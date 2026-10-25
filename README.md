@@ -18,6 +18,10 @@
 - [SEI decision-memory参照接続](tools/reference-sei-decision/README.md) — SCN-001の未決決定をSEIの一時storeへ記録し、`resume`を読む参照（合成fixture）
 - [SCN-001統合参照実行](tools/reference-scn001-run/README.md) — MMI・SEI・SCN-001評価を1つのreceiptへ束ね、Owner判断packetを生成する（承認ではない）
 
+## 検証
+
+GitHub Actionsの`tai-reference`が、`tools/`配下のGo参照実装に対して`gofmt`、`go vet`、`go test`を実行します。MMI・SEIの実接続試験は、それぞれの開発チェックアウトがない環境ではskipします。保存済みのSCN-001参照実行recordは常に検証します。
+
 ## 作業領域
 
 - [docs/](docs/) — 目的・設計・判断経緯
