@@ -185,10 +185,10 @@ func TestMMIResolvedObservationIsAlsoRenderedInD04(t *testing.T) {
 	d04Path := filepath.Join(work, "d04.md")
 	modified := "施設予約は原則不要（TAIの改訂試験）"
 	mmi := map[string]any{
-		"schema": "tai.reference.mmi-readonly/v0",
+		"schema":               "tai.reference.mmi-readonly/v0",
 		"realProductConnected": true,
-		"readOnly": true,
-		"conflictPreserved": true,
+		"readOnly":             true,
+		"conflictPreserved":    true,
 		"selected": []map[string]string{
 			{"id": "O-02", "text": modified, "source": "mmi-test", "version": "test-v0", "availability": "available"},
 			{"id": "O-03", "text": "会議室の利用には事前予約が必要", "source": "mmi-test", "version": "test-v1", "availability": "available"},
