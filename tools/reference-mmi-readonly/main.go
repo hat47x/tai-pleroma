@@ -19,30 +19,39 @@ import (
 
 const protocolVersion = "2024-11-05"
 
+type SelectedObservation struct {
+	ID            string `json:"id"`
+	Text          string `json:"text"`
+	Source        string `json:"source"`
+	SourceVersion string `json:"version"`
+	Availability  string `json:"availability"`
+}
+
 type Receipt struct {
-	Schema                string            `json:"schema"`
-	Server                string            `json:"server"`
-	ProtocolVersion       string            `json:"protocolVersion"`
-	MmiCommit             string            `json:"mmiCommit,omitempty"`
-	PackageLockDigest     string            `json:"packageLockDigest,omitempty"`
-	NodeVersion           string            `json:"nodeVersion,omitempty"`
-	Tool                  string            `json:"tool"`
-	CandidateCount        int               `json:"candidateCount"`
-	SelectedRows          int               `json:"selectedRows"`
-	ObservedIDs           []string          `json:"observedIds"`
-	ConflictPreserved     bool              `json:"conflictPreserved"`
-	SourceDigestBefore    string            `json:"sourceDigestBefore"`
-	SourceDigestAfter     string            `json:"sourceDigestAfter"`
-	GuideDigestBefore     string            `json:"guideDigestBefore"`
-	GuideDigestAfter      string            `json:"guideDigestAfter"`
-	BoundaryRejected      bool              `json:"boundaryRejected"`
-	MissingSourceRejected bool              `json:"missingSourceRejected"`
-	ReadOnly              bool              `json:"readOnly"`
-	RealProductConnected  bool              `json:"realProductConnected"`
-	Passed                bool              `json:"passed"`
-	Reason                string            `json:"reason,omitempty"`
-	Notes                 []string          `json:"notes"`
-	Extra                 map[string]string `json:"extra,omitempty"`
+	Schema                string                `json:"schema"`
+	Server                string                `json:"server"`
+	ProtocolVersion       string                `json:"protocolVersion"`
+	MmiCommit             string                `json:"mmiCommit,omitempty"`
+	PackageLockDigest     string                `json:"packageLockDigest,omitempty"`
+	NodeVersion           string                `json:"nodeVersion,omitempty"`
+	Tool                  string                `json:"tool"`
+	CandidateCount        int                   `json:"candidateCount"`
+	SelectedRows          int                   `json:"selectedRows"`
+	ObservedIDs           []string              `json:"observedIds"`
+	Selected              []SelectedObservation `json:"selected"`
+	ConflictPreserved     bool                  `json:"conflictPreserved"`
+	SourceDigestBefore    string                `json:"sourceDigestBefore"`
+	SourceDigestAfter     string                `json:"sourceDigestAfter"`
+	GuideDigestBefore     string                `json:"guideDigestBefore"`
+	GuideDigestAfter      string                `json:"guideDigestAfter"`
+	BoundaryRejected      bool                  `json:"boundaryRejected"`
+	MissingSourceRejected bool                  `json:"missingSourceRejected"`
+	ReadOnly              bool                  `json:"readOnly"`
+	RealProductConnected  bool                  `json:"realProductConnected"`
+	Passed                bool                  `json:"passed"`
+	Reason                string                `json:"reason,omitempty"`
+	Notes                 []string              `json:"notes"`
+	Extra                 map[string]string     `json:"extra,omitempty"`
 }
 
 type rpcRequest struct {
@@ -343,11 +352,14 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 	receipt.SelectedRows = len(selection.Result.Preview.Rows)
 	texts := map[string]string{}
 	for _, row := range selection.Result.Preview.Rows {
-		if len(row) < 2 {
+		if len(row) < 5 {
 			continue
 		}
 		receipt.ObservedIDs = append(receipt.ObservedIDs, row[0])
 		texts[row[0]] = row[1]
+		receipt.Selected = append(receipt.Selected, SelectedObservation{
+			ID: row[0], Text: row[1], Source: row[2], SourceVersion: row[3], Availability: row[4],
+		})
 	}
 	receipt.ConflictPreserved = texts["O-02"] != "" && texts["O-03"] != "" && texts["O-02"] != texts["O-03"]
 	if receipt.SelectedRows != 3 || !receipt.ConflictPreserved {

@@ -64,6 +64,23 @@ type Fixture struct {
 	Revisions    []Revision    `json:"revisions"`
 }
 
+type MMISelected struct {
+	ID           string `json:"id"`
+	Text         string `json:"text"`
+	Source       string `json:"source"`
+	Version      string `json:"version"`
+	Availability string `json:"availability"`
+}
+
+type MMIReceipt struct {
+	Schema               string        `json:"schema"`
+	MmiCommit            string        `json:"mmiCommit"`
+	RealProductConnected bool          `json:"realProductConnected"`
+	ReadOnly             bool          `json:"readOnly"`
+	ConflictPreserved    bool          `json:"conflictPreserved"`
+	Selected             []MMISelected `json:"selected"`
+}
+
 type CaseResult struct {
 	ID     string `json:"id"`
 	Status string `json:"status"`
@@ -75,6 +92,8 @@ type Receipt struct {
 	Scenario              string            `json:"scenario"`
 	Cases                 []CaseResult      `json:"cases"`
 	ObservationDigests    map[string]string `json:"observationDigests"`
+	ObservationSource     string            `json:"observationSource"`
+	MMICommit             string            `json:"mmiCommit,omitempty"`
 	Passed                bool              `json:"passed"`
 	Synthetic             bool              `json:"synthetic"`
 	RealProductsConnected bool              `json:"realProductsConnected"`
@@ -97,10 +116,48 @@ func statusCase(id string, passed bool, reason string) CaseResult {
 	return CaseResult{ID: id, Status: "fail", Reason: reason}
 }
 
+func ApplyMMIObservations(f *Fixture, receipt MMIReceipt) error {
+	if receipt.Schema != "tai.reference.mmi-readonly/v0" {
+		return fmt.Errorf("unexpected MMI receipt schema %q", receipt.Schema)
+	}
+	if !receipt.RealProductConnected || !receipt.ReadOnly || !receipt.ConflictPreserved {
+		return fmt.Errorf("MMI receipt does not prove a read-only conflicting selection")
+	}
+	selected := map[string]MMISelected{}
+	for _, observation := range receipt.Selected {
+		selected[observation.ID] = observation
+	}
+	for _, id := range []string{"O-02", "O-03"} {
+		if selected[id].Text == "" {
+			return fmt.Errorf("MMI receipt is missing %s", id)
+		}
+	}
+	if selected["O-02"].Text == selected["O-03"].Text {
+		return fmt.Errorf("MMI receipt lost the O-02/O-03 conflict")
+	}
+	for index := range f.Observations {
+		observation, ok := selected[f.Observations[index].ID]
+		if !ok {
+			continue
+		}
+		f.Observations[index].Text = observation.Text
+		f.Observations[index].Source = observation.Source
+		f.Observations[index].SourceVersion = observation.Version
+		f.Observations[index].Availability = observation.Availability
+	}
+	return nil
+}
+
 func Evaluate(f Fixture) Receipt {
+	return EvaluateWithSource(f, "fixture", "")
+}
+
+func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt := Receipt{
 		Schema: receiptSchema, Scenario: f.Scenario, Synthetic: true,
-		RealProductsConnected: false, HumanReviewed: false, AuthorityVerified: false,
+		ObservationSource: source, MMICommit: mmiCommit,
+		RealProductsConnected: source == "mmi-reference",
+		HumanReviewed:         false, AuthorityVerified: false,
 		ObservationDigests: map[string]string{},
 	}
 	byID := map[string]Observation{}
@@ -251,10 +308,18 @@ func Evaluate(f Fixture) Receipt {
 			receipt.Passed = false
 		}
 	}
-	receipt.Notes = []string{
-		"合成fixtureの参照評価であり、実SUI/TEI/SEI/SHO/EKIへの接続ではない。",
-		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
-		"利用者の有用性、権限者の承認、実文書の公開は未確認。",
+	if source == "mmi-reference" {
+		receipt.Notes = []string{
+			"O-02/O-03/O-07の原文だけをMMI MCPのselect結果で置き換えた合成評価。",
+			"Draft、仮説、判断、revisionはfixtureのままであり、人間の判断ではない。",
+			"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
+		}
+	} else {
+		receipt.Notes = []string{
+			"合成fixtureの参照評価であり、実SUI/TEI/SEI/SHO/EKIへの接続ではない。",
+			"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
+			"利用者の有用性、権限者の承認、実文書の公開は未確認。",
+		}
 	}
 	return receipt
 }
@@ -300,6 +365,7 @@ func isPrefix(previous, current []string) bool {
 
 func main() {
 	fixturePath := flag.String("fixture", "testdata/scn001.json", "SCN-001 fixture")
+	mmiReceiptPath := flag.String("mmi-receipt", "", "MMI read-only receipt whose selected rows replace O-02/O-03/O-07")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	raw, err := os.ReadFile(*fixturePath)
@@ -312,7 +378,27 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	receipt := Evaluate(fixture)
+	source := "fixture"
+	commit := ""
+	if *mmiReceiptPath != "" {
+		mmiRaw, err := os.ReadFile(*mmiReceiptPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		var mmiReceipt MMIReceipt
+		if err := json.Unmarshal(mmiRaw, &mmiReceipt); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		if err := ApplyMMIObservations(&fixture, mmiReceipt); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		source = "mmi-reference"
+		commit = mmiReceipt.MmiCommit
+	}
+	receipt := EvaluateWithSource(fixture, source, commit)
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

@@ -40,6 +40,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 
 - 第一候補はSHO（MMI）の読み取り専用MCP/CLIによる原資料参照とする。理由は、SCN-001のO-02/O-03のような文書断片を、書込み・権限付与なしで扱えるため。
 - [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md)で、MMI MCPの`initialize`、`inspect`、`select`、O-02/O-03の文言差の保持、ワークスペース外・missingの拒否、呼出し前後の原本digest一致、MMI commit/`package-lock.json`/Node versionの記録を確認した。
+- [reference-scn001](../tools/reference-scn001/README.md)の`-mmi-receipt`で、MMIの`selected`をO-02/O-03/O-07へ重ねる参照経路を追加した。Draft・仮説・判断はfixtureのままであり、実データと合成評価の混合である。
 - これは**ローカル開発チェックアウトへの参照接続**であり、実運用の認可・版固定・複数利用者・書込みは未確認。
 - 接続できた事実と、内容の正しさ・規程の確定を分ける。
 - **Gate**: 再現手順、固定版、負例（読取失敗・版不一致・参照切れ）が残るまで次へ進まない。

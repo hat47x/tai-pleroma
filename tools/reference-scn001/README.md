@@ -13,6 +13,8 @@ go run . -fixture testdata/scn001.json
 
 `-out receipt.json`でreceiptを保存できます。`passed=true`は合成fixtureの検査が通ったことだけを示します。
 
+`-mmi-receipt <path>`を指定すると、MMI読み取り専用接続のreceiptに含まれる`selected`でO-02/O-03/O-07の原文だけを置き換えます。Draft・仮説・判断・revisionはfixtureのままであり、人間の判断ではありません。
+
 ## 検査する条件
 
 - P-01: 全observationに原文・出典・出典版・取得時点・availability・digestがある。

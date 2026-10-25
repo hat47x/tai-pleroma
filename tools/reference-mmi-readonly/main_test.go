@@ -45,8 +45,14 @@ func TestReadOnlyInspectKeepsSources(t *testing.T) {
 	if receipt.SelectedRows != 3 || !receipt.ConflictPreserved {
 		t.Fatalf("select did not preserve the conflict: %+v", receipt)
 	}
-	if len(receipt.ObservedIDs) != 3 {
-		t.Fatalf("selected observation IDs are missing: %+v", receipt)
+	if len(receipt.ObservedIDs) != 3 || len(receipt.Selected) != 3 {
+		t.Fatalf("selected observations are missing: %+v", receipt)
+	}
+	for _, observation := range receipt.Selected {
+		if observation.ID == "" || observation.Text == "" || observation.Source == "" ||
+			observation.SourceVersion == "" || observation.Availability == "" {
+			t.Fatalf("selected observation is incomplete: %+v", observation)
+		}
 	}
 	if receipt.ProtocolVersion != protocolVersion || receipt.Server == "" {
 		t.Fatalf("MCP negotiation evidence is missing: %+v", receipt)
