@@ -109,11 +109,13 @@ func TestDuplicateObservationIdentityFails(t *testing.T) {
 	}
 }
 
-func TestRevisionMustAdvanceBeyondPreviousObservationSet(t *testing.T) {
+func TestDraftOnlyRevisionCanReuseObservedEvidence(t *testing.T) {
 	fixture := loadFixture(t)
 	fixture.Revisions[1].Observations = append([]string{}, fixture.Revisions[0].Observations...)
+	fixture.Drafts[1].References = []string{"O-02", "O-03"}
+	fixture.Drafts[1].Text = "案内資料の相違を引き続き確認中です。"
 	receipt := Evaluate(fixture)
-	if receipt.Passed || caseStatus(receipt, "P-05") != "fail" {
-		t.Fatalf("unchanged observation set was accepted as a new revision: %+v", receipt)
+	if !receipt.Passed || caseStatus(receipt, "P-05") != "pass" || caseStatus(receipt, "N-06") != "pass" {
+		t.Fatalf("draft-only revision should preserve valid evidence: %+v", receipt)
 	}
 }
