@@ -15,7 +15,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 | TAI | SCN-001、責務境界、評価条件、手動トレース例がDraft。合成walkthroughの参照評価を追加 | 観測・仮説・Draft・判断・再観測の参照関係を維持する | 人間の判断、実基盤接続、利用者価値 |
 | SUI | 意味形成、カード・島、候補と保留、出典へ戻るUIをREADMEで説明 | 観測カードと複数仮説の意味形成 | 実データの読出し・受渡し契約、認証済み操作 |
 | TEI | CLI、参照Workspace、モデル検証・生成等の参照実装。実Target・Authorityは未確認 | 規程候補のモデル化・検証（必要性が確認できた場合） | 施設規程の正式モデル、実実行先、受理 |
-| SEI | 意味の区別、来歴、semantic-contract、限定的な参照実行 | 観測・解釈・決定の意味分離と来歴 | SCN-001入力との契約適合、実接続 |
+| SEI | 意味の区別、来歴、semantic-contract、限定的な参照実行。SCN-001のdecision-memory projection参照を追加 | 観測・解釈・決定の意味分離と来歴 | 実運用store、権限、公開、契約適合 |
 | SHO（MMI） | 読み取り専用MCP/CLIの文書読出し・検索・検査。TAIからの`inspect`参照接続を追加 | 原資料の参照、案内文の組立て・レビュー | 実運用の認可・版固定・書込み契約 |
 | EKI | 範囲・期限・信頼に応じた限定委任の構想とArchitecture Baseline | 承認済み処理の限定委任 | SCN-001で委任が価値を生むかの検証、実Provider・Task |
 
@@ -49,6 +49,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 
 - CP-2の実資料参照とCP-1の参照関係を、利用者の一回の案内改善で往復する。
 - 新しい観測O-06/O-07でDraftを改訂し、旧版・旧判断・新しい未確定を混在させない。
+- [reference-sei-decision](../tools/reference-sei-decision/README.md)で、SEIの一時storeに`dec-01`と`authority:unknown`を記録し、`resume`のprojectionだけを読む参照経路を追加した。合成fixtureであり、人間の判断ではない。
 - **Gate**: 人間の判断と、独立した成果観測が記録されるまで「知的機能として成立」としない。
 
 ### CP-4 主体規模・委任・実行先を比較する
