@@ -174,7 +174,7 @@ func Evaluate(f Fixture) Receipt {
 		if index > 0 && !isPrefix(previous, revision.Observations) {
 			p05 = false
 		}
-		if len(revision.Observations) < len(previous) {
+		if index > 0 && len(revision.Observations) <= len(previous) {
 			p05 = false
 		}
 		previous = revision.Observations
@@ -222,10 +222,13 @@ func Evaluate(f Fixture) Receipt {
 	receipt.Cases = append(receipt.Cases, CaseResult{ID: "N-05", Status: "not-run",
 		Reason: "EKIの限定委任と独立した成果確認は未接続"})
 
-	// N-06: drafts and revisions reference only known observations.
+	// N-06: references must resolve within the corresponding historical snapshot.
 	n06 := true
 	known := map[string]bool{}
 	for _, observation := range f.Observations {
+		if observation.ID == "" || known[observation.ID] {
+			n06 = false // An ambiguous observation identity cannot be reconstructed.
+		}
 		known[observation.ID] = true
 	}
 	for _, draft := range f.Drafts {
@@ -236,14 +239,26 @@ func Evaluate(f Fixture) Receipt {
 		}
 	}
 	for _, revision := range f.Revisions {
+		available := map[string]bool{}
 		for _, reference := range revision.Observations {
-			if !known[reference] {
+			if !known[reference] || available[reference] {
 				n06 = false
+			}
+			available[reference] = true
+		}
+		draft, ok := draftByID(f.Drafts, revision.Draft)
+		if !ok {
+			n06 = false
+			continue
+		}
+		for _, reference := range draft.References {
+			if !available[reference] {
+				n06 = false // A draft cannot cite a future observation.
 			}
 		}
 	}
 	receipt.Cases = append(receipt.Cases, statusCase("N-06", n06,
-		"DraftとRevisionは実在するobservation IDだけを参照する"))
+		"Observation IDの重複を拒否し、Draftは当該Revisionで利用可能な観測だけを参照する"))
 
 	receipt.Passed = true
 	for _, result := range receipt.Cases {
