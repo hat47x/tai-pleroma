@@ -50,6 +50,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 - CP-2の実資料参照とCP-1の参照関係を、利用者の一回の案内改善で往復する。
 - 新しい観測O-06/O-07でDraftを改訂し、旧版・旧判断・新しい未確定を混在させない。
 - [reference-sei-decision](../tools/reference-sei-decision/README.md)で、SEIの一時storeに`dec-01`と`authority:unknown`を記録し、`resume`のprojectionだけを読む参照経路を追加した。合成fixtureであり、人間の判断ではない。
+- [reference-scn001-run](../tools/reference-scn001-run/README.md)で、MMI・SEI・SCN-001評価を1回の参照実行に束ね、`runDigest`付きのreceiptを生成した。`humanReviewed=false`、`authorityVerified=false`、`published=false`のままである。
 - **Gate**: 人間の判断と、独立した成果観測が記録されるまで「知的機能として成立」としない。
 
 ### CP-4 主体規模・委任・実行先を比較する

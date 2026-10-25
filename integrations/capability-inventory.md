@@ -16,6 +16,7 @@
 
 - **MMI**: [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md)がローカル開発チェックアウトのMMI MCP `markdown-matrix-injector/0.2.0`へstdio接続し、`inspect`と`select`を実行した。O-02/O-03/O-07の3行を取得し、O-02とO-03の文言差を保持した。境界外`../outside.csv`と存在しない`missing.csv`を拒否し、CSV/guideのdigestは不変だった。配布版、実運用の認可、版固定、書込みは未検証。
 - **SEI**: [reference-sei-decision](../tools/reference-sei-decision/README.md)がSEIの一時storeへ`rec-01`と`dec-01`を記録し、`sei resume --json`で2 records、`dec-01`、未解決`authority:unknown`を確認した。合成fixtureであり、実運用store・権限・公開・署名は未検証。
+- **統合参照実行**: [reference-scn001-run](../tools/reference-scn001-run/README.md)がMMI・SEI・SCN-001評価を1つのreceiptへ束ね、`runDigest`を生成した。`humanReviewed=false`、`authorityVerified=false`、`published=false`であり、知的機能の受入合格ではない。
 
 ## 接続を増やす順序
 
