@@ -113,7 +113,8 @@ func TestCombinedRun(t *testing.T) {
 	if packet.Status != "awaiting-owner" || packet.Approved || packet.HumanReviewed ||
 		packet.AuthorityVerified || packet.PublicationApproved || !packet.ProvisionalApproved ||
 		packet.ReviewTrigger != "real-object" || len(packet.Questions) != 4 ||
-		packet.ReviewArtifactDigest == "" || packet.ReviewArtifactStatus != "provisional" {
+		packet.ReviewArtifactDigest == "" || packet.ReviewArtifactStatus != "provisional" ||
+		packet.PublicationAllowed || len(packet.PublicationBlockers) == 0 {
 		t.Fatalf("owner packet overclaims or is incomplete: %+v", packet)
 	}
 	if _, err := BuildOwnerPacket(incompleteSCN); err == nil {
