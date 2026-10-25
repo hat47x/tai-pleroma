@@ -6,6 +6,7 @@ TAIのSCN-001から、SHO前身MMI（Markdown Matrix Injector）の読み取り�
 
 - MMI MCPの`initialize`と`notifications/initialized`。
 - `inspect`でCSVの候補を取得する。
+- `select`でO-02/O-03/O-07の行を取得し、O-02とO-03の文言が異なるまま保持される。
 - ワークスペース外の`../outside.csv`を拒否する。
 - 呼出し前後で原本とguideのSHA-256が変わらない。
 
@@ -25,7 +26,8 @@ MMIの場所は`-mmi-root`または`MMI_ROOT`で指定できます。省略時�
 ## 境界
 
 - MCPはstdioだけを使い、ネットワークへ接続しません。
-- 呼ぶツールは`inspect`だけです。
+- 呼ぶツールは`inspect`と`select`だけです。
 - `candidateCount`はinspect結果に`candidates`が含まれることの確認であり、表の意味や内容の正しさではありません。
+- `selectedRows`と`conflictPreserved`は、MMIがO-02/O-03/O-07の3行を返し、O-02とO-03の文言差を保持したことだけを示します。
 - `realProductConnected=true`は、この環境でMMI MCPとの読み取り往復が成立したことだけを示します。
 - 実運用の権限、監査、複数利用者、MMIの版固定、書込み・保存は未検証です。

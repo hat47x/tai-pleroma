@@ -25,6 +25,9 @@ type Receipt struct {
 	ProtocolVersion      string            `json:"protocolVersion"`
 	Tool                 string            `json:"tool"`
 	CandidateCount       int               `json:"candidateCount"`
+	SelectedRows         int               `json:"selectedRows"`
+	ObservedIDs          []string          `json:"observedIds"`
+	ConflictPreserved    bool              `json:"conflictPreserved"`
 	SourceDigestBefore   string            `json:"sourceDigestBefore"`
 	SourceDigestAfter    string            `json:"sourceDigestAfter"`
 	GuideDigestBefore    string            `json:"guideDigestBefore"`
@@ -183,6 +186,53 @@ func inspect(client *mcpClient, source string) (string, bool, error) {
 	return tool.Content[0].Text, tool.IsError, nil
 }
 
+type selectionResult struct {
+	Schema string `json:"schema"`
+	Result struct {
+		OK      bool `json:"ok"`
+		Preview struct {
+			Headers []string   `json:"headers"`
+			Rows    [][]string `json:"rows"`
+		} `json:"preview"`
+		Errors []struct {
+			Code    string `json:"code"`
+			Message string `json:"message"`
+		} `json:"errors"`
+	} `json:"result"`
+}
+
+func selectObservations(client *mcpClient) (selectionResult, error) {
+	result, err := client.call("tools/call", map[string]any{
+		"name": "select",
+		"arguments": map[string]any{
+			"source":  "observations.csv",
+			"table":   "Sheet1!A1:E4",
+			"columns": "id,text,source,version,availability",
+		},
+	})
+	if err != nil {
+		return selectionResult{}, err
+	}
+	var tool toolResult
+	if err := json.Unmarshal(result, &tool); err != nil {
+		return selectionResult{}, err
+	}
+	if len(tool.Content) == 0 {
+		return selectionResult{}, fmt.Errorf("select returned no content")
+	}
+	if tool.IsError {
+		return selectionResult{}, fmt.Errorf("select returned isError: %s", tool.Content[0].Text)
+	}
+	var selection selectionResult
+	if err := json.Unmarshal([]byte(tool.Content[0].Text), &selection); err != nil {
+		return selectionResult{}, err
+	}
+	if !selection.Result.OK {
+		return selectionResult{}, fmt.Errorf("select was rejected: %+v", selection.Result.Errors)
+	}
+	return selection, nil
+}
+
 func digestFile(path string) (string, error) {
 	content, err := os.ReadFile(path)
 	if err != nil {
@@ -197,7 +247,7 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 		Schema: "tai.reference.mmi-readonly/v0", Tool: "inspect", ReadOnly: true,
 		RealProductConnected: false,
 		Notes: []string{
-			"MMI MCPのinspectだけを呼ぶ読み取り専用接続。",
+			"MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
 			"原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。",
 		},
 	}
@@ -264,6 +314,25 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 	receipt.CandidateCount = strings.Count(text, `"candidates"`)
 	if receipt.CandidateCount == 0 {
 		receipt.Reason = "inspect result did not contain candidates"
+		return receipt
+	}
+	selection, err := selectObservations(client)
+	if err != nil {
+		receipt.Reason = err.Error()
+		return receipt
+	}
+	receipt.SelectedRows = len(selection.Result.Preview.Rows)
+	texts := map[string]string{}
+	for _, row := range selection.Result.Preview.Rows {
+		if len(row) < 2 {
+			continue
+		}
+		receipt.ObservedIDs = append(receipt.ObservedIDs, row[0])
+		texts[row[0]] = row[1]
+	}
+	receipt.ConflictPreserved = texts["O-02"] != "" && texts["O-03"] != "" && texts["O-02"] != texts["O-03"]
+	if receipt.SelectedRows != 3 || !receipt.ConflictPreserved {
+		receipt.Reason = "select did not preserve the O-02/O-03 observations"
 		return receipt
 	}
 	_, boundaryError, err := inspect(client, "../outside.csv")
