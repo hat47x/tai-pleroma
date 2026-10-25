@@ -348,6 +348,15 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	if err := json.Unmarshal(renderOutput, &receipt.Components.ReviewArtifact); err != nil {
 		return receipt, fmt.Errorf("review artifact receipt is invalid: %w", err)
 	}
+	// The renderer's digest must match the bytes written for this run, not merely exist.
+	artifactBytes, err := os.ReadFile(artifactPath)
+	if err != nil {
+		return receipt, fmt.Errorf("reading rendered D-04: %w", err)
+	}
+	artifactHash := sha256.Sum256(artifactBytes)
+	if receipt.Components.ReviewArtifact.ArtifactDigest != "sha256:"+hex.EncodeToString(artifactHash[:]) {
+		return receipt, fmt.Errorf("D-04 artifact bytes do not match the renderer receipt")
+	}
 	if err := readJSON(mmiPath, &receipt.Components.MMI); err != nil {
 		return receipt, err
 	}
