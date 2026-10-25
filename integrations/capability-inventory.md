@@ -1,0 +1,25 @@
+# 関連基盤の接続調査（初期）
+
+確認日: 2026-10-25。状態: **README/設計文書の静的確認のみ**。この一覧は現在のAPI接続やEnd-to-Endの動作保証ではない。
+
+確認したmainのcommitを固定する。文書中の記載があっても、現在のheadでの関連試験や外部呼出しは別途確認する。
+
+| 基盤 | 確認したmain | 静的に確認できる範囲 | SCN-001で未検証のこと |
+| --- | --- | --- | --- |
+| [SUI](https://github.com/hat47x/sui-sensemaking/blob/b0f5bae138c9289b46eae2d5f3fd6630a1175a08/README.md) | `b0f5bae` | 意味形成、候補と保留、出典へ戻れるカード・島、レビューを伴う出力をREADMEで説明 | 観測カードとTAIの入力を正本の意味を損なわず受け渡す方法 |
+| [TEI](https://github.com/hat47x/tei-platform/blob/490dd205cdcdd03c1af03d67a6f8803c83eca0be/docs/status.md) | `490dd20` | CLIと参照Workspace、モデル検証・生成等の参照実装、実証の限界が明記されている | 会議室の規程の正式モデル化・受理・作用・結果確認 |
+| [SEI](https://github.com/hat47x/sei-cognition/blob/fd329e10554c677058702d574ae9678fed786842/README.md) | `fd329e1` | 意味の区別、来歴、semantic-contract、限定的な参照実行を説明 | SCN-001に適する既存契約と入力データの適合・実接続 |
+| [SHO前身MMI](https://github.com/hat47x/markdown-matrix-injector/blob/a8addd1560bd02131b29ade4d9d1cfa7ca5f9b21/04_Documentation/mcp-server.md) | `a8addd1` | MMIのCLI/MCPで読出し、検索、選択、検査、render等を提供と記載。MCPは読み取り専用でエージェント実接続は未実施と明記 | TAIからの実際のMCP呼出し、SHO Composerの書込み系契約 |
+| [EKI](https://github.com/hat47x/eki-fabric/blob/84f03d116f60454636dd1c1b37b30b395bcd17fb/README.md) | `84f03d1` | 範囲・期限・信頼に応じた委任を中核とする構想、限定されたArchitecture Baselineを説明 | SCN-001に対して利用可能な実Provider・Taskの検証、委任する利益 |
+
+## 接続を増やす順序
+
+1. **最初の候補**: 文書または既存ツールによる読み取り専用の情報取得と、出典版を追跡する手動記録。出力の内容を検査できることを優先する。
+2. **次の候補**: 意味と判断を保持したまま、SEI等の既存契約に照らして適合性を検査する。適合しない場合は変換の採否を別途判断する。
+3. **必要になった段階**: TEIの正式モデル・生成、SHOの編集・保存、EKIの限定委任を、各製品における成立条件とともに検証する。
+
+どの段階でも、製品の「設計に記載されている」「合成試験済み」「実接続済み」「人間に有用と確認済み」を区別する。公開・書換え・権限付与を伴う操作はOwnerの確認を要する。
+
+## 不足が判明したら
+
+不足を見つけた場合は、その場で新APIを設計するのではなく、対象の基盤、対象版、使いたい利用者操作、既存機構との差、反証できる観測条件を記録する。必要なら元の基盤のIssueへ接続する。
