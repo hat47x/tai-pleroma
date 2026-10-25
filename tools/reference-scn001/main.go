@@ -174,7 +174,7 @@ func Evaluate(f Fixture) Receipt {
 		if index > 0 && !isPrefix(previous, revision.Observations) {
 			p05 = false
 		}
-		if index > 0 && len(revision.Observations) <= len(previous) {
+		if len(revision.Observations) < len(previous) {
 			p05 = false
 		}
 		previous = revision.Observations
