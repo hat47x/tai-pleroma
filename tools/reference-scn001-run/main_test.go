@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"crypto/sha256"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
