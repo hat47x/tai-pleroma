@@ -27,7 +27,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 
 - 観測 ≠ 解釈 ≠ 提案 ≠ 承認 ≠ 実行 ≠ 結果を、シナリオ上の記録項目として維持する。
 - 案内文の意味を受理する担当、公開権限、緊急時の停止条件を決める。
-- **2026-10-26のOwner指示**: 実装を止めないため、`development-review-only`の仮承認で先へ進む。実際の公開権限・Authorityは未確定であり、`reviewTrigger=real-object`で実物ベースの再レビューを必須とする。
+- **2026-10-26のOwner指示**: 実装を止めないため、`development-review-only`の仮承認で先へ進む。実際の公開権限・Authorityは未確定であり、`reviewTrigger=real-object`で実物ベースの再レビューを必須とする。再レビュー条件は[SCN-001実物ベース再レビュー](../evaluations/SCN-001-real-object-review.md)に置く。
 - **Gate**: 仮承認は公開・外部作用を許可しない。公開・外部作用は、実在の担当・権限・停止条件が確認されるまで実装しない。
 
 ### CP-1 合成walkthroughで参照関係を検査する（実施済み・参照のみ）
