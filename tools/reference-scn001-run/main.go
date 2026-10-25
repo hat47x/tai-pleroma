@@ -328,6 +328,7 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	mmiPath := filepath.Join(work, "mmi.json")
 	seiPath := filepath.Join(work, "sei.json")
 	scnPath := filepath.Join(work, "scn001.json")
+	resolvedFixturePath := filepath.Join(work, "resolved-scn001.json")
 	artifactPath := filepath.Join(work, "d04.md")
 
 	if err := goRun(ctx, mmiTool, "run", ".", "-workspace", "testdata/workspace", "-out", mmiPath); err != nil {
@@ -336,10 +337,11 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	if err := goRun(ctx, seiTool, "run", ".", "-out", seiPath); err != nil {
 		return receipt, err
 	}
-	if err := goRun(ctx, scnTool, "run", ".", "-fixture", "testdata/scn001.json", "-mmi-receipt", mmiPath, "-out", scnPath); err != nil {
+	if err := goRun(ctx, scnTool, "run", ".", "-fixture", "testdata/scn001.json",
+		"-mmi-receipt", mmiPath, "-out-fixture", resolvedFixturePath, "-out", scnPath); err != nil {
 		return receipt, err
 	}
-	renderOutput, err := goRunOutput(ctx, renderTool, "run", ".", "-fixture", "../reference-scn001/testdata/scn001.json", "-out", artifactPath)
+	renderOutput, err := goRunOutput(ctx, renderTool, "run", ".", "-fixture", resolvedFixturePath, "-out", artifactPath)
 	if err != nil {
 		return receipt, err
 	}
