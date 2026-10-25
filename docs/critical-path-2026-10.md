@@ -52,6 +52,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 - 新しい観測O-06/O-07でDraftを改訂し、旧版・旧判断・新しい未確定を混在させない。
 - [reference-sei-decision](../tools/reference-sei-decision/README.md)で、SEIの一時storeに`dec-01`と`authority:unknown`、`dec-02`（development-review-onlyの仮承認）を記録し、`resume`のprojectionだけを読む参照経路を追加した。合成fixtureであり、実在の人間の判断ではない。
 - [reference-scn001-run](../tools/reference-scn001-run/README.md)で、MMI・SEI・SCN-001評価を1回の参照実行に束ね、`runDigest`付きのreceiptを生成した。`humanReviewed=false`、`authorityVerified=false`、`published=false`のままである。
+- [reference-scn001-render](../tools/reference-scn001-render/README.md)で、D-04を`provisional`・`publicationApproved=false`・`reviewTrigger=real-object`の内部レビュー用Markdownとして生成した。公開用の成果物ではない。
 - 同ツールの`-owner-packet`で、権限者・P-06・N-05・初回範囲の判断を求める`awaiting-owner` packetを生成できる。これは承認ではなく、Owner判断の入力である。
 - **Gate**: 人間の判断と、独立した成果観測が記録されるまで「知的機能として成立」としない。
 
