@@ -20,6 +20,7 @@ jobs:
           - tools/reference-mmi-readonly
           - tools/reference-sei-decision
           - tools/reference-scn001-run
+          - tools/reference-scn001-render
     defaults:
       run:
         working-directory: ${{ matrix.tool }}

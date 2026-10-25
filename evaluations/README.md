@@ -7,4 +7,5 @@
 ## 参照実行の記録
 
 - [SCN-001実物ベース再レビュー](SCN-001-real-object-review.md): `reviewTrigger=real-object`の再レビュー計画。R-01〜R-07は未実施。
+- [SCN-001-D-04-provisional.md](artifacts/SCN-001-D-04-provisional.md): 仮承認に基づく内部レビュー用Draft。公開用ではない。
 - [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:d1cf0fa...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
