@@ -20,25 +20,26 @@ import (
 const protocolVersion = "2024-11-05"
 
 type Receipt struct {
-	Schema               string            `json:"schema"`
-	Server               string            `json:"server"`
-	ProtocolVersion      string            `json:"protocolVersion"`
-	Tool                 string            `json:"tool"`
-	CandidateCount       int               `json:"candidateCount"`
-	SelectedRows         int               `json:"selectedRows"`
-	ObservedIDs          []string          `json:"observedIds"`
-	ConflictPreserved    bool              `json:"conflictPreserved"`
-	SourceDigestBefore   string            `json:"sourceDigestBefore"`
-	SourceDigestAfter    string            `json:"sourceDigestAfter"`
-	GuideDigestBefore    string            `json:"guideDigestBefore"`
-	GuideDigestAfter     string            `json:"guideDigestAfter"`
-	BoundaryRejected     bool              `json:"boundaryRejected"`
-	ReadOnly             bool              `json:"readOnly"`
-	RealProductConnected bool              `json:"realProductConnected"`
-	Passed               bool              `json:"passed"`
-	Reason               string            `json:"reason,omitempty"`
-	Notes                []string          `json:"notes"`
-	Extra                map[string]string `json:"extra,omitempty"`
+	Schema                string            `json:"schema"`
+	Server                string            `json:"server"`
+	ProtocolVersion       string            `json:"protocolVersion"`
+	Tool                  string            `json:"tool"`
+	CandidateCount        int               `json:"candidateCount"`
+	SelectedRows          int               `json:"selectedRows"`
+	ObservedIDs           []string          `json:"observedIds"`
+	ConflictPreserved     bool              `json:"conflictPreserved"`
+	SourceDigestBefore    string            `json:"sourceDigestBefore"`
+	SourceDigestAfter     string            `json:"sourceDigestAfter"`
+	GuideDigestBefore     string            `json:"guideDigestBefore"`
+	GuideDigestAfter      string            `json:"guideDigestAfter"`
+	BoundaryRejected      bool              `json:"boundaryRejected"`
+	MissingSourceRejected bool              `json:"missingSourceRejected"`
+	ReadOnly              bool              `json:"readOnly"`
+	RealProductConnected  bool              `json:"realProductConnected"`
+	Passed                bool              `json:"passed"`
+	Reason                string            `json:"reason,omitempty"`
+	Notes                 []string          `json:"notes"`
+	Extra                 map[string]string `json:"extra,omitempty"`
 }
 
 type rpcRequest struct {
@@ -343,6 +344,16 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 	receipt.BoundaryRejected = boundaryError
 	if !receipt.BoundaryRejected {
 		receipt.Reason = "path outside the MMI root was not rejected"
+		return receipt
+	}
+	_, missingError, err := inspect(client, "missing.csv")
+	if err != nil {
+		receipt.Reason = err.Error()
+		return receipt
+	}
+	receipt.MissingSourceRejected = missingError
+	if !receipt.MissingSourceRejected {
+		receipt.Reason = "missing source was not rejected"
 		return receipt
 	}
 
