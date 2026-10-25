@@ -61,6 +61,12 @@ type ArtifactComponent struct {
 	AuthorityVerified   bool   `json:"authorityVerified"`
 }
 
+type GateComponent struct {
+	Schema   string   `json:"schema"`
+	Allowed  bool     `json:"allowed"`
+	Blockers []string `json:"blockers"`
+}
+
 type CaseResult struct {
 	ID     string `json:"id"`
 	Status string `json:"status"`
@@ -86,10 +92,11 @@ type RunReceipt struct {
 	GeneratedAt string `json:"generatedAt"`
 	RunDigest   string `json:"runDigest"`
 	Components  struct {
-		MMI            MMIComponent      `json:"mmi"`
-		SEI            SEIComponent      `json:"sei"`
-		SCN001         SCNComponent      `json:"scn001"`
-		ReviewArtifact ArtifactComponent `json:"reviewArtifact"`
+		MMI             MMIComponent      `json:"mmi"`
+		SEI             SEIComponent      `json:"sei"`
+		SCN001          SCNComponent      `json:"scn001"`
+		ReviewArtifact  ArtifactComponent `json:"reviewArtifact"`
+		PublicationGate GateComponent     `json:"publicationGate"`
 	} `json:"components"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -98,6 +105,8 @@ type RunReceipt struct {
 	AuthorityVerified     bool     `json:"authorityVerified"`
 	ProvisionalApproved   bool     `json:"provisionalApproved"`
 	PublicationApproved   bool     `json:"publicationApproved"`
+	PublicationAllowed    bool     `json:"publicationAllowed"`
+	PublicationBlockers   []string `json:"publicationBlockers"`
 	ReviewRequired        bool     `json:"reviewRequired"`
 	ReviewTrigger         string   `json:"reviewTrigger,omitempty"`
 	Published             bool     `json:"published"`
@@ -110,6 +119,19 @@ func goRunOutput(ctx context.Context, dir string, args ...string) ([]byte, error
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return output, fmt.Errorf("go %s in %s: %w: %s", strings.Join(args, " "), dir, err, strings.TrimSpace(string(output)))
+	}
+	return output, nil
+}
+
+func goRunAllowExit(ctx context.Context, dir string, args ...string) ([]byte, error) {
+	cmd := exec.CommandContext(ctx, "go", args...)
+	cmd.Dir = dir
+	output, err := cmd.Output()
+	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {
+			return output, nil
+		}
+		return output, fmt.Errorf("go %s in %s: %w", strings.Join(args, " "), dir, err)
 	}
 	return output, nil
 }
@@ -256,6 +278,19 @@ func Verify(receipt RunReceipt) Verification {
 		verification.Reason = "review artifact component is incomplete"
 		return verification
 	}
+	gate := receipt.Components.PublicationGate
+	if gate.Allowed && len(gate.Blockers) != 0 {
+		verification.Reason = "publication gate is allowed but has blockers"
+		return verification
+	}
+	if !gate.Allowed && len(gate.Blockers) == 0 {
+		verification.Reason = "publication gate is blocked without a blocker"
+		return verification
+	}
+	if receipt.PublicationAllowed != gate.Allowed {
+		verification.Reason = "publication allowed does not match the gate"
+		return verification
+	}
 	if mmi.Passed && (mmi.Server == "" || mmi.ProtocolVersion != "2024-11-05" ||
 		mmi.SelectedRows != 3 || !mmi.ConflictPreserved || !mmi.BoundaryRejected ||
 		!mmi.MissingSourceRejected || mmi.SourceDigestBefore == "" ||
@@ -315,7 +350,8 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	seiTool := filepath.Join(tools, "reference-sei-decision")
 	scnTool := filepath.Join(tools, "reference-scn001")
 	renderTool := filepath.Join(tools, "reference-scn001-render")
-	for _, dir := range []string{mmiTool, seiTool, scnTool, renderTool} {
+	gateTool := filepath.Join(tools, "reference-publication-gate")
+	for _, dir := range []string{mmiTool, seiTool, scnTool, renderTool, gateTool} {
 		if info, err := os.Stat(dir); err != nil || !info.IsDir() {
 			return receipt, fmt.Errorf("tool directory is unavailable: %s", dir)
 		}
@@ -348,6 +384,13 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	if err := json.Unmarshal(renderOutput, &receipt.Components.ReviewArtifact); err != nil {
 		return receipt, fmt.Errorf("review artifact receipt is invalid: %w", err)
 	}
+	gateOutput, err := goRunAllowExit(ctx, gateTool, "run", ".", "-status", "../../evaluations/SCN-001-review-status.json")
+	if err != nil {
+		return receipt, err
+	}
+	if err := json.Unmarshal(gateOutput, &receipt.Components.PublicationGate); err != nil {
+		return receipt, fmt.Errorf("publication gate receipt is invalid: %w", err)
+	}
 	// The renderer's digest must match the bytes written for this run, not merely exist.
 	artifactBytes, err := os.ReadFile(artifactPath)
 	if err != nil {
@@ -378,12 +421,15 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	receipt.ReviewRequired = receipt.ProvisionalApproved
 	receipt.ReviewTrigger = "real-object"
 	receipt.PublicationApproved = false
+	receipt.PublicationAllowed = receipt.Components.PublicationGate.Allowed
+	receipt.PublicationBlockers = receipt.Components.PublicationGate.Blockers
 	receipt.Notes = []string{
 		"MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",
 		"Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
 		"SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
 		"仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
 		"D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
+		"publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
 		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
 	}
 	digest, err := digestJSON(receipt.Components)

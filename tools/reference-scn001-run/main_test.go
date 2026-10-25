@@ -57,6 +57,9 @@ func TestCombinedRun(t *testing.T) {
 	if !receipt.ProvisionalApproved || !receipt.ReviewRequired || receipt.ReviewTrigger != "real-object" {
 		t.Fatalf("provisional approval is missing: %+v", receipt)
 	}
+	if receipt.PublicationAllowed || receipt.PublicationApproved || len(receipt.PublicationBlockers) == 0 {
+		t.Fatalf("publication gate did not block the pending review: %+v", receipt)
+	}
 	if !receipt.Components.MMI.ConflictPreserved || !receipt.Components.SEI.ReadOnlyProjection ||
 		receipt.Components.SCN001.ObservationSource != "mmi-reference" {
 		t.Fatalf("component linkage is incomplete: %+v", receipt)
@@ -95,6 +98,12 @@ func TestCombinedRun(t *testing.T) {
 	incompleteSCN.Components.SCN001.ObservationSource = "fixture"
 	if verification := Verify(incompleteSCN); verification.Passed {
 		t.Fatalf("incomplete SCN-001 component verified: %+v", verification)
+	}
+
+	gateTamper := receipt
+	gateTamper.Components.PublicationGate.Allowed = true
+	if verification := Verify(gateTamper); verification.Passed {
+		t.Fatalf("gate with blockers and allowed=true verified: %+v", verification)
 	}
 
 	packet, err := BuildOwnerPacket(receipt)
