@@ -49,6 +49,18 @@ type SEIComponent struct {
 	ReadOnlyProjection  bool         `json:"readOnlyProjection"`
 }
 
+type ArtifactComponent struct {
+	Passed              bool   `json:"passed"`
+	Status              string `json:"status"`
+	DraftID             string `json:"draftId"`
+	ArtifactDigest      string `json:"artifactDigest"`
+	ProvisionalApproved bool   `json:"provisionalApproved"`
+	PublicationApproved bool   `json:"publicationApproved"`
+	ReviewRequired      bool   `json:"reviewRequired"`
+	ReviewTrigger       string `json:"reviewTrigger"`
+	AuthorityVerified   bool   `json:"authorityVerified"`
+}
+
 type CaseResult struct {
 	ID     string `json:"id"`
 	Status string `json:"status"`
@@ -74,9 +86,10 @@ type RunReceipt struct {
 	GeneratedAt string `json:"generatedAt"`
 	RunDigest   string `json:"runDigest"`
 	Components  struct {
-		MMI    MMIComponent `json:"mmi"`
-		SEI    SEIComponent `json:"sei"`
-		SCN001 SCNComponent `json:"scn001"`
+		MMI            MMIComponent      `json:"mmi"`
+		SEI            SEIComponent      `json:"sei"`
+		SCN001         SCNComponent      `json:"scn001"`
+		ReviewArtifact ArtifactComponent `json:"reviewArtifact"`
 	} `json:"components"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -89,6 +102,16 @@ type RunReceipt struct {
 	ReviewTrigger         string   `json:"reviewTrigger,omitempty"`
 	Published             bool     `json:"published"`
 	Notes                 []string `json:"notes"`
+}
+
+func goRunOutput(ctx context.Context, dir string, args ...string) ([]byte, error) {
+	cmd := exec.CommandContext(ctx, "go", args...)
+	cmd.Dir = dir
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return output, fmt.Errorf("go %s in %s: %w: %s", strings.Join(args, " "), dir, err, strings.TrimSpace(string(output)))
+	}
+	return output, nil
 }
 
 func goRun(ctx context.Context, dir string, args ...string) error {
@@ -191,6 +214,13 @@ func Verify(receipt RunReceipt) Verification {
 	mmi := receipt.Components.MMI
 	sei := receipt.Components.SEI
 	scn := receipt.Components.SCN001
+	artifact := receipt.Components.ReviewArtifact
+	if artifact.Passed && (artifact.Status != "provisional" || artifact.DraftID != "D-04" ||
+		artifact.ArtifactDigest == "" || !artifact.ProvisionalApproved || artifact.PublicationApproved ||
+		!artifact.ReviewRequired || artifact.ReviewTrigger != "real-object" || artifact.AuthorityVerified) {
+		verification.Reason = "review artifact component is incomplete"
+		return verification
+	}
 	if mmi.Passed && (mmi.Server == "" || mmi.ProtocolVersion != "2024-11-05" ||
 		mmi.SelectedRows != 3 || !mmi.ConflictPreserved || !mmi.BoundaryRejected ||
 		!mmi.MissingSourceRejected || mmi.SourceDigestBefore == "" ||
@@ -222,7 +252,7 @@ func Verify(receipt RunReceipt) Verification {
 		verification.Reason = "provisional approval lacks the real-object review trigger"
 		return verification
 	}
-	if receipt.Passed && (!mmi.Passed || !sei.Passed || !scn.Passed) {
+	if receipt.Passed && (!mmi.Passed || !sei.Passed || !scn.Passed || !artifact.Passed) {
 		verification.Reason = "overall pass does not match the components"
 		return verification
 	}
@@ -249,7 +279,8 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	mmiTool := filepath.Join(tools, "reference-mmi-readonly")
 	seiTool := filepath.Join(tools, "reference-sei-decision")
 	scnTool := filepath.Join(tools, "reference-scn001")
-	for _, dir := range []string{mmiTool, seiTool, scnTool} {
+	renderTool := filepath.Join(tools, "reference-scn001-render")
+	for _, dir := range []string{mmiTool, seiTool, scnTool, renderTool} {
 		if info, err := os.Stat(dir); err != nil || !info.IsDir() {
 			return receipt, fmt.Errorf("tool directory is unavailable: %s", dir)
 		}
@@ -262,6 +293,7 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	mmiPath := filepath.Join(work, "mmi.json")
 	seiPath := filepath.Join(work, "sei.json")
 	scnPath := filepath.Join(work, "scn001.json")
+	artifactPath := filepath.Join(work, "d04.md")
 
 	if err := goRun(ctx, mmiTool, "run", ".", "-workspace", "testdata/workspace", "-out", mmiPath); err != nil {
 		return receipt, err
@@ -271,6 +303,13 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	}
 	if err := goRun(ctx, scnTool, "run", ".", "-fixture", "testdata/scn001.json", "-mmi-receipt", mmiPath, "-out", scnPath); err != nil {
 		return receipt, err
+	}
+	renderOutput, err := goRunOutput(ctx, renderTool, "run", ".", "-fixture", "../reference-scn001/testdata/scn001.json", "-out", artifactPath)
+	if err != nil {
+		return receipt, err
+	}
+	if err := json.Unmarshal(renderOutput, &receipt.Components.ReviewArtifact); err != nil {
+		return receipt, fmt.Errorf("review artifact receipt is invalid: %w", err)
 	}
 	if err := readJSON(mmiPath, &receipt.Components.MMI); err != nil {
 		return receipt, err
@@ -284,7 +323,8 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	receipt.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
 	receipt.RealProductsConnected = receipt.Components.MMI.Passed && receipt.Components.MMI.SourceDigestBefore != "" &&
 		receipt.Components.SEI.Passed && receipt.Components.SCN001.RealProductsConnected
-	receipt.Passed = receipt.Components.MMI.Passed && receipt.Components.SEI.Passed && receipt.Components.SCN001.Passed
+	receipt.Passed = receipt.Components.MMI.Passed && receipt.Components.SEI.Passed &&
+		receipt.Components.SCN001.Passed && receipt.Components.ReviewArtifact.Passed
 	receipt.HumanReviewed = false
 	receipt.AuthorityVerified = false
 	receipt.Published = false
@@ -297,6 +337,7 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 		"Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
 		"SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
 		"仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
+		"D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
 		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
 	}
 	digest, err := digestJSON(receipt.Components)

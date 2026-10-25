@@ -58,6 +58,11 @@ func TestCombinedRun(t *testing.T) {
 		receipt.Components.SCN001.ObservationSource != "mmi-reference" {
 		t.Fatalf("component linkage is incomplete: %+v", receipt)
 	}
+	if !receipt.Components.ReviewArtifact.Passed || receipt.Components.ReviewArtifact.Status != "provisional" ||
+		receipt.Components.ReviewArtifact.DraftID != "D-04" || receipt.Components.ReviewArtifact.ArtifactDigest == "" ||
+		receipt.Components.ReviewArtifact.PublicationApproved || !receipt.Components.ReviewArtifact.ReviewRequired {
+		t.Fatalf("review artifact linkage is incomplete: %+v", receipt.Components.ReviewArtifact)
+	}
 	if receipt.RunDigest == "" {
 		t.Fatalf("run digest is missing: %+v", receipt)
 	}

@@ -29,11 +29,12 @@ go run . -root ../..
 - SEI: 3 records、`dec-01`、`dec-02`（development-review-onlyの仮承認）、未解決`authority:unknown`/`publication:unapproved`、`authorityVerified=false`。
 - SCN-001: `observationSource=mmi-reference`、P-01〜P-05/P-07/N-01〜N-04/N-06/N-07の合成検査。
 - 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`reviewTrigger=real-object`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
-- `runDigest`は3 componentのJSONに対するSHA-256。
+- `reviewArtifact`: D-04の内部レビュー用Markdownの`status=provisional`、`artifactDigest`、`publicationApproved=false`。
+- `runDigest`は4 componentのJSONに対するSHA-256。
 
 ## 境界
 
-- 3ツールの`passed`は、それぞれのローカル参照実行の範囲だけを示す。
+- 4ツールの`passed`は、それぞれのローカル参照実行の範囲だけを示す。
 - P-06（主体規模比較）とN-05（EKI委任）は`not-run`。
 - SEIの一時storeは合成fixtureで、実在の規程・権限・利用者ではない。
 - MMIはローカル開発チェックアウトで、配布版・実運用の認可は未確認。
