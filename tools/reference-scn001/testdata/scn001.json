@@ -135,14 +135,16 @@
       "draft": "D-04",
       "scope": "development-review-only",
       "publicationApproved": false,
-      "reviewRequired": true
+      "reviewRequired": true,
+      "reviewTrigger": "real-object"
     }
   ],
   "provisionalApproval": {
     "basis": "owner-instruction-2026-10-26",
     "scope": "development-review-only",
     "publicationApproved": false,
-    "reviewRequired": true
+    "reviewRequired": true,
+    "reviewTrigger": "real-object"
   },
   "revisions": [
     {

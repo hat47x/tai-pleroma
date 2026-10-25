@@ -49,6 +49,7 @@ type Decision struct {
 	Scope               string `json:"scope,omitempty"`
 	PublicationApproved bool   `json:"publicationApproved"`
 	ReviewRequired      bool   `json:"reviewRequired"`
+	ReviewTrigger       string `json:"reviewTrigger,omitempty"`
 }
 
 type ProvisionalApproval struct {
@@ -56,6 +57,7 @@ type ProvisionalApproval struct {
 	Scope               string `json:"scope"`
 	PublicationApproved bool   `json:"publicationApproved"`
 	ReviewRequired      bool   `json:"reviewRequired"`
+	ReviewTrigger       string `json:"reviewTrigger"`
 }
 
 type Revision struct {
@@ -114,6 +116,7 @@ type Receipt struct {
 	ProvisionalApproved   bool              `json:"provisionalApproved"`
 	PublicationApproved   bool              `json:"publicationApproved"`
 	ReviewRequired        bool              `json:"reviewRequired"`
+	ReviewTrigger         string            `json:"reviewTrigger,omitempty"`
 	Notes                 []string          `json:"notes"`
 }
 
@@ -266,12 +269,15 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	dec02, hasDec02 := decisionByID(f.Decisions, "DEC-02")
 	d04, hasD04 := draftByID(f.Drafts, "D-04")
 	p07 := prov != nil && prov.Basis != "" && prov.Scope == "development-review-only" &&
-		!prov.PublicationApproved && prov.ReviewRequired &&
+		!prov.PublicationApproved && prov.ReviewRequired && prov.ReviewTrigger == "real-object" &&
 		hasDec02 && dec02.Status == "provisional" && dec02.Draft == "D-04" &&
 		dec02.Scope == "development-review-only" && !dec02.PublicationApproved && dec02.ReviewRequired &&
-		hasD04 && !d04.Published
+		dec02.ReviewTrigger == "real-object" && hasD04 && !d04.Published
 	receipt.ProvisionalApproved = p07
 	receipt.ReviewRequired = p07
+	if p07 {
+		receipt.ReviewTrigger = prov.ReviewTrigger
+	}
 	receipt.Cases = append(receipt.Cases, statusCase("P-07", p07,
 		"仮承認はdevelopment-review-onlyに限定し、D-04を未公開のまま残す"))
 

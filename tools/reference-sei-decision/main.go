@@ -48,6 +48,7 @@ type Receipt struct {
 	Unresolved             []UnresolvedView `json:"unresolved"`
 	NotVerifiedRecordCount int              `json:"notVerifiedRecordCount"`
 	ProvisionalApproved    bool             `json:"provisionalApproved"`
+	ReviewTrigger          string           `json:"reviewTrigger,omitempty"`
 	AuthorityVerified      bool             `json:"authorityVerified"`
 	HumanReviewed          bool             `json:"humanReviewed"`
 	Published              bool             `json:"published"`
@@ -115,6 +116,7 @@ func Run(ctx context.Context, seiRoot string) Receipt {
 		{"run", "./cmd/sei", "add", "decision", "--data-root", store,
 			"--id", "dec-02", "--statement", "D-04を内部レビュー用に仮承認。公開は未承認", "--source", "tai",
 			"--unresolved", "authority:unknown", "--unresolved", "publication:unapproved",
+			"--unresolved", "review:real-object",
 			"--recommendation", "rec-01", "--responsible", "role:provisional-owner"},
 	}
 	for _, step := range steps {
@@ -148,7 +150,8 @@ func Run(ctx context.Context, seiRoot string) Receipt {
 	}
 	if view.BundleID != "scn001" || view.RecordCount != 3 || len(view.Decisions) != 2 ||
 		!hasDec01 || !hasDec02 || !unresolved["authority:unknown"] ||
-		!unresolved["publication:unapproved"] || view.NotVerifiedRecordCount != 0 {
+		!unresolved["publication:unapproved"] || !unresolved["review:real-object"] ||
+		view.NotVerifiedRecordCount != 0 {
 		receipt.Reason = "resume projection does not match the SCN-001 decision fixture"
 		return receipt
 	}
@@ -162,6 +165,7 @@ func Run(ctx context.Context, seiRoot string) Receipt {
 		return receipt
 	}
 	receipt.ProvisionalApproved = true
+	receipt.ReviewTrigger = "real-object"
 	receipt.Passed = true
 	return receipt
 }
