@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-25T16:07:09Z",
-  "runDigest": "sha256:d1cf0fa6a7e784fbdbd5a8764c64abc99300ce3b75d2a84fd18982a4fc6050b4",
+  "generatedAt": "2026-10-25T16:55:53Z",
+  "runDigest": "sha256:8a07c94ca2d6ea792337e6c5b06ea781729dae11241ab1606a072c1299813a05",
   "components": {
     "mmi": {
       "passed": true,
@@ -13,8 +13,8 @@
       "conflictPreserved": true,
       "boundaryRejected": true,
       "missingSourceRejected": true,
-      "sourceDigestBefore": "sha256:b48efb809746472488d1cf0bb92e95ccd42245894df6b9c6a631e83064ddc661",
-      "sourceDigestAfter": "sha256:b48efb809746472488d1cf0bb92e95ccd42245894df6b9c6a631e83064ddc661"
+      "sourceDigestBefore": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce",
+      "sourceDigestAfter": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce"
     },
     "sei": {
       "passed": true,
@@ -112,6 +112,17 @@
           "status": "pass"
         }
       ]
+    },
+    "reviewArtifact": {
+      "passed": true,
+      "status": "provisional",
+      "draftId": "D-04",
+      "artifactDigest": "sha256:0600ddbe0cbdb57f5c3b7ad6ee874d9c57efd2b3c53a5584edd1498fd6d4b07f",
+      "provisionalApproved": true,
+      "publicationApproved": false,
+      "reviewRequired": true,
+      "reviewTrigger": "real-object",
+      "authorityVerified": false
     }
   },
   "passed": true,
@@ -129,6 +140,7 @@
     "Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
     "SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
     "仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
+    "D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
     "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。"
   ]
 }
