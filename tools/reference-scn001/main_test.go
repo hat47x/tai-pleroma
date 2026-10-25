@@ -90,3 +90,30 @@ func TestUnavailableSourceIsNotAbsence(t *testing.T) {
 		t.Fatalf("absence claim was accepted: %+v", receipt)
 	}
 }
+
+func TestFutureEvidenceInEarlierDraftFails(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Drafts[0].References = append(fixture.Drafts[0].References, "O-07")
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-06") != "fail" {
+		t.Fatalf("future observation accepted in T0 draft: %+v", receipt)
+	}
+}
+
+func TestDuplicateObservationIdentityFails(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Observations = append(fixture.Observations, fixture.Observations[1])
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-06") != "fail" {
+		t.Fatalf("duplicate observation ID was accepted: %+v", receipt)
+	}
+}
+
+func TestRevisionMustAdvanceBeyondPreviousObservationSet(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Revisions[1].Observations = append([]string{}, fixture.Revisions[0].Observations...)
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "P-05") != "fail" {
+		t.Fatalf("unchanged observation set was accepted as a new revision: %+v", receipt)
+	}
+}
