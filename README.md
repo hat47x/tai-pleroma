@@ -16,7 +16,7 @@
 - [SCN-001合成walkthrough](tools/reference-scn001/README.md) — T0/T1/T2の参照関係を検査する参照実装（実製品未接続）
 - [MMI読み取り専用MCP接続](tools/reference-mmi-readonly/README.md) — MMIの`inspect`/`select`を呼ぶ参照接続（書込み・権限は未検証）
 - [SEI decision-memory参照接続](tools/reference-sei-decision/README.md) — SCN-001の未決決定をSEIの一時storeへ記録し、`resume`を読む参照（合成fixture）
-- [SCN-001統合参照実行](tools/reference-scn001-run/README.md) — MMI・SEI・SCN-001評価を1つのreceiptへ束ねる（人間の判断なし）
+- [SCN-001統合参照実行](tools/reference-scn001-run/README.md) — MMI・SEI・SCN-001評価を1つのreceiptへ束ね、Owner判断packetを生成する（承認ではない）
 
 ## 作業領域
 

@@ -74,4 +74,16 @@ func TestCombinedRun(t *testing.T) {
 	if verification := Verify(incompleteSCN); verification.Passed {
 		t.Fatalf("incomplete SCN-001 component verified: %+v", verification)
 	}
+
+	packet, err := BuildOwnerPacket(receipt)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if packet.Status != "awaiting-owner" || packet.Approved || packet.HumanReviewed ||
+		packet.AuthorityVerified || packet.PublicationApproved || len(packet.Questions) != 4 {
+		t.Fatalf("owner packet overclaims or is incomplete: %+v", packet)
+	}
+	if _, err := BuildOwnerPacket(incompleteSCN); err == nil {
+		t.Fatal("owner packet was built from an unverifiable run")
+	}
 }

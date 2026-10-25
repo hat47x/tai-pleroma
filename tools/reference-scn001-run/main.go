@@ -107,6 +107,54 @@ func digestJSON(value any) (string, error) {
 	return "sha256:" + hex.EncodeToString(sum[:]), nil
 }
 
+type OwnerQuestion struct {
+	ID         string `json:"id"`
+	Question   string `json:"question"`
+	WhyBlocked string `json:"whyBlocked"`
+}
+
+type OwnerPacket struct {
+	Schema              string          `json:"schema"`
+	Scenario            string          `json:"scenario"`
+	Status              string          `json:"status"`
+	RunDigest           string          `json:"runDigest"`
+	Evidence            []string        `json:"evidence"`
+	Questions           []OwnerQuestion `json:"questions"`
+	Approved            bool            `json:"approved"`
+	HumanReviewed       bool            `json:"humanReviewed"`
+	AuthorityVerified   bool            `json:"authorityVerified"`
+	PublicationApproved bool            `json:"publicationApproved"`
+	Notes               []string        `json:"notes"`
+}
+
+func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
+	if verification := Verify(receipt); !verification.Passed {
+		return OwnerPacket{}, fmt.Errorf("run receipt is not verifiable: %s", verification.Reason)
+	}
+	return OwnerPacket{
+		Schema: "tai.reference.scn001-owner-packet/v0", Scenario: receipt.Scenario,
+		Status: "awaiting-owner", RunDigest: receipt.RunDigest,
+		Evidence: []string{
+			"tools/reference-scn001-run/README.md",
+			"tools/reference-scn001/README.md",
+			"tools/reference-mmi-readonly/README.md",
+			"tools/reference-sei-decision/README.md",
+		},
+		Questions: []OwnerQuestion{
+			{ID: "Q-01", Question: "SCN-001の案内文を公開する権限者は誰か。", WhyBlocked: "authority:unknownのままでは公開・外部作用へ進めない。"},
+			{ID: "Q-02", Question: "個人・組織・社会の主体規模比較（P-06）を初回に含めるか。", WhyBlocked: "P-06はnot-runで、人間の比較判断が必要。"},
+			{ID: "Q-03", Question: "EKIの限定委任（N-05）を初回の範囲に含めるか。", WhyBlocked: "委任の利益と独立確認が未検証。"},
+			{ID: "Q-04", Question: "この合成fixtureと参照接続の範囲を、SCN-001の初回実証として受理するか。", WhyBlocked: "合成試験の成功は利用者価値・実運用の証明ではない。"},
+		},
+		Approved: false, HumanReviewed: false, AuthorityVerified: false, PublicationApproved: false,
+		Notes: []string{
+			"このpacketはOwner判断を求めるための入力であり、承認ではない。",
+			"runDigestは参照実行の内部整合だけを示し、署名・実行者・Authorityを証明しない。",
+			"P-06とN-05はnot-runであり、知的機能の受入合格ではない。",
+		},
+	}, nil
+}
+
 type Verification struct {
 	Schema    string `json:"schema"`
 	Passed    bool   `json:"passed"`
@@ -227,8 +275,40 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 func main() {
 	root := flag.String("root", "", "TAI checkout root (default: ../..)")
 	verifyPath := flag.String("verify", "", "verify an existing run receipt instead of running")
-	outPath := flag.String("out", "", "write run receipt JSON to this file")
+	ownerPacketPath := flag.String("owner-packet", "", "build an owner decision packet from an existing run receipt")
+	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
+	if *ownerPacketPath != "" {
+		raw, err := os.ReadFile(*ownerPacketPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		var receipt RunReceipt
+		if err := json.Unmarshal(raw, &receipt); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		packet, err := BuildOwnerPacket(receipt)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		encoded, err := json.MarshalIndent(packet, "", "  ")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		encoded = append(encoded, '\n')
+		if *outPath != "" {
+			if err := os.WriteFile(*outPath, encoded, 0o644); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(2)
+			}
+		}
+		os.Stdout.Write(encoded)
+		return
+	}
 	if *verifyPath != "" {
 		raw, err := os.ReadFile(*verifyPath)
 		if err != nil {
