@@ -107,6 +107,36 @@ func digestJSON(value any) (string, error) {
 	return "sha256:" + hex.EncodeToString(sum[:]), nil
 }
 
+type Verification struct {
+	Schema    string `json:"schema"`
+	Passed    bool   `json:"passed"`
+	Reason    string `json:"reason,omitempty"`
+	RunDigest string `json:"runDigest,omitempty"`
+}
+
+func Verify(receipt RunReceipt) Verification {
+	verification := Verification{Schema: "tai.reference.scn001-run-verification/v0", RunDigest: receipt.RunDigest}
+	if receipt.Schema != "tai.reference.scn001-run/v0" {
+		verification.Reason = "unexpected run schema"
+		return verification
+	}
+	if receipt.HumanReviewed || receipt.AuthorityVerified || receipt.Published {
+		verification.Reason = "run receipt claims human review, authority, or publication"
+		return verification
+	}
+	digest, err := digestJSON(receipt.Components)
+	if err != nil {
+		verification.Reason = err.Error()
+		return verification
+	}
+	if receipt.RunDigest == "" || receipt.RunDigest != digest {
+		verification.Reason = "run digest does not match the components"
+		return verification
+	}
+	verification.Passed = true
+	return verification
+}
+
 func Run(ctx context.Context, root string) (RunReceipt, error) {
 	receipt := RunReceipt{Schema: "tai.reference.scn001-run/v0", Scenario: "SCN-001", Synthetic: true}
 	tools := filepath.Join(root, "tools")
@@ -168,8 +198,32 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 
 func main() {
 	root := flag.String("root", "", "TAI checkout root (default: ../..)")
+	verifyPath := flag.String("verify", "", "verify an existing run receipt instead of running")
 	outPath := flag.String("out", "", "write run receipt JSON to this file")
 	flag.Parse()
+	if *verifyPath != "" {
+		raw, err := os.ReadFile(*verifyPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		var receipt RunReceipt
+		if err := json.Unmarshal(raw, &receipt); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		verification := Verify(receipt)
+		encoded, err := json.MarshalIndent(verification, "", "  ")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		os.Stdout.Write(append(encoded, '\n'))
+		if !verification.Passed {
+			os.Exit(1)
+		}
+		return
+	}
 	if *root == "" {
 		*root = filepath.Clean(filepath.Join("..", ".."))
 	}

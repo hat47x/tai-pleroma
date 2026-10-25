@@ -47,4 +47,19 @@ func TestCombinedRun(t *testing.T) {
 	if receipt.RunDigest == "" {
 		t.Fatalf("run digest is missing: %+v", receipt)
 	}
+	if verification := Verify(receipt); !verification.Passed {
+		t.Fatalf("generated run did not verify: %+v", verification)
+	}
+
+	tampered := receipt
+	tampered.Components.MMI.SelectedRows = 99
+	if verification := Verify(tampered); verification.Passed {
+		t.Fatalf("tampered run verified: %+v", verification)
+	}
+
+	overclaim := receipt
+	overclaim.HumanReviewed = true
+	if verification := Verify(overclaim); verification.Passed {
+		t.Fatalf("overclaimed run verified: %+v", verification)
+	}
 }
