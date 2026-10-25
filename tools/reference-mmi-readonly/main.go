@@ -23,6 +23,9 @@ type Receipt struct {
 	Schema                string            `json:"schema"`
 	Server                string            `json:"server"`
 	ProtocolVersion       string            `json:"protocolVersion"`
+	MmiCommit             string            `json:"mmiCommit,omitempty"`
+	PackageLockDigest     string            `json:"packageLockDigest,omitempty"`
+	NodeVersion           string            `json:"nodeVersion,omitempty"`
 	Tool                  string            `json:"tool"`
 	CandidateCount        int               `json:"candidateCount"`
 	SelectedRows          int               `json:"selectedRows"`
@@ -234,6 +237,16 @@ func selectObservations(client *mcpClient) (selectionResult, error) {
 	return selection, nil
 }
 
+func commandOutput(ctx context.Context, dir, name string, args ...string) string {
+	cmd := exec.CommandContext(ctx, name, args...)
+	cmd.Dir = dir
+	output, err := cmd.Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(output))
+}
+
 func digestFile(path string) (string, error) {
 	content, err := os.ReadFile(path)
 	if err != nil {
@@ -266,6 +279,11 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 	}
 	receipt.SourceDigestBefore = beforeCSV
 	receipt.GuideDigestBefore = beforeGuide
+	receipt.NodeVersion = commandOutput(ctx, "", "node", "--version")
+	receipt.MmiCommit = commandOutput(ctx, mmiRoot, "git", "rev-parse", "HEAD")
+	if lockDigest, err := digestFile(filepath.Join(mmiRoot, "03_Implement", "package-lock.json")); err == nil {
+		receipt.PackageLockDigest = lockDigest
+	}
 
 	runCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()

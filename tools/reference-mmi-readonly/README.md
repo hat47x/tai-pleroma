@@ -9,6 +9,7 @@ TAIのSCN-001から、SHO前身MMI（Markdown Matrix Injector）の読み取り�
 - `select`でO-02/O-03/O-07の行を取得し、O-02とO-03の文言が異なるまま保持される。
 - ワークスペース外の`../outside.csv`と存在しない`missing.csv`を拒否する。
 - 呼出し前後で原本とguideのSHA-256が変わらない。
+- receiptにMMIのcommit、`package-lock.json`のdigest、Nodeのversionを記録する。
 
 意味の受理、公開権限、実運用の認可、MMIの書込み操作は扱いません。
 
