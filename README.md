@@ -12,6 +12,8 @@
 - [知的機能スライスの責務境界](docs/architecture-slice-001.md) — 統一する機能と既存基盤の分担（Draft）
 - [受入観点と負例](evaluations/SCN-001-acceptance.md) — 実証すべき成功・失敗条件（未実施）
 - [初期PoCロードマップ](docs/roadmap.md) — 手動一巡から実接続へ進む案
+- [TAI中心のクリティカルパス](docs/critical-path-2026-10.md) — TEI/SEI/SUI/SHO/EKIをどの順で接続するか（Draft）
+- [SCN-001合成walkthrough](tools/reference-scn001/README.md) — T0/T1/T2の参照関係を検査する参照実装（実製品未接続）
 
 ## 作業領域
 
