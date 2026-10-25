@@ -21,7 +21,7 @@ go run . -root ../..
 
 保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-26.json](../../evaluations/records/SCN-001-run-2026-10-26.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
 
-`-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
+`-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。packetはD-04成果物のdigest/statusと、artifact・record・再レビュー計画への参照を含みます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
 
 ## 確認すること
 

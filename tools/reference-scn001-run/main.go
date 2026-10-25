@@ -148,19 +148,21 @@ type OwnerQuestion struct {
 }
 
 type OwnerPacket struct {
-	Schema              string          `json:"schema"`
-	Scenario            string          `json:"scenario"`
-	Status              string          `json:"status"`
-	RunDigest           string          `json:"runDigest"`
-	Evidence            []string        `json:"evidence"`
-	Questions           []OwnerQuestion `json:"questions"`
-	ProvisionalApproved bool            `json:"provisionalApproved"`
-	ReviewTrigger       string          `json:"reviewTrigger,omitempty"`
-	Approved            bool            `json:"approved"`
-	HumanReviewed       bool            `json:"humanReviewed"`
-	AuthorityVerified   bool            `json:"authorityVerified"`
-	PublicationApproved bool            `json:"publicationApproved"`
-	Notes               []string        `json:"notes"`
+	Schema               string          `json:"schema"`
+	Scenario             string          `json:"scenario"`
+	Status               string          `json:"status"`
+	RunDigest            string          `json:"runDigest"`
+	ReviewArtifactDigest string          `json:"reviewArtifactDigest,omitempty"`
+	ReviewArtifactStatus string          `json:"reviewArtifactStatus,omitempty"`
+	Evidence             []string        `json:"evidence"`
+	Questions            []OwnerQuestion `json:"questions"`
+	ProvisionalApproved  bool            `json:"provisionalApproved"`
+	ReviewTrigger        string          `json:"reviewTrigger,omitempty"`
+	Approved             bool            `json:"approved"`
+	HumanReviewed        bool            `json:"humanReviewed"`
+	AuthorityVerified    bool            `json:"authorityVerified"`
+	PublicationApproved  bool            `json:"publicationApproved"`
+	Notes                []string        `json:"notes"`
 }
 
 func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
@@ -170,11 +172,17 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 	return OwnerPacket{
 		Schema: "tai.reference.scn001-owner-packet/v0", Scenario: receipt.Scenario,
 		Status: "awaiting-owner", RunDigest: receipt.RunDigest,
+		ReviewArtifactDigest: receipt.Components.ReviewArtifact.ArtifactDigest,
+		ReviewArtifactStatus: receipt.Components.ReviewArtifact.Status,
 		Evidence: []string{
 			"tools/reference-scn001-run/README.md",
 			"tools/reference-scn001/README.md",
+			"tools/reference-scn001-render/README.md",
 			"tools/reference-mmi-readonly/README.md",
 			"tools/reference-sei-decision/README.md",
+			"evaluations/artifacts/SCN-001-D-04-provisional.md",
+			"evaluations/records/SCN-001-run-2026-10-26.json",
+			"evaluations/SCN-001-real-object-review.md",
 		},
 		Questions: []OwnerQuestion{
 			{ID: "Q-01", Question: "SCN-001の案内文を公開する権限者は誰か。", WhyBlocked: "authority:unknownのままでは公開・外部作用へ進めない。"},
