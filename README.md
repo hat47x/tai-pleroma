@@ -14,6 +14,7 @@
 - [初期PoCロードマップ](docs/roadmap.md) — 手動一巡から実接続へ進む案
 - [TAI中心のクリティカルパス](docs/critical-path-2026-10.md) — TEI/SEI/SUI/SHO/EKIをどの順で接続するか（Draft）
 - [SCN-001合成walkthrough](tools/reference-scn001/README.md) — T0/T1/T2の参照関係を検査する参照実装（実製品未接続）
+- [MMI読み取り専用MCP接続](tools/reference-mmi-readonly/README.md) — MMIの`inspect`を呼ぶ最初の参照接続（書込み・権限は未検証）
 
 ## 作業領域
 
