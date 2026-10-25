@@ -13,6 +13,7 @@
 - [受入観点と負例](evaluations/SCN-001-acceptance.md) — 実証すべき成功・失敗条件（未実施）
 - [初期PoCロードマップ](docs/roadmap.md) — 手動一巡から実接続へ進む案
 - [TAI中心のクリティカルパス](docs/critical-path-2026-10.md) — TEI/SEI/SUI/SHO/EKIをどの順で接続するか（Draft）
+- [現在状態](docs/status.md) — 実装済み・検証済み・仮承認・未確認の整理
 - [SCN-001合成walkthrough](tools/reference-scn001/README.md) — T0/T1/T2の参照関係を検査する参照実装（実製品未接続）
 - [MMI読み取り専用MCP接続](tools/reference-mmi-readonly/README.md) — MMIの`inspect`/`select`を呼ぶ参照接続（書込み・権限は未検証）
 - [SEI decision-memory参照接続](tools/reference-sei-decision/README.md) — SCN-001の未決決定をSEIの一時storeへ記録し、`resume`を読む参照（合成fixture）
