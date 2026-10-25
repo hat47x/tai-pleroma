@@ -112,3 +112,48 @@ func TestUnavailableSourceIsNotAbsence(t *testing.T) {
 		t.Fatalf("absence claim was accepted: %+v", receipt)
 	}
 }
+
+func TestFutureObservationCannotSupportEarlierDraft(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Drafts[0].References = append(fixture.Drafts[0].References, "O-07")
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-06") != "fail" {
+		t.Fatalf("T0 draft accepted an observation first present in T2: %+v", receipt)
+	}
+}
+
+func TestDuplicateObservationIDIsRejected(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Observations = append(fixture.Observations, fixture.Observations[1])
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-06") != "fail" {
+		t.Fatalf("duplicate observation ID was accepted: %+v", receipt)
+	}
+}
+
+func TestDuplicateDraftIDIsRejected(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Drafts = append(fixture.Drafts, fixture.Drafts[1])
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-06") != "fail" {
+		t.Fatalf("duplicate draft ID was accepted: %+v", receipt)
+	}
+}
+
+func TestDuplicateObservationWithinRevisionIsRejected(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Revisions[3].Observations = append(fixture.Revisions[3].Observations, "O-02")
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-06") != "fail" {
+		t.Fatalf("repeated observation within revision was accepted: %+v", receipt)
+	}
+}
+
+func TestDraftOnlyRevisionMayKeepTheSameObservationSet(t *testing.T) {
+	fixture := loadFixture(t)
+	// The existing T3/D-04 in the reference fixture uses the same observations as T2.
+	receipt := Evaluate(fixture)
+	if !receipt.Passed || caseStatus(receipt, "P-05") != "pass" || caseStatus(receipt, "N-06") != "pass" {
+		t.Fatalf("draft-only revision should retain previously available evidence: %+v", receipt)
+	}
+}

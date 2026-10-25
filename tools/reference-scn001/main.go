@@ -317,13 +317,21 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, CaseResult{ID: "N-05", Status: "not-run",
 		Reason: "EKIの限定委任と独立した成果確認は未接続"})
 
-	// N-06: drafts and revisions reference only known observations.
+	// N-06: resolve identities at the revision where each draft was produced.
 	n06 := true
 	known := map[string]bool{}
 	for _, observation := range f.Observations {
+		if observation.ID == "" || known[observation.ID] {
+			n06 = false
+		}
 		known[observation.ID] = true
 	}
+	draftIDs := map[string]bool{}
 	for _, draft := range f.Drafts {
+		if draft.ID == "" || draftIDs[draft.ID] {
+			n06 = false
+		}
+		draftIDs[draft.ID] = true
 		for _, reference := range draft.References {
 			if !known[reference] {
 				n06 = false
@@ -331,14 +339,26 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 		}
 	}
 	for _, revision := range f.Revisions {
+		available := map[string]bool{}
 		for _, reference := range revision.Observations {
-			if !known[reference] {
+			if !known[reference] || available[reference] {
+				n06 = false
+			}
+			available[reference] = true
+		}
+		draft, ok := draftByID(f.Drafts, revision.Draft)
+		if !ok {
+			n06 = false
+			continue
+		}
+		for _, reference := range draft.References {
+			if !available[reference] {
 				n06 = false
 			}
 		}
 	}
 	receipt.Cases = append(receipt.Cases, statusCase("N-06", n06,
-		"DraftとRevisionは実在するobservation IDだけを参照する"))
+		"観測とDraftのIDは一意であり、各DraftはそのRevision時点の観測だけを参照する"))
 
 	// N-07: a provisional approval is not publication or verified authority.
 	n07 := p07 && !anyPublished(f.Drafts) && f.Authority.Status == "unconfirmed" &&
