@@ -212,12 +212,23 @@ func TestMMIResolvedObservationIsAlsoRenderedInD04(t *testing.T) {
 
 	render := exec.Command("go", "run", ".", "-fixture", resolvedPath, "-out", d04Path)
 	render.Dir = filepath.Join("..", "reference-scn001-render")
-	if output, err := render.CombinedOutput(); err != nil {
-		t.Fatalf("D-04 renderer rejected the resolved fixture: %v: %s", err, output)
+	renderOutput, err := render.CombinedOutput()
+	if err != nil {
+		t.Fatalf("D-04 renderer rejected the resolved fixture: %v: %s", err, renderOutput)
 	}
 	markdown, err := os.ReadFile(d04Path)
 	if err != nil {
 		t.Fatal(err)
+	}
+	var artifactReceipt struct {
+		ArtifactDigest string `json:"artifactDigest"`
+	}
+	if err := json.Unmarshal(renderOutput, &artifactReceipt); err != nil {
+		t.Fatalf("renderer did not return JSON receipt: %v: %s", err, renderOutput)
+	}
+	artifactHash := fmt.Sprintf("sha256:%x", sha256.Sum256(markdown))
+	if artifactReceipt.ArtifactDigest != artifactHash {
+		t.Fatalf("rendered artifact byte mismatch: declared=%s actual=%s", artifactReceipt.ArtifactDigest, artifactHash)
 	}
 	digest := fmt.Sprintf("sha256:%x", sha256.Sum256([]byte(modified)))
 	if !strings.Contains(string(markdown), "| O-02 | "+modified+" | mmi-test | test-v0 |") ||
