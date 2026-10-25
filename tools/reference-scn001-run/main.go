@@ -223,6 +223,33 @@ func Verify(receipt RunReceipt) Verification {
 	sei := receipt.Components.SEI
 	scn := receipt.Components.SCN001
 	artifact := receipt.Components.ReviewArtifact
+	// A successful synthetic evaluation must agree with its individual case results.
+	// A component digest alone cannot establish that agreement.
+	if scn.Passed {
+		required := map[string]string{
+			"P-01": "pass", "P-02": "pass", "P-03": "pass", "P-04": "pass",
+			"P-05": "pass", "P-06": "not-run", "P-07": "pass",
+			"N-01": "pass", "N-02": "pass", "N-03": "pass", "N-04": "pass",
+			"N-05": "not-run", "N-06": "pass", "N-07": "pass",
+		}
+		if len(scn.Cases) != len(required) {
+			verification.Reason = "SCN-001 case count does not match the successful reference evaluation"
+			return verification
+		}
+		seen := map[string]bool{}
+		for _, item := range scn.Cases {
+			status, ok := required[item.ID]
+			if !ok || seen[item.ID] || item.Status != status {
+				verification.Reason = "SCN-001 case status is inconsistent with the successful reference evaluation"
+				return verification
+			}
+			seen[item.ID] = true
+		}
+	}
+	if receipt.Passed != (mmi.Passed && sei.Passed && scn.Passed && artifact.Passed) {
+		verification.Reason = "overall pass does not match component outcomes"
+		return verification
+	}
 	if artifact.Passed && (artifact.Status != "provisional" || artifact.DraftID != "D-04" ||
 		artifact.ArtifactDigest == "" || !artifact.ProvisionalApproved || artifact.PublicationApproved ||
 		!artifact.ReviewRequired || artifact.ReviewTrigger != "real-object" || artifact.AuthorityVerified) {
