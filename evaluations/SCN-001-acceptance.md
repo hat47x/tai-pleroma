@@ -2,6 +2,8 @@
 
 状態: **Draft（評価計画）**。2026-10-25時点で実行試験、外部ツール接続試験、利用者試験は**未実施**。これは合格報告ではない。
 
+合成walkthroughの[参照実装](../tools/reference-scn001/README.md)は、P-01〜P-05とN-01〜N-04/N-06の機械検査可能な部分だけをfixtureで確認する。P-06とN-05は`not-run`であり、下表の受入ケースを実行済みにはしない。
+
 対象: [共同利用スペースの案内改善](../scenarios/SCN-001-shared-space-guidance.md)。
 
 ## 判断する価値

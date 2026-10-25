@@ -1,0 +1,142 @@
+{
+  "schema": "tai.reference.scn001/v0",
+  "scenario": "SCN-001",
+  "authority": {
+    "status": "unconfirmed",
+    "owner": ""
+  },
+  "observations": [
+    {
+      "id": "O-01",
+      "text": "会議室の予約が必要か分からない",
+      "source": "user-memo",
+      "sourceVersion": "2026-10-25",
+      "observedAt": "2026-10-25",
+      "availability": "available"
+    },
+    {
+      "id": "O-02",
+      "text": "施設の利用は予約不要",
+      "source": "notice",
+      "sourceVersion": "v0",
+      "observedAt": "2026-10-25",
+      "availability": "available"
+    },
+    {
+      "id": "O-03",
+      "text": "会議室の利用には事前予約が必要",
+      "source": "old-guidance",
+      "sourceVersion": "v0",
+      "observedAt": "2026-10-25",
+      "availability": "available"
+    },
+    {
+      "id": "O-04",
+      "text": "会議室だけ予約が必要と案内された",
+      "source": "counter-memo",
+      "sourceVersion": "v0",
+      "observedAt": "2026-10-25",
+      "availability": "available"
+    },
+    {
+      "id": "O-05",
+      "text": "提供資料の範囲では予約の承認者を確認できない",
+      "source": "provided-docs",
+      "sourceVersion": "v0",
+      "observedAt": "2026-10-25",
+      "availability": "available",
+      "scope": "provided-docs"
+    },
+    {
+      "id": "O-06",
+      "text": "最新と称する配布文書では会議室は事前予約制",
+      "source": "distribution",
+      "sourceVersion": "v1",
+      "observedAt": "2026-10-25",
+      "availability": "available"
+    },
+    {
+      "id": "O-07",
+      "text": "施設の利用は予約不要",
+      "source": "distribution",
+      "sourceVersion": "v2",
+      "observedAt": "2026-10-25",
+      "availability": "available"
+    },
+    {
+      "id": "O-08",
+      "text": "予約規程の原本を取得できなかった",
+      "source": "requested-original",
+      "sourceVersion": "unavailable",
+      "observedAt": "2026-10-25",
+      "availability": "unavailable"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H-01",
+      "text": "掲示が古い",
+      "adopted": false,
+      "dependsOn": ["O-02", "O-04"]
+    },
+    {
+      "id": "H-02",
+      "text": "旧案内文が古い",
+      "adopted": false,
+      "dependsOn": ["O-03", "O-06"]
+    },
+    {
+      "id": "H-03",
+      "text": "区画によって条件が異なる",
+      "adopted": false,
+      "dependsOn": ["O-02", "O-03", "O-04"]
+    }
+  ],
+  "drafts": [
+    {
+      "id": "D-01",
+      "text": "会議室の予約要否について案内資料に相違があります。現在確認中です。",
+      "status": "draft",
+      "published": false,
+      "references": ["O-02", "O-03"]
+    },
+    {
+      "id": "D-02",
+      "text": "会議室は事前予約制と記載した新しい資料がありますが、掲示との相違を確認中です。",
+      "status": "draft",
+      "published": false,
+      "references": ["O-02", "O-03", "O-06"]
+    },
+    {
+      "id": "D-03",
+      "text": "最新の配布文書では予約不要とされていますが、過去の異なる記載と適用条件を確認中です。",
+      "status": "draft",
+      "published": false,
+      "references": ["O-02", "O-03", "O-06", "O-07"]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "DEC-01",
+      "status": "pending",
+      "authority": "unconfirmed"
+    }
+  ],
+  "revisions": [
+    {
+      "id": "T0",
+      "draft": "D-01",
+      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05"]
+    },
+    {
+      "id": "T1",
+      "draft": "D-02",
+      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06"]
+    },
+    {
+      "id": "T2",
+      "draft": "D-03",
+      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06", "O-07", "O-08"]
+    }
+  ]
+}
