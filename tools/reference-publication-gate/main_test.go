@@ -1,6 +1,12 @@
 package main
 
-import "testing"
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
 
 func acceptedStatus() Status {
 	items := []Item{}
@@ -51,5 +57,31 @@ func TestOptionalNotApplicableIsAllowed(t *testing.T) {
 	}
 	if receipt := Evaluate(status); !receipt.Allowed {
 		t.Fatalf("not-applicable optional review was blocked: %+v", receipt)
+	}
+}
+
+func TestRepositoryStatusIsBlocked(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "SCN-001-review-status.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var status Status
+	if err := json.Unmarshal(raw, &status); err != nil {
+		t.Fatal(err)
+	}
+	receipt := Evaluate(status)
+	if receipt.Allowed {
+		t.Fatal("repository review status was allowed without real-object evidence")
+	}
+	for _, id := range required {
+		found := false
+		for _, blocker := range receipt.Blockers {
+			if strings.HasPrefix(blocker, id+":") {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatalf("%s is not represented in the blockers: %+v", id, receipt)
+		}
 	}
 }
