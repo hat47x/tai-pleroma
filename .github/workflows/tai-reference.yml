@@ -21,6 +21,7 @@ jobs:
           - tools/reference-sei-decision
           - tools/reference-scn001-run
           - tools/reference-scn001-render
+          - tools/reference-tei-model
     defaults:
       run:
         working-directory: ${{ matrix.tool }}

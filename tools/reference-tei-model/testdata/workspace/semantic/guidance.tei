@@ -1,0 +1,16 @@
+namespace scn001
+
+data Observation {
+    attribute id type std.code
+    attribute text type std.text
+    attribute source type std.text
+    attribute sourceVersion type std.code
+    attribute availability type std.code
+}
+
+data RuleCandidate {
+    attribute id type std.code
+    attribute statement type std.text
+    attribute status type std.code
+    attribute provisional type std.boolean
+}

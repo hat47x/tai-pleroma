@@ -19,6 +19,7 @@
 - [SEI decision-memory参照接続](tools/reference-sei-decision/README.md) — SCN-001の未決決定をSEIの一時storeへ記録し、`resume`を読む参照（合成fixture）
 - [SCN-001統合参照実行](tools/reference-scn001-run/README.md) — MMI・SEI・SCN-001評価を1つのreceiptへ束ね、development-review-onlyの仮承認とOwner判断packetを生成する（公開承認ではない）
 - [SCN-001レビュー用成果物](tools/reference-scn001-render/README.md) — D-04を内部レビュー用Markdownとして生成する（公開用ではない）
+- [TEIモデル検証接続](tools/reference-tei-model/README.md) — SCN-001のObservation/RuleCandidate型をTEIでvalidateする（意味・実データは未検証）
 
 ## 検証
 

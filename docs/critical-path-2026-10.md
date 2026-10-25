@@ -14,7 +14,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 | --- | --- | --- | --- |
 | TAI | SCN-001、責務境界、評価条件、手動トレース例がDraft。合成walkthroughの参照評価を追加 | 観測・仮説・Draft・判断・再観測の参照関係を維持する | 人間の判断、実基盤接続、利用者価値 |
 | SUI | 意味形成、カード・島、候補と保留、出典へ戻るUIをREADMEで説明 | 観測カードと複数仮説の意味形成 | 実データの読出し・受渡し契約、認証済み操作 |
-| TEI | CLI、参照Workspace、モデル検証・生成等の参照実装。実Target・Authorityは未確認 | 規程候補のモデル化・検証（必要性が確認できた場合） | 施設規程の正式モデル、実実行先、受理 |
+| TEI | CLI、参照Workspace、モデル検証・生成等の参照実装。SCN-001型のvalidate参照接続を追加 | 規程候補のモデル化・検証（必要性が確認できた場合） | 施設規程の正式モデル、実データ、実実行先、受理 |
 | SEI | 意味の区別、来歴、semantic-contract、限定的な参照実行。SCN-001のdecision-memory projection参照を追加 | 観測・解釈・決定の意味分離と来歴 | 実運用store、権限、公開、契約適合 |
 | SHO（MMI） | 読み取り専用MCP/CLIの文書読出し・検索・検査。TAIからの`inspect`参照接続を追加 | 原資料の参照、案内文の組立て・レビュー | 実運用の認可・版固定・書込み契約 |
 | EKI | 範囲・期限・信頼に応じた限定委任の構想とArchitecture Baseline | 承認済み処理の限定委任 | SCN-001で委任が価値を生むかの検証、実Provider・Task |
@@ -42,6 +42,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 - 第一候補はSHO（MMI）の読み取り専用MCP/CLIによる原資料参照とする。理由は、SCN-001のO-02/O-03のような文書断片を、書込み・権限付与なしで扱えるため。
 - [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md)で、MMI MCPの`initialize`、`inspect`、`select`、O-02/O-03の文言差の保持、ワークスペース外・missingの拒否、呼出し前後の原本digest一致、MMI commit/`package-lock.json`/Node versionの記録を確認した。
 - [reference-scn001](../tools/reference-scn001/README.md)の`-mmi-receipt`で、MMIの`selected`をO-02/O-03/O-07へ重ねる参照経路を追加した。Draft・仮説・判断はfixtureのままであり、実データと合成評価の混合である。
+- [reference-tei-model](../tools/reference-tei-model/README.md)で、SCN-001の`Observation`/`RuleCandidate`型をTEIの`validate`で検証した。型宣言だけであり、実データ・意味・Authorityは未検証である。
 - これは**ローカル開発チェックアウトへの参照接続**であり、実運用の認可・版固定・複数利用者・書込みは未確認。
 - 接続できた事実と、内容の正しさ・規程の確定を分ける。
 - **Gate**: 再現手順、固定版、負例（読取失敗・版不一致・参照切れ）が残るまで次へ進まない。
