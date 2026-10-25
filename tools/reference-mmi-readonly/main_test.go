@@ -51,4 +51,7 @@ func TestReadOnlyInspectKeepsSources(t *testing.T) {
 	if receipt.ProtocolVersion != protocolVersion || receipt.Server == "" {
 		t.Fatalf("MCP negotiation evidence is missing: %+v", receipt)
 	}
+	if receipt.MmiCommit == "" || receipt.PackageLockDigest == "" || receipt.NodeVersion == "" {
+		t.Fatalf("version pinning evidence is missing: %+v", receipt)
+	}
 }
