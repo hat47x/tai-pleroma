@@ -1,0 +1,13 @@
+{
+  "schema": "tai.reference.scn001-review-status/v0",
+  "scenario": "SCN-001",
+  "items": [
+    {"id": "R-01", "status": "pending", "evidence": ""},
+    {"id": "R-02", "status": "pending", "evidence": ""},
+    {"id": "R-03", "status": "pending", "evidence": ""},
+    {"id": "R-04", "status": "pending", "evidence": ""},
+    {"id": "R-05", "status": "pending", "evidence": ""},
+    {"id": "R-06", "status": "pending", "evidence": ""},
+    {"id": "R-07", "status": "pending", "evidence": ""}
+  ]
+}
