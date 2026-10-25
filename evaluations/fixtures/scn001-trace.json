@@ -1,0 +1,202 @@
+{
+  "kind": "scn001-synthetic-trace/v0",
+  "observations": [
+    {
+      "id": "O-01",
+      "source": "synthetic://resident-note",
+      "revision": "r1",
+      "quote": "会議室の予約が必要か分からない",
+      "sha256": "5bd426b302800fcb195e7b76862aafc2e3d36447077d2d987c647acc8b191898"
+    },
+    {
+      "id": "O-02",
+      "source": "synthetic://notice-board",
+      "revision": "r1",
+      "quote": "施設の利用は予約不要",
+      "sha256": "02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+    },
+    {
+      "id": "O-03",
+      "source": "synthetic://old-guide",
+      "revision": "r1",
+      "quote": "会議室の利用には事前予約が必要",
+      "sha256": "e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0"
+    },
+    {
+      "id": "O-04",
+      "source": "synthetic://desk-note",
+      "revision": "r1",
+      "quote": "会議室だけ予約が必要と案内された",
+      "sha256": "c6101e4cb712b0d8d7d350be4a79d002d7cca558b6959ef5b8af0161424af15d"
+    },
+    {
+      "id": "O-05",
+      "source": "synthetic://reviewed-document-list",
+      "revision": "r1",
+      "quote": "提供された資料に予約の承認者が見当たらない",
+      "sha256": "6b2c3d48ccafa50fa32a69e1e8c47c9b786833611cbaf5a336d4bdca9354130e",
+      "claim": "not-found-in-reviewed-materials",
+      "inferred_absence": false
+    },
+    {
+      "id": "O-06",
+      "source": "synthetic://distributed-guide",
+      "revision": "r2",
+      "quote": "会議室は事前予約制",
+      "sha256": "7d2ac3a920d3047953e1b0e1d018fdf2084dffb2b4218171491f88eed299857d"
+    },
+    {
+      "id": "O-07",
+      "source": "synthetic://republished-guide",
+      "revision": "r3",
+      "quote": "施設の利用は予約不要",
+      "sha256": "02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+    }
+  ],
+  "conflict": {
+    "evidence": [
+      "O-02",
+      "O-03"
+    ],
+    "state": "unresolved"
+  },
+  "hypotheses": [
+    {
+      "id": "H-01",
+      "text": "掲示が古い",
+      "basis": [
+        "O-02",
+        "O-03"
+      ],
+      "state": "proposed"
+    },
+    {
+      "id": "H-02",
+      "text": "旧案内文が古い",
+      "basis": [
+        "O-02",
+        "O-03"
+      ],
+      "state": "proposed"
+    },
+    {
+      "id": "H-03",
+      "text": "施設区画により条件が異なる",
+      "basis": [
+        "O-02",
+        "O-03"
+      ],
+      "state": "proposed"
+    }
+  ],
+  "snapshots": [
+    {
+      "id": "T0",
+      "observation_ids": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05"
+      ],
+      "draft": {
+        "id": "D-01",
+        "state": "draft",
+        "text": "会議室の予約要否について案内資料に相違があります。現在確認中です。",
+        "published": false,
+        "basis": [
+          {
+            "id": "O-02",
+            "sha256": "02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+          },
+          {
+            "id": "O-03",
+            "sha256": "e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0"
+          }
+        ]
+      },
+      "decision": {
+        "status": "undecided",
+        "authority": "unknown"
+      },
+      "execution": "not-performed"
+    },
+    {
+      "id": "T1",
+      "observation_ids": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05",
+        "O-06"
+      ],
+      "draft": {
+        "id": "D-02",
+        "state": "draft",
+        "text": "会議室は事前予約制と記載した新しい資料がありますが、掲示との相違を確認中です。",
+        "published": false,
+        "basis": [
+          {
+            "id": "O-02",
+            "sha256": "02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+          },
+          {
+            "id": "O-03",
+            "sha256": "e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0"
+          },
+          {
+            "id": "O-06",
+            "sha256": "7d2ac3a920d3047953e1b0e1d018fdf2084dffb2b4218171491f88eed299857d"
+          }
+        ]
+      },
+      "decision": {
+        "status": "undecided",
+        "authority": "unknown"
+      },
+      "execution": "not-performed"
+    },
+    {
+      "id": "T2",
+      "observation_ids": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05",
+        "O-06",
+        "O-07"
+      ],
+      "draft": {
+        "id": "D-03",
+        "state": "draft",
+        "text": "最新の配布文書では予約不要とされていますが、過去の異なる記載と適用条件を確認中です。",
+        "published": false,
+        "basis": [
+          {
+            "id": "O-02",
+            "sha256": "02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+          },
+          {
+            "id": "O-03",
+            "sha256": "e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0"
+          },
+          {
+            "id": "O-06",
+            "sha256": "7d2ac3a920d3047953e1b0e1d018fdf2084dffb2b4218171491f88eed299857d"
+          },
+          {
+            "id": "O-07",
+            "sha256": "02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+          }
+        ]
+      },
+      "decision": {
+        "status": "undecided",
+        "authority": "unknown"
+      },
+      "execution": "not-performed"
+    }
+  ]
+}
