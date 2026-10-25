@@ -10,7 +10,8 @@
 
 - [SCN-001 共同利用スペースの案内改善](scenarios/SCN-001-shared-space-guidance.md) — 架空の資料の矛盾を保持し、判断と文書改訂までを扱うシナリオ（Draft・未実施）
 - [知的機能スライスの責務境界](docs/architecture-slice-001.md) — 統一する機能と既存基盤の分担（Draft）
-- [受入観点と負例](evaluations/SCN-001-acceptance.md) — 実証すべき成功・失敗条件（未実施）
+- [受入観点と負例](evaluations/SCN-001-acceptance.md) — 実基盤・利用者について実証すべき条件（未実施）
+- [合成トレースの検証記録](evaluations/SCN-001-probe-run-2026-10-25.md) — 架空入力の内部整合性と負例9件を機械検査（10件成功、実連携は未実施）
 - [初期PoCロードマップ](docs/roadmap.md) — 手動一巡から実接続へ進む案
 
 ## 作業領域
