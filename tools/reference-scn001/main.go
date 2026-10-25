@@ -422,6 +422,7 @@ func main() {
 	fixturePath := flag.String("fixture", "testdata/scn001.json", "SCN-001 fixture")
 	mmiReceiptPath := flag.String("mmi-receipt", "", "MMI read-only receipt whose selected rows replace O-02/O-03/O-07")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
+	resolvedFixturePath := flag.String("out-fixture", "", "write the source-resolved fixture JSON for a downstream review renderer")
 	flag.Parse()
 	raw, err := os.ReadFile(*fixturePath)
 	if err != nil {
@@ -454,6 +455,17 @@ func main() {
 		commit = mmiReceipt.MmiCommit
 	}
 	receipt := EvaluateWithSource(fixture, source, commit)
+	if *resolvedFixturePath != "" && receipt.Passed {
+		resolved, err := json.MarshalIndent(fixture, "", "  ")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		if err := os.WriteFile(*resolvedFixturePath, append(resolved, '\n'), 0o600); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
