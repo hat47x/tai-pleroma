@@ -180,6 +180,8 @@ type OwnerPacket struct {
 	Questions            []OwnerQuestion `json:"questions"`
 	ProvisionalApproved  bool            `json:"provisionalApproved"`
 	ReviewTrigger        string          `json:"reviewTrigger,omitempty"`
+	PublicationAllowed   bool            `json:"publicationAllowed"`
+	PublicationBlockers  []string        `json:"publicationBlockers"`
 	Approved             bool            `json:"approved"`
 	HumanReviewed        bool            `json:"humanReviewed"`
 	AuthorityVerified    bool            `json:"authorityVerified"`
@@ -214,6 +216,8 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 		},
 		ProvisionalApproved: receipt.ProvisionalApproved,
 		ReviewTrigger:       receipt.ReviewTrigger,
+		PublicationAllowed:  receipt.PublicationAllowed,
+		PublicationBlockers: receipt.PublicationBlockers,
 		Approved:            false, HumanReviewed: false, AuthorityVerified: false, PublicationApproved: false,
 		Notes: []string{
 			"このpacketはOwner判断を求めるための入力であり、承認ではない。",
