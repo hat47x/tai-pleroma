@@ -15,6 +15,8 @@ go run . -fixture testdata/scn001.json
 
 `-mmi-receipt <path>`を指定すると、MMI読み取り専用接続のreceiptに含まれる`selected`でO-02/O-03/O-07の原文だけを置き換えます。Draft・仮説・判断・revisionはfixtureのままであり、人間の判断ではありません。
 
+`-out-fixture <path>`を指定すると、検証成功時の観測値を反映したfixtureを一時的なJSONとして保存できます。SCN評価と後続のD-04生成で**同じ観測集合**を使うための受渡しであり、新たな意味契約や正本を作る機能ではありません。保存先は作業用で、実資料を扱う場合はアクセス制御と削除を考慮してください。
+
 ## 検査する条件
 
 - P-01: 全observationに原文・出典・出典版・取得時点・availability・digestがある。

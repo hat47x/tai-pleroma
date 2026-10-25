@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -170,5 +173,81 @@ func TestVerifyRejectsAggregateVerdictMismatch(t *testing.T) {
 	receipt.Passed = false // components still all report success
 	if result := Verify(receipt); result.Passed {
 		t.Fatalf("aggregate outcome contradicted components: %+v", result)
+	}
+}
+
+func TestMMIResolvedObservationIsAlsoRenderedInD04(t *testing.T) {
+	// No real MMI/SEI checkout is required: this checks the two Go tool entrypoints.
+	work := t.TempDir()
+	mmiPath := filepath.Join(work, "mmi.json")
+	resolvedPath := filepath.Join(work, "resolved.json")
+	scnReceiptPath := filepath.Join(work, "scn.json")
+	d04Path := filepath.Join(work, "d04.md")
+	modified := "施設予約は原則不要（TAIの改訂試験）"
+	mmi := map[string]any{
+		"schema":               "tai.reference.mmi-readonly/v0",
+		"realProductConnected": true,
+		"readOnly":             true,
+		"conflictPreserved":    true,
+		"selected": []map[string]string{
+			{"id": "O-02", "text": modified, "source": "mmi-test", "version": "test-v0", "availability": "available"},
+			{"id": "O-03", "text": "会議室の利用には事前予約が必要", "source": "mmi-test", "version": "test-v1", "availability": "available"},
+			{"id": "O-07", "text": modified, "source": "mmi-test", "version": "test-v2", "availability": "available"},
+		},
+	}
+	data, err := json.Marshal(mmi)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(mmiPath, data, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	scn := exec.Command("go", "run", ".", "-fixture", "testdata/scn001.json",
+		"-mmi-receipt", mmiPath, "-out-fixture", resolvedPath, "-out", scnReceiptPath)
+	scn.Dir = filepath.Join("..", "reference-scn001")
+	if output, err := scn.CombinedOutput(); err != nil {
+		t.Fatalf("SCN evaluation rejected the mutated synthetic receipt: %v: %s", err, output)
+	}
+
+	render := exec.Command("go", "run", ".", "-fixture", resolvedPath, "-out", d04Path)
+	render.Dir = filepath.Join("..", "reference-scn001-render")
+	renderOutput, err := render.CombinedOutput()
+	if err != nil {
+		t.Fatalf("D-04 renderer rejected the resolved fixture: %v: %s", err, renderOutput)
+	}
+	markdown, err := os.ReadFile(d04Path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var artifactReceipt struct {
+		ArtifactDigest string `json:"artifactDigest"`
+	}
+	if err := json.Unmarshal(renderOutput, &artifactReceipt); err != nil {
+		t.Fatalf("renderer did not return JSON receipt: %v: %s", err, renderOutput)
+	}
+	artifactHash := fmt.Sprintf("sha256:%x", sha256.Sum256(markdown))
+	if artifactReceipt.ArtifactDigest != artifactHash {
+		t.Fatalf("rendered artifact byte mismatch: declared=%s actual=%s", artifactReceipt.ArtifactDigest, artifactHash)
+	}
+	digest := fmt.Sprintf("sha256:%x", sha256.Sum256([]byte(modified)))
+	if !strings.Contains(string(markdown), "| O-02 | "+modified+" | mmi-test | test-v0 |") ||
+		!strings.Contains(string(markdown), digest) ||
+		strings.Contains(string(markdown), "| O-02 | 施設の利用は予約不要 |") {
+		t.Fatalf("D-04 does not use the same MMI-resolved observation as SCN: %s", markdown)
+	}
+	raw, err := os.ReadFile(scnReceiptPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var scnResult struct {
+		Passed             bool              `json:"passed"`
+		ObservationDigests map[string]string `json:"observationDigests"`
+	}
+	if err := json.Unmarshal(raw, &scnResult); err != nil {
+		t.Fatal(err)
+	}
+	if !scnResult.Passed || scnResult.ObservationDigests["O-02"] != digest {
+		t.Fatalf("SCN and D-04 observation digests disagree: %+v", scnResult)
 	}
 }
