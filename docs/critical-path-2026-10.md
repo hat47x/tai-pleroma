@@ -27,12 +27,13 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 
 - 観測 ≠ 解釈 ≠ 提案 ≠ 承認 ≠ 実行 ≠ 結果を、シナリオ上の記録項目として維持する。
 - 案内文の意味を受理する担当、公開権限、緊急時の停止条件を決める。
-- **Gate**: 担当・権限・停止条件が文書化されるまで、公開・外部作用を実装しない。
+- **2026-10-26のOwner指示**: 実装を止めないため、`development-review-only`の仮承認で先へ進む。実際の公開権限・Authorityは未確定であり、実物ベースの再レビューを必須とする。
+- **Gate**: 仮承認は公開・外部作用を許可しない。公開・外部作用は、実在の担当・権限・停止条件が確認されるまで実装しない。
 
 ### CP-1 合成walkthroughで参照関係を検査する（実施済み・参照のみ）
 
 - [reference-scn001](../tools/reference-scn001/README.md)がT0/T1/T2のfixtureを評価する。
-- P-01〜P-05、N-01〜N-04/N-06の機械検査可能な部分を確認する。
+- P-01〜P-05、P-07、N-01〜N-04/N-06/N-07の機械検査可能な部分を確認する。
 - P-06（主体規模比較）とN-05（EKI委任）は`not-run`のまま残す。
 - **Gate**: `passed=true`は合成fixtureの整合だけを示す。人間の手動一巡や受入合格にはしない。
 
@@ -49,7 +50,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 
 - CP-2の実資料参照とCP-1の参照関係を、利用者の一回の案内改善で往復する。
 - 新しい観測O-06/O-07でDraftを改訂し、旧版・旧判断・新しい未確定を混在させない。
-- [reference-sei-decision](../tools/reference-sei-decision/README.md)で、SEIの一時storeに`dec-01`と`authority:unknown`を記録し、`resume`のprojectionだけを読む参照経路を追加した。合成fixtureであり、人間の判断ではない。
+- [reference-sei-decision](../tools/reference-sei-decision/README.md)で、SEIの一時storeに`dec-01`と`authority:unknown`、`dec-02`（development-review-onlyの仮承認）を記録し、`resume`のprojectionだけを読む参照経路を追加した。合成fixtureであり、実在の人間の判断ではない。
 - [reference-scn001-run](../tools/reference-scn001-run/README.md)で、MMI・SEI・SCN-001評価を1回の参照実行に束ね、`runDigest`付きのreceiptを生成した。`humanReviewed=false`、`authorityVerified=false`、`published=false`のままである。
 - 同ツールの`-owner-packet`で、権限者・P-06・N-05・初回範囲の判断を求める`awaiting-owner` packetを生成できる。これは承認ではなく、Owner判断の入力である。
 - **Gate**: 人間の判断と、独立した成果観測が記録されるまで「知的機能として成立」としない。

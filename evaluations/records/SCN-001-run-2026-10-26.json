@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-25T15:02:32Z",
-  "runDigest": "sha256:d2c026fdba7ffc4b1f40ca85cfdb486d5e164d952660b1b48aa0173704eff537",
+  "generatedAt": "2026-10-25T16:00:38Z",
+  "runDigest": "sha256:6472882feb78b21b67ebdad8b32551e31046221e34611419ee359ae91ad20d98",
   "components": {
     "mmi": {
       "passed": true,
@@ -21,7 +21,7 @@
       "seiCommit": "fd329e10554c677058702d574ae9678fed786842",
       "goVersion": "go version go1.26.9 windows/amd64",
       "bundleId": "scn001",
-      "recordCount": 2,
+      "recordCount": 3,
       "decision": {
         "id": "dec-01",
         "statement": "公開は保留",
@@ -29,6 +29,14 @@
           "recommendation:rec-01"
         ]
       },
+      "provisionalDecision": {
+        "id": "dec-02",
+        "statement": "D-04を内部レビュー用に仮承認。公開は未承認",
+        "recommendations": [
+          "recommendation:rec-01"
+        ]
+      },
+      "provisionalApproved": true,
       "authorityVerified": false,
       "humanReviewed": false,
       "published": false,
@@ -41,6 +49,9 @@
       "synthetic": true,
       "humanReviewed": false,
       "authorityVerified": false,
+      "provisionalApproved": true,
+      "publicationApproved": false,
+      "reviewRequired": true,
       "cases": [
         {
           "id": "P-01",
@@ -60,6 +71,10 @@
         },
         {
           "id": "P-05",
+          "status": "pass"
+        },
+        {
+          "id": "P-07",
           "status": "pass"
         },
         {
@@ -89,6 +104,10 @@
         {
           "id": "N-06",
           "status": "pass"
+        },
+        {
+          "id": "N-07",
+          "status": "pass"
         }
       ]
     }
@@ -98,11 +117,15 @@
   "realProductsConnected": true,
   "humanReviewed": false,
   "authorityVerified": false,
+  "provisionalApproved": true,
+  "publicationApproved": false,
+  "reviewRequired": true,
   "published": false,
   "notes": [
     "MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",
     "Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
     "SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
+    "仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
     "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。"
   ]
 }

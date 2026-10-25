@@ -1,4 +1,4 @@
-# 評価・検証
+﻿# 評価・検証
 
 統一的な知的機能が実際に成立するかを、再現可能な試験と観測で確かめます。
 
@@ -6,4 +6,4 @@
 
 ## 参照実行の記録
 
-- [SCN-001-run-2026-10-25.json](records/SCN-001-run-2026-10-25.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:d2c026f...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
+- [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:6472882...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。

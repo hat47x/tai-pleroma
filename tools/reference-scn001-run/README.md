@@ -1,4 +1,4 @@
-# TAI SCN-001 combined reference run
+﻿# TAI SCN-001 combined reference run
 
 SCN-001の1回の参照実行として、次の3つを順に実行し、1つのreceiptへ束ねます。
 
@@ -19,16 +19,16 @@ go run . -root ../..
 
 `-out run.json`でreceiptを保存できます。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
-保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-25.json](../../evaluations/records/SCN-001-run-2026-10-25.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
+保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-26.json](../../evaluations/records/SCN-001-run-2026-10-26.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
 
 `-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
 
 ## 確認すること
 
 - MMI: `selectedRows=3`、O-02/O-03の文言差保持、境界外・missing拒否、digest不変。
-- SEI: 2 records、`dec-01`、未解決`authority:unknown`、`authorityVerified=false`。
-- SCN-001: `observationSource=mmi-reference`、P-01〜P-05/N-01〜N-04/N-06の合成検査。
-- 統合receipt: `passed=true`、`realProductsConnected=true`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。
+- SEI: 3 records、`dec-01`、`dec-02`（development-review-onlyの仮承認）、未解決`authority:unknown`/`publication:unapproved`、`authorityVerified=false`。
+- SCN-001: `observationSource=mmi-reference`、P-01〜P-05/P-07/N-01〜N-04/N-06/N-07の合成検査。
+- 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
 - `runDigest`は3 componentのJSONに対するSHA-256。
 
 ## 境界

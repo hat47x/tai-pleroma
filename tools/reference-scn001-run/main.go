@@ -34,16 +34,18 @@ type DecisionView struct {
 }
 
 type SEIComponent struct {
-	Passed             bool         `json:"passed"`
-	SeiCommit          string       `json:"seiCommit,omitempty"`
-	GoVersion          string       `json:"goVersion,omitempty"`
-	BundleID           string       `json:"bundleId,omitempty"`
-	RecordCount        int          `json:"recordCount"`
-	Decision           DecisionView `json:"decision"`
-	AuthorityVerified  bool         `json:"authorityVerified"`
-	HumanReviewed      bool         `json:"humanReviewed"`
-	Published          bool         `json:"published"`
-	ReadOnlyProjection bool         `json:"readOnlyProjection"`
+	Passed              bool         `json:"passed"`
+	SeiCommit           string       `json:"seiCommit,omitempty"`
+	GoVersion           string       `json:"goVersion,omitempty"`
+	BundleID            string       `json:"bundleId,omitempty"`
+	RecordCount         int          `json:"recordCount"`
+	Decision            DecisionView `json:"decision"`
+	ProvisionalDecision DecisionView `json:"provisionalDecision"`
+	ProvisionalApproved bool         `json:"provisionalApproved"`
+	AuthorityVerified   bool         `json:"authorityVerified"`
+	HumanReviewed       bool         `json:"humanReviewed"`
+	Published           bool         `json:"published"`
+	ReadOnlyProjection  bool         `json:"readOnlyProjection"`
 }
 
 type CaseResult struct {
@@ -58,6 +60,9 @@ type SCNComponent struct {
 	Synthetic             bool         `json:"synthetic"`
 	HumanReviewed         bool         `json:"humanReviewed"`
 	AuthorityVerified     bool         `json:"authorityVerified"`
+	ProvisionalApproved   bool         `json:"provisionalApproved"`
+	PublicationApproved   bool         `json:"publicationApproved"`
+	ReviewRequired        bool         `json:"reviewRequired"`
 	Cases                 []CaseResult `json:"cases"`
 }
 
@@ -76,6 +81,9 @@ type RunReceipt struct {
 	RealProductsConnected bool     `json:"realProductsConnected"`
 	HumanReviewed         bool     `json:"humanReviewed"`
 	AuthorityVerified     bool     `json:"authorityVerified"`
+	ProvisionalApproved   bool     `json:"provisionalApproved"`
+	PublicationApproved   bool     `json:"publicationApproved"`
+	ReviewRequired        bool     `json:"reviewRequired"`
 	Published             bool     `json:"published"`
 	Notes                 []string `json:"notes"`
 }
@@ -120,6 +128,7 @@ type OwnerPacket struct {
 	RunDigest           string          `json:"runDigest"`
 	Evidence            []string        `json:"evidence"`
 	Questions           []OwnerQuestion `json:"questions"`
+	ProvisionalApproved bool            `json:"provisionalApproved"`
 	Approved            bool            `json:"approved"`
 	HumanReviewed       bool            `json:"humanReviewed"`
 	AuthorityVerified   bool            `json:"authorityVerified"`
@@ -146,9 +155,11 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 			{ID: "Q-03", Question: "EKIの限定委任（N-05）を初回の範囲に含めるか。", WhyBlocked: "委任の利益と独立確認が未検証。"},
 			{ID: "Q-04", Question: "この合成fixtureと参照接続の範囲を、SCN-001の初回実証として受理するか。", WhyBlocked: "合成試験の成功は利用者価値・実運用の証明ではない。"},
 		},
-		Approved: false, HumanReviewed: false, AuthorityVerified: false, PublicationApproved: false,
+		ProvisionalApproved: receipt.ProvisionalApproved,
+		Approved:            false, HumanReviewed: false, AuthorityVerified: false, PublicationApproved: false,
 		Notes: []string{
 			"このpacketはOwner判断を求めるための入力であり、承認ではない。",
+			"development-review-onlyの仮承認は記録済みだが、公開承認ではない。実物ベースの再レビューを要する。",
 			"runDigestは参照実行の内部整合だけを示し、署名・実行者・Authorityを証明しない。",
 			"P-06とN-05はnot-runであり、知的機能の受入合格ではない。",
 		},
@@ -182,14 +193,24 @@ func Verify(receipt RunReceipt) Verification {
 		verification.Reason = "MMI component is incomplete"
 		return verification
 	}
-	if sei.Passed && (sei.SeiCommit == "" || sei.RecordCount != 2 || sei.Decision.ID != "dec-01" ||
+	if sei.Passed && (sei.SeiCommit == "" || sei.RecordCount != 3 || sei.Decision.ID != "dec-01" ||
+		sei.ProvisionalDecision.ID != "dec-02" || !sei.ProvisionalApproved ||
 		!sei.ReadOnlyProjection || sei.AuthorityVerified || sei.HumanReviewed || sei.Published) {
 		verification.Reason = "SEI component is incomplete"
 		return verification
 	}
 	if scn.Passed && (scn.ObservationSource != "mmi-reference" || !scn.RealProductsConnected ||
-		!scn.Synthetic || scn.HumanReviewed || scn.AuthorityVerified) {
+		!scn.Synthetic || scn.HumanReviewed || scn.AuthorityVerified ||
+		!scn.ProvisionalApproved || scn.PublicationApproved || !scn.ReviewRequired) {
 		verification.Reason = "SCN-001 component is incomplete"
+		return verification
+	}
+	if receipt.PublicationApproved || !receipt.ReviewRequired && receipt.ProvisionalApproved {
+		verification.Reason = "provisional approval was reported as publication"
+		return verification
+	}
+	if receipt.ProvisionalApproved && !(sei.ProvisionalApproved && scn.ProvisionalApproved) {
+		verification.Reason = "provisional approval is not supported by the components"
 		return verification
 	}
 	if receipt.Passed && (!mmi.Passed || !sei.Passed || !scn.Passed) {
@@ -258,10 +279,14 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	receipt.HumanReviewed = false
 	receipt.AuthorityVerified = false
 	receipt.Published = false
+	receipt.ProvisionalApproved = receipt.Components.SEI.ProvisionalApproved && receipt.Components.SCN001.ProvisionalApproved
+	receipt.ReviewRequired = receipt.ProvisionalApproved
+	receipt.PublicationApproved = false
 	receipt.Notes = []string{
 		"MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",
 		"Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
 		"SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
+		"仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
 		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
 	}
 	digest, err := digestJSON(receipt.Components)

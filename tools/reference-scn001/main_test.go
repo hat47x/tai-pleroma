@@ -77,6 +77,28 @@ func TestRevisionOverwriteFails(t *testing.T) {
 	}
 }
 
+func TestProvisionalApprovalDoesNotPublish(t *testing.T) {
+	fixture := loadFixture(t)
+	for index := range fixture.Decisions {
+		if fixture.Decisions[index].ID == "DEC-02" {
+			fixture.Decisions[index].PublicationApproved = true
+		}
+	}
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "P-04") != "fail" || caseStatus(receipt, "P-07") != "fail" || caseStatus(receipt, "N-07") != "fail" {
+		t.Fatalf("provisional publication was accepted: %+v", receipt)
+	}
+}
+
+func TestProvisionalApprovalRequiresReview(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Provisional.ReviewRequired = false
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "P-07") != "fail" {
+		t.Fatalf("provisional approval without review was accepted: %+v", receipt)
+	}
+}
+
 func TestUnavailableSourceIsNotAbsence(t *testing.T) {
 	fixture := loadFixture(t)
 	for index := range fixture.Observations {
