@@ -124,6 +124,34 @@ func Verify(receipt RunReceipt) Verification {
 		verification.Reason = "run receipt claims human review, authority, or publication"
 		return verification
 	}
+	mmi := receipt.Components.MMI
+	sei := receipt.Components.SEI
+	scn := receipt.Components.SCN001
+	if mmi.Passed && (mmi.Server == "" || mmi.ProtocolVersion != "2024-11-05" ||
+		mmi.SelectedRows != 3 || !mmi.ConflictPreserved || !mmi.BoundaryRejected ||
+		!mmi.MissingSourceRejected || mmi.SourceDigestBefore == "" ||
+		mmi.SourceDigestBefore != mmi.SourceDigestAfter) {
+		verification.Reason = "MMI component is incomplete"
+		return verification
+	}
+	if sei.Passed && (sei.SeiCommit == "" || sei.RecordCount != 2 || sei.Decision.ID != "dec-01" ||
+		!sei.ReadOnlyProjection || sei.AuthorityVerified || sei.HumanReviewed || sei.Published) {
+		verification.Reason = "SEI component is incomplete"
+		return verification
+	}
+	if scn.Passed && (scn.ObservationSource != "mmi-reference" || !scn.RealProductsConnected ||
+		!scn.Synthetic || scn.HumanReviewed || scn.AuthorityVerified) {
+		verification.Reason = "SCN-001 component is incomplete"
+		return verification
+	}
+	if receipt.Passed && (!mmi.Passed || !sei.Passed || !scn.Passed) {
+		verification.Reason = "overall pass does not match the components"
+		return verification
+	}
+	if receipt.RealProductsConnected && !(mmi.Passed && sei.Passed && scn.RealProductsConnected) {
+		verification.Reason = "real product connection is not supported by all components"
+		return verification
+	}
 	digest, err := digestJSON(receipt.Components)
 	if err != nil {
 		verification.Reason = err.Error()
