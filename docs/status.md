@@ -19,6 +19,7 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | D-04レビュー成果物 | 生成済み | [artifact](../evaluations/artifacts/SCN-001-D-04-provisional.md) | 公開用ではない。実在の規程ではない |
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
 | 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
+| 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
 | TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
 | SUI / EKI接続 | 未実施 | [接続調査](../integrations/capability-inventory.md) | 読み取り専用の実接続なし |
 
