@@ -62,4 +62,16 @@ func TestCombinedRun(t *testing.T) {
 	if verification := Verify(overclaim); verification.Passed {
 		t.Fatalf("overclaimed run verified: %+v", verification)
 	}
+
+	incompleteSEI := receipt
+	incompleteSEI.Components.SEI.Decision.ID = "other"
+	if verification := Verify(incompleteSEI); verification.Passed {
+		t.Fatalf("incomplete SEI component verified: %+v", verification)
+	}
+
+	incompleteSCN := receipt
+	incompleteSCN.Components.SCN001.ObservationSource = "fixture"
+	if verification := Verify(incompleteSCN); verification.Passed {
+		t.Fatalf("incomplete SCN-001 component verified: %+v", verification)
+	}
 }
