@@ -42,6 +42,20 @@ func TestRenderProvisionalReviewArtifact(t *testing.T) {
 	}
 }
 
+func TestCommittedArtifactMatchesFixture(t *testing.T) {
+	content, _, err := Render(loadFixture(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	committed, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "artifacts", "SCN-001-D-04-provisional.md"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(committed) != content {
+		t.Fatal("committed review artifact is stale; regenerate it from the fixture")
+	}
+}
+
 func TestRenderRejectsPublishedProvisional(t *testing.T) {
 	fixture := loadFixture(t)
 	fixture.Provisional.PublicationApproved = true
