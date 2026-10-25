@@ -3,3 +3,7 @@
 統一的な知的機能が実際に成立するかを、再現可能な試験と観測で確かめます。
 
 対象シナリオ・対象版、期待結果、負例、実行条件、結果と未実施項目を記録してください。合成fixture・モック・実環境観測を明確に区別します。機微情報の原本は格納せず、公開可能な証拠への参照を利用します。
+
+## 参照実行の記録
+
+- [SCN-001-run-2026-10-25.json](records/SCN-001-run-2026-10-25.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:d2c026f...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。

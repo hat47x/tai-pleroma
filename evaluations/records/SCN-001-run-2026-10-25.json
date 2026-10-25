@@ -1,0 +1,108 @@
+{
+  "schema": "tai.reference.scn001-run/v0",
+  "scenario": "SCN-001",
+  "generatedAt": "2026-10-25T15:02:32Z",
+  "runDigest": "sha256:d2c026fdba7ffc4b1f40ca85cfdb486d5e164d952660b1b48aa0173704eff537",
+  "components": {
+    "mmi": {
+      "passed": true,
+      "server": "markdown-matrix-injector/0.2.0",
+      "protocolVersion": "2024-11-05",
+      "mmiCommit": "a8addd1560bd02131b29ade4d9d1cfa7ca5f9b21",
+      "selectedRows": 3,
+      "conflictPreserved": true,
+      "boundaryRejected": true,
+      "missingSourceRejected": true,
+      "sourceDigestBefore": "sha256:b48efb809746472488d1cf0bb92e95ccd42245894df6b9c6a631e83064ddc661",
+      "sourceDigestAfter": "sha256:b48efb809746472488d1cf0bb92e95ccd42245894df6b9c6a631e83064ddc661"
+    },
+    "sei": {
+      "passed": true,
+      "seiCommit": "fd329e10554c677058702d574ae9678fed786842",
+      "goVersion": "go version go1.26.9 windows/amd64",
+      "bundleId": "scn001",
+      "recordCount": 2,
+      "decision": {
+        "id": "dec-01",
+        "statement": "公開は保留",
+        "recommendations": [
+          "recommendation:rec-01"
+        ]
+      },
+      "authorityVerified": false,
+      "humanReviewed": false,
+      "published": false,
+      "readOnlyProjection": true
+    },
+    "scn001": {
+      "passed": true,
+      "observationSource": "mmi-reference",
+      "realProductsConnected": true,
+      "synthetic": true,
+      "humanReviewed": false,
+      "authorityVerified": false,
+      "cases": [
+        {
+          "id": "P-01",
+          "status": "pass"
+        },
+        {
+          "id": "P-02",
+          "status": "pass"
+        },
+        {
+          "id": "P-03",
+          "status": "pass"
+        },
+        {
+          "id": "P-04",
+          "status": "pass"
+        },
+        {
+          "id": "P-05",
+          "status": "pass"
+        },
+        {
+          "id": "P-06",
+          "status": "not-run"
+        },
+        {
+          "id": "N-01",
+          "status": "pass"
+        },
+        {
+          "id": "N-02",
+          "status": "pass"
+        },
+        {
+          "id": "N-03",
+          "status": "pass"
+        },
+        {
+          "id": "N-04",
+          "status": "pass"
+        },
+        {
+          "id": "N-05",
+          "status": "not-run"
+        },
+        {
+          "id": "N-06",
+          "status": "pass"
+        }
+      ]
+    }
+  },
+  "passed": true,
+  "synthetic": true,
+  "realProductsConnected": true,
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "published": false,
+  "notes": [
+    "MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",
+    "Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
+    "SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
+    "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。"
+  ]
+}

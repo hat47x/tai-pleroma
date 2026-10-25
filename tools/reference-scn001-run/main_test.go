@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -85,5 +86,22 @@ func TestCombinedRun(t *testing.T) {
 	}
 	if _, err := BuildOwnerPacket(incompleteSCN); err == nil {
 		t.Fatal("owner packet was built from an unverifiable run")
+	}
+}
+
+func TestRecordedRunVerifies(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "records", "SCN-001-run-2026-10-25.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var receipt RunReceipt
+	if err := json.Unmarshal(raw, &receipt); err != nil {
+		t.Fatal(err)
+	}
+	if verification := Verify(receipt); !verification.Passed {
+		t.Fatalf("recorded run does not verify: %+v", verification)
+	}
+	if packet, err := BuildOwnerPacket(receipt); err != nil || packet.Status != "awaiting-owner" {
+		t.Fatalf("recorded run cannot produce an owner packet: %+v %v", packet, err)
 	}
 }

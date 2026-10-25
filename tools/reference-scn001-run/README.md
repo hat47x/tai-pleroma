@@ -19,6 +19,8 @@ go run . -root ../..
 
 `-out run.json`でreceiptを保存できます。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
+保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-25.json](../../evaluations/records/SCN-001-run-2026-10-25.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
+
 `-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
 
 ## 確認すること
