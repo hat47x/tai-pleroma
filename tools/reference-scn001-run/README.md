@@ -19,6 +19,8 @@ go run . -root ../..
 
 `-out run.json`でreceiptを保存できます。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
+`-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
+
 ## 確認すること
 
 - MMI: `selectedRows=3`、O-02/O-03の文言差保持、境界外・missing拒否、digest不変。
