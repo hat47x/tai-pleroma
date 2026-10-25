@@ -22,8 +22,9 @@ go run . -sei-root ../../../sei-cognition
 - `sei init`で一時storeを作る。
 - `rec-01`をrecommendationとして記録する。
 - `dec-01`をdecisionとして記録し、`rec-01`へ依拠し、`authority:unknown`を未解決に残す。
-- `sei resume --json`で2 records、decision `dec-01`、未解決`authority:unknown`を確認。
-- receiptは`authorityVerified=false`、`humanReviewed=false`、`published=false`。
+- `dec-02`をdevelopment-review-onlyの仮承認として記録し、`publication:unapproved`も未解決に残す。
+- `sei resume --json`で3 records、`dec-01`/`dec-02`、未解決`authority:unknown`/`publication:unapproved`を確認。
+- receiptは`provisionalApproved=true`、`authorityVerified=false`、`humanReviewed=false`、`published=false`。
 
 ## 境界
 

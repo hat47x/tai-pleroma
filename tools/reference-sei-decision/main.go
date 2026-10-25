@@ -44,8 +44,10 @@ type Receipt struct {
 	BundleID               string           `json:"bundleId"`
 	RecordCount            int              `json:"recordCount"`
 	Decision               DecisionView     `json:"decision"`
+	ProvisionalDecision    DecisionView     `json:"provisionalDecision"`
 	Unresolved             []UnresolvedView `json:"unresolved"`
 	NotVerifiedRecordCount int              `json:"notVerifiedRecordCount"`
+	ProvisionalApproved    bool             `json:"provisionalApproved"`
 	AuthorityVerified      bool             `json:"authorityVerified"`
 	HumanReviewed          bool             `json:"humanReviewed"`
 	Published              bool             `json:"published"`
@@ -110,6 +112,10 @@ func Run(ctx context.Context, seiRoot string) Receipt {
 			"--id", "dec-01", "--statement", "公開は保留", "--source", "tai",
 			"--unresolved", "authority:unknown", "--recommendation", "rec-01",
 			"--responsible", "role:facility-owner"},
+		{"run", "./cmd/sei", "add", "decision", "--data-root", store,
+			"--id", "dec-02", "--statement", "D-04を内部レビュー用に仮承認。公開は未承認", "--source", "tai",
+			"--unresolved", "authority:unknown", "--unresolved", "publication:unapproved",
+			"--recommendation", "rec-01", "--responsible", "role:provisional-owner"},
 	}
 	for _, step := range steps {
 		if _, err := run(ctx, runtimeDir, step...); err != nil {
@@ -132,21 +138,41 @@ func Run(ctx context.Context, seiRoot string) Receipt {
 	receipt.RecordCount = view.RecordCount
 	receipt.Unresolved = view.Unresolved
 	receipt.NotVerifiedRecordCount = view.NotVerifiedRecordCount
-	if len(view.Decisions) == 1 {
-		receipt.Decision = view.Decisions[0]
+	dec01, hasDec01 := findDecision(view.Decisions, "dec-01")
+	dec02, hasDec02 := findDecision(view.Decisions, "dec-02")
+	receipt.Decision = dec01
+	receipt.ProvisionalDecision = dec02
+	unresolved := map[string]bool{}
+	for _, item := range view.Unresolved {
+		unresolved[item.Ref] = true
 	}
-	if view.BundleID != "scn001" || view.RecordCount != 2 || len(view.Decisions) != 1 ||
-		view.Decisions[0].ID != "dec-01" || len(view.Unresolved) != 1 ||
-		view.Unresolved[0].Ref != "authority:unknown" || view.NotVerifiedRecordCount != 0 {
+	if view.BundleID != "scn001" || view.RecordCount != 3 || len(view.Decisions) != 2 ||
+		!hasDec01 || !hasDec02 || !unresolved["authority:unknown"] ||
+		!unresolved["publication:unapproved"] || view.NotVerifiedRecordCount != 0 {
 		receipt.Reason = "resume projection does not match the SCN-001 decision fixture"
 		return receipt
 	}
-	if len(view.Decisions[0].Recommendations) != 1 || view.Decisions[0].Recommendations[0] != "recommendation:rec-01" {
+	if len(dec01.Recommendations) != 1 || dec01.Recommendations[0] != "recommendation:rec-01" ||
+		len(dec02.Recommendations) != 1 || dec02.Recommendations[0] != "recommendation:rec-01" {
 		receipt.Reason = "decision does not rely on rec-01"
 		return receipt
 	}
+	if !strings.Contains(dec02.Statement, "仮承認") || strings.Contains(dec02.Statement, "公開承認") {
+		receipt.Reason = "provisional decision is not scoped to internal review"
+		return receipt
+	}
+	receipt.ProvisionalApproved = true
 	receipt.Passed = true
 	return receipt
+}
+
+func findDecision(decisions []DecisionView, id string) (DecisionView, bool) {
+	for _, decision := range decisions {
+		if decision.ID == id {
+			return decision, true
+		}
+	}
+	return DecisionView{}, false
 }
 
 func main() {

@@ -31,8 +31,16 @@ func TestSCN001DecisionMemoryProjection(t *testing.T) {
 	if !receipt.StoreCreated || !receipt.ReadOnlyProjection || receipt.AuthorityVerified || receipt.HumanReviewed || receipt.Published {
 		t.Fatalf("receipt overclaims authority or publication: %+v", receipt)
 	}
-	if receipt.Decision.ID != "dec-01" || len(receipt.Unresolved) != 1 || receipt.Unresolved[0].Ref != "authority:unknown" {
+	if receipt.Decision.ID != "dec-01" || receipt.ProvisionalDecision.ID != "dec-02" ||
+		!receipt.ProvisionalApproved || len(receipt.Unresolved) < 2 {
 		t.Fatalf("decision memory is incomplete: %+v", receipt)
+	}
+	refs := map[string]bool{}
+	for _, item := range receipt.Unresolved {
+		refs[item.Ref] = true
+	}
+	if !refs["authority:unknown"] || !refs["publication:unapproved"] {
+		t.Fatalf("unresolved refs are incomplete: %+v", receipt)
 	}
 	if receipt.SeiCommit == "" || receipt.GoVersion == "" {
 		t.Fatalf("version evidence is missing: %+v", receipt)

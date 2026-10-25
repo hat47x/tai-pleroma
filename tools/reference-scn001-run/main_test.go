@@ -48,8 +48,11 @@ func TestCombinedRun(t *testing.T) {
 	if !receipt.Passed || !receipt.RealProductsConnected {
 		t.Fatalf("combined run failed: %+v", receipt)
 	}
-	if receipt.HumanReviewed || receipt.AuthorityVerified || receipt.Published {
+	if receipt.HumanReviewed || receipt.AuthorityVerified || receipt.Published || receipt.PublicationApproved {
 		t.Fatalf("combined run overclaims authority: %+v", receipt)
+	}
+	if !receipt.ProvisionalApproved || !receipt.ReviewRequired {
+		t.Fatalf("provisional approval is missing: %+v", receipt)
 	}
 	if !receipt.Components.MMI.ConflictPreserved || !receipt.Components.SEI.ReadOnlyProjection ||
 		receipt.Components.SCN001.ObservationSource != "mmi-reference" {
@@ -91,7 +94,7 @@ func TestCombinedRun(t *testing.T) {
 		t.Fatal(err)
 	}
 	if packet.Status != "awaiting-owner" || packet.Approved || packet.HumanReviewed ||
-		packet.AuthorityVerified || packet.PublicationApproved || len(packet.Questions) != 4 {
+		packet.AuthorityVerified || packet.PublicationApproved || !packet.ProvisionalApproved || len(packet.Questions) != 4 {
 		t.Fatalf("owner packet overclaims or is incomplete: %+v", packet)
 	}
 	if _, err := BuildOwnerPacket(incompleteSCN); err == nil {
@@ -100,7 +103,7 @@ func TestCombinedRun(t *testing.T) {
 }
 
 func TestRecordedRunVerifies(t *testing.T) {
-	raw, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "records", "SCN-001-run-2026-10-25.json"))
+	raw, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "records", "SCN-001-run-2026-10-26.json"))
 	if err != nil {
 		t.Fatal(err)
 	}

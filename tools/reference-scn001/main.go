@@ -42,9 +42,20 @@ type Draft struct {
 }
 
 type Decision struct {
-	ID        string `json:"id"`
-	Status    string `json:"status"`
-	Authority string `json:"authority"`
+	ID                  string `json:"id"`
+	Status              string `json:"status"`
+	Authority           string `json:"authority"`
+	Draft               string `json:"draft,omitempty"`
+	Scope               string `json:"scope,omitempty"`
+	PublicationApproved bool   `json:"publicationApproved"`
+	ReviewRequired      bool   `json:"reviewRequired"`
+}
+
+type ProvisionalApproval struct {
+	Basis               string `json:"basis"`
+	Scope               string `json:"scope"`
+	PublicationApproved bool   `json:"publicationApproved"`
+	ReviewRequired      bool   `json:"reviewRequired"`
 }
 
 type Revision struct {
@@ -54,14 +65,15 @@ type Revision struct {
 }
 
 type Fixture struct {
-	Schema       string        `json:"schema"`
-	Scenario     string        `json:"scenario"`
-	Authority    Authority     `json:"authority"`
-	Observations []Observation `json:"observations"`
-	Hypotheses   []Hypothesis  `json:"hypotheses"`
-	Drafts       []Draft       `json:"drafts"`
-	Decisions    []Decision    `json:"decisions"`
-	Revisions    []Revision    `json:"revisions"`
+	Schema       string               `json:"schema"`
+	Scenario     string               `json:"scenario"`
+	Authority    Authority            `json:"authority"`
+	Observations []Observation        `json:"observations"`
+	Hypotheses   []Hypothesis         `json:"hypotheses"`
+	Drafts       []Draft              `json:"drafts"`
+	Decisions    []Decision           `json:"decisions"`
+	Revisions    []Revision           `json:"revisions"`
+	Provisional  *ProvisionalApproval `json:"provisionalApproval,omitempty"`
 }
 
 type MMISelected struct {
@@ -99,6 +111,9 @@ type Receipt struct {
 	RealProductsConnected bool              `json:"realProductsConnected"`
 	HumanReviewed         bool              `json:"humanReviewed"`
 	AuthorityVerified     bool              `json:"authorityVerified"`
+	ProvisionalApproved   bool              `json:"provisionalApproved"`
+	PublicationApproved   bool              `json:"publicationApproved"`
+	ReviewRequired        bool              `json:"reviewRequired"`
 	Notes                 []string          `json:"notes"`
 }
 
@@ -211,15 +226,18 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 		}
 	}
 	for _, decision := range f.Decisions {
-		if decision.Status != "pending" {
+		if decision.Status != "pending" && decision.Status != "provisional" {
+			p04 = false
+		}
+		if decision.Status == "provisional" && (decision.PublicationApproved || !decision.ReviewRequired) {
 			p04 = false
 		}
 	}
 	receipt.Cases = append(receipt.Cases, statusCase("P-04", p04,
-		"承認権限が未確認の間は公開・外部作用を保留する"))
+		"承認権限が未確認の間は公開・外部作用を保留する（仮承認を除く）"))
 
 	// P-05: revisions are append-only and retain earlier drafts and observation sets.
-	p05 := len(f.Revisions) == 3
+	p05 := len(f.Revisions) >= 4
 	previous := []string{}
 	for index, revision := range f.Revisions {
 		if revision.ID != fmt.Sprintf("T%d", index) {
@@ -238,10 +256,24 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	}
 	if p05 {
 		last := f.Revisions[len(f.Revisions)-1]
-		p05 = last.Draft == "D-03"
+		p05 = last.Draft == "D-04"
 	}
 	receipt.Cases = append(receipt.Cases, statusCase("P-05", p05,
-		"T0→T1→T2はobservation集合を追加し、旧Draftを上書きしない"))
+		"T0→T1→T2→T3はobservation集合を追加し、旧Draftを上書きしない"))
+
+	// P-07: a provisional approval is scoped to development review only.
+	prov := f.Provisional
+	dec02, hasDec02 := decisionByID(f.Decisions, "DEC-02")
+	d04, hasD04 := draftByID(f.Drafts, "D-04")
+	p07 := prov != nil && prov.Basis != "" && prov.Scope == "development-review-only" &&
+		!prov.PublicationApproved && prov.ReviewRequired &&
+		hasDec02 && dec02.Status == "provisional" && dec02.Draft == "D-04" &&
+		dec02.Scope == "development-review-only" && !dec02.PublicationApproved && dec02.ReviewRequired &&
+		hasD04 && !d04.Published
+	receipt.ProvisionalApproved = p07
+	receipt.ReviewRequired = p07
+	receipt.Cases = append(receipt.Cases, statusCase("P-07", p07,
+		"仮承認はdevelopment-review-onlyに限定し、D-04を未公開のまま残す"))
 
 	// P-06 requires a human comparison across subject scales.
 	receipt.Cases = append(receipt.Cases, CaseResult{ID: "P-06", Status: "not-run",
@@ -302,6 +334,12 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, statusCase("N-06", n06,
 		"DraftとRevisionは実在するobservation IDだけを参照する"))
 
+	// N-07: a provisional approval is not publication or verified authority.
+	n07 := p07 && !anyPublished(f.Drafts) && f.Authority.Status == "unconfirmed" &&
+		hasDec02 && !dec02.PublicationApproved && !receipt.AuthorityVerified
+	receipt.Cases = append(receipt.Cases, statusCase("N-07", n07,
+		"仮承認を公開承認・Authority検証として扱わない"))
+
 	receipt.Passed = true
 	for _, result := range receipt.Cases {
 		if result.Status == "fail" {
@@ -312,16 +350,27 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 		receipt.Notes = []string{
 			"O-02/O-03/O-07の原文だけをMMI MCPのselect結果で置き換えた合成評価。",
 			"Draft、仮説、判断、revisionはfixtureのままであり、人間の判断ではない。",
+			"仮承認はdevelopment-review-onlyで、公開承認ではない。",
 			"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
 		}
 	} else {
 		receipt.Notes = []string{
 			"合成fixtureの参照評価であり、実SUI/TEI/SEI/SHO/EKIへの接続ではない。",
+			"仮承認はdevelopment-review-onlyで、公開承認ではない。",
 			"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
 			"利用者の有用性、権限者の承認、実文書の公開は未確認。",
 		}
 	}
 	return receipt
+}
+
+func decisionByID(decisions []Decision, id string) (Decision, bool) {
+	for _, decision := range decisions {
+		if decision.ID == id {
+			return decision, true
+		}
+	}
+	return Decision{}, false
 }
 
 func draftByID(drafts []Draft, id string) (Draft, bool) {

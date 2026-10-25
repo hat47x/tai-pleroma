@@ -113,6 +113,13 @@
       "status": "draft",
       "published": false,
       "references": ["O-02", "O-03", "O-06", "O-07"]
+    },
+    {
+      "id": "D-04",
+      "text": "内部レビュー用の暫定案内です。会議室の予約要否は資料間で相違が残るため、公開前に権限者の確認が必要です。",
+      "status": "draft",
+      "published": false,
+      "references": ["O-02", "O-03", "O-06", "O-07", "O-08"]
     }
   ],
   "decisions": [
@@ -120,8 +127,23 @@
       "id": "DEC-01",
       "status": "pending",
       "authority": "unconfirmed"
+    },
+    {
+      "id": "DEC-02",
+      "status": "provisional",
+      "authority": "provisional-owner",
+      "draft": "D-04",
+      "scope": "development-review-only",
+      "publicationApproved": false,
+      "reviewRequired": true
     }
   ],
+  "provisionalApproval": {
+    "basis": "owner-instruction-2026-10-26",
+    "scope": "development-review-only",
+    "publicationApproved": false,
+    "reviewRequired": true
+  },
   "revisions": [
     {
       "id": "T0",
@@ -136,6 +158,11 @@
     {
       "id": "T2",
       "draft": "D-03",
+      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06", "O-07", "O-08"]
+    },
+    {
+      "id": "T3",
+      "draft": "D-04",
       "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06", "O-07", "O-08"]
     }
   ]

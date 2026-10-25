@@ -27,6 +27,8 @@ go run . -fixture testdata/scn001.json
 - N-03: 原本取得失敗を「存在しない」と断定せず、unavailableとして保持する。
 - N-04: 仮説を規程として採用しない。
 - N-06: DraftとRevisionが実在するobservation IDだけを参照する。
+- P-07: `development-review-only`の仮承認を、未公開のD-04へ限定する。
+- N-07: 仮承認を公開承認・Authority検証として扱わない。
 
 P-06（主体規模の比較）とN-05（EKI委任の独立確認）は`not-run`です。
 
