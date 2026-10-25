@@ -27,6 +27,11 @@ func taiRootForTest(t *testing.T) string {
 			t.Skip("component tool is not available: " + dir)
 		}
 	}
+	for _, sibling := range []string{"markdown-matrix-injector", "sei-cognition"} {
+		if info, err := os.Stat(filepath.Join(root, "..", sibling)); err != nil || !info.IsDir() {
+			t.Skip("sibling checkout is not available: " + sibling)
+		}
+	}
 	return root
 }
 
