@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-25T16:00:38Z",
-  "runDigest": "sha256:6472882feb78b21b67ebdad8b32551e31046221e34611419ee359ae91ad20d98",
+  "generatedAt": "2026-10-25T16:07:09Z",
+  "runDigest": "sha256:d1cf0fa6a7e784fbdbd5a8764c64abc99300ce3b75d2a84fd18982a4fc6050b4",
   "components": {
     "mmi": {
       "passed": true,
@@ -37,6 +37,7 @@
         ]
       },
       "provisionalApproved": true,
+      "reviewTrigger": "real-object",
       "authorityVerified": false,
       "humanReviewed": false,
       "published": false,
@@ -52,6 +53,7 @@
       "provisionalApproved": true,
       "publicationApproved": false,
       "reviewRequired": true,
+      "reviewTrigger": "real-object",
       "cases": [
         {
           "id": "P-01",
@@ -120,6 +122,7 @@
   "provisionalApproved": true,
   "publicationApproved": false,
   "reviewRequired": true,
+  "reviewTrigger": "real-object",
   "published": false,
   "notes": [
     "MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",

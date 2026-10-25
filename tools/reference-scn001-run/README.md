@@ -1,4 +1,4 @@
-﻿# TAI SCN-001 combined reference run
+# TAI SCN-001 combined reference run
 
 SCN-001の1回の参照実行として、次の3つを順に実行し、1つのreceiptへ束ねます。
 
@@ -28,7 +28,7 @@ go run . -root ../..
 - MMI: `selectedRows=3`、O-02/O-03の文言差保持、境界外・missing拒否、digest不変。
 - SEI: 3 records、`dec-01`、`dec-02`（development-review-onlyの仮承認）、未解決`authority:unknown`/`publication:unapproved`、`authorityVerified=false`。
 - SCN-001: `observationSource=mmi-reference`、P-01〜P-05/P-07/N-01〜N-04/N-06/N-07の合成検査。
-- 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
+- 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`reviewTrigger=real-object`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
 - `runDigest`は3 componentのJSONに対するSHA-256。
 
 ## 境界

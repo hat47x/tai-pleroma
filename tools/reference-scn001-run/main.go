@@ -42,6 +42,7 @@ type SEIComponent struct {
 	Decision            DecisionView `json:"decision"`
 	ProvisionalDecision DecisionView `json:"provisionalDecision"`
 	ProvisionalApproved bool         `json:"provisionalApproved"`
+	ReviewTrigger       string       `json:"reviewTrigger,omitempty"`
 	AuthorityVerified   bool         `json:"authorityVerified"`
 	HumanReviewed       bool         `json:"humanReviewed"`
 	Published           bool         `json:"published"`
@@ -63,6 +64,7 @@ type SCNComponent struct {
 	ProvisionalApproved   bool         `json:"provisionalApproved"`
 	PublicationApproved   bool         `json:"publicationApproved"`
 	ReviewRequired        bool         `json:"reviewRequired"`
+	ReviewTrigger         string       `json:"reviewTrigger,omitempty"`
 	Cases                 []CaseResult `json:"cases"`
 }
 
@@ -84,6 +86,7 @@ type RunReceipt struct {
 	ProvisionalApproved   bool     `json:"provisionalApproved"`
 	PublicationApproved   bool     `json:"publicationApproved"`
 	ReviewRequired        bool     `json:"reviewRequired"`
+	ReviewTrigger         string   `json:"reviewTrigger,omitempty"`
 	Published             bool     `json:"published"`
 	Notes                 []string `json:"notes"`
 }
@@ -129,6 +132,7 @@ type OwnerPacket struct {
 	Evidence            []string        `json:"evidence"`
 	Questions           []OwnerQuestion `json:"questions"`
 	ProvisionalApproved bool            `json:"provisionalApproved"`
+	ReviewTrigger       string          `json:"reviewTrigger,omitempty"`
 	Approved            bool            `json:"approved"`
 	HumanReviewed       bool            `json:"humanReviewed"`
 	AuthorityVerified   bool            `json:"authorityVerified"`
@@ -156,6 +160,7 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 			{ID: "Q-04", Question: "この合成fixtureと参照接続の範囲を、SCN-001の初回実証として受理するか。", WhyBlocked: "合成試験の成功は利用者価値・実運用の証明ではない。"},
 		},
 		ProvisionalApproved: receipt.ProvisionalApproved,
+		ReviewTrigger:       receipt.ReviewTrigger,
 		Approved:            false, HumanReviewed: false, AuthorityVerified: false, PublicationApproved: false,
 		Notes: []string{
 			"このpacketはOwner判断を求めるための入力であり、承認ではない。",
@@ -194,14 +199,14 @@ func Verify(receipt RunReceipt) Verification {
 		return verification
 	}
 	if sei.Passed && (sei.SeiCommit == "" || sei.RecordCount != 3 || sei.Decision.ID != "dec-01" ||
-		sei.ProvisionalDecision.ID != "dec-02" || !sei.ProvisionalApproved ||
+		sei.ProvisionalDecision.ID != "dec-02" || !sei.ProvisionalApproved || sei.ReviewTrigger != "real-object" ||
 		!sei.ReadOnlyProjection || sei.AuthorityVerified || sei.HumanReviewed || sei.Published) {
 		verification.Reason = "SEI component is incomplete"
 		return verification
 	}
 	if scn.Passed && (scn.ObservationSource != "mmi-reference" || !scn.RealProductsConnected ||
 		!scn.Synthetic || scn.HumanReviewed || scn.AuthorityVerified ||
-		!scn.ProvisionalApproved || scn.PublicationApproved || !scn.ReviewRequired) {
+		!scn.ProvisionalApproved || scn.PublicationApproved || !scn.ReviewRequired || scn.ReviewTrigger != "real-object") {
 		verification.Reason = "SCN-001 component is incomplete"
 		return verification
 	}
@@ -211,6 +216,10 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	if receipt.ProvisionalApproved && !(sei.ProvisionalApproved && scn.ProvisionalApproved) {
 		verification.Reason = "provisional approval is not supported by the components"
+		return verification
+	}
+	if receipt.ProvisionalApproved && receipt.ReviewTrigger != "real-object" {
+		verification.Reason = "provisional approval lacks the real-object review trigger"
 		return verification
 	}
 	if receipt.Passed && (!mmi.Passed || !sei.Passed || !scn.Passed) {
@@ -281,6 +290,7 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 	receipt.Published = false
 	receipt.ProvisionalApproved = receipt.Components.SEI.ProvisionalApproved && receipt.Components.SCN001.ProvisionalApproved
 	receipt.ReviewRequired = receipt.ProvisionalApproved
+	receipt.ReviewTrigger = "real-object"
 	receipt.PublicationApproved = false
 	receipt.Notes = []string{
 		"MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",

@@ -39,8 +39,11 @@ func TestSCN001DecisionMemoryProjection(t *testing.T) {
 	for _, item := range receipt.Unresolved {
 		refs[item.Ref] = true
 	}
-	if !refs["authority:unknown"] || !refs["publication:unapproved"] {
+	if !refs["authority:unknown"] || !refs["publication:unapproved"] || !refs["review:real-object"] {
 		t.Fatalf("unresolved refs are incomplete: %+v", receipt)
+	}
+	if receipt.ReviewTrigger != "real-object" {
+		t.Fatalf("review trigger is missing: %+v", receipt)
 	}
 	if receipt.SeiCommit == "" || receipt.GoVersion == "" {
 		t.Fatalf("version evidence is missing: %+v", receipt)
