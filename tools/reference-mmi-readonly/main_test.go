@@ -32,7 +32,7 @@ func TestReadOnlyInspectKeepsSources(t *testing.T) {
 	if !receipt.Passed {
 		t.Fatalf("read-only MMI inspect failed: %+v", receipt)
 	}
-	if !receipt.RealProductConnected || !receipt.ReadOnly || !receipt.BoundaryRejected {
+	if !receipt.RealProductConnected || !receipt.ReadOnly || !receipt.BoundaryRejected || !receipt.MissingSourceRejected {
 		t.Fatalf("receipt overclaims or misses a boundary: %+v", receipt)
 	}
 	if receipt.SourceDigestBefore != receipt.SourceDigestAfter ||
