@@ -17,7 +17,7 @@ go test ./...
 go run . -root ../..
 ```
 
-`-out run.json`でreceiptを保存できます。
+`-out run.json`でreceiptを保存できます。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
 ## 確認すること
 
