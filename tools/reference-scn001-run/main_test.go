@@ -125,3 +125,50 @@ func TestRecordedRunVerifies(t *testing.T) {
 		t.Fatalf("recorded run cannot produce an owner packet: %+v %v", packet, err)
 	}
 }
+
+func recordedRunForMutation(t *testing.T) RunReceipt {
+	t.Helper()
+	raw, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "records", "SCN-001-run-2026-10-26.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var receipt RunReceipt
+	if err := json.Unmarshal(raw, &receipt); err != nil {
+		t.Fatal(err)
+	}
+	return receipt
+}
+
+func TestVerifyRejectsFailedCaseEvenWithRecomputedDigest(t *testing.T) {
+	receipt := recordedRunForMutation(t)
+	receipt.Components.SCN001.Cases[0].Status = "fail"
+	digest, err := digestJSON(receipt.Components)
+	if err != nil {
+		t.Fatal(err)
+	}
+	receipt.RunDigest = digest
+	if result := Verify(receipt); result.Passed {
+		t.Fatalf("case failure was accepted after rehashing: %+v", result)
+	}
+}
+
+func TestVerifyRejectsDuplicateCaseEvenWithRecomputedDigest(t *testing.T) {
+	receipt := recordedRunForMutation(t)
+	receipt.Components.SCN001.Cases[1].ID = receipt.Components.SCN001.Cases[0].ID
+	digest, err := digestJSON(receipt.Components)
+	if err != nil {
+		t.Fatal(err)
+	}
+	receipt.RunDigest = digest
+	if result := Verify(receipt); result.Passed {
+		t.Fatalf("duplicate case was accepted after rehashing: %+v", result)
+	}
+}
+
+func TestVerifyRejectsAggregateVerdictMismatch(t *testing.T) {
+	receipt := recordedRunForMutation(t)
+	receipt.Passed = false // components still all report success
+	if result := Verify(receipt); result.Passed {
+		t.Fatalf("aggregate outcome contradicted components: %+v", result)
+	}
+}
