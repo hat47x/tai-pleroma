@@ -32,7 +32,8 @@ go run . -root ../..
 - SCN-001: `observationSource=mmi-reference`、P-01〜P-05/P-07/N-01〜N-04/N-06/N-07の合成検査。
 - 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`reviewTrigger=real-object`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
 - `reviewArtifact`: D-04の内部レビュー用Markdownの`status=provisional`、`artifactDigest`、`publicationApproved=false`。
-- `runDigest`は4 componentのJSONに対するSHA-256。
+- `publicationGate`: R-01〜R-07のreview statusを読み、`allowed=false`とblockerを記録する。
+- `runDigest`は5 componentのJSONに対するSHA-256。
 
 ## 境界
 

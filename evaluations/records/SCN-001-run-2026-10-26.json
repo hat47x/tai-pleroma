@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-25T16:55:53Z",
-  "runDigest": "sha256:8a07c94ca2d6ea792337e6c5b06ea781729dae11241ab1606a072c1299813a05",
+  "generatedAt": "2026-10-25T17:39:01Z",
+  "runDigest": "sha256:9f825860a0355ad10ae827577298f0048682b3e8cb5b29c632769b34e2184077",
   "components": {
     "mmi": {
       "passed": true,
@@ -123,6 +123,19 @@
       "reviewRequired": true,
       "reviewTrigger": "real-object",
       "authorityVerified": false
+    },
+    "publicationGate": {
+      "schema": "tai.reference.scn001-publication-gate/v0",
+      "allowed": false,
+      "blockers": [
+        "R-01: status=pending",
+        "R-02: status=pending",
+        "R-03: status=pending",
+        "R-04: status=pending",
+        "R-05: status=pending",
+        "R-06: status=pending",
+        "R-07: status=pending"
+      ]
     }
   },
   "passed": true,
@@ -132,6 +145,16 @@
   "authorityVerified": false,
   "provisionalApproved": true,
   "publicationApproved": false,
+  "publicationAllowed": false,
+  "publicationBlockers": [
+    "R-01: status=pending",
+    "R-02: status=pending",
+    "R-03: status=pending",
+    "R-04: status=pending",
+    "R-05: status=pending",
+    "R-06: status=pending",
+    "R-07: status=pending"
+  ],
   "reviewRequired": true,
   "reviewTrigger": "real-object",
   "published": false,
@@ -141,6 +164,7 @@
     "SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
     "仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
     "D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
+    "publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
     "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。"
   ]
 }
