@@ -39,8 +39,8 @@ func Link(link SUILink, artifact []byte) Receipt {
 			"意味の受理・公開承認・Authorityを検証しない。",
 		},
 	}
-	if !link.Passed || len(link.LinkedCards) != 3 {
-		receipt.Reason = "SUI link is not a passed 3-card link"
+	if !link.Passed || len(link.LinkedCards) != 4 {
+		receipt.Reason = "SUI link is not a passed 4-card link"
 		return receipt
 	}
 	for _, id := range link.LinkedCards {

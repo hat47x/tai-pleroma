@@ -28,7 +28,7 @@ func load(t *testing.T) (SUILink, []byte) {
 func TestLinkMatchesDraft(t *testing.T) {
 	link, artifact := load(t)
 	receipt := Link(link, artifact)
-	if !receipt.Passed || !receipt.PublicationBlocked || len(receipt.LinkedCards) != 3 {
+	if !receipt.Passed || !receipt.PublicationBlocked || len(receipt.LinkedCards) != 4 {
 		t.Fatalf("link failed: %+v", receipt)
 	}
 	if !strings.HasPrefix(receipt.ArtifactDigest, "sha256:") {

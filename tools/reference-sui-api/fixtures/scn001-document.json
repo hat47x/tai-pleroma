@@ -25,6 +25,15 @@
       "textReviewed": false
     },
     {
+      "id": "O-06",
+      "text": "最新と称する配布文書では会議室は事前予約制",
+      "x": 480,
+      "y": 0,
+      "claimType": "fact",
+      "sources": ["distribution#v1"],
+      "textReviewed": false
+    },
+    {
       "id": "O-07",
       "text": "施設の利用は予約不要",
       "x": 640,
@@ -53,7 +62,7 @@
     },
     {
       "id": "I-02",
-      "cardIds": ["O-03"],
+      "cardIds": ["O-03", "O-06"],
       "title": "予約必要の記載",
       "collapsed": false
     }
