@@ -22,11 +22,12 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
 | TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・3 card/2 island/1 edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
+| SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
 | EKI接続 | 未実施 | [接続調査](../integrations/capability-inventory.md) | 実Task・委任の検証なし |
 
 ## 検証
 
-- GitHub Actions `tai-reference`のmatrixで7ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate）を`gofmt`・`go vet`・`go test`。
+- GitHub Actions `tai-reference`のmatrixで8ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate、SUI link）を`gofmt`・`go vet`・`go test`。
 - 別jobでSUI API probeのPython testを実行する。
 - MMI/SEIの実接続試験は、sibling checkoutがないCIではskip。
 - 保存済みの統合実行recordは常に`runDigest`とcomponent invariantsを検証。
