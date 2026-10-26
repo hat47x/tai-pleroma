@@ -46,6 +46,8 @@ python cancel.py --base-url http://127.0.0.1:18082 --token "$EKI_TOKEN" \
 
 `cancelled=true`、`taskExecuted=false`、`workerResult=false`です。
 
+cancel後、`GET /v1/tasks/{id}/result`は**501 NOT_IMPLEMENTED**を返すことを確認し、`resultAvailable=false`を記録します。結果APIが未実装の段階で、結果を捏造しないための境界です。
+
 ## 境界
 
 - Taskの送信は合成的な1件だけで、実行・結果・委任の完了は未検証です。

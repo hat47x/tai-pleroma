@@ -32,6 +32,10 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_GET(self):
+        if self.path == "/v1/tasks/tsk_test/result":
+            self.send_response(501)
+            self.end_headers()
+            return
         if self.path != "/v1/tasks/tsk_test":
             self.send_response(404)
             self.end_headers()
@@ -62,6 +66,8 @@ class CancelTest(unittest.TestCase):
         self.assertEqual(receipt["terminalCode"], "CANCELLED")
         self.assertFalse(receipt["taskExecuted"])
         self.assertFalse(receipt["workerResult"])
+        self.assertFalse(receipt["resultAvailable"])
+        self.assertEqual(receipt["resultStatus"], 501)
 
     def test_invalid_token_is_rejected(self):
         receipt = cancel(self.base_url, "wrong-token", FIXTURE, "key-1")

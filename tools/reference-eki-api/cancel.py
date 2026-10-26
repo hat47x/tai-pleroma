@@ -44,6 +44,7 @@ def cancel(base_url: str, token: str, fixture: dict[str, Any], key: str) -> dict
         "cancelled": False,
         "taskExecuted": False,
         "workerResult": False,
+        "resultAvailable": False,
         "authorityVerified": False,
         "passed": False,
         "notes": [
@@ -88,6 +89,15 @@ def cancel(base_url: str, token: str, fixture: dict[str, Any], key: str) -> dict
         receipt["reason"] = "task did not reach cancelled/CANCELLED"
         return receipt
     receipt["cancelled"] = True
+    status, result = _request("GET", base + "/v1/tasks/" + task_id + "/result", token)
+    receipt["resultStatus"] = status
+    if status == 200:
+        receipt["reason"] = f"unexpected result was returned: {result}"
+        return receipt
+    if status != 501:
+        receipt["reason"] = f"unexpected result endpoint status: {status}"
+        return receipt
+    receipt["resultAvailable"] = False
     receipt["passed"] = True
     return receipt
 
