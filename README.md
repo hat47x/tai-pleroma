@@ -24,7 +24,7 @@
 - [SUI API到達性probe](tools/reference-sui-api/README.md) — `/healthz`・`/openapi.json`・`/docs`・DocumentV1を読む（実資料・認可は未検証）
 - [SUI→SCN-001対応](tools/reference-sui-link/README.md) — SUIのcard digestとisland構成をSCN-001観測へ照合する
 - [EKI CLI起動probe](tools/reference-eki-cli/README.md) — `eki-control`/`eki-agent`のversionだけを確認する（委任・Authorityは未検証）
-- [EKI Control API認証probe](tools/reference-eki-api/README.md) — `GET /v1/tasks`の405で認証通過を確認する（Task送信は未実施）
+- [EKI Control API認証probe](tools/reference-eki-api/README.md) — `GET /v1/tasks`の405で認証通過を確認し、合成Task 1件を`queued`で受理する（Worker実行は未実施）
 
 ## 検証
 
