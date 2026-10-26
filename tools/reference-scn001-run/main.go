@@ -316,7 +316,7 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	suiOK := true
 	if link := receipt.Components.SUILink; link != nil {
-		suiOK = link.Passed && len(link.LinkedCards) == 3 && len(link.IslandGroups) == 2 &&
+		suiOK = link.Passed && len(link.LinkedCards) == 4 && len(link.IslandGroups) == 2 &&
 			link.EdgeCount == 1 && link.DocumentID != "" && link.DocumentDigest != ""
 		if !suiOK {
 			verification.Reason = "SUI link component is incomplete"
