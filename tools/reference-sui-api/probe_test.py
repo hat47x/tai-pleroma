@@ -14,6 +14,18 @@ class Handler(BaseHTTPRequestHandler):
             payload = {"openapi": "3.1.0", "paths": {"/healthz": {}, "/docs/{doc_id}": {}}}
         elif self.path == "/docs":
             payload = [{"id": "doc-1", "updated_at": "2026-10-26T00:00:00Z"}]
+        elif self.path == "/docs/doc-1":
+            payload = {
+                "version": 1,
+                "id": "doc-1",
+                "title": "SCN-001 demo",
+                "createdAt": "2026-10-26T00:00:00Z",
+                "updatedAt": "2026-10-26T00:00:00Z",
+                "transform": {"panX": 0, "panY": 0, "zoom": 1},
+                "cards": [],
+                "edges": [],
+                "islands": [],
+            }
         else:
             self.send_response(404)
             self.end_headers()
@@ -49,6 +61,11 @@ class ProbeTest(unittest.TestCase):
         self.assertEqual(receipt["pathCount"], 2)
         self.assertEqual(receipt["documentCount"], 1)
         self.assertEqual(receipt["documentIds"], ["doc-1"])
+        document = probe(self.base_url, doc_id="doc-1")
+        self.assertTrue(document["documentRead"])
+        self.assertEqual(document["documentTitle"], "SCN-001 demo")
+        self.assertEqual(document["documentCardCount"], 0)
+        self.assertTrue(document["documentDigest"].startswith("sha256:"))
 
     def test_probe_reports_unreachable(self):
         receipt = probe("http://127.0.0.1:1", timeout=1)
