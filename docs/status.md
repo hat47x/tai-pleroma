@@ -25,7 +25,7 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 
 ## 検証
 
-- GitHub Actions `tai-reference`のmatrixで5ツールを`gofmt`・`go vet`・`go test`。
+- GitHub Actions `tai-reference`のmatrixで7ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate）を`gofmt`・`go vet`・`go test`。
 - MMI/SEIの実接続試験は、sibling checkoutがないCIではskip。
 - 保存済みの統合実行recordは常に`runDigest`とcomponent invariantsを検証。
 - 2026-10-26時点のmain CIはsuccess。
