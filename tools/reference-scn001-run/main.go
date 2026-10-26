@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 )
@@ -190,6 +191,9 @@ type OwnerPacket struct {
 }
 
 func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
+	if !receipt.Passed {
+		return OwnerPacket{}, fmt.Errorf("owner packet requires a successful reference run")
+	}
 	if verification := Verify(receipt); !verification.Passed {
 		return OwnerPacket{}, fmt.Errorf("run receipt is not verifiable: %s", verification.Reason)
 	}
@@ -265,8 +269,8 @@ func VerifyArtifact(receipt RunReceipt, path string) Verification {
 
 func Verify(receipt RunReceipt) Verification {
 	verification := Verification{Schema: "tai.reference.scn001-run-verification/v0", RunDigest: receipt.RunDigest}
-	if receipt.Schema != "tai.reference.scn001-run/v0" {
-		verification.Reason = "unexpected run schema"
+	if receipt.Schema != "tai.reference.scn001-run/v0" || receipt.Scenario != "SCN-001" || !receipt.Synthetic {
+		verification.Reason = "unexpected run schema, scenario, or synthetic scope"
 		return verification
 	}
 	if receipt.HumanReviewed || receipt.AuthorityVerified || receipt.Published {
@@ -311,6 +315,10 @@ func Verify(receipt RunReceipt) Verification {
 		return verification
 	}
 	gate := receipt.Components.PublicationGate
+	if gate.Schema != "tai.reference.scn001-publication-gate/v0" {
+		verification.Reason = "unexpected publication gate schema"
+		return verification
+	}
 	if gate.Allowed && len(gate.Blockers) != 0 {
 		verification.Reason = "publication gate is allowed but has blockers"
 		return verification
@@ -321,6 +329,10 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	if receipt.PublicationAllowed != gate.Allowed {
 		verification.Reason = "publication allowed does not match the gate"
+		return verification
+	}
+	if !slices.Equal(receipt.PublicationBlockers, gate.Blockers) {
+		verification.Reason = "publication blockers do not match the gate"
 		return verification
 	}
 	if mmi.Passed && (mmi.Server == "" || mmi.ProtocolVersion != "2024-11-05" ||
@@ -346,8 +358,12 @@ func Verify(receipt RunReceipt) Verification {
 		verification.Reason = "provisional approval was reported as publication"
 		return verification
 	}
-	if receipt.ProvisionalApproved && !(sei.ProvisionalApproved && scn.ProvisionalApproved) {
-		verification.Reason = "provisional approval is not supported by the components"
+	if receipt.ProvisionalApproved != (sei.ProvisionalApproved && scn.ProvisionalApproved) {
+		verification.Reason = "provisional approval does not match the components"
+		return verification
+	}
+	if receipt.ReviewRequired != receipt.ProvisionalApproved {
+		verification.Reason = "review requirement does not match provisional approval"
 		return verification
 	}
 	if receipt.ProvisionalApproved && receipt.ReviewTrigger != "real-object" {
@@ -358,8 +374,8 @@ func Verify(receipt RunReceipt) Verification {
 		verification.Reason = "overall pass does not match the components"
 		return verification
 	}
-	if receipt.RealProductsConnected && !(mmi.Passed && sei.Passed && scn.RealProductsConnected) {
-		verification.Reason = "real product connection is not supported by all components"
+	if receipt.RealProductsConnected != (mmi.Passed && mmi.SourceDigestBefore != "" && sei.Passed && scn.RealProductsConnected) {
+		verification.Reason = "real product connection does not match the components"
 		return verification
 	}
 	digest, err := digestJSON(receipt.Components)
