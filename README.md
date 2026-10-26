@@ -76,3 +76,7 @@ TEI Platformの非公開作業資料、第三者の原文・抽出物は、著�
 | [tools/](tools/) | 参照実装と検証用ツール |
 
 開発時の作業規則は[AGENTS.md](AGENTS.md)を参照してください。
+
+## ライセンス
+
+[MIT](LICENSE)
