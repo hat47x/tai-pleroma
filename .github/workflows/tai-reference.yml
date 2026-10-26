@@ -24,6 +24,7 @@ jobs:
           - tools/reference-tei-model
           - tools/reference-publication-gate
           - tools/reference-sui-link
+          - tools/reference-sui-draft
           - tools/reference-eki-cli
     defaults:
       run:
