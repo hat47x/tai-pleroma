@@ -38,3 +38,16 @@ jobs:
         run: go vet ./...
       - name: go test
         run: go test ./... -count=1
+
+  python-reference:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/reference-sui-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: probe test
+        run: python -m unittest -v probe_test.py
