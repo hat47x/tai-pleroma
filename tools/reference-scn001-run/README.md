@@ -19,7 +19,7 @@ go test ./...
 go run . -root ../..
 ```
 
-`-out run.json`でreceiptを保存できます。今回生成したD-04も残す場合は、`-artifact-out review.md -out run.json`を指定します。両方の出力先は新規・別名のファイルに限り、既存ファイルは上書きしません。保存したbyte列を読み直し、実行記録のdigestとの一致を確認します。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
+`-out run.json`でreceiptを保存できます。SUIのcard/island照合を含める場合は`-sui-link ../../evaluations/records/SUI-SCN-link-2026-10-26.json`を指定します。今回生成したD-04も残す場合は、`-artifact-out review.md -out run.json`を指定します。両方の出力先は新規・別名のファイルに限り、既存ファイルは上書きしません。保存したbyte列を読み直し、実行記録のdigestとの一致を確認します。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
 
 `-verify run.json -artifact review.md`では、指定したローカルファイルを読み直し、`reviewArtifact.artifactDigest`とbytesを照合します。実行記録の検証とbyte照合の両方が成功した場合だけ、`passed=true`・`artifactBytesVerified=true`になります。欠損・差替え・改行の変換は失敗です。`-artifact`を付けない検証は`artifactBytesVerified=false`で、ファイルの一致を主張しません。`-artifact`は`-verify`または`-owner-packet`と併用します。`-verify`と`-owner-packet`は同時に指定できません。
@@ -57,7 +57,8 @@ go run . -owner-packet run.json -artifact review.md -out owner.json
 - 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`reviewTrigger=real-object`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
 - `reviewArtifact`: D-04の内部レビュー用Markdownの`status=provisional`、`artifactDigest`、`publicationApproved=false`。
 - `publicationGate`: R-01〜R-07のreview statusを読み、`allowed=false`とblockerを記録する。
-- `runDigest`は5 componentのJSONに対するSHA-256。
+- `suiLink`指定時は、SUIのlinked cards・island groups・edge countをcomponentへ追加する。
+- `runDigest`はcomponentのJSONに対するSHA-256。
 
 ## 境界
 

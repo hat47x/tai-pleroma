@@ -87,6 +87,15 @@ type SCNComponent struct {
 	Cases                 []CaseResult `json:"cases"`
 }
 
+type SUILinkComponent struct {
+	Passed         bool     `json:"passed"`
+	DocumentID     string   `json:"documentId"`
+	DocumentDigest string   `json:"documentDigest"`
+	LinkedCards    []string `json:"linkedCards"`
+	IslandGroups   []string `json:"islandGroups"`
+	EdgeCount      int      `json:"edgeCount"`
+}
+
 type RunReceipt struct {
 	Schema      string `json:"schema"`
 	Scenario    string `json:"scenario"`
@@ -98,6 +107,7 @@ type RunReceipt struct {
 		SCN001          SCNComponent      `json:"scn001"`
 		ReviewArtifact  ArtifactComponent `json:"reviewArtifact"`
 		PublicationGate GateComponent     `json:"publicationGate"`
+		SUILink         *SUILinkComponent `json:"suiLink,omitempty"`
 	} `json:"components"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -209,6 +219,7 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 			"tools/reference-scn001-render/README.md",
 			"tools/reference-mmi-readonly/README.md",
 			"tools/reference-sei-decision/README.md",
+			"tools/reference-sui-link/README.md",
 			"evaluations/SCN-001-real-object-review.md",
 		},
 		Questions: []OwnerQuestion{
@@ -303,7 +314,16 @@ func Verify(receipt RunReceipt) Verification {
 			seen[item.ID] = true
 		}
 	}
-	if receipt.Passed != (mmi.Passed && sei.Passed && scn.Passed && artifact.Passed) {
+	suiOK := true
+	if link := receipt.Components.SUILink; link != nil {
+		suiOK = link.Passed && len(link.LinkedCards) == 3 && len(link.IslandGroups) == 2 &&
+			link.EdgeCount == 1 && link.DocumentID != "" && link.DocumentDigest != ""
+		if !suiOK {
+			verification.Reason = "SUI link component is incomplete"
+			return verification
+		}
+	}
+	if receipt.Passed != (mmi.Passed && sei.Passed && scn.Passed && artifact.Passed && suiOK) {
 		verification.Reason = "overall pass does not match component outcomes"
 		return verification
 	}
@@ -391,7 +411,11 @@ func Verify(receipt RunReceipt) Verification {
 }
 
 func Run(ctx context.Context, root string) (RunReceipt, error) {
-	return runWithArtifactOutput(ctx, root, "")
+	return runWithArtifactOutputAndSUI(ctx, root, "", "")
+}
+
+func runWithArtifactOutput(ctx context.Context, root, artifactOut string) (RunReceipt, error) {
+	return runWithArtifactOutputAndSUI(ctx, root, artifactOut, "")
 }
 
 func artifactDigest(raw []byte) string {
@@ -399,7 +423,7 @@ func artifactDigest(raw []byte) string {
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
 
-func runWithArtifactOutput(ctx context.Context, root, artifactOut string) (RunReceipt, error) {
+func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLinkPath string) (RunReceipt, error) {
 	receipt := RunReceipt{Schema: "tai.reference.scn001-run/v0", Scenario: "SCN-001", Synthetic: true}
 	tools := filepath.Join(root, "tools")
 	mmiTool := filepath.Join(tools, "reference-mmi-readonly")
@@ -465,11 +489,19 @@ func runWithArtifactOutput(ctx context.Context, root, artifactOut string) (RunRe
 	if err := readJSON(scnPath, &receipt.Components.SCN001); err != nil {
 		return receipt, err
 	}
+	if suiLinkPath != "" {
+		var link SUILinkComponent
+		if err := readJSON(suiLinkPath, &link); err != nil {
+			return receipt, err
+		}
+		receipt.Components.SUILink = &link
+	}
 	receipt.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
 	receipt.RealProductsConnected = receipt.Components.MMI.Passed && receipt.Components.MMI.SourceDigestBefore != "" &&
 		receipt.Components.SEI.Passed && receipt.Components.SCN001.RealProductsConnected
 	receipt.Passed = receipt.Components.MMI.Passed && receipt.Components.SEI.Passed &&
-		receipt.Components.SCN001.Passed && receipt.Components.ReviewArtifact.Passed
+		receipt.Components.SCN001.Passed && receipt.Components.ReviewArtifact.Passed &&
+		(receipt.Components.SUILink == nil || receipt.Components.SUILink.Passed)
 	receipt.HumanReviewed = false
 	receipt.AuthorityVerified = false
 	receipt.Published = false
@@ -487,6 +519,9 @@ func runWithArtifactOutput(ctx context.Context, root, artifactOut string) (RunRe
 		"D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
 		"publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
 		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
+	}
+	if receipt.Components.SUILink != nil {
+		receipt.Notes = append(receipt.Notes, "SUI linkはcard digestとisland構成をSCN-001観測へ照合した参照であり、実資料・認可は未検証。")
 	}
 	digest, err := digestJSON(receipt.Components)
 	if err != nil {
@@ -506,13 +541,15 @@ func main() {
 	verifyPath := flag.String("verify", "", "verify an existing run receipt instead of running")
 	artifactPath := flag.String("artifact", "", "with -verify or -owner-packet, compare this artifact's exact bytes")
 	artifactOut := flag.String("artifact-out", "", "save this run's D-04 to a new local file")
+	suiLinkPath := flag.String("sui-link", "", "include a SUI link receipt in this run")
 	ownerPacketPath := flag.String("owner-packet", "", "build an owner decision packet from an existing run receipt")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	if (*verifyPath != "" && *ownerPacketPath != "") ||
 		(*artifactPath != "" && *verifyPath == "" && *ownerPacketPath == "") ||
-		(*artifactOut != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) {
-		fmt.Fprintln(os.Stderr, "choose run, verify, or owner-packet mode; -artifact belongs to verify/owner-packet and -artifact-out to run")
+		(*artifactOut != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) ||
+		(*suiLinkPath != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) {
+		fmt.Fprintln(os.Stderr, "choose run, verify, or owner-packet mode; -artifact/-sui-link belong to run or verify/owner-packet as documented")
 		os.Exit(2)
 	}
 	if *artifactOut != "" {
@@ -606,7 +643,7 @@ func main() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
-	receipt, err := runWithArtifactOutput(ctx, *root, *artifactOut)
+	receipt, err := runWithArtifactOutputAndSUI(ctx, *root, *artifactOut, *suiLinkPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
