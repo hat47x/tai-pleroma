@@ -56,3 +56,9 @@ jobs:
       - name: EKI API probe test
         working-directory: tools/reference-eki-api
         run: python -m unittest -v probe_test.py submit_test.py
+      - name: public boundary test
+        working-directory: tools/check-public-boundary
+        run: python -m unittest -v check_test.py
+      - name: public boundary scan
+        working-directory: .
+        run: python tools/check-public-boundary/check.py --root .
