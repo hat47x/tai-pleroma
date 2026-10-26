@@ -182,3 +182,11 @@ func TestBasisPointersDoNotCollapseRepeatedLogicalDecisionIDs(t *testing.T) {
 		t.Fatalf("record locations or scopes collapsed: %+v", result)
 	}
 }
+
+func TestBasisSnapshotRejectsInvalidUTF8WithoutRepairingValues(t *testing.T) {
+	raw := basisBundle(t, "v1", "sha256:"+strings.Repeat("a", 64), false)
+	bad := []byte(strings.Replace(string(raw), `"scope":"v1"`, "\"scope\":\""+string([]byte{0xff})+"\"", 1))
+	if _, err := basisFromSnapshot(bad); err == nil {
+		t.Fatal("invalid UTF-8 was accepted as a basis snapshot")
+	}
+}

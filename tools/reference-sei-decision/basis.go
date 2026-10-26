@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 type DecisionBasis struct {
@@ -79,6 +80,9 @@ func inspectBasis(ctx context.Context, seiRoot, path string) (BasisInspection, e
 }
 
 func basisFromSnapshot(raw []byte) (BasisInspection, error) {
+	if !utf8.Valid(raw) {
+		return BasisInspection{}, fmt.Errorf("basis snapshot is not valid UTF-8")
+	}
 	scanner := json.NewDecoder(bytes.NewReader(raw))
 	scanner.UseNumber()
 	if err := scanBasisJSON(scanner); err != nil {
