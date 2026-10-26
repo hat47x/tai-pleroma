@@ -21,7 +21,7 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
 | TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
-| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・3 cardのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
+| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・3 card/2 island/1 edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
 | EKI接続 | 未実施 | [接続調査](../integrations/capability-inventory.md) | 実Task・委任の検証なし |
 
 ## 検証
