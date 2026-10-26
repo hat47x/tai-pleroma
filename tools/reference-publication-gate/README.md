@@ -15,11 +15,14 @@ go run . -status ../../evaluations/SCN-001-review-status.json
 
 - R-01〜R-05が`accepted`で、空でないevidenceを持つ。
 - R-06/R-07が`accepted`（evidenceあり）または`not-applicable`。
+- R-01〜R-07のIDはそれぞれ一度だけ指定する。重複・未知のIDがあれば、行順や値が同じかどうかにかかわらず`allowed=false`とする。
+- JSONの同名項目、未知の項目、末尾の追加データを拒否する。大文字小文字やUnicodeのcase foldingで同じ名前になる項目も、重複として扱う。
+- schemaまたはscenarioが対象外なら、判定を通さない。
 - 上記以外は`allowed=false`、blockerを返す。
 
 ## 境界
 
-- review statusの内容が真実であることを検証しない。署名・実在確認は別途必要。
+- review statusの内容が真実であることを検証しない。署名・実在確認は別途必要。重複を拒否しても、証拠の真正性や承認者の権限は確認できない。
 - gateの`allowed=true`は公開承認ではなく、入力条件の充足だけを示す。
 - 公開・外部作用は実装しない。
 - 現在のstatusは[evaluations/SCN-001-review-status.json](../../evaluations/SCN-001-review-status.json)。

@@ -37,8 +37,30 @@ func Evaluate(status Status) Receipt {
 		Blockers: []string{}, Accepted: []string{},
 	}
 	byID := map[string]Item{}
+	if status.Schema != "tai.reference.scn001-review-status/v0" || status.Scenario != "SCN-001" {
+		receipt.Blockers = append(receipt.Blockers, "unexpected review status schema or scenario")
+		return receipt
+	}
+	known := map[string]bool{}
+	for _, id := range required {
+		known[id] = true
+	}
+	for _, id := range optional {
+		known[id] = true
+	}
 	for _, item := range status.Items {
+		if !known[item.ID] {
+			receipt.Blockers = append(receipt.Blockers, "unknown review ID: "+item.ID)
+			continue
+		}
+		if _, duplicate := byID[item.ID]; duplicate {
+			receipt.Blockers = append(receipt.Blockers, "duplicate review ID: "+item.ID)
+			continue
+		}
 		byID[item.ID] = item
+	}
+	if len(receipt.Blockers) != 0 {
+		return receipt
 	}
 	for _, id := range required {
 		item, ok := byID[id]
@@ -89,8 +111,8 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	var status Status
-	if err := json.Unmarshal(raw, &status); err != nil {
+	status, err := DecodeStatus(raw)
+	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
