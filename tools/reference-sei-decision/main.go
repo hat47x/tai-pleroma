@@ -181,6 +181,7 @@ func findDecision(decisions []DecisionView, id string) (DecisionView, bool) {
 
 func main() {
 	seiRoot := flag.String("sei-root", "", "SEI checkout root (default: SEI_ROOT or ../../../sei-cognition)")
+	basisBundle := flag.String("basis-bundle", "", "inspect original decision basis references in a portable bundle (no store writes)")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	root := *seiRoot
@@ -192,6 +193,27 @@ func main() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
+	if *basisBundle != "" {
+		inspection, err := inspectBasis(ctx, root, *basisBundle)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		encoded, err := json.MarshalIndent(inspection, "", "  ")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		encoded = append(encoded, '\n')
+		if *outPath != "" {
+			if err := writeBasisInspection(*outPath, encoded); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(2)
+			}
+		}
+		os.Stdout.Write(encoded)
+		return
+	}
 	receipt := Run(ctx, root)
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {

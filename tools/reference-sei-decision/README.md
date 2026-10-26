@@ -32,3 +32,21 @@ go run . -sei-root ../../../sei-cognition
 - `resume`はprojectionであり、決定の意味・正しさ・Authorityを証明しない。
 - `readOnlyProjection=true`は`resume`の読み取りだけを示し、SEI全体の読取専用を意味しない。
 - 実運用の監査、複数利用者、署名、公開は未検証。
+
+## 原記録の根拠参照を読む
+
+`resume`は表示用の一覧であり、ExactBindingのscope・digest・表現profileを同じ形で返すものではありません。原記録を確認する場合は、SEIの既存`export`で取得したportable bundleを、次のモードで読みます。
+
+```text
+go run . -sei-root ../../../sei-cognition -basis-bundle review-bundle.json -out basis-inspection.json
+```
+
+このモードは`init`/`add`を呼びません。入力のbyte列を一時snapshotとして固定し、同じsnapshotについて既存の`sei verify --input`と参照抽出を行います。入力全体の`sourceDigest`、元record ID、元記録内の`jsonPointer`、Decisionの論理参照、`basis_refs`の各項目と値を返します。参照をkind:idだけに縮めず、論理参照とExactBindingの両方を保持します。出力JSONの空白・エスケープ等は再符号化されるため、断片の元byte列の保存を意味しません。
+
+- 認識した`sei.decision-memory/v1alpha1`のDecisionだけを抽出します。未認識Contractは意味を解釈せず、`notVerifiedRecordCount`で残します。抽出0件を「元案件に判断がない」と読み替えません。
+- 同じDecision論理IDが複数のrecordにあっても、record IDと元の位置で別々に返します。
+- `recordStructureChecked=true`はSEIの構造検査が成功したことだけを示します。`exactTargetsVerified`・`humanReviewed`・`authorityVerified`・`publicationApproved`はすべてfalseです。
+- `-out`は既存ファイルを上書きしません。入力と同じパスや、その別名を指定しても、既存ファイルのまま失敗します。
+- 不正なUTF-8、同名JSON項目、末尾の追加データを拒否します。値を置換文字で補いません。case foldingで同名になる項目も拒否するため、この診断の受入範囲はSEI本体より狭く、拒否はSEI Contract違反の判定ではありません。
+
+出力は原記録へ戻るための参照資料です。新しい製品間Contractや状態の正本ではありません。参照先の内容・現行性・署名・権限は検証せず、受理の継続・失効・再受理も決めません。既定のSCN-001一時storeによる実行と、そのreceiptは変更しません。
