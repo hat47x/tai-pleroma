@@ -13,8 +13,9 @@ go run . -status ../../evaluations/SCN-001-review-status.json
 
 許可される条件:
 
-- R-01〜R-05が`accepted`で、空でないevidenceを持つ。
-- R-06/R-07が`accepted`（evidenceあり）または`not-applicable`。
+- R-01〜R-05が`accepted`で、空でないevidenceと`evidenceKind=real-object`を持つ。
+- R-06/R-07が`accepted`（evidenceありかつ`evidenceKind=real-object`）または`not-applicable`。
+- `evidenceKind`が`synthetic`・`fixture`・`none`のaccepted項目はblockedにする。
 - R-01〜R-07のIDはそれぞれ一度だけ指定する。重複・未知のIDがあれば、行順や値が同じかどうかにかかわらず`allowed=false`とする。
 - JSONの同名項目、未知の項目、末尾の追加データを拒否する。大文字小文字やUnicodeのcase foldingで同じ名前になる項目も、重複として扱う。
 - schemaまたはscenarioが対象外なら、判定を通さない。
