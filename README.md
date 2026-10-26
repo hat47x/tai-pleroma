@@ -76,7 +76,7 @@ TEI Platformの非公開作業資料、第三者の原文・抽出物は、著�
 | [evaluations/](evaluations/) | 評価条件、合成試験、実行記録 |
 | [tools/](tools/) | 参照実装と検証用ツール |
 
-開発時の作業規則は[AGENTS.md](AGENTS.md)を参照してください。
+開発時の作業規則は[AGENTS.md](AGENTS.md)を参照してください。脆弱性の報告は[SECURITY.md](SECURITY.md)、変更の進め方は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
 
 ## ライセンス
 
