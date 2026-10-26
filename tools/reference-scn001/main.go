@@ -312,12 +312,13 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, CaseResult{ID: "P-06", Status: "not-run",
 		Reason: "個人・組織・社会の主体規模比較は人間の判断が必要"})
 
-	// N-01: text A→B→A does not restore an earlier approval.
+	// N-01: same text in O-02/O-07 with another source version and no published Draft (a structural check only;
+	// whether an earlier approval revives is not covered here).
 	o02, ok02 := byID["O-02"]
 	o07, ok07 := byID["O-07"]
 	n01 := ok02 && ok07 && o02.Text == o07.Text && o02.SourceVersion != o07.SourceVersion && !anyPublished(f.Drafts)
 	receipt.Cases = append(receipt.Cases, statusCase("N-01", n01,
-		"O-07がO-02と同じ文言でも、出典版が別であり旧承認を自動復活させない"))
+		"O-02とO-07が同じ文言で出典版が異なり、公開済みDraftがないことの構造確認。過去の受理の復活は扱わない"))
 
 	// N-02: no publication without a confirmed authority.
 	n02 := !anyPublished(f.Drafts) && f.Authority.Status == "unconfirmed"
