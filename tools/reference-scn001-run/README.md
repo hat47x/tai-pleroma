@@ -34,6 +34,11 @@ go run . -verify ../../evaluations/records/SCN-001-run-2026-10-26.json -artifact
 
 `-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。packetはD-04成果物のdigest/status、公開gateの`allowed`/blocker、artifact・record・再レビュー計画への参照を含みます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
 
+
+まとめ欄のscenario・合成範囲、仮承認・再レビュー要否・実接続のフラグ、公開判定とblocker一覧は、個別結果と一致する必要があります。blockerの欠落・差替えや未知の公開gate schemaは、componentのdigestが一致しても拒否します。
+
+`-verify`の`passed=true`は記録の整合性を示し、参照実行自体の成功とは別です。整合した失敗記録は検査できますが、Owner判断packetは成功した参照実行の記録からだけ生成します。公開gateの入力条件を満たしても、packetの人間レビュー・Authority・公開承認はfalseのままです。
+
 ## 確認すること
 
 - MMI: `selectedRows=3`、O-02/O-03の文言差保持、境界外・missing拒否、digest不変。
