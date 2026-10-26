@@ -34,6 +34,28 @@
       "textReviewed": false
     }
   ],
-  "edges": [],
-  "islands": []
+  "edges": [
+    {
+      "id": "E-01",
+      "fromId": "I-01",
+      "toId": "I-02",
+      "fromKind": "island",
+      "toKind": "island",
+      "type": "contradicts"
+    }
+  ],
+  "islands": [
+    {
+      "id": "I-01",
+      "cardIds": ["O-02", "O-07"],
+      "title": "予約不要の記載",
+      "collapsed": false
+    },
+    {
+      "id": "I-02",
+      "cardIds": ["O-03"],
+      "title": "予約必要の記載",
+      "collapsed": false
+    }
+  ]
 }

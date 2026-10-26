@@ -1,0 +1,14 @@
+{
+  "schema": "tai.reference.eki-api-probe/v0",
+  "baseUrl": "http://127.0.0.1:18080",
+  "readOnly": true,
+  "authenticated": true,
+  "taskDelegated": false,
+  "authorityVerified": false,
+  "passed": true,
+  "notes": [
+    "EKI Control APIのGET /v1/tasksに対する認証結果だけを確認する。",
+    "Taskの送信・委任・Worker・結果検証・Authorityは未検証。"
+  ],
+  "tasksStatus": 405
+}

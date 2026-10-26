@@ -15,19 +15,22 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | SCN-001合成walkthrough | 実装済み | [reference-scn001](../tools/reference-scn001/README.md) | 合成fixture。P-06/N-05はnot-run |
 | MMI読み取り専用MCP | ローカル参照接続済み | [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md) | ローカル開発チェックアウト限定。実運用の認可・版固定は未確認 |
 | SEI decision-memory | 一時storeで参照済み | [reference-sei-decision](../tools/reference-sei-decision/README.md) | 合成fixture。実store・権限・署名は未確認 |
-| 統合参照実行 | 実装済み | [reference-scn001-run](../tools/reference-scn001-run/README.md)、[record](../evaluations/records/SCN-001-run-2026-10-26.json) | `runDigest`は内部整合のみ。署名・Authorityは未検証 |
+| 統合参照実行 | 実装済み（SUI linkを含む） | [reference-scn001-run](../tools/reference-scn001-run/README.md)、[record](../evaluations/records/SCN-001-run-2026-10-26.json) | `runDigest`は内部整合のみ。署名・Authorityは未検証 |
 | D-04レビュー成果物 | 生成済み | [artifact](../evaluations/artifacts/SCN-001-D-04-provisional.md) | 公開用ではない。実在の規程ではない |
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
 | 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
 | TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
-| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・3 cardのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
-| EKI接続 | 未実施 | [接続調査](../integrations/capability-inventory.md) | 実Task・委任の検証なし |
+| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・3 card/2 island/1 edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
+| SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
+| EKI CLI起動 | `eki-control`/`eki-agent`のversionを確認済み | [probe](../tools/reference-eki-cli/README.md)、[record](../evaluations/records/EKI-cli-2026-10-26.json) | 実Task・委任・Authorityは未検証 |
+| EKI Control API認証 | `GET /v1/tasks`の405で認証通過を確認済み | [probe](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-api-2026-10-26.json) | Task送信・委任・Worker・結果検証は未実施 |
+| EKI Task admission | 合成Task 1件を`queued`で受理済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |
 
 ## 検証
 
-- GitHub Actions `tai-reference`のmatrixで7ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate）を`gofmt`・`go vet`・`go test`。
-- 別jobでSUI API probeのPython testを実行する。
+- GitHub Actions `tai-reference`のmatrixで9ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate、SUI link、EKI CLI）を`gofmt`・`go vet`・`go test`。
+- 別jobでSUI API probeとEKI API probeのPython testを実行する。
 - MMI/SEIの実接続試験は、sibling checkoutがないCIではskip。
 - 保存済みの統合実行recordは常に`runDigest`とcomponent invariantsを検証。
 - 2026-10-26時点のmain CIはsuccess。

@@ -23,8 +23,8 @@ class Handler(BaseHTTPRequestHandler):
                 "updatedAt": "2026-10-26T00:00:00Z",
                 "transform": {"panX": 0, "panY": 0, "zoom": 1},
                 "cards": [],
-                "edges": [],
-                "islands": [],
+                "edges": [{"id": "E-1", "fromId": "I-1", "toId": "I-2", "type": "related"}],
+                "islands": [{"id": "I-1", "cardIds": []}],
             }
         else:
             self.send_response(404)
@@ -67,6 +67,8 @@ class ProbeTest(unittest.TestCase):
         self.assertEqual(document["documentCardCount"], 0)
         self.assertTrue(document["documentDigest"].startswith("sha256:"))
         self.assertEqual(document["documentCards"], [])
+        self.assertEqual(document["documentIslandCount"], 1)
+        self.assertEqual(document["documentEdgeCount"], 1)
 
     def test_probe_reports_unreachable(self):
         receipt = probe("http://127.0.0.1:1", timeout=1)
