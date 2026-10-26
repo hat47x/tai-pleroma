@@ -55,4 +55,4 @@ jobs:
         run: python -m unittest -v probe_test.py
       - name: EKI API probe test
         working-directory: tools/reference-eki-api
-        run: python -m unittest -v probe_test.py
+        run: python -m unittest -v probe_test.py submit_test.py
