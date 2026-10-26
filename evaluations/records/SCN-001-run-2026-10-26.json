@@ -1,14 +1,14 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-25T17:39:01Z",
-  "runDigest": "sha256:9f825860a0355ad10ae827577298f0048682b3e8cb5b29c632769b34e2184077",
+  "generatedAt": "2026-10-26T13:37:25Z",
+  "runDigest": "sha256:f0470418486432c955fe35a1ae3095692a099f6435b4f26099941bdfbbc52867",
   "components": {
     "mmi": {
       "passed": true,
       "server": "markdown-matrix-injector/0.2.0",
       "protocolVersion": "2024-11-05",
-      "mmiCommit": "a8addd1560bd02131b29ade4d9d1cfa7ca5f9b21",
+      "mmiCommit": "1989b827d34ebb364befbf64a2b6516ecccb1931",
       "selectedRows": 3,
       "conflictPreserved": true,
       "boundaryRejected": true,
@@ -19,7 +19,7 @@
     "sei": {
       "passed": true,
       "seiCommit": "fd329e10554c677058702d574ae9678fed786842",
-      "goVersion": "go version go1.26.9 windows/amd64",
+      "goVersion": "go version go1.27.3 windows/amd64",
       "bundleId": "scn001",
       "recordCount": 3,
       "decision": {
@@ -136,6 +136,21 @@
         "R-06: status=pending",
         "R-07: status=pending"
       ]
+    },
+    "suiLink": {
+      "passed": true,
+      "documentId": "scn001-demo",
+      "documentDigest": "sha256:d3949c8a771de3caa6bcceba74c0f5ad8cdb3c7ed2973ffa0f54a0963006182b",
+      "linkedCards": [
+        "O-02",
+        "O-03",
+        "O-07"
+      ],
+      "islandGroups": [
+        "I-01",
+        "I-02"
+      ],
+      "edgeCount": 1
     }
   },
   "passed": true,
@@ -165,6 +180,7 @@
     "仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
     "D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
     "publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
-    "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。"
+    "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
+    "SUI linkはcard digestとisland構成をSCN-001観測へ照合した参照であり、実資料・認可は未検証。"
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.sui-scn-link/v0",
+  "documentId": "scn001-demo",
+  "documentDigest": "sha256:d3949c8a771de3caa6bcceba74c0f5ad8cdb3c7ed2973ffa0f54a0963006182b",
+  "linkedCards": [
+    "O-02",
+    "O-03",
+    "O-07"
+  ],
+  "islandGroups": [
+    "I-01",
+    "I-02"
+  ],
+  "edgeCount": 1,
+  "passed": true,
+  "notes": [
+    "SUIのcard digestをSCN-001 fixtureの観測と照合する参照。",
+    "SUIの実資料・認可・意味形成の正しさは検証しない。"
+  ]
+}

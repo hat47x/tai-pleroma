@@ -1,4 +1,4 @@
-# 評価・検証
+﻿# 評価・検証
 
 統一的な知的機能が実際に成立するかを、再現可能な試験と観測で確かめます。
 
@@ -10,4 +10,4 @@
 - [SCN-001-review-status.json](SCN-001-review-status.json): R-01〜R-07の状態。現在はすべて`pending`で、公開gateはblocked。
 - [SCN-001-D-04-provisional.md](artifacts/SCN-001-D-04-provisional.md): 仮承認に基づく内部レビュー用Draft。公開用ではない。
 - [SUI-api-2026-10-26.json](records/SUI-api-2026-10-26.json): SUI APIの`/healthz`、`/openapi.json`、`/docs`、3 card/2 island/1 edgeのDocumentV1 GET record。実資料・認可・SCN-001データは未検証。SUI→SCN-001対応は[reference-sui-link](../tools/reference-sui-link/README.md)で照合。
-- [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:9f82586...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
+- [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:f047041...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。

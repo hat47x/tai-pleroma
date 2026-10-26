@@ -122,6 +122,31 @@ func TestCombinedRun(t *testing.T) {
 	}
 }
 
+func TestCombinedRunWithSUILink(t *testing.T) {
+	linkPath := filepath.Join("..", "..", "evaluations", "records", "SUI-SCN-link-2026-10-26.json")
+	receipt, err := runWithArtifactOutputAndSUI(context.Background(), taiRootForTest(t), "", linkPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !receipt.Passed || receipt.Components.SUILink == nil {
+		t.Fatalf("combined run with SUI link failed: %+v", receipt)
+	}
+	link := receipt.Components.SUILink
+	if !link.Passed || len(link.LinkedCards) != 3 || len(link.IslandGroups) != 2 || link.EdgeCount != 1 {
+		t.Fatalf("SUI link is incomplete: %+v", link)
+	}
+	if verification := Verify(receipt); !verification.Passed {
+		t.Fatalf("combined run with SUI link did not verify: %+v", verification)
+	}
+	tampered := receipt
+	copied := *tampered.Components.SUILink
+	copied.LinkedCards = copied.LinkedCards[:2]
+	tampered.Components.SUILink = &copied
+	if verification := Verify(tampered); verification.Passed {
+		t.Fatalf("tampered SUI link verified: %+v", verification)
+	}
+}
+
 func TestRecordedRunVerifies(t *testing.T) {
 	raw, err := os.ReadFile(filepath.Join("..", "..", "evaluations", "records", "SCN-001-run-2026-10-26.json"))
 	if err != nil {
