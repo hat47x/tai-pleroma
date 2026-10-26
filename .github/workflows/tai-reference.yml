@@ -51,5 +51,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: probe test
+      - name: SUI probe test
+        run: python -m unittest -v probe_test.py
+      - name: EKI API probe test
+        working-directory: tools/reference-eki-api
         run: python -m unittest -v probe_test.py
