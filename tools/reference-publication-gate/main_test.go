@@ -11,7 +11,7 @@ import (
 func acceptedStatus() Status {
 	items := []Item{}
 	for _, id := range required {
-		items = append(items, Item{ID: id, Status: "accepted", Evidence: "evidence/" + id})
+		items = append(items, Item{ID: id, Status: "accepted", Evidence: "evidence/" + id, EvidenceKind: "real-object"})
 	}
 	for _, id := range optional {
 		items = append(items, Item{ID: id, Status: "not-applicable"})
@@ -45,6 +45,15 @@ func TestMissingEvidenceIsBlocked(t *testing.T) {
 	receipt := Evaluate(status)
 	if receipt.Allowed {
 		t.Fatalf("missing evidence was allowed: %+v", receipt)
+	}
+}
+
+func TestSyntheticEvidenceIsBlocked(t *testing.T) {
+	status := acceptedStatus()
+	status.Items[0].EvidenceKind = "synthetic"
+	receipt := Evaluate(status)
+	if receipt.Allowed {
+		t.Fatalf("synthetic evidence was allowed: %+v", receipt)
 	}
 }
 

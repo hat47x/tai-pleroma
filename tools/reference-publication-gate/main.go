@@ -9,9 +9,10 @@ import (
 )
 
 type Item struct {
-	ID       string `json:"id"`
-	Status   string `json:"status"`
-	Evidence string `json:"evidence"`
+	ID           string `json:"id"`
+	Status       string `json:"status"`
+	Evidence     string `json:"evidence"`
+	EvidenceKind string `json:"evidenceKind"`
 }
 
 type Status struct {
@@ -76,6 +77,10 @@ func Evaluate(status Status) Receipt {
 			receipt.Blockers = append(receipt.Blockers, id+": evidence is empty")
 			continue
 		}
+		if item.EvidenceKind != "real-object" {
+			receipt.Blockers = append(receipt.Blockers, id+": evidenceKind is not real-object")
+			continue
+		}
 		receipt.Accepted = append(receipt.Accepted, id)
 	}
 	for _, id := range optional {
@@ -90,6 +95,10 @@ func Evaluate(status Status) Receipt {
 		}
 		if item.Status == "accepted" && strings.TrimSpace(item.Evidence) == "" {
 			receipt.Blockers = append(receipt.Blockers, id+": evidence is empty")
+			continue
+		}
+		if item.Status == "accepted" && item.EvidenceKind != "real-object" {
+			receipt.Blockers = append(receipt.Blockers, id+": evidenceKind is not real-object")
 			continue
 		}
 		receipt.Accepted = append(receipt.Accepted, id)

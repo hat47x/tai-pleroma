@@ -34,6 +34,7 @@
 - 実在の個人情報・未公開資料・秘密情報は、このリポジトリへ複製しない。参照先、版、確認者、確認日だけを記録する。
 - MMI/SEIの実環境のログや原本は、各基盤の管理場所に置く。
 - 合成fixtureの`passed=true`を、実物レビューの証拠へ読み替えない。
+- 公開gateは、`accepted`の各項目に`evidenceKind=real-object`を要求する。`synthetic`・`fixture`・`none`のままでは公開できない。
 
 ## 再レビューの記録
 

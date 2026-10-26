@@ -49,7 +49,7 @@ func scanJSONValue(decoder *json.Decoder) error {
 				return fmt.Errorf("invalid JSON object key")
 			}
 			canonical := ""
-			for _, name := range []string{"schema", "scenario", "items", "id", "status", "evidence"} {
+			for _, name := range []string{"schema", "scenario", "items", "id", "status", "evidence", "evidenceKind"} {
 				if strings.EqualFold(key, name) {
 					canonical = name
 					break
