@@ -11,8 +11,15 @@
   "health": {
     "status": "ok"
   },
-  "documentCount": 0,
-  "documentIds": [],
+  "documentCount": 1,
+  "documentIds": [
+    "scn001-demo"
+  ],
+  "documentRead": true,
+  "documentId": "scn001-demo",
+  "documentTitle": "SCN-001 demo",
+  "documentCardCount": 0,
+  "documentDigest": "sha256:1d155b5f96a5747ef6b1546f731f694bac21bbeae2bd8d3e421838a0dba98509",
   "openapiVersion": "3.1.0",
   "pathCount": 65,
   "paths": [

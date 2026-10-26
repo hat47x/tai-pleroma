@@ -1,8 +1,10 @@
 # TAI → SUI API read-only probe
 
-SUI APIの`/healthz`、`/openapi.json`、`/docs`のメタデータ一覧だけを読む、到達性確認の参照です。
+SUI APIの`/healthz`、`/openapi.json`、`/docs`のメタデータ一覧、任意の`/docs/{doc_id}`を読む参照です。
 
-**SUIのDocument本文・テナント・認可・SCN-001データは検証しません。** SUI APIが起動し、公開契約とDocumentメタデータ一覧を返すことだけを確認します。
+**SUIのテナント・認可・SCN-001データは検証しません。** 検証では一時DBに空のDocumentV1をPUTしてからGETしています。
+
+Document本文の読み取りは、明示的に`--doc-id`を指定した場合だけ行います。
 
 ## 実行
 
@@ -11,7 +13,10 @@ SUI APIが起動している環境で実行します。このリポジトリの�
 ```text
 python -m unittest -v probe_test.py
 python probe.py --base-url http://127.0.0.1:8765 --out ../../evaluations/records/SUI-api-2026-10-26.json
+python probe.py --base-url http://127.0.0.1:8765 --doc-id scn001-demo --timeout 30 --out ../../evaluations/records/SUI-api-2026-10-26.json
 ```
+
+`--doc-id`指定時は`/docs/{doc_id}`を読み、`documentTitle`、`documentCardCount`、`documentDigest`をreceiptへ追加します。
 
 ## 確認すること
 
@@ -23,7 +28,8 @@ python probe.py --base-url http://127.0.0.1:8765 --out ../../evaluations/records
 
 ## 境界
 
-- SUI Document本文の読み取り・作成・更新は行わない。`/docs`は行メタデータだけを返す。
+- SUI Document本文の作成・更新はprobeでは行わない。検証用の一時DBへ空のDocumentV1を別途PUTした。
+- `--doc-id`の本文読み取りは、空cardsの検証用Documentだけを対象にした。実在のSCN-001カードは未接続。
 - テナント、認可、監査、本人確認は未検証。
 - SCN-001の観測・仮説・DraftとSUIの意味形成は接続していない。
 - `realProductConnected=true`はAPIプロセスの到達性だけを示す。

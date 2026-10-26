@@ -9,8 +9,10 @@ reachable without claiming SCN-001 data integration.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Any
 
@@ -25,7 +27,12 @@ def _get_json(base_url: str, path: str, timeout: float) -> Any:
         return json.loads(response.read().decode("utf-8"))
 
 
-def probe(base_url: str, timeout: float = 10.0) -> dict[str, Any]:
+def _document_digest(document: dict[str, Any]) -> str:
+    canonical = json.dumps(document, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def probe(base_url: str, timeout: float = 10.0, doc_id: str | None = None) -> dict[str, Any]:
     receipt: dict[str, Any] = {
         "schema": SCHEMA,
         "baseUrl": base_url,
@@ -55,6 +62,22 @@ def probe(base_url: str, timeout: float = 10.0) -> dict[str, Any]:
     receipt["documentIds"] = [
         item.get("id") for item in documents if isinstance(item, dict) and item.get("id")
     ]
+    if doc_id is not None:
+        try:
+            document = _get_json(
+                base_url, "/docs/" + urllib.parse.quote(doc_id, safe=""), timeout
+            )
+        except (urllib.error.URLError, ValueError, json.JSONDecodeError) as error:
+            receipt["reason"] = str(error)
+            return receipt
+        if document.get("version") != 1 or not isinstance(document.get("cards"), list):
+            receipt["reason"] = "document is not DocumentV1"
+            return receipt
+        receipt["documentRead"] = True
+        receipt["documentId"] = doc_id
+        receipt["documentTitle"] = document.get("title")
+        receipt["documentCardCount"] = len(document["cards"])
+        receipt["documentDigest"] = _document_digest(document)
     paths = openapi.get("paths")
     if not isinstance(paths, dict) or not paths:
         receipt["reason"] = "openapi paths are missing"
@@ -71,10 +94,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:8765")
     parser.add_argument("--timeout", type=float, default=10.0)
+    parser.add_argument("--doc-id")
     parser.add_argument("--out")
     args = parser.parse_args()
     try:
-        receipt = probe(args.base_url, args.timeout)
+        receipt = probe(args.base_url, args.timeout, args.doc_id)
     except (urllib.error.URLError, ValueError, json.JSONDecodeError) as error:
         receipt = {
             "schema": SCHEMA,
