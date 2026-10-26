@@ -19,7 +19,7 @@
   "documentId": "scn001-demo",
   "documentTitle": "SCN-001 observations",
   "documentCardCount": 3,
-  "documentDigest": "sha256:ee3df4585deb3b7432a55f2c4ce29b3bd3a18782381025f209b17e6ed67a9b12",
+  "documentDigest": "sha256:d3949c8a771de3caa6bcceba74c0f5ad8cdb3c7ed2973ffa0f54a0963006182b",
   "documentCards": [
     {
       "id": "O-02",
@@ -37,6 +37,23 @@
       "textDigest": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
     }
   ],
+  "documentIslandCount": 2,
+  "documentIslands": [
+    {
+      "id": "I-01",
+      "cardIds": [
+        "O-02",
+        "O-07"
+      ]
+    },
+    {
+      "id": "I-02",
+      "cardIds": [
+        "O-03"
+      ]
+    }
+  ],
+  "documentEdgeCount": 1,
   "openapiVersion": "3.1.0",
   "pathCount": 65,
   "paths": [
