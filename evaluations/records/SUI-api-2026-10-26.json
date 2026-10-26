@@ -11,6 +11,8 @@
   "health": {
     "status": "ok"
   },
+  "documentCount": 0,
+  "documentIds": [],
   "openapiVersion": "3.1.0",
   "pathCount": 65,
   "paths": [
