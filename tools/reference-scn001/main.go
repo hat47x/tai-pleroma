@@ -142,22 +142,49 @@ func ApplyMMIObservations(f *Fixture, receipt MMIReceipt) error {
 		return fmt.Errorf("MMI receipt does not prove a read-only conflicting selection")
 	}
 	selected := map[string]MMISelected{}
+	required := []string{"O-02", "O-03", "O-07"}
+	targets := map[string]int{"O-02": -1, "O-03": -1, "O-07": -1}
 	for _, observation := range receipt.Selected {
+		if _, ok := targets[observation.ID]; !ok {
+			return fmt.Errorf("unexpected MMI observation ID %q", observation.ID)
+		}
+		if _, duplicate := selected[observation.ID]; duplicate {
+			return fmt.Errorf("duplicate MMI observation ID %q", observation.ID)
+		}
+		if strings.TrimSpace(observation.Text) == "" || strings.TrimSpace(observation.Source) == "" ||
+			strings.TrimSpace(observation.Version) == "" || observation.Availability != "available" {
+			return fmt.Errorf("MMI observation %s lacks available text, source, or version", observation.ID)
+		}
 		selected[observation.ID] = observation
 	}
-	for _, id := range []string{"O-02", "O-03"} {
-		if selected[id].Text == "" {
+	for _, id := range required {
+		if _, ok := selected[id]; !ok {
 			return fmt.Errorf("MMI receipt is missing %s", id)
 		}
 	}
 	if selected["O-02"].Text == selected["O-03"].Text {
 		return fmt.Errorf("MMI receipt lost the O-02/O-03 conflict")
 	}
-	for index := range f.Observations {
-		observation, ok := selected[f.Observations[index].ID]
+	// Resolve every target before writing. A rejected selection cannot leave a
+	// mixture of new MMI observations and old synthetic values in the fixture.
+	for index, observation := range f.Observations {
+		previous, ok := targets[observation.ID]
 		if !ok {
 			continue
 		}
+		if previous != -1 {
+			return fmt.Errorf("duplicate fixture target %s", observation.ID)
+		}
+		targets[observation.ID] = index
+	}
+	for _, id := range required {
+		if targets[id] == -1 {
+			return fmt.Errorf("fixture is missing MMI target %s", id)
+		}
+	}
+	for _, id := range required {
+		index := targets[id]
+		observation := selected[id]
 		f.Observations[index].Text = observation.Text
 		f.Observations[index].Source = observation.Source
 		f.Observations[index].SourceVersion = observation.Version
