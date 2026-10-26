@@ -12,6 +12,8 @@ class Handler(BaseHTTPRequestHandler):
             payload = {"status": "ok"}
         elif self.path == "/openapi.json":
             payload = {"openapi": "3.1.0", "paths": {"/healthz": {}, "/docs/{doc_id}": {}}}
+        elif self.path == "/docs":
+            payload = [{"id": "doc-1", "updated_at": "2026-10-26T00:00:00Z"}]
         else:
             self.send_response(404)
             self.end_headers()
@@ -45,6 +47,8 @@ class ProbeTest(unittest.TestCase):
         self.assertTrue(receipt["readOnly"])
         self.assertTrue(receipt["realProductConnected"])
         self.assertEqual(receipt["pathCount"], 2)
+        self.assertEqual(receipt["documentCount"], 1)
+        self.assertEqual(receipt["documentIds"], ["doc-1"])
 
     def test_probe_reports_unreachable(self):
         receipt = probe("http://127.0.0.1:1", timeout=1)

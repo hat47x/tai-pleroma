@@ -43,10 +43,18 @@ def probe(base_url: str, timeout: float = 10.0) -> dict[str, Any]:
             receipt["reason"] = "healthz did not report ok"
             return receipt
         openapi = _get_json(base_url, "/openapi.json", timeout)
+        documents = _get_json(base_url, "/docs", timeout)
     except (urllib.error.URLError, ValueError, json.JSONDecodeError) as error:
         receipt["reason"] = str(error)
         return receipt
     receipt["health"] = health
+    if not isinstance(documents, list):
+        receipt["reason"] = "docs did not return a list"
+        return receipt
+    receipt["documentCount"] = len(documents)
+    receipt["documentIds"] = [
+        item.get("id") for item in documents if isinstance(item, dict) and item.get("id")
+    ]
     paths = openapi.get("paths")
     if not isinstance(paths, dict) or not paths:
         receipt["reason"] = "openapi paths are missing"
