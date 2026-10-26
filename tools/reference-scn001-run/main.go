@@ -152,7 +152,7 @@ func readJSON(path string, target any) error {
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(raw, target)
+	return decodeEvidenceJSON(raw, target)
 }
 
 func digestJSON(value any) (string, error) {
@@ -437,14 +437,14 @@ func runWithArtifactOutput(ctx context.Context, root, artifactOut string) (RunRe
 	if err != nil {
 		return receipt, err
 	}
-	if err := json.Unmarshal(renderOutput, &receipt.Components.ReviewArtifact); err != nil {
+	if err := decodeEvidenceJSON(renderOutput, &receipt.Components.ReviewArtifact); err != nil {
 		return receipt, fmt.Errorf("review artifact receipt is invalid: %w", err)
 	}
 	gateOutput, err := goRunAllowExit(ctx, gateTool, "run", ".", "-status", "../../evaluations/SCN-001-review-status.json")
 	if err != nil {
 		return receipt, err
 	}
-	if err := json.Unmarshal(gateOutput, &receipt.Components.PublicationGate); err != nil {
+	if err := decodeEvidenceJSON(gateOutput, &receipt.Components.PublicationGate); err != nil {
 		return receipt, fmt.Errorf("publication gate receipt is invalid: %w", err)
 	}
 	// The renderer's digest must match the bytes written for this run, not merely exist.
@@ -540,7 +540,7 @@ func main() {
 			os.Exit(2)
 		}
 		var receipt RunReceipt
-		if err := json.Unmarshal(raw, &receipt); err != nil {
+		if err := decodeEvidenceJSON(raw, &receipt); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(2)
 		}
@@ -582,7 +582,7 @@ func main() {
 			os.Exit(2)
 		}
 		var receipt RunReceipt
-		if err := json.Unmarshal(raw, &receipt); err != nil {
+		if err := decodeEvidenceJSON(raw, &receipt); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(2)
 		}
