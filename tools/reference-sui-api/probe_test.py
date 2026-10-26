@@ -66,6 +66,7 @@ class ProbeTest(unittest.TestCase):
         self.assertEqual(document["documentTitle"], "SCN-001 demo")
         self.assertEqual(document["documentCardCount"], 0)
         self.assertTrue(document["documentDigest"].startswith("sha256:"))
+        self.assertEqual(document["documentCards"], [])
 
     def test_probe_reports_unreachable(self):
         receipt = probe("http://127.0.0.1:1", timeout=1)

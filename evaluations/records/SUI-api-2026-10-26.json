@@ -17,9 +17,26 @@
   ],
   "documentRead": true,
   "documentId": "scn001-demo",
-  "documentTitle": "SCN-001 demo",
-  "documentCardCount": 0,
-  "documentDigest": "sha256:1d155b5f96a5747ef6b1546f731f694bac21bbeae2bd8d3e421838a0dba98509",
+  "documentTitle": "SCN-001 observations",
+  "documentCardCount": 3,
+  "documentDigest": "sha256:ee3df4585deb3b7432a55f2c4ce29b3bd3a18782381025f209b17e6ed67a9b12",
+  "documentCards": [
+    {
+      "id": "O-02",
+      "claimType": "fact",
+      "textDigest": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+    },
+    {
+      "id": "O-03",
+      "claimType": "fact",
+      "textDigest": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0"
+    },
+    {
+      "id": "O-07",
+      "claimType": "fact",
+      "textDigest": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+    }
+  ],
   "openapiVersion": "3.1.0",
   "pathCount": 65,
   "paths": [
