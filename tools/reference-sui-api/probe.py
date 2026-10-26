@@ -78,6 +78,16 @@ def probe(base_url: str, timeout: float = 10.0, doc_id: str | None = None) -> di
         receipt["documentTitle"] = document.get("title")
         receipt["documentCardCount"] = len(document["cards"])
         receipt["documentDigest"] = _document_digest(document)
+        receipt["documentCards"] = [
+            {
+                "id": card.get("id"),
+                "claimType": card.get("claimType"),
+                "textDigest": "sha256:"
+                + hashlib.sha256(str(card.get("text", "")).encode("utf-8")).hexdigest(),
+            }
+            for card in document["cards"]
+            if isinstance(card, dict)
+        ]
     paths = openapi.get("paths")
     if not isinstance(paths, dict) or not paths:
         receipt["reason"] = "openapi paths are missing"

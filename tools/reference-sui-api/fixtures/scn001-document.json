@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "id": "scn001-demo",
+  "title": "SCN-001 observations",
+  "createdAt": "2026-10-26T00:00:00Z",
+  "updatedAt": "2026-10-26T00:00:00Z",
+  "transform": {"panX": 0, "panY": 0, "zoom": 1},
+  "cards": [
+    {
+      "id": "O-02",
+      "text": "施設の利用は予約不要",
+      "x": 0,
+      "y": 0,
+      "claimType": "fact",
+      "sources": ["notice#v0"],
+      "textReviewed": false
+    },
+    {
+      "id": "O-03",
+      "text": "会議室の利用には事前予約が必要",
+      "x": 320,
+      "y": 0,
+      "claimType": "fact",
+      "sources": ["old-guidance#v0"],
+      "textReviewed": false
+    },
+    {
+      "id": "O-07",
+      "text": "施設の利用は予約不要",
+      "x": 640,
+      "y": 0,
+      "claimType": "fact",
+      "sources": ["distribution#v2"],
+      "textReviewed": false
+    }
+  ],
+  "edges": [],
+  "islands": []
+}
