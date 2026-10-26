@@ -171,23 +171,24 @@ type OwnerQuestion struct {
 }
 
 type OwnerPacket struct {
-	Schema               string          `json:"schema"`
-	Scenario             string          `json:"scenario"`
-	Status               string          `json:"status"`
-	RunDigest            string          `json:"runDigest"`
-	ReviewArtifactDigest string          `json:"reviewArtifactDigest,omitempty"`
-	ReviewArtifactStatus string          `json:"reviewArtifactStatus,omitempty"`
-	Evidence             []string        `json:"evidence"`
-	Questions            []OwnerQuestion `json:"questions"`
-	ProvisionalApproved  bool            `json:"provisionalApproved"`
-	ReviewTrigger        string          `json:"reviewTrigger,omitempty"`
-	PublicationAllowed   bool            `json:"publicationAllowed"`
-	PublicationBlockers  []string        `json:"publicationBlockers"`
-	Approved             bool            `json:"approved"`
-	HumanReviewed        bool            `json:"humanReviewed"`
-	AuthorityVerified    bool            `json:"authorityVerified"`
-	PublicationApproved  bool            `json:"publicationApproved"`
-	Notes                []string        `json:"notes"`
+	Schema                string          `json:"schema"`
+	Scenario              string          `json:"scenario"`
+	Status                string          `json:"status"`
+	RunDigest             string          `json:"runDigest"`
+	ReviewArtifactDigest  string          `json:"reviewArtifactDigest,omitempty"`
+	ReviewArtifactStatus  string          `json:"reviewArtifactStatus,omitempty"`
+	ArtifactBytesVerified bool            `json:"artifactBytesVerified"`
+	Evidence              []string        `json:"evidence"`
+	Questions             []OwnerQuestion `json:"questions"`
+	ProvisionalApproved   bool            `json:"provisionalApproved"`
+	ReviewTrigger         string          `json:"reviewTrigger,omitempty"`
+	PublicationAllowed    bool            `json:"publicationAllowed"`
+	PublicationBlockers   []string        `json:"publicationBlockers"`
+	Approved              bool            `json:"approved"`
+	HumanReviewed         bool            `json:"humanReviewed"`
+	AuthorityVerified     bool            `json:"authorityVerified"`
+	PublicationApproved   bool            `json:"publicationApproved"`
+	Notes                 []string        `json:"notes"`
 }
 
 func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
@@ -208,8 +209,6 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 			"tools/reference-scn001-render/README.md",
 			"tools/reference-mmi-readonly/README.md",
 			"tools/reference-sei-decision/README.md",
-			"evaluations/artifacts/SCN-001-D-04-provisional.md",
-			"evaluations/records/SCN-001-run-2026-10-26.json",
 			"evaluations/SCN-001-real-object-review.md",
 		},
 		Questions: []OwnerQuestion{
@@ -392,6 +391,15 @@ func Verify(receipt RunReceipt) Verification {
 }
 
 func Run(ctx context.Context, root string) (RunReceipt, error) {
+	return runWithArtifactOutput(ctx, root, "")
+}
+
+func artifactDigest(raw []byte) string {
+	sum := sha256.Sum256(raw)
+	return "sha256:" + hex.EncodeToString(sum[:])
+}
+
+func runWithArtifactOutput(ctx context.Context, root, artifactOut string) (RunReceipt, error) {
 	receipt := RunReceipt{Schema: "tai.reference.scn001-run/v0", Scenario: "SCN-001", Synthetic: true}
 	tools := filepath.Join(root, "tools")
 	mmiTool := filepath.Join(tools, "reference-mmi-readonly")
@@ -485,19 +493,45 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 		return receipt, err
 	}
 	receipt.RunDigest = digest
+	if artifactOut != "" {
+		if err := saveReviewArtifact(receipt, artifactBytes, artifactOut); err != nil {
+			return receipt, err
+		}
+	}
 	return receipt, nil
 }
 
 func main() {
 	root := flag.String("root", "", "TAI checkout root (default: ../..)")
 	verifyPath := flag.String("verify", "", "verify an existing run receipt instead of running")
-	artifactPath := flag.String("artifact", "", "with -verify, re-read and compare this artifact's exact bytes")
+	artifactPath := flag.String("artifact", "", "with -verify or -owner-packet, compare this artifact's exact bytes")
+	artifactOut := flag.String("artifact-out", "", "save this run's D-04 to a new local file")
 	ownerPacketPath := flag.String("owner-packet", "", "build an owner decision packet from an existing run receipt")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
-	if *artifactPath != "" && (*verifyPath == "" || *ownerPacketPath != "") {
-		fmt.Fprintln(os.Stderr, "-artifact requires -verify and cannot be combined with -owner-packet")
+	if (*verifyPath != "" && *ownerPacketPath != "") ||
+		(*artifactPath != "" && *verifyPath == "" && *ownerPacketPath == "") ||
+		(*artifactOut != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) {
+		fmt.Fprintln(os.Stderr, "choose run, verify, or owner-packet mode; -artifact belongs to verify/owner-packet and -artifact-out to run")
 		os.Exit(2)
+	}
+	if *artifactOut != "" {
+		paths := []string{*artifactOut}
+		if *outPath != "" {
+			artifactAbsolute, err1 := filepath.Abs(*artifactOut)
+			receiptAbsolute, err2 := filepath.Abs(*outPath)
+			if err1 != nil || err2 != nil || strings.EqualFold(artifactAbsolute, receiptAbsolute) {
+				fmt.Fprintln(os.Stderr, "receipt and artifact outputs must be distinct paths")
+				os.Exit(2)
+			}
+			paths = append(paths, *outPath)
+		}
+		for _, path := range paths {
+			if err := requireNewReviewPath(path); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(2)
+			}
+		}
 	}
 	if *ownerPacketPath != "" {
 		raw, err := os.ReadFile(*ownerPacketPath)
@@ -510,11 +544,22 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(2)
 		}
-		packet, err := BuildOwnerPacket(receipt)
+		var packet OwnerPacket
+		if *artifactPath != "" {
+			packet, err = BuildOwnerPacketWithArtifact(receipt, *artifactPath)
+		} else {
+			packet, err = BuildOwnerPacket(receipt)
+		}
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+		recordAbsolute, err := filepath.Abs(*ownerPacketPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		packet.Evidence = append(packet.Evidence, recordAbsolute)
 		encoded, err := json.MarshalIndent(packet, "", "  ")
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -522,7 +567,7 @@ func main() {
 		}
 		encoded = append(encoded, '\n')
 		if *outPath != "" {
-			if err := os.WriteFile(*outPath, encoded, 0o644); err != nil {
+			if err := writeNewReviewFile(*outPath, encoded); err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(2)
 			}
@@ -561,7 +606,7 @@ func main() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
-	receipt, err := Run(ctx, *root)
+	receipt, err := runWithArtifactOutput(ctx, *root, *artifactOut)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
@@ -573,7 +618,13 @@ func main() {
 	}
 	encoded = append(encoded, '\n')
 	if *outPath != "" {
-		if err := os.WriteFile(*outPath, encoded, 0o644); err != nil {
+		var err error
+		if *artifactOut != "" {
+			err = writeNewReviewFile(*outPath, encoded)
+		} else {
+			err = os.WriteFile(*outPath, encoded, 0o644)
+		}
+		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(2)
 		}
