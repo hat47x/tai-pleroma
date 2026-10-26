@@ -23,6 +23,7 @@ jobs:
           - tools/reference-scn001-render
           - tools/reference-tei-model
           - tools/reference-publication-gate
+          - tools/reference-sui-link
     defaults:
       run:
         working-directory: ${{ matrix.tool }}
