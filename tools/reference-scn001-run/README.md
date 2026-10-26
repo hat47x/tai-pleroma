@@ -19,10 +19,10 @@ go test ./...
 go run . -root ../..
 ```
 
-`-out run.json`でreceiptを保存できます。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
+`-out run.json`でreceiptを保存できます。今回生成したD-04も残す場合は、`-artifact-out review.md -out run.json`を指定します。両方の出力先は新規・別名のファイルに限り、既存ファイルは上書きしません。保存したbyte列を読み直し、実行記録のdigestとの一致を確認します。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
 
-`-verify run.json -artifact review.md`では、指定したローカルファイルを読み直し、`reviewArtifact.artifactDigest`とbytesを照合します。実行記録の検証とbyte照合の両方が成功した場合だけ、`passed=true`・`artifactBytesVerified=true`になります。欠損・差替え・改行の変換は失敗です。`-artifact`を付けない検証は`artifactBytesVerified=false`で、ファイルの一致を主張しません。`-artifact`は`-verify`と併用し、`-owner-packet`とは併用できません。
+`-verify run.json -artifact review.md`では、指定したローカルファイルを読み直し、`reviewArtifact.artifactDigest`とbytesを照合します。実行記録の検証とbyte照合の両方が成功した場合だけ、`passed=true`・`artifactBytesVerified=true`になります。欠損・差替え・改行の変換は失敗です。`-artifact`を付けない検証は`artifactBytesVerified=false`で、ファイルの一致を主張しません。`-artifact`は`-verify`または`-owner-packet`と併用します。`-verify`と`-owner-packet`は同時に指定できません。
 
 ```text
 go run . -verify ../../evaluations/records/SCN-001-run-2026-10-26.json -artifact ../../evaluations/artifacts/SCN-001-D-04-provisional.md
@@ -32,12 +32,20 @@ go run . -verify ../../evaluations/records/SCN-001-run-2026-10-26.json -artifact
 
 保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-26.json](../../evaluations/records/SCN-001-run-2026-10-26.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
 
-`-owner-packet run.json -out owner.json`で、Owner判断を求めるpacketを作れます。packetはD-04成果物のdigest/status、公開gateの`allowed`/blocker、artifact・record・再レビュー計画への参照を含みます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
+`-owner-packet run.json -artifact review.md -out owner.json`で、実行記録と成果物を照合したOwner判断packetを作れます。`artifactBytesVerified=true`はその時点のbyte一致だけを示します。packetには実際に読んだ実行記録と成果物の絶対パスを入れ、固定された過去の成果物・実行記録へのリンクは補いません。`-artifact`を省略した場合は`artifactBytesVerified=false`で、成果物へのリンクも補いません。packetの出力先も新規ファイルに限ります。packetはD-04のdigest/status、公開gateの`allowed`/blocker、説明文書と再レビュー計画への参照を含みます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
 
 
 まとめ欄のscenario・合成範囲、仮承認・再レビュー要否・実接続のフラグ、公開判定とblocker一覧は、個別結果と一致する必要があります。blockerの欠落・差替えや未知の公開gate schemaは、componentのdigestが一致しても拒否します。
 
 `-verify`の`passed=true`は記録の整合性を示し、参照実行自体の成功とは別です。整合した失敗記録は検査できますが、Owner判断packetは成功した参照実行の記録からだけ生成します。公開gateの入力条件を満たしても、packetの人間レビュー・Authority・公開承認はfalseのままです。
+
+
+```text
+go run . -root ../.. -artifact-out review.md -out run.json
+go run . -owner-packet run.json -artifact review.md -out owner.json
+```
+
+実行記録・成果物・packetの保存は、複数ファイルをまとめた原子的な処理ではありません。途中で失敗した場合に一部の新規ファイルが残ることがありますが、成功として扱わず、既存ファイルを再試行で上書きしません。照合後のファイル変更まで防ぐ機能ではないため、レビュー時にも`-verify run.json -artifact review.md`で再確認します。byte一致は内容の正しさ・人間の意味受理・公開権限を証明しません。
 
 ## 確認すること
 
