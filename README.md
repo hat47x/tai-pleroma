@@ -43,6 +43,7 @@ SCN-001について、次の参照実装と検証記録があります。
 | [TEIとの接続](tools/reference-tei-model/README.md) | SCN-001で使う型宣言の検証 |
 | [EKIとの接続](tools/reference-eki-api/README.md)・[CLI確認](tools/reference-eki-cli/README.md) | API認証と合成Taskの受付・待機状態、CLI起動を確認 |
 | [公開条件の検査](tools/reference-publication-gate/README.md) | レビュー項目R-01〜R-07の状態を判定。現在は公開を保留 |
+| [公開境界の検査](tools/check-public-boundary/check.py) | 非公開リソース名・秘密鍵・tokenの混入をtracked fileから検出 |
 
 これらは開発・評価用の接続です。架空の資料に対する検査やTaskの受付を、実在の規程の確認、人による意味の受理、公開権限、実際の処理完了と同一視しません。特に、EKIでの`queued`はWorkerによる実行完了を意味しません。
 
