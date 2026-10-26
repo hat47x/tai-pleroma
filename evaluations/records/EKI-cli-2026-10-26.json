@@ -1,0 +1,15 @@
+{
+  "schema": "tai.reference.eki-cli/v0",
+  "ekiCommit": "6daa15ca735ff67f15c45d9ba2a5582ab996576f",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "controlVersion": "eki-control dev",
+  "agentVersion": "eki-agent dev",
+  "readOnly": true,
+  "taskDelegated": false,
+  "authorityVerified": false,
+  "passed": true,
+  "notes": [
+    "EKIの`eki-control`/`eki-agent`のversion表示だけを確認する。",
+    "Taskの委任・Worker・Authority・結果検証は未実施。"
+  ]
+}
