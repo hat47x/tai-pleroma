@@ -8,7 +8,7 @@ SCN-001の1回の参照実行として、次の3つを順に実行し、1つのr
 
 **人間の判断・権限・公開を実行しません。** 合成fixtureとローカル参照接続の記録です。
 
-SCN-001評価はMMIの選択結果を合成fixtureへ反映し、検証成功時の**同じ観測集合を一時fixtureとしてD-04生成へ渡します**。文書生成だけが元のfixtureを読み直す経路を避けます。出典の真正性、MMIと実資料の一致、成果物の保存先での独立したbyte照合は引き続き未検証です。
+SCN-001評価はMMIの選択結果を合成fixtureへ反映し、検証成功時の**同じ観測集合を一時fixtureとしてD-04生成へ渡します**。文書生成だけが元のfixtureを読み直す経路を避けます。出典の真正性、MMIと実資料の一致、実資料の意味・権限の確認は引き続き未検証です。保存後の成果物は次の明示的なbyte照合で検査できます。
 
 ## 実行
 
@@ -20,6 +20,15 @@ go run . -root ../..
 ```
 
 `-out run.json`でreceiptを保存できます。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
+
+
+`-verify run.json -artifact review.md`では、指定したローカルファイルを読み直し、`reviewArtifact.artifactDigest`とbytesを照合します。実行記録の検証とbyte照合の両方が成功した場合だけ、`passed=true`・`artifactBytesVerified=true`になります。欠損・差替え・改行の変換は失敗です。`-artifact`を付けない検証は`artifactBytesVerified=false`で、ファイルの一致を主張しません。`-artifact`は`-verify`と併用し、`-owner-packet`とは併用できません。
+
+```text
+go run . -verify ../../evaluations/records/SCN-001-run-2026-10-26.json -artifact ../../evaluations/artifacts/SCN-001-D-04-provisional.md
+```
+
+保存済みのMarkdownはLFで取得するよう`.gitattributes`で指定します。検証器は改行や文字コードを正規化しません。この照合は指定ファイルと記録の一致だけを示し、出典の真正性、人間の意味判断、最新の公開可否、署名を検証しません。履歴の公開gateを現在の承認として扱わないでください。
 
 保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-26.json](../../evaluations/records/SCN-001-run-2026-10-26.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
 

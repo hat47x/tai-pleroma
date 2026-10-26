@@ -229,10 +229,38 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 }
 
 type Verification struct {
-	Schema    string `json:"schema"`
-	Passed    bool   `json:"passed"`
-	Reason    string `json:"reason,omitempty"`
-	RunDigest string `json:"runDigest,omitempty"`
+	Schema                string `json:"schema"`
+	Passed                bool   `json:"passed"`
+	Reason                string `json:"reason,omitempty"`
+	RunDigest             string `json:"runDigest,omitempty"`
+	ArtifactBytesVerified bool   `json:"artifactBytesVerified"`
+}
+
+// VerifyArtifact re-reads an explicitly selected local artifact. It checks
+// byte identity with a verifiable receipt, not provenance or human acceptance.
+func VerifyArtifact(receipt RunReceipt, path string) Verification {
+	verification := Verify(receipt)
+	if !verification.Passed {
+		return verification
+	}
+	verification.Passed = false
+	if !receipt.Components.ReviewArtifact.Passed {
+		verification.Reason = "review artifact was not successfully generated"
+		return verification
+	}
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		verification.Reason = "cannot read review artifact"
+		return verification
+	}
+	sum := sha256.Sum256(raw)
+	if receipt.Components.ReviewArtifact.ArtifactDigest != "sha256:"+hex.EncodeToString(sum[:]) {
+		verification.Reason = "review artifact bytes do not match the run receipt"
+		return verification
+	}
+	verification.Passed = true
+	verification.ArtifactBytesVerified = true
+	return verification
 }
 
 func Verify(receipt RunReceipt) Verification {
@@ -447,9 +475,14 @@ func Run(ctx context.Context, root string) (RunReceipt, error) {
 func main() {
 	root := flag.String("root", "", "TAI checkout root (default: ../..)")
 	verifyPath := flag.String("verify", "", "verify an existing run receipt instead of running")
+	artifactPath := flag.String("artifact", "", "with -verify, re-read and compare this artifact's exact bytes")
 	ownerPacketPath := flag.String("owner-packet", "", "build an owner decision packet from an existing run receipt")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
+	if *artifactPath != "" && (*verifyPath == "" || *ownerPacketPath != "") {
+		fmt.Fprintln(os.Stderr, "-artifact requires -verify and cannot be combined with -owner-packet")
+		os.Exit(2)
+	}
 	if *ownerPacketPath != "" {
 		raw, err := os.ReadFile(*ownerPacketPath)
 		if err != nil {
@@ -493,6 +526,9 @@ func main() {
 			os.Exit(2)
 		}
 		verification := Verify(receipt)
+		if *artifactPath != "" {
+			verification = VerifyArtifact(receipt, *artifactPath)
+		}
 		encoded, err := json.MarshalIndent(verification, "", "  ")
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
