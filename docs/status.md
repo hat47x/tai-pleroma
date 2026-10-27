@@ -42,7 +42,7 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 - TAI、EKI、SEI、MMIは公開リポジトリ。MITライセンス。
 - README先頭に、生成AIを用いた初期開発中のソースコード公開であることを明記。
 - 4リポジトリでsecret scanning・push protection・Private vulnerability reportingを有効化。
-- `tei-platform-private-resources`は非公開を維持し、非公開理由と公開条件をREADMEに記録。
+- TEI Platformの非公開作業資料は非公開を維持し、非公開理由と公開条件を別の非公開リポジトリのREADMEに記録。
 - 公開境界の回帰検査をCIで実行。
 
 ## 仮承認の境界
