@@ -16,7 +16,7 @@ python probe.py --base-url http://127.0.0.1:8765 --out ../../evaluations/records
 python probe.py --base-url http://127.0.0.1:8765 --doc-id scn001-demo --timeout 30 --out ../../evaluations/records/SUI-api-2026-10-26.json
 ```
 
-`--doc-id`指定時は`/docs/{doc_id}`を読み、`documentTitle`、`documentCardCount`、`documentDigest`、各cardの`id`・`claimType`・`textDigest`、`documentIslandCount`、`documentEdgeCount`をreceiptへ追加します。生のcard本文は記録しません。
+`--doc-id`指定時は`/docs/{doc_id}`を読み、`documentTitle`、`documentCardCount`、`documentDigest`、各cardの`id`・`claimType`・`textDigest`、`documentIslandCount`、`documentEdgeCount`、`documentEdges`をreceiptへ追加します。生のcard本文は記録しません。
 
 検証時の入力fixtureは[fixtures/scn001-document.json](fixtures/scn001-document.json)で、O-02/O-03/O-06/O-07の4 cardと、予約不要/必要の2 island、`contradicts` edgeを持ちます。検証では一時DBへPUTしてからGETしました。
 

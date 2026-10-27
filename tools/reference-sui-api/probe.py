@@ -95,7 +95,18 @@ def probe(base_url: str, timeout: float = 10.0, doc_id: str | None = None) -> di
             for island in islands
             if isinstance(island, dict)
         ]
-        receipt["documentEdgeCount"] = len(document.get("edges", []))
+        edges = document.get("edges", [])
+        receipt["documentEdgeCount"] = len(edges)
+        receipt["documentEdges"] = [
+            {
+                "id": edge.get("id"),
+                "fromId": edge.get("fromId"),
+                "toId": edge.get("toId"),
+                "type": edge.get("type"),
+            }
+            for edge in edges
+            if isinstance(edge, dict)
+        ]
     paths = openapi.get("paths")
     if not isinstance(paths, dict) or not paths:
         receipt["reason"] = "openapi paths are missing"
