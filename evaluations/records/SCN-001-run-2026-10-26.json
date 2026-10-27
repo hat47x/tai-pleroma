@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-26T22:27:05Z",
-  "runDigest": "sha256:18486d734538906427e3025255a093b2562d65718a6c69263ae7947714365ad9",
+  "generatedAt": "2026-10-27T15:37:19Z",
+  "runDigest": "sha256:5978f5ceb28fc084e0f4f4153193b879e24f39a22da952b08394d1382f2f1c23",
   "components": {
     "mmi": {
       "passed": true,
@@ -151,7 +151,8 @@
         "I-01",
         "I-02"
       ],
-      "edgeCount": 1
+      "edgeCount": 1,
+      "contradiction": true
     }
   },
   "passed": true,

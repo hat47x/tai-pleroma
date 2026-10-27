@@ -94,6 +94,7 @@ type SUILinkComponent struct {
 	LinkedCards    []string `json:"linkedCards"`
 	IslandGroups   []string `json:"islandGroups"`
 	EdgeCount      int      `json:"edgeCount"`
+	Contradiction  bool     `json:"contradiction"`
 }
 
 type RunReceipt struct {
@@ -316,7 +317,7 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	suiOK := true
 	if link := receipt.Components.SUILink; link != nil {
-		suiOK = link.Passed && len(link.LinkedCards) == 4 && len(link.IslandGroups) == 2 &&
+		suiOK = link.Passed && link.Contradiction && len(link.LinkedCards) == 4 && len(link.IslandGroups) == 2 &&
 			link.EdgeCount == 1 && link.DocumentID != "" && link.DocumentDigest != ""
 		if !suiOK {
 			verification.Reason = "SUI link component is incomplete"
