@@ -91,6 +91,8 @@ Snapshotの候補は、TAI catalog commit、参照した各製品のSource Revis
 
 負例: (1) 同名異スコープ、(2) 未登録IDとunknown、(3) `part_of`循環、(4) 間接経路から直接Contractを捏造、(5) static-onlyをruntime-testedに昇格、(6) sourceRevision更新後に旧PASS再利用、(7) 非公開Entityまたは関係から情報漏洩、(8) `queued`をWorker完了へ昇格、(9) AI提案を人間のDecision/Authorityへ昇格、(10) 旧判断の無条件復活。
 
+図へ確定した関係を投影する前のscope/qualified identity、Source Revision、Decision/Evidenceのチェック、非公開情報とstale表示の負例は[横断情報の受入・更新プロトコル（Draft）](product-landscape-acceptance.md)へ集約する。公開プロダクトの棚卸し範囲とSHO/MMI・CSWの未決分類は[公開リポジトリ候補](product-inventory-candidates.md)を参照。
+
 ## 8. 今回は固定しないこと
 
 - すべてのリポジトリをProductとするか、研究・ツール・ライブラリをどう分類するか（全製品棚卸しが先）。
