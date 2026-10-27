@@ -8,3 +8,6 @@
 - [プロダクト横断知識モデルと管理境界（Draft）](product-knowledge-model.md) — 型付き関係・根拠・状態・Revision・Owner境界と受入条件。
 
 両文書はTAIへの横断情報集約の具体化案です。既存のSCN-001責務境界・接続実証の正本を置き換えません。
+
+- [公開リポジトリの棚卸しとプロダクト候補（Draft）](product-inventory-candidates.md) — 固定main版に基づく公開対象の候補、SHO/MMIやCSWの分類保留、網羅性・公開境界。
+- [横断プロダクト情報の受入・更新プロトコル（Draft）](product-landscape-acceptance.md) — scope、Evidence、Revision、公開境界、誤った確定を避ける負例。
