@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"testing"
 )
 
@@ -33,13 +32,14 @@ func TestReadOnlyInspectKeepsSources(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Expectations come from the environment only. Without them the run is
-	// record-only, so a checkout at another commit (or a dirty one) still passes.
-	options := Options{
-		ExpectCommit:     strings.ToLower(os.Getenv("TAI_MMI_EXPECT_COMMIT")),
-		ExpectLockDigest: strings.ToLower(os.Getenv("TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST")),
-		ExpectNodeMajor:  os.Getenv("TAI_MMI_EXPECT_NODE_MAJOR"),
+	// Expectations come from the environment only, through the same parsing main
+	// uses. Without them the run is record-only, so a checkout at another commit
+	// (or a dirty one) still passes.
+	config, err := parseConfig(nil, os.Getenv)
+	if err != nil {
+		t.Fatal(err)
 	}
+	options := config.Options
 	receipt := RunWithOptions(context.Background(), root, workspace, options)
 	if !receipt.Passed {
 		t.Fatalf("read-only MMI inspect failed: %+v", receipt)

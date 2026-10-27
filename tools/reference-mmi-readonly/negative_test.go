@@ -430,7 +430,7 @@ func TestPinnedRunRequiresTheFingerprintCrossCheck(t *testing.T) {
 func TestNodeVersionProbeCanBeUnavailable(t *testing.T) {
 	repo := newFakeMMI(t, false)
 	launches := useFakeMCP(t, fakeScenario{})
-	nodeVersionOf = func(context.Context) string { return "" } // restored by useFakeMCP's cleanup
+	nodeVersionOf = func(context.Context, string) string { return "" } // restored by useFakeMCP's cleanup
 	unpinned := Run(context.Background(), repo.Root, newWorkspace(t))
 	if !unpinned.Passed || unpinned.NodeVersion != "" {
 		t.Fatalf("a missing node probe must not fail a record-only run: %+v", unpinned)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"encoding/csv"
 	"encoding/json"
@@ -35,8 +36,14 @@ type fakeScenario struct {
 	WriteOnExit     string   `json:"writeOnExit,omitempty"`   // relative path created when stdin closes (during shutdown)
 	WriteOnSelect   string   `json:"writeOnSelect,omitempty"` // relative path created in the workspace
 	LogPath         string   `json:"logPath,omitempty"`
-	InspectError    string   `json:"inspectError,omitempty"` // inspect of observations.csv answers isError with this text
-	CrashOnInit     string   `json:"crashOnInit,omitempty"`  // write this to stderr and exit before answering initialize
+	InspectError    string   `json:"inspectError,omitempty"`   // inspect of observations.csv answers isError with this text
+	CrashOnInit     string   `json:"crashOnInit,omitempty"`    // write this to stderr and exit before answering initialize
+	NextCursor      string   `json:"nextCursor,omitempty"`     // tools/list answers a page and says more follow
+	EmptyTools      bool     `json:"emptyTools,omitempty"`     // tools/list answers an empty list
+	ExtraCandidate  bool     `json:"extraCandidate,omitempty"` // inspect also lists a candidate for another range, with its own fingerprint
+	// OverwriteOnSelect names an existing workspace file whose bytes select replaces
+	// with same-length different bytes (same path, same size, only the content changes).
+	OverwriteOnSelect string `json:"overwriteOnSelect,omitempty"`
 }
 
 var defaultFakeTools = []string{"schema", "inspect", "check", "render", "select", "find", "handoff", "validate-proposal", "validate-selection", "validate-transformation"}
@@ -106,7 +113,14 @@ func TestFakeMCPProcess(t *testing.T) {
 			for _, name := range names {
 				tools = append(tools, map[string]any{"name": name, "description": "fake", "inputSchema": map[string]any{"type": "object"}})
 			}
-			result = map[string]any{"tools": tools}
+			if scenario.EmptyTools {
+				tools = []map[string]any{}
+			}
+			listed := map[string]any{"tools": tools}
+			if scenario.NextCursor != "" {
+				listed["nextCursor"] = scenario.NextCursor
+			}
+			result = listed
 		case "tools/call":
 			var call struct {
 				Name      string         `json:"name"`
@@ -158,6 +172,17 @@ func fakeToolCall(scenario fakeScenario, workspace, name string, arguments map[s
 		if !scenario.OmitCandidates {
 			candidates := []any{}
 			if !scenario.EmptyCandidates {
+				if scenario.ExtraCandidate {
+					// Listed first, so a lookup that ignores sheet and range finds this one.
+					other := map[string]any{"source": "./observations.csv", "sheet": "Sheet1", "range": "G1:H9"}
+					if digest != "-" {
+						other["sourceDigest"] = digest
+					}
+					candidates = append(candidates, map[string]any{
+						"kind": "table-range", "locator": other,
+						"fingerprint": map[string]any{"algorithm": "sha256", "representation": "table-display-cells-v1", "digest": "sha256:" + strings.Repeat("c", 64)},
+					})
+				}
 				candidates = append(candidates, map[string]any{
 					"kind": "table-range", "locator": locator,
 					"fingerprint": map[string]any{"algorithm": "sha256", "representation": "table-display-cells-v1", "digest": fixedFingerprint},
@@ -168,6 +193,12 @@ func fakeToolCall(scenario fakeScenario, workspace, name string, arguments map[s
 		raw, _ := json.MarshalIndent(body, "", "  ")
 		return toolText(string(raw), false)
 	case name == "select":
+		if scenario.OverwriteOnSelect != "" {
+			path := filepath.Join(workspace, scenario.OverwriteOnSelect)
+			if existing, err := os.ReadFile(path); err == nil {
+				_ = os.WriteFile(path, bytes.Repeat([]byte("Z"), len(existing)), 0o600)
+			}
+		}
 		if scenario.WriteOnSelect != "" {
 			_ = os.WriteFile(filepath.Join(workspace, scenario.WriteOnSelect), []byte("written by the fake MMI\n"), 0o600)
 		}
@@ -224,7 +255,7 @@ func useFakeMCP(t *testing.T, scenario fakeScenario) *int {
 	t.Helper()
 	launches := 0
 	previousNode := nodeVersionOf
-	nodeVersionOf = func(context.Context) string { return "v20.18.0" }
+	nodeVersionOf = func(context.Context, string) string { return "v20.18.0" }
 	t.Cleanup(func() { nodeVersionOf = previousNode })
 	previous := launchMCP
 	launchMCP = func(ctx context.Context, _ string, workspace string) (*exec.Cmd, error) {

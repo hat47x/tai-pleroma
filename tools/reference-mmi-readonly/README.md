@@ -39,7 +39,7 @@ MMIの場所は`-mmi-root`または`MMI_ROOT`で指定できます。省略時�
 - `-expect-lock-digest`: `03_Implement/package-lock.json`の、CRLFをLFに直した後の`sha256:<64桁>`。
 - `-expect-node-major`: `node --version`のmajor（10進）。
 - 他の期待値だけを指定した場合は、`-expect-commit`がないため失敗します。lockのdigestはMMIの複数のcommitで同じ値になり、Nodeのmajorはチェックアウトの内容を示さないためです。
-- 追跡対象ファイルに変更（ステージ済み・未ステージ・削除）があると失敗します。`assume-unchanged`または`skip-worktree`の印が付いた追跡ファイルがある場合も、その編集を見分けられないため失敗します。
+- 追跡対象ファイルに変更（ステージ済み・未ステージ・削除）があると失敗します。`assume-unchanged`または`skip-worktree`の印が付いた追跡ファイルがある場合も、その編集を見分けられないため失敗します。比較では`refs/replace`（`git replace`）を無視します。MMIの`.git/index`は書き換えず、複製した写しに対してgitを実行します（`git diff`は`--no-optional-locks`を付けても渡されたindexを更新するため）。Nodeのversionは、MMIを起動するのと同じ`03_Implement`ディレクトリで`node --version`を実行して取ります。
 - 取得できない値（gitがない、lockがない、`node`がない）を期待した場合も失敗です。
 - `tools/list`に書込み可能と思われる名前や、測定していない名前のツールがあると失敗します。
 - `sourceDigest`・`select`のfingerprint・`rows`のいずれかが、照合できない（`unavailable`）場合も失敗します。版を固定しない実行では、これらは記録のみです。
@@ -52,6 +52,8 @@ go run . -mmi-root <MMIのcloneのパス> -workspace testdata/workspace \
 ```
 
 環境変数`TAI_MMI_EXPECT_COMMIT`・`TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST`・`TAI_MMI_EXPECT_NODE_MAJOR`でも指定できます（フラグが優先）。`go test`と、この接続を子プロセスとして起動する統合参照実行にも環境変数は引き継がれます。環境変数名を誤ると、記録のみの実行になります。
+
+統合参照実行（`reference-scn001-run`）のrecordは、このツールの`pin`の結果を取り込みません。統合参照実行が子プロセスとして起動するこのツールに環境変数を引き継いでも、期待値を指定して実行したことはrecordに残りません。固定版での実行記録にするには、期待値を指定して実行したこのツール自身のreceipt（`pin.checked=true`、`pin.result=match`）を別に保存する必要があります。統合参照実行のrecordへ`pin`を取り込むかどうかは、消費側（このツールの範囲外）の変更を伴うため、**未決（Owner判断）**です。
 
 実行後は、receiptの次を確認してください。
 
@@ -70,8 +72,11 @@ go run . -mmi-root <MMIのcloneのパス> -workspace testdata/workspace \
 
 - `pin.result`は`match`、`pin.sourceTree.status`は`clean`。`inspect`の`sourceDigest`と`select`のfingerprintは一致し、境界外は`outside-workspace`、存在しないsourceは`not-found`で拒否された。
 - 同じ期待値で`06f5b341`のMMIを使うと、commitが一致せず`passed=false`で止まる（MMIは起動しない）。`package-lock.json`のdigestは`a8addd1`と同じ値だった。lockのdigestだけではこれらのcommitを区別できないため、commitの照合が必要です。
-- Windowsで`core.autocrlf=true`のチェックアウトでは、作業ツリーの`package-lock.json`はCRLFで、receiptの`packageLockDigest`（生のバイト列）は`sha256:f6810ef0…`になります。Linuxやコミット済みのblobは`sha256:bef54626…`です。照合には後者（CRLF→LF）を使います。
-- Node majorは、測定した環境（Linux）では20でした。過去の記録のNode versionは22.23.2ですが、ここでは再現していません。
+- Node majorは、測定した環境（Linux）では20でした。過去の記録のNodeは22系とされていますが、保存済みのrecordにはNode versionの欄がなく、出典は確認できていません。ここでは再現していません（未確認）。
+
+次は上の実行とは別の観測で、`a8addd1`での実行結果ではありません。
+
+- Windowsで`core.autocrlf=true`のチェックアウト（共有の開発用チェックアウト、`1989b827`の作業ツリー）で`package-lock.json`を読み取りだけで確認すると、receiptの`packageLockDigest`（生のバイト列）は`sha256:f6810ef0…`になります。Linuxやコミット済みのblobは`sha256:bef54626…`です。照合には後者（CRLF→LF）を使います。
 
 ## 境界
 
@@ -84,7 +89,7 @@ go run . -mmi-root <MMIのcloneのパス> -workspace testdata/workspace \
 - MMIが返さない値、または形式が異なる値は`unavailable`として記録し、版を固定しない実行では失敗にしません。
 - 拒否理由の種別はエラーメッセージの文言で判定します（MMIは機械可読な符号を返しません）。文言が測定済みの版と異なる場合、版を固定しない実行では記録して注記し、固定した実行では失敗にします。メッセージ本文はローカルの絶対パスを含み得るためreceiptに保存しません。ただし、失敗時の`reason`には、子プロセスが標準エラーに出した文字列が入ることがあります。失敗したreceiptはコミットしないでください。
 - `selectedRows`と`conflictPreserved`は、MMIがO-02/O-03/O-07の3行を返し、O-02とO-03の文言差を保持したことだけを示します。
-- `realProductConnected=true`は、この環境でMMI MCPとの読み取り往復が成立し、全ての照合を通ったことだけを示します。
+- `realProductConnected=true`は、この環境でMMI MCPとの読み取り往復が成立し、このツールが実行する照合（`inspect`の`sourceDigest`・`select`の`rows`・fingerprintのうちMMIが返した値、拒否理由、ワークスペースの不変）を通ったことだけを示します。版を固定しない実行では、MMIの版（commit・lock digest・Node version）の照合と、MMIが返さなかった値の結び付けは行っていません。
 - 版を固定しない実行でも、MMIが別のcommitで挙動を変えれば（`sourceDigest`の不一致、`rows`の不整合、ワークスペースの変更など）失敗します。これらはMMIの版の違いではなく、その実行で観測した事実の不一致だからです。
 
 ### 版の一致が示さないこと

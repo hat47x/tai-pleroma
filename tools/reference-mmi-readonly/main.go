@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -391,8 +392,18 @@ func selectObservations(client *mcpClient) (selectionResult, error) {
 
 // nodeVersionOf reports `node --version`. Tests replace it so the negative cases
 // do not depend on a node binary.
-var nodeVersionOf = func(ctx context.Context) string {
-	return commandOutput(ctx, "", "node", "--version")
+var nodeVersionOf = defaultNodeVersionOf
+
+// defaultNodeVersionOf asks the node binary that launchMCP would start, from the
+// directory it starts it in (03_Implement). A version manager's shim (Volta, asdf,
+// mise, .node-version) chooses the version by the working directory, so a probe
+// from any other directory could report a different Node than the one that runs MMI.
+func defaultNodeVersionOf(ctx context.Context, mmiRoot string) string {
+	node, err := exec.LookPath("node")
+	if err != nil {
+		return ""
+	}
+	return commandOutput(ctx, filepath.Join(mmiRoot, "03_Implement"), node, "--version")
 }
 
 func commandOutput(ctx context.Context, dir, name string, args ...string) string {
@@ -472,7 +483,7 @@ func RunWithOptions(ctx context.Context, mmiRoot, workspace string, options Opti
 	receipt.GuideDigestBefore = beforeGuide
 	receipt.Binding.CSVDigest = beforeCSV
 	receipt.WorkspaceTree = WorkspaceTree{DigestBefore: beforeTree, Entries: entries}
-	receipt.NodeVersion = nodeVersionOf(ctx)
+	receipt.NodeVersion = nodeVersionOf(ctx, mmiRoot)
 	facts := gatherFacts(ctx, mmiRoot, receipt.NodeVersion)
 	receipt.MmiCommit = facts.Commit
 	if lockDigest, err := digestFile(filepath.Join(mmiRoot, "03_Implement", "package-lock.json")); err == nil {
@@ -682,32 +693,62 @@ func RunWithOptions(ctx context.Context, mmiRoot, workspace string, options Opti
 	return receipt
 }
 
-func main() {
-	mmiRoot := flag.String("mmi-root", "", "MMI checkout root (default: MMI_ROOT or ../../../markdown-matrix-injector)")
-	workspace := flag.String("workspace", "testdata/workspace", "read-only MMI workspace")
-	outPath := flag.String("out", "", "write receipt JSON to this file")
-	expectCommit := flag.String("expect-commit", os.Getenv("TAI_MMI_EXPECT_COMMIT"), "fail unless the MMI checkout HEAD equals this commit (env TAI_MMI_EXPECT_COMMIT)")
-	expectLock := flag.String("expect-lock-digest", os.Getenv("TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST"), "fail unless package-lock.json (CRLF->LF) has this sha256:<hex> digest (env TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST)")
-	expectNode := flag.String("expect-node-major", os.Getenv("TAI_MMI_EXPECT_NODE_MAJOR"), "fail unless node --version has this major (env TAI_MMI_EXPECT_NODE_MAJOR)")
-	flag.Parse()
+// cliConfig is what main passes on: where MMI and the workspace are, and the
+// opt-in pin expectations.
+type cliConfig struct {
+	MMIRoot   string
+	Workspace string
+	OutPath   string
+	Options   Options
+}
+
+// parseConfig reads the command line, with environment variables as the default
+// of each expectation flag (a flag given on the command line wins, an empty value
+// means "no expectation"). main is a thin wrapper, so the only way to give an
+// expectation is tested here and not in an untested flag block.
+func parseConfig(args []string, getenv func(string) string) (cliConfig, error) {
+	flags := flag.NewFlagSet("reference-mmi-readonly", flag.ContinueOnError)
+	mmiRoot := flags.String("mmi-root", "", "MMI checkout root (default: MMI_ROOT or ../../../markdown-matrix-injector)")
+	workspace := flags.String("workspace", "testdata/workspace", "read-only MMI workspace")
+	outPath := flags.String("out", "", "write receipt JSON to this file")
+	expectCommit := flags.String("expect-commit", getenv("TAI_MMI_EXPECT_COMMIT"), "fail unless the MMI checkout HEAD equals this commit (env TAI_MMI_EXPECT_COMMIT)")
+	expectLock := flags.String("expect-lock-digest", getenv("TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST"), "fail unless package-lock.json (CRLF->LF) has this sha256:<hex> digest (env TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST)")
+	expectNode := flags.String("expect-node-major", getenv("TAI_MMI_EXPECT_NODE_MAJOR"), "fail unless node --version has this major (env TAI_MMI_EXPECT_NODE_MAJOR)")
+	if err := flags.Parse(args); err != nil {
+		return cliConfig{}, err
+	}
 	root := *mmiRoot
 	if root == "" {
-		root = os.Getenv("MMI_ROOT")
+		root = getenv("MMI_ROOT")
 	}
 	if root == "" {
 		root = filepath.Clean(filepath.Join("..", "..", "..", "markdown-matrix-injector"))
 	}
-	receipt := RunWithOptions(context.Background(), root, *workspace, Options{
-		ExpectCommit: strings.ToLower(*expectCommit), ExpectLockDigest: strings.ToLower(*expectLock), ExpectNodeMajor: *expectNode,
-	})
+	return cliConfig{
+		MMIRoot: root, Workspace: *workspace, OutPath: *outPath,
+		Options: Options{
+			ExpectCommit: strings.ToLower(*expectCommit), ExpectLockDigest: strings.ToLower(*expectLock), ExpectNodeMajor: *expectNode,
+		},
+	}, nil
+}
+
+func main() {
+	config, err := parseConfig(os.Args[1:], os.Getenv)
+	if err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			os.Exit(0)
+		}
+		os.Exit(2)
+	}
+	receipt := RunWithOptions(context.Background(), config.MMIRoot, config.Workspace, config.Options)
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
 	encoded = append(encoded, '\n')
-	if *outPath != "" {
-		if err := os.WriteFile(*outPath, encoded, 0o644); err != nil {
+	if config.OutPath != "" {
+		if err := os.WriteFile(config.OutPath, encoded, 0o644); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(2)
 		}

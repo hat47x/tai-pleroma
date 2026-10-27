@@ -75,17 +75,64 @@ func digestFileLF(path string) (string, error) {
 	return digestBytes(bytes.ReplaceAll(content, []byte("\r\n"), []byte("\n"))), nil
 }
 
+// gitRedirectingEnv are variables that make git look at another repository, work
+// tree, index or object store than the checkout directory. A git hook sets some
+// of them; they must not redirect these queries.
+var gitRedirectingEnv = []string{
+	"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR",
+	"GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+}
+
+// gitCommand builds a git query for the checkout in dir. --no-replace-objects
+// keeps a refs/replace entry from making `diff HEAD` compare against another tree
+// than the one the recorded HEAD commit has.
 func gitCommand(ctx context.Context, dir string, args ...string) *exec.Cmd {
-	cmd := exec.CommandContext(ctx, "git", args...)
+	cmd := exec.CommandContext(ctx, "git", append([]string{"--no-replace-objects"}, args...)...)
 	cmd.Dir = dir
 	for _, entry := range os.Environ() {
-		// A git hook sets GIT_DIR/GIT_INDEX_FILE; they must not redirect this query.
-		if strings.HasPrefix(entry, "GIT_DIR=") || strings.HasPrefix(entry, "GIT_WORK_TREE=") || strings.HasPrefix(entry, "GIT_INDEX_FILE=") {
-			continue
+		name, _, _ := strings.Cut(entry, "=")
+		redirects := false
+		for _, blocked := range gitRedirectingEnv {
+			if name == blocked {
+				redirects = true
+				break
+			}
 		}
-		cmd.Env = append(cmd.Env, entry)
+		if !redirects {
+			cmd.Env = append(cmd.Env, entry)
+		}
 	}
 	return cmd
+}
+
+// copyIndex copies the checkout's real .git/index into a private temporary
+// directory. `git diff` refreshes stat information and rewrites the index it is
+// given even with --no-optional-locks, so every index-reading query runs against
+// this copy (GIT_INDEX_FILE) and the shared MMI checkout's .git stays untouched.
+func copyIndex(ctx context.Context, mmiRoot string) (string, func(), error) {
+	out, err := gitCommand(ctx, mmiRoot, "rev-parse", "--git-path", "index").Output()
+	if err != nil {
+		return "", nil, err
+	}
+	source := strings.TrimSpace(string(out))
+	if !filepath.IsAbs(source) {
+		source = filepath.Join(mmiRoot, source)
+	}
+	content, err := os.ReadFile(source)
+	if err != nil {
+		return "", nil, err
+	}
+	dir, err := os.MkdirTemp("", "tai-mmi-index-")
+	if err != nil {
+		return "", nil, err
+	}
+	cleanup := func() { _ = os.RemoveAll(dir) }
+	copyPath := filepath.Join(dir, "index")
+	if err := os.WriteFile(copyPath, content, 0o600); err != nil {
+		cleanup()
+		return "", nil, err
+	}
+	return copyPath, cleanup, nil
 }
 
 type mmiFacts struct {
@@ -98,7 +145,8 @@ type mmiFacts struct {
 	Hidden     int // tracked files git is told not to look at
 }
 
-// gatherFacts only reads: git rev-parse/diff/ls-files and a file read.
+// gatherFacts does not modify the MMI checkout: git rev-parse, a copy of the
+// index for diff/ls-files, and a file read.
 func gatherFacts(ctx context.Context, mmiRoot, nodeVersion string) mmiFacts {
 	facts := mmiFacts{TreeStatus: "unavailable"}
 	if match := nodePattern.FindStringSubmatch(nodeVersion); match != nil {
@@ -123,22 +171,32 @@ func gatherFacts(ctx context.Context, mmiRoot, nodeVersion string) mmiFacts {
 		return facts
 	}
 	facts.Commit = strings.TrimSpace(string(head))
-	// Tracked changes are judged by content (`diff HEAD` covers staged, unstaged and
-	// deleted files). `git status` reports a CRLF working copy of an LF blob as
-	// modified when the index stat was taken before the rewrite, and both commands
-	// may refresh .git/index, hence --no-optional-locks.
-	changed, err := gitCommand(ctx, mmiRoot, "--no-optional-locks", "diff", "--name-only", "-z", "HEAD", "--").Output()
+	indexCopy, cleanup, err := copyIndex(ctx, mmiRoot)
 	if err != nil {
 		return facts
 	}
-	untracked, err := gitCommand(ctx, mmiRoot, "--no-optional-locks", "ls-files", "--others", "--exclude-standard", "-z").Output()
+	defer cleanup()
+	onCopy := func(args ...string) *exec.Cmd {
+		cmd := gitCommand(ctx, mmiRoot, append([]string{"--no-optional-locks"}, args...)...)
+		cmd.Env = append(cmd.Env, "GIT_INDEX_FILE="+indexCopy)
+		return cmd
+	}
+	// Tracked changes are judged by content (`diff HEAD` covers staged, unstaged and
+	// deleted files). `git status` reports a CRLF working copy of an LF blob as
+	// modified when the index stat was taken before the rewrite, and `diff` refreshes
+	// the index it reads, hence the copy.
+	changed, err := onCopy("diff", "--name-only", "-z", "HEAD", "--").Output()
+	if err != nil {
+		return facts
+	}
+	untracked, err := onCopy("ls-files", "--others", "--exclude-standard", "-z").Output()
 	if err != nil {
 		return facts
 	}
 	// `diff HEAD` does not see a tracked file that carries the assume-unchanged or
 	// skip-worktree flag, so an edit can hide behind it. Count those files: lower
 	// case tags are assume-unchanged, `S` is skip-worktree.
-	flagged, err := gitCommand(ctx, mmiRoot, "--no-optional-locks", "ls-files", "-v", "-z").Output()
+	flagged, err := onCopy("ls-files", "-v", "-z").Output()
 	if err != nil {
 		return facts
 	}
@@ -274,11 +332,18 @@ type WorkspaceTree struct {
 }
 
 // digestTree hashes entry kind, relative path, size and content in lexical
-// order. Symlinks are not followed. Modification times are ignored on purpose.
+// order. A symlink below the root is not followed (its target is hashed), but a
+// root that is itself a symlink is resolved first: WalkDir would otherwise stop
+// at the link and see one entry. Modification times are ignored on purpose.
 func digestTree(root string) (string, int, error) {
+	resolved, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		return "", 0, err
+	}
+	root = resolved
 	hash := sha256.New()
 	entries := 0
-	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
+	err = filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
