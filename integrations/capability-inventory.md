@@ -14,7 +14,7 @@
 
 ## 参照接続の記録
 
-- **MMI**: [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md)がローカル開発チェックアウトのMMI MCP `markdown-matrix-injector/0.2.0`へstdio接続し、`inspect`と`select`を実行した。O-02/O-03/O-07の3行を取得し、O-02とO-03の文言差を保持した。境界外`../outside.csv`と存在しない`missing.csv`を拒否し、CSV/guideのdigestは不変だった。配布版、実運用の認可、版固定、書込みは未検証。
+- **MMI**: [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md)がローカル開発チェックアウトのMMI MCP `markdown-matrix-injector/0.2.0`へstdio接続し、`inspect`と`select`を実行した。O-02/O-03/O-07の3行を取得し、O-02とO-03の文言差を保持した。境界外`../outside.csv`と存在しない`missing.csv`を拒否理由の種別付きで拒否し、`inspect`の`sourceDigest`とTAI計算のCSV digestの一致、ワークスペース全体のdigestの不変を確認した。commit・`package-lock.json`のdigest・Node majorは、期待値を指定した実行でのみ照合する（既定は記録のみで、固定版の証拠にならない）。固定版での実行記録、配布版、実運用の認可、書込みは未検証。
 - **SEI**: [reference-sei-decision](../tools/reference-sei-decision/README.md)がSEIの一時storeへ`rec-01`と`dec-01`を記録し、`sei resume --json`で2 records、`dec-01`、未解決`authority:unknown`を確認した。合成fixtureであり、実運用store・権限・公開・署名は未検証。
 - **TEI**: [reference-tei-model](../tools/reference-tei-model/README.md)がSCN-001の`Observation`/`RuleCandidate`型をTEIの`validate`で検証し、`ok`とworkspace digest不変を確認した。型宣言だけで、実データ・意味・Authorityは未検証。
 - **SUI**: [reference-sui-api](../tools/reference-sui-api/README.md)がSUI APIの`/healthz`、`/openapi.json`、`/docs`、4 card/2 island/1 edgeのDocumentV1を読み、`status=ok`、OpenAPI `3.1.0`、65 paths、`scn001-demo`（O-02/O-03/O-06/O-07、I-01/I-02）を確認した。[reference-sui-link](../tools/reference-sui-link/README.md)がcard digestとisland構成をSCN-001 fixtureへ照合した。実資料・テナント・認可・意味形成の正しさは未検証。
