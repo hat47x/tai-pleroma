@@ -20,7 +20,7 @@ TAIは、役割の異なる五つの関連基盤を必要に応じて利用し�
 
 各基盤には独立した役割と開発の進め方があります。TAIはそれらの機能を重複して実装したり、独自の中央Hostへ集約したりすることを目的にしていません。
 
-プロダクト横断の構成・位置づけについては、[全体関係図（Draft）](docs/product-landscape.md)と[横断知識モデル案（Draft）](docs/product-knowledge-model.md)を参照してください。これらは現在の接続実証や製品分類の採用を意味しません。
+プロダクト横断の構成・位置づけについては、[全体関係図（Draft）](docs/product-landscape.md)と[横断知識モデル案（Draft）](docs/product-knowledge-model.md)を参照してください。これらは現在の接続実証や製品分類の採用を意味しません。候補の棚卸しは[公開リポジトリ調査（Draft）](docs/product-inventory-candidates.md)、横断的な負例・受入条件は[受入・更新プロトコル（Draft）](docs/product-landscape-acceptance.md)で扱います。
 
 ## 最初に扱う課題
 
