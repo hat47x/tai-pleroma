@@ -11,3 +11,9 @@
 
 - [公開リポジトリの棚卸しとプロダクト候補（Draft）](product-inventory-candidates.md) — 固定main版に基づく公開対象の候補、SHO/MMIやCSWの分類保留、網羅性・公開境界。
 - [横断プロダクト情報の受入・更新プロトコル（Draft）](product-landscape-acceptance.md) — scope、Evidence、Revision、公開境界、誤った確定を避ける負例。
+
+
+- [Product Landscape 横断要求 v0（Draft）](product-landscape-requirements.md) — PL-REQ-01〜16、G1〜G3、要件・受入・Ownerのトレース。
+- [Product Landscape View Contract v0（Draft）](product-landscape-view-contract.md) — Portfolio/Capability/Integrationの図の意味、版と公開の条件。
+
+G1の正式な対象・分類・公開の採否は[TAI Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)で追跡する。Issueと文書はいずれも現在**Draft・未受入**。
