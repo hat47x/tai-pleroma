@@ -60,6 +60,14 @@
     }
   ],
   "documentEdgeCount": 1,
+  "documentEdges": [
+    {
+      "id": "E-01",
+      "fromId": "I-01",
+      "toId": "I-02",
+      "type": "contradicts"
+    }
+  ],
   "openapiVersion": "3.1.0",
   "pathCount": 65,
   "paths": [
