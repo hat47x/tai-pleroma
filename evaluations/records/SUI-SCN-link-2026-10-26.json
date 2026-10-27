@@ -13,6 +13,7 @@
     "I-02"
   ],
   "edgeCount": 1,
+  "contradiction": true,
   "passed": true,
   "notes": [
     "SUIのcard digestをSCN-001 fixtureの観測と照合する参照。",

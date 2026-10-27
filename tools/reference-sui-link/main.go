@@ -57,6 +57,7 @@ type Receipt struct {
 	LinkedCards    []string `json:"linkedCards"`
 	IslandGroups   []string `json:"islandGroups"`
 	EdgeCount      int      `json:"edgeCount"`
+	Contradiction  bool     `json:"contradiction"`
 	Passed         bool     `json:"passed"`
 	Reason         string   `json:"reason,omitempty"`
 	Notes          []string `json:"notes"`
@@ -132,6 +133,7 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 		receipt.Reason = "contradicts edge between I-01 and I-02 is missing"
 		return receipt
 	}
+	receipt.Contradiction = true
 	receipt.Passed = true
 	return receipt
 }
