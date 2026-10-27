@@ -48,6 +48,8 @@ flowchart TB
 
 詳細な型・状態・検査規則は[プロダクト横断情報モデル案](product-knowledge-model.md)を参照する。
 
+要求・正式な範囲の判断は[Product Landscape要求案](product-landscape-requirements.md)と[TAI #73](https://github.com/hat47x/tai-pleroma/issues/73)に、Portfolio/Capability/Integrationを混同しない図の説明は[View Contract](product-landscape-view-contract.md)に置く。
+
 ## 3. 異なる目的の図を分ける
 
 | Viewpoint | 主な問い | 収録する情報 | 初期対応 |
