@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.eki-worker-env/v0",
+  "ekiCommit": "a578b0543e5be3a80b7031c09a0e1d40ac0f076b",
+  "environment": "WSL Ubuntu-22.04 / Docker 28.3.3 / golang:1.27",
+  "goVersion": "go1.27 linux/amd64",
+  "tests": [
+    "internal/agent/...",
+    "internal/control/..."
+  ],
+  "testsPassed": true,
+  "builtBinaries": [
+    "eki-control",
+    "eki-agent"
+  ],
+  "controlVersion": "eki-control dev",
+  "agentVersion": "eki-agent dev",
+  "workerExecution": false,
+  "taskResult": false,
+  "authorityVerified": false,
+  "passed": true,
+  "notes": [
+    "WSLのDocker engineでEKIのAgent/control test profileを実行した。",
+    "Taskを実行するWorkerではなく、claim deliveryとWorker planeのtest profile。",
+    "Task結果・実Provider・Authorityは未検証。"
+  ]
+}
