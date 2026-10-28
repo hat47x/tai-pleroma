@@ -32,6 +32,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 - `smoke.sh`でControl Planeバイナリを起動し、`GET /v1/tasks`が405を返す。
 - `eki-agent`を起動し、claim deliveryが開始される。
 - `spikes/claim-wire-roundtrip`のtestがPASS。
+- WSLのControl PlaneへTaskを送信し、`queued`→`cancelled`/`CANCELLED`まで確認。
 
 ```text
 docker run --rm -v /home/hat47x/eki-worker:/src \

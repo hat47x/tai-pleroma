@@ -19,6 +19,8 @@
   "agentSmoke": true,
   "agentClaimDelivery": "started",
   "claimWireRoundtrip": true,
+  "taskLifecycleSmoke": true,
+  "taskLifecycleStatus": "cancelled",
   "workerExecution": false,
   "taskResult": false,
   "authorityVerified": false,
