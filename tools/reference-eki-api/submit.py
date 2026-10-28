@@ -14,6 +14,8 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+import ekipin
+
 
 SCHEMA = "tai.reference.eki-task-submit/v0"
 
@@ -35,7 +37,9 @@ def _request(
         return error.code, {"raw": raw}
 
 
-def submit(base_url: str, token: str, fixture: dict[str, Any], idempotency_key: str) -> dict[str, Any]:
+def submit(
+    base_url: str, token: str, fixture: dict[str, Any], idempotency_key: str, binding: ekipin.Binding | None = None
+) -> dict[str, Any]:
     receipt: dict[str, Any] = {
         "schema": SCHEMA,
         "baseUrl": base_url,
@@ -51,6 +55,15 @@ def submit(base_url: str, token: str, fixture: dict[str, Any], idempotency_key: 
             "Workerは起動しておらず、Taskの実行・結果・委任の完了は未検証。",
         ],
     }
+    guard = ekipin.Guard(binding)
+    if not guard.before(receipt, base_url):
+        return receipt
+    return guard.after(_submit(receipt, base_url, token, fixture, idempotency_key))
+
+
+def _submit(
+    receipt: dict[str, Any], base_url: str, token: str, fixture: dict[str, Any], idempotency_key: str
+) -> dict[str, Any]:
     status, accepted = _request(
         "POST",
         base_url.rstrip("/") + "/v1/tasks",
@@ -98,12 +111,13 @@ def main() -> int:
     parser.add_argument("--fixture", required=True)
     parser.add_argument("--idempotency-key", default="tai-scn001-0001")
     parser.add_argument("--out")
+    ekipin.add_arguments(parser)
     args = parser.parse_args()
     if not args.token:
         parser.error("--token or EKI_TOKEN is required")
     with open(args.fixture, encoding="utf-8") as handle:
         fixture = json.load(handle)
-    receipt = submit(args.base_url, args.token, fixture, args.idempotency_key)
+    receipt = submit(args.base_url, args.token, fixture, args.idempotency_key, ekipin.Binding.from_args(args))
     encoded = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
     if args.out:
         with open(args.out, "w", encoding="utf-8") as handle:

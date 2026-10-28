@@ -15,6 +15,8 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+import ekipin
+
 
 SCHEMA = "tai.reference.eki-api-probe/v0"
 
@@ -32,7 +34,7 @@ def _status(base_url: str, token: str, timeout: float) -> int:
         return error.code
 
 
-def probe(base_url: str, token: str, timeout: float = 10.0) -> dict[str, Any]:
+def probe(base_url: str, token: str, timeout: float = 10.0, binding: ekipin.Binding | None = None) -> dict[str, Any]:
     receipt: dict[str, Any] = {
         "schema": SCHEMA,
         "baseUrl": base_url,
@@ -46,6 +48,13 @@ def probe(base_url: str, token: str, timeout: float = 10.0) -> dict[str, Any]:
             "Taskの送信・委任・Worker・結果検証・Authorityは未検証。",
         ],
     }
+    guard = ekipin.Guard(binding)
+    if not guard.before(receipt, base_url):
+        return receipt
+    return guard.after(_probe(receipt, base_url, token, timeout))
+
+
+def _probe(receipt: dict[str, Any], base_url: str, token: str, timeout: float) -> dict[str, Any]:
     try:
         status = _status(base_url, token, timeout)
     except (urllib.error.URLError, TimeoutError, ValueError) as error:
@@ -69,10 +78,11 @@ def main() -> int:
     parser.add_argument("--token", default=os.environ.get("EKI_TOKEN", ""))
     parser.add_argument("--timeout", type=float, default=10.0)
     parser.add_argument("--out")
+    ekipin.add_arguments(parser)
     args = parser.parse_args()
     if not args.token:
         parser.error("--token or EKI_TOKEN is required")
-    receipt = probe(args.base_url, args.token, args.timeout)
+    receipt = probe(args.base_url, args.token, args.timeout, ekipin.Binding.from_args(args))
     encoded = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
     if args.out:
         with open(args.out, "w", encoding="utf-8") as handle:
