@@ -15,7 +15,7 @@
       "memory_bytes": 268435456,
       "wall_time_seconds": 300,
       "output_bytes_max": 16777216,
-      "network_bytes_max": 0,
+      "network_bytes_max": 268435456,
       "temporary_disk_bytes": 1048576
     },
     "max_attempts": 3,
