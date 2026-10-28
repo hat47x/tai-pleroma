@@ -109,6 +109,7 @@ func gitCommand(ctx context.Context, dir string, args ...string) *exec.Cmd {
 // directory. `git diff` refreshes stat information and rewrites the index it is
 // given even with --no-optional-locks, so every index-reading query runs against
 // this copy (GIT_INDEX_FILE) and the shared MMI checkout's .git stays untouched.
+// The copy keeps the original's modification time.
 func copyIndex(ctx context.Context, mmiRoot string) (string, func(), error) {
 	out, err := gitCommand(ctx, mmiRoot, "rev-parse", "--git-path", "index").Output()
 	if err != nil {
@@ -117,6 +118,10 @@ func copyIndex(ctx context.Context, mmiRoot string) (string, func(), error) {
 	source := strings.TrimSpace(string(out))
 	if !filepath.IsAbs(source) {
 		source = filepath.Join(mmiRoot, source)
+	}
+	info, err := os.Stat(source)
+	if err != nil {
+		return "", nil, err
 	}
 	content, err := os.ReadFile(source)
 	if err != nil {
@@ -129,6 +134,14 @@ func copyIndex(ctx context.Context, mmiRoot string) (string, func(), error) {
 	cleanup := func() { _ = os.RemoveAll(dir) }
 	copyPath := filepath.Join(dir, "index")
 	if err := os.WriteFile(copyPath, content, 0o600); err != nil {
+		cleanup()
+		return "", nil, err
+	}
+	// git treats an entry whose mtime is not older than the index file's mtime as
+	// possibly stale and compares its content (racy-git protection). The copy must
+	// carry the original's mtime, or a same-size edit made in the second the index was
+	// written would look unchanged. If the mtime cannot be set the state is unknown.
+	if err := os.Chtimes(copyPath, info.ModTime(), info.ModTime()); err != nil {
 		cleanup()
 		return "", nil, err
 	}

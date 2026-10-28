@@ -96,6 +96,39 @@ func TestReplaceRefCannotHideATrackedEdit(t *testing.T) {
 	}
 }
 
+// git's racy-git protection compares content when an entry's mtime is not older than
+// the index file's. The index copy must keep the original's mtime: with a fresh one
+// a same-size edit made in the second the index was written looks unchanged and a
+// pinned run would pass on edited code. checkStat=minimal makes the stat match
+// independent of ctime, so the scenario does not depend on the clock.
+func TestIndexCopyKeepsTheOriginalMtimeSoRacyEditsAreSeen(t *testing.T) {
+	repo := newFakeMMI(t, false)
+	git(t, repo.Root, "config", "core.checkStat", "minimal")
+	readme := filepath.Join(repo.Root, "README.md")
+	stamp := time.Now().Add(-time.Hour).Truncate(time.Second)
+	if err := os.Chtimes(readme, stamp, stamp); err != nil {
+		t.Fatal(err)
+	}
+	git(t, repo.Root, "update-index", "--really-refresh")
+	index := filepath.Join(repo.Root, ".git", "index")
+	if err := os.Chtimes(index, stamp, stamp); err != nil {
+		t.Fatal(err)
+	}
+	original := mustRead(t, readme)
+	edited := append([]byte(nil), original...)
+	edited[0] ^= 0x01 // same size, different content
+	if err := os.WriteFile(readme, edited, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chtimes(readme, stamp, stamp); err != nil {
+		t.Fatal(err)
+	}
+	facts := gatherFacts(context.Background(), repo.Root, "v20.18.0")
+	if facts.Tracked != 1 || facts.TreeStatus != "tracked-changes" {
+		t.Fatalf("a same-size edit in the second the index was written was not seen: %+v", facts)
+	}
+}
+
 // When git cannot tell whether the tree is clean, a pinned run fails instead of
 // passing on a default.
 func TestPinFailsClosedWhenTheTreeStateCannotBeRead(t *testing.T) {
