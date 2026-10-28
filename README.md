@@ -28,6 +28,8 @@ TAIは、役割の異なる五つの関連基盤を必要に応じて利用し�
 
 この過程で、元の資料と版を残し、複数の解釈を検討し、確認できた範囲で案内文を改訂します。新しい資料で文言が以前と同じに戻っても、過去の判断が自動的に有効になるとは扱いません。
 
+製造工程の課題検出用に、公開施設案内の一般的な論点を参考へ独自創作した[合成施設文書](scenarios/SCN-001-synthetic-facility/README.md)もあります。実在の施設・規程ではなく、R-01〜R-05の`accepted`や`real-object`証拠ではありません。
+
 ## 現在、確認できること
 
 SCN-001について、次の参照実装と検証記録があります。
@@ -42,6 +44,7 @@ SCN-001について、次の参照実装と検証記録があります。
 | [SUIとの接続](tools/reference-sui-api/README.md)・[観測照合](tools/reference-sui-link/README.md)・[D-04照合](tools/reference-sui-draft/README.md) | 文書内のカードと観測本文の対応、島の構成、D-04の根拠行を確認 |
 | [TEIとの接続](tools/reference-tei-model/README.md) | SCN-001で使う型宣言の検証 |
 | [EKIとの接続](tools/reference-eki-api/README.md)・[CLI確認](tools/reference-eki-cli/README.md) | API認証と合成Taskの受付・待機状態、CLI起動を確認 |
+| [EKI Worker test環境](tools/reference-eki-worker/README.md) | WSL/DockerでAgent/Control test profileとバイナリbuildを確認 |
 | [公開条件の検査](tools/reference-publication-gate/README.md) | レビュー項目R-01〜R-07の状態を判定。現在は公開を保留 |
 | [公開境界の検査](tools/check-public-boundary/check.py) | 非公開リソース名・秘密鍵・tokenの混入をtracked fileから検出 |
 

@@ -52,6 +52,8 @@ type Receipt struct {
 	AuthorityVerified      bool             `json:"authorityVerified"`
 	HumanReviewed          bool             `json:"humanReviewed"`
 	Published              bool             `json:"published"`
+	Synthetic              bool             `json:"synthetic"`
+	EvidenceKind           string           `json:"evidenceKind"`
 	Passed                 bool             `json:"passed"`
 	Reason                 string           `json:"reason,omitempty"`
 	Notes                  []string         `json:"notes"`
@@ -196,6 +198,7 @@ func main() {
 	currentTarget := flag.String("current-target", "", "file holding the current target's ExactBinding JSON (with -decision-validity)")
 	var namedDecisions nameList
 	flag.Var(&namedDecisions, "decision", "kind:id of a Decision treated as the acceptance in question; repeatable (with -decision-validity)")
+	synthetic := flag.Bool("synthetic", false, "mark the decision fixture as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	if *decisionValidity != "" || *currentTarget != "" || len(namedDecisions) > 0 {
@@ -241,6 +244,10 @@ func main() {
 		return
 	}
 	receipt := Run(ctx, root)
+	if *synthetic {
+		receipt.Synthetic = true
+		receipt.EvidenceKind = "synthetic"
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

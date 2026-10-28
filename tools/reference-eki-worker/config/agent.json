@@ -1,0 +1,6 @@
+{
+  "control_url": "http://127.0.0.1:18087",
+  "queue_db": "/tmp/eki-agent-smoke.db",
+  "worker_identity": "tai-worker-smoke",
+  "token_file": "/home/hat47x/eki-worker/config/agent-token"
+}

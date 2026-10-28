@@ -41,6 +41,7 @@ def submit(base_url: str, token: str, fixture: dict[str, Any], idempotency_key: 
         "baseUrl": base_url,
         "readOnly": False,
         "taskSubmitted": False,
+        "idempotent": False,
         "taskExecuted": False,
         "workerResult": False,
         "authorityVerified": False,
@@ -65,6 +66,18 @@ def submit(base_url: str, token: str, fixture: dict[str, Any], idempotency_key: 
     receipt["taskSubmitted"] = True
     receipt["taskId"] = task_id
     receipt["submitResponseStatus"] = accepted.get("status")
+    status, repeated = _request(
+        "POST",
+        base_url.rstrip("/") + "/v1/tasks",
+        token,
+        json.dumps(fixture, ensure_ascii=False).encode("utf-8"),
+        idempotency_key,
+    )
+    receipt["repeatStatus"] = status
+    if status != 202 or repeated.get("task_id") != task_id:
+        receipt["reason"] = "idempotent retry produced a different task"
+        return receipt
+    receipt["idempotent"] = True
     status, task = _request("GET", base_url.rstrip("/") + "/v1/tasks/" + task_id, token)
     receipt["statusReadStatus"] = status
     if status != 200:

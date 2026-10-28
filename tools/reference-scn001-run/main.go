@@ -278,6 +278,23 @@ func VerifyArtifact(receipt RunReceipt, path string) Verification {
 	return verification
 }
 
+func hasExactIDs(actual []string, expected ...string) bool {
+	if len(actual) != len(expected) {
+		return false
+	}
+	remaining := make(map[string]bool, len(expected))
+	for _, id := range expected {
+		remaining[id] = true
+	}
+	for _, id := range actual {
+		if !remaining[id] {
+			return false
+		}
+		delete(remaining, id)
+	}
+	return len(remaining) == 0
+}
+
 func Verify(receipt RunReceipt) Verification {
 	verification := Verification{Schema: "tai.reference.scn001-run-verification/v0", RunDigest: receipt.RunDigest}
 	if receipt.Schema != "tai.reference.scn001-run/v0" || receipt.Scenario != "SCN-001" || !receipt.Synthetic {
@@ -292,6 +309,20 @@ func Verify(receipt RunReceipt) Verification {
 	sei := receipt.Components.SEI
 	scn := receipt.Components.SCN001
 	artifact := receipt.Components.ReviewArtifact
+	// Failure leaves evidence incomplete; it cannot authorize claims outside
+	// this reference profile, even when the component digest is recomputed.
+	if sei.HumanReviewed || sei.AuthorityVerified || sei.Published {
+		verification.Reason = "SEI component claims human review, authority, or publication"
+		return verification
+	}
+	if scn.HumanReviewed || scn.AuthorityVerified || scn.PublicationApproved {
+		verification.Reason = "SCN-001 component claims human review, authority, or publication approval"
+		return verification
+	}
+	if artifact.AuthorityVerified || artifact.PublicationApproved {
+		verification.Reason = "review artifact component claims authority or publication approval"
+		return verification
+	}
 	// A successful synthetic evaluation must agree with its individual case results.
 	// A component digest alone cannot establish that agreement.
 	if scn.Passed {
@@ -317,10 +348,12 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	suiOK := true
 	if link := receipt.Components.SUILink; link != nil {
-		suiOK = link.Passed && link.Contradiction && len(link.LinkedCards) == 4 && len(link.IslandGroups) == 2 &&
+		suiOK = link.Passed && link.Contradiction &&
+			hasExactIDs(link.LinkedCards, "O-02", "O-03", "O-06", "O-07", "O-08") &&
+			hasExactIDs(link.IslandGroups, "I-01", "I-02", "I-03") &&
 			link.EdgeCount == 1 && link.DocumentID != "" && link.DocumentDigest != ""
 		if !suiOK {
-			verification.Reason = "SUI link component is incomplete"
+			verification.Reason = "SUI link component is incomplete or has unexpected IDs"
 			return verification
 		}
 	}
@@ -364,13 +397,12 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	if sei.Passed && (sei.SeiCommit == "" || sei.RecordCount != 3 || sei.Decision.ID != "dec-01" ||
 		sei.ProvisionalDecision.ID != "dec-02" || !sei.ProvisionalApproved || sei.ReviewTrigger != "real-object" ||
-		!sei.ReadOnlyProjection || sei.AuthorityVerified || sei.HumanReviewed || sei.Published) {
+		!sei.ReadOnlyProjection) {
 		verification.Reason = "SEI component is incomplete"
 		return verification
 	}
 	if scn.Passed && (scn.ObservationSource != "mmi-reference" || !scn.RealProductsConnected ||
-		!scn.Synthetic || scn.HumanReviewed || scn.AuthorityVerified ||
-		!scn.ProvisionalApproved || scn.PublicationApproved || !scn.ReviewRequired || scn.ReviewTrigger != "real-object") {
+		!scn.Synthetic || !scn.ProvisionalApproved || !scn.ReviewRequired || scn.ReviewTrigger != "real-object") {
 		verification.Reason = "SCN-001 component is incomplete"
 		return verification
 	}
@@ -529,6 +561,9 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 		return receipt, err
 	}
 	receipt.RunDigest = digest
+	if verification := Verify(receipt); !verification.Passed {
+		return receipt, fmt.Errorf("combined run receipt is inconsistent: %s", verification.Reason)
+	}
 	if artifactOut != "" {
 		if err := saveReviewArtifact(receipt, artifactBytes, artifactOut); err != nil {
 			return receipt, err

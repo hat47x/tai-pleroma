@@ -27,6 +27,7 @@ go run . -sei-root ../../../sei-cognition
 - `dec-02`をdevelopment-review-onlyの仮承認として記録し、`publication:unapproved`も未解決に残す。
 - `sei resume --json`で3 records、`dec-01`/`dec-02`、未解決`authority:unknown`/`publication:unapproved`を確認。
 - receiptは`provisionalApproved=true`、`authorityVerified=false`、`humanReviewed=false`、`published=false`。
+- `-synthetic`指定時は`synthetic=true`、`evidenceKind=synthetic`。実物レビューの証拠ではない。
 
 ## 境界
 

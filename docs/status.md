@@ -14,20 +14,24 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | --- | --- | --- | --- |
 | SCN-001合成walkthrough | 実装済み | [reference-scn001](../tools/reference-scn001/README.md) | 合成fixture。P-06/N-05はnot-run |
 | MMI読み取り専用MCP | ローカル参照接続済み | [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md) | ローカル開発チェックアウト限定。実運用の認可・版固定は未確認 |
-| SEI decision-memory | 一時storeで参照済み。別に、合成bundleで原記録の根拠参照と、旧Decisionの現行対象への構造上の束縛を検査（実装済み） | [reference-sei-decision](../tools/reference-sei-decision/README.md) | 合成fixture。実store・権限・署名・意味受理は未確認。SEI CLIで作る実storeのDecisionはExactBindingのbasisを持たず、束縛検査の対象外 |
+| SEI decision-memory | 一時storeで3 recordsを参照済み（synthetic）。別に、合成bundleで原記録の根拠参照と、旧Decisionの現行対象への構造上の束縛を検査（実装済み） | [reference-sei-decision](../tools/reference-sei-decision/README.md)、[record](../evaluations/records/SEI-decision-2026-10-26.json) | 合成fixture。実store・権限・署名・意味受理は未確認。SEI CLIで作る実storeのDecisionはExactBindingのbasisを持たず、束縛検査の対象外 |
 | 統合参照実行 | 実装済み（SUI linkを含む） | [reference-scn001-run](../tools/reference-scn001-run/README.md)、[record](../evaluations/records/SCN-001-run-2026-10-26.json) | `runDigest`は内部整合のみ。署名・Authorityは未検証 |
 | D-04レビュー成果物 | 生成済み | [artifact](../evaluations/artifacts/SCN-001-D-04-provisional.md) | 公開用ではない。実在の規程ではない |
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
 | 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
 | TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
-| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・4 card/2 island/1 `contradicts` edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
+| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
 | SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
 | SUI→D-04対応 | D-04の観測行と公開境界を照合済み | [link](../tools/reference-sui-draft/README.md) | 意味の受理・公開承認は未検証 |
+| 合成施設文書の工程検査 | 4種類の工程欠陥を検出済み（synthetic） | [receipt](../evaluations/records/SCN-001-synthetic-facility-2026-10-28.json) | 実物レビューの証拠ではない |
+| 合成workspaceのMMI参照 | O-02/O-03/O-06/O-07/O-08の5行を読み取り専用で確認（synthetic） | [receipt](../evaluations/records/SCN-001-synthetic-mmi-2026-10-29.json) | 実資料・実認可ではない |
 | EKI CLI起動 | `eki-control`/`eki-agent`のversionを確認済み | [probe](../tools/reference-eki-cli/README.md)、[record](../evaluations/records/EKI-cli-2026-10-26.json) | 実Task・委任・Authorityは未検証 |
 | EKI Control API認証 | `GET /v1/tasks`の405で認証通過を確認済み | [probe](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-api-2026-10-26.json) | Task送信・委任・Worker・結果検証は未実施 |
-| EKI Task admission | 合成Task 1件を`queued`で受理済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |
+| EKI Task admission | 合成Task 1件を`queued`で受理し、同一keyの再送が同じtask_idを返すことを確認済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |
 | EKI Task cancel | 合成Task 1件を`cancelled`/`CANCELLED`まで確認済み。result APIは501 | [cancel](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-cancel-2026-10-26.json) | Worker未起動。実行・結果は未検証 |
+| EKI Worker test環境 | WSL/DockerでAgent/Control test profile、claim wire、Control Planeを確認済み | [worker env](../tools/reference-eki-worker/README.md)、[record](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行主体ではなく、結果・委任完了は未検証 |
+| EKI Task lifecycle on WSL | `queued`→`cancelled`/`CANCELLED`を確認済み | [worker env](../tools/reference-eki-worker/README.md) | Worker実行・結果は未検証 |
 
 ## 検証
 

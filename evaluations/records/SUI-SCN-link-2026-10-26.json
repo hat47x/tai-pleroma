@@ -1,16 +1,18 @@
 {
   "schema": "tai.reference.sui-scn-link/v0",
   "documentId": "scn001-demo",
-  "documentDigest": "sha256:af4f61f870a377d87a61de41b9a49d9617554288360f386b2cb0cf35188514c2",
+  "documentDigest": "sha256:6d957e2a9f52a90935d1ae8032d742029c4b2f69a550003e3007789b08be5f89",
   "linkedCards": [
     "O-02",
     "O-03",
     "O-06",
-    "O-07"
+    "O-07",
+    "O-08"
   ],
   "islandGroups": [
     "I-01",
-    "I-02"
+    "I-02",
+    "I-03"
   ],
   "edgeCount": 1,
   "contradiction": true,

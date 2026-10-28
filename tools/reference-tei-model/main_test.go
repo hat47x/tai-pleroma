@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -21,6 +22,13 @@ func teiRootForTest(t *testing.T) string {
 		t.Skip("TEI runtime is not available")
 	}
 	return root
+}
+
+func TestMissingWorkspaceManifestIsRejected(t *testing.T) {
+	receipt := Run(context.Background(), filepath.Join(t.TempDir(), "tei"), t.TempDir())
+	if receipt.Passed || !strings.Contains(receipt.Reason, "manifest") {
+		t.Fatalf("missing manifest was not rejected: %+v", receipt)
+	}
 }
 
 func TestTEIWorkspaceValidation(t *testing.T) {

@@ -132,7 +132,7 @@ func TestCombinedRunWithSUILink(t *testing.T) {
 		t.Fatalf("combined run with SUI link failed: %+v", receipt)
 	}
 	link := receipt.Components.SUILink
-	if !link.Passed || !link.Contradiction || len(link.LinkedCards) != 4 || len(link.IslandGroups) != 2 || link.EdgeCount != 1 {
+	if !link.Passed || !link.Contradiction || len(link.LinkedCards) != 5 || len(link.IslandGroups) != 3 || link.EdgeCount != 1 {
 		t.Fatalf("SUI link is incomplete: %+v", link)
 	}
 	if verification := Verify(receipt); !verification.Passed {
