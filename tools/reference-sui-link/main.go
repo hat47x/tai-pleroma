@@ -89,7 +89,7 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 	for _, card := range sui.DocumentCards {
 		cards[card.ID] = card
 	}
-	for _, id := range []string{"O-02", "O-03", "O-06", "O-07"} {
+	for _, id := range []string{"O-02", "O-03", "O-06", "O-07", "O-08"} {
 		card, ok := cards[id]
 		observation, exists := byID[id]
 		if !ok || !exists {
@@ -112,6 +112,7 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 	}{
 		{ID: "I-01", Cards: []string{"O-02", "O-07"}},
 		{ID: "I-02", Cards: []string{"O-03", "O-06"}},
+		{ID: "I-03", Cards: []string{"O-08"}},
 	} {
 		island, ok := islands[expected.ID]
 		if !ok {

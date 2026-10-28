@@ -9,9 +9,9 @@
 - [SCN-001実物ベース再レビュー](SCN-001-real-object-review.md): `reviewTrigger=real-object`の再レビュー計画。R-01〜R-07は未実施。
 - [SCN-001-review-status.json](SCN-001-review-status.json): R-01〜R-07の状態。現在はすべて`pending`で、公開gateはblocked。
 - [SCN-001-D-04-provisional.md](artifacts/SCN-001-D-04-provisional.md): 仮承認に基づく内部レビュー用Draft。公開用ではない。
-- [SUI-api-2026-10-26.json](records/SUI-api-2026-10-26.json): SUI APIの`/healthz`、`/openapi.json`、`/docs`、4 card/2 island/1 edgeのDocumentV1 GET record。実資料・認可・SCN-001データは未検証。SUI→SCN-001対応は[reference-sui-link](../tools/reference-sui-link/README.md)で照合。
+- [SUI-api-2026-10-26.json](records/SUI-api-2026-10-26.json): SUI APIの`/healthz`、`/openapi.json`、`/docs`、5 card/3 island/1 edgeのDocumentV1 GET record。実資料・認可・SCN-001データは未検証。SUI→SCN-001対応は[reference-sui-link](../tools/reference-sui-link/README.md)で照合。
 - [EKI-cli-2026-10-26.json](records/EKI-cli-2026-10-26.json): `eki-control`/`eki-agent`のversion起動record。Task・委任・Authorityは未検証。
 - [EKI-api-2026-10-26.json](records/EKI-api-2026-10-26.json): EKI Control APIの`GET /v1/tasks`が405を返し、Client credentialの認証通過を確認したrecord。
 - [EKI-task-2026-10-26.json](records/EKI-task-2026-10-26.json): 合成Task 1件を`queued`で受理したrecord。Worker未起動のため、実行・結果・委任完了は未検証。
 - [EKI-cancel-2026-10-26.json](records/EKI-cancel-2026-10-26.json): 合成Task 1件を`cancelled`/`CANCELLED`まで確認したrecord。Worker未起動のため、実行・結果は未検証。
-- [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:5978f5c...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
+- [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:53600dc...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。

@@ -14,8 +14,8 @@ go run . -sui-link ../../evaluations/records/SUI-SCN-link-2026-10-26.json \
 
 ## 確認すること
 
-- SUI linkが`passed=true`で、4 cardを持つ。
-- D-04にO-02/O-03/O-06/O-07の観測行がある。
+- SUI linkが`passed=true`で、5 cardを持つ。
+- D-04にO-02/O-03/O-06/O-07/O-08の観測行がある。
 - D-04が`provisional`、`公開承認: なし`、`Authority: 未検証`、`review:real-object`を保つ。
 - D-04のbyte列のSHA-256をreceiptへ記録。
 
