@@ -2,7 +2,7 @@
   "schema": "tai.reference.eki-worker-env/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "ekiCommit": "d0156845f76ff3d9af28a067dbd7514e6e2e9343",
+  "ekiCommit": "94949e049fca9050a63b81e7edb47a31a862c657",
   "environment": "WSL Ubuntu-22.04 / Docker 28.3.3 / golang:1.27",
   "goVersion": "go1.27 linux/amd64",
   "tests": [
@@ -16,6 +16,7 @@
   "fullTestSuiteNotes": "初回実行でFAILを観測。再実行と追加2回ではFAILを再現せず。原因は未特定。",
   "nativeRunnerTest": true,
   "nativeRunnerProcessGroup": true,
+  "nativeRunnerWindowsProcessTree": true,
   "nativeRunnerPlatforms": ["windows", "linux"],
   "builtBinaries": [
     "eki-control",
