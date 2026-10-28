@@ -33,6 +33,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 - `eki-agent`を起動し、claim deliveryが開始される。
 - `spikes/claim-wire-roundtrip`のtestがPASS。
 - WSLのControl PlaneへTaskを送信し、`queued`→`cancelled`/`CANCELLED`まで確認。
+- EKI sourceに`spikes/native-runner`があれば、Native Runner spikeのtestも実行。
 
 ```text
 docker run --rm -v /home/hat47x/eki-worker:/src \

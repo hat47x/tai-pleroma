@@ -21,3 +21,11 @@ docker run --rm \
   -w /src \
   "$IMAGE" \
   sh -c 'go test ./internal/agent/... ./internal/control/... -count=1'
+
+if [ -d "$EKI_ROOT/spikes/native-runner" ]; then
+  docker run --rm \
+    -v "$EKI_ROOT":/src \
+    -w /src/spikes/native-runner \
+    "$IMAGE" \
+    sh -c 'go test ./... -count=1'
+fi
