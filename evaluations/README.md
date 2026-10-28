@@ -7,6 +7,7 @@
 ## 参照実行の記録
 
 - [SCN-001実物ベース再レビュー](SCN-001-real-object-review.md): `reviewTrigger=real-object`の再レビュー計画。R-01〜R-07は未実施。
+- [SCN-001合成施設文書による工程欠陥検査](SCN-001-synthetic-facility-review.md): 創作文書で工程欠陥を検出する検証。実物レビューではない。
 - [SCN-001-review-status.json](SCN-001-review-status.json): R-01〜R-07の状態。現在はすべて`pending`で、公開gateはblocked。
 - [SCN-001-D-04-provisional.md](artifacts/SCN-001-D-04-provisional.md): 仮承認に基づく内部レビュー用Draft。公開用ではない。
 - [SUI-api-2026-10-26.json](records/SUI-api-2026-10-26.json): SUI APIの`/healthz`、`/openapi.json`、`/docs`、5 card/3 island/1 edgeのDocumentV1 GET record。実資料・認可・SCN-001データは未検証。SUI→SCN-001対応は[reference-sui-link](../tools/reference-sui-link/README.md)で照合。
