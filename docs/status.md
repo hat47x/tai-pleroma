@@ -32,6 +32,7 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | EKI Task cancel | 合成Task 1件を`cancelled`/`CANCELLED`まで確認済み。result APIは501 | [cancel](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-cancel-2026-10-26.json) | Worker未起動。実行・結果は未検証 |
 | EKI Worker test環境 | WSL/DockerでAgent/Control test profile、claim wire、Control Planeを確認済み | [worker env](../tools/reference-eki-worker/README.md)、[record](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行主体ではなく、結果・委任完了は未検証 |
 | EKI Task lifecycle on WSL | `queued`→`cancelled`/`CANCELLED`を確認済み | [worker env](../tools/reference-eki-worker/README.md) | Worker実行・結果は未検証 |
+| EKI Native Runner spike | 固定コマンドの終了コード・出力上限・取消しを確認済み | [eki-fabric #253](https://github.com/hat47x/eki-fabric/pull/253) | sandbox・資源制限なし。未信頼Task不可 |
 
 ## 検証
 
