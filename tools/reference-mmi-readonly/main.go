@@ -48,6 +48,8 @@ type Receipt struct {
 	MissingSourceRejected bool                  `json:"missingSourceRejected"`
 	ReadOnly              bool                  `json:"readOnly"`
 	RealProductConnected  bool                  `json:"realProductConnected"`
+	Synthetic             bool                  `json:"synthetic"`
+	EvidenceKind          string                `json:"evidenceKind"`
 	Passed                bool                  `json:"passed"`
 	Reason                string                `json:"reason,omitempty"`
 	Notes                 []string              `json:"notes"`
@@ -411,6 +413,7 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 func main() {
 	mmiRoot := flag.String("mmi-root", "", "MMI checkout root (default: MMI_ROOT or ../../../markdown-matrix-injector)")
 	workspace := flag.String("workspace", "testdata/workspace", "read-only MMI workspace")
+	synthetic := flag.Bool("synthetic", false, "mark the workspace as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	root := *mmiRoot
@@ -421,6 +424,10 @@ func main() {
 		root = filepath.Clean(filepath.Join("..", "..", "..", "markdown-matrix-injector"))
 	}
 	receipt := Run(context.Background(), root, *workspace)
+	if *synthetic {
+		receipt.Synthetic = true
+		receipt.EvidenceKind = "synthetic"
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

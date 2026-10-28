@@ -1,0 +1,55 @@
+{
+  "schema": "tai.reference.mmi-readonly/v0",
+  "server": "markdown-matrix-injector/0.2.0",
+  "protocolVersion": "2024-11-05",
+  "mmiCommit": "1989b827d34ebb364befbf64a2b6516ecccb1931",
+  "packageLockDigest": "sha256:f6810ef071ff05d3dee28760346659eb799c67442bdb4903c2dd2661ad4adad5",
+  "nodeVersion": "v24.19.0",
+  "tool": "inspect",
+  "candidateCount": 1,
+  "selectedRows": 3,
+  "observedIds": [
+    "O-02",
+    "O-03",
+    "O-07"
+  ],
+  "selected": [
+    {
+      "id": "O-02",
+      "text": "施設の利用は予約不要",
+      "source": "entrance-notice",
+      "version": "2026-04-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-03",
+      "text": "会議室の利用には事前予約が必要",
+      "source": "meeting-room-guidance",
+      "version": "2026-09-15",
+      "availability": "available"
+    },
+    {
+      "id": "O-07",
+      "text": "施設の利用は予約不要",
+      "source": "distribution-2026-11",
+      "version": "2026-11-01",
+      "availability": "available"
+    }
+  ],
+  "conflictPreserved": true,
+  "sourceDigestBefore": "sha256:b6f72eaf8409d3496ffac251de1e2357aad18f5e8091016f3d6a0d296debdad1",
+  "sourceDigestAfter": "sha256:b6f72eaf8409d3496ffac251de1e2357aad18f5e8091016f3d6a0d296debdad1",
+  "guideDigestBefore": "sha256:6bd55204fe9e77b00fd45a5077997563e8a6cc8890f2ab3ef78f741bbf024cdb",
+  "guideDigestAfter": "sha256:6bd55204fe9e77b00fd45a5077997563e8a6cc8890f2ab3ef78f741bbf024cdb",
+  "boundaryRejected": true,
+  "missingSourceRejected": true,
+  "readOnly": true,
+  "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
+    "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
+  ]
+}
