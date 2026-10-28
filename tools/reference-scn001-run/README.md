@@ -59,7 +59,7 @@ go run . -owner-packet run.json -artifact review.md -out owner.json
 - 統合receipt: `passed=true`、`realProductsConnected=true`、`provisionalApproved=true`、`reviewRequired=true`、`reviewTrigger=real-object`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`。
 - `reviewArtifact`: D-04の内部レビュー用Markdownの`status=provisional`、`artifactDigest`、`publicationApproved=false`。
 - `publicationGate`: R-01〜R-07のreview statusを読み、`allowed=false`とblockerを記録する。
-- `suiLink`指定時は、SUIのlinked cards・island groups・edge countをcomponentへ追加する。
+- `suiLink`指定時は、SUIのlinked cards・island groups・edge count・contradictionをcomponentへ追加する。
 - `runDigest`はcomponentのJSONに対するSHA-256。
 
 ## 境界

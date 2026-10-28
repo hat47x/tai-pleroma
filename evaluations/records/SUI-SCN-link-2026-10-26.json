@@ -1,17 +1,21 @@
 {
   "schema": "tai.reference.sui-scn-link/v0",
   "documentId": "scn001-demo",
-  "documentDigest": "sha256:d3949c8a771de3caa6bcceba74c0f5ad8cdb3c7ed2973ffa0f54a0963006182b",
+  "documentDigest": "sha256:6d957e2a9f52a90935d1ae8032d742029c4b2f69a550003e3007789b08be5f89",
   "linkedCards": [
     "O-02",
     "O-03",
-    "O-07"
+    "O-06",
+    "O-07",
+    "O-08"
   ],
   "islandGroups": [
     "I-01",
-    "I-02"
+    "I-02",
+    "I-03"
   ],
   "edgeCount": 1,
+  "contradiction": true,
   "passed": true,
   "notes": [
     "SUIのcard digestをSCN-001 fixtureの観測と照合する参照。",

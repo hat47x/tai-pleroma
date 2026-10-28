@@ -63,6 +63,7 @@ class SubmitTest(unittest.TestCase):
         self.assertTrue(receipt["passed"])
         self.assertEqual(receipt["taskId"], "tsk_test")
         self.assertEqual(receipt["taskStatus"], "queued")
+        self.assertTrue(receipt["idempotent"])
         self.assertFalse(receipt["taskExecuted"])
         self.assertFalse(receipt["workerResult"])
         self.assertFalse(receipt["readOnly"])

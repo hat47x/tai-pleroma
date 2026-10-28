@@ -15,9 +15,10 @@ go run . -fixture ../reference-scn001/testdata/scn001.json \
 確認内容:
 
 - SUI receiptが`readOnly`・`realProductConnected`・`documentRead`である。
-- O-02/O-03/O-07の`textDigest`がSCN-001観測の本文digestと一致する。
-- `I-01`がO-02/O-07、`I-02`がO-03を含む。
-- `documentEdgeCount=1`。
+- O-02/O-03/O-06/O-07/O-08の`textDigest`がSCN-001観測の本文digestと一致する。
+- `I-01`がO-02/O-07、`I-02`がO-03/O-06、`I-03`がO-08を含む。
+- `I-01`→`I-02`の`contradicts` edgeが1本ある（`documentEdgeCount=1`）。
+- `documentEdgeCount`と`documentEdges`の件数が一致する。
 
 ## 境界
 

@@ -30,6 +30,13 @@ type Island struct {
 	CardIDs []string `json:"cardIds"`
 }
 
+type Edge struct {
+	ID     string `json:"id"`
+	FromID string `json:"fromId"`
+	ToID   string `json:"toId"`
+	Type   string `json:"type"`
+}
+
 type SUIReceipt struct {
 	Passed               bool     `json:"passed"`
 	ReadOnly             bool     `json:"readOnly"`
@@ -40,6 +47,7 @@ type SUIReceipt struct {
 	DocumentCards        []Card   `json:"documentCards"`
 	DocumentIslands      []Island `json:"documentIslands"`
 	DocumentEdgeCount    int      `json:"documentEdgeCount"`
+	DocumentEdges        []Edge   `json:"documentEdges"`
 }
 
 type Receipt struct {
@@ -49,6 +57,7 @@ type Receipt struct {
 	LinkedCards    []string `json:"linkedCards"`
 	IslandGroups   []string `json:"islandGroups"`
 	EdgeCount      int      `json:"edgeCount"`
+	Contradiction  bool     `json:"contradiction"`
 	Passed         bool     `json:"passed"`
 	Reason         string   `json:"reason,omitempty"`
 	Notes          []string `json:"notes"`
@@ -80,7 +89,7 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 	for _, card := range sui.DocumentCards {
 		cards[card.ID] = card
 	}
-	for _, id := range []string{"O-02", "O-03", "O-07"} {
+	for _, id := range []string{"O-02", "O-03", "O-06", "O-07", "O-08"} {
 		card, ok := cards[id]
 		observation, exists := byID[id]
 		if !ok || !exists {
@@ -102,7 +111,8 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 		Cards []string
 	}{
 		{ID: "I-01", Cards: []string{"O-02", "O-07"}},
-		{ID: "I-02", Cards: []string{"O-03"}},
+		{ID: "I-02", Cards: []string{"O-03", "O-06"}},
+		{ID: "I-03", Cards: []string{"O-08"}},
 	} {
 		island, ok := islands[expected.ID]
 		if !ok {
@@ -119,6 +129,16 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 		}
 		receipt.IslandGroups = append(receipt.IslandGroups, expected.ID)
 	}
+	if sui.DocumentEdgeCount != len(sui.DocumentEdges) {
+		receipt.Reason = "documentEdgeCount does not match documentEdges"
+		return receipt
+	}
+	if len(sui.DocumentEdges) != 1 || sui.DocumentEdges[0].Type != "contradicts" ||
+		sui.DocumentEdges[0].FromID != "I-01" || sui.DocumentEdges[0].ToID != "I-02" {
+		receipt.Reason = "contradicts edge between I-01 and I-02 is missing"
+		return receipt
+	}
+	receipt.Contradiction = true
 	receipt.Passed = true
 	return receipt
 }

@@ -1,40 +1,83 @@
-# TAI Pleroma
+# TAI Pleroma（泰）
 
-個人・組織・社会の各水準において、知識・認識・思考・意思形成・創造・実践・学習が充実した全体として機能することを目指すプロジェクトです。
+> 本リポジトリは、生成AIを用いた初期開発中のソースコードを公開するものです。現時点で人的レビューを伴っておらず、仕様や実装は変更される場合があります。
 
-名称の「泰」は易経第11卦・地天泰、「Pleroma」は充足した全体性を表します。
+TAI Pleromaは、人が知識を得て、考え、判断し、成果を生み、その結果から学ぶまでの活動を支えるプロジェクトです。個人だけでなく、組織や社会での知的活動も対象にしています。
 
-関連基盤: SUI / TEI / SEI / SHO / EKI。TAIは、それらの集合や新たな中央Hostの構築自体ではなく、利用者から見た統一的な知的機能の成立と、その検証に重点を置きます。
+「泰」は易経第11卦の「地天泰」、「Pleroma」は充足した全体性に由来します。目指すのは、個々の機能を増やすことよりも、必要な知的能力を組み合わせて、利用者が一つの課題を継続して扱えることです。
 
-## 最初の実証
+## 何をつなぐのか
 
-- [SCN-001 共同利用スペースの案内改善](scenarios/SCN-001-shared-space-guidance.md) — 架空の資料の矛盾を保持し、判断と文書改訂までを扱うシナリオ（Draft・未実施）
-- [知的機能スライスの責務境界](docs/architecture-slice-001.md) — 統一する機能と既存基盤の分担（Draft）
-- [受入観点と負例](evaluations/SCN-001-acceptance.md) — 実証すべき成功・失敗条件（未実施）
-- [初期PoCロードマップ](docs/roadmap.md) — 手動一巡から実接続へ進む案
-- [TAI中心のクリティカルパス](docs/critical-path-2026-10.md) — TEI/SEI/SUI/SHO/EKIをどの順で接続するか（Draft）
-- [現在状態](docs/status.md) — 実装済み・検証済み・仮承認・未確認の整理
-- [SCN-001合成walkthrough](tools/reference-scn001/README.md) — T0/T1/T2の参照関係を検査する参照実装（実製品未接続）
-- [MMI読み取り専用MCP接続](tools/reference-mmi-readonly/README.md) — MMIの`inspect`/`select`を呼ぶ参照接続（書込み・権限は未検証）
-- [SEI decision-memory参照接続](tools/reference-sei-decision/README.md) — SCN-001の未決決定をSEIの一時storeへ記録し、`resume`を読む参照（合成fixture）
-- [SCN-001統合参照実行](tools/reference-scn001-run/README.md) — MMI・SEI・SCN-001評価を1つのreceiptへ束ね、development-review-onlyの仮承認とOwner判断packetを生成する（公開承認ではない）
-- [SCN-001レビュー用成果物](tools/reference-scn001-render/README.md) — D-04を内部レビュー用Markdownとして生成する（公開用ではない）
-- [TEIモデル検証接続](tools/reference-tei-model/README.md) — SCN-001のObservation/RuleCandidate型をTEIでvalidateする（意味・実データは未検証）
-- [公開gate](tools/reference-publication-gate/README.md) — R-01〜R-07の状態から公開可否だけを判定する（現在はblocked）
-- [SUI API到達性probe](tools/reference-sui-api/README.md) — `/healthz`・`/openapi.json`・`/docs`・DocumentV1を読む（実資料・認可は未検証）
-- [SUI→SCN-001対応](tools/reference-sui-link/README.md) — SUIのcard digestとisland構成をSCN-001観測へ照合する
-- [EKI CLI起動probe](tools/reference-eki-cli/README.md) — `eki-control`/`eki-agent`のversionだけを確認する（委任・Authorityは未検証）
-- [EKI Control API認証probe](tools/reference-eki-api/README.md) — `GET /v1/tasks`の405で認証通過を確認する（Task送信は未実施）
+TAIは、役割の異なる五つの関連基盤を必要に応じて利用します。
 
-## 検証
+| 基盤 | 主に扱うこと |
+| --- | --- |
+| SUI | 観測、異なる解釈や仮説の整理、意味の探索 |
+| TEI | 業務のデータ・規則・機能のモデル化と検証 |
+| SEI | 観測から判断までの意味の区別、根拠と判断履歴の保持 |
+| SHO（現行のMMIを含む） | 文書の作成・参照、出典をたどれる成果物 |
+| EKI | 範囲や権限を定めた処理の委任と、その結果の確認 |
 
-GitHub Actionsの`tai-reference`が、`tools/`配下のGo参照実装に対して`gofmt`、`go vet`、`go test`を実行します。MMI・SEIの実接続試験は、それぞれの開発チェックアウトがない環境ではskipします。保存済みのSCN-001参照実行recordは常に検証します。
+各基盤には独立した役割と開発の進め方があります。TAIはそれらの機能を重複して実装したり、独自の中央Hostへ集約したりすることを目的にしていません。
 
-## 作業領域
+## 最初に扱う課題
 
-- [docs/](docs/) — 目的・設計・判断経緯
-- [scenarios/](scenarios/) — 個人・組織・社会の利用シナリオ
-- [integrations/](integrations/) — 既存基盤との必要最小限の接続
-- [evaluations/](evaluations/) — 評価基準・試験・検証記録
+最初の題材は、[SCN-001：共同利用スペースの案内改善](scenarios/SCN-001-shared-space-guidance.md)です。これは架空の資料を使った検証用シナリオです。
 
-開発エージェントは [AGENTS.md](AGENTS.md) を参照してください。
+施設の掲示には「予約不要」、別の案内には「会議室は事前予約が必要」と書かれています。両者が本当に矛盾するのか、一般則と例外なのか、古い案内が残っているのかを調べます。
+
+この過程で、元の資料と版を残し、複数の解釈を検討し、確認できた範囲で案内文を改訂します。新しい資料で文言が以前と同じに戻っても、過去の判断が自動的に有効になるとは扱いません。
+
+## 現在、確認できること
+
+SCN-001について、次の参照実装と検証記録があります。
+
+| 対象 | 現在の確認範囲 |
+| --- | --- |
+| [SCN-001評価](tools/reference-scn001/README.md) | 架空の観測・仮説・改訂履歴の構造的な検査 |
+| [MMIとの接続](tools/reference-mmi-readonly/README.md) | 開発用の文書を読み取り専用で参照し、観測を取得 |
+| [SEIとの接続](tools/reference-sei-decision/README.md) | 合成した判断記録の保存・再開時の参照 |
+| [D-04文書生成](tools/reference-scn001-render/README.md) | 内部レビュー用Markdownの生成 |
+| [統合参照実行](tools/reference-scn001-run/README.md) | MMI・SEI・SCN-001評価・文書生成とSUIの照合結果を記録 |
+| [SUIとの接続](tools/reference-sui-api/README.md)・[観測照合](tools/reference-sui-link/README.md)・[D-04照合](tools/reference-sui-draft/README.md) | 文書内のカードと観測本文の対応、島の構成、D-04の根拠行を確認 |
+| [TEIとの接続](tools/reference-tei-model/README.md) | SCN-001で使う型宣言の検証 |
+| [EKIとの接続](tools/reference-eki-api/README.md)・[CLI確認](tools/reference-eki-cli/README.md) | API認証と合成Taskの受付・待機状態、CLI起動を確認 |
+| [公開条件の検査](tools/reference-publication-gate/README.md) | レビュー項目R-01〜R-07の状態を判定。現在は公開を保留 |
+| [公開境界の検査](tools/check-public-boundary/check.py) | 非公開リソース名・秘密鍵・tokenの混入をtracked fileから検出 |
+
+これらは開発・評価用の接続です。架空の資料に対する検査やTaskの受付を、実在の規程の確認、人による意味の受理、公開権限、実際の処理完了と同一視しません。特に、EKIでの`queued`はWorkerによる実行完了を意味しません。
+
+## どこから読むか
+
+初めて読む方は、[SCN-001のシナリオ](scenarios/SCN-001-shared-space-guidance.md)から始めてください。そのあと、[責務の分担](docs/architecture-slice-001.md)と[現在の状態](docs/status.md)を読むと、目標と実装範囲を区別できます。
+
+実装や評価に関わる方には、以下の資料があります。
+
+- [受入観点と負例](evaluations/SCN-001-acceptance.md) — 何を確認し、何が未確認か
+- [統合参照実行の手順](tools/reference-scn001-run/README.md) — 必要な開発環境、実行方法、検証範囲
+- [実物による再レビュー計画](evaluations/SCN-001-real-object-review.md) — 実在の資料や権限者を確認するための条件
+- [ロードマップ](docs/roadmap.md)・[クリティカルパス](docs/critical-path-2026-10.md) — 今後の作業と判断事項
+
+GitHub Actionsの`tai-reference`はGo・Pythonの参照試験を対象としています。外部基盤の開発チェックアウトが必要な試験は、環境によって実行されません。個々の検証結果とCIの実行状況は、対象の版ごとに確認してください。
+
+## 公開範囲
+
+本リポジトリは、初期開発中のソースコードと、そこで用いる合成fixture・評価記録を公開します。実在の顧客資料・個人情報・認証情報・非公開の作業資料は含めていません。
+
+TEI Platformの非公開作業資料、第三者の原文・抽出物は、著作権・利用条件・関係者文脈の確認前のため公開していません。公開条件は非公開リポジトリ内のREADMEに記録し、公開リポジトリへ内容を複製しません。
+
+## リポジトリの構成
+
+| 場所 | 内容 |
+| --- | --- |
+| [docs/](docs/) | 目的、設計、判断経緯、計画 |
+| [scenarios/](scenarios/) | 利用者の課題と検証用シナリオ |
+| [integrations/](integrations/) | 既存基盤との接続の調査 |
+| [evaluations/](evaluations/) | 評価条件、合成試験、実行記録 |
+| [tools/](tools/) | 参照実装と検証用ツール |
+
+開発時の作業規則は[AGENTS.md](AGENTS.md)を参照してください。脆弱性の報告は[SECURITY.md](SECURITY.md)、変更の進め方は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
+
+## ライセンス
+
+[MIT](LICENSE)
