@@ -38,6 +38,8 @@ def probe(base_url: str, timeout: float = 10.0, doc_id: str | None = None) -> di
         "baseUrl": base_url,
         "readOnly": True,
         "realProductConnected": False,
+        "synthetic": True,
+        "evidenceKind": "synthetic",
         "passed": False,
         "notes": [
             "SUI APIの到達性と公開OpenAPIだけを確認する。",
