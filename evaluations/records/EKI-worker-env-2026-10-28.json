@@ -18,6 +18,7 @@
   "controlSmokeStatus": 405,
   "agentSmoke": true,
   "agentClaimDelivery": "started",
+  "claimWireRoundtrip": true,
   "workerExecution": false,
   "taskResult": false,
   "authorityVerified": false,

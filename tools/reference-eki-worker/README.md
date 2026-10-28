@@ -31,6 +31,13 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 - `eki-control --version`と`eki-agent --version`が`dev`を返す。
 - `smoke.sh`でControl Planeバイナリを起動し、`GET /v1/tasks`が405を返す。
 - `eki-agent`を起動し、claim deliveryが開始される。
+- `spikes/claim-wire-roundtrip`のtestがPASS。
+
+```text
+docker run --rm -v /home/hat47x/eki-worker:/src \
+  -w /src/spikes/claim-wire-roundtrip golang:1.27 \
+  sh -c 'go test ./... -count=1'
+```
 
 証拠: [EKI-worker-env-2026-10-28.json](../../evaluations/records/EKI-worker-env-2026-10-28.json)
 
