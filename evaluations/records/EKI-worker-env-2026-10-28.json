@@ -16,6 +16,8 @@
   "agentVersion": "eki-agent dev",
   "controlSmoke": true,
   "controlSmokeStatus": 405,
+  "agentSmoke": true,
+  "agentClaimDelivery": "started",
   "workerExecution": false,
   "taskResult": false,
   "authorityVerified": false,
