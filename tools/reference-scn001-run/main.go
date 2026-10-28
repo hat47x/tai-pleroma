@@ -278,6 +278,23 @@ func VerifyArtifact(receipt RunReceipt, path string) Verification {
 	return verification
 }
 
+func hasExactIDs(actual []string, expected ...string) bool {
+	if len(actual) != len(expected) {
+		return false
+	}
+	remaining := make(map[string]bool, len(expected))
+	for _, id := range expected {
+		remaining[id] = true
+	}
+	for _, id := range actual {
+		if !remaining[id] {
+			return false
+		}
+		delete(remaining, id)
+	}
+	return len(remaining) == 0
+}
+
 func Verify(receipt RunReceipt) Verification {
 	verification := Verification{Schema: "tai.reference.scn001-run-verification/v0", RunDigest: receipt.RunDigest}
 	if receipt.Schema != "tai.reference.scn001-run/v0" || receipt.Scenario != "SCN-001" || !receipt.Synthetic {
@@ -331,10 +348,12 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	suiOK := true
 	if link := receipt.Components.SUILink; link != nil {
-		suiOK = link.Passed && link.Contradiction && len(link.LinkedCards) == 5 && len(link.IslandGroups) == 3 &&
+		suiOK = link.Passed && link.Contradiction &&
+			hasExactIDs(link.LinkedCards, "O-02", "O-03", "O-06", "O-07", "O-08") &&
+			hasExactIDs(link.IslandGroups, "I-01", "I-02", "I-03") &&
 			link.EdgeCount == 1 && link.DocumentID != "" && link.DocumentDigest != ""
 		if !suiOK {
-			verification.Reason = "SUI link component is incomplete"
+			verification.Reason = "SUI link component is incomplete or has unexpected IDs"
 			return verification
 		}
 	}
