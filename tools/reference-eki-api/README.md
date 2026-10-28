@@ -33,6 +33,23 @@ python submit.py --base-url http://127.0.0.1:18081 --token "$EKI_TOKEN" \
 
 `taskExecuted=false`、`workerResult=false`、`authorityVerified=false`です。
 
+同じIdempotency-Keyで2回送信し、同じ`task_id`が返ることを確認して`idempotent=true`を記録します。
+
+## 合成Taskの取り消し
+
+`cancel.py`はTaskを送信し、`POST /v1/tasks/{id}/cancel`の後、`cancelled`と`CANCELLED`を読みます。
+
+```text
+python -m unittest -v cancel_test.py
+python cancel.py --base-url http://127.0.0.1:18082 --token "$EKI_TOKEN" \
+  --fixture fixtures/task-request.json --idempotency-key tai-scn001-cancel-0001 \
+  --out ../../evaluations/records/EKI-cancel-2026-10-26.json
+```
+
+`cancelled=true`、`taskExecuted=false`、`workerResult=false`です。
+
+cancel後、`GET /v1/tasks/{id}/result`は**501 NOT_IMPLEMENTED**を返すことを確認し、`resultAvailable=false`を記録します。結果APIが未実装の段階で、結果を捏造しないための境界です。
+
 ## 境界
 
 - Taskの送信は合成的な1件だけで、実行・結果・委任の完了は未検証です。

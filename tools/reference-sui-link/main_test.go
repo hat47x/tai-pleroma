@@ -31,7 +31,7 @@ func load(t *testing.T) (Fixture, SUIReceipt) {
 func TestLinkMatchesObservationsAndIslands(t *testing.T) {
 	fixture, sui := load(t)
 	receipt := Link(fixture, sui)
-	if !receipt.Passed || len(receipt.LinkedCards) != 3 || len(receipt.IslandGroups) != 2 || receipt.EdgeCount != 1 {
+	if !receipt.Passed || !receipt.Contradiction || len(receipt.LinkedCards) != 5 || len(receipt.IslandGroups) != 3 || receipt.EdgeCount != 1 {
 		t.Fatalf("link did not match: %+v", receipt)
 	}
 }
@@ -41,6 +41,14 @@ func TestLinkRejectsChangedCardDigest(t *testing.T) {
 	sui.DocumentCards[0].TextDigest = "sha256:changed"
 	if receipt := Link(fixture, sui); receipt.Passed {
 		t.Fatalf("changed card digest was accepted: %+v", receipt)
+	}
+}
+
+func TestLinkRejectsEdgeCountMismatch(t *testing.T) {
+	fixture, sui := load(t)
+	sui.DocumentEdgeCount = 2
+	if receipt := Link(fixture, sui); receipt.Passed {
+		t.Fatalf("edge count mismatch was accepted: %+v", receipt)
 	}
 }
 

@@ -34,6 +34,25 @@
 - 実在の個人情報・未公開資料・秘密情報は、このリポジトリへ複製しない。参照先、版、確認者、確認日だけを記録する。
 - MMI/SEIの実環境のログや原本は、各基盤の管理場所に置く。
 - 合成fixtureの`passed=true`を、実物レビューの証拠へ読み替えない。
+- 公開gateは、`accepted`の各項目に`evidenceKind=real-object`を要求する。`synthetic`・`fixture`・`none`のままでは公開できない。
+
+## review status JSONへの記録
+
+`accepted`へ更新するときは、[SCN-001-review-status.json](SCN-001-review-status.json)の該当項目だけを次の形にする。
+
+```json
+{
+  "id": "R-01",
+  "status": "accepted",
+  "evidence": "参照先・版・取得時点・確認者役割を短く記録",
+  "evidenceKind": "real-object"
+}
+```
+
+- `evidence`へ原文や個人情報を転載せず、参照先・版・確認日・確認者の役割だけを書く。
+- `evidenceKind`は`real-object`だけを許可する。`synthetic`・`fixture`・`none`は不可。
+- 取得できなかった項目は`accepted`にせず、`pending`のまま残す。O-08のような`unavailable`を、利用可能な証拠へ読み替えない。
+- R-06/R-07を初回範囲から外す場合は、`not-applicable`と理由を記録する。
 
 ## 再レビューの記録
 

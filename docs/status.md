@@ -1,10 +1,10 @@
 # TAI Pleromaの現在状態
 
-更新日: 2026-10-26。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
+更新日: 2026-10-28。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
 
 ## 要約
 
-SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
+SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、SUIのcard/island/edge、TEIの型検証、EKIのTask admission/cancel、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
 
 Owner指示（2026-10-26）により、`development-review-only`の仮承認でCP-3まで進めている。**公開・外部作用は未承認**であり、`reviewTrigger=real-object`で実物ベースの再レビューを要する。
 
@@ -21,19 +21,29 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
 | TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
-| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・3 card/2 island/1 edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
+| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
 | SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
+| SUI→D-04対応 | D-04の観測行と公開境界を照合済み | [link](../tools/reference-sui-draft/README.md) | 意味の受理・公開承認は未検証 |
 | EKI CLI起動 | `eki-control`/`eki-agent`のversionを確認済み | [probe](../tools/reference-eki-cli/README.md)、[record](../evaluations/records/EKI-cli-2026-10-26.json) | 実Task・委任・Authorityは未検証 |
 | EKI Control API認証 | `GET /v1/tasks`の405で認証通過を確認済み | [probe](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-api-2026-10-26.json) | Task送信・委任・Worker・結果検証は未実施 |
-| EKI Task admission | 合成Task 1件を`queued`で受理済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |
+| EKI Task admission | 合成Task 1件を`queued`で受理し、同一keyの再送が同じtask_idを返すことを確認済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |
+| EKI Task cancel | 合成Task 1件を`cancelled`/`CANCELLED`まで確認済み。result APIは501 | [cancel](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-cancel-2026-10-26.json) | Worker未起動。実行・結果は未検証 |
 
 ## 検証
 
-- GitHub Actions `tai-reference`のmatrixで9ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate、SUI link、EKI CLI）を`gofmt`・`go vet`・`go test`。
-- 別jobでSUI API probeとEKI API probeのPython testを実行する。
+- GitHub Actions `tai-reference`のmatrixで10ツール（SCN-001、MMI、SEI、統合実行、D-04 render、TEI、公開gate、SUI link、SUI→D-04、EKI CLI）を`gofmt`・`go vet`・`go test`。
+- 別jobでSUI API/EKI API/EKI Task/公開境界のPython testを実行する。
 - MMI/SEIの実接続試験は、sibling checkoutがないCIではskip。
 - 保存済みの統合実行recordは常に`runDigest`とcomponent invariantsを検証。
-- 2026-10-26時点のmain CIはsuccess。
+- 2026-10-28時点のmain CIはsuccess。
+
+## 公開状態
+
+- TAI、EKI、SEI、MMIは公開リポジトリ。MITライセンス。
+- README先頭に、生成AIを用いた初期開発中のソースコード公開であることを明記。
+- 4リポジトリでsecret scanning・push protection・Private vulnerability reportingを有効化。
+- TEI Platformの非公開作業資料は非公開を維持し、非公開理由と公開条件を別の非公開リポジトリのREADMEに記録。
+- 公開境界の回帰検査をCIで実行。
 
 ## 仮承認の境界
 
