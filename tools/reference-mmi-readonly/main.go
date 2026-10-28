@@ -216,12 +216,12 @@ type selectionResult struct {
 	} `json:"result"`
 }
 
-func selectObservations(client *mcpClient) (selectionResult, error) {
+func selectObservations(client *mcpClient, table string) (selectionResult, error) {
 	result, err := client.call("tools/call", map[string]any{
 		"name": "select",
 		"arguments": map[string]any{
 			"source":  "observations.csv",
-			"table":   "Sheet1!A1:E4",
+			"table":   table,
 			"columns": "id,text,source,version,availability",
 		},
 	})
@@ -267,7 +267,16 @@ func digestFile(path string) (string, error) {
 	return "sha256:" + hex.EncodeToString(sum[:]), nil
 }
 
+type Options struct {
+	Table        string
+	ExpectedRows int
+}
+
 func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
+	return RunWithOptions(ctx, mmiRoot, workspace, Options{Table: "Sheet1!A1:E4", ExpectedRows: 3})
+}
+
+func RunWithOptions(ctx context.Context, mmiRoot, workspace string, options Options) Receipt {
 	receipt := Receipt{
 		Schema: "tai.reference.mmi-readonly/v0", Tool: "inspect", ReadOnly: true,
 		RealProductConnected: false,
@@ -346,7 +355,7 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 		receipt.Reason = "inspect result did not contain candidates"
 		return receipt
 	}
-	selection, err := selectObservations(client)
+	selection, err := selectObservations(client, options.Table)
 	if err != nil {
 		receipt.Reason = err.Error()
 		return receipt
@@ -364,7 +373,7 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 		})
 	}
 	receipt.ConflictPreserved = texts["O-02"] != "" && texts["O-03"] != "" && texts["O-02"] != texts["O-03"]
-	if receipt.SelectedRows != 3 || !receipt.ConflictPreserved {
+	if receipt.SelectedRows != options.ExpectedRows || !receipt.ConflictPreserved {
 		receipt.Reason = "select did not preserve the O-02/O-03 observations"
 		return receipt
 	}
@@ -413,6 +422,8 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 func main() {
 	mmiRoot := flag.String("mmi-root", "", "MMI checkout root (default: MMI_ROOT or ../../../markdown-matrix-injector)")
 	workspace := flag.String("workspace", "testdata/workspace", "read-only MMI workspace")
+	table := flag.String("table", "Sheet1!A1:E4", "MMI table range")
+	expectedRows := flag.Int("expected-rows", 3, "expected selected row count")
 	synthetic := flag.Bool("synthetic", false, "mark the workspace as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
@@ -423,7 +434,7 @@ func main() {
 	if root == "" {
 		root = filepath.Clean(filepath.Join("..", "..", "..", "markdown-matrix-injector"))
 	}
-	receipt := Run(context.Background(), root, *workspace)
+	receipt := RunWithOptions(context.Background(), root, *workspace, Options{Table: *table, ExpectedRows: *expectedRows})
 	if *synthetic {
 		receipt.Synthetic = true
 		receipt.EvidenceKind = "synthetic"

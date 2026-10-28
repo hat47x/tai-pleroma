@@ -7,11 +7,13 @@
   "nodeVersion": "v24.19.0",
   "tool": "inspect",
   "candidateCount": 1,
-  "selectedRows": 3,
+  "selectedRows": 5,
   "observedIds": [
     "O-02",
     "O-03",
-    "O-07"
+    "O-06",
+    "O-07",
+    "O-08"
   ],
   "selected": [
     {
@@ -29,18 +31,32 @@
       "availability": "available"
     },
     {
+      "id": "O-06",
+      "text": "最新と称する配布文書では会議室は事前予約制",
+      "source": "distribution-2026-10",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
       "id": "O-07",
       "text": "施設の利用は予約不要",
       "source": "distribution-2026-11",
       "version": "2026-11-01",
       "availability": "available"
+    },
+    {
+      "id": "O-08",
+      "text": "予約規程の原本を取得できなかった",
+      "source": "original-policy-note",
+      "version": "2026-10-25",
+      "availability": "unavailable"
     }
   ],
   "conflictPreserved": true,
-  "sourceDigestBefore": "sha256:b6f72eaf8409d3496ffac251de1e2357aad18f5e8091016f3d6a0d296debdad1",
-  "sourceDigestAfter": "sha256:b6f72eaf8409d3496ffac251de1e2357aad18f5e8091016f3d6a0d296debdad1",
-  "guideDigestBefore": "sha256:6bd55204fe9e77b00fd45a5077997563e8a6cc8890f2ab3ef78f741bbf024cdb",
-  "guideDigestAfter": "sha256:6bd55204fe9e77b00fd45a5077997563e8a6cc8890f2ab3ef78f741bbf024cdb",
+  "sourceDigestBefore": "sha256:2fb8beeab188388d91129d8e1530a8952d3170db0d28875a218d3866d3573875",
+  "sourceDigestAfter": "sha256:2fb8beeab188388d91129d8e1530a8952d3170db0d28875a218d3866d3573875",
+  "guideDigestBefore": "sha256:2a54004d63e030fb11484711ea0bd133ff6cd4c4572e3ed329340e72b89a116f",
+  "guideDigestAfter": "sha256:2a54004d63e030fb11484711ea0bd133ff6cd4c4572e3ed329340e72b89a116f",
   "boundaryRejected": true,
   "missingSourceRejected": true,
   "readOnly": true,
