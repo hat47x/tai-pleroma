@@ -28,6 +28,8 @@ type Receipt struct {
 	WorkspaceDigest string   `json:"workspaceDigest"`
 	Validation      string   `json:"validation"`
 	ReadOnly        bool     `json:"readOnly"`
+	Synthetic       bool     `json:"synthetic"`
+	EvidenceKind    string   `json:"evidenceKind"`
 	Passed          bool     `json:"passed"`
 	Reason          string   `json:"reason,omitempty"`
 	Notes           []string `json:"notes"`
@@ -456,6 +458,7 @@ type cliConfig struct {
 	Workspace string
 	OutPath   string
 	Options   Options
+	Synthetic bool
 }
 
 // parseConfig reads the command line, with environment variables as the default
@@ -467,6 +470,7 @@ func parseConfig(args []string, getenv func(string) string) (cliConfig, error) {
 	teiRoot := flags.String("tei-root", "", "TEI checkout root (default: TEI_ROOT or ../../../tei-platform)")
 	workspace := flags.String("workspace", "testdata/workspace", "TEI workspace")
 	outPath := flags.String("out", "", "write receipt JSON to this file")
+	synthetic := flags.Bool("synthetic", false, "mark the workspace as synthetic verification input")
 	expectCommit := flags.String("expect-commit", getenv("TAI_TEI_EXPECT_COMMIT"), "fail unless the TEI checkout HEAD equals this commit (env TAI_TEI_EXPECT_COMMIT)")
 	expectGo := flags.String("expect-go-version", getenv("TAI_TEI_EXPECT_GO_VERSION"), "fail unless `go version` reports this version token, e.g. go1.26.9 (env TAI_TEI_EXPECT_GO_VERSION)")
 	if err := flags.Parse(args); err != nil {
@@ -480,7 +484,7 @@ func parseConfig(args []string, getenv func(string) string) (cliConfig, error) {
 		root = filepath.Clean(filepath.Join("..", "..", "..", "tei-platform"))
 	}
 	return cliConfig{
-		TEIRoot: root, Workspace: *workspace, OutPath: *outPath,
+		TEIRoot: root, Workspace: *workspace, OutPath: *outPath, Synthetic: *synthetic,
 		Options: Options{ExpectCommit: strings.ToLower(*expectCommit), ExpectGoVersion: *expectGo},
 	}, nil
 }
@@ -494,6 +498,10 @@ func main() {
 		os.Exit(2)
 	}
 	receipt := RunWithOptions(context.Background(), config.TEIRoot, config.Workspace, config.Options)
+	if config.Synthetic {
+		receipt.Synthetic = true
+		receipt.EvidenceKind = "synthetic"
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

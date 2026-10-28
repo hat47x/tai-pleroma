@@ -28,6 +28,7 @@ TEIの場所は`-tei-root`または`TEI_ROOT`で指定できます。省略時�
 - workspaceの全ファイルdigest（`workspaceDigest`）と、空ディレクトリ・symlinkの指す先を含むtree digest（`workspaceTree`）が呼出し前後で不変。
 - TEIのチェックアウトの`HEAD`、追跡対象の変更（件数と差分のdigest）、未追跡ファイル（件数と名前のdigest）、未追跡または`.gitignore`対象のGoビルド入力（件数と名前のdigest）、`assume-unchanged`／`skip-worktree`の印が付いた追跡ファイルの件数が、呼出し前後で不変（`checkout`）。
 - receiptに`teiCommit`、`goVersion`（`go version`の出力）、`toolchain`、`workspaceDigest`、TEIチェックアウトの状態を記録する。期待値を指定したときだけ、commitなどを照合する。
+- `-synthetic`指定時は`synthetic=true`、`evidenceKind=synthetic`。実物レビューの証拠ではない。
 
 `readOnly`は、呼出しの前後でworkspaceまたはTEIのチェックアウトの変化を観測したときだけ`false`になります（観測した書込みの記録であり、書込めないことの証明ではありません）。この変化は、版を固定しない実行でも`passed=false`です。TEIが`readOnly`と宣言するコマンドだけを呼んでいるため、観測した書込みはTEIの版の違いではなく、その実行の事実の不一致だからです。
 

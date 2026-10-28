@@ -20,7 +20,7 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
 | 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
-| TEIモデル検証 | 型宣言をvalidate済み | [reference-tei-model](../tools/reference-tei-model/README.md) | 実データ・意味・Authorityは未検証 |
+| TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
 | SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
 | SUI→D-04対応 | D-04の観測行と公開境界を照合済み | [link](../tools/reference-sui-draft/README.md) | 意味の受理・公開承認は未検証 |
