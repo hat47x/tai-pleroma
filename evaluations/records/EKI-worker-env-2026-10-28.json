@@ -1,5 +1,7 @@
 {
   "schema": "tai.reference.eki-worker-env/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
   "ekiCommit": "a578b0543e5be3a80b7031c09a0e1d40ac0f076b",
   "environment": "WSL Ubuntu-22.04 / Docker 28.3.3 / golang:1.27",
   "goVersion": "go1.27 linux/amd64",

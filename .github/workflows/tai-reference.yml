@@ -69,3 +69,9 @@ jobs:
       - name: synthetic facility scan
         working-directory: .
         run: python tools/reference-synthetic-facility/check.py --root scenarios/SCN-001-synthetic-facility
+      - name: synthetic receipts test
+        working-directory: tools/check-synthetic-receipts
+        run: python -m unittest -v check_test.py
+      - name: synthetic receipts scan
+        working-directory: .
+        run: python tools/check-synthetic-receipts/check.py --root .
