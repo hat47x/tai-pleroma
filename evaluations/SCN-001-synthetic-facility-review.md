@@ -28,6 +28,8 @@
 
 **R-01〜R-05を`accepted`や`evidenceKind=real-object`へ更新しない。** 合成入力の検出結果を、実物レビューの受理へ読み替えない。
 
+review statusでは、R-01〜R-05を`status=pending`、`evidenceKind=synthetic`、合成入力への参照つきで記録する。`accepted`へ変更しても、公開gateは`real-object`以外を拒否する。
+
 ## 検出する工程欠陥
 
 - 総則の「予約不要」と会議室の「事前予約制」が併存する。
