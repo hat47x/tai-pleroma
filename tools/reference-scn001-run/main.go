@@ -292,6 +292,20 @@ func Verify(receipt RunReceipt) Verification {
 	sei := receipt.Components.SEI
 	scn := receipt.Components.SCN001
 	artifact := receipt.Components.ReviewArtifact
+	// Failure leaves evidence incomplete; it cannot authorize claims outside
+	// this reference profile, even when the component digest is recomputed.
+	if sei.HumanReviewed || sei.AuthorityVerified || sei.Published {
+		verification.Reason = "SEI component claims human review, authority, or publication"
+		return verification
+	}
+	if scn.HumanReviewed || scn.AuthorityVerified || scn.PublicationApproved {
+		verification.Reason = "SCN-001 component claims human review, authority, or publication approval"
+		return verification
+	}
+	if artifact.AuthorityVerified || artifact.PublicationApproved {
+		verification.Reason = "review artifact component claims authority or publication approval"
+		return verification
+	}
 	// A successful synthetic evaluation must agree with its individual case results.
 	// A component digest alone cannot establish that agreement.
 	if scn.Passed {
@@ -364,13 +378,12 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	if sei.Passed && (sei.SeiCommit == "" || sei.RecordCount != 3 || sei.Decision.ID != "dec-01" ||
 		sei.ProvisionalDecision.ID != "dec-02" || !sei.ProvisionalApproved || sei.ReviewTrigger != "real-object" ||
-		!sei.ReadOnlyProjection || sei.AuthorityVerified || sei.HumanReviewed || sei.Published) {
+		!sei.ReadOnlyProjection) {
 		verification.Reason = "SEI component is incomplete"
 		return verification
 	}
 	if scn.Passed && (scn.ObservationSource != "mmi-reference" || !scn.RealProductsConnected ||
-		!scn.Synthetic || scn.HumanReviewed || scn.AuthorityVerified ||
-		!scn.ProvisionalApproved || scn.PublicationApproved || !scn.ReviewRequired || scn.ReviewTrigger != "real-object") {
+		!scn.Synthetic || !scn.ProvisionalApproved || !scn.ReviewRequired || scn.ReviewTrigger != "real-object") {
 		verification.Reason = "SCN-001 component is incomplete"
 		return verification
 	}
@@ -529,6 +542,9 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 		return receipt, err
 	}
 	receipt.RunDigest = digest
+	if verification := Verify(receipt); !verification.Passed {
+		return receipt, fmt.Errorf("combined run receipt is inconsistent: %s", verification.Reason)
+	}
 	if artifactOut != "" {
 		if err := saveReviewArtifact(receipt, artifactBytes, artifactOut); err != nil {
 			return receipt, err
