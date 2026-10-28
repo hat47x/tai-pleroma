@@ -61,6 +61,16 @@ func Link(link SUILink, artifact []byte) Receipt {
 			return receipt
 		}
 	}
+	o08Unavailable := false
+	for _, line := range strings.Split(text, "\n") {
+		if strings.HasPrefix(line, "| O-08 |") && strings.Contains(line, "| unavailable |") {
+			o08Unavailable = true
+		}
+	}
+	if !o08Unavailable {
+		receipt.Reason = "O-08 must remain unavailable in the artifact"
+		return receipt
+	}
 	receipt.LinkedCards = append([]string(nil), link.LinkedCards...)
 	receipt.PublicationBlocked = true
 	receipt.Passed = true

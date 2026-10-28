@@ -36,6 +36,19 @@ func TestLinkMatchesDraft(t *testing.T) {
 	}
 }
 
+func TestLinkRejectsAvailableO08(t *testing.T) {
+	link, artifact := load(t)
+	lines := strings.Split(string(artifact), "\n")
+	for index, line := range lines {
+		if strings.HasPrefix(line, "| O-08 |") {
+			lines[index] = strings.ReplaceAll(line, "| unavailable |", "| available |")
+		}
+	}
+	if receipt := Link(link, []byte(strings.Join(lines, "\n"))); receipt.Passed {
+		t.Fatalf("available O-08 was accepted: %+v", receipt)
+	}
+}
+
 func TestLinkRejectsMissingBoundary(t *testing.T) {
 	link, artifact := load(t)
 	broken := strings.Replace(string(artifact), "- 公開承認: **なし**", "- 公開承認: **あり**", 1)
