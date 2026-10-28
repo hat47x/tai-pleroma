@@ -34,6 +34,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 - `spikes/claim-wire-roundtrip`のtestがPASS。
 - WSLのControl PlaneへTaskを送信し、`queued`→`cancelled`/`CANCELLED`まで確認。
 - EKI sourceに`spikes/native-runner`があれば、Native Runner spikeのtestも実行。
+- Linuxでは期限・取消し・出力上限時にプロセスグループを停止する。
 
 ```text
 docker run --rm -v /home/hat47x/eki-worker:/src \
