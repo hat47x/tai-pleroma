@@ -129,6 +129,10 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 		}
 		receipt.IslandGroups = append(receipt.IslandGroups, expected.ID)
 	}
+	if sui.DocumentEdgeCount != len(sui.DocumentEdges) {
+		receipt.Reason = "documentEdgeCount does not match documentEdges"
+		return receipt
+	}
 	if len(sui.DocumentEdges) != 1 || sui.DocumentEdges[0].Type != "contradicts" ||
 		sui.DocumentEdges[0].FromID != "I-01" || sui.DocumentEdges[0].ToID != "I-02" {
 		receipt.Reason = "contradicts edge between I-01 and I-02 is missing"

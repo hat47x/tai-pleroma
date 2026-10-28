@@ -44,6 +44,14 @@ func TestLinkRejectsChangedCardDigest(t *testing.T) {
 	}
 }
 
+func TestLinkRejectsEdgeCountMismatch(t *testing.T) {
+	fixture, sui := load(t)
+	sui.DocumentEdgeCount = 2
+	if receipt := Link(fixture, sui); receipt.Passed {
+		t.Fatalf("edge count mismatch was accepted: %+v", receipt)
+	}
+}
+
 func TestLinkRejectsMissingIsland(t *testing.T) {
 	fixture, sui := load(t)
 	sui.DocumentIslands = sui.DocumentIslands[:1]
