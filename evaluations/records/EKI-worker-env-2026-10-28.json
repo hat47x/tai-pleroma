@@ -2,7 +2,7 @@
   "schema": "tai.reference.eki-worker-env/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "ekiCommit": "94949e049fca9050a63b81e7edb47a31a862c657",
+  "ekiCommit": "941bea556d9c8793348d21c387e53ea3058e9170",
   "environment": "WSL Ubuntu-22.04 / Docker 28.3.3 / golang:1.27",
   "goVersion": "go1.27 linux/amd64",
   "tests": [
@@ -17,6 +17,9 @@
   "nativeRunnerTest": true,
   "nativeRunnerProcessGroup": true,
   "nativeRunnerWindowsProcessTree": true,
+  "nativeRunnerArgsAllowlist": true,
+  "nativeRunnerGPUFailClosed": true,
+  "nativeRunnerStreamingDigest": true,
   "nativeRunnerPlatforms": ["windows", "linux"],
   "builtBinaries": [
     "eki-control",
