@@ -1,6 +1,6 @@
 # YI Constellation｜高密度スライド・デザイン制作ガイド v3（統合・配布の二層を追加）
 
-対応原稿：[`YI_Constellation_product_series_slides_release_strategy.md`](YI_Constellation_product_series_slides_release_strategy.md)  
+対応原稿：[`YI_Constellation_product_series_slides_release_strategy.md`](yi-constellation-family-overview.md)  
 対象：PowerPoint 16:9／本編24枚＋付録3枚。画像を先に作って文章を重ねるのではなく、**意味と情報の階層から版面を組み立てる**。
 
 ## 1. ビジュアルコンセプト
