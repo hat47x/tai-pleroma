@@ -60,6 +60,7 @@ import subprocess
 import sys
 import tempfile
 from contextlib import redirect_stderr
+from unittest import mock
 
 import ekipin
 
@@ -217,6 +218,34 @@ class PinnedRunTest(PinnedBase):
         text = json.dumps(receipt)
         for forbidden in (self.tmp.name, "/proc", str(PID), "valid-token"):
             self.assertNotIn(forbidden, text)
+
+    @unittest.skipUnless(LINUX, "needs symlinks shaped like /proc/PID/fd")
+    def test_proxy_environment_fails_a_pinned_run_closed(self):
+        # With http_proxy set, urllib would send the request to the proxy, not to --control-pid.
+        make_proc(self.proc, PID, self.EXE, self.port)
+        proxy = type("P", (CountingHandler,), {"count": 0, "hook": None})
+        proxy_server = ThreadingHTTPServer(("127.0.0.1", 0), proxy)
+        thread = threading.Thread(target=proxy_server.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(thread.join, 5)
+        self.addCleanup(proxy_server.server_close)
+        self.addCleanup(proxy_server.shutdown)
+        environment = {"http_proxy": f"http://127.0.0.1:{proxy_server.server_port}", "HTTP_PROXY": "", "no_proxy": "", "NO_PROXY": ""}
+        with mock.patch.dict(os.environ, environment):
+            receipt = probe(self.base_url, "valid-token", binding=self.binding(digest_of(self.EXE)))
+            self.assertFalse(receipt["passed"], receipt)
+            self.assertEqual(receipt["pin"]["result"], "unavailable")
+            self.assertIn("proxy", receipt["reason"])
+            self.assertEqual((self.handler.count, proxy.count), (0, 0))
+            # no_proxy naming the host keeps the request direct, so the pin can match.
+            os.environ["no_proxy"] = "127.0.0.1"
+            direct = probe(self.base_url, "valid-token", binding=self.binding(digest_of(self.EXE)))
+            self.assertTrue(direct["passed"], direct)
+            self.assertEqual((self.handler.count, proxy.count), (1, 0))
+        # A run without an expectation is not changed by the environment.
+        with mock.patch.dict(os.environ, environment):
+            plain = probe(self.base_url, "valid-token")
+            self.assertEqual(plain["pin"]["result"], "not-checked")
 
     @unittest.skipUnless(LINUX, "needs symlinks shaped like /proc/PID/fd")
     def test_digest_mismatch_sends_no_request(self):

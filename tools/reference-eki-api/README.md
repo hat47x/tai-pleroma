@@ -74,6 +74,7 @@ python probe.py --base-url http://127.0.0.1:<port> --token "$EKI_TOKEN" \
 
 - 期待値を渡さない実行は記録だけです。`controlBinary.binding`は`not-provided`、`process`（`--control-pid`あり）、`file`（`--control-binary`のみ）、`unavailable`（読めない）のいずれかで、失敗にはしません。`file`は**操作者の申告**で、応答したサーバプロセスの束縛ではありません。
 - 期待値を渡す固定実行は、`--control-pid`が必須です。リクエストを1件も送る前に、(1) `/proc/<pid>/exe`のsha256が期待と一致し、(2) そのPIDが`--base-url`のポートをLISTENしている（`/proc/net/tcp`のinodeと`/proc/<pid>/fd`の突き合わせ）ことを確認します。外れれば何も送らず`passed=false`です。全リクエストの後にもう一度実行ファイルのsha256を見て、変わっていれば`passed=false`にします。`--control-binary`も渡したときは、そのファイルのsha256も一致が必要です。
+- 固定実行は、`http_proxy` `https_proxy` `all_proxy`が`--base-url`に適用される環境（`no_proxy`がそのホストを除いていない）では、リクエストを送る前に`pin.result=unavailable`で止まります。プロキシが応答を返すと、`--control-pid`のプロセスを束縛したことにならないためです。ループバックを`no_proxy`へ入れれば進めます。期待値なしの実行は、プロキシ環境でも従来どおり動きます。
 - Linux（WSL含む）だけで動きます。`/proc`がない環境、他ユーザー・他名前空間のPID（`fd`が読めない）、IPv6だけのLISTEN、ループバック以外の`--base-url`は`unavailable`か不一致になり、固定実行は**閉じる側**（失敗）に倒れます。
 - receiptの追加フィールド: `controlBinary`（`binding` `sha256` `processSha256` `listenerBound` `source`）と`pin`（`checked` `result` `controlBinary.status/expected/actual`）。パス、PID、token、OSのエラー文は入れません。
 

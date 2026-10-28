@@ -140,6 +140,21 @@ func TestPinMismatchFailsBeforeAnyEkiCodeRuns(t *testing.T) {
 				writeFiles(t, r.Root, map[string]string{"internal/core/go.mod": "module x\n"})
 			},
 			"1 untracked or ignored Go build input", "mismatch"},
+		"untracked vendor file that is not a go file": {head,
+			func(t *testing.T, r fakeRepo) {
+				writeFiles(t, r.Root, map[string]string{"vendor/modules.txt": "# eki\n"})
+			},
+			"1 untracked or ignored Go build input", "mismatch"},
+		"untracked go.work": {head,
+			func(t *testing.T, r fakeRepo) {
+				writeFiles(t, r.Root, map[string]string{"go.work": "go 1.21\n"})
+			},
+			"1 untracked or ignored Go build input", "mismatch"},
+		"untracked go.work.sum": {head,
+			func(t *testing.T, r fakeRepo) {
+				writeFiles(t, r.Root, map[string]string{"go.work.sum": "\n"})
+			},
+			"1 untracked or ignored Go build input", "mismatch"},
 		"ignored go file": {head,
 			func(t *testing.T, r fakeRepo) {
 				writeFiles(t, r.Root, map[string]string{".git/info/exclude": "*.go.local\nhidden.go\n", "cmd/eki-agent/hidden.go": "package main\n"})

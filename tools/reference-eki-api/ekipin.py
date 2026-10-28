@@ -21,6 +21,7 @@ import hashlib
 import os
 import re
 import urllib.parse
+import urllib.request
 from dataclasses import dataclass
 from typing import Any
 
@@ -139,6 +140,18 @@ def _port_of(base_url: str) -> tuple[str, int]:
         return "", 0
 
 
+def _proxied(base_url: str) -> bool:
+    """True when urllib would send a request to base-url through a proxy (http_proxy,
+    https_proxy, all_proxy, unless no_proxy names the host). A proxy, not the process
+    named by --control-pid, would then answer, so a pinned run refuses to start."""
+    host, _ = _port_of(base_url)
+    scheme = urllib.parse.urlparse(base_url).scheme or "http"
+    proxies = urllib.request.getproxies()
+    if not (proxies.get(scheme) or proxies.get("all")):
+        return False
+    return not urllib.request.proxy_bypass(host)
+
+
 class Guard:
     """Fills the additive receipt fields and enforces the pin around one run."""
 
@@ -186,6 +199,8 @@ class Guard:
             result, reason = "mismatch", "pin mismatch: control binary digest differs from the expectation"
         elif b.binary and file_digest != b.expect:
             result, reason = "mismatch", "pin mismatch: --control-binary digest differs from the expectation"
+        elif _proxied(base_url):
+            result, reason = "unavailable", "pin unavailable: an HTTP proxy is configured for base-url, so the request would not reach the process"
         elif bound is None:
             result, reason = "unavailable", "pin unavailable: listener of the process could not be checked"
         elif not bound:

@@ -46,7 +46,7 @@ type Toolchain struct {
 	GoVersionToken string   `json:"goVersionToken"`       // go1.26.9, from `go version` run in the EKI checkout
 	GoToolchainEnv string   `json:"goToolchainEnv"`       // inherited GOTOOLCHAIN (local | auto | go1.x ...)
 	GoFlags        string   `json:"goFlags"`              // inherited GOFLAGS
-	GoWork         string   `json:"goWork"`               // inherited GOWORK ("" or off when no go.work applies)
+	GoWork         string   `json:"goWork"`               // inherited GOWORK: "" or off when no go.work applies, present when one does (never its path)
 	Enforced       []string `json:"enforced"`             // NAME=value set for the go commands because the run is pinned
 	Build          string   `json:"build"`                // not-run | built | failed
 	BuildFlags     []string `json:"buildFlags,omitempty"` // explicit flags given to go build
@@ -174,7 +174,15 @@ func probeToolchain(ctx context.Context, ekiRoot string, pinned bool) (string, T
 	if raw := commandOutput(ctx, ekiRoot, append(append([]string{}, inherited...), "GOTOOLCHAIN=local"), "go", "env", "-json", "GOWORK"); raw != "" {
 		_ = json.Unmarshal([]byte(raw), &workenv)
 	}
-	tool.GoToolchainEnv, tool.GoFlags, tool.GoWork = goenv["GOTOOLCHAIN"], goenv["GOFLAGS"], workenv["GOWORK"]
+	tool.GoToolchainEnv, tool.GoFlags = goenv["GOTOOLCHAIN"], goenv["GOFLAGS"]
+	// `go env GOWORK` prints the path of the go.work file; the receipt keeps only
+	// whether one applies, never the path.
+	switch work := workenv["GOWORK"]; work {
+	case "", "off":
+		tool.GoWork = work
+	default:
+		tool.GoWork = "present"
+	}
 	return full, tool
 }
 
@@ -335,7 +343,7 @@ func newReceipt() Receipt {
 		Notes: []string{
 			"EKIの`eki-control`/`eki-agent`のversion表示だけを確認する。",
 			"Taskの委任・Worker・Authority・結果検証は未実施。",
-			"版固定の一致が示すのは、checkoutのHEAD・追跡内容・Go toolchainと、そこから作ったバイナリのsha256が期待と合ったことだけである。EKIの正しさ・実行結果・Authorityは示さない。`--version`は`dev`だけを出し、版の証明にならない。",
+			"版固定の一致が示すのは、checkoutのHEAD・追跡内容・Go toolchainが期待と合ったことだけである（バイナリのsha256は記録するだけで照合しない）。EKIの正しさ・実行結果・Authorityは示さない。`--version`は`dev`だけを出し、版の証明にならない。",
 		},
 		Pin:       PinCheck{Result: "not-checked", Commit: PinItem{Status: "not-checked"}, GoVersion: PinItem{Status: "not-checked"}, SourceTree: SourceTree{Status: "not-checked"}},
 		Checkout:  CheckoutCheck{Status: "not-checked"},

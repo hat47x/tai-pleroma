@@ -15,7 +15,7 @@ go run . -eki-root ../../../eki-fabric
 
 `EKI_ROOT`でも指定できます。
 
-既定の実行は記録だけです。期待値を渡さない限り、commitの不一致や未コミットの変更で失敗にはしません。
+既定の実行は記録だけです。期待値を渡さない限り、commitの不一致や未コミットの変更で失敗にはしません（例外は、実行中のcheckout書き換えの検出。Owner判断7）。
 
 ## 版を固定して実行する（任意）
 
@@ -69,7 +69,7 @@ gitの事実は、`--no-replace-objects`で、`GIT_DIR`等の環境変数を除�
 - EKIのTask、Worker、委任、結果検証、Authorityは未検証。
 - `eki-control`はM0 skeletonで、実運用のControl Planeではない。
 - version表示は機能の実装・受入を証明しない。
-- **`--version`は`dev`だけを出し、commitを報告しない**（EKI `84f03d1`から`934069a`までの5つのcommitで確認）。`versionAgreement=agree`は同じcommitのバイナリであることを何も示さない。固定の中身は、checkoutのHEAD・追跡内容・Go toolchain・そこから作ったバイナリのsha256だけである。`reportedCommit=not-reported`のまま`pin.result=match`になる。
+- **`--version`は`dev`だけを出し、commitを報告しない**（EKI `84f03d1`から`934069a`までの5つのcommitで確認）。`versionAgreement=agree`は同じcommitのバイナリであることを何も示さない。固定の中身は、checkoutのHEAD・追跡内容・Go toolchainだけである。バイナリのsha256は記録するだけで、このCLIは期待値と照合しない（`reference-eki-api`の`--expect-control-sha256`へ渡す値として使える）。`reportedCommit=not-reported`のまま`pin.result=match`になる。
 - pinの一致は、HEAD・追跡内容・toolchainが期待と合ったことだけを示す。EKIの正しさ、実行結果、Authorityは示さない。
 - 追跡外・無視された非Goのファイルや、`//go:embed`で取り込まれる任意名のファイルは見えない（未確認の限界）。cgo、環境変数、モジュールのダウンロード元も固定しない。
 - EKIの`go.mod`は`go 1.27.0`で、Go 1.26ではビルドできない。固定実行はビルド失敗（reason `EKI build failed`）になる。実EKIの試験はGo 1.27以上があるときだけ走り、CIのGo 1.26.xでは必ずskipする。
@@ -80,7 +80,8 @@ gitの事実は、`--no-replace-objects`で、`GIT_DIR`等の環境変数を除�
 
 1. 既定は記録のみ。強制はフラグ・環境変数を渡したときだけ。
 2. 非固定の実行も`go run`をやめ、`go build -buildvcs=false -trimpath`でcheckout外にビルドして実行する。reasonは定型文になり、エラー詳細は失われる（診断は減る）。
-3. 版の主軸は、`--version`ではなく、checkoutのHEADとビルドしたバイナリのsha256。EKIがversionにcommitを出すようになれば、`reportedCommit`を必須に強められる。EKI側の変更は求めない。
+3. 版の主軸は、`--version`ではなく、checkoutのHEADと追跡内容（ビルドしたバイナリのsha256は記録のみ）。EKIがversionにcommitを出すようになれば、`reportedCommit`を必須に強められる。EKI側の変更は求めない。
 4. 固定実行のtoolchainは`GOTOOLCHAIN=local`。Go 1.27未満では実EKIを固定できない。`GOTOOLCHAIN=auto`は版の保証が弱くなるので許さない。
 5. どのEKIの版を固定するかは決めない（既定値なし）。記録は`84f03d1`（capability-inventoryの表）、`6daa15c`/`a578b05`（保存済みrecord）、`critical-path`の`6daa15c`で揃っておらず、呼び出し側が明示する。
 6. untracked/ignoredで失敗にするのはGoのビルド入力だけ。全件を失敗にすると誤検出が増える。
+7. 実行中のcheckout書き換えの検出は、期待値の有無によらず常に有効（`readOnly=true`という既存の主張を偽にしないため）。これは「既定は記録のみ」の例外で、従来の既定の失敗条件（version出力が空など）に加わる。期待commitの不一致や、実行前から存在する未コミットの変更では既定の実行は失敗にしない。共有checkoutを他の作業が同時に動かすと偶発的に`changed`になり得るので、その場合はreceiptの`checkout`を見て再実行する。
