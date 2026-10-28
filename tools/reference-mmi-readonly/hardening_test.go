@@ -377,8 +377,13 @@ func TestParseConfigWiresEveryExpectation(t *testing.T) {
 			if (err != nil) != test.wantErr {
 				t.Fatalf("error = %v, wantErr %t", err, test.wantErr)
 			}
-			if err == nil && config.Options != test.want {
-				t.Fatalf("options = %+v, want %+v", config.Options, test.want)
+			got := config.Options
+			if err == nil && (got.Table != defaultTable || got.ExpectedRows != defaultExpectedRows) {
+				t.Fatalf("table defaults: %+v", got)
+			}
+			got.Table, got.ExpectedRows = "", 0 // the table flags are not part of the pin expectations
+			if err == nil && got != test.want {
+				t.Fatalf("options = %+v, want %+v", got, test.want)
 			}
 		})
 	}
