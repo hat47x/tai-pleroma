@@ -11,6 +11,8 @@
     "spikes/native-runner"
   ],
   "testsPassed": true,
+  "fullTestSuite": true,
+  "fullTestSuiteCommand": "go test ./... -count=1",
   "nativeRunnerTest": true,
   "nativeRunnerProcessGroup": true,
   "nativeRunnerPlatforms": ["windows", "linux"],
