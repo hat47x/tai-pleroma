@@ -18,9 +18,10 @@ mkdir -p /home/hat47x/eki-worker
 ## 実行
 
 ```text
-chmod +x run.sh build.sh
+chmod +x run.sh build.sh smoke.sh
 EKI_ROOT=/home/hat47x/eki-worker ./run.sh
 EKI_ROOT=/home/hat47x/eki-worker ./build.sh
+EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 ```
 
 ## 確認したこと
@@ -29,6 +30,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./build.sh
 - `eki-control`と`eki-agent`をLinux向けにビルドできる。
 - `eki-control --version`と`eki-agent --version`が`dev`を返す。
 - `smoke.sh`でControl Planeバイナリを起動し、`GET /v1/tasks`が405を返す。
+- `eki-agent`を起動し、claim deliveryが開始される。
 
 証拠: [EKI-worker-env-2026-10-28.json](../../evaluations/records/EKI-worker-env-2026-10-28.json)
 
