@@ -30,7 +30,8 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | EKI Control API認証 | `GET /v1/tasks`の405で認証通過を確認済み | [probe](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-api-2026-10-26.json) | Task送信・委任・Worker・結果検証は未実施 |
 | EKI Task admission | 合成Task 1件を`queued`で受理し、同一keyの再送が同じtask_idを返すことを確認済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |
 | EKI Task cancel | 合成Task 1件を`cancelled`/`CANCELLED`まで確認済み。result APIは501 | [cancel](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-cancel-2026-10-26.json) | Worker未起動。実行・結果は未検証 |
-| EKI Worker test環境 | WSL/DockerでAgent/Control test profileとバイナリbuildを確認済み | [worker env](../tools/reference-eki-worker/README.md)、[record](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行主体ではなく、結果・委任完了は未検証 |
+| EKI Worker test環境 | WSL/DockerでAgent/Control test profile、claim wire、Control Planeを確認済み | [worker env](../tools/reference-eki-worker/README.md)、[record](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行主体ではなく、結果・委任完了は未検証 |
+| EKI Task lifecycle on WSL | `queued`→`cancelled`/`CANCELLED`を確認済み | [worker env](../tools/reference-eki-worker/README.md) | Worker実行・結果は未検証 |
 
 ## 検証
 
