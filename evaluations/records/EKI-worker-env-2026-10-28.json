@@ -13,6 +13,7 @@
   "testsPassed": true,
   "fullTestSuite": true,
   "fullTestSuiteCommand": "go test ./... -count=1",
+  "fullTestSuiteNotes": "初回実行でFAILを観測し、再実行でPASS。原因は未特定。",
   "nativeRunnerTest": true,
   "nativeRunnerProcessGroup": true,
   "nativeRunnerPlatforms": ["windows", "linux"],

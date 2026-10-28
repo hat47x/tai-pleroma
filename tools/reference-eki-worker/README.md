@@ -27,7 +27,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 ## 確認したこと
 
 - `go test ./internal/agent/... ./internal/control/... -count=1` がPASS。
-- `go test ./... -count=1`（EKI全体）がPASS。
+- `go test ./... -count=1`（EKI全体）が再実行でPASS。初回はFAILを観測し、原因は未特定。
 - `eki-control`と`eki-agent`をLinux向けにビルドできる。
 - `eki-control --version`と`eki-agent --version`が`dev`を返す。
 - `smoke.sh`でControl Planeバイナリを起動し、`GET /v1/tasks`が405を返す。
