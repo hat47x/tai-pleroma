@@ -26,6 +26,7 @@
 | SEI | 3 records、`authority:unknown`/`publication:unapproved`を保持 | [receipt](../evaluations/records/SEI-decision-2026-10-26.json) | 実store・署名・権限 |
 | TEI | 型宣言`validation=ok`、workspace digest不変 | [receipt](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味 |
 | EKI | Control Plane 405、Agent claim delivery、Task `queued`→`cancelled` | [receipt](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行・結果・Authority |
+| EKI Native Runner | 固定コマンド、期限/取消し、出力上限、Windows/Linuxのツリー停止、fail-closed | [eki-fabric #273](https://github.com/hat47x/eki-fabric/pull/273) | sandbox・CPU/メモリ制限・結果検証 |
 
 ## 検出する工程欠陥
 
