@@ -18,7 +18,14 @@ import (
 // Any non-empty field turns the run into a pinned run, and a pinned run needs
 // ExpectCommit: package-lock.json is byte-identical across many MMI commits and
 // the Node major says nothing about the checkout, so neither can stand in for it.
+const (
+	defaultTable        = "Sheet1!A1:E4"
+	defaultExpectedRows = 3
+)
+
 type Options struct {
+	Table        string // MMI table range to select; empty means defaultTable
+	ExpectedRows int    // expected selected row count (with Table)
 	ExpectCommit     string // 40-hex (or 64-hex) git object id of the MMI checkout HEAD
 	ExpectLockDigest string // sha256:<64 hex> of package-lock.json after CRLF->LF normalisation
 	ExpectNodeMajor  string // decimal major of `node --version`

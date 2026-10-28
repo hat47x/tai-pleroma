@@ -33,6 +33,8 @@ python submit.py --base-url http://127.0.0.1:18081 --token "$EKI_TOKEN" \
 
 `taskExecuted=false`、`workerResult=false`、`authorityVerified=false`です。
 
+同じIdempotency-Keyで2回送信し、同じ`task_id`が返ることを確認して`idempotent=true`を記録します。
+
 ## 合成Taskの取り消し
 
 `cancel.py`はTaskを送信し、`POST /v1/tasks/{id}/cancel`の後、`cancelled`と`CANCELLED`を読みます。

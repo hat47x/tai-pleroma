@@ -52,6 +52,8 @@ type Receipt struct {
 	AuthorityVerified      bool             `json:"authorityVerified"`
 	HumanReviewed          bool             `json:"humanReviewed"`
 	Published              bool             `json:"published"`
+	Synthetic              bool             `json:"synthetic"`
+	EvidenceKind           string           `json:"evidenceKind"`
 	Passed                 bool             `json:"passed"`
 	Reason                 string           `json:"reason,omitempty"`
 	Notes                  []string         `json:"notes"`
@@ -182,6 +184,7 @@ func findDecision(decisions []DecisionView, id string) (DecisionView, bool) {
 func main() {
 	seiRoot := flag.String("sei-root", "", "SEI checkout root (default: SEI_ROOT or ../../../sei-cognition)")
 	basisBundle := flag.String("basis-bundle", "", "inspect original decision basis references in a portable bundle (no store writes)")
+	synthetic := flag.Bool("synthetic", false, "mark the decision fixture as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	root := *seiRoot
@@ -215,6 +218,10 @@ func main() {
 		return
 	}
 	receipt := Run(ctx, root)
+	if *synthetic {
+		receipt.Synthetic = true
+		receipt.EvidenceKind = "synthetic"
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

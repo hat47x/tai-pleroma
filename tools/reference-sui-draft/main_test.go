@@ -28,11 +28,24 @@ func load(t *testing.T) (SUILink, []byte) {
 func TestLinkMatchesDraft(t *testing.T) {
 	link, artifact := load(t)
 	receipt := Link(link, artifact)
-	if !receipt.Passed || !receipt.PublicationBlocked || len(receipt.LinkedCards) != 4 {
+	if !receipt.Passed || !receipt.PublicationBlocked || len(receipt.LinkedCards) != 5 {
 		t.Fatalf("link failed: %+v", receipt)
 	}
 	if !strings.HasPrefix(receipt.ArtifactDigest, "sha256:") {
 		t.Fatalf("artifact digest is missing: %+v", receipt)
+	}
+}
+
+func TestLinkRejectsAvailableO08(t *testing.T) {
+	link, artifact := load(t)
+	lines := strings.Split(string(artifact), "\n")
+	for index, line := range lines {
+		if strings.HasPrefix(line, "| O-08 |") {
+			lines[index] = strings.ReplaceAll(line, "| unavailable |", "| available |")
+		}
+	}
+	if receipt := Link(link, []byte(strings.Join(lines, "\n"))); receipt.Passed {
+		t.Fatalf("available O-08 was accepted: %+v", receipt)
 	}
 }
 

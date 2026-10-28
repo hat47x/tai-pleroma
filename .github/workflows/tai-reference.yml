@@ -63,3 +63,9 @@ jobs:
       - name: public boundary scan
         working-directory: .
         run: python tools/check-public-boundary/check.py --root .
+      - name: synthetic facility test
+        working-directory: tools/reference-synthetic-facility
+        run: python -m unittest -v check_test.py
+      - name: synthetic facility scan
+        working-directory: .
+        run: python tools/reference-synthetic-facility/check.py --root scenarios/SCN-001-synthetic-facility

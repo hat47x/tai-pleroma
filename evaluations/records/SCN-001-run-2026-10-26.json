@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-27T15:37:19Z",
-  "runDigest": "sha256:5978f5ceb28fc084e0f4f4153193b879e24f39a22da952b08394d1382f2f1c23",
+  "generatedAt": "2026-10-28T10:27:15Z",
+  "runDigest": "sha256:53600dc4ad4a8c8df5fab0343459f9fb601c2018db2beb15432ce50b6dd2a8e5",
   "components": {
     "mmi": {
       "passed": true,
@@ -140,16 +140,18 @@
     "suiLink": {
       "passed": true,
       "documentId": "scn001-demo",
-      "documentDigest": "sha256:af4f61f870a377d87a61de41b9a49d9617554288360f386b2cb0cf35188514c2",
+      "documentDigest": "sha256:6d957e2a9f52a90935d1ae8032d742029c4b2f69a550003e3007789b08be5f89",
       "linkedCards": [
         "O-02",
         "O-03",
         "O-06",
-        "O-07"
+        "O-07",
+        "O-08"
       ],
       "islandGroups": [
         "I-01",
-        "I-02"
+        "I-02",
+        "I-03"
       ],
       "edgeCount": 1,
       "contradiction": true

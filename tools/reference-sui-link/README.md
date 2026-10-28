@@ -15,9 +15,14 @@ go run . -fixture ../reference-scn001/testdata/scn001.json \
 確認内容:
 
 - SUI receiptが`readOnly`・`realProductConnected`・`documentRead`である。
-- O-02/O-03/O-06/O-07の`textDigest`がSCN-001観測の本文digestと一致する。
-- `I-01`がO-02/O-07、`I-02`がO-03/O-06を含む。
+- O-02/O-03/O-06/O-07/O-08の`textDigest`がSCN-001観測の本文digestと一致する。
+- `I-01`がO-02/O-07、`I-02`がO-03/O-06、`I-03`がO-08を含む。
 - `I-01`→`I-02`の`contradicts` edgeが1本ある（`documentEdgeCount=1`）。
+- `documentEdgeCount`と`documentEdges`の件数が一致する。
+
+観測・card・islandの各一覧で同じIDが重複する場合は、同じ値でも拒否します。islandのメンバーは配列の各項目として比較し、`["O-02 O-07"]`を`["O-02", "O-07"]`と同じ扱いにしません。並び順の違いと、IDが重複しない追加要素は許容しますが、選択外の要素の内容は照合しません。
+
+Document IDとdigest値が空の場合も失敗とします。Document本文からのdigest再計算と、矛盾という関係の意味的な正しさは検証しません。
 
 ## 境界
 

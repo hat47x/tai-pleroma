@@ -86,6 +86,8 @@ type Receipt struct {
 	MissingSourceRejected bool                  `json:"missingSourceRejected"`
 	ReadOnly              bool                  `json:"readOnly"`
 	RealProductConnected  bool                  `json:"realProductConnected"`
+	Synthetic             bool                  `json:"synthetic"`
+	EvidenceKind          string                `json:"evidenceKind"`
 	Passed                bool                  `json:"passed"`
 	Reason                string                `json:"reason,omitempty"`
 	Notes                 []string              `json:"notes"`
@@ -363,10 +365,10 @@ type selectionResult struct {
 	} `json:"candidate"`
 }
 
-func selectObservations(client *mcpClient) (selectionResult, error) {
+func selectObservations(client *mcpClient, table string) (selectionResult, error) {
 	text, isError, err := client.callTool("select", map[string]any{
 		"source":  "observations.csv",
-		"table":   "Sheet1!A1:E4",
+		"table":   table,
 		"columns": "id,text,source,version,availability",
 	})
 	if err != nil {
@@ -453,6 +455,9 @@ func Run(ctx context.Context, mmiRoot, workspace string) Receipt {
 }
 
 func RunWithOptions(ctx context.Context, mmiRoot, workspace string, options Options) Receipt {
+	if options.Table == "" {
+		options.Table, options.ExpectedRows = defaultTable, defaultExpectedRows
+	}
 	receipt := Receipt{
 		Schema: "tai.reference.mmi-readonly/v0", Tool: "inspect", ReadOnly: true,
 		RealProductConnected: false,
@@ -581,7 +586,7 @@ func RunWithOptions(ctx context.Context, mmiRoot, workspace string, options Opti
 		receipt.Binding.SourceDigest = "match"
 	}
 
-	selection, err := selectObservations(client)
+	selection, err := selectObservations(client, options.Table)
 	if err != nil {
 		return fail(receipt, err.Error())
 	}
@@ -622,7 +627,7 @@ func RunWithOptions(ctx context.Context, mmiRoot, workspace string, options Opti
 		})
 	}
 	receipt.ConflictPreserved = texts["O-02"] != "" && texts["O-03"] != "" && texts["O-02"] != texts["O-03"]
-	if receipt.SelectedRows != 3 || !receipt.ConflictPreserved {
+	if receipt.SelectedRows != options.ExpectedRows || !receipt.ConflictPreserved {
 		return fail(receipt, "select did not preserve the O-02/O-03 observations")
 	}
 
@@ -700,6 +705,7 @@ type cliConfig struct {
 	Workspace string
 	OutPath   string
 	Options   Options
+	Synthetic bool
 }
 
 // parseConfig reads the command line, with environment variables as the default
@@ -711,6 +717,9 @@ func parseConfig(args []string, getenv func(string) string) (cliConfig, error) {
 	mmiRoot := flags.String("mmi-root", "", "MMI checkout root (default: MMI_ROOT or ../../../markdown-matrix-injector)")
 	workspace := flags.String("workspace", "testdata/workspace", "read-only MMI workspace")
 	outPath := flags.String("out", "", "write receipt JSON to this file")
+	table := flags.String("table", defaultTable, "MMI table range")
+	expectedRows := flags.Int("expected-rows", defaultExpectedRows, "expected selected row count")
+	synthetic := flags.Bool("synthetic", false, "mark the workspace as synthetic verification input")
 	expectCommit := flags.String("expect-commit", getenv("TAI_MMI_EXPECT_COMMIT"), "fail unless the MMI checkout HEAD equals this commit (env TAI_MMI_EXPECT_COMMIT)")
 	expectLock := flags.String("expect-lock-digest", getenv("TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST"), "fail unless package-lock.json (CRLF->LF) has this sha256:<hex> digest (env TAI_MMI_EXPECT_PACKAGE_LOCK_DIGEST)")
 	expectNode := flags.String("expect-node-major", getenv("TAI_MMI_EXPECT_NODE_MAJOR"), "fail unless node --version has this major (env TAI_MMI_EXPECT_NODE_MAJOR)")
@@ -725,8 +734,9 @@ func parseConfig(args []string, getenv func(string) string) (cliConfig, error) {
 		root = filepath.Clean(filepath.Join("..", "..", "..", "markdown-matrix-injector"))
 	}
 	return cliConfig{
-		MMIRoot: root, Workspace: *workspace, OutPath: *outPath,
+		MMIRoot: root, Workspace: *workspace, OutPath: *outPath, Synthetic: *synthetic,
 		Options: Options{
+			Table: *table, ExpectedRows: *expectedRows,
 			ExpectCommit: strings.ToLower(*expectCommit), ExpectLockDigest: strings.ToLower(*expectLock), ExpectNodeMajor: *expectNode,
 		},
 	}, nil
@@ -741,6 +751,10 @@ func main() {
 		os.Exit(2)
 	}
 	receipt := RunWithOptions(context.Background(), config.MMIRoot, config.Workspace, config.Options)
+	if config.Synthetic {
+		receipt.Synthetic = true
+		receipt.EvidenceKind = "synthetic"
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
