@@ -28,6 +28,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./build.sh
 - `go test ./internal/agent/... ./internal/control/... -count=1` がPASS。
 - `eki-control`と`eki-agent`をLinux向けにビルドできる。
 - `eki-control --version`と`eki-agent --version`が`dev`を返す。
+- `smoke.sh`でControl Planeバイナリを起動し、`GET /v1/tasks`が405を返す。
 
 証拠: [EKI-worker-env-2026-10-28.json](../../evaluations/records/EKI-worker-env-2026-10-28.json)
 
