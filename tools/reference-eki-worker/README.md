@@ -37,6 +37,7 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 - EKI sourceに`spikes/native-runner`があれば、Native Runner spikeのtestも実行。
 - Linuxでは期限・取消し・出力上限時にプロセスグループを停止する。
 - Windowsでは`taskkill /T`でプロセスツリーを停止する。
+- 引数許可リスト、GPU制限拒否、実行ファイルdigestのストリーム照合を確認する。
 
 ```text
 docker run --rm -v /home/hat47x/eki-worker:/src \
