@@ -31,7 +31,7 @@ func load(t *testing.T) (Fixture, SUIReceipt) {
 func TestLinkMatchesObservationsAndIslands(t *testing.T) {
 	fixture, sui := load(t)
 	receipt := Link(fixture, sui)
-	if !receipt.Passed || !receipt.Contradiction || len(receipt.LinkedCards) != 4 || len(receipt.IslandGroups) != 2 || receipt.EdgeCount != 1 {
+	if !receipt.Passed || !receipt.Contradiction || len(receipt.LinkedCards) != 5 || len(receipt.IslandGroups) != 3 || receipt.EdgeCount != 1 {
 		t.Fatalf("link did not match: %+v", receipt)
 	}
 }
