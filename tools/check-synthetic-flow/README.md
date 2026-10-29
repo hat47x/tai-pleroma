@@ -1,6 +1,6 @@
 # 合成SCN-001フローの接続検査
 
-合成施設文書からD-04、生成AI development review、公開gateまでが一続きに接続されているかを確認します。
+合成施設文書からD-04、生成AI development review、EKI Worker test環境、公開gateまでが一続きに接続されているかを確認します。
 
 ## 確認する流れ
 
@@ -12,11 +12,13 @@
   -> SUI 5 cards / 3 islands / 1 edge
   -> D-04
   -> 生成AI development review
+  -> EKI Worker test環境（Task実行ではない）
   -> 公開gate
 ```
 
 - D-04にO-08の`unavailable`、`provisional`、公開承認なしが残っていること。
 - AI reviewが`quality=sufficient-for-development`で、人間・公開承認を主張していないこと。
+- EKI Worker test環境が`workerExecution=false`、`taskResult=false`のままであること。
 - gateが`allowed=false`で、R-01〜R-05を`developmentAccepted`にしていること。
 
 ## 実行

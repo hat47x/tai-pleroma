@@ -15,6 +15,7 @@ RECORDS = {
     "tei": "evaluations/records/TEI-model-2026-10-29.json",
     "sui": "evaluations/records/SUI-api-2026-10-26.json",
     "ai_review": "evaluations/records/SCN-001-ai-review-2026-10-29.json",
+    "eki": "evaluations/records/EKI-worker-env-2026-10-28.json",
     "gate": "evaluations/records/SCN-001-publication-gate-2026-10-29.json",
 }
 D04 = "evaluations/artifacts/SCN-001-D-04-provisional.md"
@@ -33,6 +34,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         tei = load(root, RECORDS["tei"])
         sui = load(root, RECORDS["sui"])
         ai_review = load(root, RECORDS["ai_review"])
+        eki = load(root, RECORDS["eki"])
         gate = load(root, RECORDS["gate"])
         d04 = (root / D04).read_text(encoding="utf-8")
     except (OSError, KeyError, json.JSONDecodeError) as error:
@@ -54,6 +56,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("AI review claims human or publication approval")
     if ai_review.get("outcome") != "uncertainty-preserved" or ai_review.get("userNextStep") != "confirm-with-authority":
         errors.append("AI review does not preserve uncertainty and the next action")
+    if eki.get("testsPassed") is not True or eki.get("nativeRunnerTest") is not True:
+        errors.append("EKI worker test environment did not pass its tests")
+    if eki.get("workerExecution") is not False or eki.get("taskResult") is not False:
+        errors.append("EKI worker test environment claims Task execution")
     expected = ["R-01", "R-02", "R-03", "R-04", "R-05"]
     if gate.get("allowed") is not False or gate.get("developmentAccepted") != expected:
         errors.append("gate did not keep publication blocked with 5 development-accepted items")
@@ -65,9 +71,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "schema": "tai.reference.scn001-synthetic-flow/v0",
         "synthetic": True,
         "evidenceKind": "synthetic",
-        "flow": "synthetic-documents->MMI->SEI->TEI->SUI->D-04->AI-review->publication-gate",
+        "flow": "synthetic-documents->MMI->SEI->TEI->SUI->D-04->AI-review->EKI-worker-test-env->publication-gate",
         "steps": list(RECORDS),
         "developmentReview": "accepted",
+        "workerFeasibility": "test-environment-only",
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,
