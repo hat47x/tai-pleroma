@@ -12,7 +12,8 @@
     "eki_quote",
     "sui",
     "ai_review",
-    "ai_approval"
+    "ai_approval",
+    "approvals"
   ],
   "publicationAllowed": false,
   "passed": true,

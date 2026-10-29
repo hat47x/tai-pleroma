@@ -17,6 +17,7 @@ RECORDS = {
     "sui": "evaluations/records/SCN-002-sui-2026-10-29.json",
     "ai_review": "evaluations/records/SCN-002-ai-review-2026-10-29.json",
     "ai_approval": "evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json",
+    "approvals": "evaluations/records/SCN-002-approvals-2026-10-29.json",
 }
 D05 = "evaluations/artifacts/SCN-002-D-05-priority-plan.md"
 D06 = "evaluations/artifacts/SCN-002-D-06-approval-packet.md"
@@ -38,6 +39,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     sui = receipts.get("sui", {})
     ai_review = receipts.get("ai_review", {})
     ai_approval = receipts.get("ai_approval", {})
+    approvals = receipts.get("approvals", {})
     try:
         d05 = (root / D05).read_text(encoding="utf-8")
         d06 = (root / D06).read_text(encoding="utf-8")
@@ -82,6 +84,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("SCN-002 D-06 AI review is not sufficient-for-approval-preparation")
     if ai_approval.get("approvalGranted") is not False or ai_approval.get("humanReviewed") is not False:
         errors.append("SCN-002 D-06 AI review claims approval")
+    approval_decisions = approvals.get("approvalDecisions", [])
+    if approvals.get("passed") is not True or approvals.get("recordCount") != 4 or len(approval_decisions) != 3:
+        errors.append("SEI approval simulation did not record 4 records / 3 pending decisions")
+    for decision in approval_decisions:
+        if "未完了" not in decision.get("statement", ""):
+            errors.append("SEI approval decision does not say 未完了")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",
