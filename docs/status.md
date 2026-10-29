@@ -20,7 +20,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
 | 合成後レビュー | 合成でR-01〜R-05をdevelopment accepted。実物は未実施 | [判断](../evaluations/SCN-001-owner-decision-2026-10-29.md)、[計画](../evaluations/SCN-001-real-object-review.md) | R-06/R-07はPending。公開用real-objectは未取得 |
 | 生成AI development review | D-04を観点に照らして`quality=sufficient-for-development` | [rubric](../evaluations/SCN-001-ai-development-review-rubric.md)、[receipt](../evaluations/records/SCN-001-ai-review-2026-10-29.json) | 人間レビュー・公開承認ではない |
-| 合成フロー接続 | 文書→MMI→SEI→TEI→SUI→D-04→AI review→gateが接続済み | [receipt](../evaluations/records/SCN-001-synthetic-flow-2026-10-29.json) | 実在の規程・権限ではない |
+| 合成フロー接続 | 文書→MMI→SEI→TEI→SUI→D-04→AI review→EKI Worker test環境→gateが接続済み | [receipt](../evaluations/records/SCN-001-synthetic-flow-2026-10-29.json) | EKIはTask実行ではない。実在の規程・権限でもない |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
