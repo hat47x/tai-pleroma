@@ -31,6 +31,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SCN-002 複数拠点メンテナンス | 3拠点・期限・故障・予算の合成シナリオをMMI/TEI/SEI/EKI/SUIで実行 | [slice](../evaluations/records/SCN-002-slice-2026-10-29.json) | EKIはadmission/cancelのみ。優先度・安全判断・発注は未検証 |
 | SCN-002 D-05優先度案 | 合成概算2000万円、予算上限3000万円。見積・承認は未確定 | [artifact](../evaluations/artifacts/SCN-002-D-05-priority-plan.md)、[AI review](../evaluations/records/SCN-002-ai-review-2026-10-29.json) | 発注なし。公開承認なし。実在の資産・契約ではない |
 | SCN-002 D-06承認パケット | 合成見積2100万円。予算責任者・調達・安全の承認待ち | [artifact](../evaluations/artifacts/SCN-002-D-06-approval-packet.md)、[AI review](../evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json) | 承認1件も完了せず。発注なし |
+| 横断シナリオ | SCN-001とSCN-002を1つの実務能力マトリクスへ統合 | [matrix](../evaluations/records/SCN-cross-scenario-2026-10-29.json) | 合成入力。公開gateはblocked |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |

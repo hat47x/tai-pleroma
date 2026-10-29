@@ -46,6 +46,7 @@ RECORDS = (
     "evaluations/records/SCN-002-ai-review-2026-10-29.json",
     "evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json",
     "evaluations/records/SCN-002-slice-2026-10-29.json",
+    "evaluations/records/SCN-cross-scenario-2026-10-29.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
     "evaluations/records/SCN-001-eki-feasibility-2026-10-29.json",
