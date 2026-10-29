@@ -25,6 +25,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | 合成バリエーション | 本館/別館、全館/旧掲示の2変種でMMI/TEI/SEI/EKI/SUIがPASS | [matrix](../evaluations/records/SCN-001-variant-matrix-2026-10-29.json) | EKIはTask admission/cancel、SUIはPUT/GETのみ。実在の規程ではない |
 | 合成不正入力 | TEI/MMI/EKI/SUIが不正入力を拒否 | [matrix](../evaluations/records/SCN-001-negative-matrix-2026-10-29.json) | 拒否経路の確認のみ。公開gateはblocked |
 | SUI未知edge type | `bogus`をPUT/GETで保持（既知契約） | [contract](../evaluations/records/SCN-001-sui-contract-2026-10-29.json) | 意味の検証ではない |
+| SEI重複decision | 同じ`dec-01`の2回目を拒否 | [receipt](../evaluations/records/SCN-001-invalid-sei-2026-10-29.json) | 重複IDの拒否のみ。意味の受理ではない |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |

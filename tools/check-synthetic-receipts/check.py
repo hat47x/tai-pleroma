@@ -34,6 +34,7 @@ RECORDS = (
     "evaluations/records/SCN-001-negative-matrix-2026-10-29.json",
     "evaluations/records/SCN-001-sui-unknown-edge-2026-10-29.json",
     "evaluations/records/SCN-001-sui-contract-2026-10-29.json",
+    "evaluations/records/SCN-001-invalid-sei-2026-10-29.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
     "evaluations/records/SCN-001-eki-feasibility-2026-10-29.json",
