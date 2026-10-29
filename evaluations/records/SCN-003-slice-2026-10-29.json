@@ -1,0 +1,14 @@
+{
+  "schema": "tai.reference.scn003/v0",
+  "scenario": "SCN-003",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "slice": "grant-application-first-review",
+  "steps": [
+    "mmi",
+    "tei"
+  ],
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}
