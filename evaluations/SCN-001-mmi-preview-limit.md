@@ -7,7 +7,9 @@
 - 結果: `passed=false`
 - 理由: `select did not preserve the O-02/O-03 observations`（行数不一致）
 
-MMIの参照実装は選択結果のpreview（最大5行）を`selectedRows`として数えている可能性がある。7行全体の選択・検証はこの経路では未確認。
+MMIの`select`はpreviewを最大5行に固定している（`03_Implement/src/navigate/select.ts`の`logical.bodyRows.slice(0, 5)`）。TAIの参照実装はpreviewの行数を`selectedRows`として数えるため、5行超の表はこの経路では行数一致を検証できない。
+
+7行全体の選択・検証は、preview以外の読み取り経路が必要。現時点では未確認。
 
 ## 境界
 
