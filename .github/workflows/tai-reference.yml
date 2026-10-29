@@ -93,3 +93,9 @@ jobs:
       - name: synthetic negative scan
         working-directory: .
         run: python tools/check-synthetic-negative/check.py --root .
+      - name: synthetic contract test
+        working-directory: tools/check-synthetic-contract
+        run: python -m unittest -v check_test.py
+      - name: synthetic contract scan
+        working-directory: .
+        run: python tools/check-synthetic-contract/check.py --root .
