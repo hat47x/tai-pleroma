@@ -13,6 +13,7 @@ RECORDS = (
     "evaluations/records/TEI-model-2026-10-29.json",
     "evaluations/records/SEI-decision-2026-10-26.json",
     "evaluations/records/SCN-001-synthetic-mmi-2026-10-29.json",
+    "evaluations/records/SCN-001-large-mmi-2026-10-29.json",
     "evaluations/records/SCN-001-synthetic-facility-2026-10-28.json",
     "evaluations/records/SCN-001-variant-b-mmi-2026-10-29.json",
     "evaluations/records/SCN-001-variant-b-tei-2026-10-29.json",
