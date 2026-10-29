@@ -3,6 +3,8 @@
   "baseUrl": "http://127.0.0.1:8765",
   "readOnly": true,
   "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
   "passed": true,
   "notes": [
     "SUI APIの到達性と公開OpenAPIだけを確認する。",

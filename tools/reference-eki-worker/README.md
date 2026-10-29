@@ -27,12 +27,17 @@ EKI_ROOT=/home/hat47x/eki-worker ./smoke.sh
 ## 確認したこと
 
 - `go test ./internal/agent/... ./internal/control/... -count=1` がPASS。
+- `go test ./... -count=1`（EKI全体）が再実行でPASS。初回はFAILを観測し、追加2回では再現せず、原因は未特定。
 - `eki-control`と`eki-agent`をLinux向けにビルドできる。
 - `eki-control --version`と`eki-agent --version`が`dev`を返す。
 - `smoke.sh`でControl Planeバイナリを起動し、`GET /v1/tasks`が405を返す。
 - `eki-agent`を起動し、claim deliveryが開始される。
 - `spikes/claim-wire-roundtrip`のtestがPASS。
 - WSLのControl PlaneへTaskを送信し、`queued`→`cancelled`/`CANCELLED`まで確認。
+- EKI sourceに`spikes/native-runner`があれば、Native Runner spikeのtestも実行。
+- Linuxでは期限・取消し・出力上限時にプロセスグループを停止する。
+- Windowsでは`taskkill /T`でプロセスツリーを停止する。
+- 引数許可リスト、GPU制限拒否、実行ファイルdigestのストリーム照合を確認する。
 
 ```text
 docker run --rm -v /home/hat47x/eki-worker:/src \

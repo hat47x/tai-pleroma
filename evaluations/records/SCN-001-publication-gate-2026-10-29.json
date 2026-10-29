@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.scn001-publication-gate/v0",
+  "scenario": "SCN-001",
+  "allowed": false,
+  "blockers": [
+    "R-01: synthetic development review; real-object required for publication",
+    "R-02: synthetic development review; real-object required for publication",
+    "R-03: synthetic development review; real-object required for publication",
+    "R-04: synthetic development review; real-object required for publication",
+    "R-05: synthetic development review; real-object required for publication",
+    "R-06: status=pending",
+    "R-07: status=pending"
+  ],
+  "accepted": [],
+  "developmentAccepted": [
+    "R-01",
+    "R-02",
+    "R-03",
+    "R-04",
+    "R-05"
+  ]
+}

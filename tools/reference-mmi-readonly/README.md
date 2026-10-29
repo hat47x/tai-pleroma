@@ -31,5 +31,6 @@ MMIの場所は`-mmi-root`または`MMI_ROOT`で指定できます。省略時�
 - 呼ぶツールは`inspect`と`select`だけです。
 - `candidateCount`はinspect結果に`candidates`が含まれることの確認であり、表の意味や内容の正しさではありません。
 - `selectedRows`と`conflictPreserved`は、MMIがO-02/O-03/O-07の3行を返し、O-02とO-03の文言差を保持したことだけを示します。
+- MMI `select`のpreviewは最大5行です。`selectedRows`はpreviewの行数であり、5行超の表の全行一致はこの経路では検証できません。
 - `realProductConnected=true`は、この環境でMMI MCPとの読み取り往復が成立したことだけを示します。
 - 実運用の権限、監査、複数利用者、MMIの版固定、書込み・保存は未検証です。

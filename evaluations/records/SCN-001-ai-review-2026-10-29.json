@@ -1,0 +1,35 @@
+{
+  "schema": "tai.reference.scn001-ai-review/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenario": "SCN-001",
+  "evaluatorKind": "generative-ai",
+  "evaluator": "TAI autonomous development review",
+  "reviewDate": "2026-10-29",
+  "artifact": "evaluations/artifacts/SCN-001-D-04-provisional.md",
+  "rubric": "evaluations/SCN-001-ai-development-review-rubric.md",
+  "criteria": [
+    "general rule versus exception",
+    "version and source",
+    "unavailable original",
+    "authority and publication",
+    "post-synthetic real-object review",
+    "business outcome and next step"
+  ],
+  "outcome": "uncertainty-preserved",
+  "userNextStep": "confirm-with-authority",
+  "quality": "sufficient-for-development",
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "publicationApproved": false,
+  "publicationAllowed": false,
+  "reviewTrigger": "post-synthetic-real-object",
+  "passed": true,
+  "notes": [
+    "D-04は予約不要と会議室の事前予約制を併存させたまま、未決を残している。",
+    "O-08の原本未取得を保持し、規程内容を推測していない。",
+    "authority:unknownとpublication:unapprovedを維持している。",
+    "予約の要否を断定せず、権限者への確認を次の行動として示している。",
+    "生成AIによるdevelopment reviewであり、人間レビューや公開承認ではない。"
+  ]
+}

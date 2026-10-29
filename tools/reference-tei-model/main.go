@@ -23,6 +23,8 @@ type Receipt struct {
 	WorkspaceDigest string   `json:"workspaceDigest"`
 	Validation      string   `json:"validation"`
 	ReadOnly        bool     `json:"readOnly"`
+	Synthetic       bool     `json:"synthetic"`
+	EvidenceKind    string   `json:"evidenceKind"`
 	Passed          bool     `json:"passed"`
 	Reason          string   `json:"reason,omitempty"`
 	Notes           []string `json:"notes"`
@@ -135,6 +137,7 @@ func Run(ctx context.Context, teiRoot, workspace string) Receipt {
 func main() {
 	teiRoot := flag.String("tei-root", "", "TEI checkout root (default: TEI_ROOT or ../../../tei-platform)")
 	workspace := flag.String("workspace", "testdata/workspace", "TEI workspace")
+	synthetic := flag.Bool("synthetic", false, "mark the workspace as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	root := *teiRoot
@@ -147,6 +150,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 	receipt := Run(ctx, root, *workspace)
+	if *synthetic {
+		receipt.Synthetic = true
+		receipt.EvidenceKind = "synthetic"
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

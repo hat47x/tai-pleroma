@@ -1,0 +1,71 @@
+{
+  "schema": "tai.reference.mmi-readonly/v0",
+  "server": "markdown-matrix-injector/0.2.0",
+  "protocolVersion": "2024-11-05",
+  "mmiCommit": "e3a199c806381eaa9944792e17287cc90e414878",
+  "packageLockDigest": "sha256:becc3b2d5e4b1aa554d2786540c369abe84c62419852467fa1856f0f10b92f02",
+  "nodeVersion": "v24.19.0",
+  "tool": "inspect",
+  "candidateCount": 1,
+  "selectedRows": 5,
+  "observedIds": [
+    "O-02",
+    "O-03",
+    "O-20",
+    "O-21",
+    "O-23"
+  ],
+  "selected": [
+    {
+      "id": "O-02",
+      "text": "全館の会議室は事前予約制",
+      "source": "current-policy",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-03",
+      "text": "旧掲示では会議室は予約不要",
+      "source": "old-notice",
+      "version": "2026-04-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-20",
+      "text": "旧掲示は2026年4月版",
+      "source": "old-notice",
+      "version": "2026-04-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-21",
+      "text": "現行規程は2026年10月版",
+      "source": "current-policy",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-23",
+      "text": "現行規程の原本は取得できていない",
+      "source": "requested-original",
+      "version": "2026-10-25",
+      "availability": "unavailable"
+    }
+  ],
+  "conflictPreserved": true,
+  "sourceDigestBefore": "sha256:16aec111f6e3963c689d0b8caf824fdc734b939c9ccdaaa782628f0ec2cc97df",
+  "sourceDigestAfter": "sha256:16aec111f6e3963c689d0b8caf824fdc734b939c9ccdaaa782628f0ec2cc97df",
+  "guideDigestBefore": "sha256:f89ecd70ae9e150e835c0e22736b876a8d13c451ea21e1a737c27122be0d64e0",
+  "guideDigestAfter": "sha256:f89ecd70ae9e150e835c0e22736b876a8d13c451ea21e1a737c27122be0d64e0",
+  "boundaryRejected": true,
+  "missingSourceRejected": true,
+  "readOnly": true,
+  "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
+    "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
+  ]
+}

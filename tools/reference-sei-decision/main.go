@@ -37,6 +37,7 @@ type ResumeView struct {
 
 type Receipt struct {
 	Schema                 string           `json:"schema"`
+	Variant                string           `json:"variant,omitempty"`
 	SeiCommit              string           `json:"seiCommit"`
 	GoVersion              string           `json:"goVersion"`
 	StoreCreated           bool             `json:"storeCreated"`
@@ -45,6 +46,9 @@ type Receipt struct {
 	RecordCount            int              `json:"recordCount"`
 	Decision               DecisionView     `json:"decision"`
 	ProvisionalDecision    DecisionView     `json:"provisionalDecision"`
+	ApprovalDecisions      []DecisionView   `json:"approvalDecisions,omitempty"`
+	RejectionDecisions     []DecisionView   `json:"rejectionDecisions,omitempty"`
+	Rejected               bool             `json:"rejected"`
 	Unresolved             []UnresolvedView `json:"unresolved"`
 	NotVerifiedRecordCount int              `json:"notVerifiedRecordCount"`
 	ProvisionalApproved    bool             `json:"provisionalApproved"`
@@ -198,12 +202,13 @@ func main() {
 	currentTarget := flag.String("current-target", "", "file holding the current target's ExactBinding JSON (with -decision-validity)")
 	var namedDecisions nameList
 	flag.Var(&namedDecisions, "decision", "kind:id of a Decision treated as the acceptance in question; repeatable (with -decision-validity)")
+	variant := flag.String("variant", "", "record a synthetic SCN-001 variant (b or c)")
 	synthetic := flag.Bool("synthetic", false, "mark the decision fixture as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	if *decisionValidity != "" || *currentTarget != "" || len(namedDecisions) > 0 {
-		if *decisionValidity == "" || *currentTarget == "" || *basisBundle != "" {
-			fmt.Fprintln(os.Stderr, "-decision-validity needs -current-target and cannot be combined with -basis-bundle; -current-target and -decision need -decision-validity")
+		if *decisionValidity == "" || *currentTarget == "" || *basisBundle != "" || *variant != "" {
+			fmt.Fprintln(os.Stderr, "-decision-validity needs -current-target and cannot be combined with -basis-bundle or -variant; -current-target and -decision need -decision-validity")
 			os.Exit(2)
 		}
 	}
@@ -244,6 +249,13 @@ func main() {
 		return
 	}
 	receipt := Run(ctx, root)
+	if *variant == "scn002-approvals" {
+		receipt = RunApproval(ctx, root)
+	} else if *variant == "scn002-rejections" {
+		receipt = RunRejection(ctx, root)
+	} else if *variant != "" {
+		receipt = RunVariant(ctx, root, *variant)
+	}
 	if *synthetic {
 		receipt.Synthetic = true
 		receipt.EvidenceKind = "synthetic"

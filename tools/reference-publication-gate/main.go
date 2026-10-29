@@ -22,11 +22,12 @@ type Status struct {
 }
 
 type Receipt struct {
-	Schema   string   `json:"schema"`
-	Scenario string   `json:"scenario"`
-	Allowed  bool     `json:"allowed"`
-	Blockers []string `json:"blockers"`
-	Accepted []string `json:"accepted"`
+	Schema              string   `json:"schema"`
+	Scenario            string   `json:"scenario"`
+	Allowed             bool     `json:"allowed"`
+	Blockers            []string `json:"blockers"`
+	Accepted            []string `json:"accepted"`
+	DevelopmentAccepted []string `json:"developmentAccepted"`
 }
 
 var required = []string{"R-01", "R-02", "R-03", "R-04", "R-05"}
@@ -35,7 +36,7 @@ var optional = []string{"R-06", "R-07"}
 func Evaluate(status Status) Receipt {
 	receipt := Receipt{
 		Schema: "tai.reference.scn001-publication-gate/v0", Scenario: status.Scenario,
-		Blockers: []string{}, Accepted: []string{},
+		Blockers: []string{}, Accepted: []string{}, DevelopmentAccepted: []string{},
 	}
 	byID := map[string]Item{}
 	if status.Schema != "tai.reference.scn001-review-status/v0" || status.Scenario != "SCN-001" {
@@ -77,11 +78,15 @@ func Evaluate(status Status) Receipt {
 			receipt.Blockers = append(receipt.Blockers, id+": evidence is empty")
 			continue
 		}
-		if item.EvidenceKind != "real-object" {
-			receipt.Blockers = append(receipt.Blockers, id+": evidenceKind is not real-object")
-			continue
+		switch item.EvidenceKind {
+		case "real-object":
+			receipt.Accepted = append(receipt.Accepted, id)
+		case "synthetic":
+			receipt.DevelopmentAccepted = append(receipt.DevelopmentAccepted, id)
+			receipt.Blockers = append(receipt.Blockers, id+": synthetic development review; real-object required for publication")
+		default:
+			receipt.Blockers = append(receipt.Blockers, id+": unsupported evidenceKind "+item.EvidenceKind)
 		}
-		receipt.Accepted = append(receipt.Accepted, id)
 	}
 	for _, id := range optional {
 		item, ok := byID[id]
@@ -97,8 +102,16 @@ func Evaluate(status Status) Receipt {
 			receipt.Blockers = append(receipt.Blockers, id+": evidence is empty")
 			continue
 		}
-		if item.Status == "accepted" && item.EvidenceKind != "real-object" {
-			receipt.Blockers = append(receipt.Blockers, id+": evidenceKind is not real-object")
+		if item.Status == "accepted" {
+			switch item.EvidenceKind {
+			case "real-object":
+				receipt.Accepted = append(receipt.Accepted, id)
+			case "synthetic":
+				receipt.DevelopmentAccepted = append(receipt.DevelopmentAccepted, id)
+				receipt.Blockers = append(receipt.Blockers, id+": synthetic development review; real-object required for publication")
+			default:
+				receipt.Blockers = append(receipt.Blockers, id+": unsupported evidenceKind "+item.EvidenceKind)
+			}
 			continue
 		}
 		receipt.Accepted = append(receipt.Accepted, id)

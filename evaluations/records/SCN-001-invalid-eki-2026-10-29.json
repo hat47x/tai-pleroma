@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.eki-task-submit/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "baseUrl": "http://127.0.0.1:18086",
+  "readOnly": false,
+  "taskSubmitted": false,
+  "idempotent": false,
+  "taskExecuted": false,
+  "workerResult": false,
+  "authorityVerified": false,
+  "passed": false,
+  "notes": [
+    "EKI Control APIへ合成Taskを1件だけ送信し、queued状態を読む。",
+    "Workerは起動しておらず、Taskの実行・結果・委任の完了は未検証。"
+  ],
+  "submitStatus": 400,
+  "reason": "task submission failed: 400 {'raw': '{\"type\":\"urn:eki:problem:invalid-task-request\",\"title\":\"The request is malformed or invalid\",\"status\":400,\"detail\":\"priority must be background, normal or high\",\"code\":\"INVALID_TASK_REQUEST\"}\\n'}"
+}

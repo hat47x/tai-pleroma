@@ -1,0 +1,69 @@
+{
+  "schema": "tai.reference.sei-decision/v0",
+  "variant": "scn002",
+  "seiCommit": "3ae1d85af14e2380d2e73a9756232d33c9d26fec",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "storeCreated": true,
+  "readOnlyProjection": true,
+  "bundleId": "scn002-maintenance",
+  "recordCount": 3,
+  "decision": {
+    "id": "dec-scn002-01",
+    "statement": "A拠点を最優先、B拠点を次点、C拠点は保留",
+    "recommendations": [
+      "recommendation:rec-scn002"
+    ],
+    "responsible": [
+      "role:facility-owner"
+    ]
+  },
+  "provisionalDecision": {
+    "id": "dec-scn002-02",
+    "statement": "D-05優先度案を内部レビュー用に仮承認。公開・発注は未承認",
+    "recommendations": [
+      "recommendation:rec-scn002"
+    ],
+    "responsible": [
+      "role:provisional-owner"
+    ]
+  },
+  "unresolved": [
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-scn002-01"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-scn002-02"
+    },
+    {
+      "ref": "budget:unapproved",
+      "left_open_by_decision": "dec-scn002-01"
+    },
+    {
+      "ref": "due:conflict",
+      "left_open_by_decision": "dec-scn002-01"
+    },
+    {
+      "ref": "publication:unapproved",
+      "left_open_by_decision": "dec-scn002-02"
+    },
+    {
+      "ref": "review:real-object",
+      "left_open_by_decision": "dec-scn002-02"
+    }
+  ],
+  "notVerifiedRecordCount": 0,
+  "provisionalApproved": true,
+  "reviewTrigger": "real-object",
+  "authorityVerified": false,
+  "humanReviewed": false,
+  "published": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "SEIの一時storeへ合成variant fixtureを記録し、resumeのprojectionだけを読む参照。",
+    "決定の意味・権限・公開を検証しない。実運用のstoreではない。"
+  ]
+}

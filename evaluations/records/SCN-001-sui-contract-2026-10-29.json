@@ -1,0 +1,10 @@
+{
+  "schema": "tai.reference.scn001-contract/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "contract": "sui unknown edge type is preserved",
+  "unknownEdgePreserved": true,
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

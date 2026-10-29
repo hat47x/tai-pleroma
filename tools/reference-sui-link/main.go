@@ -175,7 +175,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	if err := json.Unmarshal(raw, &fixture); err != nil {
+	if err := decodeEvidenceJSON(raw, &fixture); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
@@ -185,7 +185,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	if err := json.Unmarshal(raw, &sui); err != nil {
+	if err := decodeEvidenceJSON(raw, &sui); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}

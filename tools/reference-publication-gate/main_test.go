@@ -55,6 +55,9 @@ func TestSyntheticEvidenceIsBlocked(t *testing.T) {
 	if receipt.Allowed {
 		t.Fatalf("synthetic evidence was allowed: %+v", receipt)
 	}
+	if len(receipt.DevelopmentAccepted) != 1 || receipt.DevelopmentAccepted[0] != "R-01" {
+		t.Fatalf("synthetic evidence was not recorded as development-accepted: %+v", receipt)
+	}
 }
 
 func TestOptionalNotApplicableIsAllowed(t *testing.T) {

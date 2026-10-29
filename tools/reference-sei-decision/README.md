@@ -19,6 +19,12 @@ go run . -sei-root ../../../sei-cognition
 
 `validity_cli_test.go`は、構造検査をしない偽の`sei verify`を一時ディレクトリに置き、ビルドした実行体の成功経路（フラグの受け渡し、`-out`、exit code）だけを確認します。実SEIの構造検査の代わりではありません。
 
+合成バリエーションは`-variant b`または`-variant c`で記録できます。
+
+```text
+go run . -sei-root ../../../sei-cognition -variant b -synthetic -out variant-b.json
+```
+
 ## 確認すること
 
 - `sei init`で一時storeを作る。

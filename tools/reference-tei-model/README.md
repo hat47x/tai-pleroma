@@ -21,6 +21,7 @@ go run . -tei-root ../../../tei-platform -workspace testdata/workspace
 - `tei validate`が`ok`を返す。
 - workspaceの全ファイルdigestが呼出し前後で不変。
 - `teiCommit`、`goVersion`、`workspaceDigest`をreceiptへ記録。
+- `-synthetic`指定時は`synthetic=true`、`evidenceKind=synthetic`。実物レビューの証拠ではない。
 
 ## 境界
 

@@ -775,7 +775,7 @@ func TestValidityCLIFlagsAndExitCodes(t *testing.T) {
 		t.Skip("go is not available")
 	}
 	dir := t.TempDir()
-	binary := filepath.Join(dir, "tool")
+	binary := filepath.Join(dir, "tool"+exeSuffix)
 	if out, err := exec.Command("go", "build", "-o", binary, ".").CombinedOutput(); err != nil {
 		t.Fatalf("build: %v: %s", err, out)
 	}

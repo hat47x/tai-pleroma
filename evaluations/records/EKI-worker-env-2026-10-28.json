@@ -1,13 +1,26 @@
 {
   "schema": "tai.reference.eki-worker-env/v0",
-  "ekiCommit": "a578b0543e5be3a80b7031c09a0e1d40ac0f076b",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "ekiCommit": "941bea556d9c8793348d21c387e53ea3058e9170",
   "environment": "WSL Ubuntu-22.04 / Docker 28.3.3 / golang:1.27",
   "goVersion": "go1.27 linux/amd64",
   "tests": [
     "internal/agent/...",
-    "internal/control/..."
+    "internal/control/...",
+    "spikes/native-runner"
   ],
   "testsPassed": true,
+  "fullTestSuite": true,
+  "fullTestSuiteCommand": "go test ./... -count=1",
+  "fullTestSuiteNotes": "初回実行でFAILを観測。再実行と追加2回ではFAILを再現せず。原因は未特定。",
+  "nativeRunnerTest": true,
+  "nativeRunnerProcessGroup": true,
+  "nativeRunnerWindowsProcessTree": true,
+  "nativeRunnerArgsAllowlist": true,
+  "nativeRunnerGPUFailClosed": true,
+  "nativeRunnerStreamingDigest": true,
+  "nativeRunnerPlatforms": ["windows", "linux"],
   "builtBinaries": [
     "eki-control",
     "eki-agent"
