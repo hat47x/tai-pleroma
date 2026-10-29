@@ -37,6 +37,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | 横断シナリオ | SCN-001/SCN-002/SCN-003を1つの実務能力マトリクスへ統合 | [matrix](../evaluations/records/SCN-cross-scenario-2026-10-29.json) | 合成入力。公開gateはblocked |
 | SCN-003 補助金一次審査 | 3申請・収入要件差・上限・利益相反・採択枠をMMI/TEI/SEI/EKI/SUIで実行 | [slice](../evaluations/records/SCN-003-slice-2026-10-29.json) | 合成データ。採択判断は未検証 |
 | SCN-003 D-08一次審査 | A保留、B不適格、C通常審査外。採択なし | [artifact](../evaluations/artifacts/SCN-003-D-08-first-review.md)、[AI review](../evaluations/records/SCN-003-D-08-ai-review-2026-10-29.json) | 採択・通知・公開なし |
+| SCN-002/003採用 | Owner判断でdevelopment review対象に採用。D-07/D-08の未決は保持 | [判断](../evaluations/SCN-002-003-owner-decision-2026-10-30.md)、[status](../evaluations/SCN-002-003-review-status.json) | 実物レビューは先送り。公開gateはblocked |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
