@@ -75,3 +75,9 @@ jobs:
       - name: synthetic receipts scan
         working-directory: .
         run: python tools/check-synthetic-receipts/check.py --root .
+      - name: synthetic flow test
+        working-directory: tools/check-synthetic-flow
+        run: python -m unittest -v check_test.py
+      - name: synthetic flow scan
+        working-directory: .
+        run: python tools/check-synthetic-flow/check.py --root .

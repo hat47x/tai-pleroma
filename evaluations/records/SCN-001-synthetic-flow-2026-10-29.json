@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.scn001-synthetic-flow/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "flow": "synthetic-documents->MMI->SEI->TEI->SUI->D-04->AI-review->publication-gate",
+  "steps": [
+    "facility",
+    "mmi",
+    "sei",
+    "tei",
+    "sui",
+    "ai_review",
+    "gate"
+  ],
+  "developmentReview": "accepted",
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}
