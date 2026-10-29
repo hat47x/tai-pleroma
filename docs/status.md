@@ -22,6 +22,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | 生成AI development review | D-04を観点に照らして`quality=sufficient-for-development` | [rubric](../evaluations/SCN-001-ai-development-review-rubric.md)、[receipt](../evaluations/records/SCN-001-ai-review-2026-10-29.json) | 人間レビュー・公開承認ではない |
 | 合成フロー接続 | 文書→MMI→SEI→TEI→SUI→D-04→AI review→EKI Worker test環境→EKI feasibility review→gateが接続済み | [receipt](../evaluations/records/SCN-001-synthetic-flow-2026-10-29.json) | EKIはTask実行ではない。実在の規程・権限でもない |
 | Owner review packet | 開発レビューの受理、証拠、公開blocker、次の確認を一覧化 | [packet](SCN-001-owner-review-packet.md) | 承認ではない。人間レビューは未実施 |
+| 合成バリエーション | 本館/別館、全館/旧掲示の2変種でMMI/TEIがPASS | [matrix](../evaluations/records/SCN-001-variant-matrix-2026-10-29.json) | 実在の施設・規程ではない |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |

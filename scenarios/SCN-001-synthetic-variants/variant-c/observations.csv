@@ -1,0 +1,6 @@
+id,text,source,version,availability
+O-02,全館の会議室は事前予約制,current-policy,2026-10-01,available
+O-03,旧掲示では会議室は予約不要,old-notice,2026-04-01,available
+O-20,旧掲示は2026年4月版,old-notice,2026-04-01,available
+O-21,現行規程は2026年10月版,current-policy,2026-10-01,available
+O-23,現行規程の原本は取得できていない,requested-original,2026-10-25,unavailable
