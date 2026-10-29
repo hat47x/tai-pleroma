@@ -6,7 +6,7 @@
 
 SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、SUIのcard/island/edge、TEIの型検証、EKIのTask admission/cancel、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
 
-Owner指示（2026-10-26）により、`development-review-only`の仮承認でCP-3まで進めている。**公開・外部作用は未承認**であり、`reviewTrigger=real-object`で実物ベースの再レビューを要する。
+Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`development-review-only`の仮承認でCP-3まで進めている。R-01〜R-05は合成文書でdevelopment review accepted。**公開・外部作用は未承認**であり、公開用の実物レビューを合成後の工程として残す。
 
 ## 実装と証拠
 
@@ -18,8 +18,26 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | 統合参照実行 | 実装済み（SUI linkを含む） | [reference-scn001-run](../tools/reference-scn001-run/README.md)、[record](../evaluations/records/SCN-001-run-2026-10-26.json) | `runDigest`は内部整合のみ。署名・Authorityは未検証 |
 | D-04レビュー成果物 | 生成済み | [artifact](../evaluations/artifacts/SCN-001-D-04-provisional.md) | 公開用ではない。実在の規程ではない |
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
-| 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
-| 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
+| 合成後レビュー | 合成でR-01〜R-05をdevelopment accepted。実物は未実施 | [判断](../evaluations/SCN-001-owner-decision-2026-10-29.md)、[計画](../evaluations/SCN-001-real-object-review.md) | R-06/R-07はPending。公開用real-objectは未取得 |
+| 生成AI development review | D-04を観点に照らして`quality=sufficient-for-development` | [rubric](../evaluations/SCN-001-ai-development-review-rubric.md)、[receipt](../evaluations/records/SCN-001-ai-review-2026-10-29.json) | 人間レビュー・公開承認ではない |
+| 合成フロー接続 | 文書→MMI→SEI→TEI→SUI→D-04→AI review→EKI Worker test環境→EKI feasibility review→gateが接続済み | [receipt](../evaluations/records/SCN-001-synthetic-flow-2026-10-29.json) | EKIはTask実行ではない。実在の規程・権限でもない |
+| Owner review packet | 開発レビューの受理、証拠、公開blocker、次の確認を一覧化 | [packet](SCN-001-owner-review-packet.md) | 承認ではない。人間レビューは未実施 |
+| 合成バリエーション | 本館/別館、全館/旧掲示の2変種でMMI/TEI/SEI/EKI/SUIがPASS | [matrix](../evaluations/records/SCN-001-variant-matrix-2026-10-29.json) | EKIはTask admission/cancel、SUIはPUT/GETのみ。実在の規程ではない |
+| 合成不正入力 | TEI/MMI/EKI/SUIが不正入力を拒否 | [matrix](../evaluations/records/SCN-001-negative-matrix-2026-10-29.json) | 拒否経路の確認のみ。公開gateはblocked |
+| SUI未知edge type | `bogus`をPUT/GETで保持（既知契約） | [contract](../evaluations/records/SCN-001-sui-contract-2026-10-29.json) | 意味の検証ではない |
+| SEI重複decision | 同じ`dec-01`の2回目を拒否 | [receipt](../evaluations/records/SCN-001-invalid-sei-2026-10-29.json) | 重複IDの拒否のみ。意味の受理ではない |
+| MMI 5行超 | 7行選択は`selectedRows=5`で未検証 | [制約](../evaluations/SCN-001-mmi-preview-limit.md) | preview上限の可能性。実在の規程ではない |
+| 合成プロセスマトリクス | 5製品の正常系・拒否系・契約系を集約 | [matrix](../evaluations/records/SCN-001-process-matrix-2026-10-29.json) | 合成入力の集約。実Task実行ではない |
+| SCN-002 複数拠点メンテナンス | 3拠点・期限・故障・予算の合成シナリオをMMI/TEI/SEI/EKI/SUIで実行 | [slice](../evaluations/records/SCN-002-slice-2026-10-29.json) | EKIはadmission/cancelのみ。優先度・安全判断・発注は未検証 |
+| SCN-002 D-05優先度案 | 合成概算2000万円、予算上限3000万円。見積・承認は未確定 | [artifact](../evaluations/artifacts/SCN-002-D-05-priority-plan.md)、[AI review](../evaluations/records/SCN-002-ai-review-2026-10-29.json) | 発注なし。公開承認なし。実在の資産・契約ではない |
+| SCN-002 D-06承認パケット | 合成見積2100万円。予算責任者・調達・安全の承認待ち | [artifact](../evaluations/artifacts/SCN-002-D-06-approval-packet.md)、[AI review](../evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json) | 承認1件も完了せず。発注なし |
+| SCN-002 承認シミュレーション | 3名の承認待ちdecisionをSEIへ記録 | [receipt](../evaluations/records/SCN-002-approvals-2026-10-29.json) | 4 records / 3 decisions。承認は未完了 |
+| SCN-002 差戻しシミュレーション | 安全・調達の差戻し理由をSEIへ記録 | [receipt](../evaluations/records/SCN-002-rejections-2026-10-29.json) | 3 records / 2 rejections。承認なし |
+| SCN-002 D-07再提出 | 差戻し2件へ対応。合成見積2160万円。再承認待ち | [artifact](../evaluations/artifacts/SCN-002-D-07-resubmission.md)、[AI review](../evaluations/records/SCN-002-D-07-ai-review-2026-10-29.json) | 発注なし。再承認は未完了 |
+| 横断シナリオ | SCN-001/SCN-002/SCN-003を1つの実務能力マトリクスへ統合 | [matrix](../evaluations/records/SCN-cross-scenario-2026-10-29.json) | 合成入力。公開gateはblocked |
+| SCN-003 補助金一次審査 | 3申請・収入要件差・上限・利益相反・採択枠をMMI/TEI/SEI/EKI/SUIで実行 | [slice](../evaluations/records/SCN-003-slice-2026-10-29.json) | 合成データ。採択判断は未検証 |
+| SCN-003 D-08一次審査 | A保留、B不適格、C通常審査外。採択なし | [artifact](../evaluations/artifacts/SCN-003-D-08-first-review.md)、[AI review](../evaluations/records/SCN-003-D-08-ai-review-2026-10-29.json) | 採択・通知・公開なし |
+| 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
 | SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
@@ -54,8 +72,9 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 ## 仮承認の境界
 
 - `provisionalApproved=true`、`publicationApproved=false`、`authorityVerified=false`。
-- 仮承認の根拠は`owner-instruction-2026-10-26`。
-- 実物レビューR-01〜R-05が揃わない場合は、`provisionalApproved=false`へ戻し、D-04を未決へ戻す。
+- 仮承認の根拠は`owner-instruction-2026-10-26`と`owner-decision-2026-10-29`。
+- R-01〜R-05は合成文書でdevelopment accepted。公開用real-objectレビューは合成後の工程へ移す。
+- 合成後の実物レビューで前提が崩れた場合は`provisionalApproved=false`へ戻し、D-04を未決へ戻す。
 - 公開・外部作用・予約実行は行わない。
 
 ## 未確認

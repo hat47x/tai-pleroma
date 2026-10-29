@@ -1,0 +1,52 @@
+{
+  "schema": "tai.reference.cross-scenario/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenarios": [
+    "SCN-001",
+    "SCN-002",
+    "SCN-003"
+  ],
+  "matrix": {
+    "SCN-001": {
+      "kind": "facility-reservation",
+      "products": [
+        "EKI",
+        "MMI",
+        "SEI",
+        "SUI",
+        "TEI"
+      ]
+    },
+    "SCN-002": {
+      "kind": "multi-site-maintenance",
+      "products": [
+        "ai_approval",
+        "ai_resubmit",
+        "ai_review",
+        "approvals",
+        "eki_inspect",
+        "eki_quote",
+        "mmi",
+        "rejections",
+        "sei",
+        "sui",
+        "tei"
+      ]
+    },
+    "SCN-003": {
+      "kind": "grant-application-review",
+      "products": [
+        "ai_review",
+        "eki",
+        "mmi",
+        "sei",
+        "sui",
+        "tei"
+      ]
+    }
+  },
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

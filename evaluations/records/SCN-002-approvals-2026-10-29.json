@@ -1,0 +1,100 @@
+{
+  "schema": "tai.reference.sei-decision/v0",
+  "variant": "scn002-approvals",
+  "seiCommit": "3ae1d85af14e2380d2e73a9756232d33c9d26fec",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "storeCreated": true,
+  "readOnlyProjection": true,
+  "bundleId": "scn002-approvals",
+  "recordCount": 4,
+  "decision": {
+    "id": "dec-approval-budget",
+    "statement": "予算承認は未完了",
+    "recommendations": [
+      "recommendation:rec-approval"
+    ],
+    "responsible": [
+      "role:budget-owner"
+    ]
+  },
+  "provisionalDecision": {
+    "id": "dec-approval-procurement",
+    "statement": "調達承認は未完了",
+    "recommendations": [
+      "recommendation:rec-approval"
+    ],
+    "responsible": [
+      "role:procurement"
+    ]
+  },
+  "approvalDecisions": [
+    {
+      "id": "dec-approval-budget",
+      "statement": "予算承認は未完了",
+      "recommendations": [
+        "recommendation:rec-approval"
+      ],
+      "responsible": [
+        "role:budget-owner"
+      ]
+    },
+    {
+      "id": "dec-approval-procurement",
+      "statement": "調達承認は未完了",
+      "recommendations": [
+        "recommendation:rec-approval"
+      ],
+      "responsible": [
+        "role:procurement"
+      ]
+    },
+    {
+      "id": "dec-approval-safety",
+      "statement": "安全承認は未完了",
+      "recommendations": [
+        "recommendation:rec-approval"
+      ],
+      "responsible": [
+        "role:safety"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "ref": "approval:budget-pending",
+      "left_open_by_decision": "dec-approval-budget"
+    },
+    {
+      "ref": "approval:procurement-pending",
+      "left_open_by_decision": "dec-approval-procurement"
+    },
+    {
+      "ref": "approval:safety-pending",
+      "left_open_by_decision": "dec-approval-safety"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-approval-budget"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-approval-procurement"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-approval-safety"
+    }
+  ],
+  "notVerifiedRecordCount": 0,
+  "provisionalApproved": false,
+  "authorityVerified": false,
+  "humanReviewed": false,
+  "published": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "SEIの一時storeへ3名の承認待ちdecisionを記録する。",
+    "承認・発注・公開は実行しない。実在の権限でもない。"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.scn002-ai-review/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenario": "SCN-002",
+  "evaluatorKind": "generative-ai",
+  "evaluator": "TAI autonomous development review",
+  "reviewDate": "2026-10-29",
+  "artifact": "evaluations/artifacts/SCN-002-D-06-approval-packet.md",
+  "criteria": [
+    "budget total stays within the cap as a synthetic estimate",
+    "every approval remains pending",
+    "no order or publication is claimed",
+    "quote and safety conditions remain unresolved"
+  ],
+  "quality": "sufficient-for-approval-preparation",
+  "outcome": "approval-ready-with-conditions",
+  "userNextStep": "obtain-approvals",
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "approvalGranted": false,
+  "publicationApproved": false,
+  "publicationAllowed": false,
+  "reviewTrigger": "post-synthetic-real-object",
+  "passed": true,
+  "notes": [
+    "合成見積2100万円は予算上限3000万円の範囲内だが、税・契約条件・安全確認を含まない。",
+    "予算責任者・調達担当・安全担当の承認はすべて未完了。",
+    "発注・公開を実行していない。"
+  ]
+}

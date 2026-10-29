@@ -17,6 +17,12 @@ go run . -sei-root ../../../sei-cognition
 
 `SEI_ROOT`でも指定できます。
 
+合成バリエーションは`-variant b`または`-variant c`で記録できます。
+
+```text
+go run . -sei-root ../../../sei-cognition -variant b -synthetic -out variant-b.json
+```
+
 ## 確認すること
 
 - `sei init`で一時storeを作る。

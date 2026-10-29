@@ -1,0 +1,10 @@
+{
+  "schema": "tai.reference.sei-negative/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "duplicateRejected": true,
+  "passed": true,
+  "setupExitCode": 0,
+  "duplicateExitCode": 1,
+  "reason": "exit status 1"
+}

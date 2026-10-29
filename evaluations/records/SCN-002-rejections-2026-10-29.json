@@ -1,0 +1,83 @@
+{
+  "schema": "tai.reference.sei-decision/v0",
+  "variant": "scn002-rejections",
+  "seiCommit": "3ae1d85af14e2380d2e73a9756232d33c9d26fec",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "storeCreated": true,
+  "readOnlyProjection": true,
+  "bundleId": "scn002-rejections",
+  "recordCount": 3,
+  "decision": {
+    "id": "dec-reject-safety",
+    "statement": "安全担当が差戻し: 工事停止範囲が未特定",
+    "recommendations": [
+      "recommendation:rec-rejection"
+    ],
+    "responsible": [
+      "role:safety"
+    ]
+  },
+  "provisionalDecision": {
+    "id": "dec-reject-procurement",
+    "statement": "調達が差戻し: 見積条件が不足",
+    "recommendations": [
+      "recommendation:rec-rejection"
+    ],
+    "responsible": [
+      "role:procurement"
+    ]
+  },
+  "rejectionDecisions": [
+    {
+      "id": "dec-reject-safety",
+      "statement": "安全担当が差戻し: 工事停止範囲が未特定",
+      "recommendations": [
+        "recommendation:rec-rejection"
+      ],
+      "responsible": [
+        "role:safety"
+      ]
+    },
+    {
+      "id": "dec-reject-procurement",
+      "statement": "調達が差戻し: 見積条件が不足",
+      "recommendations": [
+        "recommendation:rec-rejection"
+      ],
+      "responsible": [
+        "role:procurement"
+      ]
+    }
+  ],
+  "rejected": true,
+  "unresolved": [
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-reject-safety"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-reject-procurement"
+    },
+    {
+      "ref": "rejection:procurement",
+      "left_open_by_decision": "dec-reject-procurement"
+    },
+    {
+      "ref": "rejection:safety",
+      "left_open_by_decision": "dec-reject-safety"
+    }
+  ],
+  "notVerifiedRecordCount": 0,
+  "provisionalApproved": false,
+  "authorityVerified": false,
+  "humanReviewed": false,
+  "published": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "SEIの一時storeへ差戻しdecisionを記録する。",
+    "承認・発注・公開は実行しない。実在の権限でもない。"
+  ]
+}

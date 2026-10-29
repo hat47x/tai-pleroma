@@ -37,6 +37,7 @@ type ResumeView struct {
 
 type Receipt struct {
 	Schema                 string           `json:"schema"`
+	Variant                string           `json:"variant,omitempty"`
 	SeiCommit              string           `json:"seiCommit"`
 	GoVersion              string           `json:"goVersion"`
 	StoreCreated           bool             `json:"storeCreated"`
@@ -45,6 +46,9 @@ type Receipt struct {
 	RecordCount            int              `json:"recordCount"`
 	Decision               DecisionView     `json:"decision"`
 	ProvisionalDecision    DecisionView     `json:"provisionalDecision"`
+	ApprovalDecisions      []DecisionView   `json:"approvalDecisions,omitempty"`
+	RejectionDecisions     []DecisionView   `json:"rejectionDecisions,omitempty"`
+	Rejected               bool             `json:"rejected"`
 	Unresolved             []UnresolvedView `json:"unresolved"`
 	NotVerifiedRecordCount int              `json:"notVerifiedRecordCount"`
 	ProvisionalApproved    bool             `json:"provisionalApproved"`
@@ -184,6 +188,7 @@ func findDecision(decisions []DecisionView, id string) (DecisionView, bool) {
 func main() {
 	seiRoot := flag.String("sei-root", "", "SEI checkout root (default: SEI_ROOT or ../../../sei-cognition)")
 	basisBundle := flag.String("basis-bundle", "", "inspect original decision basis references in a portable bundle (no store writes)")
+	variant := flag.String("variant", "", "record a synthetic SCN-001 variant (b or c)")
 	synthetic := flag.Bool("synthetic", false, "mark the decision fixture as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
@@ -218,6 +223,13 @@ func main() {
 		return
 	}
 	receipt := Run(ctx, root)
+	if *variant == "scn002-approvals" {
+		receipt = RunApproval(ctx, root)
+	} else if *variant == "scn002-rejections" {
+		receipt = RunRejection(ctx, root)
+	} else if *variant != "" {
+		receipt = RunVariant(ctx, root, *variant)
+	}
 	if *synthetic {
 		receipt.Synthetic = true
 		receipt.EvidenceKind = "synthetic"

@@ -1,0 +1,6 @@
+id,text,source,version,availability
+O-02,A拠点の受電設備は2026年12月が更新期限,asset-inventory,2026-10-01,available
+O-03,A拠点の受電設備は2027年3月が更新期限,vendor-notice,2026-09-15,available
+O-10,B拠点の空調設備は故障中で稼働していない,facility-log,2026-10-20,available
+O-11,C拠点の受電設備は更新不要と記録されている,asset-inventory,2026-10-01,available
+O-12,2026年度の設備更新予算上限は3000万円,budget-note,2026-04-01,available

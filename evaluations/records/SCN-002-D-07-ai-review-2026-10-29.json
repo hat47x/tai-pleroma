@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.scn002-ai-review/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenario": "SCN-002",
+  "evaluatorKind": "generative-ai",
+  "evaluator": "TAI autonomous development review",
+  "reviewDate": "2026-10-29",
+  "artifact": "evaluations/artifacts/SCN-002-D-07-resubmission.md",
+  "criteria": [
+    "both rejection reasons have a recorded response",
+    "revised estimate stays within the budget cap as a synthetic estimate",
+    "re-approval remains pending",
+    "no order or publication is claimed"
+  ],
+  "quality": "sufficient-for-resubmission",
+  "outcome": "revised-after-rejection",
+  "userNextStep": "resubmit-approvals",
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "approvalGranted": false,
+  "publicationApproved": false,
+  "publicationAllowed": false,
+  "reviewTrigger": "post-synthetic-real-object",
+  "passed": true,
+  "notes": [
+    "安全・調達の差戻し2件に対応を記録した。",
+    "合成見積2160万円は予算上限3000万円の範囲内だが、確定額ではない。",
+    "再承認は未完了で、発注・公開を実行していない。"
+  ]
+}

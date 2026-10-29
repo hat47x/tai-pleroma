@@ -1,0 +1,5 @@
+namespace bad-variant
+
+data Observation {
+    attribute id type std.code
+}
