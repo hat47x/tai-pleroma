@@ -9,11 +9,13 @@
   "results": {
     "variant-b": {
       "mmi": true,
-      "tei": true
+      "tei": true,
+      "sei": true
     },
     "variant-c": {
       "mmi": true,
-      "tei": true
+      "tei": true,
+      "sei": true
     }
   },
   "publicationAllowed": false,
