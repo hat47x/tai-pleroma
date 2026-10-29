@@ -21,7 +21,7 @@ def request(method: str, url: str, body: bytes | None = None) -> tuple[int, Any]
         return error.code, {"raw": error.read().decode("utf-8", errors="replace")}
 
 
-def put_document(base_url: str, fixture: dict[str, Any]) -> dict[str, Any]:
+def put_document(base_url: str, fixture: dict[str, Any], expected: tuple[int, int, int] = (5, 3, 1)) -> dict[str, Any]:
     receipt: dict[str, Any] = {
         "schema": "tai.reference.sui-document-put/v0",
         "synthetic": True,
@@ -44,13 +44,14 @@ def put_document(base_url: str, fixture: dict[str, Any]) -> dict[str, Any]:
     receipt["islandCount"] = len(document.get("islands", []))
     receipt["edgeCount"] = len(document.get("edges", []))
     receipt["edgeType"] = document.get("edges", [{}])[0].get("type") if document.get("edges") else None
+    receipt["expected"] = {"cards": expected[0], "islands": expected[1], "edges": expected[2]}
     receipt["passed"] = (
-        receipt["cardCount"] == 5
-        and receipt["islandCount"] == 3
-        and receipt["edgeCount"] == 1
+        receipt["cardCount"] == expected[0]
+        and receipt["islandCount"] == expected[1]
+        and receipt["edgeCount"] == expected[2]
     )
     if not receipt["passed"]:
-        receipt["reason"] = "DocumentV1 shape is not 5 cards / 3 islands / 1 edge"
+        receipt["reason"] = f"DocumentV1 shape is not {expected[0]} cards / {expected[1]} islands / {expected[2]} edges"
     return receipt
 
 
@@ -58,10 +59,13 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:8765")
     parser.add_argument("--fixture", required=True)
+    parser.add_argument("--cards", type=int, default=5)
+    parser.add_argument("--islands", type=int, default=3)
+    parser.add_argument("--edges", type=int, default=1)
     parser.add_argument("--out")
     args = parser.parse_args()
     fixture = json.loads(open(args.fixture, encoding="utf-8").read())
-    receipt = put_document(args.base_url, fixture)
+    receipt = put_document(args.base_url, fixture, (args.cards, args.islands, args.edges))
     encoded = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
     if args.out:
         open(args.out, "w", encoding="utf-8", newline="\n").write(encoded)

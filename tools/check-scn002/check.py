@@ -14,6 +14,7 @@ RECORDS = {
     "sei": "evaluations/records/SCN-002-sei-2026-10-29.json",
     "eki_inspect": "evaluations/records/SCN-002-eki-inspect-a-2026-10-29.json",
     "eki_quote": "evaluations/records/SCN-002-eki-quote-b-2026-10-29.json",
+    "sui": "evaluations/records/SCN-002-sui-2026-10-29.json",
 }
 
 
@@ -30,6 +31,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     sei = receipts.get("sei", {})
     eki_inspect = receipts.get("eki_inspect", {})
     eki_quote = receipts.get("eki_quote", {})
+    sui = receipts.get("sui", {})
     if mmi.get("passed") is not True or mmi.get("selectedRows") != 5:
         errors.append("MMI did not return 5 rows")
     if mmi.get("synthetic") is not True:
@@ -49,6 +51,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"EKI {name} is not cancelled with result 501")
         if eki.get("workerResult") is not False or eki.get("taskExecuted") is not False:
             errors.append(f"EKI {name} claims Task execution")
+    if sui.get("passed") is not True or (sui.get("cardCount"), sui.get("islandCount"), sui.get("edgeCount")) != (7, 4, 2):
+        errors.append("SUI DocumentV1 is not 7 cards / 4 islands / 2 edges")
+    if sui.get("edgeType") != "depends":
+        errors.append("SUI edge type is not depends")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",

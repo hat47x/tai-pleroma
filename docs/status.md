@@ -28,7 +28,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SEI重複decision | 同じ`dec-01`の2回目を拒否 | [receipt](../evaluations/records/SCN-001-invalid-sei-2026-10-29.json) | 重複IDの拒否のみ。意味の受理ではない |
 | MMI 5行超 | 7行選択は`selectedRows=5`で未検証 | [制約](../evaluations/SCN-001-mmi-preview-limit.md) | preview上限の可能性。実在の規程ではない |
 | 合成プロセスマトリクス | 5製品の正常系・拒否系・契約系を集約 | [matrix](../evaluations/records/SCN-001-process-matrix-2026-10-29.json) | 合成入力の集約。実Task実行ではない |
-| SCN-002 複数拠点メンテナンス | 3拠点・期限・故障・予算の合成シナリオをMMI/TEI/SEI/EKIで実行 | [slice](../evaluations/records/SCN-002-slice-2026-10-29.json) | EKIはadmission/cancelのみ。優先度・安全判断・発注は未検証 |
+| SCN-002 複数拠点メンテナンス | 3拠点・期限・故障・予算の合成シナリオをMMI/TEI/SEI/EKI/SUIで実行 | [slice](../evaluations/records/SCN-002-slice-2026-10-29.json) | EKIはadmission/cancelのみ。優先度・安全判断・発注は未検証 |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |

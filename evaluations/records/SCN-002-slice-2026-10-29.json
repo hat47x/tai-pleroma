@@ -9,7 +9,8 @@
     "tei",
     "sei",
     "eki_inspect",
-    "eki_quote"
+    "eki_quote",
+    "sui"
   ],
   "publicationAllowed": false,
   "passed": true,
