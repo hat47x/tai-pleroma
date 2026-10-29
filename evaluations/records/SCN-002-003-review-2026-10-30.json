@@ -1,0 +1,12 @@
+{
+  "schema": "tai.reference.multi-scenario-review-check/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenarios": [
+    "SCN-002",
+    "SCN-003"
+  ],
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}
