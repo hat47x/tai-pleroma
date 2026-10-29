@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.scn003-ai-review/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenario": "SCN-003",
+  "evaluatorKind": "generative-ai",
+  "evaluator": "TAI autonomous development review",
+  "reviewDate": "2026-10-29",
+  "artifact": "evaluations/artifacts/SCN-003-D-08-first-review.md",
+  "criteria": [
+    "eligibility conflict remains unresolved",
+    "over-cap and conflict cases are excluded",
+    "quota is not over-filled",
+    "adoption and publication are not claimed"
+  ],
+  "quality": "sufficient-for-first-review",
+  "outcome": "candidate-with-unresolved-eligibility",
+  "userNextStep": "confirm-eligibility-and-quota",
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "adoptionGranted": false,
+  "publicationApproved": false,
+  "publicationAllowed": false,
+  "reviewTrigger": "post-synthetic-real-object",
+  "passed": true,
+  "notes": [
+    "Aは収入要件の食い違いが残るため保留。",
+    "Bは上限超過、Cは利益相反で除外。",
+    "採択・通知・公開を実行していない。"
+  ]
+}

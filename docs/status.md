@@ -35,7 +35,8 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SCN-002 差戻しシミュレーション | 安全・調達の差戻し理由をSEIへ記録 | [receipt](../evaluations/records/SCN-002-rejections-2026-10-29.json) | 3 records / 2 rejections。承認なし |
 | SCN-002 D-07再提出 | 差戻し2件へ対応。合成見積2160万円。再承認待ち | [artifact](../evaluations/artifacts/SCN-002-D-07-resubmission.md)、[AI review](../evaluations/records/SCN-002-D-07-ai-review-2026-10-29.json) | 発注なし。再承認は未完了 |
 | 横断シナリオ | SCN-001とSCN-002を1つの実務能力マトリクスへ統合 | [matrix](../evaluations/records/SCN-cross-scenario-2026-10-29.json) | 合成入力。公開gateはblocked |
-| SCN-003 補助金一次審査 | 3申請・収入要件差・上限・利益相反・採択枠をMMI/TEIで実行 | [slice](../evaluations/records/SCN-003-slice-2026-10-29.json) | 合成データ。採択判断は未検証 |
+| SCN-003 補助金一次審査 | 3申請・収入要件差・上限・利益相反・採択枠をMMI/TEI/SEI/EKI/SUIで実行 | [slice](../evaluations/records/SCN-003-slice-2026-10-29.json) | 合成データ。採択判断は未検証 |
+| SCN-003 D-08一次審査 | A保留、B不適格、C通常審査外。採択なし | [artifact](../evaluations/artifacts/SCN-003-D-08-first-review.md)、[AI review](../evaluations/records/SCN-003-D-08-ai-review-2026-10-29.json) | 採択・通知・公開なし |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |

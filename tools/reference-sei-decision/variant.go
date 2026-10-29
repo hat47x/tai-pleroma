@@ -54,6 +54,17 @@ var variantFixtures = map[string]variantFixture{
 		provisional:  "dec-scn002-02",
 		provisionalD: "D-05優先度案を内部レビュー用に仮承認。公開・発注は未承認",
 	},
+	"scn003": {
+		bundle:       "scn003-grant-review",
+		recommendID:  "rec-scn003",
+		recommend:    "3申請の要件・上限・利益相反を比較中",
+		decisionID:   "dec-scn003-01",
+		decision:     "Aは収入要件確認待ち、Bは上限超過、Cは利益相反で通常審査外",
+		unresolved:   "eligibility:A-conflict",
+		unresolved2:  "conflict:C",
+		provisional:  "dec-scn003-02",
+		provisionalD: "D-08採択候補を内部レビュー用に仮承認。採択・公開は未承認",
+	},
 }
 
 func RunVariant(ctx context.Context, seiRoot, variant string) Receipt {

@@ -6,7 +6,11 @@
   "slice": "grant-application-first-review",
   "steps": [
     "mmi",
-    "tei"
+    "tei",
+    "sei",
+    "eki",
+    "sui",
+    "ai_review"
   ],
   "publicationAllowed": false,
   "passed": true,
