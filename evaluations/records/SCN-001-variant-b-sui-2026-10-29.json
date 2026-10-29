@@ -1,0 +1,13 @@
+{
+  "schema": "tai.reference.sui-document-put/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "docId": "scn001-variant-b",
+  "passed": true,
+  "putStatus": 200,
+  "readStatus": 200,
+  "cardCount": 5,
+  "islandCount": 3,
+  "edgeCount": 1,
+  "edgeType": "supports"
+}

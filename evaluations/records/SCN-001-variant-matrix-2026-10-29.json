@@ -11,13 +11,15 @@
       "mmi": true,
       "tei": true,
       "sei": true,
-      "eki": true
+      "eki": true,
+      "sui": true
     },
     "variant-c": {
       "mmi": true,
       "tei": true,
       "sei": true,
-      "eki": true
+      "eki": true,
+      "sui": true
     }
   },
   "publicationAllowed": false,

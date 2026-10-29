@@ -19,7 +19,7 @@ class CheckTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
             for expected in VARIANTS.values():
-                for relative in (expected["mmi"], expected["tei"], expected["sei"], expected["eki"]):
+                for relative in (expected["mmi"], expected["tei"], expected["sei"], expected["eki"], expected["sui"]):
                     source = ROOT / relative
                     destination = root / relative
                     destination.parent.mkdir(parents=True, exist_ok=True)

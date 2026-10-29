@@ -24,6 +24,8 @@ RECORDS = (
     "evaluations/records/SCN-001-variant-c-eki-2026-10-29.json",
     "evaluations/records/SCN-001-variant-b-eki-cancel-2026-10-29.json",
     "evaluations/records/SCN-001-variant-c-eki-cancel-2026-10-29.json",
+    "evaluations/records/SCN-001-variant-b-sui-2026-10-29.json",
+    "evaluations/records/SCN-001-variant-c-sui-2026-10-29.json",
     "evaluations/records/SCN-001-variant-matrix-2026-10-29.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
