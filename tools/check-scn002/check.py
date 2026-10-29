@@ -16,8 +16,10 @@ RECORDS = {
     "eki_quote": "evaluations/records/SCN-002-eki-quote-b-2026-10-29.json",
     "sui": "evaluations/records/SCN-002-sui-2026-10-29.json",
     "ai_review": "evaluations/records/SCN-002-ai-review-2026-10-29.json",
+    "ai_approval": "evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json",
 }
 D05 = "evaluations/artifacts/SCN-002-D-05-priority-plan.md"
+D06 = "evaluations/artifacts/SCN-002-D-06-approval-packet.md"
 
 
 def check(root: pathlib.Path) -> dict[str, Any]:
@@ -35,11 +37,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     eki_quote = receipts.get("eki_quote", {})
     sui = receipts.get("sui", {})
     ai_review = receipts.get("ai_review", {})
+    ai_approval = receipts.get("ai_approval", {})
     try:
         d05 = (root / D05).read_text(encoding="utf-8")
+        d06 = (root / D06).read_text(encoding="utf-8")
     except OSError as error:
-        errors.append(f"d05: {error}")
+        errors.append(f"artifacts: {error}")
         d05 = ""
+        d06 = ""
     if mmi.get("passed") is not True or mmi.get("selectedRows") != 5:
         errors.append("MMI did not return 5 rows")
     if mmi.get("synthetic") is not True:
@@ -70,6 +75,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("SCN-002 AI review is not sufficient-for-development")
     if ai_review.get("humanReviewed") is not False or ai_review.get("publicationApproved") is not False:
         errors.append("SCN-002 AI review claims human or publication approval")
+    for marker in ("- 状態: `awaiting-approval`", "- 承認: **未完了**", "- 発注: **なし**", "承認は1件も完了していない"):
+        if marker not in d06:
+            errors.append(f"D-06 is missing marker: {marker}")
+    if ai_approval.get("quality") != "sufficient-for-approval-preparation" or ai_approval.get("passed") is not True:
+        errors.append("SCN-002 D-06 AI review is not sufficient-for-approval-preparation")
+    if ai_approval.get("approvalGranted") is not False or ai_approval.get("humanReviewed") is not False:
+        errors.append("SCN-002 D-06 AI review claims approval")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",
