@@ -14,6 +14,8 @@ VARIANTS = {
         "tei": "evaluations/records/SCN-001-variant-b-tei-2026-10-29.json",
         "sei": "evaluations/records/SCN-001-variant-b-sei-2026-10-29.json",
         "eki": "evaluations/records/SCN-001-variant-b-eki-cancel-2026-10-29.json",
+        "sui": "evaluations/records/SCN-001-variant-b-sui-2026-10-29.json",
+        "edge": "supports",
         "ids": ["O-02", "O-03", "O-10", "O-11", "O-14"],
     },
     "variant-c": {
@@ -21,6 +23,8 @@ VARIANTS = {
         "tei": "evaluations/records/SCN-001-variant-c-tei-2026-10-29.json",
         "sei": "evaluations/records/SCN-001-variant-c-sei-2026-10-29.json",
         "eki": "evaluations/records/SCN-001-variant-c-eki-cancel-2026-10-29.json",
+        "sui": "evaluations/records/SCN-001-variant-c-sui-2026-10-29.json",
+        "edge": "contradicts",
         "ids": ["O-02", "O-03", "O-20", "O-21", "O-23"],
     },
 }
@@ -39,6 +43,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             tei = load(root, expected["tei"])
             sei = load(root, expected["sei"])
             eki = load(root, expected["eki"])
+            sui = load(root, expected["sui"])
         except (OSError, json.JSONDecodeError) as error:
             errors.append(f"{name}: {error}")
             continue
@@ -58,9 +63,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"{name}: EKI task is not cancelled with result 501")
         if eki.get("workerResult") is not False or eki.get("taskExecuted") is not False:
             errors.append(f"{name}: EKI variant claims Task execution")
+        if sui.get("passed") is not True or (sui.get("cardCount"), sui.get("islandCount"), sui.get("edgeCount")) != (5, 3, 1):
+            errors.append(f"{name}: SUI DocumentV1 is not 5 cards / 3 islands / 1 edge")
+        if sui.get("edgeType") != expected["edge"]:
+            errors.append(f"{name}: SUI edge type differs: {sui.get('edgeType')}")
         results[name] = {
             "mmi": mmi.get("passed"), "tei": tei.get("passed"),
             "sei": sei.get("passed"), "eki": eki.get("passed"),
+            "sui": sui.get("passed"),
         }
 
     return {
