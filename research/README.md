@@ -5,6 +5,8 @@
 - 対象: TAI / SUI / SEI / TEI / SHO（現行MMI）/ EKI
 - 起点: [SCN-001](../scenarios/SCN-001-shared-space-guidance.md) と [TAIの現状](../docs/status.md)
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
+- 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
+- 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
 
 ## 1. 目的
 
@@ -72,3 +74,11 @@ W1–2のプロトコルが確定するまでは研究実験を「実施済み�
 第一期の成果物は、(a) 反証可能なプロトコル、(b) 少なくとも1種類の同条件比較と要素除去の観測記録、(c) 費用と見逃し・過剰拒否の評価、(d) 導入／不採用を区別した製品改善候補、(e) 論文草案。
 
 結果に根拠がなければ「改善を確認できなかった」と記録し、TAI独自Runtime/DB/契約の新設を正当化しない。論文化の可否・タイトル・投稿先は結果と先行研究レビューを得てから判断する。本書自体は要求・設計の採用、Issueの完了、研究実施、論文成果を意味しない。
+
+## 8. 現行開発の進展と研究への影響（2026-10-29追補）
+
+TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠点の設備更新](../scenarios/SCN-002-synthetic-maintenance/README.md)の合成実験系も存在する。SCN-001で調整した検査が他ドメインへ適用できるかを調べる**候補**とするが、同等のGoldケースは未固定であり、外部妥当性を実証したとは扱わない。
+
+[TAI Draft PR #142](https://github.com/hat47x/tai-pleroma/pull/142)はMMI選択→SCN評価→D-04根拠本文の同一run内の結び付けを強化する提案であり、既存のSUI `-sui-receipt` による現在観測照合とは異なる境界である。PR #142の検査を未統合のまま現行mainの保証として数えたり、H1の独立した実験結果として数えたりしない。
+
+研究実験の固定版は、対象コードの現在mainではなく、各runのSHAと入力blob・記録digestで定める。研究計画の追補でプロダクトのOwner・実験結果・採用状態が自動的に変わることはない。
