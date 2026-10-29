@@ -11,6 +11,14 @@
     "mmi": {
       "rejected": true,
       "reason": "select was rejected: [{Code:TABLE_NOT_FOUND Message:「Sheet1!A1:E9」に当たる表がシート「Sheet1」に見つかりません。}]"
+    },
+    "eki": {
+      "rejected": true,
+      "reason": "task submission failed: 400 {'raw': '{\"type\":\"urn:eki:problem:invalid-task-request\",\"title\":\"The request is malformed or invalid\",\"status\":400,\"detail\":\"priority must be background, normal or high\",\"code\":\"INVALID_TASK_REQUEST\"}\\n'}"
+    },
+    "sui": {
+      "rejected": true,
+      "reason": "PUT failed: 422 {'raw': '{\"detail\":{\"schemaVersion\":\"1.0.0\",\"errorEnvelope\":{\"errorCode\":\"A1_REQUIRED_FIELD_MISSING\",\"message\":\"Input should be \\'fact\\', \\'claim\\', \\'hypothesis\\' or \\'unknown\\'\",\"contractId\":\"A1-REDIFF-IF\",\"retryable\":false,\"occurredAt\":\"2026-10-29T13:26:20.965186Z\"}}}'}"
     }
   },
   "publicationAllowed": false,

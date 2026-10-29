@@ -11,6 +11,8 @@ from typing import Any
 RECORDS = {
     "tei": "evaluations/records/SCN-001-invalid-tei-2026-10-29.json",
     "mmi": "evaluations/records/SCN-001-invalid-mmi-2026-10-29.json",
+    "eki": "evaluations/records/SCN-001-invalid-eki-2026-10-29.json",
+    "sui": "evaluations/records/SCN-001-invalid-sui-2026-10-29.json",
 }
 
 
@@ -30,6 +32,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         reason = str(receipt.get("reason", ""))
         if not reason:
             errors.append(f"{name}: rejection reason is empty")
+        if name == "eki" and receipt.get("submitStatus") != 400:
+            errors.append("eki: rejection status is not 400")
+        if name == "sui" and receipt.get("putStatus") != 422:
+            errors.append("sui: rejection status is not 422")
         results[name] = {"rejected": receipt.get("passed") is False, "reason": reason}
     return {
         "schema": "tai.reference.scn001-negative-matrix/v0",
