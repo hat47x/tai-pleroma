@@ -1,6 +1,6 @@
 # 合成バリエーションのプロセス検査
 
-SCN-001の合成文書を、構成の異なる2変種へ広げ、MMI・TEI・SEIの参照実装が入力差を扱えるかを確認します。
+SCN-001の合成文書を、構成の異なる2変種へ広げ、MMI・TEI・SEI・EKIの参照実装が入力差を扱えるかを確認します。
 
 ## 変種
 
@@ -8,6 +8,8 @@ SCN-001の合成文書を、構成の異なる2変種へ広げ、MMI・TEI・SEI
 - `variant-c`: 全館予約制と旧掲示の差。版の差を保持する。
 
 各変種は5行の`observations.csv`と、`Building`/`RoomPolicy`または`PolicyVersion`/`Notice`/`Conflict`型を持つTEI workspaceです。
+
+EKIでは変種ごとにTask requestを送り、`queued`→`cancelled`/`CANCELLED`、result API 501を確認します。Task実行は行いません。
 
 ## 実行
 
@@ -19,5 +21,5 @@ python check.py --root ../..
 ## 境界
 
 - 合成入力です。実在の施設・規程ではありません。
-- MMIの読み取り、TEIの型検証、SEIのdecision-memory記録だけを確認します。意味の受理・公開承認ではありません。
+- MMIの読み取り、TEIの型検証、SEIのdecision-memory記録、EKIのTask admission/cancelだけを確認します。意味の受理・公開承認ではありません。
 - 公開gateはblockedのままです。

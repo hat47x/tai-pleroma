@@ -1,0 +1,23 @@
+{
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "schema": "tai.reference.eki-task-submit/v0",
+  "baseUrl": "http://127.0.0.1:18086",
+  "readOnly": false,
+  "taskSubmitted": true,
+  "idempotent": true,
+  "taskExecuted": false,
+  "workerResult": false,
+  "authorityVerified": false,
+  "passed": true,
+  "notes": [
+    "EKI Control APIへ合成Taskを1件だけ送信し、queued状態を読む。",
+    "Workerは起動しておらず、Taskの実行・結果・委任の完了は未検証。"
+  ],
+  "submitStatus": 202,
+  "taskId": "tsk_69dbf32a39133e3bb1f7007a2656f2bf",
+  "submitResponseStatus": "queued",
+  "repeatStatus": 202,
+  "statusReadStatus": 200,
+  "taskStatus": "queued"
+}

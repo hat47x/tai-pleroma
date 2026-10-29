@@ -38,6 +38,8 @@ def _request(
 def submit(base_url: str, token: str, fixture: dict[str, Any], idempotency_key: str) -> dict[str, Any]:
     receipt: dict[str, Any] = {
         "schema": SCHEMA,
+        "synthetic": True,
+        "evidenceKind": "synthetic",
         "baseUrl": base_url,
         "readOnly": False,
         "taskSubmitted": False,

@@ -38,6 +38,8 @@ def _request(
 def cancel(base_url: str, token: str, fixture: dict[str, Any], key: str) -> dict[str, Any]:
     receipt: dict[str, Any] = {
         "schema": SCHEMA,
+        "synthetic": True,
+        "evidenceKind": "synthetic",
         "baseUrl": base_url,
         "readOnly": False,
         "taskSubmitted": False,
