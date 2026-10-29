@@ -16,16 +16,17 @@ import (
 )
 
 type MMIComponent struct {
-	Passed                bool   `json:"passed"`
-	Server                string `json:"server,omitempty"`
-	ProtocolVersion       string `json:"protocolVersion,omitempty"`
-	MmiCommit             string `json:"mmiCommit,omitempty"`
-	SelectedRows          int    `json:"selectedRows"`
-	ConflictPreserved     bool   `json:"conflictPreserved"`
-	BoundaryRejected      bool   `json:"boundaryRejected"`
-	MissingSourceRejected bool   `json:"missingSourceRejected"`
-	SourceDigestBefore    string `json:"sourceDigestBefore,omitempty"`
-	SourceDigestAfter     string `json:"sourceDigestAfter,omitempty"`
+	Passed                bool              `json:"passed"`
+	Server                string            `json:"server,omitempty"`
+	ProtocolVersion       string            `json:"protocolVersion,omitempty"`
+	MmiCommit             string            `json:"mmiCommit,omitempty"`
+	SelectedRows          int               `json:"selectedRows"`
+	ConflictPreserved     bool              `json:"conflictPreserved"`
+	BoundaryRejected      bool              `json:"boundaryRejected"`
+	MissingSourceRejected bool              `json:"missingSourceRejected"`
+	SourceDigestBefore    string            `json:"sourceDigestBefore,omitempty"`
+	SourceDigestAfter     string            `json:"sourceDigestAfter,omitempty"`
+	SelectedDigests       map[string]string `json:"selectedDigests,omitempty"`
 }
 
 type DecisionView struct {
@@ -51,15 +52,16 @@ type SEIComponent struct {
 }
 
 type ArtifactComponent struct {
-	Passed              bool   `json:"passed"`
-	Status              string `json:"status"`
-	DraftID             string `json:"draftId"`
-	ArtifactDigest      string `json:"artifactDigest"`
-	ProvisionalApproved bool   `json:"provisionalApproved"`
-	PublicationApproved bool   `json:"publicationApproved"`
-	ReviewRequired      bool   `json:"reviewRequired"`
-	ReviewTrigger       string `json:"reviewTrigger"`
-	AuthorityVerified   bool   `json:"authorityVerified"`
+	Passed              bool              `json:"passed"`
+	Status              string            `json:"status"`
+	DraftID             string            `json:"draftId"`
+	ArtifactDigest      string            `json:"artifactDigest"`
+	ProvisionalApproved bool              `json:"provisionalApproved"`
+	PublicationApproved bool              `json:"publicationApproved"`
+	ReviewRequired      bool              `json:"reviewRequired"`
+	ReviewTrigger       string            `json:"reviewTrigger"`
+	AuthorityVerified   bool              `json:"authorityVerified"`
+	ObservationDigests  map[string]string `json:"observationDigests,omitempty"`
 }
 
 type GateComponent struct {
@@ -74,17 +76,18 @@ type CaseResult struct {
 }
 
 type SCNComponent struct {
-	Passed                bool         `json:"passed"`
-	ObservationSource     string       `json:"observationSource"`
-	RealProductsConnected bool         `json:"realProductsConnected"`
-	Synthetic             bool         `json:"synthetic"`
-	HumanReviewed         bool         `json:"humanReviewed"`
-	AuthorityVerified     bool         `json:"authorityVerified"`
-	ProvisionalApproved   bool         `json:"provisionalApproved"`
-	PublicationApproved   bool         `json:"publicationApproved"`
-	ReviewRequired        bool         `json:"reviewRequired"`
-	ReviewTrigger         string       `json:"reviewTrigger,omitempty"`
-	Cases                 []CaseResult `json:"cases"`
+	Passed                bool              `json:"passed"`
+	ObservationSource     string            `json:"observationSource"`
+	RealProductsConnected bool              `json:"realProductsConnected"`
+	Synthetic             bool              `json:"synthetic"`
+	HumanReviewed         bool              `json:"humanReviewed"`
+	AuthorityVerified     bool              `json:"authorityVerified"`
+	ProvisionalApproved   bool              `json:"provisionalApproved"`
+	PublicationApproved   bool              `json:"publicationApproved"`
+	ReviewRequired        bool              `json:"reviewRequired"`
+	ReviewTrigger         string            `json:"reviewTrigger,omitempty"`
+	Cases                 []CaseResult      `json:"cases"`
+	ObservationDigests    map[string]string `json:"observationDigests,omitempty"`
 }
 
 type SUILinkComponent struct {
@@ -189,6 +192,7 @@ type OwnerPacket struct {
 	ReviewArtifactDigest  string          `json:"reviewArtifactDigest,omitempty"`
 	ReviewArtifactStatus  string          `json:"reviewArtifactStatus,omitempty"`
 	ArtifactBytesVerified bool            `json:"artifactBytesVerified"`
+	InputBindingVerified  bool            `json:"inputBindingVerified"`
 	Evidence              []string        `json:"evidence"`
 	Questions             []OwnerQuestion `json:"questions"`
 	ProvisionalApproved   bool            `json:"provisionalApproved"`
@@ -206,11 +210,13 @@ func BuildOwnerPacket(receipt RunReceipt) (OwnerPacket, error) {
 	if !receipt.Passed {
 		return OwnerPacket{}, fmt.Errorf("owner packet requires a successful reference run")
 	}
-	if verification := Verify(receipt); !verification.Passed {
+	verification := Verify(receipt)
+	if !verification.Passed {
 		return OwnerPacket{}, fmt.Errorf("run receipt is not verifiable: %s", verification.Reason)
 	}
 	return OwnerPacket{
-		Schema: "tai.reference.scn001-owner-packet/v0", Scenario: receipt.Scenario,
+		InputBindingVerified: verification.InputBindingVerified,
+		Schema:               "tai.reference.scn001-owner-packet/v0", Scenario: receipt.Scenario,
 		Status: "awaiting-owner", RunDigest: receipt.RunDigest,
 		ReviewArtifactDigest: receipt.Components.ReviewArtifact.ArtifactDigest,
 		ReviewArtifactStatus: receipt.Components.ReviewArtifact.Status,
@@ -249,6 +255,7 @@ type Verification struct {
 	Reason                string `json:"reason,omitempty"`
 	RunDigest             string `json:"runDigest,omitempty"`
 	ArtifactBytesVerified bool   `json:"artifactBytesVerified"`
+	InputBindingVerified  bool   `json:"inputBindingVerified"`
 }
 
 // VerifyArtifact re-reads an explicitly selected local artifact. It checks
@@ -357,6 +364,11 @@ func Verify(receipt RunReceipt) Verification {
 			return verification
 		}
 	}
+	bound, reason := checkInputBinding(receipt)
+	if reason != "" {
+		verification.Reason = reason
+		return verification
+	}
 	if receipt.Passed != (mmi.Passed && sei.Passed && scn.Passed && artifact.Passed && suiOK) {
 		verification.Reason = "overall pass does not match component outcomes"
 		return verification
@@ -440,6 +452,7 @@ func Verify(receipt RunReceipt) Verification {
 		return verification
 	}
 	verification.Passed = true
+	verification.InputBindingVerified = bound
 	return verification
 }
 
@@ -516,6 +529,9 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 	if err := readJSON(mmiPath, &receipt.Components.MMI); err != nil {
 		return receipt, err
 	}
+	if receipt.Components.MMI.SelectedDigests, err = selectedDigests(mmiPath); err != nil {
+		return receipt, fmt.Errorf("MMI selected rows are invalid: %w", err)
+	}
 	if err := readJSON(seiPath, &receipt.Components.SEI); err != nil {
 		return receipt, err
 	}
@@ -561,8 +577,12 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 		return receipt, err
 	}
 	receipt.RunDigest = digest
-	if verification := Verify(receipt); !verification.Passed {
+	verification := Verify(receipt)
+	if !verification.Passed {
 		return receipt, fmt.Errorf("combined run receipt is inconsistent: %s", verification.Reason)
+	}
+	if receipt.Passed && !verification.InputBindingVerified {
+		return receipt, fmt.Errorf("combined run did not bind MMI selection, SCN-001 input, and D-04 rows")
 	}
 	if artifactOut != "" {
 		if err := saveReviewArtifact(receipt, artifactBytes, artifactOut); err != nil {

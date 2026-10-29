@@ -32,6 +32,20 @@ go run . -verify ../../evaluations/records/SCN-001-run-2026-10-26.json -artifact
 
 保存済みの参照実行は[evaluations/records/SCN-001-run-2026-10-26.json](../../evaluations/records/SCN-001-run-2026-10-26.json)にあり、`go test`の`TestRecordedRunVerifies`で`runDigest`とcomponent invariantsを再確認します。
 
+## 入力の結び付け
+
+1回の実行で、次の3つが同じ本文を指していることをdigestで結びます。
+
+- `mmi.selectedDigests`: MMIが返した`selected`の各行のIDと本文digest（返却されたまま）。
+- `scn001.observationDigests`: SCN-001が評価に使ったobservationの本文digest。
+- `reviewArtifact.observationDigests`: D-04の根拠表に実際に書いた行の本文digest（rendererが返す）。
+
+`Verify`は、MMIの選択行がすべて評価入力と一致し、D-04の根拠行がすべて評価入力と一致し、MMIの選択行がすべてD-04に現れることを確認します。IDが同じで本文だけ差し替えた場合、componentのdigestを再計算しても拒否します。成功した実行では3つすべてが必要で、欠けると`inputBindingVerified=false`になります。`-verify`とOwner判断packetはこの結果を`inputBindingVerified`として返します。
+
+この項目を追加する前の記録（3つとも空）は、従来どおり`passed=true`で検証できますが、`inputBindingVerified=false`です。入力の一致を主張しません。保存済みの記録は、この項目を含めて再生成したものです。
+
+結び付けが示すのは、1回の実行の中で3つの経路が同じ本文digestを扱ったことだけです。MMIの読取り元が実資料と一致すること、本文の意味、出典の真正性、人間の受理、公開権限は確認しません。
+
 `-owner-packet run.json -artifact review.md -out owner.json`で、実行記録と成果物を照合したOwner判断packetを作れます。`artifactBytesVerified=true`はその時点のbyte一致だけを示します。packetには実際に読んだ実行記録と成果物の絶対パスを入れ、固定された過去の成果物・実行記録へのリンクは補いません。`-artifact`を省略した場合は`artifactBytesVerified=false`で、成果物へのリンクも補いません。packetの出力先も新規ファイルに限ります。packetはD-04のdigest/status、公開gateの`allowed`/blocker、説明文書と再レビュー計画への参照を含みます。`status=awaiting-owner`、`approved=false`、`humanReviewed=false`、`authorityVerified=false`、`publicationApproved=false`であり、承認ではありません。
 
 
@@ -63,6 +77,7 @@ go run . -owner-packet run.json -artifact review.md -out owner.json
 - `publicationGate`: R-01〜R-07のreview statusを読み、`allowed=false`とblockerを記録する。
 - `suiLink`指定時は、SUIのlinked cards・island groups・edge count・contradictionをcomponentへ追加する。
 - `runDigest`はcomponentのJSONに対するSHA-256。
+- 入力の結び付け: `mmi.selectedDigests`・`scn001.observationDigests`・`reviewArtifact.observationDigests`が同じ本文digestを指し、`inputBindingVerified=true`。
 
 ## 境界
 
