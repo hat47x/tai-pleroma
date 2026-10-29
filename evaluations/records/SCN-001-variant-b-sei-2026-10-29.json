@@ -1,0 +1,65 @@
+{
+  "schema": "tai.reference.sei-decision/v0",
+  "variant": "b",
+  "seiCommit": "3ae1d85af14e2380d2e73a9756232d33c9d26fec",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "storeCreated": true,
+  "readOnlyProjection": true,
+  "bundleId": "scn001-variant-b",
+  "recordCount": 3,
+  "decision": {
+    "id": "dec-variant-b-01",
+    "statement": "本館は予約制、別館は予約不要として扱う。別館の現行案内は未確認",
+    "recommendations": [
+      "recommendation:rec-variant-b"
+    ],
+    "responsible": [
+      "role:facility-owner"
+    ]
+  },
+  "provisionalDecision": {
+    "id": "dec-variant-b-02",
+    "statement": "D-04 variant-bを内部レビュー用に仮承認。公開は未承認",
+    "recommendations": [
+      "recommendation:rec-variant-b"
+    ],
+    "responsible": [
+      "role:provisional-owner"
+    ]
+  },
+  "unresolved": [
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-variant-b-01"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-variant-b-02"
+    },
+    {
+      "ref": "publication:unapproved",
+      "left_open_by_decision": "dec-variant-b-02"
+    },
+    {
+      "ref": "review:real-object",
+      "left_open_by_decision": "dec-variant-b-02"
+    },
+    {
+      "ref": "scope:annex",
+      "left_open_by_decision": "dec-variant-b-01"
+    }
+  ],
+  "notVerifiedRecordCount": 0,
+  "provisionalApproved": true,
+  "reviewTrigger": "real-object",
+  "authorityVerified": false,
+  "humanReviewed": false,
+  "published": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "SEIの一時storeへ合成variant fixtureを記録し、resumeのprojectionだけを読む参照。",
+    "決定の意味・権限・公開を検証しない。実運用のstoreではない。"
+  ]
+}

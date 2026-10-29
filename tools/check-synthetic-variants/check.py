@@ -12,11 +12,13 @@ VARIANTS = {
     "variant-b": {
         "mmi": "evaluations/records/SCN-001-variant-b-mmi-2026-10-29.json",
         "tei": "evaluations/records/SCN-001-variant-b-tei-2026-10-29.json",
+        "sei": "evaluations/records/SCN-001-variant-b-sei-2026-10-29.json",
         "ids": ["O-02", "O-03", "O-10", "O-11", "O-14"],
     },
     "variant-c": {
         "mmi": "evaluations/records/SCN-001-variant-c-mmi-2026-10-29.json",
         "tei": "evaluations/records/SCN-001-variant-c-tei-2026-10-29.json",
+        "sei": "evaluations/records/SCN-001-variant-c-sei-2026-10-29.json",
         "ids": ["O-02", "O-03", "O-20", "O-21", "O-23"],
     },
 }
@@ -33,6 +35,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         try:
             mmi = load(root, expected["mmi"])
             tei = load(root, expected["tei"])
+            sei = load(root, expected["sei"])
         except (OSError, json.JSONDecodeError) as error:
             errors.append(f"{name}: {error}")
             continue
@@ -42,7 +45,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"{name}: MMI observed IDs differ: {mmi.get('observedIds')}")
         if tei.get("synthetic") is not True or tei.get("validation") != "ok" or tei.get("passed") is not True:
             errors.append(f"{name}: TEI validation did not pass")
-        results[name] = {"mmi": mmi.get("passed"), "tei": tei.get("passed")}
+        if sei.get("synthetic") is not True or sei.get("recordCount") != 3 or sei.get("passed") is not True:
+            errors.append(f"{name}: SEI did not record 3 variant records")
+        if sei.get("variant") != name.removeprefix("variant-"):
+            errors.append(f"{name}: SEI variant id differs: {sei.get('variant')}")
+        results[name] = {"mmi": mmi.get("passed"), "tei": tei.get("passed"), "sei": sei.get("passed")}
 
     return {
         "schema": "tai.reference.scn001-variant-matrix/v0",
