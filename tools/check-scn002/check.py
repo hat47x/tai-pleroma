@@ -19,9 +19,11 @@ RECORDS = {
     "ai_approval": "evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json",
     "approvals": "evaluations/records/SCN-002-approvals-2026-10-29.json",
     "rejections": "evaluations/records/SCN-002-rejections-2026-10-29.json",
+    "ai_resubmit": "evaluations/records/SCN-002-D-07-ai-review-2026-10-29.json",
 }
 D05 = "evaluations/artifacts/SCN-002-D-05-priority-plan.md"
 D06 = "evaluations/artifacts/SCN-002-D-06-approval-packet.md"
+D07 = "evaluations/artifacts/SCN-002-D-07-resubmission.md"
 
 
 def check(root: pathlib.Path) -> dict[str, Any]:
@@ -42,13 +44,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     ai_approval = receipts.get("ai_approval", {})
     approvals = receipts.get("approvals", {})
     rejections = receipts.get("rejections", {})
+    ai_resubmit = receipts.get("ai_resubmit", {})
     try:
         d05 = (root / D05).read_text(encoding="utf-8")
         d06 = (root / D06).read_text(encoding="utf-8")
+        d07 = (root / D07).read_text(encoding="utf-8")
     except OSError as error:
         errors.append(f"artifacts: {error}")
         d05 = ""
         d06 = ""
+        d07 = ""
     if mmi.get("passed") is not True or mmi.get("selectedRows") != 5:
         errors.append("MMI did not return 5 rows")
     if mmi.get("synthetic") is not True:
@@ -98,6 +103,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     for decision in rejection_decisions:
         if "差戻し" not in decision.get("statement", ""):
             errors.append("SEI rejection decision does not say 差戻し")
+    for marker in ("- 状態: `revised`", "- 承認: **未完了**", "- 発注: **なし**", "再承認はまだ得られていない", "差戻し2件には対応"):
+        if marker not in d07:
+            errors.append(f"D-07 is missing marker: {marker}")
+    if ai_resubmit.get("quality") != "sufficient-for-resubmission" or ai_resubmit.get("passed") is not True:
+        errors.append("SCN-002 D-07 AI review is not sufficient-for-resubmission")
+    if ai_resubmit.get("approvalGranted") is not False or ai_resubmit.get("humanReviewed") is not False:
+        errors.append("SCN-002 D-07 AI review claims approval")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",

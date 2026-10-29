@@ -14,7 +14,8 @@
     "ai_review",
     "ai_approval",
     "approvals",
-    "rejections"
+    "rejections",
+    "ai_resubmit"
   ],
   "publicationAllowed": false,
   "passed": true,
