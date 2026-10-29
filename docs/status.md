@@ -32,6 +32,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SCN-002 D-05優先度案 | 合成概算2000万円、予算上限3000万円。見積・承認は未確定 | [artifact](../evaluations/artifacts/SCN-002-D-05-priority-plan.md)、[AI review](../evaluations/records/SCN-002-ai-review-2026-10-29.json) | 発注なし。公開承認なし。実在の資産・契約ではない |
 | SCN-002 D-06承認パケット | 合成見積2100万円。予算責任者・調達・安全の承認待ち | [artifact](../evaluations/artifacts/SCN-002-D-06-approval-packet.md)、[AI review](../evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json) | 承認1件も完了せず。発注なし |
 | SCN-002 承認シミュレーション | 3名の承認待ちdecisionをSEIへ記録 | [receipt](../evaluations/records/SCN-002-approvals-2026-10-29.json) | 4 records / 3 decisions。承認は未完了 |
+| SCN-002 差戻しシミュレーション | 安全・調達の差戻し理由をSEIへ記録 | [receipt](../evaluations/records/SCN-002-rejections-2026-10-29.json) | 3 records / 2 rejections。承認なし |
 | 横断シナリオ | SCN-001とSCN-002を1つの実務能力マトリクスへ統合 | [matrix](../evaluations/records/SCN-cross-scenario-2026-10-29.json) | 合成入力。公開gateはblocked |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
