@@ -42,8 +42,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             if not item:
                 errors.append(f"missing review item: {item_id}")
                 continue
-            if item.get("status") != "pending" or item.get("evidenceKind") != "synthetic":
-                errors.append(f"{item_id} is not pending/synthetic")
+            if item.get("status") != "accepted" or item.get("evidenceKind") != "synthetic":
+                errors.append(f"{item_id} is not accepted/synthetic")
         for item_id in ("R-06", "R-07"):
             item = items.get(item_id)
             if not item or item.get("status") != "pending" or item.get("evidenceKind") != "none":

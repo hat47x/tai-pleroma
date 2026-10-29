@@ -2,11 +2,11 @@
   "schema": "tai.reference.scn001-review-status/v0",
   "scenario": "SCN-001",
   "items": [
-    {"id": "R-01", "status": "pending", "evidence": "synthetic: scenarios/SCN-001-synthetic-facility/entrance-notice.md, meeting-room-guidance.md", "evidenceKind": "synthetic"},
-    {"id": "R-02", "status": "pending", "evidence": "synthetic: authority remains unknown", "evidenceKind": "synthetic"},
-    {"id": "R-03", "status": "pending", "evidence": "synthetic: scenarios/SCN-001-synthetic-facility/mmi", "evidenceKind": "synthetic"},
-    {"id": "R-04", "status": "pending", "evidence": "synthetic: SEI decision-memory fixture", "evidenceKind": "synthetic"},
-    {"id": "R-05", "status": "pending", "evidence": "synthetic: D-04 internal review", "evidenceKind": "synthetic"},
+    {"id": "R-01", "status": "accepted", "evidence": "synthetic: scenarios/SCN-001-synthetic-facility/entrance-notice.md, meeting-room-guidance.md", "evidenceKind": "synthetic"},
+    {"id": "R-02", "status": "accepted", "evidence": "synthetic: authority remains unknown; development review only", "evidenceKind": "synthetic"},
+    {"id": "R-03", "status": "accepted", "evidence": "synthetic: scenarios/SCN-001-synthetic-facility/mmi", "evidenceKind": "synthetic"},
+    {"id": "R-04", "status": "accepted", "evidence": "synthetic: SEI decision-memory fixture", "evidenceKind": "synthetic"},
+    {"id": "R-05", "status": "accepted", "evidence": "synthetic: D-04 internal review", "evidenceKind": "synthetic"},
     {"id": "R-06", "status": "pending", "evidence": "", "evidenceKind": "none"},
     {"id": "R-07", "status": "pending", "evidence": "", "evidenceKind": "none"}
   ]
