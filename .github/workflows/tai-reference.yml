@@ -111,3 +111,9 @@ jobs:
       - name: synthetic process scan
         working-directory: .
         run: python tools/check-synthetic-process/check.py --root .
+      - name: SCN-002 slice test
+        working-directory: tools/check-scn002
+        run: python -m unittest -v check_test.py
+      - name: SCN-002 slice scan
+        working-directory: .
+        run: python tools/check-scn002/check.py --root .
