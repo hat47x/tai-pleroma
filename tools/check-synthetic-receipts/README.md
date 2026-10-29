@@ -11,7 +11,7 @@
 - 合成施設文書
 - EKI Worker test環境
 
-あわせて、R-01〜R-05が`pending`/`synthetic`、R-06/R-07が`pending`/`none`であることを確認します。
+あわせて、R-01〜R-05が`accepted`/`synthetic`、R-06/R-07が`pending`/`none`であることを確認します。
 
 ## 実行
 

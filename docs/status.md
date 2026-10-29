@@ -6,7 +6,7 @@
 
 SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、SUIのcard/island/edge、TEIの型検証、EKIのTask admission/cancel、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
 
-Owner指示（2026-10-26）により、`development-review-only`の仮承認でCP-3まで進めている。**公開・外部作用は未承認**であり、`reviewTrigger=real-object`で実物ベースの再レビューを要する。
+Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`development-review-only`の仮承認でCP-3まで進めている。R-01〜R-05は合成文書でdevelopment review accepted。**公開・外部作用は未承認**であり、公開用の実物レビューを合成後の工程として残す。
 
 ## 実装と証拠
 
@@ -18,8 +18,8 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 | 統合参照実行 | 実装済み（SUI linkを含む） | [reference-scn001-run](../tools/reference-scn001-run/README.md)、[record](../evaluations/records/SCN-001-run-2026-10-26.json) | `runDigest`は内部整合のみ。署名・Authorityは未検証 |
 | D-04レビュー成果物 | 生成済み | [artifact](../evaluations/artifacts/SCN-001-D-04-provisional.md) | 公開用ではない。実在の規程ではない |
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
-| 実物ベース再レビュー | 未実施 | [計画](../evaluations/SCN-001-real-object-review.md) | R-01〜R-07はPending |
-| 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | R-01〜R-05のaccepted証拠がない |
+| 合成後レビュー | 合成でR-01〜R-05をdevelopment accepted。実物は未実施 | [判断](../evaluations/SCN-001-owner-decision-2026-10-29.md)、[計画](../evaluations/SCN-001-real-object-review.md) | R-06/R-07はPending。公開用real-objectは未取得 |
+| 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
 | SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
 | SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
@@ -54,8 +54,9 @@ Owner指示（2026-10-26）により、`development-review-only`の仮承認でC
 ## 仮承認の境界
 
 - `provisionalApproved=true`、`publicationApproved=false`、`authorityVerified=false`。
-- 仮承認の根拠は`owner-instruction-2026-10-26`。
-- 実物レビューR-01〜R-05が揃わない場合は、`provisionalApproved=false`へ戻し、D-04を未決へ戻す。
+- 仮承認の根拠は`owner-instruction-2026-10-26`と`owner-decision-2026-10-29`。
+- R-01〜R-05は合成文書でdevelopment accepted。公開用real-objectレビューは合成後の工程へ移す。
+- 合成後の実物レビューで前提が崩れた場合は`provisionalApproved=false`へ戻し、D-04を未決へ戻す。
 - 公開・外部作用・予約実行は行わない。
 
 ## 未確認
