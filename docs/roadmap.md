@@ -25,6 +25,8 @@
 
 ## Phase 3 — 主体の規模と実行形態を比較
 
+**次の評価対象**: [人とAIの協働統治に向けた開発の焦点](ai-human-cogovernance-development-plan.md)と[P-06比較プロトコル](../evaluations/P-06-cogovernance-protocol.md)で、個人・組織・社会の違いを、Markdown等による手作業との対照で観測する。具体的な試行は[Issue #127](https://github.com/hat47x/tai-pleroma/issues/127)で追跡する。現時点では**全ケースNOT RUN**であり、R-01〜R-07の実物確認や公開権限を代替しない。
+
 - 個人／組織／社会へ適用する際の、情報公開、承認主体、参加条件の違いを比較する。
 - EKIの委任、TEIのモデル生成、SHOの文書編集を必要性が確認できた範囲で試す。
 - **出口**: 一つの知的機能としての価値と、個々の基盤へ戻すべき仕事を区別できること。
