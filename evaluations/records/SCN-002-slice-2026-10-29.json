@@ -13,7 +13,8 @@
     "sui",
     "ai_review",
     "ai_approval",
-    "approvals"
+    "approvals",
+    "rejections"
   ],
   "publicationAllowed": false,
   "passed": true,

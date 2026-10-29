@@ -18,6 +18,7 @@ RECORDS = {
     "ai_review": "evaluations/records/SCN-002-ai-review-2026-10-29.json",
     "ai_approval": "evaluations/records/SCN-002-D-06-ai-review-2026-10-29.json",
     "approvals": "evaluations/records/SCN-002-approvals-2026-10-29.json",
+    "rejections": "evaluations/records/SCN-002-rejections-2026-10-29.json",
 }
 D05 = "evaluations/artifacts/SCN-002-D-05-priority-plan.md"
 D06 = "evaluations/artifacts/SCN-002-D-06-approval-packet.md"
@@ -40,6 +41,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     ai_review = receipts.get("ai_review", {})
     ai_approval = receipts.get("ai_approval", {})
     approvals = receipts.get("approvals", {})
+    rejections = receipts.get("rejections", {})
     try:
         d05 = (root / D05).read_text(encoding="utf-8")
         d06 = (root / D06).read_text(encoding="utf-8")
@@ -90,6 +92,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     for decision in approval_decisions:
         if "未完了" not in decision.get("statement", ""):
             errors.append("SEI approval decision does not say 未完了")
+    rejection_decisions = rejections.get("rejectionDecisions", [])
+    if rejections.get("passed") is not True or rejections.get("recordCount") != 3 or len(rejection_decisions) != 2:
+        errors.append("SEI rejection simulation did not record 3 records / 2 rejections")
+    for decision in rejection_decisions:
+        if "差戻し" not in decision.get("statement", ""):
+            errors.append("SEI rejection decision does not say 差戻し")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",

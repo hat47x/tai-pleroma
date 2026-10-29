@@ -47,6 +47,8 @@ type Receipt struct {
 	Decision               DecisionView     `json:"decision"`
 	ProvisionalDecision    DecisionView     `json:"provisionalDecision"`
 	ApprovalDecisions      []DecisionView   `json:"approvalDecisions,omitempty"`
+	RejectionDecisions     []DecisionView   `json:"rejectionDecisions,omitempty"`
+	Rejected               bool             `json:"rejected"`
 	Unresolved             []UnresolvedView `json:"unresolved"`
 	NotVerifiedRecordCount int              `json:"notVerifiedRecordCount"`
 	ProvisionalApproved    bool             `json:"provisionalApproved"`
@@ -223,6 +225,8 @@ func main() {
 	receipt := Run(ctx, root)
 	if *variant == "scn002-approvals" {
 		receipt = RunApproval(ctx, root)
+	} else if *variant == "scn002-rejections" {
+		receipt = RunRejection(ctx, root)
 	} else if *variant != "" {
 		receipt = RunVariant(ctx, root, *variant)
 	}
