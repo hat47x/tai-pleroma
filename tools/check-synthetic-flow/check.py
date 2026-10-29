@@ -52,6 +52,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("TEI validation is not ok")
     if (sui.get("documentCardCount"), sui.get("documentIslandCount"), sui.get("documentEdgeCount")) != (5, 3, 1):
         errors.append("SUI shape is not 5 cards / 3 islands / 1 edge")
+    if ai_review.get("evaluatorKind") != "generative-ai":
+        errors.append("AI development review is not marked generative-ai")
     if ai_review.get("quality") != "sufficient-for-development" or ai_review.get("passed") is not True:
         errors.append("AI development review is not sufficient-for-development")
     if ai_review.get("humanReviewed") is not False or ai_review.get("publicationApproved") is not False:
@@ -62,6 +64,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("EKI worker test environment did not pass its tests")
     if eki.get("workerExecution") is not False or eki.get("taskResult") is not False:
         errors.append("EKI worker test environment claims Task execution")
+    if eki_review.get("evaluatorKind") != "generative-ai":
+        errors.append("EKI feasibility review is not marked generative-ai")
     if eki_review.get("quality") != "sufficient-for-feasibility" or eki_review.get("passed") is not True:
         errors.append("EKI feasibility review is not sufficient-for-feasibility")
     if eki_review.get("workerExecution") is not False or eki_review.get("taskResult") is not False:
