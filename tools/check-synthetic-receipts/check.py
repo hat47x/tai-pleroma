@@ -52,6 +52,10 @@ RECORDS = (
     "evaluations/records/SCN-cross-scenario-2026-10-29.json",
     "evaluations/records/SCN-003-mmi-2026-10-29.json",
     "evaluations/records/SCN-003-tei-2026-10-29.json",
+    "evaluations/records/SCN-003-sei-2026-10-29.json",
+    "evaluations/records/SCN-003-eki-docs-2026-10-29.json",
+    "evaluations/records/SCN-003-sui-2026-10-29.json",
+    "evaluations/records/SCN-003-D-08-ai-review-2026-10-29.json",
     "evaluations/records/SCN-003-slice-2026-10-29.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
@@ -78,7 +82,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"evaluatorKind is not generative-ai: {relative}")
             if data.get("humanReviewed") is not False or data.get("publicationApproved") is not False:
                 errors.append(f"AI review claims human or publication approval: {relative}")
-            if "D-07" in relative:
+            if "D-08" in relative:
+                expected_outcome, expected_next = "candidate-with-unresolved-eligibility", "confirm-eligibility-and-quota"
+            elif "D-07" in relative:
                 expected_outcome, expected_next = "revised-after-rejection", "resubmit-approvals"
             elif "D-06" in relative:
                 expected_outcome, expected_next = "approval-ready-with-conditions", "obtain-approvals"

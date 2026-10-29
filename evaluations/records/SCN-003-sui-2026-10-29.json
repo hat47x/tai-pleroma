@@ -1,0 +1,18 @@
+{
+  "schema": "tai.reference.sui-document-put/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "docId": "scn003-grant-review",
+  "passed": true,
+  "putStatus": 200,
+  "readStatus": 200,
+  "cardCount": 5,
+  "islandCount": 3,
+  "edgeCount": 1,
+  "edgeType": "contradicts",
+  "expected": {
+    "cards": 5,
+    "islands": 3,
+    "edges": 1
+  }
+}
