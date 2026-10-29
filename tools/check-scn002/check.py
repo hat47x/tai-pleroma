@@ -15,7 +15,9 @@ RECORDS = {
     "eki_inspect": "evaluations/records/SCN-002-eki-inspect-a-2026-10-29.json",
     "eki_quote": "evaluations/records/SCN-002-eki-quote-b-2026-10-29.json",
     "sui": "evaluations/records/SCN-002-sui-2026-10-29.json",
+    "ai_review": "evaluations/records/SCN-002-ai-review-2026-10-29.json",
 }
+D05 = "evaluations/artifacts/SCN-002-D-05-priority-plan.md"
 
 
 def check(root: pathlib.Path) -> dict[str, Any]:
@@ -32,6 +34,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     eki_inspect = receipts.get("eki_inspect", {})
     eki_quote = receipts.get("eki_quote", {})
     sui = receipts.get("sui", {})
+    ai_review = receipts.get("ai_review", {})
+    try:
+        d05 = (root / D05).read_text(encoding="utf-8")
+    except OSError as error:
+        errors.append(f"d05: {error}")
+        d05 = ""
     if mmi.get("passed") is not True or mmi.get("selectedRows") != 5:
         errors.append("MMI did not return 5 rows")
     if mmi.get("synthetic") is not True:
@@ -55,6 +63,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("SUI DocumentV1 is not 7 cards / 4 islands / 2 edges")
     if sui.get("edgeType") != "depends":
         errors.append("SUI edge type is not depends")
+    for marker in ("- 状態: `provisional`", "- 公開承認: **なし**", "- 発注: **なし**", "見積が確定していない"):
+        if marker not in d05:
+            errors.append(f"D-05 is missing marker: {marker}")
+    if ai_review.get("quality") != "sufficient-for-development" or ai_review.get("passed") is not True:
+        errors.append("SCN-002 AI review is not sufficient-for-development")
+    if ai_review.get("humanReviewed") is not False or ai_review.get("publicationApproved") is not False:
+        errors.append("SCN-002 AI review claims human or publication approval")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",

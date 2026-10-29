@@ -10,7 +10,8 @@
     "sei",
     "eki_inspect",
     "eki_quote",
-    "sui"
+    "sui",
+    "ai_review"
   ],
   "publicationAllowed": false,
   "passed": true,
