@@ -1,0 +1,25 @@
+namespace scn001_variant_b
+
+data Observation {
+    attribute id type std.code
+    attribute text type std.text
+    attribute source type std.text
+    attribute sourceVersion type std.code
+    attribute availability type std.code
+}
+
+data Building {
+    attribute id type std.code
+    attribute name type std.text
+}
+
+data RoomPolicy {
+    attribute building type std.code
+    attribute reservationRequired type std.boolean
+    attribute effectiveVersion type std.code
+}
+
+data ScopeException {
+    attribute scope type std.code
+    attribute description type std.text
+}

@@ -81,3 +81,9 @@ jobs:
       - name: synthetic flow scan
         working-directory: .
         run: python tools/check-synthetic-flow/check.py --root .
+      - name: synthetic variants test
+        working-directory: tools/check-synthetic-variants
+        run: python -m unittest -v check_test.py
+      - name: synthetic variants scan
+        working-directory: .
+        run: python tools/check-synthetic-variants/check.py --root .

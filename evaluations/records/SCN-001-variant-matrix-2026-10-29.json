@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.scn001-variant-matrix/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "variants": [
+    "variant-b",
+    "variant-c"
+  ],
+  "results": {
+    "variant-b": {
+      "mmi": true,
+      "tei": true
+    },
+    "variant-c": {
+      "mmi": true,
+      "tei": true
+    }
+  },
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}
