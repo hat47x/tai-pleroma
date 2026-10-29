@@ -19,7 +19,7 @@ go test ./...
 go run . -root ../..
 ```
 
-`-out run.json`でreceiptを保存できます。SUIのcard/island照合を含める場合は`-sui-link ../../evaluations/records/SUI-SCN-link-2026-10-26.json`を指定します。今回生成したD-04も残す場合は、`-artifact-out review.md -out run.json`を指定します。両方の出力先は新規・別名のファイルに限り、既存ファイルは上書きしません。保存したbyte列を読み直し、実行記録のdigestとの一致を確認します。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
+`-out run.json`でreceiptを保存できます。保存済みSUI照合要約を含める場合は`-sui-link ../../evaluations/records/SUI-SCN-link-2026-10-26.json`を指定します。今回生成したD-04も残す場合は、`-artifact-out review.md -out run.json`を指定します。両方の出力先は新規・別名のファイルに限り、既存ファイルは上書きしません。保存したbyte列を読み直し、実行記録のdigestとの一致を確認します。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
 
 `-verify run.json -artifact review.md`では、指定したローカルファイルを読み直し、`reviewArtifact.artifactDigest`とbytesを照合します。実行記録の検証とbyte照合の両方が成功した場合だけ、`passed=true`・`artifactBytesVerified=true`になります。欠損・差替え・改行の変換は失敗です。`-artifact`を付けない検証は`artifactBytesVerified=false`で、ファイルの一致を主張しません。`-artifact`は`-verify`または`-owner-packet`と併用します。`-verify`と`-owner-packet`は同時に指定できません。
@@ -39,11 +39,11 @@ go run . -verify ../../evaluations/records/SCN-001-run-2026-10-26.json -artifact
 
 SUI linkを含む記録では、cardのID集合がO-02/O-03/O-06/O-07/O-08、islandのID集合がI-01/I-02/I-03とそれぞれ一致することを確認します。件数だけが同じ別IDや空IDは拒否し、並び順の違いは許容します。この検査はID集合の一致を確認するもので、SUI Document本文や今回のMMI観測との内容の一致を再検証するものではありません。
 
-### 追加候補: 今回の観測を使うSUI照合
+### 今回の観測を使うSUI照合
 
-状態: Draftの実装候補。元のSUI receiptを受け渡すCLIの採用はOwner判断待ちです。保存済み要約での不一致は[再現記録](../../evaluations/SCN-001-sui-current-observation-gap.md)を参照してください。
+今回の観測内容とSUI cardを照合する場合は`-sui-receipt`を使います。保存済み要約だけの検査との違いは[再現記録](../../evaluations/SCN-001-sui-current-observation-gap.md)を参照してください。
 
-`-sui-receipt`は、元のSUI API probe receiptを読み取り、今回MMI観測を反映したfixtureと一緒に既存の`reference-sui-link`へ渡す候補です。D-04生成に使うfixtureと同じものを渡し、cardの内容が一致しない場合は実行記録と成果物を保存せずに終了します。元のreceiptは一度だけ読み、曖昧なJSONを拒否した同じbytesの一時コピーを照合器へ渡します。
+`-sui-receipt`は、元のSUI API probe receiptを読み取り、今回MMI観測を反映したfixtureと一緒に既存の`reference-sui-link`へ渡します。D-04生成に使うfixtureと同じものを渡し、cardの内容が一致しない場合は実行記録と成果物を保存せずに終了します。元のreceiptは一度だけ読み、曖昧なJSONを拒否した同じbytesの一時コピーを照合器へ渡します。
 
 ```text
 go run . -root ../.. \
@@ -51,9 +51,9 @@ go run . -root ../.. \
   -artifact-out review.md -out run.json
 ```
 
-`-sui-link`とは同時に使えず、`-verify`・`-owner-packet`とも併用できません。この候補での`-out`は新規ファイルに限り、元のreceiptや既存出力を上書きしません。引数の不正や内容の不一致は終了コード2となり、成功した実行記録を標準出力へ返しません。
+`-sui-link`とは同時に使えず、`-verify`・`-owner-packet`とも併用できません。この経路での`-out`は新規ファイルに限り、元のreceiptや既存出力を上書きしません。引数の不正や内容の不一致は終了コード2となり、成功した実行記録を標準出力へ返しません。
 
-既存のreceipt schemaと`runDigest`の計算方法は変えません。SUIの個別結果には既存の要約を保持し、説明文で今回の照合と保存済み要約の読込みを区別します。ただし、説明文だけを実行の証明として扱えません。保存後の`-verify`は記録の構造と任意の成果物bytesを調べるもので、元のSUI receiptと今回の観測を再照合しません。この追加候補でもDocument本文のdigest再計算、SUI実APIの認可、実資料の真正性、人による意味受理、公開権限は未検証です。
+既存のreceipt schemaと`runDigest`の計算方法は変えません。SUIの個別結果には既存の要約を保持し、説明文で今回の照合と保存済み要約の読込みを区別します。ただし、説明文だけを実行の証明として扱えません。保存後の`-verify`は記録の構造と任意の成果物bytesを調べるもので、元のSUI receiptと今回の観測を再照合しません。この経路でもDocument本文のdigest再計算、SUI実APIの認可、実資料の真正性、人による意味受理、公開権限は未検証です。
 
 JSONの読出しでは、不正なUTF-8と、同じobject内で重複する項目名を拒否します。大文字・小文字、Unicodeの大小文字対応、escape表記が違うだけの同名項目も対象です。保存済み記録の検査・packet生成と、5つの個別ツールの返却値に同じ検査を適用し、後の値で前の主張が消えることを防ぎます。未使用の追加項目は引き続き読み飛ばしますが、その内部の重複も拒否するため、一般的なJSONより受け付ける範囲は狭くなります。追加項目の意味や承認は検証しません。正常な既存記録のschemaとdigestは変えません。
 
