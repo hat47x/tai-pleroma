@@ -99,3 +99,9 @@ jobs:
       - name: synthetic contract scan
         working-directory: .
         run: python tools/check-synthetic-contract/check.py --root .
+      - name: SEI negative test
+        working-directory: tools/reference-sei-negative
+        run: python -m unittest -v check_test.py
+      - name: SEI negative scan
+        working-directory: .
+        run: python tools/reference-sei-negative/check.py --root .
