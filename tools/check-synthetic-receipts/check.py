@@ -15,6 +15,7 @@ RECORDS = (
     "evaluations/records/SCN-001-synthetic-mmi-2026-10-29.json",
     "evaluations/records/SCN-001-synthetic-facility-2026-10-28.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
+    "evaluations/records/SCN-001-ai-review-2026-10-29.json",
 )
 REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
 
@@ -31,6 +32,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"synthetic is not true: {relative}")
         if data.get("evidenceKind") != "synthetic":
             errors.append(f"evidenceKind is not synthetic: {relative}")
+        if "ai-review" in relative:
+            if data.get("evaluatorKind") != "generative-ai":
+                errors.append(f"evaluatorKind is not generative-ai: {relative}")
+            if data.get("humanReviewed") is not False or data.get("publicationApproved") is not False:
+                errors.append(f"AI review claims human or publication approval: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
