@@ -77,7 +77,7 @@ W1–2のプロトコルが確定するまでは研究実験を「実施済み�
 
 ## 8. 現行開発の進展と研究への影響（2026-10-29追補）
 
-TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠点の設備更新](../scenarios/SCN-002-synthetic-maintenance/README.md)の合成実験系も存在する。SCN-001で調整した検査が他ドメインへ適用できるかを調べる**候補**とするが、同等のGoldケースは未固定であり、外部妥当性を実証したとは扱わない。
+TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠点の設備更新](https://github.com/hat47x/tai-pleroma/blob/c388e47c708c6f35b6c6f8f42a546a1b31710f3d/scenarios/SCN-002-synthetic-maintenance/README.md)の合成実験系も存在する。SCN-001で調整した検査が他ドメインへ適用できるかを調べる**候補**とするが、同等のGoldケースは未固定であり、外部妥当性を実証したとは扱わない。
 
 [TAI Draft PR #142](https://github.com/hat47x/tai-pleroma/pull/142)はMMI選択→SCN評価→D-04根拠本文の同一run内の結び付けを強化する提案であり、既存のSUI `-sui-receipt` による現在観測照合とは異なる境界である。PR #142の検査を未統合のまま現行mainの保証として数えたり、H1の独立した実験結果として数えたりしない。
 
