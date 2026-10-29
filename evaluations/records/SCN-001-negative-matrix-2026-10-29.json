@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.scn001-negative-matrix/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "expectedRejection": true,
+  "results": {
+    "tei": {
+      "rejected": true,
+      "reason": "TEI validate failed: exit status 1: exit status 1"
+    },
+    "mmi": {
+      "rejected": true,
+      "reason": "select was rejected: [{Code:TABLE_NOT_FOUND Message:「Sheet1!A1:E9」に当たる表がシート「Sheet1」に見つかりません。}]"
+    }
+  },
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

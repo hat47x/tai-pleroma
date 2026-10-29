@@ -87,3 +87,9 @@ jobs:
       - name: synthetic variants scan
         working-directory: .
         run: python tools/check-synthetic-variants/check.py --root .
+      - name: synthetic negative test
+        working-directory: tools/check-synthetic-negative
+        run: python -m unittest -v check_test.py
+      - name: synthetic negative scan
+        working-directory: .
+        run: python tools/check-synthetic-negative/check.py --root .
