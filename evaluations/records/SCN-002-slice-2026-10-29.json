@@ -7,7 +7,9 @@
   "steps": [
     "mmi",
     "tei",
-    "sei"
+    "sei",
+    "eki_inspect",
+    "eki_quote"
   ],
   "publicationAllowed": false,
   "passed": true,
