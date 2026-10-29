@@ -6,7 +6,8 @@
   "slice": "multi-site-maintenance-prioritization",
   "steps": [
     "mmi",
-    "tei"
+    "tei",
+    "sei"
   ],
   "publicationAllowed": false,
   "passed": true,

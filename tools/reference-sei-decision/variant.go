@@ -17,6 +17,7 @@ type variantFixture struct {
 	decisionID   string
 	decision     string
 	unresolved   string
+	unresolved2  string
 	provisional  string
 	provisionalD string
 }
@@ -41,6 +42,17 @@ var variantFixtures = map[string]variantFixture{
 		unresolved:   "notice:old",
 		provisional:  "dec-variant-c-02",
 		provisionalD: "D-04 variant-cを内部レビュー用に仮承認。公開は未承認",
+	},
+	"scn002": {
+		bundle:       "scn002-maintenance",
+		recommendID:  "rec-scn002",
+		recommend:    "A拠点の期限差、B拠点の故障、予算上限を比較中",
+		decisionID:   "dec-scn002-01",
+		decision:     "A拠点を最優先、B拠点を次点、C拠点は保留",
+		unresolved:   "due:conflict",
+		unresolved2:  "budget:unapproved",
+		provisional:  "dec-scn002-02",
+		provisionalD: "D-05優先度案を内部レビュー用に仮承認。公開・発注は未承認",
 	},
 }
 
@@ -75,15 +87,22 @@ func RunVariant(ctx context.Context, seiRoot, variant string) Receipt {
 	receipt.SeiCommit = output(ctx, seiRoot, "git", "rev-parse", "HEAD")
 	receipt.GoVersion = output(ctx, runtimeDir, "go", "version")
 
+	decisionStep := []string{
+		"run", "./cmd/sei", "add", "decision", "--data-root", store,
+		"--id", fixture.decisionID, "--statement", fixture.decision, "--source", "tai",
+		"--unresolved", fixture.unresolved, "--unresolved", "authority:unknown",
+	}
+	if fixture.unresolved2 != "" {
+		decisionStep = append(decisionStep, "--unresolved", fixture.unresolved2)
+	}
+	decisionStep = append(decisionStep, "--recommendation", fixture.recommendID, "--responsible", "role:facility-owner")
+
 	steps := [][]string{
 		{"run", "./cmd/sei", "init", "--data-root", store, "--bundle-id", fixture.bundle},
 		{"run", "./cmd/sei", "add", "recommendation", "--data-root", store,
 			"--id", fixture.recommendID, "--statement", fixture.recommend, "--source", "tai",
 			"--basis", "observation:O-02", "--basis", "observation:O-03"},
-		{"run", "./cmd/sei", "add", "decision", "--data-root", store,
-			"--id", fixture.decisionID, "--statement", fixture.decision, "--source", "tai",
-			"--unresolved", fixture.unresolved, "--unresolved", "authority:unknown",
-			"--recommendation", fixture.recommendID, "--responsible", "role:facility-owner"},
+		decisionStep,
 		{"run", "./cmd/sei", "add", "decision", "--data-root", store,
 			"--id", fixture.provisional, "--statement", fixture.provisionalD, "--source", "tai",
 			"--unresolved", "authority:unknown", "--unresolved", "publication:unapproved",
@@ -121,6 +140,7 @@ func RunVariant(ctx context.Context, seiRoot, variant string) Receipt {
 	}
 	if view.BundleID != fixture.bundle || view.RecordCount != 3 || len(view.Decisions) != 2 ||
 		!hasDecision || !hasProvisional || !unresolved[fixture.unresolved] ||
+		(fixture.unresolved2 != "" && !unresolved[fixture.unresolved2]) ||
 		!unresolved["authority:unknown"] || !unresolved["publication:unapproved"] ||
 		!unresolved["review:real-object"] || view.NotVerifiedRecordCount != 0 {
 		receipt.Reason = "resume projection does not match the SEI variant fixture"

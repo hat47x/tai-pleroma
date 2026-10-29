@@ -11,6 +11,7 @@ from typing import Any
 RECORDS = {
     "mmi": "evaluations/records/SCN-002-mmi-2026-10-29.json",
     "tei": "evaluations/records/SCN-002-tei-2026-10-29.json",
+    "sei": "evaluations/records/SCN-002-sei-2026-10-29.json",
 }
 
 
@@ -24,6 +25,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"{name}: {error}")
     mmi = receipts.get("mmi", {})
     tei = receipts.get("tei", {})
+    sei = receipts.get("sei", {})
     if mmi.get("passed") is not True or mmi.get("selectedRows") != 5:
         errors.append("MMI did not return 5 rows")
     if mmi.get("synthetic") is not True:
@@ -32,6 +34,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("TEI did not validate the maintenance model")
     if tei.get("synthetic") is not True:
         errors.append("TEI receipt is not synthetic")
+    if sei.get("passed") is not True or sei.get("recordCount") != 3 or sei.get("variant") != "scn002":
+        errors.append("SEI did not record the SCN-002 decision fixture")
+    if sei.get("synthetic") is not True:
+        errors.append("SEI receipt is not synthetic")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",
