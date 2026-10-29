@@ -1,9 +1,10 @@
 # 横断シナリオの実務能力マトリクス
 
-SCN-001（単一施設の予約案内）とSCN-002（複数拠点の設備更新）を1つのマトリクスへ統合します。
+SCN-001（単一施設の予約案内）、SCN-002（複数拠点の設備更新）、SCN-003（補助金一次審査）を1つのマトリクスへ統合します。
 
 - SCN-001: MMI/TEI/SEI/EKI/SUIの正常系・拒否系
-- SCN-002: MMI/TEI/SEI/EKI/SUI、D-05/D-06、AI review
+- SCN-002: MMI/TEI/SEI/EKI/SUI、D-05/D-06/D-07、AI review
+- SCN-003: MMI/TEI/SEI/EKI/SUI、D-08、AI review
 
 ## 実行
 
