@@ -2,7 +2,7 @@
   "schema": "tai.reference.scn001-synthetic-flow/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "flow": "synthetic-documents->MMI->SEI->TEI->SUI->D-04->AI-review->EKI-worker-test-env->publication-gate",
+  "flow": "synthetic-documents->MMI->SEI->TEI->SUI->D-04->AI-review->EKI-worker-test-env->EKI-feasibility-review->publication-gate",
   "steps": [
     "facility",
     "mmi",
@@ -11,6 +11,7 @@
     "sui",
     "ai_review",
     "eki",
+    "eki_review",
     "gate"
   ],
   "developmentReview": "accepted",

@@ -11,7 +11,8 @@
 - [SCN-001実物レビュー要求の変更](SCN-001-owner-decision-2026-10-29.md): 合成文書によるdevelopment acceptedと、生成AI評価・人間レビュー後置のOwner判断。
 - [SCN-001生成AI development reviewの観点](SCN-001-ai-development-review-rubric.md): D-04を確認する5観点。
 - [SCN-001-ai-review-2026-10-29.json](records/SCN-001-ai-review-2026-10-29.json): 生成AIによるdevelopment review receipt。`quality=sufficient-for-development`、`humanReviewed=false`。
-- [SCN-001-synthetic-flow-2026-10-29.json](records/SCN-001-synthetic-flow-2026-10-29.json): 合成文書→MMI→SEI→TEI→SUI→D-04→AI review→gateの接続receipt。`publicationAllowed=false`。
+- [SCN-001-synthetic-flow-2026-10-29.json](records/SCN-001-synthetic-flow-2026-10-29.json): 合成文書→MMI→SEI→TEI→SUI→D-04→AI review→EKI test環境→gateの接続receipt。`publicationAllowed=false`。
+- [SCN-001-eki-feasibility-2026-10-29.json](records/SCN-001-eki-feasibility-2026-10-29.json): EKI Worker test環境のfeasibility review。`quality=sufficient-for-feasibility`、`taskExecution=false`。
 - [SCN-001-synthetic-facility-2026-10-28.json](records/SCN-001-synthetic-facility-2026-10-28.json): 合成文書の欠陥検査receipt。`synthetic=true`、`publicationAllowed=false`。
 - [SCN-001-synthetic-mmi-2026-10-29.json](records/SCN-001-synthetic-mmi-2026-10-29.json): 合成workspaceのMMI読み取り専用receipt。`synthetic=true`、`selectedRows=5`。実認可は未検証。
 - [SCN-001-review-status.json](SCN-001-review-status.json): R-01〜R-05は合成で`accepted`/`synthetic`。R-06/R-07は`pending`。公開gateはblocked。
