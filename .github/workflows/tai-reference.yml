@@ -105,3 +105,9 @@ jobs:
       - name: SEI negative scan
         working-directory: .
         run: python tools/reference-sei-negative/check.py --root .
+      - name: synthetic process test
+        working-directory: tools/check-synthetic-process
+        run: python -m unittest -v check_test.py
+      - name: synthetic process scan
+        working-directory: .
+        run: python tools/check-synthetic-process/check.py --root .
