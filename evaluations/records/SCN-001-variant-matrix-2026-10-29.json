@@ -10,12 +10,14 @@
     "variant-b": {
       "mmi": true,
       "tei": true,
-      "sei": true
+      "sei": true,
+      "eki": true
     },
     "variant-c": {
       "mmi": true,
       "tei": true,
-      "sei": true
+      "sei": true,
+      "eki": true
     }
   },
   "publicationAllowed": false,
