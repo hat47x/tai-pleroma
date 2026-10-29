@@ -457,7 +457,14 @@ func artifactDigest(raw []byte) string {
 }
 
 func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLinkPath string) (RunReceipt, error) {
+	return runWithSUIInputs(ctx, root, artifactOut, suiLinkPath, "")
+}
+
+func runWithSUIInputs(ctx context.Context, root, artifactOut, suiLinkPath, suiReceiptPath string) (RunReceipt, error) {
 	receipt := RunReceipt{Schema: "tai.reference.scn001-run/v0", Scenario: "SCN-001", Synthetic: true}
+	if suiLinkPath != "" && suiReceiptPath != "" {
+		return receipt, fmt.Errorf("choose a saved SUI link or a source SUI receipt, not both")
+	}
 	tools := filepath.Join(root, "tools")
 	mmiTool := filepath.Join(tools, "reference-mmi-readonly")
 	seiTool := filepath.Join(tools, "reference-sei-decision")
@@ -474,6 +481,22 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 		return receipt, err
 	}
 	defer os.RemoveAll(work)
+	// Read the selected source once, reject ambiguous JSON, and give the checker
+	// these same bytes. Never let a later source-path change select other input.
+	suiSnapshotPath := filepath.Join(work, "sui-source.json")
+	if suiReceiptPath != "" {
+		snapshot, err := os.ReadFile(suiReceiptPath)
+		if err != nil {
+			return receipt, fmt.Errorf("SUI source receipt is invalid: %w", err)
+		}
+		var checked json.RawMessage
+		if err := decodeEvidenceJSON(snapshot, &checked); err != nil {
+			return receipt, fmt.Errorf("SUI source receipt is invalid: %w", err)
+		}
+		if err := os.WriteFile(suiSnapshotPath, snapshot, 0o600); err != nil {
+			return receipt, err
+		}
+	}
 	mmiPath := filepath.Join(work, "mmi.json")
 	seiPath := filepath.Join(work, "sei.json")
 	scnPath := filepath.Join(work, "scn001.json")
@@ -529,6 +552,24 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 		}
 		receipt.Components.SUILink = &link
 	}
+	if suiReceiptPath != "" {
+		output, err := goRunOutput(ctx, filepath.Join(tools, "reference-sui-link"),
+			"run", ".", "-fixture", resolvedFixturePath, "-sui-receipt", suiSnapshotPath)
+		if err != nil {
+			return receipt, fmt.Errorf("SUI link against this run's observations: %w", err)
+		}
+		var result struct {
+			SUILinkComponent
+			Schema string `json:"schema"`
+		}
+		if err := decodeEvidenceJSON(output, &result); err != nil {
+			return receipt, fmt.Errorf("SUI link receipt is invalid: %w", err)
+		}
+		if result.Schema != "tai.reference.sui-scn-link/v0" || !result.Passed {
+			return receipt, fmt.Errorf("SUI link against this run's observations did not pass")
+		}
+		receipt.Components.SUILink = &result.SUILinkComponent
+	}
 	receipt.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
 	receipt.RealProductsConnected = receipt.Components.MMI.Passed && receipt.Components.MMI.SourceDigestBefore != "" &&
 		receipt.Components.SEI.Passed && receipt.Components.SCN001.RealProductsConnected
@@ -553,8 +594,10 @@ func runWithArtifactOutputAndSUI(ctx context.Context, root, artifactOut, suiLink
 		"publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
 		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
 	}
-	if receipt.Components.SUILink != nil {
-		receipt.Notes = append(receipt.Notes, "SUI linkはcard digestとisland構成をSCN-001観測へ照合した参照であり、実資料・認可は未検証。")
+	if suiReceiptPath != "" {
+		receipt.Notes = append(receipt.Notes, "SUIの元receiptのsnapshotを、今回MMI観測を反映したfixtureへ既存照合器で照合した。実資料・認可・Document本文のdigest再計算は未検証。")
+	} else if receipt.Components.SUILink != nil {
+		receipt.Notes = append(receipt.Notes, "保存済みSUI link要約を読み込み、ID集合等の構造を検査した。今回のMMI観測との内容の再照合は未実施。")
 	}
 	digest, err := digestJSON(receipt.Components)
 	if err != nil {
@@ -578,14 +621,16 @@ func main() {
 	artifactPath := flag.String("artifact", "", "with -verify or -owner-packet, compare this artifact's exact bytes")
 	artifactOut := flag.String("artifact-out", "", "save this run's D-04 to a new local file")
 	suiLinkPath := flag.String("sui-link", "", "include a SUI link receipt in this run")
+	suiReceiptPath := flag.String("sui-receipt", "", "check a source SUI receipt against this run's MMI-resolved fixture")
 	ownerPacketPath := flag.String("owner-packet", "", "build an owner decision packet from an existing run receipt")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
 	if (*verifyPath != "" && *ownerPacketPath != "") ||
 		(*artifactPath != "" && *verifyPath == "" && *ownerPacketPath == "") ||
 		(*artifactOut != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) ||
-		(*suiLinkPath != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) {
-		fmt.Fprintln(os.Stderr, "choose run, verify, or owner-packet mode; -artifact/-sui-link belong to run or verify/owner-packet as documented")
+		((*suiLinkPath != "" || *suiReceiptPath != "") && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) ||
+		(*suiLinkPath != "" && *suiReceiptPath != "") {
+		fmt.Fprintln(os.Stderr, "choose run, verify, or owner-packet mode; SUI inputs belong to run and are mutually exclusive")
 		os.Exit(2)
 	}
 	if *artifactOut != "" {
@@ -604,6 +649,12 @@ func main() {
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(2)
 			}
+		}
+	}
+	if *suiReceiptPath != "" && *outPath != "" {
+		if err := requireNewReviewPath(*outPath); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
 		}
 	}
 	if *ownerPacketPath != "" {
@@ -679,7 +730,7 @@ func main() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
-	receipt, err := runWithArtifactOutputAndSUI(ctx, *root, *artifactOut, *suiLinkPath)
+	receipt, err := runWithSUIInputs(ctx, *root, *artifactOut, *suiLinkPath, *suiReceiptPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
@@ -692,7 +743,7 @@ func main() {
 	encoded = append(encoded, '\n')
 	if *outPath != "" {
 		var err error
-		if *artifactOut != "" {
+		if *artifactOut != "" || *suiReceiptPath != "" {
 			err = writeNewReviewFile(*outPath, encoded)
 		} else {
 			err = os.WriteFile(*outPath, encoded, 0o644)
