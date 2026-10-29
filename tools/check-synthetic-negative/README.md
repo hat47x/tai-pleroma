@@ -1,9 +1,11 @@
 # 合成不正入力の拒否検査
 
-TEIとMMIが、意図的に不正な合成入力を拒否するかを確認します。
+TEI・MMI・EKI・SUIが、意図的に不正な合成入力を拒否するかを確認します。
 
 - TEI: ハイフンを含む不正なnamespaceで`validation`が失敗する。
 - MMI: CSVの範囲外を指すガイドで`TABLE_NOT_FOUND`になる。
+- EKI: `priority=low`のTask requestを400で拒否する。
+- SUI: `claimType=bogus`のDocumentV1を422で拒否する。
 
 `passed=false`のreceiptを期待し、受理された場合はcheckerが失敗します。
 
