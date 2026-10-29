@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.scn001-eki-feasibility/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "scenario": "SCN-001",
+  "evaluatorKind": "generative-ai",
+  "subject": "EKI Worker test environment",
+  "rubric": "evaluations/SCN-001-eki-worker-feasibility-review.md",
+  "controlPlane": true,
+  "agentClaimDelivery": true,
+  "taskLifecycle": true,
+  "nativeRunner": true,
+  "workerExecution": false,
+  "taskResult": false,
+  "humanReviewed": false,
+  "publicationApproved": false,
+  "quality": "sufficient-for-feasibility",
+  "passed": true,
+  "notes": [
+    "Control Plane、Agent、Task cancel、Native Runnerのspikeを確認した。",
+    "Taskを実行するWorkerではなく、結果・Authorityは未検証。",
+    "sandbox・CPU/メモリ制限は未実装。"
+  ]
+}

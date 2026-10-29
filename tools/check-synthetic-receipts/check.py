@@ -16,6 +16,7 @@ RECORDS = (
     "evaluations/records/SCN-001-synthetic-facility-2026-10-28.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
+    "evaluations/records/SCN-001-eki-feasibility-2026-10-29.json",
     "evaluations/records/SCN-001-synthetic-flow-2026-10-29.json",
 )
 REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
