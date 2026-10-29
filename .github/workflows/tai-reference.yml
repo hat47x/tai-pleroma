@@ -117,3 +117,9 @@ jobs:
       - name: SCN-002 slice scan
         working-directory: .
         run: python tools/check-scn002/check.py --root .
+      - name: cross-scenario test
+        working-directory: tools/check-cross-scenario
+        run: python -m unittest -v check_test.py
+      - name: cross-scenario scan
+        working-directory: .
+        run: python tools/check-cross-scenario/check.py --root .
