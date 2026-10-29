@@ -61,6 +61,6 @@ CTRL-01/MUT-01の差は既存[合成反例の記録](../../evaluations/SCN-001-s
 - Gate A: 正常系と差替え系のGoldが事前に固定され、比較対象の製品版・実行環境が揃う。
 - Gate B: B1とB2の同一条件の実行を完了し、結果・ログ・入力不変性が残る（成功/失敗の両方を保持）。
 - Gate C: 独立した評価で結果を確認し、当初の開発用fixture以外の**保留ケース**を使用する。
-- Gate D: 他のシナリオで同様の問題が起こり得るかを評価する。[SCN-002](../../scenarios/SCN-002-synthetic-maintenance/README.md)は分野転用の候補だが、同等のdigest/判断境界のケースをまだ固定していないため、結果の一般化には用いない。
+- Gate D: 他のシナリオで同様の問題が起こり得るかを評価する。[SCN-002](https://github.com/hat47x/tai-pleroma/blob/c388e47c708c6f35b6c6f8f42a546a1b31710f3d/scenarios/SCN-002-synthetic-maintenance/README.md)は分野転用の候補だが、同等のdigest/判断境界のケースをまだ固定していないため、結果の一般化には用いない。
 
 **現在**: プロトコル候補と過去の開発証拠があるのみ。Gate A〜Dはこの研究として未完了。R-01〜R-07とP-06/N-05は既存の未受理・NOT RUNのまま。Ownerによる意味受理・公開・外部作用は行わない。
