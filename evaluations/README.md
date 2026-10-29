@@ -9,6 +9,8 @@
 - [SCN-001実物ベース再レビュー](SCN-001-real-object-review.md): 合成後に行う公開用実物レビューの計画。R-06/R-07は未実施。
 - [SCN-001合成施設文書による工程欠陥検査](SCN-001-synthetic-facility-review.md): 創作文書で工程欠陥を検出する検証。実物レビューではない。
 - [SCN-001実物レビュー要求の変更](SCN-001-owner-decision-2026-10-29.md): 合成文書によるdevelopment acceptedと、生成AI評価・人間レビュー後置のOwner判断。
+- [SCN-001生成AI development reviewの観点](SCN-001-ai-development-review-rubric.md): D-04を確認する5観点。
+- [SCN-001-ai-review-2026-10-29.json](records/SCN-001-ai-review-2026-10-29.json): 生成AIによるdevelopment review receipt。`quality=sufficient-for-development`、`humanReviewed=false`。
 - [SCN-001-synthetic-facility-2026-10-28.json](records/SCN-001-synthetic-facility-2026-10-28.json): 合成文書の欠陥検査receipt。`synthetic=true`、`publicationAllowed=false`。
 - [SCN-001-synthetic-mmi-2026-10-29.json](records/SCN-001-synthetic-mmi-2026-10-29.json): 合成workspaceのMMI読み取り専用receipt。`synthetic=true`、`selectedRows=5`。実認可は未検証。
 - [SCN-001-review-status.json](SCN-001-review-status.json): R-01〜R-05は合成で`accepted`/`synthetic`。R-06/R-07は`pending`。公開gateはblocked。
