@@ -38,6 +38,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"evaluatorKind is not generative-ai: {relative}")
             if data.get("humanReviewed") is not False or data.get("publicationApproved") is not False:
                 errors.append(f"AI review claims human or publication approval: {relative}")
+            if data.get("outcome") != "uncertainty-preserved" or data.get("userNextStep") != "confirm-with-authority":
+                errors.append(f"AI review does not preserve the business outcome: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")

@@ -52,10 +52,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("AI development review is not sufficient-for-development")
     if ai_review.get("humanReviewed") is not False or ai_review.get("publicationApproved") is not False:
         errors.append("AI review claims human or publication approval")
+    if ai_review.get("outcome") != "uncertainty-preserved" or ai_review.get("userNextStep") != "confirm-with-authority":
+        errors.append("AI review does not preserve uncertainty and the next action")
     expected = ["R-01", "R-02", "R-03", "R-04", "R-05"]
     if gate.get("allowed") is not False or gate.get("developmentAccepted") != expected:
         errors.append("gate did not keep publication blocked with 5 development-accepted items")
-    for marker in ("| O-08 |", "| unavailable |", "- 状態: `provisional`", "- 公開承認: **なし**"):
+    for marker in ("| O-08 |", "| unavailable |", "- 状態: `provisional`", "- 公開承認: **なし**", "相違が残る", "確認が必要"):
         if marker not in d04:
             errors.append(f"D-04 is missing marker: {marker}")
 
