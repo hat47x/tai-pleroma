@@ -12,6 +12,8 @@ RECORDS = {
     "mmi": "evaluations/records/SCN-002-mmi-2026-10-29.json",
     "tei": "evaluations/records/SCN-002-tei-2026-10-29.json",
     "sei": "evaluations/records/SCN-002-sei-2026-10-29.json",
+    "eki_inspect": "evaluations/records/SCN-002-eki-inspect-a-2026-10-29.json",
+    "eki_quote": "evaluations/records/SCN-002-eki-quote-b-2026-10-29.json",
 }
 
 
@@ -26,6 +28,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     mmi = receipts.get("mmi", {})
     tei = receipts.get("tei", {})
     sei = receipts.get("sei", {})
+    eki_inspect = receipts.get("eki_inspect", {})
+    eki_quote = receipts.get("eki_quote", {})
     if mmi.get("passed") is not True or mmi.get("selectedRows") != 5:
         errors.append("MMI did not return 5 rows")
     if mmi.get("synthetic") is not True:
@@ -38,6 +42,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("SEI did not record the SCN-002 decision fixture")
     if sei.get("synthetic") is not True:
         errors.append("SEI receipt is not synthetic")
+    for name, eki in (("inspect-a", eki_inspect), ("quote-b", eki_quote)):
+        if eki.get("passed") is not True:
+            errors.append(f"EKI {name} did not pass admission/cancel")
+        if eki.get("taskStatus") != "cancelled" or eki.get("resultStatus") != 501:
+            errors.append(f"EKI {name} is not cancelled with result 501")
+        if eki.get("workerResult") is not False or eki.get("taskExecuted") is not False:
+            errors.append(f"EKI {name} claims Task execution")
     return {
         "schema": "tai.reference.scn002/v0",
         "scenario": "SCN-002",
