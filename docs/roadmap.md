@@ -36,3 +36,12 @@
 3. Phase 2ではどの既存機能を選び、現在の動作と版をどの環境で確かめるか。
 
 実装言語、専用Host、独自AIハーネス、統一データベース、新規Contractの採否は保留する。
+
+## 横断計画（2026-10-30：Draft・本ロードマップのPhase 0〜3を置換しない）
+
+[TAIシリーズの能力増幅・縮退適性と横断実証計画](harness-capability-lifecycle-2026-10.md) を別レーンで提案する。これは [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) のHarness-first構成と、[#165](https://github.com/hat47x/tai-pleroma/issues/165) 企業/未知業務、[#166](https://github.com/hat47x/tai-pleroma/issues/166) 生活の買い物、[#167](https://github.com/hat47x/tai-pleroma/issues/167) Personal Agencyを同一評価方法で比較するための計画であり、SCN-001の既存受理Gateや公開条件を変更しない。
+
+- **接続だけで合格にしない**：既存ハーネス単体と、SEI/TEI/SHO等の最小機能を追加した場合の成果・信頼性・確認負担・運用コストを測る。
+- **最小実行例を先行**：同じ意味の本文が戻ってもSourceの版・scopeが変わるA→B→A'のSEI判断再開を、外部ハーネス間で行い、現実の権限へ昇格しないことを検査する。
+- **縮退も成果**：最新版の外部ハーネス単体で等価にできるならTAI独自処理を薄くする/廃止する処遇を選べる。共通HostやAgent Runtimeの新設は必須ではない。
+- **進捗の区別**：この文書とリンクを追加しても、SCN-004/005、実ハーネス比較、実ユーザーQoL、実発注/予約/委任の受入は引き続き **NOT RUN**。
