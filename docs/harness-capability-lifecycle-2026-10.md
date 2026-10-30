@@ -190,3 +190,27 @@ Ownerに残すのは、対象業務の意味の正式受理、本番の権限と
 - **Owner待ち**：実業務意味、本人/組織の委任、共有してよい実資料、本番作用はOwnerが判断。合成read-only比較は先行できる。
 
 **SW-01のExit**：2つの実際に利用可能な外部Harnessを用いて、同じ元資料から (i) historical basis差分、(ii) 現在の適用性、(iii) 現行権限を混同せず、(iv) Aに対するB/Cの増分または増分なしを、ログで反証可能に示す。二つのHarnessが未接続なら本条件は未達。現時点でこの実行は **NOT RUN**。
+
+### 11.5 既存READMEから確定できる準備コマンド（**未実行**）
+
+以下はTAI `tools/reference-sei-decision/README.md` と `tools/reference-mmi-readonly/README.md` にある既存の参照経路。各コマンドは **それぞれ指定ディレクトリ内** から実行する。Portable bundleのファイル名は取得時に実在を確認する。各テストのexit/Go/Node/SEI/MMI版を記録し、現在のmainへ過去のreceiptを自動適用しない。
+
+```sh
+# TAI checkout の tools/reference-sei-decision 内
+cd tools/reference-sei-decision
+go test ./...
+go run . -sei-root ../../../sei-cognition \
+  -basis-bundle /absolute/path/to/existing-portable-bundle.json \
+  -out /absolute/path/to/new-basis-inspection.json
+```
+
+```sh
+# TAI checkout の tools/reference-mmi-readonly 内（SEIのディレクトリからではない）
+cd tools/reference-mmi-readonly
+go test ./...
+go run . -workspace testdata/workspace -mmi-root ../../../markdown-matrix-injector
+```
+
+初回に確認できるのは、**既存原bundleの構造/ExactBinding参照を縮めず抽出できること**と、**MMIの合成workspaceを読み取り専用で扱えること**まで。両結果を統合して「同一の現行業務意味」「Source真正性」「実行許可」と言い切らない。
+
+失敗時は、①portable bundleの取得・入力format/未認識contract、②source version/scope/target bindingの欠落、③SEI/MMIへの依存/配置、④MCP実呼出しとTool出力、⑤Harnessの回答に移した時の情報欠落、⑥認可やread accessの境界、を別々の失敗列にする。原bundleが見つからない場合は新しい「受理済み」fixtureを作らず、#33で使われた入力の位置/保全方法を担当へ照会する。
