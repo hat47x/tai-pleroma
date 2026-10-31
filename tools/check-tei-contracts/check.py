@@ -45,6 +45,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         cap = capabilities.get(name, {})
         if cap.get("inputs", [{}])[0].get("type") != cap.get("output"):
             errors.append(f"{name} is not an identity capability")
+    patterns = data.get("patterns", {})
+    if set(patterns) != required:
+        errors.append(f"pattern set differs: {sorted(patterns)}")
+    for capability, pattern in patterns.items():
+        expected = "product_contracts_flow." + capability.removeprefix("product_contracts.")
+        if pattern != expected:
+            errors.append(f"{capability} is not wired to {expected}: {pattern}")
     if not data.get("worldFingerprint") or not data.get("sourceIndexFingerprint"):
         errors.append("TEI fingerprints are missing")
     if data.get("synthetic") is not True:

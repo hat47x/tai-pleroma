@@ -2,10 +2,10 @@
   "schema": "tei.product-capabilities/v1",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "cd47b6fa4905f35b12b8d993efcb5d4df78fad5f",
+  "teiCommit": "0399225c16e332f2aceb80d3ebe8ac1917700989",
   "workspace": "reference/product-contracts",
-  "worldFingerprint": "sha256:fca923f2766b0b0db5bec0101439cd4a6d7a6d935050b754b2b594815f6f1dfd",
-  "sourceIndexFingerprint": "sha256:a9a27ab8ad56ee05dc879727953e27d00b6eac787774727b41e82fd3b1c74425",
+  "worldFingerprint": "sha256:da593906d33adebf5b2d4436feac30ad52cecc0edd1cda45cedd4ef9daa0f093",
+  "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
   "capabilities": {
     "product_contracts.eki_task_submit": {
       "inputs": [{"name": "request", "type": "product_contracts.task_request"}],
@@ -31,5 +31,13 @@
       "inputs": [{"name": "selection", "type": "product_contracts.selection"}],
       "output": "product_contracts.selection"
     }
+  },
+  "patterns": {
+    "product_contracts.eki_task_submit": "product_contracts_flow.eki_task_submit",
+    "product_contracts.eki_attempt_execute": "product_contracts_flow.eki_attempt_execute",
+    "product_contracts.eki_result_accept": "product_contracts_flow.eki_result_accept",
+    "product_contracts.sui_document_put": "product_contracts_flow.sui_document_put",
+    "product_contracts.sei_decision_record": "product_contracts_flow.sei_decision_record",
+    "product_contracts.mmi_observation_select": "product_contracts_flow.mmi_observation_select"
   }
 }
