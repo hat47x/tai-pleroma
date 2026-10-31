@@ -1,0 +1,14 @@
+{
+  "schema": "tai.reference.tei-capability-chain/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "teiCommit": "cd47b6fa4905f35b12b8d993efcb5d4df78fad5f",
+  "chain": [
+    "eki_task_submit",
+    "eki_attempt_execute",
+    "eki_result_accept"
+  ],
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

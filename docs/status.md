@@ -52,6 +52,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | EKI Task cancel | 合成Task 1件を`cancelled`/`CANCELLED`まで確認済み。result APIは501 | [cancel](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-cancel-2026-10-26.json) | Worker未起動。実行・結果は未検証 |
 | EKI Worker test環境 | WSL/DockerでAgent/Control test profile、claim wire、Control Planeを確認済み | [worker env](../tools/reference-eki-worker/README.md)、[record](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行主体ではなく、結果・委任完了は未検証 |
 | EKI 固定コマンド実行 | 別プロセスのControl/Agentで実行とResultClaim送信を確認。Attemptは`verifying` | [receipt](../evaluations/records/EKI-execution-2026-10-31.json) | Result Verification/Acceptanceは未完了。sandbox・資源上限なし |
+| TEI能力連鎖 | `TaskRequest→Attempt→ResultClaim→AcceptedResult`の型連鎖をTEI定義で検査 | [chain](../evaluations/records/TEI-capability-chain-2026-10-31.json)、[caps](../evaluations/records/TEI-product-capabilities-2026-10-31.json) | 宣言の整合性のみ。実装生成・受理ではない |
 | EKI Task lifecycle on WSL | `queued`→`cancelled`/`CANCELLED`を確認済み | [worker env](../tools/reference-eki-worker/README.md) | Worker実行・結果は未検証 |
 | EKI Native Runner spike | 終了コード・出力上限・期限/取消し・Supervisor接続・Windows/Linuxのプロセスツリー停止を確認。未対応sandbox/資源上限/GPU/digest/引数を拒否 | [eki-fabric #275](https://github.com/hat47x/eki-fabric/pull/275) | sandbox・CPU/メモリ制限なし。未信頼Task不可 |
 
