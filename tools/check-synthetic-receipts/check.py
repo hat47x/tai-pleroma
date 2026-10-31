@@ -61,7 +61,7 @@ RECORDS = (
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/EKI-execution-2026-10-31.json",
     "evaluations/records/EKI-acceptance-2026-10-31.json",
-    "evaluations/records/EKI-runtime-memory-limit-2026-11-01.json",
+    "evaluations/records/EKI-runtime-limits-2026-11-01.json",
     "evaluations/records/TEI-product-capabilities-2026-10-31.json",
     "evaluations/records/TEI-capability-chain-2026-10-31.json",
     "evaluations/records/SW-01-S1-harness-2026-10-31.json",
