@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.eki-execution/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "date": "2026-10-31",
+  "ekiCommit": "73b48a0e7f40ee5c061046e5819ec3bf094cf9ef",
+  "test": "TestAgentExecutesAndSubmitsResultClaim",
+  "processBoundary": "eki-control and eki-agent as separate OS processes",
+  "command": "cmd.exe /c echo hello (Windows) or /bin/echo hello (Unix)",
+  "executionStatus": "completed",
+  "claimDecision": "new",
+  "attemptPhase": "verifying",
+  "resultClaimSubmitted": true,
+  "resultVerified": false,
+  "resultAccepted": false,
+  "taskResultAccepted": false,
+  "sandbox": false,
+  "resourceLimitsEnforced": false,
+  "taskInputCommand": false,
+  "notes": [
+    "固定コマンドの実行とResultClaim送信をプロセス境界で確認した。",
+    "Control PlaneのAttemptはverifyingへ進んだ。",
+    "Result VerificationとResult Acceptanceは未完了。",
+    "sandbox・CPU/メモリ/network/temp-diskの強制は未実装。"
+  ]
+}
