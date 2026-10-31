@@ -52,7 +52,14 @@ func TestCurrentSUILinkRejectsChangedObservation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	copyRoot := t.TempDir()
+	// The copied MMI and SEI tools reach their sibling checkouts through
+	// ../../.., so the copy must live next to the checkout, not in the system
+	// temp directory. The tools themselves run `go` from the copy.
+	copyRoot, err := os.MkdirTemp(filepath.Dir(root), "tai-scn001-copy-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { os.RemoveAll(copyRoot) })
 	for _, tool := range []string{"reference-mmi-readonly", "reference-sei-decision", "reference-scn001", "reference-scn001-render", "reference-publication-gate", "reference-sui-link"} {
 		if err := os.CopyFS(filepath.Join(copyRoot, "tools", tool), os.DirFS(filepath.Join(root, "tools", tool))); err != nil {
 			t.Fatal(err)

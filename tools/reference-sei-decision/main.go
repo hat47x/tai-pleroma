@@ -63,6 +63,16 @@ type Receipt struct {
 	Notes                  []string         `json:"notes"`
 }
 
+// nameList collects a repeatable string flag.
+type nameList []string
+
+func (n *nameList) String() string { return strings.Join(*n, ",") }
+
+func (n *nameList) Set(value string) error {
+	*n = append(*n, value)
+	return nil
+}
+
 func run(ctx context.Context, dir string, args ...string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "go", args...)
 	cmd.Dir = dir
@@ -188,10 +198,20 @@ func findDecision(decisions []DecisionView, id string) (DecisionView, bool) {
 func main() {
 	seiRoot := flag.String("sei-root", "", "SEI checkout root (default: SEI_ROOT or ../../../sei-cognition)")
 	basisBundle := flag.String("basis-bundle", "", "inspect original decision basis references in a portable bundle (no store writes)")
+	decisionValidity := flag.String("decision-validity", "", "check in a portable bundle whether named Decisions are structurally bound to the current target (no store writes)")
+	currentTarget := flag.String("current-target", "", "file holding the current target's ExactBinding JSON (with -decision-validity)")
+	var namedDecisions nameList
+	flag.Var(&namedDecisions, "decision", "kind:id of a Decision treated as the acceptance in question; repeatable (with -decision-validity)")
 	variant := flag.String("variant", "", "record a synthetic SCN-001 variant (b or c)")
 	synthetic := flag.Bool("synthetic", false, "mark the decision fixture as synthetic verification input")
 	outPath := flag.String("out", "", "write receipt JSON to this file")
 	flag.Parse()
+	if *decisionValidity != "" || *currentTarget != "" || len(namedDecisions) > 0 {
+		if *decisionValidity == "" || *currentTarget == "" || *basisBundle != "" || *variant != "" {
+			fmt.Fprintln(os.Stderr, "-decision-validity needs -current-target and cannot be combined with -basis-bundle or -variant; -current-target and -decision need -decision-validity")
+			os.Exit(2)
+		}
+	}
 	root := *seiRoot
 	if root == "" {
 		root = os.Getenv("SEI_ROOT")
@@ -201,6 +221,12 @@ func main() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
+	if *decisionValidity != "" {
+		// The exit code only says whether a report was produced; the verdict is in the report.
+		code := runValidity(ctx, root, *decisionValidity, *currentTarget, namedDecisions, *outPath, os.Stdout, os.Stderr)
+		cancel()
+		os.Exit(code)
+	}
 	if *basisBundle != "" {
 		inspection, err := inspectBasis(ctx, root, *basisBundle)
 		if err != nil {

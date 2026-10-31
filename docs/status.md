@@ -14,7 +14,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | --- | --- | --- | --- |
 | SCN-001合成walkthrough | 実装済み | [reference-scn001](../tools/reference-scn001/README.md) | 合成fixture。P-06/N-05はnot-run |
 | MMI読み取り専用MCP | ローカル参照接続済み | [reference-mmi-readonly](../tools/reference-mmi-readonly/README.md) | ローカル開発チェックアウト限定。実運用の認可・版固定は未確認 |
-| SEI decision-memory | 一時storeで3 recordsを参照済み（synthetic） | [reference-sei-decision](../tools/reference-sei-decision/README.md)、[record](../evaluations/records/SEI-decision-2026-10-26.json) | 合成fixture。実store・権限・署名は未確認 |
+| SEI decision-memory | 一時storeで3 recordsを参照済み（synthetic）。別に、合成bundleで原記録の根拠参照と、旧Decisionの現行対象への構造上の束縛を検査（実装済み） | [reference-sei-decision](../tools/reference-sei-decision/README.md)、[record](../evaluations/records/SEI-decision-2026-10-26.json) | 合成fixture。実store・権限・署名・意味受理は未確認。SEI CLIで作る実storeのDecisionはExactBindingのbasisを持たず、束縛検査の対象外 |
 | 統合参照実行 | 実装済み（SUI linkを含む） | [reference-scn001-run](../tools/reference-scn001-run/README.md)、[record](../evaluations/records/SCN-001-run-2026-10-26.json) | `runDigest`は内部整合のみ。署名・Authorityは未検証 |
 | D-04レビュー成果物 | 生成済み | [artifact](../evaluations/artifacts/SCN-001-D-04-provisional.md) | 公開用ではない。実在の規程ではない |
 | Owner判断packet | 生成可能 | `-owner-packet` | 承認ではない。実物レビュー待ち |
@@ -87,6 +87,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 - 公開権限者の本人・役割・承認範囲。
 - MMI/SEIの実運用環境、監査、版固定、複数利用者。
 - P-06（主体規模比較）、N-05（EKI委任）。
+- 受理→要再確認→同文言復帰を、実在の判断記録・権限・実資料で扱った結果。構造上の束縛の検査（`-decision-validity`）は合成bundleだけで、受理の有効性は判定しない。受理の有効性をDecision・lineage・Profileのどこに置くかはOwner判断（[#33](https://github.com/hat47x/tai-pleroma/issues/33)）。
 - 利用者にとっての有用性。
 
 ## 次の判断

@@ -1,0 +1,109 @@
+{
+  "contract": "sei.semantic-interchange/v1alpha1",
+  "bundle_id": "n33-b-revises",
+  "records": [
+    {
+      "record_id": "rec-d1",
+      "contract": {
+        "contract_id": "sei.decision-memory",
+        "version": "v1alpha1"
+      },
+      "kind": "decision",
+      "logical_ref": {
+        "kind": "decision",
+        "id": "dec-accept-1"
+      },
+      "payload": {
+        "contract": "sei.decision-memory/v1alpha1",
+        "record_type": "decision",
+        "decision": {
+          "ref": {
+            "kind": "decision",
+            "id": "dec-accept-1"
+          },
+          "statement": "合成: Aの内部レビューでの受理（承認ではない）",
+          "basis_refs": [
+            {
+              "logical_ref": {
+                "kind": "artifact",
+                "id": "guidance-draft",
+                "scope": "source-v1"
+              },
+              "content_digest": "sha256:1feabaa3835cbe8812d75655659254d5b4e3f0538b0a9f8105b74fa90e65d499",
+              "representation_profile": {
+                "profile_id": "sei.raw-bytes+sha256",
+                "version": "v1alpha1"
+              }
+            }
+          ],
+          "responsibility_refs": [
+            {
+              "kind": "role",
+              "id": "synthetic-reviewer"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "record_id": "rec-d2",
+      "contract": {
+        "contract_id": "sei.decision-memory",
+        "version": "v1alpha1"
+      },
+      "kind": "decision",
+      "logical_ref": {
+        "kind": "decision",
+        "id": "dec-reconfirm"
+      },
+      "payload": {
+        "contract": "sei.decision-memory/v1alpha1",
+        "record_type": "decision",
+        "decision": {
+          "ref": {
+            "kind": "decision",
+            "id": "dec-reconfirm"
+          },
+          "statement": "合成: 以前の受理が要再確認になったことの通知（受理ではない）",
+          "basis_refs": [
+            {
+              "logical_ref": {
+                "kind": "artifact",
+                "id": "guidance-draft",
+                "scope": "source-v2"
+              },
+              "content_digest": "sha256:f27c871c96f211bd95b7c5e000fc351b50068715c54790115cb61072d1cd1b2f",
+              "representation_profile": {
+                "profile_id": "sei.raw-bytes+sha256",
+                "version": "v1alpha1"
+              }
+            }
+          ],
+          "responsibility_refs": [
+            {
+              "kind": "role",
+              "id": "synthetic-reviewer"
+            }
+          ],
+          "unresolved_refs": [
+            {
+              "kind": "review",
+              "id": "needs-reconfirmation"
+            }
+          ],
+          "lineage": {
+            "relation": "revises",
+            "from": {
+              "kind": "decision",
+              "id": "dec-reconfirm"
+            },
+            "to": {
+              "kind": "decision",
+              "id": "dec-accept-1"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -29,7 +29,7 @@ go run . -fixture testdata/scn001.json
 - P-03: D-01がO-02/O-03を参照する未公開Draftで、「確認中」を明示する。
 - P-04: 承認権限が未確認の間、公開・外部作用を保留する。
 - P-05: T0→T1→T2がobservation集合を追加し、旧Draftを上書きしない。
-- N-01: 文言がA→B→Aへ戻っても、出典版が別であり旧承認を自動復活させない。
+- N-01: O-02とO-07が同じ文言で出典版が異なり、公開済みDraftがないことを確認する（構造の合成検査）。過去の受理が復活するかは扱わない。受理を伴う往復の構造は、[reference-sei-decision](../reference-sei-decision/README.md)の`-decision-validity`が合成bundleで別に調べる。
 - N-02: 権限未確認のまま公開済み・承認済みと報告しない。
 - N-03: 原本取得失敗を「存在しない」と断定せず、unavailableとして保持する。
 - N-04: 仮説を規程として採用しない。
