@@ -3,7 +3,7 @@
   "synthetic": true,
   "evidenceKind": "synthetic",
   "date": "2026-11-01",
-  "ekiCommit": "629ebf3b9fa82d7220ff67c7125dc588f2f95fce",
+  "ekiCommit": "b8c4afeddb0604c16159eda4210b790c8369903b",
   "area": "native runner resource limits",
   "memoryLimitEnforcedWhileRunning": true,
   "cpuLimitEnforcedWhileRunning": true,
@@ -13,12 +13,15 @@
   "cpuLimitEnforcedAfterExit": true,
   "sandbox": false,
   "networkLimitEnforced": false,
-  "temporaryDiskLimitEnforced": false,
+  "temporaryDiskLimitEnforcedWhileRunning": true,
+  "temporaryDiskDirectory": "per-run directory passed as TMP/TEMP/TMPDIR",
   "observed": {
     "windowsMemoryTest": "TestRunnerStopsProcessWhenMemoryLimitIsExceeded",
     "windowsMemoryTestResult": "PASS",
     "windowsCPUTest": "TestRunnerStopsProcessWhenCPULimitIsExceeded",
     "windowsCPUTestResult": "PASS",
+    "windowsTempDiskTest": "TestRunnerStopsProcessWhenTempDiskLimitIsExceeded",
+    "windowsTempDiskTestResult": "PASS",
     "windowsStopLatencySeconds": 0.1,
     "processE2E": "TestAgentExecutesAndSubmitsResultClaim",
     "processE2EResult": "PASS"
@@ -26,8 +29,10 @@
   "notes": [
     "20ms間隔でRSSと累積CPU時間を取得し、上限超過時にcancelProcessでプロセスツリーを停止する。",
     "CPUはWindowsのGetProcessTimes、Linuxの/proc/<pid>/statから取得する。",
+    "一時ディスクは実行ごとのディレクトリ配下の通常ファイルサイズを合計して監視する。",
+    "子プロセスが別の場所へ書く場合は一時ディスク監視の対象外。",
     "瞬間的な超過は取り逃す可能性がある。",
     "sandboxではない。",
-    "network・temp-disk制限は未実装。"
+    "network制限は未実装。"
   ]
 }
