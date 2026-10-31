@@ -143,6 +143,8 @@ Ownerに残すのは、対象業務の意味の正式受理、本番の権限と
 
 ## 11. 最小の実証スライス SW-01（他チャットとの差分だけ）
 
+[SW-01の比較・反証可能な実行票](../evaluations/SW-01-harness-handoff-qualification.md)を別ファイルに置く。**全ケースNOT RUN**。比較票は既存Decisionや権限の新しい正本ではない。
+
 [TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)では、SEIの原bundleからExactBindingを取り出す既存 `reference-sei-decision -basis-bundle` と、SEI `BuildResume` がkind:idへ情報を縮める差がすでに確認されている。**この抽出CLIやA→B→A' fixtureをTAI #168側で作り直さない。** 再利用するのは既存CLIの出力と、各Harnessが判断に使うread-only Handoffまでに限定する。
 
 ### 11.1 同一出力に見えても異なる三条件
@@ -252,7 +254,7 @@ TAIの増分価値は**利用者の一つの活動が、根拠の適合性、行
 
 ## 13. 既存EKI実証の進展を正確に受け取る（2026-10-31）
 
-TAI mainに [合成EKI固定コマンド実行のrecord](../evaluations/records/EKI-execution-2026-10-31.json) が追加された。記録が示す範囲は **別OS processのControl/Agentで固定コマンド実行→ResultClaim送信→Attempt `verifying`** まで。 `executionStatus=completed` でも `resultVerified=false`、`resultAccepted=false`、`taskResultAccepted=false`、`sandbox=false`、`resourceLimitsEnforced=false` である。この観測を旧「queuedのみ」へ戻してはいけない一方、外部作業の受理・安全な未信頼Task実行・ビジネス効果が成立したと主張してもいけない。正式な結果検証はEKI側責務のまま。
+TAI mainに [合成EKI固定コマンド実行のrecord](https://github.com/hat47x/tai-pleroma/blob/ecc34ebcd1e0546fc512c5966c6ba693434481fa/evaluations/records/EKI-execution-2026-10-31.json) が追加された。記録が示す範囲は **別OS processのControl/Agentで固定コマンド実行→ResultClaim送信→Attempt `verifying`** まで。 `executionStatus=completed` でも `resultVerified=false`、`resultAccepted=false`、`taskResultAccepted=false`、`sandbox=false`、`resourceLimitsEnforced=false` である。この観測を旧「queuedのみ」へ戻してはいけない一方、外部作業の受理・安全な未信頼Task実行・ビジネス効果が成立したと主張してもいけない。正式な結果検証はEKI側責務のまま。
 
 | 境界 | 最新TAI参照証拠 | 対応する未実証 |
 | --- | --- | --- |
