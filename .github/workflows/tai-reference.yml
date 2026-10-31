@@ -135,3 +135,9 @@ jobs:
       - name: multi-scenario review scan
         working-directory: .
         run: python tools/check-multi-scenario-review/check.py --root .
+      - name: TEI capability chain test
+        working-directory: tools/check-tei-contracts
+        run: python -m unittest -v check_test.py
+      - name: TEI capability chain scan
+        working-directory: .
+        run: python tools/check-tei-contracts/check.py --root .

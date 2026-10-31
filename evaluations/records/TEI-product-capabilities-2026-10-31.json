@@ -1,0 +1,35 @@
+{
+  "schema": "tei.product-capabilities/v1",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "teiCommit": "cd47b6fa4905f35b12b8d993efcb5d4df78fad5f",
+  "workspace": "reference/product-contracts",
+  "worldFingerprint": "sha256:fca923f2766b0b0db5bec0101439cd4a6d7a6d935050b754b2b594815f6f1dfd",
+  "sourceIndexFingerprint": "sha256:a9a27ab8ad56ee05dc879727953e27d00b6eac787774727b41e82fd3b1c74425",
+  "capabilities": {
+    "product_contracts.eki_task_submit": {
+      "inputs": [{"name": "request", "type": "product_contracts.task_request"}],
+      "output": "product_contracts.attempt"
+    },
+    "product_contracts.eki_attempt_execute": {
+      "inputs": [{"name": "execution", "type": "product_contracts.attempt"}],
+      "output": "product_contracts.result_claim"
+    },
+    "product_contracts.eki_result_accept": {
+      "inputs": [{"name": "claim", "type": "product_contracts.result_claim"}],
+      "output": "product_contracts.accepted_result"
+    },
+    "product_contracts.sui_document_put": {
+      "inputs": [{"name": "document", "type": "product_contracts.document"}],
+      "output": "product_contracts.document"
+    },
+    "product_contracts.sei_decision_record": {
+      "inputs": [{"name": "decision", "type": "product_contracts.decision"}],
+      "output": "product_contracts.decision"
+    },
+    "product_contracts.mmi_observation_select": {
+      "inputs": [{"name": "selection", "type": "product_contracts.selection"}],
+      "output": "product_contracts.selection"
+    }
+  }
+}
