@@ -52,6 +52,20 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         expected = "product_contracts_flow." + capability.removeprefix("product_contracts.")
         if pattern != expected:
             errors.append(f"{capability} is not wired to {expected}: {pattern}")
+    bindings = data.get("bindings", {})
+    if set(bindings) != required:
+        errors.append(f"binding set differs: {sorted(bindings)}")
+    expected_bindings = {
+        "product_contracts.eki_task_submit": "EKITaskSubmit",
+        "product_contracts.eki_attempt_execute": "EKIAttemptExecute",
+        "product_contracts.eki_result_accept": "EKIResultAccept",
+        "product_contracts.sui_document_put": "SUIDocumentPut",
+        "product_contracts.sei_decision_record": "SEIDecisionRecord",
+        "product_contracts.mmi_observation_select": "MMIObservationSelect",
+    }
+    for capability, name in bindings.items():
+        if expected_bindings.get(capability) != name:
+            errors.append(f"{capability} binding differs: {name}")
     if not data.get("worldFingerprint") or not data.get("sourceIndexFingerprint"):
         errors.append("TEI fingerprints are missing")
     if data.get("synthetic") is not True:

@@ -2,7 +2,7 @@
   "schema": "tei.product-capabilities/v1",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "0399225c16e332f2aceb80d3ebe8ac1917700989",
+  "teiCommit": "3c8c4a2b2dcb91e37c2d184bebee7b5f8a9db958",
   "workspace": "reference/product-contracts",
   "worldFingerprint": "sha256:da593906d33adebf5b2d4436feac30ad52cecc0edd1cda45cedd4ef9daa0f093",
   "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
@@ -31,6 +31,14 @@
       "inputs": [{"name": "selection", "type": "product_contracts.selection"}],
       "output": "product_contracts.selection"
     }
+  },
+  "bindings": {
+    "product_contracts.eki_task_submit": "EKITaskSubmit",
+    "product_contracts.eki_attempt_execute": "EKIAttemptExecute",
+    "product_contracts.eki_result_accept": "EKIResultAccept",
+    "product_contracts.sui_document_put": "SUIDocumentPut",
+    "product_contracts.sei_decision_record": "SEIDecisionRecord",
+    "product_contracts.mmi_observation_select": "MMIObservationSelect"
   },
   "patterns": {
     "product_contracts.eki_task_submit": "product_contracts_flow.eki_task_submit",
