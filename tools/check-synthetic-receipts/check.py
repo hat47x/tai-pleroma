@@ -63,6 +63,7 @@ RECORDS = (
     "evaluations/records/EKI-acceptance-2026-10-31.json",
     "evaluations/records/TEI-product-capabilities-2026-10-31.json",
     "evaluations/records/TEI-capability-chain-2026-10-31.json",
+    "evaluations/records/SW-01-S1-harness-2026-10-31.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
     "evaluations/records/SCN-001-eki-feasibility-2026-10-29.json",
     "evaluations/records/SCN-001-synthetic-flow-2026-10-29.json",
