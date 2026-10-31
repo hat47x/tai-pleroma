@@ -1,6 +1,9 @@
 import os, re
 import os as _os
-ROOT=_os.environ.get("HAT47X_ROOT","/mnt/d/GIT/hat47x")
+import sys
+ROOT=_os.environ.get("HAT47X_ROOT")
+if not ROOT:
+    sys.exit("HAT47X_ROOT is not set: point it at the directory that holds the repositories")
 R=["tei-platform","sei-cognition","sui-sensemaking","markdown-matrix-injector","eki-fabric","cultural-substrate-weaving","vs-bear-simulator"]
 # product-name patterns (word-ish boundaries); long slug forms included
 P={

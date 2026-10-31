@@ -10,7 +10,9 @@
 """
 import collections, json, os, re, subprocess, sys
 
-ROOT = os.environ.get("HAT47X_ROOT", "/mnt/d/GIT/hat47x")
+ROOT = os.environ.get("HAT47X_ROOT")
+if not ROOT:
+    sys.exit("HAT47X_ROOT is not set: point it at the directory that holds the repositories")
 REPOS = ["tei-platform", "sei-cognition", "sui-sensemaking", "markdown-matrix-injector",
          "eki-fabric", "cultural-substrate-weaving", "vs-bear-simulator"]
 INTEGRATION = {r: "origin/main" for r in REPOS}
