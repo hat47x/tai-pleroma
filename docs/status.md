@@ -53,6 +53,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | EKI Worker test環境 | WSL/DockerでAgent/Control test profile、claim wire、Control Planeを確認済み | [worker env](../tools/reference-eki-worker/README.md)、[record](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行主体ではなく、結果・委任完了は未検証 |
 | EKI 固定コマンド実行 | 別プロセスのControl/Agentで実行とResultClaim送信を確認。Attemptは`verifying` | [receipt](../evaluations/records/EKI-execution-2026-10-31.json) | sandbox・資源上限なし |
 | EKI Result Acceptance | 2名の独立verifier、RA-2で受理。AcceptedResult保存、Task terminal | [receipt](../evaluations/records/EKI-acceptance-2026-10-31.json) | verifierは合成。sandbox・資源上限なし |
+| EKI 実行中メモリ上限 | 20ms間隔のRSS監視で上限超過時にプロセスツリーを停止（Linux/Windows） | [receipt](../evaluations/records/EKI-runtime-memory-limit-2026-11-01.json) | CPUは終了後の検査のみ。sandbox・network/temp-disk制限なし |
 | TEI能力連鎖 | `TaskRequest→Attempt→ResultClaim→AcceptedResult`の型連鎖をTEI定義で検査 | [chain](../evaluations/records/TEI-capability-chain-2026-10-31.json)、[caps](../evaluations/records/TEI-product-capabilities-2026-10-31.json) | 宣言の整合性のみ。実装生成・受理ではない |
 | SW-01 S1 ハーネスA/B | 外部ハーネス相当の隔離サブセッション（表示のみ、計3回）と既存read-only構造検査の対照。同文言・別scopeの旧受理転用を、Aは3回とも根拠の検証不能なまま保留・拒否し、Bはscope差とlineageの構造事実として拒否 | [record](../evaluations/records/SW-01-S1-harness-2026-10-31.json)、[rerun](../evaluations/records/SW-01-S1-harnessA-rerun-2026-10-31.json) | 同一モデル3回。別ハーネス製品での再実行（G2）はnot-run。実受理・権限は未検証 |
 | EKI Task lifecycle on WSL | `queued`→`cancelled`/`CANCELLED`を確認済み | [worker env](../tools/reference-eki-worker/README.md) | Worker実行・結果は未検証 |
