@@ -60,20 +60,22 @@ type Fixture struct {
 }
 
 type Receipt struct {
-	Schema              string   `json:"schema"`
-	Scenario            string   `json:"scenario"`
-	Status              string   `json:"status"`
-	DraftID             string   `json:"draftId"`
-	ArtifactPath        string   `json:"artifactPath,omitempty"`
-	ArtifactDigest      string   `json:"artifactDigest"`
-	ProvisionalApproved bool     `json:"provisionalApproved"`
-	PublicationApproved bool     `json:"publicationApproved"`
-	ReviewRequired      bool     `json:"reviewRequired"`
-	ReviewTrigger       string   `json:"reviewTrigger"`
-	AuthorityVerified   bool     `json:"authorityVerified"`
-	Passed              bool     `json:"passed"`
-	Reason              string   `json:"reason,omitempty"`
-	Notes               []string `json:"notes"`
+	Schema         string `json:"schema"`
+	Scenario       string `json:"scenario"`
+	Status         string `json:"status"`
+	DraftID        string `json:"draftId"`
+	ArtifactPath   string `json:"artifactPath,omitempty"`
+	ArtifactDigest string `json:"artifactDigest"`
+	// ObservationDigests binds the rendered evidence rows to the evaluated input.
+	ObservationDigests  map[string]string `json:"observationDigests,omitempty"`
+	ProvisionalApproved bool              `json:"provisionalApproved"`
+	PublicationApproved bool              `json:"publicationApproved"`
+	ReviewRequired      bool              `json:"reviewRequired"`
+	ReviewTrigger       string            `json:"reviewTrigger"`
+	AuthorityVerified   bool              `json:"authorityVerified"`
+	Passed              bool              `json:"passed"`
+	Reason              string            `json:"reason,omitempty"`
+	Notes               []string          `json:"notes"`
 }
 
 func digest(text string) string {
@@ -151,6 +153,7 @@ func Render(fixture Fixture) (string, Receipt, error) {
 	markdown.WriteString("## 根拠observation\n\n")
 	markdown.WriteString("| ID | 原文 | 出典 | 版 | 取得時点 | availability | digest |\n")
 	markdown.WriteString("| --- | --- | --- | --- | --- | --- | --- |\n")
+	rendered := map[string]string{}
 	for _, observation := range fixture.Observations {
 		for _, reference := range d04.References {
 			if observation.ID == reference {
@@ -158,6 +161,7 @@ func Render(fixture Fixture) (string, Receipt, error) {
 					tableCell(observation.ID), tableCell(observation.Text), tableCell(observation.Source),
 					tableCell(observation.SourceVersion), tableCell(observation.ObservedAt),
 					tableCell(observation.Availability), digest(observation.Text)))
+				rendered[observation.ID] = digest(observation.Text)
 			}
 		}
 	}
@@ -178,6 +182,7 @@ func Render(fixture Fixture) (string, Receipt, error) {
 	receipt.ReviewRequired = true
 	receipt.ReviewTrigger = prov.ReviewTrigger
 	receipt.ArtifactDigest = digest(content)
+	receipt.ObservationDigests = rendered
 	receipt.Passed = true
 	return content, receipt, nil
 }
