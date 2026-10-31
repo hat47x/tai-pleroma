@@ -77,7 +77,7 @@ TAIシリーズの主要な利用入口はClaude Code、Codex、Dots、Grok Bot�
 
 ## 7. 何をまだ主張できないか
 
-- SW-01 S1は合成条件の初回1モデル/1ハーネス対照。Aレーンの追加3回の記録は[PR #176](https://github.com/hat47x/tai-pleroma/pull/176)で扱われ、**異なるハーネスでの再現ではない**。
+- SW-01 S1は合成条件の初回1モデル/1ハーネス対照。Aレーンの追加2回（初回と合わせ計3回）の記録は[PR #176](https://github.com/hat47x/tai-pleroma/pull/176)で扱われ、**異なるハーネスでの再現ではない**。
 - 2026-10-31の[EKI execution](../evaluations/records/EKI-execution-2026-10-31.json)と[Result Acceptance](../evaluations/records/EKI-acceptance-2026-10-31.json)は、限定的な固定コマンド実行・合成Verifierである。外部の業務成果、本番のsandboxと資源制限は未検証。
 - TEI能力連鎖の[receipt](../evaluations/records/TEI-capability-chain-2026-10-31.json)は型宣言の整合性だけで、実行生成・Source意味受理ではない。
 - P-06の個人・組織・社会の比較、SCN-004/005のRC、実利用者QoL/有用性、実物の原本・権限・外部作用は、この設計文書によって**実施済みにならない**。
