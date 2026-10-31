@@ -214,3 +214,69 @@ go run . -workspace testdata/workspace -mmi-root ../../../markdown-matrix-inject
 初回に確認できるのは、**既存原bundleの構造/ExactBinding参照を縮めず抽出できること**と、**MMIの合成workspaceを読み取り専用で扱えること**まで。両結果を統合して「同一の現行業務意味」「Source真正性」「実行許可」と言い切らない。
 
 失敗時は、①portable bundleの取得・入力format/未認識contract、②source version/scope/target bindingの欠落、③SEI/MMIへの依存/配置、④MCP実呼出しとTool出力、⑤Harnessの回答に移した時の情報欠落、⑥認可やread accessの境界、を別々の失敗列にする。原bundleが見つからない場合は新しい「受理済み」fixtureを作らず、#33で使われた入力の位置/保全方法を担当へ照会する。
+
+## 12. 2026-10-31 横断収束：TAIが提供するのは「別のAgent」ではなく、状況付きで使える能力
+
+この節は、TEI [#2390](https://github.com/hat47x/tei-platform/issues/2390) の10/31追補（Consumer×Provider×Host×Context×Time）、[#2391](https://github.com/hat47x/tei-platform/issues/2391) のUI外部制御、[#2386](https://github.com/hat47x/tei-platform/issues/2386) の組織/代理、[#2387](https://github.com/hat47x/tei-platform/issues/2387) のQuery構造Explain、[SEI #677](https://github.com/hat47x/sei-cognition/issues/677) の組織意志の引継ぎを横断して整理した **Draft / 未実証** の補足である。
+
+### 12.1 三つの独立した問い
+
+外部Harnessが「その能力を使うべきか」と判断する際、Tool列挙・Skillを読めたことをそのまま答えにしない。
+
+| 問い | 確認するもの | 誰が正本/必要条件を持つか |
+| --- | --- | --- |
+| **何が実在し、どういう意味か** | Plugin/非実行定義/Service Contract/Provider/選択されたphysical artifact、入力・出力・拒否・NULL・0件・単位・時点、実Load member | 各製品の既存意味契約・Build証拠、Consumer要求、外部Host |
+| **今この用途に適するか** | Source/対象集合/Context/鮮度/欠落/不確実性、必要Host API・Lifecycle phase・実行Target、現在の利用資格 | SEIの文脈処理、TEIの分野意味、Consumer/Hostの実条件 |
+| **何が実際に起きたか** | 操作送信・UI反応・Provider結果・Commit/Receipt・独立Outcome・本人/組織の目標への効果 | 実際のProvider/Host・利用者。TAIは参照と比較、決定を自称しない |
+
+「portable Plugin」という静的属性で全環境の互換性を宣言しない。意味、配布、実ロード、実利用、権限、外部効果は別々の適合性である。Pluginは**呼び出すサービスだけではなく**、Message定義、テンプレート、DSL/表示資源、Hostイベント用の拡張点を含み得る。非実行定義に架空のRPCやCommitを要求しない。必要なContract/Resource単位を選び、Plugin package丸ごと利用を前提にしない。
+
+### 12.2 論理的に不使用でも、物理的に存在するもの
+
+**TAI-COLOC（既存#2390のP-COLOCを参照）**：read-only機能AしかHarnessに公開していないつもりでも、同じartifactにread-write機能BとHost imports、初期化処理、公開可能なentrypointが残る場合がある。AのみのTool登録・read-only宣言は、Bの到達不能や副作用不存在を保証しない。
+
+- **Adapter/Logical selection**：外部Harnessへ見える能力を必要最小限にする。これはHost Resource/実Load物の隔離の代わりではない。
+- **Physical closure**：選択したphysical membersと実Load bytes/依存、到達可能entrypoint、初期化時の副作用を、必要な実装単位で別に観測する。
+- **Build exclusion**：TEI #2391の専用UI制御はTest/Developmentで使っても、既定Production成果物から物理除去する。Production UIのブラックボックス試験は可能。Wails/WebViewが既存のMCP等を提供する場合はそれを第一候補とし、TEI独自の重複制御Serverを先に作らない。
+- **根拠の更新**：同じコンテンツdigestでも、Source/Target scope、Hostの現行権限、Render用SVG/辞書/テンプレートが変われば、全てが同じ資格で使えるとは限らない。SHO/MMIは表示時に使う資産の依存を必要範囲で照合する。
+
+### 12.3 組織モデルとDSLに求める意味の可搬性
+
+[TEI #2386](https://github.com/hat47x/tei-platform/issues/2386) のOrg/Assignment/Acting Contextでは、所属・兼務・代理は業務意味だが、別テナントへの実行権限は別。異動/組織改編の**有効時点**と**記録時点**も分ける。個人生活では家族/共同購入者の意向を統合許諾へ自動変換しない。組織/家庭どちらも複数主体の権限を「AIが理解した」として自動受理しない。
+
+[TEI #2387](https://github.com/hat47x/tei-platform/issues/2387) のQuery構造Explainは複雑なSQL/CTEを可視化できる候補だが、図やLineageの生成はQueryが要求対象を**すべて取得した**証明ではない。例：要求集合 `L={A(正値),B(数量0)}`、Provider返却 `R=[A]` のとき `checkAll(R)`は成立しても、`R=L`は成立しない。対象集合、取得完全性、NULL/未取得、Scope、Provider同版鮮度を別に検証する。高価な「不存在の一般証明」を義務化せず、対象業務で必要なOracle/独立照合を採用する。
+
+### 12.4 新しいTAI Runtimeを作らずに評価できる価値
+
+TAIの増分価値は**利用者の一つの活動が、根拠の適合性、行為の可否、結果の確実性の三つを混同せず前進すること**である。これには、外部Harnessと独立したSEIの原記録・TEIの意味/Provider検証・SHOのSource参照・EKIの信頼条件/Result観測を必要時に利用すればよい。新しい共通状態正本/汎用Orchestrator/一括Grant Engineを前提にしない。
+
+## 13. 既存EKI実証の進展を正確に受け取る（2026-10-31）
+
+TAI mainに [合成EKI固定コマンド実行のrecord](../evaluations/records/EKI-execution-2026-10-31.json) が追加された。記録が示す範囲は **別OS processのControl/Agentで固定コマンド実行→ResultClaim送信→Attempt `verifying`** まで。 `executionStatus=completed` でも `resultVerified=false`、`resultAccepted=false`、`taskResultAccepted=false`、`sandbox=false`、`resourceLimitsEnforced=false` である。この観測を旧「queuedのみ」へ戻してはいけない一方、外部作業の受理・安全な未信頼Task実行・ビジネス効果が成立したと主張してもいけない。正式な結果検証はEKI側責務のまま。
+
+| 境界 | 最新TAI参照証拠 | 対応する未実証 |
+| --- | --- | --- |
+| Dispatch / Execute | 合成固定commandの別process実行が記録済み | 任意Task入力、sandbox/Resource制御、ProductionのOwner委任 |
+| ResultClaim / Verify | Claim送信まで観測、Attemptはverifying | Result VerificationとAcceptance、独立Output/Effect照合 |
+| Business Outcome | なし | Providerの作用確定、受理された業務成果、個人のQoL |
+
+この区別は [TEI #1174](https://github.com/hat47x/tei-platform/issues/1174) のEffect Fenceと、ユーザーが望む「ハーネスに任せても完了を偽装しない」に直結する。応答喪失時の再送可否をHarnessの推測で決めず、対応するProvider側の照会/冪等性/効果識別子に従わせる。
+
+## 14. 最小の能力増幅判定（SW-01後、独立の次段候補）
+
+### 14.1 四つの独立した評価対象
+
+| ID | 検証対象 | ハーネス単体に対して何を比較するか | 不合格とする誤り |
+| --- | --- | --- | --- |
+| EV-1 認識/継続 | A→B→A'、欠落/取得不能、別Harnessで再開 | 正しい根拠・不明点・scopeの保全、再開の人手 | 旧受理自動復活、redacted dataの開示、正本とprojectionの混同 |
+| EV-2 可搬Provider | Pure計算/Message定義等を外部Hostで必要分だけ使用 | 実Load byte、独立Oracle、Host依存、Adapter量 | TEI Runtime必須化、shapeだけで意味合格、COLOCから権限漏れ |
+| EV-3 副作用 | 有効委任、mock Submit、ACK喪失、二重実行、独立lookup | 不正作用・結果不明の扱い・照会回数 | queued/ClaimをAcceptedに昇格、権限失効後の作用、二重効果 |
+| EV-4 本人/組織への価値 | 個人の休息・創作/買い物、企業の遅延/負担転嫁を同時評価 | 意図実現、不要な質問・承認・費用、犠牲となった別目的 | 完了率のみでQoL/組織利益を宣言、負担を他部署へ転嫁 |
+
+**開始順序**：SW-01（既存#33の原記録・SEI/SHOのread-only比較）を先行。EV-2はTEI #2390/#2392の外部Consumer実証を参照し**別Oracleを作らない**。EV-3はEKI/TEI担当の既存Result・Effect Gateが利用可能になってからmockのみ。EV-4は#165/#166/#167とSEI #677の合成ケースへ接続。各Gateは他のGateの成功を意味しない。
+
+### 14.2 本当に縮退可能であるための判定
+
+同じ入力・許可・Harness版・実利用文脈を固定して、(A)Harness単体、(B)+SEI、(C)+用途に必要な別製品、(D)別Harness引継ぎ、(E)更新された強いHarness単体を比較する。安全境界の必須違反が一つでも起これば平均品質の改善で覆さない。増分がない/外部能力で代替可能なら**委譲/薄いAdapter化/削除**を正式な選択肢とする。追加Pluginの依存/更新負担、利用者の問い合わせ回数と個人情報の露出を、品質と同時に測る。
+
+重要な反証：**「機能を呼べた」だけではEV-1〜4すべてNOT RUN。** Model/Skillの将来成熟を仮定して、未実施の良い結果を先取りしない。実測結果に応じてTAIシリーズの責務・製品境界自体を更新してよい。
