@@ -85,7 +85,7 @@ L0〜L3は固定の権限階層・Schemaではなく説明用の便宜である�
 比較時に固定するもの：入力のrevision/sha、source visibility、利用可能なツール、許可、人物の意図、時刻条件、環境・生成モデルの版。結果不明や利用不可は別分類。追加トークン/価格、処理時間、人の確認回数、情報露出面積を記録。
 
 ### 7.2 現存機構の再利用と未観測
-現行TAIのREADMEと参照接続には、SHO(MMI)のread-only inspect/select、SEI一時storeのdecision/resume、TEIの型validate、SUIのカード連結、EKIのAPI/queuedといった**限定された参照観測**がある。これは製品間の実業務一巡、意味の受理、外部効果、実ユーザー価値を示さない。
+現行TAIのREADMEと参照接続には、SHO(MMI)のread-only inspect/select、SEI一時storeのdecision/resume、TEIの型validate、SUIのカード連結、EKIのTask admissionと固定command実行/ResultClaim送信（最終Resultは未受理）といった**限定された参照観測**がある。これは製品間の実業務一巡、意味の受理、外部効果、実ユーザー価値を示さない。
 [接続調査](../integrations/capability-inventory.md) と [クリティカルパス](critical-path-2026-10.md) に固定版と制約あり。最新mainに過去receiptを流用しない。
 
 ### 7.3 最初の追加fixture（一件だけ）
