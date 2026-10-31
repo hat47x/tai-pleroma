@@ -54,6 +54,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | EKI 固定コマンド実行 | 別プロセスのControl/Agentで実行とResultClaim送信を確認。Attemptは`verifying` | [receipt](../evaluations/records/EKI-execution-2026-10-31.json) | sandbox・資源上限なし |
 | EKI Result Acceptance | 2名の独立verifier、RA-2で受理。AcceptedResult保存、Task terminal | [receipt](../evaluations/records/EKI-acceptance-2026-10-31.json) | verifierは合成。sandbox・資源上限なし |
 | TEI能力連鎖 | `TaskRequest→Attempt→ResultClaim→AcceptedResult`の型連鎖をTEI定義で検査 | [chain](../evaluations/records/TEI-capability-chain-2026-10-31.json)、[caps](../evaluations/records/TEI-product-capabilities-2026-10-31.json) | 宣言の整合性のみ。実装生成・受理ではない |
+| SW-01 S1 ハーネスA/B | 外部ハーネス相当の隔離サブセッション（表示のみ）と既存read-only構造検査の対照。同文言・別scopeの旧受理転用を、Aは根拠なしに保留、Bはscope差とlineageの構造事実として拒否 | [record](../evaluations/records/SW-01-S1-harness-2026-10-31.json) | 1ハーネス・1モデル・1回。比較ベンチマークではない。実受理・権限は未検証 |
 | EKI Task lifecycle on WSL | `queued`→`cancelled`/`CANCELLED`を確認済み | [worker env](../tools/reference-eki-worker/README.md) | Worker実行・結果は未検証 |
 | EKI Native Runner spike | 終了コード・出力上限・期限/取消し・Supervisor接続・Windows/Linuxのプロセスツリー停止を確認。未対応sandbox/資源上限/GPU/digest/引数を拒否 | [eki-fabric #275](https://github.com/hat47x/eki-fabric/pull/275) | sandbox・CPU/メモリ制限なし。未信頼Task不可 |
 
