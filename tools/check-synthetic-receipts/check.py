@@ -60,6 +60,7 @@ RECORDS = (
     "evaluations/records/SCN-002-003-review-2026-10-30.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
     "evaluations/records/EKI-execution-2026-10-31.json",
+    "evaluations/records/EKI-acceptance-2026-10-31.json",
     "evaluations/records/TEI-product-capabilities-2026-10-31.json",
     "evaluations/records/TEI-capability-chain-2026-10-31.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
