@@ -50,6 +50,13 @@ type Decision struct {
 	PublicationApproved bool   `json:"publicationApproved"`
 	ReviewRequired      bool   `json:"reviewRequired"`
 	ReviewTrigger       string `json:"reviewTrigger,omitempty"`
+	// Subject records what the decision accepted, for acceptances of a
+	// single observation rather than of a draft. SubjectDigest pins the
+	// accepted text, so a later observation with the same text is
+	// comparable against what was accepted, on purpose (N-08).
+	Subject        string `json:"subject,omitempty"`
+	SubjectVersion string `json:"subjectVersion,omitempty"`
+	SubjectDigest  string `json:"subjectDigest,omitempty"`
 }
 
 type ProvisionalApproval struct {
@@ -249,6 +256,8 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 		"D-01はO-02/O-03を参照する未公開Draftで、確認中を明示する"))
 
 	// P-04: with an unconfirmed authority, no publication or external effect occurs.
+	// A superseded decision keeps its acceptance record but holds no force, so it
+	// may stand as long as it claims no publication.
 	p04 := f.Authority.Status == "unconfirmed"
 	for _, draft := range f.Drafts {
 		if draft.Published {
@@ -256,10 +265,13 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 		}
 	}
 	for _, decision := range f.Decisions {
-		if decision.Status != "pending" && decision.Status != "provisional" {
+		if decision.Status != "pending" && decision.Status != "provisional" && decision.Status != "superseded" {
 			p04 = false
 		}
-		if decision.Status == "provisional" && (decision.PublicationApproved || !decision.ReviewRequired) {
+		if decision.PublicationApproved {
+			p04 = false
+		}
+		if decision.Status == "provisional" && (!decision.ReviewRequired || decision.ReviewTrigger == "") {
 			p04 = false
 		}
 	}
@@ -285,8 +297,15 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 		previous = revision.Observations
 	}
 	if p05 {
-		last := f.Revisions[len(f.Revisions)-1]
-		p05 = last.Draft == "D-04"
+		// Each revision produces its own draft: T0→D-01 … T4→D-05, never an
+		// overwrite of an earlier one.
+		seen := map[string]bool{}
+		for _, revision := range f.Revisions {
+			if seen[revision.Draft] {
+				p05 = false
+			}
+			seen[revision.Draft] = true
+		}
 	}
 	receipt.Cases = append(receipt.Cases, statusCase("P-05", p05,
 		"T0→T1→T2→T3はobservation集合を追加し、旧Draftを上書きしない"))
@@ -312,12 +331,15 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, CaseResult{ID: "P-06", Status: "not-run",
 		Reason: "個人・組織・社会の主体規模比較は人間の判断が必要"})
 
-	// N-01: text A→B→A does not restore an earlier approval.
+	// N-01: text A→B→A does not by itself make an observation accepted.
+	// O-07 repeats O-02's text on a later version, and O-02 carries no
+	// acceptance record, so the text match alone accepts nothing.
 	o02, ok02 := byID["O-02"]
 	o07, ok07 := byID["O-07"]
-	n01 := ok02 && ok07 && o02.Text == o07.Text && o02.SourceVersion != o07.SourceVersion && !anyPublished(f.Drafts)
+	n01 := ok02 && ok07 && o02.Text == o07.Text && o02.SourceVersion != o07.SourceVersion && !anyPublished(f.Drafts) &&
+		!decisionAccepts(f.Decisions, "O-02")
 	receipt.Cases = append(receipt.Cases, statusCase("N-01", n01,
-		"O-07がO-02と同じ文言でも、出典版が別であり旧承認を自動復活させない"))
+		"O-07がO-02と同じ文言でも、O-02に受理の記録はなく、本文一致だけで受理と扱わない"))
 
 	// N-02: no publication without a confirmed authority.
 	n02 := !anyPublished(f.Drafts) && f.Authority.Status == "unconfirmed"
@@ -393,6 +415,28 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, statusCase("N-07", n07,
 		"仮承認を公開承認・Authority検証として扱わない"))
 
+	// N-08: a lapsed acceptance does not come back through identical text.
+	// O-02 was once accepted in internal review (DEC-03), the basis changed
+	// (O-06), and the acceptance lapsed. O-09 repeats the accepted text on a
+	// different source version, so the text match against the acceptance
+	// record is real — and still not enough: the acceptance stays lapsed and
+	// the way forward is DEC-04, a fresh confirmation path.
+	dec03, hasDec03 := decisionByID(f.Decisions, "DEC-03")
+	dec04, hasDec04 := decisionByID(f.Decisions, "DEC-04")
+	o09, ok09 := byID["O-09"]
+	textMatchIsReal := ok09 && dec03.SubjectDigest != "" &&
+		dec03.SubjectDigest == digest(o09.Text) &&
+		o09.SourceVersion != dec03.SubjectVersion && o09.Source != dec03.Authority
+	d05, hasD05 := draftByID(f.Drafts, "D-05")
+	n08 := hasDec03 && hasDec04 && ok09 && hasD05 &&
+		dec03.Status == "superseded" && dec03.Subject == "O-02" && !dec03.PublicationApproved &&
+		dec04.Status == "pending" && dec04.Subject == "O-09" && !dec04.PublicationApproved &&
+		!d05.Published &&
+		textMatchIsReal &&
+		!decisionAccepts(f.Decisions, "O-09")
+	receipt.Cases = append(receipt.Cases, statusCase("N-08", n08,
+		"過去に受理された判断は、本文が同じ文言へ戻っても自動復活せず、正当な確認経路(DEC-04)へ戻る"))
+
 	receipt.Passed = true
 	for _, result := range receipt.Cases {
 		if result.Status == "fail" {
@@ -448,6 +492,26 @@ func anyPublished(drafts []Draft) bool {
 	for _, draft := range drafts {
 		if draft.Published {
 			return true
+		}
+	}
+	return false
+}
+
+// decisionAccepts reports whether a decision in the given states accepts the
+// observation. A lapsed acceptance (superseded, pending, or withdrawn) does
+// not.
+func decisionAccepts(decisions []Decision, subject string, states ...string) bool {
+	if len(states) == 0 {
+		states = []string{"accepted", "confirmed"}
+	}
+	for _, decision := range decisions {
+		if decision.Subject != subject {
+			continue
+		}
+		for _, state := range states {
+			if decision.Status == state {
+				return true
+			}
 		}
 	}
 	return false
