@@ -2,7 +2,7 @@
   "schema": "tai.reference.tei-capability-chain/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "cd47b6fa4905f35b12b8d993efcb5d4df78fad5f",
+  "teiCommit": "0399225c16e332f2aceb80d3ebe8ac1917700989",
   "chain": [
     "eki_task_submit",
     "eki_attempt_execute",
