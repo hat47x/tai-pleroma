@@ -331,15 +331,14 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, CaseResult{ID: "P-06", Status: "not-run",
 		Reason: "個人・組織・社会の主体規模比較は人間の判断が必要"})
 
-	// N-01: text A→B→A does not by itself make an observation accepted.
-	// O-07 repeats O-02's text on a later version, and O-02 carries no
-	// acceptance record, so the text match alone accepts nothing.
+	// N-01: same text in O-02/O-07 with another source version and no published Draft (a structural check only;
+	// whether an earlier approval revives is not covered here — N-08 does).
 	o02, ok02 := byID["O-02"]
 	o07, ok07 := byID["O-07"]
 	n01 := ok02 && ok07 && o02.Text == o07.Text && o02.SourceVersion != o07.SourceVersion && !anyPublished(f.Drafts) &&
 		!decisionAccepts(f.Decisions, "O-02")
 	receipt.Cases = append(receipt.Cases, statusCase("N-01", n01,
-		"O-07がO-02と同じ文言でも、O-02に受理の記録はなく、本文一致だけで受理と扱わない"))
+		"O-02とO-07が同じ文言で出典版が異なり、公開済みDraftがないことの構造確認。過去の受理の復活はN-08が扱う"))
 
 	// N-02: no publication without a confirmed authority.
 	n02 := !anyPublished(f.Drafts) && f.Authority.Status == "unconfirmed"
