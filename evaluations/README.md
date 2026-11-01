@@ -27,4 +27,5 @@
 - [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:53600dc...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
 - [yi-constellation-structure-2026-11-01.json](records/yi-constellation-structure-2026-11-01.json): Yi Constellationの64卦表、8×8配置、36変爻、象の引用、綜卦、序卦の構造検算。`passed=true`、`errors=0`。意味の解釈は対象外。
 - [yi-64-hexagrams.json](fixtures/yi-64-hexagrams.json): 64卦の番号、卦名、卦の並び、大象のfixture。19の検算が使う。
+- [yi-appendix-quotes.json](fixtures/yi-appendix-quotes.json): 序卦伝と雑卦伝の八つの引用のfixture。19の検算が使う。
 - [audit-yi-constellation.py](audit-yi-constellation.py): 上記の検算を再実行するスクリプト。外部ライブラリは不要。

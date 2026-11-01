@@ -2,8 +2,8 @@
 
 対象は docs/yi-constellation/01-64卦のシステム地図.md と
 docs/yi-constellation/09-変爻の分析.md である。番号、卦名、上下卦、
-八×八の配置、三十六の変爻、之卦の象の引用、綜卦の対、序卦の連続を
-機械的に確かめる。象の意味の解釈は検算しない。
+八×八の配置、三十六の変爻、之卦の象の引用、序卦伝・雑卦伝の引用、
+綜卦の対、序卦の連続を機械的に確かめる。象の意味の解釈は検算しない。
 
 使い方:
     python evaluations/audit-yi-constellation.py
@@ -43,6 +43,8 @@ BY_NAME = {name: (n, bits) for n, name, bits in HEX}
 BY_BITS = {bits: (n, name) for n, name, bits in HEX}
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "yi-64-hexagrams.json"
 XIANG = {item["name"]: item["xiang"] for item in json.loads(FIXTURE.read_text(encoding="utf-8"))["hexagrams"]}
+APPENDIX_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "yi-appendix-quotes.json"
+APPENDIX_QUOTES = json.loads(APPENDIX_FIXTURE.read_text(encoding="utf-8"))["quotes"]
 TRIGRAM = {"111": "乾", "110": "兌", "101": "離", "100": "震", "011": "巽", "010": "坎", "001": "艮", "000": "坤"}
 PRODUCTS = {"TAI": "泰", "SUI": "萃", "SHO": "升", "SEI": "井", "TEI": "鼎", "EKI": "益"}
 SHADOWS = {12, 41, 47, 49}
@@ -213,6 +215,14 @@ def check_xiang(doc: str) -> list[str]:
     return errors
 
 
+def check_appendix_quotes(doc: str) -> list[str]:
+    errors: list[str] = []
+    for item in APPENDIX_QUOTES:
+        if normalize(item["quote"]) not in normalize(doc):
+            errors.append(f"appendix quote missing ({item['section']}): {item['quote'][:30]}")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--json", help="write the audit result to this path")
@@ -226,6 +236,7 @@ def main() -> int:
     errors += check_matrix(doc01)
     errors += check_changes(doc09)
     errors += check_xiang(doc09)
+    errors += check_appendix_quotes(doc01)
     errors += check_pairs()
 
     result = {
@@ -240,6 +251,7 @@ def main() -> int:
             "matrix": "8x8 upper/lower placement",
             "changes": "36 summary and detailed line changes, polarity labels",
             "xiang": "36 daisho quotes against the fixture",
+            "appendix": "8 xugua and zagua quotes against the fixture",
             "pairs": "5 zonggua pairs and 8 xugua transitions",
         },
         "errors": errors,
