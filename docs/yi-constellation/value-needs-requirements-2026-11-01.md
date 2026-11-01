@@ -110,6 +110,7 @@
 | YI-CAND-16 | 各製品の固有Contract/Release/Authorityを維持したまま、組合せの版と公開可能な根拠を案内できる | TAI #73/#74・Draft #72/#75 | 単体製品PASSをシリーズ全体の受入に昇格 |
 | YI-CAND-17 | 原資料と、文書の図・表・引用に影響する表示依存を必要な範囲で再照合できる | SHO/MMI | Markdown同一でSVGのみ更新したのに同一表示と断定 |
 | YI-CAND-18 | 不可逆/高影響のAction、探索的な提案、低影響のread-only操作に、用途別の確認・観測を適用できる | Owner方針／Host/Provider／EKI | 全用途を同じ承認回数にし、誤作動または過剰停止 |
+| YI-CAND-19 | 機密性の高い運用で、SEI/SUI等の生データをOS/実Hostの強制境界内に保持し、外部Harness・別Productへ許可済みの用途限定Projectionのみ開示できる | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／SUI・SEI Source Owner／TEI Host／EKI Sandbox | MCPでは伏せたが同じOSユーザーのShell/別Portで生データを取得／Cloud推論へ平文を送信 |
 
 ### 4.1 要件精緻化で守る区別
 
@@ -118,6 +119,19 @@
 - **実測・提案・受理**：固定fixtureでの動作、各製品単体PASS、同一案件のE2E、実利用者の価値は独立の観測列とする。各成功を一つのPASSに集約しない。
 - **根拠参照と同一性**：同じbytesでも対象・使用目的・取得先・時点・権限が異なり得る。中央の万能ID/Global Principalは要件化しない。
 - **価値の測定と守るべき境界**：平均的なQoL改善や完了率で、無権限の作用・情報漏えい・少数者の負担を相殺しない。
+
+
+
+### 4.2 2026-11-01：機密情報を持つ主体の知的活動と、AI利用の可否を分ける
+
+機密性の高い個人・組織・社会データでは、AIへ生データを与える自由度よりも、**実際の閲覧資格・保護境界・情報持出し先**によって利用できる活動が変わる。YI-V-01/03/05/09/10に関わる横断要件として、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)のOS/Host隔離と用途限定Projectionを研究する。
+
+- **保護されるSource**：SEI観測・SUI未レビューCard/関係構造・SHO原文・TEI組織/業務データ等。機密なID・件数・digest・検索結果・ログ・一時ファイルも対象に含める。ClientのSafeMode/Promptだけで保護済みとみなさない。
+- **機密運用の実質的選択肢**：外部Cloudを使わずローカル/管理環境で推論、許可済み要約のみ外部へ渡す、機密を要する操作は本人/管理者に残す、非機密な調査を独立して続ける。**AI製品が使えないというだけで活動全体が停止しない**ことも価値。
+- **合成比較**：利用を許可されたProjectionへアクセス可能な経路を正例、同じConsumerからraw file/別Port/任意Tool/egress/metadataで機密を取得できる経路を負例とする。実OS/Networkで阻止した証拠が要る。隠れた資料を「0件」と断定せず、非公開構造を推測で漏らさない。
+- **境界**：Rawを持つ各Product/Hostと実権限者がSource・開示・データ所在地を管理し、TAIは目的・用途に合う能力選択と比較を担当する。MCP/Skill登録・Providerの自己申告・LLMの拒否文はOS隔離の根拠ではない。EKI resourceWatch/Job Objectによる資源制限を機密保護に読み替えない。
+
+**状態**：YI-CAND-19は採用前の追加候補。OS強制、外部Harnessの実送出、テナント越境、実機密資料での利用者評価はNOT RUN。YIの既存候補01〜18の正式受理状況を変えない。
 
 ## 5. 受入シナリオ案（既存票を再利用）
 
