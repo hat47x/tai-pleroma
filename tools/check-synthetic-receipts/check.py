@@ -81,6 +81,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-live-2026-11-01.json",
     "evaluations/records/SEI-live-2026-11-01.json",
     "evaluations/records/MMI-live-2026-11-01.json",
+    "evaluations/records/EKI-http-agent-2026-11-01.json",
 )
 
 
@@ -150,6 +151,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "EKI-http-agent" in relative:
+            observed = data.get("observed", {})
+            if observed.get("submitStatus") != 202:
+                errors.append(f"EKI HTTP/agent receipt has no 202: {relative}")
+            if not str(observed.get("taskID", "")).startswith("tsk_"):
+                errors.append(f"EKI HTTP/agent receipt has no task id: {relative}")
+            if not str(observed.get("claimDigest", "")):
+                errors.append(f"EKI HTTP/agent receipt has no claim digest: {relative}")
         if "MMI-live" in relative:
             observed = data.get("observed", {})
             if observed.get("exitCode") != 0:
