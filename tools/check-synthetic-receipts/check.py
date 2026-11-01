@@ -89,6 +89,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-text-generation-2026-11-01.json",
     "evaluations/records/SUI-TEI-target-2026-11-01.json",
     "evaluations/records/SUI-TEI-target-document-id-2026-11-02.json",
+    "evaluations/records/SUI-TEI-card-record-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -160,6 +161,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-card-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("kind") != "record" or observed.get("passedCases") != 4:
+                errors.append(f"TEI card record receipt did not pass a record contract: {relative}")
+            if "text-record-template" not in observed.get("qualified", []):
+                errors.append(f"TEI card record receipt did not qualify the record candidate: {relative}")
+            if observed.get("profilePassed") is not True:
+                errors.append(f"TEI card record receipt did not run the profile: {relative}")
         if "tei-multi-attribute" in relative:
             observed = data.get("observed", {})
             if observed.get("attributeCount") != 2 or observed.get("passedCases") != 4:

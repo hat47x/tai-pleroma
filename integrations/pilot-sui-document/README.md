@@ -73,7 +73,21 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 
 `candidates/document-id/`に2つ目の契約（`sui.card.document_id`）を追加し、同じ`text-template`で生成・選抜しました。4ケースが一致し、`qualified=["text-template"]`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)）。
 
-これは属性ごとに独立した契約を持つ段階であり、Card全体を1つのrecordとして投影する契約ではありません。record全体の投影は未達です。
+これは属性ごとに独立した契約を持つ段階であり、Card全体を1つのrecordとして投影する契約ではありません。
+
+### record全体への拡張（2026-11-02）
+
+`candidates/card-record/`に、Cardの`text`と`documentId`を1つのrecordとして投影する契約を追加しました。`projection.kind=record`と`fields`を使い、`text-record-template`（[PR #2549](https://github.com/hat47x/tei-platform/pull/2549)）で生成しました。
+
+```text
+present:    {"documentId":"doc-1","text":" hello "}
+missing:    ["text"]
+unresolved: （値なし）
+```
+
+4ケースが一致し、`qualified=["text-record-template"]`、`passed=true`、`profiles/record.json`のone-shot実行も`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-card-record-2026-11-02.json)）。
+
+record投影は、Cardの2属性に限った参照ローカルの実装です。Cardの他の属性、Island/Edge、実装コードの生成は未達です。
 
 ## 段階3の最初の測定（2026-11-02）
 
