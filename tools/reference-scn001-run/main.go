@@ -339,18 +339,27 @@ func Verify(receipt RunReceipt) Verification {
 			"N-01": "pass", "N-02": "pass", "N-03": "pass", "N-04": "pass",
 			"N-05": "not-run", "N-06": "pass", "N-07": "pass",
 		}
-		if len(scn.Cases) != len(required) {
+		if len(scn.Cases) != len(required) && len(scn.Cases) != len(required)+1 {
 			verification.Reason = "SCN-001 case count does not match the successful reference evaluation"
 			return verification
 		}
 		seen := map[string]bool{}
 		for _, item := range scn.Cases {
 			status, ok := required[item.ID]
+			if item.ID == "N-08" {
+				status, ok = "pass", true
+			}
 			if !ok || seen[item.ID] || item.Status != status {
 				verification.Reason = "SCN-001 case status is inconsistent with the successful reference evaluation"
 				return verification
 			}
 			seen[item.ID] = true
+		}
+		for id := range required {
+			if !seen[id] {
+				verification.Reason = "SCN-001 required case is missing"
+				return verification
+			}
 		}
 	}
 	suiOK := true

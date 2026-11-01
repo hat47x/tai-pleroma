@@ -83,9 +83,9 @@ go run . -owner-packet run.json -artifact review.md -out owner.json
 
 実行記録・成果物・packetの保存は、複数ファイルをまとめた原子的な処理ではありません。途中で失敗した場合に一部の新規ファイルが残ることがありますが、成功として扱わず、既存ファイルを再試行で上書きしません。照合後のファイル変更まで防ぐ機能ではないため、レビュー時にも`-verify run.json -artifact review.md`で再確認します。byte一致は内容の正しさ・人間の意味受理・公開権限を証明しません。
 
-## 追加候補: SUI照合入力の保存と再検証
+## SUI照合入力の保存と再検証
 
-状態: Draftの実装候補。ローカル保存形式と追加の検証結果はOwner判断待ちです。既存のrun receiptと`-verify`の形式は変更しません。
+SUI照合の入力を保存し、後から内容を再検証できます。既存のrun receiptと`-verify`の形式は変更しません。
 
 `-sui-receipt`で今回の内容を照合する実行に、`-sui-evidence-out`で新規ディレクトリを指定すると、次の5ファイルと`manifest.json`を保存します。保存先の親ディレクトリは存在する必要があり、既存ディレクトリは空でも再利用しません。別途指定する`-out`・`-artifact-out`は保存ディレクトリの外に置きます。
 
@@ -111,6 +111,8 @@ go run . -root ../.. -verify-sui-evidence review-evidence
 1. 保存したMMI返却値をfixtureへ再反映し、fixtureのbytesとSCN個別結果を照合する。
 2. 元SUI receiptと同じfixtureを既存の`reference-sui-link`へ渡し、SUI個別結果を照合する。
 3. 同じfixtureでD-04を再生成し、個別結果と保存済み成果物のbytesを照合する。
+
+実行内の本文digest対応を含む記録では、保存したMMI選択行からdigestも再計算し、記録と照合します。以前の記録にN-08がない場合は、その記録からN-08を確認済みと解釈しません。N-08を含む成功記録では、その結果も成功している必要があります。
 
 すべて成功した場合だけ、`schema=tai.reference.scn001-sui-evidence-verification/v0`の結果で`passed=true`・`suiContentVerified=true`・`artifactBytesVerified=true`になります。失敗時は終了コード1で3フラグともfalseです。引数の競合や保存の失敗は終了コード2です。`humanReviewed`・`authorityVerified`・`publicationApproved`は成功時もfalseです。既存の`-verify run.json`に、この内容照合や追加フラグは含めません。
 

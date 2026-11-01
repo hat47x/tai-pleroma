@@ -120,6 +120,9 @@ func validateSUIEvidence(manifest suiEvidenceManifest, files map[string][]byte) 
 	if err := decodeEvidenceJSON(files["mmi.json"], &mmi); err != nil {
 		return receipt, err
 	}
+	// SelectedDigests is derived by the combined runner, not returned by MMI.
+	// It is independently recomputed from the saved rows during replay below.
+	mmi.SelectedDigests = receipt.Components.MMI.SelectedDigests
 	if !sameEvidenceValue(mmi, receipt.Components.MMI) {
 		return receipt, fmt.Errorf("saved MMI component differs from run")
 	}
@@ -217,6 +220,12 @@ func VerifySUIEvidence(ctx context.Context, root, dir string) SUIEvidenceVerific
 		}
 	}
 	fixture := filepath.Join(work, "resolved-scn001.json")
+	if len(receipt.Components.MMI.SelectedDigests) != 0 {
+		digests, err := selectedDigests(filepath.Join(work, "mmi.json"))
+		if err != nil || !sameEvidenceValue(digests, receipt.Components.MMI.SelectedDigests) {
+			return fail(fmt.Errorf("saved MMI selected rows differ from run"))
+		}
+	}
 	resolved := filepath.Join(work, "re-resolved.json")
 	scnOutput, err := goRunOutput(ctx, filepath.Join(root, "tools", "reference-scn001"),
 		"run", ".", "-fixture", fixture, "-mmi-receipt", filepath.Join(work, "mmi.json"), "-out-fixture", resolved)
