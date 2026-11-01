@@ -455,6 +455,23 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, statusCase("N-09", n09,
 		"全てのDecisionのdraftとsubjectが、実在するDraftとObservationを指す"))
 
+	// N-10: a decision that records the accepted subject version must point
+	// at an observation with that version. A resolved ID with a drifted
+	// version is a stale basis; the authority and meaning axes are not
+	// checked here.
+	n10 := true
+	for _, decision := range f.Decisions {
+		if decision.Subject == "" || decision.SubjectVersion == "" {
+			continue
+		}
+		observation, ok := byID[decision.Subject]
+		if !ok || observation.SourceVersion != decision.SubjectVersion {
+			n10 = false
+		}
+	}
+	receipt.Cases = append(receipt.Cases, statusCase("N-10", n10,
+		"subjectVersionを記録したDecisionは、対象ObservationのsourceVersionと一致する"))
+
 	receipt.Passed = true
 	for _, result := range receipt.Cases {
 		if result.Status == "fail" {

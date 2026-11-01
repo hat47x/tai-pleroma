@@ -97,3 +97,34 @@ func TestUntargetedDecisionSubjectFails(t *testing.T) {
 	})
 	requireFail(t, Evaluate(fixture), "N-09")
 }
+
+// A decision that pins a subject version must point at the same observation
+// version. A resolved ID with a drifted version is a stale basis.
+func TestSubjectVersionMismatchFails(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Observations = append(fixture.Observations, Observation{
+		ID:            "O-10",
+		Text:          "別の版の配布文書",
+		Source:        "distribution",
+		SourceVersion: "v2",
+		ObservedAt:    "2026-10-27",
+		Availability:  "available",
+	})
+	fixture.Decisions = append(fixture.Decisions, Decision{
+		ID:                  "DEC-07",
+		Status:              "pending",
+		Authority:           "unconfirmed",
+		Subject:             "O-10",
+		SubjectVersion:      "v0",
+		PublicationApproved: false,
+		ReviewRequired:      true,
+	})
+	requireFail(t, Evaluate(fixture), "N-10")
+}
+
+// The pinned version itself can drift from the observation it names.
+func TestSubjectVersionDriftFails(t *testing.T) {
+	fixture := loadFixture(t)
+	setDecision(t, &fixture, "DEC-03", func(d *Decision) { d.SubjectVersion = "v1" })
+	requireFail(t, Evaluate(fixture), "N-10")
+}
