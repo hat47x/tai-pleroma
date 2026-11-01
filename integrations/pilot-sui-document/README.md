@@ -68,3 +68,28 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 さらに、`profiles/oneshot.json`を追加し、`tei-target-profile run`で同じ候補をone-shotのTarget Profileで実行しました。4ケースが`exitCode=0`で一致し、`processModel=oneshot`、`generatorId=text-template`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-target-2026-11-01.json)）。ただし、これは同じホスト上の参照実行であり、実機・実OS・実配備を示しません。
 
 生成したのは投影の候補であり、SUIの実装コードでも実行可能な画面・APIでもありません。段階2は最小経路とTarget Profile実行まで到達し、複数属性・record全体・実環境が残っています。
+
+## 段階3の最初の測定（2026-11-02）
+
+`measure_workflow.py`で、生成と選抜のツール工程を測定しました。
+
+```sh
+python integrations/pilot-sui-document/measure_workflow.py \
+  --tei-repo <TEI> --workspace integrations/pilot-sui-document \
+  --contract .../contract.json --fixtures .../fixtures.json \
+  --out evaluations/records/SUI-TEI-workflow-2026-11-02.json
+```
+
+観測（1回、Windows、同じホスト）:
+
+| 項目 | 値 |
+| --- | --- |
+| generate | 406ms |
+| select | 3312ms |
+| cases | 4 |
+| 人の介入（呼び出し側の申告） | 0 |
+| 自律ステップ | 2 |
+
+receipt: [SUI-TEI-workflow-2026-11-02.json](../../evaluations/records/SUI-TEI-workflow-2026-11-02.json)
+
+これはツール工程の時間・試行回数・介入回数の記録であり、生産性や自律性の証明ではありません。比較対象（現行SUIの手作業）と評価集合はまだ定めていません。

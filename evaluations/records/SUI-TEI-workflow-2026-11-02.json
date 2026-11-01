@@ -1,0 +1,42 @@
+{
+  "schema": "tai.reference.tei-workflow-measurement/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "2197baaedbde178a042a280ea1bd1d534617bfc7",
+  "host": "Windows 11 with Go on PATH",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document\\candidates\\text-identity\\contract.json -strategy text-template -out D:\\GIT\\hat47x\\.gotmp\\tei-measure-olpvyt09\\text-template && go run ./tools/reference-generator-selection/cmd/tei-generator-select -workspace D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document -contract D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document\\candidates\\text-identity\\contract.json -fixtures D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document\\candidates\\text-identity\\fixtures.json -candidates D:\\GIT\\hat47x\\.gotmp\\tei-measure-olpvyt09",
+  "result": "PASS",
+  "workspace": "..\\..\\integrations\\pilot-sui-document",
+  "steps": [
+    {
+      "name": "generate",
+      "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document\\candidates\\text-identity\\contract.json -strategy text-template -out D:\\GIT\\hat47x\\.gotmp\\tei-measure-olpvyt09\\text-template",
+      "elapsedMillis": 406,
+      "exitCode": 0
+    },
+    {
+      "name": "select",
+      "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-select -workspace D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document -contract D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document\\candidates\\text-identity\\contract.json -fixtures D:\\GIT\\hat47x\\tai-wt-gencand\\integrations\\pilot-sui-document\\candidates\\text-identity\\fixtures.json -candidates D:\\GIT\\hat47x\\.gotmp\\tei-measure-olpvyt09",
+      "elapsedMillis": 3312,
+      "exitCode": 0
+    }
+  ],
+  "attempts": {
+    "generate": 1,
+    "select": 1
+  },
+  "passed": true,
+  "qualified": [
+    "text-template"
+  ],
+  "cases": 4,
+  "digests": {
+    "contract": "sha256:12e3428fa726f3ce52ccac0ae3f7a221541c561d0177ae963472cc560d3a3dd8",
+    "fixtures": "sha256:23e70fc056f9dcc462a292d65c046e0f4129b61de9d51c65b081645a69207247"
+  },
+  "humanInterventions": 0,
+  "autonomousSteps": 2,
+  "scope": "Tool-step measurement only. It records elapsed time, attempts, and human interventions supplied by the caller; it does not measure human effort, meaning correctness, productivity, or autonomy."
+}
