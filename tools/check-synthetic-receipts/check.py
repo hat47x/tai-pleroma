@@ -140,6 +140,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             conflict = data.get("idempotencyConflict", {})
             if conflict.get("resultStatus") != 409 or conflict.get("code") != "IDEMPOTENCY_KEY_CONFLICT":
                 errors.append(f"live receipt did not record the idempotency conflict: {relative}")
+        if "SUI-live" in relative:
+            document = data.get("document", {})
+            if document.get("putStatus") != 200 or document.get("read") is not True:
+                errors.append(f"SUI live receipt has no document round trip: {relative}")
+            if document.get("cardCount") != 1:
+                errors.append(f"SUI live receipt card count differs: {relative}")
+            if not str(document.get("digest", "")).startswith("sha256:"):
+                errors.append(f"SUI live receipt has no document digest: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
