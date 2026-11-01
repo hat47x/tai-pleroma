@@ -101,6 +101,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append("live call is claimed without a control host")
         if not str(live_call.get("observedTaskId", "")).startswith("tsk_"):
             errors.append("live call is claimed without an observed task id")
+        if live_call.get("idempotentReplay") is True:
+            if live_call.get("replayTaskId") != live_call.get("observedTaskId"):
+                errors.append("idempotent replay returned a different task id")
         live_error = data.get("liveErrorCall", {})
         if live_error.get("test") == "TestLiveEKIProblemJSON":
             if live_error.get("result") != "PASS":
