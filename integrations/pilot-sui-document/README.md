@@ -153,3 +153,21 @@ rollback: passed=true, slot=a, previousSlot=b
 receipt: [SUI-TEI-deploy-2026-11-02.json](../../evaluations/records/SUI-TEI-deploy-2026-11-02.json)
 
 これはローカルfilesystem上のslot切替であり、実Target、supervisor、無停止更新、health check、drainを示しません。
+
+## Island/Edgeへの拡張（2026-11-02）
+
+`candidates/island-record/`と`candidates/edge-record/`を追加し、同じ`text-record-template`で生成・選抜・実行しました。
+
+```text
+sui.island.record: islandId, documentId
+sui.edge.record:   edgeId, fromCard, toCard, relation
+```
+
+どちらも4ケースが一致し、`qualified=["text-record-template"]`、`passed=true`、`profiles/record.json`のone-shot実行も`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-island-edge-2026-11-02.json)）。
+
+Edgeのfrom/toは、入れ子の参照ではなく識別子の組（`fromCard`、`toCard`）としてflatなrecordに置きました。
+
+### 暫定意思決定（AI）
+
+- Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。
+- Edgeの関係は、`relation`を`std.code`の文字列として保持する。関係の意味の検証は、この契約では行わない。

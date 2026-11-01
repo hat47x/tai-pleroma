@@ -1,0 +1,23 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "sui.edge.record",
+  "version": "1",
+  "status": "reference-local",
+  "note": "SUIのEdgeを、edgeId・fromCard・toCard・relationからなるrecordとして投影する参照用の契約。from/toの関係は識別子の組で表す。",
+  "inputs": [
+    {"attribute": "sui.edge.edge_id", "primitive": "std.identifier"},
+    {"attribute": "sui.edge.from_card", "primitive": "std.identifier"},
+    {"attribute": "sui.edge.to_card", "primitive": "std.identifier"},
+    {"attribute": "sui.edge.relation", "primitive": "std.code"}
+  ],
+  "output": {"primitive": "std.text"},
+  "projection": {
+    "kind": "record",
+    "fields": [
+      {"name": "edgeId", "input": "edgeId", "attribute": "sui.edge.edge_id", "primitive": "std.identifier"},
+      {"name": "fromCard", "input": "fromCard", "attribute": "sui.edge.from_card", "primitive": "std.identifier"},
+      {"name": "toCard", "input": "toCard", "attribute": "sui.edge.to_card", "primitive": "std.identifier"},
+      {"name": "relation", "input": "relation", "attribute": "sui.edge.relation", "primitive": "std.code"}
+    ]
+  }
+}
