@@ -442,3 +442,24 @@ EKI [#351／merged #366](https://github.com/hat47x/eki-fabric/issues/351)ではW
 [TAIのSUI DocumentV1パイロット](https://github.com/hat47x/tai-pleroma/blob/main/integrations/pilot-sui-document/README.md)では、Document/Card/Island/Edgeの意味モデルは`tei validate`で確認できた。一方、従来の数値生成契約はWorkspace属性不一致で拒否され、`std.text`の試行はrounding前提で拒否された（[TEI #2488](https://github.com/hat47x/tei-platform/issues/2488)）。その後、[merged spike #2489](https://github.com/hat47x/tei-platform/pull/2489)で文字列のpresent/empty/missing/unresolvedを比較できたが、現行の製品Generator Selectionがrecord/string出力に対応したという実証ではない。段階2の実生成は停止中。
 
 **横断的な能力選択の含意**：`model-valid`／`contract-expressible`／`generator-supported`／`artifact-verified`／`host-executed`／`owner-accepted`を一つのready状態へ統合しない。外部Harnessが別コード生成を補助する場合も、その成果物がTEIの正式Generator/Selectorを通ったと扱わず、独立した候補・出典/版・検査証拠を残す。未対応が見つかったときは適切な段階で止め、TEI側の既存Issueに要求を返す。TAIに同じrecord/string Generatorを別実装しない。
+
+## 19. 2026-11-01：機密性の高い運用での生データ隔離（TAI #232）
+
+**Ownerの追加要望**：SEI/SUI等が保持する生データを、ハーネスや別Productが直接取得できると外部LLMやTool等へ非公開内容が送出され得る。機密性が高い場合は、**OS/Hostが実際に強制する境界**でRaw Storeを保護し、許可済みの用途限定Projection/QueryだけをConsumerへ渡す。[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)を横断の設計・試験Ownerとし、SUI実API、SEI元記録、EKI Sandbox、TEI Host Authorityの第二実装はTAIへ置かない。
+
+### 19.1 「Productが返さない」と「Processから読めない」は異なる
+
+- **Policy/Projection**：SUI未レビューのCard/Edge/IDやSEI生観測をServer側で非開示。Clientの`safeMode`/MCP Tool annotationだけでServerの全出入口を保護したと推測しない。Read-onlyは更新権限の制限であって、秘密の読取り禁止とは別。
+- **OS/Runtime**：Raw StoreとHarnessは必要時に別OS Identity/ACL/プロセス/VM境界へ分離し、FS・Secret・IPC・network egress・一時ファイル・Logs/Crash dumpsを確認。LinuxではUID/ACL/namespace/Landlock/seccomp等、WindowsではACL/Identity/AppContainer/LPAC/VM/Firewall等を**Host固有の実利用資格と強制結果**で判断。既存EKI Job ObjectやresourceWatchの合格を機密隔離へ昇格させない。
+- **Network/Model送信**：Cloud LLM/API/telemetryへの送出前に用途・許容内容をProductが制限し、必要な場合は原文処理を許可されたローカル/組織管理の境界内で行う。生データを一度Modelへ渡した後のRedactionや「モデルに秘密を守らせる」Promptを保証としない。
+- **Handoff**：Harness交代や別Product利用時は、Sourceへのopaque reference・許可済み要約/集計と利用条件/確認要否だけ引き渡し、元文書・件数・ID・生fingerprint・Secretの存在さえ非公開になり得ると扱う。「後から元の記録へ戻れる」は改めて適切なHost/Source認可が成立した範囲に限る。
+
+### 19.2 Profile案・比較試験の位置付け
+
+機密度に応じてLAB（合成）／CONTROLLED（サーバ認可＋OS identity）／CONFIDENTIAL（Rawを別Process/隔離Hostへ置き、外部へ最小投影のみ）／RESTRICTED（特定ネットワーク・データ所在地の範囲内で生データ処理）を**候補**とする。Source/用途によって利用Profileは変わる。正式なCore Enum・万能Grant・全Productの必須Runtimeにはしない。いずれもOSと各製品の実装で保証が異なるので、環境が強制できない機能は`unsupported`で評価する。
+
+**最初の横断対照**：SUIまたはSEIの合成Rawを非Harness UIDの管理領域へ配置→Harnessは許可したServer Projectionへ正常アクセス→raw file、別Port direct API、symlink、任意Shell/MCP、下位Tool、非許可egressでは拒否。加えて本文を隠した投影のCard件数/ID/Edge、エラー/ログ、集計と反復照会による間接開示を調べる。既存SUI #3330/#3331、TEI #2391のF1/F2、EKI #174のProfileを再利用。必要な時点に原資料へ到達できることは**許可されたProductが取得し、非公開原文をHarnessへ配布しない**方式で確認する。
+
+**連携成功の最小主張**は、①実Kernel/OS権限でRawへの直接アクセスを防げた、②実APIは用途に許された投影だけ返した、③実外向き経路に非許可のRawが出なかった、④非公開情報を対象集合の0件/全件と取り違えず活動が進められた、の**個別証拠**。それぞれ同じInput/Process/Version/Host/時点であることを示す。OS管理者権限、Kernel侵害、許可済み画面の撮影等は別Threat Class。
+
+**状態**：#232へ具体的な負例・C0〜C5・責務分担を起票済み。本節は設計候補で、Linux/Windowsの実隔離、実Cloud egress、秘密文書のProduct横断処理、Ownerの機密Profile採用は**NOT RUN**。SW-01 A2/B1比較も非公開Rawの直接投入を前提にせず、同じ許可済みProjectionで条件を固定する。
