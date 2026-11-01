@@ -151,6 +151,19 @@
 4. **技術への転換時点**：既存のHarness/通常ファイル/CLIで満たせる部分と、独立したモデル・Plugin・実装が必要な部分。比較結果により機能を縮退させる余地。
 5. **価値と負担の均衡**：受益分布や停止の価値を誰が測り、どの情報を合法的・正当に収集し、誰が判断するか。
 
+## 7.1 2026-11-01研究深化：価値の実現可能性・緊張・現場の反証
+
+[価値の実現と検証をつなぐ研究計画](value-realization-research-protocol-2026-11-01.md)を、前節D1〜D5の具体化として追加した（**Research / Draft / Owner未受理**）。
+
+- 価値・要望・実質的な選択可能性（Capability）・技術的要件・結果を区別し、**行為の達成**と**本人が選べる自由**の双方を測る。完了件数を唯一の価値基準にしない。
+- 当事者は直接利用者に加え、共同利用者、影響を受ける非利用者、権限をもつ主体を含める。個人・組織・社会は同一Agentの単純な拡大ではなく、関係・意思決定・参加条件が変わる場面として比較する。
+- 価値の緊張を、先回り支援/主体性、自由な探索/作用の確かさ、継続/撤回、効率/相互性、拡張/余白、局所自治/共同調整として扱う。探索段階の生成的可能性と、その後の正式受理・実行の検証を区別する。
+- 個人の創作・仕事・休息（CASE-V01）、組織の未知課題と脆弱性（CASE-V02）、社会の共有資源と異論（CASE-V03）に具体化。社会のCASE-V03は参加者・正当な決定主体を未調査の**探索票**であり、実社会受理は未実施。
+- TEI側の**AI-first / Headless-first / GUI-later**方針を組織CASEに接続し、意味モデル・Plugin設計の机上評価とAI向けCLI/typed操作のPoC後にGUIの差分を検証する案とした。各製品の独立UIや人間の正式受理は維持。
+- 追加の外部参照：[Capability Approach](https://plato.stanford.edu/entries/capability-approach/)、[Self-Determination Theory](https://www.apa.org/research-practice/conduct-research/self-determination-theory)、[CHI 2026の人間主導/モデル主導の創作比較](https://doi.org/10.1145/3772318.3791185)、[Ostrom IAD](https://www.ostrom.indiana.edu/courses-teaching/teaching-tools/iad-framework/index.html)、[ISO/IEC 25019:2023の利用時品質](https://www.iso.org/standard/78177.html)と[25010:2023の製品品質](https://www.iso.org/standard/78176.html)。**外部研究の事実とYIへの設計上の解釈は別**。
+
+`RQ-YI-013〜015`の原文・正式版については引き続き未照合。新しい候補索引を正式な要求IDへ昇格させず、既存#127/#165/#166/#167/#168と各ProductのOwner・既存受入票へ接続する。
+
 ## 8. 現時点の処遇
 
 - **今回確認した事実**：TAI mainの方針・文書構成、Draft #72/#75/#81/#128/#169の提案範囲、EKIの下流側 `RQ-YI` 引用、NIST/ISO/W3C等の外部出典。
