@@ -24,6 +24,7 @@
 | D-04 AI review | `sufficient-for-development` | [receipt](../evaluations/records/SCN-001-ai-review-2026-10-29.json) |
 | EKI feasibility | `sufficient-for-feasibility`、Task実行なし | [receipt](../evaluations/records/SCN-001-eki-feasibility-2026-10-29.json) |
 | EKI 実行・受理 | TEST PROFILEでHTTP submit→Agent実行→ResultClaim→受理。検証は同一ホスト再実行 | [receipt](../evaluations/records/EKI-http-agent-2026-11-01.json) |
+| run receiptの実実行参照 | `externalExecution`がEKI receiptをdigestで固定。`-verify`でrunDigestとinputBindingを確認 | [run](../evaluations/records/SCN-001-run-2026-11-01.json) |
 | 合成フロー | 全コンポーネント接続済み | [receipt](../evaluations/records/SCN-001-synthetic-flow-2026-10-29.json) |
 | 公開gate | `allowed=false` | [receipt](../evaluations/records/SCN-001-publication-gate-2026-10-29.json) |
 
