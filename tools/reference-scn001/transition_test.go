@@ -128,3 +128,18 @@ func TestSubjectVersionDriftFails(t *testing.T) {
 	setDecision(t, &fixture, "DEC-03", func(d *Decision) { d.SubjectVersion = "v1" })
 	requireFail(t, Evaluate(fixture), "N-10")
 }
+
+// A publication claim is checked for every decision, not only the named
+// ones. This contrasts with the link check before N-09: the authority claim
+// was already generalized by P-04.
+func TestUntargetedPublicationApprovalFails(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Decisions = append(fixture.Decisions, Decision{
+		ID:                  "DEC-08",
+		Status:              "approved",
+		Authority:           "provisional-owner",
+		PublicationApproved: true,
+		ReviewRequired:      false,
+	})
+	requireFail(t, Evaluate(fixture), "P-04")
+}
