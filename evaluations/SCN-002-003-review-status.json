@@ -1,0 +1,45 @@
+{
+  "schema": "tai.reference.multi-scenario-review/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "reviewTrigger": "post-synthetic-real-object",
+  "scenarios": [
+    {
+      "id": "SCN-002",
+      "status": "accepted",
+      "evidenceKind": "synthetic",
+      "slice": "evaluations/records/SCN-002-slice-2026-10-29.json",
+      "artifacts": [
+        "evaluations/artifacts/SCN-002-D-05-priority-plan.md",
+        "evaluations/artifacts/SCN-002-D-06-approval-packet.md",
+        "evaluations/artifacts/SCN-002-D-07-resubmission.md"
+      ],
+      "unresolved": [
+        "A拠点の更新期限差",
+        "合成見積は確定額ではない",
+        "再承認は未完了"
+      ]
+    },
+    {
+      "id": "SCN-003",
+      "status": "accepted",
+      "evidenceKind": "synthetic",
+      "slice": "evaluations/records/SCN-003-slice-2026-10-29.json",
+      "artifacts": [
+        "evaluations/artifacts/SCN-003-D-08-first-review.md"
+      ],
+      "unresolved": [
+        "申請Aの収入要件の食い違い",
+        "申請Cの利益相反",
+        "採択枠の扱い"
+      ]
+    }
+  ],
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "publicationApproved": false,
+  "publicationAllowed": false,
+  "publicationBlockers": [
+    "post-synthetic-real-object review is required"
+  ]
+}

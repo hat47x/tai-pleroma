@@ -1,0 +1,92 @@
+{
+  "schema": "tai.reference.tei-capability-chain/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "teiCommit": "1a2b1a604dacf3ac6b4134eb9deecf55275410c3",
+  "chain": [
+    "eki_task_submit",
+    "eki_attempt_execute",
+    "eki_result_accept"
+  ],
+  "flowOrder": [
+    "product_contracts.eki_task_submit",
+    "product_contracts.eki_attempt_execute",
+    "product_contracts.eki_result_accept"
+  ],
+  "orderEvidence": {
+    "mechanism": "composition.ActivationOrder",
+    "test": "TestProductFlowActivationFollowsDependencies",
+    "result": "PASS",
+    "negativeTest": "TestProductFlowOrderDependsOnCoeffects",
+    "negativeResult": "PASS",
+    "order": [
+      "eki_task_submit",
+      "eki_attempt_execute",
+      "eki_result_accept"
+    ],
+    "source": "Attempt and ResultClaim dependencies between composition providers"
+  },
+  "effects": {
+    "product_contracts.eki_task_submit": "create product_contracts.attempt",
+    "product_contracts.eki_attempt_execute": "create product_contracts.result_claim",
+    "product_contracts.eki_result_accept": "create product_contracts.accepted_result",
+    "product_contracts.sui_document_put": "update product_contracts.document",
+    "product_contracts.sei_decision_record": "create product_contracts.decision",
+    "product_contracts.mmi_observation_select": "none"
+  },
+  "bindingImplementations": {
+    "product_contracts.eki_task_submit": [
+      "EKITaskSubmit",
+      "EKITaskSubmitHTTP"
+    ],
+    "product_contracts.eki_attempt_execute": [
+      "EKIAttemptExecute"
+    ],
+    "product_contracts.eki_result_accept": [
+      "EKIResultAccept"
+    ],
+    "product_contracts.sui_document_put": [
+      "SUIDocumentPut"
+    ],
+    "product_contracts.sei_decision_record": [
+      "SEIDecisionRecord"
+    ],
+    "product_contracts.mmi_observation_select": [
+      "MMIObservationSelect"
+    ]
+  },
+  "httpBinding": {
+    "method": "POST",
+    "path": "/v1/tasks",
+    "idempotencyHeader": "Idempotency-Key",
+    "successStatus": 202,
+    "errorFormat": "application/problem+json",
+    "liveCallExecuted": true,
+    "testedWith": "httptest and live eki-control"
+  },
+  "liveCall": {
+    "date": "2026-11-01",
+    "ekiControlCommit": "99a01f99879b45875027e2a6a70753b25e50d5bb",
+    "ekiControlHost": "WSL2 Ubuntu (linux amd64 build)",
+    "endpoint": "http://127.0.0.1:18082",
+    "resultStatus": 202,
+    "taskIdPrefix": "tsk_",
+    "observedTaskId": "tsk_0467a69ca211ab7eaf306bc51ecc79b4",
+    "previousObservedTaskId": "tsk_a303bfb28e004347f545e554a43a597b",
+    "runs": 3,
+    "test": "TestLiveEKITaskSubmitHTTP",
+    "result": "PASS",
+    "scope": "WSL-hosted eki-control reached through localhost forwarding; Task accepted but no Worker executed it"
+  },
+  "liveErrorCall": {
+    "date": "2026-11-01",
+    "status": 400,
+    "code": "INVALID_TASK_REQUEST",
+    "test": "TestLiveEKIProblemJSON",
+    "result": "PASS",
+    "scope": "empty TaskRequest against the same WSL-hosted eki-control"
+  },
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

@@ -113,6 +113,32 @@ func TestUnavailableSourceIsNotAbsence(t *testing.T) {
 	}
 }
 
+func TestRevivedAcceptanceFails(t *testing.T) {
+	fixture := loadFixture(t)
+	for index := range fixture.Decisions {
+		if fixture.Decisions[index].ID == "DEC-03" {
+			fixture.Decisions[index].Status = "accepted"
+		}
+	}
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-08") != "fail" {
+		t.Fatalf("a lapsed acceptance came back on the text match: %+v", receipt)
+	}
+}
+
+func TestDifferentTextIsNotAMatchForTheLapsedAcceptance(t *testing.T) {
+	fixture := loadFixture(t)
+	for index := range fixture.Observations {
+		if fixture.Observations[index].ID == "O-09" {
+			fixture.Observations[index].Text = "会議室のみ予約不要と改訂された"
+		}
+	}
+	receipt := Evaluate(fixture)
+	if receipt.Passed || caseStatus(receipt, "N-08") != "fail" {
+		t.Fatalf("a different text counted as a match for the lapsed acceptance: %+v", receipt)
+	}
+}
+
 func TestFutureObservationCannotSupportEarlierDraft(t *testing.T) {
 	fixture := loadFixture(t)
 	fixture.Drafts[0].References = append(fixture.Drafts[0].References, "O-07")

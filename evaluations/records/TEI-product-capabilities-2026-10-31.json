@@ -1,0 +1,118 @@
+{
+  "schema": "tei.product-capabilities/v1",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "teiCommit": "1a2b1a604dacf3ac6b4134eb9deecf55275410c3",
+  "workspace": "reference/product-contracts",
+  "worldFingerprint": "sha256:da593906d33adebf5b2d4436feac30ad52cecc0edd1cda45cedd4ef9daa0f093",
+  "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
+  "capabilities": {
+    "product_contracts.eki_task_submit": {
+      "inputs": [{"name": "request", "type": "product_contracts.task_request"}],
+      "output": "product_contracts.attempt"
+    },
+    "product_contracts.eki_attempt_execute": {
+      "inputs": [{"name": "execution", "type": "product_contracts.attempt"}],
+      "output": "product_contracts.result_claim"
+    },
+    "product_contracts.eki_result_accept": {
+      "inputs": [{"name": "claim", "type": "product_contracts.result_claim"}],
+      "output": "product_contracts.accepted_result"
+    },
+    "product_contracts.sui_document_put": {
+      "inputs": [{"name": "document", "type": "product_contracts.document"}],
+      "output": "product_contracts.document"
+    },
+    "product_contracts.sei_decision_record": {
+      "inputs": [{"name": "decision", "type": "product_contracts.decision"}],
+      "output": "product_contracts.decision"
+    },
+    "product_contracts.mmi_observation_select": {
+      "inputs": [{"name": "selection", "type": "product_contracts.selection"}],
+      "output": "product_contracts.selection"
+    }
+  },
+  "bindings": {
+    "product_contracts.eki_task_submit": "EKITaskSubmit",
+    "product_contracts.eki_attempt_execute": "EKIAttemptExecute",
+    "product_contracts.eki_result_accept": "EKIResultAccept",
+    "product_contracts.sui_document_put": "SUIDocumentPut",
+    "product_contracts.sei_decision_record": "SEIDecisionRecord",
+    "product_contracts.mmi_observation_select": "MMIObservationSelect"
+  },
+  "bindingImplementations": {
+    "product_contracts.eki_task_submit": ["EKITaskSubmit", "EKITaskSubmitHTTP"],
+    "product_contracts.eki_attempt_execute": ["EKIAttemptExecute"],
+    "product_contracts.eki_result_accept": ["EKIResultAccept"],
+    "product_contracts.sui_document_put": ["SUIDocumentPut"],
+    "product_contracts.sei_decision_record": ["SEIDecisionRecord"],
+    "product_contracts.mmi_observation_select": ["MMIObservationSelect"]
+  },
+  "httpBinding": {
+    "method": "POST",
+    "path": "/v1/tasks",
+    "idempotencyHeader": "Idempotency-Key",
+    "successStatus": 202,
+    "errorFormat": "application/problem+json",
+    "liveCallExecuted": true,
+    "testedWith": "httptest and live eki-control"
+  },
+  "liveCall": {
+    "date": "2026-11-01",
+    "ekiControlCommit": "99a01f99879b45875027e2a6a70753b25e50d5bb",
+    "ekiControlHost": "WSL2 Ubuntu (linux amd64 build)",
+    "endpoint": "http://127.0.0.1:18082",
+    "resultStatus": 202,
+    "taskIdPrefix": "tsk_",
+    "observedTaskId": "tsk_0467a69ca211ab7eaf306bc51ecc79b4",
+    "previousObservedTaskId": "tsk_a303bfb28e004347f545e554a43a597b",
+    "runs": 3,
+    "test": "TestLiveEKITaskSubmitHTTP",
+    "result": "PASS",
+    "scope": "WSL-hosted eki-control reached through localhost forwarding; Task accepted but no Worker executed it"
+  },
+  "liveErrorCall": {
+    "date": "2026-11-01",
+    "status": 400,
+    "code": "INVALID_TASK_REQUEST",
+    "test": "TestLiveEKIProblemJSON",
+    "result": "PASS",
+    "scope": "empty TaskRequest against the same WSL-hosted eki-control"
+  },
+  "orderEvidence": {
+    "mechanism": "composition.ActivationOrder",
+    "test": "TestProductFlowActivationFollowsDependencies",
+    "result": "PASS",
+    "negativeTest": "TestProductFlowOrderDependsOnCoeffects",
+    "negativeResult": "PASS",
+    "order": [
+      "eki_task_submit",
+      "eki_attempt_execute",
+      "eki_result_accept"
+    ],
+    "source": "Attempt and ResultClaim dependencies between composition providers"
+  },
+  "patterns": {
+    "product_contracts.eki_task_submit": "product_contracts_flow.eki_task_submit",
+    "product_contracts.eki_attempt_execute": "product_contracts_flow.eki_attempt_execute",
+    "product_contracts.eki_result_accept": "product_contracts_flow.eki_result_accept",
+    "product_contracts.sui_document_put": "product_contracts_flow.sui_document_put",
+    "product_contracts.sei_decision_record": "product_contracts_flow.sei_decision_record",
+    "product_contracts.mmi_observation_select": "product_contracts_flow.mmi_observation_select"
+  },
+  "flowOrder": [
+    "product_contracts.eki_task_submit",
+    "product_contracts.eki_attempt_execute",
+    "product_contracts.eki_result_accept"
+  ],
+  "flowOrderScope": "TAI contract over TEI patterns. The TEI DSL has no order keyword; this list is checked by TAI and is not enforced by TEI.",
+  "effects": {
+    "product_contracts.eki_task_submit": "create product_contracts.attempt",
+    "product_contracts.eki_attempt_execute": "create product_contracts.result_claim",
+    "product_contracts.eki_result_accept": "create product_contracts.accepted_result",
+    "product_contracts.sui_document_put": "update product_contracts.document",
+    "product_contracts.sei_decision_record": "create product_contracts.decision",
+    "product_contracts.mmi_observation_select": "none"
+  },
+  "effectScope": "TEI DataEffect declares business intent only. It does not authorize execution or assert that durable data changed."
+}

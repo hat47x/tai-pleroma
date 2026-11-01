@@ -129,3 +129,15 @@ jobs:
       - name: SCN-003 slice scan
         working-directory: .
         run: python tools/check-scn003/check.py --root .
+      - name: multi-scenario review test
+        working-directory: tools/check-multi-scenario-review
+        run: python -m unittest -v check_test.py
+      - name: multi-scenario review scan
+        working-directory: .
+        run: python tools/check-multi-scenario-review/check.py --root .
+      - name: TEI capability chain test
+        working-directory: tools/check-tei-contracts
+        run: python -m unittest -v check_test.py
+      - name: TEI capability chain scan
+        working-directory: .
+        run: python tools/check-tei-contracts/check.py --root .

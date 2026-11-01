@@ -1,8 +1,8 @@
 {
   "schema": "tai.reference.scn001-run/v0",
   "scenario": "SCN-001",
-  "generatedAt": "2026-10-28T10:27:15Z",
-  "runDigest": "sha256:53600dc4ad4a8c8df5fab0343459f9fb601c2018db2beb15432ce50b6dd2a8e5",
+  "generatedAt": "2026-10-28T16:14:01Z",
+  "runDigest": "sha256:924bf6b20bb8282de09ea682c23e6896f3f3f2094744b940cc113529295c1198",
   "components": {
     "mmi": {
       "passed": true,
@@ -14,11 +14,16 @@
       "boundaryRejected": true,
       "missingSourceRejected": true,
       "sourceDigestBefore": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce",
-      "sourceDigestAfter": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce"
+      "sourceDigestAfter": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce",
+      "selectedDigests": {
+        "O-02": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-03": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0",
+        "O-07": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+      }
     },
     "sei": {
       "passed": true,
-      "seiCommit": "d818028532fcab2a7f91bbd65d8d9de5f1c3880b",
+      "seiCommit": "d51232dd5eb28bee42e57a7b31fb31cd2bedbf7b",
       "goVersion": "go version go1.27.3 windows/amd64",
       "bundleId": "scn001",
       "recordCount": 3,
@@ -111,7 +116,17 @@
           "id": "N-07",
           "status": "pass"
         }
-      ]
+      ],
+      "observationDigests": {
+        "O-01": "sha256:5bd426b302800fcb195e7b76862aafc2e3d36447077d2d987c647acc8b191898",
+        "O-02": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-03": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0",
+        "O-04": "sha256:c6101e4cb712b0d8d7d350be4a79d002d7cca558b6959ef5b8af0161424af15d",
+        "O-05": "sha256:fd3b28cec417ae9cfd4abcd5c80efc040017f80c7e676ebbc32d2d1f6da01156",
+        "O-06": "sha256:a6782eb43874f3d03f5338b2818aaaa45d1aeacc7d77f52e6a9f51dacd7ea82e",
+        "O-07": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-08": "sha256:678ba80b4b84681e98ce7d4dde324622a89f6ad4dd4d9a102e73ac82c7ebe68c"
+      }
     },
     "reviewArtifact": {
       "passed": true,
@@ -122,7 +137,14 @@
       "publicationApproved": false,
       "reviewRequired": true,
       "reviewTrigger": "real-object",
-      "authorityVerified": false
+      "authorityVerified": false,
+      "observationDigests": {
+        "O-02": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-03": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0",
+        "O-06": "sha256:a6782eb43874f3d03f5338b2818aaaa45d1aeacc7d77f52e6a9f51dacd7ea82e",
+        "O-07": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-08": "sha256:678ba80b4b84681e98ce7d4dde324622a89f6ad4dd4d9a102e73ac82c7ebe68c"
+      }
     },
     "publicationGate": {
       "schema": "tai.reference.scn001-publication-gate/v0",

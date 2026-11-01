@@ -57,12 +57,27 @@ RECORDS = (
     "evaluations/records/SCN-003-sui-2026-10-29.json",
     "evaluations/records/SCN-003-D-08-ai-review-2026-10-29.json",
     "evaluations/records/SCN-003-slice-2026-10-29.json",
+    "evaluations/records/SCN-002-003-review-2026-10-30.json",
     "evaluations/records/EKI-worker-env-2026-10-28.json",
+    "evaluations/records/EKI-execution-2026-10-31.json",
+    "evaluations/records/EKI-acceptance-2026-10-31.json",
+    "evaluations/records/EKI-runtime-limits-2026-11-01.json",
+    "evaluations/records/TEI-product-capabilities-2026-10-31.json",
+    "evaluations/records/TEI-capability-chain-2026-10-31.json",
+    "evaluations/records/SW-01-S1-harness-2026-10-31.json",
+    "evaluations/records/SW-01-S1-harnessA-rerun-2026-10-31.json",
     "evaluations/records/SCN-001-ai-review-2026-10-29.json",
     "evaluations/records/SCN-001-eki-feasibility-2026-10-29.json",
     "evaluations/records/SCN-001-synthetic-flow-2026-10-29.json",
 )
 REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
+
+# Real-execution receipts are kept separate from synthetic ones so that a test
+# run on a host is never counted as synthetic evidence.
+REAL_RECORDS = (
+    "evaluations/records/EKI-linux-process-2026-11-01.json",
+    "evaluations/records/EKI-bwrap-linux-2026-11-01.json",
+)
 
 
 def check(root: pathlib.Path) -> dict[str, Any]:
@@ -94,6 +109,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 expected_outcome, expected_next = "uncertainty-preserved", "confirm-with-authority"
             if data.get("outcome") != expected_outcome or data.get("userNextStep") != expected_next:
                 errors.append(f"AI review does not preserve the business outcome: {relative}")
+    for relative in REAL_RECORDS:
+        path = root / relative
+        if not path.is_file():
+            errors.append(f"missing real-execution receipt: {relative}")
+            continue
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("synthetic") is not False:
+            errors.append(f"real-execution receipt claims synthetic: {relative}")
+        if data.get("evidenceKind") != "real-execution":
+            errors.append(f"evidenceKind is not real-execution: {relative}")
+        if data.get("publicationAllowed") is not False:
+            errors.append(f"real-execution receipt allows publication: {relative}")
+        if not data.get("host") or not data.get("command"):
+            errors.append(f"real-execution receipt lacks host or command: {relative}")
+        if data.get("result") != "PASS":
+            errors.append(f"real-execution receipt is not PASS: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
@@ -111,7 +142,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             item = items.get(item_id)
             if not item or item.get("status") != "pending" or item.get("evidenceKind") != "none":
                 errors.append(f"{item_id} is not pending/none")
-    return {"passed": not errors, "errors": errors, "recordCount": len(RECORDS)}
+    return {
+        "passed": not errors,
+        "errors": errors,
+        "recordCount": len(RECORDS),
+        "realRecordCount": len(REAL_RECORDS),
+    }
 
 
 def main() -> int:
