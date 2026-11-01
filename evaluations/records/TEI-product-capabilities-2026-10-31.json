@@ -2,7 +2,7 @@
   "schema": "tei.product-capabilities/v1",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "5a31d5ddbf5b2cef225cfe5fd1def976b74a0003",
+  "teiCommit": "875909888a80fcbaf8e8e89117b628e8e8e1f9bd",
   "workspace": "reference/product-contracts",
   "worldFingerprint": "sha256:da593906d33adebf5b2d4436feac30ad52cecc0edd1cda45cedd4ef9daa0f093",
   "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
@@ -54,8 +54,19 @@
     "idempotencyHeader": "Idempotency-Key",
     "successStatus": 202,
     "errorFormat": "application/problem+json",
-    "liveCallExecuted": false,
-    "testedWith": "httptest"
+    "liveCallExecuted": true,
+    "testedWith": "httptest and live eki-control"
+  },
+  "liveCall": {
+    "date": "2026-11-01",
+    "ekiControlCommit": "03b51e0b24eed6069a3fab5bf3f470d7aab531d2",
+    "endpoint": "http://127.0.0.1:18080",
+    "resultStatus": 202,
+    "taskIdPrefix": "tsk_",
+    "observedTaskId": "tsk_f45e833bcc230d3e12a673a4d49418a0",
+    "test": "TestLiveEKITaskSubmitHTTP",
+    "result": "PASS",
+    "scope": "loopback eki-control with a static test token; Task accepted but no Worker executed it"
   },
   "patterns": {
     "product_contracts.eki_task_submit": "product_contracts_flow.eki_task_submit",
