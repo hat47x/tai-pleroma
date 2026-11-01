@@ -83,6 +83,7 @@ REAL_RECORDS = (
     "evaluations/records/MMI-live-2026-11-01.json",
     "evaluations/records/EKI-http-agent-2026-11-01.json",
     "evaluations/records/SUI-auth-2026-11-01.json",
+    "evaluations/records/SUI-TEI-pilot-2026-11-01.json",
 )
 
 
@@ -152,6 +153,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "SUI-TEI-pilot" in relative:
+            observed = data.get("observed", {})
+            if observed.get("validate") != "ok":
+                errors.append(f"TEI pilot receipt did not record validate ok: {relative}")
+            if not str(observed.get("sourceIndexFingerprint", "")).startswith("sha256:"):
+                errors.append(f"TEI pilot receipt has no source index fingerprint: {relative}")
+            if observed.get("dataTypes", 0) < 4:
+                errors.append(f"TEI pilot receipt has too few data types: {relative}")
         if "SUI-auth" in relative:
             observed = data.get("observed", {})
             if observed.get("passed", 0) < 40 or observed.get("failed") != 0:
