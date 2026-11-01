@@ -466,3 +466,45 @@ EKI [#351／merged #366](https://github.com/hat47x/eki-fabric/issues/351)ではW
 **2026-11時点のOS実装候補**：[Microsoft Execution Containers (MXC)公式](https://learn.microsoft.com/en-us/windows/apps/develop/mxc/)は、SDK＋PolicyからOS固有Process/Session/VM系Backendを選択し、File/Network/UI制限を適用する既存実装である。WindowsでのProcessContainerはAppContainer系、Linuxではbubblewrap系、macOSではSeatbelt系などを候補とする。ただし[公式Backend別の制約](https://learn.microsoft.com/en-us/windows/apps/develop/mxc/examples)により、あるSession/WSL系はNetwork/Filesystemの細粒度制御が他のBackendと同等ではない。**MXCという名称だけで機密Profile達成と認定しない**。Target OS/更新・SDK/Policy版・実起動Backend・サポート権限・hostLoopback・egress拒否の正負例を固定し、Windows既存[Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)の資源制御単独と比較する。Linux独立候補は[Landlock](https://kernel.org/doc/html/next/userspace-api/landlock.html)等。OS自体のCapabilityと、TEI/EKI/TAIの製品保証は別。
 
 **状態**：#232へ具体的な負例・C0〜C5・責務分担を起票済み。本節は設計候補で、Linux/Windowsの実隔離、実Cloud egress、秘密文書のProduct横断処理、Ownerの機密Profile採用は**NOT RUN**。SW-01 A2/B1比較も非公開Rawの直接投入を前提にせず、同じ許可済みProjectionで条件を固定する。
+
+## 20. 2026-11-01：安価な大量推論を製品群の拡大へ転換する（TAI #233）
+
+ユーザー方針は、トークン大量調達により**開発速度・要件・Issue・対象領域を積極的に拡張**すること。従来の「高価なLLMを節約するために機能を削る」前提を改める。軽量性・縮退可能性は、豊かな製品構成を利用者が**必要に応じて選べる**性質として維持し、探索の候補数・Issue数を固定上限で制限しない。
+
+[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)をシリーズ横断の開発ポートフォリオ、[TEI #2493](https://github.com/hat47x/tei-platform/issues/2493)をTEIの外部要件Pressure、[#2495](https://github.com/hat47x/tei-platform/issues/2495)をデータ構造メタ概念のOwnerとする。[YI研究Draft #231](https://github.com/hat47x/tai-pleroma/pull/231)は価値/要望の拡大、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)は生データ隔離。新しい中央Runtime・第二Portfolio DBを先に採用しない。
+
+### 20.1 スコープの拡大を可能にする五つの独立した作業群
+
+| 作業群 | 並列に生成・深掘りするもの | 正本/完成条件の所在 |
+| --- | --- | --- |
+| 外部要求の広範な収集 | SaaS/OSS/商用/先行技術のPressures、複数1:N・N:M/Graph/Gantt/Map、企業・個人・社会での利用要求 | 各業務の事実Source・Owner。仮説/反例も保持 |
+| 意味・構造の探索 | [TEI #2495の七役割](https://github.com/hat47x/tei-platform/issues/2495#issuecomment-6556744900)：対象/構成/性質・法則/解釈文脈/利用要求/証拠/実現。SEI組織固有の暗黙期待、SUIの認識視点 | TEI/SEI/SUI各Owner。多重facetは単一継承/全自動型変換を意味しない |
+| 実装と生成対象の拡張 | TEI Headless CUI/Plugin、Java/.NET/WASM、SHO文書、SUI Canvas、EKI限定委任と実成果物 | 各製品の既存Contract/Generator/Host/Conformance。生成候補と正式成果物は別 |
+| 独立検証の厚み | Contract正負例、現在対象/時点、集合欠落、OS Raw隔離、sealed holdout、同一Task因果 | 既存Oracle/Host/Providerと業務Owner。LLMの相互賛同を受理としない |
+| 価値の広がり | 個人の選択・休息、企業の未知課題/重大脆弱性、社会での異論・受益の公平、複数Harnessでの継続 | [YI #231](https://github.com/hat47x/tai-pleroma/pull/231)・TAI #165/#167/各Owner。実利用者の評価は別 |
+
+**設計上の焦点**：大量のAI生成物を高速に作ることと、Ownerが受理できる独立した成果を増やすことは別。製品型の追加と、同じ概念に別名を増やすことも別。広い探索から新しい意味の軸やPluginが本当に必要な箇所を発見する。PoCの小ささは探索の狭さではなく、受入可能な**比較単位**を意味する。
+
+### 20.2 安価なトークンで変わる制約と、変わらない制約
+
+開発の進行を `exploration → qualified proposal → independent test → integrated artifact → actual use outcome` の**観測上の段階**で分ける。直列の製品Runtimeや新Gateではない。
+
+- **トークンに比例して増やせる候補**：異なる設計/Method、コード/テスト案、反例、多言語Target、UI/文書、未採用の仮説。CSWの生成探索では途中採否を強制しない。
+- **トークンだけでは増えない資源**：実OS隔離の管理、独立Oracle/秘密holdout、実PostgreSQL/Windows/Native/Hostテスト、CI容量、同一契約の統合、ライセンス・著作物確認、Ownerの業務意味受理、実利用者が得た価値。
+- **新しいボトルネックの見つけ方**：候補が多いのに実証が滞る場合、原因を`Owner pending`／`Source permissions`／`Integration conflict`／`Runtime not available`／`Oracle missing`など既存Issueの実体に引き戻す。上流の生成数だけを増やして「開発が進んだ」としない。
+
+### 20.3 機密環境でも並列探索できる二つの作業面
+
+**探索面**：非機密のSource/合成fixtureを使うAI Agentsを、既存Harness/DSH/OpenCode/Codex/Claude等、別Branch/Worktree/作業票で並列化。各Agentへ作業範囲・Base revision・利用可能なTool・禁止作用を渡す。共通ファイル/契約修正のみ依存を調整する（TEI #2017 A0〜A4）。大量並列でも、Ownerの正式権限をAgent間で移譲したと推定しない。
+
+**機密面**：SEI/SUI等のRawはProduct/OS管理領域内にとどめる。外部Agentsへ渡すのは許可済みProjection/合成サンプル/部分的なConformanceだけ。**TEIの型・構造メタデータも、Schema名、列名、件数、少数者の関係、値域、Digest、エラー内容によって秘匿情報になる**ため、Structure Catalogを無条件にPublicにしない。外部公開可能な抽象facet、用途に許可した実Schema、Raw実値の三者を区別。OSユーザー/Filesystem/Network/Secret/別Portの実強制は[#232](https://github.com/hat47x/tai-pleroma/issues/232)を参照。安全を要求するProfileの実拒否が未証明なら、隔離済みとせず合成資料で作業する。
+
+**統合面**：候補→既存Ownerの正負Oracle→同一revision/Toolchain/Artifactの照合→実利用確認を行う。各Productで合成PASSした記録が他ProductとのE2E、Host実Effect、業務意味受理へ変化しない。多数のPRを作成したという事実は実Source/Prompt/Build入力からの追跡に代わらない。
+
+### 20.4 同じ4件の要件で、並列化の実質価値を測る（設計／NOT RUN）
+
+[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)のP-A〜P-Eを参照。P-A逐次/単一Harness、P-B独立Agentで同じ4件、P-C共通Contractの競合、P-D非公開Sourceを含むOS隔離、P-E複数Model/料金枠を固定した比較。PoCとして、**複数1:N＋Graph/Gantt、SaaS/SIerの組織文脈差、SUI/SEI Projection、EKI結果受理**の4領域を初回候補とする。TEI #2493 A〜Eと重複した実装はしない。
+
+観測列は `input/source revision, actual model/tool and delivered context, independent negative cases, candidate count, unique accepted design options, Oracle result, integration conflict and latency, CI+human resource cost, disclosed bytes, Owner unresolved, user value`。一律のToken単価や同一モデル利用枠は事前に仮定せず、実利用可能なものを記録する。価格/購入Credit/契約配賦を二重計算しない。
+
+**Priority**：SW-01 A2/B1の独立検証器増分は引き続き横断の品質基準。#233ではスコープ拡張/同時開発の評価を**並行に進めてよい**。これは開発領域を狭くするCritical Path制限ではなく、並列で得た結果の資格を正確に区別するための実証順序である。外部モデルの実構成・OS拒否・P-A〜P-E、実Provider Effect、Owner意味受理、QoLは未実証。
