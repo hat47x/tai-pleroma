@@ -45,3 +45,12 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 - 実行先で動作すること
 - 人が意味を受理したこと
 - 生成AIの効率や自律性が向上したこと
+
+## 段階2の試行結果（2026-11-01）
+
+生成へ進めるかを確認するため、TEIの`reference-generator-selection`を2通りで試しました。
+
+1. 既存の数値契約をこの作業領域へ適用すると、`accepted attribute sales.order_line.quantity was not found in the Workspace`で拒否されました。契約の属性がWorkspaceに存在することを前提にしています。
+2. `std.text`だけの契約を作り、`tei-generator-build -strategy template`へ渡すと、`contract rounding precision/scale is invalid`で拒否されました。生成器の契約が数値・money・roundingを前提にしています。
+
+このため、SUIのrecord/string投影は、現状の生成器では生成できません。不足は[tei-platform #2488](https://github.com/hat47x/tei-platform/issues/2488)へ記録しました。段階2は、TEI側の生成契約が整うまで停止します。回避のための別実装をTAI側へ追加しません。
