@@ -396,3 +396,43 @@ TEI [#2020 Delivery Profile](https://github.com/hat47x/tei-platform/issues/2020)
 - **入力の実測**：SW-01 A2/B1では、Prepared（生成予定のContext）・Delivered（実際にHarnessへ渡ったSource/版）・Observed use（引用やTool呼出しで確認できた範囲）を分ける。[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017#issuecomment-6471599765)の証拠境界を参照し、渡しただけで理解/意味受理されたとは主張しない。独立Oracle/holdoutの正解を生成側へ事前開示しない。
 
 TAIでSEIのroutingや通知基盤を複製しない。確認回数・通知回数・手戻り・誤った利用・不必要な停止を別列で比較し、**低い注意負担と必要な条件の保持の両立**を能力増幅の評価項目とする。新規Q-N/Q-P/Q-C/Q-H、実別Harness、実生活/業務の成果、Owner受理はNOT RUN。
+
+## 18. 2026-11-01：開示投影・保存再検証・現在適用を区別した活動継続
+
+**根拠の進展**：TAI [#28／merged #163](https://github.com/hat47x/tai-pleroma/issues/28)で、SUI照合用のMMI観測・fixture・元SUI記録・実行記録・D-04の5ファイルとhash一覧を保存し、読取り専用で再生成・byte照合できるようになった。Linux固定fixture・負例・race付きテストは既存担当の実測。**SUI局所の再現**であり、統合実行の全入力/環境、原資料の現在性・真正性・本番認可・意味受理・公開権限は対象外。非原子的な複数ファイル保存を、部分保存後の安全な自動再実行保証と混同しない。
+
+SUI側のmerged [#3330](https://github.com/hat47x/sui-sensemaking/pull/3330)、[#3331](https://github.com/hat47x/sui-sensemaking/pull/3331)、[#3337](https://github.com/hat47x/sui-sensemaking/pull/3337)では、agent向けの未レビューCard ID/関係線/島所属を伏せ、実本文露出の監査を修正し、proposalの`accepted`は**提案生成時のbundleへの判断**と明示した。これらはSUI側のコード・文書・テストの進展であり、TAIの実テナント/外部Harness接続の成功ではない。
+
+### 18.1 「観測できなかった」と「存在しない」を分ける
+
+同じDocumentでも、閲覧者・入口・SafeModeにより返される投影が異なる。TAIが保持するべき対象は**許可された投影の内容と到達範囲**である。未レビューCardが返らないとき、全DocumentのCard数を観測済み投影件数から推定して完全集合と呼ばない。また、隠したCardの存在/IDや件数を、差分診断を通じて外部へ漏らさない。
+
+| 読取り面 | 既存の契約・具体的注意 | TAI Consumerの検証可能範囲 |
+| --- | --- | --- |
+| SUI agent `GET /docs/{id}` | レビュー済み本文は付与対象内で返る。未レビューCard ID・それを端点とするEdge等は除外。監査に実露出を記録 | **開示された投影**の内容・範囲。非開示集合の完全性・内部IDは主張しない |
+| SUI MCP `get_context_projection` | `safeMode:true`はより厳しいクライアント側既定。SafeMode中のCard digestは`null`になり得る | 本文/digestがない時に「不一致」「同一」と断定せず、照合不能として残す |
+| SUI Proposal Status | `sourceBundleHash`は提案**生成時**のbundleを指す。現在の`baseDocSignature`は別に取得 | `accepted`だけで現在Document版の判断・TAI/Owner意味受理としない |
+| TAI SUI保存Evidence（#163） | 保存済み局所入力間の整合・生成物byte再照合 | 保存時の参照再構成に限る。元資料の現在状態・利用条件・正本Authorityは別途確認 |
+
+[SUI #67最新照合](https://github.com/hat47x/tai-pleroma/issues/67#issuecomment-6554569610)によれば、現在の`baseDocSignature`（docId:updatedAt）、`bundleHash`、`cards[].digest / islands[].digest`はそれぞれ射程が異なる。`bundleHash`が単位digestを含まないこと、`baseDocSignature`だけでcontent byte一致を主張できないことにも注意。Hashが一致しても、真実性・未レビュー情報・公開許可の保証にはならない。
+
+**三つの閉包を分ける**：①開示投影について可視範囲の記録が揃う、②元の全対象/業務Required setについてCoverageが揃う、③実外部Effectの対象と結果が確定する。①から②、②から③を自動導出しない。開示制限下で②が必要なら、許可済みSource Ownerが別経路で検証した範囲の証拠を受け取るか`unknown`へ留める。透明性を理由に非公開情報を渡すことも、機密を理由に欠落を「0」と表示することもしない。
+
+### 18.2 進んだEKI実行面の保証を、旧recordと混同せず更新
+
+EKI [#374／merged #382](https://github.com/hat47x/eki-fabric/issues/374)で**HTTP submit→dispatch→Agent実行→ResultClaim保存**までのprocess testが追加された。既存TAIの「TEI HTTP 202で受付」の実測よりEKI内部の製品検証は進んだが、**TEI発行のそのtask_idが同じ試行でEKI AcceptedResultとなったこと**は引き続き未実証。EKI [#381](https://github.com/hat47x/eki-fabric/issues/381)の`active→verifying/ready`配線は未完了、[#263](https://github.com/hat47x/eki-fabric/issues/263)のactive cancel収束と[#320](https://github.com/hat47x/eki-fabric/issues/320)の実出力byte取得もOwner課題。
+
+EKI [#351／merged #366](https://github.com/hat47x/eki-fabric/issues/351)ではWindowsの子孫プロセスを含むCPU/メモリ監視とLinuxのプロセスグループ集計が試験で確認された。ただし20ms間隔の監視は瞬間超過・短命の子を見落とし得る。Windowsの実行後メモリ検査、Job Objectの適用profile、実出力/本番結果の保証もそれぞれ別。個別試験と同一実Taskでの実施証拠を区別する。
+
+### 18.3 SW-01で再利用する小さな正負例（追加試行はNOT RUN）
+
+- **VIEW-P/N**：同じDocumentのレビュー済み投影だけを参照し、隠れたCard/EdgeのIDを含まずに妥当な説明を再構成する（正）。元Documentの件数・未レビューの構造を「存在しない」または推測表示する（負）。実SUI Tenantの接続権限がなければ保存fixtureの投影比較に限定する。
+- **HISTORY-P/N**：TAI #163の保存済みEvidenceのbyte再検証がPASSでも、元Documentが改版済みのケースでは「歴史的再現は成立／現行適用は未検証」と返す（正）。保存bundleの同じhashまたはSUI Proposal `accepted`を理由に現行判断を有効化する（負）。
+- **RECEIPT-P/N**：EKIの一Task内でSubmit→Claimまでの実IDを追う（正）。別fixtureのAcceptedResultを同Taskに接ぎ、ArtifactやOwnerの業務Effectまで完了したと述べる（負）。Owner側P1-JE-1へ引き渡す。
+- **ENV-P/N**：Harness A2/B1の比較で実際のTool呼出し・受領bytes・base revision・実効モデル/課金経路を記録する（正）。モデル名や提供プランが変わった試行を同条件の再現、想定使用額を実支出と扱う（負）。既存DSH/OpenCode等のハーネスを活用し、新TAI専用Runner・Billing基盤を作らない。
+
+**共通の評価列（共有Schemaではない）**：`user-purpose / disclosed source projection + view policy / source revision + actual evidence bytes / decision basis + applicability / current authority / task+attempt+receipt identity / verified result endpoints / inaccessible+unresolved / user follow-up burden`。認可できない要素は`not accessible`とし、存在の有無を推測しない。秘密情報/holdout期待値は提供先に渡さない。
+
+**縮退の判断**：AIが情報整理・要約を自力で行えるようになれば表示/通知Adapterを減らせる。一方で、現在の利用範囲、読取り資格、同一案件の因果、効果の未確定を正しく表せるかは、外部Harnessの実能力に照らして評価する。新版の製品やfixtureの実測を既存履歴から区別し、CSW/SUIの自由な探索を実行向けGateへ従属させない。
+
+状態：参照したmerged PR、TAI #163の保存再検証、EKI process/資源試験は**各担当の限定実証**。VIEW/HISTORY/RECEIPT/ENVのTAI横断試験・実ハーネス製品交換・実Authority・Owner意味受理・実世界効果は**未実施／未受理**。
