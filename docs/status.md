@@ -47,6 +47,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | 合成workspaceのMMI参照 | O-02/O-03/O-06/O-07/O-08の5行を読み取り専用で確認（synthetic） | [receipt](../evaluations/records/SCN-001-synthetic-mmi-2026-10-29.json) | 実資料・実認可ではない |
 | 合成receiptの横断検査 | SUI/TEI/SEI/MMI/施設/EKI-envの`synthetic`ラベルと、実実行receiptの`real-execution`ラベルをCIで確認 | [checker](../tools/check-synthetic-receipts/README.md) | 合成receiptは実物証拠ではない |
 | EKI process試験のLinux実行 | WSL2 Ubuntuで`conformance/process`全件がPASS。Agent実行・ResultClaim・メモリ上限停止を確認 | [receipt](../evaluations/records/EKI-linux-process-2026-11-01.json) | テストプロファイル。本番配備・Worker Protocol準拠・公開承認ではない |
+| EKI bwrap sandboxのLinux実行 | WSL2 Ubuntuで通常実行・読み取り専用root・network interfaceなし・作業ディレクトリ書込みの4件がPASS | [receipt](../evaluations/records/EKI-bwrap-linux-2026-11-01.json) | `linux-bwrap` profileのみ。他のmount経由の絶対パスまで保証しない |
 | EKI CLI起動 | `eki-control`/`eki-agent`のversionを確認済み | [probe](../tools/reference-eki-cli/README.md)、[record](../evaluations/records/EKI-cli-2026-10-26.json) | 実Task・委任・Authorityは未検証 |
 | EKI Control API認証 | `GET /v1/tasks`の405で認証通過を確認済み | [probe](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-api-2026-10-26.json) | Task送信・委任・Worker・結果検証は未実施 |
 | EKI Task admission | 合成Task 1件を`queued`で受理し、同一keyの再送が同じtask_idを返すことを確認済み | [submit](../tools/reference-eki-api/README.md)、[record](../evaluations/records/EKI-task-2026-10-26.json) | Worker未起動。実行・結果・委任完了は未検証 |

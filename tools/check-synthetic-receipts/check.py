@@ -76,6 +76,7 @@ REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
 # run on a host is never counted as synthetic evidence.
 REAL_RECORDS = (
     "evaluations/records/EKI-linux-process-2026-11-01.json",
+    "evaluations/records/EKI-bwrap-linux-2026-11-01.json",
 )
 
 
