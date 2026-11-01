@@ -2,7 +2,7 @@
   "schema": "tai.reference.tei-capability-chain/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "ee9808752d5aa802cc9667e8f02eadad3293a75a",
+  "teiCommit": "1a2b1a604dacf3ac6b4134eb9deecf55275410c3",
   "chain": [
     "eki_task_submit",
     "eki_attempt_execute",
@@ -17,6 +17,8 @@
     "mechanism": "composition.ActivationOrder",
     "test": "TestProductFlowActivationFollowsDependencies",
     "result": "PASS",
+    "negativeTest": "TestProductFlowOrderDependsOnCoeffects",
+    "negativeResult": "PASS",
     "order": [
       "eki_task_submit",
       "eki_attempt_execute",
