@@ -109,3 +109,18 @@ A2→B1では**一次情報と独立期待値を固定**する。B1に追加さ�
 S5の別Harness引継ぎでは、Q-Nが通知されていなくても、元Source/版・用途・鮮度要求・不明点へ**閲覧可能な範囲で**戻れるかを確認する。通知用Projectionだけが渡されて条件が消失した場合は情報不足とし、元記録が非公開ならその内容を推測しない。追加のSource/Decision StoreやNotification Engineは作らない。
 
 **A2/B1比較の観測列を補足**：`Prepared Context`・`Actual Delivered Context`・回答と実Tool呼出しから観測できる`Used Evidence`を分ける。Deliveredを内部理解の証拠にしない。holdoutの答えは生成側へ渡さない。人の確認数と、不要な通知数・条件の見落とし・不必要な全停止を別々に測る（[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017#issuecomment-6471599765)）。Q-N/Q-P/Q-Cおよび別Harness S5は**NOT RUN**。
+
+### S2/S3/S5追補：保存物の再検証と開示投影の限界（2026-11-01／新規NOT RUN）
+
+参照実測：[TAI #28・merged #163](https://github.com/hat47x/tai-pleroma/issues/28)の局所SUI証拠保存再検証、[SUI #3330](https://github.com/hat47x/sui-sensemaking/pull/3330)の未レビュー構造非開示、[#3331](https://github.com/hat47x/sui-sensemaking/pull/3331)の実露出監査、[#3337](https://github.com/hat47x/sui-sensemaking/pull/3337)のproposal判断の生成時bundleへの束縛。各製品の独立実証をSW-01実施済みとは記録しない。
+
+| 合成試行候補 | 一対の観測 | SW-01側で主張できること |
+| --- | --- | --- |
+| **VIEW-0/1（S3）** | 未レビューCard/Edgeの元Documentと、agentに許された開示投影。閲覧可能件数だけで元集合を全件とみなす誤読を比較 | 開示投影の内部整合。未開示ID・件数を推測公開せず、元集合の完全性は`unknown` |
+| **DIGEST-0/1（S2）** | SUI`baseDocSignature`、`bundleHash`、Card/Island単位digestの有無、MCP SafeMode ON/OFFを比較 | null digestは「不一致」ではなく照合不能。bundleHashの一致をカード単位の同一性へ拡張しない |
+| **HISTORY-0/1（S4/S5）** | TAI保存Evidenceの同一byte再検証成功後、現在Sourceが変化／取得できない。SUI Proposal Statusは旧生成bundleへの`accepted` | 過去の局所再現が成立しても、現在の適用性・現行のOwner受理・公開資格は未確認 |
+| **EXPOSURE-0/1（S3）** | MCP SafeMode既定と直接GETでのレビュー済み本文取得、実際の閲覧資格/露出監査を比較 | 実際に返った内容と監査の対応を確認する。クライアント側SafeModeをサーバ側の認可上限とみなさない |
+
+各試行は**利用できる固定合成fixture・既存Read-only API**で行い、SUI側にあるContract/Oracleを再実装しない。実Tenantや秘密文書の非公開構造をTAIのログに残さない。閲覧権限を得ていない場合は`not-accessible`と記録し、全文・未レビュー構造・存在を推定しない。
+
+**比較する品質**：歴史的再現／現在の資料照合／利用用途の適合／開示可能範囲／Owner意味受理・現在Authorityを別列とする。SUI local Evidenceのbyte一致は、MainのSource真正性、MMI C-01/T2の再解決、TEIのbusiness closureを通過した証拠ではない。SW-01 A2/B1を優先し、合成VIEW/DIGEST/HISTORY/EXPOSUREはその材料として既存固定fixtureが使える場合に限定。**今回の新規実行はNOT RUN**。
