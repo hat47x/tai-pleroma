@@ -107,6 +107,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     flow = data.get("flowOrder", [])
     if flow != expected_flow:
         errors.append(f"flow order differs: {flow}")
+    order_evidence = data.get("orderEvidence", {})
+    if order_evidence.get("mechanism") != "composition.ActivationOrder":
+        errors.append(f"order evidence mechanism differs: {order_evidence.get('mechanism')}")
+    if order_evidence.get("result") != "PASS":
+        errors.append("order evidence is not PASS")
+    if order_evidence.get("order") != [c.split(".")[-1] for c in expected_flow]:
+        errors.append(f"order evidence differs: {order_evidence.get('order')}")
     for capability in flow:
         if capability not in patterns or capability not in bindings:
             errors.append(f"flow step has no pattern or binding: {capability}")
@@ -137,6 +144,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "teiCommit": data.get("teiCommit"),
         "chain": ["eki_task_submit", "eki_attempt_execute", "eki_result_accept"],
         "flowOrder": flow,
+        "orderEvidence": order_evidence,
         "effects": effects,
         "bindingImplementations": implementations,
         "httpBinding": http_binding,
