@@ -92,6 +92,17 @@ class CheckTest(unittest.TestCase):
             target.write_text(json.dumps(data), encoding="utf-8")
             self.assertFalse(check(root)["passed"])
 
+    def test_live_error_call_with_wrong_status_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            target = root / RECORD
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / RECORD, target)
+            data = json.loads(target.read_text(encoding="utf-8"))
+            data["liveErrorCall"]["status"] = 200
+            target.write_text(json.dumps(data), encoding="utf-8")
+            self.assertFalse(check(root)["passed"])
+
 
 if __name__ == "__main__":
     unittest.main()

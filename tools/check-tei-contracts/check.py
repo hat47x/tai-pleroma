@@ -101,6 +101,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append("live call is claimed without a control host")
         if not str(live_call.get("observedTaskId", "")).startswith("tsk_"):
             errors.append("live call is claimed without an observed task id")
+        live_error = data.get("liveErrorCall", {})
+        if live_error.get("test") == "TestLiveEKIProblemJSON":
+            if live_error.get("result") != "PASS":
+                errors.append("live error call is not PASS")
+            if live_error.get("status") != 400:
+                errors.append(f"live error call status differs: {live_error.get('status')}")
+            if not live_error.get("code"):
+                errors.append("live error call has no problem code")
     elif live is not False:
         errors.append("httpBinding.liveCallExecuted must be true or false")
     expected_flow = [
@@ -153,6 +161,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "bindingImplementations": implementations,
         "httpBinding": http_binding,
         "liveCall": live_call,
+        "liveErrorCall": live_error,
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,
