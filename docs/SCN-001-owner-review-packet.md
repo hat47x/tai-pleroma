@@ -34,6 +34,7 @@
 - 業務フローが一巡した後、人間レビューを行う。
 - 公開前に、実在の施設資料・権限者・独立レビューによる`post-synthetic-real-object`を行う。
 - EKIはTEST PROFILEで実行・受理まで到達した。Worker Protocol、独立した検証主体、実Authorityは未確認であり、R-07（N-05のEKI委任）は`pending`のままとする。
+- SUIのマルチテナント化は、TEIによるSUIの再構築を進めた後に扱う（Owner指示 2026-11-01）。現行SUIの認可test 40件は既存実装の確認であり、着手根拠にしない。
 
 ### 検証の独立性（Owner判断待ち）
 

@@ -26,7 +26,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 未接続として残るもの:
 
 - EKIの`HTTP submit → dispatch → Agent execute → ResultClaim → Result Acceptance`はTEST PROFILEで到達した。検証は同一ホストの再実行による再現性確認であり、Worker Protocolや独立検証は未実施である。
-- SUIは合成documentであり、SCN-001の実資料は未検証である。テナント境界と認可adapterはtest 40件がPASSしたが、実運用の認可判断・実資格情報・複数テナントでの確認ではない。
+- SUIは合成documentであり、SCN-001の実資料は未検証である。テナント境界と認可adapterはtest 40件がPASSしたが、実運用の認可判断・実資格情報・複数テナントでの確認ではない。マルチテナント化はTEIによるSUIの再構築を進めた後に扱う（Owner指示 2026-11-01）。
 - MMIの候補は`inferred`であり、意味の受理ではない。
 
 ## 実装と証拠
