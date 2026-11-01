@@ -66,3 +66,34 @@ func TestSupersededDecisionSubjectMismatchFails(t *testing.T) {
 	setDecision(t, &fixture, "DEC-03", func(d *Decision) { d.Subject = "O-03" })
 	requireFail(t, Evaluate(fixture), "N-08")
 }
+
+// A decision that no other check names is still checked for a resolvable
+// draft link. Before N-09 this fixture passed, which showed the gap that
+// the transition analysis found (variant F).
+func TestUntargetedDecisionLinkFails(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Decisions = append(fixture.Decisions, Decision{
+		ID:                  "DEC-05",
+		Status:              "pending",
+		Authority:           "unconfirmed",
+		Draft:               "D-99",
+		PublicationApproved: false,
+		ReviewRequired:      true,
+	})
+	requireFail(t, Evaluate(fixture), "N-09")
+}
+
+// A decision subject that does not resolve is a broken basis even when the
+// decision is not named by N-08.
+func TestUntargetedDecisionSubjectFails(t *testing.T) {
+	fixture := loadFixture(t)
+	fixture.Decisions = append(fixture.Decisions, Decision{
+		ID:                  "DEC-06",
+		Status:              "pending",
+		Authority:           "unconfirmed",
+		Subject:             "O-99",
+		PublicationApproved: false,
+		ReviewRequired:      true,
+	})
+	requireFail(t, Evaluate(fixture), "N-09")
+}

@@ -34,6 +34,7 @@ go run . -fixture testdata/scn001.json
 - N-03: 原本取得失敗を「存在しない」と断定せず、unavailableとして保持する。
 - N-04: 仮説を規程として採用しない。
 - N-08: 過去に受理された判断(DEC-03)は、本文が同じ文言へ戻っても自動復活せず、正当な確認経路(DEC-04)へ戻る。
+- N-09: 全てのDecisionのdraftとsubjectが、実在するDraftとObservationを指す。P-07やN-08が名前で参照しないDecisionも対象にする。
 - N-06: 観測ID・Draft IDの重複を拒否し、各Draftが対応Revisionの時点ですでに得られた観測だけを根拠として参照する。観測が増えないDraft改訂は許容する。
 - P-07: `development-review-only`の仮承認を、未公開のD-04へ限定する。
 - N-07: 仮承認を公開承認・Authority検証として扱わない。

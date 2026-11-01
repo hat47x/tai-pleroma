@@ -436,6 +436,25 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, statusCase("N-08", n08,
 		"過去に受理された判断は、本文が同じ文言へ戻っても自動復活せず、正当な確認経路(DEC-04)へ戻る"))
 
+	// N-09: every decision link resolves, not only the decisions named by
+	// P-07 and N-08. A decision with a missing draft or subject is a broken
+	// basis even when no scenario check names it (variant F).
+	n09 := true
+	for _, decision := range f.Decisions {
+		if decision.Draft != "" {
+			if _, ok := draftByID(f.Drafts, decision.Draft); !ok {
+				n09 = false
+			}
+		}
+		if decision.Subject != "" {
+			if _, ok := byID[decision.Subject]; !ok {
+				n09 = false
+			}
+		}
+	}
+	receipt.Cases = append(receipt.Cases, statusCase("N-09", n09,
+		"全てのDecisionのdraftとsubjectが、実在するDraftとObservationを指す"))
+
 	receipt.Passed = true
 	for _, result := range receipt.Cases {
 		if result.Status == "fail" {
