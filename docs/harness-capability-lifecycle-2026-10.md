@@ -385,3 +385,14 @@ TEI [#2020 Delivery Profile](https://github.com/hat47x/tei-platform/issues/2020)
 **合成の正負対（提案/NOT RUN）**：同じTEIモデル・Decisionに対し、P-local（対象Sourceを閲覧できる）とP-cloud（同じ意味契約だけ共有、資料/Grantは非公開）のHarnessを比較。(正) P-cloudがMethodの適用条件と不足を復元し、許された範囲で活動準備を続ける。(負) 非公開原文・根拠の存在・権限を推測で開示/承継、またはlocalで見えたEffectをcloud側からの現在の作用として扱う。実行権限はそれぞれのHost/Providerが判断する。
 
 **意味の可搬性 ≠ データ/権限の可搬性 ≠ 成果の完全な引渡し**。これを中央のProfile管理機構で一律に解決せず、既存のDelivery/Host境界の証拠を利用する。実ハーネス間・テナント間の評価はD1以降に必要性を確認して行う。
+
+## 17. 2026-11-01：通知を抑えても、用途別の未確認は保持する（計画提案）
+
+[SEI #660の評価用Consumer限定実測](https://github.com/hat47x/sei-cognition/issues/660#issuecomment-6499506336)では、通常優先度の鮮度不足が出力から省略され、鮮度要求自体のない場合と同じJSONとなった。これは合成評価用Consumerの観測であり、現行SEI製品全体の障害を意味しない。[SEI #677の引継ぎ案](https://github.com/hat47x/sei-cognition/issues/677#issuecomment-6552742323)と合わせ、TAIでは**用途ごとの利用条件・確認状態・人への通知・実行権限**を区別する。
+
+- **静かな継続**：通常優先度の未確認を即時通知しなくても、後から該当用途で利用するときは、対象・版・scope・鮮度不足・原記録への参照を取得可能にする。通知0件を「未決なし」と解釈しない（[SEI #678](https://github.com/hat47x/sei-cognition/issues/678)も参照）。
+- **必要な時点の確認**：過去の資料を参考資料として読むことと、現在の正式案内に使用することでは利用条件が異なる。無関係な独立調査は継続し、不可逆な作用が未確認条件に依存する場合はOwner/Providerの既存境界へ委ねる。
+- **最小の合成対照（NOT RUN）**：Q-N=normal+staleで通知を抑制、Q-P=鮮度要求なしで通知不要。通知出力が両者とも空でも、後段のHarnessが用途別の条件を区別できるかを比較する。Q-C=critical+staleでは注意喚起の適切さを別観測。Q-H=別Harnessへの引継ぎでは共有可能な情報だけ渡し、未取得はunknownとして扱う。
+- **入力の実測**：SW-01 A2/B1では、Prepared（生成予定のContext）・Delivered（実際にHarnessへ渡ったSource/版）・Observed use（引用やTool呼出しで確認できた範囲）を分ける。[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017#issuecomment-6471599765)の証拠境界を参照し、渡しただけで理解/意味受理されたとは主張しない。独立Oracle/holdoutの正解を生成側へ事前開示しない。
+
+TAIでSEIのroutingや通知基盤を複製しない。確認回数・通知回数・手戻り・誤った利用・不必要な停止を別列で比較し、**低い注意負担と必要な条件の保持の両立**を能力増幅の評価項目とする。新規Q-N/Q-P/Q-C/Q-H、実別Harness、実生活/業務の成果、Owner受理はNOT RUN。
