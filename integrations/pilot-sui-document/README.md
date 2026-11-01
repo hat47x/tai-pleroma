@@ -63,4 +63,8 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 
 続いて、`text-template`戦略を追加し（[PR #2524](https://github.com/hat47x/tei-platform/pull/2524)）、同じ契約から候補を**生成**して選抜しました。4ケースが一致し、`qualified=["text-template"]`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)）。
 
-これで「意味（TEIの契約）→生成器→候補→適合fixtureによる選抜」の最小経路が、文字列投影の1属性で通りました。ただし、生成したのは投影の候補であり、SUIの実装コードでも実行可能な画面・APIでもありません。段階2は最小経路まで到達し、複数属性・record全体・Target Profileが残っています。
+これで「意味（TEIの契約）→生成器→候補→適合fixtureによる選抜」の最小経路が、文字列投影の1属性で通りました。
+
+さらに、`profiles/oneshot.json`を追加し、`tei-target-profile run`で同じ候補をone-shotのTarget Profileで実行しました。4ケースが`exitCode=0`で一致し、`processModel=oneshot`、`generatorId=text-template`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-target-2026-11-01.json)）。ただし、これは同じホスト上の参照実行であり、実機・実OS・実配備を示しません。
+
+生成したのは投影の候補であり、SUIの実装コードでも実行可能な画面・APIでもありません。段階2は最小経路とTarget Profile実行まで到達し、複数属性・record全体・実環境が残っています。
