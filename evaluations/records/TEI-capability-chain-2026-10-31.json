@@ -21,6 +21,27 @@
     "product_contracts.sei_decision_record": "create product_contracts.decision",
     "product_contracts.mmi_observation_select": "none"
   },
+  "bindingImplementations": {
+    "product_contracts.eki_task_submit": [
+      "EKITaskSubmit",
+      "EKITaskSubmitHTTP"
+    ],
+    "product_contracts.eki_attempt_execute": [
+      "EKIAttemptExecute"
+    ],
+    "product_contracts.eki_result_accept": [
+      "EKIResultAccept"
+    ],
+    "product_contracts.sui_document_put": [
+      "SUIDocumentPut"
+    ],
+    "product_contracts.sei_decision_record": [
+      "SEIDecisionRecord"
+    ],
+    "product_contracts.mmi_observation_select": [
+      "MMIObservationSelect"
+    ]
+  },
   "publicationAllowed": false,
   "passed": true,
   "errors": []

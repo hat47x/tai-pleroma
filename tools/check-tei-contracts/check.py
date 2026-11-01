@@ -66,6 +66,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     for capability, name in bindings.items():
         if expected_bindings.get(capability) != name:
             errors.append(f"{capability} binding differs: {name}")
+    implementations = data.get("bindingImplementations", {})
+    if set(implementations) != required:
+        errors.append(f"binding implementation set differs: {sorted(implementations)}")
+    for capability, names in implementations.items():
+        if not names:
+            errors.append(f"{capability} has no binding implementation")
+    submit_implementations = implementations.get("product_contracts.eki_task_submit", [])
+    if "EKITaskSubmitHTTP" not in submit_implementations:
+        errors.append("eki_task_submit has no HTTP binding implementation")
     expected_flow = [
         "product_contracts.eki_task_submit",
         "product_contracts.eki_attempt_execute",
@@ -105,6 +114,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "chain": ["eki_task_submit", "eki_attempt_execute", "eki_result_accept"],
         "flowOrder": flow,
         "effects": effects,
+        "bindingImplementations": implementations,
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,
