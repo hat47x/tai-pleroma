@@ -82,6 +82,7 @@ REAL_RECORDS = (
     "evaluations/records/SEI-live-2026-11-01.json",
     "evaluations/records/MMI-live-2026-11-01.json",
     "evaluations/records/EKI-http-agent-2026-11-01.json",
+    "evaluations/records/SUI-auth-2026-11-01.json",
 )
 
 
@@ -151,6 +152,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "SUI-auth" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed", 0) < 40 or observed.get("failed") != 0:
+                errors.append(f"SUI auth receipt does not record 40 passing tests: {relative}")
+            if not str(data.get("suiCommit", "")):
+                errors.append(f"SUI auth receipt has no commit: {relative}")
         if "EKI-http-agent" in relative:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202:

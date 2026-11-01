@@ -17,7 +17,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | EKI | Linuxの`conformance/process`、bwrap sandbox 5件、executor承認のdigest形式検証 | [process](../evaluations/records/EKI-linux-process-2026-11-01.json)、[bwrap](../evaluations/records/EKI-bwrap-linux-2026-11-01.json) |
 | EKI | HTTP submit 202 → dispatch → Agent実行 → ResultClaim → Result Acceptance（TEST PROFILE、同一ホスト再実行の検証）。run receiptへdigestで参照 | [http-agent](../evaluations/records/EKI-http-agent-2026-11-01.json)、[run](../evaluations/records/SCN-001-run-2026-11-01.json) |
 | TEI | EKI Control APIへの`POST /v1/tasks`（202）、replay、problem+json、409 conflict | [live](../evaluations/records/TEI-EKI-live-2026-11-01.json) |
-| SUI | ローカル起動の`/healthz`・OpenAPI・合成documentのPUT/GET | [live](../evaluations/records/SUI-live-2026-11-01.json) |
+| SUI | ローカル起動の`/healthz`・OpenAPI・合成documentのPUT/GET。テナント境界・認可adapterのtest 40件 | [live](../evaluations/records/SUI-live-2026-11-01.json)、[auth](../evaluations/records/SUI-auth-2026-11-01.json) |
 | SEI | SEIチェックアウトに対する`TestSCN001DecisionMemoryProjection`と`TestValidityThroughSEIVerify` | [live](../evaluations/records/SEI-live-2026-11-01.json) |
 | MMI | 依存導入したCLIでfixture xlsxを`inspect --json` | [live](../evaluations/records/MMI-live-2026-11-01.json) |
 
@@ -26,7 +26,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 未接続として残るもの:
 
 - EKIの`HTTP submit → dispatch → Agent execute → ResultClaim → Result Acceptance`はTEST PROFILEで到達した。検証は同一ホストの再実行による再現性確認であり、Worker Protocolや独立検証は未実施である。
-- SUIは合成documentであり、SCN-001の実資料・テナント・認可は未検証である。
+- SUIは合成documentであり、SCN-001の実資料は未検証である。テナント境界と認可adapterはtest 40件がPASSしたが、実運用の認可判断・実資格情報・複数テナントでの確認ではない。
 - MMIの候補は`inferred`であり、意味の受理ではない。
 
 ## 実装と証拠
