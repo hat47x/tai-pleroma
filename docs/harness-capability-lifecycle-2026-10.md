@@ -462,4 +462,7 @@ EKI [#351／merged #366](https://github.com/hat47x/eki-fabric/issues/351)ではW
 
 **連携成功の最小主張**は、①実Kernel/OS権限でRawへの直接アクセスを防げた、②実APIは用途に許された投影だけ返した、③実外向き経路に非許可のRawが出なかった、④非公開情報を対象集合の0件/全件と取り違えず活動が進められた、の**個別証拠**。それぞれ同じInput/Process/Version/Host/時点であることを示す。OS管理者権限、Kernel侵害、許可済み画面の撮影等は別Threat Class。
 
+
+**2026-11時点のOS実装候補**：[Microsoft Execution Containers (MXC)公式](https://learn.microsoft.com/en-us/windows/apps/develop/mxc/)は、SDK＋PolicyからOS固有Process/Session/VM系Backendを選択し、File/Network/UI制限を適用する既存実装である。WindowsでのProcessContainerはAppContainer系、Linuxではbubblewrap系、macOSではSeatbelt系などを候補とする。ただし[公式Backend別の制約](https://learn.microsoft.com/en-us/windows/apps/develop/mxc/examples)により、あるSession/WSL系はNetwork/Filesystemの細粒度制御が他のBackendと同等ではない。**MXCという名称だけで機密Profile達成と認定しない**。Target OS/更新・SDK/Policy版・実起動Backend・サポート権限・hostLoopback・egress拒否の正負例を固定し、Windows既存[Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)の資源制御単独と比較する。Linux独立候補は[Landlock](https://kernel.org/doc/html/next/userspace-api/landlock.html)等。OS自体のCapabilityと、TEI/EKI/TAIの製品保証は別。
+
 **状態**：#232へ具体的な負例・C0〜C5・責務分担を起票済み。本節は設計候補で、Linux/Windowsの実隔離、実Cloud egress、秘密文書のProduct横断処理、Ownerの機密Profile採用は**NOT RUN**。SW-01 A2/B1比較も非公開Rawの直接投入を前提にせず、同じ許可済みProjectionで条件を固定する。
