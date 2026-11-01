@@ -1,0 +1,14 @@
+{
+  "schema": "tei.reference.target-profile/v0",
+  "id": "sui-text-rolling",
+  "version": "1",
+  "description": "rolling profile for the SUI text projection pilot",
+  "processModel": "long-running",
+  "storage": "filesystem",
+  "network": "none",
+  "update": "rolling",
+  "memoryLimitBytes": 67108864,
+  "observability": ["stdout", "exit-code"],
+  "unsupported": ["hard-realtime", "audit-log"],
+  "generatorId": "text-template"
+}

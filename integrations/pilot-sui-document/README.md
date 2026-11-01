@@ -139,3 +139,17 @@ receipt: [SUI-TEI-compare-2026-11-02.json](../../evaluations/records/SUI-TEI-com
 **この比較は生産性の評価ではありません。** 本開発はPoCであり、生産性はプロダクト完成後に評価します。このreceiptは生成AIが自分の進め方を振り返るための材料であり、人による受入判定や生産性の基準にはしません。
 
 比較から言えるのは、TEI経路では契約とfixtureが変更面になり、同じ4ケースで両経路を検証できることです。人の作業時間、学習曲線、長期保守は測っておらず、PoC中には測りません。
+
+## 配備とロールバック（2026-11-02）
+
+`profiles/rolling.json`を追加し、`tei-target-profile deploy`で異なる2つの生成物を順に配置してから、`rollback`を実行しました。
+
+```text
+1回目: slot=a, rollbackAvailable=false
+2回目: slot=b, previousSlot=a, rollbackAvailable=true
+rollback: passed=true, slot=a, previousSlot=b
+```
+
+receipt: [SUI-TEI-deploy-2026-11-02.json](../../evaluations/records/SUI-TEI-deploy-2026-11-02.json)
+
+これはローカルfilesystem上のslot切替であり、実Target、supervisor、無停止更新、health check、drainを示しません。

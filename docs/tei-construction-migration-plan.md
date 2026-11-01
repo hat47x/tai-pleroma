@@ -75,7 +75,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | 0 | 本計画のレビューと、パイロット範囲・測定方法の確定 | Ownerまたは担当者の合意 |
 | 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
-| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行まで到達。属性単位（text/document_id）とCard record（text+documentId）を選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)）。Island/Edgeは未達 |
+| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行とrollingの配備・rollbackまで到達。属性単位（text/document_id）とCard record（text+documentId）を選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)）。Island/Edgeは未達 |
 | 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。生産性は完成後に評価する（仮決定）。人の作業時間・長期保守はPoC中には測らない |
 | 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
 
@@ -108,6 +108,16 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 `measure_workflow.py`とT1比較のreceiptは、生成AIが自分の進め方を振り返り、次の作業を選ぶための材料です。人による受入判定、生産性の評価、自律性の証明には使いません。
 
 したがって「生産性が未確認」は未達項目ではなく、現段階では評価しない項目として扱います。
+
+### 暫定意思決定（AI、2026-11-02）
+
+判断を人へ戻さず、AIが暫定の意思決定を行い、設計・製造・計画へ回収します。人はIssue等で見解を供給します。不整合は上位の設計レベルで後から整合させます。
+
+| 決定 | 理由 | 見直し条件 |
+| --- | --- | --- |
+| record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
+| PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
+| 配備はrollingプロファイルのslot切替で参照する | rollback経路を実際に検証できた | 実Targetのsupervisorを扱うとき |
 
 ## 8. 停止条件・非目標
 
