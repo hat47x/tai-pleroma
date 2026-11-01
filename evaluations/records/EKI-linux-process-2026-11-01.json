@@ -8,7 +8,7 @@
   "host": "WSL2 Ubuntu, linux amd64",
   "binaries": "eki-control and eki-agent cross-compiled with GOOS=linux from the same commit",
   "testHarness": "conformance/process test binary for linux, run with EKI_PROCESS_BIN_DIR",
-  "command": "EKI_PROCESS_BIN_DIR=/mnt/d/GIT/hat47x/.tmpbin process-linux.test -test.timeout 600s",
+  "command": "EKI_PROCESS_BIN_DIR=<bin-dir> process-linux.test -test.timeout 600s",
   "suite": "conformance/process",
   "result": "PASS",
   "tests": {
