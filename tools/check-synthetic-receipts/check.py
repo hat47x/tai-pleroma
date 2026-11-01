@@ -136,6 +136,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"live receipt replay differs from the accepted task: {relative}")
             if data.get("rejected", {}).get("resultStatus") != 400:
                 errors.append(f"live receipt did not record a 400 rejection: {relative}")
+            conflict = data.get("idempotencyConflict", {})
+            if conflict.get("resultStatus") != 409 or conflict.get("code") != "IDEMPOTENCY_KEY_CONFLICT":
+                errors.append(f"live receipt did not record the idempotency conflict: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
