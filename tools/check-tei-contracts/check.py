@@ -97,6 +97,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append("live call is claimed without a task id prefix")
         if live_call.get("resultStatus") != 202:
             errors.append("live call is claimed without status 202")
+        if not live_call.get("ekiControlHost"):
+            errors.append("live call is claimed without a control host")
+        if not str(live_call.get("observedTaskId", "")).startswith("tsk_"):
+            errors.append("live call is claimed without an observed task id")
     elif live is not False:
         errors.append("httpBinding.liveCallExecuted must be true or false")
     expected_flow = [
