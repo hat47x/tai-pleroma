@@ -1,6 +1,6 @@
 # TAIシリーズの能力増幅・縮退適性と横断実証計画（2026-10-30）
 
-状態: **Draft / Proposed / NOT RUN**。設計検討と既存Issueの証拠を整理する非規範的計画。Ownerによる正式な意味受理、Production Authority、RC完成、実ユーザーQoLの効果検証を宣言しない。新しい中央Host、共有DB、第二の正本、独自生成AIハーネス、新統一Schemaを前提にしない。
+状態: **Draft / Proposed**。SW-01 S1に限定合成実測あり（OpenCode Aは同一モデル計3回、既存CLI Bを別に観測）。他のHarness横断、Owner意味受理、Production Authority、実ユーザーQoL評価は**NOT RUN**。既存Issueの証拠を整理する非規範的計画。Ownerによる正式な意味受理、Production Authority、RC完成、実ユーザーQoLの効果検証を宣言しない。新しい中央Host、共有DB、第二の正本、独自生成AIハーネス、新統一Schemaを前提にしない。
 
 ## 1. 製品命題
 
@@ -85,7 +85,7 @@ L0〜L3は固定の権限階層・Schemaではなく説明用の便宜である�
 比較時に固定するもの：入力のrevision/sha、source visibility、利用可能なツール、許可、人物の意図、時刻条件、環境・生成モデルの版。結果不明や利用不可は別分類。追加トークン/価格、処理時間、人の確認回数、情報露出面積を記録。
 
 ### 7.2 現存機構の再利用と未観測
-現行TAIのREADMEと参照接続には、SHO(MMI)のread-only inspect/select、SEI一時storeのdecision/resume、TEIの型validate、SUIのカード連結、EKIのTask admissionと固定command実行/ResultClaim送信（最終Resultは未受理）といった**限定された参照観測**がある。これは製品間の実業務一巡、意味の受理、外部効果、実ユーザー価値を示さない。
+現行TAIのREADMEと参照接続には、SHO(MMI)のread-only inspect/select、SEI一時storeのdecision/resume、TEIの型validate、SUIのカード連結、EKIのTask admission・固定command実行/ResultClaim・**別の合成テストによるRA-2 AcceptedResult保存とterminal**といった**限定された参照観測**がある。これは製品間の実業務一巡、意味の受理、外部効果、実ユーザー価値を示さない。
 [接続調査](../integrations/capability-inventory.md) と [クリティカルパス](critical-path-2026-10.md) に固定版と制約あり。最新mainに過去receiptを流用しない。
 
 ### 7.3 最初の追加fixture（一件だけ）
@@ -191,7 +191,7 @@ Ownerに残すのは、対象業務の意味の正式受理、本番の権限と
 - **TEI/EKI担当**：初回はno-effect。将来のmock Effectで、Execution intentとcurrent Host authority、Provider receipt/最終結果の照合を既存#1174等へ引き渡す。
 - **Owner待ち**：実業務意味、本人/組織の委任、共有してよい実資料、本番作用はOwnerが判断。合成read-only比較は先行できる。
 
-**SW-01のExit**：2つの実際に利用可能な外部Harnessを用いて、同じ元資料から (i) historical basis差分、(ii) 現在の適用性、(iii) 現行権限を混同せず、(iv) Aに対するB/Cの増分または増分なしを、ログで反証可能に示す。二つのHarnessが未接続なら本条件は未達。現時点でこの実行は **NOT RUN**。
+**SW-01のExit**：2つの実際に利用可能な外部Harnessを用いて、同じ元資料から (i) historical basis差分、(ii) 現在の適用性、(iii) 現行権限を混同せず、(iv) Aに対するB/Cの増分または増分なしを、ログで反証可能に示す。二つのHarnessが未接続なら本条件は未達。初回S1の限定合成観測は実施済みだが、二つの異なるHarnessでの比較・現在の実Targetの独立同定・人間の正式受理は **NOT RUN**。
 
 ### 11.5 既存READMEから確定できる準備コマンド（**未実行**）
 
@@ -281,4 +281,43 @@ TAI mainに [合成EKI固定コマンド実行のrecord](https://github.com/hat4
 
 同じ入力・許可・Harness版・実利用文脈を固定して、(A)Harness単体、(B)+SEI、(C)+用途に必要な別製品、(D)別Harness引継ぎ、(E)更新された強いHarness単体を比較する。安全境界の必須違反が一つでも起これば平均品質の改善で覆さない。増分がない/外部能力で代替可能なら**委譲/薄いAdapter化/削除**を正式な選択肢とする。追加Pluginの依存/更新負担、利用者の問い合わせ回数と個人情報の露出を、品質と同時に測る。
 
-重要な反証：**「機能を呼べた」だけではEV-1〜4すべてNOT RUN。** Model/Skillの将来成熟を仮定して、未実施の良い結果を先取りしない。実測結果に応じてTAIシリーズの責務・製品境界自体を更新してよい。
+重要な反証：**「機能を呼べた」だけではEV-1〜4すべてPASSにはならない。** SW-01 S1の限定比較、EKIの合成Result Acceptance、TEI→EKI task admissionにはそれぞれ実測があるが、四軸全体の合格や同一Taskの横断End-to-End成立ではない。 Model/Skillの将来成熟を仮定して、未実施の良い結果を先取りしない。実測結果に応じてTAIシリーズの責務・製品境界自体を更新してよい。
+
+## 15. 2026-11-01：実証の進展を受けた能力増幅の評価補正
+
+### 15.1 SW-01：モデル単体の「安全側の回答」と独立検証器の寄与
+
+既存の[SW-01 S1初回比較](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/SW-01-S1-harness-2026-10-31.json)、[同じOpenCode/GLM Latestによる計3回のA再実行](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/SW-01-S1-harnessA-rerun-2026-10-31.json)が記録された。3回とも旧受理を現在へ誤昇格せず、現在有効性・受理出典/版・旧相反文言の位置づけの不足を指摘した。表現の強さには差があり、根拠はLLMの判断として残る。既存決定的CLIによるBは同じ結論をscope/digest/lineageに基づき再現可能にしたが、**A/Bの一次情報・Tool利用条件は異なっている**。人の再確認は両条件で必要で、3回の成功は全ハーネス/未知ケースに一般化できない。
+
+[SW-01検証票](../evaluations/SW-01-harness-handoff-qualification.md)に次の候補を具体化：A1=簡略表示、A2=同一次情報の構造化`basis_references`を渡すが検査結果は渡さない、B1=A2と同じ元情報＋既存独立Validator、D1=別Harness。**情報を増やす効果**と**検査器が構造的な判断を提供する効果**を別の評価対象にする。S1の負例に加え、既存契約で表現可能なら限定された**合成再受理の正例**を用い、全件保留という単純手法が偽陽性（過剰拒否）を起こすか確かめる。S1-Pは実Ownerによる新しい意味受理を要求・主張するものではない。
+
+根幹の未解決は`-current-target`が**caller-supplied**であること。Validatorの「指定Targetは旧Decisionに束縛されない」と、指定したTargetが現在の原資料/業務対象に対応することは別。MMI C-01/T2のSource locator・実realpath・取得byte/版・Sheet/Rangeの原典解決証拠と、SEIの原Basisを必要に応じ参照する。ただしC-01/T2はfixture G0-0不一致と実CLI/VS Code実証不足を抱えるため、結合済みの原典保証は未実証と扱う。TAIがSource Resolver/Decision正本を追加しない。
+
+SEI [#678](https://github.com/hat47x/sei-cognition/issues/678#issuecomment-6496934127)では`basis_references`と人向け表示によるform/scope/digest/profileの区別が実装/試験されており、旧互換`basis`のみの利用者と区別する。過去の表示不足を現行SEI全部に一般化しない。
+
+### 15.2 EKI：ResultClaimから合成Result Acceptanceへ進展、隔離保証は条件付き
+
+- [2026-10-31の合成EKI Acceptance記録](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/EKI-acceptance-2026-10-31.json)では、固定commandのResultClaimを2名の**合成verifier**とRA-2/出力digestの同一Host再実行で照合し、`resultVerified=true`、`resultAccepted=true`、`acceptedResultStored=true`、`taskTerminal=true`を確認。実在第三者の独立検証・本番業務効果を主張しない。先行[Execution記録](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/EKI-execution-2026-10-31.json)のverifying状態は**その時点の歴史的証拠**であり、現在の機能全体がそこまでに留まるという説明は古い。
+- [2026-11-01のRuntime制限記録](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/EKI-runtime-limits-2026-11-01.json)ではWindows/Linuxの実行中CPU/メモリ監視（20ms間隔）、超過時のprocess tree停止、実行別作業directory・一時容量監視、Windows Job Objectによる制限、WSL Ubuntu上でのLinux bubblewrap read-only root/private /tmp/networkなし/PID分離の限定実測を記録。**完全Sandboxはまだ保証されていない**。Windows Job Objectはfilesystem/network隔離を与えず、ポーリングは瞬間超過を取り逃し得る。Linux bwrapの「networkなし」は帯域/転送byte数の計測ではない。Linux以外のHostや任意未信頼Taskの安全な本番実行へ自動一般化しない。
+- [TEI Product Capability Chain](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/TEI-capability-chain-2026-10-31.json)では型/flow順序/Bindingに加え、loopbackの実`eki-control`へHTTP Task Submitし、202とTask IDを観測した。**当該実HTTP CallではWorkerを実行していない**。別の合成Acceptance記録とTask ID/Operation IDで同一因果系列を示す証拠もない。TEIの型/順序/Binding検査をそのまま一案件の`TaskRequest → Attempt → ResultClaim → AcceptedResult`実E2Eへ昇格させない。
+
+### 15.3 「各所PASS」と「同一案件を通したPASS」を分離する
+
+製品間連携の受入では、**観測した関係をつなぐ一件のEvidence Chain**が重要になる。ただし新しい共有Store/Manifest/合格Gateは先行採用しない。既存の各製品のReceipt/Contractを参照し、合成一件の評価票で次を確認する。
+
+| 接続 | 同じ対象・因果関係かを照合する証拠 | 届かない保証 |
+| --- | --- | --- |
+| SHO Source→SEI Decision | 現行Sourceの実解決先/版/scope/digest、Decision BasisRefsとlineage、対象時点と用途 | 取得成功だけで現在の受理まで保証しない |
+| TEI Model→EKI Task Admission | 受理対象のContract/Action、Host Binding、実HTTP Task ID、入力revision/Request ID | TEI Validate/HTTP 202だけでWorker実行は保証しない |
+| Task→Attempt→Claim→AcceptedResult | 同一Task/Attempt/Claim/Resultをつなぐ識別子、同一の実行条件、verifier/原結果、各時点の正負Evidence | **別々の合成テストがすべてPASSでも**一本の本番実行や実効果の証明ではない |
+| User intent→Business effect→Outcome | 目的/行為対象/現行権限/実Providerの効果/本人の受理・価値 | Result Acceptanceだけで業務意味受理やQoL改善にはならない |
+
+**優先する反例**：TEI HTTP task受入の`task_id=T1`と、EKIの別fixtureでのAcceptedResult `T2`を、名前や処理型が同じという理由で「T1が完了した」と報告したら失敗。T1→T2が異なるなら**未連結**と明示。真正なID/版/operation lineageを既存記録でたどれない場合は`unproven`。これを防ぐためにTAIがEKIのResult受理やTEIのSource/Contract検証を再実装する必要はない。
+
+### 15.4 統合の成功条件は「独立性」と「人の目的に即した価値」
+
+A2/B1により、情報の可用性と独立検証の増分を区別し、完全に保留するだけのモデルが合成正例で無用な停止を招かないかを確かめる。実行ではTask受付/実行/Claim/合成Acceptance/実外部Effectを別観測する。SUI・CSWの探索には自由な案の生成を、SHOには文書/出典参照の検査を、TEIには意味の正式受理と生成物の対応を、EKIには資源・委任・結果の責務を、それぞれ独立して保つ。
+
+**縮退の扱い**：検証済みの能力を外部Harnessが同等以上に提供するなら、まず重複した探索/表示/判断補助/接続のコードを減らす。各製品の原記録・Authority・プロセス隔離・検証Oracleを、比較結果なしに一括撤去しない。利用者の意図の実現、人への不要な確認/通知、情報の露出、導入・更新の負担を別の受入列に保持する。
+
+本節のうちSW-01 S1、EKI合成Acceptance、資源制限、TEI HTTP受入は**既存mainに記録された限定実測**。A2/B1/D1、SW-01-TARGET、合成正例、同一案件のTEI→EKI→AcceptedResult連結は**設計案・NOT RUN**。本Draft自体のコード実行/CI・Owner意味受理・Production Authorityは未実施。
