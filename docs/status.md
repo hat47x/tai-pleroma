@@ -20,7 +20,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SUI | ローカル起動の`/healthz`・OpenAPI・合成documentのPUT/GET。テナント境界・認可adapterのtest 40件 | [live](../evaluations/records/SUI-live-2026-11-01.json)、[auth](../evaluations/records/SUI-auth-2026-11-01.json) |
 | SEI | SEIチェックアウトに対する`TestSCN001DecisionMemoryProjection`と`TestValidityThroughSEIVerify` | [live](../evaluations/records/SEI-live-2026-11-01.json) |
 | MMI | 依存導入したCLIでfixture xlsxを`inspect --json` | [live](../evaluations/records/MMI-live-2026-11-01.json) |
-| TEI構築パイロット | SUI DocumentV1投影をTEIの意味モデルで`validate ok`、source indexで定義を取得 | [model](../integrations/pilot-sui-document/README.md)、[receipt](../evaluations/records/SUI-TEI-pilot-2026-11-01.json) |
+| TEI構築パイロット | SUI DocumentV1投影をTEIの意味モデルで`validate ok`、source indexで定義を取得。文字列投影の契約はspikeで4ケースPASS | [model](../integrations/pilot-sui-document/README.md)、[receipt](../evaluations/records/SUI-TEI-pilot-2026-11-01.json)、[spike](../evaluations/records/SUI-TEI-generation-spike-2026-11-01.json) |
 
 これらが示すのは、各基盤の**その版・そのfixture・そのホスト**での観測である。実データ、実権限、独立した検証主体、公開承認を示すものではない。
 

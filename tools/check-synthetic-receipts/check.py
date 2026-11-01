@@ -84,6 +84,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-http-agent-2026-11-01.json",
     "evaluations/records/SUI-auth-2026-11-01.json",
     "evaluations/records/SUI-TEI-pilot-2026-11-01.json",
+    "evaluations/records/SUI-TEI-generation-spike-2026-11-01.json",
 )
 
 
@@ -153,6 +154,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-generation-spike" in relative:
+            observed = data.get("observed", {})
+            if observed.get("cases") != 4 or observed.get("passedCases") != 4:
+                errors.append(f"TEI generation spike receipt did not pass 4 cases: {relative}")
+            if not str(observed.get("contractDigest", "")).startswith("sha256:"):
+                errors.append(f"TEI generation spike receipt has no contract digest: {relative}")
         if "SUI-TEI-pilot" in relative:
             observed = data.get("observed", {})
             if observed.get("validate") != "ok":
