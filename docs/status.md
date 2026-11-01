@@ -40,7 +40,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SCN-002/003採用 | Owner判断でdevelopment review対象に採用。D-07/D-08の未決は保持 | [判断](../evaluations/SCN-002-003-owner-decision-2026-10-30.md)、[status](../evaluations/SCN-002-003-review-status.json) | 実物レビューは先送り。公開gateはblocked |
 | 公開gate | blocked | [gate](../tools/reference-publication-gate/README.md) | syntheticはdevelopmentAccepted。公開にはreal-objectが必要 |
 | TEIモデル検証 | 型宣言をvalidate済み（synthetic） | [reference-tei-model](../tools/reference-tei-model/README.md)、[record](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味・Authorityは未検証 |
-| SUI API到達性 | `/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認済み（synthetic） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json) | 実在のSCN-001資料・テナント・認可は未検証 |
+| SUI API到達性 | 合成fixtureでは`/healthz`・`/openapi.json`・`/docs`・5 card/3 island/1 `contradicts` edgeのDocumentV1 GETを確認。ローカルSUIバックエンドの実起動では`/healthz` 200と65 pathを確認（document 0件） | [probe](../tools/reference-sui-api/README.md)、[record](../evaluations/records/SUI-api-2026-10-26.json)、[live](../evaluations/records/SUI-live-2026-11-01.json) | 実在のSCN-001資料・テナント・認可は未検証。live側は空のstore |
 | SUI→SCN-001対応 | card digestとisland構成を照合済み | [link](../tools/reference-sui-link/README.md) | 意味形成の正しさ・実資料は未検証 |
 | SUI→D-04対応 | D-04の観測行と公開境界を照合済み | [link](../tools/reference-sui-draft/README.md) | 意味の受理・公開承認は未検証 |
 | 合成施設文書の工程検査 | 4種類の工程欠陥を検出済み（synthetic） | [receipt](../evaluations/records/SCN-001-synthetic-facility-2026-10-28.json) | 実物レビューの証拠ではない |
