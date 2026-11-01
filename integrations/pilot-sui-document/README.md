@@ -179,6 +179,18 @@ sui.document.record: documentId, title, digest
 
 Documentは、Document・Card・Island・Edgeの4つのflat recordをアプリケーション側で合成する形です。入れ子のDocument契約は作っていません。
 
+### 合成層（2026-11-02）
+
+`assembler/document_assembler.py`で、4つのflat recordを1つのDocumentへ合成します。
+
+- 同じ`documentId`に属するか
+- Card/IslandのIDが重複していないか
+- Edgeの`fromCard`/`toCard`が実在するか
+
+を検査し、不整合は`AssemblyError`にします。`python -m unittest`で6件がPASSしました（[receipt](../../evaluations/records/SUI-TEI-assembler-2026-11-02.json)）。
+
+あわせて`sui.card.record`へ`cardId`を追加し、4ケースの選抜を再実行しました（`qualified=["text-record-template"]`、`passed=true`）。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。
