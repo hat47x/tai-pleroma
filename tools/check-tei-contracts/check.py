@@ -66,6 +66,17 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     for capability, name in bindings.items():
         if expected_bindings.get(capability) != name:
             errors.append(f"{capability} binding differs: {name}")
+    expected_flow = [
+        "product_contracts.eki_task_submit",
+        "product_contracts.eki_attempt_execute",
+        "product_contracts.eki_result_accept",
+    ]
+    flow = data.get("flowOrder", [])
+    if flow != expected_flow:
+        errors.append(f"flow order differs: {flow}")
+    for capability in flow:
+        if capability not in patterns or capability not in bindings:
+            errors.append(f"flow step has no pattern or binding: {capability}")
     if not data.get("worldFingerprint") or not data.get("sourceIndexFingerprint"):
         errors.append("TEI fingerprints are missing")
     if data.get("synthetic") is not True:
@@ -76,6 +87,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "evidenceKind": "synthetic",
         "teiCommit": data.get("teiCommit"),
         "chain": ["eki_task_submit", "eki_attempt_execute", "eki_result_accept"],
+        "flowOrder": flow,
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,

@@ -47,5 +47,11 @@
     "product_contracts.sui_document_put": "product_contracts_flow.sui_document_put",
     "product_contracts.sei_decision_record": "product_contracts_flow.sei_decision_record",
     "product_contracts.mmi_observation_select": "product_contracts_flow.mmi_observation_select"
-  }
+  },
+  "flowOrder": [
+    "product_contracts.eki_task_submit",
+    "product_contracts.eki_attempt_execute",
+    "product_contracts.eki_result_accept"
+  ],
+  "flowOrderScope": "TAI contract over TEI patterns. The TEI DSL has no order keyword; this list is checked by TAI and is not enforced by TEI."
 }
