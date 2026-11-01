@@ -1,6 +1,6 @@
 {
   "schema": "tai.evaluation.yi-constellation-structure/v0",
-  "checkedAt": "2026-11-01T04:59:46.293281+00:00",
+  "checkedAt": "2026-11-01T05:04:20.552780+00:00",
   "documents": [
     "docs/yi-constellation/01-64卦のシステム地図.md",
     "docs/yi-constellation/09-変爻の分析.md"
@@ -9,9 +9,10 @@
     "64table": "number, name, upper/lower trigram, position",
     "matrix": "8x8 upper/lower placement",
     "changes": "36 summary and detailed line changes, polarity labels",
+    "xiang": "36 daisho quotes against the fixture",
     "pairs": "5 zonggua pairs and 8 xugua transitions"
   },
   "errors": [],
   "passed": true,
-  "scope": "構造のみ。意味の解釈、象伝の文言、製品割当の理由は検算しない。"
+  "scope": "構造と大象の引用。意味の解釈と製品割当の理由は検算しない。"
 }

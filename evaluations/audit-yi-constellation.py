@@ -1,9 +1,9 @@
 """Yi Constellationの構造を、原典の卦序と六十四卦の対応から検算する。
 
 対象は docs/yi-constellation/01-64卦のシステム地図.md と
-docs/yi-constellation/09-変爻の分析.md である。意味の解釈や象伝の文言は
-検算しない。番号、卦名、上下卦、八×八の配置、三十六の変爻、綜卦の対、
-序卦の連続だけを機械的に確かめる。
+docs/yi-constellation/09-変爻の分析.md である。番号、卦名、上下卦、
+八×八の配置、三十六の変爻、之卦の象の引用、綜卦の対、序卦の連続を
+機械的に確かめる。象の意味の解釈は検算しない。
 
 使い方:
     python evaluations/audit-yi-constellation.py
@@ -41,6 +41,8 @@ HEX = [
 BY_NUM = {n: (name, bits) for n, name, bits in HEX}
 BY_NAME = {name: (n, bits) for n, name, bits in HEX}
 BY_BITS = {bits: (n, name) for n, name, bits in HEX}
+FIXTURE = Path(__file__).resolve().parent / "fixtures" / "yi-64-hexagrams.json"
+XIANG = {item["name"]: item["xiang"] for item in json.loads(FIXTURE.read_text(encoding="utf-8"))["hexagrams"]}
 TRIGRAM = {"111": "乾", "110": "兌", "101": "離", "100": "震", "011": "巽", "010": "坎", "001": "艮", "000": "坤"}
 PRODUCTS = {"TAI": "泰", "SUI": "萃", "SHO": "升", "SEI": "井", "TEI": "鼎", "EKI": "益"}
 SHADOWS = {12, 41, 47, 49}
@@ -182,6 +184,35 @@ def check_pairs() -> list[str]:
     return errors
 
 
+def normalize(text: str) -> str:
+    return re.sub(r"[\s，、；。：,.;:（）()「」『』]", "", text)
+
+
+def check_xiang(doc: str) -> list[str]:
+    errors: list[str] = []
+    current = None
+    count = 0
+    for line in doc.splitlines():
+        heading = re.match(r"^## \d+\. (TAI|SUI|SHO|SEI|TEI|EKI) ", line)
+        if heading:
+            current = heading.group(1)
+            continue
+        if not current or not re.match(r"^\| (初九|初六|九二|六二|九三|六三|九四|六四|九五|六五|上九|上六) \|", line):
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        label, zhigua, quote = cells[0], cells[2], cells[3]
+        count += 1
+        expected = XIANG.get(zhigua)
+        if expected is None:
+            errors.append(f"xiang {current} {label}: no canonical text for {zhigua}")
+            continue
+        if normalize(quote) not in normalize(expected):
+            errors.append(f"xiang {current} {label} {zhigua}: quote mismatch")
+    if count != 36:
+        errors.append(f"xiang rows: {count}")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--json", help="write the audit result to this path")
@@ -194,6 +225,7 @@ def main() -> int:
     errors += check_64_table(doc01)
     errors += check_matrix(doc01)
     errors += check_changes(doc09)
+    errors += check_xiang(doc09)
     errors += check_pairs()
 
     result = {
@@ -207,11 +239,12 @@ def main() -> int:
             "64table": "number, name, upper/lower trigram, position",
             "matrix": "8x8 upper/lower placement",
             "changes": "36 summary and detailed line changes, polarity labels",
+            "xiang": "36 daisho quotes against the fixture",
             "pairs": "5 zonggua pairs and 8 xugua transitions",
         },
         "errors": errors,
         "passed": not errors,
-        "scope": "構造のみ。意味の解釈、象伝の文言、製品割当の理由は検算しない。",
+        "scope": "構造と大象の引用。意味の解釈と製品割当の理由は検算しない。",
     }
     print(f"errors: {len(errors)}")
     for error in errors[:60]:

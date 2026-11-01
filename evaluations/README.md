@@ -25,5 +25,6 @@
 - [EKI-task-2026-10-26.json](records/EKI-task-2026-10-26.json): 合成Task 1件を`queued`で受理し、同一Idempotency-Keyの再送が同じtask_idを返したrecord。Worker未起動のため、実行・結果・委任完了は未検証。
 - [EKI-cancel-2026-10-26.json](records/EKI-cancel-2026-10-26.json): 合成Task 1件を`cancelled`/`CANCELLED`まで確認したrecord。Worker未起動のため、実行・結果は未検証。
 - [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:53600dc...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
-- [yi-constellation-structure-2026-11-01.json](records/yi-constellation-structure-2026-11-01.json): Yi Constellationの64卦表、8×8配置、36変爻、綜卦、序卦の構造検算。`passed=true`、`errors=0`。意味の解釈は対象外。
+- [yi-constellation-structure-2026-11-01.json](records/yi-constellation-structure-2026-11-01.json): Yi Constellationの64卦表、8×8配置、36変爻、象の引用、綜卦、序卦の構造検算。`passed=true`、`errors=0`。意味の解釈は対象外。
+- [yi-64-hexagrams.json](fixtures/yi-64-hexagrams.json): 64卦の番号、卦名、卦の並び、大象のfixture。19の検算が使う。
 - [audit-yi-constellation.py](audit-yi-constellation.py): 上記の検算を再実行するスクリプト。外部ライブラリは不要。
