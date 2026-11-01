@@ -1,0 +1,72 @@
+package main
+
+import (
+	"errors"
+	"testing"
+)
+
+func TestRunPassesOnSyntheticBoundary(t *testing.T) {
+	receipt := Run()
+	if !receipt.Passed {
+		t.Fatalf("synthetic boundary failed: %+v", receipt)
+	}
+	if !receipt.Synthetic || receipt.RealProductsConnected {
+		t.Fatalf("receipt overclaims scope: %+v", receipt)
+	}
+}
+
+func TestReadIsReadOnlyAndKeepsCanonical(t *testing.T) {
+	product := NewProduct()
+	before := product.Digest()
+	harness := NewHarness(product, "session-1")
+	read, err := harness.Read("policy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !read.ReadOnly || read.CanonicalDigest != before {
+		t.Fatalf("read receipt is not read-only: %+v", read)
+	}
+	if product.Digest() != before {
+		t.Fatal("read changed the canonical digest")
+	}
+}
+
+func TestWriteIsDeniedAndCanonicalUnchanged(t *testing.T) {
+	product := NewProduct()
+	before := product.Digest()
+	harness := NewHarness(product, "session-1")
+	if err := harness.Write("policy", "tampered"); !errors.Is(err, ErrWriteDenied) {
+		t.Fatalf("write was not denied: %v", err)
+	}
+	if product.Digest() != before {
+		t.Fatal("denied write changed the canonical digest")
+	}
+}
+
+func TestHandoffIsRecordedWithoutCanonicalWrite(t *testing.T) {
+	product := NewProduct()
+	before := product.Digest()
+	harness := NewHarness(product, "session-1")
+	handoff, err := harness.Handoff("会議室の予約要否を確認する")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(product.handoffs) != 1 || product.handoffs[0] != handoff {
+		t.Fatalf("handoff not recorded: %+v", product.handoffs)
+	}
+	if product.Digest() != before {
+		t.Fatal("handoff changed the canonical digest")
+	}
+}
+
+func TestSessionEndKeepsProductReadable(t *testing.T) {
+	product := NewProduct()
+	harness := NewHarness(product, "session-1")
+	harness.EndSession()
+	if _, err := harness.Read("policy"); err == nil {
+		t.Fatal("harness read after session end should fail")
+	}
+	if _, err := product.Read("policy"); err != nil {
+		t.Fatalf("product canonical should stay readable: %v", err)
+	}
+}
