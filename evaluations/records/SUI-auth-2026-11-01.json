@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sui-auth/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "suiCommit": "ed6eabd99bba07f2b5737e82165275ded95f1576",
+  "host": "WSL2 Ubuntu with the local SUI virtual environment",
+  "command": ".venv/bin/python -m pytest tests/test_access_control_tenant_boundary.py tests/test_auth_context_resolution.py tests/test_access_control_external_http_adapter.py tests/test_access_control_adapter_contract.py -q",
+  "result": "PASS",
+  "observed": {
+    "passed": 40,
+    "failed": 0
+  },
+  "tests": [
+    "tests/test_access_control_tenant_boundary.py",
+    "tests/test_auth_context_resolution.py",
+    "tests/test_access_control_external_http_adapter.py",
+    "tests/test_access_control_adapter_contract.py"
+  ],
+  "scope": "Unit and contract tests for SUI's tenant boundary, auth context resolution, external authorization adapter, and adapter contract. This is not a live multi-tenant deployment, not real credentials, and not a real authorization decision."
+}
