@@ -75,6 +75,19 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     submit_implementations = implementations.get("product_contracts.eki_task_submit", [])
     if "EKITaskSubmitHTTP" not in submit_implementations:
         errors.append("eki_task_submit has no HTTP binding implementation")
+    http_binding = data.get("httpBinding", {})
+    expected_http_binding = {
+        "method": "POST",
+        "path": "/v1/tasks",
+        "idempotencyHeader": "Idempotency-Key",
+        "successStatus": 202,
+        "errorFormat": "application/problem+json",
+    }
+    for key, value in expected_http_binding.items():
+        if http_binding.get(key) != value:
+            errors.append(f"http binding {key} differs: {http_binding.get(key)}")
+    if http_binding.get("liveCallExecuted") is not False:
+        errors.append("http binding must not claim a live cross-repo call")
     expected_flow = [
         "product_contracts.eki_task_submit",
         "product_contracts.eki_attempt_execute",
@@ -115,6 +128,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "flowOrder": flow,
         "effects": effects,
         "bindingImplementations": implementations,
+        "httpBinding": http_binding,
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,

@@ -48,6 +48,15 @@
     "product_contracts.sei_decision_record": ["SEIDecisionRecord"],
     "product_contracts.mmi_observation_select": ["MMIObservationSelect"]
   },
+  "httpBinding": {
+    "method": "POST",
+    "path": "/v1/tasks",
+    "idempotencyHeader": "Idempotency-Key",
+    "successStatus": 202,
+    "errorFormat": "application/problem+json",
+    "liveCallExecuted": false,
+    "testedWith": "httptest"
+  },
   "patterns": {
     "product_contracts.eki_task_submit": "product_contracts_flow.eki_task_submit",
     "product_contracts.eki_attempt_execute": "product_contracts_flow.eki_attempt_execute",
