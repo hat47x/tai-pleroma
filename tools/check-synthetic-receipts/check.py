@@ -90,6 +90,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-target-2026-11-01.json",
     "evaluations/records/SUI-TEI-target-document-id-2026-11-02.json",
     "evaluations/records/SUI-TEI-card-record-2026-11-02.json",
+    "evaluations/records/SUI-TEI-compare-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -161,6 +162,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-comparison" in relative:
+            if data.get("evaluationSet", {}).get("cases") != 4:
+                errors.append(f"TEI comparison receipt did not use 4 cases: {relative}")
+            if data.get("tei", {}).get("passed") is not True or data.get("baseline", {}).get("passed") is not True:
+                errors.append(f"TEI comparison receipt did not pass both paths: {relative}")
         if "tei-card-record" in relative:
             observed = data.get("observed", {})
             if observed.get("kind") != "record" or observed.get("passedCases") != 4:
