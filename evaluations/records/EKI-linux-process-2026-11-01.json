@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.eki-linux-process/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "ekiCommit": "99a01f99879b45875027e2a6a70753b25e50d5bb",
+  "host": "WSL2 Ubuntu, linux amd64",
+  "binaries": "eki-control and eki-agent cross-compiled with GOOS=linux from the same commit",
+  "testHarness": "conformance/process test binary for linux, run with EKI_PROCESS_BIN_DIR",
+  "command": "EKI_PROCESS_BIN_DIR=/mnt/d/GIT/hat47x/.tmpbin process-linux.test -test.timeout 600s",
+  "suite": "conformance/process",
+  "result": "PASS",
+  "tests": {
+    "TestAgentExecutesAndSubmitsResultClaim": "PASS",
+    "TestAgentStopsAssignmentWhenMemoryLimitIsExceeded": "PASS",
+    "fullProcessSuite": "PASS"
+  },
+  "observed": [
+    "The Agent executed the fixed command and submitted a ResultClaim.",
+    "Re-execution reproduced the claim output digest.",
+    "A 1 MiB memory limit stopped the process tree and closed the Attempt."
+  ],
+  "scope": "Test profile on loopback/WSL. This is not a production deployment, a Worker Protocol conformance claim, or a publication approval."
+}
