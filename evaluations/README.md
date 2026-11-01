@@ -29,3 +29,9 @@
 - [yi-64-hexagrams.json](fixtures/yi-64-hexagrams.json): 64卦の番号、卦名、卦の並び、大象のfixture。19の検算が使う。
 - [yi-appendix-quotes.json](fixtures/yi-appendix-quotes.json): 序卦伝と雑卦伝の八つの引用のfixture。19の検算が使う。
 - [audit-yi-constellation.py](audit-yi-constellation.py): 上記の検算を再実行するスクリプト。外部ライブラリは不要。
+- [audit-robotics-records.py](audit-robotics-records.py): 自動運転とロボティクスの四つの記録を、合成fixtureで検証するスクリプト。外部ライブラリは不要。
+- [robotics-records-2026-11-02.json](records/robotics-records-2026-11-02.json): 四つの記録の合成fixture九件の検証receipt。`synthetic=true`、`passed=true`、自己試験あり。実車・実ロボット・実安全制御器は未検証。
+- [ad/](fixtures/ad/): 自動運転の合成fixture。テイクオーバー、インシデント、ディスエンゲージメント、旧ECUからの移行。
+- [robotics/](fixtures/robotics/): ロボティクスの合成fixture。ピックアンドプレースの受け渡し、出来事、判断、意味の対応。
+- [schemas/](../docs/yi-constellation/schemas/): 出来事、受け渡し、判断、意味の対応のJSON Schema。暫定版0.1。
+- [46-四つの記録のスキーマ](../docs/yi-constellation/46-四つの記録のスキーマ.md): 四つの記録の暫定スキーマ、合成fixture、検証結果、回収した知見。
