@@ -2,7 +2,7 @@
   "schema": "tei.product-capabilities/v1",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "875909888a80fcbaf8e8e89117b628e8e8e1f9bd",
+  "teiCommit": "7b6e14d0dafab02f5fa3663a394784a33ba3af1f",
   "workspace": "reference/product-contracts",
   "worldFingerprint": "sha256:da593906d33adebf5b2d4436feac30ad52cecc0edd1cda45cedd4ef9daa0f093",
   "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
@@ -67,6 +67,17 @@
     "test": "TestLiveEKITaskSubmitHTTP",
     "result": "PASS",
     "scope": "loopback eki-control with a static test token; Task accepted but no Worker executed it"
+  },
+  "orderEvidence": {
+    "mechanism": "composition.ActivationOrder",
+    "test": "TestProductFlowActivationFollowsDependencies",
+    "result": "PASS",
+    "order": [
+      "eki_task_submit",
+      "eki_attempt_execute",
+      "eki_result_accept"
+    ],
+    "source": "Attempt and ResultClaim dependencies between composition providers"
   },
   "patterns": {
     "product_contracts.eki_task_submit": "product_contracts_flow.eki_task_submit",

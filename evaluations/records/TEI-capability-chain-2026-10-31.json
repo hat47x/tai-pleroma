@@ -2,7 +2,7 @@
   "schema": "tai.reference.tei-capability-chain/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "875909888a80fcbaf8e8e89117b628e8e8e1f9bd",
+  "teiCommit": "7b6e14d0dafab02f5fa3663a394784a33ba3af1f",
   "chain": [
     "eki_task_submit",
     "eki_attempt_execute",
@@ -13,6 +13,17 @@
     "product_contracts.eki_attempt_execute",
     "product_contracts.eki_result_accept"
   ],
+  "orderEvidence": {
+    "mechanism": "composition.ActivationOrder",
+    "test": "TestProductFlowActivationFollowsDependencies",
+    "result": "PASS",
+    "order": [
+      "eki_task_submit",
+      "eki_attempt_execute",
+      "eki_result_accept"
+    ],
+    "source": "Attempt and ResultClaim dependencies between composition providers"
+  },
   "effects": {
     "product_contracts.eki_task_submit": "create product_contracts.attempt",
     "product_contracts.eki_attempt_execute": "create product_contracts.result_claim",
@@ -57,6 +68,7 @@
     "endpoint": "http://127.0.0.1:18080",
     "resultStatus": 202,
     "taskIdPrefix": "tsk_",
+    "observedTaskId": "tsk_f45e833bcc230d3e12a673a4d49418a0",
     "test": "TestLiveEKITaskSubmitHTTP",
     "result": "PASS",
     "scope": "loopback eki-control with a static test token; Task accepted but no Worker executed it"
