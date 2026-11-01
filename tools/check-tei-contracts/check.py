@@ -86,34 +86,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     for key, value in expected_http_binding.items():
         if http_binding.get(key) != value:
             errors.append(f"http binding {key} differs: {http_binding.get(key)}")
-    live_call = data.get("liveCall", {})
-    live = http_binding.get("liveCallExecuted")
-    if live is True:
-        if live_call.get("result") != "PASS":
-            errors.append("live call is claimed without a PASS result")
-        if not live_call.get("ekiControlCommit"):
-            errors.append("live call is claimed without an eki-control commit")
-        if live_call.get("taskIdPrefix") != "tsk_":
-            errors.append("live call is claimed without a task id prefix")
-        if live_call.get("resultStatus") != 202:
-            errors.append("live call is claimed without status 202")
-        if not live_call.get("ekiControlHost"):
-            errors.append("live call is claimed without a control host")
-        if not str(live_call.get("observedTaskId", "")).startswith("tsk_"):
-            errors.append("live call is claimed without an observed task id")
-        if live_call.get("idempotentReplay") is True:
-            if live_call.get("replayTaskId") != live_call.get("observedTaskId"):
-                errors.append("idempotent replay returned a different task id")
-        live_error = data.get("liveErrorCall", {})
-        if live_error.get("test") == "TestLiveEKIProblemJSON":
-            if live_error.get("result") != "PASS":
-                errors.append("live error call is not PASS")
-            if live_error.get("status") != 400:
-                errors.append(f"live error call status differs: {live_error.get('status')}")
-            if not live_error.get("code"):
-                errors.append("live error call has no problem code")
-    elif live is not False:
-        errors.append("httpBinding.liveCallExecuted must be true or false")
+    if http_binding.get("liveCallExecuted") is not False:
+        errors.append("a synthetic receipt must not claim a live call; put it in TEI-EKI-live")
     expected_flow = [
         "product_contracts.eki_task_submit",
         "product_contracts.eki_attempt_execute",
@@ -165,8 +139,6 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "effects": effects,
         "bindingImplementations": implementations,
         "httpBinding": http_binding,
-        "liveCall": live_call,
-        "liveErrorCall": live_error,
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,

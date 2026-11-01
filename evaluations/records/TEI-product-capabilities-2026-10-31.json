@@ -54,32 +54,9 @@
     "idempotencyHeader": "Idempotency-Key",
     "successStatus": 202,
     "errorFormat": "application/problem+json",
-    "liveCallExecuted": true,
-    "testedWith": "httptest and live eki-control"
-  },
-  "liveCall": {
-    "date": "2026-11-01",
-    "ekiControlCommit": "3e44ccd5eaa6713d6b7f7468d3bf54c429d395d7",
-    "ekiControlHost": "WSL2 Ubuntu (linux amd64 build)",
-    "endpoint": "http://127.0.0.1:18083",
-    "resultStatus": 202,
-    "taskIdPrefix": "tsk_",
-    "observedTaskId": "tsk_e158d3e9bd0c0577c1ca719f60449fdd",
-    "previousObservedTaskId": "tsk_0467a69ca211ab7eaf306bc51ecc79b4",
-    "runs": 4,
-    "idempotentReplay": true,
-    "replayTaskId": "tsk_e158d3e9bd0c0577c1ca719f60449fdd",
-    "test": "TestLiveEKITaskSubmitHTTP",
-    "result": "PASS",
-    "scope": "WSL-hosted eki-control reached through localhost forwarding; Task accepted but no Worker executed it"
-  },
-  "liveErrorCall": {
-    "date": "2026-11-01",
-    "status": 400,
-    "code": "INVALID_TASK_REQUEST",
-    "test": "TestLiveEKIProblemJSON",
-    "result": "PASS",
-    "scope": "empty TaskRequest against the same WSL-hosted eki-control"
+    "liveCallExecuted": false,
+    "testedWith": "httptest",
+    "liveEvidence": "TEI-EKI-live-2026-11-01.json"
   },
   "orderEvidence": {
     "mechanism": "composition.ActivationOrder",

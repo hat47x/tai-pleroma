@@ -77,6 +77,7 @@ REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
 REAL_RECORDS = (
     "evaluations/records/EKI-linux-process-2026-11-01.json",
     "evaluations/records/EKI-bwrap-linux-2026-11-01.json",
+    "evaluations/records/TEI-EKI-live-2026-11-01.json",
 )
 
 
@@ -125,6 +126,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"real-execution receipt lacks host or command: {relative}")
         if data.get("result") != "PASS":
             errors.append(f"real-execution receipt is not PASS: {relative}")
+        if "TEI-EKI-live" in relative:
+            accepted = data.get("accepted", {})
+            if accepted.get("resultStatus") != 202:
+                errors.append(f"live receipt did not record 202: {relative}")
+            if not str(accepted.get("observedTaskId", "")).startswith("tsk_"):
+                errors.append(f"live receipt has no accepted task id: {relative}")
+            if data.get("idempotentReplay", {}).get("replayTaskId") != accepted.get("observedTaskId"):
+                errors.append(f"live receipt replay differs from the accepted task: {relative}")
+            if data.get("rejected", {}).get("resultStatus") != 400:
+                errors.append(f"live receipt did not record a 400 rejection: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
