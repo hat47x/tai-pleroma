@@ -95,3 +95,17 @@ A2→B1では**一次情報と独立期待値を固定**する。B1に追加さ�
 ### S4の追加観測：時点付きTargetの意味（設計のみ／NOT RUN）
 
 `current-target`のIdentity/Scope/Digestが与えられても、**どの時点で何を現行対象と呼ぶか**は別。TEI [#1124](https://github.com/hat47x/tei-platform/issues/1124#issuecomment-6552461423) が示す`tSelect→tResolve→tCommit`を参照し、S4では (a) **特定版/選択時点へ固定する意図**、(b) **現在条件で再解決する意図** を合成の対照として区別する。固定集合`{A,B}`が再解決後`{A,C}`になった事実だけで、後者を誤りとしない。前者ではTarget driftの可能性を明示する。両者の採否は業務Owner判断であり、SW-01のread-only合成Decision検証だけでは実Operation/Commit/認可や集合完全性を証明しない。新たなTEI Adapter・Gateを作らず、対象Bindingの観測が必要になったときは既存#1124/#1127へ引き渡す。
+
+### S3/S5追補：通知0件と未確認0件を区別（2026-11-01／新規NOT RUN）
+
+[SEI #660の合成評価Consumer](https://github.com/hat47x/sei-cognition/issues/660#issuecomment-6499506336)で観測された`normal + stale`の出力省略を参照し、以下の二条件を追加する。これはSEI製品全体の不具合断定ではなく、SW-01の**用途付き引継ぎ**評価へ既存反例を再利用する計画である。
+
+| 対照 | 通知 | 利用条件 | Harnessが説明すべきこと |
+| --- | --- | --- | --- |
+| Q-N：`normal/stale`、公開用途に鮮度条件あり | 今すぐ通知なしでもよい | 鮮度未充足を保持 | 公開に進むとき不足条件と出所を取り出せる |
+| Q-P：同じ公開用途に鮮度要求なし | 通知なし | 鮮度要求自体がない | Q-Nと区別して扱える |
+| Q-C：`critical/stale` | 適時の通知/保留 | 鮮度未充足を保持 | 通知の強さと正式受理・実行権限を混同しない |
+
+S5の別Harness引継ぎでは、Q-Nが通知されていなくても、元Source/版・用途・鮮度要求・不明点へ**閲覧可能な範囲で**戻れるかを確認する。通知用Projectionだけが渡されて条件が消失した場合は情報不足とし、元記録が非公開ならその内容を推測しない。追加のSource/Decision StoreやNotification Engineは作らない。
+
+**A2/B1比較の観測列を補足**：`Prepared Context`・`Actual Delivered Context`・回答と実Tool呼出しから観測できる`Used Evidence`を分ける。Deliveredを内部理解の証拠にしない。holdoutの答えは生成側へ渡さない。人の確認数と、不要な通知数・条件の見落とし・不必要な全停止を別々に測る（[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017#issuecomment-6471599765)）。Q-N/Q-P/Q-Cおよび別Harness S5は**NOT RUN**。
