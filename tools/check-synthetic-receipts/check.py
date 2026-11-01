@@ -87,6 +87,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-generation-spike-2026-11-01.json",
     "evaluations/records/SUI-TEI-selection-2026-11-01.json",
     "evaluations/records/SUI-TEI-text-generation-2026-11-01.json",
+    "evaluations/records/SUI-TEI-target-2026-11-01.json",
 )
 
 
@@ -156,6 +157,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-target" in relative:
+            observed = data.get("observed", {})
+            if observed.get("processModel") != "oneshot" or observed.get("profilePassed") is not True:
+                errors.append(f"TEI target receipt did not pass the oneshot profile: {relative}")
+            if observed.get("passedCases") != 4:
+                errors.append(f"TEI target receipt did not pass 4 cases: {relative}")
         if "tei-text-generation" in relative:
             observed = data.get("observed", {})
             if observed.get("strategy") != "text-template" or observed.get("passedCases") != 4:

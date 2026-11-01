@@ -75,7 +75,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | 0 | 本計画のレビューと、パイロット範囲・測定方法の確定 | Ownerまたは担当者の合意 |
 | 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
-| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→`text-template`生成→4ケース選抜まで到達（[generation receipt](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)）。複数属性・record全体・Target Profileは未達 |
+| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→`text-template`生成→4ケース選抜→one-shot Target Profile実行まで到達（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)）。複数属性・record全体は未達 |
 | 3 | 現行実装との比較測定とreceipt化 | 測定結果と再現手順 |
 | 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
 
