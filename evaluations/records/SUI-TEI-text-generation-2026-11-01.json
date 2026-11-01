@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.tei-text-generation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "teiCommit": "c26c2f51e4be91a43df1da01cdcf239ac7261ba6",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract <TAI>/integrations/pilot-sui-document/candidates/text-identity/contract.json -strategy text-template -out <tmp>/text-template && go run ./tools/reference-generator-selection/cmd/tei-generator-select -workspace <TAI>/integrations/pilot-sui-document -contract <TAI>/integrations/pilot-sui-document/candidates/text-identity/contract.json -fixtures <TAI>/integrations/pilot-sui-document/candidates/text-identity/fixtures.json -candidates <tmp>",
+  "result": "PASS",
+  "observed": {
+    "contractId": "sui.card.text",
+    "strategy": "text-template",
+    "contractDigest": "sha256:12e3428fa726f3ce52ccac0ae3f7a221541c561d0177ae963472cc560d3a3dd8",
+    "fixturesDigest": "sha256:23e70fc056f9dcc462a292d65c046e0f4129b61de9d51c65b081645a69207247",
+    "generatedSourceDigest": "sha256:7efc203f597e885d3502e112b70879ba3b176d270d5307991136173043e541f0",
+    "cases": 4,
+    "passedCases": 4,
+    "qualified": ["text-template"]
+  },
+  "scope": "A reference-local text projection contract, a candidate generated from that contract with the text-template strategy, and its selection against four fixture cases. It does not generate SUI code or a runnable SUI surface, run a Target Profile, or show human acceptance."
+}
