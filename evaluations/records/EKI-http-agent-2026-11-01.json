@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.eki-http-agent/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "ekiCommit": "824bb05",
+  "host": "Windows Go test process with local eki-control and eki-agent binaries",
+  "command": "go test ./conformance/process -run TestHTTPTaskSubmissionIsExecutedByTheAgent -count=1 -v",
+  "result": "PASS",
+  "observed": {
+    "submitStatus": 202,
+    "taskID": "tsk_19a6eb8da9289591acee1dd5b7f1b683",
+    "attemptID": "atm_a0a190c7361dc330208d0acd31e926d9",
+    "claimDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+    "testProfile": true
+  },
+  "scope": "A TEST PROFILE task with a synthetic executor approval, a fixed echo command, and a temporary state store. It does not show Worker Protocol compatibility, result acceptance, a production authority, or publication approval."
+}
