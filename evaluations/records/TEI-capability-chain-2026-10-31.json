@@ -65,13 +65,16 @@
   "liveCall": {
     "date": "2026-11-01",
     "ekiControlCommit": "03b51e0b24eed6069a3fab5bf3f470d7aab531d2",
-    "endpoint": "http://127.0.0.1:18080",
+    "ekiControlHost": "WSL2 Ubuntu (linux amd64 build)",
+    "endpoint": "http://127.0.0.1:18081",
     "resultStatus": 202,
     "taskIdPrefix": "tsk_",
-    "observedTaskId": "tsk_f45e833bcc230d3e12a673a4d49418a0",
+    "observedTaskId": "tsk_a303bfb28e004347f545e554a43a597b",
+    "previousObservedTaskId": "tsk_f45e833bcc230d3e12a673a4d49418a0",
+    "runs": 2,
     "test": "TestLiveEKITaskSubmitHTTP",
     "result": "PASS",
-    "scope": "loopback eki-control with a static test token; Task accepted but no Worker executed it"
+    "scope": "WSL-hosted eki-control reached through localhost forwarding; Task accepted but no Worker executed it"
   },
   "publicationAllowed": false,
   "passed": true,
