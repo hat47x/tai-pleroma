@@ -69,6 +69,12 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 
 生成したのは投影の候補であり、SUIの実装コードでも実行可能な画面・APIでもありません。段階2は最小経路とTarget Profile実行まで到達し、複数属性・record全体・実環境が残っています。
 
+### 複数属性への拡張（2026-11-02）
+
+`candidates/document-id/`に2つ目の契約（`sui.card.document_id`）を追加し、同じ`text-template`で生成・選抜しました。4ケースが一致し、`qualified=["text-template"]`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)）。
+
+これは属性ごとに独立した契約を持つ段階であり、Card全体を1つのrecordとして投影する契約ではありません。record全体の投影は未達です。
+
 ## 段階3の最初の測定（2026-11-02）
 
 `measure_workflow.py`で、生成と選抜のツール工程を測定しました。
