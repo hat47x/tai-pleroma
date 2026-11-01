@@ -77,6 +77,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     for capability in flow:
         if capability not in patterns or capability not in bindings:
             errors.append(f"flow step has no pattern or binding: {capability}")
+    expected_effects = {
+        "product_contracts.eki_task_submit": "create product_contracts.attempt",
+        "product_contracts.eki_attempt_execute": "create product_contracts.result_claim",
+        "product_contracts.eki_result_accept": "create product_contracts.accepted_result",
+        "product_contracts.sui_document_put": "update product_contracts.document",
+        "product_contracts.sei_decision_record": "create product_contracts.decision",
+        "product_contracts.mmi_observation_select": "none",
+    }
+    effects = data.get("effects", {})
+    if set(effects) != required:
+        errors.append(f"effect set differs: {sorted(effects)}")
+    for capability, effect in effects.items():
+        if expected_effects.get(capability) != effect:
+            errors.append(f"{capability} effect differs: {effect}")
+        if effect != "none" and not effect.startswith(("create ", "update ")):
+            errors.append(f"{capability} effect is not create/update/none: {effect}")
     if not data.get("worldFingerprint") or not data.get("sourceIndexFingerprint"):
         errors.append("TEI fingerprints are missing")
     if data.get("synthetic") is not True:
@@ -88,6 +104,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "teiCommit": data.get("teiCommit"),
         "chain": ["eki_task_submit", "eki_attempt_execute", "eki_result_accept"],
         "flowOrder": flow,
+        "effects": effects,
         "publicationAllowed": False,
         "passed": not errors,
         "errors": errors,

@@ -2,7 +2,7 @@
   "schema": "tei.product-capabilities/v1",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "3c8c4a2b2dcb91e37c2d184bebee7b5f8a9db958",
+  "teiCommit": "5a31d5ddbf5b2cef225cfe5fd1def976b74a0003",
   "workspace": "reference/product-contracts",
   "worldFingerprint": "sha256:da593906d33adebf5b2d4436feac30ad52cecc0edd1cda45cedd4ef9daa0f093",
   "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
@@ -53,5 +53,14 @@
     "product_contracts.eki_attempt_execute",
     "product_contracts.eki_result_accept"
   ],
-  "flowOrderScope": "TAI contract over TEI patterns. The TEI DSL has no order keyword; this list is checked by TAI and is not enforced by TEI."
+  "flowOrderScope": "TAI contract over TEI patterns. The TEI DSL has no order keyword; this list is checked by TAI and is not enforced by TEI.",
+  "effects": {
+    "product_contracts.eki_task_submit": "create product_contracts.attempt",
+    "product_contracts.eki_attempt_execute": "create product_contracts.result_claim",
+    "product_contracts.eki_result_accept": "create product_contracts.accepted_result",
+    "product_contracts.sui_document_put": "update product_contracts.document",
+    "product_contracts.sei_decision_record": "create product_contracts.decision",
+    "product_contracts.mmi_observation_select": "none"
+  },
+  "effectScope": "TEI DataEffect declares business intent only. It does not authorize execution or assert that durable data changed."
 }
