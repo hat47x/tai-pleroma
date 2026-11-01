@@ -15,7 +15,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | 基盤 | 実実行の内容 | receipt |
 | --- | --- | --- |
 | EKI | Linuxの`conformance/process`、bwrap sandbox 5件、executor承認のdigest形式検証 | [process](../evaluations/records/EKI-linux-process-2026-11-01.json)、[bwrap](../evaluations/records/EKI-bwrap-linux-2026-11-01.json) |
-| EKI | HTTP submit 202 → dispatch → Agent実行 → ResultClaim保存（TEST PROFILE） | [http-agent](../evaluations/records/EKI-http-agent-2026-11-01.json) |
+| EKI | HTTP submit 202 → dispatch → Agent実行 → ResultClaim → Result Acceptance（TEST PROFILE、同一ホスト再実行の検証） | [http-agent](../evaluations/records/EKI-http-agent-2026-11-01.json) |
 | TEI | EKI Control APIへの`POST /v1/tasks`（202）、replay、problem+json、409 conflict | [live](../evaluations/records/TEI-EKI-live-2026-11-01.json) |
 | SUI | ローカル起動の`/healthz`・OpenAPI・合成documentのPUT/GET | [live](../evaluations/records/SUI-live-2026-11-01.json) |
 | SEI | SEIチェックアウトに対する`TestSCN001DecisionMemoryProjection`と`TestValidityThroughSEIVerify` | [live](../evaluations/records/SEI-live-2026-11-01.json) |
@@ -25,7 +25,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 
 未接続として残るもの:
 
-- EKIの`HTTP submit → dispatch → Agent execute → ResultClaim`はTEST PROFILEで到達した。Worker Protocol、Result Acceptance、独立検証は未実施である。
+- EKIの`HTTP submit → dispatch → Agent execute → ResultClaim → Result Acceptance`はTEST PROFILEで到達した。検証は同一ホストの再実行による再現性確認であり、Worker Protocolや独立検証は未実施である。
 - SUIは合成documentであり、SCN-001の実資料・テナント・認可は未検証である。
 - MMIの候補は`inferred`であり、意味の受理ではない。
 

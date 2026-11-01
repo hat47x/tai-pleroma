@@ -4,16 +4,19 @@
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
   "date": "2026-11-01",
-  "ekiCommit": "824bb05",
+  "ekiCommit": "ccaff37571f5e586c38cb085ceeba1a6aee0555e",
   "host": "Windows Go test process with local eki-control and eki-agent binaries",
   "command": "go test ./conformance/process -run TestHTTPTaskSubmissionIsExecutedByTheAgent -count=1 -v",
   "result": "PASS",
   "observed": {
     "submitStatus": 202,
-    "taskID": "tsk_19a6eb8da9289591acee1dd5b7f1b683",
-    "attemptID": "atm_a0a190c7361dc330208d0acd31e926d9",
+    "taskID": "tsk_e2b20bf28bd437241f1f41d6a2412ead",
+    "attemptID": "atm_bab0c404be333181bc9d6a44961c575e",
     "claimDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+    "acceptedOutcome": "accepted",
+    "acceptedResultDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+    "verification": "same-host re-execution compared with the claim digest",
     "testProfile": true
   },
-  "scope": "A TEST PROFILE task with a synthetic executor approval, a fixed echo command, and a temporary state store. It does not show Worker Protocol compatibility, result acceptance, a production authority, or publication approval."
+  "scope": "A TEST PROFILE task with a synthetic executor approval, a fixed echo command, a temporary state store, and a synthetic verifier that re-executes on the same host. It does not show Worker Protocol compatibility, independent verification, a production authority, or publication approval."
 }
