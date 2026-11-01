@@ -91,3 +91,7 @@ A2→B1では**一次情報と独立期待値を固定**する。B1に追加さ�
 4. 対象ID/Source locator・digest・有効範囲・currentTargetの同定を既存資料で独立照合し、根拠不足のまま完了を宣言しない。
 
 この改訂は既存Issue/参照実装/検査器を再利用する**検証計画の修正**であり、別のGate・正本Schema・中央Authorityを追加する提案ではない。
+
+### S4の追加観測：時点付きTargetの意味（設計のみ／NOT RUN）
+
+`current-target`のIdentity/Scope/Digestが与えられても、**どの時点で何を現行対象と呼ぶか**は別。TEI [#1124](https://github.com/hat47x/tei-platform/issues/1124#issuecomment-6552461423) が示す`tSelect→tResolve→tCommit`を参照し、S4では (a) **特定版/選択時点へ固定する意図**、(b) **現在条件で再解決する意図** を合成の対照として区別する。固定集合`{A,B}`が再解決後`{A,C}`になった事実だけで、後者を誤りとしない。前者ではTarget driftの可能性を明示する。両者の採否は業務Owner判断であり、SW-01のread-only合成Decision検証だけでは実Operation/Commit/認可や集合完全性を証明しない。新たなTEI Adapter・Gateを作らず、対象Bindingの観測が必要になったときは既存#1124/#1127へ引き渡す。
