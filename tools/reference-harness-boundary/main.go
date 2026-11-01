@@ -21,6 +21,7 @@ type Receipt struct {
 	WriteDenied           bool     `json:"writeDenied"`
 	CanonicalUnchanged    bool     `json:"canonicalUnchanged"`
 	HandoffRecorded       bool     `json:"handoffRecorded"`
+	DeferredRecorded      bool     `json:"deferredRecorded"`
 	SessionEnded          bool     `json:"sessionEnded"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -32,6 +33,7 @@ type Handoff struct {
 	ContextID string `json:"contextId"`
 	Version   string `json:"version"`
 	Task      string `json:"task"`
+	Deferred  bool   `json:"deferred"`
 }
 
 type ReadReceipt struct {
@@ -101,12 +103,14 @@ func (p *Product) RecordHandoff(handoff Handoff) {
 type Harness struct {
 	product   *Product
 	sessionID string
+	budget    int
+	used      int
 	ended     bool
 	handoffs  []Handoff
 }
 
 func NewHarness(product *Product, sessionID string) *Harness {
-	return &Harness{product: product, sessionID: sessionID}
+	return &Harness{product: product, sessionID: sessionID, budget: 1}
 }
 
 func (h *Harness) Read(key string) (ReadReceipt, error) {
@@ -128,6 +132,11 @@ func (h *Harness) Handoff(task string) (Handoff, error) {
 		return Handoff{}, errors.New("session ended")
 	}
 	handoff := Handoff{ContextID: h.sessionID + "-ctx", Version: "v1", Task: task}
+	if h.used >= h.budget {
+		handoff.Deferred = true
+	} else {
+		h.used++
+	}
 	h.product.RecordHandoff(handoff)
 	h.handoffs = append(h.handoffs, handoff)
 	return handoff, nil
@@ -147,6 +156,7 @@ func Run() Receipt {
 			"合成の製品とハーネスによる境界の参照実装。",
 			"実製品の認可、監査、複数利用者を確かめない。",
 			"ハーネスはセッションと受け渡しの記録を持ち、製品の正本を持たない。",
+			"文脈の上限の後は、渡せなかったものを保留として記録する。",
 		},
 	}
 	product := NewProduct()
@@ -159,8 +169,10 @@ func Run() Receipt {
 	writeErr := harness.Write("policy", "tampered")
 	receipt.WriteDenied = errors.Is(writeErr, ErrWriteDenied)
 
-	handoff, err := harness.Handoff("会議室の予約要否を確認する")
-	receipt.HandoffRecorded = err == nil && len(product.handoffs) == 1 && product.handoffs[0] == handoff
+	first, firstErr := harness.Handoff("会議室の予約要否を確認する")
+	second, secondErr := harness.Handoff("未解決の予約条件を渡す")
+	receipt.HandoffRecorded = firstErr == nil && !first.Deferred && len(product.handoffs) >= 1 && product.handoffs[0] == first
+	receipt.DeferredRecorded = secondErr == nil && second.Deferred && len(product.handoffs) >= 2 && product.handoffs[1] == second
 
 	after := product.Digest()
 	receipt.CanonicalUnchanged = before == after
@@ -170,7 +182,7 @@ func Run() Receipt {
 	receipt.SessionEnded = readErr == nil
 
 	receipt.Passed = receipt.ReadOnly && receipt.WriteDenied && receipt.CanonicalUnchanged &&
-		receipt.HandoffRecorded && receipt.SessionEnded
+		receipt.HandoffRecorded && receipt.DeferredRecorded && receipt.SessionEnded
 	return receipt
 }
 

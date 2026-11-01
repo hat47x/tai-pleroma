@@ -59,6 +59,32 @@ func TestHandoffIsRecordedWithoutCanonicalWrite(t *testing.T) {
 	}
 }
 
+func TestHandoffRecordsDeferredWhenBudgetExhausted(t *testing.T) {
+	product := NewProduct()
+	before := product.Digest()
+	harness := NewHarness(product, "session-1")
+	first, err := harness.Handoff("最初の課題")
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := harness.Handoff("上限の後の課題")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if first.Deferred {
+		t.Fatal("the first handoff should be passed")
+	}
+	if !second.Deferred {
+		t.Fatal("the second handoff should be deferred")
+	}
+	if len(product.handoffs) != 2 || product.handoffs[0] != first || product.handoffs[1] != second {
+		t.Fatalf("handoffs not recorded: %+v", product.handoffs)
+	}
+	if product.Digest() != before {
+		t.Fatal("deferred handoff changed the canonical digest")
+	}
+}
+
 func TestSessionEndKeepsProductReadable(t *testing.T) {
 	product := NewProduct()
 	harness := NewHarness(product, "session-1")
