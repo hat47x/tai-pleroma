@@ -2,7 +2,7 @@
   "schema": "tai.reference.tei-capability-chain/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "3c8c4a2b2dcb91e37c2d184bebee7b5f8a9db958",
+  "teiCommit": "5a31d5ddbf5b2cef225cfe5fd1def976b74a0003",
   "chain": [
     "eki_task_submit",
     "eki_attempt_execute",
@@ -13,6 +13,14 @@
     "product_contracts.eki_attempt_execute",
     "product_contracts.eki_result_accept"
   ],
+  "effects": {
+    "product_contracts.eki_task_submit": "create product_contracts.attempt",
+    "product_contracts.eki_attempt_execute": "create product_contracts.result_claim",
+    "product_contracts.eki_result_accept": "create product_contracts.accepted_result",
+    "product_contracts.sui_document_put": "update product_contracts.document",
+    "product_contracts.sei_decision_record": "create product_contracts.decision",
+    "product_contracts.mmi_observation_select": "none"
+  },
   "publicationAllowed": false,
   "passed": true,
   "errors": []
