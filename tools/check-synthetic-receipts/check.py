@@ -79,6 +79,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-bwrap-linux-2026-11-01.json",
     "evaluations/records/TEI-EKI-live-2026-11-01.json",
     "evaluations/records/SUI-live-2026-11-01.json",
+    "evaluations/records/SEI-live-2026-11-01.json",
 )
 
 
