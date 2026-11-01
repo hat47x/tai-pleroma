@@ -23,6 +23,7 @@
 | SUI | 5 card/3 island/1 edge | [receipt](../evaluations/records/SUI-api-2026-10-26.json) |
 | D-04 AI review | `sufficient-for-development` | [receipt](../evaluations/records/SCN-001-ai-review-2026-10-29.json) |
 | EKI feasibility | `sufficient-for-feasibility`、Task実行なし | [receipt](../evaluations/records/SCN-001-eki-feasibility-2026-10-29.json) |
+| EKI 実行・受理 | TEST PROFILEでHTTP submit→Agent実行→ResultClaim→受理。検証は同一ホスト再実行 | [receipt](../evaluations/records/EKI-http-agent-2026-11-01.json) |
 | 合成フロー | 全コンポーネント接続済み | [receipt](../evaluations/records/SCN-001-synthetic-flow-2026-10-29.json) |
 | 公開gate | `allowed=false` | [receipt](../evaluations/records/SCN-001-publication-gate-2026-10-29.json) |
 
@@ -31,10 +32,11 @@
 - R-06（P-06の主体規模比較）とR-07（N-05のEKI委任）は`pending`。
 - 業務フローが一巡した後、人間レビューを行う。
 - 公開前に、実在の施設資料・権限者・独立レビューによる`post-synthetic-real-object`を行う。
-- EKIはControl Plane/Agent/Native Runnerのtest環境であり、Taskを実行するWorkerではない。
+- EKIはTEST PROFILEで実行・受理まで到達した。Worker Protocol、独立した検証主体、実Authorityは未確認であり、R-07（N-05のEKI委任）は`pending`のままとする。
 
 ## 境界
 
 - このpacketはOwner判断の入力であり、承認ではない。
 - 合成文書を実在の規程・権限の証拠として扱わない。
+- EKIの実行・受理はTEST PROFILEと合成検証であり、実在の業務処理・独立検証・公開承認ではない。
 - 公開・外部作用・予約実行は行わない。
