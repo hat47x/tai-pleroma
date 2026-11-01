@@ -57,4 +57,8 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 
 必要な拡張の案と受入試験は[TEI-GAP.md](TEI-GAP.md)に置きました。TEI側の設計判断を拘束しない提案です。
 
-その後、TEI側でspike（[PR #2489](https://github.com/hat47x/tei-platform/pull/2489)）が統合され、`std.text`の契約を`rounding`なしで記述し、`present`・`empty`・`missing`・`unresolved`の4ケースを区別して比較できることを確認しました。既存の`reference-generator-selection`はまだ文字列契約を扱えないため、段階2の本体は引き続き停止しています。
+その後、TEI側でspike（[PR #2489](https://github.com/hat47x/tei-platform/pull/2489)）が統合され、`std.text`の契約を`rounding`なしで記述し、`present`・`empty`・`missing`・`unresolved`の4ケースを区別して比較できることを確認しました。
+
+さらに、文字列投影を既存の`reference-generator-selection`へ取り込み（[PR #2520](https://github.com/hat47x/tei-platform/pull/2520)）、この作業領域の`candidates/text-identity`を選抜できることを確認しました。4ケースが一致し、`qualified=["text-identity"]`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-selection-2026-11-01.json)）。
+
+ただし、候補は手書きであり、契約から生成したものではありません。`tei-generator-build`のstrategyは引き続きmoney前提のため、**意味からの候補生成**は未達です。段階2は、契約の選抜まで到達し、生成で停止しています。
