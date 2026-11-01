@@ -51,10 +51,13 @@ CSWの[観点と最初の選定](../../../cultural-substrate-weaving/skills/cult
 
 ## 3. CSWへ戻した編集
 
-CSWの作業規則に従い、生成元と生成物を分けず、本文を直接編集しました。実行した編集は、次の二つです。
+CSWの作業規則に従い、生成元と生成物を分けず、本文を直接編集しました。実行した編集は、次の三つです。
 
 1. `skills/cultural-substrate-weaving/references/writing-techniques.md`に、節「六爻の変爻を、局面の転換として読む」を追加した。手順、井の九三から坎へ移る作例、注意を書いた。
 2. `skills/cultural-substrate-weaving/references/framework-selection.md`の易の行に、変爻を局面の転換として読む技法を追記した。
+3. `skills/cultural-substrate-weaving/SKILL.md`の技法の一覧に「変爻の局面転換」を加えた。
+
+2026-11-01に三つのファイルを読み直し、井の九三から坎への計算、坎の象「水洊至、習坎。君子以常德行、習教事」、注意書き、原典へのリンクを確認しました。CSWの`main`はcleanで、`dist/`は存在しないため、ZIPの確認は不要でした。
 
 編集の内容は、[CSWの差分](../../../cultural-substrate-weaving/)で確認できます。CSWの本文は、製品設計の方法論ではなく、執筆のための手つきとして書きました。製品名や製品の役割は、CSWの本文へ持ち込んでいません。
 
