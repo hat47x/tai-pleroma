@@ -2,11 +2,16 @@
   "schema": "tai.reference.tei-capability-chain/v0",
   "synthetic": true,
   "evidenceKind": "synthetic",
-  "teiCommit": "0399225c16e332f2aceb80d3ebe8ac1917700989",
+  "teiCommit": "3c8c4a2b2dcb91e37c2d184bebee7b5f8a9db958",
   "chain": [
     "eki_task_submit",
     "eki_attempt_execute",
     "eki_result_accept"
+  ],
+  "flowOrder": [
+    "product_contracts.eki_task_submit",
+    "product_contracts.eki_attempt_execute",
+    "product_contracts.eki_result_accept"
   ],
   "publicationAllowed": false,
   "passed": true,
