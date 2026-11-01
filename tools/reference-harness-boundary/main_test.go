@@ -112,3 +112,26 @@ func TestProviderEncounterIsRecordedWithoutCanonicalWrite(t *testing.T) {
 		t.Fatal("encounter changed the canonical digest")
 	}
 }
+
+func TestProviderExchangeIsRecordedAsEncounter(t *testing.T) {
+	product := NewProduct()
+	before := product.Digest()
+	harness := NewHarness(product, "session-1")
+	first, err := harness.Encounter(Provider{ID: "provider-a", Version: "v1"}, "最初の課題")
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := harness.Encounter(Provider{ID: "provider-b", Version: "v2"}, "交換後の課題")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(harness.encounters) != 2 || harness.encounters[0] != first || harness.encounters[1] != second {
+		t.Fatalf("encounters not recorded: %+v", harness.encounters)
+	}
+	if first.ProviderID == second.ProviderID {
+		t.Fatal("the exchange should change the provider")
+	}
+	if product.Digest() != before {
+		t.Fatal("provider exchange changed the canonical digest")
+	}
+}

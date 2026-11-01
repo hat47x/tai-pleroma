@@ -23,6 +23,7 @@ type Receipt struct {
 	HandoffRecorded       bool     `json:"handoffRecorded"`
 	DeferredRecorded      bool     `json:"deferredRecorded"`
 	ProviderRecorded      bool     `json:"providerRecorded"`
+	ProviderExchanged     bool     `json:"providerExchanged"`
 	SessionEnded          bool     `json:"sessionEnded"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -183,6 +184,7 @@ func Run() Receipt {
 			"ハーネスはセッションと受け渡しの記録を持ち、製品の正本を持たない。",
 			"文脈の上限の後は、渡せなかったものを保留として記録する。",
 			"提供元のIDと版を記録し、提供元を正本にしない。",
+			"提供元の交換は、別の遭遇として記録する。",
 		},
 	}
 	product := NewProduct()
@@ -203,6 +205,10 @@ func Run() Receipt {
 	encounter, encounterErr := harness.Encounter(Provider{ID: "provider-a", Version: "v1"}, "課題を処理する")
 	receipt.ProviderRecorded = encounterErr == nil && len(harness.encounters) == 1 && harness.encounters[0] == encounter
 
+	exchanged, exchangeErr := harness.Encounter(Provider{ID: "provider-b", Version: "v2"}, "課題を処理する")
+	receipt.ProviderExchanged = exchangeErr == nil && len(harness.encounters) == 2 &&
+		harness.encounters[1] == exchanged && exchanged.ProviderID != encounter.ProviderID
+
 	after := product.Digest()
 	receipt.CanonicalUnchanged = before == after
 
@@ -211,7 +217,8 @@ func Run() Receipt {
 	receipt.SessionEnded = readErr == nil
 
 	receipt.Passed = receipt.ReadOnly && receipt.WriteDenied && receipt.CanonicalUnchanged &&
-		receipt.HandoffRecorded && receipt.DeferredRecorded && receipt.ProviderRecorded && receipt.SessionEnded
+		receipt.HandoffRecorded && receipt.DeferredRecorded && receipt.ProviderRecorded &&
+		receipt.ProviderExchanged && receipt.SessionEnded
 	return receipt
 }
 
