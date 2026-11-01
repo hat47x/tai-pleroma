@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.tei-assembler/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "98b0e68e12477c97e7ba9afbbf4e55a85426dba7",
+  "host": "Windows with Python 3.12 and Go 1.27.3",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract <TAI>/integrations/pilot-sui-document/candidates/card-record/contract.json -strategy text-record-template -out <tmp> && go run ./tools/reference-generator-selection/cmd/tei-generator-select ... && cd <TAI>/integrations/pilot-sui-document/assembler && python -m unittest -v",
+  "result": "PASS",
+  "observed": {
+    "cardContract": "sui.card.record","cardVersion": "2",
+    "cardFields": ["cardId", "documentId", "text"],
+    "cardSourceDigest": "sha256:2bd8bc6f6242ccd4adc04d26caf909dbc0e4fbc243444d94e7bf0f5641c003ee",
+    "cardCases": 4,
+    "cardQualified": "text-record-template",
+    "assemblerTests": 6,
+    "assemblerPassed": 6,
+    "assembledFrom": ["sui.document.record", "sui.card.record", "sui.island.record", "sui.edge.record"]
+  },
+  "scope": "An application-side composition module that joins the four flat projection records and rejects cross-document or dangling references. Tests use inline synthetic records. It does not generate SUI code, run a real target, or show human acceptance."
+}
