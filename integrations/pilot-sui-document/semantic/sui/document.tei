@@ -1,0 +1,25 @@
+namespace sui
+
+data Document {
+    attribute documentId type std.identifier
+    attribute title type std.text
+    attribute digest type std.text
+}
+
+data Card {
+    attribute cardId type std.identifier
+    attribute documentId type std.identifier
+    attribute text type std.text
+}
+
+data Island {
+    attribute islandId type std.identifier
+    attribute documentId type std.identifier
+}
+
+data Edge {
+    attribute edgeId type std.identifier
+    attribute fromCard type std.identifier
+    attribute toCard type std.identifier
+    attribute relation type std.code
+}
