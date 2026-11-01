@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.card.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {"text": " hello ", "documentId": "doc-1"},
+      "want": {"state": "present", "text": "{\"documentId\":\"doc-1\",\"text\":\" hello \"}"}
+    },
+    {
+      "id": "empty-text",
+      "input": {"text": "", "documentId": "doc-1"},
+      "want": {"state": "present", "text": "{\"documentId\":\"doc-1\",\"text\":\"\"}"}
+    },
+    {
+      "id": "missing-text",
+      "input": {"documentId": "doc-1"},
+      "want": {"state": "missing", "text": "[\"text\"]"}
+    },
+    {
+      "id": "unresolved-text",
+      "input": {"text": null, "documentId": "doc-1"},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}
