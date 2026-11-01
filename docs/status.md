@@ -1,12 +1,32 @@
 # TAI Pleromaの現在状態
 
-更新日: 2026-10-28。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
+更新日: 2026-11-01。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
 
 ## 要約
 
 SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、SUIのcard/island/edge、TEIの型検証、EKIのTask admission/cancel、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
 
 Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`development-review-only`の仮承認でCP-3まで進めている。R-01〜R-05は合成文書でdevelopment review accepted。**公開・外部作用は未承認**であり、公開用の実物レビューを合成後の工程として残す。
+
+## 実接続の証拠（2026-11-01）
+
+次のreceiptは`synthetic=false`かつ`evidenceKind=real-execution`で、受入済みの合成receiptとは別に保持している。いずれも`publicationAllowed=false`である。
+
+| 基盤 | 実実行の内容 | receipt |
+| --- | --- | --- |
+| EKI | Linuxの`conformance/process`、bwrap sandbox 5件、executor承認のdigest形式検証 | [process](../evaluations/records/EKI-linux-process-2026-11-01.json)、[bwrap](../evaluations/records/EKI-bwrap-linux-2026-11-01.json) |
+| TEI | EKI Control APIへの`POST /v1/tasks`（202）、replay、problem+json、409 conflict | [live](../evaluations/records/TEI-EKI-live-2026-11-01.json) |
+| SUI | ローカル起動の`/healthz`・OpenAPI・合成documentのPUT/GET | [live](../evaluations/records/SUI-live-2026-11-01.json) |
+| SEI | SEIチェックアウトに対する`TestSCN001DecisionMemoryProjection`と`TestValidityThroughSEIVerify` | [live](../evaluations/records/SEI-live-2026-11-01.json) |
+| MMI | 依存導入したCLIでfixture xlsxを`inspect --json` | [live](../evaluations/records/MMI-live-2026-11-01.json) |
+
+これらが示すのは、各基盤の**その版・そのfixture・そのホスト**での観測である。実データ、実権限、独立した検証主体、公開承認を示すものではない。
+
+未接続として残るもの:
+
+- EKIの`HTTP submit → dispatch → Agent execute → ResultClaim`は、Agentの実行まで到達したがClaim配信が完了していない（[eki-fabric #374](https://github.com/hat47x/eki-fabric/issues/374)）。
+- SUIは合成documentであり、SCN-001の実資料・テナント・認可は未検証である。
+- MMIの候補は`inferred`であり、意味の受理ではない。
 
 ## 実装と証拠
 
