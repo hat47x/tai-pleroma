@@ -321,3 +321,57 @@ A2/B1により、情報の可用性と独立検証の増分を区別し、完全
 **縮退の扱い**：検証済みの能力を外部Harnessが同等以上に提供するなら、まず重複した探索/表示/判断補助/接続のコードを減らす。各製品の原記録・Authority・プロセス隔離・検証Oracleを、比較結果なしに一括撤去しない。利用者の意図の実現、人への不要な確認/通知、情報の露出、導入・更新の負担を別の受入列に保持する。
 
 本節のうちSW-01 S1、EKI合成Acceptance、資源制限、TEI HTTP受入は**既存mainに記録された限定実測**。A2/B1/D1、SW-01-TARGET、合成正例、同一案件のTEI→EKI→AcceptedResult連結は**設計案・NOT RUN**。本Draft自体のコード実行/CI・Owner意味受理・Production Authorityは未実施。
+
+## 16. 2026-11-01：時間付き対象Bindingと同一案件の因果証拠（横断補足／未受理）
+
+**位置付け**：TEI [#1119のS/T/V/E対象・UI時間join](https://github.com/hat47x/tei-platform/issues/1119#issuecomment-6552307103)、[#1124の対象Binding時点](https://github.com/hat47x/tei-platform/issues/1124#issuecomment-6552461423)、[#1121の同一Task接合P1-JE-1](https://github.com/hat47x/tei-platform/issues/1121#issuecomment-6552456611)、[#1130のcancel/Artifact/Batch区別](https://github.com/hat47x/tei-platform/issues/1130#issuecomment-6552459821)、EKI既存#263/#320を、TAIの**活動の継続性と成果の説明可能性**へ適用するための評価方針。以下の新しい対照は設計案/NOT RUN。既存Issueが持つOracle、実Provider・Worker・UIの試験をTAIで再実装しない。
+
+### 16.1 対象を確定する時点は業務意味の一部
+
+非同期活動では、同じ`OperationID`、同じ画面表示、同じ文言でも、利用対象は以下の時点で変わり得る。
+
+| 時点（説明用） | 実際に確認すべきこと | 単独では言えないこと |
+| --- | --- | --- |
+| `tSelect` | UI選択主体、表示/入力snapshot、選択ID・selection epoch | 将来実行すべき対象と確定している |
+| `tSubmit` | 送信時の要求・対象/条件・revisionと入力がどれか | Commandが適切な対象で受理/Commitされた |
+| `tResolve` | Providerが条件を解決した実対象集合と根拠の時点・scope | Ownerがその時点の再解決を許容した |
+| `tCommit` | 認可・対象版条件・OperationID・実Effect/Receipt | Business Outcomeや外部先の副作用が全部確定した |
+| `tObserve` | 独立read/Result/人間が受け取る現在表示の対象・版 | そのObservationが全件の成功/Owner意味受理を示す |
+
+**二つの対照はどちらも業務意味次第**：
+- **Fixed set**：選択時の`S={A,B}`を確定するActionで`T={A,C}`へ変化したら、選択対象からの逸脱を疑う。
+- **Late-bound predicate**：Ownerが「実行時に条件Pを満たす集合を対象」と受理していれば、`S={A,B}`→`T={A,C}`自体は直ちに誤りでない。ただしPの適用時点、取得完全性、対象への認可、実Effect集合/一部成功は別の確認が要る。
+
+AIが二つを同じ汎用Ruleで処理すると、**誤処理**または**不必要な保留**が生じ得る。TAIは選択内容・現在の意図・出所・不明点を必要最小限で受け渡し、対象確定規則はTEI/実業務Ownerの受理に従う。UIのA→B編集中に遅れたAの応答が返った場合も、UIに表示する対象と実際に確定した要求の対象を混同しない。TEI [#1000](https://github.com/hat47x/tei-platform/issues/1000)の既存試験票へ委譲する。
+
+### 16.2 「一つの活動が継続した」の主張を、根拠の届く段階までに限定
+
+活動の連続性を`source → decision → intent → submission → attempt → claim → acceptance → effect → outcome`という**例示の照合順**で考える。これをCoreの必須状態機械や製品間の共有Schemaにはしない。read-only探索には`effect`を強制せず、合成Taskに業務Owner完了を要求しない。
+
+- **意味のつながり**：原資料・版・対象・用途がDecisionのBasisにどう結び付いたか。歴史的レビューと現行適用は別。
+- **要求と実行のつながり**：TEI BindingとEKI Task IDを、同一submit時点の入力digest/Scopeに対応させる。Compositionの`ActivationOrder`（merged #2452）はProvider依存の構造順で、Workerの実時間順ではない。HTTP 202/Task IDは受付の証拠。
+- **Workerと結果のつながり**：EKIの同一Task ID→Attempt/Lease/Fence/WorkOrder→ResultClaim→Verification/AcceptedResultと、必要な場合の実成果物bytes。別TaskのAcceptedResultや単なるdigestの一致は引渡し完了としない。正本は[TEI #1121 P1-JE-1](https://github.com/hat47x/tei-platform/issues/1121#issuecomment-6552456611)、EKI [#320](https://github.com/hat47x/eki-fabric/issues/320)。
+- **実外部効果とのつながり**：業務更新を伴うときは、EKIのResult Acceptanceを[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)のDB/Provider Effect・ReceiptやOwner必要結果集合へ昇格させない。ACK-loss後は、同Scope/OperationID/RequestHashのLookupと再Executeを区別する。
+
+これらをつなぐ際に、**どの辺まで既存recordが同一の版・対象・操作を証明するか**を明記する。非連結部分は未確認のまま返し、「Taskを受けた」「Workerが返した」「業務が完了した」を一語の`done`へ畳み込まない。
+
+### 16.3 反証は少数の対だけを、既存担当の試験へ渡す
+
+| 例 | 既存試験へ返す問い | TAIで見る利用者価値 |
+| --- | --- | --- |
+| **BIND-F/L**：固定選択と実行時条件解決を同じ`S→T`差分で比べる | TEI #1124/#1127：Ownerが採用した対象決定規則・時点の違いにより適用判断は変わるか | AIが過度に停止せず、意図しない対象への適用も回避するか |
+| **JOIN-P/N**：同一TaskのJ1→J3と、別TaskのAcceptedResultを混ぜた場合 | TEI #1121 P1-JE-1、EKI #57/#242/#243：Task/Attempt/Fence/Claim/Resultを同一試行として復元できるか | 「着手」から「完了」へ説明を進める際の見かけの成功を抑えるか |
+| **CANCEL/ART**：cancel intentと実停止、Output digestと実bytes取得を別々に扱う | EKI #263/#320：中止・終端・結果の保存とDeliveryの差 | 再送・通知・人の次作業を誤らせず、必要以上の確認を増やさないか |
+| **RESTART/RETRY**：Service Reconcileの再起動とBusiness Action再試行の違い | TEI #2020/#1130：merged #2450のsuperviseは`Reconcile`へContextを渡さず、cancelの境界がまだ限定的 | 再起動報告だけで不可逆処理の安全な再送を示唆しないか |
+
+**最小の横断受入票**（共有実装/Schemaではなく一時の比較記録）：`purpose / actual target-binding rule & time / source revision & scope / submitted operation & authority boundary / observed attempt & result / proof endpoint / unresolved / user burden`。この値を既存recordから求められなければ`unknown`とする。高価な全件Oracleを一律義務にせず、Ownerの業務意味とProviderが本当に保証する範囲で照合する。
+
+### 16.4 開発優先度を増やさず、観測があるところから縮退を判断する
+
+- **最初**：SW-01 A2/B1およびS1-P/Nの厳密な比較を継続し、同じ情報で検証器がもたらす増分を測る。SEI/SHOの元の原典検証とOwner受理は独立。
+- **並行の既存Owner作業**：TEI/EKIのP1-JE-1で一件の合成read-only Taskが`Submit→AcceptedResult`へ至る証拠を実測する。未観測の段階をTAIが成功扱いしない。P0-a実PG／P0-b二Functionの優先順を変えない。
+- **後段**：必要なActivityだけにBIND-F/L、CANCEL/ART、RESTART/RETRYを参照する。探索・創作での途中仮説やSUIカード配置に、業務実行向けの新Gateを強制しない。
+
+**縮退の評価を二方向にする**：同じ結果なら「検査を追加する費用・質問・導入負荷を取り除く」だけでなく、「**不要な停止・重複確認を減らして活動を前進させる**」ことも価値とする。低リスクで可逆な下書き/準備、現行権限のある作用、結果不明の不可逆作用では、必要な確かさと許容される行動が異なる。本人の生活の余白、組織の少数意見、受理前の創造的探索を単一のタスク完了率へ還元しない。
+
+**実証範囲**：この節は2026-11-01の既存GitHub実装・Issue/合成recordへの**設計反映**。BIND-F/L、JOIN-P/N、CANCEL/ART、RESTART/RETRYは新規NOT RUN。#2450/#2452/TEI HTTP受入およびEKIの別合成AcceptedResultは各々固有の合成/実コード観測であり、同一Business Actionの通し・再送・Commitを証明したものではない。正式な業務意味、Target Binding Rule、部分完了、現実の委任・実効果はOwner判断待ち。
