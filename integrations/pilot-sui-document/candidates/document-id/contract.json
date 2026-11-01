@@ -1,0 +1,19 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "sui.card.document_id",
+  "version": "1",
+  "status": "reference-local",
+  "note": "SUIのcardが属するdocumentの識別子を投影する参照用の契約。製品の受理済み契約ではない。",
+  "inputs": [
+    {
+      "attribute": "sui.card.document_id",
+      "primitive": "std.identifier"
+    }
+  ],
+  "output": {
+    "primitive": "std.identifier"
+  },
+  "projection": {
+    "kind": "identity"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-multi-attribute/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "2197baaedbde178a042a280ea1bd1d534617bfc7",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract <TAI>/integrations/pilot-sui-document/candidates/document-id/contract.json -strategy text-template -out <tmp>/text-template && go run ./tools/reference-generator-selection/cmd/tei-generator-select -workspace <TAI>/integrations/pilot-sui-document -contract <TAI>/integrations/pilot-sui-document/candidates/document-id/contract.json -fixtures <TAI>/integrations/pilot-sui-document/candidates/document-id/fixtures.json -candidates <tmp>",
+  "result": "PASS",
+  "observed": {
+    "contracts": ["sui.card.text", "sui.card.document_id"],
+    "attributeCount": 2,
+    "generatedSourceDigest": "sha256:cdb437c35b9e5ed234afeea831cb237e7a1c8eab9788ad2a66625b8a1ea44ef7",
+    "cases": 4,
+    "passedCases": 4,
+    "qualified": ["text-template"]
+  },
+  "scope": "Two separate text projection contracts (card text and card document id) generated with text-template and selected against four fixtures each. It does not produce a single record-level artifact, SUI code, a real target, or human acceptance."
+}
