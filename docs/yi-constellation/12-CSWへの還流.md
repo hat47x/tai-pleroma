@@ -51,7 +51,7 @@ CSWの[観点と最初の選定](../../../cultural-substrate-weaving/skills/cult
 
 ## 3. CSWへ戻した編集
 
-CSWの作業規則に従い、生成元と生成物を分けず、本文を直接編集しました。実行した編集は、次の六つです。
+CSWの作業規則に従い、生成元と生成物を分けず、本文を直接編集しました。実行した編集は、次の七つです。
 
 1. `skills/cultural-substrate-weaving/references/writing-techniques.md`に、節「六爻の変爻を、局面の転換として読む」を追加した。手順、井の九三から坎へ移る作例、注意を書いた。
 2. `skills/cultural-substrate-weaving/references/framework-selection.md`の易の行に、変爻を局面の転換として読む技法を追記した。
@@ -59,6 +59,7 @@ CSWの作業規則に従い、生成元と生成物を分けず、本文を直�
 4. `skills/cultural-substrate-weaving/references/writing-techniques.md`に、節「価値の交差：製品やサービスの価値を、第二の体系で読み直す」を追加した。華厳の全体とマンダラの中心を、製品の価値へ当てる手順と作例を書いた。`framework-selection.md`の華厳の節にも、価値の読みへの適用を一行添えた。
 5. `skills/cultural-substrate-weaving/references/writing-techniques.md`に、節「価値の生剋：五つの働きで、価値の巡りと毒を読む」を追加した。五行を製品の五分類に使わず、養う関係と抑える関係の問いとして使う手順を書いた。`framework-selection.md`の五行の節にも、価値の読みへの適用を一行添えた。
 6. `skills/cultural-substrate-weaving/references/writing-techniques.md`に、節「経験の味わい：状況、表れ、移ろいから、製品の経験を読む」を追加した。ラサ論を製品の経験へ当てる手順と作例を書いた。`framework-selection.md`のラサ論の節にも、製品の経験への適用を一行添えた。
+7. `skills/cultural-substrate-weaving/references/writing-techniques.md`に、節「場と身体の価値：五大で、製品の場所を読む」を追加した。五大を製品の五分類に使わず、場の質と構えの問いとして使う手順と作例を書いた。`framework-selection.md`の五大の節にも、製品の場への適用を一行添えた。
 
 2026-11-01に三つのファイルを読み直し、井の九三から坎への計算、坎の象「水洊至、習坎。君子以常德行、習教事」、注意書き、原典へのリンクを確認しました。価値の交差の節では、第二の体系を製品の分類に使わず、価値の主語を変える操作として書きました。CSWの`main`はcleanで、`dist/`は存在しないため、ZIPの確認は不要でした。
 
