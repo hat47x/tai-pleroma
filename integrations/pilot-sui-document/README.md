@@ -167,6 +167,18 @@ sui.edge.record:   edgeId, fromCard, toCard, relation
 
 Edgeのfrom/toは、入れ子の参照ではなく識別子の組（`fromCard`、`toCard`）としてflatなrecordに置きました。
 
+### Document本体のrecord（2026-11-02）
+
+`candidates/document-record/`に、Documentの`documentId`・`title`・`digest`を投影する契約を追加しました。
+
+```text
+sui.document.record: documentId, title, digest
+```
+
+4ケースが一致し、`qualified=["text-record-template"]`、`passed=true`、one-shot実行も`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-document-record-2026-11-02.json)）。
+
+Documentは、Document・Card・Island・Edgeの4つのflat recordをアプリケーション側で合成する形です。入れ子のDocument契約は作っていません。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。

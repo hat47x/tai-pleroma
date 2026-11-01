@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.document.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {"documentId": "doc-1", "title": "Notes", "digest": "sha256:abc"},
+      "want": {"state": "present", "text": "{\"digest\":\"sha256:abc\",\"documentId\":\"doc-1\",\"title\":\"Notes\"}"}
+    },
+    {
+      "id": "empty-title",
+      "input": {"documentId": "doc-1", "title": "", "digest": "sha256:abc"},
+      "want": {"state": "present", "text": "{\"digest\":\"sha256:abc\",\"documentId\":\"doc-1\",\"title\":\"\"}"}
+    },
+    {
+      "id": "missing-digest",
+      "input": {"documentId": "doc-1", "title": "Notes"},
+      "want": {"state": "missing", "text": "[\"digest\"]"}
+    },
+    {
+      "id": "unresolved-title",
+      "input": {"documentId": "doc-1", "title": null, "digest": "sha256:abc"},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}
