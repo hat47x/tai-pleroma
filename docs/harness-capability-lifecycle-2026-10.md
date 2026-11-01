@@ -252,11 +252,11 @@ go run . -workspace testdata/workspace -mmi-root ../../../markdown-matrix-inject
 
 TAIの増分価値は**利用者の一つの活動が、根拠の適合性、行為の可否、結果の確実性の三つを混同せず前進すること**である。これには、外部Harnessと独立したSEIの原記録・TEIの意味/Provider検証・SHOのSource参照・EKIの信頼条件/Result観測を必要時に利用すればよい。新しい共通状態正本/汎用Orchestrator/一括Grant Engineを前提にしない。
 
-## 13. 既存EKI実証の進展を正確に受け取る（2026-10-31）
+## 13. 2026-10-31初期のEKI実証（歴史的snapshot：現在の到達点は§15.2）
 
-TAI mainに [合成EKI固定コマンド実行のrecord](https://github.com/hat47x/tai-pleroma/blob/ecc34ebcd1e0546fc512c5966c6ba693434481fa/evaluations/records/EKI-execution-2026-10-31.json) が追加された。記録が示す範囲は **別OS processのControl/Agentで固定コマンド実行→ResultClaim送信→Attempt `verifying`** まで。 `executionStatus=completed` でも `resultVerified=false`、`resultAccepted=false`、`taskResultAccepted=false`、`sandbox=false`、`resourceLimitsEnforced=false` である。この観測を旧「queuedのみ」へ戻してはいけない一方、外部作業の受理・安全な未信頼Task実行・ビジネス効果が成立したと主張してもいけない。正式な結果検証はEKI側責務のまま。
+2026-10-31当時のTAI mainに [合成EKI固定コマンド実行のrecord](https://github.com/hat47x/tai-pleroma/blob/ecc34ebcd1e0546fc512c5966c6ba693434481fa/evaluations/records/EKI-execution-2026-10-31.json) が追加された。記録が示す範囲は **別OS processのControl/Agentで固定コマンド実行→ResultClaim送信→Attempt `verifying`** まで。 `executionStatus=completed` でも `resultVerified=false`、`resultAccepted=false`、`taskResultAccepted=false`、`sandbox=false`、`resourceLimitsEnforced=false` である。この記録は当初のverifying段階の歴史的観測である。**その後の別合成fixtureでのRA-2 Result AcceptanceとRuntime制限の進展は§15.2参照**。先行recordが更新されたわけではなく、別の対象・時点の証拠を連結済みとみなさない。正式な結果検証はEKI側責務のまま。
 
-| 境界 | 最新TAI参照証拠 | 対応する未実証 |
+| 境界 | 当時のTAI参照証拠 | 当時の未実証・継続課題 |
 | --- | --- | --- |
 | Dispatch / Execute | 合成固定commandの別process実行が記録済み | 任意Task入力、sandbox/Resource制御、ProductionのOwner委任 |
 | ResultClaim / Verify | Claim送信まで観測、Attemptはverifying | Result VerificationとAcceptance、独立Output/Effect照合 |
@@ -275,7 +275,7 @@ TAI mainに [合成EKI固定コマンド実行のrecord](https://github.com/hat4
 | EV-3 副作用 | 有効委任、mock Submit、ACK喪失、二重実行、独立lookup | 不正作用・結果不明の扱い・照会回数 | queued/ClaimをAcceptedに昇格、権限失効後の作用、二重効果 |
 | EV-4 本人/組織への価値 | 個人の休息・創作/買い物、企業の遅延/負担転嫁を同時評価 | 意図実現、不要な質問・承認・費用、犠牲となった別目的 | 完了率のみでQoL/組織利益を宣言、負担を他部署へ転嫁 |
 
-**開始順序**：SW-01（既存#33の原記録・SEI/SHOのread-only比較）を先行。EV-2はTEI #2390/#2392の外部Consumer実証を参照し**別Oracleを作らない**。EV-3はEKI/TEI担当の既存Result・Effect Gateが利用可能になってからmockのみ。EV-4は#165/#166/#167とSEI #677の合成ケースへ接続。各Gateは他のGateの成功を意味しない。
+**開始順序**：SW-01（既存#33の原記録・SEI/SHOのread-only比較）を先行。S1限定比較の実測後は§15.1のA2/B1を優先し、初回Aを再実施するだけの試験を増やさない。EV-2はTEI #2390/#2392の外部Consumer実証を参照し**別Oracleを作らない**。EV-3はEKI/TEI担当の既存Result・Effect Gateが利用可能になってからmockのみ。EV-4は#165/#166/#167とSEI #677の合成ケースへ接続。各Gateは他のGateの成功を意味しない。
 
 ### 14.2 本当に縮退可能であるための判定
 
