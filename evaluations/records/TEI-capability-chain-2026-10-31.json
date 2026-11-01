@@ -42,6 +42,15 @@
       "MMIObservationSelect"
     ]
   },
+  "httpBinding": {
+    "method": "POST",
+    "path": "/v1/tasks",
+    "idempotencyHeader": "Idempotency-Key",
+    "successStatus": 202,
+    "errorFormat": "application/problem+json",
+    "liveCallExecuted": false,
+    "testedWith": "httptest"
+  },
   "publicationAllowed": false,
   "passed": true,
   "errors": []
