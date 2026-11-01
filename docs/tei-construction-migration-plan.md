@@ -76,7 +76,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | 0 | 本計画のレビューと、パイロット範囲・測定方法の確定 | Ownerまたは担当者の合意 |
 | 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
 | 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行まで到達。属性単位（text/document_id）とCard record（text+documentId）を選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)）。Island/Edgeは未達 |
-| 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。TEI経路は遅く、生産性向上は未確認。人の作業時間・長期保守は未測定 |
+| 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。生産性は完成後に評価する（仮決定）。人の作業時間・長期保守はPoC中には測らない |
 | 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
 
 各段階は小さなPRとreceiptで記録します。段階2で生成できない場合は、TEI側の不足としてIssueへ戻し、下流のプロダクトへ回避実装を足しません。
@@ -91,16 +91,23 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 
 示せていないこと:
 
-- 複数属性を1つのrecordとして投影する契約。
-- 現行SUIとの比較（評価集合と変更課題が未定）。
+- Island/Edgeの投影と、SUIの実装コードの生成。
 - 実機・実OS・実配備、人の受理、意味の正しさ。
-- 生成AIの生産性・自律性の向上（測ったのはツール工程だけ）。
+- 生成AIの生産性・自律性の向上（PoC中は評価せず、完成後に評価する）。
 
 判断の選択肢:
 
-1. パイロットをrecord全体へ広げる。
-2. 比較測定の評価集合と変更課題を先に固定する。
-3. ここで止め、TEI側の統合モデラー整備を待つ。
+1. パイロットをIsland/Edgeへ広げる。
+2. 実環境に近いTarget Profileへ進む。
+3. TEI側の統合モデラー整備を待つ。
+
+### 評価の位置づけ（2026-11-02、仮決定）
+
+本開発はPoCであり、生産性の評価はプロダクト完成後に行います。PoC中に中間評価を人への判断材料として出しません。細部の判断は完成後でないと困難なため、ここでは仮決定として置き、必要になった時点で見直します。
+
+`measure_workflow.py`とT1比較のreceiptは、生成AIが自分の進め方を振り返り、次の作業を選ぶための材料です。人による受入判定、生産性の評価、自律性の証明には使いません。
+
+したがって「生産性が未確認」は未達項目ではなく、現段階では評価しない項目として扱います。
 
 ## 8. 停止条件・非目標
 
