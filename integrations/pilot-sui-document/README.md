@@ -112,4 +112,28 @@ python integrations/pilot-sui-document/measure_workflow.py \
 
 receipt: [SUI-TEI-workflow-2026-11-02.json](../../evaluations/records/SUI-TEI-workflow-2026-11-02.json)
 
-これはツール工程の時間・試行回数・介入回数の記録であり、生産性や自律性の証明ではありません。比較対象（現行SUIの手作業）と評価集合はまだ定めていません。
+これはツール工程の時間・試行回数・介入回数の記録であり、生産性や自律性の証明ではありません。
+
+## 比較測定（T1、2026-11-02）
+
+評価集合を1課題に固定しました。
+
+```text
+T1: 投影の種別を normalize（前後空白の除去）から identity へ変える
+契約: sui.card.text
+fixture: present / empty / missing / unresolved の4ケース
+```
+
+`compare_workflow.py`で、TEI経路と、手書き候補を直接編集する経路を同じfixtureで実行しました。
+
+| 項目 | TEI経路 | 手書き経路 |
+| --- | --- | --- |
+| 結果 | PASS | PASS |
+| 経過時間 | 3500ms | 1485ms |
+| 契約の変更行 | 2 | - |
+| ソースの変更行 | - | 3 |
+| fixtureの変更行 | 2 | 2 |
+
+receipt: [SUI-TEI-compare-2026-11-02.json](../../evaluations/records/SUI-TEI-compare-2026-11-02.json)
+
+**この比較は生産性の向上を示しません。** 両経路とも同じエージェントが同じセッションで作成しており、TEI経路は再生成の分だけ遅い結果です。示せたのは、TEI経路では契約とfixtureが変更面になり、同じ4ケースで両経路を検証できることです。人の作業時間、学習曲線、長期保守は測っていません。
