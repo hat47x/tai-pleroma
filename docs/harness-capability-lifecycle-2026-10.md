@@ -436,3 +436,9 @@ EKI [#351／merged #366](https://github.com/hat47x/eki-fabric/issues/351)ではW
 **縮退の判断**：AIが情報整理・要約を自力で行えるようになれば表示/通知Adapterを減らせる。一方で、現在の利用範囲、読取り資格、同一案件の因果、効果の未確定を正しく表せるかは、外部Harnessの実能力に照らして評価する。新版の製品やfixtureの実測を既存履歴から区別し、CSW/SUIの自由な探索を実行向けGateへ従属させない。
 
 状態：参照したmerged PR、TAI #163の保存再検証、EKI process/資源試験は**各担当の限定実証**。VIEW/HISTORY/RECEIPT/ENVのTAI横断試験・実ハーネス製品交換・実Authority・Owner意味受理・実世界効果は**未実施／未受理**。
+
+### 18.4 TEIで意味を表現できることと、Target生成が成立することの差
+
+[TAIのSUI DocumentV1パイロット](https://github.com/hat47x/tai-pleroma/blob/main/integrations/pilot-sui-document/README.md)では、Document/Card/Island/Edgeの意味モデルは`tei validate`で確認できた。一方、従来の数値生成契約はWorkspace属性不一致で拒否され、`std.text`の試行はrounding前提で拒否された（[TEI #2488](https://github.com/hat47x/tei-platform/issues/2488)）。その後、[merged spike #2489](https://github.com/hat47x/tei-platform/pull/2489)で文字列のpresent/empty/missing/unresolvedを比較できたが、現行の製品Generator Selectionがrecord/string出力に対応したという実証ではない。段階2の実生成は停止中。
+
+**横断的な能力選択の含意**：`model-valid`／`contract-expressible`／`generator-supported`／`artifact-verified`／`host-executed`／`owner-accepted`を一つのready状態へ統合しない。外部Harnessが別コード生成を補助する場合も、その成果物がTEIの正式Generator/Selectorを通ったと扱わず、独立した候補・出典/版・検査証拠を残す。未対応が見つかったときは適切な段階で止め、TEI側の既存Issueに要求を返す。TAIに同じrecord/string Generatorを別実装しない。
