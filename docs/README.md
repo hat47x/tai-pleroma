@@ -11,3 +11,8 @@
 ## 上流の整合
 
 - [SCN-001「実行→検証→受理」の三視点整合](scn001-three-view-alignment.md)
+
+## 上流の整合
+
+- [SCN-001「実行→検証→受理」の三視点整合](scn001-three-view-alignment.md)
+- [TEIによるプロダクト構築への移行 — フィージビリティ検証計画](tei-construction-migration-plan.md)
