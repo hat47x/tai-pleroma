@@ -75,7 +75,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | 0 | 本計画のレビューと、パイロット範囲・測定方法の確定 | Ownerまたは担当者の合意 |
 | 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
-| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 生成物と試験結果。文字列契約はspikeで4ケースPASSしたが、既存ツールは未対応のため停止中（[#2488](https://github.com/hat47x/tei-platform/issues/2488)、[spike receipt](../evaluations/records/SUI-TEI-generation-spike-2026-11-01.json)） |
+| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 文字列契約の選抜は到達（[selection receipt](../evaluations/records/SUI-TEI-selection-2026-11-01.json)）。候補は手書きで、契約からの生成は未達（[#2488](https://github.com/hat47x/tei-platform/issues/2488)） |
 | 3 | 現行実装との比較測定とreceipt化 | 測定結果と再現手順 |
 | 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
 
