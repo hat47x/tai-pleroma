@@ -61,4 +61,6 @@ go run ./cmd/tei source-index -workspace <TAI>/integrations/pilot-sui-document -
 
 さらに、文字列投影を既存の`reference-generator-selection`へ取り込み（[PR #2520](https://github.com/hat47x/tei-platform/pull/2520)）、この作業領域の`candidates/text-identity`を選抜できることを確認しました。4ケースが一致し、`qualified=["text-identity"]`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-selection-2026-11-01.json)）。
 
-ただし、候補は手書きであり、契約から生成したものではありません。`tei-generator-build`のstrategyは引き続きmoney前提のため、**意味からの候補生成**は未達です。段階2は、契約の選抜まで到達し、生成で停止しています。
+続いて、`text-template`戦略を追加し（[PR #2524](https://github.com/hat47x/tei-platform/pull/2524)）、同じ契約から候補を**生成**して選抜しました。4ケースが一致し、`qualified=["text-template"]`、`passed=true`です（[receipt](../../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)）。
+
+これで「意味（TEIの契約）→生成器→候補→適合fixtureによる選抜」の最小経路が、文字列投影の1属性で通りました。ただし、生成したのは投影の候補であり、SUIの実装コードでも実行可能な画面・APIでもありません。段階2は最小経路まで到達し、複数属性・record全体・Target Profileが残っています。
