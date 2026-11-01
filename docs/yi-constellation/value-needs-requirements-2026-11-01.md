@@ -112,6 +112,9 @@
 | YI-CAND-18 | 不可逆/高影響のAction、探索的な提案、低影響のread-only操作に、用途別の確認・観測を適用できる | Owner方針／Host/Provider／EKI | 全用途を同じ承認回数にし、誤作動または過剰停止 |
 | YI-CAND-19 | 機密性の高い運用で、SEI/SUI等の生データをOS/実Hostの強制境界内に保持し、外部Harness・別Productへ許可済みの用途限定Projectionのみ開示できる | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／SUI・SEI Source Owner／TEI Host／EKI Sandbox | MCPでは伏せたが同じOSユーザーのShell/別Portで生データを取得／Cloud推論へ平文を送信 |
 
+| YI-CAND-20 | 安価な大量推論を使い、異なる業務・情報構造・実装・検証案を幅広く並列探索し、製品Ownerが検証できる独立成果の数と質を改善できる | [TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)／[TEI #2493](https://github.com/hat47x/tei-platform/issues/2493)／各Product | Token/PR数だけ増え、実Oracle・意味受理・統合に進まない。複数Agentが共通Contractを競合変更 |
+| YI-CAND-21 | 製品横断でデータ構造・Value Domain・単位・数学的性質・時空間の意味を必要な抽象度で説明し、実データ・機密Schemaの開示資格を分けてConsumerへ提示できる | [TEI #2495](https://github.com/hat47x/tei-platform/issues/2495)／TAI #232/#233／SUI/SEI Consumer | Vectorと線形空間の混同、温度点と差の誤演算、非公開の列名/件数を外部AIへ露出 |
+
 ### 4.1 要件精緻化で守る区別
 
 - **データ・機能・業務**：誰が何のために判断するか（業務）を起点に、必要な行為（機能）と記録（データ）を選ぶ。業務モデルのメタ概念を整理することと、すべての現場を同一業務へ押し込むことは別。
@@ -229,3 +232,27 @@
 **参考研究（外部の観測、YIの実証ではない）**：[DORA 2025](https://dora.dev/research/2025/dora-report/)はAIが組織の既存能力や弱点を増幅することを報告。[Anthropicの並列研究システム報告](https://www.anthropic.com/research/multi-agent-research-system)は広い調査で並列探索が有効だが、コード変更の並列化では依存調整が制約となることを述べる。これらの結果をTAIの実測値として転用しない。
 
 **状態**：対象領域と研究計画の拡大提案。新しい自律開発の運用Agent、共通Host、組織価値観の自動採用、外部effect、実QoL/組織成果は**NOT RUN / Owner未受理**。既存#165/#167/#168/#231、TEI #2390/#2492、SEI #677への接続で詳細化する。
+
+
+## 10. 2026-11-01：価値実現のために製品群を拡大する設計方針
+
+[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)に、**生成能力が潤沢な状況での要件・独立PoC・実装・試験・製品機能の拡張**を横断計画として記録した。独立Productの専門責務を広げる一方、TAI側は価値と組合せの検証を担当し、初期から「すべて小さく縮退させる」ことを最適解に固定しない。**成熟は単一の実装規模ではなく、選べる機能の豊かさ、正しく外せること、個人・組織・社会での有用性の三つを両立させること**として評価する。
+
+### 10.1 外部ハーネスの豊富な推論で拡張できる候補と、追加する資源
+
+- **圧力の発見**：業種/企業規模/ライフサイクルの異なるSaaS/商用/OSS、複数1:N・Gantt/Map/Graph、数学/単位/時点・AI支援開発、組織内の意味と対外共有を横断調査。
+- **独立したデザイン**：TEI [#2495](https://github.com/hat47x/tei-platform/issues/2495)の構造/性質/解釈/実現の複数facet、SEIの組織固有コンテキスト、SUIの表示/異論、SHOの文書、EKIの委任を同じ問題へ複数方式で適用。
+- **安全な並列化**：Agentを実行可能な作業票/OS権限とSourceの開示範囲に応じて分離し、独立Source・隔離branch・独立Oracleの候補を増やす。[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の機密OS境界は、設計上の推奨ではなく**実強制を確認するべき別の資格**である。
+- **統合の受入能力**：実CI・別Target/Host・権利と配布・意味Owner/利用者の判断がボトルネックになった場合、その原因を可視化する。安価なtokenだけで実許可・実世界成果・人の受益が増えるわけではない。
+
+### 10.2 語彙の豊かさと機密性を同時に扱う
+
+[TEI #2495](https://github.com/hat47x/tei-platform/issues/2495#issuecomment-6556744900)の「対象／構成／性質・法則／解釈文脈／利用要求／証拠／実現」の七役割は**比較用の概念整理**であり、TAIの新しい正式共通Schemaではない。例えば`float[3]`と線形空間の元は同値ではなく、順序付きmapをVector/Hashtableの二者択一に押し込む必要もない。一方、**企業の実テーブル名・属性名・件数・値域・プロパティ依存関係そのものが機密**になり得る。
+
+そこでAI向けCUIの候補投影を、(A)業務名を含まない一般的な型/facetの説明、(B)現在の権限・用途に適う具体的Schema、(C)許可された実値/Rawの三つに分ける。公開する粒度はSource OwnerのHost/Serverが判断し、Promptやクライアント側の非表示だけに依存しない。推測可能な列名/ID/少数集合や反復検索の間接漏えいも比較する。
+
+### 10.3 拡張と縮退を同時に測定する
+
+[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)のP-A〜P-E（逐次/並列/競合/機密/モデル・料金）を用い、実装候補数・実証済み能力・統合済み成果・利用者に増えた選択肢を別の観測として比較する。候補が多いことで価値が増したか、検証負担や情報露出だけが増したかを評価する。数を制限するのでなく、誤昇格・未知・機密境界・各Ownerの受理を正確に記録する。
+
+**状態**：YI-CAND-20/21、概念投影A/B/C、並列P-A〜P-Eは提案段階・NOT RUN。TEI #2493/#2495の既存設計提案を参照しており、YIとしての新たな型体系・必須Core/Hostの実装、Owner正式受理や実利用者価値の実証ではない。
