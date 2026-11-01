@@ -96,3 +96,19 @@ func TestSessionEndKeepsProductReadable(t *testing.T) {
 		t.Fatalf("product canonical should stay readable: %v", err)
 	}
 }
+
+func TestProviderEncounterIsRecordedWithoutCanonicalWrite(t *testing.T) {
+	product := NewProduct()
+	before := product.Digest()
+	harness := NewHarness(product, "session-1")
+	encounter, err := harness.Encounter(Provider{ID: "provider-a", Version: "v1"}, "課題を処理する")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(harness.encounters) != 1 || harness.encounters[0] != encounter {
+		t.Fatalf("encounter not recorded: %+v", harness.encounters)
+	}
+	if product.Digest() != before {
+		t.Fatal("encounter changed the canonical digest")
+	}
+}

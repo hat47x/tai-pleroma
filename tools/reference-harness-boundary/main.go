@@ -22,6 +22,7 @@ type Receipt struct {
 	CanonicalUnchanged    bool     `json:"canonicalUnchanged"`
 	HandoffRecorded       bool     `json:"handoffRecorded"`
 	DeferredRecorded      bool     `json:"deferredRecorded"`
+	ProviderRecorded      bool     `json:"providerRecorded"`
 	SessionEnded          bool     `json:"sessionEnded"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -34,6 +35,17 @@ type Handoff struct {
 	Version   string `json:"version"`
 	Task      string `json:"task"`
 	Deferred  bool   `json:"deferred"`
+}
+
+type Provider struct {
+	ID      string `json:"id"`
+	Version string `json:"version"`
+}
+
+type Encounter struct {
+	ProviderID      string `json:"providerId"`
+	ProviderVersion string `json:"providerVersion"`
+	Task            string `json:"task"`
 }
 
 type ReadReceipt struct {
@@ -101,12 +113,13 @@ func (p *Product) RecordHandoff(handoff Handoff) {
 // Harness holds a session and a context handoff history. It may read the
 // product and pass context to it, but it may not write the canonical store.
 type Harness struct {
-	product   *Product
-	sessionID string
-	budget    int
-	used      int
-	ended     bool
-	handoffs  []Handoff
+	product    *Product
+	sessionID  string
+	budget     int
+	used       int
+	ended      bool
+	handoffs   []Handoff
+	encounters []Encounter
 }
 
 func NewHarness(product *Product, sessionID string) *Harness {
@@ -142,6 +155,18 @@ func (h *Harness) Handoff(task string) (Handoff, error) {
 	return handoff, nil
 }
 
+func (h *Harness) Encounter(provider Provider, task string) (Encounter, error) {
+	if h.ended {
+		return Encounter{}, errors.New("session ended")
+	}
+	if provider.ID == "" || provider.Version == "" {
+		return Encounter{}, errors.New("provider id and version are required")
+	}
+	encounter := Encounter{ProviderID: provider.ID, ProviderVersion: provider.Version, Task: task}
+	h.encounters = append(h.encounters, encounter)
+	return encounter, nil
+}
+
 func (h *Harness) EndSession() {
 	h.ended = true
 }
@@ -157,6 +182,7 @@ func Run() Receipt {
 			"実製品の認可、監査、複数利用者を確かめない。",
 			"ハーネスはセッションと受け渡しの記録を持ち、製品の正本を持たない。",
 			"文脈の上限の後は、渡せなかったものを保留として記録する。",
+			"提供元のIDと版を記録し、提供元を正本にしない。",
 		},
 	}
 	product := NewProduct()
@@ -174,6 +200,9 @@ func Run() Receipt {
 	receipt.HandoffRecorded = firstErr == nil && !first.Deferred && len(product.handoffs) >= 1 && product.handoffs[0] == first
 	receipt.DeferredRecorded = secondErr == nil && second.Deferred && len(product.handoffs) >= 2 && product.handoffs[1] == second
 
+	encounter, encounterErr := harness.Encounter(Provider{ID: "provider-a", Version: "v1"}, "課題を処理する")
+	receipt.ProviderRecorded = encounterErr == nil && len(harness.encounters) == 1 && harness.encounters[0] == encounter
+
 	after := product.Digest()
 	receipt.CanonicalUnchanged = before == after
 
@@ -182,7 +211,7 @@ func Run() Receipt {
 	receipt.SessionEnded = readErr == nil
 
 	receipt.Passed = receipt.ReadOnly && receipt.WriteDenied && receipt.CanonicalUnchanged &&
-		receipt.HandoffRecorded && receipt.DeferredRecorded && receipt.SessionEnded
+		receipt.HandoffRecorded && receipt.DeferredRecorded && receipt.ProviderRecorded && receipt.SessionEnded
 	return receipt
 }
 
