@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.sui-live-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "suiCommit": "e1fb63c45e0fc30fcf43822bacff9659a48e47f5",
+  "host": "WSL2 Ubuntu; SUI backend started from the local checkout with uvicorn on 127.0.0.1:8765",
+  "command": "python probe.py --base-url http://127.0.0.1:8765",
+  "result": "PASS",
+  "observed": {
+    "healthStatus": "ok",
+    "openapiVersion": "3.1.0",
+    "pathCount": 65,
+    "documentCount": 0,
+    "readOnly": true
+  },
+  "tests": {
+    "healthz": "200",
+    "openapi": "read"
+  },
+  "scope": "Read-only reachability of a local SUI backend. The empty document store was not seeded, so no SCN-001 document, tenant, authorization or card content is verified. This is not a publication approval."
+}
