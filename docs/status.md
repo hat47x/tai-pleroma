@@ -1,10 +1,12 @@
 # TAI Pleromaの現在状態
 
-更新日: 2026-11-01。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
+更新日: 2026-11-02。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
 
 ## 要約
 
 SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、SUIのcard/island/edge、TEIの型検証、EKIのTask admission/cancel、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
+
+TEI構築移行のパイロットとして、SUI DocumentV1の文字列投影（card本文とdocument_id）を、TEIの契約→生成→適合選抜→one-shot Target Profile実行まで通した。示せたのは参照ローカルの最小経路であり、record全体、実環境、人の受理、生産性の向上は未検証である。
 
 Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`development-review-only`の仮承認でCP-3まで進めている。R-01〜R-05は合成文書でdevelopment review accepted。**公開・外部作用は未承認**であり、公開用の実物レビューを合成後の工程として残す。
 
