@@ -35,6 +35,16 @@
 - 公開前に、実在の施設資料・権限者・独立レビューによる`post-synthetic-real-object`を行う。
 - EKIはTEST PROFILEで実行・受理まで到達した。Worker Protocol、独立した検証主体、実Authorityは未確認であり、R-07（N-05のEKI委任）は`pending`のままとする。
 
+### 検証の独立性（Owner判断待ち）
+
+EKIのResult Acceptanceは、ポリシーが指定したdimensionの値が異なることを機械的に確認します。今回のTEST PROFILEでは、2つの検証を同一ホストの再実行で作り、`principal`と`operator`のラベルだけを変えています。これは「何が独立していたか」を示す記録としては不十分です。EKIの要件とAssurance Modelは、独立した実行・検証の一致を、何が独立していたかを示せる場合に限って保証の根拠にすることを求めています（RQ-045、Axis E）。
+
+Ownerに判断いただきたい点:
+
+1. SCN-001で必要な独立性のdimension（主体、実装、データ、ホスト、モデル系譜のどれを分けるか）
+2. Verifierを誰が信頼の基盤として認めるか
+3. real-objectレビューで、独立検証をどこまで要求するか
+
 ## 境界
 
 - このpacketはOwner判断の入力であり、承認ではない。
