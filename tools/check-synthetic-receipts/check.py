@@ -80,6 +80,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-EKI-live-2026-11-01.json",
     "evaluations/records/SUI-live-2026-11-01.json",
     "evaluations/records/SEI-live-2026-11-01.json",
+    "evaluations/records/MMI-live-2026-11-01.json",
 )
 
 
@@ -149,6 +150,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "MMI-live" in relative:
+            observed = data.get("observed", {})
+            if observed.get("exitCode") != 0:
+                errors.append(f"MMI live receipt did not record exit 0: {relative}")
+            if not isinstance(observed.get("candidateCount"), int) or observed.get("candidateCount") < 1:
+                errors.append(f"MMI live receipt has no candidates: {relative}")
+            if not str(observed.get("sourceDigest", "")).startswith("sha256:"):
+                errors.append(f"MMI live receipt has no source digest: {relative}")
     status_path = root / REVIEW_STATUS
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
