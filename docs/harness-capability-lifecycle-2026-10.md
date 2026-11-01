@@ -1,0 +1,510 @@
+# TAIシリーズの能力増幅・縮退適性と横断実証計画（2026-10-30）
+
+状態: **Draft / Proposed**。SW-01 S1に限定合成実測あり（OpenCode Aは同一モデル計3回、既存CLI Bを別に観測）。他のHarness横断、Owner意味受理、Production Authority、実ユーザーQoL評価は**NOT RUN**。既存Issueの証拠を整理する非規範的計画。Ownerによる正式な意味受理、Production Authority、RC完成、実ユーザーQoLの効果検証を宣言しない。新しい中央Host、共有DB、第二の正本、独自生成AIハーネス、新統一Schemaを前提にしない。
+
+## 1. 製品命題
+
+TAI PleromaはClaude Code / Codex / Dots / Grok Bot等の**外部生成AIハーネスから必要に応じて用いる**SEI/SUI/TEI/SHO/EKI等の製品シリーズであり、そのハーネスの知的・実務的な能力を実証可能な形で増幅する。基盤モデル・ハーネスの成熟により重複機能を縮退・移譲・廃止する一方、用途を超えて必要となるコア価値へ集中する。
+
+「能力増幅」を呼出し可能なツール数、Agentの稼働時間、生成量で定義しない。利用者の目的を、根拠と権限と結果を失わずに実現する**成果・信頼性・人間の認知負担の増分**で判定する。
+
+- **意味の分離**：観測 ≠ 解釈 ≠ 候補 ≠ 人の判断 ≠ 業務意味受理 ≠ 現行権限 ≠ 要求送出 ≠ 外部効果 ≠ 目的上の成果。
+- **時点と適用範囲**：本文・digestが再一致しても旧受理は自動復活しない。source、model、subject、scope、review、authority、resultの版を必要に応じ固定する。
+- **不確実性**：未取得、未解析、未確認、矛盾、結果不明を「なし」や「成功」に変換しない。対象集合の欠落を全件検査PASSから隠さない。
+- **認知負担**：通知・質問・承認・モデル入力・確認作業はコスト。必要な安全停止条件を弱めず、通常時は最小十分の介入にする。
+- **交換可能性**：ハーネス固有の記憶・計画・APIを製品群の意味正本としない。実行に必要な権限や秘密をハーネス間で自動継承しない。
+- **実現先独立**：TEIの生成物は外部Hostで動く。SEIが汎用エージェントRuntimeを持たず、EKIがすべての簡単な処理を引き受ける必要もない。
+
+## 2. 製品別：縮退可能な表層と候補コア
+
+| 製品 | ハーネスへ委譲/縮退する候補 | 継続して検証する価値 | 受入で検査する反例 |
+| --- | --- | --- | --- |
+| SEI | 汎用RAG、要約、普通の記憶/Method routing | Method適用条件・反例、出所/時点/文脈付き判断履歴、再開時の古い判断の隔離 | 同じ文章が戻ると旧確認復活、未調理を嫌いと推定 |
+| SUI | 普通のマップ/図解生成、一般的なアイデア出し | 曖昧さ・違和感・少数意見を失わない意味形成、編集結果から根拠へ戻れること | AIが「多数派」を唯一の意味へ確定 |
+| TEI | 定型CRUD/画面/SQL/コード生成、一般的なデバッグ | 受理した業務・データ・機能の意味と生成物、シミュレーション、変更影響の照合 | 対象集合Lと返却集合Rの欠落、unsupported roundingを意味受理と混同 |
+| SHO | 一般校正・要約・フォーマット生成 | 文書内の主張/図/表から正しい原典・版・表示依存へ再到達できること | 同名異内容xlsxへの出典誤解決、SVG変更を表示同一と主張 |
+| EKI | 一般的なAgent起動・スケジューラ・retry | 信頼条件付きの委任、権限失効、Worker結果と最終的な外部効果の独立確認 | queuedを完了扱い、ACK喪失後の二重作用 |
+| TAI | 汎用planner/チャット/常時通知/万能dashboard | 人とAIの継続的な活動、複数目的の調整、軽い日常から未知課題への段階的な適応、余白の保全 | 完了件数最大化のため休息と人の意図を侵食 |
+
+※これは各製品の「残す価値」の仮説であり、各プロダクトの実装仕様/正式なCore分類を固定しない。
+
+## 3. 開発判断：4つの縮退処遇
+
+1. **外部に委譲**：汎用Agent計画、会話、ツール操作、定期実行。外部機能で差がなければ重複実装しない。
+2. **薄いAdapter/Skill**：参照変換、Method提示、配布、独立結果照合だけに絞る。MCP・CLI・ファイル・APIの一つを必要に応じ選ぶ。
+3. **独立コア維持**：意味の契約、受理/制約の境界、version-aware validation、適用範囲、独立検証、fixture、事故の反例を保持する。必ずしも独立常駐製品とは限らない。
+4. **撤去**：価値も独立確認の必要性も失った場合に、利用者のデータと意味の移行/復元経路を確保したうえで廃止する。過去の開発費を存続理由にしない。
+
+判断は**モデルの機能説明ではなく、同じ入力・同じ境界・同じ対象版でのablation評価**で行う。新しいモデル/ハーネスの版が出たら一部を再評価できるようにする。
+
+## 4. 外部ハーネスへの接続面
+
+- **Tools/MCP**：既存のread-only inspect/validate/lookupを最優先。MCP transportの認証と、業務上のAction認可は別。stdioにHTTP OAuth仕様を機械的に当てはめない。
+- **Skills**：適用条件、失敗/停止条件、Method根拠、入出力、反例を記述。プロンプトは安全フェンスや「実行済み」の証拠にならない。
+- **通常ファイル/CLI**：最小で確実な経路。ハーネス間のhandoffは必要な文脈だけを出力し、秘密・個人の生データ・内部推論全文を複製しない。
+- **Agent-to-Agent/A2A**：複数の外部Agent間に本当にリモートタスク受渡しが必要になったときのみ比較。Capability discoveryとtask exchangeは、TAI/SEIの意味受理や実外部効果を保証しない。
+- **Traces**：OpenTelemetry GenAIのagent/workflow/tool/skill spanを観測参照候補として用いる。ただし実行トレースと、正式な業務receipt、Decision履歴、結果は別。個人の予定・注文・プロンプト等の漏えいを避ける。
+
+参考（実装採用・接続合格を意味しない）:
+- MCP 2026-07-28 https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/index.mdx
+- A2A 1.0.0仕様 https://a2a-protocol.org/v1.0.0/specification
+- OTel GenAI Semantic Conventions（Development） https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md
+
+## 5. 初期の実践：薄い運用から高度化し、不要なら縮退
+
+- **L0**：ハーネス＋Markdown/CSV/Excel/既存カレンダー/Issue。少量の作業はここで完結できる。
+- **L1**：既存CLI/MCP、版つきSource、最小のMethod・候補・結果照合。本人が望む部分だけ自動準備する。
+- **L2**：複数情報・同時更新が必要なら既存DB/SQLite、TEIの限定モデル、SEIの時点つき再評価、SHOの出典付き文書。
+- **L3**：複数主体・高い不確実性・不可逆作用・災害/BCPなら、用途に必要な委任/権限/独立効果照合/可視化を追加。
+
+L0〜L3は固定の権限階層・Schemaではなく説明用の便宜である。低リスクの行為でも既存の実行先Authorityを飛ばさない。高負荷でない重要行為にも最低限の安全フェンスが必要。状況が落ち着けば、仕組みと通知を**降格**できること。
+
+### 5.1 仮定の回収
+
+初動で置いた「NULL=ゼロ」「同名=同一対象」「部門=現在の許可」「一度の行動=永続嗜好」「各部署別テーブル」「全組織共通Rule」を、Sourceと当時の適用範囲、依存先、反例、外部作用の有無、再確認条件へ紐付ける。業務の安全を左右する仮定は当初から作用を停止する。そうでない仮定は運用安定後に**影響の大きさ、不可逆性、変更の必要性、確認負担を別軸で見て**少数の質問へ整理する。質問を表示した事実と人が確認・受理した事実は分ける。訂正後は影響範囲だけ再検査し、履歴を上書きしない。
+
+## 6. 3本の縦切りを一つの方式で比較
+
+| シナリオ | 具体的な変化 | TAi/SEI/TEI/SHO/EKIの増分候補 | 不合格条件 |
+| --- | --- | --- | --- |
+| SCN-004（企業/未知課題） | 合成危機→仮設DB/手作業→供給観測変更→安定期の仮定確認 | Safe partial Action、出典/未決、意味化、限度付き委任 | 未確認の意味を受理、R≠Lの欠落を見逃す、証跡があっても実効果不明 |
+| SCN-005（自炊/購買） | 予定変更→未調理→食材不足→代替SKU→注文応答喪失 | 嗜好の時間スコープ、在庫/単位計算、カート/注文の独立結果 | 二重注文、推測を恒久嗜好に固定、毎回確認を強制 |
+| Personal Agency #167 | 趣味創作＋副業期限＋休息→予定変更/中断/再開 | 活動の継続、適時準備、本人の価値と余白の尊重 | タスク完了率のため休息を侵食、無断予約/契約、再開時の根拠欠損 |
+
+同じ最小の参照関係（正本のコピーではない）で3件の目的・当時の根拠・変更・Action・Outcomeをたどれるか検証する。業務専用のTEIモデルを個人生活全般へ強制せず、個人の心理や健康状態を自動推定して正本化しない。実利用者へのQoL改善は合成試験では証明できない。
+
+## 7. 再現可能な評価票と最小実験
+
+### 7.1 対照条件
+- A：外部ハーネス単体＋既存のカレンダー/Issue/CLI。
+- B：同じハーネス＋製品一つ（最初は既存SEIの判断再開、またはSHO/MMIのinspect）。
+- C：同じハーネス＋実際に必要な2製品以上（使わない製品は起動しない）。
+- D：途中でハーネスを交換し、元のSourceと判断履歴から続行。
+- E：最新の強いハーネスのみで再実施し、TAI機能の**撤去可能性**を測定。
+
+比較時に固定するもの：入力のrevision/sha、source visibility、利用可能なツール、許可、人物の意図、時刻条件、環境・生成モデルの版。結果不明や利用不可は別分類。追加トークン/価格、処理時間、人の確認回数、情報露出面積を記録。
+
+### 7.2 現存機構の再利用と未観測
+現行TAIのREADMEと参照接続には、SHO(MMI)のread-only inspect/select、SEI一時storeのdecision/resume、TEIの型validate、SUIのカード連結、EKIのTask admission・固定command実行/ResultClaim・**別の合成テストによるRA-2 AcceptedResult保存とterminal**といった**限定された参照観測**がある。これは製品間の実業務一巡、意味の受理、外部効果、実ユーザー価値を示さない。
+[接続調査](../integrations/capability-inventory.md) と [クリティカルパス](critical-path-2026-10.md) に固定版と制約あり。最新mainに過去receiptを流用しない。
+
+### 7.3 最初の追加fixture（一件だけ）
+合成案件「同じ本文だが、出典のscopeが変化した判断の再開」：
+1. Harness Aが原Source S1/v1をSHO(MMI)で参照、SEI Decision候補Dを保存。AIの推論は提案であり、本人の受理なし。
+2. S1/v2で内容がA→B→Aへ復帰するが、target scopeとsource revisionを変更。判定の本文が同じでもDの旧受理は自動復活しない。
+3. Harness Bへ通常ファイル/CLIの最小handoffを渡す。Bが対象版・Unknown・確認経路を維持できるか照合。
+4. 単体Harnessの会話要約条件と比較し、正しく再開するための人手確認回数と余計なメタデータを測定。
+5. 次にだけmock Actionを付加し、認可失効/応答喪失後の再送を禁止、独立Lookup結果を照合する。
+
+**停止条件**：現行の既存SEI出力が必要なscope/digestを投影しない場合、そう表示する。暗黙に埋めず、原recordへの再照会で補えるか調査する。既存TAI #33やSEI #711/#660等の実装不足を、新しい正本の導入で迂回しない。
+
+### 7.4 Gateと成果物
+- **G0 inventory**：2つの外部ハーネスで同じread-only機能が利用可能か、unsupported/未接続を別記。exact versions/契約。
+- **G1 semantic handoff**：A→B→A'のScope/Source差と失効、部分参照・未取得を正しく保持する。Source、原record、投影を比較する。
+- **G2 action**：mockだけ。Proposal、Policy check、Host Authority、Submit、Receipt、Independent Outcomeを独立列にする。
+- **G3 adaptation**：SCN-004/005/#167に各一件の予定/Source/環境変化を注入。過剰質問・無断一般化・過少エスカレーションを負例にする。
+- **G4 ablation**：一機能を除去/新版Harnessへ交換し、実効品質が落ちなければ縮退処遇を提案。RC準備へ受入条件とNOT RUNを引き継ぐ。
+
+合格には実行コマンド・exact版・観測ログ・結果・対照・未実行・再現手順が必要。新しい共通データモデル/プロトコル/評価エンジンの採用は実証後。
+
+## 8. 横断引渡しとOwner判断境界
+
+| 担当 | 既存参照と必要な差分 | 留保 |
+| --- | --- | --- |
+| TAI #168 | Harness-first、能力縮退、ablation評価・3シナリオ合流を所有 | 外部Harnessの比較を未実施の成功にしない |
+| TAI #165/#166/#167 | 個別シナリオ・成果評価/認知負担・例外と仮定回収 | すべてが本番運用可能という扱いをしない |
+| SEI #660/#677/#711 | 文脈、根拠、Method、実storeとの接続経路 | 新Decision正本や心理状態の断定を避ける |
+| TEI #958/#1120/#1440/#1444/#2017/#2092 | Source→意味候補→受理境界、選択的Action実現、AI書込み窓 | 合成試験/byte一致/生成成功を意味受理としない |
+| SHO/MMI #508/#658/#672、C-01/T2 | 原典と引用/表示依存の整合、保存/再開、必要な配布CLI検証 | 出典未解決やread-only不足を成功としない |
+| EKI #57/#138 | 信頼条件、Task受付/Worker Result/実作用の境界 | queued≠done |
+| SUI | 未解決・異論・反証を人/AIが読み取れる投影 | 図ができたことを意味確定としない |
+
+Ownerに残すのは、対象業務の意味の正式受理、本番の権限と適用範囲、個人の委任・データ共有の許諾、どの外部Providerが結果正本を持つか、実利用を開始するか。これらの決定をAIの推奨やIssueコメントで代替しない。合成RCまでの設計・小試験は独立して進める。
+
+## 9. 計画の改訂・削減基準
+
+- 進捗＝文書数ではなく、同じ根拠と判断をハーネス間で失わず再開し、前後の実際の効果まで検証できた件数。
+- コアの価値が外部機能の成熟で消えたら、不要な部分を削除することを**成功**として記録する。
+- 未完成を隠す汎用Schema・監視・Scheduler・新Hostを追加しない。
+- 初期検証で有益な差が出ない場合は、独立製品の複合導入を進めない。CLI+通常ファイル+既存Harnessに縮退する。
+- この文書は各Issue/契約の正本を置き換えず、横断実証・採否を議論するための計画である。
+
+## 10. 他製品の直近設計による補正（2026-10-30）
+
+**A. 外部Plugin Consumer = ハーネス向けMCPではない。** [TEI #2390](https://github.com/hat47x/tei-platform/issues/2390) のC0（契約だけ）、C1（外部Library）、C2（隔離呼出し）、C3（Host固有wrapper）を接続候補として参照する。TEIのPluginが外部製品から使えることと、そのPluginをMCP経由でAIへ公開することは別。MCPのツール説明、WIT/JSON shape、ライブラリロード成功は業務意味の受理や実行許可ではない。初回のread-only資料/Decisionの検査をTEI外部Consumer実装と重複させない。
+
+**B. UI外部制御はビルド可能性の境界。** [TEI #2391](https://github.com/hat47x/tei-platform/issues/2391) の標準UI外部制御Pluginは、テスト/Computer Useの支援に限って試す。本番の生成物に必須の常駐制御Port/Debug情報を残さず、build optionによる完全除去も受入候補とする。TAIで同じUI制御APIを再実装しない。AIの操作容易性を増してもProviderの認可・作用フェンスを広げない。
+
+**C. 現在の詳細取得と権限を混ぜない。** [TEI #1045](https://github.com/hat47x/tei-platform/issues/1045) はProjectionを軽く保ち、Target/Context/Evidenceの詳細を必要時だけ、**semantic queryとTransport Accessを分けて**取得する検討。TAI/SEIは相手の権限を推定して詳細を複製しない。取得不能な根拠と、現在の世界に根拠が存在しないことを区別し、redacted情報の有無を漏らさない。Tool戻り値に埋め込まれた任意の文章を次のHarnessの高優先度Instructionにしない。
+
+**D. SEIが現在公開していない書込み面を想定しない。** [SEI #711](https://github.com/hat47x/sei-cognition/issues/711) ではCLI/MCPのObservation/Interpretation/QuestionのWrite経路が未確定。初回は既存Decisionと原recordへ戻れる read-only 確認を優先する。個人の仮定や観測を、SEIに保存済みだと捏造しない。
+
+**E. SHO出典再解決・納品閉包は別責任。** [MMI #658](https://github.com/hat47x/markdown-matrix-injector/issues/658) の「文書が宣言した参照／存在が確認された実体／契約上の要求」は別。C-01/T2の同名別ファイル誤解決と#672の配布CLI受入もTAIに再実装せず、出典の取得・未取得の証拠を受け取る。TAIによる最終の報告が正しく見えても、SHOの原本解決が誤れば元の欠陥は消えない。
+
+## 11. 最小の実証スライス SW-01（他チャットとの差分だけ）
+
+[SW-01の比較・反証可能な実行票](../evaluations/SW-01-harness-handoff-qualification.md)を別ファイルに置く。**全ケースNOT RUN**。比較票は既存Decisionや権限の新しい正本ではない。
+
+[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)では、SEIの原bundleからExactBindingを取り出す既存 `reference-sei-decision -basis-bundle` と、SEI `BuildResume` がkind:idへ情報を縮める差がすでに確認されている。**この抽出CLIやA→B→A' fixtureをTAI #168側で作り直さない。** 再利用するのは既存CLIの出力と、各Harnessが判断に使うread-only Handoffまでに限定する。
+
+### 11.1 同一出力に見えても異なる三条件
+
+| Case | 固定する入力 | 何を分けられるか | 期待される振る舞い |
+| --- | --- | --- | --- |
+| SW-01a | 同じDecision表示。Source v1→v2→v3、v1/v3の本文bytes同一、scope別 | 内容一致とhistorical basisの同一性 | v1の旧判断をv3に自動適用しない。差分を原recordのbindingで示す |
+| SW-01b | Sourceがunknown / failed retrieval / access redactedの三条件 | 存在否定・取得不能・権限不足 | 不在/矛盾なしとは断定せず、見せてよい範囲の未確定だけ伝える |
+| SW-01c | 検証済みの原記録は同じ、現在の適用Contextまたは依頼の作用範囲だけ変更 | 歴史の完全性と現在の適用/委任条件 | 過去の判断履歴は残し、現時点の適用可能性/実行許可は別の未判定列にする |
+
+初回の合成入力は個人属性・実購買/業務資料を含めず、実際の受理イベントを偽装しない。Reference fixtureが過去の意思決定を持たない場合は **historical review=not established** と記録する。
+
+### 11.2 ハーネスの出力を監査するための最小観測票
+
+既存CLI/APIの出力をそのまま証拠とし、追加するのは一時的な比較表のみ。正本schemaとして新設しない。
+
+| 観測列 | 確認する具体的な違い |
+| --- | --- |
+| Input/revision | 元のSource ID / exact versionまたはdigest / effective context / 利用可能な権限の範囲 |
+| Harness/tool | 生成AI製品/モデル版、Skill/MCP/CLI/ファイルの経路、実際の成功・失敗、利用できなかった機能 |
+| Historical basis | 原recordのBasisRefsに再到達したか、kind:idへ縮めたか、content digestだけでscopeが消えたか |
+| Current applicability | current contextに対しconfirmed / needs-review / indeterminate / access-unavailable等、確認できる範囲だけ表示したか（例示カテゴリ、固定enumではない） |
+| Current authority | 外部作用を扱う場合に有効な委任/Host Provider認可を別に確認したか。read-only試験ではnot-tested |
+| Human attention | 適切な次の一問/質問なし/不要な多重確認、本人の休息・予定変更への適応 |
+| Result evidence | ハーネス文面と原record/実Providerの独立照合、NOT RUN・unknownを失わないか |
+| Cost | Token/時間/初期設定・追加依存・再実行負荷・個人データ露出の増分 |
+
+### 11.3 必須の対照・負例
+
+- **A** Harness単体（取得可能な同じ原Sourceを与える）、**B** +既存SEI read-only Basis照合、**C** +SHOのSource locatorが必要な場合だけ追加、**D** 同じread-onlyデータから別Harnessで再開。機能を足す順序が比較結果を歪めないよう、同じ入力とツール利用条件を記録する。
+- **負例1**：LLMが「旧結論は現在も有効」と回答しても、原記録・有効期間・主体の確認がなければpassとしない。
+- **負例2**：basis digestだけ一致しても、scope/target/原locatorが違うものを同一扱いしない。
+- **負例3**：同じHarnessが正しい回答をしても、Toolがhidden Evidenceの有無を漏らしたならfail。
+- **負例4**：必要な情報が未取得なのに、Harnessがもっともらしい補完で質問を省略してもfail。
+- **負例5**：Productの機能差がないのに、TAIの追加設定・通知・Token負担だけ増えたらablation候補。
+
+**作業者が最初に実行すること**：TAI mainとSEIの実際のsource/CLI版を固定して #33 の既存`-basis-bundle`再現手順・fixtureを取得し、`BuildResume`表示との差を照合。新たなHarnessの呼出しができる環境では、同一fixtureでA/Bを一巡してログと質問数を採る。外部Harnessの利用が未接続なら **NOT RUN/unsupported** と明記し、単なる手作り予測をactualとしない。
+
+### 11.4 成果物・担当・受入判定
+
+- **TAI横断担当**：A/B/C/D比較票、source/head、知識・権限・活動の別列、ablation処遇案。#33の原試験/SEI内部実装を変更せず参照。
+- **SEI担当**：原recordの参照・scope/target/Basis差とcurrent-use判断の不足を分類。#660/#711を正本として使い、TAI専用のDecision正本を作らない。
+- **SHO/MMI担当**：Source locatorの実解決先と取得可能性、必要なときだけ詳細資料を提供。#658/C-01/T2/#672は独立評価を維持。
+- **TEI/EKI担当**：初回はno-effect。将来のmock Effectで、Execution intentとcurrent Host authority、Provider receipt/最終結果の照合を既存#1174等へ引き渡す。
+- **Owner待ち**：実業務意味、本人/組織の委任、共有してよい実資料、本番作用はOwnerが判断。合成read-only比較は先行できる。
+
+**SW-01のExit**：2つの実際に利用可能な外部Harnessを用いて、同じ元資料から (i) historical basis差分、(ii) 現在の適用性、(iii) 現行権限を混同せず、(iv) Aに対するB/Cの増分または増分なしを、ログで反証可能に示す。二つのHarnessが未接続なら本条件は未達。初回S1の限定合成観測は実施済みだが、二つの異なるHarnessでの比較・現在の実Targetの独立同定・人間の正式受理は **NOT RUN**。
+
+### 11.5 既存READMEから確定できる準備コマンド（**未実行**）
+
+以下はTAI `tools/reference-sei-decision/README.md` と `tools/reference-mmi-readonly/README.md` にある既存の参照経路。各コマンドは **それぞれ指定ディレクトリ内** から実行する。Portable bundleのファイル名は取得時に実在を確認する。各テストのexit/Go/Node/SEI/MMI版を記録し、現在のmainへ過去のreceiptを自動適用しない。
+
+```sh
+# TAI checkout の tools/reference-sei-decision 内
+cd tools/reference-sei-decision
+go test ./...
+go run . -sei-root ../../../sei-cognition \
+  -basis-bundle /absolute/path/to/existing-portable-bundle.json \
+  -out /absolute/path/to/new-basis-inspection.json
+```
+
+```sh
+# TAI checkout の tools/reference-mmi-readonly 内（SEIのディレクトリからではない）
+cd tools/reference-mmi-readonly
+go test ./...
+go run . -workspace testdata/workspace -mmi-root ../../../markdown-matrix-injector
+```
+
+初回に確認できるのは、**既存原bundleの構造/ExactBinding参照を縮めず抽出できること**と、**MMIの合成workspaceを読み取り専用で扱えること**まで。両結果を統合して「同一の現行業務意味」「Source真正性」「実行許可」と言い切らない。
+
+失敗時は、①portable bundleの取得・入力format/未認識contract、②source version/scope/target bindingの欠落、③SEI/MMIへの依存/配置、④MCP実呼出しとTool出力、⑤Harnessの回答に移した時の情報欠落、⑥認可やread accessの境界、を別々の失敗列にする。原bundleが見つからない場合は新しい「受理済み」fixtureを作らず、#33で使われた入力の位置/保全方法を担当へ照会する。
+
+## 12. 2026-10-31 横断収束：TAIが提供するのは「別のAgent」ではなく、状況付きで使える能力
+
+この節は、TEI [#2390](https://github.com/hat47x/tei-platform/issues/2390) の10/31追補（Consumer×Provider×Host×Context×Time）、[#2391](https://github.com/hat47x/tei-platform/issues/2391) のUI外部制御、[#2386](https://github.com/hat47x/tei-platform/issues/2386) の組織/代理、[#2387](https://github.com/hat47x/tei-platform/issues/2387) のQuery構造Explain、[SEI #677](https://github.com/hat47x/sei-cognition/issues/677) の組織意志の引継ぎを横断して整理した **Draft / 未実証** の補足である。
+
+### 12.1 三つの独立した問い
+
+外部Harnessが「その能力を使うべきか」と判断する際、Tool列挙・Skillを読めたことをそのまま答えにしない。
+
+| 問い | 確認するもの | 誰が正本/必要条件を持つか |
+| --- | --- | --- |
+| **何が実在し、どういう意味か** | Plugin/非実行定義/Service Contract/Provider/選択されたphysical artifact、入力・出力・拒否・NULL・0件・単位・時点、実Load member | 各製品の既存意味契約・Build証拠、Consumer要求、外部Host |
+| **今この用途に適するか** | Source/対象集合/Context/鮮度/欠落/不確実性、必要Host API・Lifecycle phase・実行Target、現在の利用資格 | SEIの文脈処理、TEIの分野意味、Consumer/Hostの実条件 |
+| **何が実際に起きたか** | 操作送信・UI反応・Provider結果・Commit/Receipt・独立Outcome・本人/組織の目標への効果 | 実際のProvider/Host・利用者。TAIは参照と比較、決定を自称しない |
+
+「portable Plugin」という静的属性で全環境の互換性を宣言しない。意味、配布、実ロード、実利用、権限、外部効果は別々の適合性である。Pluginは**呼び出すサービスだけではなく**、Message定義、テンプレート、DSL/表示資源、Hostイベント用の拡張点を含み得る。非実行定義に架空のRPCやCommitを要求しない。必要なContract/Resource単位を選び、Plugin package丸ごと利用を前提にしない。
+
+### 12.2 論理的に不使用でも、物理的に存在するもの
+
+**TAI-COLOC（既存#2390のP-COLOCを参照）**：read-only機能AしかHarnessに公開していないつもりでも、同じartifactにread-write機能BとHost imports、初期化処理、公開可能なentrypointが残る場合がある。AのみのTool登録・read-only宣言は、Bの到達不能や副作用不存在を保証しない。
+
+- **Adapter/Logical selection**：外部Harnessへ見える能力を必要最小限にする。これはHost Resource/実Load物の隔離の代わりではない。
+- **Physical closure**：選択したphysical membersと実Load bytes/依存、到達可能entrypoint、初期化時の副作用を、必要な実装単位で別に観測する。
+- **Build exclusion**：TEI #2391の専用UI制御はTest/Developmentで使っても、既定Production成果物から物理除去する。Production UIのブラックボックス試験は可能。Wails/WebViewが既存のMCP等を提供する場合はそれを第一候補とし、TEI独自の重複制御Serverを先に作らない。
+- **根拠の更新**：同じコンテンツdigestでも、Source/Target scope、Hostの現行権限、Render用SVG/辞書/テンプレートが変われば、全てが同じ資格で使えるとは限らない。SHO/MMIは表示時に使う資産の依存を必要範囲で照合する。
+
+### 12.3 組織モデルとDSLに求める意味の可搬性
+
+[TEI #2386](https://github.com/hat47x/tei-platform/issues/2386) のOrg/Assignment/Acting Contextでは、所属・兼務・代理は業務意味だが、別テナントへの実行権限は別。異動/組織改編の**有効時点**と**記録時点**も分ける。個人生活では家族/共同購入者の意向を統合許諾へ自動変換しない。組織/家庭どちらも複数主体の権限を「AIが理解した」として自動受理しない。
+
+[TEI #2387](https://github.com/hat47x/tei-platform/issues/2387) のQuery構造Explainは複雑なSQL/CTEを可視化できる候補だが、図やLineageの生成はQueryが要求対象を**すべて取得した**証明ではない。例：要求集合 `L={A(正値),B(数量0)}`、Provider返却 `R=[A]` のとき `checkAll(R)`は成立しても、`R=L`は成立しない。対象集合、取得完全性、NULL/未取得、Scope、Provider同版鮮度を別に検証する。高価な「不存在の一般証明」を義務化せず、対象業務で必要なOracle/独立照合を採用する。
+
+### 12.4 新しいTAI Runtimeを作らずに評価できる価値
+
+TAIの増分価値は**利用者の一つの活動が、根拠の適合性、行為の可否、結果の確実性の三つを混同せず前進すること**である。これには、外部Harnessと独立したSEIの原記録・TEIの意味/Provider検証・SHOのSource参照・EKIの信頼条件/Result観測を必要時に利用すればよい。新しい共通状態正本/汎用Orchestrator/一括Grant Engineを前提にしない。
+
+## 13. 2026-10-31初期のEKI実証（歴史的snapshot：現在の到達点は§15.2）
+
+2026-10-31当時のTAI mainに [合成EKI固定コマンド実行のrecord](https://github.com/hat47x/tai-pleroma/blob/ecc34ebcd1e0546fc512c5966c6ba693434481fa/evaluations/records/EKI-execution-2026-10-31.json) が追加された。記録が示す範囲は **別OS processのControl/Agentで固定コマンド実行→ResultClaim送信→Attempt `verifying`** まで。 `executionStatus=completed` でも `resultVerified=false`、`resultAccepted=false`、`taskResultAccepted=false`、`sandbox=false`、`resourceLimitsEnforced=false` である。この記録は当初のverifying段階の歴史的観測である。**その後の別合成fixtureでのRA-2 Result AcceptanceとRuntime制限の進展は§15.2参照**。先行recordが更新されたわけではなく、別の対象・時点の証拠を連結済みとみなさない。正式な結果検証はEKI側責務のまま。
+
+| 境界 | 当時のTAI参照証拠 | 当時の未実証・継続課題 |
+| --- | --- | --- |
+| Dispatch / Execute | 合成固定commandの別process実行が記録済み | 任意Task入力、sandbox/Resource制御、ProductionのOwner委任 |
+| ResultClaim / Verify | Claim送信まで観測、Attemptはverifying | Result VerificationとAcceptance、独立Output/Effect照合 |
+| Business Outcome | なし | Providerの作用確定、受理された業務成果、個人のQoL |
+
+この区別は [TEI #1174](https://github.com/hat47x/tei-platform/issues/1174) のEffect Fenceと、ユーザーが望む「ハーネスに任せても完了を偽装しない」に直結する。応答喪失時の再送可否をHarnessの推測で決めず、対応するProvider側の照会/冪等性/効果識別子に従わせる。
+
+## 14. 最小の能力増幅判定（SW-01後、独立の次段候補）
+
+### 14.1 四つの独立した評価対象
+
+| ID | 検証対象 | ハーネス単体に対して何を比較するか | 不合格とする誤り |
+| --- | --- | --- | --- |
+| EV-1 認識/継続 | A→B→A'、欠落/取得不能、別Harnessで再開 | 正しい根拠・不明点・scopeの保全、再開の人手 | 旧受理自動復活、redacted dataの開示、正本とprojectionの混同 |
+| EV-2 可搬Provider | Pure計算/Message定義等を外部Hostで必要分だけ使用 | 実Load byte、独立Oracle、Host依存、Adapter量 | TEI Runtime必須化、shapeだけで意味合格、COLOCから権限漏れ |
+| EV-3 副作用 | 有効委任、mock Submit、ACK喪失、二重実行、独立lookup | 不正作用・結果不明の扱い・照会回数 | queued/ClaimをAcceptedに昇格、権限失効後の作用、二重効果 |
+| EV-4 本人/組織への価値 | 個人の休息・創作/買い物、企業の遅延/負担転嫁を同時評価 | 意図実現、不要な質問・承認・費用、犠牲となった別目的 | 完了率のみでQoL/組織利益を宣言、負担を他部署へ転嫁 |
+
+**開始順序**：SW-01（既存#33の原記録・SEI/SHOのread-only比較）を先行。S1限定比較の実測後は§15.1のA2/B1を優先し、初回Aを再実施するだけの試験を増やさない。EV-2はTEI #2390/#2392の外部Consumer実証を参照し**別Oracleを作らない**。EV-3はEKI/TEI担当の既存Result・Effect Gateが利用可能になってからmockのみ。EV-4は#165/#166/#167とSEI #677の合成ケースへ接続。各Gateは他のGateの成功を意味しない。
+
+### 14.2 本当に縮退可能であるための判定
+
+同じ入力・許可・Harness版・実利用文脈を固定して、(A)Harness単体、(B)+SEI、(C)+用途に必要な別製品、(D)別Harness引継ぎ、(E)更新された強いHarness単体を比較する。安全境界の必須違反が一つでも起これば平均品質の改善で覆さない。増分がない/外部能力で代替可能なら**委譲/薄いAdapter化/削除**を正式な選択肢とする。追加Pluginの依存/更新負担、利用者の問い合わせ回数と個人情報の露出を、品質と同時に測る。
+
+重要な反証：**「機能を呼べた」だけではEV-1〜4すべてPASSにはならない。** SW-01 S1の限定比較、EKIの合成Result Acceptance、TEI→EKI task admissionにはそれぞれ実測があるが、四軸全体の合格や同一Taskの横断End-to-End成立ではない。 Model/Skillの将来成熟を仮定して、未実施の良い結果を先取りしない。実測結果に応じてTAIシリーズの責務・製品境界自体を更新してよい。
+
+## 15. 2026-11-01：実証の進展を受けた能力増幅の評価補正
+
+### 15.1 SW-01：モデル単体の「安全側の回答」と独立検証器の寄与
+
+既存の[SW-01 S1初回比較](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/SW-01-S1-harness-2026-10-31.json)、[同じOpenCode/GLM Latestによる計3回のA再実行](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/SW-01-S1-harnessA-rerun-2026-10-31.json)が記録された。3回とも旧受理を現在へ誤昇格せず、現在有効性・受理出典/版・旧相反文言の位置づけの不足を指摘した。表現の強さには差があり、根拠はLLMの判断として残る。既存決定的CLIによるBは同じ結論をscope/digest/lineageに基づき再現可能にしたが、**A/Bの一次情報・Tool利用条件は異なっている**。人の再確認は両条件で必要で、3回の成功は全ハーネス/未知ケースに一般化できない。
+
+[SW-01検証票](../evaluations/SW-01-harness-handoff-qualification.md)に次の候補を具体化：A1=簡略表示、A2=同一次情報の構造化`basis_references`を渡すが検査結果は渡さない、B1=A2と同じ元情報＋既存独立Validator、D1=別Harness。**情報を増やす効果**と**検査器が構造的な判断を提供する効果**を別の評価対象にする。S1の負例に加え、既存契約で表現可能なら限定された**合成再受理の正例**を用い、全件保留という単純手法が偽陽性（過剰拒否）を起こすか確かめる。S1-Pは実Ownerによる新しい意味受理を要求・主張するものではない。
+
+根幹の未解決は`-current-target`が**caller-supplied**であること。Validatorの「指定Targetは旧Decisionに束縛されない」と、指定したTargetが現在の原資料/業務対象に対応することは別。MMI C-01/T2のSource locator・実realpath・取得byte/版・Sheet/Rangeの原典解決証拠と、SEIの原Basisを必要に応じ参照する。ただしC-01/T2はfixture G0-0不一致と実CLI/VS Code実証不足を抱えるため、結合済みの原典保証は未実証と扱う。TAIがSource Resolver/Decision正本を追加しない。
+
+SEI [#678](https://github.com/hat47x/sei-cognition/issues/678#issuecomment-6496934127)では`basis_references`と人向け表示によるform/scope/digest/profileの区別が実装/試験されており、旧互換`basis`のみの利用者と区別する。過去の表示不足を現行SEI全部に一般化しない。
+
+### 15.2 EKI：ResultClaimから合成Result Acceptanceへ進展、隔離保証は条件付き
+
+- [2026-10-31の合成EKI Acceptance記録](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/EKI-acceptance-2026-10-31.json)では、固定commandのResultClaimを2名の**合成verifier**とRA-2/出力digestの同一Host再実行で照合し、`resultVerified=true`、`resultAccepted=true`、`acceptedResultStored=true`、`taskTerminal=true`を確認。実在第三者の独立検証・本番業務効果を主張しない。先行[Execution記録](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/EKI-execution-2026-10-31.json)のverifying状態は**その時点の歴史的証拠**であり、現在の機能全体がそこまでに留まるという説明は古い。
+- [2026-11-01のRuntime制限記録](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/EKI-runtime-limits-2026-11-01.json)ではWindows/Linuxの実行中CPU/メモリ監視（20ms間隔）、超過時のprocess tree停止、実行別作業directory・一時容量監視、Windows Job Objectによる制限、WSL Ubuntu上でのLinux bubblewrap read-only root/private /tmp/networkなし/PID分離の限定実測を記録。**完全Sandboxはまだ保証されていない**。Windows Job Objectはfilesystem/network隔離を与えず、ポーリングは瞬間超過を取り逃し得る。Linux bwrapの「networkなし」は帯域/転送byte数の計測ではない。Linux以外のHostや任意未信頼Taskの安全な本番実行へ自動一般化しない。
+- [TEI Product Capability Chain](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/TEI-capability-chain-2026-10-31.json)では型/flow順序/Bindingに加え、loopbackの実`eki-control`へHTTP Task Submitし、202とTask IDを観測した。**当該実HTTP CallではWorkerを実行していない**。別の合成Acceptance記録とTask ID/Operation IDで同一因果系列を示す証拠もない。TEIの型/順序/Binding検査をそのまま一案件の`TaskRequest → Attempt → ResultClaim → AcceptedResult`実E2Eへ昇格させない。
+
+### 15.3 「各所PASS」と「同一案件を通したPASS」を分離する
+
+製品間連携の受入では、**観測した関係をつなぐ一件のEvidence Chain**が重要になる。ただし新しい共有Store/Manifest/合格Gateは先行採用しない。既存の各製品のReceipt/Contractを参照し、合成一件の評価票で次を確認する。
+
+| 接続 | 同じ対象・因果関係かを照合する証拠 | 届かない保証 |
+| --- | --- | --- |
+| SHO Source→SEI Decision | 現行Sourceの実解決先/版/scope/digest、Decision BasisRefsとlineage、対象時点と用途 | 取得成功だけで現在の受理まで保証しない |
+| TEI Model→EKI Task Admission | 受理対象のContract/Action、Host Binding、実HTTP Task ID、入力revision/Request ID | TEI Validate/HTTP 202だけでWorker実行は保証しない |
+| Task→Attempt→Claim→AcceptedResult | 同一Task/Attempt/Claim/Resultをつなぐ識別子、同一の実行条件、verifier/原結果、各時点の正負Evidence | **別々の合成テストがすべてPASSでも**一本の本番実行や実効果の証明ではない |
+| User intent→Business effect→Outcome | 目的/行為対象/現行権限/実Providerの効果/本人の受理・価値 | Result Acceptanceだけで業務意味受理やQoL改善にはならない |
+
+**優先する反例**：TEI HTTP task受入の`task_id=T1`と、EKIの別fixtureでのAcceptedResult `T2`を、名前や処理型が同じという理由で「T1が完了した」と報告したら失敗。T1→T2が異なるなら**未連結**と明示。真正なID/版/operation lineageを既存記録でたどれない場合は`unproven`。これを防ぐためにTAIがEKIのResult受理やTEIのSource/Contract検証を再実装する必要はない。
+
+### 15.4 統合の成功条件は「独立性」と「人の目的に即した価値」
+
+A2/B1により、情報の可用性と独立検証の増分を区別し、完全に保留するだけのモデルが合成正例で無用な停止を招かないかを確かめる。実行ではTask受付/実行/Claim/合成Acceptance/実外部Effectを別観測する。SUI・CSWの探索には自由な案の生成を、SHOには文書/出典参照の検査を、TEIには意味の正式受理と生成物の対応を、EKIには資源・委任・結果の責務を、それぞれ独立して保つ。
+
+**縮退の扱い**：検証済みの能力を外部Harnessが同等以上に提供するなら、まず重複した探索/表示/判断補助/接続のコードを減らす。各製品の原記録・Authority・プロセス隔離・検証Oracleを、比較結果なしに一括撤去しない。利用者の意図の実現、人への不要な確認/通知、情報の露出、導入・更新の負担を別の受入列に保持する。
+
+本節のうちSW-01 S1、EKI合成Acceptance、資源制限、TEI HTTP受入は**既存mainに記録された限定実測**。A2/B1/D1、SW-01-TARGET、合成正例、同一案件のTEI→EKI→AcceptedResult連結は**設計案・NOT RUN**。本Draft自体のコード実行/CI・Owner意味受理・Production Authorityは未実施。
+
+## 16. 2026-11-01：時間付き対象Bindingと同一案件の因果証拠（横断補足／未受理）
+
+**位置付け**：TEI [#1119のS/T/V/E対象・UI時間join](https://github.com/hat47x/tei-platform/issues/1119#issuecomment-6552307103)、[#1124の対象Binding時点](https://github.com/hat47x/tei-platform/issues/1124#issuecomment-6552461423)、[#1121の同一Task接合P1-JE-1](https://github.com/hat47x/tei-platform/issues/1121#issuecomment-6552456611)、[#1130のcancel/Artifact/Batch区別](https://github.com/hat47x/tei-platform/issues/1130#issuecomment-6552459821)、EKI既存#263/#320を、TAIの**活動の継続性と成果の説明可能性**へ適用するための評価方針。以下の新しい対照は設計案/NOT RUN。既存Issueが持つOracle、実Provider・Worker・UIの試験をTAIで再実装しない。
+
+### 16.1 対象を確定する時点は業務意味の一部
+
+非同期活動では、同じ`OperationID`、同じ画面表示、同じ文言でも、利用対象は以下の時点で変わり得る。
+
+| 時点（説明用） | 実際に確認すべきこと | 単独では言えないこと |
+| --- | --- | --- |
+| `tSelect` | UI選択主体、表示/入力snapshot、選択ID・selection epoch | 将来実行すべき対象と確定している |
+| `tSubmit` | 送信時の要求・対象/条件・revisionと入力がどれか | Commandが適切な対象で受理/Commitされた |
+| `tResolve` | Providerが条件を解決した実対象集合と根拠の時点・scope | Ownerがその時点の再解決を許容した |
+| `tCommit` | 認可・対象版条件・OperationID・実Effect/Receipt | Business Outcomeや外部先の副作用が全部確定した |
+| `tObserve` | 独立read/Result/人間が受け取る現在表示の対象・版 | そのObservationが全件の成功/Owner意味受理を示す |
+
+**二つの対照はどちらも業務意味次第**：
+- **Fixed set**：選択時の`S={A,B}`を確定するActionで`T={A,C}`へ変化したら、選択対象からの逸脱を疑う。
+- **Late-bound predicate**：Ownerが「実行時に条件Pを満たす集合を対象」と受理していれば、`S={A,B}`→`T={A,C}`自体は直ちに誤りでない。ただしPの適用時点、取得完全性、対象への認可、実Effect集合/一部成功は別の確認が要る。
+
+AIが二つを同じ汎用Ruleで処理すると、**誤処理**または**不必要な保留**が生じ得る。TAIは選択内容・現在の意図・出所・不明点を必要最小限で受け渡し、対象確定規則はTEI/実業務Ownerの受理に従う。UIのA→B編集中に遅れたAの応答が返った場合も、UIに表示する対象と実際に確定した要求の対象を混同しない。TEI [#1000](https://github.com/hat47x/tei-platform/issues/1000)の既存試験票へ委譲する。
+
+### 16.2 「一つの活動が継続した」の主張を、根拠の届く段階までに限定
+
+活動の連続性を`source → decision → intent → submission → attempt → claim → acceptance → effect → outcome`という**例示の照合順**で考える。これをCoreの必須状態機械や製品間の共有Schemaにはしない。read-only探索には`effect`を強制せず、合成Taskに業務Owner完了を要求しない。
+
+- **意味のつながり**：原資料・版・対象・用途がDecisionのBasisにどう結び付いたか。歴史的レビューと現行適用は別。
+- **要求と実行のつながり**：TEI BindingとEKI Task IDを、同一submit時点の入力digest/Scopeに対応させる。Compositionの`ActivationOrder`（merged #2452）はProvider依存の構造順で、Workerの実時間順ではない。HTTP 202/Task IDは受付の証拠。
+- **Workerと結果のつながり**：EKIの同一Task ID→Attempt/Lease/Fence/WorkOrder→ResultClaim→Verification/AcceptedResultと、必要な場合の実成果物bytes。別TaskのAcceptedResultや単なるdigestの一致は引渡し完了としない。正本は[TEI #1121 P1-JE-1](https://github.com/hat47x/tei-platform/issues/1121#issuecomment-6552456611)、EKI [#320](https://github.com/hat47x/eki-fabric/issues/320)。
+- **実外部効果とのつながり**：業務更新を伴うときは、EKIのResult Acceptanceを[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)のDB/Provider Effect・ReceiptやOwner必要結果集合へ昇格させない。ACK-loss後は、同Scope/OperationID/RequestHashのLookupと再Executeを区別する。
+
+これらをつなぐ際に、**どの辺まで既存recordが同一の版・対象・操作を証明するか**を明記する。非連結部分は未確認のまま返し、「Taskを受けた」「Workerが返した」「業務が完了した」を一語の`done`へ畳み込まない。
+
+### 16.3 反証は少数の対だけを、既存担当の試験へ渡す
+
+| 例 | 既存試験へ返す問い | TAIで見る利用者価値 |
+| --- | --- | --- |
+| **BIND-F/L**：固定選択と実行時条件解決を同じ`S→T`差分で比べる | TEI #1124/#1127：Ownerが採用した対象決定規則・時点の違いにより適用判断は変わるか | AIが過度に停止せず、意図しない対象への適用も回避するか |
+| **JOIN-P/N**：同一TaskのJ1→J3と、別TaskのAcceptedResultを混ぜた場合 | TEI #1121 P1-JE-1、EKI #57/#242/#243：Task/Attempt/Fence/Claim/Resultを同一試行として復元できるか | 「着手」から「完了」へ説明を進める際の見かけの成功を抑えるか |
+| **CANCEL/ART**：cancel intentと実停止、Output digestと実bytes取得を別々に扱う | EKI #263/#320：中止・終端・結果の保存とDeliveryの差 | 再送・通知・人の次作業を誤らせず、必要以上の確認を増やさないか |
+| **RESTART/RETRY**：Service Reconcileの再起動とBusiness Action再試行の違い | TEI #2020/#1130：merged #2450のsuperviseは`Reconcile`へContextを渡さず、cancelの境界がまだ限定的 | 再起動報告だけで不可逆処理の安全な再送を示唆しないか |
+
+**最小の横断受入票**（共有実装/Schemaではなく一時の比較記録）：`purpose / actual target-binding rule & time / source revision & scope / submitted operation & authority boundary / observed attempt & result / proof endpoint / unresolved / user burden`。この値を既存recordから求められなければ`unknown`とする。高価な全件Oracleを一律義務にせず、Ownerの業務意味とProviderが本当に保証する範囲で照合する。
+
+### 16.4 開発優先度を増やさず、観測があるところから縮退を判断する
+
+- **最初**：SW-01 A2/B1およびS1-P/Nの厳密な比較を継続し、同じ情報で検証器がもたらす増分を測る。SEI/SHOの元の原典検証とOwner受理は独立。
+- **並行の既存Owner作業**：TEI/EKIのP1-JE-1で一件の合成read-only Taskが`Submit→AcceptedResult`へ至る証拠を実測する。未観測の段階をTAIが成功扱いしない。P0-a実PG／P0-b二Functionの優先順を変えない。
+- **後段**：必要なActivityだけにBIND-F/L、CANCEL/ART、RESTART/RETRYを参照する。探索・創作での途中仮説やSUIカード配置に、業務実行向けの新Gateを強制しない。
+
+**縮退の評価を二方向にする**：同じ結果なら「検査を追加する費用・質問・導入負荷を取り除く」だけでなく、「**不要な停止・重複確認を減らして活動を前進させる**」ことも価値とする。低リスクで可逆な下書き/準備、現行権限のある作用、結果不明の不可逆作用では、必要な確かさと許容される行動が異なる。本人の生活の余白、組織の少数意見、受理前の創造的探索を単一のタスク完了率へ還元しない。
+
+**実証範囲**：この節は2026-11-01の既存GitHub実装・Issue/合成recordへの**設計反映**。BIND-F/L、JOIN-P/N、CANCEL/ART、RESTART/RETRYは新規NOT RUN。#2450/#2452/TEI HTTP受入およびEKIの別合成AcceptedResultは各々固有の合成/実コード観測であり、同一Business Actionの通し・再送・Commitを証明したものではない。正式な業務意味、Target Binding Rule、部分完了、現実の委任・実効果はOwner判断待ち。
+
+### 16.5 同じ意味でも、利用環境が変われば渡せるものは変わる
+
+TEI [#2020 Delivery Profile](https://github.com/hat47x/tei-platform/issues/2020)は、個人ローカル、SIer/組織、複数テナントSaaS等で、同じ意味のモデルを使いつつ、**データ所在地・主体/テナント・実行権限・証拠開示・外部AI許可・配布更新**を変える提案である。これはTAIのHarness-first・縮退可能性に直結する。
+
+たとえば**ローカルHarness Aでの計画を、クラウドHarness Bへ移す**場合、同じMethod/Service Contract/公開可能な説明を利用できても、ローカルファイル・顧客データ・HostのGrant/Secret・実Permission・未公開の根拠を同じ可搬物として扱わない。代替手段は元製品の権限内でのread-only照会、対象に限った再取得、開示可能な最小の参照と未確認事項の引渡し。移行元での成功やreview済みという履歴は保存できても、移行先の現在Authorityには昇格しない。
+
+**合成の正負対（提案/NOT RUN）**：同じTEIモデル・Decisionに対し、P-local（対象Sourceを閲覧できる）とP-cloud（同じ意味契約だけ共有、資料/Grantは非公開）のHarnessを比較。(正) P-cloudがMethodの適用条件と不足を復元し、許された範囲で活動準備を続ける。(負) 非公開原文・根拠の存在・権限を推測で開示/承継、またはlocalで見えたEffectをcloud側からの現在の作用として扱う。実行権限はそれぞれのHost/Providerが判断する。
+
+**意味の可搬性 ≠ データ/権限の可搬性 ≠ 成果の完全な引渡し**。これを中央のProfile管理機構で一律に解決せず、既存のDelivery/Host境界の証拠を利用する。実ハーネス間・テナント間の評価はD1以降に必要性を確認して行う。
+
+## 17. 2026-11-01：通知を抑えても、用途別の未確認は保持する（計画提案）
+
+[SEI #660の評価用Consumer限定実測](https://github.com/hat47x/sei-cognition/issues/660#issuecomment-6499506336)では、通常優先度の鮮度不足が出力から省略され、鮮度要求自体のない場合と同じJSONとなった。これは合成評価用Consumerの観測であり、現行SEI製品全体の障害を意味しない。[SEI #677の引継ぎ案](https://github.com/hat47x/sei-cognition/issues/677#issuecomment-6552742323)と合わせ、TAIでは**用途ごとの利用条件・確認状態・人への通知・実行権限**を区別する。
+
+- **静かな継続**：通常優先度の未確認を即時通知しなくても、後から該当用途で利用するときは、対象・版・scope・鮮度不足・原記録への参照を取得可能にする。通知0件を「未決なし」と解釈しない（[SEI #678](https://github.com/hat47x/sei-cognition/issues/678)も参照）。
+- **必要な時点の確認**：過去の資料を参考資料として読むことと、現在の正式案内に使用することでは利用条件が異なる。無関係な独立調査は継続し、不可逆な作用が未確認条件に依存する場合はOwner/Providerの既存境界へ委ねる。
+- **最小の合成対照（NOT RUN）**：Q-N=normal+staleで通知を抑制、Q-P=鮮度要求なしで通知不要。通知出力が両者とも空でも、後段のHarnessが用途別の条件を区別できるかを比較する。Q-C=critical+staleでは注意喚起の適切さを別観測。Q-H=別Harnessへの引継ぎでは共有可能な情報だけ渡し、未取得はunknownとして扱う。
+- **入力の実測**：SW-01 A2/B1では、Prepared（生成予定のContext）・Delivered（実際にHarnessへ渡ったSource/版）・Observed use（引用やTool呼出しで確認できた範囲）を分ける。[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017#issuecomment-6471599765)の証拠境界を参照し、渡しただけで理解/意味受理されたとは主張しない。独立Oracle/holdoutの正解を生成側へ事前開示しない。
+
+TAIでSEIのroutingや通知基盤を複製しない。確認回数・通知回数・手戻り・誤った利用・不必要な停止を別列で比較し、**低い注意負担と必要な条件の保持の両立**を能力増幅の評価項目とする。新規Q-N/Q-P/Q-C/Q-H、実別Harness、実生活/業務の成果、Owner受理はNOT RUN。
+
+## 18. 2026-11-01：開示投影・保存再検証・現在適用を区別した活動継続
+
+**根拠の進展**：TAI [#28／merged #163](https://github.com/hat47x/tai-pleroma/issues/28)で、SUI照合用のMMI観測・fixture・元SUI記録・実行記録・D-04の5ファイルとhash一覧を保存し、読取り専用で再生成・byte照合できるようになった。Linux固定fixture・負例・race付きテストは既存担当の実測。**SUI局所の再現**であり、統合実行の全入力/環境、原資料の現在性・真正性・本番認可・意味受理・公開権限は対象外。非原子的な複数ファイル保存を、部分保存後の安全な自動再実行保証と混同しない。
+
+SUI側のmerged [#3330](https://github.com/hat47x/sui-sensemaking/pull/3330)、[#3331](https://github.com/hat47x/sui-sensemaking/pull/3331)、[#3337](https://github.com/hat47x/sui-sensemaking/pull/3337)では、agent向けの未レビューCard ID/関係線/島所属を伏せ、実本文露出の監査を修正し、proposalの`accepted`は**提案生成時のbundleへの判断**と明示した。これらはSUI側のコード・文書・テストの進展であり、TAIの実テナント/外部Harness接続の成功ではない。
+
+### 18.1 「観測できなかった」と「存在しない」を分ける
+
+同じDocumentでも、閲覧者・入口・SafeModeにより返される投影が異なる。TAIが保持するべき対象は**許可された投影の内容と到達範囲**である。未レビューCardが返らないとき、全DocumentのCard数を観測済み投影件数から推定して完全集合と呼ばない。また、隠したCardの存在/IDや件数を、差分診断を通じて外部へ漏らさない。
+
+| 読取り面 | 既存の契約・具体的注意 | TAI Consumerの検証可能範囲 |
+| --- | --- | --- |
+| SUI agent `GET /docs/{id}` | レビュー済み本文は付与対象内で返る。未レビューCard ID・それを端点とするEdge等は除外。監査に実露出を記録 | **開示された投影**の内容・範囲。非開示集合の完全性・内部IDは主張しない |
+| SUI MCP `get_context_projection` | `safeMode:true`はより厳しいクライアント側既定。SafeMode中のCard digestは`null`になり得る | 本文/digestがない時に「不一致」「同一」と断定せず、照合不能として残す |
+| SUI Proposal Status | `sourceBundleHash`は提案**生成時**のbundleを指す。現在の`baseDocSignature`は別に取得 | `accepted`だけで現在Document版の判断・TAI/Owner意味受理としない |
+| TAI SUI保存Evidence（#163） | 保存済み局所入力間の整合・生成物byte再照合 | 保存時の参照再構成に限る。元資料の現在状態・利用条件・正本Authorityは別途確認 |
+
+[SUI #67最新照合](https://github.com/hat47x/tai-pleroma/issues/67#issuecomment-6554569610)によれば、現在の`baseDocSignature`（docId:updatedAt）、`bundleHash`、`cards[].digest / islands[].digest`はそれぞれ射程が異なる。`bundleHash`が単位digestを含まないこと、`baseDocSignature`だけでcontent byte一致を主張できないことにも注意。Hashが一致しても、真実性・未レビュー情報・公開許可の保証にはならない。
+
+**三つの閉包を分ける**：①開示投影について可視範囲の記録が揃う、②元の全対象/業務Required setについてCoverageが揃う、③実外部Effectの対象と結果が確定する。①から②、②から③を自動導出しない。開示制限下で②が必要なら、許可済みSource Ownerが別経路で検証した範囲の証拠を受け取るか`unknown`へ留める。透明性を理由に非公開情報を渡すことも、機密を理由に欠落を「0」と表示することもしない。
+
+### 18.2 進んだEKI実行面の保証を、旧recordと混同せず更新
+
+EKI [#374／merged #382](https://github.com/hat47x/eki-fabric/issues/374)で**HTTP submit→dispatch→Agent実行→ResultClaim保存**までのprocess testが追加された。既存TAIの「TEI HTTP 202で受付」の実測よりEKI内部の製品検証は進んだが、**TEI発行のそのtask_idが同じ試行でEKI AcceptedResultとなったこと**は引き続き未実証。EKI [#381](https://github.com/hat47x/eki-fabric/issues/381)の`active→verifying/ready`配線は未完了、[#263](https://github.com/hat47x/eki-fabric/issues/263)のactive cancel収束と[#320](https://github.com/hat47x/eki-fabric/issues/320)の実出力byte取得もOwner課題。
+
+EKI [#351／merged #366](https://github.com/hat47x/eki-fabric/issues/351)ではWindowsの子孫プロセスを含むCPU/メモリ監視とLinuxのプロセスグループ集計が試験で確認された。ただし20ms間隔の監視は瞬間超過・短命の子を見落とし得る。Windowsの実行後メモリ検査、Job Objectの適用profile、実出力/本番結果の保証もそれぞれ別。個別試験と同一実Taskでの実施証拠を区別する。
+
+### 18.3 SW-01で再利用する小さな正負例（追加試行はNOT RUN）
+
+- **VIEW-P/N**：同じDocumentのレビュー済み投影だけを参照し、隠れたCard/EdgeのIDを含まずに妥当な説明を再構成する（正）。元Documentの件数・未レビューの構造を「存在しない」または推測表示する（負）。実SUI Tenantの接続権限がなければ保存fixtureの投影比較に限定する。
+- **HISTORY-P/N**：TAI #163の保存済みEvidenceのbyte再検証がPASSでも、元Documentが改版済みのケースでは「歴史的再現は成立／現行適用は未検証」と返す（正）。保存bundleの同じhashまたはSUI Proposal `accepted`を理由に現行判断を有効化する（負）。
+- **RECEIPT-P/N**：EKIの一Task内でSubmit→Claimまでの実IDを追う（正）。別fixtureのAcceptedResultを同Taskに接ぎ、ArtifactやOwnerの業務Effectまで完了したと述べる（負）。Owner側P1-JE-1へ引き渡す。
+- **ENV-P/N**：Harness A2/B1の比較で実際のTool呼出し・受領bytes・base revision・実効モデル/課金経路を記録する（正）。モデル名や提供プランが変わった試行を同条件の再現、想定使用額を実支出と扱う（負）。既存DSH/OpenCode等のハーネスを活用し、新TAI専用Runner・Billing基盤を作らない。
+
+**共通の評価列（共有Schemaではない）**：`user-purpose / disclosed source projection + view policy / source revision + actual evidence bytes / decision basis + applicability / current authority / task+attempt+receipt identity / verified result endpoints / inaccessible+unresolved / user follow-up burden`。認可できない要素は`not accessible`とし、存在の有無を推測しない。秘密情報/holdout期待値は提供先に渡さない。
+
+**縮退の判断**：AIが情報整理・要約を自力で行えるようになれば表示/通知Adapterを減らせる。一方で、現在の利用範囲、読取り資格、同一案件の因果、効果の未確定を正しく表せるかは、外部Harnessの実能力に照らして評価する。新版の製品やfixtureの実測を既存履歴から区別し、CSW/SUIの自由な探索を実行向けGateへ従属させない。
+
+状態：参照したmerged PR、TAI #163の保存再検証、EKI process/資源試験は**各担当の限定実証**。VIEW/HISTORY/RECEIPT/ENVのTAI横断試験・実ハーネス製品交換・実Authority・Owner意味受理・実世界効果は**未実施／未受理**。
+
+### 18.4 TEIで意味を表現できることと、Target生成が成立することの差
+
+[TAIのSUI DocumentV1パイロット](https://github.com/hat47x/tai-pleroma/blob/main/integrations/pilot-sui-document/README.md)では、Document/Card/Island/Edgeの意味モデルは`tei validate`で確認できた。一方、従来の数値生成契約はWorkspace属性不一致で拒否され、`std.text`の試行はrounding前提で拒否された（[TEI #2488](https://github.com/hat47x/tei-platform/issues/2488)）。その後、[merged spike #2489](https://github.com/hat47x/tei-platform/pull/2489)で文字列のpresent/empty/missing/unresolvedを比較できたが、現行の製品Generator Selectionがrecord/string出力に対応したという実証ではない。段階2の実生成は停止中。
+
+**横断的な能力選択の含意**：`model-valid`／`contract-expressible`／`generator-supported`／`artifact-verified`／`host-executed`／`owner-accepted`を一つのready状態へ統合しない。外部Harnessが別コード生成を補助する場合も、その成果物がTEIの正式Generator/Selectorを通ったと扱わず、独立した候補・出典/版・検査証拠を残す。未対応が見つかったときは適切な段階で止め、TEI側の既存Issueに要求を返す。TAIに同じrecord/string Generatorを別実装しない。
+
+## 19. 2026-11-01：機密性の高い運用での生データ隔離（TAI #232）
+
+**Ownerの追加要望**：SEI/SUI等が保持する生データを、ハーネスや別Productが直接取得できると外部LLMやTool等へ非公開内容が送出され得る。機密性が高い場合は、**OS/Hostが実際に強制する境界**でRaw Storeを保護し、許可済みの用途限定Projection/QueryだけをConsumerへ渡す。[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)を横断の設計・試験Ownerとし、SUI実API、SEI元記録、EKI Sandbox、TEI Host Authorityの第二実装はTAIへ置かない。
+
+### 19.1 「Productが返さない」と「Processから読めない」は異なる
+
+- **Policy/Projection**：SUI未レビューのCard/Edge/IDやSEI生観測をServer側で非開示。Clientの`safeMode`/MCP Tool annotationだけでServerの全出入口を保護したと推測しない。Read-onlyは更新権限の制限であって、秘密の読取り禁止とは別。
+- **OS/Runtime**：Raw StoreとHarnessは必要時に別OS Identity/ACL/プロセス/VM境界へ分離し、FS・Secret・IPC・network egress・一時ファイル・Logs/Crash dumpsを確認。LinuxではUID/ACL/namespace/Landlock/seccomp等、WindowsではACL/Identity/AppContainer/LPAC/VM/Firewall等を**Host固有の実利用資格と強制結果**で判断。既存EKI Job ObjectやresourceWatchの合格を機密隔離へ昇格させない。
+- **Network/Model送信**：Cloud LLM/API/telemetryへの送出前に用途・許容内容をProductが制限し、必要な場合は原文処理を許可されたローカル/組織管理の境界内で行う。生データを一度Modelへ渡した後のRedactionや「モデルに秘密を守らせる」Promptを保証としない。
+- **Handoff**：Harness交代や別Product利用時は、Sourceへのopaque reference・許可済み要約/集計と利用条件/確認要否だけ引き渡し、元文書・件数・ID・生fingerprint・Secretの存在さえ非公開になり得ると扱う。「後から元の記録へ戻れる」は改めて適切なHost/Source認可が成立した範囲に限る。
+
+### 19.2 Profile案・比較試験の位置付け
+
+機密度に応じてLAB（合成）／CONTROLLED（サーバ認可＋OS identity）／CONFIDENTIAL（Rawを別Process/隔離Hostへ置き、外部へ最小投影のみ）／RESTRICTED（特定ネットワーク・データ所在地の範囲内で生データ処理）を**候補**とする。Source/用途によって利用Profileは変わる。正式なCore Enum・万能Grant・全Productの必須Runtimeにはしない。いずれもOSと各製品の実装で保証が異なるので、環境が強制できない機能は`unsupported`で評価する。
+
+**最初の横断対照**：SUIまたはSEIの合成Rawを非Harness UIDの管理領域へ配置→Harnessは許可したServer Projectionへ正常アクセス→raw file、別Port direct API、symlink、任意Shell/MCP、下位Tool、非許可egressでは拒否。加えて本文を隠した投影のCard件数/ID/Edge、エラー/ログ、集計と反復照会による間接開示を調べる。既存SUI #3330/#3331、TEI #2391のF1/F2、EKI #174のProfileを再利用。必要な時点に原資料へ到達できることは**許可されたProductが取得し、非公開原文をHarnessへ配布しない**方式で確認する。
+
+**連携成功の最小主張**は、①実Kernel/OS権限でRawへの直接アクセスを防げた、②実APIは用途に許された投影だけ返した、③実外向き経路に非許可のRawが出なかった、④非公開情報を対象集合の0件/全件と取り違えず活動が進められた、の**個別証拠**。それぞれ同じInput/Process/Version/Host/時点であることを示す。OS管理者権限、Kernel侵害、許可済み画面の撮影等は別Threat Class。
+
+
+**2026-11時点のOS実装候補**：[Microsoft Execution Containers (MXC)公式](https://learn.microsoft.com/en-us/windows/apps/develop/mxc/)は、SDK＋PolicyからOS固有Process/Session/VM系Backendを選択し、File/Network/UI制限を適用する既存実装である。WindowsでのProcessContainerはAppContainer系、Linuxではbubblewrap系、macOSではSeatbelt系などを候補とする。ただし[公式Backend別の制約](https://learn.microsoft.com/en-us/windows/apps/develop/mxc/examples)により、あるSession/WSL系はNetwork/Filesystemの細粒度制御が他のBackendと同等ではない。**MXCという名称だけで機密Profile達成と認定しない**。Target OS/更新・SDK/Policy版・実起動Backend・サポート権限・hostLoopback・egress拒否の正負例を固定し、Windows既存[Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)の資源制御単独と比較する。Linux独立候補は[Landlock](https://kernel.org/doc/html/next/userspace-api/landlock.html)等。OS自体のCapabilityと、TEI/EKI/TAIの製品保証は別。
+
+**状態**：#232へ具体的な負例・C0〜C5・責務分担を起票済み。本節は設計候補で、Linux/Windowsの実隔離、実Cloud egress、秘密文書のProduct横断処理、Ownerの機密Profile採用は**NOT RUN**。SW-01 A2/B1比較も非公開Rawの直接投入を前提にせず、同じ許可済みProjectionで条件を固定する。
+
+## 20. 2026-11-01：安価な大量推論を製品群の拡大へ転換する（TAI #233）
+
+ユーザー方針は、トークン大量調達により**開発速度・要件・Issue・対象領域を積極的に拡張**すること。従来の「高価なLLMを節約するために機能を削る」前提を改める。軽量性・縮退可能性は、豊かな製品構成を利用者が**必要に応じて選べる**性質として維持し、探索の候補数・Issue数を固定上限で制限しない。
+
+[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)をシリーズ横断の開発ポートフォリオ、[TEI #2493](https://github.com/hat47x/tei-platform/issues/2493)をTEIの外部要件Pressure、[#2495](https://github.com/hat47x/tei-platform/issues/2495)をデータ構造メタ概念のOwnerとする。[YI研究Draft #231](https://github.com/hat47x/tai-pleroma/pull/231)は価値/要望の拡大、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)は生データ隔離。新しい中央Runtime・第二Portfolio DBを先に採用しない。
+
+### 20.1 スコープの拡大を可能にする五つの独立した作業群
+
+| 作業群 | 並列に生成・深掘りするもの | 正本/完成条件の所在 |
+| --- | --- | --- |
+| 外部要求の広範な収集 | SaaS/OSS/商用/先行技術のPressures、複数1:N・N:M/Graph/Gantt/Map、企業・個人・社会での利用要求 | 各業務の事実Source・Owner。仮説/反例も保持 |
+| 意味・構造の探索 | [TEI #2495の七役割](https://github.com/hat47x/tei-platform/issues/2495#issuecomment-6556744900)：対象/構成/性質・法則/解釈文脈/利用要求/証拠/実現。SEI組織固有の暗黙期待、SUIの認識視点 | TEI/SEI/SUI各Owner。多重facetは単一継承/全自動型変換を意味しない |
+| 実装と生成対象の拡張 | TEI Headless CUI/Plugin、Java/.NET/WASM、SHO文書、SUI Canvas、EKI限定委任と実成果物 | 各製品の既存Contract/Generator/Host/Conformance。生成候補と正式成果物は別 |
+| 独立検証の厚み | Contract正負例、現在対象/時点、集合欠落、OS Raw隔離、sealed holdout、同一Task因果 | 既存Oracle/Host/Providerと業務Owner。LLMの相互賛同を受理としない |
+| 価値の広がり | 個人の選択・休息、企業の未知課題/重大脆弱性、社会での異論・受益の公平、複数Harnessでの継続 | [YI #231](https://github.com/hat47x/tai-pleroma/pull/231)・TAI #165/#167/各Owner。実利用者の評価は別 |
+
+**設計上の焦点**：大量のAI生成物を高速に作ることと、Ownerが受理できる独立した成果を増やすことは別。製品型の追加と、同じ概念に別名を増やすことも別。広い探索から新しい意味の軸やPluginが本当に必要な箇所を発見する。PoCの小ささは探索の狭さではなく、受入可能な**比較単位**を意味する。
+
+### 20.2 安価なトークンで変わる制約と、変わらない制約
+
+開発の進行を `exploration → qualified proposal → independent test → integrated artifact → actual use outcome` の**観測上の段階**で分ける。直列の製品Runtimeや新Gateではない。
+
+- **トークンに比例して増やせる候補**：異なる設計/Method、コード/テスト案、反例、多言語Target、UI/文書、未採用の仮説。CSWの生成探索では途中採否を強制しない。
+- **トークンだけでは増えない資源**：実OS隔離の管理、独立Oracle/秘密holdout、実PostgreSQL/Windows/Native/Hostテスト、CI容量、同一契約の統合、ライセンス・著作物確認、Ownerの業務意味受理、実利用者が得た価値。
+- **新しいボトルネックの見つけ方**：候補が多いのに実証が滞る場合、原因を`Owner pending`／`Source permissions`／`Integration conflict`／`Runtime not available`／`Oracle missing`など既存Issueの実体に引き戻す。上流の生成数だけを増やして「開発が進んだ」としない。
+
+### 20.3 機密環境でも並列探索できる二つの作業面
+
+**探索面**：非機密のSource/合成fixtureを使うAI Agentsを、既存Harness/DSH/OpenCode/Codex/Claude等、別Branch/Worktree/作業票で並列化。各Agentへ作業範囲・Base revision・利用可能なTool・禁止作用を渡す。共通ファイル/契約修正のみ依存を調整する（TEI #2017 A0〜A4）。大量並列でも、Ownerの正式権限をAgent間で移譲したと推定しない。
+
+**機密面**：SEI/SUI等のRawはProduct/OS管理領域内にとどめる。外部Agentsへ渡すのは許可済みProjection/合成サンプル/部分的なConformanceだけ。**TEIの型・構造メタデータも、Schema名、列名、件数、少数者の関係、値域、Digest、エラー内容によって秘匿情報になる**ため、Structure Catalogを無条件にPublicにしない。外部公開可能な抽象facet、用途に許可した実Schema、Raw実値の三者を区別。OSユーザー/Filesystem/Network/Secret/別Portの実強制は[#232](https://github.com/hat47x/tai-pleroma/issues/232)を参照。安全を要求するProfileの実拒否が未証明なら、隔離済みとせず合成資料で作業する。
+
+**統合面**：候補→既存Ownerの正負Oracle→同一revision/Toolchain/Artifactの照合→実利用確認を行う。各Productで合成PASSした記録が他ProductとのE2E、Host実Effect、業務意味受理へ変化しない。多数のPRを作成したという事実は実Source/Prompt/Build入力からの追跡に代わらない。
+
+### 20.4 同じ4件の要件で、並列化の実質価値を測る（設計／NOT RUN）
+
+[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)のP-A〜P-Eを参照。P-A逐次/単一Harness、P-B独立Agentで同じ4件、P-C共通Contractの競合、P-D非公開Sourceを含むOS隔離、P-E複数Model/料金枠を固定した比較。PoCとして、**複数1:N＋Graph/Gantt、SaaS/SIerの組織文脈差、SUI/SEI Projection、EKI結果受理**の4領域を初回候補とする。TEI #2493 A〜Eと重複した実装はしない。
+
+観測列は `input/source revision, actual model/tool and delivered context, independent negative cases, candidate count, unique accepted design options, Oracle result, integration conflict and latency, CI+human resource cost, disclosed bytes, Owner unresolved, user value`。一律のToken単価や同一モデル利用枠は事前に仮定せず、実利用可能なものを記録する。価格/購入Credit/契約配賦を二重計算しない。
+
+**Priority**：SW-01 A2/B1の独立検証器増分は引き続き横断の品質基準。#233ではスコープ拡張/同時開発の評価を**並行に進めてよい**。これは開発領域を狭くするCritical Path制限ではなく、並列で得た結果の資格を正確に区別するための実証順序である。外部モデルの実構成・OS拒否・P-A〜P-E、実Provider Effect、Owner意味受理、QoLは未実証。
