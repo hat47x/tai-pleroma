@@ -1,0 +1,19 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "sui.island.record",
+  "version": "1",
+  "status": "reference-local",
+  "note": "SUIのIslandを、islandIdとdocumentIdからなるrecordとして投影する参照用の契約。",
+  "inputs": [
+    {"attribute": "sui.island.island_id", "primitive": "std.identifier"},
+    {"attribute": "sui.island.document_id", "primitive": "std.identifier"}
+  ],
+  "output": {"primitive": "std.text"},
+  "projection": {
+    "kind": "record",
+    "fields": [
+      {"name": "islandId", "input": "islandId", "attribute": "sui.island.island_id", "primitive": "std.identifier"},
+      {"name": "documentId", "input": "documentId", "attribute": "sui.island.document_id", "primitive": "std.identifier"}
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.island.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {"islandId": "island-1", "documentId": "doc-1"},
+      "want": {"state": "present", "text": "{\"documentId\":\"doc-1\",\"islandId\":\"island-1\"}"}
+    },
+    {
+      "id": "empty-id",
+      "input": {"islandId": "", "documentId": "doc-1"},
+      "want": {"state": "present", "text": "{\"documentId\":\"doc-1\",\"islandId\":\"\"}"}
+    },
+    {
+      "id": "missing-document",
+      "input": {"islandId": "island-1"},
+      "want": {"state": "missing", "text": "[\"documentId\"]"}
+    },
+    {
+      "id": "unresolved-island",
+      "input": {"islandId": null, "documentId": "doc-1"},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}

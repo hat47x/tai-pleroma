@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-island-edge/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "98b0e68e12477c97e7ba9afbbf4e55a85426dba7",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract <TAI>/integrations/pilot-sui-document/candidates/{island-record,edge-record}/contract.json -strategy text-record-template -out <tmp> && go run ./tools/reference-generator-selection/cmd/tei-generator-select ... && go run ./tools/reference-target-profile/cmd/tei-target-profile run -profile <TAI>/integrations/pilot-sui-document/profiles/record.json ...",
+  "result": "PASS",
+  "observed": {
+    "contracts": [
+      {"id": "sui.island.record", "fields": ["islandId", "documentId"], "cases": 4, "qualified": "text-record-template", "targetPassed": true},
+      {"id": "sui.edge.record", "fields": ["edgeId", "fromCard", "toCard", "relation"], "cases": 4, "qualified": "text-record-template", "targetPassed": true}
+    ],
+    "relationRepresentation": "fromCard and toCard are identifier fields in one flat record; the relation is a std.code field.",
+    "documentComposition": "deferred: the text-record contract is flat and cannot nest cards, islands, or edges."
+  },
+  "scope": "Two reference-local record contracts for SUI Island and Edge, each generated, selected against four fixtures, and run under the one-shot record profile. It does not produce nested Document projection, SUI code, real target deployment, or human acceptance."
+}

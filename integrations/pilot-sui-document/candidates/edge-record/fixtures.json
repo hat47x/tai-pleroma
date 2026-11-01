@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.edge.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {"edgeId": "edge-1", "fromCard": "card-1", "toCard": "card-2", "relation": "supports"},
+      "want": {"state": "present", "text": "{\"edgeId\":\"edge-1\",\"fromCard\":\"card-1\",\"relation\":\"supports\",\"toCard\":\"card-2\"}"}
+    },
+    {
+      "id": "empty-relation",
+      "input": {"edgeId": "edge-1", "fromCard": "card-1", "toCard": "card-2", "relation": ""},
+      "want": {"state": "present", "text": "{\"edgeId\":\"edge-1\",\"fromCard\":\"card-1\",\"relation\":\"\",\"toCard\":\"card-2\"}"}
+    },
+    {
+      "id": "missing-to",
+      "input": {"edgeId": "edge-1", "fromCard": "card-1", "relation": "supports"},
+      "want": {"state": "missing", "text": "[\"toCard\"]"}
+    },
+    {
+      "id": "unresolved-from",
+      "input": {"edgeId": "edge-1", "fromCard": null, "toCard": "card-2", "relation": "supports"},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}
