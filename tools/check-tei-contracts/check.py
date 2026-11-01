@@ -126,6 +126,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         errors.append("order evidence is not PASS")
     if order_evidence.get("order") != [c.split(".")[-1] for c in expected_flow]:
         errors.append(f"order evidence differs: {order_evidence.get('order')}")
+    if order_evidence.get("negativeResult") != "PASS" or not order_evidence.get("negativeTest"):
+        errors.append("order evidence has no negative control")
     for capability in flow:
         if capability not in patterns or capability not in bindings:
             errors.append(f"flow step has no pattern or binding: {capability}")

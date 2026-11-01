@@ -48,6 +48,17 @@ class CheckTest(unittest.TestCase):
             target.write_text(json.dumps(data), encoding="utf-8")
             self.assertFalse(check(root)["passed"])
 
+    def test_order_evidence_without_negative_control_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            target = root / RECORD
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / RECORD, target)
+            data = json.loads(target.read_text(encoding="utf-8"))
+            data["orderEvidence"].pop("negativeResult", None)
+            target.write_text(json.dumps(data), encoding="utf-8")
+            self.assertFalse(check(root)["passed"])
+
     def test_missing_read_only_effect_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
