@@ -93,6 +93,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-compare-2026-11-02.json",
     "evaluations/records/SUI-TEI-deploy-2026-11-02.json",
     "evaluations/records/SUI-TEI-island-edge-2026-11-02.json",
+    "evaluations/records/SUI-TEI-document-record-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -164,6 +165,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-document-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("cases") != 4 or observed.get("profilePassed") is not True:
+                errors.append(f"TEI document record receipt did not pass 4 cases and the profile: {relative}")
+            if observed.get("fields") != ["documentId", "title", "digest"]:
+                errors.append(f"TEI document record receipt has unexpected fields: {relative}")
         if "tei-island-edge" in relative:
             contracts = data.get("observed", {}).get("contracts", [])
             if len(contracts) != 2:
