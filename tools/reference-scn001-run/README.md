@@ -19,6 +19,7 @@ go test ./...
 go run . -root ../..
 ```
 
+`-eki-receipt ../../evaluations/records/EKI-http-agent-2026-11-01.json`を指定すると、実実行のEKI receiptをbyte digestで固定し、run receiptの`externalExecution`へ参照として記録します。受理済み（`acceptedOutcome=accepted`）で未公開（`publicationAllowed=false`）のreceiptだけを受け付けます。これはシナリオ実行そのものではなく、実行区間の証拠をrun receiptへ結び付ける参照です。保存済みの例は[SCN-001-run-2026-11-01.json](../../evaluations/records/SCN-001-run-2026-11-01.json)です。
 `-out run.json`でreceiptを保存できます。保存済みSUI照合要約を含める場合は`-sui-link ../../evaluations/records/SUI-SCN-link-2026-10-26.json`を指定します。今回生成したD-04も残す場合は、`-artifact-out review.md -out run.json`を指定します。両方の出力先は新規・別名のファイルに限り、既存ファイルは上書きしません。保存したbyte列を読み直し、実行記録のdigestとの一致を確認します。`-verify run.json`で`runDigest`を再計算し、`humanReviewed`・`authorityVerified`・`published`がすべてfalseであることを確認できます。
 
 

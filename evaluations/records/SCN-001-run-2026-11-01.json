@@ -1,0 +1,208 @@
+{
+  "schema": "tai.reference.scn001-run/v0",
+  "scenario": "SCN-001",
+  "generatedAt": "2026-11-01T06:18:08Z",
+  "runDigest": "sha256:eb123c4871b95cd815051388fd99830ad6114668f2ffa79bad1e632037759d07",
+  "components": {
+    "mmi": {
+      "passed": true,
+      "server": "markdown-matrix-injector/0.2.0",
+      "protocolVersion": "2024-11-05",
+      "mmiCommit": "e293927e7decb548c9662c4a19a140c1d017a1a8",
+      "selectedRows": 3,
+      "conflictPreserved": true,
+      "boundaryRejected": true,
+      "missingSourceRejected": true,
+      "sourceDigestBefore": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce",
+      "sourceDigestAfter": "sha256:99bf12937d825e0ce52753a39d41426f30fc2ae9e695db9a6f9bb0bdf08f44ce",
+      "selectedDigests": {
+        "O-02": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-03": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0",
+        "O-07": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+      }
+    },
+    "sei": {
+      "passed": true,
+      "seiCommit": "234c3f91ce86b59b0f202295f454bad74dc6758c",
+      "goVersion": "go version go1.27.3 windows/amd64",
+      "bundleId": "scn001",
+      "recordCount": 3,
+      "decision": {
+        "id": "dec-01",
+        "statement": "公開は保留",
+        "recommendations": [
+          "recommendation:rec-01"
+        ]
+      },
+      "provisionalDecision": {
+        "id": "dec-02",
+        "statement": "D-04を内部レビュー用に仮承認。公開は未承認",
+        "recommendations": [
+          "recommendation:rec-01"
+        ]
+      },
+      "provisionalApproved": true,
+      "reviewTrigger": "real-object",
+      "authorityVerified": false,
+      "humanReviewed": false,
+      "published": false,
+      "readOnlyProjection": true
+    },
+    "scn001": {
+      "passed": true,
+      "observationSource": "mmi-reference",
+      "realProductsConnected": true,
+      "synthetic": true,
+      "humanReviewed": false,
+      "authorityVerified": false,
+      "provisionalApproved": true,
+      "publicationApproved": false,
+      "reviewRequired": true,
+      "reviewTrigger": "real-object",
+      "cases": [
+        {
+          "id": "P-01",
+          "status": "pass"
+        },
+        {
+          "id": "P-02",
+          "status": "pass"
+        },
+        {
+          "id": "P-03",
+          "status": "pass"
+        },
+        {
+          "id": "P-04",
+          "status": "pass"
+        },
+        {
+          "id": "P-05",
+          "status": "pass"
+        },
+        {
+          "id": "P-07",
+          "status": "pass"
+        },
+        {
+          "id": "P-06",
+          "status": "not-run"
+        },
+        {
+          "id": "N-01",
+          "status": "pass"
+        },
+        {
+          "id": "N-02",
+          "status": "pass"
+        },
+        {
+          "id": "N-03",
+          "status": "pass"
+        },
+        {
+          "id": "N-04",
+          "status": "pass"
+        },
+        {
+          "id": "N-05",
+          "status": "not-run"
+        },
+        {
+          "id": "N-06",
+          "status": "pass"
+        },
+        {
+          "id": "N-07",
+          "status": "pass"
+        },
+        {
+          "id": "N-08",
+          "status": "pass"
+        }
+      ],
+      "observationDigests": {
+        "O-01": "sha256:5bd426b302800fcb195e7b76862aafc2e3d36447077d2d987c647acc8b191898",
+        "O-02": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-03": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0",
+        "O-04": "sha256:c6101e4cb712b0d8d7d350be4a79d002d7cca558b6959ef5b8af0161424af15d",
+        "O-05": "sha256:fd3b28cec417ae9cfd4abcd5c80efc040017f80c7e676ebbc32d2d1f6da01156",
+        "O-06": "sha256:a6782eb43874f3d03f5338b2818aaaa45d1aeacc7d77f52e6a9f51dacd7ea82e",
+        "O-07": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-08": "sha256:678ba80b4b84681e98ce7d4dde324622a89f6ad4dd4d9a102e73ac82c7ebe68c",
+        "O-09": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+      }
+    },
+    "reviewArtifact": {
+      "passed": true,
+      "status": "provisional",
+      "draftId": "D-04",
+      "artifactDigest": "sha256:0600ddbe0cbdb57f5c3b7ad6ee874d9c57efd2b3c53a5584edd1498fd6d4b07f",
+      "provisionalApproved": true,
+      "publicationApproved": false,
+      "reviewRequired": true,
+      "reviewTrigger": "real-object",
+      "authorityVerified": false,
+      "observationDigests": {
+        "O-02": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-03": "sha256:e11416b06a952168954074bf904627c2bbc74ff59f25503a508b8c67ce23acb0",
+        "O-06": "sha256:a6782eb43874f3d03f5338b2818aaaa45d1aeacc7d77f52e6a9f51dacd7ea82e",
+        "O-07": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+        "O-08": "sha256:678ba80b4b84681e98ce7d4dde324622a89f6ad4dd4d9a102e73ac82c7ebe68c"
+      }
+    },
+    "publicationGate": {
+      "schema": "tai.reference.scn001-publication-gate/v0",
+      "allowed": false,
+      "blockers": [
+        "R-01: synthetic development review; real-object required for publication",
+        "R-02: synthetic development review; real-object required for publication",
+        "R-03: synthetic development review; real-object required for publication",
+        "R-04: synthetic development review; real-object required for publication",
+        "R-05: synthetic development review; real-object required for publication",
+        "R-06: status=pending",
+        "R-07: status=pending"
+      ]
+    },
+    "externalExecution": {
+      "path": "../../evaluations/records/EKI-http-agent-2026-11-01.json",
+      "digest": "sha256:5213f6a35eddaff2779996d7c162af03cb07ddd1efb2bce1f2f3e64fa7764902",
+      "ekiCommit": "ccaff37571f5e586c38cb085ceeba1a6aee0555e",
+      "taskId": "tsk_e2b20bf28bd437241f1f41d6a2412ead",
+      "acceptedOutcome": "accepted",
+      "acceptedResultDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+      "verification": "same-host re-execution compared with the claim digest",
+      "testProfile": true
+    }
+  },
+  "passed": true,
+  "synthetic": true,
+  "realProductsConnected": true,
+  "humanReviewed": false,
+  "authorityVerified": false,
+  "provisionalApproved": true,
+  "publicationApproved": false,
+  "publicationAllowed": false,
+  "publicationBlockers": [
+    "R-01: synthetic development review; real-object required for publication",
+    "R-02: synthetic development review; real-object required for publication",
+    "R-03: synthetic development review; real-object required for publication",
+    "R-04: synthetic development review; real-object required for publication",
+    "R-05: synthetic development review; real-object required for publication",
+    "R-06: status=pending",
+    "R-07: status=pending"
+  ],
+  "reviewRequired": true,
+  "reviewTrigger": "real-object",
+  "published": false,
+  "notes": [
+    "MMIの読み取り専用観測とSEIのdecision-memory projection、SCN-001合成評価を1回の参照実行に束ねた。",
+    "Draft・仮説・判断・revisionは合成fixtureであり、人間の判断ではない。",
+    "SEIの一時storeは参照用で、実在の規程・権限・公開ではない。",
+    "仮承認はdevelopment-review-onlyで、公開承認ではなく、実物ベースの再レビューを要する。",
+    "D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
+    "publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
+    "P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
+    "EKIの実実行receiptをdigestで固定して参照した。TEST PROFILEと同一ホスト再実行の検証であり、独立検証ではない。"
+  ]
+}

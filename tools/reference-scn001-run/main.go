@@ -100,18 +100,30 @@ type SUILinkComponent struct {
 	Contradiction  bool     `json:"contradiction"`
 }
 
+type ExternalExecutionComponent struct {
+	Path                 string `json:"path"`
+	Digest               string `json:"digest"`
+	EkiCommit            string `json:"ekiCommit"`
+	TaskID               string `json:"taskId"`
+	AcceptedOutcome      string `json:"acceptedOutcome"`
+	AcceptedResultDigest string `json:"acceptedResultDigest"`
+	Verification         string `json:"verification"`
+	TestProfile          bool   `json:"testProfile"`
+}
+
 type RunReceipt struct {
 	Schema      string `json:"schema"`
 	Scenario    string `json:"scenario"`
 	GeneratedAt string `json:"generatedAt"`
 	RunDigest   string `json:"runDigest"`
 	Components  struct {
-		MMI             MMIComponent      `json:"mmi"`
-		SEI             SEIComponent      `json:"sei"`
-		SCN001          SCNComponent      `json:"scn001"`
-		ReviewArtifact  ArtifactComponent `json:"reviewArtifact"`
-		PublicationGate GateComponent     `json:"publicationGate"`
-		SUILink         *SUILinkComponent `json:"suiLink,omitempty"`
+		MMI               MMIComponent                `json:"mmi"`
+		SEI               SEIComponent                `json:"sei"`
+		SCN001            SCNComponent                `json:"scn001"`
+		ReviewArtifact    ArtifactComponent           `json:"reviewArtifact"`
+		PublicationGate   GateComponent               `json:"publicationGate"`
+		SUILink           *SUILinkComponent           `json:"suiLink,omitempty"`
+		ExternalExecution *ExternalExecutionComponent `json:"externalExecution,omitempty"`
 	} `json:"components"`
 	Passed                bool     `json:"passed"`
 	Synthetic             bool     `json:"synthetic"`
@@ -176,6 +188,51 @@ func digestJSON(value any) (string, error) {
 	}
 	sum := sha256.Sum256(raw)
 	return "sha256:" + hex.EncodeToString(sum[:]), nil
+}
+
+// LoadExternalExecution reads a real-execution receipt and pins its exact
+// bytes. It accepts only a passed receipt that does not claim publication.
+func LoadExternalExecution(path string) (ExternalExecutionComponent, error) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return ExternalExecutionComponent{}, err
+	}
+	var doc struct {
+		Synthetic          bool   `json:"synthetic"`
+		EvidenceKind       string `json:"evidenceKind"`
+		PublicationAllowed bool   `json:"publicationAllowed"`
+		Result             string `json:"result"`
+		EkiCommit          string `json:"ekiCommit"`
+		Observed           struct {
+			SubmitStatus         int    `json:"submitStatus"`
+			TaskID               string `json:"taskID"`
+			AcceptedOutcome      string `json:"acceptedOutcome"`
+			AcceptedResultDigest string `json:"acceptedResultDigest"`
+			Verification         string `json:"verification"`
+			TestProfile          bool   `json:"testProfile"`
+		} `json:"observed"`
+	}
+	if err := decodeEvidenceJSON(raw, &doc); err != nil {
+		return ExternalExecutionComponent{}, err
+	}
+	if doc.Synthetic || doc.EvidenceKind != "real-execution" || doc.PublicationAllowed {
+		return ExternalExecutionComponent{}, fmt.Errorf("external execution receipt is not a real, unpublished execution")
+	}
+	if doc.Result != "PASS" || doc.Observed.SubmitStatus != 202 {
+		return ExternalExecutionComponent{}, fmt.Errorf("external execution receipt did not pass with a 202 submission")
+	}
+	if doc.Observed.AcceptedOutcome != "accepted" || doc.Observed.AcceptedResultDigest == "" {
+		return ExternalExecutionComponent{}, fmt.Errorf("external execution receipt has no accepted result")
+	}
+	sum := sha256.Sum256(raw)
+	return ExternalExecutionComponent{
+		Path: path, Digest: "sha256:" + hex.EncodeToString(sum[:]),
+		EkiCommit: doc.EkiCommit, TaskID: doc.Observed.TaskID,
+		AcceptedOutcome:      doc.Observed.AcceptedOutcome,
+		AcceptedResultDigest: doc.Observed.AcceptedResultDigest,
+		Verification:         doc.Observed.Verification,
+		TestProfile:          doc.Observed.TestProfile,
+	}, nil
 }
 
 type OwnerQuestion struct {
@@ -311,6 +368,13 @@ func Verify(receipt RunReceipt) Verification {
 	if receipt.HumanReviewed || receipt.AuthorityVerified || receipt.Published {
 		verification.Reason = "run receipt claims human review, authority, or publication"
 		return verification
+	}
+	if external := receipt.Components.ExternalExecution; external != nil {
+		if external.Path == "" || !strings.HasPrefix(external.Digest, "sha256:") ||
+			external.AcceptedOutcome != "accepted" || external.AcceptedResultDigest == "" {
+			verification.Reason = "external execution component is incomplete"
+			return verification
+		}
 	}
 	mmi := receipt.Components.MMI
 	sei := receipt.Components.SEI
@@ -680,6 +744,7 @@ func main() {
 	artifactOut := flag.String("artifact-out", "", "save this run's D-04 to a new local file")
 	suiLinkPath := flag.String("sui-link", "", "include a SUI link receipt in this run")
 	suiReceiptPath := flag.String("sui-receipt", "", "check a source SUI receipt against this run's MMI-resolved fixture")
+	ekiReceiptPath := flag.String("eki-receipt", "", "include a real-execution EKI receipt as evidence")
 	evidenceOut := flag.String("sui-evidence-out", "", "save this successful run's SUI replay inputs to a new directory")
 	verifyEvidence := flag.String("verify-sui-evidence", "", "replay a saved SUI evidence directory with current local reference tools")
 	ownerPacketPath := flag.String("owner-packet", "", "build an owner decision packet from an existing run receipt")
@@ -720,7 +785,7 @@ func main() {
 	if (*verifyPath != "" && *ownerPacketPath != "") ||
 		(*artifactPath != "" && *verifyPath == "" && *ownerPacketPath == "") ||
 		(*artifactOut != "" && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) ||
-		((*suiLinkPath != "" || *suiReceiptPath != "") && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) ||
+		((*suiLinkPath != "" || *suiReceiptPath != "" || *ekiReceiptPath != "") && (*verifyPath != "" || *ownerPacketPath != "" || *artifactPath != "")) ||
 		(*suiLinkPath != "" && *suiReceiptPath != "") {
 		fmt.Fprintln(os.Stderr, "choose run, verify, or owner-packet mode; SUI inputs belong to run and are mutually exclusive")
 		os.Exit(2)
@@ -824,6 +889,25 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
+	if *ekiReceiptPath != "" {
+		component, err := LoadExternalExecution(*ekiReceiptPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		receipt.Components.ExternalExecution = &component
+		runDigest, err := digestJSON(receipt.Components)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		receipt.RunDigest = runDigest
+		if verification := Verify(receipt); !verification.Passed {
+			fmt.Fprintln(os.Stderr, verification.Reason)
+			os.Exit(2)
+		}
+		receipt.Notes = append(receipt.Notes, "EKIの実実行receiptをdigestで固定して参照した。TEST PROFILEと同一ホスト再実行の検証であり、独立検証ではない。")
+	}
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -832,7 +916,7 @@ func main() {
 	encoded = append(encoded, '\n')
 	if *outPath != "" {
 		var err error
-		if *artifactOut != "" || *suiReceiptPath != "" {
+		if *artifactOut != "" || *suiReceiptPath != "" || *ekiReceiptPath != "" {
 			err = writeNewReviewFile(*outPath, encoded)
 		} else {
 			err = os.WriteFile(*outPath, encoded, 0o644)
