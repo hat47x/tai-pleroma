@@ -159,6 +159,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"EKI HTTP/agent receipt has no task id: {relative}")
             if not str(observed.get("claimDigest", "")):
                 errors.append(f"EKI HTTP/agent receipt has no claim digest: {relative}")
+            if observed.get("acceptedOutcome") != "accepted":
+                errors.append(f"EKI HTTP/agent receipt has no accepted result: {relative}")
+            if not str(observed.get("acceptedResultDigest", "")):
+                errors.append(f"EKI HTTP/agent receipt has no accepted result digest: {relative}")
         if "MMI-live" in relative:
             observed = data.get("observed", {})
             if observed.get("exitCode") != 0:
