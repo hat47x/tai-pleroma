@@ -88,6 +88,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-selection-2026-11-01.json",
     "evaluations/records/SUI-TEI-text-generation-2026-11-01.json",
     "evaluations/records/SUI-TEI-target-2026-11-01.json",
+    "evaluations/records/SUI-TEI-target-document-id-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
