@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-generation-spike/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "teiCommit": "43517af5450aacb2fdd6c48585dc143f52d57da4",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./spikes/text-projection-generator -contract spikes/text-projection-generator/testdata/contract.json -fixtures spikes/text-projection-generator/testdata/fixtures.json -out spikes/text-projection-generator/evidence/2026-11-01/receipt.json",
+  "result": "PASS",
+  "observed": {
+    "contractId": "sui.card.text",
+    "projectionKind": "identity",
+    "cases": 4,
+    "passedCases": 4,
+    "contractDigest": "sha256:7eb8d0d9765890689e17cc764324c2366c3c46af9e83327a07acfd0b9039cf5f",
+    "fixturesDigest": "sha256:2f7971b5fb97f7b409d438250e2d4fea528c0a8a639e972122f7257d4eea985d"
+  },
+  "scope": "A TEI spike that evaluates a text projection contract with four fixture cases. It does not change the existing generator-selection tool, generate SUI code, run a Target Profile, or show human acceptance."
+}
