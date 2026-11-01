@@ -3,7 +3,7 @@
   "synthetic": true,
   "evidenceKind": "synthetic",
   "date": "2026-11-01",
-  "ekiCommit": "b8c4afeddb0604c16159eda4210b790c8369903b",
+  "ekiCommit": "7468b25dcba1d07a7376e13256359a58d0c36b67",
   "area": "native runner resource limits",
   "memoryLimitEnforcedWhileRunning": true,
   "cpuLimitEnforcedWhileRunning": true,
@@ -24,13 +24,17 @@
     "windowsTempDiskTestResult": "PASS",
     "windowsStopLatencySeconds": 0.1,
     "processE2E": "TestAgentExecutesAndSubmitsResultClaim",
-    "processE2EResult": "PASS"
+    "processE2EResult": "PASS",
+    "processLimitE2E": "TestAgentStopsAssignmentWhenMemoryLimitIsExceeded",
+    "processLimitE2EResult": "PASS",
+    "processLimitE2EObserved": "execution_status=failed, failure contains memory limit, Attempt closed"
   },
   "notes": [
     "20ms間隔でRSSと累積CPU時間を取得し、上限超過時にcancelProcessでプロセスツリーを停止する。",
     "CPUはWindowsのGetProcessTimes、Linuxの/proc/<pid>/statから取得する。",
     "一時ディスクは実行ごとのディレクトリ配下の通常ファイルサイズを合計して監視する。",
     "子プロセスが別の場所へ書く場合は一時ディスク監視の対象外。",
+    "資源上限超過の失敗がResultClaimとしてControl Planeへ届き、Attemptがclosedになることをe2eで確認した。",
     "瞬間的な超過は取り逃す可能性がある。",
     "sandboxではない。",
     "network制限は未実装。"
