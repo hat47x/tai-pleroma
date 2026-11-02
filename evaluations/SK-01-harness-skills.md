@@ -363,3 +363,32 @@
 **比較計画**：J0全再実行、J1依存差分再資格化、J2古いAgentの「成功」を無条件継承する負例。J1が省略してよい範囲にはProduct Ownerによる依存保証が必要で、不明はunknown。対象Claim・Scope/Grain・Source/Method/Tool版、Body receipt/Consumer Read、現在Grant/Disclosureの**実証拠を分離**して採点。既存TEI #2018とTAI #168の総合生産性計測へ接続する。
 
 **SK-RQとの分担**：SK-RQ01〜12は変更後のClaim再資格化（Opaque依存・Oracle改版・Skill Script差・Artifact混在等）を扱い、SK-C01〜15は公開の**明示DAGの影響閉包**と、EKI Result Body→SHO Consumer→TAI ActivityのHandoff分類を扱う。SK-RQのR2＝不明項目の限定保留、SK-CのJ2＝旧Agent成功を無確認で再利用する誤った対照。どちらも現実の依存Graph/現在Grant/実受取を確認した保証ではない。
+
+
+## S. 型付きConnectionとModel of Computationを持つHandoff（SK-CE01〜16）
+
+[設計](../docs/yi-constellation/typed-connection-handoff-and-computation-context-2026-11-02.md)。TEIのConnection/Operator/Meaning/Graphviz役割は#988/#2507/#2620のOwner。ここでは**TAI Skillが受け取った矢印・リンク・通知・検証結果から、何を共同Claimへ昇格させるか**を比較する。全件**設計・NOT RUN**。
+
+| ID | 正当な読み取り・判別 | 誤成功となる読み替え |
+| --- | --- | --- |
+| SK-CE01 | 型・文脈のないDOT `a -> b` はGraph形状。Dependency/Control/Workflowは未解決 | 矢印だけで実行順や実Dataflowを断言 |
+| SK-CE02 | SHO Research Indexの字下げは整理上の親子。学術cites/extendsは別関係 | インデントを原論文の引用・反証と断言 |
+| SK-CE03 | 論文URLの参照は本文未取得でも成立。Materializationはunknown | URLを登録しただけで原典を読んだ |
+| SK-CE04 | Function Data Contextの宣言は実Provider read footprintと別 | Mappingから実Read完全性・漏洩なしを断言 |
+| SK-CE05 | `filter(q>0)`のResultへの`all(q>0)`と元全明細へのValidationは別Claim | 選別で隠した違反行を全件OKへ転化 |
+| SK-CE06 | Event生成/送信/受信/処理/実Effect、EKI ACK→Bodyを別証拠とする | Delivery ACKをBusiness Effectと表示 |
+| SK-CE07 | Action Offer/Control intentとHost現在Grant、Commitは別資格 | Viewに表示されたActionを実行許可扱い |
+| SK-CE08 | 制約宣言/静的検証/実施/DB-Host強制の各段階は別 | 図に書いた制約を本番で強制済みと扱う |
+| SK-CE09 | 観測値とSource/epoch/Rule/Consumerが一致するかを確認 | 値一致だけで異時点・異Scopeの共同結論 |
+| SK-CE10 | Batch/Stream/Event/AsyncのClock・窓・順序を区別 | 異なる計算時点の局所PASSを同時成立へ |
+| SK-CE11 | 参照のみのEdgeは変更影響に必ずしも使わない。Productが証明した依存を採用 | 単なるリンク増加だけで全成果物再実行 |
+| SK-CE12 | 必要依存の根拠が不明なら再資格化が必要な部分をunknownとして保留 | Edgeがないから無影響と即断 |
+| SK-CE13 | 数値近似は下流のDomain/Operator Law/閾値許容差で条件付き合成 | 上流絶対誤差0.01→平方後も0.01保証 |
+| SK-CE14 | 未公開接続Role/Action名・件数をConsumerへ開示できるか別検証 | 内部Graphの秘密Edge名をSkill説明に出す |
+| SK-CE15 | StreamのWindow/遅延/Watermark/重複を確認する | 未完了WindowをBatch全件と同一視 |
+| SK-CE16 | 同じSemantic SubjectでもProvider Alias/Mapping/版・Commit対象が別 | 別Routeの古いRead/Receiptを同じ作用へ接続 |
+
+**独立の試験条件**：各Caseの期待はProductの意味Ownerが確認したSource/実Tool/実Consumerの観測または独立の反例から得る。同じAgentが作成した図・Skill・公開Fixtureを同じAgentで判定するだけでは意味受理にはならない。設計資料から読み取れる静的Relationと、本番OS/Host/Providerで実際に発生したRead/Effectを異なる証拠として保持する。
+
+**比較順序**：P0＝SHO整理リンク・TEI構造/Operator・EKI ACKの3種の異質なEdgeで意味Role不足を診断、P1＝実Product read-only情報、P2＝二Productの同一Source/Claim/Clock条件、P3＝二Harness＋H2/H3/H4/H5＋J0/J1/J2。**SK-CはEvidence依存の影響閉包、SK-CEは接続意味の妥当性**を担当し、互いのPASSを代理しない。実Product/Harness/OS・Owner受理はNOT RUN。
+
