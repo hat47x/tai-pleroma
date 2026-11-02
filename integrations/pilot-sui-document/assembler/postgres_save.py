@@ -42,9 +42,18 @@ def main():
     from sui_sensemaking_api.db import engine
     from sui_sensemaking_api.documentv1_projection import from_artifact, to_documentv1_payload
     from sui_sensemaking_api.main import app
+    from sqlalchemy import text
     from sui_sensemaking_api.models import Base
 
     Base.metadata.create_all(engine)
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "insert into tenants (id, display_name, lifecycle_state, created_at, updated_at) "
+                "values ('local-default', 'Local', 'active', '2026-11-03T00:00:00Z', '2026-11-03T00:00:00Z') "
+                "on conflict (id) do nothing"
+            )
+        )
     projected = from_artifact(json.loads(Path(args.artifact).read_text(encoding="utf-8")))
     payload = to_documentv1_payload(
         projected,

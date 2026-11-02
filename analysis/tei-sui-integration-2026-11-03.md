@@ -42,7 +42,7 @@ TEI契約（record投影）
 | ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
 | 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成61件・実実行85件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成61件・実実行86件がcheckerを通る。
 
 ## 未検証
 
@@ -135,3 +135,18 @@ receiptは`evaluations/records/`にあり、合成61件・実実行85件がcheck
 - 仮説: Alembicのmigrationで作られる制約・トリガーが不足している
 
 SQLiteの一時DBでは同じ手順が200で通る。Postgres経路は未検証のまま。[attempt](../evaluations/postgres-attempt-2026-11-03.json)
+### 追記（解決）
+
+409の原因は、`local-default`テナント行が`tenants`になく、`documents`の外部キー制約に違反していたことだった（`ForeignKeyViolation`）。`Base.metadata.create_all`だけではテナントが投入されない。
+
+テナント行を投入して再実行したところ、保存は成功した。
+
+```text
+createStatus: 200
+readStatus: 200
+documentRows: 1
+revisionRows: 1
+roundTrip: true
+```
+
+[save receipt](../evaluations/records/SUI-TEI-postgres-2026-11-03.json)
