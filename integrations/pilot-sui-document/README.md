@@ -641,3 +641,16 @@ allMatch: true
 
 - [artifact flow receipt](../../evaluations/records/SUI-TEI-contract-digest-2026-11-03.json)
 - [digest check](../../evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json)
+## 一括実行（2026-11-03）
+
+`assembler/run_pilot.py`で、投影フロー・DocumentV1検証・契約digest照合を1コマンドで実行します。
+
+```text
+flow: 21ケースPASS
+documentV1: valid
+contractDigests: allMatch
+result: PASS
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json)
+- 保存は含まない

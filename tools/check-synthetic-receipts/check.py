@@ -142,6 +142,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-contract-versions-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-contract-digest-2026-11-03.json",
     "evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json",
+    "evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -262,6 +263,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "tei-pipeline-run" in relative:
+            steps = data.get("steps", {})
+            if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:
+                errors.append(f"TEI pilot run did not pass all steps: {relative}")
         if "tei-contract-digest-check" in relative:
             observed = data.get("observed", {})
             if observed.get("allMatch") is not True:
