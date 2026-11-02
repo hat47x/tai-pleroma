@@ -49,6 +49,11 @@ type SUIReceipt struct {
 	DocumentIslands      []Island `json:"documentIslands"`
 	DocumentEdgeCount    int      `json:"documentEdgeCount"`
 	DocumentEdges        []Edge   `json:"documentEdges"`
+
+	// Additive fields of a probe receipt that declares who answered. Stored records
+	// made before them have neither.
+	ServerIdentity ServerIdentity `json:"serverIdentity"`
+	Pin            ProbePin       `json:"pin"`
 }
 
 type Receipt struct {
@@ -61,6 +66,7 @@ type Receipt struct {
 	Contradiction  bool     `json:"contradiction"`
 	Passed         bool     `json:"passed"`
 	Reason         string   `json:"reason,omitempty"`
+	Pin            PinCheck `json:"pin"`
 	Notes          []string `json:"notes"`
 }
 
@@ -70,6 +76,12 @@ func digest(text string) string {
 }
 
 func Link(fixture Fixture, sui SUIReceipt) Receipt {
+	return LinkPinned(fixture, sui, Options{})
+}
+
+// LinkPinned is Link with opt-in expectations about the SUI receipt. It compares what
+// the receipt file declares; it does not show that the file is genuine.
+func LinkPinned(fixture Fixture, sui SUIReceipt, options Options) Receipt {
 	receipt := Receipt{
 		Schema: "tai.reference.sui-scn-link/v0", DocumentID: sui.DocumentID,
 		DocumentDigest: sui.DocumentDigest, EdgeCount: sui.DocumentEdgeCount,
@@ -78,9 +90,22 @@ func Link(fixture Fixture, sui SUIReceipt) Receipt {
 			"SUIの実資料・認可・意味形成の正しさは検証しない。",
 		},
 	}
+	pin, reason := evaluatePin(options, sui)
+	receipt.Pin = pin
 	if !sui.Passed || !sui.ReadOnly || !sui.RealProductConnected || !sui.DocumentRead {
 		receipt.Reason = "SUI receipt is not a read-only document read"
 		return receipt
+	}
+	if sui.Pin.Checked && sui.Pin.Result != "match" {
+		receipt.Reason = "SUI receipt carries a pin that did not match"
+		return receipt
+	}
+	if reason != "" {
+		receipt.Reason = reason
+		return receipt
+	}
+	if pin.Checked {
+		receipt.Notes = append(receipt.Notes, "版固定の一致が示すのは、receiptが申告したrevisionとdocumentDigestが期待と合ったことだけで、SUIの正しさ・コードの同一性・認可は示さない。receiptファイルの改ざんは検出しない。")
 	}
 	if sui.DocumentID == "" || sui.DocumentDigest == "" {
 		receipt.Reason = "SUI document identity or digest is incomplete"
@@ -164,7 +189,14 @@ func main() {
 	fixturePath := flag.String("fixture", "", "SCN-001 fixture")
 	suiPath := flag.String("sui-receipt", "", "SUI API probe receipt")
 	outPath := flag.String("out", "", "write link receipt")
+	expectRevision := flag.String("expect-revision", os.Getenv("TAI_SUI_EXPECT_REVISION"), "pin: revision the SUI receipt must declare (env TAI_SUI_EXPECT_REVISION)")
+	expectDigest := flag.String("expect-document-digest", os.Getenv("TAI_SUI_EXPECT_DOCUMENT_DIGEST"), "pin: sha256:<hex> the SUI receipt documentDigest must have (env TAI_SUI_EXPECT_DOCUMENT_DIGEST)")
 	flag.Parse()
+	options := Options{ExpectRevision: *expectRevision, ExpectDocumentDigest: *expectDigest}
+	if err := options.validate(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
 	if *fixturePath == "" || *suiPath == "" {
 		fmt.Fprintln(os.Stderr, "-fixture and -sui-receipt are required")
 		os.Exit(2)
@@ -189,7 +221,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	receipt := Link(fixture, sui)
+	receipt := LinkPinned(fixture, sui, options)
 	encoded, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
