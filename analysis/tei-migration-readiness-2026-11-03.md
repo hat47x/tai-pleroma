@@ -55,3 +55,13 @@ SUIのDocumentV1で言えば、Document/Card/Island/Edge/Affiliationの投影と
 3. 製品ごとのドメインモデルとTEI primitiveの対応表を作る
 
 公開gateは`blocked`のまま。外部作用・公開は未承認。
+
+## SEIの既存TEI接続（誤読防止）
+
+SEIにはすでにTEIとの接続がある。`runtime/go/teiintegration`がTEI executableを呼び、`deployment-provider-plan`をcapability observationへ写す。これはProvider計画の取得であり、Decision Memoryの投影とは役割が違う。
+
+- `.tei`がSEIリポジトリにないことは、TEI未接続を意味しない
+- TAIの`pilot-sei-decision`はDecisionの投影であり、`teiintegration`を置き換えない
+- 将来SEIへ投影のconsumerを足すなら、`teiintegration`とは別パッケージにする
+
+この整理は重複実装を避けるためのもので、SEIの設計判断を変更しない。
