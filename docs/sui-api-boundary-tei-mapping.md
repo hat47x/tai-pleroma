@@ -57,3 +57,8 @@ GET /docs/{doc_id}/epistemic/projection
 - フロントエンドの`epistemic_projection_adapter`が新しいartifact kindを受け取れるかは未確認。
 - `GET /docs/{doc_id}`と`PUT /docs/{doc_id}`の改訂・競合の扱いは未確認。
 - 案Aに必要なSUI側の変更量は未見積もり。
+
+## 実装状況（2026-11-02）
+
+SUIの許可リストへ`documentv1-projection`を追加しました（[sui-sensemaking #3364](https://github.com/hat47x/sui-sensemaking/pull/3364)、`963adb0`）。TAIのartifactを`tenants/<tenantId>/<docId>/documentv1-projection.json`へ置き、SUIのtransport moduleでpayloadが一致して読めること、別tenantでは
+ot-a-file`になることを確認しました（[receipt](../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)）。HTTPサーバ・認証・配備は未検証です。
