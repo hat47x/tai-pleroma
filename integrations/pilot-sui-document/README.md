@@ -565,3 +565,16 @@ syntheticCardsAdded: 298
 - [receipt](../../evaluations/records/SUI-TEI-large-doc-2026-11-03.json)
 - **合成fixture**であり、パイロットの実証ではない
 - 本番上限・同時書き込みは未検証
+## ETag前提条件（2026-11-03）
+
+`assembler/etag_check.py`で、保存経路の`If-Match`を確認します。
+
+```text
+ETagあり: true
+古い If-Match: 409
+一致する If-Match: 200
+前提条件なし: 200（local-devのlast-write-wins）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-etag-2026-11-03.json)
+- SaaSプロファイルの前提条件必須動作、同時書き込みは未検証
