@@ -654,3 +654,17 @@ result: PASS
 
 - [receipt](../../evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json)
 - 保存は含まない
+## 一括実行に保存を追加（2026-11-03）
+
+`--save`を付けると、検証の後に保存と往復整合まで実行します（既定は無効）。
+
+```text
+flow: 21ケースPASS
+documentV1: valid
+contractDigests: allMatch
+save: roundTrip true / planAction update / 200
+result: PASS
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json)
+- 一時SQLite・`local-dev`
