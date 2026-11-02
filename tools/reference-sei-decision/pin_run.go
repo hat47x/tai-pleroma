@@ -354,6 +354,21 @@ func pinReportedCommit(head string, values ...string) string {
 	return status
 }
 
+var pinShortHexPattern = regexp.MustCompile(`^[0-9a-f]{7,39}$`)
+
+// pinShortCommit judges an abbreviated commit (7 to 39 hex digits) in the `commit` field of
+// `sei version` as a prefix of HEAD. "" means the field is not an abbreviated hash.
+func pinShortCommit(head, commit string) string {
+	value := strings.ToLower(strings.TrimSpace(commit))
+	if !pinShortHexPattern.MatchString(value) {
+		return ""
+	}
+	if strings.HasPrefix(head, value) {
+		return "match"
+	}
+	return "mismatch"
+}
+
 // build compiles cmd/sei outside the checkout, runs `sei version` in an empty directory
 // and returns the state of the pinned context. A non-empty reason is a refusal.
 func (s *pinSession) build(ctx context.Context, runtimeDir, goPath string, head string) (*pinnedSEI, string) {
@@ -416,6 +431,14 @@ func (s *pinSession) build(ctx context.Context, runtimeDir, goPath string, head 
 	}
 	s.report.Binary.VersionLine = VersionLine{Version: line.Version, Commit: line.Commit, Target: line.Target}
 	status := pinReportedCommit(head, line.Commit, line.Version)
+	switch pinShortCommit(head, line.Commit) {
+	case "mismatch":
+		status = "mismatch"
+	case "match":
+		if status == "not-reported" {
+			status = "match"
+		}
+	}
 	s.report.Binary.ReportedCommit.Status = status
 	if status == "mismatch" {
 		return nil, "pin mismatch: sei version reports a commit that differs from HEAD"
@@ -428,6 +451,13 @@ func (s *pinSession) build(ctx context.Context, runtimeDir, goPath string, head 
 // output() to the pinned sei (or to a refusal). An unpinned run gets ctx back unchanged
 // and keeps the old `go run` path; only facts are recorded.
 func beginPin(ctx context.Context, root string, options Options) (context.Context, *pinSession) {
+	// go build runs in runtime/go, so a relative build-out would land inside the checkout
+	// although it looks outside relative to the caller's directory: decide on the absolute path.
+	if options.BuildOut != "" {
+		if absolute, err := filepath.Abs(options.BuildOut); err == nil {
+			options.BuildOut = absolute
+		}
+	}
 	s := &pinSession{root: root, options: options, pinned: options.specified(), report: newPinReport()}
 	runtimeDir := filepath.Join(root, "runtime", "go")
 	_, statErr := os.Stat(filepath.Join(runtimeDir, "cmd", "sei"))
@@ -513,7 +543,7 @@ func (s *pinSession) finish(ctx context.Context) (PinReport, []string) {
 
 const (
 	pinNoteRecordOnly = "版固定の期待値が指定されていないため、SEIのcommit・Go versionは記録のみで照合していない。実行前後のcheckoutの変化もcheckout.statusに記録するだけで、passedは変えない。"
-	pinNotePinned     = "版固定の一致が示すのは、checkoutのHEAD・追跡内容・Go toolchainが期待と合ったことだけである（バイナリのsha256は記録するだけで照合しない）。SEIの正しさ・決定の意味・Authorityは示さない。`sei version`は`commit: unknown`を出すため、版の証明にならない。"
+	pinNotePinned     = "版固定の一致が示すのは、checkoutのHEAD・追跡内容・Go toolchainが期待と合ったことだけである（バイナリのsha256は記録するだけで照合しない）。GOEXPERIMENT・CGO_ENABLED・GOOS/GOARCH・CCなど、toolchainの他の設定は拘束せず、名前だけを記録する。SEIの正しさ・決定の意味・Authorityは示さない。`sei version`は`commit: unknown`を出すため、版の証明にならない。"
 )
 
 // pinScrub replaces a reason that names a local path with a fixed sentence.

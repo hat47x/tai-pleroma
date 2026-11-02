@@ -197,10 +197,18 @@ func isGoBuildInput(name string) bool {
 	return false
 }
 
+// isNestedRepository reports an entry that git lists as one directory (trailing slash)
+// because it holds a repository of its own, when that directory is or contains part of the
+// module directory. git does not list the files inside it, so their names cannot be
+// judged: such a directory is counted as a build input (fail closed).
+func isNestedRepository(name string) bool {
+	return strings.HasSuffix(name, "/") && (strings.HasPrefix(name, pinModuleDir) || strings.HasPrefix(pinModuleDir, name))
+}
+
 func pinBuildInputs(output []byte) []string {
 	var names []string
 	for _, entry := range bytes.Split(output, []byte{0}) {
-		if name := string(entry); name != "" && isGoBuildInput(name) {
+		if name := string(entry); name != "" && (isGoBuildInput(name) || isNestedRepository(name)) {
 			names = append(names, name)
 		}
 	}

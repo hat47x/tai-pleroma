@@ -71,6 +71,12 @@ func main() {
 				f.Close()
 			}
 		}
+		if p := os.Getenv("FAKE_SEI_SWAP"); p != "" {
+			if from, to, ok := strings.Cut(p, "|"); ok {
+				_ = os.Remove(from)
+				_ = os.WriteFile(to, []byte("package main\n"), 0o644)
+			}
+		}
 		if os.Getenv("FAKE_SEI_WRITE_CWD") != "" {
 			_ = os.WriteFile(".sei", []byte("x"), 0o644)
 		}
@@ -182,7 +188,7 @@ func pinSetup(t *testing.T, shim, deny, withGit bool) pinEnv {
 	t.Setenv("GIT_CONFIG_NOSYSTEM", "1")
 	for _, name := range append(append([]string{}, pinGitRedirectingEnv...), "TAI_SEI_EXPECT_COMMIT", "TAI_SEI_EXPECT_GO_VERSION", "SEI_DATA_ROOT",
 		"GOTOOLDIR", "GOCACHEPROG", "GOROOT", "FAKE_SEI_MARKER", "FAKE_SEI_FAIL", "FAKE_SEI_STDERR", "FAKE_SEI_WRITE_CHECKOUT", "FAKE_SEI_APPEND_TRACKED",
-		"FAKE_SEI_WRITE_CWD", "FAKE_SEI_BREAK_RESUME", "FAKE_SEI_VERSION_OUT") {
+		"FAKE_SEI_WRITE_CWD", "FAKE_SEI_BREAK_RESUME", "FAKE_SEI_VERSION_OUT", "FAKE_SEI_SWAP") {
 		old, had := os.LookupEnv(name)
 		os.Unsetenv(name)
 		if had {

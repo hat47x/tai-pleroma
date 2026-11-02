@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | `-expect-commit <40桁または64桁のhex>` | `TAI_SEI_EXPECT_COMMIT` | SEI checkoutのHEADがこのcommitと一致しなければ失敗する。大文字は小文字にする |
 | `-expect-go-version <goX.Y[.Z]>` | `TAI_SEI_EXPECT_GO_VERSION` | `go version`のversionトークンが一致しなければ失敗する（OS・archは含めない）。単独では指定できない |
-| `-build-out <dir>` | なし | 固定実行でビルドした`sei`をこのディレクトリに残す。checkoutの外でなければ拒否する。期待値なしでは使えない |
+| `-build-out <dir>` | なし | 固定実行でビルドした`sei`をこのディレクトリに残す。checkoutの外でなければ拒否する。相対パスは呼び出し元のcwd基準の絶対パスにして判定とビルドに使う。期待値なしでは使えない |
 
 フラグが環境変数より優先します。フラグの空値は「期待なし」です。どれかを指定すると固定実行になり、固定実行には`-expect-commit`が要ります（Goのversionだけでは、どのcheckoutを動かしたか分からないため）。形が不正な指定は`invalid-expectation`で失敗します。
 
@@ -58,8 +58,9 @@ gitの照会は、`GIT_DIR`・`GIT_WORK_TREE`・`GIT_INDEX_FILE`・`GIT_COMMON_D
 
 ## 境界
 
-- `sei version`は`commit: unknown`を返します（ビルド時に埋め込まれない）。よって`binary.reportedCommit`は通常`not-reported`です。ツールが`-ldflags`でcommitを注入することはしません（自己申告になるため）。`sei version`が将来commitを報告し始め、HEADと違えば、固定実行は失敗します。
+- `sei version`は`commit: unknown`を返します（ビルド時に埋め込まれない）。よって`binary.reportedCommit`は通常`not-reported`です。ツールが`-ldflags`でcommitを注入することはしません（自己申告になるため）。`sei version`が将来commitを報告し始め、HEADと違えば、固定実行は失敗します。7〜39桁の短縮hashは、HEADの接頭辞かどうかで照合します（`commit`欄だけ。40桁・64桁は欄を問わず全文照合）。
 - `//go:embed`と`cgo`は、確認した版の`runtime/go`に無かったことだけを確認しました。他の版では未確認です。埋め込まれたファイルは、名前によらず検出できません。
+- `runtime/go`以下にある別のgitリポジトリ（未追跡で`.git`を持つディレクトリ）は、gitが中のファイルを列挙しません。そのためディレクトリ単位でビルド入力として数え、固定実行を`mismatch`にします（中身は見ません）。
 - `GOEXPERIMENT`、`CGO_ENABLED`、`GOOS`/`GOARCH`、`CC`、`GOENV`（`go env -w`の設定）は拘束しません。設定されていれば名前を`toolchain.inheritedSettings`に残すだけです。`GOPROXY`なども拘束しません。モジュールの取得は、追跡対象の`go.sum`が検証します。
 - storeの中身（実行後に削除される）は比較しません。保証は「checkoutと作業ディレクトリが変わらない」までです。
 - このツールにはHTTP/MCPの機能が無いため、プロキシによる迂回や、応答者の識別の対策はありません。何が答えたかの束縛は、`binary.sha256`と`sei version`の出力に限ります。
