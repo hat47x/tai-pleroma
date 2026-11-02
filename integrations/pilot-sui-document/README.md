@@ -390,3 +390,17 @@ sui.island.record v5:   id, title?, cardIds[]
 - 21ケースPASS、単体13件PASS
 
 - [receipt](../../evaluations/records/SUI-TEI-optional-core-2026-11-02.json)
+## 管理経路の読み取り（2026-11-02）
+
+SUIの管理経路面（`GET /admin/tei-epistemic/artifacts/{artifact_kind}`）でも同じartifact kindを読めることを確認しました。
+
+```text
+tenant binding: PASS
+read:           PASS
+tenant isolation: PASS
+admin path:     PASS
+```
+
+`verify_sui_reader.py`が、tenant別ディレクトリと運用者レベル（ルート）の両方から同じpayloadを読めることを検査します（[receipt](../../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)）。
+
+HTTPサーバ・認証・実配備は未検証です。

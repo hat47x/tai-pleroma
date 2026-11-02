@@ -64,3 +64,4 @@ SUIの許可リストへ`documentv1-projection`を追加しました（[sui-sens
 ot-a-file`になることを確認しました（[receipt](../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)）。HTTPサーバ・認証・配備は未検証です。
 
 なお、2026-11-02に`install_artifact.py`と`verify_sui_reader.py`で、バインディングの解決とtenant分離を確認しました（[receipt](../evaluations/records/SUI-TEI-binding-2026-11-02.json)）。
+管理経路（`/admin/tei-epistemic/artifacts/{artifact_kind}`）でも同じkindを読めることを確認しました（[receipt](../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)）。

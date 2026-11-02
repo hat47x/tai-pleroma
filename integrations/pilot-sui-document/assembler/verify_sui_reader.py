@@ -50,6 +50,9 @@ def main():
         other = transport.read_bound_tei_reference_artifact(
             tmp, "tenant-b", "doc-1", "documentv1-projection"
         )
+        admin_path = Path(tmp) / "documentv1-projection.json"
+        admin_path.write_text(Path(args.artifact).read_text(encoding="utf-8"), encoding="utf-8")
+        admin_read = transport.read_tei_reference_artifact(tmp, "documentv1-projection")
 
     read_ok = isinstance(read, transport.TeiReferenceArtifact) and read.payload == payload
     binding_resolved = (
@@ -58,6 +61,9 @@ def main():
     )
     isolated = (
         isinstance(other, transport.TeiReferenceReadFailure) and other.reason == "not-a-file"
+    )
+    admin_ok = (
+        isinstance(admin_read, transport.TeiReferenceArtifact) and admin_read.payload == payload
     )
 
     receipt = {
@@ -69,18 +75,19 @@ def main():
         "suiCommit": os.popen(f'git -C "{args.sui_repo}" rev-parse HEAD').read().strip(),
         "host": "Windows with Python 3.12",
         "command": f"python integrations/pilot-sui-document/assembler/verify_sui_reader.py --sui-repo {args.sui_repo} --artifact {args.artifact}",
-        "result": "PASS" if read_ok and binding_resolved and isolated else "FAIL",
+        "result": "PASS" if read_ok and binding_resolved and isolated and admin_ok else "FAIL",
         "artifact": {"path": os.path.relpath(args.artifact), "digest": digest(args.artifact)},
         "readOk": read_ok,
         "bindingResolved": binding_resolved,
         "tenantIsolationRejected": isolated,
+        "adminPathOk": admin_ok,
         "scope": "The SUI transport module is imported directly and reads the TAI artifact from a temporary tenant directory. It does not start the SUI server, exercise HTTP authorization, or prove deployment.",
     }
     with open(args.out, "w", encoding="utf-8") as handle:
         json.dump(receipt, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
-    print(json.dumps({"readOk": read_ok, "bindingResolved": binding_resolved, "isolated": isolated}))
-    return 0 if read_ok and binding_resolved and isolated else 1
+    print(json.dumps({"readOk": read_ok, "bindingResolved": binding_resolved, "isolated": isolated, "adminOk": admin_ok}))
+    return 0 if read_ok and binding_resolved and isolated and admin_ok else 1
 
 
 if __name__ == "__main__":
