@@ -71,7 +71,7 @@ python integrations/<pilot>/assembler/validate_against_sui.py \
   --sui-repo <SUI> --artifact <artifact.json> --out <receipt.json>
 ```
 
-- `transform`と時刻は投影に含まれない。呼び出し側が渡す
+- `transform`と時刻は投影に含まれない。呼び出し側が渡す`n- `source.contracts[].sourceDigest`は契約JSONのハッシュではなく、生成された候補ソースのdigest。契約ファイルの同一性確認には使えない
 - 保存契約はpayloadに`schemaVersion`を要求しない
 
 ## 6. 保存
