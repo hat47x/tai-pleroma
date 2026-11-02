@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.tei-sui-save-plan/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "suiCommit": "47c6479c59f53f54b05b5d021484a6c9c1fd9e13",
+  "host": "Windows with Python 3.12 and SUI runtime dependencies",
+  "command": "PYTHONPATH=src python -m pytest tests/test_documentv1_save_plan.py -q",
+  "result": "PASS",
+  "observed": {
+    "module": "sui_sensemaking_api.documentv1_save_plan",
+    "tests": 4,
+    "passed": 4,
+    "writes": false,
+    "warnsOnUnprojectedFields": true
+  },
+  "scope": "A non-writing save plan compares a projection with an existing DocumentV1 and reports additions, removals, changes, and data-loss warnings. It does not call the save API or touch a database."
+}

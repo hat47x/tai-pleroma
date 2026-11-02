@@ -120,3 +120,13 @@ tenant面の`/docs/{doc_id}/epistemic/projection`をTestClientで確認しまし
 - 認可関数はテスト用に差し替えており、実セッション・実DBは未検証
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-tenant-route-2026-11-03.json)
+### 保存計画（2026-11-03）
+
+`plan_save`を追加しました（[sui-sensemaking #3376](https://github.com/hat47x/sui-sensemaking/pull/3376)、`47c6479`）。
+
+- 投影と既存DocumentV1を比較し、追加・削除・変更を返す
+- 投影が持たない既存フィールド（`critiqueInputs`、`transform`、`narratives`など）は失われるため警告する
+- 書き込みは行わない
+- unittest 4件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
