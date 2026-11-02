@@ -359,3 +359,20 @@ sui.card.record: id, text, x, y, claimType?, holdState?, textReviewed?
 - [artifact](../../evaluations/artifacts/documentv1-projection.json)
 
 `critiqueHistory`のような構造体の配列は未対応です。
+## artifactの構造検証（2026-11-02）
+
+`assembler/validate_artifact.py`で、artifactのenvelopeと要素の形を検査します。
+
+```text
+schema / contract / source.teiCommit
+document.id、cards[].id/text/x/y、islands[].cardIds
+edges[].fromId/toId/type/fromKind/toKind、affiliations[]
+```
+
+`check_artifact.py`でreceiptを出し、13件の単体テストがPASSしました（[receipt](../../evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json)）。
+
+### 写像の範囲（暫定）
+
+- 対象: Document(id,title)、Card(id,text,x,y,claimType,holdState,textReviewed)、Island(id,title,cardIds)、Edge(id,fromId,toId,type,fromKind,toKind)、Affiliation(id,cardId,islandId)
+- 対象外: `critiqueHistory`などの構造体配列、`transform`、`createdAt`/`updatedAt`、図形・要約・履歴
+- 対象外は、投影契約ではなくSUI側の元データを正本とする

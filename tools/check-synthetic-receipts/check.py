@@ -106,6 +106,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-coordinates-2026-11-02.json",
     "evaluations/records/SUI-TEI-optional-2026-11-02.json",
     "evaluations/records/SUI-TEI-reviewed-2026-11-02.json",
+    "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -186,6 +187,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-sui-reader" in relative:
             if data.get("readOk") is not True or data.get("tenantIsolationRejected") is not True:
                 errors.append(f"TEI SUI reader receipt did not read and isolate: {relative}")
+        if "tei-artifact-validation" in relative:
+            if data.get("passed") is not True or data.get("errors"):
+                errors.append(f"TEI artifact validation receipt did not pass: {relative}")
         if "tei-artifact" in relative:
             artifact = data.get("artifact") or {}
             if artifact.get("schema") != "tai.reference.tei-documentv1-projection/v0":

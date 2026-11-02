@@ -1,0 +1,17 @@
+{
+  "schema": "tai.reference.tei-artifact-validation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/check_artifact.py --artifact D:\\GIT\\hat47x\\tai-wt-rev\\evaluations\\artifacts\\documentv1-projection.json",
+  "result": "PASS",
+  "passed": true,
+  "errors": [],
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-rev\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:c4c77cafca936e76c201bba8d30b4d32bb63dc881b3989a079c145555b3158c5"
+  },
+  "scope": "Structural validation of the artifact envelope and element shapes. It does not validate meaning against SUI's DocumentV1 model."
+}
