@@ -36,6 +36,7 @@ def main():
     parser.add_argument("--tei-repo", required=True)
     parser.add_argument("--workspace", required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--artifact-out", default=None)
     args = parser.parse_args()
 
     tei_repo = os.path.abspath(args.tei_repo)
@@ -105,13 +106,36 @@ def main():
     except AssemblyError:
         rejected = True
 
+    tei_commit = run(["git", "rev-parse", "HEAD"], cwd=tei_repo).stdout.strip()
+    artifact = None
+    if args.artifact_out:
+        artifact = {
+            "schema": "tai.reference.tei-documentv1-projection/v0",
+            "contract": {"id": "sui.documentv1.projection", "version": "1"},
+            "source": {
+                "teiCommit": tei_commit,
+                "contracts": {
+                    name: {"sourceDigest": data["sourceDigest"], "cases": data["cases"]}
+                    for name, data in candidates.items()
+                },
+            },
+            "document": composed,
+        }
+        if not composed["document"].get("id") or not composed["cards"]:
+            raise SystemExit("artifact is missing the document id or cards")
+        artifact_path = os.path.abspath(args.artifact_out)
+        os.makedirs(os.path.dirname(artifact_path), exist_ok=True)
+        with open(artifact_path, "w", encoding="utf-8") as handle:
+            json.dump(artifact, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+
     receipt = {
         "schema": "tai.reference.tei-integration-flow/v0",
         "synthetic": False,
         "evidenceKind": "real-execution",
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
-        "teiCommit": run(["git", "rev-parse", "HEAD"], cwd=tei_repo).stdout.strip(),
+        "teiCommit": tei_commit,
         "host": "Windows with Go on PATH and Python 3.12",
         "command": f"python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo {tei_repo} --workspace {workspace}",
         "result": "PASS",
@@ -127,6 +151,15 @@ def main():
             "affiliations": len(composed["affiliations"]),
         },
         "danglingReferenceRejected": rejected,
+        "artifact": (
+            {
+                "path": os.path.relpath(artifact_path),
+                "digest": digest(artifact_path),
+                "schema": artifact["schema"],
+            }
+            if artifact
+            else None
+        ),
         "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance.",
     }
     with open(args.out, "w", encoding="utf-8") as handle:

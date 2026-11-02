@@ -1,0 +1,75 @@
+{
+  "schema": "tai.reference.tei-documentv1-projection/v0",
+  "contract": {
+    "id": "sui.documentv1.projection",
+    "version": "1"
+  },
+  "source": {
+    "teiCommit": "98e08841ccd03574690fc6195e2cce62454a5fa3",
+    "contracts": {
+      "document-record": {
+        "sourceDigest": "sha256:2800efdc03219bb95f75fa97dbf06d9220efbf3f616c5df9674ca01a5abae655",
+        "cases": 4
+      },
+      "card-record": {
+        "sourceDigest": "sha256:6b8bf63c5917e9452a0dd2353c2f9ccdece1b1436be7c5d186459f7ba9329d10",
+        "cases": 5
+      },
+      "island-record": {
+        "sourceDigest": "sha256:bd7b2704fa7960b64c3b32fd3881c39d5ad19842d3f3c997cec438a0a0dc2706",
+        "cases": 4
+      },
+      "edge-record": {
+        "sourceDigest": "sha256:8b9d3c6d4f2272bccbe4584b804ebf9100168708e76c31749735718f50f4d657",
+        "cases": 4
+      },
+      "affiliation-record": {
+        "sourceDigest": "sha256:87b7b3c70c987890984b46210891ff447cbddc5b8545dd1a78c565bc2acbb0f6",
+        "cases": 4
+      }
+    }
+  },
+  "document": {
+    "document": {
+      "id": "doc-1",
+      "title": "Notes"
+    },
+    "cards": [
+      {
+        "id": "card-1",
+        "text": " hello "
+      },
+      {
+        "id": "card-2",
+        "text": "world"
+      }
+    ],
+    "islands": [
+      {
+        "cardIds": [
+          "card-1",
+          "card-2"
+        ],
+        "id": "island-1",
+        "title": "Group A"
+      }
+    ],
+    "edges": [
+      {
+        "fromId": "card-1",
+        "fromKind": "card",
+        "id": "edge-1",
+        "toId": "card-2",
+        "toKind": "card",
+        "type": "supports"
+      }
+    ],
+    "affiliations": [
+      {
+        "cardId": "card-1",
+        "id": "aff-1",
+        "islandId": "island-1"
+      }
+    ]
+  }
+}
