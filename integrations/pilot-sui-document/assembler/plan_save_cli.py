@@ -26,6 +26,7 @@ def main():
     sys.path.insert(0, str(Path(args.sui_repo) / "03_Implement/backend/src"))
     from sui_sensemaking_api.documentv1_projection import from_artifact
     from sui_sensemaking_api.documentv1_save_plan import plan_save
+    from sui_sensemaking_api.routes.docs import _validate_document_payload_with_a1_contract
 
     artifact = json.loads(Path(args.artifact).read_text(encoding="utf-8"))
     existing = (
@@ -39,6 +40,7 @@ def main():
         existing=existing,
         preserve_existing=True,
     )
+    validated = _validate_document_payload_with_a1_contract(plan.payload)
 
     receipt = {
         "schema": "tai.reference.tei-save-plan-cli/v0",
@@ -63,8 +65,10 @@ def main():
             "preservedIslands": len(plan.preserved_islands),
             "warnings": len(plan.warnings),
             "writes": False,
+            "contractValid": True,
+            "contractCards": len(validated.cards),
         },
-        "scope": "Builds a save plan through SUI's consumer and planner. It does not save, call the API, or touch a database.",
+        "scope": "Builds a save plan through SUI's consumer and planner, and validates the payload with SUI's document contract adapter. It does not save, call the API, or touch a database.",
     }
     with open(args.out, "w", encoding="utf-8") as handle:
         json.dump(receipt, handle, ensure_ascii=False, indent=2)
