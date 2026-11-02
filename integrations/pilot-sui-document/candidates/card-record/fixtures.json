@@ -9,6 +9,11 @@
       "want": {"state": "present", "text": "{\"cardId\":\"card-1\",\"documentId\":\"doc-1\",\"text\":\" hello \"}"}
     },
     {
+      "id": "present-2",
+      "input": {"cardId": "card-2", "documentId": "doc-1", "text": "world"},
+      "want": {"state": "present", "text": "{\"cardId\":\"card-2\",\"documentId\":\"doc-1\",\"text\":\"world\"}"}
+    },
+    {
       "id": "empty-text",
       "input": {"cardId": "card-1", "documentId": "doc-1", "text": ""},
       "want": {"state": "present", "text": "{\"cardId\":\"card-1\",\"documentId\":\"doc-1\",\"text\":\"\"}"}

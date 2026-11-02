@@ -1,0 +1,44 @@
+{
+  "schema": "tai.reference.tei-integration-flow/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "98b0e68e12477c97e7ba9afbbf4e55a85426dba7",
+  "host": "Windows with Go on PATH and Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo D:\\GIT\\hat47x\\tei-wt-main3 --workspace D:\\GIT\\hat47x\\tai-wt-flow2\\integrations\\pilot-sui-document",
+  "result": "PASS",
+  "elapsedMillis": 9515,
+  "contracts": {
+    "document-record": {
+      "sourceDigest": "sha256:8c83e2a209572abdf70a400680bdeb4487be69f4cdba6acd23f3d893bde2e72b",
+      "cases": 4,
+      "passed": 4
+    },
+    "card-record": {
+      "sourceDigest": "sha256:2bd8bc6f6242ccd4adc04d26caf909dbc0e4fbc243444d94e7bf0f5641c003ee",
+      "cases": 5,
+      "passed": 5
+    },
+    "island-record": {
+      "sourceDigest": "sha256:c85f64786c098f23efe7def2fbd1a2d1a4309308836178deda65b9026b891c29",
+      "cases": 4,
+      "passed": 4
+    },
+    "edge-record": {
+      "sourceDigest": "sha256:aad2b0d06670958d757f7832c3f75681e252ee86b0a1e021484f6fef9fe9c325",
+      "cases": 4,
+      "passed": 4
+    }
+  },
+  "casesRun": 17,
+  "casesPassed": 17,
+  "composed": {
+    "documentId": "doc-1",
+    "cards": 2,
+    "islands": 1,
+    "edges": 1
+  },
+  "danglingReferenceRejected": true,
+  "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance."
+}

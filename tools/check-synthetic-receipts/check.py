@@ -95,6 +95,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-island-edge-2026-11-02.json",
     "evaluations/records/SUI-TEI-document-record-2026-11-02.json",
     "evaluations/records/SUI-TEI-assembler-2026-11-02.json",
+    "evaluations/records/SUI-TEI-integration-flow-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -166,6 +167,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-integration-flow" in relative:
+            if data.get("casesPassed") != data.get("casesRun") or data.get("casesPassed") != 17:
+                errors.append(f"TEI integration flow receipt did not pass all cases: {relative}")
+            if data.get("danglingReferenceRejected") is not True:
+                errors.append(f"TEI integration flow receipt did not reject a dangling reference: {relative}")
+            if data.get("composed", {}).get("cards") != 2:
+                errors.append(f"TEI integration flow receipt did not compose two cards: {relative}")
         if "tei-assembler" in relative:
             observed = data.get("observed", {})
             if observed.get("assemblerPassed") != 6 or observed.get("assemblerTests") != 6:

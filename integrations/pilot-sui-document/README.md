@@ -191,6 +191,19 @@ Documentは、Document・Card・Island・Edgeの4つのflat recordをアプリ�
 
 あわせて`sui.card.record`へ`cardId`を追加し、4ケースの選抜を再実行しました（`qualified=["text-record-template"]`、`passed=true`）。
 
+### 結合経路（2026-11-02）
+
+`assembler/integration_flow.py`で、4つの契約から候補を生成し、各候補を実行して、presentの出力を合成層へ渡しました。
+
+```text
+contracts: 4
+cases: 17/17 PASS
+composed: cards=2, islands=1, edges=1
+dangling edge: rejected
+```
+
+生成した候補を実際にプロセスとして実行し、その標準出力を入力にしている点が、これまでの選抜との違いです。結合経路全体は[receipt](../../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)に記録しました。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。
