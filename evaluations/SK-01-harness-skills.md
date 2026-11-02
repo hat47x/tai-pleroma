@@ -258,7 +258,7 @@
 
 **評価資格**：SK-D全件**NOT RUN**。公開Issueの設計・TEI別Draftの局所合成PASSはSK-Dの実Harness/Tool互換資格ではない。初期はread-only実ToolでH2/H3を実行し、操作説明とSource/Tool版を対応づける。その後、必要時に生Data露出/依存Script/Provider/複数Harnessの負例を追加する。Capabilityから自動でSkillを生成する方式が採用されるまでは、**人手で版固定したProduct Skillの照合**も適切な受入対象とする。期待値と生成Agentの入力は分離する。
 
-## N. 2026-11-02：SK-TB01〜09 現在のTrustを過去のSkill/接続成功から推定しない
+## O. 2026-11-02：SK-TB01〜09 現在のTrustを過去のSkill/接続成功から推定しない
 
 [Skill計画§14](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)、[EKI #433](https://github.com/hat47x/eki-fabric/issues/433)、[#466](https://github.com/hat47x/eki-fabric/issues/466)、[#467](https://github.com/hat47x/eki-fabric/issues/467)、[#468](https://github.com/hat47x/eki-fabric/issues/468)を接続。EKIで確認された二つの問題は**source-staticの製品問題**であり、TAIでmTLSを実装・修正する案件ではない。下表は外部Harness/TAI Skillがその状態を**誤って成功へ昇格させない**かを測る評価案。
 
@@ -284,7 +284,7 @@
 
 **順序**：公開fixture整合の確認済み→SK-G0の各Product Skill入口に「実Trust由来の許可」への暗黙昇格がないかレビュー→EKI #466/#467が所有する実証を参照→必要なHarness H2/H3/H4/H5へ適用。**新Skill・実mTLS/OS/Network/Provider/Owner受理はNOT RUN**。初期互換の許可条件はEKI #433のOwner判断に残す。
 
-## O. Skillが要求と実取得を混同しない試験（SK-F01〜F12）
+## P. Skillが要求と実取得を混同しない試験（SK-F01〜F12）
 
 [設計のSource・資格の分担](../docs/yi-constellation/harness-skill-read-witness-rule-disclosure-2026-11-02.md)。TEI [#2506](https://github.com/hat47x/tei-platform/issues/2506)/[Draft #2624](https://github.com/hat47x/tei-platform/pull/2624)はContext明示MappingとRule依存を、TEI [Draft #2628](https://github.com/hat47x/tei-platform/pull/2628)は実Provider Read Witnessを、SEI [Draft #770](https://github.com/hat47x/sei-cognition/pull/770)は問い相対の限定判断とPlanner/Probeの開示を所有する。TAI SK-Fは**横断Skillが個別観測を誤った総合PASSへ昇格しないか**を評価する。新しいRule Engine/Provider/Policy EngineをTAIへ作らない。
 
@@ -335,3 +335,30 @@
 **公開参照データ**：[12ケース・14分類の合成fixture](fixtures/SK-RQ-selective-requalification.synthetic.json)、[再実行用Nodeスクリプト](tools/check-sk-rq-fixture.cjs)。公開Expectedはsealed holdoutでない。実Product・Provider・Host認可・Skill/Harnessでの検証は別途必要である。
 
 **実証段階**：公開fixture整合→TEI #2605実read-only CLIとSkillのH2/H3→R1/R2で本当に必要な局所再確認の観測→TAI H4/H5で共同Claimと不要なTool/開示を比較→EKI/Provider/OS/Ownerの実確認。Product単独で成立する局所TaskにはTAI横断Skillを導入しない対照を保持。新SK-RQの実Product/実Harness/独立sealed評価・本番作用は**NOT RUN**。
+
+## Q. Activity継続の選択的再資格化（SK-C01〜C15）
+
+[設計／Product境界](../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)。各Productで既に得た局所PASSを、新Activityの同一Source/Meaning/Scope/Consumer/Hostに対する総合PASSへ昇格させない。別時点・別Provider・別Attemptに対する**履歴の有効性**は保存しつつ、現在の目的で再利用できる証拠を再確認する。
+
+| ID | 変更またはHandoff反例 | 主な期待 |
+| --- | --- | --- |
+| SK-C01 | SHO索引の表示用Titleだけ更新 | SHO索引／TAI要約を再評価、無関係TEI/SEI/EKIは履歴を保つ |
+| SK-C02 | TEI Source変更 | TEI Role/Target、依存SHO設計・納品とTAI結果を再評価 |
+| SK-C03 | Provider Bindingのみ変更 | Query Read→Rule→SEI ClaimとTAIの現在性を再評価、TEI意味Targetは直接変更しない |
+| SK-C04 | SEI Methodの改版 | その認識ClaimとTAI結果を再評価、無関係Targetを保存 |
+| SK-C05 | EKI Attempt結果が変更 | 同一Attempt Body→SHO納品とTAI結果を再確認、別Productの意味は保存 |
+| SK-C06 | 現在Host Grantが変化 | Effect資格/TAI結果を再確認、Read-only探索は許された範囲で継続 |
+| SK-C07 | 過去は実行可、現在Grantを確認できない | 現在の危険Effectを拒否、履歴消去／無条件全面中断はしない |
+| SK-C08 | Claim ACK、実Body未受領 | Body欠落。新Attemptの業務再実行を勝手に起動しない |
+| SK-C09 | Body digest照合済み、Consumerの実Readなし | EKI受信とSHO等での受領・利用を区別 |
+| SK-C10 | 個別Readは正しいがSource/epochが異なる | 結合Claimの十分性を未確認に戻す |
+| SK-C11 | 内部では結果あり、外部への開示不可 | 外部Handoffでは結果・理由・候補の公開を保留 |
+| SK-C12 | 合成fixture中で全前提がtrue | `qualified-fixture-only`。実製品の意味受理・効果ではない |
+| SK-C13 | Bodyの署名・digestが一致しない | 受取確認を未成立とする |
+| SK-C14 | Full scopeが必要、実Resultはpartial | Claim全件性を未成立とする |
+| SK-C15 | Tool/ResultがあるがOwnerの意味受理未確認 | Product意味の正式採用・結果受理と区別 |
+
+[公開合成Fixture](fixtures/SK-C-continuation-requalification.synthetic.json)／[JS Checker](tools/check-sk-c-fixture.cjs)／[V8限定記録](records/SK-C-public-fixture-selfcheck-2026-11-02.json)を作成。実行時はGitHubの**保存済みJSコード（Node shebangを除く）とFixture**をV8に渡し、`fs.readFileSync`をそのFixtureを返すShimで代用。**15/15公開期待値整合、4/4 Mutation負例（重要Edge削除・偽受理・Grantすり替え・無関係Edge混入）検出**。Source graph/Expectedが公開・架空であるため独立Oracleではない。**Node.jsの実行、Product/Provider/SEI/SHO/EKI/Host/OS/Harness/Ownerの実連携はNOT RUN**。
+
+**比較計画**：J0全再実行、J1依存差分再資格化、J2古いAgentの「成功」を無条件継承する負例。J1が省略してよい範囲にはProduct Ownerによる依存保証が必要で、不明はunknown。対象Claim・Scope/Grain・Source/Method/Tool版、Body receipt/Consumer Read、現在Grant/Disclosureの**実証拠を分離**して採点。既存TEI #2018とTAI #168の総合生産性計測へ接続する。
+
