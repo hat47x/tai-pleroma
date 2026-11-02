@@ -8,7 +8,7 @@
     "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
     "contracts": {
       "document-record": {
-        "sourceDigest": "sha256:de794933e07e450cd69aa749d25fc3db665e8d521ca86b9d14aae576d0af45e3",
+        "sourceDigest": "sha256:0050e22f52a873d90a13456181f684b164459b91717d9ba6fb84634ff50d6d58",
         "cases": 4
       },
       "card-record": {
@@ -32,6 +32,10 @@
   "document": {
     "document": {
       "id": "doc-1",
+      "readingOrder": [
+        "card-1",
+        "card-2"
+      ],
       "title": "Notes"
     },
     "cards": [

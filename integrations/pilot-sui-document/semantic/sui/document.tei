@@ -4,6 +4,7 @@ data Document {
     attribute documentId type std.identifier
     attribute title type std.text
     attribute digest type std.text
+    attribute readingOrder type std.identifier
 }
 
 data Card {

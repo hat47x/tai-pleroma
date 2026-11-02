@@ -592,3 +592,17 @@ sui.card.record v8: id, text, x, y, claimType?, holdState?, textReviewed?, sourc
 
 - [receipt](../../evaluations/records/SUI-TEI-sources-2026-11-03.json)
 - [validation](../../evaluations/records/SUI-TEI-sources-validation-2026-11-03.json)
+## DocumentのreadingOrder（2026-11-03）
+
+Documentのoptionalな`readingOrder`配列を投影へ追加しました。
+
+```text
+sui.document.record v5: id, title?, readingOrder[]?
+```
+
+- 契約・fixture・SUI consumer・DocumentV1 payloadまで反映
+- 21ケースPASS、SUI unittest 24件PASS
+- `validate_against_sui`でDocumentV1妥当性を確認
+
+- [receipt](../../evaluations/records/SUI-TEI-reading-order-2026-11-03.json)
+- [validation](../../evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json)
