@@ -128,7 +128,7 @@ Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Opera
 
 **変更後もNOT RUN**：H2/H3の実Harness比較、二Harness移植、SHO別Reader、実OS/外部Host拒否、TAI所有の活動E2E、独立Owner意味受理。本節は後着事実の参照訂正とRunbookの実行順序変更のみ。
 
-## 6. 実TEI CLIの既存実証とSK-02比較適格性の引渡し（2026-11-03）
+## 10. 実TEI CLIの既存実証とSK-02比較適格性の引渡し（2026-11-03）
 
 2026-11-02に[TEI #2587](https://github.com/hat47x/tei-platform/pull/2587)（操作・Artifact生成）と[TEI #2626](https://github.com/hat47x/tei-platform/pull/2626)（実CLIでModel/Source/Traceを読取るConstruction Context）がmainに統合された。#2626 exact-head `42b7ec43fa7901359120008105e812eda7e9d6e7`の[Focused GitHub Actions #41462654810](https://github.com/hat47x/tei-platform/actions/runs/41462654810)は実Go CLI・二表示・Source-only Relocationの限定実証に成功している。2026-11-03時点でTAIが同じCLIを**当該Harnessから実呼出しした証拠は未取得**であり、TEI自身のPASSをS1/H2/H3/H4/H5の実績として移し替えない。
 
