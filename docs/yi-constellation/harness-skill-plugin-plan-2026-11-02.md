@@ -424,3 +424,15 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 - **非決定的Agentの比較**：実Harnessが確率的に異なるTool提案や順序を返す場合、単一回の本文byte不一致だけでは「秘密の存在を推定した」証拠にしない。同一Model/設定/公開入力を揃え、実Traceを複数試行で採取して差の再現・原因を独立分析する。逆に数回の一致で**全経路の非干渉を保証しない**。
 
 [SK-01 §U](../../evaluations/SK-01-harness-skills.md)を観測面の横断受入表とする。最初の実TEI Skill Runbook（§20）は依然優先し、**今回の局所Mockの6/6をTEI CLI S1/H2/H3やTAI H4/H5の実行済みと扱わない**。独立Product Skillの用途は拡張してよいが、ProductのSource/Meaning、現在Host Grant、実公開・納品の資格は引き続き別である。
+
+
+## 22. 2026-11-02：実CLI観測の到達、Role依存閉包、Test-as-Dataの独立性
+
+[実Product Skill資格確認Runbook §7〜8](first-real-skill-qualification-runbook-2026-11-02.md)で、従来の静的・公開合成評価だけだった証拠に、TEI [Draft #2626](https://github.com/hat47x/tei-platform/pull/2626)の**実Go CLI Read／同一Read WitnessからのAI JSON・人間Markdown二投影**を新たに対応付けた。PR HEAD `31c62e8bb44c1c5c59933a46924aa4c338637085`の[GitHub CI #41456256348](https://github.com/hat47x/tei-platform/actions/runs/41456256348)は**2 Job successを確認**。実CLI 9プロセスによる限定観測、Source/World指紋、Catalog/Trace/Validate、二素材を同Jobで個別に再読取した資格のみ主張できる。
+
+**次のProduct成熟階段**は、①実Product Tool観測（部分成立）、②既存TEI Product Skillを実ロードして同Source・ToolのH2/H3で改善を測る（未実施）、③二Productの別Reader・独立意味/Sourceを接続するH4/H5（未実施）、④別Harness/現Grant/実Effect/Current Requalification（未実施）。**TEI CI successをTAI Skill install・SHO実Writer/Reader・実外部LLM送出・Owner意味受理へ昇格しない**。以前のPlan-only表現は初版当時の履歴であり、この項の資格更新を優先する。
+
+新しい[SK-01 §V](../../evaluations/SK-01-harness-skills.md) SK-IQ01〜12では、TEI [Draft #2638](https://github.com/hat47x/tei-platform/pull/2638)のRole bootstrap/eager依存閉包・deferred data Refの区別、[Draft #2639](https://github.com/hat47x/tei-platform/pull/2639)の実Go Language Plugin Referenceへの二表層接続、TEI [#2621](https://github.com/hat47x/tei-platform/issues/2621#issuecomment-6578796587)のTest-as-Data/独立Expected・Mutationを**Product側受理の必要条件を見落とさないためのConsumerケース**へ接続。Root RoleのPinだけで依存Interpreterを保証しない。Markdown/Skillの説明に現れる`role`文字列から意味受理や実Toolの有効性を推定しない。ExpectedとImplementationが同じ式に依存するセルフチェックを独立Oracleと呼ばない。
+
+Owner分担：TEI #2620/#988はMeaning/Role/Plugin、#2605は実Product Skill、#2621/#2514はTest/Oracle、#2516は二Consumerの用途相対Projection、#2600は再生成/再資格化、TAI #168/#271は選択/Harness比較/Activity引継ぎ、SHOはWriter/Readerの実到達。共通Host/Registry/第二Role Resolver・Oracle Runnerは追加しない。**SK-IQ01〜12とH2/H3/H4/H5実験はNOT RUN**。
+
