@@ -94,3 +94,39 @@ TAIは「read-onlyを呼んだので確認完了」とせず、必要な範囲�
 **最小Privilegeを指示文で約束するより、実際の到達を比較する**。比較する内容は不要なRelation/Field取得、未確認Ruleの偽合格、過剰なDisclosure、旧Snapshot結合、別Productへの無用なTool呼出し、Skill導入によるtoken/時間・人の確認の差。静的例示Skillに実アクセス保証を付与しない。
 
 TEI側の#2624/#2628合成結果を、TAIの実Harness合格へ機械的に加算しない。反面、他Productが既に提供する十分性・Rule/Providerの負例をTAIで再実装する必要もない。**必要なClaimに必要な証拠だけをつなぎ、その証拠の欠落を残余として表現できること**を横断Skillの独自の成果として検証する。
+
+## 7. Excelの非表示状態とCSV復号規則をSource利用資格へ組み込む（2026-11-03）
+
+**新たに接続した実MMI観測**：
+- [MMI #756](https://github.com/hat47x/markdown-matrix-injector/issues/756)では、`origin/main e293927e`／WSL Ubuntu／Node.js 20.20.2の**合成XLSXを使用したMCP/CLI実測**として、Excelの`veryHidden`シートが`inspect`の`sheets[]`・Candidate・`sample`に**可視シートと区別されず出力**され、`select`が成功し、`render`で値が文書へ展開、`check.errors=0`だったことが記録されている。非表示行・列も`render`に現れた。**隠す意図やその値が機密かどうかは、Excelのhidden属性だけでは判定できない**。ただし黙って外部AI/文書/納品へ転送する既定でよいという受理でもない。
+- [MMI #758](https://github.com/hat47x/markdown-matrix-injector/issues/758)は、CSVをUTF-8（strict）→Shift_JISで復号する現`workbookLoader.ts`経路に対し、CP932 CSVの`inspect`で復号した見出しは正しく返るが、**採用したDecoder名がLocator/Provenance/Fingerprint結果に出ない**と実測。SourceDigestが一致しても、同じ**Text/Value Projectionの復号条件が揃っている**とは言えない。UTF-8としてもCP932としても読めるbytesで値が変わるという反例は**未実測の仮説**。
+- [MMI #690](https://github.com/hat47x/markdown-matrix-injector/issues/690)はWindowsの改行自動変換で作業ツリーのSource bytes digestが変わる別境界。これはDecoderの版やVisibilityと別に比較する。
+
+**TAI/SHO向けの新しい判別**は、Raw bytes→Decoded Values→Visibility/Selection→Rendered/Selected Projection→実Consumer/Harness受信→用途別公開資格という**対象に相対的な連鎖**である。必要な独立Witnessが無ければ、前の値やDocumentのPreview一致から次の資格を推定しない。
+
+| Stage | 本当に確認したいもの | 主な責任者 |
+| --- | --- | --- |
+| Raw | Source byte digest、実Readerが読んだFile/Version、改行などの変換 | MMI Source Identity/読み取り実装 |
+| Interpret | CSVで実際に採用したencoding/Decoder規則・版、Excel Sheet/Row/Column visibilityの観測値 | MMI #758/#756 |
+| Select | 利用者が意図したSheet/Range/Hidden inclusion、read-onlyで実選択したSource Slice | MMI CLI/MCP、Source Owner |
+| Publish | 文書/Resultへ実投影した値・非表示属性の診断と意味、Scope/Requiredの範囲 | MMI Render、SHO #4/#6/#10 |
+| Disclose | 現在のAudience/Recipientに、Raw/選択値/存在情報を**実際に送ってよいか**と実送出 | Product/Host Policy、TAI #232、TEI #2515 |
+
+**固定の安全な既定をここで宣言しない**：`veryHidden`は暗号化・アクセス制御ではない。これを機密のPolicyと同一視して「選択不可」にするのも、存在だけから「公開可」にするのも誤り。既定の選択・診断・互換性はMMI #756のOwner判断、実送出先やDisclosureは保持者/Host判断。SHOは警告/根拠/出現箇所と保存版を保持し、MMIのDecoderやExcel Parserを複製しない。
+
+### 新しい受入照合SK-V01〜SK-V08（全件このTAI計画ではNOT RUN）
+
+| Case | 対照 | 誤合格を防ぐ条件 |
+| --- | --- | --- |
+| V01 | visible/hidden/veryHiddenを含む同一架空Workbook | MMI観測に属性が実付随したか、External Skillが勝手に可視のみと主張しない |
+| V02 | 非表示Sheetを明示選択、Render/Preview | 選択成功・文書表示と、利用者/Recipientへの開示許可を独立に確認 |
+| V03 | 非表示Row/Columnに値、可視値だけで説明を構築 | Source rangeの全値と可視Projectionの範囲を誤って同一視しない |
+| V04 | 同一CSV bytesを異なるDecoder規則で解釈する候補 | raw digestだけからdecoded valueの同値性を確定しない。異解釈は**仮説比較**として別Oracleで実測する |
+| V05 | UTF-8、BOM、CP932の実MCP/CLI結果 | Decoder採用結果・版・値の組を固定し、未報告ならunknown。MMI #758の実装受入が先 |
+| V06 | Windows/LF/CRLFで同じ文書の意味だがSource bytes違い | bytes同一性/Meaning類似/Reference locationの再資格化を別にする（MMI #690、TEI #2626 W0c） |
+| V07 | LLMにRawを送らず非表示候補の存在・sheet名をTool discoveryで送る | 正文本文だけでなくMetadata、Tool引数、Result、診断、Planner/Actual Egressの開示を検証 |
+| V08 | H2 Tool-only vs H3 Product Skill、同一公開Workbook/CSV | 誤った可視範囲・Decoder不明点・不必要なRaw取得/送信・Tool数/Token/人手Reviewを同じ実Tool/独立Oracleで比較 |
+
+**進行順**：MMI #756/#758のOwnerが現在のMCP/CLI実結果の属性・Decoder・Renderer負例を独立に補う → SHO #10は実Productが返したWitnessでのみ記述・引用・公開の現在資格を表示 → TAI [SK-02](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)の最初のTEI Product Skill比較を維持した上で、MMI Product Skillを追加する**別の公開合成Task Group**でH2/H3やH4/H5の差を測定。MMI #658の納品集合・C-01/T2 G0-0は独立Gateであり、#756/#758の局所実測がその合格にはならない。
+
+**資格**：現段階の#756/#758は**対象となるMMI旧mainの限定実測**。この計画では追加のMMI CLI/Excel/CSV/SHO/外部Harness/OS/Network試験を行っていない。SK-V01〜08はNOT RUN、正式Schema/実開示Policy/Owner意味受理は未決。既存MMI Source/Decoder/Visibilityの責任をTAIへ移管せず、新共通Parser/Host/Policy Engine/Registryを作らない。
