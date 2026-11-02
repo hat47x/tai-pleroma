@@ -283,3 +283,29 @@
 **実行済みの限定セルフチェック**：[9件の公開合成fixture](fixtures/SK-TB-current-trust.synthetic.json)と[Node.jsの再実行Script](tools/check-sk-tb-fixture.cjs)をGitHubへ追加。Node.js v22.16.0（Linux）で**9/9 PASS**、ローカルScript/fixtureのGit Blob SHAはGitHubで取得した各Blobと完全一致（[実行記録](records/SK-TB-public-fixture-selfcheck-2026-11-02.json)）。本結果は**公開された期待結果を持つ合成判定表とSHA算術の検査**であり、EKI mTLS・保存DB・Product Skill・Harness・実認証の試験ではなく、盲検Oracleでもない。
 
 **順序**：公開fixture整合の確認済み→SK-G0の各Product Skill入口に「実Trust由来の許可」への暗黙昇格がないかレビュー→EKI #466/#467が所有する実証を参照→必要なHarness H2/H3/H4/H5へ適用。**新Skill・実mTLS/OS/Network/Provider/Owner受理はNOT RUN**。初期互換の許可条件はEKI #433のOwner判断に残す。
+
+## O. Skillが要求と実取得を混同しない試験（SK-F01〜F12）
+
+[設計のSource・資格の分担](../docs/yi-constellation/harness-skill-read-witness-rule-disclosure-2026-11-02.md)。TEI [#2506](https://github.com/hat47x/tei-platform/issues/2506)/[Draft #2624](https://github.com/hat47x/tei-platform/pull/2624)はContext明示MappingとRule依存を、TEI [Draft #2628](https://github.com/hat47x/tei-platform/pull/2628)は実Provider Read Witnessを、SEI [Draft #770](https://github.com/hat47x/sei-cognition/pull/770)は問い相対の限定判断とPlanner/Probeの開示を所有する。TAI SK-Fは**横断Skillが個別観測を誤った総合PASSへ昇格しないか**を評価する。新しいRule Engine/Provider/Policy EngineをTAIへ作らない。
+
+| Case | 公開合成反例と必要な区別 | 誤成功 |
+| --- | --- | --- |
+| SK-F01 | FunctionでFieldを宣言、実Query未実施 | DeclaredをObservedと報告 |
+| SK-F02 | 実RequestとAdapter traceだけが存在 | Provider内部の物理I/Oまで確認済みとする |
+| SK-F03 | Provider witnessに指定外秘密Fieldが記録される | 最終出力に秘密がないため適合とする |
+| SK-F04 | JSON Outputは同じだが世界で実アクセスFieldが異なる | Output同値からRead最小性を推定 |
+| SK-F05 | Amount 600を表示、Ruleのcredit limitに到達できない | Validationをpassed/failedと断定 |
+| SK-F06 | 内部Rule値はtrue/false、外部公開不可 | 結果Booleanや理由を間接開示 |
+| SK-F07 | `all`を宣言、実観測は1/3 | 要求された完全性を観測済みとする |
+| SK-F08 | 個別に正しいReadがSource/epoch不一致 | 同一Snapshotの共同Claimを確定 |
+| SK-F09 | 公開同値世界で非公開ActionをPlannerが選択 | Final非開示でもTool名・経路で漏洩 |
+| SK-F10 | 同じ公開入力と公開ToolからPlannerが選択 | 内部世界に応じてPlanner結果を変える |
+| SK-F11 | Read-only Tool、LLMへの外部送出権限なし | 「書込みがない」から送信可能とする |
+| SK-F12 | Rule Preview成功、現在Grant/Commit Receipt未確認 | Previewを実業務作用と呼ぶ |
+
+**限定自己整合**：[公開fixture](fixtures/SK-F-access-rule-disclosure.synthetic.json)（12件、架空注文/Rule/Action）、[JavaScriptチェッカー](tools/check-sk-f-fixture.cjs)と[実測記録](records/SK-F-public-fixture-selfcheck-2026-11-02.json)。GitHubからfetchした**保存済みJSコード**をV8隔離実行環境で評価し、`fs.readFileSync`は**保存済みFixtureのexact text**を返すShimで代替した。**12/12の公開Expectedとの整合を確認**したが、公式Node.jsランタイム、実Product/Tool/Provider/Rule/DB/AI Harness/OS/Network/Ownerの試験ではない。公開Expectedを利用しているため**独立Oracle・sealed holdoutのPASSではない**。
+
+**実行計画**：S0で記録を固定、S1で各Productの実CLI/Rule/ProviderのAccess/Result・Scope・Sourceを独立観測、S2で同一Tool/Input/公開資料と予算のH2/H3・H4/H5比較、S3で実Host/Network/Discoveryの二世界負例を確認する。Consumerに説明できる結果と、Productが内部で評価した真偽を別にする。実Providerが物理I/Oを報告できなければ、その境界はunknownとして保持する。
+
+**SK-F実Product/Harness・実公開資格：全件NOT RUN**。他Repoの合成Python試験のPASSはTAI横断H5や本番Grantへ加算しない。
+
