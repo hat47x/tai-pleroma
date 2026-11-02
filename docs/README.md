@@ -15,6 +15,21 @@
 
 - [人とAIの協働統治に向けた開発の焦点（Draft）](ai-human-cogovernance-development-plan.md) — 個人・組織・社会の価値検証を先行させる優先順位と責務境界。実施条件は[P-06評価](../evaluations/P-06-cogovernance-protocol.md)で定める。
 
+## プロダクト横断の俯瞰と棚卸し（Draft）
+
+- [プロダクト横断の全体像と関係図（Draft）](product-landscape.md) — 既存の五基盤とTAIの役割、横断俯瞰、調査範囲の限界。
+- [プロダクト横断知識モデルと管理境界（Draft）](product-knowledge-model.md) — 型付き関係・根拠・状態・Revision・Owner境界と受入条件。
+
+両文書はTAIへの横断情報集約の具体化案です。既存のSCN-001責務境界・接続実証の正本を置き換えません。
+
+- [公開リポジトリの棚卸しとプロダクト候補（Draft）](product-inventory-candidates.md) — 固定main版に基づく公開対象の候補、SHO/MMIやCSWの分類保留、網羅性・公開境界。
+- [横断プロダクト情報の受入・更新プロトコル（Draft）](product-landscape-acceptance.md) — scope、Evidence、Revision、公開境界、誤った確定を避ける負例。
+
+- [Product Landscape 横断要求 v0（Draft）](product-landscape-requirements.md) — PL-REQ-01〜16、G1〜G3、要件・受入・Ownerのトレース。
+- [Product Landscape View Contract v0（Draft）](product-landscape-view-contract.md) — Portfolio/Capability/Integrationの図の意味、版と公開の条件。
+
+G1の正式な対象・分類・公開の採否は[TAI Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)で追跡する。Issueと文書はいずれも現在**Draft・未受入**。
+
 ## 製品シリーズの概要
 
 [YI Constellation 構想と設計（PowerPoint）](YI_Constellation.pptx)は、製品群の役割と境界、利用例、構想、2026年10月時点の確認範囲をまとめた資料です。各製品の最新の要件・設計・検証結果は、それぞれのリポジトリを参照してください。資料内の構想や過去の確認結果は、現在の実装や受入を示すものではありません。
