@@ -551,3 +551,17 @@ writes: true
 
 - [receipt](../../evaluations/records/SUI-TEI-multi-doc-2026-11-03.json)
 - 大量カード・同時書き込み・本番DBは未検証
+## 大量カードの保存（合成、2026-11-03）
+
+`assembler/large_save.py`は、パイロット投影へ合成Cardを追加して保存します。
+
+```text
+requestedCards: 300 / savedCards: 300
+putStatus: 200 / readStatus: 200
+payloadBytes: 22744
+syntheticCardsAdded: 298
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-large-doc-2026-11-03.json)
+- **合成fixture**であり、パイロットの実証ではない
+- 本番上限・同時書き込みは未検証
