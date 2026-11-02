@@ -422,3 +422,27 @@ DocumentV1 valid: true
 ```
 
 `transform`と時刻は呼び出し側から供給しています（[receipt](../../evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json)）。
+## 保存計画CLI（2026-11-03）
+
+`assembler/plan_save_cli.py`で、artifactと既存DocumentV1から保存計画を作れます。
+
+```sh
+python integrations/pilot-sui-document/assembler/plan_save_cli.py \
+  --sui-repo <SUI> --artifact evaluations/artifacts/documentv1-projection.json \
+  --existing <existing-documentv1.json> --out <receipt.json>
+```
+
+- 既定は非破壊マージ（`preserve_existing=True`）
+- 追加・変更・保持・警告をreceiptへ記録
+- 書き込みは行わない
+
+観測（1回）:
+
+```text
+action: update
+cardsAdded: 1 / cardsChanged: 1
+preservedCards: 1 / preservedIslands: 1
+warnings: 0 / writes: false
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json)

@@ -1,0 +1,1 @@
+{"id":"doc-1","createdAt":"2026-01-01T00:00:00Z","transform":{"panX":0,"panY":0,"zoom":1},"cards":[{"id":"card-1","text":"old","x":1,"y":2,"critique":"keep"},{"id":"card-9","text":"extra","x":0,"y":0}],"islands":[{"id":"island-1","cardIds":["card-1"]},{"id":"island-9","cardIds":["card-9"]}],"edges":[],"critiqueInputs":[{"id":"crit-1"}]}
