@@ -191,3 +191,19 @@ TEI #2605では、実行入口のread-only discoveryは全Plugin一覧ではな�
 Product単独利用（TAIなし）の対照H2↔H3を先行し、複数製品が本当に必要なケースでH4↔H5を実行する。Skill追加が有益とは限らず、同じ公開仕様・Tool版・入力Sourceと独立期待値を保持し、余分なTool呼出し・Context・開示・誤成功も計測する。
 
 **責務と状態**：これは既存SK-G0〜G6・H0〜H7の詳細化であり、新しい中央Capability Registry/Agent Runtime/第二Authorityを追加しない。[SK-01のSK-E試験](../../evaluations/SK-01-harness-skills.md)を参照。実Skill/CLI/Harnessロード、二Tenant非開示、OS制御、正式受理はNOT RUN。
+
+
+## 9. 各Productでの並列受入作業（2026-11-02起票）
+
+TAIが横断Skillの正本・AB比較・シリーズ配布を担当し、**各Productが専用Skillの具体的入口とテストを所有**する方針を、次の独立Issueへ還流した。
+
+| Product Owner | 専用Skill検証のIssue | 既存Core/契約と切り分ける差分 |
+| --- | --- | --- |
+| TEI | [#2614](https://github.com/hat47x/tei-platform/issues/2614) | 実CLI/Modeler/DSL/Generatorの使い方を説明。#2516のClaimと#2390のProvider意味を重複実装しない |
+| SEI | [#769](https://github.com/hat47x/sei-cognition/issues/769) | Inquiry/Methodの手順と根拠/残余の引渡し。#767の独立Method/Evidenceを利用 |
+| SUI | [#3368](https://github.com/hat47x/sui-sensemaking/issues/3368) | 許可されたAgent Projectionを使った意味探索。#3297の未決開示判定を先取りしない |
+| SHO | [#10](https://github.com/hat47x/sho-composer/issues/10) | MMIの既存`mmi` Skillを利用し、文書/出典/説明/固定納品を別資格にする |
+| EKI | [#468](https://github.com/hat47x/eki-fabric/issues/468) | Task/Attempt/Output/Resultの実在入口を使用し、#465のBody転送未解決を隠さない |
+
+いずれも**要求・受入計画の起票のみ**。各ProductのSkill/Plugin codeやCI、実Harness、正式API/Owner受理を実施したものではない。TAI #168の横断作業と、各製品実装の状況を混同しない。
+
