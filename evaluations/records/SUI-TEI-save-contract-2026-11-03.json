@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.tei-save-plan-cli/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/plan_save_cli.py --sui-repo D:\\GIT\\hat47x\\sui-wt-schema --artifact D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\documentv1-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
+  },
+  "existing": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\existing-documentv1.json",
+    "digest": "sha256:9b70f4a11be8a5e7ecb5b110acd05888218e258c49c7771d5f186733385de7db"
+  },
+  "observed": {
+    "action": "update",
+    "cardsAdded": 1,
+    "cardsRemoved": 0,
+    "cardsChanged": 1,
+    "islandsAdded": 0,
+    "preservedCards": 1,
+    "preservedIslands": 1,
+    "warnings": 0,
+    "writes": false,
+    "contractValid": true,
+    "contractCards": 3
+  },
+  "scope": "Builds a save plan through SUI's consumer and planner, and validates the payload with SUI's document contract adapter. It does not save, call the API, or touch a database."
+}

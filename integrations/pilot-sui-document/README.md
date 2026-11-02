@@ -446,3 +446,12 @@ warnings: 0 / writes: false
 ```
 
 - [receipt](../../evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json)
+### 保存契約の検証（2026-11-03）
+
+CLIは、保存計画のpayloadをSUIの保存経路と同じA1契約アダプタで検証します。
+
+- payloadへ`schemaVersion: "1.0.0"`が必要（SUI #3379で追加）
+- 非破壊マージ後のpayloadが契約を通ることを確認
+- 観測: `contractValid: true`、`contractCards: 3`
+
+- [receipt](../../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)

@@ -151,3 +151,12 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-merge-2026-11-03.
 - unittest 6件がPASS
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json)
+### 保存契約（A1）の通過確認（2026-11-03）
+
+保存planのpayloadを、保存経路と同じ`_validate_document_payload_with_a1_contract`で検証しました。
+
+- `schemaVersion: "1.0.0"`が必要（[sui-sensemaking #3379](https://github.com/hat47x/sui-sensemaking/pull/3379)、`2f7aec6`）
+- 非破壊マージ後のpayloadが契約を通る（`contractValid: true`）
+- 保存・API呼び出しは未実施
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)
