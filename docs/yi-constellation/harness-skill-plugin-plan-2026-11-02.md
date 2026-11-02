@@ -239,7 +239,7 @@ Skillの初期read-only経路は、実Product側の公開プロトコルが提�
 
 Output filename、Manifest列挙、Subject ID・件数、対象バージョン、生成ログ、失敗箇所は非公開の構造を漏らし得る。外部Harnessへ渡すのはSource保持Product/実Hostの**許可済み公開投影と検証結果のみ**。内部で完全集合と同版byteを確認しても、詳細なManifestや検証Booleanを外部へ返せるとは限らない（TAI #232／TEI #2515/#2516）。Client Skillがファイルを隠しただけではOSでRawを禁止した証拠にならない。
 
-既存[SK-01 §KのSK-C01〜06](../../evaluations/SK-01-harness-skills.md)（または[TAI #168の接続検討](https://github.com/hat47x/tai-pleroma/issues/168#issuecomment-6572833447)）は**製品間のSubject/Source/時点/意味の対応**、本§11とSK-Jは**版間対応候補・物理公開世代・実成果物の送達**を扱う。横断H4/H5の「完了」にはどちらか一方の単体PASSでは足りず、必要な結合辺の実証が要る。
+[TAI #168のSK-C01〜06接続検討](https://github.com/hat47x/tai-pleroma/issues/168#issuecomment-6572833447)は**製品間のSubject/Source/時点/意味の対応**、本§11とSK-Jは**版間対応候補・物理公開世代・実成果物の送達**を扱う。横断H4/H5の「完了」にはどちらか一方の単体PASSでは足りず、必要な結合辺の実証が要る。
 
 ### 11.5 計画と検証Owner
 
