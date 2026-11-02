@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 from typing import Any
@@ -99,6 +100,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-alignment-2026-11-02.json",
     "evaluations/records/SUI-TEI-affiliation-2026-11-02.json",
     "evaluations/records/SUI-TEI-island-cardids-2026-11-02.json",
+    "evaluations/records/SUI-TEI-artifact-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -173,6 +175,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-artifact" in relative:
+            artifact = data.get("artifact") or {}
+            if artifact.get("schema") != "tai.reference.tei-documentv1-projection/v0":
+                errors.append(f"TEI artifact receipt has no projection schema: {relative}")
+            else:
+                artifact_path = root / artifact["path"]
+                if not artifact_path.is_file():
+                    errors.append(f"TEI artifact receipt points at a missing file: {relative}")
+                elif hashlib.sha256(artifact_path.read_bytes()).hexdigest() != artifact["digest"].removeprefix("sha256:"):
+                    errors.append(f"TEI artifact digest does not match the file: {relative}")
         if "tei-integration-flow" in relative:
             if data.get("casesPassed") != data.get("casesRun"):
                 errors.append(f"TEI integration flow receipt did not pass all cases: {relative}")

@@ -259,3 +259,22 @@ DocumentV1と現在の投影契約の差分は[SUI DocumentV1とTEI投影の差�
 ## SUI API境界への接続案
 
 `GET /docs/{doc_id}/epistemic/projection`を最初の接続面とする案を[SUI API境界とTEI投影の接続案](../../docs/sui-api-boundary-tei-mapping.md)に整理しました。読み取り専用のartifact kind追加を先に行い、DocumentV1の書き込みは後回しにします。
+
+## 投影artifactの生成（2026-11-02）
+
+結合経路に`--artifact-out`を追加し、SUIが読める形のJSONを生成しました。
+
+```json
+{
+  "schema": "tai.reference.tei-documentv1-projection/v0",
+  "contract": {"id": "sui.documentv1.projection", "version": "1"},
+  "source": {"teiCommit": "...", "contracts": {"...": {"sourceDigest": "...", "cases": 4}}},
+  "document": {"document": {...}, "cards": [...], "islands": [...], "edges": [...], "affiliations": [...]}
+}
+```
+
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+- [receipt](../../evaluations/records/SUI-TEI-artifact-2026-11-02.json)
+- receiptはartifactのpathとdigestを保持し、checkerが実ファイルのdigestと照合します
+
+このartifactはまだSUIへ配置していません。SUI側のartifact kind追加と運用者バインディングが次の接続点です。
