@@ -126,6 +126,10 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 
 DocumentV1と現在の投影契約の差分を[sui-documentv1-tei-gap.md](sui-documentv1-tei-gap.md)へ整理しました。識別子名、Edgeの端点種別、所属、未モデル要素が残っています。
 
+## 7.6 API境界への接続案
+
+SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読み取り専用のartifactとして投影を渡す案を[sui-api-boundary-tei-mapping.md](sui-api-boundary-tei-mapping.md)へ整理しました。DocumentV1の書き込み経路は、完全な写像ができるまで扱いません。
+
 ## 8. 停止条件・非目標
 
 - フィージビリティが確認できるまで、既存プロダクトの本番移行や公開は行いません。
