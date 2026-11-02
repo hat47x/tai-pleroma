@@ -1,0 +1,34 @@
+{
+  "schema": "tai.reference.sui-saas-startup/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, uvicorn, and an embedded PostgreSQL 16.2",
+  "command": "python integrations/tools/saas_startup_probe.py <SUI repo>",
+  "result": "REFUSED",
+  "observed": {
+    "runtimeProfile": "saas-multitenant",
+    "migration": "alembic upgrade head",
+    "seconds": 3.04,
+    "missing": [
+      "external access control",
+      "external document policy binding",
+      "external tenant capability resolution",
+      "SaaS OAuth broker authorize endpoint configured",
+      "SaaS auth-session hash key configured"
+    ],
+    "missingCount": 5,
+    "extraEnv": {
+      "SUI_ACCESS_CONTROL_FAIL_SAFE_MODE": "deny"
+    },
+    "outputTail": [
+      "  File \"D:\\GIT\\hat47x\\sui-wt-latest\\03_Implement\\backend\\src\\sui_sensemaking_api\\trusted_saas_runtime.py\", line 112, in validate",
+      "    raise RuntimeError(\"trusted SaaS runtime policy is incomplete: \" + \", \".join(missing))",
+      "RuntimeError: trusted SaaS runtime policy is incomplete: external access control, external document policy binding, external tenant capability resolution, SaaS OAuth broker authorize endpoint configured, SaaS auth-session hash key configured",
+      "",
+      "Application startup failed. Exiting."
+    ]
+  },
+  "scope": "Starts SUI under the SaaS profile against a migrated embedded PostgreSQL. It records the startup refusal; it does not configure the policy or change SUI."
+}
