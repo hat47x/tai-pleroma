@@ -33,6 +33,13 @@ description: >-
 
 検証可能な情報はSource/Tool/Receiptへ戻れる参照を付ける。実行できなかったことや、入力を受領しただけの状態を「完了」と書かない。Ownerの採否は製品ごとの既存経路に残す。
 
+## Skill自身の能力を過大申告しないための追加条件
+
+- **製品向けSkillの実在確認**：ルート`skills/ponytail`は開発一般向けでありSEI/SUI/EKIの製品操作Skillではない。MMIの`skills/mmi`は既存の製品向けSkillだが、利用Harnessの実Tool接続を別途確認する。
+- **比較するClaimを取り違えない**：数値・文章の一致と、対象集合／粒度／単位／時間／用途が同一のClaimであることは別。必要な情報が許可Projectionから区別できないならSource保持側の限定照会を使い、不可能なら`unknown`を維持する。
+- **Methodと実現を区別**：SEIの認知Method、SUIの意味探索、TEIのDSL/Domain Plugin、SHOの文書投影、EKIの実Body/Receiptは別のOwner。SkillはMethodの提案・Tool利用の案内であり、製品機能の実装や正式結果受理ではない。
+- **実際のSkillロードと秘密の受渡し**：同名Skillが存在する場合は実pathとcontent digest、Harness/Profileを確認する。別Harnessへ活動を移すとき、開示許可、認可、実施結果の現在適用性を再確認する。DSH等のSession LogやTool拡張送信も確認可能な範囲で検査する。
+
 ## 関連
 
 - [横断設計](../../../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)
