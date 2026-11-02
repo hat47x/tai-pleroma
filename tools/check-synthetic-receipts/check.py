@@ -128,6 +128,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-save-e2e-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-auth-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json",
+    "evaluations/records/SUI-TEI-server-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -228,6 +229,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-sui-server" in relative:
+            observed = data.get("observed", {})
+            if observed.get("serverReady") is not True or observed.get("anonymousStatus") != 401:
+                errors.append(f"TEI server receipt did not record readiness and 401: {relative}")
+            if observed.get("transport") != "uvicorn on 127.0.0.1":
+                errors.append(f"TEI server receipt must disclose the transport: {relative}")
         if "tei-save-roundtrip" in relative:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True:
