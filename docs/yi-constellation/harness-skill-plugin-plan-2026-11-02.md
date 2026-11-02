@@ -159,3 +159,35 @@ VersionはProduct/CLI/MCP/Skill/Adapter/Harness/Connection/Policyそれぞれに
 
 ### 9.5 受入への接続
 [SK-01追補 SK-R01〜R08](../../evaluations/SK-01-harness-skills.md)で、単独Productに余分なSkillを入れる逆効果、曖昧コマンド、導入済みだが実Tool不在、read-only入口とwrite別入口、同名Tool版差、切断・部分成功、ロード実体の未観測、現在権限差を**同一合成Taskの正負対**として検証する。前段はメタ情報・契約の静的棚卸し、次段は実Harness/CLI/MCP/OS・独立Oracle。PlanだけではSkill有効性、実Tool接続、OS隔離、Owner受理を証明しない。
+
+## 10. 2026-11-02：Skillの実入力束縛と発見面の開示資格（設計候補）
+
+他チャットの[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)（実在CLI限定の最初のProduct Skill）、[TEI #2595](https://github.com/hat47x/tei-platform/issues/2595)（宣言Sourceと実使用byteの差）、[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)（全送出面）、[TEI #2516](https://github.com/hat47x/tei-platform/issues/2516)（Consumer別Claim）、[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)（根拠十分性）をTAIのSkill評価へ接続する。各Productの内部Oracle/CLI/意味正本は各Ownerのまま。
+
+### 10.1 SkillのSHA一致は、実際の手順全体を使った証拠ではない
+
+レビュー済みのルートSkill文書と、配布Bundle、実SessionにロードされたSkill、参照先のreferences・scripts・URL先、MCP/CLIバイナリ、実際に読んだSource byteは別々の観測対象。root SKILL.mdのdigestが一致しても依存ファイルが差し替われば、実際の動作は変わり得る。次の資格を分け、必要な列だけSK-01へ追加する。
+
+| 観測 | 残す参照 | それだけでは断定できないこと |
+| --- | --- | --- |
+| Reviewed | Skill/参照資料のSource repo・commit・digest | 実Harnessへのロード |
+| Packaged/Installed | Bundleと依存scripts・Adapterのdigest、実配置先 | 当該Sessionの実消費 |
+| Delivered/Loaded | 実配布され、直接観測できた断片とTool定義、実読取範囲 | モデルの内部理解・非計測の依存ファイル |
+| Invoked | 実Tool名・argv・Process principal、CLI/Host版、実Sourceと出力 | 独立Oracleによる正しさ・本番許可 |
+| Qualified/Effect | Claim・Scope・Grain・as-of・独立検証・必要な実Provider receipt | 別Harnessや将来版での同じ資格 |
+
+実ロードbyteが観測不能ならunknownとする。Skillの自己申告で「使用済み」と認定しない。TEI #2595の実SourceとBuildの照合はTEIの実装Ownerに戻し、TAIではその結果の適用範囲だけを評価する。
+
+### 10.2 発見段階にも情報開示がある
+
+Skill名、CLI help、Tool schema、MCP tools/list、ErrorやCapabilityの件数だけでも、非公開の業務構造・顧客・Tenant固有機能の存在が分かる可能性がある。高機密Profileでは、discovery → invocation → result → final explanationを**別々の開示先・開示資格**で点検する。内部世界が異なるのに公開可能な一覧が同じであるべき二つの合成Tenantでは、一覧・Toolエラー・暗黙Skill選択から秘密を推測させない。
+
+公開一覧を隠せたことはRawや別Portのアクセス拒否の証拠ではない。実OS/Server強制は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)とTEI #2515を参照する。特定の問いを内部Productで評価する場合も、結果true/falseや拒否理由が秘密を漏らし得るため、用途限定の既存QueryとOwnerの開示Policyを使用する。任意Predicateを汎用Skillとして開放しない。
+
+### 10.3 実在CLIを使った最初の対照
+
+TEI #2605では、実行入口のread-only discoveryは全Plugin一覧ではなく限定したselected-read-only-commandsと報告されている。最初のTEI Skillは、実在が確認された model catalog、inspect、trace、validate -json 等に限定する。validateの終了コード0とok・diagnostics・Warningを分け、複数呼出しのworld/source fingerprintが同じSnapshotに対応するか確認する。モデル検査だけでOwner受理や外部Host上のJava/.NET/WASMの動作を保証しない。
+
+Product単独利用（TAIなし）の対照H2↔H3を先行し、複数製品が本当に必要なケースでH4↔H5を実行する。Skill追加が有益とは限らず、同じ公開仕様・Tool版・入力Sourceと独立期待値を保持し、余分なTool呼出し・Context・開示・誤成功も計測する。
+
+**責務と状態**：これは既存SK-G0〜G6・H0〜H7の詳細化であり、新しい中央Capability Registry/Agent Runtime/第二Authorityを追加しない。[SK-01のSK-E試験](../../evaluations/SK-01-harness-skills.md)を参照。実Skill/CLI/Harnessロード、二Tenant非開示、OS制御、正式受理はNOT RUN。
