@@ -121,6 +121,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-containment-2026-11-03.json",
     "evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
+    "evaluations/records/SUI-TEI-save-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -221,6 +222,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-sui-save-merge" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 5 or observed.get("writes") is not False:
+                errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
         if "tei-sui-save-plan" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") != 4 or observed.get("writes") is not False:
