@@ -668,3 +668,15 @@ result: PASS
 
 - [receipt](../../evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json)
 - 一時SQLite・`local-dev`
+## artifactのJSON Schema（2026-11-03）
+
+`artifact.schema.json`を追加し、`assembler/validate_artifact_schema.py`でartifactを検証します。
+
+```text
+valid: true
+errors: []
+```
+
+- 検証する: envelope・契約メタデータ・要素の形
+- 検証しない: 参照整合性・DocumentV1
+- [receipt](../../evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json)
