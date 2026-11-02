@@ -83,5 +83,5 @@ TEI main `9c9ef4d160640908e06ad13afb6c2b45c664c748` の [`cmd/tei/cli_contract.g
 
 [既存Go Language Pluginへの試験Draft #2639](https://github.com/hat47x/tei-platform/pull/2639)の二表層→Plain Data候補は、同じ形式の候補であっても受理済みMeaningやSource occurrenceの一致を主張しない。Script/Roleの能力を説明するSkillは、同じ表層の例示文を**真の受理済み操作の列挙**と扱わない。正式TEI DSL/Pluginの採用やAIによる構文理解成功も、別に測る。
 
-Test-as-DataはTEI [#2621](https://github.com/hat47x/tei-platform/issues/2621#issuecomment-6578796587)と[#2514](https://github.com/hat47x/tei-platform/issues/2514)が独立Expected・Mutation・Source/改版を受け持つ。Skillに含まれるHow-toや公開Fixtureが利用者へ期待答を提示しても、Agentに同じExpectedを与えた結果を**独立・盲検のProduct正答率**として計測しない。[TAI SK-01 §V](../../evaluations/SK-01-harness-skills.md)のSK-IQ01〜12に引き渡す。
+Test-as-DataはTEI [#2621](https://github.com/hat47x/tei-platform/issues/2621#issuecomment-6578796587)と[#2514](https://github.com/hat47x/tei-platform/issues/2514)が独立Expected・Mutation・Source/改版を受け持つ。Skillに含まれるHow-toや公開Fixtureが利用者へ期待答を提示しても、Agentに同じExpectedを与えた結果を**独立・盲検のProduct正答率**として計測しない。[TAI SK-01 §W](../../evaluations/SK-01-harness-skills.md)のSK-IQ01〜12に引き渡す。
 
