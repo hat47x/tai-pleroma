@@ -95,3 +95,33 @@ W0/W1 (underlying Product data; may differ in restricted input)
 ### 未採用と未実行
 
 `AS-01〜12`は同じSynthesized worldを用いた**局所的な判別力確認**であり、非干渉の完全証明でも、実MCP/実Renderer/OS/Host/Networkによる漏えい・遮断の証明でもない。保護対象の範囲と許された公開差は各Product/Ownerが決める。既存のTEI #1119 Critical PathとSHO S0/MMI G0-0、TAI #168/#271段階試験を変更せず、単独Productの探索・実装・AIの自由な提案生成を維持する。
+
+## 7. 2026-11-02：回答前の実HTTP受信面を合成Nodeで観測（AS-LB）
+
+**局所実行を一段進めた範囲**：[check-preanswer-loopback.cjs](../../evaluations/tools/check-preanswer-loopback.cjs) をNode v22.16.0（Linux）で実行し、**127.0.0.1の一時Portだけ**にbindした試験用HTTP Receiverが実際に受信した**POST body bytes**を比較した。6試験／9リクエストを観測し**6/6 PASS**。実行ソースのローカルGit Blob `1049188e3639c3d25d95989867a1a43cd4e53726` とGitHub保存Blobは一致し、ソースSHA-256は `eb8db66211136b9825173ac2141b2361546a708116857ab6d730ce435a406f54`。[結果記録](../../evaluations/records/AS-LB-loopback-http-2026-11-02.json) は試験用合成の限定記録であり、Product実装の検証記録ではない。
+
+| Case | 実Mock Receiverで見たこと | 正しく言える範囲 |
+| --- | --- | --- |
+| LB-01 | Hidden Actionだけ異なる二世界が、許可公開Toolだけ選ぶPlannerでは**HTTP bodyの実bytes一致** | この**模擬Plannerとこの受信Port**で限定された公開投影が同じ |
+| LB-02 | Hidden Actionを選ぶ誤Plannerでは、公開対象外の架空Tool名 `private.reconcile` が実HTTP bodyへ入った | **意図的に誤った方式の漏えい証人**を検出。安全な製品の合格ではない |
+| LB-03 | modelMessages/最終回答は同一でも、副次`sessionEvent`に合成Canaryが入ると受信bodyに出た | Model本文だけの監査では不十分という**模擬送出**の実証 |
+| LB-04 | 明示的に公開可能になったToolを加えると、受信内容が正当に変化 | 正当な開示差を誤った非干渉失敗と数えない |
+| LB-05 | 内部拒否理由が異なっても、外部向けGeneric Errorの受信bytesが一致 | 実ProductのTiming・HTTP status・error経路の保証ではない |
+| LB-06 | 一致する公開Response shapeなら、同じHTTP bodyを受信 | この実Mockの構成での等価性に限定 |
+
+実行コマンド例：
+
+```bash
+node evaluations/tools/check-preanswer-loopback.cjs
+```
+
+**意義の違い**：既存のAS-01〜12はテスト内の配列や値比較。今回のAS-LBでは少なくとも**JSON serialization → `http.request` → loopback Receiver実受領 → 受信byte比較**を通過した。ただしProductのTool discovery、LLM出力、SDK、MCP、DSH Session Log、SHO Renderer/DOM、HTTP以外の副次Channel、実OS/Network制御のいずれも通過していない。`LB-02/03 PASS`は**不安全な模擬方式で漏出したことを検出できた**意味であり、脆弱性が実製品で再現した証拠ではない。
+
+### 次に置く実Product側観測の条件
+
+1. [TAI Draft #270のTEI最初の実Tool Runbook](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)の実CLI S1→H2/H3で、**実際にHarnessへ渡るTool一覧・Skill読込実体・Tool result**を固定する。TAI/SEIのTool名を想像で作らない。
+2. 実LLM/HarnessのEgressを測る際は、Source保持Product/Hostの**明示的に許された合成Canaryと試験用Endpoint**で、各送出面（model request・追加Session Event・Tool/CLI戻り・Renderer/a11y・log）を別々に観測する。Mockへの送信可否を他の宛先におけるブロックの証拠に使わない。
+3. [TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の現在資格を使い、Source・開示Policy・Renderer profile・Skill参照Script・Tool Catalog・Host Grantの変化ごとに**Affected Consumer**だけ再確認する候補を比較。ただしDependency未観測を「影響なし」とせず、非公開Toolを外部へ列挙させない。
+4. [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の必要な高機密Profileでは、実OS/Hostの直接Rawアクセス拒否と実送信経路の観測を**別の製品試験として**実施。通常TEI組織Data全件へ一律の隔離義務を追加しない。
+
+**限定状態**：今回新たに実施したのは架空データの**Node.js loopback Receiverを使用した6試験**のみ。実製品/実Harness/実LLM/実MCP/Browser DOM/OS権限・外部Network監視/Owner受理・本番秘密は一切評価していない。全経路の非干渉、特定製品の情報漏えい防止、Context/Taskの意味受理を主張しない。
