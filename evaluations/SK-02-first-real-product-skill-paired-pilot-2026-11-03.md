@@ -121,3 +121,13 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **進行と責務**：まずTEI [merged #2626](https://github.com/hat47x/tei-platform/pull/2626)の実read-only CLI観測を、TAIが新たに実行したことにせず独立参考Evidenceとして再利用。TEI [Draft #2607](https://github.com/hat47x/tei-platform/pull/2607)のSkill実Load／[PR #2649](https://github.com/hat47x/tei-platform/pull/2649)のCapability/CLI current-stateを次に確認。TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)の変更再資格化や[SK-03](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)の第2 Harnessは**最初の同一Harness内H2/H3比較を完了した後の別対象**とする。新実行Host・Permission/Metadata Registry・Skill必須化を追加しない。
 
 **未実施**：実H2/H3四Session／実Product Skill Load／独立Oracle採点／実Tool・Host/OS/外部NetworkのEgress監査／SHO/EKI実Consumer／Owner意味受理は引き続き**NOT RUN**。32件は固定した公開合成メタデータの評価のみ。
+
+## 10. 実Product CIの観測値をH2/H3実績に移さない（2026-11-03）
+
+**初回S1の比較起点を実データで固定**：[TEI #2649 exact-head CLI/Artifact Reader CI #41503235605](https://github.com/hat47x/tei-platform/actions/runs/41503235605)の実Job logは`Go CLIの実出力・独立Readerによる5 Artifact filesのbyte一致`を確認（completed/success）。同時にOperation Gaps **4件**、Manifest `Complete=false`、Source移動前後のWorld Fingerprintは不変だがModel Revision/Manifest Digest/Source Treeは変化し、旧Operation＋新Manifestは不一致と判定した。[実Runから検証値を転記した読み取り専用Evidence Pointer](./records/TEI-PR2649-one-revision-actual-cli-observation-2026-11-03.json)を候補ブランチに保存した。これは**TAI H2/H3の最初の外部Harness試行ではない**。
+
+**比較可能性と完了/開示を混同しない**：`artifacts -out`はCIの一時ディレクトリへ実ファイルを書き込んだため、同じ許可を初期H2/H3 Skillへ自動付与しない。実CLIで5件のbyte一致に達しても、Consumerが要求する全member・現在の受理資格・外部への送出資格は未成立。Reader/Artifact試験はTEI側に保持し、TAIではこの事実を実測済み参考値として参照するだけとする。
+
+**次の独立実験**は、H2/H3の四独立Session・実Tool argv/exit/出力・実Skill package読み込み・Reader側と出典/Version・OS/Host Current Grant・Disclosureを、**各Session固有の観測**として記録すること。TAIにはTEIが持つModel/Artifact検証器を移植しない。Source/Modelの値がいったん同じ状態へ戻るA→B→Aは、二度のハッシュ一致だけでは「中間の変更なし」の証明にならない。新たに[SK-03 §7](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)で、SHO [#13](https://github.com/hat47x/sho-composer/pull/13)の同bytes別Source/ABA/部分作用と、MMI [#756](https://github.com/hat47x/markdown-matrix-injector/issues/756)のHidden Excel、[#758](https://github.com/hat47x/markdown-matrix-injector/issues/758)のDecoder不明を**別Taskの後続引渡し負例**として整理した。初回TEI Skill比較をこれらのProduct未受理によって停止させない。
+
+**実証状態**：TEI #2649のexact HEAD CI・ローカル5 Artifact Readerは**Owner別に実証済**。TAIのH2/H3 Skillロード、四Session、他Harnessへの移植、SHO/MMI実Consumer、Owner意味受理は**NOT RUN**。新しい共通Evidence Schema・全局Snapshot/Permission Engine・独自Hostを採用しない。
