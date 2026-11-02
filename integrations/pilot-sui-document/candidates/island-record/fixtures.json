@@ -1,17 +1,17 @@
 {
   "schema": "tei.reference.generator-fixture/v0",
   "contractId": "sui.island.record",
-  "contractVersion": "4",
+  "contractVersion": "5",
   "cases": [
     {
-      "id": "present",
-      "input": {"id": "island-1", "title": "Group A", "cardIds": ["card-1", "card-2"]},
-      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\",\"card-2\"],\"id\":\"island-1\",\"title\":\"Group A\"}"}
+      "id": "present-no-title",
+      "input": {"id": "island-1", "cardIds": ["card-1", "card-2"]},
+      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\",\"card-2\"],\"id\":\"island-1\"}"}
     },
     {
-      "id": "empty-cardids",
-      "input": {"id": "island-1", "title": "", "cardIds": []},
-      "want": {"state": "present", "text": "{\"cardIds\":[],\"id\":\"island-1\",\"title\":\"\"}"}
+      "id": "present-title",
+      "input": {"id": "island-1", "title": "Group A", "cardIds": ["card-1", "card-2"]},
+      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\",\"card-2\"],\"id\":\"island-1\",\"title\":\"Group A\"}"}
     },
     {
       "id": "missing-cardids",

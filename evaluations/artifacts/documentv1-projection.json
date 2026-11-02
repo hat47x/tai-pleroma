@@ -8,7 +8,7 @@
     "teiCommit": "3784a4432a28502ca04057325689e409d14d9140",
     "contracts": {
       "document-record": {
-        "sourceDigest": "sha256:2800efdc03219bb95f75fa97dbf06d9220efbf3f616c5df9674ca01a5abae655",
+        "sourceDigest": "sha256:de794933e07e450cd69aa749d25fc3db665e8d521ca86b9d14aae576d0af45e3",
         "cases": 4
       },
       "card-record": {
@@ -16,7 +16,7 @@
         "cases": 5
       },
       "island-record": {
-        "sourceDigest": "sha256:bd7b2704fa7960b64c3b32fd3881c39d5ad19842d3f3c997cec438a0a0dc2706",
+        "sourceDigest": "sha256:5c09a2e383772f2585bd0efb9f8ffa20a114fb737e85684cc184b55855cec08c",
         "cases": 4
       },
       "edge-record": {

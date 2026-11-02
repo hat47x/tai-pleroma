@@ -107,6 +107,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-optional-2026-11-02.json",
     "evaluations/records/SUI-TEI-reviewed-2026-11-02.json",
     "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
+    "evaluations/records/SUI-TEI-optional-core-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )

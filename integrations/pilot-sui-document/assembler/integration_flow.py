@@ -89,12 +89,12 @@ def main():
                 "records": records,
             }
 
-    document = candidates["document-record"]["records"]["present"]
+    document = candidates["document-record"]["records"]["present-title"]
     cards = [
         candidates["card-record"]["records"]["present"],
         candidates["card-record"]["records"]["present-2"],
     ]
-    islands = [candidates["island-record"]["records"]["present"]]
+    islands = [candidates["island-record"]["records"]["present-title"]]
     edges = [candidates["edge-record"]["records"]["present"]]
     affiliations = [candidates["affiliation-record"]["records"]["present"]]
 
