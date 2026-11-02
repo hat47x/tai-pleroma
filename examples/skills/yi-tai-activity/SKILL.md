@@ -123,3 +123,11 @@ ProductにData/Rule/ProviderのEvidenceがある場合は、**何を要求した
 
 これは[SK-01 SK-F](../../../evaluations/SK-01-harness-skills.md)の反例用の作業指針。TAI SkillがTEI Rule Engine、SEI Inquiry、OS非干渉監査や新Capabilityを実装した事実ではない。
 
+## 過去の成果を再利用する前の局所再確認（評価用）
+
+- **現在の問いに必要な証拠を特定する。** Source/Rule/Oracle/取得Snapshot/型・粒度・意味版、Skillの参照Script・実Tool/Host、文書Template/公開Artifact、現在の開示・実行権限を別々に確認する。必要な依存関係が不明なら過去のPASSを現在の全面PASSへ昇格させない。
+- **影響するClaimだけ再評価候補とする。** 例えばD1だけに依存する既存の集計は無関係のD2変更で一律失効させず、D1×D2のJOINは再評価対象。依存が完全に観測できなければ、影響なしと断定せず不明としてProduct Ownerに照会する。
+- **共同結論は別に成立条件を確認する。** SEI/TEI/SHO等の局所結果がそれぞれPASSしても、同じSource/Scope/Grain/epoch/Claimであるかは追加の証拠が必要。古いSnapshotや別Consumerの結果を単純に結合しない。
+- **現在の権限は都度Product/Hostに確認する。** Model/Skill/Manifest/過去Trustが同じでも、現在のHost Grant・Issuer・外部開示は別。確認不能なEffect/送出を保留し、公開合成資料による独立read-only作業は継続可能な範囲で行う。
+
+[SK-01 §P／SK-RQ01〜12](../../../evaluations/SK-01-harness-skills.md)は以上の指針に対する公開合成受入案。実製品の再評価API・独立Oracle・Effect認可を本Skillが実装したという意味ではない。
