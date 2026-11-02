@@ -102,3 +102,12 @@ description: >-
 - 非公開Capabilityの名前、件数、存在や診断理由を外部へ公開するかもProduct/Hostが判断する。Product単独で仕事が成立する場合にはTAIを必須にせず、複数Productが必要になった場合のみ横断接続する。
 
 [Capability-derived Skill設計](../../../docs/yi-constellation/capability-derived-skill-projections-2026-11-02.md)と[SK-01 SK-D](../../../evaluations/SK-01-harness-skills.md)は未実装の比較計画である。
+
+## 現在のTrust・設定読取り失敗を伴うSkill接続（合成評価指針）
+
+- Skillをインストールできたこと、古いHarnessで接続できたこと、現行Issuer/Grantを確認したこと、実Providerへ作用できることを分ける。**認証の最終判断は現在のHost/各Product側**へ委ね、TAI SkillからmTLS/Trust Bundle/Owner Authorityを再実装しない。
+- Source側の導入状態が**明示的な未導入（Ownerが旧互換方式を許可した場合）**なのか、**導入済みだが読取り障害・レコード不正・履歴喪失**なのかを消さない。後者を「未設定だから通す」に変換せず、適切なProductのUnavailable/Denied結果へ引き継ぐ。
+- SHA等のDigest比較では**対象byteとアルゴリズムを確認**する。両側が同じ関数で生成した一致値は独立Oracleではない。Issuer Fingerprint／Skill Bundle／Source／ArtifactのDigestを同じ信頼資格にまとめない。
+- 他Harnessへ再開する際は、旧Skillの内容一致やTask受付履歴を現在の機密Source開示資格・実行Grantへ昇格させない。権限確認が不足する作用は保留し、実権限のある非機密の調査や文書下書きを継続可能とする。
+
+本節は[SK-01 SK-TB01〜09](../../../evaluations/SK-01-harness-skills.md)の合成比較計画であり、EKI #433/#466/#467の製品修正・実mTLS合格や現在の外部ハーネス接続を保証しない。
