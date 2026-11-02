@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-sui-save-merge/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "suiCommit": "de50696360968cc73a531f05a85966393e9aba26",
+  "host": "Windows with Python 3.12 and SUI runtime dependencies",
+  "command": "PYTHONPATH=src python -m pytest tests/test_documentv1_merge.py -q",
+  "result": "PASS",
+  "observed": {
+    "module": "sui_sensemaking_api.documentv1_merge",
+    "tests": 5,
+    "passed": 5,
+    "writes": false,
+    "keepsUnprojectedFields": true,
+    "keepsExistingCardsAndIslands": true
+  },
+  "scope": "A non-writing merge keeps document, card, and island fields the projection does not carry, and keeps existing cards and islands the projection does not mention. It does not save, call the API, or prove human acceptance."
+}

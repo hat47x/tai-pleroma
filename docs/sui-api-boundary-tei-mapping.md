@@ -130,3 +130,14 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-tenant-route-2026-11-0
 - unittest 4件がPASS
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
+### 非破壊マージ（2026-11-03）
+
+`merge_preserving_existing`を追加しました（[sui-sensemaking #3377](https://github.com/hat47x/sui-sensemaking/pull/3377)、`de50696`）。
+
+- 投影が持たないdocument/card/islandのフィールドを保持
+- 投影にない既存Card/Islandも保持
+- `createdAt`は既存値を維持
+- 書き込みは行わない
+- unittest 5件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-merge-2026-11-03.json)
