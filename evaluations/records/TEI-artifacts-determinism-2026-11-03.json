@@ -1,0 +1,38 @@
+{
+  "schema": "tai.reference.tei-artifacts-determinism/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Go on PATH and Python 3.12",
+  "command": "python integrations/tools/check_determinism.py --tei-repo <TEI>",
+  "result": "PASS",
+  "observed": {
+    "artifacts": {
+      "sei": {
+        "identical": true,
+        "digests": [
+          "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c",
+          "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+        ]
+      },
+      "mmi": {
+        "identical": true,
+        "digests": [
+          "sha256:feaae850106f12da1927348d314d14a72594c4ff73eba87a8bd59581a6a0ca77",
+          "sha256:feaae850106f12da1927348d314d14a72594c4ff73eba87a8bd59581a6a0ca77"
+        ]
+      },
+      "eki": {
+        "identical": true,
+        "digests": [
+          "sha256:8fae849023b801a296eaa68afde460635823bdf3e24a299ef1fa56436b8c9db0",
+          "sha256:8fae849023b801a296eaa68afde460635823bdf3e24a299ef1fa56436b8c9db0"
+        ]
+      }
+    },
+    "allIdentical": true,
+    "count": 3
+  },
+  "scope": "Rebuilds each single-record artifact twice from the same TEI commit and compares bytes. It does not cover the SUI multi-element artifact."
+}
