@@ -647,6 +647,7 @@ allMatch: true
 
 ```text
 flow: 21ケースPASS
+schema: valid
 documentV1: valid
 contractDigests: allMatch
 result: PASS
@@ -660,6 +661,7 @@ result: PASS
 
 ```text
 flow: 21ケースPASS
+schema: valid
 documentV1: valid
 contractDigests: allMatch
 save: roundTrip true / planAction update / 200

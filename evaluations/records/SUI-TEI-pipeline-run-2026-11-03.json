@@ -15,6 +15,10 @@
       "returncode": 0,
       "casesPassed": 21
     },
+    "schema": {
+      "returncode": 0,
+      "valid": true
+    },
     "documentV1": {
       "returncode": 0,
       "valid": true
