@@ -61,6 +61,18 @@ description: >-
 
 この注意は[SK-01 SK-J](../../../evaluations/SK-01-harness-skills.md)の未実施反例に基づく**評価用指針**であり、任意のTEI/SHO/EKI Productに新しいToolや実行権限を与えない。
 
+
+
+## Markdown・TEI Function Context・SHO Research Indexをまたぐ依頼
+
+- **Markdownを読むことと実行意味の受理を分ける。** 表・式・説明・Test Caseが同一Markdownにあっても、それぞれのRoleの明示的な解決条件をTEIの実在するCLI/Pluginで確認する。Role未指定の表をFunction/Testとして実行しない。Expectedが書いてあってもテストが実行されたわけではない。
+- **Relationと取得Scopeを分ける。** Data Modelに関係が定義されていても、Function Data ContextのEntity/Relation path/Field/grain/scope/完全性の明示Mappingがない限り、隠れたRelationを取得対象に追加しない。Contextが指定されていても実Provider Read、認可、同一Snapshot、全件取得は別証拠。
+- **表示と保存の意味を分ける。** Derived Dataset/集約文字列などの非可逆Projectionを編集しても、Source ID/型付きIntent/更新Rule/現在Hostの権限が確認できなければ、DBへのPATCHや全置換の成功とは扱わない。Native SQLは特殊な明示Bindingがある場合のみに扱う。
+- **論文リンクは論文本文ではない。** SHO Research IndexのL0はリンク・順序・字下げの保存だけで価値がある。URLや見出しだけから論文の主張・引用/発展関係・実装済みのアルゴリズムを断定しない。著者が明示したacademic edgeと整理用の親子を分け、原典未取得なら未取得として設計候補までを支援する。
+- **必要な製品を選ぶ。** リンク整理だけならSHO単体、モデル調査だけならTEI単体の適切なread-only Skillで足りる場合がある。複数製品を使う目的に限ってTAI横断Skillで根拠と未決をつなぐ。新しいTEI Markdown Role解決器・SHO Paper→Code機能をSkill文書の存在から実装済みと扱わない。
+
+上記は[SK-01 SK-L01〜L10](../../../evaluations/SK-01-harness-skills.md)の評価設計であり、現在のTEI/SHOの機能完了・OS/Provider/Owner受理を保証しない。
+
 ## 関連
 
 - [横断設計](../../../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)
