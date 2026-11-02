@@ -1,0 +1,28 @@
+{
+  "schema": "tai.reference.tei-pilot-run/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Go on PATH and Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/run_pilot.py",
+  "result": "PASS",
+  "artifact": {
+    "digest": "sha256:d1c8605ee8a28d7feefe5ca919677f2e575af22d30dfc1dd9244422ac2b8d3b2"
+  },
+  "steps": {
+    "flow": {
+      "returncode": 0,
+      "casesPassed": 21
+    },
+    "documentV1": {
+      "returncode": 0,
+      "valid": true
+    },
+    "contractDigests": {
+      "returncode": 0,
+      "allMatch": true
+    }
+  },
+  "scope": "Runs the projection flow, the DocumentV1 validation, and the contract digest check in one command. It does not save documents or prove deployment."
+}
