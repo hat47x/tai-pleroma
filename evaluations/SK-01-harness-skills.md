@@ -338,7 +338,7 @@
 
 ## Q. Activity継続の選択的再資格化（SK-C01〜C15）
 
-[設計／Product境界](../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)。各Productで既に得た局所PASSを、新Activityの同一Source/Meaning/Scope/Consumer/Hostに対する総合PASSへ昇格させない。別時点・別Provider・別Attemptに対する**履歴の有効性**は保存しつつ、現在の目的で再利用できる証拠を再確認する。
+[設計／Product境界](../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)／[Owner作業票 TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)。各Productで既に得た局所PASSを、新Activityの同一Source/Meaning/Scope/Consumer/Hostに対する総合PASSへ昇格させない。別時点・別Provider・別Attemptに対する**履歴の有効性**は保存しつつ、現在の目的で再利用できる証拠を再確認する。
 
 | ID | 変更またはHandoff反例 | 主な期待 |
 | --- | --- | --- |
