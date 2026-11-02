@@ -111,6 +111,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-admin-path-2026-11-02.json",
     "evaluations/records/SUI-TEI-consumer-2026-11-02.json",
     "evaluations/records/SUI-TEI-adapter-2026-11-02.json",
+    "evaluations/records/SUI-TEI-http-route-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -185,6 +186,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-http-route" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 2 or observed.get("status") != 200:
+                errors.append(f"TEI HTTP route receipt did not pass two requests: {relative}")
+            if observed.get("authOverridden") is not True:
+                errors.append(f"TEI HTTP route receipt did not disclose the auth override: {relative}")
         if "tei-adapter" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") != 9 or observed.get("savesAnything") is not False:
