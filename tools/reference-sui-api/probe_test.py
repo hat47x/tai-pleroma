@@ -69,6 +69,7 @@ class ProbeTest(unittest.TestCase):
         self.assertEqual(document["documentCards"], [])
         self.assertEqual(document["documentIslandCount"], 1)
         self.assertEqual(document["documentEdgeCount"], 1)
+        self.assertEqual(document["documentEdges"][0]["type"], "related")
 
     def test_probe_reports_unreachable(self):
         receipt = probe("http://127.0.0.1:1", timeout=1)

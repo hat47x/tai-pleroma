@@ -1,0 +1,71 @@
+{
+  "schema": "tai.reference.mmi-readonly/v0",
+  "server": "markdown-matrix-injector/0.2.0",
+  "protocolVersion": "2024-11-05",
+  "mmiCommit": "1989b827d34ebb364befbf64a2b6516ecccb1931",
+  "packageLockDigest": "sha256:f6810ef071ff05d3dee28760346659eb799c67442bdb4903c2dd2661ad4adad5",
+  "nodeVersion": "v24.19.0",
+  "tool": "inspect",
+  "candidateCount": 1,
+  "selectedRows": 5,
+  "observedIds": [
+    "O-02",
+    "O-03",
+    "O-06",
+    "O-07",
+    "O-08"
+  ],
+  "selected": [
+    {
+      "id": "O-02",
+      "text": "施設の利用は予約不要",
+      "source": "entrance-notice",
+      "version": "2026-04-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-03",
+      "text": "会議室の利用には事前予約が必要",
+      "source": "meeting-room-guidance",
+      "version": "2026-09-15",
+      "availability": "available"
+    },
+    {
+      "id": "O-06",
+      "text": "最新と称する配布文書では会議室は事前予約制",
+      "source": "distribution-2026-10",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-07",
+      "text": "施設の利用は予約不要",
+      "source": "distribution-2026-11",
+      "version": "2026-11-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-08",
+      "text": "予約規程の原本を取得できなかった",
+      "source": "original-policy-note",
+      "version": "2026-10-25",
+      "availability": "unavailable"
+    }
+  ],
+  "conflictPreserved": true,
+  "sourceDigestBefore": "sha256:2fb8beeab188388d91129d8e1530a8952d3170db0d28875a218d3866d3573875",
+  "sourceDigestAfter": "sha256:2fb8beeab188388d91129d8e1530a8952d3170db0d28875a218d3866d3573875",
+  "guideDigestBefore": "sha256:2a54004d63e030fb11484711ea0bd133ff6cd4c4572e3ed329340e72b89a116f",
+  "guideDigestAfter": "sha256:2a54004d63e030fb11484711ea0bd133ff6cd4c4572e3ed329340e72b89a116f",
+  "boundaryRejected": true,
+  "missingSourceRejected": true,
+  "readOnly": true,
+  "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
+    "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
+  ]
+}

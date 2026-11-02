@@ -1,0 +1,49 @@
+{
+  "schema": "tai.reference.synthetic-facility/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "publicationAllowed": false,
+  "findings": [
+    {
+      "observation": "O-02",
+      "document": "entrance-notice.md",
+      "marker": "総則の予約不要",
+      "found": true
+    },
+    {
+      "observation": "O-03",
+      "document": "meeting-room-guidance.md",
+      "marker": "会議室の予約制",
+      "found": true
+    },
+    {
+      "observation": "O-06",
+      "document": "distribution-2026-10.md",
+      "marker": "10月版の予約制",
+      "found": true
+    },
+    {
+      "observation": "O-07",
+      "document": "distribution-2026-11.md",
+      "marker": "11月版の予約不要",
+      "found": true
+    },
+    {
+      "observation": "O-08",
+      "document": "original-policy-note.md",
+      "marker": "原本未取得",
+      "found": true
+    }
+  ],
+  "passed": true,
+  "notes": [
+    "製造工程の課題検出用に創作した文書だけを対象にする。",
+    "実在の施設・規程・権限を確認した証拠ではない。"
+  ],
+  "detectedDefects": [
+    "総則の予約不要と会議室の予約制が併存する",
+    "10月版と11月版で会議室の条件が変わる",
+    "11月版から会議室の記載が消える",
+    "予約規程の原本を取得できていない"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "scn002-maintenance",
+  "title": "SCN-002 multi-site maintenance",
+  "createdAt": "2026-10-29T00:00:00Z",
+  "updatedAt": "2026-10-29T00:00:00Z",
+  "transform": {"panX": 0, "panY": 0, "zoom": 1},
+  "cards": [
+    {"id": "O-02", "text": "A拠点の受電設備は2026年12月が更新期限", "x": 0, "y": 0, "claimType": "fact", "sources": ["asset-inventory#2026-10-01"], "textReviewed": false},
+    {"id": "O-03", "text": "A拠点の受電設備は2027年3月が更新期限", "x": 160, "y": 0, "claimType": "fact", "sources": ["vendor-notice#2026-09-15"], "textReviewed": false},
+    {"id": "O-10", "text": "B拠点の空調設備は故障中", "x": 320, "y": 0, "claimType": "fact", "sources": ["facility-log#2026-10-20"], "textReviewed": false},
+    {"id": "O-11", "text": "B拠点の見積は未取得", "x": 480, "y": 0, "claimType": "unknown", "sources": ["quote#pending"], "textReviewed": false},
+    {"id": "O-20", "text": "C拠点の受電設備は更新不要", "x": 640, "y": 0, "claimType": "fact", "sources": ["asset-inventory#2026-10-01"], "textReviewed": false},
+    {"id": "O-21", "text": "2026年度の予算上限は3000万円", "x": 800, "y": 0, "claimType": "fact", "sources": ["budget-note#2026-04-01"], "textReviewed": false},
+    {"id": "O-22", "text": "発注承認はまだ得られていない", "x": 960, "y": 0, "claimType": "unknown", "sources": ["approval#pending"], "textReviewed": false}
+  ],
+  "edges": [
+    {"id": "E-01", "fromId": "I-01", "toId": "I-04", "fromKind": "island", "toKind": "island", "type": "depends"},
+    {"id": "E-02", "fromId": "I-02", "toId": "I-04", "fromKind": "island", "toKind": "island", "type": "depends"}
+  ],
+  "islands": [
+    {"id": "I-01", "cardIds": ["O-02", "O-03"], "title": "A拠点", "collapsed": false},
+    {"id": "I-02", "cardIds": ["O-10", "O-11"], "title": "B拠点", "collapsed": false},
+    {"id": "I-03", "cardIds": ["O-20"], "title": "C拠点", "collapsed": false},
+    {"id": "I-04", "cardIds": ["O-21", "O-22"], "title": "予算・承認", "collapsed": false}
+  ]
+}

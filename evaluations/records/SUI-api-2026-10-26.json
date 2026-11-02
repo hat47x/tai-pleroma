@@ -3,6 +3,8 @@
   "baseUrl": "http://127.0.0.1:8765",
   "readOnly": true,
   "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
   "passed": true,
   "notes": [
     "SUI APIの到達性と公開OpenAPIだけを確認する。",
@@ -18,8 +20,8 @@
   "documentRead": true,
   "documentId": "scn001-demo",
   "documentTitle": "SCN-001 observations",
-  "documentCardCount": 4,
-  "documentDigest": "sha256:af4f61f870a377d87a61de41b9a49d9617554288360f386b2cb0cf35188514c2",
+  "documentCardCount": 5,
+  "documentDigest": "sha256:6d957e2a9f52a90935d1ae8032d742029c4b2f69a550003e3007789b08be5f89",
   "documentCards": [
     {
       "id": "O-02",
@@ -40,9 +42,14 @@
       "id": "O-07",
       "claimType": "fact",
       "textDigest": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537"
+    },
+    {
+      "id": "O-08",
+      "claimType": "unknown",
+      "textDigest": "sha256:678ba80b4b84681e98ce7d4dde324622a89f6ad4dd4d9a102e73ac82c7ebe68c"
     }
   ],
-  "documentIslandCount": 2,
+  "documentIslandCount": 3,
   "documentIslands": [
     {
       "id": "I-01",
@@ -57,9 +64,23 @@
         "O-03",
         "O-06"
       ]
+    },
+    {
+      "id": "I-03",
+      "cardIds": [
+        "O-08"
+      ]
     }
   ],
   "documentEdgeCount": 1,
+  "documentEdges": [
+    {
+      "id": "E-01",
+      "fromId": "I-01",
+      "toId": "I-02",
+      "type": "contradicts"
+    }
+  ],
   "openapiVersion": "3.1.0",
   "pathCount": 65,
   "paths": [

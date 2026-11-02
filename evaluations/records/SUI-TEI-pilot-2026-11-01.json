@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-construction-pilot/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "teiCommit": "ee85d864cc3d89af642d4a280399e3a7545edcc6",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "goVersion": "go1.27.3 windows/amd64",
+  "workspace": "integrations/pilot-sui-document",
+  "command": "go run ./cmd/tei validate -workspace <TAI>/integrations/pilot-sui-document",
+  "result": "PASS",
+  "observed": {
+    "validate": "ok",
+    "sourceIndexOk": true,
+    "sourceIndexFingerprint": "sha256:570087108743f61b61595953ebf862776a8b1bfc9eeaed55ab69850f1e2a242a",
+    "dataTypes": 4,
+    "patterns": 4
+  },
+  "scope": "A fixture model of the SUI DocumentV1 projection in TEI's semantic model. It shows that the model validates and that the semantic definition can be located by source index. It does not show generation, conformance, target execution, human acceptance, or an efficiency or autonomy improvement."
+}

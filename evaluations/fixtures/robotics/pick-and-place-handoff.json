@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "record_type": "handoff",
+  "handoff_id": "hnd-rob-001",
+  "domain": "robotics",
+  "task_id": "task-pick-place-001",
+  "robot_id": "robot-001",
+  "robot_model": "arm-6dof",
+  "from": { "type": "robot", "id": "robot-001" },
+  "to": { "type": "human", "id": "operator-001" },
+  "sent": ["pick_complete", "place_target", "safety_zone"],
+  "not_sent": ["gripper_force_profile"],
+  "ack": "accepted_with_conditions",
+  "next_action": "human_inspect_part",
+  "safety_envelope_ref": "se-rob-001",
+  "evidence_refs": ["robot-log-001", "camera-snapshot-001"]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.tei-sui-auth/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "suiCommit": "b56d78f3f03d0ff1905b7a08f9cbf93e363ee642",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and SUI runtime dependencies",
+  "command": "PYTHONPATH=src python -m pytest tests/test_documentv1_projection_route.py -q",
+  "result": "PASS",
+  "observed": {
+    "endpoint": "/admin/tei-epistemic/artifacts/documentv1-projection",
+    "authorizedStatus": 200,
+    "anonymousStatus": 401,
+    "tests": 3,
+    "passed": 3,
+    "authEnabled": true,
+    "authMechanism": "X-Admin-Api-Key",
+    "dbOverridden": true
+  },
+  "scope": "The control-plane authorization path is enabled with a configured key, and the DB dependency is overridden. It does not verify a running server, tenant-plane routing, production profiles, or deployment."
+}

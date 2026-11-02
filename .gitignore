@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Go
+*.exe
+*.test
+.gocache/
+.gomodcache/
+.gotmp/
+
+# Local review artifacts and temporary inputs
+.tmp/
+*.tmp

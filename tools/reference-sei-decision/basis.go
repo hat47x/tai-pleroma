@@ -55,7 +55,7 @@ func inspectBasis(ctx context.Context, seiRoot, path string) (BasisInspection, e
 		return BasisInspection{}, err
 	}
 	// Verify and extract the same snapshot, never re-read a changing input path.
-	checked, err := run(ctx, filepath.Join(seiRoot, "runtime", "go"), "run", "./cmd/sei", "verify", "--input", snapshot)
+	checked, err := runOutput(ctx, filepath.Join(seiRoot, "runtime", "go"), "run", "./cmd/sei", "verify", "--input", snapshot)
 	if err != nil {
 		return BasisInspection{}, err
 	}

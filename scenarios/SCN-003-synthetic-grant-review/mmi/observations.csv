@@ -1,0 +1,6 @@
+id,text,source,version,availability
+O-02,申請Aは収入要件を満たす,application-summary,2026-10-01,available
+O-03,申請Aは収入要件を満たさない,eligibility-check,2026-10-02,available
+O-10,申請Bの事業費は上限500万円を超える,budget-check,2026-10-01,available
+O-11,申請Cの審査担当は申請者と親族,conflict-check,2026-10-03,available
+O-12,2026年度の採択枠は2件,grant-notice,2026-04-01,available

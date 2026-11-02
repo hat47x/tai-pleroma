@@ -1,0 +1,33 @@
+{
+  "listen": "127.0.0.1:18086",
+  "database": "/tmp/eki-worker-smoke.db",
+  "tokens": [
+    {
+      "principal": "tai-worker-smoke",
+      "role": "client",
+      "token_sha256": "ca9157ecaf5ca13cb2b8d391821abac6c77d83c76f8b250105816d6b2073232f"
+    }
+  ],
+  "policy": {
+    "approved_executors": ["dev.example.transform"],
+    "per_task": {
+      "cpu_millis": 1000,
+      "memory_bytes": 268435456,
+      "wall_time_seconds": 300,
+      "output_bytes_max": 16777216,
+      "network_bytes_max": 268435456,
+      "temporary_disk_bytes": 1048576
+    },
+    "max_attempts": 3,
+    "max_outstanding_tasks": 10
+  },
+  "worker": {
+    "listen": "127.0.0.1:18087",
+    "sessions": [
+      {
+        "worker_identity": "tai-worker-smoke",
+        "session_token_sha256": "ca9157ecaf5ca13cb2b8d391821abac6c77d83c76f8b250105816d6b2073232f"
+      }
+    ]
+  }
+}

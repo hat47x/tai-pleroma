@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.edge.record",
+  "contractVersion": "3",
+  "cases": [
+    {
+      "id": "present",
+      "input": {"id": "edge-1", "fromId": "card-1", "toId": "card-2", "type": "supports", "fromKind": "card", "toKind": "card"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"fromKind\":\"card\",\"id\":\"edge-1\",\"toId\":\"card-2\",\"toKind\":\"card\",\"type\":\"supports\"}"}
+    },
+    {
+      "id": "card-to-island",
+      "input": {"id": "edge-2", "fromId": "card-1", "toId": "island-1", "type": "contains", "fromKind": "card", "toKind": "island"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"fromKind\":\"card\",\"id\":\"edge-2\",\"toId\":\"island-1\",\"toKind\":\"island\",\"type\":\"contains\"}"}
+    },
+    {
+      "id": "missing-to",
+      "input": {"id": "edge-1", "fromId": "card-1", "type": "supports", "fromKind": "card", "toKind": "card"},
+      "want": {"state": "missing", "text": "[\"toId\"]"}
+    },
+    {
+      "id": "unresolved-from",
+      "input": {"id": "edge-1", "fromId": null, "toId": "card-2", "type": "supports", "fromKind": "card", "toKind": "card"},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}

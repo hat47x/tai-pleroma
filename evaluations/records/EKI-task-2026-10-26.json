@@ -1,8 +1,9 @@
 {
   "schema": "tai.reference.eki-task-submit/v0",
-  "baseUrl": "http://127.0.0.1:18081",
+  "baseUrl": "http://127.0.0.1:18084",
   "readOnly": false,
   "taskSubmitted": true,
+  "idempotent": true,
   "taskExecuted": false,
   "workerResult": false,
   "authorityVerified": false,
@@ -12,8 +13,9 @@
     "Workerは起動しておらず、Taskの実行・結果・委任の完了は未検証。"
   ],
   "submitStatus": 202,
-  "taskId": "tsk_eb711770d5a0e915e16ae04940113184",
+  "taskId": "tsk_10d68e477220c8beac56c0f0643504df",
   "submitResponseStatus": "queued",
+  "repeatStatus": 202,
   "statusReadStatus": 200,
   "taskStatus": "queued"
 }

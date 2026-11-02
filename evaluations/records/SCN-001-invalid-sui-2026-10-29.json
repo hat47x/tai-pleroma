@@ -1,0 +1,9 @@
+{
+  "schema": "tai.reference.sui-document-put/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "docId": "scn001-invalid-claim",
+  "passed": false,
+  "putStatus": 422,
+  "reason": "PUT failed: 422 {'raw': '{\"detail\":{\"schemaVersion\":\"1.0.0\",\"errorEnvelope\":{\"errorCode\":\"A1_REQUIRED_FIELD_MISSING\",\"message\":\"Input should be \\'fact\\', \\'claim\\', \\'hypothesis\\' or \\'unknown\\'\",\"contractId\":\"A1-REDIFF-IF\",\"retryable\":false,\"occurredAt\":\"2026-10-29T13:26:20.965186Z\"}}}'}"
+}

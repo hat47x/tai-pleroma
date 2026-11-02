@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.tei-card-record/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "98b0e68e12477c97e7ba9afbbf4e55a85426dba7",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-build -contract <TAI>/integrations/pilot-sui-document/candidates/card-record/contract.json -strategy text-record-template -out <tmp>/text-record-template && go run ./tools/reference-generator-selection/cmd/tei-generator-select -workspace <TAI>/integrations/pilot-sui-document -contract <TAI>/integrations/pilot-sui-document/candidates/card-record/contract.json -fixtures <TAI>/integrations/pilot-sui-document/candidates/card-record/fixtures.json -candidates <tmp> && go run ./tools/reference-target-profile/cmd/tei-target-profile run -profile <TAI>/integrations/pilot-sui-document/profiles/record.json -workspace <TAI>/integrations/pilot-sui-document -contract <TAI>/integrations/pilot-sui-document/candidates/card-record/contract.json -fixtures <TAI>/integrations/pilot-sui-document/candidates/card-record/fixtures.json -candidates <tmp>",
+  "result": "PASS",
+  "observed": {
+    "contractId": "sui.card.record",
+    "kind": "record",
+    "fields": ["text", "documentId"],
+    "generatorId": "text-record-template",
+    "cases": 4,
+    "passedCases": 4,
+    "qualified": ["text-record-template"],
+    "profileId": "sui-record-oneshot",
+    "profilePassed": true
+  },
+  "scope": "A reference-local record projection contract for SUI Card, generated with text-record-template, selected against four fixtures, and run under a one-shot Target Profile. It does not produce SUI code, a real target deployment, or human acceptance."
+}

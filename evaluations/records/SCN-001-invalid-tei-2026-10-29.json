@@ -1,0 +1,16 @@
+{
+  "schema": "tai.reference.tei-model/v0",
+  "teiCommit": "7032c9edc2c6f7d25cb8dbab0e92ec0f662b196c",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "workspaceDigest": "sha256:abf0e32384605697cae30c24bf5201b8353ac57b9698a0fddbb4247d54761acc",
+  "validation": "",
+  "readOnly": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": false,
+  "reason": "TEI validate failed: exit status 1: exit status 1",
+  "notes": [
+    "TEIのvalidateだけを実行する読み取り専用接続。",
+    "SCN-001のObservation/RuleCandidateの型宣言を検証するが、実データ・意味・Authorityは検証しない。"
+  ]
+}

@@ -39,8 +39,8 @@ func Link(link SUILink, artifact []byte) Receipt {
 			"意味の受理・公開承認・Authorityを検証しない。",
 		},
 	}
-	if !link.Passed || len(link.LinkedCards) != 4 {
-		receipt.Reason = "SUI link is not a passed 4-card link"
+	if !link.Passed || len(link.LinkedCards) != 5 {
+		receipt.Reason = "SUI link is not a passed 5-card link"
 		return receipt
 	}
 	for _, id := range link.LinkedCards {
@@ -60,6 +60,16 @@ func Link(link SUILink, artifact []byte) Receipt {
 			receipt.Reason = "artifact is missing boundary marker: " + marker
 			return receipt
 		}
+	}
+	o08Unavailable := false
+	for _, line := range strings.Split(text, "\n") {
+		if strings.HasPrefix(line, "| O-08 |") && strings.Contains(line, "| unavailable |") {
+			o08Unavailable = true
+		}
+	}
+	if !o08Unavailable {
+		receipt.Reason = "O-08 must remain unavailable in the artifact"
+		return receipt
 	}
 	receipt.LinkedCards = append([]string(nil), link.LinkedCards...)
 	receipt.PublicationBlocked = true

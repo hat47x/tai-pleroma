@@ -1,0 +1,14 @@
+{
+  "schema": "tei.reference.target-profile/v0",
+  "id": "sui-text-oneshot",
+  "version": "1",
+  "description": "one-shot profile for the SUI card text projection pilot",
+  "processModel": "oneshot",
+  "storage": "filesystem",
+  "network": "none",
+  "update": "replace",
+  "memoryLimitBytes": 67108864,
+  "observability": ["stdout", "exit-code"],
+  "unsupported": ["hard-realtime", "rolling-update", "audit-log"],
+  "generatorId": "text-template"
+}

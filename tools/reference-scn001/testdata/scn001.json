@@ -70,6 +70,14 @@
       "sourceVersion": "unavailable",
       "observedAt": "2026-10-25",
       "availability": "unavailable"
+    },
+    {
+      "id": "O-09",
+      "text": "施設の利用は予約不要",
+      "source": "distribution",
+      "sourceVersion": "v3",
+      "observedAt": "2026-10-26",
+      "availability": "available"
     }
   ],
   "hypotheses": [
@@ -77,19 +85,29 @@
       "id": "H-01",
       "text": "掲示が古い",
       "adopted": false,
-      "dependsOn": ["O-02", "O-04"]
+      "dependsOn": [
+        "O-02",
+        "O-04"
+      ]
     },
     {
       "id": "H-02",
       "text": "旧案内文が古い",
       "adopted": false,
-      "dependsOn": ["O-03", "O-06"]
+      "dependsOn": [
+        "O-03",
+        "O-06"
+      ]
     },
     {
       "id": "H-03",
       "text": "区画によって条件が異なる",
       "adopted": false,
-      "dependsOn": ["O-02", "O-03", "O-04"]
+      "dependsOn": [
+        "O-02",
+        "O-03",
+        "O-04"
+      ]
     }
   ],
   "drafts": [
@@ -98,28 +116,57 @@
       "text": "会議室の予約要否について案内資料に相違があります。現在確認中です。",
       "status": "draft",
       "published": false,
-      "references": ["O-02", "O-03"]
+      "references": [
+        "O-02",
+        "O-03"
+      ]
     },
     {
       "id": "D-02",
       "text": "会議室は事前予約制と記載した新しい資料がありますが、掲示との相違を確認中です。",
       "status": "draft",
       "published": false,
-      "references": ["O-02", "O-03", "O-06"]
+      "references": [
+        "O-02",
+        "O-03",
+        "O-06"
+      ]
     },
     {
       "id": "D-03",
       "text": "最新の配布文書では予約不要とされていますが、過去の異なる記載と適用条件を確認中です。",
       "status": "draft",
       "published": false,
-      "references": ["O-02", "O-03", "O-06", "O-07"]
+      "references": [
+        "O-02",
+        "O-03",
+        "O-06",
+        "O-07"
+      ]
     },
     {
       "id": "D-04",
       "text": "内部レビュー用の暫定案内です。会議室の予約要否は資料間で相違が残るため、公開前に権限者の確認が必要です。",
       "status": "draft",
       "published": false,
-      "references": ["O-02", "O-03", "O-06", "O-07", "O-08"]
+      "references": [
+        "O-02",
+        "O-03",
+        "O-06",
+        "O-07",
+        "O-08"
+      ]
+    },
+    {
+      "id": "D-05",
+      "text": "配布文書の新版が以前の記載と同じ文言に戻りましたが、過去の受理は再確認中のため、公開前に改めて確認します。",
+      "status": "draft",
+      "published": false,
+      "references": [
+        "O-02",
+        "O-06",
+        "O-09"
+      ]
     }
   ],
   "decisions": [
@@ -137,6 +184,26 @@
       "publicationApproved": false,
       "reviewRequired": true,
       "reviewTrigger": "real-object"
+    },
+    {
+      "id": "DEC-03",
+      "status": "superseded",
+      "authority": "internal-review-2026-10-24",
+      "subject": "O-02",
+      "subjectVersion": "v0",
+      "subjectDigest": "sha256:02f44f2912500f6b1d8cd02221ac450964c2f82e5991529ddf46a31574ec9537",
+      "scope": "internal-review",
+      "publicationApproved": false,
+      "reviewRequired": true,
+      "reviewTrigger": "real-object"
+    },
+    {
+      "id": "DEC-04",
+      "status": "pending",
+      "authority": "unconfirmed",
+      "subject": "O-09",
+      "publicationApproved": false,
+      "reviewRequired": true
     }
   ],
   "provisionalApproval": {
@@ -150,22 +217,68 @@
     {
       "id": "T0",
       "draft": "D-01",
-      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05"]
+      "observations": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05"
+      ]
     },
     {
       "id": "T1",
       "draft": "D-02",
-      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06"]
+      "observations": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05",
+        "O-06"
+      ]
     },
     {
       "id": "T2",
       "draft": "D-03",
-      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06", "O-07", "O-08"]
+      "observations": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05",
+        "O-06",
+        "O-07",
+        "O-08"
+      ]
     },
     {
       "id": "T3",
       "draft": "D-04",
-      "observations": ["O-01", "O-02", "O-03", "O-04", "O-05", "O-06", "O-07", "O-08"]
+      "observations": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05",
+        "O-06",
+        "O-07",
+        "O-08"
+      ]
+    },
+    {
+      "id": "T4",
+      "draft": "D-05",
+      "observations": [
+        "O-01",
+        "O-02",
+        "O-03",
+        "O-04",
+        "O-05",
+        "O-06",
+        "O-07",
+        "O-08",
+        "O-09"
+      ]
     }
   ]
 }

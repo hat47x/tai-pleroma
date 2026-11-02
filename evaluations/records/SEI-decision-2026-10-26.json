@@ -1,0 +1,60 @@
+{
+  "schema": "tai.reference.sei-decision/v0",
+  "seiCommit": "d51232dd5eb28bee42e57a7b31fb31cd2bedbf7b",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "storeCreated": true,
+  "readOnlyProjection": true,
+  "bundleId": "scn001",
+  "recordCount": 3,
+  "decision": {
+    "id": "dec-01",
+    "statement": "公開は保留",
+    "recommendations": [
+      "recommendation:rec-01"
+    ],
+    "responsible": [
+      "role:facility-owner"
+    ]
+  },
+  "provisionalDecision": {
+    "id": "dec-02",
+    "statement": "D-04を内部レビュー用に仮承認。公開は未承認",
+    "recommendations": [
+      "recommendation:rec-01"
+    ],
+    "responsible": [
+      "role:provisional-owner"
+    ]
+  },
+  "unresolved": [
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-01"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-02"
+    },
+    {
+      "ref": "publication:unapproved",
+      "left_open_by_decision": "dec-02"
+    },
+    {
+      "ref": "review:real-object",
+      "left_open_by_decision": "dec-02"
+    }
+  ],
+  "notVerifiedRecordCount": 0,
+  "provisionalApproved": true,
+  "reviewTrigger": "real-object",
+  "authorityVerified": false,
+  "humanReviewed": false,
+  "published": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "SEIの一時storeへ合成fixtureを記録し、resumeのprojectionだけを読む参照。",
+    "決定の意味・権限・公開を検証しない。実運用のstoreではない。"
+  ]
+}
