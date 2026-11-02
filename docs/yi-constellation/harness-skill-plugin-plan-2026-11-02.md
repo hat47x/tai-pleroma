@@ -309,3 +309,33 @@ TAIの責務は利用者の目的・対象・時点から**実在する製品と
 
 **状態**：構成・評価計画のみ。自動投影の実装、実Skill/CLIロード、複数Harnessでの実証、Product意味/OS認可/外部Effect/Owner受理はNOT RUN。
 
+## 14. 2026-11-02：Skillが参照する「信頼の現在性」と失敗時の縮退
+
+**新たな横断反例**：[EKI #466](https://github.com/hat47x/eki-fabric/issues/466)ではIssuer Fingerprintの二重SHA-256、[#467](https://github.com/hat47x/eki-fabric/issues/467)では**導入済みTrust Bundleの読取エラーを「未設定」と同じfalseへ畳み、現行版検査を省略し得る**経路がSource-staticで指摘された。これは実mTLS攻撃・本番バイパスの実証ではなく、EKI #433の製品Ownerが修正・検証する個別Blocker。外部Harness向け[EKI Skill #468](https://github.com/hat47x/eki-fabric/issues/468)と、TEI/SEI/SUI/SHOのProduct Skill群に**「SkillやToolの見え方」と「現在のTrust/開示/実作用の資格」を分ける**横断評価を追加する。
+
+### 14.1 失敗情報は「未導入」「現行版」「検証不能」「不正/失効」に分かれる
+
+| 実際に観測したSource/Host状態（合成） | 正しい行動の候補 | 誤った合流 |
+| --- | --- | --- |
+| **未導入**：明示された旧互換profile、従来認証は有効 | **Ownerが互換性を認めた場合に限り**従来経路へ進む。全許可ではない | 未導入をあらゆる「読めない」の代替にする |
+| **導入済み・現行版読取成功** | 最新Bundleのissuer・期限・revocationと既存CA/Registry等の認証を段階確認 | Signed Bundleが存在するだけで本人のAction・Grantを認可 |
+| **導入済み・I/O error／破損／過去導入後NotFound** | 版を検証できない接続は実Hostが**安全側に拒否／unavailable**。正確な内部理由の外部開示はPolicy別 | errorをfalse/noneとして旧CAへfallbackし、失効状態を復活 |
+| **現行版でissuer除外・期限切れ** | 現行規則に従い拒否、証拠として有効な版と独立Oracleを参照 | 昔の成功receipt・旧Skillの案内で再許可 |
+
+これは全製品一律の失敗State enumではなく、**異なる意味の観測値を消さない**というSK-01評価の要点。失効時の明確な拒否と、そもそも互換モードが正式に許可されている正例を両方確認する。SEIの`unknown`と`negative`、SUIの`not disclosed`と`nonexistent`、SHOの`not fetched`と`content-empty`でも同様の誤合流を調べるが、各Productの正式状態型を共通化しない。
+
+### 14.2 同じハッシュ関数を検証側でも使うことは、独立Oracleではない
+
+EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である一方、コードが`sha256(sha256(DER))`を返すことが分かった。テストExpectedまで同じ`IssuerFingerprint`を使えば実装とテストが**同じ誤り**を共有し、自己整合PASSになり得る。SK-01の`Skill digest / Source fingerprint / Artifact manifest / Issuer fingerprint`は役割・対象byte・アルゴリズムを明示して比較し、単に「sha256」ラベルや両側一致で外部互換・現在Trustを保証しない。独立Expectedは標準hash／外部生成DER等を使い、機密SourceのDigestやTrust Bundle本文を低権限Harnessへ無断公開しない。
+
+### 14.3 Product Skill群とTAI横断の責務
+
+2026-11-02に各製品のSkill **Issue候補**が出そろった：[TEI #2605／Draft #2607](https://github.com/hat47x/tei-platform/issues/2605)、[SEI #769](https://github.com/hat47x/sei-cognition/issues/769)、[SUI #3368](https://github.com/hat47x/sui-sensemaking/issues/3368)、[SHO #10](https://github.com/hat47x/sho-composer/issues/10)、[EKI #468](https://github.com/hat47x/eki-fabric/issues/468)。**起票済みであることはSkillの実インストール・動作・Owner受理を意味しない**。TAIは「実Toolを選ぶ」「許可された情報/結果だけを引継ぐ」「現在の実資格を再確認する」ための横断Skillを持つ。Trust BundleのParser/署名検証・mTLS Listener・CA更新、認証の正本はEKI #433/#466/#467に保持する。
+
+外部Harness A→Bの引継ぎでは、**Skillの固定Digest、Task/Attempt結果の実証、Issuer/Policyの現在版、Consumerの現在権限は互いに異なる**。Aで成功したTrust/GrantをBへ移すことはできない。接続の前に既存Product/Hostへ現時点の認証・開示を確認し、失敗なら該当の危険な作用だけを中止する。**公開の合成資料を使った調査、文書下書き、Sourceの局所整理は別に続けられる**。
+
+### 14.4 受入へ：通常系／障害系／回復系を一対にする
+
+[SK-01 §N](../../evaluations/SK-01-harness-skills.md)に、未導入互換・現行issuer・失効issuer・Bundle読取障害・不正record・導入後喪失・独立SHA一回vs二回・Harness再開・開示用診断を含む**SK-TB**対照を設計する。試験は**合成fixtureだけ**で開始し、EKI実証は[#433](https://github.com/hat47x/eki-fabric/issues/433)のOwnerへ、外部送信・情報開示は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)へ引き渡す。型・時間・意味・認可の実検査がない他Productに同等の状態管理を強制しない。
+
+**状態**：本節は各Productの最新Issueから成熟した失敗境界を横断評価へ整理した**計画**。既存EKI source-static発見や合成数式対照はEKIの限定証拠。実EKI mTLS、Trust Bundle migration、Skill経由作業、別Harness現在認可、OS/Network送出の正負試験は**NOT RUN**。高価なTokenを節約するための最小実装制限を設けず、専門Skill群の機能探索は並行して広げる。
