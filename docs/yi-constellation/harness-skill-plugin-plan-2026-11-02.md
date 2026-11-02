@@ -352,3 +352,14 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **採用上の先後**：既存TEI read-only CLI実利用（#2605）→現ProductのRule/Providerの実根拠→必要なProduct間データ連携→外部Harnessの消費・開示/送出と実効権限。候補探索と独立PoCは並列に増やしてよい。局所合成PASSを一Activityの業務成果受理として扱わない。
 
+## 16. 2026-11-02：変更後の選択的再資格化と共同Claim（SK-RQ）
+
+[新しい設計・受入表](harness-skill-selective-requalification-2026-11-02.md)へ、[TEI #1445 H8-P13/P14](https://github.com/hat47x/tei-platform/issues/1445)（検証費用と共同Claim）、[#2582](https://github.com/hat47x/tei-platform/issues/2582)（局所依存・非単調なDerived結果）、[SEI Draft #770](https://github.com/hat47x/sei-cognition/pull/770)（問いQ相対の十分性・観測同値類・複数Readのepoch混合）、[TEI #2628](https://github.com/hat47x/tei-platform/issues/2628)（Output同値と実Read Witnessの非同値）、[SHO #6](https://github.com/hat47x/sho-composer/issues/6)、[EKI #467](https://github.com/hat47x/eki-fabric/issues/467)を既存各Ownerとして接続した。
+
+**横断Skillに必要な一段先の能力**は、単にProduct結果を結合するだけでなく、**何が変更されたとき、どの既存Claim／Skill／Document／公開一式を再確認し、何を履歴として保持できるかを根拠付きで区別すること**。Source/Rule/Oracle/Skill/Template/Policy/Trustの影響先は異なる。依存不明なら「影響無し」を保証できず、実Provider Read/共同Snapshot/開示資格も別。過去の成功を歴史として保ちながら、現在のActionとEgressは実Product/Hostが再認可する。CSW/SUIの自由な探索には採否ゲートを追加しない。
+
+**比較候補**：R0全面再検証、R1依存に基づく選択的再確認、R2未観測依存や共同Snapshot不足の限定保留。正しい再利用数だけでなく、`false reuse`と`unnecessary invalidation`の双方、適切な危険作用の保留と、継続可能な独立read-only作業を別計測する。TAIへ第二の依存解析器／共通Snapshotサービス／中央Policy・Authorityを作らず、各製品の実Source・Oracle・変更通知を参照する。
+
+[SK-01 §P](../../evaluations/SK-01-harness-skills.md)にSK-RQ01〜12を追加し、[公開合成fixture](../../evaluations/fixtures/SK-RQ-selective-requalification.synthetic.json)と[Node用再実行Script](../../evaluations/tools/check-sk-rq-fixture.cjs)を保存した。GitHubに保存されたfixtureをV8参照分類で**12ケース／14項目の自己整合PASS**（[限定記録](../../evaluations/records/SK-RQ-public-fixture-selfcheck-2026-11-02.json)）。**Nodeスクリプト自体・実Product/Tool/AI Harness/OS/Provider・独立sealed Oracle・Owner受理はNOT RUN**。公開Expectedは盲検ではない。
+
+**評価順**：SK-G0・TEI #2605実read-only→RQ01〜03の過少/過剰再確認→RQ07の共同ClaimとSource時点→RQ05/06の実権限／開示→H2/H3 Product Skillありなし→H4/H5横断Skillの追加価値。並列探索範囲を広く取りながら、実行資格は各製品の正本へ戻す。
