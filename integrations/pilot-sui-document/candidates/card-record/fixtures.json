@@ -1,31 +1,31 @@
 {
   "schema": "tei.reference.generator-fixture/v0",
   "contractId": "sui.card.record",
-  "contractVersion": "3",
+  "contractVersion": "5",
   "cases": [
     {
       "id": "present",
-      "input": {"id": "card-1", "text": " hello "},
-      "want": {"state": "present", "text": "{\"id\":\"card-1\",\"text\":\" hello \"}"}
+      "input": {"id": "card-1", "text": " hello ", "x": 10, "y": 20.5},
+      "want": {"state": "present", "text": "{\"id\":\"card-1\",\"text\":\" hello \",\"x\":10,\"y\":20.5}"}
     },
     {
       "id": "present-2",
-      "input": {"id": "card-2", "text": "world"},
-      "want": {"state": "present", "text": "{\"id\":\"card-2\",\"text\":\"world\"}"}
+      "input": {"id": "card-2", "text": "world", "x": 0, "y": 0},
+      "want": {"state": "present", "text": "{\"id\":\"card-2\",\"text\":\"world\",\"x\":0,\"y\":0}"}
     },
     {
       "id": "empty-text",
-      "input": {"id": "card-1", "text": ""},
-      "want": {"state": "present", "text": "{\"id\":\"card-1\",\"text\":\"\"}"}
+      "input": {"id": "card-1", "text": "", "x": 1, "y": 2},
+      "want": {"state": "present", "text": "{\"id\":\"card-1\",\"text\":\"\",\"x\":1,\"y\":2}"}
     },
     {
       "id": "missing-text",
-      "input": {"id": "card-1"},
+      "input": {"id": "card-1", "x": 1, "y": 2},
       "want": {"state": "missing", "text": "[\"text\"]"}
     },
     {
       "id": "unresolved-text",
-      "input": {"id": "card-1", "text": null},
+      "input": {"id": "card-1", "text": null, "x": 1, "y": 2},
       "want": {"state": "unresolved"}
     }
   ]
