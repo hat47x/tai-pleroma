@@ -436,3 +436,11 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 Owner分担：TEI #2620/#988はMeaning/Role/Plugin、#2605は実Product Skill、#2621/#2514はTest/Oracle、#2516は二Consumerの用途相対Projection、#2600は再生成/再資格化、TAI #168/#271は選択/Harness比較/Activity引継ぎ、SHOはWriter/Readerの実到達。共通Host/Registry/第二Role Resolver・Oracle Runnerは追加しない。**SK-IQ01〜12とH2/H3/H4/H5実験はNOT RUN**。
 
+
+## 22. 必要最小のSkill構成を実利用タスクで比較する（SK-MIN）
+
+[二つの実利用シナリオとSK-MIN01〜12](skill-composition-minimal-routing-scenarios-2026-11-02.md)を[SK-01 §X](../../evaluations/SK-01-harness-skills.md)へ接続した。横断Productを全て使うことは統合品質ではない。**Research Index L0のリンク編集だけならSHO/通常Markdown単独、TEI read-onlyモデル調査だけならTEI単独**を先に評価し、Source取得・問い相対の根拠・正式な意味採否・文書Consumer・外部作用が実際に必要になった段階だけ各Product/TAIを候補にする。
+
+SC-AはMarkdownリンク整理→必要な元資料の取得・SEI/SUIの根拠/探索→TEI意味候補とOwner受理→SHO Writer/Reader・レビュー・納品を**未取得/未実装を伏せずに**追う。SC-BはTEI実read-only CLI→Product Skill有無→Context-aware Action Offer→隔離mock Host/Providerの実Effectを分ける。各段階で実Tool/Skill/Consumer/権限がなければunsupported、存在するだけならstatic-known、実到達は該当Ownerの独立証拠として記録する。TAIがProduct内Method/Role/権限/出典正本を複製せず、許可済み最小Handoffだけを担当する。
+
+**追加の測定目的**：H2/H3とH4/H5の質の向上だけでなく、不要なSkill呼出し・未必要なTool発見・誤った完了・Tool/Plannerの余剰開示・Token/人の確認/時間の追加費用を同一Taskで測定する。Product数増加を加点しない。実行の優先は既に一部成功した[TEI Draft #2626](https://github.com/hat47x/tei-platform/pull/2626)実CLIの範囲を利用するH2/H3であり、実Skillロード・SHO別Reader・別Harness・Host/OSの証拠は未取得。**SK-MIN全件NOT RUN、Owner正式受理・main統合なし**。
