@@ -629,3 +629,15 @@ document-record: sui.document.record v5 / cases 4
 契約ファイルのハッシュは`sourceDigest`（生成候補ソースのdigest）とは別物なので、版の確認には`contractVersion`を使います。
 
 - [receipt](../../evaluations/records/SUI-TEI-contract-versions-2026-11-03.json)
+## 契約内容の照合（2026-11-03）
+
+artifactの`contractDigest`（契約JSONのLF正規化ハッシュ）と、契約ファイルを比較できます。
+
+```text
+contracts: 5
+mismatches: []
+allMatch: true
+```
+
+- [artifact flow receipt](../../evaluations/records/SUI-TEI-contract-digest-2026-11-03.json)
+- [digest check](../../evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json)

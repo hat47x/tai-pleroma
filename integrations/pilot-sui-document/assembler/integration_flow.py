@@ -52,6 +52,9 @@ def main():
             fixtures_path = os.path.join(workspace, "candidates", name, "fixtures.json")
             with open(contract_path, encoding="utf-8") as handle:
                 contract = json.load(handle)
+            with open(contract_path, "rb") as handle:
+                contract_bytes = handle.read().replace(b"\r\n", b"\n")
+            contract_digest = "sha256:" + hashlib.sha256(contract_bytes).hexdigest()
             out_dir = os.path.join(tmp, name)
             build = run(
                 [
@@ -87,6 +90,7 @@ def main():
             candidates[name] = {
                 "contractId": contract.get("id"),
                 "contractVersion": contract.get("version"),
+                "contractDigest": contract_digest,
                 "sourceDigest": manifest.get("SourceDigest") or manifest.get("Manifest", {}).get("sourceDigest"),
                 "cases": len(fixtures["cases"]),
                 "passed": sum(1 for item in case_results if item["contract"] == name and item["passed"]),
@@ -122,6 +126,7 @@ def main():
                     name: {
                         "contractId": data["contractId"],
                         "contractVersion": data["contractVersion"],
+                        "contractDigest": data["contractDigest"],
                         "sourceDigest": data["sourceDigest"],
                         "cases": data["cases"],
                     }
@@ -149,7 +154,7 @@ def main():
         "command": f"python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo {tei_repo} --workspace {workspace}",
         "result": "PASS",
         "elapsedMillis": round((time.monotonic() - started) * 1000),
-        "contracts": {name: {"contractId": data["contractId"], "contractVersion": data["contractVersion"], "sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
+        "contracts": {name: {"contractId": data["contractId"], "contractVersion": data["contractVersion"], "contractDigest": data["contractDigest"], "sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
         "casesRun": cases_run,
         "casesPassed": sum(1 for item in case_results if item["passed"]),
         "composed": {
