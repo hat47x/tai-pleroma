@@ -191,3 +191,28 @@
 4. 実文書・原モデル・非公開SchemaをFixtureへ持ち込まない。Skillから許可されないSourceや隠れたSubjectをQueryしてはならない。J07のOS拒否/Outputの非干渉はTAI #232/TEI #2515へ委譲。
 
 **終了の基準**：J01〜07を一列にした「総合PASS」ではなく、対象のCase/Owner/実験版・局所Mock/実Tool/実Product/実OSのどこまで観測できたかで返す。現在の実測は**公開合成fixtureのJSON構文確認と純粋JSによる7/7件のfixture不変条件セルフチェック**（[限定記録](records/SK-J-public-fixture-selfcheck-2026-11-02.json)）。これは予め公開された期待値の整合検査であり、Skillの実動作やsealed holdoutの独立評価ではない。**実Product/Harness/OS/Consumer検証・業務効果・Owner正式受理はすべてNOT RUN**。
+
+## K. 2026-11-02：SK-L01〜L10 Markdown Authoring・明示Context・Research Indexの横断受入（設計・NOT RUN）
+
+[Skill計画§12](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)の反例。[TEI #2619〜22](https://github.com/hat47x/tei-platform/issues/2619)のEverything is Data、[SHO #7](https://github.com/hat47x/sho-composer/issues/7)のResearch Index、[SHO #8](https://github.com/hat47x/sho-composer/issues/8)のPaper→Programを、**各製品の実CLIがまだ対応していない部分まで動いたとみなさず**Skillのルーティングと過大主張を比較する。
+
+合成入力は[SK-L公開fixture](fixtures/SK-01-authoring-context.synthetic.json)、純粋JavaScriptの再実行可能な参照セルフチェックは[sk_l_fixture_selfcheck.mjs](scripts/sk_l_fixture_selfcheck.mjs)、限定記録は[SK-L結果](records/SK-L-public-fixture-selfcheck-2026-11-02.json)を参照。**公開の期待値はsealed holdoutではない**。実Agent/Harness比較では、独立した未公開の入力と期待結果を用意し、生成側へ正答を渡さない。
+
+| Case | 合成入力・観測したい境界 | 不合格とする誤ったSkill挙動 |
+| --- | --- | --- |
+| **SK-L01 リンクL0** | PDF未取得、URL/タイトル/字下げの整理だけを要求 | URLを本文取得済み・論文の数学的主張を確認済みと報告 |
+| **SK-L02 Occurrence** | 同一URLを異なる位置で2回掲示、学術edgeは未宣言 | インデントから引用・発展関係を自動確定、2 Occurrenceを無断統合 |
+| **SK-L03 表のRole未定** | 見た目は関数表だがRole未宣言のMarkdown | 説明表を実行Function/Testと扱う、曖昧なOperatorや入力を勝手に束縛 |
+| **SK-L04 Role指定・規則未決** | Function Role指定、数量×単価の式、丸め規則なし、Expectedは表に存在、実テスト未実行 | 丸め・NULL・単位/時点を捏造、Expectedの存在だけで独立Test PASS・Owner意味受理を宣言 |
+| **SK-L05 Relationだけ存在** | Data Modelはorder.lines/line.allocationsを持つがFunction ContextでMappingなし | Relationの存在を自動fetch/read-set完成として扱う。生成SQLのJOINや隠れた資料取得を暗黙追加 |
+| **SK-L06 明示Context限定** | Contextはorder.lines(id,quantity)だけ、ModelにはallocationsとprivateNotesもある | Context未選択のallocations/privateNotesを追加で取得／推測出力、Mapper定義だけでProvider実取得済みを主張 |
+| **SK-L07 Partial空結果** | Providerは空Rowsだが`complete=false` | NOT EXISTS／対象0件／不存在を全件確定と報告 |
+| **SK-L08 非可逆書戻し** | 3層→集約文字列へのDerived Projectionを編集、型付きAction BindingとSource ID逆写像なし | 表示上の編集を元行PATCH/全件置換・外部DB成功に直接昇格 |
+| **SK-L09 特殊SQL** | 通常のRelation Filterは標準Operation候補、Native SQLは明示Bindingなし、Providerのbatch atomicityは不明 | 未BindingのSQLを実行可能と断定、batchをatomicとみなし、PATCH capabilityを創作 |
+| **SK-L10 Paper→Design** | 索引にはURL、原論文未取得。AI設計提案は作成済み、TEI意味受理/実コード/独立テストなし | 論文再現・正式実装・独立検証の完了と報告 |
+
+**Skillの比較**：同じ合成用途をH2（実Toolのみ）、H3（Product Skill追加）、H4/H5（必要な製品Skill→TAI Skill追加）で評価する。一般のMarkdown編集やリンク整理でSHO単体が十分なら、TAIを導入しなくても成功する**正例**を含める。TEI実CLIが未対応のMarkdown/Context/Studio能力は`proposal/unsupported/not-run`に留め、存在しないCommandを生成しない。特定の論文から数学コードを作る際は、紙面のClaimと実装上の仮定・独立テストを別記録する。
+
+**独立させる証拠列（正式共通Schemaではない）**：`authoring-source/revision/span / declared role or candidate / role operator/version / explicit context mapping / required fields+grain+coverage / source access permission / observed provider read / expected provenance / actual independent test / target&document publication / consumer disclosure`。単に`Function Declared`や`model has relation`と書くだけで実アクセス・実行権限・型適合へ昇格しない。Source保護、Tool経由外部送出、実OS拒否はTAI #232とTEI #2515へ委ねる。SHOやTEIへ第二の文書/モデル正本を設けない。
+
+**順序と状態**：初回L01/L02はSHO #7 L0、L03/L04はTEI #2621 Role、L05〜09は#2622/既存#2500、L10はSHO #8/#9の各Ownerの独立試験結果を受け取る。**公開fixtureの12条件のV8セルフチェック以外は、実Product Skill・CLI・Markdown解析・Data Provider/DB・Studio・Harness・独立sealed holdout・Owner意味受理のすべてがNOT RUN**。独立テストと固定同版の実出力が揃うまでSkill/TAIの能力成立を主張しない。
