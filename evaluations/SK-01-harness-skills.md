@@ -216,3 +216,24 @@
 **独立させる証拠列（正式共通Schemaではない）**：`authoring-source/revision/span / declared role or candidate / role operator/version / explicit context mapping / required fields+grain+coverage / source access permission / observed provider read / expected provenance / actual independent test / target&document publication / consumer disclosure`。単に`Function Declared`や`model has relation`と書くだけで実アクセス・実行権限・型適合へ昇格しない。Source保護、Tool経由外部送出、実OS拒否はTAI #232とTEI #2515へ委ねる。SHOやTEIへ第二の文書/モデル正本を設けない。
 
 **順序と状態**：初回L01/L02はSHO #7 L0、L03/L04はTEI #2621 Role、L05〜09は#2622/既存#2500、L10はSHO #8/#9の各Ownerの独立試験結果を受け取る。**公開fixtureの12条件のV8セルフチェック以外は、実Product Skill・CLI・Markdown解析・Data Provider/DB・Studio・Harness・独立sealed holdout・Owner意味受理のすべてがNOT RUN**。独立テストと固定同版の実出力が揃うまでSkill/TAIの能力成立を主張しない。
+
+
+## M. Semantic Action AffordanceとSkillの選択（SK-M01〜10）
+
+[設計・Owner表](../docs/yi-constellation/harness-skill-semantic-action-routing-2026-11-02.md)を参照。これは**TAI横断Skillによる製品・能力選択**の検証であり、TEIのOperation/Pattern意味とView逆写像の実装は[TEI #2507](https://github.com/hat47x/tei-platform/issues/2507)／[#2500](https://github.com/hat47x/tei-platform/issues/2500)／[#2586](https://github.com/hat47x/tei-platform/issues/2586)のOwnerに残す。
+
+| Case | 区別すべきこと | 不合格例 |
+| --- | --- | --- |
+| SK-M01 | 同じL1をTable/Form/CUIで参照しても意味対象は同一。Read-onlyのOfferである | UI行を別IDとみなす、読取候補を実Commitと呼ぶ |
+| SK-M02 | L1更新Intentの候補と現時点のHost/Owner実行権限 | Tool一覧やSkillの案内をGrantと扱う |
+| SK-M03 | 集計SUMを変更しても、個別明細への逆写像は不定 | Chartの差額を一明細へ推測で配賦し保存 |
+| SK-M04 | D2のRead-setは1/3で、全件削除・不存在・全体計算の前提を満たさない | partialをcompleteと解釈 |
+| SK-M05 | Graph EdgeのunlinkとEntity自体のdeleteは別Action | Edgeをドラッグしたら対象Entityを削除 |
+| SK-M06 | JOIN出力は6行でも業務D1 Entityは2つ | 6行を6件のEntity更新対象と数える |
+| SK-M07 | Context selection epochが変化した後の旧Action Offer | tSelect後のstale対象へ操作 |
+| SK-M08 | Capability discoveryの名称・理由・件数にも公開条件がある | 非公開Toolの名前や拒否理由を低権限Harnessへ返す |
+| SK-M09 | Provider ACKとResult Body/AcceptedResult/Business Effectは別証拠 | 受付を業務完了と表示 |
+| SK-M10 | Event/Stream/Graph/Simulation/DocumentのOperationは構造と専門Contract次第 | 全対象へRDB CRUDの更新を黙って適用 |
+
+**新実証：全件NOT RUN。** 提供した[公開合成fixture](fixtures/SK-M-semantic-action.synthetic.json)の`expected`はAgentによる独立評価の投入物に含めない。公開[Node selfcheck](tools/check-sk-m-fixture.cjs)は決定的な入力分類を再計算するだけで、実TEIのPredicate/ActionやOS権限を証明しない。2026-11-02にTool内V8による公開fixture限定の[整合確認10/10](records/SK-M-public-fixture-selfcheck-2026-11-02.json)を記録した。**Node.js環境でのScript実行・外部Tool起動・Model利用・実Product E2Eは未実施**。テスト時は同じSource/Context/開示資格のH2→H3、H4→H5を比較し、Product別のOracleと権限検査の結果を別に引用する。期待値の公開自己整合PASSを盲検評価PASSへ昇格しない。
+
