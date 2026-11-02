@@ -11,7 +11,7 @@ SEIのDecision Memory（`sei.decision-memory/v1alpha1`）から、平坦に投�
 ## 実行
 
 ```sh
-python integrations/pilot-sei-decision/run_selection.py \
+python integrations/tools/run_selection.py \
   --tei-repo <TEI> \
   --workspace integrations/pilot-sei-decision \
   --contract integrations/pilot-sei-decision/candidates/decision-record/contract.json \
