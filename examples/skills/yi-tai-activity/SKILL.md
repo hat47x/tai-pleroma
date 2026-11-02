@@ -91,3 +91,14 @@ description: >-
 - **UIとHarnessの届く範囲を観測する**。Productが実際に開示したCapability/Toolだけを案内する。ボタン表示・MCP Annotation・HTTP Ackを権限/完了の根拠としない。元Productが現在のTarget/権限/Effectを確認できないなら未確認と記録する。
 
 [設計とSK-M評価](../../../docs/yi-constellation/harness-skill-semantic-action-routing-2026-11-02.md)。新Action API・CLI・Providerを本Skillが実装済みと宣言するものではない。
+
+
+## Product契約からSkillを案内する場合の整合性（評価用）
+
+製品がCapability/Operation/意味Roleの説明を公開している場合、Skill側にはその**実Source・契約版・実Toolの署名と未対応事項**を参照する。生成済み説明であっても現在利用可能なCLI/MCP、Product実装と照合し、古いTool例を実能力へ昇格させない。説明文とProduct契約が違う場合、外部Harness向けの手順とOwner側の現行契約を区別して報告する。
+
+- Markdown、式、Graphviz、DSL等の違いだけで重複Action能力を宣言しない。意味Role/Operator/入力・出力/Target版が一致するかをProduct側の結果から確認する。引用・例示・未解決Roleは実行可能という根拠ではない。
+- Product SkillのTechnical Referenceと、人/AIが執筆したMethod・Task Recipeは役割が異なる。Product Coreと実APIの正本が優先され、Skillだけで新しい権限や完了が生じることはない。
+- 非公開Capabilityの名前、件数、存在や診断理由を外部へ公開するかもProduct/Hostが判断する。Product単独で仕事が成立する場合にはTAIを必須にせず、複数Productが必要になった場合のみ横断接続する。
+
+[Capability-derived Skill設計](../../../docs/yi-constellation/capability-derived-skill-projections-2026-11-02.md)と[SK-01 SK-D](../../../evaluations/SK-01-harness-skills.md)は未実装の比較計画である。
