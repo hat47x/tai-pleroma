@@ -431,7 +431,7 @@
 **初回の接続位置**：TEI実CLIのREAL-01とH2/H3（[Runbook](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)）の実証拠を先に取得し、その時に発見・応答・Model/Tool送信のどの面を観測できるかを確認する。外部Egressの検証では常に公開合成Canaryと許可済みMock Endpointのみを用いる。保護が不要な通常のTEI組織Dataまで特殊なOS隔離必須としない。Owner意味受理、実Productの認可・本番Effectは別試験。
 
 
-## U. 2026-11-02 実Product read-only CIを受入証拠に昇格させる範囲（REAL Evidence Update）
+## V. 2026-11-02 実Product read-only CIを受入証拠に昇格させる範囲（REAL Evidence Update）
 
 [最初のProduct Skill Runbook §7〜8](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)の**後着実証**を反映する。以前の「REAL-01〜07は全てNOT RUN」という記述は旧状況である。**既存TEI Ownerの実CLI単独観測は一部実行済み**となったが、TAI H2/H3以降の比較は依然NOT RUN。
 
@@ -444,7 +444,7 @@
 
 **REAL-01の扱い**：同項の「TEI read-only CLI現物」については、#2626の**指定PR HEAD・公開Workspace・CI環境で実観測済みの部分**を確認済みに更新する。ただしTAIが自分の実行試行として同一Tool/Sourceを再実行したという主張ではなく、Job内自己再読取を別Product受領と扱わない。REAL-02（H2/H3）およびREAL-04〜07は未実施。REAL-03の同版Read/Warningは#2626に限る。新しいSkill install/Owner受理は未実施。
 
-## V. Role Bootstrap・Source/Skill Drift・独立Test-as-Dataの負例（SK-IQ01〜12）
+## W. Role Bootstrap・Source/Skill Drift・独立Test-as-Dataの負例（SK-IQ01〜12）
 
 既存[SK-D](#n-product-capability由来のskill-projectionとドリフトsk-d01d10)／SK-E／SK-CEに、Role解釈依存閉包とOracleの**出所独立性**を追加する。TEI [Draft #2638](https://github.com/hat47x/tei-platform/pull/2638)のRB19件は限定合成、[Draft #2639](https://github.com/hat47x/tei-platform/pull/2639)は既存Go Referenceへの接続、[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)のTA-OはExpectedの独立性をOwnerとする。**TAIはその解釈・計算・テストRunnerを再実装しない**。以下のSK-IQは全件**実Product/Harness NOT RUN**。
 
