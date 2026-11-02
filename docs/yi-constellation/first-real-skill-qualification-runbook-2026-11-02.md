@@ -115,3 +115,15 @@ H4＝必要なProduct Tools＋Product Skills、H5＝H4＋TAI横断Skill。実Too
 
 Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Operator版／実Tool signature／実Source/Role witness／独立Expected／現在のDisclosure・Grantは、段階的に検査する。Role解釈エンジン、Oracle Runner、Host AuthorityをTAIへ移設しない。TAI [SK-01 §W](../../evaluations/SK-01-harness-skills.md)へケースを追加し、実Productの能力と未知の範囲に応じて選択的に適用する。
 
+
+## 9. 2026-11-03 後着確認：#2626 mergedと次のHarness実証を区別
+
+このRunbookの§1〜§6は作成当時の手順・状態、§7〜§8は後着の実CLIとRole/Oracle検討である。**TEI [PR #2626](https://github.com/hat47x/tei-platform/pull/2626)は2026-11-02T18:35Z時点でmerged**（merge commit `00eb8e148daadbc2cf40145d8e8473d56531514c`）。公開参照Workspaceでの実Go CLI 9プロセス／同Job内二Projectionの再読取／Source-only移動に伴うSourceIndex/Trace位置変化は、今後はmerged Sourceを実起点とする。ただし本Runbook自身が新mainでTEIを再実行したという意味ではなく、元PRの固定HEADで観測された局所Evidenceを参照する。
+
+**新たに優先して比較する作業**：実在TEI Skill [#2605](https://github.com/hat47x/tei-platform/issues/2605)/[Draft #2607](https://github.com/hat47x/tei-platform/pull/2607)の正式なLoaded byte（rootだけでなくreferences/scripts）を確認し、同一Harness・同一Tool/SourceでH2/H3を反復。その後、[複数Harnessと実Capability資格化計画](harness-portability-and-capability-qualification-2026-11-03.md)のSK-HP01〜14へ接続する。
+
+特に [TEI Draft #2649](https://github.com/hat47x/tei-platform/pull/2649) の実Source-static照合で、`commands`はselected read-only Catalogに限定される一方で`operations`/`artifacts` CLI dispatchが別に存在する。この**一覧外＝不存在ではない**という陰性所見と、`artifacts -out`の実ファイル書込分岐を、最新の実バイナリとargvで必要時に検査する。実コマンドの発見はSkillのread-only権限をwriteへ拡張しない。
+
+二番目のHarnessはClaude Code／Codex／OpenCode（DSH構成は別Profile）等の**実際に使える**環境から選び、Dots/Grok BotはAccount availabilityが確認できた場合のみ個別Profileとして評価する。比較は公式文書の機能一覧ではなく、実Skill load/Tool arrival/出力・現在権限・外部受信によって行う。公開済み資料でできるTaskは本番秘密を用いず、未接続はunsupportedとする。
+
+**変更後もNOT RUN**：H2/H3の実Harness比較、二Harness移植、SHO別Reader、実OS/外部Host拒否、TAI所有の活動E2E、独立Owner意味受理。本節は後着事実の参照訂正とRunbookの実行順序変更のみ。
