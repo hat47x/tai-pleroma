@@ -160,6 +160,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
     "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
     "evaluations/records/SCN-003-compose-2026-11-03.json",
+    "evaluations/records/SCN-003-save-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -280,6 +281,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SCN-003-save" in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("cards") != 3:
+                errors.append(f"SCN-003 save did not round trip three cards: {relative}")
         if "SCN-003-compose" in relative:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
