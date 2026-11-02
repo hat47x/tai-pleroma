@@ -34,6 +34,22 @@ SUI / TEI / SEI / SHO / EKIは、それぞれ独立した能力・ライフサ�
 - 新しい契約、権限変更、本番作用、破壊的操作、意味上の受理が必要な箇所はOwner判断を明示して止めます。
 - 記述は原則として自然な日本語を用い、コード識別子や外部仕様名は原表記を維持します。
 
+## YI Constellationの上流要求研究（Draft参照）
+
+- [価値・要望・要件の往復整理](docs/yi-constellation/value-needs-requirements-2026-11-01.md)と[価値の実現・研究計画](docs/yi-constellation/value-realization-research-protocol-2026-11-01.md)は**提案/研究資料**であり、正式な製品仕様・新しいOwner判断ではありません。
+- 価値を扱うときは、誰のどの状況の価値か、本人の表明かAI推論か、実際に選べる機会か既に達成した結果かを区別します。直接・間接の当事者と、利用を望まない選択も考慮します。
+- 仮説・意味の**生成的探索**では候補と異論の豊かさを保ち、検証・反証・正式採否は別工程で行います。実外部作用には既存Owner/Host/Providerの権限・対象・結果確認を用います。
+- 開発の最初の経路は、必要な機能を既存の外部AIハーネス、通常ファイル、CLI/typed operationsから利用できるかを確かめます。TEIのAI-first/Headless-first/GUI-later設計は当該製品の境界を尊重し、TAIに新たな中央Agent・Hostを強制しません。
+- 価値を具体化した結果は既存のTAI #127/#165/#166/#167/#168、製品群/配布の #73/#74、各ProductのIssue/ADRへ**採用された差分のみ**接続してください。既存Draft PRの変更、未実施のPASS化、独自の統合受入Gateの新設を避けます。
+
+
+
+## 機密Rawと外部ハーネスの境界（提案・実保証ではない）
+
+- [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)を参照。SEI/SUI/SHO等の原文・人事/顧客情報・未レビュー構造は、明示許可された用途でだけ扱います。外部LLM、MCP、別Productへの入力には、**Source保持側のサーバで許可した投影・要約・照合結果**を優先し、RawやCredentialを作業ログ・Prompt・Issue/PR・テストfixtureへコピーしません。
+- 強い機密Profileでは、別OS identity、ACL、Filesystem/IPC/Networkの実行時制限等でRaw Storeへ直接アクセスできないことが必要です。`read-only`、client側SafeMode、Toolの注記、Agentの自己抑制だけを機密保護の根拠にしません。ローカルMCP/CLIの直接経路、外向き通信、Telemetry、ログ・一時ファイルも点検します。
+- 実効のOS隔離/egress制御・元Sourceの開示資格を確認できない場合、機密Profileを`unverified/unsupported`と記録し、合成非機密fixtureで作業を続けます。OS管理者の権限とProductの閲覧権限、秘密を渡した後の扱いは別に評価します。
+
 ## 初期実証の基準
 
 個人・組織・社会のいずれか一つの具体的な課題について、**情報の把握 → 解釈・判断 → 成果物または行動 → 結果の観測・更新**を追跡できる最小シナリオから始めます。複数基盤の接続数ではなく、一連の知的機能としての有用性と検証可能性を評価します。
