@@ -108,3 +108,12 @@ Harness固有の包装は、まず次の観測票を作る。これは**試験�
 - **TEI #2018**：H2/H3、H4/H5、別Harnessの総費用と品質を同一Task/独立Expectedで比較する。成功時間短縮が品質を毀損した場合は生産性向上としない。
 
 **今回の状態**：追加したのはProduct間/Harness間の評価方法と反証票であり、いずれのHarnessの実導入・実Tool呼出し・各Ownerの契約採用・GitHub mainへの統合も行っていない。
+
+---
+
+<!-- yi-harness-sk03-crossref-20261103 -->
+## 8. 2026-11-03補強：DSHとOpenCodeを分離し、次の実測をSK-03へ固定
+
+[SK-03実行計画](harness-interoperability-and-handoff-pilot-2026-11-03.md)は、本書M0〜M5のうち**最初の2つの実HarnessでのTool-only／Product Skill移植／限定Handoff**の比較適格性とHX-01〜10負例を定義する。DSHはOpenCode＋DeepSeekモデル設定と同一ではなく、独立のHarness実行物・Profile・送出経路を持つものとして別行に置く（DSH固有の一次実通信はTEI #2509）。P0の候補はClaude Code・Codex・OpenCode・DSH、P1にGemini CLI・Copilot Agent・Cursor・Clineを加え、Dots/Grok Bot/ChatGPT WorkのCloud機能は利用可否を実確認する別群とする。
+
+Skillの置き場所とroot文書が一致しても、実参照Script、MCP negotiated revision/Tool schema、引数で変わるEffect、Host Grant、SourceIndex・Consumerの実利用は独立。まず[SK-02](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)を実施し、実際の同Task比較が成立した後にSK-03を段階的に開始する。**現状の追加分は計画だけ（NOT RUN）**。本書のSK-HP01〜14や既存C0〜C5を置換・二重実装しない。
