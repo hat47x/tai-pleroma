@@ -81,3 +81,37 @@ H4＝必要なProduct Tools＋Product Skills、H5＝H4＋TAI横断Skill。実Too
 - **D 配布・再開**：TAI #74のProduct ReleaseとSkill依存閉包、各Harness Adapter、現在Trust/Disclosureの差分確認。Owner採否・実配布を別Gateとする。
 
 **統合前に照合すること**：mainの現行変更、同一Issue内の重複案・見出し/相対リンク、Productの正式採用範囲、機密データの公開権限、脚注・合成fixtureの独立性、現在の実Product可用性。実行証拠が不足する項目はDraftとして維持でき、他の独立PoCを止める理由にはしない。
+
+
+## 7. 2026-11-02 更新：実Product CLIは一部観測済み。Skill試験は未実施
+
+本Runbookの初期状態欄「Plan-only」「S1実CLI未実施」は**初版執筆時点の履歴**である。後続のTEI [Draft PR #2626](https://github.com/hat47x/tei-platform/pull/2626)に実Product観測が追加されたため、以下を現時点の資格として優先する。
+
+| 根拠 | 確認済みの範囲 | そこから主張しないこと |
+| --- | --- | --- |
+| [TEI CI #41445984686](https://github.com/hat47x/tei-platform/actions/runs/41445984686)、HEAD `2e7aef560e35b79d658bb9c41c1575129f6a62a6` | 実Goバイナリのread-only CLIを別プロセスで9回実行。catalog/inspect/trace/validateとSource/World fingerprint・Warning/診断・stale拒否を限定観測 | Product Skillをハーネスから呼んだこと、実DB/外部Provider/Host資格 |
+| **現行[TEI CI #41456256348](https://github.com/hat47x/tei-platform/actions/runs/41456256348)**、PR HEAD `31c62e8bb44c1c5c59933a46924aa4c338637085` | GitHub Actionsの`synthetic-construction-context`と`observed-tei-cli-read`の**2 jobsともcompleted/success**をGitHub側から照合。合成15+表示13件、実CLI Readでの72 Catalog entries／2 Trace rows／3 diagnostics、同じ実Read Witnessから一時領域にAI JSONと人間Markdownを生成・**同一Jobで個別再読取**した報告 | 独立したSHO Composer Reader、外部LLM/HarnessでのSkill load、Consumer独立受領、OS/Network Disclosure、業務意味受理 |
+| [TEI Product Skill Draft #2607](https://github.com/hat47x/tei-platform/pull/2607) | `yi-tei-modeling`のread-only Skill文書と実CLIの対応候補をSource-static照合 | 上記CIのプロセスがこのSkillを**実際に読んだ／利用した**という証拠 |
+| TAI [SK-01](../../evaluations/SK-01-harness-skills.md) H2/H3/H4/H5 | 同一Source/Tool/モデル/AgentでSkillの有無・TAI追加価値を測る**次の試験** | 既存TEI CI successを横断H2/H3実施済みと数えること |
+
+今回、CIの成功について[GitHub ActionsのJob一覧とStep一覧](https://github.com/hat47x/tei-platform/actions/runs/41456256348)を再確認した。実際のConsumerは**同Jobの投影ファイル再読取Checker**であり、SHO Writer/Reader・別HarnessのConsumerではない。同じWitnessから二素材を出力できることと、別の製品がその意味/出典/開示資格を保持して読み取ったことは分ける。PR #2626もDraftであり、mainの現行実行契約に採用済みと扱わない。
+
+### 次の実行票：観測済みCLIをSkillの追加価値へ結び付ける
+
+- **R1 Product所有のSkill実使用**：TEI #2605/#2607が提供する実際のSkill root/Referenceのload byte、必要時の資料展開、選択されたCLI実binary/argv/workspace/Source/診断を、SkillなしのH2とSkillありのH3で同じHarness上で比較する。実CIと同一Tool版・Sourceであると確認できない場合は**別試行**。
+- **R2 正負の独立比較**：誤Subject選択、Warningの無視、異Fingerprint、STALЕ、Source改行、非公開Metadata、Skill rootだけで依存資料変更を隠すケースを、Skillへ期待値を渡さず評価する。ユーザーが必要とする判断の質と、実呼出数・Token/人の確認コストの双方を記録。
+- **R3 二Productへ接続**：実TEI read witnessをSHO/MMIの文書素材として渡す場合、**保存→別Readerによる読取→Source再解決**を新たな実観測として要求する。実CLIがMarkdownを書いたことをSHOの完了とは呼ばない。
+- **R4 引継ぎ/再資格化**：同じSource byteでもRole/Operator解釈Plugin版やProvider Route/非表示Rule依存が変われば、証拠・Consumer資格の局所再確認が必要。TAI #271はProduct Ownerが認めた依存閉包に限り再利用する。
+
+**現状の最も強い実証**：公開Workspace・指定HEADに対するTEI実Go read-only CLIの9プロセス観測と、同じJob内のAI JSON／人間Markdown派生素材の再読取。**未実証**：実Skill loadを用いたH2/H3、二Harness、SHO独立Reader、実Provider、OS egress、Owner意味受理。
+
+## 8. Role解釈の依存閉包とTest-as-DataをSkillの追加検査にする
+
+[TEI Role Bootstrap Draft #2638](https://github.com/hat47x/tei-platform/pull/2638)は、有限Bootstrap・eager interpreter dependencyの循環とdeferred Refの循環を区別し、**Root RoleにPinがあってもEager依存先のRole/Providerが固定されていないと選択資格は成立しない**という反例を19件の限定V8合成で確認している。ただし実TEI Extension Lock/Hostでの確認ではない。
+
+[TEI Go Language Reference Draft #2639](https://github.com/hat47x/tei-platform/pull/2639)は、既存`ParseSelected`・`ParsePipelineSyntax`・`LowerPinnedPipeline`・`ResolveOperator`への二表層接続を提案する。Source span/候補標準Data/Accepted Meaning/Providerを分離する。**Go Referenceを利用した候補解釈と、正式TEI Role採用/実行資格は別**。複数表層で同じ候補値を得ても、lexical scope、NULL/Bag/Grain/Effect、Target版、Source occurrenceとOwnerの解釈が同一とは限らない。
+
+[TEI #2621 Test-as-Data](https://github.com/hat47x/tei-platform/issues/2621#issuecomment-6578796587)は、Markdown/JSONの入力と期待値を同じ表へ置ける利便性を保ちつつ、**期待値を実装の同じ計算式から生成した場合は独立Oracleではない**と区別した。例：数量2×単価50のExpected=100を固定すれば乗算→加算の変更（Actual=52）を検出できるが、Expectedも同じ変更式から再生成すると偽PASSする。CaseがOwner受理を得ているか、Expected由来/版、意図的Mutation、最小反例で保つ必要なScope/Unit/Grain/時点を別に確認する。
+
+Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Operator版／実Tool signature／実Source/Role witness／独立Expected／現在のDisclosure・Grantは、段階的に検査する。Role解釈エンジン、Oracle Runner、Host AuthorityをTAIへ移設しない。TAI [SK-01 §V](../../evaluations/SK-01-harness-skills.md)へケースを追加し、実Productの能力と未知の範囲に応じて選択的に適用する。
+
