@@ -389,3 +389,20 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **資格**：Markdownの設計と受入ケースのみ。TEIの実DSL/Operator/Provider、Product間接続、実Clock/Event/Host、Agent Skill load・Owner意味受理・独立OracleはNOT RUN。複数製品の局所Reference PASSを横断E2Eへ昇格させない。
 
+## 19. 2026-11-02：合成評価の拡大と最初の実Product観測を分けて進める
+
+[最初の実Product Skill資格確認Runbook](first-real-skill-qualification-runbook-2026-11-02.md)を追加した。TEI mainの`docs/getting-started.md`・`cmd/tei/cli_contract.go`を静的に再照合し、**実CLIの存在を文書上で確認できる範囲**と、実環境で実Toolを呼んで観測すべき範囲を分けた。これは今まで増やした公開合成SK-M/TB/F/RQ/C/Jなどを縮小する方針ではない。開発の対象とProduct Skill候補を引き続き並列拡張する一方、**品質・実装の成熟度として主張する証拠**は次の実測に進める。
+
+| Work lane | 最初の可動単位 | 「次の段階へ進んだ」と言える最小観測 |
+| --- | --- | --- |
+| **L0 Product単体** | 権限のあるcheckoutで、TEIの実在read-only CLI（commands/catalog/inspect/validate）を利用。TEI #2605/#2607 | binary/Go/OS/worktree、CLI version、実argv・実Output、Source fingerprint・Warningとunknownを記録した。TAIは不要 |
+| **L1 Skill増分** | 同Harness・同Source・同ToolでH2（Toolだけ）対H3（TEI Product Skill追加） | Product Skillの実ロード範囲・呼出し差・誤判断/Tool時間・人の確認負担を比較。期待値をSkillへ与えない |
+| **L2 製品横断** | 現在のMMI参照観測＋TEIモデル読取、必要な対象だけH4 vs H5 | MMI Source→TEI Meaningの根拠のある対応と、別Source/不明の分離。SHO保存やEKI Bodyを仮装しない |
+| **L3 Activity再開** | TAI #271の限定したSource/Policy差分を利用したA→B Harness引継ぎ | historical evidence/current qualification、現在Host Grant、実Consumer read、再確認対象の選別を実観測 |
+| **L4 機密／実作用** | 該当Productの実Profile・Provider側で拒否試験 | OS/HostのRaw・Capability・外向き通信・現在Trustの実拒否と、同Attempt成果物／業務Effectの独立観測 |
+
+**実受入に向けて先に解決・確認する依存**：TEI #2605の実CLI S1／TAI SK-01 H2/H3が最初の候補。SHO Research Indexは作者のMarkdownとLink構文索引（SHO #7／Draft #12）から原文取得・文書保存・納品へ自動昇格させない。EKI #465のRunner→Body SenderはSource-static上の実配線課題であり、Body送達E2E前に既存Ownerで確認する。SEI #767の公開合成世界への限定十分性／Planner候補の機密性を、外部AIへの実Q判定/実OS開示保証に昇格しない。TAI #271の依存Graphは公開合成で15/15の自己整合を持つが、現実の依存線抽出・Owner受理は未実施。
+
+**合格の帰属**：L0のProduct read-only実測、L1のSkill増分、L2の意味接合、L3の現在再資格化、L4の強制拒否/実Effectは**互いに独立した証拠**。一部成功を横断E2Eと称さない。同じSource名でも実byte/Source revision、同じSnapshot labelでも実epoch/Scope、Tool exit 0でもWarning、Trust歴史でも現在Grant、Manifest Completeでも実Consumer読取を別観測にする。公開fixtureにはExpectedを含むため、実Skillの独立能力比較には封印した評価側のケースを用いる。
+
+**状態**：Runbookと順序・責務の計画追補。実TEIビルド/CLI、別HarnessのH2/H3/H4/H5、SHO/ EK Iの実Artifact・OS/Networkの負例、Owner採用は**NOT RUN**。新共通Host/中央Registry/第二の証拠正本/万能Agentは追加しない。
