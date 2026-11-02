@@ -143,3 +143,16 @@ ProductにData/Rule/ProviderのEvidenceがある場合は、**何を要求した
 - 秘密・非公開のSource/Capability/Tool/結果/診断はConsumerごとに許可されたProjectionへ落とし、活動引継ぎ票自体も情報公開対象として扱う。
 
 [選択的再資格化の計画](../../../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)と[SK-01 SK-C](../../../evaluations/SK-01-harness-skills.md)は**公開合成だけの評価案**。現行TAI Skillが新しい実行器、Oracle、中央Claim DB、Provider、Owner受理資格を取得した証拠ではない。
+
+
+## 接続Roleと計算文脈を伴うProduct Handoff（評価用）
+
+Product間の引用、Graph Edge、Event、データの受渡し、Command、Constraint、Observation、Evidence依存を一律の「接続」とみなさず、**Source/Role/Operator版・対象Scope・実作用・計算時点をProductの既存契約で確認する**。
+
+- 単なるMarkdown URL・Graphvizの矢印・Skillへのリンクは、参照または形状の観測。論文取得、実Dataflow、因果、実操作権限・証拠依存を推測しない。
+- `filter`による選別結果と元集団の`validate-all`、数値近似と下流の閾値Action、通知ACKと実消費／Effectを区別する。正式Operator/Role/Lawの同値性はTEI側Ownerの結果を参照する。
+- Batch/Reactive/Event Stream/Async Attempt/Transactionでは、Source Snapshot、Clock/Window、重複/再送、実Grant・Body receiptが各々必要になり得る。ProductのToolが観測していない資格をTAIで補完しない。
+- Productの単独Skillで充分ならそのまま利用し、複数Productの結果を共同Claimとして扱うときだけ**成立したEdgeと不足しているEdge**を伝える。非公開Edge/Actionの名称や件数もConsumerごとの開示条件に従う。
+
+[型付きHandoff設計](../../../docs/yi-constellation/typed-connection-handoff-and-computation-context-2026-11-02.md)／[SK-CE01〜16](../../../evaluations/SK-01-harness-skills.md)は、正式Toolの導入・現実の権限の保証ではなく、説明と反例の計画である。
+
