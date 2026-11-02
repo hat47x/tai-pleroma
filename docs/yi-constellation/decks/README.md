@@ -1,11 +1,11 @@
 # YI Constellation のデッキ
 
-前後関係で二つに分けています。
+ファイル名はASCIIのみです。前編と後編を分けています。
 
-- 前編: [YI_Constellation_前編_構想と設計.pptx](前編/YI_Constellation_前編_構想と設計.pptx)。30枚。製品群の構想と設計。
-- 後編: [YI_Constellation_後編_文化的体系と発展性.pptx](後編/YI_Constellation_後編_文化的体系と発展性.pptx)。47枚。31〜77番。文化的体系から読む製品の価値と発展。
-- 統合: 前編30枚と後編47枚を並べると、全77枚になります。統合ファイルはまだ作っていません。
-- 価値のトラック: [価値のトラック.pptx](価値のトラック.pptx)。価値の語りを十五枚で辿る別系統のデッキ。
-- 後編のPDFと検査記録は、`後編/`に置いています。
+- 前編: [YI_Constellation_1.pptx](part1/YI_Constellation_1.pptx)。30枚。製品群の構想と設計。
+- 後編: [YI_Constellation_2.pptx](part2/YI_Constellation_2.pptx)。24枚。文化的体系から読む、製品の価値と発展。図を中心に再構成した版。
+- 後編の詳細版: [YI_Constellation_2_detail.pptx](part2/YI_Constellation_2_detail.pptx)。47枚。31〜77番。旧構成を保持。
+- 価値のトラック: [価値のトラック.pptx](価値のトラック.pptx)。15枚。価値の語りを辿る別系統のデッキ。
+- PDFは、それぞれのフォルダに同じ名前で置いています。
 
-前編は`docs/YI_Constellation.pptx`の写しです。後編は、前編の配色、書体、見出し、ページ番号に合わせて整えています。
+前編は`docs/YI_Constellation.pptx`の写しです。後編は、前編の配色、書体、見出し、ページ番号に合わせ、六つの器官と巽の関係を図で示します。
