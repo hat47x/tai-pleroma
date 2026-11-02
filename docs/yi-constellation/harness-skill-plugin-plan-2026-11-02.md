@@ -287,3 +287,13 @@ SHO #7のL0はMarkdown見出し・字下げ・リンクURLだけで完成する�
 **既存の受入順序と拡張**：SK-G0/G1・TEI #2605の実CLIを先行し、L01/L02（SHOリンクの未取得）、L03/L04（Markdown Role/Expected）、L05〜L08（TEI明示Context/非可逆保存）、L09/L10（根拠を保った研究→設計の段階）を独立Laneで追加する。大量AI並列開発では候補の種類を増やしてよいが、各Productの実行受理・外部送信・実Provider・Owner判断の証拠は単純加算しない。
 
 **状態**：設計・SK-01の追加試験候補。TEI #2619〜2622とSHO #7〜9は現時点でIssue上の設計であり、正式Core/Studio/Markdown CompilerやSHO単体保存・Paper→Code E2Eの実動作を確定していない。SK-L全件・実Tool/Harness・Source/DB/Host・OS拒否・正式Owner受理はNOT RUN。
+
+
+## 13. Semantic Action Affordanceと外部HarnessのSkill選択（2026-11-02）
+
+**成熟した接続点**：[TEI #2507](https://github.com/hat47x/tei-platform/issues/2507)のSemantic Context起点の汎用Action、[#2500](https://github.com/hat47x/tei-platform/issues/2500)のViewChange逆写像、[#2586](https://github.com/hat47x/tei-platform/issues/2586)の一Function Headless縦断、[#2622](https://github.com/hat47x/tei-platform/issues/2622)の汎用Data Operationsを、TAI横断Skillが利用する**能力選択の入力**として位置付ける。具体的な境界・受入は[Semantic Action Routing設計](harness-skill-semantic-action-routing-2026-11-02.md)。
+
+TAIの責務は利用者の目的・対象・時点から**実在する製品と適用可能な能力を選び、必要な許可済み根拠/Resultへつなぐこと**。TEIのAction適合判断・Type/Role/Read-set・Operation Intent・Provider/Host権限をTAIに再実装しない。**同一Meaning ActionをTable/Form/Graph/CUI/外部Harnessで異なるAffordanceとして提供**する構想はTEI #2507/#2500のOwner。SkillがActionを発見した事実を、表示資格・現在の実行許可・Receipt/Business完了へ自動昇格させない。
+
+[SK-01 §M](../../evaluations/SK-01-harness-skills.md)では、L1を異なるUI/CUIから参照する同一性、Chart aggregate更新の逆写像不能、D2の部分取得での全件操作、Graph edgeとEntityの差、JOIN行とEntity数、stale epoch、secret CapabilityのDiscovery、Provider ACKの未完了、Event等の専門Operationを10件の合成反例として追加する。公開[fixture](../../evaluations/fixtures/SK-M-semantic-action.synthetic.json)と[Node selfcheck source](../../evaluations/tools/check-sk-m-fixture.cjs)を付けた。V8で**公開fixture内の宣言と分類の限定整合10/10を確認**した[記録](../../evaluations/records/SK-M-public-fixture-selfcheck-2026-11-02.json)があるが、**Node runner自体・TEI実CLI/Pattern・実Harness/OS/権限/Effect・独立sealed OracleはNOT RUN**。Product側実装・意味/権限の受理は従来Ownerへ委譲し、TAIはH2/H3/H4/H5でSkillを追加する価値だけを評価する。
+
