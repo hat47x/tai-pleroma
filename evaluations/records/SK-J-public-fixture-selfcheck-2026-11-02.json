@@ -1,0 +1,65 @@
+{
+  "run_id": "SK-J-public-fixture-selfcheck-2026-11-02",
+  "created": "2026-11-02",
+  "kind": "reference-fixture-consistency-only",
+  "status": "PASS",
+  "scope": "Pure JS/V8 evaluation of public synthetic JSON case invariants, not a Product/Skill/Harness integration test.",
+  "fixture": {
+    "repo": "hat47x/tai-pleroma",
+    "path": "evaluations/fixtures/SK-01-revision-publication.synthetic.json",
+    "branch": "docs/yi-harness-skills-20261102",
+    "content_sha": "d5031cc824d2b68eff5a65dea679a34cc50f2ce0"
+  },
+  "observations": [
+    {
+      "id": "SK-J01",
+      "pass": true,
+      "observation": "A→B→C has 4 candidate paths; semantic mapping not established"
+    },
+    {
+      "id": "SK-J02",
+      "pass": true,
+      "observation": "Template changed, meaning/source identity fixed"
+    },
+    {
+      "id": "SK-J03",
+      "pass": true,
+      "observation": "Physical file a.md differs from R1 manifest"
+    },
+    {
+      "id": "SK-J04",
+      "pass": true,
+      "observation": "Stale b.md exists outside consistent R2 manifest set"
+    },
+    {
+      "id": "SK-J05",
+      "pass": true,
+      "observation": "Complete flag and non-empty Findings coexist"
+    },
+    {
+      "id": "SK-J06",
+      "pass": true,
+      "observation": "Claim ACK present; no body delivery observed"
+    },
+    {
+      "id": "SK-J07",
+      "pass": true,
+      "observation": "Two internal worlds share the same allowed public listing"
+    }
+  ],
+  "checks_passed": 7,
+  "checks_failed": 0,
+  "not_run": [
+    "Product Skill load",
+    "Tool invocation",
+    "TEI CLI/Generator",
+    "SHO document persistence",
+    "EKI task/runner/body transfer",
+    "Publication fault injection",
+    "OS/Network isolation",
+    "Independent sealed holdout",
+    "Owner review",
+    "Real external side effects"
+  ],
+  "security_note": "Public fixture includes expected results; it is unsealed. Blind evaluation requires private/unreleased variants accessible only to a separately permissioned evaluator."
+}
