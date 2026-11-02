@@ -375,3 +375,17 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 [SK-01 §R](../../evaluations/SK-01-harness-skills.md)へ**SK-C01〜C15**を追加し、公開の[依存/委譲Fixture](../../evaluations/fixtures/SK-C-continuation-requalification.synthetic.json)と[自己整合Checker](../../evaluations/tools/check-sk-c-fixture.cjs)、[限定V8実行記録](../../evaluations/records/SK-C-public-fixture-selfcheck-2026-11-02.json)を接続した。GitHub保存済みJS・JSONのexact bytesをV8＋fs/path Shimで評価し、**公開合成15/15整合、Mutation負例4/4検出**。**実Node.js実行、実Product/OS/外部Harness、Owner意味受理、EKI Body送達/SHO実読取、独立sealed OracleはNOT RUN**。これはTAI/TEI/EKIの製品仕様採用ではなく、Draft設計・反証用Corpusである。
 
 **相補的な評価**：SK-RQはClaimの現在性・変更による再確認の必要性とUnknownの保持、SK-Cは明示されたCross-Product依存線・EKI Body・SHO Consumer Read・Grantまでの継続/Handoffを対象とする。RQのR2は不明箇所だけを保留する安全側の対照、CのJ2は旧成功を無検証で転用する危険な負例であり、同じ再実行方針を意味しない。
+
+
+## 19. 型付きConnectionとModel of ComputationのProduct間Handoff
+
+[型付き接続と計算文脈のConsumer設計](typed-connection-handoff-and-computation-context-2026-11-02.md)を追加し、TEI #988/#2507/#2620/#2586の最新の「接続そのものの意味」「Graphvizを文脈付き標準Data変換として扱う」構想を、TAIのProduct選択・活動継続に接続した。
+
+接続は、**参照／データフロー／Event／Control Intent／Constraint／Observation／Evidence依存**など、意味Role・解釈版と実際の成立証拠で区別する。図の `a -> b`、Markdownの字下げ、Skillのリンク、Tool Callの記録から、実Read/Commit/Effect/Consumer receipt/Business受理を推測しない。**Model of Computation**（Batch Snapshot／Reactive／Event Stream／Async Attempt／Transaction）とClock/epoch/順序もClaimの成立条件に含める。
+
+具体例は、(1) `filter(q>0)`の選別と**元母集団の全称Validation**は別、(2) `|x−x̂|≤0.01`という上流近似が下流非線形関数/閾値Actionを保証するとは限らない、(3) EKI Claim ACK／Body受領／SHO実読取／納品は異なる段階、(4) 文書の参照やDOTの単なるEdgeは実依存・実権限・学術的引用の確定ではない、の四群とした。
+
+[SK-01 §S](../../evaluations/SK-01-harness-skills.md)にSK-CE01〜16を置く。既存SK-RQ/SK-CがEvidenceの変更依存・再資格化を扱うのに対し、SK-CEは**Edge意味と計算時点の取り違えによる誤結合**を検出する。各意味のOwner/Oracleは既存Product側に残し、TAIは実在するProductの結果を用途相対に引継ぎ、別の中央Graph/Role Engine/Hostを作らない。
+
+**資格**：Markdownの設計と受入ケースのみ。TEIの実DSL/Operator/Provider、Product間接続、実Clock/Event/Host、Agent Skill load・Owner意味受理・独立OracleはNOT RUN。複数製品の局所Reference PASSを横断E2Eへ昇格させない。
+
