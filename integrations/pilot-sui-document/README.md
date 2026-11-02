@@ -233,6 +233,21 @@ sui.affiliation.record: id, cardId, islandId
 
 `Island.cardIds`（Island側の包含リスト）は、投影契約が配列を扱えないため未対応です。所属はAffiliationで表す暫定決定とします。
 
+### 配列投影とIsland.cardIds（2026-11-02）
+
+投影フィールドに`many`を追加し（[PR #2576](https://github.com/hat47x/tei-platform/pull/2576)）、`sui.island.record`をv4へ上げて`cardIds`を文字列配列として投影しました。
+
+```text
+sui.island.record: id, title, cardIds[]
+```
+
+- 空配列は`present`で`[]`
+- 欠落は`missing`、
+ull`は`unresolved`
+- 合成層は`cardIds`の各要素が実在するCardを指すか検査
+
+単体テスト9件と結合経路21ケースがPASSしました（[receipt](../../evaluations/records/SUI-TEI-island-cardids-2026-11-02.json)）。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。
@@ -241,3 +256,151 @@ sui.affiliation.record: id, cardId, islandId
 ## SUI本体との差分
 
 DocumentV1と現在の投影契約の差分は[SUI DocumentV1とTEI投影の差分](../../docs/sui-documentv1-tei-gap.md)に整理しました。名前・関係の一般性・未モデル要素が残っています。
+
+## SUI API境界への接続案
+
+`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とする案を[SUI API境界とTEI投影の接続案](../../docs/sui-api-boundary-tei-mapping.md)に整理しました。読み取り専用のartifact kind追加を先に行い、DocumentV1の書き込みは後回しにします。
+
+## 投影artifactの生成（2026-11-02）
+
+結合経路に`--artifact-out`を追加し、SUIが読める形のJSONを生成しました。
+
+```json
+{
+  "schema": "tai.reference.tei-documentv1-projection/v0",
+  "contract": {"id": "sui.documentv1.projection", "version": "1"},
+  "source": {"teiCommit": "...", "contracts": {"...": {"sourceDigest": "...", "cases": 4}}},
+  "document": {"document": {...}, "cards": [...], "islands": [...], "edges": [...], "affiliations": [...]}
+}
+```
+
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+- [receipt](../../evaluations/records/SUI-TEI-artifact-2026-11-02.json)
+- receiptはartifactのpathとdigestを保持し、checkerが実ファイルのdigestと照合します
+
+このartifactはまだSUIへ配置していません。SUI側のartifact kind追加と運用者バインディングが次の接続点です。
+
+## SUI側の読み取り接続（2026-11-02）
+
+SUIのartifact kind許可リストへ`documentv1-projection`を追加し（[sui-sensemaking #3364](https://github.com/hat47x/sui-sensemaking/pull/3364)、`963adb0`）、TAIのartifactをtenant別ディレクトリから読めることを確認しました。
+
+```text
+read:            PASS（payloadがartifactと一致）
+tenant isolation: PASS（別tenantはnot-a-file）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)
+- SUIのtransport moduleを直接読み込み、HTTPサーバ・認証・配備は通していません
+
+## 運用者バインディング（2026-11-02）
+
+`assembler/install_artifact.py`で、artifactを`tenants/<tenant>/<doc>/documentv1-projection.json`へ置き、`epistemic-bindings.json`へバインディングを記録します。
+
+```sh
+python integrations/pilot-sui-document/assembler/install_artifact.py \
+  --root <SUI_TEI_REFERENCE_DIR> --tenant tenant-a --doc doc-1 \
+  --artifact evaluations/artifacts/documentv1-projection.json
+```
+
+`verify_sui_reader.py`で、バインディングの解決と読み取りを確認しました。
+
+```text
+binding resolved: PASS（documentv1-projection）
+read:             PASS（payloadがartifactと一致）
+tenant isolation: PASS（別tenantはnot-a-file）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-binding-2026-11-02.json)
+## 座標の投影（Card v5、2026-11-02）
+
+TEIの数値投影（[PR #2578](https://github.com/hat47x/tei-platform/pull/2578)）を使い、Card record v5へ`x`と`y`を追加しました。
+
+```text
+sui.card.record: id, text, x, y
+```
+
+- `std.decimal`のフィールドはJSON数値として出力
+- 合成層は値の型に依存しない
+- 21ケースPASS、単体9件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-coordinates-2026-11-02.json)
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+
+`claimType`・`textReviewed`・`holdState`などのoptionalな列挙・真偽値は未対応です。record契約は全フィールド必須のため、optionalを扱うには別の表現が必要です。
+## optionalフィールド（Card v6、2026-11-02）
+
+TEIのoptional投影（[PR #2580](https://github.com/hat47x/tei-platform/pull/2580)）を使い、Card record v6へ`claimType`と`holdState`をoptionalとして追加しました。
+
+```text
+sui.card.record: id, text, x, y, claimType?, holdState?
+```
+
+- 入力に存在しない、またはnullのoptionalフィールドは出力から省略
+- 必須フィールドの`missing`/`unresolved`は従来どおり
+- 21ケースPASS、単体9件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-optional-2026-11-02.json)
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+
+`textReviewed`や`critiqueHistory`のような真偽値・配列のoptionalは未対応です。
+## 真偽値（Card v7、2026-11-02）
+
+TEIの真偽値投影（[PR #2581](https://github.com/hat47x/tei-platform/pull/2581)）を使い、Card record v7へ`textReviewed`をoptionalの真偽値として追加しました。
+
+```text
+sui.card.record: id, text, x, y, claimType?, holdState?, textReviewed?
+```
+
+- `true`/`false`をJSON真偽値として出力
+- 欠落時は出力から省略
+- 21ケースPASS、単体9件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-reviewed-2026-11-02.json)
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+
+`critiqueHistory`のような構造体の配列は未対応です。
+## artifactの構造検証（2026-11-02）
+
+`assembler/validate_artifact.py`で、artifactのenvelopeと要素の形を検査します。
+
+```text
+schema / contract / source.teiCommit
+document.id、cards[].id/text/x/y、islands[].cardIds
+edges[].fromId/toId/type/fromKind/toKind、affiliations[]
+```
+
+`check_artifact.py`でreceiptを出し、13件の単体テストがPASSしました（[receipt](../../evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json)）。
+
+### 写像の範囲（暫定）
+
+- 対象: Document(id,title)、Card(id,text,x,y,claimType,holdState,textReviewed)、Island(id,title,cardIds)、Edge(id,fromId,toId,type,fromKind,toKind)、Affiliation(id,cardId,islandId)
+- 対象外: `critiqueHistory`などの構造体配列、`transform`、`createdAt`/`updatedAt`、図形・要約・履歴
+- 対象外は、投影契約ではなくSUI側の元データを正本とする
+## Document/Islandのoptional title（2026-11-02）
+
+SUIの`DocumentV1.title`と`Island.title`はoptionalなので、契約を合わせました。
+
+```text
+sui.document.record v4: id, title?
+sui.island.record v5:   id, title?, cardIds[]
+```
+
+- `title`がない場合は出力から省略
+- `id`と`cardIds`は必須のまま
+- 21ケースPASS、単体13件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-optional-core-2026-11-02.json)
+## 管理経路の読み取り（2026-11-02）
+
+SUIの管理経路面（`GET /admin/tei-epistemic/artifacts/{artifact_kind}`）でも同じartifact kindを読めることを確認しました。
+
+```text
+tenant binding: PASS
+read:           PASS
+tenant isolation: PASS
+admin path:     PASS
+```
+
+`verify_sui_reader.py`が、tenant別ディレクトリと運用者レベル（ルート）の両方から同じpayloadを読めることを検査します（[receipt](../../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)）。
+
+HTTPサーバ・認証・実配備は未検証です。

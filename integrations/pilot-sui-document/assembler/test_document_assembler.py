@@ -61,6 +61,11 @@ class AssembleTest(unittest.TestCase):
         composed = assemble(DOCUMENT, CARDS, ISLANDS, EDGES, affiliations)
         self.assertEqual(len(composed["affiliations"]), 1)
 
+    def test_rejects_island_card_id_unknown(self):
+        islands = [dict(ISLANDS[0], cardIds=['card-9'])]
+        with self.assertRaises(AssemblyError):
+            assemble(DOCUMENT, CARDS, islands, EDGES)
+
     def test_rejects_affiliation_to_unknown_island(self):
         affiliations = [{"id": "aff-1", "cardId": "card-1", "islandId": "island-9"}]
         with self.assertRaises(AssemblyError):

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 from typing import Any
@@ -98,6 +99,18 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-integration-flow-2026-11-02.json",
     "evaluations/records/SUI-TEI-alignment-2026-11-02.json",
     "evaluations/records/SUI-TEI-affiliation-2026-11-02.json",
+    "evaluations/records/SUI-TEI-island-cardids-2026-11-02.json",
+    "evaluations/records/SUI-TEI-artifact-2026-11-02.json",
+    "evaluations/records/SUI-TEI-sui-reader-2026-11-02.json",
+    "evaluations/records/SUI-TEI-binding-2026-11-02.json",
+    "evaluations/records/SUI-TEI-coordinates-2026-11-02.json",
+    "evaluations/records/SUI-TEI-optional-2026-11-02.json",
+    "evaluations/records/SUI-TEI-reviewed-2026-11-02.json",
+    "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
+    "evaluations/records/SUI-TEI-optional-core-2026-11-02.json",
+    "evaluations/records/SUI-TEI-admin-path-2026-11-02.json",
+    "evaluations/records/SUI-TEI-consumer-2026-11-02.json",
+    "evaluations/records/SUI-TEI-adapter-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -172,6 +185,36 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-adapter" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 9 or observed.get("savesAnything") is not False:
+                errors.append(f"TEI adapter receipt did not record nine non-saving tests: {relative}")
+        if "tei-consumer" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 6 or observed.get("readOnly") is not True:
+                errors.append(f"TEI consumer receipt did not record six read-only tests: {relative}")
+        if "tei-admin-path" in relative:
+            if data.get("adminPathOk") is not True or data.get("readOk") is not True:
+                errors.append(f"TEI admin path receipt did not read the artifact: {relative}")
+        if "tei-binding" in relative:
+            if data.get("bindingResolved") is not True or data.get("readOk") is not True:
+                errors.append(f"TEI binding receipt did not resolve and read: {relative}")
+        if "tei-sui-reader" in relative:
+            if data.get("readOk") is not True or data.get("tenantIsolationRejected") is not True:
+                errors.append(f"TEI SUI reader receipt did not read and isolate: {relative}")
+        if "tei-artifact-validation" in relative:
+            if data.get("passed") is not True or data.get("errors"):
+                errors.append(f"TEI artifact validation receipt did not pass: {relative}")
+        if "tei-artifact" in relative:
+            artifact = data.get("artifact") or {}
+            if artifact.get("schema") != "tai.reference.tei-documentv1-projection/v0":
+                errors.append(f"TEI artifact receipt has no projection schema: {relative}")
+            else:
+                artifact_path = root / artifact["path"]
+                if not artifact_path.is_file():
+                    errors.append(f"TEI artifact receipt points at a missing file: {relative}")
+                elif hashlib.sha256(artifact_path.read_bytes()).hexdigest() != artifact["digest"].removeprefix("sha256:"):
+                    errors.append(f"TEI artifact digest does not match the file: {relative}")
         if "tei-integration-flow" in relative:
             if data.get("casesPassed") != data.get("casesRun"):
                 errors.append(f"TEI integration flow receipt did not pass all cases: {relative}")

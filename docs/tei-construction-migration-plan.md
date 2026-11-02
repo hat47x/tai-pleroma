@@ -117,14 +117,30 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
+| 投影からDocumentV1相当のpayloadを組み立て、`transform`・時刻は呼び出し側が供給する | 投影に含まれない必須項目を明示し、保存は別の変更に分ける | 保存経路を実装するとき |
+| SUI側に読み取り専用のartifact consumerを置き、型付きrecordへ読む | API・UIへ接続する前に、artifactの検証と参照整合性をSUI側で確認できる | DocumentV1の保存・API接続を行うとき |
+| documentv1-projectionはAPIの読み取り専用消費に限定し、フロントエンドconsumerは作らない | 既存UIはepistemic系のみを扱い、DocumentV1表示は再構築の対象 | 再構築で表示・編集が必要になったとき |
+| 管理経路（/admin/tei-epistemic/artifacts/{kind}）でも同じartifact kindを読む | tenant面と運用者面で同じ成果物を参照でき、検証を共有できる | 管理面のkindを分ける必要が出たとき |
+| Document/Islandの	itleはoptionalとして投影する | SUI側で省略可能な項目を、必須recordで欠落扱いにしない | 必須に戻す仕様変更があったとき |
+| 構造体配列・	ransform・時刻は投影せず、SUI側の元データを正本とする | flatな投影契約で無理に写像せず、読み取り専用artifactの範囲を保つ | 完全なDocumentV1写像が必要になったとき |
+| 真偽値はstd.booleanで投影し、optionalの欠落は省略する | `textReviewed`のようなフラグを型を保って扱える | 構造体の履歴を扱うとき |
+| optionalな列挙はoptionalフィールドで表し、欠落時は出力から省略する | SUIのoptional列挙を、必須recordを壊さずに投影できる | 真偽値・履歴を扱うとき |
+| 座標は数値投影（std.decimal）で扱い、optionalな列挙・真偽値は別表現まで保留する | 座標は必須で数値として投影でき、optionalは全フィールド必須のrecord契約と衝突する | optionalを扱う契約表現ができたとき |
+| 運用者バインディングはinstall_artifact.pyで再現可能にする | artifactとbindingを同じ手順で置け、解決を検証できる | SUI側の運用コマンドが整ったとき |
+| SUI側の読み取り面へdocumentv1-projection kindを追加し、tenant分離を維持する | 読み取り専用で既存のfail-closed経路を使える | HTTP認証・配備を扱うとき |
+| 投影artifactを`tai.reference.tei-documentv1-projection/v0`として生成し、receiptでdigestを固定する | SUIの読み取り面へ渡す形を先に固められる | SUI側のkindが決まったとき |
 | 配備はrollingプロファイルのslot切替で参照する | rollback経路を実際に検証できた | 実Targetのsupervisorを扱うとき |
-| 所属は`Affiliation`（id/cardId/islandId）で表し、`Island.cardIds`は投影しない | 投影契約が配列を扱えず、所属はAffiliationで検証できる | 投影契約が配列を扱えるようになったとき |
+| 所属は`Affiliation`と`Island.cardIds`の両方を投影し、合成時に整合を検査する | 配列投影（`many`）を追加でき、両方の表現を検証できる | 二重表現が負担になったとき |
 | 契約v3で識別子を`id`、Edgeを`fromId`/`toId`/`fromKind`/`toKind`へ統一する | SUIの名前と端点種別に寄せ、合成でCard/Island両方を解決できる | 実装接続で別の写像が必要になったとき |
 | Document全体はflatなrecordの合成で表す | 現行の投影契約は入れ子を扱えず、要素単位なら検証できる | 投影契約が複合構造を扱えるようになったとき |
 
 ## 7.5 SUI本体との差分
 
 DocumentV1と現在の投影契約の差分を[sui-documentv1-tei-gap.md](sui-documentv1-tei-gap.md)へ整理しました。識別子名、Edgeの端点種別、所属、未モデル要素が残っています。
+
+## 7.6 API境界への接続案
+
+SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読み取り専用のartifactとして投影を渡す案を[sui-api-boundary-tei-mapping.md](sui-api-boundary-tei-mapping.md)へ整理しました。DocumentV1の書き込み経路は、完全な写像ができるまで扱いません。
 
 ## 8. 停止条件・非目標
 
