@@ -13,7 +13,7 @@
 5. SaaS OAuth broker authorize endpoint configured
 6. SaaS auth-session hash key configured
 
-`SUI_ACCESS_CONTROL_FAIL_SAFE_MODE=deny`だけを足すと、2番目が消えて5項目になる。[knob確認](../evaluations/saas-failsafe-knob-2026-11-03.json)
+`SUI_ACCESS_CONTROL_FAIL_SAFE_MODE=deny`だけを足すと、2番目が消えて5項目になる。[knob確認](../evaluations/saas-failsafe-knob-2026-11-03.json)`n`n6項目すべてに値を入れる（外部HTTP先は未実装のURL）と、SaaSプロファイルで起動し、未認証のリクエストは401になった。[stub起動](../evaluations/saas-stub-startup-2026-11-03.json)`n`n値が欠けた状態では、実行によって拒否（6項目の列挙）または30秒無応答のいずれかになった。環境や順序に依存する可能性がある。
 
 ## 設定の対応表
 
