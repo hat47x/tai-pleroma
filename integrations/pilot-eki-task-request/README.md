@@ -31,3 +31,16 @@ passed: true
 ```
 
 - [receipt](../../evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json)
+
+## artifact（2026-11-03）
+
+`build_artifact.py`で、fixtureの`present`からTaskRequestの投影artifactを作ります。
+
+```text
+schema: tai.reference.tei-eki-task-request-projection/v0
+taskRequestValid: true
+cases: 4
+```
+
+- [artifact](../../evaluations/artifacts/eki-task-request-projection.json)
+- [receipt](../../evaluations/records/EKI-TEI-artifact-2026-11-03.json)

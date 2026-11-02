@@ -151,6 +151,7 @@ REAL_RECORDS = (
     "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
     "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
     "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json",
+    "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -271,13 +272,17 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "EKI-TEI-artifact" in relative:
+            observed = data.get("observed", {})
+            if observed.get("taskRequestValid") is not True:
+                errors.append(f"EKI artifact did not validate: {relative}")
         if "EKI-TEI-task-request-selection" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") is not True:
                 errors.append(f"EKI task request selection did not pass: {relative}")
         if "artifacts-crosscheck" in relative:
             observed = data.get("observed", {})
-            if observed.get("allValid") is not True or observed.get("count") != 3:
+            if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
         if "MMI-TEI-artifact" in relative:
             observed = data.get("observed", {})

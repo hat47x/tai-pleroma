@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.tei-eki-task-request-projection/v0",
+  "contract": {
+    "id": "eki.task-request.projection",
+    "version": "1"
+  },
+  "source": {
+    "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
+    "contract": {
+      "contractId": "eki.task-request.record",
+      "contractVersion": "1",
+      "contractDigest": "sha256:3be8fb0dc04e3016fbd2d9c7ef8e9f6d06dbe4cc6794a60235396c38935d6c21",
+      "sourceDigest": "sha256:6f827aade7882104ee749779039bf81ee76c3ec7f6002059904ed53ea4f740bd",
+      "cases": 4
+    }
+  },
+  "taskRequest": {
+    "clientRequestId": "req-001",
+    "executorId": "dev.example.transform",
+    "priority": "normal",
+    "schema": "eki.task-request/v1",
+    "versionConstraint": "^1"
+  }
+}
