@@ -541,3 +541,9 @@
 | **SK-N17** | 監視されたChange通知0件、監視範囲・完全性は不明 | 「通知なし」を「変更なし」と呼ばず、実Source/Providerのcoverageの確認が必要 |
 
 今回のV8 17件は、引き続き**同一作者の公開合成分類**であり、実SQL/Provider/OS、独立Oracle、実変更通知の信頼性を測っていない。
+
+## AA. 2026-11-03：Skillの増分効果を初めて測定するための事前登録（SK-02）
+
+[実行可能な四試行ペア票 SK-02](SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)をH2（Toolのみ）とH3（同HarnessでProduct Skillを追加）の初回実証手順とする。**上のSK-MIN/SK-HP/SK-Nや既存合成評価を実Harness成功数へ加算しない**。固定すべき点は実TEI CLI binary/digest＋Source/WorldFP/SourceIndexFP＋Prompt＋Model/Tool/Principal/Disclosureと、実Skill loaded closure、独立Expected。新規SessionでH2→H3、H3→H2の逆順を一ペアずつ、各腕に同じ資料・実Toolを与える。Forced Skillロードと自動Discoveryは**別試験**。
+
+比較可能性・正答・誤完了・Warning/Unknown保持・Token/Tool/人の確認負担を独立に記録。H3のSkillロードが確認できない、またはSource/Oracle/権限が一腕だけ違う場合、**Skillの効果は比較不能**であり「有効性0」と扱わない。TEI #2626はmergedだが「Skill未使用のCLI実測」であり、TEI Draft #2607はSkill文書と静的Checkerの候補である。TAI実Harnessでの四試行と二Harness移植は**NOT RUN**。SK-02は既存SK-01の初回試験票であって、新しい必須Common Gate/Runnerではない。
