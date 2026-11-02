@@ -161,3 +161,11 @@
 **最低限の証拠表**：固定した公開fixture／Source version、実装されたSkillのrootと参照物のdigest、実配布・実読込み範囲、CLI/MCP/OS実Principal、discovery一覧の実出力、実Tool requestとresponse、入出力の開示先、Source fingerprint、独立Oracle、unknownとNOT RUN。実モデルの「使いました」はConsumedの観測に数えない。SK-E04/05は実Host/OS拒否・Egressを[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)へ委ね、SK-01は公開可能な結果と利用者にとっての作業可能性を比較する。全経路の非干渉を形式的に証明したとは主張しない。
 
 **最初に実行可能な縦切り候補**：SK-E03とSK-E06をTEI #2605 S1でread-only実CLI確認→同じTool・同じSourceのH2/H3比較→SK-E01/02でSkill loaderの実観測可能性を検討→E04/05は合成2世界・実OS/Server開示条件で試験。H4/H5・別HarnessのH6/H7はその後に進められる。初期PoCを小さくするのは証拠の帰属のためであり、Skillや業務領域の探索数に上限を課さない。
+
+
+## H. 2026-11-02：Owner別Skill受入のトレース
+
+各製品側のProduct Skill試作と正負例は、[TEI #2614](https://github.com/hat47x/tei-platform/issues/2614)、[SEI #769](https://github.com/hat47x/sei-cognition/issues/769)、[SUI #3368](https://github.com/hat47x/sui-sensemaking/issues/3368)、[SHO #10](https://github.com/hat47x/sho-composer/issues/10)、[EKI #468](https://github.com/hat47x/eki-fabric/issues/468)で追跡する。各Productの局所試験をTAI H4/H5の横断PASSとして複製せず、TAIは**同一fixture・同一開示・同じTool可用性の条件**で、Tool-only/Product Skill/TAI Skillの増分を比較する。
+
+未実施状況：SK-01 H0〜H7、SK-P01〜07、SK-X01〜07、SK-N01〜22は**すべてNOT RUN**。Product Issue起票は実装完了の証拠ではない。
+
