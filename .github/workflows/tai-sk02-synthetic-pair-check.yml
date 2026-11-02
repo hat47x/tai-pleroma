@@ -1,0 +1,32 @@
+name: TAI SK-02 paired-trial synthetic checker (non-product)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'evaluations/tools/check-sk02-pair-eligibility.cjs'
+      - 'evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md'
+      - '.github/workflows/tai-sk02-synthetic-pair-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-sk02-only:
+    name: JavaScript syntax and 32 synthetic cases
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact checkout
+        run: |
+          git rev-parse HEAD
+          git status --porcelain
+      - name: Check JavaScript syntax
+        run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
+      - name: Execute public synthetic E01-E32 only
+        run: node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test
