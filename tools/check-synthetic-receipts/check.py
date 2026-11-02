@@ -163,6 +163,7 @@ REAL_RECORDS = (
     "evaluations/records/SCN-003-save-2026-11-03.json",
     "evaluations/records/TEI-suite-pipeline-2026-11-03.json",
     "evaluations/records/TEI-suite-2026-11-03.json",
+    "evaluations/records/SUI-TEI-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -283,6 +284,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SUI-TEI-tls" in relative:
+            observed = data.get("observed", {})
+            if observed.get("tls") is not True or observed.get("authenticatedStatus") != 200:
+                errors.append(f"SUI TLS check did not succeed: {relative}")
         if "TEI-suite-2026" in relative:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or any(step.get("returncode") != 0 for step in steps.values()):
