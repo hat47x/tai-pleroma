@@ -8,22 +8,32 @@
     "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
     "contracts": {
       "document-record": {
+        "contractId": "sui.document.record",
+        "contractVersion": "5",
         "sourceDigest": "sha256:0050e22f52a873d90a13456181f684b164459b91717d9ba6fb84634ff50d6d58",
         "cases": 4
       },
       "card-record": {
+        "contractId": "sui.card.record",
+        "contractVersion": "8",
         "sourceDigest": "sha256:f7c60ac5d91a74c079b186d7a3080d87f0b636b5daa278caa324a717a6437cba",
         "cases": 5
       },
       "island-record": {
+        "contractId": "sui.island.record",
+        "contractVersion": "5",
         "sourceDigest": "sha256:5c09a2e383772f2585bd0efb9f8ffa20a114fb737e85684cc184b55855cec08c",
         "cases": 4
       },
       "edge-record": {
+        "contractId": "sui.edge.record",
+        "contractVersion": "3",
         "sourceDigest": "sha256:8b9d3c6d4f2272bccbe4584b804ebf9100168708e76c31749735718f50f4d657",
         "cases": 4
       },
       "affiliation-record": {
+        "contractId": "sui.affiliation.record",
+        "contractVersion": "1",
         "sourceDigest": "sha256:87b7b3c70c987890984b46210891ff447cbddc5b8545dd1a78c565bc2acbb0f6",
         "cases": 4
       }
