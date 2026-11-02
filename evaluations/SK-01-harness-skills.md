@@ -392,3 +392,22 @@
 
 **比較順序**：P0＝SHO整理リンク・TEI構造/Operator・EKI ACKの3種の異質なEdgeで意味Role不足を診断、P1＝実Product read-only情報、P2＝二Productの同一Source/Claim/Clock条件、P3＝二Harness＋H2/H3/H4/H5＋J0/J1/J2。**SK-CはEvidence依存の影響閉包、SK-CEは接続意味の妥当性**を担当し、互いのPASSを代理しない。実Product/Harness/OS・Owner受理はNOT RUN。
 
+## S. 2026-11-02：最初の実Tool資格確認に進むための実行票（全新試験NOT RUN）
+
+[実施Runbook](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)で、数多くの**公開合成・自己整合**から一件の**実Product/Skill/Consumer観測**へ進む順序を固定する。以下はSK-01 H2/H3/H4/H5の既存受入条件を使用するためのチェックリストであり、新共通Runtimeや第二Oracleではない。
+
+| Check | 入力を揃える条件 | 必須観測／失敗扱い |
+| --- | --- | --- |
+| **REAL-01 CLI現物** | TEI本体の権限あるcheckout、同一Workspace、現在Go/OS/実binary | 実Version/argv/exit/JSON/diagnostics/Source revisionとfingerprint。Markdownにコマンドが書かれているだけならNOT RUN |
+| **REAL-02 H2/H3の差分** | 同じHarness/Model/Tool/Source/開示条件、片方のみTEI Product Skill | Skillの実利用/ロードが観測可能か、不適切なTool・誤Subject・不要な呼出し・本当の出典保持が変わるか。期待答の供与差があれば比較不可 |
+| **REAL-03 Warning/Read整合** | 同一ToolのWarningを含むvalidationとcatalog/inspect、意図的な版不一致も別Case | exit 0でWarning無しやOwner意味受理を言わない。WorldとSource両Fingerprint同一を実観測。CRLF/LFでSourceが変わる条件を無視しない |
+| **REAL-04 H4/H5必要性** | 実MMI参照Source＋実TEIモデルのread-only観測、明示対応あり/なし | 単独Ownerの局所PASSを横断Claimへ無根拠結合しない。SHO実保存/Reader可視、EKI Body/Effectの資格を作り出さない |
+| **REAL-05 開示と保持** | 本番機密を含まない公開・合成Workspaceで開始。実Cloud Harnessへ送る内容を確認 | read-only ToolのLocal Read許可からモデル送信許可を推論しない。Tool/Skill discoveryの秘密名を開示しない |
+| **REAL-06 独立Expected** | 生成担当のPromptと公開できる仕様は同じ、Oracle/隠し期待値は別管理 | SK-C/RQ等の公開ExpectedをSkillへ埋めた回答を盲検PASSと報告しない。事前にExpectedが無い/照合不能ならunknown |
+| **REAL-07 現在資格と再開** | Source/Method/Skill Script/Trust/Host Grantの変化を局所的に区別 | 歴史的PASSから現在の危険Actionや非公開送信を許可しない。無関係のread-only Activityは継続 |
+
+**試験記録の区分**：`static-known`（今回TEI main文書/CLI contractを照合）、`fixture-consistency`（既存公開期待値で自己整合確認）、`real-product-cli`、`real-harness-skill`、`cross-product-joined`、`host-enforced-disclosure`、`owner-accepted`を区別する。これらは**SK-01上の説明区分**であり、Product側の採用済みステートマシンではない。
+
+**初回の終了条件**：TEI単独のread-only実CLIが、正確なSource・Warning・実Outputを出せることを実記録し、その同じTaskでH2とH3を比較できたかを独立に判定する。SHO/MMI/SEI/EKI/二Harness/OSの試験を全件完了しない限り何も得られないという方式にはしない。ただし、未実行範囲を完全なTAI Skill受理へ昇格しない。
+
+**現状**：TEI mainの`docs/getting-started.md`と`cmd/tei/cli_contract.go`のGitHub静的読取を実施。**REAL-01〜07の実CLI/実Harness評価はすべてNOT RUN**。公開合成fixtureのPASSは局所の自己整合に限る。
