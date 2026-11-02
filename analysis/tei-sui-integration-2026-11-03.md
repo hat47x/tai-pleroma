@@ -103,3 +103,25 @@ receiptは`evaluations/records/`にあり、合成61件・実実行65件がcheck
 | Affiliation | `cardId`,`islandId` | `std.identifier` | `sui.affiliation.card_id` / `island_id` |
 
 投影しないもの: `critique`・`critiqueTags`・`meta`・`ka`・`geometry`・`summaryText`・`transform`・`createdAt`/`updatedAt`・`critiqueInputs`などの構造体配列。
+## 構造体配列の扱い（暫定決定）
+
+`narratives`・`evidenceLinks`・`critiqueInputs`・`relationSummaries`のような構造体配列は、投影しないままにする。
+
+検討した選択肢:
+
+| 案 | 内容 | 判断 |
+| --- | --- | --- |
+| A | 投影しない。既存値を保存時にマージで保持する | 採用 |
+| B | 要素ごとに別契約・別artifactを作る | 保留 |
+| C | JSON文字列として1フィールドへ通す | 不採用 |
+
+理由:
+
+- 現在の投影は平坦なrecordで、要素の意味と必須項目が固まっていない
+- 保存は非破壊マージなので、投影しない値は保持される
+- Cは契約上は通るが、型の検証を失い、TEIのprimitiveの意味から外れる
+
+見直し条件:
+
+- SUIが投影だけからこれらの要素を復元する必要が出たとき
+- 要素の契約（必須項目・参照関係）が確定したとき
