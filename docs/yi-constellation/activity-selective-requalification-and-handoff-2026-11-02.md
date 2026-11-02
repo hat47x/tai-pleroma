@@ -171,7 +171,7 @@ Result行が0件であるとき、既存行IDによる参照依存は空でも�
 
 | Case | 変更と観測 | TAIの適切な帰結 |
 | --- | --- | --- |
-| **SC-N1 0件の否定依存** | 0件の完全Read、partial 0件、partialだが対象一致1件 | 歴史的「0件観測」／有界Scope内の不存在／不存在の反例を混同しない |
+| **SC-N1 0件の否定依存** | 0件の完全Read、partial 0件、partialだが同Scope・Predicate・現在時点で一致が確認された1件 | 歴史的「0件観測」／有界Scope内の不存在／不存在の反例を混同しない |
 | **SC-N2 ABA** | 0→1→0。t0とt2の結果値は同じ | 履歴保持・現在再確認・期間無変更Claimを別判定 |
 | **SC-N3 演算順序** | Filter→Order→LimitがB、Order→Limit→Local Filterが0件 | 同じSource/Command名で演算を入替えてfalse absenceにしない |
 | **SC-N4 複数Window** | Window1はA→B、古いA応答後着。Window2は独立にAの現在資格を持つ | Window1へ旧Aを混入させず、Window2の正しい独立証拠を一律失効しない |
@@ -180,7 +180,7 @@ Result行が0件であるとき、既存行IDによる参照依存は空でも�
 | **SC-N7 Tool一覧差** | TEI選抜`commands`に実dispatchの`operations`が未掲載 | Discovery非掲載からUnsupportedを断定せず、**Toolを実際に呼べること／権限を持つことも推測しない** |
 | **SC-N8 Output一致・Rule改版** | Output digestは同じでもRule/Policyだけ変更 | 対象Claimの再資格化。元Outputの履歴は保存し、今のGrant/Disclosureを再判定 |
 
-[SK-01 §YのSK-N](../../evaluations/SK-01-harness-skills.md)へ[公開合成14件の自己整合Script](../../evaluations/tools/check-sk-n-negative-witness.cjs)と[V8限定記録](../../evaluations/records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)を接続した。**14/14 PASSは公開の模擬関数と期待条件の自己整合**であり、TEIの実SQL/Go Executor・Role Extension Lock・実Window・TAI Harness/OS/Current Grant・独立Oracleの実証ではない。実TEI sqlite QX-31の12件PASSも**独立したProduct側実験**として保持し、TAIの14件と合算しない。
+[SK-01 §YのSK-N](../../evaluations/SK-01-harness-skills.md)へ[公開合成17件の自己整合Script](../../evaluations/tools/check-sk-n-negative-witness.cjs)と[V8限定記録](../../evaluations/records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)を接続した。**17/17 PASSは公開の模擬関数と期待条件の自己整合**であり、TEIの実SQL/Go Executor・Role Extension Lock・実Window・TAI Harness/OS/Current Grant・独立Oracleの実証ではない。実TEI sqlite QX-31の12件PASSも**独立したProduct側実験**として保持し、TAIの14件と合算しない。
 
 ### 10.4 J0/J1/J2の評価で誤集計しない
 
@@ -188,4 +188,10 @@ Result行が0件であるとき、既存行IDによる参照依存は空でも�
 
 測定軸：`false_absence_pass / ABA_as_no_change / missed_negative_dependency / unnecessary_invalidation / wrong_Window_adoption / stale_Role_implementation / actual_Reads / external disclosure / human review / total_cost`。Source version、実Provider I/O、必要Member、Read Scope/Cohort、Rule/Role実装、実Consumer資格とOwner/独立Oracleを揃え、`unknown/NOT RUN`を実成功として加算しない。既存TEI #1119 P0 Critical Pathを変更せず、**合成での早期反証と実Product/Hostでの証明を分ける**。
 
-**状態**：本節はOwner別の設計統合・公開合成Referenceの14件自己整合のみ。実TAI Product/外部Harness、TEI Go Query/Provider/Role実装、SHO Renderer/保存、EKI Body、OS/Network強制、Owner業務受理は**NOT RUN**。新Negative Cache／Reactive/Policy/Agent Host／中央依存Graphを先に採用しない。
+**状態**：本節はOwner別の設計統合・公開合成Referenceの17件自己整合のみ。実TAI Product/外部Harness、TEI Go Query/Provider/Role実装、SHO Renderer/保存、EKI Body、OS/Network強制、Owner業務受理は**NOT RUN**。新Negative Cache／Reactive/Policy/Agent Host／中央依存Graphを先に採用しない。
+
+### 10.5 2026-11-03 追加訂正：一致行による反証にも証人の資格が必要
+
+上記SC-N1で「partialで一致1件があれば不存在を反証できる」と言えるのは、**その行が問いのScope／Predicateに実際に該当し、対象時点で現在有効であると証明できる場合だけ**。誤ったTenant/対象/時点の行や、非公開Toolが返した自己申告をそのまま反証には使わない。対応する[SK-N15（Scope未確認）／N16（古い時点のWitness）／N17（通知がないこと≠変化なし）](../../evaluations/tools/check-sk-n-negative-witness.cjs)を追加した。
+
+Change Eventが0件だったとしても、監視対象Scope/時点の**全変更が実際に捕捉できていた**証拠がなければ`no-change`ではない。変更観測の完全性はProductの既存Provider/Subscription・Read CohortのOwnerが証明する。公開合成V8自己整合は**17/17**（[記録](../../evaluations/records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)、更新されたSource Git blob `beeaf0d0b48ba75564f74668c3276e0360dd5776`）。実監視・実Scopeの試験はNOT RUN。
