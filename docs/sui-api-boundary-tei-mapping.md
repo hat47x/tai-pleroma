@@ -72,3 +72,12 @@ ot-a-file`になることを確認しました（[receipt](../evaluations/record
 - 理由: 既存のフロントエンドはepistemic系のスキーマだけを扱っており、DocumentV1の投影を表示する画面は再構築の対象そのもの。
 - 読み取り経路は、tenant面と管理面の既存の認可・fail-closed規則に従う。
 - 見直し: SUI再構築でDocumentV1の表示・編集が必要になったとき。
+## consumerの実装状況（2026-11-02）
+
+SUI側へ読み取り専用のconsumerを追加しました（[sui-sensemaking #3365](https://github.com/hat47x/sui-sensemaking/pull/3365)、`a1128a1`）。
+
+- `sui_sensemaking_api.documentv1_projection.from_artifact`が、envelopeと参照整合性を検証して型付きrecordを返す
+- 6件のunittestがPASS
+- DocumentV1の保存・API・UIには接続していない
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-consumer-2026-11-02.json)

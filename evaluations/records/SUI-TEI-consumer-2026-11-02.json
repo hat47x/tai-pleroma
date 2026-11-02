@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-sui-consumer/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "suiCommit": "a1128a1832cb9fcb44ac36a501951f72e66441de",
+  "host": "Windows with Python 3.12",
+  "command": "PYTHONPATH=src python -m unittest discover -s tests -p test_documentv1_projection.py",
+  "result": "PASS",
+  "observed": {
+    "module": "sui_sensemaking_api.documentv1_projection",
+    "tests": 6,
+    "passed": 6,
+    "readOnly": true,
+    "connectedToApi": false,
+    "connectedToUi": false
+  },
+  "scope": "SUI reads the TAI projection artifact into typed records and checks element references. It does not write DocumentV1, run the SUI API, or connect to the UI."
+}
