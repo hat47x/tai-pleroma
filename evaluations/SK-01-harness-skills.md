@@ -190,4 +190,4 @@
 3. G層の生成物が存在しても、P層の同世代Manifestと実Consumer読取りが未観測なら`not-verified`。ディレクトリ同時更新・原子公開機構の設計/試験はTEI #2604へ委譲。TAI Skill側に新しいWrite/Atomic Publisherを作らない。
 4. 実文書・原モデル・非公開SchemaをFixtureへ持ち込まない。Skillから許可されないSourceや隠れたSubjectをQueryしてはならない。J07のOS拒否/Outputの非干渉はTAI #232/TEI #2515へ委譲。
 
-**終了の基準**：J01〜07を一列にした「総合PASS」ではなく、対象のCase/Owner/実験版・局所Mock/実Tool/実Product/実OSのどこまで観測できたかで返す。現在は**JSON構文確認のみ、すべての新たな実行・業務効果・Owner正式受理はNOT RUN**。
+**終了の基準**：J01〜07を一列にした「総合PASS」ではなく、対象のCase/Owner/実験版・局所Mock/実Tool/実Product/実OSのどこまで観測できたかで返す。現在の実測は**公開合成fixtureのJSON構文確認と純粋JSによる7/7件のfixture不変条件セルフチェック**（[限定記録](records/SK-J-public-fixture-selfcheck-2026-11-02.json)）。これは予め公開された期待値の整合検査であり、Skillの実動作やsealed holdoutの独立評価ではない。**実Product/Harness/OS/Consumer検証・業務効果・Owner正式受理はすべてNOT RUN**。
