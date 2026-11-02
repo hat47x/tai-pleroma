@@ -487,3 +487,15 @@ APIキーなしの PUT: 401
 - [receipt](../../evaluations/records/SUI-TEI-save-auth-2026-11-03.json)
 - 一時SQLite、`local-dev`のまま
 - 本番認証・本番DB・実配備は未検証
+## 保存後の往復整合（2026-11-03）
+
+保存後の`GET`と投影を比較します。
+
+```text
+cardIds / cardText / cardPosition: 一致
+islandIds / islandCardIds:         一致
+edgeIds:                           一致
+roundTrip: true
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json)

@@ -77,6 +77,34 @@ def main():
         updated = client.put(f"/docs/{projected.id}", json=update_payload, headers=headers)
         final = client.get(f"/docs/{projected.id}", headers=headers)
 
+    saved = final.json() if final.status_code == 200 else {}
+    projected_cards = {card["id"]: card for card in payload["cards"]}
+    saved_cards = {card.get("id"): card for card in saved.get("cards", [])}
+    projected_islands = {island["id"]: island for island in payload["islands"]}
+    saved_islands = {island.get("id"): island for island in saved.get("islands", [])}
+    projected_edges = {edge["id"]: edge for edge in payload["edges"]}
+    saved_edges = {edge.get("id"): edge for edge in saved.get("edges", [])}
+    checks = {
+        "cardIds": set(projected_cards) == set(saved_cards),
+        "cardText": all(
+            saved_cards[cid].get("text") == card.get("text")
+            for cid, card in projected_cards.items()
+            if cid in saved_cards
+        ),
+        "cardPosition": all(
+            (saved_cards[cid].get("x"), saved_cards[cid].get("y")) == (card.get("x"), card.get("y"))
+            for cid, card in projected_cards.items()
+            if cid in saved_cards
+        ),
+        "islandIds": set(projected_islands) == set(saved_islands),
+        "islandCardIds": all(
+            saved_islands[iid].get("cardIds") == island.get("cardIds")
+            for iid, island in projected_islands.items()
+            if iid in saved_islands
+        ),
+        "edgeIds": set(projected_edges) == set(saved_edges),
+    }
+
     receipt = {
         "schema": "tai.reference.tei-sui-save/v0",
         "synthetic": False,
@@ -99,6 +127,8 @@ def main():
             "runtimeProfile": "local-dev",
             "apiKey": "configured" if args.api_key else "unset",
             "unauthorizedStatus": unauthorized.status_code if unauthorized is not None else None,
+            "roundTrip": all(checks.values()),
+            "roundTripChecks": checks,
         },
         "scope": "The SUI app runs in-process with a temporary SQLite database, no API key, and the local-dev profile. It exercises create, read, and update over HTTP. It does not verify a production database, authentication, or deployment.",
     }
