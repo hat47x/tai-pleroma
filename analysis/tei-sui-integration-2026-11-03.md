@@ -38,15 +38,20 @@ TEI契約（record投影）
 | 保存後の往復整合 | 6項目一致 | `SUI-TEI-save-roundtrip-2026-11-03.json` |
 | uvicorn実サーバ経由 | 200/401 | `SUI-TEI-server-2026-11-03.json` |
 | 投影の決定性 | 2回で同一digest | `SUI-TEI-determinism-2026-11-03.json` |
+| 複数文書の保存（10件） | 200/全件独立 | `SUI-TEI-multi-doc-2026-11-03.json` |
+| ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
+| 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成60件・実実行52件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成60件・実実行57件がcheckerを通る。
 
 ## 未検証
 
 - 本番DB（Postgres）。この環境に`psql`・`docker`・5432の待受がない
 - TLS・リバースプロキシ・実配備
 - 本番認証構成（現在は`local-dev`と静的APIキー）
-- 複数文書・大規模文書の保存
+- SaaSプロファイル。trusted SaaS runtime policyの設定が不足して起動できない
+- 実際の大量カード（300枚は合成fixtureで確認）
+- 同時書き込み
 - 意味の正しさ、人の受理
 
 ## 暫定決定
