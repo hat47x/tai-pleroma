@@ -5,14 +5,14 @@
   "publicationAllowed": false,
   "date": "2026-11-03",
   "host": "Windows with Python 3.12",
-  "command": "python integrations/pilot-sui-document/assembler/plan_save_cli.py --sui-repo D:\\GIT\\hat47x\\sui-wt-schema --artifact D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\documentv1-projection.json",
+  "command": "python integrations/pilot-sui-document/assembler/plan_save_cli.py --sui-repo D:\\GIT\\hat47x\\sui-wt-revert --artifact D:\\GIT\\hat47x\\tai-wt-fix\\evaluations\\artifacts\\documentv1-projection.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\documentv1-projection.json",
+    "path": "D:\\GIT\\hat47x\\tai-wt-fix\\evaluations\\artifacts\\documentv1-projection.json",
     "digest": "sha256:6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
   },
   "existing": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\existing-documentv1.json",
+    "path": "D:\\GIT\\hat47x\\tai-wt-fix\\evaluations\\artifacts\\existing-documentv1.json",
     "digest": "sha256:9b70f4a11be8a5e7ecb5b110acd05888218e258c49c7771d5f186733385de7db"
   },
   "observed": {
