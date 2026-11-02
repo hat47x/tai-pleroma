@@ -338,4 +338,4 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 [SK-01 §N](../../evaluations/SK-01-harness-skills.md)に、未導入互換・現行issuer・失効issuer・Bundle読取障害・不正record・導入後喪失・独立SHA一回vs二回・Harness再開・開示用診断を含む**SK-TB**対照を設計する。試験は**合成fixtureだけ**で開始し、EKI実証は[#433](https://github.com/hat47x/eki-fabric/issues/433)のOwnerへ、外部送信・情報開示は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)へ引き渡す。型・時間・意味・認可の実検査がない他Productに同等の状態管理を強制しない。
 
-**状態**：本節は各Productの最新Issueから成熟した失敗境界を横断評価へ整理した**計画**。既存EKI source-static発見や合成数式対照はEKIの限定証拠。実EKI mTLS、Trust Bundle migration、Skill経由作業、別Harness現在認可、OS/Network送出の正負試験は**NOT RUN**。高価なTokenを節約するための最小実装制限を設けず、専門Skill群の機能探索は並行して広げる。
+**状態**：本節は各Productの最新Issueから成熟した失敗境界を横断評価へ整理した**計画**。公開合成SK-TB 9件の[Node.js再実行Script](../../evaluations/tools/check-sk-tb-fixture.cjs)は、固定fixture/ScriptがGitHub Blobと完全一致する環境で**9/9の限定セルフチェックPASS**（[記録](../../evaluations/records/SK-TB-public-fixture-selfcheck-2026-11-02.json)）。期待値が公開されており、外部Harnessの独立能力試験ではない。実EKI mTLS、Trust Bundle migration、Skill経由作業、別Harness現在認可、OS/Network送出の正負試験は**NOT RUN**。トークン大量調達を前提に探索領域は並行拡張しつつ、実証資格は各Ownerに維持する。
