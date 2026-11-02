@@ -114,7 +114,7 @@ function syntheticSelfTest() {
     ["E13 prompt differs", x=>{x.trials[0].prompt_digest="sha256:"+"8".repeat(64);return x;},"ineligible"],
     ["E14 no current-grant witness", x=>{delete x.trials[0].grant_observed_at_invocation;return x;},"insufficient-evidence"],
     ["E15 invalid repo HEAD", x=>{for(const r of x.trials)r.repo_head="not-a-real-commit";return x;},"ineligible"],
-    ["E16 three trials only", x=>{x.trials.pop();return x;}, "ineligible"],
+    ["E16 three trials only", x=>{x.trials.pop();return x;},"ineligible"],
     ["E17 one-sided World fingerprint mutation", x=>{x.trials[2].world_fingerprint="other-world";return x;},"ineligible"],
     ["E18 independent session not observed", x=>{delete x.trials[1].independent_session_observed;return x;},"insufficient-evidence"],
     ["E19 forced and auto skill activation mixed", x=>{x.trials[2].skill_activation="auto";return x;},"ineligible"],
