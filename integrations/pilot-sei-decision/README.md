@@ -35,3 +35,18 @@ passed: true
 - SEIの実データ・実スキーマとの突き合わせ
 - 参照配列の投影
 - SEI側のconsumer・保存
+
+## artifact（2026-11-03）
+
+`build_artifact.py`で、fixtureの`present`からDecisionの投影artifactを作ります。
+
+```text
+schema: tai.reference.tei-sei-decision-projection/v0
+decisionValid: true
+cases: 4
+```
+
+- `artifact.schema.json`で形を検証
+- SEIへは接続しない
+- [artifact](../../evaluations/artifacts/sei-decision-projection.json)
+- [receipt](../../evaluations/records/SEI-TEI-artifact-2026-11-03.json)
