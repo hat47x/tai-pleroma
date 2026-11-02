@@ -133,9 +133,8 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json",
     "evaluations/records/SUI-TEI-server-2026-11-03.json",
     "evaluations/records/SUI-TEI-determinism-2026-11-03.json",
-    "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
-    "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json",
-    "evaluations/records/SUI-TEI-etag-2026-11-03.json",
+    "evaluations/records/SUI-TEI-sources-2026-11-03.json",
+    "evaluations/records/SUI-TEI-sources-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -256,6 +255,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "tei-sources-validation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documentV1Valid") is not True:
+                errors.append(f"TEI sources validation did not validate DocumentV1: {relative}")
+        elif "tei-sources" in relative:
+            if data.get("result") != "PASS":
+                errors.append(f"TEI sources receipt did not pass: {relative}")
         if "tei-sui-server" in relative:
             observed = data.get("observed", {})
             if observed.get("serverReady") is not True or observed.get("anonymousStatus") != 401:
