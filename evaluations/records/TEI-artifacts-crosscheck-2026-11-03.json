@@ -47,10 +47,23 @@
           "digest": "sha256:832f5055eb0c623bf18a73ae5c75ef37fcdd577131dd7db42e76b9ad19a3a2c1"
         },
         "schemaId": "tai.reference.tei-mmi-format-profile-projection/v0"
+      },
+      "eki": {
+        "valid": true,
+        "errors": [],
+        "artifact": {
+          "path": "evaluations/artifacts/eki-task-request-projection.json",
+          "digest": "sha256:8fae849023b801a296eaa68afde460635823bdf3e24a299ef1fa56436b8c9db0"
+        },
+        "schema": {
+          "path": "integrations/pilot-eki-task-request/artifact.schema.json",
+          "digest": "sha256:cb4f67ea09156cd93edf41a0b3a28e529931dbf0512c006f7bf869f469798d37"
+        },
+        "schemaId": "tai.reference.tei-eki-task-request-projection/v0"
       }
     },
     "allValid": true,
-    "count": 3
+    "count": 4
   },
   "scope": "Validates each pilot artifact against its own JSON Schema. It does not compare semantics across products or validate against product code."
 }

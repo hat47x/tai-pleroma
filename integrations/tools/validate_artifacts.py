@@ -21,6 +21,10 @@ ARTIFACTS = {
         "evaluations/artifacts/mmi-format-profile-projection.json",
         "integrations/pilot-mmi-format-profile/artifact.schema.json",
     ),
+    "eki": (
+        "evaluations/artifacts/eki-task-request-projection.json",
+        "integrations/pilot-eki-task-request/artifact.schema.json",
+    ),
 }
 
 
