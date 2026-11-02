@@ -70,3 +70,12 @@ SEIにはすでにTEIとの接続がある。`runtime/go/teiintegration`がTEI e
 EKIは`conformance/productboundary`で、製品コードがSEI・TEIへ依存しないことを確かめている。EKIの投影パイロットを作る場合も、製品コードへ`tei-platform`への依存や語彙を持ち込まず、TAI側の`integrations/`に置く。
 
 MMIの文書に出てくる「TEI」は、Text Encoding Initiative（TEI XML）を指す場合が多い。製品群のTEI（`tei-platform`）とは別物なので、検索結果をそのまま接続の証拠にしない。
+## EKIの既存TEI接続（誤読防止）
+
+EKIには`spikes/tei-workload-projection`があり、TEIの仕事をEKIのTaskRequestへ投影して`eki-control`へ投げる検証が行われている。依存の向きはTEI → EKIで、EKI本体の`internal/`・`cmd/`はTEIへ依存しない。
+
+今回のTAI側パイロットは向きが逆（EKIの要素をTEIで記述する）なので、同じ「投影」でも目的が違う。
+
+- EKIで投影パイロットを作るなら、既存SpikeのTaskRequest投影と混同しない名前・範囲にする
+- EKI本体の製品境界テスト（TEI依存禁止）は維持する
+- 既存Spikeの結果を、EKIの受入判断や要件変更の根拠にしない
