@@ -526,8 +526,18 @@
 | **SK-N12：CLI discovery** | `commands`は選抜read-only、別dispatchに`operations/artifacts`の実Sourceがある | 選抜Catalog非掲載＝機能不存在、またはdispatch存在＝Skill現在Grant とする |
 | **SK-N13〜14：開示/Rule改版** | Sourceの値は同じで公開Policyだけ変化／Output digest同じでRule改版 | 歴史的Observationから現在の公開可否やRule適合を推定 |
 
-**公開限定Reference**：[Script](tools/check-sk-n-negative-witness.cjs)は架空データの決定的な条件をテストし、GitHub保存済みScriptをV8で実行して**14/14の公開自己整合**を確認（[記録](records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)、Script Git Blob `92eed571d4e04f568eefce96b725a56994eb6eb0`）。この実測は**TEIのSQLite12件の実SQL例、Role/Go Extension Lock、本物のWindow/Provider DB、実Host/Skill/Harness、独立sealed Oracleを呼んでいない**。製品の合格率へ14件を加算しない。
+**公開限定Reference**：[Script](tools/check-sk-n-negative-witness.cjs)は架空データの決定的な条件をテストし、GitHub保存済みScriptをV8で実行して**17/17の公開自己整合**を確認（[記録](records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)、Script Git Blob `beeaf0d0b48ba75564f74668c3276e0360dd5776`）。この実測は**TEIのSQLite12件の実SQL例、Role/Go Extension Lock、本物のWindow/Provider DB、実Host/Skill/Harness、独立sealed Oracleを呼んでいない**。製品の合格率へ17件を加算しない。
 
 **他レーンの更新資格**：[TEI Draft #2626](https://github.com/hat47x/tei-platform/pull/2626)は2026-11-02T18:35:59Zに**mainへmerge済み**で、限定した実CLI/同Job再読取の証拠はTEI側に存在する。しかし**TAI SK-NやProduct Skill H2/H3で実CLIを呼んだわけではない**。実CLIで`operations`が利用可能なことと`artifacts -out`の実書込みは異なるEffect分類であり、開示やCurrent Grantを新たに与えない。Source移動でWorldFPが同じでもSourceIndex/Traceが変わる条件は、SHO/外部Consumer側の引用再確認候補。
 
 **実証への移行**：最初にTEIの既存read-only CLI/Goモデルと同一Sourceに対し、(a)Predicate/Relation/Scopeの否定依存Witness、(b)実Window epoch/選択、(c)Role/Extension Lockの実Pin、(d)Product Skillの実Loaded/Tool Invokedを**それぞれのOwnerで観測**する。TAIはH2/H3およびH4/H5、TAI #271 J0/J1/J2との誤再利用・過剰失効を比較する。現在は本SK-Nの実Product/二Harness/OS/Provider/Owner意味受理 **NOT RUN**。新Negative Cache／Reactive Runtime／中央Host／Skill権限正本を提案しない。
+
+### 追加されたWitnessの品質反例（SK-N15〜17）
+
+| Case | 仮の一致行／Change Event | 誤昇格を拒否する条件 |
+| --- | --- | --- |
+| **SK-N15** | partial結果で存在候補1件があるが、対象ScopeまたはPredicate適合の根拠がない | 別Tenant/別Predicateの行を当該「不存在Claim」の反証に使わない |
+| **SK-N16** | 対象Scopeに一致する行だったが、現時点に有効な証拠ではない | 過去の存在証拠から現在の不存在を直ちに否定しない |
+| **SK-N17** | 監視されたChange通知0件、監視範囲・完全性は不明 | 「通知なし」を「変更なし」と呼ばず、実Source/Providerのcoverageの確認が必要 |
+
+今回のV8 17件は、引き続き**同一作者の公開合成分類**であり、実SQL/Provider/OS、独立Oracle、実変更通知の信頼性を測っていない。
