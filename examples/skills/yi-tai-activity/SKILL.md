@@ -131,3 +131,15 @@ ProductにData/Rule/ProviderのEvidenceがある場合は、**何を要求した
 - **現在の権限は都度Product/Hostに確認する。** Model/Skill/Manifest/過去Trustが同じでも、現在のHost Grant・Issuer・外部開示は別。確認不能なEffect/送出を保留し、公開合成資料による独立read-only作業は継続可能な範囲で行う。
 
 [SK-01 §P／SK-RQ01〜12](../../../evaluations/SK-01-harness-skills.md)は以上の指針に対する公開合成受入案。実製品の再評価API・独立Oracle・Effect認可を本Skillが実装したという意味ではない。
+
+## Activity再開とProduct別の選択的再資格化（評価案）
+
+前のSession/Agent/Skillの「成功」「検証済み」を、別のSource・時点・Provider・Consumer/Hostへ自動的に移植しない。**履歴として当時成立した観測**と、**現在の目的にその結果を利用できる資格**を別々に説明する。
+
+- 目的のClaim・Scope・時点に必要なTEI Source/意味Role・Rule、SEI Method、EKI Task/Attempt/Body、SHO Source Occurrence・実読取版、Host Current Grant/Trustの**存在する参照**を調べる。存在しないToolや証拠は未実施・unknownで扱う。
+- 変更されたSource/能力/Methodと、実際に受理済みの依存関係に基づき、再確認の必要なProductだけを選ぶ。Edgeが不明なら「無影響」と推測しない。無関係な履歴・独立作業は利用可能な範囲で継続する。
+- EKIのClaim ACKをBody実受領にせず、Body digest照合をSHOの実読取・固定納品にせず、生成Artifactの存在を利用者の受取にしない。遅延Bodyを再確認することと、別Attemptの効果を再実行することを分ける。
+- 以前のGrantやTrust Bundleの成功では現在の危険操作は許可されない。現在の実Host資格と開示範囲が不明な操作は保留し、権限のあるread-only調査や説明は続けられる。
+- 秘密・非公開のSource/Capability/Tool/結果/診断はConsumerごとに許可されたProjectionへ落とし、活動引継ぎ票自体も情報公開対象として扱う。
+
+[選択的再資格化の計画](../../../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)と[SK-01 SK-C](../../../evaluations/SK-01-harness-skills.md)は**公開合成だけの評価案**。現行TAI Skillが新しい実行器、Oracle、中央Claim DB、Provider、Owner受理資格を取得した証拠ではない。
