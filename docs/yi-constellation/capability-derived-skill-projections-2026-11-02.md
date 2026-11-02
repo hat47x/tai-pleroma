@@ -65,3 +65,11 @@ Markdown表、式、チェーン、Graphviz等が同じRole/Operator/型/対象�
 Product契約・Role/Operator・ToolとProduct Skillは各Productが所有する。TAIは比較・横断選択・用途別束の版固定、[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)はシリーズ配布、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)は製品横断の情報境界を担当する。新しい共通Host/Registry/第二の意味正本は前提にしない。
 
 **状態：本書は計画のみ。Capability-to-Skill生成器、実CLI/Skill/複数Harness、実送信/認可、独立評価、正式Owner受理はNOT RUN。**
+
+
+## 2026-11-02：最初の製品資産との静的照合
+
+TEI main `9c9ef4d160640908e06ad13afb6c2b45c664c748` の [`cmd/tei/cli_contract.go`](https://github.com/hat47x/tei-platform/blob/9c9ef4d160640908e06ad13afb6c2b45c664c748/cmd/tei/cli_contract.go) を読み取り、Catalog `tei.cli.discovery/v0` のScopeが**`selected-read-only-commands`**であることを確認した。TEI [Draft #2607](https://github.com/hat47x/tei-platform/pull/2607)の `skills/yi-tei-modeling/SKILL.md`（Git blob `9cd8475bd6489c6661ae644bf771cfcce04188b1`）と詳細Reference（blob `ec2f90e85ed42659aca8b44a9be216987860b099`）には、`commands`、`model catalog`、`inspect`、`trace`、`validate -json`への手順が既にあり、CLI Catalogから読める選択項目を扱う設計であることを静的に照合した。
+
+これが確認するのは、**read-only Tool名とSkill文章の対応候補**である。現行環境でそのToolが実行できること、CLIの全Plugin能力、Source/Modelの同一Snapshot、非公開データの送出資格、意味受理、外部Host作用の保証にはならない。ここを最初のH2/H3の実験基準点とし、機械由来説明の自動生成は**追加価値が確認された後の比較候補**に置く。
+
