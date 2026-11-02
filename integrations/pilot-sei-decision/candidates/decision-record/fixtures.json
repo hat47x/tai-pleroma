@@ -1,0 +1,57 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sei.decision.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {
+        "contract": "sei.decision-memory/v1alpha1",
+        "recordType": "decision",
+        "refKind": "decision",
+        "refId": "decision-1",
+        "statement": "Adopt option A",
+        "rationale": "Lower cost"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"contract\":\"sei.decision-memory/v1alpha1\",\"rationale\":\"Lower cost\",\"recordType\":\"decision\",\"refId\":\"decision-1\",\"refKind\":\"decision\",\"statement\":\"Adopt option A\"}"
+      }
+    },
+    {
+      "id": "present-no-rationale",
+      "input": {
+        "contract": "sei.decision-memory/v1alpha1",
+        "recordType": "decision",
+        "refKind": "decision",
+        "refId": "decision-1",
+        "statement": "Adopt option A"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"contract\":\"sei.decision-memory/v1alpha1\",\"recordType\":\"decision\",\"refId\":\"decision-1\",\"refKind\":\"decision\",\"statement\":\"Adopt option A\"}"
+      }
+    },
+    {
+      "id": "missing-statement",
+      "input": {
+        "contract": "sei.decision-memory/v1alpha1",
+        "recordType": "decision",
+        "refKind": "decision",
+        "refId": "decision-1"
+      },
+      "want": {"state": "missing", "text": "[\"statement\"]"}
+    },
+    {
+      "id": "unresolved-ref",
+      "input": {
+        "contract": "sei.decision-memory/v1alpha1",
+        "recordType": "decision",
+        "refKind": "decision",
+        "refId": null,
+        "statement": "Adopt option A"
+      },
+      "want": {"state": "unresolved"}
+    }
+  ]
+}

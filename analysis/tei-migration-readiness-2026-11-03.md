@@ -24,7 +24,7 @@
 
 - TEI自身は`.tei`で自己記述されている
 - TAIにはSUI向けのパイロット投影（`integrations/pilot-sui-document/semantic/sui/document.tei`）と契約がある
-- SUI・SEI・EKI・MMIには`.tei`も参照契約もまだない
+- SUI・SEI・EKI・MMIのリポジトリには`.tei`も参照契約もまだない`n- TAI側にはSEI Decisionの参照パイロット（`integrations/pilot-sei-decision`）を追加した。SEI本体は未変更
 - したがって、これら4製品のTEIによる構築は、現時点では**未着手**に近い
 - TAIのSUIパイロットは、製品側のドメインモデルを写した参照実装であり、製品の構築手段がTEIへ移ったわけではない
 
