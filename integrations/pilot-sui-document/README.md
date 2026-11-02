@@ -242,7 +242,8 @@ sui.island.record: id, title, cardIds[]
 ```
 
 - 空配列は`present`で`[]`
-- 欠落は`missing`、`null`は`unresolved`
+- 欠落は`missing`、
+ull`は`unresolved`
 - 合成層は`cardIds`の各要素が実在するCardを指すか検査
 
 単体テスト9件と結合経路21ケースがPASSしました（[receipt](../../evaluations/records/SUI-TEI-island-cardids-2026-11-02.json)）。
@@ -278,3 +279,15 @@ DocumentV1と現在の投影契約の差分は[SUI DocumentV1とTEI投影の差�
 - receiptはartifactのpathとdigestを保持し、checkerが実ファイルのdigestと照合します
 
 このartifactはまだSUIへ配置していません。SUI側のartifact kind追加と運用者バインディングが次の接続点です。
+
+## SUI側の読み取り接続（2026-11-02）
+
+SUIのartifact kind許可リストへ`documentv1-projection`を追加し（[sui-sensemaking #3364](https://github.com/hat47x/sui-sensemaking/pull/3364)、`963adb0`）、TAIのartifactをtenant別ディレクトリから読めることを確認しました。
+
+```text
+read:            PASS（payloadがartifactと一致）
+tenant isolation: PASS（別tenantはnot-a-file）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)
+- SUIのtransport moduleを直接読み込み、HTTPサーバ・認証・配備は通していません

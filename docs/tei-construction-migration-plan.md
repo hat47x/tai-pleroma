@@ -117,6 +117,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
+| SUI側の読み取り面へ`documentv1-projection` kindを追加し、tenant分離を維持する | 読み取り専用で既存のfail-closed経路を使える | HTTP認証・配備を扱うとき |
 | 投影artifactを`tai.reference.tei-documentv1-projection/v0`として生成し、receiptでdigestを固定する | SUIの読み取り面へ渡す形を先に固められる | SUI側のkindが決まったとき |
 | 配備はrollingプロファイルのslot切替で参照する | rollback経路を実際に検証できた | 実Targetのsupervisorを扱うとき |
 | 所属は`Affiliation`と`Island.cardIds`の両方を投影し、合成時に整合を検査する | 配列投影（`many`）を追加でき、両方の表現を検証できる | 二重表現が負担になったとき |

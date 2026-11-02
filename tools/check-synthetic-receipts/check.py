@@ -101,6 +101,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-affiliation-2026-11-02.json",
     "evaluations/records/SUI-TEI-island-cardids-2026-11-02.json",
     "evaluations/records/SUI-TEI-artifact-2026-11-02.json",
+    "evaluations/records/SUI-TEI-sui-reader-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -175,6 +176,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-sui-reader" in relative:
+            if data.get("readOk") is not True or data.get("tenantIsolationRejected") is not True:
+                errors.append(f"TEI SUI reader receipt did not read and isolate: {relative}")
         if "tei-artifact" in relative:
             artifact = data.get("artifact") or {}
             if artifact.get("schema") != "tai.reference.tei-documentv1-projection/v0":
