@@ -2,6 +2,8 @@
 
 2026-11-02。**設計提案／公開合成Referenceのみ。Owner受理と実Product/Harness統合はNOT RUN。**
 
+Owner作業票：[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)。
+
 関連：[TAI全体計画](harness-skill-plugin-plan-2026-11-02.md)、[SK-01](../../evaluations/SK-01-harness-skills.md)、[Evidence/開示](harness-skill-read-witness-rule-disclosure-2026-11-02.md)、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、[TEI #2516](https://github.com/hat47x/tei-platform/issues/2516)、[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)、[EKI #465](https://github.com/hat47x/eki-fabric/issues/465)、[SHO #10](https://github.com/hat47x/sho-composer/issues/10)。
 
 ## 1. 今回の追加差分：履歴の真実と現在の利用資格は異なる
