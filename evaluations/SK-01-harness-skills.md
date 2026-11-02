@@ -163,7 +163,7 @@
 **最初に実行可能な縦切り候補**：SK-E03とSK-E06をTEI #2605 S1でread-only実CLI確認→同じTool・同じSourceのH2/H3比較→SK-E01/02でSkill loaderの実観測可能性を検討→E04/05は合成2世界・実OS/Server開示条件で試験。H4/H5・別HarnessのH6/H7はその後に進められる。初期PoCを小さくするのは証拠の帰属のためであり、Skillや業務領域の探索数に上限を課さない。
 
 
-## H. 2026-11-02：Owner別Skill受入のトレース
+### I.1 2026-11-02：Owner別Skill受入のトレース
 
 各製品側のProduct Skill試作と正負例は、[TEI #2614](https://github.com/hat47x/tei-platform/issues/2614)、[SEI #769](https://github.com/hat47x/sei-cognition/issues/769)、[SUI #3368](https://github.com/hat47x/sui-sensemaking/issues/3368)、[SHO #10](https://github.com/hat47x/sho-composer/issues/10)、[EKI #468](https://github.com/hat47x/eki-fabric/issues/468)で追跡する。各Productの局所試験をTAI H4/H5の横断PASSとして複製せず、TAIは**同一fixture・同一開示・同じTool可用性の条件**で、Tool-only/Product Skill/TAI Skillの増分を比較する。
 
