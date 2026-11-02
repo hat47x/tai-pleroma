@@ -69,7 +69,7 @@ func RunRejection(ctx context.Context, seiRoot string) Receipt {
 		}
 	}
 	receipt.StoreCreated = true
-	resume, err := run(ctx, runtimeDir, "run", "./cmd/sei", "resume", "--data-root", store, "--json")
+	resume, err := runOutput(ctx, runtimeDir, "run", "./cmd/sei", "resume", "--data-root", store, "--json")
 	if err != nil {
 		receipt.Reason = err.Error()
 		return receipt

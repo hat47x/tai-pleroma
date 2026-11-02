@@ -1,0 +1,61 @@
+{
+  "checked_at": "2026-11-02T11:16:15+09:00",
+  "slide_count": 47,
+  "display_numbers": [
+    31,
+    77
+  ],
+  "chapters": 4,
+  "reference_pages": 2,
+  "editable_shapes": 1973,
+  "visible_text_frames": 1177,
+  "speaker_notes": 47,
+  "native_powerpoint": "47ページを開いてPDFと1920×1080画像を書き出した",
+  "native_input_sha256": "91D4FA3FC4526C893CB59B2CA1216337D589D93044429FCD4FDA4A63ECBC66B6",
+  "openxml_parts_parsed": 204,
+  "text_bounds": {
+    "overflow": 0,
+    "tolerance_pt": 3
+  },
+  "text_intersections": {
+    "count": 0,
+    "tolerance_pt": 2
+  },
+  "pdf": {
+    "pages": 47,
+    "visible_frames_present": 1177,
+    "replacement_characters": 0,
+    "embedded_fonts": 6
+  },
+  "diagram_structure": {
+    "explicit_one_line_changes": 5,
+    "reference_table_changes": 36
+  },
+  "reader_links_checked": 211,
+  "source_document_mutations_by_this_task": 0,
+  "concurrent_source_changes_detected": [],
+  "files": {
+    "YI_Constellation_続編_文化的体系と発展性.pptx": {
+      "bytes": 2049607,
+      "sha256": "91d4fa3fc4526c893cb59b2ca1216337d589d93044429fcd4fda4a63ecbc66b6"
+    },
+    "YI_Constellation_続編_文化的体系と発展性.pdf": {
+      "bytes": 1163497,
+      "sha256": "76466192250d8496755beabc0a50c81a582a849799259a9b632e4093ef95ae6d"
+    }
+  },
+  "scope": "表示・本文出力・参照・図の構造の検査。解釈の唯一性、製品の実装、利用効果、読者による受入れを確認したものではない。",
+  "visual_review": "全ページの一覧と、図・長い文・改行を調整したページの拡大表示を確認した。",
+  "source_reading_review": "原文の象意・場面・未来の読みと、各ページの主旨と図の意味を照合した。元の22〜42の文書は変更していない。",
+  "proofreading": "本文資料3件の検査と最終稿照合を実行し、原文の意味を担う比喩や状態語を文脈で確認した。",
+  "text_palette_contrast_on_ivory": {
+    "main_navy": 9.96,
+    "body_grey": 5.47,
+    "gold_ink": 4.64
+  },
+  "reader_document_sha256": {
+    "README.md": "78be74dfb1a45c6b8cca0518885fcd4002ca7ca30f03ccbe290350a7f80d50f8",
+    "44-続編の統合論考.md": "ab60042a1ac046716c8c58a74a560931421337e611a1416ee2420d00c4c4d10d",
+    "45-続編スライドの構成と出典.md": "ff563fe341ecfdbc4813946fbf0cb94a7150c42795e2cfdb274da1216f5d18c1"
+  }
+}

@@ -436,6 +436,42 @@ func EvaluateWithSource(f Fixture, source, mmiCommit string) Receipt {
 	receipt.Cases = append(receipt.Cases, statusCase("N-08", n08,
 		"過去に受理された判断は、本文が同じ文言へ戻っても自動復活せず、正当な確認経路(DEC-04)へ戻る"))
 
+	// N-09: every decision link resolves, not only the decisions named by
+	// P-07 and N-08. A decision with a missing draft or subject is a broken
+	// basis even when no scenario check names it (variant F).
+	n09 := true
+	for _, decision := range f.Decisions {
+		if decision.Draft != "" {
+			if _, ok := draftByID(f.Drafts, decision.Draft); !ok {
+				n09 = false
+			}
+		}
+		if decision.Subject != "" {
+			if _, ok := byID[decision.Subject]; !ok {
+				n09 = false
+			}
+		}
+	}
+	receipt.Cases = append(receipt.Cases, statusCase("N-09", n09,
+		"全てのDecisionのdraftとsubjectが、実在するDraftとObservationを指す"))
+
+	// N-10: a decision that records the accepted subject version must point
+	// at an observation with that version. A resolved ID with a drifted
+	// version is a stale basis; the authority and meaning axes are not
+	// checked here.
+	n10 := true
+	for _, decision := range f.Decisions {
+		if decision.Subject == "" || decision.SubjectVersion == "" {
+			continue
+		}
+		observation, ok := byID[decision.Subject]
+		if !ok || observation.SourceVersion != decision.SubjectVersion {
+			n10 = false
+		}
+	}
+	receipt.Cases = append(receipt.Cases, statusCase("N-10", n10,
+		"subjectVersionを記録したDecisionは、対象ObservationのsourceVersionと一致する"))
+
 	receipt.Passed = true
 	for _, result := range receipt.Cases {
 		if result.Status == "fail" {

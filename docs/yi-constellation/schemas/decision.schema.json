@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tai-pleroma.local/schemas/robotics/decision.schema.json",
+  "title": "DecisionRecord",
+  "description": "ロボットまたは自動運転の行為の理由、権限、前提、安全の制約、証拠を記録する。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_type",
+    "decision_id",
+    "domain",
+    "action",
+    "rationale",
+    "options",
+    "criteria",
+    "authority_ref",
+    "assumptions",
+    "safety_constraints",
+    "evidence_refs",
+    "revisit_condition"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "record_type": { "const": "decision" },
+    "decision_id": { "type": "string", "pattern": "^dec-[a-z0-9-]+$" },
+    "domain": { "enum": ["ad", "robotics"] },
+    "task_id": { "type": "string" },
+    "vehicle_id": { "type": "string" },
+    "robot_id": { "type": "string" },
+    "robot_model": { "type": "string" },
+    "automation_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "odd": { "type": "string" },
+    "action": { "type": "string", "minLength": 1 },
+    "rationale": { "type": "string", "minLength": 1 },
+    "options": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "authority_ref": { "type": "string", "minLength": 1 },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "safety_constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "revisit_condition": { "type": "string", "minLength": 1 },
+    "supervisor_ref": { "type": "string" },
+    "disengagement_reason": { "type": "string" },
+    "mrc": { "type": "string" },
+    "safety_envelope_ref": { "type": "string" }
+  },
+  "additionalProperties": false
+}

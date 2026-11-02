@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tai-pleroma.local/schemas/robotics/event.schema.json",
+  "title": "EventRecord",
+  "description": "ロボットまたは自動運転の出来事を記録する。安全制御の記録ではなく、出来事の参照と結果を残す。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_type",
+    "event_id",
+    "domain",
+    "occurred_at",
+    "actor",
+    "action",
+    "authority_ref",
+    "safety_envelope_ref",
+    "outcome",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "record_type": { "const": "event" },
+    "event_id": { "type": "string", "pattern": "^evt-[a-z0-9-]+$" },
+    "domain": { "enum": ["ad", "robotics"] },
+    "occurred_at": { "type": "string" },
+    "task_id": { "type": "string" },
+    "vehicle_id": { "type": "string" },
+    "robot_id": { "type": "string" },
+    "robot_model": { "type": "string" },
+    "firmware_version": { "type": "string" },
+    "automation_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "odd": { "type": "string" },
+    "mrc": { "type": "string" },
+    "ota_version": { "type": "string" },
+    "actor": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "enum": ["robot", "vehicle", "human", "system", "ai"] },
+        "id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "action": { "type": "string", "minLength": 1 },
+    "authority_ref": { "type": "string", "minLength": 1 },
+    "safety_envelope_ref": { "type": "string", "minLength": 1 },
+    "outcome": {
+      "enum": ["completed", "aborted", "failed", "takeover", "disengaged", "incident"]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "handoff_ref": { "type": "string" }
+  },
+  "additionalProperties": false
+}

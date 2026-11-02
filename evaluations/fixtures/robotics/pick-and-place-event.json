@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "record_type": "event",
+  "event_id": "evt-rob-001",
+  "domain": "robotics",
+  "occurred_at": "2026-11-02T09:00:00+09:00",
+  "task_id": "task-pick-place-001",
+  "robot_id": "robot-001",
+  "robot_model": "arm-6dof",
+  "firmware_version": "1.4.2",
+  "actor": { "type": "robot", "id": "robot-001" },
+  "action": "pick_and_place",
+  "authority_ref": "auth-rob-001",
+  "safety_envelope_ref": "se-rob-001",
+  "outcome": "completed",
+  "evidence_refs": ["robot-log-001", "camera-snapshot-001"],
+  "handoff_ref": "hnd-rob-001"
+}
