@@ -127,7 +127,7 @@ TAIのActivity継続を、前のAgentの「成功」文章を再利用する処�
 
 **資格**：今回PASSは**保存済み公開synthetic checkerのNode実行のみ**。TEI #2632/#2633/#2634の実Go製品試験（それぞれのPRに記載された観測資格を参照）、実Provider/DB/OS、SHO保存再開、EKI送受信、TAI実Skillロード、正式完全性Oracle/Owner意味受理はこの試行でNOT RUN。既存SK-C/RQ、MMI C-01/T2 G0-0、TEI #1119 Gateを変更しない。
 
-## 8. 2026-11-02：値が変わらない変更でも、公開・提案・消費資格は再確認対象になり得る
+## 9. 2026-11-02：値が変わらない変更でも、公開・提案・消費資格は再確認対象になり得る
 
 [TAI Draft #272](https://github.com/hat47x/tai-pleroma/pull/272)の[回答前観測面の計画](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/docs/yi-constellation/preanswer-observable-surface-and-consumer-handoff-2026-11-02.md)と、[Mock Receiverを用いた限定6/6局所実行](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/evaluations/records/AS-LB-loopback-http-2026-11-02.json)を現在資格の依存評価へ接続する。**今回の実Mockで検証したのは架空のHTTP送信を一つのlocalhost Portが受信した範囲**であり、実Productの外部送信・非干渉・OS拒否は未観測。
 
@@ -144,3 +144,48 @@ TAIのActivity継続を、前のAgentの「成功」文章を再利用する処�
 **最初の反証**：開示Policyだけを狭め、内部Sourceと値を固定した二世界で、J0（全面再検証）、J1（当該外部Consumerの公開再資格化）、J2（過去成功を無条件再利用）を比較する。J1では内部Ownerの以前の確定Claimを無意味に破棄せず、**新規の外部Tool候補・Session Event・送信内容**の公開だけ現行Policyに従うか観測。さらにRenderer profileだけ変える別対照で、SHOの原文保持と表示再検証が分離できるかを試す。[SK-01 §U](../../evaluations/SK-01-harness-skills.md)で実Product側に引き渡す。合成Mock 6/6をJ1の実Product評価成功とは扱わない。
 
 **状態**：Source差分/公開変更と選択的再資格化の検証計画。外部Harnessからの実Planner Trace・DOM・実Network/OS拒否・現在の業務Authority、SHO実読取、EKI実BodyやOwner受理は**NOT RUN**。
+
+## 10. 2026-11-02：空集合・ABA・Relation再束縛をActivityの再利用資格に含める（SC-N）
+
+**成熟したProduct側Evidence**：[TEI #2582](https://github.com/hat47x/tei-platform/issues/2582) の負依存・Relation path再束縛・複数Window、[TEI #2387 QX-31](https://github.com/hat47x/tei-platform/issues/2387) の実SQLite 12件（合成SQLの局所実行）、[#2640](https://github.com/hat47x/tei-platform/pull/2640)の正常0件/演算順序/ABA、[#2638](https://github.com/hat47x/tei-platform/pull/2638)のRole＋Eager依存先のVersion/Contract/Implementation Pin、[#2649](https://github.com/hat47x/tei-platform/pull/2649)の実CLI dispatch≠選抜discoveryを既存TAI #271の再資格化へ結ぶ。これらのOwnerのSource/Query/Role/Extension実装をTAI側に移設しない。
+
+### 10.1 失効を判定する対象は「出力に出た値の変更」より広い
+
+Result行が0件であるとき、既存行IDによる参照依存は空でも、**WHERE/NOT EXISTSのPredicate、Relation path/Binding、Parent selection、Provider Route、Read Scope・Cohort・page completeness、Ruleの非出力Field**は結果を成立させる条件。これらの依存を把握できないなら、0件という履歴を残しつつ、現在の「該当がない」というClaimは`not-established`か独立再取得候補とする。
+
+特に0件の全件性は**対象Scopeを決めた上での完全Read**に相対。partial readから「対象なし」は言えないが、帰属が確かな1件の一致が見つかれば、「なし」の否定は部分Readでも成立する場合がある。**不存在の証明と存在の反例で必要な完全性が非対称**であることを区別する。
+
+`t0=0→t1=1→t2=0`では、(A)t0が当時正しかった履歴、(B)t2に独立に再取得して確認した現在0件、(C)t0以降ずっと変化しなかったという期間Claimは異なる。(A)と(B)がtrueでも(C)はfalse。イベントが見えないProviderで(C)を断定せず、TTL・同じDigest・同じ最終値を無変更証明に転用しない。
+
+`Filter→Order→Limit`と`Order→Limit→Local Filter`は演算順序が違えば0件/1件が変化し得る。UIの「0件」をActionの不存在・全件性へ昇格しない。SQLのPushdown/Local residualは各Targetの演算/NULL/Collation/Scope/時点を確認する必要がある。
+
+### 10.2 影響範囲の二つの閉包を分ける
+
+**Data/Query現在性の閉包**：出力Fieldに見えないRule入力、Relationの付替え、Row membershipへの否定依存、実ProviderのRead Cohortと変更観測範囲。これを持つOwnerはTEI #2506/#2582/#2387/#1708。
+
+**Capability/Skill/Consumer現在性の閉包**：Role自身とEager依存先の`version + contract fingerprint + implementation fingerprint`の確認、実`Tool` dispatch/利用可能性と限定catalogの差、実Skill/References/Scriptsのロード、公開Policy、現在Host Grant、Renderer/Consumer Read、成果物同世代。これを持つOwnerはTEI #2620/#2638/#2649/#2605、TAI #270/#272/#232、SHO #6、EKI #465。
+
+両閉包で同じ`SourceRev`文字列を持っていても、現時点の実取得・実Role実装、外部への開示権限まで一致するとは限らない。いずれも**意味のOwner受理/実Provider Effectを自動発行しない**。TAIが実装するのは各Productの現在証拠を要求し、必要なConsumerへ開示可能な結果だけ渡す横断Activityの選択・引継ぎである。
+
+### 10.3 製品別Ownerへ戻す反証票
+
+| Case | 変更と観測 | TAIの適切な帰結 |
+| --- | --- | --- |
+| **SC-N1 0件の否定依存** | 0件の完全Read、partial 0件、partialだが対象一致1件 | 歴史的「0件観測」／有界Scope内の不存在／不存在の反例を混同しない |
+| **SC-N2 ABA** | 0→1→0。t0とt2の結果値は同じ | 履歴保持・現在再確認・期間無変更Claimを別判定 |
+| **SC-N3 演算順序** | Filter→Order→LimitがB、Order→Limit→Local Filterが0件 | 同じSource/Command名で演算を入替えてfalse absenceにしない |
+| **SC-N4 複数Window** | Window1はA→B、古いA応答後着。Window2は独立にAの現在資格を持つ | Window1へ旧Aを混入させず、Window2の正しい独立証拠を一律失効しない |
+| **SC-N5 Relation再束縛** | 表示amount=600不変、O1.customerRefがC1/limit700→C2/limit500 | Rule依存を再束縛・再評価し、独立したAmount表示の履歴は保持可 |
+| **SC-N6 Role実装Pin** | Root Role version固定、Eager依存先の実装fingerprintだけ変化 | 旧Role資格を現在の適用資格へ昇格しない。無関係Roleの全面失効も不要 |
+| **SC-N7 Tool一覧差** | TEI選抜`commands`に実dispatchの`operations`が未掲載 | Discovery非掲載からUnsupportedを断定せず、**Toolを実際に呼べること／権限を持つことも推測しない** |
+| **SC-N8 Output一致・Rule改版** | Output digestは同じでもRule/Policyだけ変更 | 対象Claimの再資格化。元Outputの履歴は保存し、今のGrant/Disclosureを再判定 |
+
+[SK-01 §YのSK-N](../../evaluations/SK-01-harness-skills.md)へ[公開合成14件の自己整合Script](../../evaluations/tools/check-sk-n-negative-witness.cjs)と[V8限定記録](../../evaluations/records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)を接続した。**14/14 PASSは公開の模擬関数と期待条件の自己整合**であり、TEIの実SQL/Go Executor・Role Extension Lock・実Window・TAI Harness/OS/Current Grant・独立Oracleの実証ではない。実TEI sqlite QX-31の12件PASSも**独立したProduct側実験**として保持し、TAIの14件と合算しない。
+
+### 10.4 J0/J1/J2の評価で誤集計しない
+
+`TAI.SC-06:J0`＝必要な全確認、`TAI.SC-06:J1`＝依存に基づく選択的再資格化、`TAI.SC-06:J2`＝古い成功の無検証再利用（危険な負例）。[TEI #1445](https://github.com/hat47x/tei-platform/issues/1445)のJ0/J1/J2は別定義なのでラベルを混ぜない。既存[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)の`BR-FULL/BR-SELECTIVE/BR-UNVERIFIED/BR-JOINT`と比較する際も**対応を明記してから**測定する。
+
+測定軸：`false_absence_pass / ABA_as_no_change / missed_negative_dependency / unnecessary_invalidation / wrong_Window_adoption / stale_Role_implementation / actual_Reads / external disclosure / human review / total_cost`。Source version、実Provider I/O、必要Member、Read Scope/Cohort、Rule/Role実装、実Consumer資格とOwner/独立Oracleを揃え、`unknown/NOT RUN`を実成功として加算しない。既存TEI #1119 P0 Critical Pathを変更せず、**合成での早期反証と実Product/Hostでの証明を分ける**。
+
+**状態**：本節はOwner別の設計統合・公開合成Referenceの14件自己整合のみ。実TAI Product/外部Harness、TEI Go Query/Provider/Role実装、SHO Renderer/保存、EKI Body、OS/Network強制、Owner業務受理は**NOT RUN**。新Negative Cache／Reactive/Policy/Agent Host／中央依存Graphを先に採用しない。
