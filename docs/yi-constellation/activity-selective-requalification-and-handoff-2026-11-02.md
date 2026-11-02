@@ -93,3 +93,36 @@ TAIのActivity継続を、前のAgentの「成功」文章を再利用する処�
 - **P4**：J0/J1/J2の再検査漏れ・費用・Reviewコスト・誤成功を比較し、TEI #2018／TAI #168/#74の製品価値に反映する。
 
 製品単独のPoCやRead-only調査は、全製品を待たずに並行して進められる。EKI Result BodyやSHO実保存、TEI実Providerが欠ける連携はその段階のみ未実施と記録する。CSW自由探索の途中に採否Gateを挿入せず、受理・実作用の段階で既存の製品責務へ戻す。
+
+## 8. 同じResultでも再資格化が必要な場合：依存の閉包と受渡し資格を二軸で照合（QH-01〜18）
+
+**追加の問題**：従来のSK-Cは、入力した合成Dependency Graphが十分なEdgeを持つことを前提とした。現実には、返却列に現れないWHERE/EXISTS/Sort/Validation入力、複数Persistence Mappingの実Route、Consumerが要求するArtifact Member集合などが**実依存から漏れる**。値・digestや同じOperation IDが不変でも、依存根拠が変われば旧「利用可能」を再適用できるとは限らない。
+
+実験の出所：[TEI Query QX-27 Draft #2634](https://github.com/hat47x/tei-platform/pull/2634)（Go DerivedIR OutputField Inputsと非出力Predicate等の区別）、[TEI Operation Draft #2632](https://github.com/hat47x/tei-platform/pull/2632)（同一Operation IDで多Mapping・Alias順変更・Basis/Inputsが変動する特性記述）、[TEI ArtifactSet Draft #2633](https://github.com/hat47x/tei-platform/pull/2633)／[設計 #2630](https://github.com/hat47x/tei-platform/pull/2630)（内部Manifest/CheckSet整合とConsumer相対Required集合・実member bytesを分離）、[MMI Draft #755](https://github.com/hat47x/markdown-matrix-injector/pull/755)（HTML comment・inline-codeの偽参照を実CIで拒否）、[SHO #6](https://github.com/hat47x/sho-composer/issues/6)（複数Claimの合成の独立性）、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)。
+
+**原則**：現在の一つのClaim/Activityで「以前の根拠が影響を受けるか」と「現在のConsumerに渡してよいか」を**独立に判定する**。`reusable-dependency-evidence`は、対象Claimに必要な依存が本当に列挙済みであって、変更がその閉包外にあると確認できる場合の**候補**。その上でRead Cohort／実Read Trace／Consumer Required Member／実Artifact byte／同Attempt Body／Egress許可／Effect Grant／Owner受理のうち必要な資格を個別に満たす。
+
+| 比較軸 | 不変の証拠が許す主張 | 追加で要求する独立証拠 |
+| --- | --- | --- |
+| Dependency/Meaning | Source上のResult/digest・見かけのRule値が不変 | 非出力Predicate/Filter/Negative dependency、Rule/Role/Operator、Mapping/Provider Routeの**必要な依存の閉包** |
+| Data/Time | 同じ画面値、同名Snapshot token | 必要なScope/Field Presence/Read Cohortの実保証。要求Readと実Provider Witnessの区別 |
+| Artifact/Receiver | ProducerのManifest `Complete`、Claim ACK、同じSHA | ConsumerのExpectedMember集合、実読取member bytes、同じAttemptのBody到達 |
+| Actor/Authority | 以前のSkill説明・Tool成功・Grant | 現時点の許可／Recipient／実送出・実Effect／業務Owner採用。権限不明ならその作用を保留 |
+
+### test-only実装と観測（製品コード・共通Schemaではない）
+
+公開の[合成Nodeチェッカー `check-sk-qh-qualification.cjs`](../../evaluations/tools/check-sk-qh-qualification.cjs)へQH-01〜18を保存。**保存済みと同一Git blobのNode v22.16.0、`node /mnt/data/check_sk_qh_qualification.cjs`で18/18の独立assertionsがPASS**（2026-11-02、Python 3.13.5で計数とSHA-256を確認）。実行ファイル6,054 bytes／SHA-256 `3a9ee6bfe98c950166092a28c0f75564044254de4709b4d937c0510a0e92b317`／git blob `6c078c980c1d739abc0dccdac8b27e35d536b1d3`、GitHub保存Blobと一致。RepoのNode製品CI/Harnessに組み込んだことは意味しない。単体再実行方法は`node evaluations/tools/check-sk-qh-qualification.cjs`。
+
+- **QH-01/02**：既知の依存閉包外でSHOリンク題名だけ変わった場合、TEIの当該意味Evidence候補を保持できる。
+- **QH-03〜07**：出力Digestが同じでも、非出力Predicate／隠れたValidation Rule／Provider Route／Artifact Required集合／Role/Operator版が変わればそのClaimの再資格化候補。
+- **QH-08〜10**：必要依存の閉包が不明、Read Cohort未保証、Provider Read Witnessが無い場合。未観測を「影響なし」「完全な同時Snapshot」「過剰Readなし」へ変えない。
+- **QH-11〜13**：Manifest `Complete`でもRequired Member未確定、実member bytes不一致、ACKはあるが同Attempt Body未受領なら各々のConsumer資格を保留。
+- **QH-14〜18**：Egress/Effect Grant/Owner受理の独立欠落、複数の不足が同時にある場合、未知依存とBody欠落が重なる場合。単一の列挙statusだけで理由を消さない。
+
+**意図的な不健全基準J2の対照**：全18ケースで表示`outputDigest`を同じ文字列に固定し、「前回成功・同digestなので再利用」というJ2で全件再利用すると、必要な依存再評価または受渡し資格不足の**16件を誤再利用**する（公開・合成入力に限定した試験）。全件再確認J0では局所影響が無い2件まで再確認する可能性がある。J1の利益は、上記情報が実Productから取得でき、独立Oracleで偽再利用0を確認してから測る。
+
+**最も重要な負例（依存閉包の虚偽）**：チェッカー内のMutationは`predicate:hidden_flag`の依存Edgeを削ったまま`dependencyCoverageVerified=true`とすると、同じ変更を「requalify」から**誤ってreuse候補**へ分類する。この合成例は、**形式的に整ったGraph/Checkerがあっても、必要依存Edgeの漏れをそれだけで検出できない**ことを示す。実製品ではTEI #2387/#2634のSQL非出力依存、#2624のValidation入力、#2632のActual Mapping/Route、#2633のConsumer Requiredを各Ownerが独立に照合し、閉包が示せない範囲をunknownへ残す。TAIには第二SQL Analyzer、Repository-wide Claim Graph、共通Grant Engineを導入しない。
+
+**優先実証**：P1＝TEI既存read-only CLI/Go（#2586）から**Source/Role/Function Context/Query/Rule/Provider Route/実Result**の同Attempt参照を一件取得できるか。P2＝実Consumer Requiredと読取Artifact版、必要なSnapshot/Dependency証拠、EKI同Attempt Bodyを段階的に接続。P3＝別Harnessへ再開し、J0/J1/J2の偽再利用・再読取数・token/手戻りを比較。Mutation合格は製品の閉包証明ではなく、独立Source/Oracleと実Read traceが揃った場合だけより強い主張へ進む。
+
+**資格**：今回PASSは**保存済み公開synthetic checkerのNode実行のみ**。TEI #2632/#2633/#2634の実Go製品試験（それぞれのPRに記載された観測資格を参照）、実Provider/DB/OS、SHO保存再開、EKI送受信、TAI実Skillロード、正式完全性Oracle/Owner意味受理はこの試行でNOT RUN。既存SK-C/RQ、MMI C-01/T2 G0-0、TEI #1119 Gateを変更しない。
