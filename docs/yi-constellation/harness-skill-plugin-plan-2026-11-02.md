@@ -244,3 +244,46 @@ Output filename、Manifest列挙、Subject ID・件数、対象バージョン�
 ### 11.5 計画と検証Owner
 
 [SK-01 §J](../../evaluations/SK-01-harness-skills.md)のSK-J01〜J07で、版間曖昧性、同版Template差分、混合世代、残存物、CompleteとFindings、EKI Body未送達、Manifestの存在推知を公開合成fixtureで対照する。TEI #2505/#2604、SHO #6、EKI #465に**各Productの実装・試験を委譲**し、TAIは単体Skillと横断Skillが誤った完了主張をしないか評価する。Skill/Tool/Consumerの実接続、実OS拒否、実Artifact公開・読取り、Owner受理は全て新規NOT RUN。P0は従来のSK-G0/G1とTEI #2605 read-only一件を維持し、拡張候補と検証Laneを並列増加してよい。
+
+## 12. 2026-11-02：Markdownを「文書・モデル・テスト」として使う時のSkill適用境界
+
+**Ownerの新しい横断方針**：TEI [#2619](https://github.com/hat47x/tei-platform/issues/2619)／[#2620](https://github.com/hat47x/tei-platform/issues/2620)／[#2621](https://github.com/hat47x/tei-platform/issues/2621)／[#2622](https://github.com/hat47x/tei-platform/issues/2622)では、**標準データ構造に意味Roleを適用して、Markdown／表／式／構造UIから定義・例・テストを扱う**設計が具体化された。一方、[SHO #7](https://github.com/hat47x/sho-composer/issues/7)／[#8](https://github.com/hat47x/sho-composer/issues/8)／[#9](https://github.com/hat47x/sho-composer/issues/9)は、リンクだけでも成立するResearch Index、論文→設計→プログラムの根拠連鎖、通常テキストとの対照を所有する。
+
+**横断Skillの仕事は文書全体に単一の実行意味を与えることではなく、利用者の目的に沿って、文書のどの部分をどのProductの実在能力へ委ねられるか判断すること**。TAIに共通Parser/DocDB/Script Interpreterや第二のTEI意味正本を作らない。Role付与・Context Mapping・Studio実装はTEI、文書原文・Occurrence・Research IndexはSHO、参照再解決はSHO/MMI既存Owner、Methodの問いと十分性はSEIが保有する。TAIはSkillの選択・受渡しと成果の過大主張を比較する。
+
+### 12.1 三つの独立した境界：Authoring／Meaning／Materialization
+
+| 境界 | 具体例 | AI/Skillが行えること | 確認すべき別資格 |
+| --- | --- | --- | --- |
+| **Authoring Source** | Markdown文章、リンク付き階層、表、計算式、テスト例 | 原文とSource span/文書版を読取り、説明/候補を提案 | 明示Roleの有無。説明文や全表をFunction/Testとして自動起動しない |
+| **Semantic Binding** | Data Model Relation、型付きFunction、Rule、Function Data Context | TEI側が認識するRole/Operator/ID、型・単位・grain、明示Mappingを読取る | どの候補が解決・Owner受理済みか。Relationは**アクセス可能な関係**であり、その存在だけで全Relationを取得しない |
+| **Materialization / Effect** | ProviderのData fetch、Derived Dataset、生成コード、ViewChange→Action、実Test | 実在CLI/Hostで許された対象だけを照合し、実取得Scope・Read-set/版を記録 | 取得権限・必要完全性・NULL/未取得、Generator/実Provider、非可逆書戻し、業務Owner受理、実Output/外部Effect |
+
+例えば親注文→明細→割当のData Modelが存在しても、Function Data Contextで指定したRelation path/Field/粒度/Scopeの取得だけが候補となる。**AI向け補完は未採用候補として可視化し、暗黙取得・隠れたJOIN・実行済みread-setへ昇格させない**。通常の取得/集約にはTEIの標準Data Operations（名称は仮称）を利用する構想で、Native SQLは明示した例外的な実装Binding。TEI #2622でのProviderごとのread/filter/expand/aggregate/PATCH/full-replace/atomicity差をTAI Skillが隠さない。
+
+### 12.2 一つのMarkdown内のRoleは、部分ごとに確認する
+
+同一Markdown中の一般の表、説明用計算例、型付きFunction表、独立Expectedテストは**見た目が似ていても同一のRoleではない**。TEI #2621ではProfile/見出し/宣言されたRoleによる識別、曖昧な場合の候補提示と明示的な確定を提案している。
+
+- **記述→候補**：自由文・表・式に対し、AIが「Functionかもしれない」と提案できる。説明用表を実Testや実Functionとして自動実行することは別。
+- **Role Binding→意味候補**：Ownerが確定したSource span/意味ID/Role/Operator版、型・丸め・NULL・単位・時点を参照。簡潔な式だけを見て丸めやNULLの規則を補完しない。
+- **Expected→独立評価**：文書内のExpectedは人が提示した期待・Independent Oracleの入力候補。生成コードが再計算したExpectedを独立証拠として使わない。Testの「定義済み」「実行済み」「結果確認済み」は別。
+- **Studio→構造Projection**：同じ意味IDを表・Tree・Graph・式・モデルInstanceとして投影する契約はTEI側で検証。TAI Skillは表示が似ていることから異なるSource/Roleを誤同定しない。
+
+### 12.3 「論文を索引に入れた」ことと「原典を読んだ」ことを分ける
+
+SHO #7のL0はMarkdown見出し・字下げ・リンクURLだけで完成する独立した研究活動。リンクの親子は第一に**整理上の包含/順序**であり、論文AがBを引用/発展/反証したという学術関係ではない。同一URLの複数Occurrenceと、論文原典Identity・版は別。
+
+外部AIが次に行えるのは、(a)リンク集を保存・並べ替える、(b)原文取得候補を提案する、(c)実Source/権限を確認して許される場合だけ取得し、(d)取得済みの節/式から根拠付きClaim・Designへ進む、という**段階的な選択**。SkillはURLだけで未取得論文の内容・数式・学術関係を創作しない。ユーザーがリンク整理だけを求めるときは、SHOの単体入口が存在する場合にはTAI/TEI/SEIを読み込む必要がない。
+
+論文→設計→プログラム（SHO #8）では、source-stated／interpretation／design proposal／TEI accepted model／executed targetを分ける。**TEIを使わずSHO＋外部コードRepoだけで実装する選択も有効**。構造化による実価値はSHO #9のA0/A1/A2、B0/B1/B2の同資料・同予算比較で測り、AIの理解が自動的に向上したとは先取りしない。
+
+### 12.4 Skillが現在の対象を扱う際の正負対と受入の組立て
+
+[SK-01 §K](../../evaluations/SK-01-harness-skills.md)にSK-L01〜L10を配置する。公開の合成Fixtureで(A)未Role表、(B)明示Roleと未解決の型・丸め、(C)Relationは存在するがContextは限定、(D)集約Projectionと非可逆編集、(E)論文L0しか存在しない状態を固定し、**Skillなし／Product Skill／TAI横断Skill**で目的達成と不要な取得・未確認の保持を比較する。
+
+**Data取得の要否・開示・実観測は別**：`model_has_relation=true`、`context_mapped=true`、`source_access_authorized=true`、`read_observed=true`、`complete_for_claim=true`は別。これらは評価列の説明で、TAIの新しい共通モデル型ではない。Contextのない問い合わせで暗黙に取得したり、ローカル閲覧可能なRawを外部LLMへ送ったりしてはいけない。**通常のTEI内組織Dataすべてに特別OS隔離を課す方針ではない**。秘密指定Sourceや外部Host/AIへの送出時は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の実境界を参照。
+
+**既存の受入順序と拡張**：SK-G0/G1・TEI #2605の実CLIを先行し、L01/L02（SHOリンクの未取得）、L03/L04（Markdown Role/Expected）、L05〜L08（TEI明示Context/非可逆保存）、L09/L10（根拠を保った研究→設計の段階）を独立Laneで追加する。大量AI並列開発では候補の種類を増やしてよいが、各Productの実行受理・外部送信・実Provider・Owner判断の証拠は単純加算しない。
+
+**状態**：設計・SK-01の追加試験候補。TEI #2619〜2622とSHO #7〜9は現時点でIssue上の設計であり、正式Core/Studio/Markdown CompilerやSHO単体保存・Paper→Code E2Eの実動作を確定していない。SK-L全件・実Tool/Harness・Source/DB/Host・OS拒否・正式Owner受理はNOT RUN。
