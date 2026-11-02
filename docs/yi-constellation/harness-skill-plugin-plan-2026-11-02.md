@@ -339,3 +339,16 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 [SK-01 §N](../../evaluations/SK-01-harness-skills.md)に、未導入互換・現行issuer・失効issuer・Bundle読取障害・不正record・導入後喪失・独立SHA一回vs二回・Harness再開・開示用診断を含む**SK-TB**対照を設計する。試験は**合成fixtureだけ**で開始し、EKI実証は[#433](https://github.com/hat47x/eki-fabric/issues/433)のOwnerへ、外部送信・情報開示は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)へ引き渡す。型・時間・意味・認可の実検査がない他Productに同等の状態管理を強制しない。
 
 **状態**：本節は各Productの最新Issueから成熟した失敗境界を横断評価へ整理した**計画**。公開合成SK-TB 9件の[Node.js再実行Script](../../evaluations/tools/check-sk-tb-fixture.cjs)は、固定fixture/ScriptがGitHub Blobと完全一致する環境で**9/9の限定セルフチェックPASS**（[記録](../../evaluations/records/SK-TB-public-fixture-selfcheck-2026-11-02.json)）。期待値が公開されており、外部Harnessの独立能力試験ではない。実EKI mTLS、Trust Bundle migration、Skill経由作業、別Harness現在認可、OS/Network送出の正負試験は**NOT RUN**。トークン大量調達を前提に探索領域は並行拡張しつつ、実証資格は各Ownerに維持する。
+
+## 15. 2026-11-02：Requested／Rule／Actual Read／Disclosureの接続
+
+[新設計・Owner接続表](harness-skill-read-witness-rule-disclosure-2026-11-02.md)に、TEI [Draft #2624](https://github.com/hat47x/tei-platform/pull/2624)のDisplay Mapping≠Rule依存（合成20+18件）、TEI [Draft #2628](https://github.com/hat47x/tei-platform/pull/2628)のOutput同値≠実Provider取得範囲（合成12件）、SEI [Draft #770](https://github.com/hat47x/sei-cognition/pull/770)のClaim相対十分性・複数Read版混合・Planner Discovery時の情報開示を**各Ownerの独立Evidenceのまま**組み込んだ。
+
+**横断Skillの追加機能候補**は、Declared Mapping（D）→Rule Dependency（R）→Realized Request（Q）→実Read Witness（W）→Claim Qualification（C）→Consumer Projection（P）→Actual Egress/Effect（E）の**必要な証拠がどこで観測されたかと、どこから不明かの連結**。このD/R/Q/W/C/P/Eは評価の説明列であり、TAI独自の共通実行Schema、全情報フローEngine、第二Provider/Policy/Claim正本ではない。
+
+**新たな重要反例**：画面がOrder Amount 600のみ表示していても、与信Ruleの評価は内部Credit Limit 700/500で変わり得る。一方、そのRule結果のBoolean自体を外部AIへ公開できない場合、どちらの世界でも開示済み情報から結果を判別させない。読取り結果が同じでもProviderが秘密Fieldを追加で取得した可能性があり、Adapterのread-only TraceをDB物理I/Oの保証と混同しない。最終回答の非開示だけでなく、Tool/Skill発見・Planner候補・途中のAPI呼出し名による存在推知を検査する。
+
+[SK-01 §O](../../evaluations/SK-01-harness-skills.md)にSK-F01〜F12と、[公開合成fixture](../../evaluations/fixtures/SK-F-access-rule-disclosure.synthetic.json)、[整合チェッカー](../../evaluations/tools/check-sk-f-fixture.cjs)、[限定V8記録](../../evaluations/records/SK-F-public-fixture-selfcheck-2026-11-02.json)を追加。**GitHubから再取得した正確なscriptとfixtureをV8上でfs-shimを用いて実行し、公開期待値との自己整合12/12を確認**。Node.js環境での実行、ProductのRule/Provider/実DB監査、外部Harness/OS/Network、独立holdout、Owner受理は**NOT RUN**。H2/H3とH4/H5ではProduct単独Skillとの比較と、機密/完全性/誤成功の検出を別軸で測る。
+
+**採用上の先後**：既存TEI read-only CLI実利用（#2605）→現ProductのRule/Providerの実根拠→必要なProduct間データ連携→外部Harnessの消費・開示/送出と実効権限。候補探索と独立PoCは並列に増やしてよい。局所合成PASSを一Activityの業務成果受理として扱わない。
+
