@@ -1,0 +1,38 @@
+{
+  "record_type": "SK-C-public-synthetic-V8-selfcheck",
+  "date": "2026-11-02",
+  "repo": "hat47x/tai-pleroma",
+  "branch": "docs/yi-harness-skills-20261102",
+  "script": {
+    "path": "evaluations/tools/check-sk-c-fixture.cjs",
+    "git_blob_sha": "c66afae7a41ba6c993c6d8548d9f8aefde0b8d9a"
+  },
+  "fixture": {
+    "path": "evaluations/fixtures/SK-C-continuation-requalification.synthetic.json",
+    "git_blob_sha": "ef651f6aaf4cdc43f7465a9869ed484f2d741d10",
+    "publicExpectedIncluded": true
+  },
+  "execution": {
+    "environment": "V8 JS isolate, exact Github-committed script minus Node shebang, require node:fs/path mapped to exact fetched fixture and simple path shims; not a Node.js execution",
+    "cases": 15,
+    "passed": 15,
+    "failed": 0,
+    "mutationChecks": 4,
+    "mutationsDetected": 4,
+    "mutations": [
+      "remove-relevant-dependency",
+      "fabricate-acceptance",
+      "flip-grant-without-revising-expectation",
+      "invent-extra-dependency"
+    ],
+    "exitCode": 0
+  },
+  "limitations": [
+    "Public expected values are visible to classifier; self-consistency only, not independent sealed oracle",
+    "Synthetic graph dependencies are assumed input, not actual observed Product dependency extraction",
+    "No real TEI/SEI/SHO/EKI product operations, real artifact transfer, actual business acceptance",
+    "No external harness load, OS/Host grant check, network egress, current trust bundle or independent consumer read",
+    "No real Node.js runner test in this attempt"
+  ],
+  "release_state": "Draft branch only, no main merge"
+}
