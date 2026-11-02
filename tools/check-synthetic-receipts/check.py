@@ -165,6 +165,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-suite-2026-11-03.json",
     "evaluations/records/SUI-TEI-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -285,11 +286,19 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SUI-TEI-postgres-migrate" in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
+                errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
         if "SUI-TEI-postgres" in relative:
             observed = data.get("observed", {})
             expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
             if data.get("result") != expected:
                 errors.append(f"SUI Postgres receipt result does not match roundTrip: {relative}")
+        if "SUI-TEI-postgres-migrate" in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
+                errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
         if "SUI-TEI-postgres" in relative:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("documentRows") != 1:

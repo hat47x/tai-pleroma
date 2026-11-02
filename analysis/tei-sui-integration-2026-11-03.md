@@ -42,7 +42,7 @@ TEI契約（record投影）
 | ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
 | 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成61件・実実行86件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成61件・実実行87件がcheckerを通る。
 
 ## 未検証
 
@@ -150,3 +150,17 @@ roundTrip: true
 ```
 
 [save receipt](../evaluations/records/SUI-TEI-postgres-2026-11-03.json)
+### 追記（migration経路）
+
+`alembic upgrade head`でスキーマを作る経路でも保存を確認した。
+
+```text
+migration: alembic upgrade head
+createStatus: 200
+readStatus: 200
+documentRows: 1
+revisionRows: 1
+roundTrip: true
+```
+
+テナント行の投入は migration 後も必要だった（migrationはテナントを投入しない）。[receipt](../evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json)
