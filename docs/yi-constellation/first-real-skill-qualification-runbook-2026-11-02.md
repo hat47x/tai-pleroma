@@ -1,6 +1,6 @@
 # YI Constellation：最初の実Product Skill資格確認 Runbook（2026-11-02）
 
-状態：**実行可能な手順案／実TEI CLI・外部Harness・製品横断の実行はNOT RUN／Owner未受理**。設計の参照資料であり、将来のCI必須Gateや新しい統合Runner/Registryではない。
+状態：**TAI本RunbookによるTEI CLI実行・外部Harness Skillロード・製品横断実験はNOT RUN／Owner未受理**。ただしTEI側の[merged PR #2626](https://github.com/hat47x/tei-platform/pull/2626)では、公開Referenceによる実Go CLIと二表示・Source移動のFocused CIが成功している。両者を混同しない。設計の参照資料であり、将来のCI必須Gateや新しい統合Runner/Registryではない。
 
 ## 目的：合成fixture中心の議論から、実際のProductを使用した証拠へ
 
@@ -127,3 +127,17 @@ Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Opera
 二番目のHarnessはClaude Code／Codex／OpenCode（DSH構成は別Profile）等の**実際に使える**環境から選び、Dots/Grok BotはAccount availabilityが確認できた場合のみ個別Profileとして評価する。比較は公式文書の機能一覧ではなく、実Skill load/Tool arrival/出力・現在権限・外部受信によって行う。公開済み資料でできるTaskは本番秘密を用いず、未接続はunsupportedとする。
 
 **変更後もNOT RUN**：H2/H3の実Harness比較、二Harness移植、SHO別Reader、実OS/外部Host拒否、TAI所有の活動E2E、独立Owner意味受理。本節は後着事実の参照訂正とRunbookの実行順序変更のみ。
+
+## 6. 実TEI CLIの既存実証とSK-02比較適格性の引渡し（2026-11-03）
+
+2026-11-02に[TEI #2587](https://github.com/hat47x/tei-platform/pull/2587)（操作・Artifact生成）と[TEI #2626](https://github.com/hat47x/tei-platform/pull/2626)（実CLIでModel/Source/Traceを読取るConstruction Context）がmainに統合された。#2626 exact-head `42b7ec43fa7901359120008105e812eda7e9d6e7`の[Focused GitHub Actions #41462654810](https://github.com/hat47x/tei-platform/actions/runs/41462654810)は実Go CLI・二表示・Source-only Relocationの限定実証に成功している。2026-11-03時点でTAIが同じCLIを**当該Harnessから実呼出しした証拠は未取得**であり、TEI自身のPASSをS1/H2/H3/H4/H5の実績として移し替えない。
+
+**対象コマンドの資格**：`tei commands`の限定Discoveryは全Dispatch列挙ではない。`tei operations`／`tei artifacts`は実装されているが、`artifacts -out`はローカルファイル書込みを伴い、初回Tool-only/Skill比較で許可するread-only操作と同一視しない。[TEI #2649](https://github.com/hat47x/tei-platform/pull/2649)はCapability→CLI→Product Skillを別証拠で整理し、候補Workflowの完了結果はそのexact headのRunごとに確認する。
+
+**最初の実験の判定順**：
+1. **S1 Product-only**：固定したTEI実Binary・Source/worktree・Read-only実argvと出力、SourceIndex/WorldFP、ValidationのWarning/Unknownを、TAIの独立した実行票として観測。既存#2626 CIは対照にするだけ。
+2. **H2/H3を交差順で4独立Session**：同じ`repo_head/binary/workspace-tree/World/SourceIndex/prompt/harness/model/tool-profile/principal/grant/disclosure/oracle-version`を実照合。H2がSkill非露出、H3が同一版Skillを**実ロード**したことを確認。ForcedとAutoは別Group。
+3. **比較適格性をTask採点前に判定**：[実行可能なtest-only Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)に、一件の`{trials:[H2,H3,H3,H2]}`を入力する。同Checkerの`eligible-to-score`はTrialの記入欄の整合候補に限り、実Observerの真正性／Task正答／Skill追加価値を証明しない。未観測は`insufficient-evidence`で保持し、Source/Grant/Model/Skillの不一致は`ineligible`として別Groupへ戻す。
+4. **Independent Oracleと総費用**：比較適格なGroupについてのみ、独立採点者がTool原出力と期待を照合し、正答/誤成功/Token/Time/人手確認を別に記録する。Oracleを片側SessionやSkill本文へ混入させない。
+
+**限定の新規実測**：Checker本体9,361byte、SHA-256 `be2185ff77fb8ab0e03a3c7fc6462f21ad3ce3ede8c83448482e86073274e565`／Git blob `7ea3d34387eee832d4f190d6264d19988d8027f1`。Node.js v22.16.0で公開架空Trial票の**20/20自己試験PASS**（`node --check` PASS）。実Harnessでの4試行、Product Skillの実Load、外部AIの送出、OS/Host Policy強制、独立Oracle採点・Owner受理は**NOT RUN**。別の新Runnerや中央Host・新しい認可正本を追加しない。
