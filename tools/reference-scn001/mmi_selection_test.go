@@ -9,7 +9,7 @@ import (
 func selectedReceipt() MMIReceipt {
 	return MMIReceipt{Schema: "tai.reference.mmi-readonly/v0", RealProductConnected: true, ReadOnly: true, ConflictPreserved: true,
 		Selected: []MMISelected{
-			{ID: "O-02", Text: "  改訂した掲示の文面  ", Source: " notice-copy ", Version: " test-v0 ", Availability: "available"},
+			{ID: "O-02", Text: "  改訂した掲示の文面  ", Source: " notice-copy ", Version: "v0", Availability: "available"},
 			{ID: "O-03", Text: "会議室の利用には事前予約が必要", Source: "guidance-copy", Version: "test-v1", Availability: "available"},
 			{ID: "O-07", Text: "  改訂した掲示の文面  ", Source: "redistribution-copy", Version: "test-v2", Availability: "available"},
 		}}

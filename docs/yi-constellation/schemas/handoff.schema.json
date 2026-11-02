@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tai-pleroma.local/schemas/robotics/handoff.schema.json",
+  "title": "HandoffRecord",
+  "description": "人、ロボット、車両、システムの間の受け渡しを記録する。渡したものと渡さなかったものを分ける。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_type",
+    "handoff_id",
+    "domain",
+    "task_id",
+    "from",
+    "to",
+    "sent",
+    "not_sent",
+    "ack",
+    "next_action",
+    "safety_envelope_ref",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "record_type": { "const": "handoff" },
+    "handoff_id": { "type": "string", "pattern": "^hnd-[a-z0-9-]+$" },
+    "domain": { "enum": ["ad", "robotics"] },
+    "task_id": { "type": "string" },
+    "vehicle_id": { "type": "string" },
+    "robot_id": { "type": "string" },
+    "robot_model": { "type": "string" },
+    "automation_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "odd": { "type": "string" },
+    "mrc": { "type": "string" },
+    "from": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "enum": ["robot", "vehicle", "human", "system", "ai"] },
+        "id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "to": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "enum": ["robot", "vehicle", "human", "system", "ai"] },
+        "id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "sent": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "not_sent": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "ack": {
+      "enum": ["accepted", "accepted_with_conditions", "rejected", "no_response"]
+    },
+    "next_action": { "type": "string", "minLength": 1 },
+    "deadline": { "type": "string" },
+    "takeover_request": {
+      "type": "object",
+      "required": ["requested_at", "reason"],
+      "properties": {
+        "requested_at": { "type": "string" },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "safety_envelope_ref": { "type": "string", "minLength": 1 },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

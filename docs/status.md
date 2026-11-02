@@ -1,10 +1,12 @@
 # TAI Pleromaの現在状態
 
-更新日: 2026-11-01。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
+更新日: 2026-11-02。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
 
 ## 要約
 
 SCN-001の合成walkthrough、MMI読み取り専用MCP、SEI decision-memory、SUIのcard/island/edge、TEIの型検証、EKIのTask admission/cancel、統合参照実行、D-04レビュー成果物、Owner判断packetまでを参照実装として接続した。
+
+TEI構築移行のパイロットとして、SUI DocumentV1の文字列投影（card本文とdocument_id）を、TEIの契約→生成→適合選抜→one-shot Target Profile実行まで通した。示せたのは参照ローカルの最小経路であり、record全体、実環境、人の受理、生産性の向上は未検証である。
 
 Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`development-review-only`の仮承認でCP-3まで進めている。R-01〜R-05は合成文書でdevelopment review accepted。**公開・外部作用は未承認**であり、公開用の実物レビューを合成後の工程として残す。
 
@@ -20,7 +22,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 | SUI | ローカル起動の`/healthz`・OpenAPI・合成documentのPUT/GET。テナント境界・認可adapterのtest 40件 | [live](../evaluations/records/SUI-live-2026-11-01.json)、[auth](../evaluations/records/SUI-auth-2026-11-01.json) |
 | SEI | SEIチェックアウトに対する`TestSCN001DecisionMemoryProjection`と`TestValidityThroughSEIVerify` | [live](../evaluations/records/SEI-live-2026-11-01.json) |
 | MMI | 依存導入したCLIでfixture xlsxを`inspect --json` | [live](../evaluations/records/MMI-live-2026-11-01.json) |
-| TEI構築パイロット | SUI DocumentV1投影をTEIの意味モデルで`validate ok`、source indexで定義を取得。文字列投影の契約はspikeで4ケースPASS | [model](../integrations/pilot-sui-document/README.md)、[receipt](../evaluations/records/SUI-TEI-pilot-2026-11-01.json)、[spike](../evaluations/records/SUI-TEI-generation-spike-2026-11-01.json) |
+| TEI構築パイロット | SUI DocumentV1投影をTEIの意味モデルで`validate ok`。文字列・record契約から候補を生成し、4ケースで選抜。one-shot Target Profileで実行。text/document_idの属性契約とCard record（text+documentId）、Island/Edge/Document recordを選抜。生成・選抜の工程とT1比較を測定し、rolling配備とrollbackを実行 | [model](../integrations/pilot-sui-document/README.md)、[pilot receipt](../evaluations/records/SUI-TEI-pilot-2026-11-01.json)、[spike](../evaluations/records/SUI-TEI-generation-spike-2026-11-01.json)、[selection](../evaluations/records/SUI-TEI-selection-2026-11-01.json)、[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)、[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[island-edge](../evaluations/records/SUI-TEI-island-edge-2026-11-02.json)、[document](../evaluations/records/SUI-TEI-document-record-2026-11-02.json)、[assembler](../evaluations/records/SUI-TEI-assembler-2026-11-02.json)、[flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[alignment](../evaluations/records/SUI-TEI-alignment-2026-11-02.json)、[affiliation](../evaluations/records/SUI-TEI-affiliation-2026-11-02.json)、[cardIds](../evaluations/records/SUI-TEI-island-cardids-2026-11-02.json)、[artifact](../evaluations/records/SUI-TEI-artifact-2026-11-02.json)、[sui-reader](../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)、[binding](../evaluations/records/SUI-TEI-binding-2026-11-02.json)、[coordinates](../evaluations/records/SUI-TEI-coordinates-2026-11-02.json)、[optional](../evaluations/records/SUI-TEI-optional-2026-11-02.json)、[reviewed](../evaluations/records/SUI-TEI-reviewed-2026-11-02.json)、[artifact-validation](../evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json)、[optional-core](../evaluations/records/SUI-TEI-optional-core-2026-11-02.json)、[admin-path](../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)、[consumer](../evaluations/records/SUI-TEI-consumer-2026-11-02.json)、[adapter](../evaluations/records/SUI-TEI-adapter-2026-11-02.json)、[http-route](../evaluations/records/SUI-TEI-http-route-2026-11-02.json)、[auth](../evaluations/records/SUI-TEI-auth-2026-11-02.json) |
 
 これらが示すのは、各基盤の**その版・そのfixture・そのホスト**での観測である。実データ、実権限、独立した検証主体、公開承認を示すものではない。
 

@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.tei-deploy/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "98b0e68e12477c97e7ba9afbbf4e55a85426dba7",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-target-profile/cmd/tei-target-profile deploy -profile <TAI>/integrations/pilot-sui-document/profiles/rolling.json -candidates A -root <tmp> && go run ./tools/reference-target-profile/cmd/tei-target-profile deploy -profile <TAI>/integrations/pilot-sui-document/profiles/rolling.json -candidates B -root <tmp> && go run ./tools/reference-target-profile/cmd/tei-target-profile rollback -root <tmp>",
+  "result": "PASS",
+  "observed": {
+    "profileId": "sui-text-rolling",
+    "update": "rolling",
+    "firstDeploy": {"slot": "a", "rollbackAvailable": false},
+    "secondDeploy": {"slot": "b", "previousSlot": "a", "rollbackAvailable": true, "artifactDigest": "sha256:976e00f5a460467ce5d4ddeb413a876757517830a190463315f31513c23092c9"},
+    "rollback": {"passed": true, "slot": "a", "previousSlot": "b"}
+  },
+  "scope": "A reference-local rolling deployment on the filesystem with two generated artifacts, followed by a slot rollback. It does not prove a real target, a supervisor, zero-downtime update, health checks, or drain behavior."
+}

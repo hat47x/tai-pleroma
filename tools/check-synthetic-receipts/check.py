@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Fail if a synthetic reference receipt loses its synthetic labeling."""
+"""Fail if a synthetic reference receipt loses its synthetic labeling.
+
+Fail closed on ambiguous or malformed JSON: duplicate keys and duplicate review
+IDs must not silently replace an earlier assertion about review status.
+"""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 from typing import Any
@@ -85,8 +90,59 @@ REAL_RECORDS = (
     "evaluations/records/SUI-auth-2026-11-01.json",
     "evaluations/records/SUI-TEI-pilot-2026-11-01.json",
     "evaluations/records/SUI-TEI-generation-spike-2026-11-01.json",
+    "evaluations/records/SUI-TEI-selection-2026-11-01.json",
+    "evaluations/records/SUI-TEI-text-generation-2026-11-01.json",
+    "evaluations/records/SUI-TEI-target-2026-11-01.json",
+    "evaluations/records/SUI-TEI-target-document-id-2026-11-02.json",
+    "evaluations/records/SUI-TEI-card-record-2026-11-02.json",
+    "evaluations/records/SUI-TEI-compare-2026-11-02.json",
+    "evaluations/records/SUI-TEI-deploy-2026-11-02.json",
+    "evaluations/records/SUI-TEI-island-edge-2026-11-02.json",
+    "evaluations/records/SUI-TEI-document-record-2026-11-02.json",
+    "evaluations/records/SUI-TEI-assembler-2026-11-02.json",
+    "evaluations/records/SUI-TEI-integration-flow-2026-11-02.json",
+    "evaluations/records/SUI-TEI-alignment-2026-11-02.json",
+    "evaluations/records/SUI-TEI-affiliation-2026-11-02.json",
+    "evaluations/records/SUI-TEI-island-cardids-2026-11-02.json",
+    "evaluations/records/SUI-TEI-artifact-2026-11-02.json",
+    "evaluations/records/SUI-TEI-sui-reader-2026-11-02.json",
+    "evaluations/records/SUI-TEI-binding-2026-11-02.json",
+    "evaluations/records/SUI-TEI-coordinates-2026-11-02.json",
+    "evaluations/records/SUI-TEI-optional-2026-11-02.json",
+    "evaluations/records/SUI-TEI-reviewed-2026-11-02.json",
+    "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
+    "evaluations/records/SUI-TEI-optional-core-2026-11-02.json",
+    "evaluations/records/SUI-TEI-admin-path-2026-11-02.json",
+    "evaluations/records/SUI-TEI-consumer-2026-11-02.json",
+    "evaluations/records/SUI-TEI-adapter-2026-11-02.json",
+    "evaluations/records/SUI-TEI-http-route-2026-11-02.json",
+    "evaluations/records/SUI-TEI-auth-2026-11-02.json",
+    "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
+    "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
 
+
+
+def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """Refuse JSON members silently overwritten by Python's usual decoder."""
+    obj: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in obj:
+            raise ValueError(f"duplicate JSON key: {key}")
+        obj[key] = value
+    return obj
+
+def _read_json(path: pathlib.Path, label: str, errors: list[str]) -> dict[str, Any] | None:
+    """Read one JSON receipt; malformed or duplicate-key input fails closed."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
+    except (OSError, UnicodeError, ValueError) as exc:
+        errors.append(f"invalid JSON file: {label}: {exc}")
+        return None
+    if not isinstance(data, dict):
+        errors.append(f"expected JSON object: {label}")
+        return None
+    return data
 
 def check(root: pathlib.Path) -> dict[str, Any]:
     errors: list[str] = []
@@ -95,7 +151,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if not path.is_file():
             errors.append(f"missing receipt: {relative}")
             continue
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = _read_json(path, relative, errors)
+        if data is None:
+            continue
         if data.get("synthetic") is not True:
             errors.append(f"synthetic is not true: {relative}")
         if data.get("evidenceKind") != "synthetic":
@@ -122,7 +180,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if not path.is_file():
             errors.append(f"missing real-execution receipt: {relative}")
             continue
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = _read_json(path, relative, errors)
+        if data is None:
+            continue
         if data.get("synthetic") is not False:
             errors.append(f"real-execution receipt claims synthetic: {relative}")
         if data.get("evidenceKind") != "real-execution":
@@ -154,6 +214,125 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
+        if "tei-affiliation" in relative:
+            if data.get("composed", {}).get("affiliations") != 1:
+                errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-auth" in relative:
+            observed = data.get("observed", {})
+            if observed.get("authorizedStatus") != 200 or observed.get("anonymousStatus") != 401:
+                errors.append(f"TEI auth receipt did not record 200/401: {relative}")
+            if observed.get("authEnabled") is not True:
+                errors.append(f"TEI auth receipt did not enable authorization: {relative}")
+        if "tei-http-route" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 2 or observed.get("status") != 200:
+                errors.append(f"TEI HTTP route receipt did not pass two requests: {relative}")
+            if observed.get("authOverridden") is not True:
+                errors.append(f"TEI HTTP route receipt did not disclose the auth override: {relative}")
+        if "tei-adapter" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 9 or observed.get("savesAnything") is not False:
+                errors.append(f"TEI adapter receipt did not record nine non-saving tests: {relative}")
+        if "tei-consumer" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 6 or observed.get("readOnly") is not True:
+                errors.append(f"TEI consumer receipt did not record six read-only tests: {relative}")
+        if "tei-admin-path" in relative:
+            if data.get("adminPathOk") is not True or data.get("readOk") is not True:
+                errors.append(f"TEI admin path receipt did not read the artifact: {relative}")
+        if "tei-binding" in relative:
+            if data.get("bindingResolved") is not True or data.get("readOk") is not True:
+                errors.append(f"TEI binding receipt did not resolve and read: {relative}")
+        if "tei-sui-reader" in relative:
+            if data.get("readOk") is not True or data.get("tenantIsolationRejected") is not True:
+                errors.append(f"TEI SUI reader receipt did not read and isolate: {relative}")
+        if "tei-artifact-validation" in relative:
+            if data.get("passed") is not True or data.get("errors"):
+                errors.append(f"TEI artifact validation receipt did not pass: {relative}")
+        if "tei-artifact" in relative:
+            artifact = data.get("artifact") or {}
+            if artifact.get("schema") != "tai.reference.tei-documentv1-projection/v0":
+                errors.append(f"TEI artifact receipt has no projection schema: {relative}")
+            else:
+                artifact_path = root / artifact["path"]
+                if not artifact_path.is_file():
+                    errors.append(f"TEI artifact receipt points at a missing file: {relative}")
+                elif hashlib.sha256(artifact_path.read_bytes()).hexdigest() != artifact["digest"].removeprefix("sha256:"):
+                    errors.append(f"TEI artifact digest does not match the file: {relative}")
+        if "tei-integration-flow" in relative:
+            if data.get("casesPassed") != data.get("casesRun"):
+                errors.append(f"TEI integration flow receipt did not pass all cases: {relative}")
+            if data.get("danglingReferenceRejected") is not True:
+                errors.append(f"TEI integration flow receipt did not reject a dangling reference: {relative}")
+            if data.get("composed", {}).get("cards") != 2:
+                errors.append(f"TEI integration flow receipt did not compose two cards: {relative}")
+        if "tei-assembler" in relative:
+            observed = data.get("observed", {})
+            if observed.get("assemblerPassed") != 6 or observed.get("assemblerTests") != 6:
+                errors.append(f"TEI assembler receipt did not pass 6 tests: {relative}")
+            if observed.get("cardCases") != 4 or observed.get("cardQualified") != "text-record-template":
+                errors.append(f"TEI assembler receipt did not bind the card record: {relative}")
+        if "tei-document-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("cases") != 4 or observed.get("profilePassed") is not True:
+                errors.append(f"TEI document record receipt did not pass 4 cases and the profile: {relative}")
+            if observed.get("fields") != ["documentId", "title", "digest"]:
+                errors.append(f"TEI document record receipt has unexpected fields: {relative}")
+        if "tei-island-edge" in relative:
+            contracts = data.get("observed", {}).get("contracts", [])
+            if len(contracts) != 2:
+                errors.append(f"TEI island/edge receipt did not cover two contracts: {relative}")
+            for item in contracts:
+                if item.get("cases") != 4 or item.get("targetPassed") is not True:
+                    errors.append(f"TEI island/edge receipt did not pass 4 cases for {item.get('id')}: {relative}")
+        if "tei-deploy" in relative:
+            observed = data.get("observed", {})
+            if observed.get("rollback", {}).get("passed") is not True:
+                errors.append(f"TEI deploy receipt did not pass rollback: {relative}")
+            if observed.get("secondDeploy", {}).get("rollbackAvailable") is not True:
+                errors.append(f"TEI deploy receipt did not record rollback availability: {relative}")
+        if "tei-comparison" in relative:
+            if data.get("evaluationSet", {}).get("cases") != 4:
+                errors.append(f"TEI comparison receipt did not use 4 cases: {relative}")
+            if data.get("tei", {}).get("passed") is not True or data.get("baseline", {}).get("passed") is not True:
+                errors.append(f"TEI comparison receipt did not pass both paths: {relative}")
+        if "tei-card-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("kind") != "record" or observed.get("passedCases") != 4:
+                errors.append(f"TEI card record receipt did not pass a record contract: {relative}")
+            if "text-record-template" not in observed.get("qualified", []):
+                errors.append(f"TEI card record receipt did not qualify the record candidate: {relative}")
+            if observed.get("profilePassed") is not True:
+                errors.append(f"TEI card record receipt did not run the profile: {relative}")
+        if "tei-multi-attribute" in relative:
+            observed = data.get("observed", {})
+            if observed.get("attributeCount") != 2 or observed.get("passedCases") != 4:
+                errors.append(f"TEI multi-attribute receipt did not cover two attributes: {relative}")
+            if "text-template" not in observed.get("qualified", []):
+                errors.append(f"TEI multi-attribute receipt did not qualify the candidate: {relative}")
+        if "tei-workflow" in relative:
+            if data.get("passed") is not True or data.get("cases") != 4:
+                errors.append(f"TEI workflow receipt did not pass 4 cases: {relative}")
+            if data.get("humanInterventions") != 0:
+                errors.append(f"TEI workflow receipt recorded human interventions: {relative}")
+        if "tei-target" in relative:
+            observed = data.get("observed", {})
+            if observed.get("processModel") != "oneshot" or observed.get("profilePassed") is not True:
+                errors.append(f"TEI target receipt did not pass the oneshot profile: {relative}")
+            if observed.get("passedCases") != 4:
+                errors.append(f"TEI target receipt did not pass 4 cases: {relative}")
+        if "tei-text-generation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("strategy") != "text-template" or observed.get("passedCases") != 4:
+                errors.append(f"TEI text generation receipt did not pass 4 cases with text-template: {relative}")
+            if "text-template" not in observed.get("qualified", []):
+                errors.append(f"TEI text generation receipt did not qualify the generated candidate: {relative}")
+        if "tei-text-selection" in relative:
+            observed = data.get("observed", {})
+            if observed.get("cases") != 4 or observed.get("passedCases") != 4:
+                errors.append(f"TEI text selection receipt did not pass 4 cases: {relative}")
+            if "text-identity" not in observed.get("qualified", []):
+                errors.append(f"TEI text selection receipt did not qualify the candidate: {relative}")
         if "tei-generation-spike" in relative:
             observed = data.get("observed", {})
             if observed.get("cases") != 4 or observed.get("passedCases") != 4:
@@ -198,8 +377,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     if not status_path.is_file():
         errors.append(f"missing review status: {REVIEW_STATUS}")
     else:
-        status = json.loads(status_path.read_text(encoding="utf-8"))
-        items = {item["id"]: item for item in status.get("items", [])}
+        status = _read_json(status_path, REVIEW_STATUS, errors)
+        if status is None:
+            status = {}
+        rows = status.get("items")
+        if not isinstance(rows, list):
+            errors.append(f"review items must be an array: {REVIEW_STATUS}")
+            rows = []
+        items: dict[str, dict[str, Any]] = {}
+        for index, item in enumerate(rows):
+            if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not item["id"]:
+                errors.append(f"invalid review item at index {index}: {REVIEW_STATUS}")
+                continue
+            if item["id"] in items:
+                errors.append(f"duplicate review item: {item['id']}")
+                continue
+            items[item["id"]] = item
         for item_id in ("R-01", "R-02", "R-03", "R-04", "R-05"):
             item = items.get(item_id)
             if not item:
@@ -211,6 +404,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             item = items.get(item_id)
             if not item or item.get("status") != "pending" or item.get("evidenceKind") != "none":
                 errors.append(f"{item_id} is not pending/none")
+                continue
+            if item.get("evidence") not in (None, ""):
+                errors.append(f"{item_id} declares evidence despite evidenceKind=none")
     return {
         "passed": not errors,
         "errors": errors,

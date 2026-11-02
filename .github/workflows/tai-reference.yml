@@ -26,6 +26,7 @@ jobs:
           - tools/reference-sui-link
           - tools/reference-sui-draft
           - tools/reference-eki-cli
+          - tools/reference-harness-boundary
     defaults:
       run:
         working-directory: ${{ matrix.tool }}
