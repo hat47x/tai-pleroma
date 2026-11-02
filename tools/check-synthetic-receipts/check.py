@@ -138,6 +138,8 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-reading-order-2026-11-03.json",
     "evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json",
+    "evaluations/records/SUI-TEI-contract-versions-2026-11-03.json",
+    "evaluations/records/SUI-TEI-contract-versions-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -258,6 +260,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "tei-contract-versions-validation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documentV1Valid") is not True:
+                errors.append(f"TEI contract versions validation did not validate DocumentV1: {relative}")
+        elif "tei-contract-versions" in relative:
+            contracts = data.get("contracts", {})
+            if not contracts or not all(item.get("contractVersion") for item in contracts.values()):
+                errors.append(f"TEI contract versions receipt is missing contract versions: {relative}")
         if "tei-fields-roundtrip" in relative:
             observed = data.get("observed", {})
             checks = observed.get("roundTripChecks", {})

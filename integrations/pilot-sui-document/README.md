@@ -617,3 +617,15 @@ planAction: update / 差分なし
 ```
 
 - [receipt](../../evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json)
+## 契約の版をartifactへ記録（2026-11-03）
+
+artifactの`source.contracts`へ`contractId`と`contractVersion`を記録するようにしました。
+
+```text
+card-record: sui.card.record v8 / cases 5
+document-record: sui.document.record v5 / cases 4
+```
+
+契約ファイルのハッシュは`sourceDigest`（生成候補ソースのdigest）とは別物なので、版の確認には`contractVersion`を使います。
+
+- [receipt](../../evaluations/records/SUI-TEI-contract-versions-2026-11-03.json)

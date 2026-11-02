@@ -50,6 +50,8 @@ def main():
         for name in CONTRACTS:
             contract_path = os.path.join(workspace, "candidates", name, "contract.json")
             fixtures_path = os.path.join(workspace, "candidates", name, "fixtures.json")
+            with open(contract_path, encoding="utf-8") as handle:
+                contract = json.load(handle)
             out_dir = os.path.join(tmp, name)
             build = run(
                 [
@@ -83,6 +85,8 @@ def main():
                 if passed and actual.get("state") == "present":
                     records[case["id"]] = json.loads(actual["text"])
             candidates[name] = {
+                "contractId": contract.get("id"),
+                "contractVersion": contract.get("version"),
                 "sourceDigest": manifest.get("SourceDigest") or manifest.get("Manifest", {}).get("sourceDigest"),
                 "cases": len(fixtures["cases"]),
                 "passed": sum(1 for item in case_results if item["contract"] == name and item["passed"]),
@@ -115,7 +119,12 @@ def main():
             "source": {
                 "teiCommit": tei_commit,
                 "contracts": {
-                    name: {"sourceDigest": data["sourceDigest"], "cases": data["cases"]}
+                    name: {
+                        "contractId": data["contractId"],
+                        "contractVersion": data["contractVersion"],
+                        "sourceDigest": data["sourceDigest"],
+                        "cases": data["cases"],
+                    }
                     for name, data in candidates.items()
                 },
             },
@@ -140,7 +149,7 @@ def main():
         "command": f"python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo {tei_repo} --workspace {workspace}",
         "result": "PASS",
         "elapsedMillis": round((time.monotonic() - started) * 1000),
-        "contracts": {name: {"sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
+        "contracts": {name: {"contractId": data["contractId"], "contractVersion": data["contractVersion"], "sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
         "casesRun": cases_run,
         "casesPassed": sum(1 for item in case_results if item["passed"]),
         "composed": {
