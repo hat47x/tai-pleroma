@@ -184,3 +184,8 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-e2e-2026-11-03.js
 本番認証・本番DB・実配備は未検証です。
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-auth-2026-11-03.json)
+### 保存後の往復整合（2026-11-03）
+
+保存後に読み戻したDocumentV1と投影を比較し、CardのID・本文・座標、IslandのID・`cardIds`、EdgeのIDが一致することを確認しました（`roundTrip: true`）。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json)
