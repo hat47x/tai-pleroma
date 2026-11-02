@@ -366,7 +366,7 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 ## 17. 2026-11-02：Activity継続の選択的再資格化とProduct横断Handoff
 
-[新しい計画](activity-selective-requalification-and-handoff-2026-11-02.md)に、TEI [#2586](https://github.com/hat47x/tei-platform/issues/2586)/[#2516](https://github.com/hat47x/tei-platform/issues/2516)のClaim相対・局所結論と、SEI [#767](https://github.com/hat47x/sei-cognition/issues/767)の問いQ相対の限定十分性、EKI [#465](https://github.com/hat47x/eki-fabric/issues/465)のClaim ACKとBody受取の断絶、SHO [#10](https://github.com/hat47x/sho-composer/issues/10)の文書読取/納品資格、TAI #168のHarness交換・活動再開を統合した。
+[新しい計画](activity-selective-requalification-and-handoff-2026-11-02.md)と[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)に、TEI [#2586](https://github.com/hat47x/tei-platform/issues/2586)/[#2516](https://github.com/hat47x/tei-platform/issues/2516)のClaim相対・局所結論と、SEI [#767](https://github.com/hat47x/sei-cognition/issues/767)の問いQ相対の限定十分性、EKI [#465](https://github.com/hat47x/eki-fabric/issues/465)のClaim ACKとBody受取の断絶、SHO [#10](https://github.com/hat47x/sho-composer/issues/10)の文書読取/納品資格、TAI #168のHarness交換・活動再開を統合した。
 
 **成熟した設計判断**：履歴における有効な観測（Historical Evidence）と、その証拠を現在の目的・Source/epoch/Scope/Host/Consumerに使える資格（Current Qualification）を区別する。**変更を受けた依存Claimだけ**再評価し、正当な旧記録は履歴として保つ。依存線が不明なら無影響を宣言せず、必要な確認を追加する。Skillが既存ProductのAuthority、意味受理、DB Read/Result本体の実観測を代行しない。
 
