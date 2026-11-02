@@ -103,6 +103,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-artifact-2026-11-02.json",
     "evaluations/records/SUI-TEI-sui-reader-2026-11-02.json",
     "evaluations/records/SUI-TEI-binding-2026-11-02.json",
+    "evaluations/records/SUI-TEI-coordinates-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )

@@ -1,19 +1,23 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.card.record",
-  "version": "3",
+  "version": "5",
   "status": "reference-local",
-  "note": "SUI Cardのidとtextを投影する参照用の契約。座標・claimType・レビュー状態は対象外。",
+  "note": "SUI Cardのid・text・x・yを投影する参照用の契約。claimType・レビュー状態は対象外。",
   "inputs": [
     {"attribute": "sui.card.card_id", "primitive": "std.identifier"},
-    {"attribute": "sui.card.text", "primitive": "std.text"}
+    {"attribute": "sui.card.text", "primitive": "std.text"},
+    {"attribute": "sui.card.x", "primitive": "std.decimal"},
+    {"attribute": "sui.card.y", "primitive": "std.decimal"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
     "kind": "record",
     "fields": [
       {"name": "id", "input": "id", "attribute": "sui.card.card_id", "primitive": "std.identifier"},
-      {"name": "text", "input": "text", "attribute": "sui.card.text", "primitive": "std.text"}
+      {"name": "text", "input": "text", "attribute": "sui.card.text", "primitive": "std.text"},
+      {"name": "x", "input": "x", "attribute": "sui.card.x", "primitive": "std.decimal"},
+      {"name": "y", "input": "y", "attribute": "sui.card.y", "primitive": "std.decimal"}
     ]
   }
 }

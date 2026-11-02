@@ -5,14 +5,14 @@
     "version": "1"
   },
   "source": {
-    "teiCommit": "98e08841ccd03574690fc6195e2cce62454a5fa3",
+    "teiCommit": "6942dcf89c1344412f10fcf6fc761062ef4da269",
     "contracts": {
       "document-record": {
         "sourceDigest": "sha256:2800efdc03219bb95f75fa97dbf06d9220efbf3f616c5df9674ca01a5abae655",
         "cases": 4
       },
       "card-record": {
-        "sourceDigest": "sha256:6b8bf63c5917e9452a0dd2353c2f9ccdece1b1436be7c5d186459f7ba9329d10",
+        "sourceDigest": "sha256:aa5fd842034ece5d702a5bc91819e0e7a4853b9a6118626239acfb6a35b5bca1",
         "cases": 5
       },
       "island-record": {
@@ -37,11 +37,15 @@
     "cards": [
       {
         "id": "card-1",
-        "text": " hello "
+        "text": " hello ",
+        "x": 10,
+        "y": 20.5
       },
       {
         "id": "card-2",
-        "text": "world"
+        "text": "world",
+        "x": 0,
+        "y": 0
       }
     ],
     "islands": [

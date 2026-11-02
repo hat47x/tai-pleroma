@@ -311,3 +311,19 @@ tenant isolation: PASS（別tenantはnot-a-file）
 ```
 
 - [receipt](../../evaluations/records/SUI-TEI-binding-2026-11-02.json)
+## 座標の投影（Card v5、2026-11-02）
+
+TEIの数値投影（[PR #2578](https://github.com/hat47x/tei-platform/pull/2578)）を使い、Card record v5へ`x`と`y`を追加しました。
+
+```text
+sui.card.record: id, text, x, y
+```
+
+- `std.decimal`のフィールドはJSON数値として出力
+- 合成層は値の型に依存しない
+- 21ケースPASS、単体9件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-coordinates-2026-11-02.json)
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+
+`claimType`・`textReviewed`・`holdState`などのoptionalな列挙・真偽値は未対応です。record契約は全フィールド必須のため、optionalを扱うには別の表現が必要です。

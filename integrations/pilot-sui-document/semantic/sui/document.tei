@@ -10,6 +10,8 @@ data Card {
     attribute cardId type std.identifier
     attribute documentId type std.identifier
     attribute text type std.text
+    attribute x type std.decimal
+    attribute y type std.decimal
 }
 
 data Island {
