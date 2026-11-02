@@ -1,4 +1,4 @@
-﻿"""Check that the SCN-002 artifacts carry the documented identifiers."""
+"""Check that the SCN-003 artifacts carry the documented identifiers."""
 
 import hashlib
 import json
@@ -30,7 +30,7 @@ def main():
 
     all_found = all(item["found"] for item in results.values())
     receipt = {
-        "schema": "tai.reference.scn-002-artifact-links/v0",
+        "schema": "tai.reference.scn-003-artifact-links/v0",
         "synthetic": False,
         "evidenceKind": "real-execution",
         "publicationAllowed": False,
@@ -39,9 +39,9 @@ def main():
         "command": "python integrations/tools/check_scenario_artifacts.py",
         "result": "PASS" if all_found else "FAIL",
         "observed": {"artifacts": results, "allFound": all_found, "count": len(results)},
-        "scope": "Checks that the four SCN-002 artifacts exist and contain the documented identifiers. It does not prove that a product would accept them.",
+        "scope": "Checks that the four SCN-003 artifacts exist and contain the documented identifiers. It does not prove that a product would accept them.",
     }
-    out = ROOT / "evaluations/records/SCN-002-artifact-links-2026-11-03.json"
+    out = ROOT / "evaluations/records/SCN-003-artifact-links-2026-11-03.json"
     out.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"allFound": all_found, "count": len(results)}))
     return 0 if all_found else 1

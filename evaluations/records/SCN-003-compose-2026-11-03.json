@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.scn-003-compose/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12 and the SUI consumer",
+  "command": "python integrations/tools/compose_scn_003.py --sui-repo <SUI>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:5cc0fa31466dda34c43323dd12e14b9281ec7be4757a8200e9a356f1bc8c11bb"
+  },
+  "observed": {
+    "valid": true,
+    "cards": 3,
+    "decisionRef": "decision-1",
+    "cardId": "card-decision-1"
+  },
+  "scope": "Adds the SEI decision as one SUI card and validates the composed artifact with the SUI consumer. It does not save the document or change SUI."
+}

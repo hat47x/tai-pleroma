@@ -1,5 +1,5 @@
 {
-  "schema": "tai.reference.scn-002-artifact-links/v0",
+  "schema": "tai.reference.scn-003-artifact-links/v0",
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
@@ -37,5 +37,5 @@
     "allFound": true,
     "count": 4
   },
-  "scope": "Checks that the four SCN-002 artifacts exist and contain the documented identifiers. It does not prove that a product would accept them."
+  "scope": "Checks that the four SCN-003 artifacts exist and contain the documented identifiers. It does not prove that a product would accept them."
 }
