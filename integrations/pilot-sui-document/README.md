@@ -522,3 +522,19 @@ casesPassed: 21 / 21
 
 - [receipt](../../evaluations/records/SUI-TEI-determinism-2026-11-03.json)
 - 異なるホスト・ツールチェーン間の決定性は未検証
+## 保存計画と保存の統合（2026-11-03）
+
+`save_to_sui.py`は、既存文書がある場合に`plan_save(preserve_existing=True)`のpayloadをそのまま`PUT`へ渡します。
+
+観測（2回目の保存）:
+
+```text
+planAction: update
+planCardsAdded: 0 / planCardsChanged: 0
+planPreservedCards: 0 / planWarnings: 0
+roundTrip: true
+```
+
+同じ内容の再保存が差分ゼロで通ることを確認しました。
+
+- [receipt](../../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
