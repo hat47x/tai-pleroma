@@ -112,6 +112,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-consumer-2026-11-02.json",
     "evaluations/records/SUI-TEI-adapter-2026-11-02.json",
     "evaluations/records/SUI-TEI-http-route-2026-11-02.json",
+    "evaluations/records/SUI-TEI-auth-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -186,6 +187,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-auth" in relative:
+            observed = data.get("observed", {})
+            if observed.get("authorizedStatus") != 200 or observed.get("anonymousStatus") != 401:
+                errors.append(f"TEI auth receipt did not record 200/401: {relative}")
+            if observed.get("authEnabled") is not True:
+                errors.append(f"TEI auth receipt did not enable authorization: {relative}")
         if "tei-http-route" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") != 2 or observed.get("status") != 200:

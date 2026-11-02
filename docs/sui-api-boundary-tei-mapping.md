@@ -101,3 +101,12 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-adapter-2026-11-02.jso
 - 実サーバ・実配備・tenant面のHTTP経路は未検証
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-http-route-2026-11-02.json)
+#### 実認可の確認（2026-11-02）
+
+`SUI_ADMIN_API_KEY`を設定した状態で、管理経路をTestClientで確認しました（[sui-sensemaking #3372](https://github.com/hat47x/sui-sensemaking/pull/3372)、`b56d78f`）。
+
+- 正しい`X-Admin-Api-Key`で200、artifactをverbatim返す
+- 無認証は401
+- DB依存はoverrideで外しており、実DB・実サーバは未検証
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-auth-2026-11-02.json)
