@@ -280,4 +280,6 @@
 
 観測列：`product revision / harness+skill digest / tool actual version / trust profile configured/history / Latest read outcome / issuer current permission / old-CA+registry eligibility / expected response class / disclosure destination / actual request+error / independent oracle / user continuation`。各列は評価票上の参照であり、TAI新しい共通Trust Store/認証器にしない。
 
-**順序**：まず公開fixtureの静的自己検査→SK-G0の各Product Skill入口に「実Trust由来の許可」への暗黙昇格がないかレビュー→実EKI #466/#467のOwner試験結果を受領→必要なHarness H2/H3/H4/H5へ適用。**公開fixture自己検査以外の、新Skill・実mTLS/OS/Network/Provider/Owner受理はNOT RUN**。初期互換に実運用で誰が許可を与えるかはEKI #433のOwner判断に残す。
+**実行済みの限定セルフチェック**：[9件の公開合成fixture](fixtures/SK-TB-current-trust.synthetic.json)と[Node.jsの再実行Script](tools/check-sk-tb-fixture.cjs)をGitHubへ追加。Node.js v22.16.0（Linux）で**9/9 PASS**、ローカルScript/fixtureのGit Blob SHAはGitHubで取得した各Blobと完全一致（[実行記録](records/SK-TB-public-fixture-selfcheck-2026-11-02.json)）。本結果は**公開された期待結果を持つ合成判定表とSHA算術の検査**であり、EKI mTLS・保存DB・Product Skill・Harness・実認証の試験ではなく、盲検Oracleでもない。
+
+**順序**：公開fixture整合の確認済み→SK-G0の各Product Skill入口に「実Trust由来の許可」への暗黙昇格がないかレビュー→EKI #466/#467が所有する実証を参照→必要なHarness H2/H3/H4/H5へ適用。**新Skill・実mTLS/OS/Network/Provider/Owner受理はNOT RUN**。初期互換の許可条件はEKI #433のOwner判断に残す。
