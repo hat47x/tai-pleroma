@@ -61,18 +61,18 @@ YI Constellationはブランド、TAIは目的・活動の継続と**必要な�
 
 | ID | 条件 | 期待判断・検出する誤昇格 |
 | --- | --- | --- |
-| MIN-01 | リンク順だけ変更、外部内容取得要求なし | Markdown単独で完了。全Product呼出を加点しない |
-| MIN-02 | 同じURLが2箇所、片方のOccurrenceだけメモ改訂 | 出典候補の同一性と別Occurrenceの編集を分離 |
-| MIN-03 | URLあるが本文未取得、問いQに答えるよう要求 | 本文に基づくClaimは未確認。SEI回答を捏造しない |
-| MIN-04 | SUIで未レビューEdgeあり、外部公開Projectionにない | Skill/Tool名・件数・エラー差で内部存在を漏らさない |
-| MIN-05 | TEI catalog/inspectは実在、SHO Writerは未確認 | TEI Toolのみを使用しSHO完成を主張しない |
-| MIN-06 | TEI exit 0でWarning、traceとinspectのfingerprintが違う | Warningと異Source・Unknownを保持 |
-| MIN-07 | Skill Markdown同じ、参照ScriptかRole eager依存だけ更新 | Root名/Hashだけの過去資格を持ち越さない |
-| MIN-08 | Visible Action一件、hidden Rule/RouteまたはGrant失効 | 開示候補／実適用／現在実行資格を独立判定 |
-| MIN-09 | 同じ最終回答、Planner Tool提案または実Egress byteが異なる | 回答だけの一致で非開示保証しない |
-| MIN-10 | EKI Claim ACKのみ、同Attempt Body未着、SHO Reader未実行 | 委任受付／Body／Consumer／納品を別段階 |
-| MIN-11 | 古い固定SHO版に新TEI branchだけ存在 | 選択した説明対象版を固定し、旧納品を自動失効しない |
-| MIN-12 | 別Harnessへ引継ぎ、履歴Successと現在Grant/Tool差あり | 履歴の保存と現在の再照合、使えるread-only作業継続 |
+| SK-MIN01 | リンク順だけ変更、外部内容取得要求なし | Markdown単独で完了。全Product呼出を加点しない |
+| SK-MIN02 | 同じURLが2箇所、片方のOccurrenceだけメモ改訂 | 出典候補の同一性と別Occurrenceの編集を分離 |
+| SK-MIN03 | URLあるが本文未取得、問いQに答えるよう要求 | 本文に基づくClaimは未確認。SEI回答を捏造しない |
+| SK-MIN04 | SUIで未レビューEdgeあり、外部公開Projectionにない | Skill/Tool名・件数・エラー差で内部存在を漏らさない |
+| SK-MIN05 | TEI catalog/inspectは実在、SHO Writerは未確認 | TEI Toolのみを使用しSHO完成を主張しない |
+| SK-MIN06 | TEI exit 0でWarning、traceとinspectのfingerprintが違う | Warningと異Source・Unknownを保持 |
+| SK-MIN07 | Skill Markdown同じ、参照ScriptかRole eager依存だけ更新 | Root名/Hashだけの過去資格を持ち越さない |
+| SK-MIN08 | Visible Action一件、hidden Rule/RouteまたはGrant失効 | 開示候補／実適用／現在実行資格を独立判定 |
+| SK-MIN09 | 同じ最終回答、Planner Tool提案または実Egress byteが異なる | 回答だけの一致で非開示保証しない |
+| SK-MIN10 | EKI Claim ACKのみ、同Attempt Body未着、SHO Reader未実行 | 委任受付／Body／Consumer／納品を別段階 |
+| SK-MIN11 | 古い固定SHO版に新TEI branchだけ存在 | 選択した説明対象版を固定し、旧納品を自動失効しない |
+| SK-MIN12 | 別Harnessへ引継ぎ、履歴Successと現在Grant/Tool差あり | 履歴の保存と現在の再照合、使えるread-only作業継続 |
 
 比較：`P0` Harness＋実Toolのみ、`P1`＋Product Skill、`P2`＋TAI Skillを**同一Task/Source/Tool/Allowed audience/独立Oracle**で反復し、達成率・false completion/false disclosure・unsupported・Source fidelity・Token／Tool／人のReview／実時間・不要なProduct起動数を報告する。P2を「製品を多く使ったから」高評価にしない。判断が問うQやProduct実能力によって変わるため、外部Harness未対応はunsupportedとする。
 
