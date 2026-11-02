@@ -47,7 +47,7 @@ Tokenの低価格化によって大量の候補・Skill・Product能力を開発
 
 ## 5. 12ケースの公開合成反例と受入順序
 
-[SK-01 §P](../../evaluations/SK-01-harness-skills.md)にSK-RQ01〜12を定義する。[公開fixture](../../evaluations/fixtures/SK-RQ-selective-requalification.synthetic.json)は**未封印の教育・整合性確認用**。公開Expectedを含むため独立した盲検Oracleではない。
+[SK-01 §Q](../../evaluations/SK-01-harness-skills.md)にSK-RQ01〜12を定義する。[公開fixture](../../evaluations/fixtures/SK-RQ-selective-requalification.synthetic.json)は**未封印の教育・整合性確認用**。公開Expectedを含むため独立した盲検Oracleではない。
 
 1. Sourceが別領域で変更され、必要依存の完全な既知集合から非影響を説明できる（旧資格の局所保持）。
 2. Claimが依存するRule改版で、表示が同じでも再検証対象となる。
@@ -73,7 +73,7 @@ Tokenの低価格化によって大量の候補・Skill・Product能力を開発
 | 評価面 | 主Owner・受入表 | 他方への入力 |
 | --- | --- | --- |
 | Productを跨いだEvidence/Source/Bodyの実Handoff・復帰条件 | **#271／SK-C01〜15** | 履歴と現在性を区別したSource/Task/Owner参照 |
-| 変更で影響するClaim・Skillだけを再確認する判断 | **#270 SK-01 §P／SK-RQ01〜12** | 変更イベント、既存Productが実証した依存、未確定項目の保留 |
+| 変更で影響するClaim・Skillだけを再確認する判断 | **#270 SK-01 §Q／SK-RQ01〜12** | 変更イベント、既存Productが実証した依存、未確定項目の保留 |
 | 共同Claimの同一Snapshot・Rule/Read | TEI #2514/#2582、SEI #767/#770 | Productごとの正式な局所Oracle/Result |
 | EKI Trust/Body、SHO文書、外部送出権限 | EKI #433/#465/#467、SHO #6、TAI #232 | 実Reader/Host/Policyの資格。過去SkillやHandoffの文章だけでは代用不可 |
 
