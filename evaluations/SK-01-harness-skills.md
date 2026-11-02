@@ -482,3 +482,30 @@
 比較条件は `P0=実Toolのみ`、`P1=P0+Product Skill`、`P2=P1+TAI Skill`。少なくとも同じタスク・Tool/Source/公開範囲・独立Expectedを固定し、**false completion、unsupported、不要なProduct起動、Token／実Tool／人のReview、Source忠実性、外部送出**を別採点する。P2の有利さを先取りしない。旧局所合成PASS、TEI Draft #2626の実CLI/同Job再読取を、H2/H3実Harness・SHO Reader・本番Provider成功に加算しない。
 
 **状態**：SK-MIN01〜12は評価設計のみ。Product Skillの実ロード、SC-A/SC-B横断到達、独立Reader、別Harness/Host/OSでの実作用・開示実証、Owner受理は**NOT RUN**。これらを伴わない文章上の例を「YICが実際に統合動作した」とは報告しない。
+
+## Y. 外部Harness別Skill/Profileと実Capability資格（SK-HP01〜14）
+
+[詳細なHarness対応表・C0〜C5照合](../docs/yi-constellation/harness-portability-and-capability-qualification-2026-11-03.md)をSK-01へ接続する。**Claude Code／Codex／OpenCode（DSH構成を別Profile）／利用可能なDots・Grok Bot**を代表候補とするが、実導入・現行機能は各環境で未確認。Skillの文書や公式機能説明は「実そのAccount・SessionにToolがある」という観測ではない。共通Host、Registry、Capability Engine、統一Harness APIは新設しない。
+
+| Case | 変化／負例 | Product/TAIの責務・正しい判定 |
+| --- | --- | --- |
+| **SK-HP01** | TEI `commands`の選抜read-only一覧に`operations`がないが、main dispatchにはある | 「一覧外＝未実装」を誤断定しない。実Tool availability/Grantは別 |
+| **SK-HP02** | TEI `artifacts`のstdoutと`artifacts -out`を混同 | 同名CLIでもargvによってFile write Effectが変わる。read-only Skillからwriteへ無断拡張しない |
+| **SK-HP03** | Harness Aで発見できたSkillをBへ配置、Bの探索Path/権限は別 | Bでの実発見/Load未観測なら未対応またはunknown。GitHub保存のみでは合格せず |
+| **SK-HP04** | 同一Skill名/root、参照Script byteが違う | 実ロード依存closureの差を追跡。旧結果を無条件再利用しない |
+| **SK-HP05** | OpenCode ProfileでSkillのpermissionをdeny | 表示されないSkillを「内部に存在しない」と一般化せず、許可された一覧だけ公開 |
+| **SK-HP06** | MCPのHarness別prefix／Tool schema／版が変化 | 実SessionのTool List・call args／Effectを再発見。文字列名だけで自動実行しない |
+| **SK-HP07** | TEI read-onlyだけで依頼達成 | TAI/SHO/EKIなど余分な起動は増分価値として採点しない |
+| **SK-HP08** | WorldFP不変、SourceIndex/Trace/Locationだけ変更 | TEI意味再生成とSource/SHO引用の現在資格を別に扱う。TEI merged #2626は限定実観測済み |
+| **SK-HP09** | Root RoleのPinはあるがeager依存InterpreterのPinが欠落 | 解釈資格・正式意味受理を保留。#2638の限定fixtureを実Role解決保証としない |
+| **SK-HP10** | SkillはLoaded、CLI/MCP実Toolが未接続 | 文書案内は可能でもProduct Tool invocationはunsupported／未観測 |
+| **SK-HP11** | 旧Harnessで成功、新HarnessのGrantは失効 | 歴史結果保存と現在のEffect/Egress再認可を区別、独立read-onlyは継続 |
+| **SK-HP12** | 同じ最終回答、Tool候補・Session Event・実送出byteが違う | Tool/Planner/Transport/Consumerの公開面を独立観測。TAI Draft #272のmockは実Harness保証ではない |
+| **SK-HP13** | Local CLI readは許可、CloudにSource Rawは送信禁止 | 観測可能なLocal ReadとAudience別Disclosureを分離、実Host/Network拒否は別Owner |
+| **SK-HP14** | EKI Claim ACKはあるが同Attempt Body未到達、SHO Reader未実施 | 履歴/Task受付/Body/Consumer/業務Effectを分離。「納品完了」としない |
+
+**評価順序**：まず同一実TEI read-only CLI＋公開合成Workspaceを使いH2 Tool-onlyとH3 Skillありを1 Harnessで比較。次に別Harnessで実Load/Tool arrivalの差を再測し、必要な場合のみH4/H5横断へ進む。さらにChange Injection（Source-only/Role/Script/Tool alias/Grant）で現在資格を再確認し、独立Oracleと開示許可を先に固定する。
+
+**記録条件**：`harness/version/profile/session, skill path/loaded bytes/refs, real tool/argv/response, source/epoch, observable public projection, effect class, current authority, actual egress, consumer receipt, independent expected, cost/time, unknown/unsupported`をケースごとに対象Scopeに限って保存。失敗した未設置Harnessを成功として数えず、公開Expected付き合成データを盲検評価としない。
+
+**実行状態**：本節のSK-HP01〜14は**全件NOT RUN**。既存TEI merged #2626の実CLI観測や、TEI Draft #2649のSource-static 15件はそれぞれのOwnerの局所証拠であり、ここでH2/H3/他Harnessが実行されたわけではない。SHO実Reader／OS/Network／Owner受理／Host本番作用は未実行。
