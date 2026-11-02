@@ -129,6 +129,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-save-auth-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json",
     "evaluations/records/SUI-TEI-server-2026-11-03.json",
+    "evaluations/records/SUI-TEI-determinism-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -229,6 +230,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-determinism" in relative:
+            observed = data.get("observed", {})
+            if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
+                errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
         if "tei-sui-server" in relative:
             observed = data.get("observed", {})
             if observed.get("serverReady") is not True or observed.get("anonymousStatus") != 401:
