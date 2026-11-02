@@ -5,7 +5,8 @@
 function assert(x, name) { if (!x) throw new Error("FAILED "+name); }
 function same(a,b){return JSON.stringify(a)===JSON.stringify(b)}
 function absence(w){
-  if(w.matchedWitness) return "refuted-with-witness";
+  if(w.matchedWitness && w.witnessScopeAndPredicateVerified && w.witnessCurrent)
+    return "refuted-with-witness";
   if(w.rows===0 && w.rowsetComplete && w.predicateEvaluated &&
      w.scopeVerified && w.cohortVerified && w.readCurrent)
     return "qualified-within-scope";
@@ -15,6 +16,10 @@ function currentRecheck(e){
   if(e.opaqueDependencies) return "not-established";
   if(e.changed.some(x=>e.dependencies.includes(x))) return "requalify";
   return e.currentReadAndGrantVerified ? "eligible-for-claim-review" : "historical-only";
+}
+function unchangedSince(events,coverageComplete){
+  if(!coverageComplete)return "not-established";
+  return events.length===0 ? "unchanged" : "changed";
 }
 function query(items,filterBeforeLimit){
   const sorted=items.slice().sort((a,b)=>a.id.localeCompare(b.id));
@@ -42,18 +47,20 @@ function pinValid(root,pins,installed){
 function runSelfcheck(){
  const out=[];
  function test(id,rule){assert(rule(),id);out.push(id)}
- const base={rows:0,matchedWitness:false,rowsetComplete:true,predicateEvaluated:true,
+ const base={rows:0,matchedWitness:false,witnessScopeAndPredicateVerified:false,
+   witnessCurrent:false,rowsetComplete:true,predicateEvaluated:true,
    scopeVerified:true,cohortVerified:true,readCurrent:true};
  test("NX-01-complete-zero",()=>absence(base)==="qualified-within-scope");
  test("NX-02-partial-zero",()=>absence({...base,rowsetComplete:false})==="not-established");
- test("NX-03-partial-positive",()=>absence({...base,rowsetComplete:false,matchedWitness:true})==="refuted-with-witness");
+ test("NX-03-partial-positive",()=>absence({...base,rowsetComplete:false,matchedWitness:true,
+   witnessScopeAndPredicateVerified:true,witnessCurrent:true})==="refuted-with-witness");
  test("NX-04-no-predicate-proof",()=>absence({...base,predicateEvaluated:false})==="not-established");
  test("NX-05-ABA-history-vs-current",()=>{
    const t0={time:0,rows:0},t1={time:1,rows:1},t2={time:2,rows:0};
    const sameValue=t0.rows===t2.rows;
    const changed=t0.rows!==t1.rows || t1.rows!==t2.rows;
    return sameValue && changed && absence(base)==="qualified-within-scope" &&
-     !(!changed);
+     unchangedSince([{time:1,delta:1},{time:2,delta:-1}],true)==="changed";
  });
  test("NX-06-filter-limit-noncommutative",()=>{
    const rows=[{id:"A",active:false},{id:"B",active:true}];
@@ -106,6 +113,12 @@ function runSelfcheck(){
      currentRecheck({dependencies:["rule"],changed:["rule"],opaqueDependencies:false,
        currentReadAndGrantVerified:true})==="requalify";
  });
+ test("NX-15-unqualified-scope-witness",()=>absence({...base,rowsetComplete:false,
+    matchedWitness:true,witnessScopeAndPredicateVerified:false,witnessCurrent:true})==="not-established");
+ test("NX-16-stale-witness",()=>absence({...base,rowsetComplete:false,
+    matchedWitness:true,witnessScopeAndPredicateVerified:true,witnessCurrent:false})==="not-established");
+ test("NX-17-no-notification-is-not-no-change",()=>unchangedSince([],false)==="not-established" &&
+    unchangedSince([],true)==="unchanged" && unchangedSince([{delta:1}],true)==="changed");
  return {name:"SK-N bounded synthetic negative-witness selfcheck",cases:out,checks:out.length,
    status:"PASS",scope:"public deterministic reference; no Product/Provider/Host/Harness execution"};
 }
