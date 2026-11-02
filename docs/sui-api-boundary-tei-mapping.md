@@ -91,3 +91,13 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-consumer-2026-11-02.js
 - unittest 9件がPASS
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-adapter-2026-11-02.json)
+### HTTP経路の確認（2026-11-02）
+
+管理経路`/admin/tei-epistemic/artifacts/documentv1-projection`をFastAPIのTestClientで確認しました（[sui-sensemaking #3367](https://github.com/hat47x/sui-sensemaking/pull/3367)、`42ec002`）。
+
+- 200でartifactをverbatim返す（`Cache-Control: no-store`）
+- 未知kindは404 `unknown_tei_artifact`
+- control-plane認可はdependency overrideで外しており、認可そのものは未検証
+- 実サーバ・実配備・tenant面のHTTP経路は未検証
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-http-route-2026-11-02.json)

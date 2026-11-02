@@ -117,6 +117,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
+| 管理経路のHTTP応答をTestClientで確認し、認可はoverrideで外したことを明記する | 実サーバなしで経路とfail-closedを検証できる | 実認可・実配備を確認するとき |
 | 投影からDocumentV1相当のpayloadを組み立て、`transform`・時刻は呼び出し側が供給する | 投影に含まれない必須項目を明示し、保存は別の変更に分ける | 保存経路を実装するとき |
 | SUI側に読み取り専用のartifact consumerを置き、型付きrecordへ読む | API・UIへ接続する前に、artifactの検証と参照整合性をSUI側で確認できる | DocumentV1の保存・API接続を行うとき |
 | documentv1-projectionはAPIの読み取り専用消費に限定し、フロントエンドconsumerは作らない | 既存UIはepistemic系のみを扱い、DocumentV1表示は再構築の対象 | 再構築で表示・編集が必要になったとき |
