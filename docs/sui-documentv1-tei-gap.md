@@ -82,6 +82,6 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 
 ## 写像の範囲（2026-11-02の暫定決定）
 
-- 投影する: Documentのid/title、Cardのid/text/x/y/claimType/holdState/textReviewed、Islandのid/title/cardIds、Edgeのid/fromId/toId/type/fromKind/toKind、Affiliationのid/cardId/islandId。
+- 投影する: Documentのidとoptionalなtitle、Cardのid/text/x/y/claimType/holdState/textReviewed、Islandのid/title/cardIds、Edgeのid/fromId/toId/type/fromKind/toKind、Affiliationのid/cardId/islandId。
 - 投影しない: `critiqueHistory`などの構造体配列、`transform`、`createdAt`/`updatedAt`、図形・要約・履歴。これらはSUI側の元データを正本とする。
 - artifactは読み取り専用で、SUIのDocumentV1そのものではない。

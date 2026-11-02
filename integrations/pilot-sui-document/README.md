@@ -376,3 +376,17 @@ edges[].fromId/toId/type/fromKind/toKind、affiliations[]
 - 対象: Document(id,title)、Card(id,text,x,y,claimType,holdState,textReviewed)、Island(id,title,cardIds)、Edge(id,fromId,toId,type,fromKind,toKind)、Affiliation(id,cardId,islandId)
 - 対象外: `critiqueHistory`などの構造体配列、`transform`、`createdAt`/`updatedAt`、図形・要約・履歴
 - 対象外は、投影契約ではなくSUI側の元データを正本とする
+## Document/Islandのoptional title（2026-11-02）
+
+SUIの`DocumentV1.title`と`Island.title`はoptionalなので、契約を合わせました。
+
+```text
+sui.document.record v4: id, title?
+sui.island.record v5:   id, title?, cardIds[]
+```
+
+- `title`がない場合は出力から省略
+- `id`と`cardIds`は必須のまま
+- 21ケースPASS、単体13件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-optional-core-2026-11-02.json)
