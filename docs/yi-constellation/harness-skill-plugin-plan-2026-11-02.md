@@ -186,7 +186,7 @@ Skill名、CLI help、Tool schema、MCP tools/list、ErrorやCapabilityの件数
 
 ### 10.3 実在CLIを使った最初の対照
 
-TEI #2605では、実行入口のread-only discoveryは全Plugin一覧ではなく限定したselected-read-only-commandsと報告されている。最初のTEI Skillは、実在が確認された model catalog、inspect、trace、validate -json 等に限定する。validateの終了コード0とok・diagnostics・Warningを分け、複数呼出しのworld/source fingerprintが同じSnapshotに対応するか確認する。モデル検査だけでOwner受理や外部Host上のJava/.NET/WASMの動作を保証しない。
+TEI #2605／[候補Draft #2607](https://github.com/hat47x/tei-platform/pull/2607)では、portable read-only Product Skill文書をTEI自身が保有し、実行入口のdiscoveryは全Plugin一覧ではなく限定したselected-read-only-commandsと報告されている。候補SkillのMarkdownがブランチに存在することと、実CLI/Harness稼働とは別。最初のTEI Skillは、実在が確認された model catalog、inspect、trace、validate -json 等に限定する。validateの終了コード0とok・diagnostics・Warningを分け、複数呼出しのworld/source fingerprintが同じSnapshotに対応するか確認する。モデル検査だけでOwner受理や外部Host上のJava/.NET/WASMの動作を保証しない。
 
 Product単独利用（TAIなし）の対照H2↔H3を先行し、複数製品が本当に必要なケースでH4↔H5を実行する。Skill追加が有益とは限らず、同じ公開仕様・Tool版・入力Sourceと独立期待値を保持し、余分なTool呼出し・Context・開示・誤成功も計測する。
 
@@ -238,6 +238,8 @@ Skillの初期read-only経路は、実Product側の公開プロトコルが提�
 ### 11.4 機密ProfileではManifest・出力名自体を開示範囲に含める
 
 Output filename、Manifest列挙、Subject ID・件数、対象バージョン、生成ログ、失敗箇所は非公開の構造を漏らし得る。外部Harnessへ渡すのはSource保持Product/実Hostの**許可済み公開投影と検証結果のみ**。内部で完全集合と同版byteを確認しても、詳細なManifestや検証Booleanを外部へ返せるとは限らない（TAI #232／TEI #2515/#2516）。Client Skillがファイルを隠しただけではOSでRawを禁止した証拠にならない。
+
+既存[SK-01 §KのSK-C01〜06](../../evaluations/SK-01-harness-skills.md)（または[TAI #168の接続検討](https://github.com/hat47x/tai-pleroma/issues/168#issuecomment-6572833447)）は**製品間のSubject/Source/時点/意味の対応**、本§11とSK-Jは**版間対応候補・物理公開世代・実成果物の送達**を扱う。横断H4/H5の「完了」にはどちらか一方の単体PASSでは足りず、必要な結合辺の実証が要る。
 
 ### 11.5 計画と検証Owner
 
