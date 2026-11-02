@@ -284,6 +284,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SUI-TEI-postgres" in relative:
+            observed = data.get("observed", {})
+            expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
+            if data.get("result") != expected:
+                errors.append(f"SUI Postgres receipt result does not match roundTrip: {relative}")
         if "SUI-TEI-tls" in relative:
             observed = data.get("observed", {})
             if observed.get("tls") is not True or observed.get("authenticatedStatus") != 200:
