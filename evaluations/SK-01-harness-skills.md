@@ -309,7 +309,7 @@
 
 **SK-F実Product/Harness・実公開資格：全件NOT RUN**。他Repoの合成Python試験のPASSはTAI横断H5や本番Grantへ加算しない。
 
-## P. 2026-11-02：SK-RQ01〜12 変更後の選択的再資格化と共同Claim
+## Q. 2026-11-02：SK-RQ01〜12 変更後の選択的再資格化と共同Claim
 
 [選択的再資格化の設計・Owner表](../docs/yi-constellation/harness-skill-selective-requalification-2026-11-02.md)。TEI [#1445 H8-P13/P14](https://github.com/hat47x/tei-platform/issues/1445)、[#2582](https://github.com/hat47x/tei-platform/issues/2582)／[#2514](https://github.com/hat47x/tei-platform/issues/2514)、SEI [Draft #770](https://github.com/hat47x/sei-cognition/pull/770)、SHO [#6](https://github.com/hat47x/sho-composer/issues/6)、EKI [#467](https://github.com/hat47x/eki-fabric/issues/467)の既存Ownerを使用する。TAIは各Productの依存解析・認証・独立Oracleを再実装せず、**再確認するClaimと履歴として維持できる成果を適切に選べるか**を検証する。
 
@@ -336,7 +336,7 @@
 
 **実証段階**：公開fixture整合→TEI #2605実read-only CLIとSkillのH2/H3→R1/R2で本当に必要な局所再確認の観測→TAI H4/H5で共同Claimと不要なTool/開示を比較→EKI/Provider/OS/Ownerの実確認。Product単独で成立する局所TaskにはTAI横断Skillを導入しない対照を保持。新SK-RQの実Product/実Harness/独立sealed評価・本番作用は**NOT RUN**。
 
-## Q. Activity継続の選択的再資格化（SK-C01〜C15）
+## R. Activity継続の選択的再資格化（SK-C01〜C15）
 
 [設計／Product境界](../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)／[Owner作業票 TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)。各Productで既に得た局所PASSを、新Activityの同一Source/Meaning/Scope/Consumer/Hostに対する総合PASSへ昇格させない。別時点・別Provider・別Attemptに対する**履歴の有効性**は保存しつつ、現在の目的で再利用できる証拠を再確認する。
 
@@ -362,3 +362,4 @@
 
 **比較計画**：J0全再実行、J1依存差分再資格化、J2古いAgentの「成功」を無条件継承する負例。J1が省略してよい範囲にはProduct Ownerによる依存保証が必要で、不明はunknown。対象Claim・Scope/Grain・Source/Method/Tool版、Body receipt/Consumer Read、現在Grant/Disclosureの**実証拠を分離**して採点。既存TEI #2018とTAI #168の総合生産性計測へ接続する。
 
+**SK-RQとの分担**：SK-RQ01〜12は変更後のClaim再資格化（Opaque依存・Oracle改版・Skill Script差・Artifact混在等）を扱い、SK-C01〜15は公開の**明示DAGの影響閉包**と、EKI Result Body→SHO Consumer→TAI ActivityのHandoff分類を扱う。SK-RQのR2＝不明項目の限定保留、SK-CのJ2＝旧Agent成功を無確認で再利用する誤った対照。どちらも現実の依存Graph/現在Grant/実受取を確認した保証ではない。
