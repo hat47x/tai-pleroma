@@ -16,6 +16,7 @@ data Island {
     attribute islandId type std.identifier
     attribute documentId type std.identifier
     attribute title type std.text
+    attribute cardIds type std.identifier
 }
 
 data Edge {

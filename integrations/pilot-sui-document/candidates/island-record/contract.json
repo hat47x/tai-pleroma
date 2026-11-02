@@ -1,19 +1,21 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.island.record",
-  "version": "3",
+  "version": "4",
   "status": "reference-local",
-  "note": "SUI Islandのidとtitleを投影する参照用の契約。cardIds・図形・要約は対象外。",
+  "note": "SUI Islandのid・title・cardIdsを投影する参照用の契約。図形・要約は対象外。cardIdsは文字列配列として扱う。",
   "inputs": [
     {"attribute": "sui.island.island_id", "primitive": "std.identifier"},
-    {"attribute": "sui.island.title", "primitive": "std.text"}
+    {"attribute": "sui.island.title", "primitive": "std.text"},
+    {"attribute": "sui.island.card_ids", "primitive": "std.identifier"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
     "kind": "record",
     "fields": [
       {"name": "id", "input": "id", "attribute": "sui.island.island_id", "primitive": "std.identifier"},
-      {"name": "title", "input": "title", "attribute": "sui.island.title", "primitive": "std.text"}
+      {"name": "title", "input": "title", "attribute": "sui.island.title", "primitive": "std.text"},
+      {"name": "cardIds", "input": "cardIds", "attribute": "sui.island.card_ids", "primitive": "std.identifier", "many": true}
     ]
   }
 }

@@ -233,6 +233,20 @@ sui.affiliation.record: id, cardId, islandId
 
 `Island.cardIds`（Island側の包含リスト）は、投影契約が配列を扱えないため未対応です。所属はAffiliationで表す暫定決定とします。
 
+### 配列投影とIsland.cardIds（2026-11-02）
+
+投影フィールドに`many`を追加し（[PR #2576](https://github.com/hat47x/tei-platform/pull/2576)）、`sui.island.record`をv4へ上げて`cardIds`を文字列配列として投影しました。
+
+```text
+sui.island.record: id, title, cardIds[]
+```
+
+- 空配列は`present`で`[]`
+- 欠落は`missing`、`null`は`unresolved`
+- 合成層は`cardIds`の各要素が実在するCardを指すか検査
+
+単体テスト9件と結合経路21ケースがPASSしました（[receipt](../../evaluations/records/SUI-TEI-island-cardids-2026-11-02.json)）。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。
