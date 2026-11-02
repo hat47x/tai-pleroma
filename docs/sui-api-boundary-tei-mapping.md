@@ -62,3 +62,5 @@ GET /docs/{doc_id}/epistemic/projection
 
 SUIの許可リストへ`documentv1-projection`を追加しました（[sui-sensemaking #3364](https://github.com/hat47x/sui-sensemaking/pull/3364)、`963adb0`）。TAIのartifactを`tenants/<tenantId>/<docId>/documentv1-projection.json`へ置き、SUIのtransport moduleでpayloadが一致して読めること、別tenantでは
 ot-a-file`になることを確認しました（[receipt](../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)）。HTTPサーバ・認証・配備は未検証です。
+
+なお、2026-11-02に`install_artifact.py`と`verify_sui_reader.py`で、バインディングの解決とtenant分離を確認しました（[receipt](../evaluations/records/SUI-TEI-binding-2026-11-02.json)）。

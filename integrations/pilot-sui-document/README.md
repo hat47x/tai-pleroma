@@ -291,3 +291,23 @@ tenant isolation: PASS（別tenantはnot-a-file）
 
 - [receipt](../../evaluations/records/SUI-TEI-sui-reader-2026-11-02.json)
 - SUIのtransport moduleを直接読み込み、HTTPサーバ・認証・配備は通していません
+
+## 運用者バインディング（2026-11-02）
+
+`assembler/install_artifact.py`で、artifactを`tenants/<tenant>/<doc>/documentv1-projection.json`へ置き、`epistemic-bindings.json`へバインディングを記録します。
+
+```sh
+python integrations/pilot-sui-document/assembler/install_artifact.py \
+  --root <SUI_TEI_REFERENCE_DIR> --tenant tenant-a --doc doc-1 \
+  --artifact evaluations/artifacts/documentv1-projection.json
+```
+
+`verify_sui_reader.py`で、バインディングの解決と読み取りを確認しました。
+
+```text
+binding resolved: PASS（documentv1-projection）
+read:             PASS（payloadがartifactと一致）
+tenant isolation: PASS（別tenantはnot-a-file）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-binding-2026-11-02.json)
