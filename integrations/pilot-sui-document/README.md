@@ -455,3 +455,23 @@ CLIは、保存計画のpayloadをSUIの保存経路と同じA1契約アダプ�
 - 観測: `contractValid: true`、`contractCards: 3`
 
 - [receipt](../../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)
+## 保存の実行（2026-11-03）
+
+`assembler/save_to_sui.py`で、投影artifactをSUIのHTTP APIへ保存します。
+
+- SUIアプリを一時SQLite DBで起動（`local-dev`、APIキーなし）
+- `PUT /docs/{doc_id}`で作成し、`GET`で読み戻し
+- 既存文書を検証したうえで非破壊マージし、`PUT`で更新
+- 最終`GET`まで確認
+
+観測:
+
+```text
+create: 200 / read: 200
+update: 200 / final read: 200
+cards: 2 / writes: true
+database: temporary SQLite
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-e2e-2026-11-03.json)
+- 本番DB・認証・実配備は未検証

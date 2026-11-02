@@ -160,3 +160,16 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-merge-2026-1
 - 保存・API呼び出しは未実施
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)
+### 保存の実行（2026-11-03）
+
+`save_to_sui.py`で、投影から作成・読み戻し・非破壊マージによる更新までを通しました。
+
+- `PUT /docs/doc-1` 作成: 200
+- `GET` 読み戻し: 200
+- 既存検証 + マージ + `PUT`: 200
+- 最終`GET`: 200
+- 一時SQLite、`local-dev`、APIキーなし
+
+本番DB・認証・実配備は未検証です。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-e2e-2026-11-03.json)

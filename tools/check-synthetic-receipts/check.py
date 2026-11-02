@@ -125,6 +125,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-contract-2026-11-03.json",
+    "evaluations/records/SUI-TEI-save-e2e-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -225,6 +226,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-save-e2e" in relative:
+            observed = data.get("observed", {})
+            if observed.get("writes") is not True or observed.get("finalReadStatus") != 200:
+                errors.append(f"TEI save e2e receipt did not record a successful write: {relative}")
+            if observed.get("database") != "temporary SQLite":
+                errors.append(f"TEI save e2e receipt must disclose the temporary database: {relative}")
         if "tei-save-contract" in relative:
             observed = data.get("observed", {})
             if observed.get("contractValid") is not True or observed.get("writes") is not False or observed.get("existingValidated") is not True:
