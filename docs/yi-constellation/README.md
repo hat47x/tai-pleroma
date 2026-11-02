@@ -7,13 +7,13 @@
 六つの器官と一つの風を、易の象、華厳の関係、マンダラの門、五行の巡り、ラサの味わい、五大の場所から読みます。価値の核、関係と経験、変化と未来、次の身体という四つの章で、製品の活用と発展をたどります。
 
 - [PowerPoint：前編30枚](decks/part1/YI_Constellation_1.pptx)
-- [PowerPoint：後編24枚（31〜54番）](decks/part2/YI_Constellation_2.pptx)
-- [PDF：後編24枚](decks/part2/YI_Constellation_2.pdf)
+- [PowerPoint：後編42枚（31〜72番）](decks/part2/YI_Constellation_2.pptx)
+- [PDF：後編42枚](decks/part2/YI_Constellation_2.pdf)
 - [後編の詳細版47枚（31〜77番）](decks/part2/YI_Constellation_2_detail.pptx)
 - [文化的体系から読む、製品の価値と発展](analysis/44-続編の統合論考.md)
 - [スライド本文・図の読み方・出典](analysis/45-続編スライドの構成と出典.md)
 
-前編30枚と後編24枚は別ファイルです。後編は図を中心に再構成し、通し番号は31〜54番です。47枚の詳細版も残しています。
+前編30枚と後編42枚は別ファイルです。後編は図を中心に再構成し、詳細版の製品頁・関係頁・変化頁・参照頁を統合しています。通し番号は31〜72番です。47枚の詳細版も参照用に残しています。
 
 ## この資料群の目的
 
