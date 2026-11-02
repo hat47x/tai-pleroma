@@ -55,7 +55,7 @@
     "MMI #758 observed CP932 decoded text without an exposed decoder profile; raw source digest does not prove decoded value provenance.",
     "SHO Draft #13 Python spike reproduced identical bytes in distinct paths, A->B->A ABA and partial write results; not SHO product acceptance."
   ],
-  "tai_product_skill_loaded": false,
+  "tai_product_skill_loaded": "NOT RUN",
   "tai_h2_h3_trials": "NOT RUN",
   "consumer_business_acceptance": "NOT RUN"
 }
