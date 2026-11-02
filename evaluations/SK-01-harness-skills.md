@@ -509,3 +509,25 @@
 **記録条件**：`harness/version/profile/session, skill path/loaded bytes/refs, real tool/argv/response, source/epoch, observable public projection, effect class, current authority, actual egress, consumer receipt, independent expected, cost/time, unknown/unsupported`をケースごとに対象Scopeに限って保存。失敗した未設置Harnessを成功として数えず、公開Expected付き合成データを盲検評価としない。
 
 **実行状態**：本節のSK-HP01〜14は**全件NOT RUN**。既存TEI merged #2626の実CLI観測や、TEI Draft #2649のSource-static 15件はそれぞれのOwnerの局所証拠であり、ここでH2/H3/他Harnessが実行されたわけではない。SHO実Reader／OS/Network／Owner受理／Host本番作用は未実行。
+
+## Z. 2026-11-03：空集合の否定依存・ABA・Relation再束縛とCapability実装同一性（SK-N）
+
+[TAI #271 活動継続の計画§10](../docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)へ、[TEI #2582](https://github.com/hat47x/tei-platform/issues/2582)／[TEI #2387 QX-31](https://github.com/hat47x/tei-platform/issues/2387)／[TEI #2640](https://github.com/hat47x/tei-platform/pull/2640)／[TEI #2638](https://github.com/hat47x/tei-platform/pull/2638)の局所反例を接続した。**TAIはQuery・Read/Cache・Role Resolver・Permissionを実装せず、Productが提示した根拠が現在のActivity Claim/Consumerに必要十分かと、履歴の保持可否を判定する横断評価を持つ**。
+
+| Case | 公開合成の正負対 | 横断Skillが誤昇格させてはいけないもの |
+| --- | --- | --- |
+| **SK-N01〜04：空集合** | 完全Scope・完全Predicate実行の0件／partial 0件／partialだが一致Witnessあり／Predicate実行証拠なし | 0件Observationを普遍的不存在とする、partial 0をfalseとする。部分的に得た確実な一致反例は限定否定として有効 |
+| **SK-N05：ABA** | t0=0→t1=1→t2=0。現在の0件だけ同じ | t0の履歴が正しく、t2で同じ結果だとしても、期間無変更ClaimやRequestからの同一Effectを認めない |
+| **SK-N06：演算順序** | Filter→Order→Limit＝B、Order→Limit→Local Filter＝0 | Outputが空だから対象が存在しない、二つのQueryが同義と断定 |
+| **SK-N07：二Window** | W1のA→B後着Aを拒否、W2の独立A観測は適格 | W1の旧ResponseをW2のInputとして代用、またはW2の正しい履歴まで一律失効 |
+| **SK-N08：Relation再束縛** | O1.amount600不変、Customer→Accountのlimit700→500 | Displayが同値だから隠れたRule/Read依存も現在有効とする |
+| **SK-N09〜10：依存観測の範囲** | 未観測依存がある／依存既知で無関係な文書タイトルだけ変更 | 未観測を「変化なし」に昇格、または無関係な結果を一律再実行 |
+| **SK-N11：Eager Roleの実装Pin** | Role/Root versionは一致、Eager依存先のImplementation fingerprintが異なる | 旧Semantic Role版文字列だけで現行実装の利用資格を認める |
+| **SK-N12：CLI discovery** | `commands`は選抜read-only、別dispatchに`operations/artifacts`の実Sourceがある | 選抜Catalog非掲載＝機能不存在、またはdispatch存在＝Skill現在Grant とする |
+| **SK-N13〜14：開示/Rule改版** | Sourceの値は同じで公開Policyだけ変化／Output digest同じでRule改版 | 歴史的Observationから現在の公開可否やRule適合を推定 |
+
+**公開限定Reference**：[Script](tools/check-sk-n-negative-witness.cjs)は架空データの決定的な条件をテストし、GitHub保存済みScriptをV8で実行して**14/14の公開自己整合**を確認（[記録](records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)、Script Git Blob `92eed571d4e04f568eefce96b725a56994eb6eb0`）。この実測は**TEIのSQLite12件の実SQL例、Role/Go Extension Lock、本物のWindow/Provider DB、実Host/Skill/Harness、独立sealed Oracleを呼んでいない**。製品の合格率へ14件を加算しない。
+
+**他レーンの更新資格**：[TEI Draft #2626](https://github.com/hat47x/tei-platform/pull/2626)は2026-11-02T18:35:59Zに**mainへmerge済み**で、限定した実CLI/同Job再読取の証拠はTEI側に存在する。しかし**TAI SK-NやProduct Skill H2/H3で実CLIを呼んだわけではない**。実CLIで`operations`が利用可能なことと`artifacts -out`の実書込みは異なるEffect分類であり、開示やCurrent Grantを新たに与えない。Source移動でWorldFPが同じでもSourceIndex/Traceが変わる条件は、SHO/外部Consumer側の引用再確認候補。
+
+**実証への移行**：最初にTEIの既存read-only CLI/Goモデルと同一Sourceに対し、(a)Predicate/Relation/Scopeの否定依存Witness、(b)実Window epoch/選択、(c)Role/Extension Lockの実Pin、(d)Product Skillの実Loaded/Tool Invokedを**それぞれのOwnerで観測**する。TAIはH2/H3およびH4/H5、TAI #271 J0/J1/J2との誤再利用・過剰失効を比較する。現在は本SK-Nの実Product/二Harness/OS/Provider/Owner意味受理 **NOT RUN**。新Negative Cache／Reactive Runtime／中央Host／Skill権限正本を提案しない。
