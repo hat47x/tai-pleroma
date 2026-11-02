@@ -91,3 +91,12 @@ Skill実ロード・独立Oracle・実Tool出力が揃わなければ、H2/H3 Sk
 | Source/Grant/Disclosure移動 | 同一文字列Value/WorldFPだけでは固定版が十分とは限らない | Principal/Host/Tool/実送信byteをScopeに照合。未観測はUnknownとして報告 |
 
 **優先順**：P0＝実TEI #2626由来の公開read-onlyコマンドでS1 Product-only観測をTAIに取り込み、Tool-only H2の実出力を固定。P1＝別SessionでH3 Product Skill forced loadを実観測し、四試行を成立させる。P2＝独立Oracleを適用して比較、auto discoveryを別Groupで実施。P3＝H4/H5／SHO・EKI連携・Source改版／Egress負例へ拡張する。**H3未ロード・権限差・プロンプト差で不適格になった試行を、Skillの効果ゼロと算出しない**。TEI実CLIの成功もTAI Harnessの成果へ合算しない。
+
+---
+
+<!-- sk02-next-two-harness-20261103 -->
+## 8. 2026-11-03：結果を第2 Harnessへ渡す際の比較資格
+
+SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。第2 Harnessへの配布・差分Adapter・Source再解決・現在Grant/Disclosure/Consumer到達の検証は[SK-03](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)へ移譲する。実行Groupを混ぜて4 Sessionを水増ししたり、Claude Code／Codex／OpenCode／DSHの異なるModel/Plan/権限を「同条件のSkill効果」へ偽装しない。後続実験では第1 Harnessで実際にLoaded/InvokedされたProduct SkillとCLIに対し、Source/実byte/型付きResult/Warning/Unknownを固定して第2 Harnessで再資格化する。
+
+[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のHandoffはHistoryとCurrent Qualificationを区別。DSH/Cloudの外部送出面、OpenCodeのTool/Skill permission、MCP対応版は各実環境で検査し、実Raw/Host Grantのコピーを前提にしない。**SK-03新試験の実観測はNOT RUN**。SK-02既存20/20は公開合成の比較適格性Checkerに限る。
