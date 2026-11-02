@@ -164,3 +164,15 @@ roundTrip: true
 ```
 
 テナント行の投入は migration 後も必要だった（migrationはテナントを投入しない）。[receipt](../evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json)
+## SaaSプロファイルの前提（2026-11-03再確認）
+
+埋め込みPostgresをAlembicで初期化したうえで`SUI_RUNTIME_PROFILE=saas-multitenant`を起動すると、`trusted SaaS runtime policy is incomplete`で停止する。現在の不足項目は6つ。
+
+1. external access control
+2. deny fail-safe mode
+3. external document policy binding
+4. external tenant capability resolution
+5. SaaS OAuth broker authorize endpoint configured
+6. SaaS auth-session hash key configured
+
+APIキーと管理者キーを設定しても、この6項目は自動では満たされない。[probe](../evaluations/saas-startup-probe-2026-11-03.json)

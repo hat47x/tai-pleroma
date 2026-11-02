@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.sui-saas-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/tools/probe_saas_profile.py <SUI repo>",
+  "result": "IMPORTED",
+  "observed": {
+    "runtimeProfile": "saas-multitenant",
+    "importOk": true,
+    "seconds": 2.9,
+    "outputTail": [
+      "IMPORT_OK"
+    ]
+  },
+  "scope": "Shows what happens when SUI is asked for the SaaS multi-tenant profile without configuring it. It does not enable the profile or change SUI."
+}
