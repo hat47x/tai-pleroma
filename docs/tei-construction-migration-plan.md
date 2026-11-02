@@ -117,7 +117,8 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
-| Document/Islandの`title`はoptionalとして投影する | SUI側で省略可能な項目を、必須recordで欠落扱いにしない | 必須に戻す仕様変更があったとき |
+| 管理経路（`/admin/tei-epistemic/artifacts/{kind}`）でも同じartifact kindを読む | tenant面と運用者面で同じ成果物を参照でき、検証を共有できる | 管理面のkindを分ける必要が出たとき |
+| Document/Islandの	itleはoptionalとして投影する | SUI側で省略可能な項目を、必須recordで欠落扱いにしない | 必須に戻す仕様変更があったとき |
 | 構造体配列・	ransform・時刻は投影せず、SUI側の元データを正本とする | flatな投影契約で無理に写像せず、読み取り専用artifactの範囲を保つ | 完全なDocumentV1写像が必要になったとき |
 | 真偽値はstd.booleanで投影し、optionalの欠落は省略する | `textReviewed`のようなフラグを型を保って扱える | 構造体の履歴を扱うとき |
 | optionalな列挙はoptionalフィールドで表し、欠落時は出力から省略する | SUIのoptional列挙を、必須recordを壊さずに投影できる | 真偽値・履歴を扱うとき |

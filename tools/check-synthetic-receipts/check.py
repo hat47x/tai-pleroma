@@ -108,6 +108,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-reviewed-2026-11-02.json",
     "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
     "evaluations/records/SUI-TEI-optional-core-2026-11-02.json",
+    "evaluations/records/SUI-TEI-admin-path-2026-11-02.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -182,6 +183,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-admin-path" in relative:
+            if data.get("adminPathOk") is not True or data.get("readOk") is not True:
+                errors.append(f"TEI admin path receipt did not read the artifact: {relative}")
         if "tei-binding" in relative:
             if data.get("bindingResolved") is not True or data.get("readOk") is not True:
                 errors.append(f"TEI binding receipt did not resolve and read: {relative}")

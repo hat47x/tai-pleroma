@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-sui-reader/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "suiCommit": "963adb0c2b5fbb353aa8a9d2190ebe65efadb94f",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/verify_sui_reader.py --sui-repo D:\\GIT\\hat47x\\sui-wt-main --artifact D:\\GIT\\hat47x\\tai-wt-optcore\\evaluations\\artifacts\\documentv1-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "tai-wt-optcore\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:b16489915a09f3f994a4fadf4c41e575a1ff6c466a12148555196f8cc3339c20"
+  },
+  "readOk": true,
+  "bindingResolved": true,
+  "tenantIsolationRejected": true,
+  "adminPathOk": true,
+  "scope": "The SUI transport module is imported directly and reads the TAI artifact from a temporary tenant directory. It does not start the SUI server, exercise HTTP authorization, or prove deployment."
+}
