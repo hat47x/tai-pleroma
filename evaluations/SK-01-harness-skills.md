@@ -392,7 +392,7 @@
 
 **比較順序**：P0＝SHO整理リンク・TEI構造/Operator・EKI ACKの3種の異質なEdgeで意味Role不足を診断、P1＝実Product read-only情報、P2＝二Productの同一Source/Claim/Clock条件、P3＝二Harness＋H2/H3/H4/H5＋J0/J1/J2。**SK-CはEvidence依存の影響閉包、SK-CEは接続意味の妥当性**を担当し、互いのPASSを代理しない。実Product/Harness/OS・Owner受理はNOT RUN。
 
-## S. 2026-11-02：最初の実Tool資格確認に進むための実行票（全新試験NOT RUN）
+## T. 2026-11-02：最初の実Tool資格確認に進むための実行票（全新試験NOT RUN）
 
 [実施Runbook](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)で、数多くの**公開合成・自己整合**から一件の**実Product/Skill/Consumer観測**へ進む順序を固定する。以下はSK-01 H2/H3/H4/H5の既存受入条件を使用するためのチェックリストであり、新共通Runtimeや第二Oracleではない。
 
