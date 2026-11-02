@@ -11,7 +11,7 @@ import time
 
 from document_assembler import AssemblyError, assemble
 
-CONTRACTS = ["document-record", "card-record", "island-record", "edge-record"]
+CONTRACTS = ["document-record", "card-record", "island-record", "edge-record", "affiliation-record"]
 
 
 def digest(path):
@@ -95,12 +95,13 @@ def main():
     ]
     islands = [candidates["island-record"]["records"]["present"]]
     edges = [candidates["edge-record"]["records"]["present"]]
+    affiliations = [candidates["affiliation-record"]["records"]["present"]]
 
-    composed = assemble(document, cards, islands, edges)
+    composed = assemble(document, cards, islands, edges, affiliations)
     dangling = [dict(edges[0], toId="card-9")]
     rejected = False
     try:
-        assemble(document, cards, islands, dangling)
+        assemble(document, cards, islands, dangling, affiliations)
     except AssemblyError:
         rejected = True
 
@@ -123,6 +124,7 @@ def main():
             "cards": len(composed["cards"]),
             "islands": len(composed["islands"]),
             "edges": len(composed["edges"]),
+            "affiliations": len(composed["affiliations"]),
         },
         "danglingReferenceRejected": rejected,
         "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance.",

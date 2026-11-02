@@ -221,6 +221,18 @@ Edge:     id, fromId, toId, type, fromKind, toKind
 
 結合経路は`cases=17/17`、`composed=2 cards, 1 island, 1 edge`、未知端点のEdgeは拒否です（[receipt](../../evaluations/records/SUI-TEI-alignment-2026-11-02.json)）。
 
+### Affiliationの投影（2026-11-02）
+
+CardとIslandの多対多所属を表す`sui.affiliation.record`を追加しました。
+
+```text
+sui.affiliation.record: id, cardId, islandId
+```
+
+意味モデルへ`Affiliation`を追加し、合成層は所属のCard/Islandが実在するかを検査します。単体テスト8件と、5契約を通す結合経路21ケースがPASSしました（[receipt](../../evaluations/records/SUI-TEI-affiliation-2026-11-02.json)）。
+
+`Island.cardIds`（Island側の包含リスト）は、投影契約が配列を扱えないため未対応です。所属はAffiliationで表す暫定決定とします。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。

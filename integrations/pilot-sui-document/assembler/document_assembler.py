@@ -1,8 +1,9 @@
 """Compose a SUI DocumentV1 from flat TEI projection records.
 
 The TEI projection contracts are flat. This module is the application-side
-composition step: it checks identifier uniqueness and resolves edge endpoints
-against cards or islands according to fromKind/toKind.
+composition step: it checks identifier uniqueness, resolves edge endpoints
+against cards or islands according to fromKind/toKind, and checks that each
+affiliation points at an existing card and island.
 """
 
 KINDS = ("card", "island")
@@ -24,13 +25,14 @@ def _unique(records, label):
     return ids
 
 
-def assemble(document, cards, islands, edges):
+def assemble(document, cards, islands, edges, affiliations=()):
     if not document.get("id"):
         raise AssemblyError("document.id is required")
 
     card_ids = _unique(cards, "card")
     island_ids = _unique(islands, "island")
     _unique(edges, "edge")
+    _unique(affiliations, "affiliation")
 
     known = {"card": card_ids, "island": island_ids}
     for edge in edges:
@@ -43,9 +45,20 @@ def assemble(document, cards, islands, edges):
             if endpoint not in known[kind]:
                 raise AssemblyError(f"edge {edge_id} references unknown {kind} {endpoint}")
 
+    for affiliation in affiliations:
+        if affiliation.get("cardId") not in card_ids:
+            raise AssemblyError(
+                f"affiliation {affiliation['id']} references unknown card {affiliation.get('cardId')}"
+            )
+        if affiliation.get("islandId") not in island_ids:
+            raise AssemblyError(
+                f"affiliation {affiliation['id']} references unknown island {affiliation.get('islandId')}"
+            )
+
     return {
         "document": dict(document),
         "cards": [dict(card) for card in cards],
         "islands": [dict(island) for island in islands],
         "edges": [dict(edge) for edge in edges],
+        "affiliations": [dict(affiliation) for affiliation in affiliations],
     }
