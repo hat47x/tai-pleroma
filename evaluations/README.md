@@ -25,6 +25,16 @@
 - [EKI-task-2026-10-26.json](records/EKI-task-2026-10-26.json): 合成Task 1件を`queued`で受理し、同一Idempotency-Keyの再送が同じtask_idを返したrecord。Worker未起動のため、実行・結果・委任完了は未検証。
 - [EKI-cancel-2026-10-26.json](records/EKI-cancel-2026-10-26.json): 合成Task 1件を`cancelled`/`CANCELLED`まで確認したrecord。Worker未起動のため、実行・結果は未検証。
 - [SCN-001-run-2026-10-26.json](records/SCN-001-run-2026-10-26.json): MMI・SEI・SCN-001合成評価の統合receipt。`runDigest=sha256:53600dc...`、`humanReviewed=false`、`authorityVerified=false`、`published=false`。`reference-scn001-run`の`-verify`で内部整合を再確認できる。受入合格ではない。
+- [yi-constellation-structure-2026-11-01.json](records/yi-constellation-structure-2026-11-01.json): Yi Constellationの64卦表、8×8配置、36変爻、象の引用、綜卦、序卦の構造検算。`passed=true`、`errors=0`。意味の解釈は対象外。
+- [yi-64-hexagrams.json](fixtures/yi-64-hexagrams.json): 64卦の番号、卦名、卦の並び、大象のfixture。19の検算が使う。
+- [yi-appendix-quotes.json](fixtures/yi-appendix-quotes.json): 序卦伝と雑卦伝の八つの引用のfixture。19の検算が使う。
+- [audit-yi-constellation.py](audit-yi-constellation.py): 上記の検算を再実行するスクリプト。外部ライブラリは不要。
+- [audit-robotics-records.py](audit-robotics-records.py): 自動運転とロボティクスの四つの記録を、合成fixtureで検証するスクリプト。外部ライブラリは不要。
+- [robotics-records-2026-11-02.json](records/robotics-records-2026-11-02.json): 四つの記録の合成fixture九件の検証receipt。`synthetic=true`、`passed=true`、自己試験あり。実車・実ロボット・実安全制御器は未検証。
+- [ad/](fixtures/ad/): 自動運転の合成fixture。テイクオーバー、インシデント、ディスエンゲージメント、旧ECUからの移行。
+- [robotics/](fixtures/robotics/): ロボティクスの合成fixture。ピックアンドプレースの受け渡し、出来事、判断、意味の対応。
+- [schemas/](../docs/yi-constellation/schemas/): 出来事、受け渡し、判断、意味の対応のJSON Schema。暫定版0.1。
+- [46-四つの記録のスキーマ](../docs/yi-constellation/analysis/46-四つの記録のスキーマ.md): 四つの記録の暫定スキーマ、合成fixture、検証結果、回収した知見。
 
 ## ハーネス引渡しの負例（新規実験NOT RUN）
 

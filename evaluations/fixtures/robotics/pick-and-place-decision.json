@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "record_type": "decision",
+  "decision_id": "dec-rob-001",
+  "domain": "robotics",
+  "task_id": "task-pick-place-001",
+  "robot_id": "robot-001",
+  "robot_model": "arm-6dof",
+  "action": "regrasp_part",
+  "rationale": "initial grasp force below threshold",
+  "options": ["continue", "regrasp_part", "abort"],
+  "criteria": ["grasp_stability", "cycle_time", "safety"],
+  "authority_ref": "auth-rob-001",
+  "assumptions": ["part is rigid", "fixture is calibrated"],
+  "safety_constraints": ["human outside safety zone", "force <= 40N"],
+  "evidence_refs": ["robot-log-002", "force-sensor-002"],
+  "revisit_condition": "gripper calibration update",
+  "safety_envelope_ref": "se-rob-001"
+}

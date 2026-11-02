@@ -1,0 +1,4 @@
+workspace: sui_document_projection_pilot
+sources:
+  - semantic
+  - applications

@@ -1,0 +1,55 @@
+{
+  "schema": "tai.reference.tei-integration-flow/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "teiCommit": "3784a4432a28502ca04057325689e409d14d9140",
+  "host": "Windows with Go on PATH and Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo D:\\GIT\\hat47x\\tei-wt-bool2 --workspace D:\\GIT\\hat47x\\tai-wt-rev\\integrations\\pilot-sui-document",
+  "result": "PASS",
+  "elapsedMillis": 9344,
+  "contracts": {
+    "document-record": {
+      "sourceDigest": "sha256:2800efdc03219bb95f75fa97dbf06d9220efbf3f616c5df9674ca01a5abae655",
+      "cases": 4,
+      "passed": 4
+    },
+    "card-record": {
+      "sourceDigest": "sha256:a3e9b50739c5c01fbc24a5d31beda48bc5594d8c785b30cd39716a91b65e081c",
+      "cases": 5,
+      "passed": 5
+    },
+    "island-record": {
+      "sourceDigest": "sha256:bd7b2704fa7960b64c3b32fd3881c39d5ad19842d3f3c997cec438a0a0dc2706",
+      "cases": 4,
+      "passed": 4
+    },
+    "edge-record": {
+      "sourceDigest": "sha256:8b9d3c6d4f2272bccbe4584b804ebf9100168708e76c31749735718f50f4d657",
+      "cases": 4,
+      "passed": 4
+    },
+    "affiliation-record": {
+      "sourceDigest": "sha256:87b7b3c70c987890984b46210891ff447cbddc5b8545dd1a78c565bc2acbb0f6",
+      "cases": 4,
+      "passed": 4
+    }
+  },
+  "casesRun": 21,
+  "casesPassed": 21,
+  "composed": {
+    "id": "doc-1",
+    "cards": 2,
+    "islands": 1,
+    "edges": 1,
+    "affiliations": 1
+  },
+  "danglingReferenceRejected": true,
+  "artifact": {
+    "path": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:c4c77cafca936e76c201bba8d30b4d32bb63dc881b3989a079c145555b3158c5",
+    "schema": "tai.reference.tei-documentv1-projection/v0"
+  },
+  "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance."
+}

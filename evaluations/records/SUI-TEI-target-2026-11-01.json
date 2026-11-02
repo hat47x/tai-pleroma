@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-target-profile/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "teiCommit": "c26c2f51e4be91a43df1da01cdcf239ac7261ba6",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-target-profile/cmd/tei-target-profile run -profile <TAI>/integrations/pilot-sui-document/profiles/oneshot.json -workspace <TAI>/integrations/pilot-sui-document -contract <TAI>/integrations/pilot-sui-document/candidates/text-identity/contract.json -fixtures <TAI>/integrations/pilot-sui-document/candidates/text-identity/fixtures.json -candidates <tmp>",
+  "result": "PASS",
+  "observed": {
+    "profileId": "sui-text-oneshot",
+    "profileVersion": "1",
+    "processModel": "oneshot",
+    "generatorId": "text-template",
+    "cases": 4,
+    "passedCases": 4,
+    "profilePassed": true
+  },
+  "scope": "A reference-local one-shot Target Profile that executes the generated text projection candidate against four fixture cases on this host. It does not prove a real OS image, a real target, a production deployment, SUI code generation, or human acceptance."
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sei-live/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "seiCommit": "13674ed41f379e4625b03a3b8fc749cfafe5f588",
+  "tool": "tools/reference-sei-decision",
+  "host": "Windows Go test process invoking the local SEI checkout",
+  "command": "go test . -run 'TestSCN001DecisionMemoryProjection|TestValidityThroughSEIVerify' -count=1 -v",
+  "result": "PASS",
+  "tests": {
+    "TestSCN001DecisionMemoryProjection": "PASS",
+    "TestValidityThroughSEIVerify": "PASS"
+  },
+  "observed": [
+    "The reference tool ran SEI init/add/resume against a temporary store.",
+    "The resulting projection kept authority unknown as unresolved.",
+    "SEI verify accepted the reference validity records used by the test."
+  ],
+  "scope": "A temporary SEI store and the synthetic SCN-001 DEC-01 fixture. This is not a real decision, real authority, or a publication approval."
+}

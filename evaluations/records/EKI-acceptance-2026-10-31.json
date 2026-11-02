@@ -3,8 +3,10 @@
   "synthetic": true,
   "evidenceKind": "synthetic",
   "date": "2026-10-31",
-  "ekiCommit": "5afe6fd4a96a0f9d629c3e23f80cad6409e530b8",
+  "ekiCommit": "48cc3e9f511d37ee5ee8738c680f3a61971c234a",
   "test": "TestAgentExecutesAndSubmitsResultClaim",
+  "verificationMethod": "reexecution",
+  "reexecutionDigestMatched": true,
   "processBoundary": "eki-control and eki-agent as separate OS processes",
   "command": "cmd.exe /c echo hello (Windows) or /bin/echo hello (Unix)",
   "executionStatus": "completed",
@@ -24,6 +26,8 @@
     "Agentの固定コマンド実行とResultClaim送信後、Control PlaneのstoreでResult Acceptanceを実行した。",
     "2名の独立verifierによりRA-2で受理され、AcceptedResultが保存され、Taskがterminalになった。",
     "verifierは合成のテストデータであり、実在の独立機関ではない。",
+    "verifierの観測digestは、同じ固定コマンドを再実行して得た出力digestと一致した。",
+    "再実行は同一ホストでの確認であり、独立した検証機関ではない。",
     "sandbox・CPU/メモリ/network/temp-diskの強制は未実装。"
   ]
 }
