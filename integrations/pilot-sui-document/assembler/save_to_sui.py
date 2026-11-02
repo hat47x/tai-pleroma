@@ -37,11 +37,9 @@ def main():
     from fastapi.testclient import TestClient
 
     from sui_sensemaking_api.db import engine
-    from sui_sensemaking_api.documentv1_merge import (
-        merge_preserving_existing,
-        validate_existing_document,
-    )
+    from sui_sensemaking_api.documentv1_merge import validate_existing_document
     from sui_sensemaking_api.documentv1_projection import from_artifact, to_documentv1_payload
+    from sui_sensemaking_api.documentv1_save_plan import plan_save
     from sui_sensemaking_api.main import app
     from sui_sensemaking_api.models import Base
 
@@ -65,14 +63,17 @@ def main():
         existing = fetched.json() if fetched.status_code == 200 else None
         if existing is not None:
             validate_existing_document(existing)
-            update_payload = merge_preserving_existing(
+            plan = plan_save(
                 projected,
                 transform={"panX": 0.0, "panY": 0.0, "zoom": 1.0},
                 created_at="2026-11-03T00:00:00Z",
                 updated_at="2026-11-03T00:00:00Z",
                 existing=existing,
+                preserve_existing=True,
             )
+            update_payload = plan.payload
         else:
+            plan = None
             update_payload = payload
         updated = client.put(f"/docs/{projected.id}", json=update_payload, headers=headers)
         final = client.get(f"/docs/{projected.id}", headers=headers)
@@ -129,6 +130,11 @@ def main():
             "unauthorizedStatus": unauthorized.status_code if unauthorized is not None else None,
             "roundTrip": all(checks.values()),
             "roundTripChecks": checks,
+            "planAction": plan.action if plan is not None else None,
+            "planCardsAdded": len(plan.cards_added) if plan is not None else None,
+            "planCardsChanged": len(plan.cards_changed) if plan is not None else None,
+            "planPreservedCards": len(plan.preserved_cards) if plan is not None else None,
+            "planWarnings": len(plan.warnings) if plan is not None else None,
         },
         "scope": "The SUI app runs in-process with a temporary SQLite database, no API key, and the local-dev profile. It exercises create, read, and update over HTTP. It does not verify a production database, authentication, or deployment.",
     }
