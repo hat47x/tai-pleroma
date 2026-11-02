@@ -65,3 +65,18 @@ Tokenの低価格化によって大量の候補・Skill・Product能力を開発
 **最初の試験順**：SK-G0／TEI #2605の実read-only入口→RQ01/RQ02/RQ03で過少・過剰再確認を合成比較→RQ07で共同Claimの追加条件→RQ05/RQ06でSource Ownerによる実権限・開示の差→Productの既存実Oracle/Providerの実測を受け、H2/H3/H4/H5のSkill増分へ。全12ケースの試行は、公開fixtureのセルフチェックとは区別する。
 
 **Ownerと状態**：各Productの現在のRead/Rule/Issuer/Output/Publishの真偽・実装は各Ownerが保持する。TAIは比較可能なClaimと追加検証の選択を担い、外部Harnessが原資料Rawを閲覧できない場合は元Productの許可Projectionと内部再照会を使用する。本書は**計画案**であり、実Product/Tool/OS/Harness/Owner受理の検証はNOT RUN。
+
+## 6. #271との役割統合：Activity再開と局所Skill再資格化を二重実装しない
+
+同じ2026-11-02に[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)／[Activity継続計画](activity-selective-requalification-and-handoff-2026-11-02.md)が起票された。**こちらをActivity全体の唯一の横断Owner**とし、SK-C01〜15はSource→各Product→Consumer/Host/Harnessの**依存EdgeとHandoffの到達関係**を検証する。今回のSK-RQ01〜12は、**変更イベントを受けた特定Claim/Skill成果の再資格化が過少・過剰にならないか**を比較する補助的な評価視点とする。SK-C/SK-RQの期待判定を同じ共通Runtimeへ二重実装したり、両方の合成PASSを「27件の製品実証」に合算したりしない。
+
+| 評価面 | 主Owner・受入表 | 他方への入力 |
+| --- | --- | --- |
+| Productを跨いだEvidence/Source/Bodyの実Handoff・復帰条件 | **#271／SK-C01〜15** | 履歴と現在性を区別したSource/Task/Owner参照 |
+| 変更で影響するClaim・Skillだけを再確認する判断 | **#270 SK-01 §P／SK-RQ01〜12** | 変更イベント、既存Productが実証した依存、未確定項目の保留 |
+| 共同Claimの同一Snapshot・Rule/Read | TEI #2514/#2582、SEI #767/#770 | Productごとの正式な局所Oracle/Result |
+| EKI Trust/Body、SHO文書、外部送出権限 | EKI #433/#465/#467、SHO #6、TAI #232 | 実Reader/Host/Policyの資格。過去SkillやHandoffの文章だけでは代用不可 |
+
+**比較ラベルの衝突を避ける**：#271の`J0=全面再実行 / J1=選択的再資格化 / J2=旧成功を無検証で流用（意図した負例）`と、本書の`R0=全面再確認 / R1=依存に基づく再確認 / R2=未知だけ保留する安全な選択肢`は、**J2とR2が反対の意味**なので統一しない。横断レポートではラベルだけでなく、その定義・目的・実行された方式を併記する。次段で同一fixture上の共通評価が可能になれば、ベースライン比較を再利用して重複試行を減らす。
+
+**状態**：#271側のSK-C公開fixture 15件とmutation 4件は同レーンのV8限定自己整合であり、SK-RQの12件/14分類とは別。どちらも実Product E2E・外部Harness・独立Oracle・Owner採用を示さない。新しいIssue・同内容の実装担当は増やさない。
