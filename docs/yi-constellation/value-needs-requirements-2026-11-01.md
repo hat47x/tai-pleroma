@@ -114,6 +114,7 @@
 
 | YI-CAND-20 | 安価な大量推論を使い、異なる業務・情報構造・実装・検証案を幅広く並列探索し、製品Ownerが検証できる独立成果の数と質を改善できる | [TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)／[TEI #2493](https://github.com/hat47x/tei-platform/issues/2493)／各Product | Token/PR数だけ増え、実Oracle・意味受理・統合に進まない。複数Agentが共通Contractを競合変更 |
 | YI-CAND-21 | 製品横断でデータ構造・Value Domain・単位・数学的性質・時空間の意味を必要な抽象度で説明し、実データ・機密Schemaの開示資格を分けてConsumerへ提示できる | [TEI #2495](https://github.com/hat47x/tei-platform/issues/2495)／TAI #232/#233／SUI/SEI Consumer | Vectorと線形空間の混同、温度点と差の誤演算、非公開の列名/件数を外部AIへ露出 |
+| YI-CAND-22 | 機密Rawを外部AIへ渡さず、目的・対象・適用範囲が許可された問いについてのみ元Product側で検証し、開示許可済みの結果に基づいて活動を継続できる | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)／[TEI #2516](https://github.com/hat47x/tei-platform/issues/2516) | 秘密がある/ないという真偽1bitの漏えい、反復照会での値復元、非開示を全件適合へ誤昇格、全ての作業を過剰停止 |
 
 ### 4.1 要件精緻化で守る区別
 
@@ -256,3 +257,19 @@
 [TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)のP-A〜P-E（逐次/並列/競合/機密/モデル・料金）を用い、実装候補数・実証済み能力・統合済み成果・利用者に増えた選択肢を別の観測として比較する。候補が多いことで価値が増したか、検証負担や情報露出だけが増したかを評価する。数を制限するのでなく、誤昇格・未知・機密境界・各Ownerの受理を正確に記録する。
 
 **状態**：YI-CAND-20/21、概念投影A/B/C、並列P-A〜P-Eは提案段階・NOT RUN。TEI #2493/#2495の既存設計提案を参照しており、YIとしての新たな型体系・必須Core/Hostの実装、Owner正式受理や実利用者価値の実証ではない。
+
+
+## 11. 2026-11-02：機密保持を理由に活動を止めすぎない「問いの適用可能性」
+
+[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の設計では、機密Sourceを持つProductと外部HarnessをOS/Host境界で分離する。11月2日の[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)・[TEI #2516](https://github.com/hat47x/tei-platform/issues/2516)との照合により、**何を開示できるか**に加えて、**許可された情報だけで何を正当に判断できるか**が独立した価値要件になる。
+
+### 新たな価値の緊張と期待する選択肢
+
+- **秘密と知的活動**：非公開Rawの直接開示を必要としない研究・準備・仮説生成は進められる。機密内部にしかない情報に依存する確定的主張は、権限ある保持者側で判断するか不明のままにする。
+- **利用条件と結果開示**：内部だけでQを評価できても、true/false自体が秘密を示す場合は外部へ返さない。利用者が望む成果と、守るべき情報/他者の権利が両立する公開範囲を用途・主体ごとに定義する。
+- **正しさと開示コスト**：外部AIの「全件確認済み」表示は、見せられた投影だけで証明できない場合がある。信頼を高めるには、検証資格がある内部Productの限定Verdictが有用な場合もあるが、任意Questionへの無制限真偽応答は反復Queryによる漏えい経路となり得る。
+- **通常組織Dataとの区別**：TEI内の通常の組織情報は標準Data/Functionとして扱い、モジュール名だけで一律の機密隔離や保護Gatewayを要求しない。特殊な識別情報、別Trust Domainへの送出、案件固有の秘匿要件がある場合に適用する。
+
+**最初の価値評価（合成・NOT RUN）**：二つの内部世界S0/S1が同じ公開投影Vを返すが「未レビューが存在しない」Qの真偽は異なる例で、(A) AI単体V、(B)許可済みローカル判定、(C)結果自体が非開示、を比較する。評価は不要な全停止・正しく継続できた独立作業・過大な全称主張・本人への確認負担・隠れた値の漏えいを別欄とする。秘密を外部AIへ渡した状態で“理解度向上”と数えない。具体的な評価票は[TAI SW-01](https://github.com/hat47x/tai-pleroma/blob/work/harness-value-lifecycle-20261030/evaluations/SW-01-harness-handoff-qualification.md)を参照。
+
+**状態**：YI-CAND-22は候補であり、実ユーザーの満足・信頼、内部Qの公開資格、技術的な非開示、実Harnessの能力、Ownerによる正式採用は未実証。新しいYI中央Policy/AI Routerを追加する設計ではない。
