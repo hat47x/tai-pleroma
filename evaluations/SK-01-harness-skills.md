@@ -465,3 +465,20 @@
 
 **受入手順**：まずProduct Ownerが既に検証した受理範囲（#2638の限定V8 19/19、#2639のGo Reference、#2621の未実行TA-O）をexact版で照合し、現在の試験状態・内部期待値の独立性を保持する。その上で同一Workspace/実Toolへ対応するCaseのみH2/H3へ渡す。RoleのBootstrapとdeferred参照、Source表層と意味採否、expected-as-dataと独立Oracle、実Provider/Consumer受領を**別の証拠列**にする。別Repoの自己検査PASSをTAI横断SK-IQ PASSへ加算しない。
 
+
+## X. 必要最小の製品／Skill選択と二本の実利用シナリオ（SK-MIN01〜12）
+
+[実利用シナリオと最小選択の試験計画](../docs/yi-constellation/skill-composition-minimal-routing-scenarios-2026-11-02.md)をSK-01の候補に接続する（2026-11-02）。**Skill/Tool/製品を多く起動したことは成功ではない**。一製品・通常Markdownだけで満たせる依頼にはTAI横断Skillを要求せず、必要なときだけ製品を増やす。これまでのH2/H3、H4/H5、SK-RQ、SK-C、P-OBSを別実証のまま、同じ利用者の目的・Source・独立Oracleに束ねて評価する。新しい中央Policy Engine・Registry・Product Hostは作らない。
+
+二本の縦切り：**SC-A** はSHO Research Index L0のMarkdown整理から、必要かつ実取得された資料だけをMMI/SEI/SUIで扱い、Owner受理候補を経てTEI/SHO文書の実Consumerまで追う。**SC-B** は現行TEI read-only CLI→Product Skill増分→明示Action候補→外部Hostのmock効果を分離する。SHO Writer・SEI API・TEI Action Provider等が利用不能なら `unsupported/not-run` と記録し、予定の機能を仮実行しない。
+
+| 群 | 反例と観測 | 独立Ownerの証拠 |
+| --- | --- | --- |
+| **SK-MIN01〜03** | L0のみで完了できる／OccurrenceとSource混同／未取得原文を読んだと誤断定 | SHO #7/#10、MMI #514、SEI #769 |
+| **SK-MIN04〜06** | 未公開SUI候補の発見漏出／実TEI CLIと未実装SHOの混同／exit 0のWarningと異Fingerprint | SUI #3368、TEI #2605/#2626、TAI #232 |
+| **SK-MIN07〜09** | Skill参照Script・Eager Role依存の変更／Action候補と現在Grantの混同／同最終回答でもTool候補やEgressが違う | TEI #2638/#2507、TAI #272/#271、各Host |
+| **SK-MIN10〜12** | EKI ACK≠Body/SHO Reader／旧固定納品と別branchの混同／Harness再開時の旧Grant再利用 | EKI #465、SHO #6、TAI #271 |
+
+比較条件は `P0=実Toolのみ`、`P1=P0+Product Skill`、`P2=P1+TAI Skill`。少なくとも同じタスク・Tool/Source/公開範囲・独立Expectedを固定し、**false completion、unsupported、不要なProduct起動、Token／実Tool／人のReview、Source忠実性、外部送出**を別採点する。P2の有利さを先取りしない。旧局所合成PASS、TEI Draft #2626の実CLI/同Job再読取を、H2/H3実Harness・SHO Reader・本番Provider成功に加算しない。
+
+**状態**：SK-MIN01〜12は評価設計のみ。Product Skillの実ロード、SC-A/SC-B横断到達、独立Reader、別Harness/Host/OSでの実作用・開示実証、Owner受理は**NOT RUN**。これらを伴わない文章上の例を「YICが実際に統合動作した」とは報告しない。
