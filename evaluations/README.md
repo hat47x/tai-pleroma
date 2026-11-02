@@ -34,4 +34,4 @@
 - [ad/](fixtures/ad/): 自動運転の合成fixture。テイクオーバー、インシデント、ディスエンゲージメント、旧ECUからの移行。
 - [robotics/](fixtures/robotics/): ロボティクスの合成fixture。ピックアンドプレースの受け渡し、出来事、判断、意味の対応。
 - [schemas/](../docs/yi-constellation/schemas/): 出来事、受け渡し、判断、意味の対応のJSON Schema。暫定版0.1。
-- [46-四つの記録のスキーマ](../docs/yi-constellation/46-四つの記録のスキーマ.md): 四つの記録の暫定スキーマ、合成fixture、検証結果、回収した知見。
+- [46-四つの記録のスキーマ](../docs/yi-constellation/analysis/46-四つの記録のスキーマ.md): 四つの記録の暫定スキーマ、合成fixture、検証結果、回収した知見。
