@@ -309,3 +309,29 @@
 
 **SK-F実Product/Harness・実公開資格：全件NOT RUN**。他Repoの合成Python試験のPASSはTAI横断H5や本番Grantへ加算しない。
 
+## P. 2026-11-02：SK-RQ01〜12 変更後の選択的再資格化と共同Claim
+
+[選択的再資格化の設計・Owner表](../docs/yi-constellation/harness-skill-selective-requalification-2026-11-02.md)。TEI [#1445 H8-P13/P14](https://github.com/hat47x/tei-platform/issues/1445)、[#2582](https://github.com/hat47x/tei-platform/issues/2582)／[#2514](https://github.com/hat47x/tei-platform/issues/2514)、SEI [Draft #770](https://github.com/hat47x/sei-cognition/pull/770)、SHO [#6](https://github.com/hat47x/sho-composer/issues/6)、EKI [#467](https://github.com/hat47x/eki-fabric/issues/467)の既存Ownerを使用する。TAIは各Productの依存解析・認証・独立Oracleを再実装せず、**再確認するClaimと履歴として維持できる成果を適切に選べるか**を検証する。
+
+| Case | 変更の対照 | SK-01で観測する適切な資格 |
+| --- | --- | --- |
+| SK-RQ01 | 注文合計に依存しない配送Sourceのみ改版、依存集合は既知 | 無関係な履歴Claimの証拠を保持。ただし現在のHost許可は別 |
+| SK-RQ02 | Credit Ruleだけ改版、表示数値は同じ | Rule依存Claimを再評価。表示同値から現在Rule PASSを創作しない |
+| SK-RQ03 | Read/Rule依存の一部がOpaque | 影響無しと断定せず`unknown-impact`。安全な独立作業は継続 |
+| SK-RQ04 | Skill root SHAは不変、参照Scriptのみ変更 | 配布閉包・実Sessionの読込み・該当Tool挙動を再照合。無関係なSource Meaningは保持 |
+| SK-RQ05 | ConsumerのDisclosure Policyが狭くなる | 過去の観測は残し、**新しい外部送出**は現行Policyで再判定 |
+| SK-RQ06 | EKI Trust Bundleの現在版が読めない | 危険なEffectを保留し、認可済み公開資料の準備は継続。初回未導入互換へfallbackしない |
+| SK-RQ07 | 各Readは局所PASSだが、二Productのepochが違う | 共同Claimは`joint-unknown`。全再実行でも実Snapshot保証は別途必要 |
+| SK-RQ08 | Manifest世代R1と実Artifact一部R2が混在 | 実Consumerが同版一式を読めたとは主張しない |
+| SK-RQ09 | EKI同AttemptでClaim ACK後にBodyが到着 | Body到着の資格を更新するがBusiness Effectまで昇格しない。重複業務再実行は別判断 |
+| SK-RQ10 | SHO Templateだけ変更、TEI Meaningは同一 | SHOのRender/Reviewだけ再確認候補。TEI Library/Meaningの既存証拠を一律失効しない |
+| SK-RQ11 | Sourceは不変、独立Expected/Oracleのみ変更 | 関連した検証Claimを再評価。過去のTest PASS履歴は履歴として保持 |
+| SK-RQ12 | Source byteは同じでも、利用目的・Claimが変更 | 目的相対のScope/十分性/開示資格を再確認 |
+
+### 比較実験の評価列
+
+**同じ公開合成fixture**で、(R0)全Claim再確認、(R1)既存Productの観測依存に基づく選択的再確認、(R2)不明な依存・同一Snapshotの証拠不足だけ限定保留、を並行比較する。重要なのは**false reuse**（古いClaimを現在の受理へ誤昇格）と**unnecessary invalidation**（依存しない確認済みClaimの無用な失効）の両方。加えて、確認回数・Product起動数・独立Oracle・時間/Token・人の確認・保留Effect・現在の正しい開示状態を別欄で記録。局所PASSを横断PASSへ加算しない。
+
+**公開参照データ**：[12ケース・14分類の合成fixture](fixtures/SK-RQ-selective-requalification.synthetic.json)、[再実行用Nodeスクリプト](tools/check-sk-rq-fixture.cjs)。公開Expectedはsealed holdoutでない。実Product・Provider・Host認可・Skill/Harnessでの検証は別途必要である。
+
+**実証段階**：公開fixture整合→TEI #2605実read-only CLIとSkillのH2/H3→R1/R2で本当に必要な局所再確認の観測→TAI H4/H5で共同Claimと不要なTool/開示を比較→EKI/Provider/OS/Ownerの実確認。Product単独で成立する局所TaskにはTAI横断Skillを導入しない対照を保持。新SK-RQの実Product/実Harness/独立sealed評価・本番作用は**NOT RUN**。
