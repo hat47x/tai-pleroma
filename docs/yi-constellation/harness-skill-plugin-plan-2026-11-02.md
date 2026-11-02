@@ -461,13 +461,13 @@ SC-AはMarkdownリンク整理→必要な元資料の取得・SEI/SUIの根拠/
 
 [TAI #271のActivity継続計画§10](activity-selective-requalification-and-handoff-2026-11-02.md)に、[TEI #2582](https://github.com/hat47x/tei-platform/issues/2582)の負依存/Relation Path、[TEI #2640](https://github.com/hat47x/tei-platform/pull/2640)の0件・ABA・演算順序、[TEI #2638](https://github.com/hat47x/tei-platform/pull/2638)のRole自己記述のEager実装Pin、[TEI #2649](https://github.com/hat47x/tei-platform/pull/2649)の実CLI dispatch≠選抜Capability Discoveryを**同一Activityの変更後の再利用資格**として接続した。従来の「値が同じなら再利用可能」「旧StatusがPASSなら成功」という二つの誤昇格を分けて反証する。
 
-- **0件と否定依存**：SQL結果の行ID集合が空でも`NOT EXISTS`/JOIN/Filter/TopNなどのPredicate・Relation・Scope/Provider・全件性への依存は消えない。partial 0件は対象不存在ではない。一方、同Scopeの帰属が明白な1件Witnessは部分取得でも不存在を反証し得る。
+- **0件と否定依存**：SQL結果の行ID集合が空でも`NOT EXISTS`/JOIN/Filter/TopNなどのPredicate・Relation・Scope/Provider・全件性への依存は消えない。partial 0件は対象不存在ではない。存在の反例についても**現在Scope・Predicate・時点の照合済みWitness**が必要で、別Tenant/過去時点の行は反証にならない。Change Event 0件も監視範囲の完全性がなければ期間無変更の証拠ではない。一方、同Scopeの帰属が明白な1件Witnessは部分取得でも不存在を反証し得る。
 - **ABAとWindow**：0→1→0は同じ最終値でも「期間内無変更」ではない。Window1でA→Bへ切替えた後の古いA応答と、Window2が独立に取得したAは別。現在のOutput値とSource/Context epoch/選択Identity/Provider Cohortを照合する。
 - **式・実Target順序**：Filter→Order→LimitとLimit→Local Filterを交換できない場合、偽0件の結果が生じる。表示数値の同一性から規則・実Read・結果の意味の同一性を推測しない。
 - **Role/Skillの実装同一性**：Role versionだけでなくContract/実装fingerprint、必要なEager依存Pinの全体、実CLI/Adapter版、Skillの実ロード依存物を区別する。実Tool dispatchがあること、Toolが選抜catalogに載ること、現在のAgentへ公開/実行を許すこと、結果が届くことは独立資格。
 - **誤判定の両方向**：依存の未観測はunknownにして必要な対象だけ再確認。ただし、無関係なSource/Renderer変更で歴史的に正しい独立Claimを一律失効させない。Agentが実際に使えなかったToolを使ったと報告させず、Contextの限定Scopeを超える判断を避ける。
 
-[SK-01 §Z](../../evaluations/SK-01-harness-skills.md)の**SK-N01〜14**と、[Script](../../evaluations/tools/check-sk-n-negative-witness.cjs)／[限定V8実行記録](../../evaluations/records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)を追加し、公開の合成値を使った**14/14自己整合**を確認。これはProductの元SQLやProviderを実行しない**作者自身のReference**であり、TEI #2387 QX-31の実SQLite12/12・TEI #2638の模擬Role Pin24/24・既存TAI QH18/18は、各Owner／試行の別証拠のまま保持する。合算した数値をYI製品E2E合格としない。
+[SK-01 §Z](../../evaluations/SK-01-harness-skills.md)の**SK-N01〜17**と、[Script](../../evaluations/tools/check-sk-n-negative-witness.cjs)／[限定V8実行記録](../../evaluations/records/SK-N-public-negative-witness-selfcheck-2026-11-02.json)を追加し、公開の合成値を使った**17/17自己整合**を確認。これはProductの元SQLやProviderを実行しない**作者自身のReference**であり、TEI #2387 QX-31の実SQLite12/12・TEI #2638の模擬Role Pin24/24・既存TAI QH18/18は、各Owner／試行の別証拠のまま保持する。合算した数値をYI製品E2E合格としない。
 
 **実証の先後を更新**：[TEI PR #2626](https://github.com/hat47x/tei-platform/pull/2626)は2026-11-02T18:35:59Zにmainへmerge済みで、実Go CLI read-only/Context Consumerの限定観測は存在する。よって「TEI CLIはすべて静的文書のみ」という過去記述は**現在のTEI製品レーンには当てはまらない**。ただしTAIの外部HarnessでのH2/H3、複数Harness切替、TAI Activityでの実Skill load/Tool invocation、実OS/Host等は未実施。最初はTEI製品側実Tool・Source/Consumerの既存証拠を固定し、Product Skill有無の差→必要な最小Product組合せ→Activity再開J0/J1/J2へ進める。探索や新Issueは並列に増やし、品質を主張するための検証単位は小さく保つ。
 
