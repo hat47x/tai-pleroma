@@ -51,4 +51,4 @@ Status: **提案（仮決定で進行中）**。受入判断ではない。
 
 ## 検証
 
-`integrations/tools/check_scenario_artifacts.py`で4つの識別子の存在を確認する。
+`integrations/tools/check_scenario_artifacts.py`で4つの識別子の存在を確認する。`integrations/tools/compose_scn_003.py`でSEIの判断をSUIのカードとして合成し、`serve_and_save.py`で一時SQLiteのSUIへ保存して往復を確認する。
