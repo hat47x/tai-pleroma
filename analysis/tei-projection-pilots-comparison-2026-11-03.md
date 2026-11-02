@@ -53,6 +53,10 @@ source     {teiCommit, contract{contractId, contractVersion, contractDigest, sou
 - 参照整合性が必要なのはSUIだけで、合成層に検査を置く形が合う
 - 製品側consumerはSUI（Python）・SEI（Go）・MMI（TypeScript）・EKI（Go spike）にある。SEI・MMI・EKIは実artifactの読み取りまで確認済み。SEIは実artifactの読み取りまで確認済み。保存まで進んだのはSUIだけ
 
+## 再生成の同一性
+
+SEI・MMI・EKIの単一record artifactは、同じTEIコミットから2回生成すると同一のdigestになった（`check_determinism.py`、3件）。SUIの複数要素artifactは別の`determinism_check.py`で確認している。
+
 ## つまずきの共有
 
 - `tei.workspace.yaml`がないと選抜が落ちる
