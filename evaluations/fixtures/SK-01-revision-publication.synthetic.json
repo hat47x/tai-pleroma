@@ -1,0 +1,188 @@
+{
+  "fixture_id": "SK-J-2026-11-02",
+  "kind": "public-synthetic-non-normative-evaluation-input",
+  "status": "fixture-created-tests-not-run",
+  "purpose": "Evaluate whether external Harness/Product Skills avoid promoting source correspondence, generation, or partial delivery to current accepted meaning or complete consumer results.",
+  "product_owners": [
+    "TEI #2505/#2604",
+    "SHO #6",
+    "EKI #465",
+    "TAI Draft #270"
+  ],
+  "cases": [
+    {
+      "id": "SK-J01",
+      "name": "A-B-C candidate path not accepted equivalence",
+      "source_nodes": {
+        "A": [
+          "a1",
+          "a2"
+        ],
+        "B": [
+          "b1"
+        ],
+        "C": [
+          "c1",
+          "c2"
+        ]
+      },
+      "candidate_edges_AB": [
+        [
+          "a1",
+          "b1"
+        ],
+        [
+          "a2",
+          "b1"
+        ]
+      ],
+      "candidate_edges_BC": [
+        [
+          "b1",
+          "c1"
+        ],
+        [
+          "b1",
+          "c2"
+        ]
+      ],
+      "expected": {
+        "candidate_paths": 4,
+        "unique_A_to_C_mapping": false,
+        "owner_meaning_accepted": false,
+        "allowed_claim": "Four possible paths through B; semantic identity unresolved."
+      }
+    },
+    {
+      "id": "SK-J02",
+      "name": "Template-only change",
+      "source_revision": "S1",
+      "meaning_revision": "M1",
+      "generator": "G1",
+      "template_before": "T1",
+      "template_after": "T2",
+      "expected": {
+        "document_regeneration_candidate": true,
+        "source_meaning_changed_automatically": false,
+        "external_library_meaning_changed_automatically": false,
+        "document_review_current": false
+      }
+    },
+    {
+      "id": "SK-J03",
+      "name": "Partial two-generation publication",
+      "published_manifest": {
+        "generation": "R1",
+        "files": {
+          "a.md": "r1-a",
+          "b.md": "r1-b"
+        }
+      },
+      "physical_files": {
+        "a.md": "r2-a",
+        "b.md": "r1-b"
+      },
+      "attempted_generation": "R2",
+      "write_interrupted": true,
+      "expected": {
+        "published_generation_consistent": false,
+        "may_report_complete_delivery": false,
+        "needs_owner_publication_recovery": true
+      }
+    },
+    {
+      "id": "SK-J04",
+      "name": "Stale file outside published manifest",
+      "manifest": {
+        "generation": "R2",
+        "files": {
+          "a.md": "r2-a"
+        }
+      },
+      "physical_files": {
+        "a.md": "r2-a",
+        "b.md": "r1-b"
+      },
+      "expected": {
+        "b_in_manifest": false,
+        "should_consume_b_as_R2": false,
+        "manifest_scoped_bundle_consistent": true,
+        "directory_listing_equivalent_to_bundle": false
+      }
+    },
+    {
+      "id": "SK-J05",
+      "name": "Complete flag is not Findings empty",
+      "manifest": {
+        "complete": true,
+        "unresolved_count": 0
+      },
+      "checkset": {
+        "findings": [
+          {
+            "kind": "synthetic-lint-finding",
+            "severity": "warning"
+          }
+        ]
+      },
+      "expected": {
+        "complete_claim_limited_to_unresolved": true,
+        "all_checks_clean": false,
+        "owner_acceptance": false
+      }
+    },
+    {
+      "id": "SK-J06",
+      "name": "Claim ACK before actual body delivery",
+      "task_id": "T1",
+      "attempt_id": "A1",
+      "result_claim": {
+        "ack": true,
+        "output_digest_declared": "sha256-of-abc-synthetic"
+      },
+      "body_delivery": {
+        "observed": false,
+        "bytes": null
+      },
+      "expected": {
+        "claim_ack_observed": true,
+        "body_received": false,
+        "accepted_full_artifact": false,
+        "create_new_attempt_automatically": false
+      }
+    },
+    {
+      "id": "SK-J07",
+      "name": "Hidden metadata must not leak through discovery",
+      "low_privilege_policy": "hide-unreviewed-and-hidden-artifacts",
+      "worlds": {
+        "S0": {
+          "internal_files": [
+            "public.md"
+          ]
+        },
+        "S1": {
+          "internal_files": [
+            "public.md",
+            "hidden-plan.md"
+          ]
+        }
+      },
+      "allowed_public_listing": [
+        "public.md"
+      ],
+      "expected": {
+        "public_listing_identical_in_both_worlds": true,
+        "reveal_hidden_count": false,
+        "reveal_hidden_filename": false,
+        "prove_raw_os_isolation_from_listing": false
+      }
+    }
+  ],
+  "evaluation_notes": [
+    "Expected answers are for an independent evaluator. Do not copy them into a tested agent's context when measuring independent competence.",
+    "Cases contain no real/private Source, secrets, credentials or external URLs.",
+    "No runtime skill loading, TEI/SHO/EKI product E2E, filesystem fault injection, OS isolation or user acceptance has been executed.",
+    "Do not treat JSON as a required cross-product schema or adopted Oracle."
+  ]
+}
