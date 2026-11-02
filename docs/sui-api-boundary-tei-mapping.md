@@ -110,3 +110,13 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-http-route-2026-11-02.
 - DB依存はoverrideで外しており、実DB・実サーバは未検証
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-auth-2026-11-02.json)
+### tenant面のHTTP確認（2026-11-03）
+
+tenant面の`/docs/{doc_id}/epistemic/projection`をTestClientで確認しました（[sui-sensemaking #3375](https://github.com/hat47x/sui-sensemaking/pull/3375)、`bee69d0`）。
+
+- binding経由で200、artifactをverbatim返す
+- agent credentialは403 `agent_route_not_enabled`
+- bindingなしは503 `tei_reference_unavailable`
+- 認可関数はテスト用に差し替えており、実セッション・実DBは未検証
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-tenant-route-2026-11-03.json)

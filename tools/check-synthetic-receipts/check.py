@@ -117,6 +117,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-adapter-2026-11-02.json",
     "evaluations/records/SUI-TEI-http-route-2026-11-02.json",
     "evaluations/records/SUI-TEI-auth-2026-11-02.json",
+    "evaluations/records/SUI-TEI-tenant-route-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -217,6 +218,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-tenant-route" in relative:
+            observed = data.get("observed", {})
+            if observed.get("boundArtifactStatus") != 200 or observed.get("agentCredentialStatus") != 403:
+                errors.append(f"TEI tenant route receipt did not record 200/403: {relative}")
+            if observed.get("authorizationStubbed") is not True:
+                errors.append(f"TEI tenant route receipt did not disclose the authorization stub: {relative}")
         if "tei-auth" in relative:
             observed = data.get("observed", {})
             if observed.get("authorizedStatus") != 200 or observed.get("anonymousStatus") != 401:
