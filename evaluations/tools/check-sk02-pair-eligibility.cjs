@@ -16,6 +16,23 @@ const SAME = ["task_id", "repo_head", "binary_digest", "workspace_tree_digest",
 const DIGEST = /^sha256:[a-f0-9]{64}$/;
 const HEAD = /^[a-f0-9]{40}$/;
 
+/**
+ * SK-02 covers a restricted TEI read-only CLI task.
+ * This checks stated argv family, NOT actual process observation, Product effects,
+ * Host authorization, OS containment, or all of TEI's available commands.
+ */
+function readOnlyCommandFamily(argv) {
+  if (!Array.isArray(argv) || argv.length < 2 ||
+      argv.some(t => typeof t !== "string" || t.length === 0)) return "unobserved";
+  if (!/(?:^|[\\/])tei(?:\.exe)?$/iu.test(argv[0])) return "outside-tool-profile";
+  if (argv.slice(1).some(t => /^(?:--?out)(?:=|$)/u.test(t))) return "write-option-not-allowed";
+  if (argv[1] === "version" || argv[1] === "commands" ||
+      argv[1] === "inspect" || argv[1] === "trace" || argv[1] === "validate") return "allowed-family";
+  if (argv[1] === "model" && argv[2] === "catalog") return "allowed-family";
+  // operations/artifacts exist in TEI but are outside this initial selected scope.
+  return "outside-initial-readonly-profile";
+}
+
 function evaluate(group) {
   const invalid = [], unknown = [];
   const rows = group?.trials;
@@ -54,11 +71,23 @@ function evaluate(group) {
     }
     if (row.independent_session_observed !== true) unknown.push(id + "-session-independence-unverified");
     if (row.oracle_exposed == null) unknown.push(id + "-oracle-exposure-unverified");
+    if (row.unauthorized_write_observed == null) unknown.push(id + "-write-observer-missing");
+    if (row.unauthorized_egress_observed == null) unknown.push(id + "-egress-observer-missing");
+    if (!Array.isArray(row.cli_invocations) || row.cli_invocations.length === 0) {
+      unknown.push(id + "-actual-cli-invocations-unobserved");
+    } else {
+      for (const argv of row.cli_invocations) {
+        const family = readOnlyCommandFamily(argv);
+        if (family === "unobserved") unknown.push(id + "-cli-argv-unobserved");
+        else if (family !== "allowed-family") invalid.push(id + "-cli-" + family);
+      }
+    }
     if (row.tool_invocation_observed !== true || row.actual_cli_output_observed !== true)
       unknown.push(id + "-actual-tool-evidence-unobserved");
     if (row.grant_observed_at_invocation !== true || row.egress_scope_observed !== true)
       unknown.push(id + "-current-authority-or-egress-unobserved");
     if (row.arm === "H2") {
+      if (row.skill_activation == null) unknown.push(id + "-H2-activation-unverified");
       if (row.skill_activation != null && row.skill_activation !== "none") invalid.push(id + "-H2-activation-not-none");
       if (row.skill_exposed === true || row.skill_loaded === true) invalid.push(id + "-H2-contaminated-by-skill");
       if (row.skill_exposed !== false || row.skill_loaded !== false)
@@ -93,6 +122,9 @@ function seed() {
     oracle_exposed:false,unauthorized_write_observed:false,
     unauthorized_egress_observed:false,tool_invocation_observed:true,
     actual_cli_output_observed:true,grant_observed_at_invocation:true,
+    cli_invocations:[["/tmp/tei","commands"],
+      ["/tmp/tei","model","catalog","-workspace","reference/workspace"],
+      ["/tmp/tei","validate","-workspace","reference/workspace","-json"]],
     egress_scope_observed:true,skill_exposed:arm === "H3",skill_loaded:arm === "H3",
     skill_activation:arm === "H3" ? "forced" : "none",
     ...(arm==="H3" ? {skill_package_digest:hash("7")} : {})}))};
@@ -119,6 +151,18 @@ function syntheticSelfTest() {
     ["E18 independent session not observed", x=>{delete x.trials[1].independent_session_observed;return x;},"insufficient-evidence"],
     ["E19 forced and auto skill activation mixed", x=>{x.trials[2].skill_activation="auto";return x;},"ineligible"],
     ["E20 H3 skill package changed", x=>{x.trials[2].skill_package_digest="sha256:"+"c".repeat(64);return x;},"ineligible"],
+    ["E21 missing write observation", x=>{delete x.trials[0].unauthorized_write_observed;return x;},"insufficient-evidence"],
+    ["E22 missing egress observation", x=>{delete x.trials[1].unauthorized_egress_observed;return x;},"insufficient-evidence"],
+    ["E23 missing CLI argv", x=>{delete x.trials[2].cli_invocations;return x;},"insufficient-evidence"],
+    ["E24 artifacts output writes locally", x=>{x.trials[1].cli_invocations.push(["tei","artifacts","-out","build"]);return x;},"ineligible"],
+    ["E25 operations exists but not in selected discovery", x=>{x.trials[0].cli_invocations.push(["tei","operations"]);return x;},"ineligible"],
+    ["E26 artifacts stdout still outside initial profile", x=>{x.trials[3].cli_invocations.push(["tei","artifacts"]);return x;},"ineligible"],
+    ["E27 Windows TEI executable path accepted", x=>{x.trials[1].cli_invocations.push(["C:\\bin\\tei.exe","inspect","-workspace","reference/workspace"]);return x;},"eligible-to-score"],
+    ["E28 different allowed read-only commands", x=>{x.trials[2].cli_invocations.push(["tei","trace","-workspace","reference/workspace"]);return x;},"eligible-to-score"],
+    ["E29 missing H2 activation witness", x=>{delete x.trials[0].skill_activation;return x;},"insufficient-evidence"],
+    ["E30 non TEI command outside profile", x=>{x.trials[2].cli_invocations.push(["curl","https://example.invalid"]);return x;},"ineligible"],
+    ["E31 out flag on otherwise allowed command", x=>{x.trials[1].cli_invocations.push(["tei","validate","--out=/tmp/result"]);return x;},"ineligible"],
+    ["E32 malformed actual CLI invocation", x=>{x.trials[3].cli_invocations.push(null);return x;},"insufficient-evidence"],
   ];
   const results=[];
   for(const [title,change,expected] of tests){
