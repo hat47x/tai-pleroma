@@ -227,7 +227,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
         if "tei-save-contract" in relative:
             observed = data.get("observed", {})
-            if observed.get("contractValid") is not True or observed.get("writes") is not False:
+            if observed.get("contractValid") is not True or observed.get("writes") is not False or observed.get("existingValidated") is not True:
                 errors.append(f"TEI save contract receipt did not validate the payload: {relative}")
         if "tei-save-plan-cli" in relative:
             observed = data.get("observed", {})

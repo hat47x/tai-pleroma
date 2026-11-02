@@ -25,6 +25,7 @@ def main():
 
     sys.path.insert(0, str(Path(args.sui_repo) / "03_Implement/backend/src"))
     from sui_sensemaking_api.documentv1_projection import from_artifact
+    from sui_sensemaking_api.documentv1_merge import validate_existing_document
     from sui_sensemaking_api.documentv1_save_plan import plan_save
     from sui_sensemaking_api.routes.docs import _validate_document_payload_with_a1_contract
 
@@ -32,6 +33,8 @@ def main():
     existing = (
         json.loads(Path(args.existing).read_text(encoding="utf-8")) if args.existing else None
     )
+    if existing is not None:
+        validate_existing_document(existing)
     plan = plan_save(
         from_artifact(artifact),
         transform=json.loads(args.transform),
@@ -65,6 +68,7 @@ def main():
             "preservedIslands": len(plan.preserved_islands),
             "warnings": len(plan.warnings),
             "writes": False,
+            "existingValidated": existing is not None,
             "contractValid": True,
             "contractCards": len(validated.cards),
         },

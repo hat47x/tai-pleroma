@@ -156,7 +156,7 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-merge-2026-1
 保存planのpayloadを、保存経路と同じ`_validate_document_payload_with_a1_contract`で検証しました。
 
 - payloadに`schemaVersion`は不要（[sui-sensemaking #3380](https://github.com/hat47x/sui-sensemaking/pull/3380)で追加を取り消し）
-- 非破壊マージ後のpayloadが契約を通る（`contractValid: true`）`n- 当初の422は、既存文書の`critiqueInputs`が不正だったことが原因
+- 非破壊マージ後のpayloadが契約を通る（`contractValid: true`）`n- 当初の422は、既存文書の`critiqueInputs`が不正だったことが原因`n- 対策として、マージ前に既存文書を`DocumentV1`で検証する（[sui-sensemaking #3381](https://github.com/hat47x/sui-sensemaking/pull/3381)、`fb22b65`）
 - 保存・API呼び出しは未実施
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)
