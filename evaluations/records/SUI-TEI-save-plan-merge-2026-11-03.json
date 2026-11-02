@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.tei-sui-save-plan-merge/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "suiCommit": "56133c7756112a4a5f608d26e27467ae31834154",
+  "host": "Windows with Python 3.12 and SUI runtime dependencies",
+  "command": "PYTHONPATH=src python -m pytest tests/test_documentv1_save_plan.py tests/test_documentv1_save_plan_merge.py -q",
+  "result": "PASS",
+  "observed": {
+    "tests": 6,
+    "passed": 6,
+    "writes": false,
+    "preserveOption": "preserve_existing",
+    "preservedCardsReported": true
+  },
+  "scope": "The save plan can now compute a non-destructive merge, keep existing cards, islands, and unprojected fields, and report preserved items. It still does not save or call the API."
+}
