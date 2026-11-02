@@ -2,36 +2,49 @@ import unittest
 
 from document_assembler import AssemblyError, assemble
 
-DOCUMENT = {"documentId": "doc-1", "title": "Notes", "digest": "sha256:abc"}
-CARDS = [
-    {"cardId": "card-1", "documentId": "doc-1", "text": "hello"},
-    {"cardId": "card-2", "documentId": "doc-1", "text": "world"},
-]
-ISLANDS = [{"islandId": "island-1", "documentId": "doc-1"}]
+DOCUMENT = {"id": "doc-1", "title": "Notes"}
+CARDS = [{"id": "card-1", "text": "hello"}, {"id": "card-2", "text": "world"}]
+ISLANDS = [{"id": "island-1", "title": "Group A"}]
 EDGES = [
-    {"edgeId": "edge-1", "fromCard": "card-1", "toCard": "card-2", "relation": "supports"}
+    {
+        "id": "edge-1",
+        "fromId": "card-1",
+        "toId": "card-2",
+        "type": "supports",
+        "fromKind": "card",
+        "toKind": "card",
+    }
 ]
 
 
 class AssembleTest(unittest.TestCase):
     def test_composes_one_document(self):
         composed = assemble(DOCUMENT, CARDS, ISLANDS, EDGES)
-        self.assertEqual(composed["document"]["documentId"], "doc-1")
+        self.assertEqual(composed["document"]["id"], "doc-1")
         self.assertEqual(len(composed["cards"]), 2)
         self.assertEqual(len(composed["edges"]), 1)
 
-    def test_rejects_card_from_another_document(self):
-        cards = [dict(CARDS[0], documentId="doc-2")]
-        with self.assertRaises(AssemblyError):
-            assemble(DOCUMENT, cards, ISLANDS, [])
+    def test_accepts_card_to_island_edge(self):
+        edges = [
+            {
+                "id": "edge-2",
+                "fromId": "card-1",
+                "toId": "island-1",
+                "type": "contains",
+                "fromKind": "card",
+                "toKind": "island",
+            }
+        ]
+        composed = assemble(DOCUMENT, CARDS, ISLANDS, edges)
+        self.assertEqual(composed["edges"][0]["toKind"], "island")
 
-    def test_rejects_island_from_another_document(self):
-        islands = [dict(ISLANDS[0], documentId="doc-2")]
+    def test_rejects_unknown_edge_endpoint(self):
+        edges = [dict(EDGES[0], toId="card-9")]
         with self.assertRaises(AssemblyError):
-            assemble(DOCUMENT, CARDS, islands, [])
+            assemble(DOCUMENT, CARDS, ISLANDS, edges)
 
-    def test_rejects_edge_to_unknown_card(self):
-        edges = [dict(EDGES[0], toCard="card-9")]
+    def test_rejects_unknown_kind(self):
+        edges = [dict(EDGES[0], toKind="narrative")]
         with self.assertRaises(AssemblyError):
             assemble(DOCUMENT, CARDS, ISLANDS, edges)
 

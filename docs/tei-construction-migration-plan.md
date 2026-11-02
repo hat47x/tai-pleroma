@@ -117,7 +117,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
-| 配備はrollingプロファイルのslot切替で参照する | rollback経路を実際に検証できた | 実Targetのsupervisorを扱うとき |`n| Document全体はflatなrecordの合成で表す | 現行の投影契約は入れ子を扱えず、要素単位なら検証できる | 投影契約が複合構造を扱えるようになったとき |
+| 配備はrollingプロファイルのslot切替で参照する | rollback経路を実際に検証できた | 実Targetのsupervisorを扱うとき |`n| 契約v3で識別子を`id`、Edgeを`fromId`/`toId`/`fromKind`/`toKind`へ統一する | SUIの名前と端点種別に寄せ、合成でCard/Island両方を解決できる | 実装接続で別の写像が必要になったとき |`n| Document全体はflatなrecordの合成で表す | 現行の投影契約は入れ子を扱えず、要素単位なら検証できる | 投影契約が複合構造を扱えるようになったとき |
 
 ## 7.5 SUI本体との差分
 

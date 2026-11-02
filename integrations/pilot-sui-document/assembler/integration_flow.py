@@ -97,7 +97,7 @@ def main():
     edges = [candidates["edge-record"]["records"]["present"]]
 
     composed = assemble(document, cards, islands, edges)
-    dangling = [dict(edges[0], toCard="card-9")]
+    dangling = [dict(edges[0], toId="card-9")]
     rejected = False
     try:
         assemble(document, cards, islands, dangling)
@@ -119,7 +119,7 @@ def main():
         "casesRun": cases_run,
         "casesPassed": sum(1 for item in case_results if item["passed"]),
         "composed": {
-            "documentId": composed["document"]["documentId"],
+            "id": composed["document"]["id"],
             "cards": len(composed["cards"]),
             "islands": len(composed["islands"]),
             "edges": len(composed["edges"]),

@@ -15,11 +15,14 @@ data Card {
 data Island {
     attribute islandId type std.identifier
     attribute documentId type std.identifier
+    attribute title type std.text
 }
 
 data Edge {
     attribute edgeId type std.identifier
-    attribute fromCard type std.identifier
-    attribute toCard type std.identifier
+    attribute fromId type std.identifier
+    attribute toId type std.identifier
     attribute relation type std.code
+    attribute fromKind type std.code
+    attribute toKind type std.code
 }

@@ -1,23 +1,27 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.edge.record",
-  "version": "1",
+  "version": "3",
   "status": "reference-local",
-  "note": "SUIのEdgeを、edgeId・fromCard・toCard・relationからなるrecordとして投影する参照用の契約。from/toの関係は識別子の組で表す。",
+  "note": "SUI Edgeのid・fromId・toId・type・fromKind・toKindを投影する参照用の契約。CardとIslandの両端を扱える。",
   "inputs": [
     {"attribute": "sui.edge.edge_id", "primitive": "std.identifier"},
-    {"attribute": "sui.edge.from_card", "primitive": "std.identifier"},
-    {"attribute": "sui.edge.to_card", "primitive": "std.identifier"},
-    {"attribute": "sui.edge.relation", "primitive": "std.code"}
+    {"attribute": "sui.edge.from_id", "primitive": "std.identifier"},
+    {"attribute": "sui.edge.to_id", "primitive": "std.identifier"},
+    {"attribute": "sui.edge.relation", "primitive": "std.code"},
+    {"attribute": "sui.edge.from_kind", "primitive": "std.code"},
+    {"attribute": "sui.edge.to_kind", "primitive": "std.code"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
     "kind": "record",
     "fields": [
-      {"name": "edgeId", "input": "edgeId", "attribute": "sui.edge.edge_id", "primitive": "std.identifier"},
-      {"name": "fromCard", "input": "fromCard", "attribute": "sui.edge.from_card", "primitive": "std.identifier"},
-      {"name": "toCard", "input": "toCard", "attribute": "sui.edge.to_card", "primitive": "std.identifier"},
-      {"name": "relation", "input": "relation", "attribute": "sui.edge.relation", "primitive": "std.code"}
+      {"name": "id", "input": "id", "attribute": "sui.edge.edge_id", "primitive": "std.identifier"},
+      {"name": "fromId", "input": "fromId", "attribute": "sui.edge.from_id", "primitive": "std.identifier"},
+      {"name": "toId", "input": "toId", "attribute": "sui.edge.to_id", "primitive": "std.identifier"},
+      {"name": "type", "input": "type", "attribute": "sui.edge.relation", "primitive": "std.code"},
+      {"name": "fromKind", "input": "fromKind", "attribute": "sui.edge.from_kind", "primitive": "std.code"},
+      {"name": "toKind", "input": "toKind", "attribute": "sui.edge.to_kind", "primitive": "std.code"}
     ]
   }
 }

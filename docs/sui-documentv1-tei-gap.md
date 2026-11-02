@@ -75,3 +75,7 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 - SUI側のAPI境界（どのエンドポイントがDocumentV1のどの部分を受理するか）は、この整理では確認していない。
 - フロントエンドの型とPythonモデルの一致は、SUI側の契約試験に委ねる。
 - 実装接続の工数と影響範囲は未見積もり。
+
+## 実装状況（2026-11-02）
+
+契約v3で、識別子を`id`へ、Edgeを`fromId`/`toId`/`fromKind`/`toKind`へ統一しました。合成層も追従し、単体テスト6件と結合経路17ケースがPASSしています（[alignment receipt](../evaluations/records/SUI-TEI-alignment-2026-11-02.json)）。座標・レビュー状態・所属（`cardIds`/`Affiliation`）は引き続き未モデルです。

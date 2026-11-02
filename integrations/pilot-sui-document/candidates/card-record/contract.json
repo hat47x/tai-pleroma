@@ -1,20 +1,18 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.card.record",
-  "version": "2",
+  "version": "3",
   "status": "reference-local",
-  "note": "SUIのCardを、cardId・documentId・textからなるrecordとして投影する参照用の契約。製品の受理済み契約ではない。",
+  "note": "SUI Cardのidとtextを投影する参照用の契約。座標・claimType・レビュー状態は対象外。",
   "inputs": [
     {"attribute": "sui.card.card_id", "primitive": "std.identifier"},
-    {"attribute": "sui.card.document_id", "primitive": "std.identifier"},
     {"attribute": "sui.card.text", "primitive": "std.text"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
     "kind": "record",
     "fields": [
-      {"name": "cardId", "input": "cardId", "attribute": "sui.card.card_id", "primitive": "std.identifier"},
-      {"name": "documentId", "input": "documentId", "attribute": "sui.card.document_id", "primitive": "std.identifier"},
+      {"name": "id", "input": "id", "attribute": "sui.card.card_id", "primitive": "std.identifier"},
       {"name": "text", "input": "text", "attribute": "sui.card.text", "primitive": "std.text"}
     ]
   }
