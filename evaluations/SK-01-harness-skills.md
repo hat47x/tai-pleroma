@@ -547,3 +547,16 @@
 [実行可能な四試行ペア票 SK-02](SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)をH2（Toolのみ）とH3（同HarnessでProduct Skillを追加）の初回実証手順とする。**上のSK-MIN/SK-HP/SK-Nや既存合成評価を実Harness成功数へ加算しない**。固定すべき点は実TEI CLI binary/digest＋Source/WorldFP/SourceIndexFP＋Prompt＋Model/Tool/Principal/Disclosureと、実Skill loaded closure、独立Expected。新規SessionでH2→H3、H3→H2の逆順を一ペアずつ、各腕に同じ資料・実Toolを与える。Forced Skillロードと自動Discoveryは**別試験**。
 
 比較可能性・正答・誤完了・Warning/Unknown保持・Token/Tool/人の確認負担を独立に記録。H3のSkillロードが確認できない、またはSource/Oracle/権限が一腕だけ違う場合、**Skillの効果は比較不能**であり「有効性0」と扱わない。TEI #2626はmergedだが「Skill未使用のCLI実測」であり、TEI Draft #2607はSkill文書と静的Checkerの候補である。TAI実Harnessでの四試行と二Harness移植は**NOT RUN**。SK-02は既存SK-01の初回試験票であって、新しい必須Common Gate/Runnerではない。
+
+---
+
+<!-- yi-harness-sk03-cases-20261103 -->
+## AB. 2026-11-03：複数Harness実証の収束先（SK-03／HX-01〜10）
+
+[相互運用・Handoffパイロット SK-03](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)をSK-01 §YのSK-HP01〜14へ追加接続する。**対応表の記入と実動作は別**。同Harnessで先に[SK-02 H2/H3](SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)を成立させ、第2 Harnessに同じ公開Task/CLI/独立Expected/Skill依存closureを移した際の差を、SK-03-G0〜G4で比較する。
+
+HX-01＝DSH≠OpenCode＋DeepSeekモデル、HX-02＝Skill rootと実参照閉包、HX-03＝MCP config/Tool alias/revision、HX-04＝同答でも別Sink egress、HX-05＝WorldFP同値/SourceIndex移動、HX-06＝旧Harnessの権限自己申告、HX-07＝ACKのみの再Effect、HX-08＝Cloud経路からのRaw不許可、HX-09＝H3にのみ追加Tool/Oracle混入、HX-10＝Skill追加で品質は同じだが総費用が増える、の**独立負例10件**を追加する。公開合成CheckerのPASSで実Harness対応済みとはしない。
+
+**必須Evidence（必要なScopeのみ）**：Harness/build/Model/Session、OS principal、当該Tool/Skillの実可用・実loaded bytes、正確なCLI argsまたはMCP実negotiation/tool call、Source/Scope/Warning/Unknown、現在Grant/Recipient、実受信/Consumer、Oracle provenance、費用・Observer・unknown。Model/Tool/Host条件が異なる場合はその**構成の成立/非成立**だけを主張し、Skill固有の因果効果比較から除外する。受渡しの現在資格はTAI #271、機密・NetworkはTAI #232/TEI #2515、Product CLIはTEI #2605/merged #2626の各Ownerに戻す。
+
+**現在**：SK-03-G0〜G4、HX-01〜10、2 Harness移植、Handoff、実Skill/Tool、実OS/Receiverはすべて**NOT RUN**。TAI Draft #270の既存SK-02単体CheckerやTEI既存CIと合算せず、新たな共通Gate/Runner、独自Host・Registryを先に作らない。
