@@ -1,0 +1,107 @@
+{
+  "run_id": "SK-M-public-fixture-selfcheck-2026-11-02",
+  "kind": "V8-reference-classifier-public-synthetic-fixture-consistency-only",
+  "fixture": {
+    "repo": "hat47x/tai-pleroma",
+    "branch": "docs/yi-harness-skills-20261102",
+    "path": "evaluations/fixtures/SK-M-semantic-action.synthetic.json",
+    "content_sha": "a264801214787ec0382080f2c550dabf889c7042"
+  },
+  "checks_passed": 10,
+  "checks_failed": 0,
+  "status": "PASS",
+  "observations": [
+    {
+      "id": "SK-M01",
+      "passed": true,
+      "actual": {
+        "status": "read_offer_only",
+        "subject": "L1",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M02",
+      "passed": true,
+      "actual": {
+        "status": "intent_candidate_authority_unverified",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M03",
+      "passed": true,
+      "actual": {
+        "status": "ambiguous_inverse",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M04",
+      "passed": true,
+      "actual": {
+        "status": "requires_complete_scope",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M05",
+      "passed": true,
+      "actual": {
+        "status": "edge_intent_candidate",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M06",
+      "passed": true,
+      "actual": {
+        "status": "read_result_only",
+        "entity_count": 2,
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M07",
+      "passed": true,
+      "actual": {
+        "status": "stale_context",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M08",
+      "passed": true,
+      "actual": {
+        "status": "withheld_discovery",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M09",
+      "passed": true,
+      "actual": {
+        "status": "receipt_only",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M10",
+      "passed": true,
+      "actual": {
+        "status": "requires_specialist_contract",
+        "effect_confirmed": false
+      }
+    }
+  ],
+  "not_run": [
+    "Committed Node runner under Node.js",
+    "Actual TEI Action Pattern/CLI",
+    "Product or Harness Skill load",
+    "Independent sealed holdout",
+    "OS/Host authorization",
+    "Real Provider effects",
+    "Owner acceptance"
+  ],
+  "note": "This check recomputed simple public fixture labels in the V8 tool environment. It is not an independent semantic oracle, production qualification or actual Node runner execution."
+}
