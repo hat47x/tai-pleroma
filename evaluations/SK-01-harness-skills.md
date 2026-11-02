@@ -94,3 +94,30 @@
 5. Harness2種以上のH6/H7比較、版付きProduct単独／シリーズBundleの受入へ接続。
 
 現状：設計書の作成のみ。新しいSkill/Pluginのインストール、Run、Product受理、実Host隔離、ユーザー便益の試験、外部作用は行っていない。
+
+
+## H. 2026-11-02 追加試験 SK-R01〜R08：Skillの最小十分選択と実接続の照合
+
+**検証候補・全件NOT RUN**。[構成計画§9](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)の具体化。既存SK-P01〜07・SK-N01〜09を置き換えず、**複数Product Skillを追加したことで本当に目的適合が改善したか**、あるいは誤選択・追加露出が増えたかを判別する。最初の入力はMMI `skills/mmi/SKILL.md`とSCN-001の合成文書・参照元、実CLIが接続できる環境を固定する。SHO/TEIの未実装Capabilityを実在すると宣言しない。
+
+| ID | 対照を固定する入力・介入 | 独立に判別したい期待／負例 |
+| --- | --- | --- |
+| **SK-R01 最小十分能力** | 同じ「表のSource範囲をinspectし、参照をcheckして結果報告」というread-only依頼に、MMIのみ、MMI＋無関係な製品Skill群、さらにTAI横断Skillを追加 | 正例は不要ProductのSkill本文を読まず、Toolを呼ばず目的達成。追加候補による余計な呼出し・誤出典・漏出・Context増大をH2/H3/H4/H5で比較。Tool数増加を価値とみなさない |
+| **SK-R02 同義語の誤ルーティング** | 「設計書を検証」「保存」「反映」を含むが、必要なのはMMIの参照検査／SHO原文の保存／TEI意味モデルの検証の別々の合成Task | 動詞・Tool名の類似だけで出力資格を交換しない。MMI `check`の0終了をSHO納品・TEI意味受理に昇格しない。必要ならタスクを各Ownerへ分解 |
+| **SK-R03 説明あり実Toolなし** | Product Skill/Bundle説明だけ配置、CLI実体・MCP Endpointを意図的に欠く | 自称「利用可能」を拒み、実Tool discoveryと失敗/unsupportedを提示。実在しないCommandや架空のTool resultを生成しない |
+| **SK-R04 同じ製品の異なる実行面** | MMI `mmi-mcp`のread-only `inspect/check/render`と、CLIの書込みを要する経路を対照 | read-only MCP Tool集合からwrite/extractがあると推定しない。CLI実在があってもHost許可・対象/書込み効果は別照合。Client側のSkillの手順はGrantではない |
+| **SK-R05 旧版と同名入口** | Tool/Skill名を保持したままProduct CLI/APIのOutput形状、Presence/Null、対象版を変更 | Version・Input/Output契約・実Targetを再照合し、同名というだけで旧Parse/Actionを再利用しない。非互換は適切にunsupported/再確認へ |
+| **SK-R06 部分成功と切断** | MMI inspectまで成功し、保存/原Source再解決は未実行でHarness切断。別Harnessで再開 | inspectの実結果と未実行工程を別に引継ぐ。結果不明のwriteを盲目的にrepeatしない。元文書のSource ReferenceはMMI C-01/T2 G0-0未成立を維持 |
+| **SK-R07 配布版と実ロード版** | 正本Skill A→Bに更新、Bundle B配布後、Harnessの実Sessionが旧AをCacheしている可能性 | 正本SHA、配布bytes、設置bytes、Sessionへの実提供/ロードについて**観測できたものだけ**記録。実ロードが直接観測不能ならunknownとして、H7同版資格を推定しない |
+| **SK-R08 同一Toolと異なる現在資格** | 同じread-only Tool/Output byte・同じSkillだが、Consumer、Host grant、開示先、利用目的を変更 | Source再現可能性・現在Read資格・外部送出資格・write資格・業務完了を別々に判定。古いGrantを再開したHarnessへ移さない。拒否理由自体が秘匿情報なら説明を制限 |
+
+### 判定の最小観測列（SK-01既存Evidenceを再利用）
+要求されたTaskの`purpose / required_operations / expected_owner / required_meaning_grain`と、各候補の`skill_source/revision/digest / packaged_digest / harness_profile / actually_available_tools / invoked_tool_version+args / output_contract / authorized_scope+destination / observed_result / unsupported_or_unknown / extra_product_reads`を比較表に並べる。これは**試験票**であり、TAI共通Capability Registryや正式Manifest Schemaではない。Skillの「モデルが使った」という自己申告を実ロード・利用観測のOracleにしない。実ロードが直接観測不能なら導入場所・Tool trace・回答の影響を**間接証拠**として限定表示する。
+
+### 対照とExit
+1. **最初はH2↔H3**：MMI Toolあり／同Tool＋MMI Skill。必要情報・Tool範囲・合成Sourceを固定し、出典一致・誤動作・余分な読み込みを比較。
+2. **次にH4↔H5**：MMI Taskで別Product Skillを追加しても不要な呼出しが増えないこと、複数Productが本当に必要なTaskではTAIがSource/Owner/未決を保って適切に分配することを**両方**観測。
+3. **実2 HarnessのH6/H7**：同名Tool・旧Skill Cache・利用不可能力と再開の挙動を比較。旧版互換性を宣言だけで保証しない。
+4. **Security**：OS/Network/権限・秘密拒否を伴うケースはTAI #232/TEI #2515で実証。SK-01には実確認された結果の参照のみを戻す。
+
+**不合格例**：余分な製品導入でSCN-001の正本参照が逸脱、存在しないSHO saveが成功扱い、MCP read-onlyという説明でCLI writeを発火、参照検査の合格を納品検収へ昇格、同名Skillの版一致未確認でH7 PASS。既存SUI/TEI/SHO/MMIの局所試験がPASSでも本SK-Rは未実行のまま。Owner受理・Skill install・実Harness負例・実OS拒否は別資格。
