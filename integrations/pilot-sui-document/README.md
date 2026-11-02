@@ -450,7 +450,7 @@ warnings: 0 / writes: false
 
 CLIは、保存計画のpayloadをSUIの保存経路と同じA1契約アダプタで検証します。
 
-- payloadに`schemaVersion`は不要（付与しない）
+- payloadに`schemaVersion`は不要（付与しない）`n- 既存文書はマージ前に`validate_existing_document`で検証する
 - 非破壊マージ後のpayloadが契約を通ることを確認
 - 観測: `contractValid: true`、`contractCards: 3`
 
