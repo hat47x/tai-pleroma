@@ -14,6 +14,7 @@ data Card {
     attribute y type std.decimal
     attribute claimType type std.code
     attribute holdState type std.code
+    attribute textReviewed type std.boolean
 }
 
 data Island {

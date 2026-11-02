@@ -343,3 +343,19 @@ sui.card.record: id, text, x, y, claimType?, holdState?
 - [artifact](../../evaluations/artifacts/documentv1-projection.json)
 
 `textReviewed`や`critiqueHistory`のような真偽値・配列のoptionalは未対応です。
+## 真偽値（Card v7、2026-11-02）
+
+TEIの真偽値投影（[PR #2581](https://github.com/hat47x/tei-platform/pull/2581)）を使い、Card record v7へ`textReviewed`をoptionalの真偽値として追加しました。
+
+```text
+sui.card.record: id, text, x, y, claimType?, holdState?, textReviewed?
+```
+
+- `true`/`false`をJSON真偽値として出力
+- 欠落時は出力から省略
+- 21ケースPASS、単体9件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-reviewed-2026-11-02.json)
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+
+`critiqueHistory`のような構造体の配列は未対応です。
