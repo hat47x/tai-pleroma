@@ -20,6 +20,8 @@ def main():
     parser.add_argument("--sui-repo", required=True)
     parser.add_argument("--workspace", default="integrations/pilot-sui-document")
     parser.add_argument("--out", required=True)
+    parser.add_argument("--save", action="store_true")
+    parser.add_argument("--api-key", default=None)
     args = parser.parse_args()
 
     assembler = Path(__file__).resolve().parent
@@ -105,6 +107,34 @@ def main():
             and steps["contractDigests"]["allMatch"]
             else "FAIL"
         )
+        if args.save and result == "PASS":
+            save_out = tmp / "save.json"
+            save_command = [
+                sys.executable,
+                str(assembler / "save_to_sui.py"),
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                str(artifact),
+                "--out",
+                str(save_out),
+            ]
+            if args.api_key:
+                save_command.extend(["--api-key", args.api_key])
+            saved = subprocess.run(save_command, capture_output=True, text=True)
+            observed = (
+                json.loads(save_out.read_text(encoding="utf-8"))["observed"]
+                if save_out.exists()
+                else {}
+            )
+            steps["save"] = {
+                "returncode": saved.returncode,
+                "roundTrip": observed.get("roundTrip", False),
+                "planAction": observed.get("planAction"),
+                "finalReadStatus": observed.get("finalReadStatus"),
+            }
+            if saved.returncode != 0 or not steps["save"]["roundTrip"]:
+                result = "FAIL"
         _write(args.out, artifact, steps, result)
         print(json.dumps({"result": result, "steps": steps}))
         return 0 if result == "PASS" else 1
