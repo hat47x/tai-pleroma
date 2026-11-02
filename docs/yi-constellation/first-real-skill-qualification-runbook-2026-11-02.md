@@ -18,18 +18,20 @@
 
 ## 2. 最初のS1：TEI単独CLIの現物読取り（TAIとHarnessなし）
 
-**実施環境**：オペレーターが権限を持つTEI checkout。別途保存した未公開Sourceを自動アップロードしない。低機密の`examples/first-workspace`を使用。Go buildはプロジェクトの依存取得があり得るため、OS・依存キャッシュ・ネットワークのPolicyを先に確認し、必要ならネットワーク遮断・提供済みmodule cacheで実行する。既存build成果物と未コミットの編集を破壊しない。以下は**手順例であり未実行**。
+**実施環境**：オペレーターが権限を持つTEI checkout。別途保存した未公開Sourceを自動アップロードしない。低機密の`examples/first-workspace`を使用。Go buildはプロジェクトの依存取得があり得るため、OS・依存キャッシュ・ネットワークのPolicyを先に確認し、必要ならネットワーク遮断・提供済みmodule cacheで実行する。既存build成果物と未コミットの編集を破壊しない。以下は**実行環境を固定したLinux/WSL/macOS向け手順例であり、未実行**。Windowsネイティブではパス/一時ディレクトリの形式を適切に読み替え、別実証する。実施する端末のcheckoutへ移動してから実行する。
 
 ```bash
-cd <authorized-local-tei-checkout>
+# Linux/WSL/macOSで、権限のあるTEI checkout内から実行する例
 git rev-parse HEAD
 git status --porcelain
 go version
-go build -o <temporary-directory>/tei ./cmd/tei
-<temporary-directory>/tei version -json
-<temporary-directory>/tei commands
-<temporary-directory>/tei model catalog -workspace examples/first-workspace
-<temporary-directory>/tei validate -workspace examples/first-workspace -json
+TEI_BIN_DIR="$(mktemp -d)"
+go build -o "$TEI_BIN_DIR/tei" ./cmd/tei
+"$TEI_BIN_DIR/tei" version -json
+"$TEI_BIN_DIR/tei" commands
+"$TEI_BIN_DIR/tei" model catalog -workspace examples/first-workspace
+"$TEI_BIN_DIR/tei" validate -workspace examples/first-workspace -json
+# 試験後、保存する必要がない一時バイナリのみ管理者の判断で削除
 ```
 
 **比較対象を選ぶ**：catalogから`ambiguous=false`の正確な`entries[].subject.kind/id`を**実結果から取得して**inspectし、関係を調べたい場合にのみtrace。固定の仮IDを推測呼出ししない。2回のTool観測で`worldFingerprint`／`sourceIndexFingerprint`が違う場合、同一Snapshotの全結果とみなさずSource差・Checkout改行・時点を調査。validationのexit code、`ok`、Warning/Error、diagnostics、Output実byte digestを別々に記録。
