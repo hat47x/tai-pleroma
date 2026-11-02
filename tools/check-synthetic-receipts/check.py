@@ -126,6 +126,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-contract-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-e2e-2026-11-03.json",
+    "evaluations/records/SUI-TEI-save-auth-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -226,6 +227,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-save-auth" in relative:
+            observed = data.get("observed", {})
+            if observed.get("unauthorizedStatus") != 401 or observed.get("finalReadStatus") != 200:
+                errors.append(f"TEI save auth receipt did not record 401 then 200: {relative}")
+            if observed.get("apiKey") != "configured":
+                errors.append(f"TEI save auth receipt must disclose the configured key: {relative}")
         if "tei-save-e2e" in relative:
             observed = data.get("observed", {})
             if observed.get("writes") is not True or observed.get("finalReadStatus") != 200:

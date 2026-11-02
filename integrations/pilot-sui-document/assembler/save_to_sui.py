@@ -19,6 +19,7 @@ def main():
     parser.add_argument("--sui-repo", required=True)
     parser.add_argument("--artifact", required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--api-key", default=None)
     args = parser.parse_args()
 
     db_dir = tempfile.mkdtemp(prefix="sui-save-")
@@ -26,7 +27,10 @@ def main():
     os.environ.setdefault("SUI_RUNTIME_PROFILE", "local-dev")
     os.environ.setdefault("SUI_LLM_PROVIDER", "none")
     os.environ.setdefault("SUI_LOG_LEVEL", "ERROR")
-    os.environ.pop("SUI_API_KEY", None)
+    if args.api_key:
+        os.environ["SUI_API_KEY"] = args.api_key
+    else:
+        os.environ.pop("SUI_API_KEY", None)
     os.environ.pop("SUI_ADMIN_API_KEY", None)
     sys.path.insert(0, str(Path(args.sui_repo) / "03_Implement/backend/src"))
 
@@ -51,9 +55,13 @@ def main():
         updated_at="2026-11-03T00:00:00Z",
     )
 
+    headers = {"X-API-Key": args.api_key} if args.api_key else {}
     with TestClient(app) as client:
-        created = client.put(f"/docs/{projected.id}", json=payload)
-        fetched = client.get(f"/docs/{projected.id}")
+        unauthorized = (
+            client.put(f"/docs/{projected.id}", json=payload) if args.api_key else None
+        )
+        created = client.put(f"/docs/{projected.id}", json=payload, headers=headers)
+        fetched = client.get(f"/docs/{projected.id}", headers=headers)
         existing = fetched.json() if fetched.status_code == 200 else None
         if existing is not None:
             validate_existing_document(existing)
@@ -66,8 +74,8 @@ def main():
             )
         else:
             update_payload = payload
-        updated = client.put(f"/docs/{projected.id}", json=update_payload)
-        final = client.get(f"/docs/{projected.id}")
+        updated = client.put(f"/docs/{projected.id}", json=update_payload, headers=headers)
+        final = client.get(f"/docs/{projected.id}", headers=headers)
 
     receipt = {
         "schema": "tai.reference.tei-sui-save/v0",
@@ -89,7 +97,8 @@ def main():
             "writes": True,
             "database": "temporary SQLite",
             "runtimeProfile": "local-dev",
-            "apiKey": "unset",
+            "apiKey": "configured" if args.api_key else "unset",
+            "unauthorizedStatus": unauthorized.status_code if unauthorized is not None else None,
         },
         "scope": "The SUI app runs in-process with a temporary SQLite database, no API key, and the local-dev profile. It exercises create, read, and update over HTTP. It does not verify a production database, authentication, or deployment.",
     }
