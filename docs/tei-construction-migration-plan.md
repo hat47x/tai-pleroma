@@ -117,7 +117,8 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
-| optionalな列挙は`optional`フィールドで表し、欠落時は出力から省略する | SUIのoptional列挙を、必須recordを壊さずに投影できる | 真偽値・履歴を扱うとき |
+| 真偽値は`std.boolean`で投影し、optionalの欠落は省略する | `textReviewed`のようなフラグを型を保って扱える | 構造体の履歴を扱うとき |
+| optionalな列挙はoptionalフィールドで表し、欠落時は出力から省略する | SUIのoptional列挙を、必須recordを壊さずに投影できる | 真偽値・履歴を扱うとき |
 | 座標は数値投影（std.decimal）で扱い、optionalな列挙・真偽値は別表現まで保留する | 座標は必須で数値として投影でき、optionalは全フィールド必須のrecord契約と衝突する | optionalを扱う契約表現ができたとき |
 | 運用者バインディングはinstall_artifact.pyで再現可能にする | artifactとbindingを同じ手順で置け、解決を検証できる | SUI側の運用コマンドが整ったとき |
 | SUI側の読み取り面へdocumentv1-projection kindを追加し、tenant分離を維持する | 読み取り専用で既存のfail-closed経路を使える | HTTP認証・配備を扱うとき |
