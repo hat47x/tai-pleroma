@@ -121,6 +121,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-containment-2026-11-03.json",
     "evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
+    "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json",
@@ -131,6 +132,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-server-2026-11-03.json",
     "evaluations/records/SUI-TEI-determinism-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
+    "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -231,6 +233,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-multi-doc" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
+                errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
         if "tei-sui-save-plan" in relative:
             observed = data.get("observed", {})
             if observed.get("planAction") != "update" or observed.get("roundTrip") is not True:
@@ -280,6 +286,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
+        if "tei-multi-doc" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
+                errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
         if "tei-sui-save-plan" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") != 4 or observed.get("writes") is not False:

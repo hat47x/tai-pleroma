@@ -538,3 +538,16 @@ roundTrip: true
 同じ内容の再保存が差分ゼロで通ることを確認しました。
 
 - [receipt](../../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
+## 複数文書の保存（2026-11-03）
+
+`assembler/multi_save.py`で、同じ投影を10の文書IDへ保存します。
+
+```text
+documents: 10
+createdAll: true / readAll: true
+isolatedIds: true
+writes: true
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-multi-doc-2026-11-03.json)
+- 大量カード・同時書き込み・本番DBは未検証
