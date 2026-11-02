@@ -5,6 +5,7 @@
 - 対象: TAI / SUI / SEI / TEI / SHO（現行MMI）/ EKI
 - 起点: [SCN-001](../scenarios/SCN-001-shared-space-guidance.md) と [TAIの現状](../docs/status.md)
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
+- **2026-11-02研究追補**: [生成的探索と証拠制約の接続](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)（CSWの認知Method、SUIの仮説、SEI/TEIの意味、EKIの権限・結果を分離して比較する提案。RQ6、実験NOT RUN）
 - 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
 - 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
 
@@ -82,3 +83,13 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 [TAI Draft PR #142](https://github.com/hat47x/tai-pleroma/pull/142)はMMI選択→SCN評価→D-04根拠本文の同一run内の結び付けを強化する提案であり、既存のSUI `-sui-receipt` による現在観測照合とは異なる境界である。PR #142の検査を未統合のまま現行mainの保証として数えたり、H1の独立した実験結果として数えたりしない。
 
 研究実験の固定版は、対象コードの現在mainではなく、各runのSHAと入力blob・記録digestで定める。研究計画の追補でプロダクトのOwner・実験結果・採用状態が自動的に変わることはない。
+
+## 9. 2026-11-02時点の最新開発・他チャット研究との整合
+
+- TAI main `95253b11c18c0c335442194edec15e9ba7985646` を参照。旧研究基準SHAを「最新main」と読み替えない。
+- [TAI PR #142](https://github.com/hat47x/tai-pleroma/pull/142) は2026-10-31に統合済み。MMI選択・SCN評価・D-04の本文の同一run内照合は、統合前の別実装候補でなくmain側の限定された製品機構となった。ただしSource真正性・Owner意味受理・公開権限は未検証。
+- EKIの[合成Result Acceptance記録](https://github.com/hat47x/tai-pleroma/blob/95253b11c18c0c335442194edec15e9ba7985646/evaluations/records/EKI-acceptance-2026-10-31.json)は固定コマンドと合成VerifierによるAcceptedResultまでの証拠であり、本番sandbox・実業務Outcomeではない。旧記述の`queued`だけを現行全体の実装上限と読まない。
+- CSWの[現行README](https://github.com/hat47x/cultural-substrate-weaving/blob/70d8db5eab9cef76e340e196e0cb8c09f85f7086/README.md)は創作・執筆のための3つのスキルを中心に簡素化されている。文化的体系や生成・批評・媒介をTAIで研究する場合も、CSW本体をTAIの必須製品・固定マルチエージェントとして扱わない。
+- [TAI Draft #177](https://github.com/hat47x/tai-pleroma/pull/177) はHarness間の認知・権限・結果境界のConsumer側評価、[Draft #231](https://github.com/hat47x/tai-pleroma/pull/231) は価値・要望・要件の往復と利用者価値の研究。研究PR #129は仮説、反証条件、実験計画と解釈上の限界を担い、他Draftの正本を移さない。
+
+この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。
