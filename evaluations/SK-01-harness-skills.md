@@ -171,7 +171,7 @@
 
 ## J. 2026-11-02：SK-J01〜J07 改版・生成・公開・受取を分離する試験
 
-[Skill計画§11](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)を反証可能にする。合成入力と**独立評価者用**期待値は[SK-J固定fixture](fixtures/SK-01-revision-publication.synthetic.json)に保存した。JSON構文は検証済み。**Product/Skill/Harnessへの実入力・CLI/OS/公開・Oracle実行はNOT RUN**。この期待値をAgentへそのまま渡して「AIが答えた」と評価しない。
+[Skill計画§11](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)を反証可能にする。合成入力と**公開セルフチェック用の期待値**は[SK-J固定fixture](fixtures/SK-01-revision-publication.synthetic.json)に保存した。JSON構文は検証済み。**公開Repo上の期待値はsealed holdoutではない**ため、実Harnessの能力評価では別権限の評価担当が未公開の派生fixture/期待値を保持し、Agentが参照できない環境で比較する。**Product/Skill/Harnessへの実入力・CLI/OS/公開・Oracle実行はNOT RUN**。公開の期待値をAgentへそのまま渡して「AIが答えた」と評価しない。
 
 | Case | 合成の境界 | 出口と誤成功 |
 | --- | --- | --- |
