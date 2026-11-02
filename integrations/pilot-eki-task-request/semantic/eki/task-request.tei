@@ -1,0 +1,9 @@
+namespace eki
+
+data TaskRequest {
+    attribute schemaVersion type std.text
+    attribute executorId type std.text
+    attribute executorVersionConstraint type std.text
+    attribute priority type std.text
+    attribute clientRequestId type std.text
+}

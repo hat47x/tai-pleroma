@@ -1,0 +1,50 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "eki.task-request.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": "^1",
+        "priority": "normal",
+        "clientRequestId": "req-001"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"clientRequestId\":\"req-001\",\"executorId\":\"dev.example.transform\",\"priority\":\"normal\",\"schema\":\"eki.task-request/v1\",\"versionConstraint\":\"^1\"}"
+      }
+    },
+    {
+      "id": "present-minimal",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": "^1"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"executorId\":\"dev.example.transform\",\"schema\":\"eki.task-request/v1\",\"versionConstraint\":\"^1\"}"
+      }
+    },
+    {
+      "id": "missing-executor",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "versionConstraint": "^1"
+      },
+      "want": {"state": "missing", "text": "[\"executorId\"]"}
+    },
+    {
+      "id": "unresolved-version",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": null
+      },
+      "want": {"state": "unresolved"}
+    }
+  ]
+}

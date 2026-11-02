@@ -1,0 +1,25 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "eki.task-request.record",
+  "version": "1",
+  "status": "reference-local",
+  "note": "EKI TaskRequest（eki.task-request/v1）の平坦なヘッダ部分をrecordとして写す参照用の契約。inputs・parameters・resources・reliability・extensionsは対象外。",
+  "inputs": [
+    {"attribute": "eki.task_request.schema_version", "primitive": "std.text"},
+    {"attribute": "eki.task_request.executor_id", "primitive": "std.text"},
+    {"attribute": "eki.task_request.executor_version_constraint", "primitive": "std.text"},
+    {"attribute": "eki.task_request.priority", "primitive": "std.text"},
+    {"attribute": "eki.task_request.client_request_id", "primitive": "std.text"}
+  ],
+  "output": {"primitive": "std.text"},
+  "projection": {
+    "kind": "record",
+    "fields": [
+      {"name": "schema", "input": "schema", "attribute": "eki.task_request.schema_version", "primitive": "std.text"},
+      {"name": "executorId", "input": "executorId", "attribute": "eki.task_request.executor_id", "primitive": "std.text"},
+      {"name": "versionConstraint", "input": "versionConstraint", "attribute": "eki.task_request.executor_version_constraint", "primitive": "std.text"},
+      {"name": "priority", "input": "priority", "attribute": "eki.task_request.priority", "primitive": "std.text", "optional": true},
+      {"name": "clientRequestId", "input": "clientRequestId", "attribute": "eki.task_request.client_request_id", "primitive": "std.text", "optional": true}
+    ]
+  }
+}
