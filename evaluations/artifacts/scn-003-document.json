@@ -1,0 +1,117 @@
+{
+  "schema": "tai.reference.tei-documentv1-projection/v0",
+  "contract": {
+    "id": "sui.documentv1.projection",
+    "version": "1"
+  },
+  "source": {
+    "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
+    "contracts": {
+      "document-record": {
+        "contractId": "sui.document.record",
+        "contractVersion": "5",
+        "contractDigest": "sha256:cefe467d14f99cb3f4c6ca1f3fe8d638cb36bb5ccf9b77d57fbab12d5380edc8",
+        "sourceDigest": "sha256:0050e22f52a873d90a13456181f684b164459b91717d9ba6fb84634ff50d6d58",
+        "cases": 4
+      },
+      "card-record": {
+        "contractId": "sui.card.record",
+        "contractVersion": "8",
+        "contractDigest": "sha256:097e10334421891d106cfcd793239b0d16269f25905f46620bf610375b4c4261",
+        "sourceDigest": "sha256:f7c60ac5d91a74c079b186d7a3080d87f0b636b5daa278caa324a717a6437cba",
+        "cases": 5
+      },
+      "island-record": {
+        "contractId": "sui.island.record",
+        "contractVersion": "5",
+        "contractDigest": "sha256:5abb808aa5ef50449085c9bfcce657259f1761685b04cd26cb2819e5e0bb77d5",
+        "sourceDigest": "sha256:5c09a2e383772f2585bd0efb9f8ffa20a114fb737e85684cc184b55855cec08c",
+        "cases": 4
+      },
+      "edge-record": {
+        "contractId": "sui.edge.record",
+        "contractVersion": "3",
+        "contractDigest": "sha256:7b1afc291ea82d10412171741c07522942f098d749ff883b330e835ca2f40cf6",
+        "sourceDigest": "sha256:8b9d3c6d4f2272bccbe4584b804ebf9100168708e76c31749735718f50f4d657",
+        "cases": 4
+      },
+      "affiliation-record": {
+        "contractId": "sui.affiliation.record",
+        "contractVersion": "1",
+        "contractDigest": "sha256:082b03aed88f516678989ae3abc58daf1a030ff416aa97c4ff236126e1bca8b9",
+        "sourceDigest": "sha256:87b7b3c70c987890984b46210891ff447cbddc5b8545dd1a78c565bc2acbb0f6",
+        "cases": 4
+      }
+    }
+  },
+  "document": {
+    "document": {
+      "id": "doc-1",
+      "readingOrder": [
+        "card-1",
+        "card-2"
+      ],
+      "title": "Notes"
+    },
+    "cards": [
+      {
+        "id": "card-1",
+        "text": " hello ",
+        "x": 10,
+        "y": 20.5
+      },
+      {
+        "claimType": "claim",
+        "holdState": "held",
+        "id": "card-2",
+        "sources": [
+          "src-1",
+          "src-2"
+        ],
+        "text": "world",
+        "textReviewed": true,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": "card-decision-1",
+        "text": "[decision-1] Adopt option A",
+        "x": 0.0,
+        "y": 0.0,
+        "sources": [
+          "sei:decision-1"
+        ]
+      }
+    ],
+    "islands": [
+      {
+        "cardIds": [
+          "card-1"
+        ],
+        "id": "island-1",
+        "title": "Group A"
+      }
+    ],
+    "edges": [
+      {
+        "fromId": "card-1",
+        "fromKind": "card",
+        "id": "edge-1",
+        "toId": "card-2",
+        "toKind": "card",
+        "type": "supports"
+      }
+    ],
+    "affiliations": [
+      {
+        "cardId": "card-2",
+        "id": "aff-1",
+        "islandId": "island-1"
+      }
+    ]
+  },
+  "scn003": {
+    "decisionRef": "decision-1",
+    "decisionArtifact": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+  }
+}
