@@ -51,6 +51,16 @@ description: >-
 
 これらは動作済み安全保証ではなく、[SK-01 SK-E01〜07](../../../evaluations/SK-01-harness-skills.md)で反証するための手順案である。
 
+
+## Source改版・生成物を他製品へ渡す場合
+
+- Sourceの現在版（S）、版間の対応**候補**（C）、Ownerが受理した意味（M）、導出結果・Generator/Template版（G）、完成した一式の公開とConsumerによる実読取り（P）は別の証拠。A→B→Cの候補経路があってもA→Cの意味同値・旧受理の再利用を約束しない。
+- 文書・ライブラリ・複数ファイルの成果物について、Manifest/Digest/生成コマンド成功だけで同一世代の一式を利用者が取得したと断定しない。実Productに世代固定・ファイルbyte照合の入口がない場合、公開の整合はunknownとして各Product Ownerへ返す。
+- EKIのTask/AttemptでResultClaimやACKを確認できても、同一Attemptの出力Bodyが送達されたか、AcceptedResult・外部Effectが得られたかは別に報告する。見えないBodyを補作・再実行しない。
+- 参照先のSourceやManifestが非公開なら、存在することや件数を推測しない。必要な事実の照合は、許可された保持Productの内部検査を利用する。
+
+この注意は[SK-01 SK-J](../../../evaluations/SK-01-harness-skills.md)の未実施反例に基づく**評価用指針**であり、任意のTEI/SHO/EKI Productに新しいToolや実行権限を与えない。
+
 ## 関連
 
 - [横断設計](../../../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)
