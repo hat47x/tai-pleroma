@@ -65,3 +65,8 @@ SEIにはすでにTEIとの接続がある。`runtime/go/teiintegration`がTEI e
 - 将来SEIへ投影のconsumerを足すなら、`teiintegration`とは別パッケージにする
 
 この整理は重複実装を避けるためのもので、SEIの設計判断を変更しない。
+## EKIとMMIの注意点
+
+EKIは`conformance/productboundary`で、製品コードがSEI・TEIへ依存しないことを確かめている。EKIの投影パイロットを作る場合も、製品コードへ`tei-platform`への依存や語彙を持ち込まず、TAI側の`integrations/`に置く。
+
+MMIの文書に出てくる「TEI」は、Text Encoding Initiative（TEI XML）を指す場合が多い。製品群のTEI（`tei-platform`）とは別物なので、検索結果をそのまま接続の証拠にしない。
