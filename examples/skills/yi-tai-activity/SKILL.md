@@ -40,6 +40,17 @@ description: >-
 - **Methodと実現を区別**：SEIの認知Method、SUIの意味探索、TEIのDSL/Domain Plugin、SHOの文書投影、EKIの実Body/Receiptは別のOwner。SkillはMethodの提案・Tool利用の案内であり、製品機能の実装や正式結果受理ではない。
 - **実際のSkillロードと秘密の受渡し**：同名Skillが存在する場合は実pathとcontent digest、Harness/Profileを確認する。別Harnessへ活動を移すとき、開示許可、認可、実施結果の現在適用性を再確認する。DSH等のSession LogやTool拡張送信も確認可能な範囲で検査する。
 
+
+## Skill・Toolの実体と開示に関する追加注意（評価案）
+
+- **能力の説明と実能力を区別**する。Skillの名前や説明、CLI/MCPの一覧は候補発見にすぎない。実際に利用できるTool、Toolの版、当該SessionのHost資格を確かめ、確認できない項目はunknownとする。
+- **実ロードを推測しない**。配布・参照したroot Skill文書のdigestが一致しても、参照先の資料・Script・MCP Toolの内容や、実際にHarnessへロードされたbyteは同一と限らない。観測できる範囲だけを利用記録として示す。
+- **発見の段階でも開示制限を守る**。外部へ返すSkill/Tool名・一覧、引数Schema、Error、件数、拒否理由が機密になり得る。公開可否はSource保持Product/Hostの実Policyに従い、Skillの記述で権限を増やさない。
+- **隠れたSourceの真偽を創作しない**。同じ開示投影から内部全体の問いに異なる答えがあり得る場合、元Productによる許可済みの限定検査か、根拠不足のまま扱う。内部検査のYes/No自体が非公開の場合、結果開示を要求しない。
+- **TEI単独等の正規入口を尊重**する。Product自身のread-only Skillで完結する仕事にTAIや別Productを必須化しない。TEI #2605のCLI操作は実環境で検証したものだけを利用し、validateのexit 0を意味受理に昇格させない。
+
+これらは動作済み安全保証ではなく、[SK-01 SK-E01〜07](../../../evaluations/SK-01-harness-skills.md)で反証するための手順案である。
+
 ## 関連
 
 - [横断設計](../../../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)
