@@ -100,7 +100,10 @@
       ],
       "internal_result": true,
       "consumer_may_view_result": false,
-      "expected": "result_withheld"
+      "expected": "result_withheld",
+      "second_internal_result": false,
+      "first_internal_result": true,
+      "note": "Two private worlds share same public view; both withheld regardless true/false internal result."
     },
     {
       "id": "SK-F07",
