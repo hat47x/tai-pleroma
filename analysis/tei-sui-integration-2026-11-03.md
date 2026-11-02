@@ -79,3 +79,27 @@ receiptは`evaluations/records/`にあり、合成61件・実実行57件がcheck
 4. 保存計画を運用ツールとして定着させる
 
 公開gateは`blocked`のまま。外部作用・公開は未承認。
+
+## 付録: DocumentV1とTEI primitiveの対応
+
+| 要素 | フィールド | TEI primitive | 契約フィールド |
+| --- | --- | --- | --- |
+| Document | `id` | `std.identifier` | `sui.document.document_id` |
+| Document | `title`（optional） | `std.text` | `sui.document.title` |
+| Card | `id` | `std.identifier` | `sui.card.card_id` |
+| Card | `text` | `std.text` | `sui.card.text` |
+| Card | `x`,`y` | `std.decimal` | `sui.card.x` / `sui.card.y` |
+| Card | `claimType`（optional） | `std.text` | `sui.card.claim_type` |
+| Card | `holdState`（optional） | `std.text` | `sui.card.hold_state` |
+| Card | `textReviewed`（optional） | `std.boolean` | `sui.card.text_reviewed` |
+| Island | `id` | `std.identifier` | `sui.island.island_id` |
+| Island | `title`（optional） | `std.text` | `sui.island.title` |
+| Island | `cardIds`（配列） | `std.identifier` × many | `sui.island.card_ids` |
+| Edge | `id` | `std.identifier` | `sui.edge.edge_id` |
+| Edge | `fromId`,`toId` | `std.identifier` | `sui.edge.from_id` / `to_id` |
+| Edge | `type` | `std.text` | `sui.edge.relation` |
+| Edge | `fromKind`,`toKind` | `std.text` | `sui.edge.from_kind` / `to_kind` |
+| Affiliation | `id` | `std.identifier` | `sui.affiliation.affiliation_id` |
+| Affiliation | `cardId`,`islandId` | `std.identifier` | `sui.affiliation.card_id` / `island_id` |
+
+投影しないもの: `critique`・`critiqueTags`・`meta`・`ka`・`geometry`・`summaryText`・`transform`・`createdAt`/`updatedAt`・`critiqueInputs`などの構造体配列。
