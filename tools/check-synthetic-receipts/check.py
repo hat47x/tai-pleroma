@@ -283,7 +283,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
         if "SCN-003-save" in relative:
             observed = data.get("observed", {})
-            if observed.get("roundTrip") is not True or observed.get("cards") != 3:
+            if observed.get("roundTrip") is not True or observed.get("cards") != 5:
                 errors.append(f"SCN-003 save did not round trip three cards: {relative}")
         if "SCN-003-compose" in relative:
             observed = data.get("observed", {})

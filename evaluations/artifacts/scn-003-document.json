@@ -81,6 +81,24 @@
         "sources": [
           "sei:decision-1"
         ]
+      },
+      {
+        "id": "card-task-1",
+        "text": "[dev.example.transform] ^1",
+        "x": 0.0,
+        "y": 0.0,
+        "sources": [
+          "eki:task-request"
+        ]
+      },
+      {
+        "id": "card-profile-1",
+        "text": "[profile-a] Profile A",
+        "x": 0.0,
+        "y": 0.0,
+        "sources": [
+          "mmi:format-profile"
+        ]
       }
     ],
     "islands": [
@@ -112,6 +130,8 @@
   },
   "scn003": {
     "decisionRef": "decision-1",
-    "decisionArtifact": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+    "decisionArtifact": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c",
+    "taskExecutor": "dev.example.transform",
+    "profileId": "profile-a"
   }
 }
