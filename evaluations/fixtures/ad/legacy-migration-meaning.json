@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "record_type": "meaning",
+  "meaning_id": "mean-ad-001",
+  "domain": "ad",
+  "source_step": "legacy_ecu_brake_control",
+  "target_step": "ad_stack_brake_actuator",
+  "role": "brake_controller",
+  "permission": "safety_authority",
+  "status": "split",
+  "owner": "vehicle-platform-team",
+  "loss_note": "legacy diagnostic trouble code mapping is not yet migrated",
+  "safety_case_ref": "safety-case-ad-001",
+  "evidence_refs": ["legacy-spec-001", "ad-stack-spec-001"]
+}

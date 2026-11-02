@@ -647,7 +647,7 @@ func inspectValidity(ctx context.Context, seiRoot, path, targetPath string, name
 		return ValidityInspection{}, err
 	}
 	// Verify the same snapshot that was read, never re-read a changing input path.
-	checked, err := run(ctx, filepath.Join(seiRoot, "runtime", "go"), "run", "./cmd/sei", "verify", "--input", snapshot)
+	checked, err := runOutput(ctx, filepath.Join(seiRoot, "runtime", "go"), "run", "./cmd/sei", "verify", "--input", snapshot)
 	if err != nil {
 		return ValidityInspection{}, err
 	}

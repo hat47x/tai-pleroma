@@ -1,0 +1,38 @@
+{
+  "schema": "tai.evaluation.robotics-records/v0",
+  "executed_at": "2026-11-01T23:17:14.254099+00:00",
+  "synthetic": true,
+  "passed": true,
+  "errors": [],
+  "self_test": {
+    "passed": true,
+    "errors": []
+  },
+  "fixtures": [
+    "evaluations/fixtures/ad/disengagement-decision.json",
+    "evaluations/fixtures/ad/incident-event.json",
+    "evaluations/fixtures/ad/incident-handoff.json",
+    "evaluations/fixtures/ad/legacy-migration-meaning.json",
+    "evaluations/fixtures/ad/takeover-handoff.json",
+    "evaluations/fixtures/robotics/pick-and-place-decision.json",
+    "evaluations/fixtures/robotics/pick-and-place-event.json",
+    "evaluations/fixtures/robotics/pick-and-place-handoff.json",
+    "evaluations/fixtures/robotics/pick-and-place-meaning.json"
+  ],
+  "schemas": [
+    "docs/yi-constellation/schemas/event.schema.json",
+    "docs/yi-constellation/schemas/handoff.schema.json",
+    "docs/yi-constellation/schemas/decision.schema.json",
+    "docs/yi-constellation/schemas/meaning.schema.json"
+  ],
+  "checks": {
+    "schema_validation": "required, type, enum, const, pattern, minLength, minItems, additionalProperties",
+    "cross_record": "safety_envelope_ref, handoff_ref, domain fields, from/to, decision fields, meaning status",
+    "coverage": "event, handoff, decision, meaning in ad and robotics"
+  },
+  "notes": [
+    "合成fixtureのみ。実車、実ロボット、実安全制御器は未検証。",
+    "安全エンベロープは参照のみで、安全認証の証拠ではない。",
+    "意味の対応は移行の記録であり、移行の正しさを検証したものではない。"
+  ]
+}
