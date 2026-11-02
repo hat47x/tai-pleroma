@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.tei-sui-http/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "suiCommit": "42ec002699766d3eec5efa9754b90353cc0c01e7",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and SUI runtime dependencies",
+  "command": "PYTHONPATH=src python -m pytest tests/test_documentv1_projection_route.py -q",
+  "result": "PASS",
+  "observed": {
+    "endpoint": "/admin/tei-epistemic/artifacts/documentv1-projection",
+    "status": 200,
+    "cacheControl": "no-store",
+    "artifactVerbatim": true,
+    "unknownKindStatus": 404,
+    "tests": 2,
+    "passed": 2,
+    "authOverridden": true
+  },
+  "scope": "The FastAPI route is exercised through TestClient with the control-plane authorization dependency overridden. It does not verify real authorization, a running server, tenant-plane routing, or deployment."
+}

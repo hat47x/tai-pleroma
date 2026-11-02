@@ -26,6 +26,7 @@
 | SEI | 3 records、`authority:unknown`/`publication:unapproved`を保持 | [receipt](../evaluations/records/SEI-decision-2026-10-26.json) | 実store・署名・権限 |
 | TEI | 型宣言`validation=ok`、workspace digest不変 | [receipt](../evaluations/records/TEI-model-2026-10-29.json) | 実データ・意味 |
 | EKI | Control Plane 405、Agent claim delivery、Task `queued`→`cancelled` | [receipt](../evaluations/records/EKI-worker-env-2026-10-28.json) | Task実行・結果・Authority |
+| EKI Native Runner | 固定コマンド、期限/取消し、出力上限、Windows/Linuxのツリー停止、引数/GPU/資源/digestのfail-closed | [eki-fabric #275](https://github.com/hat47x/eki-fabric/pull/275) | sandbox・CPU/メモリ制限・結果検証 |
 
 ## 検出する工程欠陥
 
@@ -39,15 +40,15 @@
 
 | ID | status | evidenceKind | 意味 |
 | --- | --- | --- | --- |
-| R-01 | pending | synthetic | 合成文書だけ。実在の規程ではない |
-| R-02 | pending | synthetic | 権限者は未確認のまま |
-| R-03 | pending | synthetic | 合成MMI workspaceだけ |
-| R-04 | pending | synthetic | 合成SEI fixtureだけ |
-| R-05 | pending | synthetic | 人間の独立レビューは未実施 |
+| R-01 | accepted | synthetic | 合成文書によるdevelopment review。実在の規程ではない |
+| R-02 | accepted | synthetic | development reviewのみ。権限者は未確認 |
+| R-03 | accepted | synthetic | 合成MMI workspaceによるdevelopment review |
+| R-04 | accepted | synthetic | 合成SEI fixtureによるdevelopment review |
+| R-05 | accepted | synthetic | 生成AIによるdevelopment review。人間の独立レビューは未実施 |
 | R-06 | pending | none | 未実施 |
 | R-07 | pending | none | 未実施 |
 
-R-01〜R-05を`accepted`や`real-object`へ更新していない。公開gateは`blocked`。
+R-01〜R-05はOwner判断によりdevelopment review accepted。評価者は生成AIで、人間レビューは業務フロー一巡とAI品質確認の後に回す。公開用の`real-object`証拠ではない。公開gateは`developmentAccepted`へ記録し、公開は`blocked`。
 
 ## 再実行
 

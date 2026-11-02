@@ -4,7 +4,7 @@ import shutil
 import tempfile
 import unittest
 
-from check import REVIEW_STATUS, RECORDS, check
+from check import REAL_RECORDS, RECORDS, REVIEW_STATUS, check
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
@@ -16,7 +16,7 @@ class CheckTest(unittest.TestCase):
         self.assertEqual(receipt["recordCount"], len(RECORDS))
 
     def _copy_fixture(self, root):
-        for relative in (*RECORDS, REVIEW_STATUS):
+        for relative in (*RECORDS, *REAL_RECORDS, REVIEW_STATUS):
             source = ROOT / relative
             destination = root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -100,6 +100,19 @@ class CheckTest(unittest.TestCase):
             receipt = check(root)
             self.assertFalse(receipt["passed"])
             self.assertTrue(any("R-07 declares evidence" in e for e in receipt["errors"]))
+
+
+    def test_real_execution_receipt_claiming_synthetic_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            target = root / REAL_RECORDS[0]
+            data = json.loads(target.read_text(encoding="utf-8"))
+            data["synthetic"] = True
+            target.write_text(json.dumps(data), encoding="utf-8")
+            receipt = check(root)
+            self.assertFalse(receipt["passed"])
+            self.assertTrue(any("claims synthetic" in error for error in receipt["errors"]))
 
 
 if __name__ == "__main__":

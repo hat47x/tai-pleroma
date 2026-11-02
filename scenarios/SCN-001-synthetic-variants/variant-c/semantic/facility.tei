@@ -1,0 +1,27 @@
+namespace scn001_variant_c
+
+data Observation {
+    attribute id type std.code
+    attribute text type std.text
+    attribute source type std.text
+    attribute sourceVersion type std.code
+    attribute availability type std.code
+}
+
+data PolicyVersion {
+    attribute id type std.code
+    attribute effectiveFrom type std.date
+    attribute status type std.code
+}
+
+data Notice {
+    attribute id type std.code
+    attribute version type std.code
+    attribute removed type std.boolean
+}
+
+data Conflict {
+    attribute current type std.code
+    attribute old type std.code
+    attribute reason type std.text
+}

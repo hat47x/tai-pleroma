@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.document.record",
+  "contractVersion": "4",
+  "cases": [
+    {
+      "id": "present-no-title",
+      "input": {"id": "doc-1"},
+      "want": {"state": "present", "text": "{\"id\":\"doc-1\"}"}
+    },
+    {
+      "id": "present-title",
+      "input": {"id": "doc-1", "title": "Notes"},
+      "want": {"state": "present", "text": "{\"id\":\"doc-1\",\"title\":\"Notes\"}"}
+    },
+    {
+      "id": "missing-id",
+      "input": {"title": "Notes"},
+      "want": {"state": "missing", "text": "[\"id\"]"}
+    },
+    {
+      "id": "unresolved-id",
+      "input": {"id": null, "title": "Notes"},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}

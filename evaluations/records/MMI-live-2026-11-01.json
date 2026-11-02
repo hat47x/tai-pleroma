@@ -1,0 +1,19 @@
+{
+  "schema": "tai.reference.mmi-live-inspect/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "mmiCommit": "e293927e7decb548c9662c4a19a140c1d017a1a8",
+  "host": "Windows Node.js 24.19.0 with the MMI dependencies installed by npm ci",
+  "command": "node --import tsx src/cli/mmi.ts inspect test/fixtures/libreoffice-fill-impact-family.xlsx --json",
+  "result": "PASS",
+  "observed": {
+    "exitCode": 0,
+    "candidateCount": 9,
+    "sheetCount": 9,
+    "sourceDigest": "sha256:aeeb605c4bcd88a02df6ecf09a83db962141d6f6c90bd96375d67feeeb937973",
+    "firstFingerprint": "sha256:9c1d7dc6d0e28a33ac7d307abee95360ba691fbbe5165a82b5290bfd42ac3537"
+  },
+  "scope": "The MMI fixture workbook only. Candidates are inferred table regions, not accepted semantic meaning, and this is not a publication approval."
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.scn002/v0",
+  "scenario": "SCN-002",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "slice": "multi-site-maintenance-prioritization",
+  "steps": [
+    "mmi",
+    "tei",
+    "sei",
+    "eki_inspect",
+    "eki_quote",
+    "sui",
+    "ai_review",
+    "ai_approval",
+    "approvals",
+    "rejections",
+    "ai_resubmit"
+  ],
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

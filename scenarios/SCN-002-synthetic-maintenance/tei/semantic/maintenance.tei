@@ -1,0 +1,26 @@
+namespace scn002_maintenance
+
+data Site {
+    attribute id type std.code
+    attribute name type std.text
+}
+
+data Asset {
+    attribute id type std.code
+    attribute site type std.code
+    attribute kind type std.code
+    attribute renewalDue type std.date
+    attribute status type std.code
+}
+
+data Budget {
+    attribute fiscalYear type std.code
+    attribute limitYen type std.integer
+}
+
+data Priority {
+    attribute asset type std.code
+    attribute rank type std.integer
+    attribute reason type std.text
+    attribute approval type std.code
+}

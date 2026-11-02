@@ -74,5 +74,38 @@ class SubmitTest(unittest.TestCase):
         self.assertFalse(receipt["taskSubmitted"])
 
 
+# --- binding of the answering process (ekipin.py): the Task is not sent on a failed pin ---
+
+import ekipin
+
+
+class CountingSubmitTest(unittest.TestCase):
+    def test_unpinned_run_adds_fields_only(self):
+        receipt = submit(self.base_url, "valid-token", FIXTURE, "key-1")
+        self.assertEqual(receipt["schema"], "tai.reference.eki-task-submit/v0")
+        self.assertTrue(receipt["passed"])
+        self.assertEqual(receipt["controlBinary"]["binding"], "not-provided")
+        self.assertFalse(receipt["pin"]["checked"])
+
+    def test_pinned_run_without_a_matching_process_sends_nothing(self):
+        counted = []
+        original = Handler.do_POST
+        Handler.do_POST = lambda handler: (counted.append(1), original(handler))[1]
+        try:
+            expect = "sha256:" + "0" * 64
+            for binding in (ekipin.Binding(expect=expect), ekipin.Binding(expect=expect, pid=424242, proc="/nonexistent-proc")):
+                receipt = submit(self.base_url, "valid-token", FIXTURE, "key-1", binding)
+                self.assertFalse(receipt["passed"])
+                self.assertFalse(receipt["taskSubmitted"])
+                self.assertEqual(receipt["pin"]["result"], "unavailable")
+        finally:
+            Handler.do_POST = original
+        self.assertEqual(counted, [])
+
+
+CountingSubmitTest.setUp = SubmitTest.setUp
+CountingSubmitTest.tearDown = SubmitTest.tearDown
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,18 @@
+{
+  "schema": "tai.reference.sui-document-put/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "docId": "scn002-maintenance",
+  "passed": true,
+  "putStatus": 200,
+  "readStatus": 200,
+  "cardCount": 7,
+  "islandCount": 4,
+  "edgeCount": 2,
+  "edgeType": "depends",
+  "expected": {
+    "cards": 7,
+    "islands": 4,
+    "edges": 2
+  }
+}

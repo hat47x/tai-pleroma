@@ -1,0 +1,41 @@
+{
+  "schema": "tai.reference.tei-comparison/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "host": "Windows 11 with Go on PATH",
+  "command": "python integrations/pilot-sui-document/compare_workflow.py --tei-repo D:\\GIT\\hat47x\\tei-wt-main3 --workspace D:\\GIT\\hat47x\\tai-wt-compare\\integrations\\pilot-sui-document",
+  "result": "PASS",
+  "task": "T1: projection kind normalize -> identity",
+  "evaluationSet": {
+    "contract": "sui.card.text",
+    "fixtures": [
+      "present",
+      "empty",
+      "missing",
+      "unresolved"
+    ],
+    "cases": 4,
+    "fixturesDigest": "sha256:d55c98a036b7e7b5588d183dd2cc969f1626dbeb47f28af4c0500fd17b747ce7"
+  },
+  "tei": {
+    "elapsedMillis": 3500,
+    "passed": true,
+    "qualified": [
+      "text-template"
+    ],
+    "contractLinesChanged": 2,
+    "fixtureLinesChanged": 2
+  },
+  "baseline": {
+    "elapsedMillis": 1485,
+    "passed": true,
+    "cases": 4,
+    "sourceLinesChanged": 3,
+    "fixtureLinesChanged": 2
+  },
+  "humanInterventions": 0,
+  "interpretation": "Both paths passed. The TEI path took longer because it regenerates the candidate and rebinds it to the contract; the baseline edited a handwritten candidate. This run does not show a productivity gain. It shows that the TEI path keeps the contract and fixtures as the change surface, and that the same four cases verify both paths.",
+  "scope": "Both paths were authored by the same agent in one session. The receipt compares artifact edits, regeneration, and elapsed time; it does not measure human productivity, code quality, or autonomy."
+}

@@ -10,8 +10,11 @@
 - 合成MMI
 - 合成施設文書
 - EKI Worker test環境
+- SCN-001生成AI development review
 
-あわせて、R-01〜R-05が`pending`/`synthetic`、R-06/R-07が`pending`/`none`であることを確認します。
+あわせて、R-01〜R-05が`accepted`/`synthetic`、R-06/R-07が`pending`/`none`であることを確認します。AI review receiptでは`evaluatorKind=generative-ai`、`humanReviewed=false`、`publicationApproved=false`も確認します。
+
+実実行のreceiptは合成receiptと分けて`REAL_RECORDS`に登録します。`synthetic=false`、`evidenceKind=real-execution`、`publicationAllowed=false`、`host`、`command`、`result=PASS`を確認します。実実行receiptが`synthetic=true`を主張すると失敗します。
 
 ## 曖昧な記録の拒否
 

@@ -1,1 +1,3 @@
 evaluations/artifacts/*.md text eol=lf
+tools/reference-sei-decision/testdata/**/*.json text eol=lf
+analysis/cross-repo/** text eol=lf

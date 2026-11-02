@@ -1,0 +1,71 @@
+{
+  "schema": "tai.reference.mmi-readonly/v0",
+  "server": "markdown-matrix-injector/0.2.0",
+  "protocolVersion": "2024-11-05",
+  "mmiCommit": "e3a199c806381eaa9944792e17287cc90e414878",
+  "packageLockDigest": "sha256:becc3b2d5e4b1aa554d2786540c369abe84c62419852467fa1856f0f10b92f02",
+  "nodeVersion": "v24.19.0",
+  "tool": "inspect",
+  "candidateCount": 1,
+  "selectedRows": 5,
+  "observedIds": [
+    "O-02",
+    "O-03",
+    "O-10",
+    "O-11",
+    "O-12"
+  ],
+  "selected": [
+    {
+      "id": "O-02",
+      "text": "A拠点の受電設備は2026年12月が更新期限",
+      "source": "asset-inventory",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-03",
+      "text": "A拠点の受電設備は2027年3月が更新期限",
+      "source": "vendor-notice",
+      "version": "2026-09-15",
+      "availability": "available"
+    },
+    {
+      "id": "O-10",
+      "text": "B拠点の空調設備は故障中で稼働していない",
+      "source": "facility-log",
+      "version": "2026-10-20",
+      "availability": "available"
+    },
+    {
+      "id": "O-11",
+      "text": "C拠点の受電設備は更新不要と記録されている",
+      "source": "asset-inventory",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-12",
+      "text": "2026年度の設備更新予算上限は3000万円",
+      "source": "budget-note",
+      "version": "2026-04-01",
+      "availability": "available"
+    }
+  ],
+  "conflictPreserved": true,
+  "sourceDigestBefore": "sha256:78bf0f167519668b0dc74b09eafa62dbbb4e425f4dacdec3223e02339e67e0cf",
+  "sourceDigestAfter": "sha256:78bf0f167519668b0dc74b09eafa62dbbb4e425f4dacdec3223e02339e67e0cf",
+  "guideDigestBefore": "sha256:d2b55b720829f1d703f6455118c3bb8cb51a9c76a72de32df5e9d0bb3bcd62bf",
+  "guideDigestAfter": "sha256:d2b55b720829f1d703f6455118c3bb8cb51a9c76a72de32df5e9d0bb3bcd62bf",
+  "boundaryRejected": true,
+  "missingSourceRejected": true,
+  "readOnly": true,
+  "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
+    "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
+  ]
+}

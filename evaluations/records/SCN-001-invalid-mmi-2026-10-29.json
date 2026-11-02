@@ -1,0 +1,30 @@
+{
+  "schema": "tai.reference.mmi-readonly/v0",
+  "server": "markdown-matrix-injector/0.2.0",
+  "protocolVersion": "2024-11-05",
+  "mmiCommit": "e3a199c806381eaa9944792e17287cc90e414878",
+  "packageLockDigest": "sha256:becc3b2d5e4b1aa554d2786540c369abe84c62419852467fa1856f0f10b92f02",
+  "nodeVersion": "v24.19.0",
+  "tool": "inspect",
+  "candidateCount": 1,
+  "selectedRows": 0,
+  "observedIds": null,
+  "selected": null,
+  "conflictPreserved": false,
+  "sourceDigestBefore": "sha256:badda883e22532368248efbc53e33a5cff67281a295ffca03f9cd347ee45182c",
+  "sourceDigestAfter": "",
+  "guideDigestBefore": "sha256:f3521d1914a83a2074a2f4cea243a12fdb918ab132ec3c61b3c292d983b6abc7",
+  "guideDigestAfter": "",
+  "boundaryRejected": false,
+  "missingSourceRejected": false,
+  "readOnly": true,
+  "realProductConnected": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": false,
+  "reason": "select was rejected: [{Code:TABLE_NOT_FOUND Message:「Sheet1!A1:E9」に当たる表がシート「Sheet1」に見つかりません。}]",
+  "notes": [
+    "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
+    "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
+  ]
+}

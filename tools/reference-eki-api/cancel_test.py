@@ -75,5 +75,36 @@ class CancelTest(unittest.TestCase):
         self.assertFalse(receipt["taskSubmitted"])
 
 
+# --- binding of the answering process (ekipin.py): the Task is not sent on a failed pin ---
+
+import ekipin
+
+
+class CountingCancelTest(unittest.TestCase):
+    def test_unpinned_run_adds_fields_only(self):
+        receipt = cancel(self.base_url, "valid-token", FIXTURE, "key-1")
+        self.assertEqual(receipt["schema"], "tai.reference.eki-task-cancel/v0")
+        self.assertTrue(receipt["passed"])
+        self.assertEqual(receipt["controlBinary"]["binding"], "not-provided")
+        self.assertFalse(receipt["pin"]["checked"])
+
+    def test_pinned_run_without_a_matching_process_sends_nothing(self):
+        counted = []
+        original = Handler.do_POST
+        Handler.do_POST = lambda handler: (counted.append(1), original(handler))[1]
+        try:
+            receipt = cancel(self.base_url, "valid-token", FIXTURE, "key-1", ekipin.Binding(expect="sha256:" + "0" * 64))
+        finally:
+            Handler.do_POST = original
+        self.assertFalse(receipt["passed"])
+        self.assertFalse(receipt["taskSubmitted"])
+        self.assertEqual(receipt["pin"]["result"], "unavailable")
+        self.assertEqual(counted, [])
+
+
+CountingCancelTest.setUp = CancelTest.setUp
+CountingCancelTest.tearDown = CancelTest.tearDown
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,27 @@
+{
+  "schema": "tai.reference.eki-bwrap-linux/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "ekiCommit": "d1571cce9cb62d4ef47df7b0785a68a4372488c6",
+  "host": "WSL2 Ubuntu with bwrap installed; linux amd64 test binary",
+  "command": "runner-linux.test -test.v -test.run TestRunWithBwrap",
+  "suite": "internal/agent/nativerunner (linux build)",
+  "result": "PASS",
+  "tests": {
+    "TestRunWithBwrapSandboxSucceeds": "PASS",
+    "TestRunWithBwrapSandboxMakesRootReadOnly": "PASS",
+    "TestRunWithBwrapSandboxHasNoNetworkInterface": "PASS",
+    "TestRunWithBwrapSandboxStopsBusyProcessAtCPULimit": "PASS",
+    "TestRunWithBwrapSandboxUsesPerRunWorkingDirectory": "PASS"
+  },
+  "observed": [
+    "A normal fixed command runs inside bubblewrap.",
+    "Writing to /etc fails because the root is read-only.",
+    "No eth0 appears in the sandbox /proc/net/dev.",
+    "With a temporary-disk limit, the per-run working directory is bound read-write and a file can be written there.",
+    "A busy loop under a 100ms CPU limit stopped in about 0.12s after RSS and CPU sampling was changed to sum the process group."
+  ],
+  "scope": "The linux-bwrap profile only. This is not a claim that every absolute path is unreachable through other mounts, and it is not a publication approval."
+}

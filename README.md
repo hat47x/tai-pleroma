@@ -6,6 +6,8 @@ TAI Pleromaは、人が知識を得て、考え、判断し、成果を生み、
 
 「泰」は易経第11卦の「地天泰」、「Pleroma」は充足した全体性に由来します。目指すのは、個々の機能を増やすことよりも、必要な知的能力を組み合わせて、利用者が一つの課題を継続して扱えることです。
 
+製品群全体の構想と役割の分担は、[YI Constellation 構想と設計](docs/YI_Constellation.pptx)をご覧ください。YI Constellationはシリーズの名称であり、TAI Pleromaは課題を横断して扱う製品です。資料の確認状況は2026年10月時点のものです。
+
 ## 何をつなぐのか
 
 TAIは、役割の異なる五つの関連基盤を必要に応じて利用します。
@@ -46,6 +48,7 @@ SCN-001について、次の参照実装と検証記録があります。
 | [SUIとの接続](tools/reference-sui-api/README.md)・[観測照合](tools/reference-sui-link/README.md)・[D-04照合](tools/reference-sui-draft/README.md) | 文書内のカードと観測本文の対応、島の構成、D-04の根拠行を確認 |
 | [TEIとの接続](tools/reference-tei-model/README.md) | SCN-001で使う型宣言の検証 |
 | [EKIとの接続](tools/reference-eki-api/README.md)・[CLI確認](tools/reference-eki-cli/README.md) | API認証と合成Taskの受付・待機状態、CLI起動を確認 |
+| [ハーネス境界](tools/reference-harness-boundary/README.md) | 合成の製品とハーネスで、読み取り専用、書き込み拒否、文脈の受け渡しと保留、提供元の遭遇と交換、セッション終了を検査 |
 | [EKI Worker test環境](tools/reference-eki-worker/README.md) | WSL/DockerでAgent/Control test profileとバイナリbuildを確認 |
 | [公開条件の検査](tools/reference-publication-gate/README.md) | レビュー項目R-01〜R-07の状態を判定。現在は公開を保留 |
 | [公開境界の検査](tools/check-public-boundary/check.py) | 非公開リソース名・秘密鍵・tokenの混入をtracked fileから検出 |
@@ -79,6 +82,7 @@ TEI Platformの非公開作業資料、第三者の原文・抽出物は、著�
 | [scenarios/](scenarios/) | 利用者の課題と検証用シナリオ |
 | [integrations/](integrations/) | 既存基盤との接続の調査 |
 | [evaluations/](evaluations/) | 評価条件、合成試験、実行記録 |
+| [analysis/](analysis/) | 複数リポジトリにまたがる整理・監査の成果物 |
 | [tools/](tools/) | 参照実装と検証用ツール |
 
 開発時の作業規則は[AGENTS.md](AGENTS.md)を参照してください。脆弱性の報告は[SECURITY.md](SECURITY.md)、変更の進め方は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
