@@ -510,3 +510,15 @@ roundTrip: true
 
 - [receipt](../../evaluations/records/SUI-TEI-server-2026-11-03.json)
 - 本番DB・TLS・リバースプロキシ・実配備は未検証
+## 決定性（2026-11-03）
+
+`assembler/determinism_check.py`で、同じ入力の投影を2回実行し、artifactのdigestを比較します。
+
+```text
+runs: 2 / identical: true
+digest: 6d39148c...bacf34（両回一致）
+casesPassed: 21 / 21
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-determinism-2026-11-03.json)
+- 異なるホスト・ツールチェーン間の決定性は未検証
