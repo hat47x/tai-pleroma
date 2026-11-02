@@ -578,3 +578,17 @@ ETagあり: true
 
 - [receipt](../../evaluations/records/SUI-TEI-etag-2026-11-03.json)
 - SaaSプロファイルの前提条件必須動作、同時書き込みは未検証
+## Cardのsources（2026-11-03）
+
+Cardのoptionalな`sources`配列を投影へ追加しました。
+
+```text
+sui.card.record v8: id, text, x, y, claimType?, holdState?, textReviewed?, sources[]?
+```
+
+- 契約・fixture・SUI consumer・DocumentV1 payloadまで反映
+- 21ケースPASS、SUI unittest 21件PASS
+- `validate_against_sui`でDocumentV1妥当性を確認
+
+- [receipt](../../evaluations/records/SUI-TEI-sources-2026-11-03.json)
+- [validation](../../evaluations/records/SUI-TEI-sources-validation-2026-11-03.json)
