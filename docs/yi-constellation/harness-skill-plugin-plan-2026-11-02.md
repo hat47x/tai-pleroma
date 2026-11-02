@@ -207,3 +207,38 @@ TAIが横断Skillの正本・AB比較・シリーズ配布を担当し、**各Pr
 
 いずれも**要求・受入計画の起票のみ**。各ProductのSkill/Plugin codeやCI、実Harness、正式API/Owner受理を実施したものではない。TAI #168の横断作業と、各製品実装の状況を混同しない。
 
+## 11. 2026-11-02：Source改版から「利用者が受け取った一式」までのSkillの責務
+
+他チャットの[TEI #2505／Draft #2615](https://github.com/hat47x/tei-platform/pull/2615)は原資料のA→B→C改版とConsumer別の影響を、[TEI #2604](https://github.com/hat47x/tei-platform/issues/2604)は複数Artifactの**物理公開と読取り一貫性**を分けた。[SHO #6](https://github.com/hat47x/sho-composer/issues/6)は文書と原Source・表示依存の受渡し、[EKI #465](https://github.com/hat47x/eki-fabric/issues/465)は実Runnerの出力BodyからSenderまでの断絶を具体化した。これらをTAIのProduct SkillルーティングとActivity再開の**失敗資格**へ還元する。各実装・OracleはそれぞれのOwnerに残す。
+
+### 11.1 五層の同一性をSkillの「成功」一語に畳まない
+
+| 層 | 何を区別するか | Skillが付けてよい報告資格 |
+| --- | --- | --- |
+| **S Source** | ZIP/member/view/atomと固定版の位置参照、実Source bytes | 特定版の出典を再取得・照合した |
+| **C Correspondence** | A→B、B→Cの多対多の**対応候補** | 版間の候補経路と不明点を提示した |
+| **M Meaning** | Ownerが受理したClaim/Rule・対象/適用範囲・版 | その意味受理を正本から確認した（候補≠受理） |
+| **G Generation** | Target/Template/Generator/Rule版・出力実byte・Manifest/Findings | 指定入力から指定出力を生成・局所検証した |
+| **P Publication/Consumption** | 完成したArtifact一式の世代、Consumerが実際に読んだファイル・Digestと開示先 | 同一世代の完成一式を当該Consumerが取得したことを観測した |
+
+これはTEI #2615のS/C/M/G/Pを**評価の説明**に借りるもので、TAIの新しい共通意味Schemaや公式状態機械ではない。GのPASSからP、PのPASSから現在の業務意味・実Host/DB効果へ昇格しない。入力文書を受け取ったことと、SHOで著者が実際にレビュー・固定納品できたことも別。EKIではResultClaim/Claim ACKから**同AttemptのBody bytes**到着を推測しない。
+
+### 11.2 Skillが作るのは「再評価の候補」であり、旧受理の自動移植ではない
+
+A版で受理した説明をC版で使用する際、A→BとB→Cの個別候補が高確度でも、A→Cが一意・同義とは限らない。二要素がBで統合されCで再分割された場合、合成経路は複数。Skillは候補理由/曖昧性と利用先Claimを示し、現行Ownerによる用途別受理・再検証へ返す。**原本byteの同一、同一表面文言、同じhashの復活も現在適用の保証ではない**。Dependencyが明確な場合は影響の小さいConsumerだけを再評価候補にできるが、依存未観測を「影響なし」と断定しない。
+
+SHOの説明文・引用出典・表示用画像/式・固定納品版と、TEIの意味モデル・Java/.NET/WASM出力は異なる派生系列。Templateだけが変わった場合にLibraryの業務意味を改版扱いすることも、意味が改版されたのに旧文書を自動承認することも避ける。
+
+### 11.3 Artifactの物理公開をSkill操作結果から独立検証する
+
+TEI #2604で現行未統合候補のSource-static所見となった**逐次上書き後にManifest書込み**のケースでは、R1一式からR2更新途中のエラーが起これば、Consumerに旧Manifest＋新しい一部ファイルが見え得る。消されたtableの旧ファイル残存やslug衝突も別負例。したがって、Tool exit 0／ManifestのComplete／生成物Digest／SHO Render成功は、**消費者が同じ完成世代を読めた証拠ではない**。
+
+Skillの初期read-only経路は、実Product側の公開プロトコルが提供する場合、**一つの固定世代／Manifest参照を取得→列挙されたファイルの実byteを照合→旧残存物を公開一式へ混ぜない→対象Consumerの読取り状態を報告**する。Product側でsnapshot取得・不変の世代が提供されない場合は、同一世代の証明を捏造せず`unknown/partial`として既存Owner #2604へ返す。TAI Skillが独自にatomic writeや第二のArtifact Storeを実装する方針ではない。
+
+### 11.4 機密ProfileではManifest・出力名自体を開示範囲に含める
+
+Output filename、Manifest列挙、Subject ID・件数、対象バージョン、生成ログ、失敗箇所は非公開の構造を漏らし得る。外部Harnessへ渡すのはSource保持Product/実Hostの**許可済み公開投影と検証結果のみ**。内部で完全集合と同版byteを確認しても、詳細なManifestや検証Booleanを外部へ返せるとは限らない（TAI #232／TEI #2515/#2516）。Client Skillがファイルを隠しただけではOSでRawを禁止した証拠にならない。
+
+### 11.5 計画と検証Owner
+
+[SK-01 §J](../../evaluations/SK-01-harness-skills.md)のSK-J01〜J07で、版間曖昧性、同版Template差分、混合世代、残存物、CompleteとFindings、EKI Body未送達、Manifestの存在推知を公開合成fixtureで対照する。TEI #2505/#2604、SHO #6、EKI #465に**各Productの実装・試験を委譲**し、TAIは単体Skillと横断Skillが誤った完了主張をしないか評価する。Skill/Tool/Consumerの実接続、実OS拒否、実Artifact公開・読取り、Owner受理は全て新規NOT RUN。P0は従来のSK-G0/G1とTEI #2605 read-only一件を維持し、拡張候補と検証Laneを並列増加してよい。
