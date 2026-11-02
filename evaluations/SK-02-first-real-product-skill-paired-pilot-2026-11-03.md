@@ -100,3 +100,24 @@ Skill実ロード・独立Oracle・実Tool出力が揃わなければ、H2/H3 Sk
 SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。第2 Harnessへの配布・差分Adapter・Source再解決・現在Grant/Disclosure/Consumer到達の検証は[SK-03](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)へ移譲する。実行Groupを混ぜて4 Sessionを水増ししたり、Claude Code／Codex／OpenCode／DSHの異なるModel/Plan/権限を「同条件のSkill効果」へ偽装しない。後続実験では第1 Harnessで実際にLoaded/InvokedされたProduct SkillとCLIに対し、Source/実byte/型付きResult/Warning/Unknownを固定して第2 Harnessで再資格化する。
 
 [TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のHandoffはHistoryとCurrent Qualificationを区別。DSH/Cloudの外部送出面、OpenCodeのTool/Skill permission、MCP対応版は各実環境で検査し、実Raw/Host Grantのコピーを前提にしない。**SK-03新試験の実観測はNOT RUN**。SK-02既存20/20は公開合成の比較適格性Checkerに限る。
+
+## 9. 実CLI argv・Write/Egress観測の欠損を比較適格にしない（2026-11-03、E21〜E32）
+
+**新しい実行可能な検査差分**：[既存Checker](./tools/check-sk02-pair-eligibility.cjs)に12負例・正例を追加し、公開合成E01〜E32の**32件**を維持。同じTool Profile digestと`tool_invocation_observed=true`の自己申告が揃っても、**実際のargvが記録されない場合**は`insufficient-evidence`。観測記録がないのに「無許可の書込み／外部送信なし」とする従来の空欄通過を防ぐため、`unauthorized_write_observed`・`unauthorized_egress_observed`のどちらかが未記録でも`insufficient-evidence`を返す。これは記録欄の存在を検証するだけで、監査記録の実在性を証明しない。
+
+**最初のH2/H3で許可するコマンド集合**：TEIの限定read-only Catalogから、`version`、`commands`、`model catalog`、`inspect`、`trace`、`validate`だけを初期タスクの実argv候補とする。Windows `tei.exe`／Unix pathのコマンドも記録上認識する。一方、[merged TEI #2587](https://github.com/hat47x/tei-platform/pull/2587)で実装が存在する`operations`／`artifacts`は、**不存在とはせず、SK-02の当初の許可Profileの外**とする。`artifacts -out`は明示的なファイル副作用があるため、比較適格として受理しない。許可されたコマンド名に`--out`を付けて記録する場合も、まず不適格として止める（実CLIの正式な全flag検証ではない）。
+
+| ケース | 固定された合成入力 | Expected |
+| --- | --- | --- |
+| E21〜E23 | 実Write/Egress observer、あるいはCLI実argvを欠落 | `insufficient-evidence` |
+| E24〜E26 | `artifacts -out`、当初Profile外の`operations`／`artifacts` | `ineligible` |
+| E27〜E28 | Windows実行ファイル表記／H3で別の許可済read-only CLIを利用 | `eligible-to-score`（**正答を意味しない**） |
+| E29〜E32 | H2のSkill activation観測欠落、別Toolを実行、`--out`、argv不正 | 欠落は`insufficient-evidence`、Profile逸脱は`ineligible` |
+
+**限定試験のEvidence**：2026-11-03に、GitHub保存済みChecker Git Blob `76dc0ea128fa919e8d1b4ee458733b74ac734f51`を**コード実行環境のV8で直接評価**して、合成E01〜E32 **32/32 assertions PASS**。Node.jsそのものの実行ではないため、Node 22の実験と呼ばない。さらに[専用の非Product GitHub Actions Workflow](../.github/workflows/tai-sk02-synthetic-pair-check.yml)を追加して、**exact PR headのNode 22 `node --check`／`--self-test`**を別Runで検査する。Workflowの状態は完成結果・Job logを確認するまでPASSと宣言しない。既存`tai-reference`のGo/Pythonジョブ成功を、このNode Checkerの成功と混同しない。
+
+**実Harness測定の最初の条件**：四つの独立Sessionの実Tool argv・exit/stdout/diagnostics・実ファイルWrite観測・実送信先/bytes（可能な範囲）、Skill root＋実Loadされたrefs/scripts、Principal/現在Grantの根拠を一試行の記録へ紐付ける。上記のCheckerは実Process/Network Sensorではないため、JSON内`*_observed=true`だけで真の観測があったとは認定しない。Tool CallとAgentの自己申告は別。Taskの正答・Skill追加効果・Time/Token/Costは従来の独立Oracleで別に採点する。
+
+**進行と責務**：まずTEI [merged #2626](https://github.com/hat47x/tei-platform/pull/2626)の実read-only CLI観測を、TAIが新たに実行したことにせず独立参考Evidenceとして再利用。TEI [Draft #2607](https://github.com/hat47x/tei-platform/pull/2607)のSkill実Load／[PR #2649](https://github.com/hat47x/tei-platform/pull/2649)のCapability/CLI current-stateを次に確認。TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)の変更再資格化や[SK-03](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)の第2 Harnessは**最初の同一Harness内H2/H3比較を完了した後の別対象**とする。新実行Host・Permission/Metadata Registry・Skill必須化を追加しない。
+
+**未実施**：実H2/H3四Session／実Product Skill Load／独立Oracle採点／実Tool・Host/OS/外部NetworkのEgress監査／SHO/EKI実Consumer／Owner意味受理は引き続き**NOT RUN**。32件は固定した公開合成メタデータの評価のみ。
