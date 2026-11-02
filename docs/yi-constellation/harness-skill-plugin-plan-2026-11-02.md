@@ -406,3 +406,21 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 **合格の帰属**：L0のProduct read-only実測、L1のSkill増分、L2の意味接合、L3の現在再資格化、L4の強制拒否/実Effectは**互いに独立した証拠**。一部成功を横断E2Eと称さない。同じSource名でも実byte/Source revision、同じSnapshot labelでも実epoch/Scope、Tool exit 0でもWarning、Trust歴史でも現在Grant、Manifest Completeでも実Consumer読取を別観測にする。公開fixtureにはExpectedを含むため、実Skillの独立能力比較には封印した評価側のケースを用いる。
 
 **状態**：Runbookと順序・責務の計画追補。実TEIビルド/CLI、別HarnessのH2/H3/H4/H5、SHO/EKIの実Artifact・OS/Networkの負例、Owner採用は**NOT RUN**。新共通Host/中央Registry/第二の証拠正本/万能Agentは追加しない。
+
+## 21. 2026-11-02：回答前の観測面と実HTTP受信byteをSkill資格へ接続
+
+別Draft [TAI #272](https://github.com/hat47x/tai-pleroma/pull/272)の[横断観測面計画](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/docs/yi-constellation/preanswer-observable-surface-and-consumer-handoff-2026-11-02.md)を、本Draft #270の「何をSkillが実際に外部へ出したか」の**実測可能な範囲**へ接続する。SEI [#767/#770](https://github.com/hat47x/sei-cognition/pull/770)の公開Planner候補、TEI [#2507](https://github.com/hat47x/tei-platform/issues/2507)の隠れたAction/Route、SHO [#7/#12](https://github.com/hat47x/sho-composer/pull/12)のMarkdown Link TokenとRenderer anchorの差、TAI #232の実OS/Host開示境界をそれぞれのOwnerから参照。**TAIへ新しいPolicy Engine/Planner/Renderer/MCP Serverを追加するものではない**。
+
+**新しく取得した限定実行証拠**：[PR #272のNode HTTP loopback Receiver](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/evaluations/tools/check-preanswer-loopback.cjs)が、実際のPOST bodyを9回受信し、**6/6局所合成試験PASS**（[記録](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/evaluations/records/AS-LB-loopback-http-2026-11-02.json)）。HTTP bodyのbytesが同じか／非公開Tool名やSession Eventの**架空Canary**が実際の受信bytesに入ったかを観測した。LB-02/LB-03のPASSは**わざと漏らす合成模擬系を検出した**意味で、実Productの防御成功ではない。実Node v22.16.0、Linux、loopback `127.0.0.1`のみ、Product/OS/SDK/Harness/実Browserは**NOT RUN**。
+
+この試験が追加したのは、従来AS-01〜12の**純粋な合成値比較**から、`serialized payload → http.request → local Receiver → actual received bytes`までの1本の**実Transport観測経路**である。これにより「モデル本文・最終回答は同じだが、実受信Session Eventだけ違う」ケースを実HTTP bodyで区別できた。ただし、Mock宛のRequestだけを見ても、別Port/DNS/Tool/Log/Clipboard/外部Model Providerへの漏出**不存在は証明できない**。
+
+### 21.1 SK-01に引き渡す厳密な対照
+
+- **同一公開Projectionの二世界**：内部Hidden Actionの有無だけを変える。Audience/Purpose/Release Profile/Tool listを固定し、提供できる最終回答だけでなく、外部に露出した`offered tools / selected tool / request args / response / session events / rendered links / error`を観測。最初にTool-only H2で同条件、Skill追加H3でも同条件を維持する。実Toolの有無が不明なら`unknown`、推測コマンドは使用しない。
+- **意図的に許可公開を変える正例**：Owner/Hostが公開可能なTool集合を増やした場合は、公開候補に差が生じても正当。秘密だけ変えた場合の差と分け、情報を隠すために正常な機能まで一律停止しない。
+- **実Renderer差は別実験**：SHOのLink token一覧が同じでもraw HTML profileで実anchorが異なり得る。NodeのloopbackテストはDOMやa11yを実生成していないので、実SHO/Browser Rendererを持つProduct Ownerが別途検証する。
+- **実Egress資格はHostで**：外部LLM/MCP/Browserへ送る実Data/Toolの現在資格はSource保持Product/実Hostが判定する。TAI #232で機密ProfileのOS直アクセス・別Port・Session/Network/Timing/Logを別に観測し、Clientのread-onlyやSkillの説明を防御資格へ転用しない。
+- **非決定的Agentの比較**：実Harnessが確率的に異なるTool提案や順序を返す場合、単一回の本文byte不一致だけでは「秘密の存在を推定した」証拠にしない。同一Model/設定/公開入力を揃え、実Traceを複数試行で採取して差の再現・原因を独立分析する。逆に数回の一致で**全経路の非干渉を保証しない**。
+
+[SK-01 §U](../../evaluations/SK-01-harness-skills.md)を観測面の横断受入表とする。最初の実TEI Skill Runbook（§20）は依然優先し、**今回の局所Mockの6/6をTEI CLI S1/H2/H3やTAI H4/H5の実行済みと扱わない**。独立Product Skillの用途は拡張してよいが、ProductのSource/Meaning、現在Host Grant、実公開・納品の資格は引き続き別である。
