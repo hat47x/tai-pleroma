@@ -5,14 +5,14 @@
     "version": "1"
   },
   "source": {
-    "teiCommit": "6942dcf89c1344412f10fcf6fc761062ef4da269",
+    "teiCommit": "6faab9d7ab25aab35db794c22cea9ff01f863631",
     "contracts": {
       "document-record": {
         "sourceDigest": "sha256:2800efdc03219bb95f75fa97dbf06d9220efbf3f616c5df9674ca01a5abae655",
         "cases": 4
       },
       "card-record": {
-        "sourceDigest": "sha256:aa5fd842034ece5d702a5bc91819e0e7a4853b9a6118626239acfb6a35b5bca1",
+        "sourceDigest": "sha256:134ffeed789306c7ba83dc92fa653eb7d4c7cc8cd463dfa12748a2b65d20dd5f",
         "cases": 5
       },
       "island-record": {
@@ -42,6 +42,8 @@
         "y": 20.5
       },
       {
+        "claimType": "claim",
+        "holdState": "held",
         "id": "card-2",
         "text": "world",
         "x": 0,

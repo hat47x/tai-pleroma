@@ -327,3 +327,19 @@ sui.card.record: id, text, x, y
 - [artifact](../../evaluations/artifacts/documentv1-projection.json)
 
 `claimType`・`textReviewed`・`holdState`などのoptionalな列挙・真偽値は未対応です。record契約は全フィールド必須のため、optionalを扱うには別の表現が必要です。
+## optionalフィールド（Card v6、2026-11-02）
+
+TEIのoptional投影（[PR #2580](https://github.com/hat47x/tei-platform/pull/2580)）を使い、Card record v6へ`claimType`と`holdState`をoptionalとして追加しました。
+
+```text
+sui.card.record: id, text, x, y, claimType?, holdState?
+```
+
+- 入力に存在しない、またはnullのoptionalフィールドは出力から省略
+- 必須フィールドの`missing`/`unresolved`は従来どおり
+- 21ケースPASS、単体9件PASS
+
+- [receipt](../../evaluations/records/SUI-TEI-optional-2026-11-02.json)
+- [artifact](../../evaluations/artifacts/documentv1-projection.json)
+
+`textReviewed`や`critiqueHistory`のような真偽値・配列のoptionalは未対応です。

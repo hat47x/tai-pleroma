@@ -1,7 +1,7 @@
 {
   "schema": "tei.reference.generator-fixture/v0",
   "contractId": "sui.card.record",
-  "contractVersion": "5",
+  "contractVersion": "6",
   "cases": [
     {
       "id": "present",
@@ -10,8 +10,8 @@
     },
     {
       "id": "present-2",
-      "input": {"id": "card-2", "text": "world", "x": 0, "y": 0},
-      "want": {"state": "present", "text": "{\"id\":\"card-2\",\"text\":\"world\",\"x\":0,\"y\":0}"}
+      "input": {"id": "card-2", "text": "world", "x": 0, "y": 0, "claimType": "claim", "holdState": "held"},
+      "want": {"state": "present", "text": "{\"claimType\":\"claim\",\"holdState\":\"held\",\"id\":\"card-2\",\"text\":\"world\",\"x\":0,\"y\":0}"}
     },
     {
       "id": "empty-text",
