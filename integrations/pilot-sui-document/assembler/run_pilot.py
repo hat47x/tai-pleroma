@@ -57,6 +57,32 @@ def main():
             _write(args.out, artifact, steps, "FAIL")
             return 1
 
+        schema_out = tmp / "schema.json"
+        schema_check = subprocess.run(
+            [
+                sys.executable,
+                str(assembler / "validate_artifact_schema.py"),
+                "--artifact",
+                str(artifact),
+                "--schema",
+                str(workspace / "artifact.schema.json"),
+                "--out",
+                str(schema_out),
+            ],
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        steps["schema"] = {
+            "returncode": schema_check.returncode,
+            "valid": json.loads(schema_out.read_text(encoding="utf-8"))["observed"]["valid"]
+            if schema_out.exists()
+            else False,
+        }
+        if schema_check.returncode != 0:
+            _write(args.out, artifact, steps, "FAIL")
+            return 1
+
         validate_out = tmp / "validate.json"
         validate = subprocess.run(
             [
