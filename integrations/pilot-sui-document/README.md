@@ -475,3 +475,15 @@ database: temporary SQLite
 
 - [receipt](../../evaluations/records/SUI-TEI-save-e2e-2026-11-03.json)
 - 本番DB・認証・実配備は未検証
+## 認証ありの保存（2026-11-03）
+
+`--api-key`を渡すと、業務APIキーを設定した状態で保存します。
+
+```text
+APIキーなしの PUT: 401
+正しい X-API-Key:  200（作成・読み戻し・更新・最終GET）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-auth-2026-11-03.json)
+- 一時SQLite、`local-dev`のまま
+- 本番認証・本番DB・実配備は未検証

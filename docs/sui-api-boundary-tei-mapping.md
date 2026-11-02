@@ -173,3 +173,14 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-contract-2026-11-
 本番DB・認証・実配備は未検証です。
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-e2e-2026-11-03.json)
+### 認証ありの保存（2026-11-03）
+
+業務APIキーを設定した状態で、同じ保存経路を確認しました。
+
+- APIキーなし: 401
+- `X-API-Key`あり: 作成・読み戻し・更新・最終GETがすべて200
+- 一時SQLite、`local-dev`
+
+本番認証・本番DB・実配備は未検証です。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-auth-2026-11-03.json)
