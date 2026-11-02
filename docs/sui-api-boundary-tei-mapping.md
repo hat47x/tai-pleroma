@@ -65,3 +65,10 @@ ot-a-file`になることを確認しました（[receipt](../evaluations/record
 
 なお、2026-11-02に`install_artifact.py`と`verify_sui_reader.py`で、バインディングの解決とtenant分離を確認しました（[receipt](../evaluations/records/SUI-TEI-binding-2026-11-02.json)）。
 管理経路（`/admin/tei-epistemic/artifacts/{artifact_kind}`）でも同じkindを読めることを確認しました（[receipt](../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)）。
+## 利用面の決定（2026-11-02、暫定）
+
+`documentv1-projection`は、当面APIの読み取り専用消費に限定します。フロントエンドのconsumerは作りません。
+
+- 理由: 既存のフロントエンドはepistemic系のスキーマだけを扱っており、DocumentV1の投影を表示する画面は再構築の対象そのもの。
+- 読み取り経路は、tenant面と管理面の既存の認可・fail-closed規則に従う。
+- 見直し: SUI再構築でDocumentV1の表示・編集が必要になったとき。
