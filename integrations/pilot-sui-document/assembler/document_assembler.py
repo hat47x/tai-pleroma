@@ -45,6 +45,11 @@ def assemble(document, cards, islands, edges, affiliations=()):
             if endpoint not in known[kind]:
                 raise AssemblyError(f"edge {edge_id} references unknown {kind} {endpoint}")
 
+    for island in islands:
+        for card_id in island.get("cardIds", []):
+            if card_id not in card_ids:
+                raise AssemblyError(f"island {island['id']} references unknown card {card_id}")
+
     for affiliation in affiliations:
         if affiliation.get("cardId") not in card_ids:
             raise AssemblyError(
