@@ -9,13 +9,19 @@
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
-    "digest": "sha256:5cc0fa31466dda34c43323dd12e14b9281ec7be4757a8200e9a356f1bc8c11bb"
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
     "valid": true,
-    "cards": 3,
+    "cards": 5,
     "decisionRef": "decision-1",
-    "cardId": "card-decision-1"
+    "taskExecutor": "dev.example.transform",
+    "profileId": "profile-a",
+    "cardIds": [
+      "card-decision-1",
+      "card-task-1",
+      "card-profile-1"
+    ]
   },
-  "scope": "Adds the SEI decision as one SUI card and validates the composed artifact with the SUI consumer. It does not save the document or change SUI."
+  "scope": "Adds the SEI decision, EKI task request, and MMI format profile as SUI cards and validates the composed artifact with the SUI consumer. It does not save the document or change SUI."
 }

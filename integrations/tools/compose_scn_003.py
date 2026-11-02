@@ -30,22 +30,28 @@ def main():
 
     composed = copy.deepcopy(sui)
     decision = sei["decision"]
-    card_id = "card-decision-1"
-    composed["document"]["cards"].append(
-        {
-            "id": card_id,
-            "text": f"[{decision['refId']}] {decision['statement']}",
-            "x": 0.0,
-            "y": 0.0,
-            "sources": ["sei:decision-1"],
-        }
-    )
+    eki = json.loads((ROOT / "evaluations/artifacts/eki-task-request-projection.json").read_text(encoding="utf-8"))
+    mmi = json.loads((ROOT / "evaluations/artifacts/mmi-format-profile-projection.json").read_text(encoding="utf-8"))
+    task = eki["taskRequest"]
+    profile = mmi["profile"]
+
+    additions = [
+        ("card-decision-1", f"[{decision['refId']}] {decision['statement']}", "sei:decision-1"),
+        ("card-task-1", f"[{task['executorId']}] {task['versionConstraint']}", "eki:task-request"),
+        ("card-profile-1", f"[{profile['id']}] {profile['label']}", "mmi:format-profile"),
+    ]
     reading_order = composed["document"].get("readingOrder")
-    if isinstance(reading_order, list):
-        reading_order.append(card_id)
+    for card_id, text, source in additions:
+        composed["document"]["cards"].append(
+            {"id": card_id, "text": text, "x": 0.0, "y": 0.0, "sources": [source]}
+        )
+        if isinstance(reading_order, list):
+            reading_order.append(card_id)
     composed["scn003"] = {
         "decisionRef": decision["refId"],
         "decisionArtifact": digest(sei_path),
+        "taskExecutor": task["executorId"],
+        "profileId": profile["id"],
     }
 
     out_path = ROOT / args.out
@@ -88,9 +94,11 @@ def main():
             "valid": valid,
             "cards": len(composed["document"]["cards"]),
             "decisionRef": decision["refId"],
-            "cardId": card_id,
+            "taskExecutor": task["executorId"],
+            "profileId": profile["id"],
+            "cardIds": [card_id for card_id, _, _ in additions],
         },
-        "scope": "Adds the SEI decision as one SUI card and validates the composed artifact with the SUI consumer. It does not save the document or change SUI.",
+        "scope": "Adds the SEI decision, EKI task request, and MMI format profile as SUI cards and validates the composed artifact with the SUI consumer. It does not save the document or change SUI.",
     }
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(receipt["observed"]))
