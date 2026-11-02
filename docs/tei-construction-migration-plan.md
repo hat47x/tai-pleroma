@@ -117,6 +117,8 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
+| AffiliationはIsland.cardIdsの包含と重複させない | DocumentV1が同じ組を拒否するため | containmentの表現が変わったとき |
+| artifactをDocumentV1モデルで検証し、transformと時刻は呼び出し側が供給する | 保存前に製品モデルとの整合を確認できる | 保存経路を実装するとき |
 | tenant面HTTPは認可関数を差し替えて200/403/503を確認する | 実セッションなしで経路とfail-closedを検証できる | 実セッション・実DBで確認するとき |
 | 管理経路はX-Admin-Api-Keyの実認可で確認し、DBはoverrideする | 認可の有無で200/401が分かれることを、実サーバなしで確認できる | 実DB・実サーバで確認するとき |
 | 管理経路のHTTP応答をTestClientで確認し、認可はoverrideで外したことを明記する | 実サーバなしで経路とfail-closedを検証できる | 実認可・実配備を確認するとき |

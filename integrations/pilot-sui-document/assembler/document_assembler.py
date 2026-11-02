@@ -50,6 +50,12 @@ def assemble(document, cards, islands, edges, affiliations=()):
             if card_id not in card_ids:
                 raise AssemblyError(f"island {island['id']} references unknown card {card_id}")
 
+    containment = {
+        (card_id, island["id"])
+        for island in islands
+        for card_id in island.get("cardIds", [])
+    }
+
     for affiliation in affiliations:
         if affiliation.get("cardId") not in card_ids:
             raise AssemblyError(
@@ -58,6 +64,10 @@ def assemble(document, cards, islands, edges, affiliations=()):
         if affiliation.get("islandId") not in island_ids:
             raise AssemblyError(
                 f"affiliation {affiliation['id']} references unknown island {affiliation.get('islandId')}"
+            )
+        if (affiliation.get("cardId"), affiliation.get("islandId")) in containment:
+            raise AssemblyError(
+                f"affiliation {affiliation['id']} duplicates visual containment"
             )
 
     return {

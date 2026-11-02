@@ -66,6 +66,12 @@ class AssembleTest(unittest.TestCase):
         with self.assertRaises(AssemblyError):
             assemble(DOCUMENT, CARDS, islands, EDGES)
 
+    def test_rejects_affiliation_duplicating_containment(self):
+        islands = [dict(ISLANDS[0], cardIds=['card-1'])]
+        affiliations = [{'id': 'aff-1', 'cardId': 'card-1', 'islandId': 'island-1'}]
+        with self.assertRaises(AssemblyError):
+            assemble(DOCUMENT, CARDS, islands, EDGES, affiliations)
+
     def test_rejects_affiliation_to_unknown_island(self):
         affiliations = [{"id": "aff-1", "cardId": "card-1", "islandId": "island-9"}]
         with self.assertRaises(AssemblyError):

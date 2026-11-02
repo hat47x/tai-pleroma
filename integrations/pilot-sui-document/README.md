@@ -404,3 +404,21 @@ admin path:     PASS
 `verify_sui_reader.py`が、tenant別ディレクトリと運用者レベル（ルート）の両方から同じpayloadを読めることを検査します（[receipt](../../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)）。
 
 HTTPサーバ・認証・実配備は未検証です。
+## 所属とcontainmentの整合（2026-11-03）
+
+SUIの`DocumentV1`は、`Island.cardIds`の包含と`Affiliation`が同じ組を指すと拒否します。合成層へ同じ規則を追加しました。
+
+- island.cardIdsに入っているCardのAffiliationは`AssemblyError`
+- パイロットのfixtureを、containmentとAffiliationが重複しない形へ変更
+
+## DocumentV1モデルでの検証（2026-11-03）
+
+`assembler/validate_against_sui.py`で、artifactをSUIのconsumerに読ませ、`DocumentV1`モデルで検証しました。
+
+```text
+documentId: doc-1
+cards: 2 / islands: 1 / affiliations: 1
+DocumentV1 valid: true
+```
+
+`transform`と時刻は呼び出し側から供給しています（[receipt](../../evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json)）。
