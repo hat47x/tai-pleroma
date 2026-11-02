@@ -405,4 +405,4 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **合格の帰属**：L0のProduct read-only実測、L1のSkill増分、L2の意味接合、L3の現在再資格化、L4の強制拒否/実Effectは**互いに独立した証拠**。一部成功を横断E2Eと称さない。同じSource名でも実byte/Source revision、同じSnapshot labelでも実epoch/Scope、Tool exit 0でもWarning、Trust歴史でも現在Grant、Manifest Completeでも実Consumer読取を別観測にする。公開fixtureにはExpectedを含むため、実Skillの独立能力比較には封印した評価側のケースを用いる。
 
-**状態**：Runbookと順序・責務の計画追補。実TEIビルド/CLI、別HarnessのH2/H3/H4/H5、SHO/ EK Iの実Artifact・OS/Networkの負例、Owner採用は**NOT RUN**。新共通Host/中央Registry/第二の証拠正本/万能Agentは追加しない。
+**状態**：Runbookと順序・責務の計画追補。実TEIビルド/CLI、別HarnessのH2/H3/H4/H5、SHO/EKIの実Artifact・OS/Networkの負例、Owner採用は**NOT RUN**。新共通Host/中央Registry/第二の証拠正本/万能Agentは追加しない。
