@@ -358,7 +358,7 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **横断Skillに必要な一段先の能力**は、単にProduct結果を結合するだけでなく、**何が変更されたとき、どの既存Claim／Skill／Document／公開一式を再確認し、何を履歴として保持できるかを根拠付きで区別すること**。Source/Rule/Oracle/Skill/Template/Policy/Trustの影響先は異なる。依存不明なら「影響無し」を保証できず、実Provider Read/共同Snapshot/開示資格も別。過去の成功を歴史として保ちながら、現在のActionとEgressは実Product/Hostが再認可する。CSW/SUIの自由な探索には採否ゲートを追加しない。
 
-**比較候補**：R0全面再検証、R1依存に基づく選択的再確認、R2未観測依存や共同Snapshot不足の限定保留。正しい再利用数だけでなく、`false reuse`と`unnecessary invalidation`の双方、適切な危険作用の保留と、継続可能な独立read-only作業を別計測する。TAIへ第二の依存解析器／共通Snapshotサービス／中央Policy・Authorityを作らず、各製品の実Source・Oracle・変更通知を参照する。
+**比較候補**：R0全面再検証、R1依存に基づく選択的再確認、R2未観測依存や共同Snapshot不足の限定保留。なお別レーンで起票された[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)／[Activity継続の依存・Handoff試験](activity-selective-requalification-and-handoff-2026-11-02.md)を横断Activity側のOwnerとし、SK-C01〜15の**依存閉包／実到達**と、SK-RQ01〜12の**Claim別再資格化**を明確に分担する。#271の`J2=旧成功を無検証で採用する負例`と本節の`R2=未知だけを安全に保留`は異なるので、**J2≠R2**。ラベルだけを一つにまとめない。正しい再利用数だけでなく、`false reuse`と`unnecessary invalidation`の双方、適切な危険作用の保留と、継続可能な独立read-only作業を別計測する。TAIへ第二の依存解析器／共通Snapshotサービス／中央Policy・Authorityを作らず、各製品の実Source・Oracle・変更通知を参照する。
 
 [SK-01 §P](../../evaluations/SK-01-harness-skills.md)にSK-RQ01〜12を追加し、[公開合成fixture](../../evaluations/fixtures/SK-RQ-selective-requalification.synthetic.json)と[Node用再実行Script](../../evaluations/tools/check-sk-rq-fixture.cjs)を保存した。GitHubに保存されたfixtureをV8参照分類で**12ケース／14項目の自己整合PASS**（[限定記録](../../evaluations/records/SK-RQ-public-fixture-selfcheck-2026-11-02.json)）。**Nodeスクリプト自体・実Product/Tool/AI Harness/OS/Provider・独立sealed Oracle・Owner受理はNOT RUN**。公開Expectedは盲検ではない。
 
