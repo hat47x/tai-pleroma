@@ -1,0 +1,25 @@
+namespace scn003_grant_review
+
+data Applicant {
+    attribute id type std.code
+    attribute name type std.text
+    attribute requestedYen type std.integer
+}
+
+data Criterion {
+    attribute id type std.code
+    attribute result type std.code
+    attribute source type std.text
+}
+
+data Conflict {
+    attribute applicant type std.code
+    attribute reviewer type std.code
+    attribute reason type std.text
+}
+
+data Score {
+    attribute applicant type std.code
+    attribute total type std.integer
+    attribute status type std.code
+}

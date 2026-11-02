@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "record_type": "meaning",
+  "meaning_id": "mean-rob-001",
+  "domain": "robotics",
+  "source_step": "manual_inspection",
+  "target_step": "robot_vision_inspection",
+  "role": "quality_inspector",
+  "permission": "quality_authority",
+  "status": "split",
+  "owner": "quality-team",
+  "loss_note": "tactile defect detection is not yet covered by vision",
+  "safety_case_ref": "safety-case-rob-001",
+  "evidence_refs": ["inspection-spec-001", "vision-spec-001"]
+}

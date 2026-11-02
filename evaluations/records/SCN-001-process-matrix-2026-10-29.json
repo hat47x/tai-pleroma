@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.scn001-process-matrix/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "products": {
+    "MMI": {
+      "normal": true,
+      "rejection": true,
+      "limitation": "5-row preview"
+    },
+    "TEI": {
+      "normal": true,
+      "rejection": true
+    },
+    "SEI": {
+      "normal": true,
+      "rejection": true
+    },
+    "EKI": {
+      "normal": true,
+      "rejection": true
+    },
+    "SUI": {
+      "normal": true,
+      "rejection": true,
+      "unknownEdgePreserved": true
+    }
+  },
+  "publicationAllowed": false,
+  "passed": true,
+  "errors": []
+}

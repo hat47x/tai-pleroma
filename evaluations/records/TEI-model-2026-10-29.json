@@ -1,0 +1,15 @@
+{
+  "schema": "tai.reference.tei-model/v0",
+  "teiCommit": "aec98f37b699d99623b5685c4318bdd746cfc8d7",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "workspaceDigest": "sha256:50cb348560c15c61f51ec90cecc6eb72d91be78ca68513f9e7b5b555f7040857",
+  "validation": "ok",
+  "readOnly": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "TEIのvalidateだけを実行する読み取り専用接続。",
+    "SCN-001のObservation/RuleCandidateの型宣言を検証するが、実データ・意味・Authorityは検証しない。"
+  ]
+}

@@ -1,0 +1,19 @@
+application sui_document_projection {
+    uses semantic sui
+}
+
+pattern sui_document_projection.document_record record {
+    data sui.document
+}
+
+pattern sui_document_projection.card_record record {
+    data sui.card
+}
+
+pattern sui_document_projection.island_record record {
+    data sui.island
+}
+
+pattern sui_document_projection.edge_record record {
+    data sui.edge
+}

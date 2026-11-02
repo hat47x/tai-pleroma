@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-sui-adapter/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-02",
+  "suiCommit": "ba660d7f948b495f05f927fbc1d58647adb8f9d0",
+  "host": "Windows with Python 3.12",
+  "command": "PYTHONPATH=src python -m unittest discover -s tests -p test_documentv1_projection.py",
+  "result": "PASS",
+  "observed": {
+    "module": "sui_sensemaking_api.documentv1_projection",
+    "function": "to_documentv1_payload",
+    "tests": 9,
+    "passed": 9,
+    "savesAnything": false,
+    "requiresTransform": true,
+    "requiresTimestamps": true
+  },
+  "scope": "The adapter builds a DocumentV1-shaped mapping from a projection. The caller supplies transform, createdAt, and updatedAt. It does not save, validate against Pydantic, or call the API."
+}

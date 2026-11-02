@@ -1,0 +1,22 @@
+{
+  "schema": "eki.task-request/v1",
+  "executor": {"id": "dev.example.transform", "version_constraint": "^1"},
+  "inputs": [],
+  "parameters": {"mode": "old-notice-check", "scope": "all-rooms"},
+  "resources": {
+    "cpu_millis": 800,
+    "memory_bytes": 268435456,
+    "wall_time_seconds": 120,
+    "output_bytes_max": 2097152,
+    "network_bytes_max": 0
+  },
+  "reliability": {
+    "retryable": false,
+    "preemptible": true,
+    "checkpointable": false,
+    "deterministic": true,
+    "max_attempts": 1,
+    "effect_mode": "none"
+  },
+  "priority": "background"
+}

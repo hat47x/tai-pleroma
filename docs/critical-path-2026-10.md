@@ -54,6 +54,7 @@ TAI Pleromaを中心に、TEI / SEI / SUI / SHO（MMI） / EKIを一つの知的
 - CP-2の実資料参照とCP-1の参照関係を、利用者の一回の案内改善で往復する。
 - 新しい観測O-06/O-07でDraftを改訂し、旧版・旧判断・新しい未確定を混在させない。
 - [reference-sei-decision](../tools/reference-sei-decision/README.md)で、SEIの一時storeに`dec-01`と`authority:unknown`、`dec-02`（development-review-onlyの仮承認）を記録し、`resume`のprojectionだけを読む参照経路を追加した。合成fixtureであり、実在の人間の判断ではない。
+- 同ツールの`-basis-bundle`と`-decision-validity`は、合成portable bundleから原記録の根拠参照と、旧Decisionの現行対象への構造上の束縛を読む。`-decision-validity`は、SEI CLIで作る実storeのDecision（ExactBindingのbasisを持たない）を比べられず、指名しても両フラグを未確認（null）にする。受理の有効性は判定しない。
 - [reference-scn001-run](../tools/reference-scn001-run/README.md)で、MMI・SEI・SCN-001評価・D-04レビュー成果物・SUI linkを1回の参照実行に束ね、`runDigest`付きのreceiptを生成した。`humanReviewed=false`、`authorityVerified=false`、`published=false`のままである。
 - [reference-scn001-render](../tools/reference-scn001-render/README.md)で、D-04を`provisional`・`publicationApproved=false`・`reviewTrigger=real-object`の内部レビュー用Markdownとして生成した。公開用の成果物ではない。
 - 同ツールの`-owner-packet`で、権限者・P-06・N-05・初回範囲の判断を求める`awaiting-owner` packetを生成できる。これは承認ではなく、Owner判断の入力である。
@@ -81,7 +82,7 @@ TAIの最初の成果は、一件の案内改善で根拠・判断・成果物�
 | 優先 | 対象 | 次に確かめること | 依存と残る判断 |
 | --- | --- | --- | --- |
 | 1 | 資料から成果物までの対応（[TAI #28](https://github.com/hat47x/tai-pleroma/issues/28)） | 同じ観測集合からの生成に加え、保存後に読み直したD-04のbytesと実行記録の一致を確認する。差替え・欠損・改行変換を成功にしない | 原資料の真正性とMMI選択ID・版の整合は別途確認する |
-| 2 | 更新後の判断の扱い（[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)） | 受理→根拠変更→同文言復帰でも、旧判断が自動復活しない反例を検査する | 現行N-01の構造検査だけで意味受理の有効性を証明しない |
+| 2 | 更新後の判断の扱い（[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)） | 合成bundleで、旧い判断のExactBindingが現行対象と一致しない、または閉じるlineage（supersedes/withdraws）が参照する場合に、構造上束縛されないことを検査する（`reference-sei-decision -decision-validity`、実装済み）。最初から未受理のA→B→Aとは区別する | 意味受理・期間・権限・実資料は未確認で、構造上の束縛は受理の有効性を意味しない。lineageのfrom/toの向きと、relationがDecisionの受理へ及ぼす効果はSEIが定めておらず、向きを仮定せずfail closedで扱う（revisesを閉じない扱いはTAIの暫定仮定）。現行N-01（文言・版・未公開の合成検査）とは別 |
 | 3 | 実物による一巡（R-01〜R-05） | 実資料、担当と権限、実store、独立レビューを特定版に結び付ける | 人による意味の受理と公開権限の判断が必要。証拠未取得のまま公開へ進めない |
 | 必要性の確認後 | SUI・TEI・SHOの追加接続 | 複数仮説の比較、規則モデル化、文書編集が一巡をどう改善するかを観測する | 既存の読出し・型検証を、実データの意味受理や保存・commitの成功と混同しない |
 | 委任する場合 | EKI（N-05 / R-07） | 委任しない場合との利益、限定範囲、独立した結果確認を比較する | 実Provider・Task、認証、通信契約はEKI側の条件。委任不要の案内改善の前提にしない |

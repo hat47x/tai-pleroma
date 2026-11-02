@@ -1,0 +1,159 @@
+# TEIによるプロダクト構築への移行 — フィージビリティ検証計画
+
+状態: **Draft（提案）**。Owner指示（2026-11-01）を前提にした検証計画であり、製品要求・採用済み設計ではありません。要求の正本は各リポジトリの`requirements/`、TEIの方法は[TEIの業務システム設計要求](https://github.com/hat47x/tei-platform/blob/main/requirements/BUSINESS_SYSTEM_DESIGN_REQUIREMENTS.md)を参照します。
+
+## 1. 前提とする方向
+
+TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を含む）は、TEIによる構築へ移行する前提にあります。この移行の実装に耐えることを、TEIのフィージビリティ検証と、各プロダクトの生成AIを用いた開発効率・自律性の向上検証として扱います。
+
+したがって、個別プロダクトの機能追加は、移行後にTEIの意味モデルと生成器で表現できるかを意識して行います。ただし、移行の実現性が確認できるまでは、既存プロダクトの実装を止めません。
+
+## 2. 「TEIで構築する」の操作的定義
+
+抽象的な「TEIで作る」を、検証できる条件に分解します。
+
+| 条件 | 意味 | 確認方法 |
+| --- | --- | --- |
+| 意味が正本 | データ・機能・業務の意味が、生成物のコードとは別に版付きで存在する | 意味の変更がdiffで追え、生成物と対応づく |
+| 生成単位が生成器 | 案件ごとのコードではなく、意味から生成器を導出・選択できる | 同じ意味から複数の成果物を再生成できる |
+| 適合試験がある | 生成物の正しさを、意味とは独立した試験で確認できる | 生成物の差し替え後も同じ試験が通る |
+| 実行先が交換できる | Target Profileを変えても意味と試験を引き継げる | 別の実行先で同じ適合試験が通る |
+| 証拠が版に束縛される | 生成器・成果物・試験のdigestが記録される | receiptから版と結果を再確認できる |
+
+このうち一つでも欠ける場合、「TEIで構築した」とは呼びません。現在のTEIは、生成器の選抜・来歴・artifactとTarget Profileの参照実装を持つ一方、統合モデラーと編集環境は未完成です（[TEI status](https://github.com/hat47x/tei-platform/blob/main/docs/status.md)）。この差を、パイロットでどこまで埋められるかを確認します。
+
+## 3. パイロットの選定
+
+第一候補は**SUIの再構築**です。理由は次のとおりです。
+
+- マルチテナント化より先に、TEIによる再構築を進める方針が決まっている（Owner指示 2026-11-01）。
+- SUIはデータ・機能・業務の三視点が比較的明確で、DocumentV1、card、island、edgeという意味の単位を持つ。
+- 現行SUIには参照実装と試験があり、生成物と比較する基準を作りやすい。
+
+ただし、SUI全体を一度に移行しません。最初のパイロットは**DocumentV1の読み取りとcard/island/edge投影**に限定します。意味形成のUI、認可、テナント分離は対象外とし、別の判断に分けます。
+
+## 4. 三視点のモデル化範囲（パイロット）
+
+| 視点 | パイロットで扱う範囲 | 正本・参照 |
+| --- | --- | --- |
+| **データ** | DocumentV1、Card、Island、Edge、digest | SUIの型定義と合成document |
+| **機能** | documentのPUT/GET、card/island/edgeへの投影、digest照合 | SUI APIの参照実装 |
+| **業務** | 誰が意味を受理するか、誰が文書を読むか、何を未決のまま残すか | SCN-001の観測・仮説・判断の分離 |
+
+業務の視点は、パイロットでも省略しません。意味の受理者を決めずに生成器だけを作ると、生成物の正しさを誰が判断するかが空になります。
+
+## 5. フィージビリティ判定
+
+パイロットの合否は、次の5条件で判定します。
+
+1. 意味の変更から成果物を再生成でき、手作業の修正が不要または限定されている。
+2. 生成物が既存の適合試験（または移行後に定義する試験）を通る。
+3. Target Profileを一つ選び、その実行先で動作する。
+4. 生成器・成果物・試験のdigestがreceiptに残り、後から再確認できる。
+5. 上記を、人が同じ手順で再現できる。
+
+「生成できた」ことは、業務上の正しさや利用者価値の証拠にしません。
+
+## 6. 効率・自律性の測定
+
+移行の効果は、次の指標で測ります。比較の基準は、現行SUIの該当範囲を手作業で変更した場合とします。
+
+| 指標 | 何を見るか | 注意 |
+| --- | --- | --- |
+| 変更から再生成までの時間 | 意味の変更を決めてから、試験が通る成果物が出るまで | 待ち時間と人の作業時間を分ける |
+| 手修正の量 | 生成物へ人が加えた変更の行数・箇所数 | 意味の修正と生成器の修正を分ける |
+| 人の介入回数 | 指示・確認・やり直しの回数 | 介入の種類を記録する |
+| 試行回数 | 生成AIが失敗して再試行した回数 | 失敗の原因分類を持つ |
+| 文脈量 | 生成AIへ渡した意味・コードの量 | 削減が目的化しないよう、精度と併記する |
+| レビュー指摘 | 生成物に対する指摘の件数と種類 | 意味・実装・運用に分ける |
+
+これらの指標は、一つのパイロットの観測であり、一般的な生産性の証明ではありません。比較条件（同じ変更、同じ評価集合、同じ環境）をreceiptに残します。
+
+## 7. 段階計画
+
+| 段階 | 内容 | 出口 |
+| --- | --- | --- |
+| 0 | 本計画のレビューと、パイロット範囲・測定方法の確定 | Ownerまたは担当者の合意 |
+| 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
+| 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行とrollingの配備・rollbackまで到達。属性単位（text/document_id）とCard record（text+documentId）とIsland/Edge recordを選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[island-edge](../evaluations/records/SUI-TEI-island-edge-2026-11-02.json)、[document](../evaluations/records/SUI-TEI-document-record-2026-11-02.json)）。Documentはflat recordの合成で表し、合成層のテスト6件と、生成候補を実行して合成する結合経路17ケースもPASS（[assembler](../evaluations/records/SUI-TEI-assembler-2026-11-02.json)、[flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[affiliation](../evaluations/records/SUI-TEI-affiliation-2026-11-02.json)）。入れ子投影は未達 |
+| 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。生産性は完成後に評価する（仮決定）。人の作業時間・長期保守はPoC中には測らない |
+| 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
+
+各段階は小さなPRとreceiptで記録します。段階2で生成できない場合は、TEI側の不足としてIssueへ戻し、下流のプロダクトへ回避実装を足しません。
+
+### 判定（2026-11-02時点）
+
+示せたこと:
+
+- 文字列投影の1属性で、意味→契約→生成→選抜→one-shot Target Profile実行まで通った。
+- 2属性目（document_id）も同じ生成器で生成・選抜・実行できた。
+- 生成と選抜のツール工程の時間・試行回数・介入回数をreceiptへ記録できた。
+
+示せていないこと:
+
+- Island/Edgeの投影と、SUIの実装コードの生成。
+- 実機・実OS・実配備、人の受理、意味の正しさ。
+- 生成AIの生産性・自律性の向上（PoC中は評価せず、完成後に評価する）。
+
+判断の選択肢:
+
+1. パイロットをIsland/Edgeへ広げる。
+2. 実環境に近いTarget Profileへ進む。
+3. TEI側の統合モデラー整備を待つ。
+
+### 評価の位置づけ（2026-11-02、仮決定）
+
+本開発はPoCであり、生産性の評価はプロダクト完成後に行います。PoC中に中間評価を人への判断材料として出しません。細部の判断は完成後でないと困難なため、ここでは仮決定として置き、必要になった時点で見直します。
+
+`measure_workflow.py`とT1比較のreceiptは、生成AIが自分の進め方を振り返り、次の作業を選ぶための材料です。人による受入判定、生産性の評価、自律性の証明には使いません。
+
+したがって「生産性が未確認」は未達項目ではなく、現段階では評価しない項目として扱います。
+
+### 暫定意思決定（AI、2026-11-02）
+
+判断を人へ戻さず、AIが暫定の意思決定を行い、設計・製造・計画へ回収します。人はIssue等で見解を供給します。不整合は上位の設計レベルで後から整合させます。
+
+| 決定 | 理由 | 見直し条件 |
+| --- | --- | --- |
+| record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
+| PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
+| 管理経路は`X-Admin-Api-Key`の実認可で確認し、DBはoverrideする | 認可の有無で200/401が分かれることを、実サーバなしで確認できる | 実DB・実サーバで確認するとき |
+| 管理経路のHTTP応答をTestClientで確認し、認可はoverrideで外したことを明記する | 実サーバなしで経路とfail-closedを検証できる | 実認可・実配備を確認するとき |
+| 投影からDocumentV1相当のpayloadを組み立て、`transform`・時刻は呼び出し側が供給する | 投影に含まれない必須項目を明示し、保存は別の変更に分ける | 保存経路を実装するとき |
+| SUI側に読み取り専用のartifact consumerを置き、型付きrecordへ読む | API・UIへ接続する前に、artifactの検証と参照整合性をSUI側で確認できる | DocumentV1の保存・API接続を行うとき |
+| documentv1-projectionはAPIの読み取り専用消費に限定し、フロントエンドconsumerは作らない | 既存UIはepistemic系のみを扱い、DocumentV1表示は再構築の対象 | 再構築で表示・編集が必要になったとき |
+| 管理経路（/admin/tei-epistemic/artifacts/{kind}）でも同じartifact kindを読む | tenant面と運用者面で同じ成果物を参照でき、検証を共有できる | 管理面のkindを分ける必要が出たとき |
+| Document/Islandの	itleはoptionalとして投影する | SUI側で省略可能な項目を、必須recordで欠落扱いにしない | 必須に戻す仕様変更があったとき |
+| 構造体配列・	ransform・時刻は投影せず、SUI側の元データを正本とする | flatな投影契約で無理に写像せず、読み取り専用artifactの範囲を保つ | 完全なDocumentV1写像が必要になったとき |
+| 真偽値はstd.booleanで投影し、optionalの欠落は省略する | `textReviewed`のようなフラグを型を保って扱える | 構造体の履歴を扱うとき |
+| optionalな列挙はoptionalフィールドで表し、欠落時は出力から省略する | SUIのoptional列挙を、必須recordを壊さずに投影できる | 真偽値・履歴を扱うとき |
+| 座標は数値投影（std.decimal）で扱い、optionalな列挙・真偽値は別表現まで保留する | 座標は必須で数値として投影でき、optionalは全フィールド必須のrecord契約と衝突する | optionalを扱う契約表現ができたとき |
+| 運用者バインディングはinstall_artifact.pyで再現可能にする | artifactとbindingを同じ手順で置け、解決を検証できる | SUI側の運用コマンドが整ったとき |
+| SUI側の読み取り面へdocumentv1-projection kindを追加し、tenant分離を維持する | 読み取り専用で既存のfail-closed経路を使える | HTTP認証・配備を扱うとき |
+| 投影artifactを`tai.reference.tei-documentv1-projection/v0`として生成し、receiptでdigestを固定する | SUIの読み取り面へ渡す形を先に固められる | SUI側のkindが決まったとき |
+| 配備はrollingプロファイルのslot切替で参照する | rollback経路を実際に検証できた | 実Targetのsupervisorを扱うとき |
+| 所属は`Affiliation`と`Island.cardIds`の両方を投影し、合成時に整合を検査する | 配列投影（`many`）を追加でき、両方の表現を検証できる | 二重表現が負担になったとき |
+| 契約v3で識別子を`id`、Edgeを`fromId`/`toId`/`fromKind`/`toKind`へ統一する | SUIの名前と端点種別に寄せ、合成でCard/Island両方を解決できる | 実装接続で別の写像が必要になったとき |
+| Document全体はflatなrecordの合成で表す | 現行の投影契約は入れ子を扱えず、要素単位なら検証できる | 投影契約が複合構造を扱えるようになったとき |
+
+## 7.5 SUI本体との差分
+
+DocumentV1と現在の投影契約の差分を[sui-documentv1-tei-gap.md](sui-documentv1-tei-gap.md)へ整理しました。識別子名、Edgeの端点種別、所属、未モデル要素が残っています。
+
+## 7.6 API境界への接続案
+
+SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読み取り専用のartifactとして投影を渡す案を[sui-api-boundary-tei-mapping.md](sui-api-boundary-tei-mapping.md)へ整理しました。DocumentV1の書き込み経路は、完全な写像ができるまで扱いません。
+
+## 8. 停止条件・非目標
+
+- フィージビリティが確認できるまで、既存プロダクトの本番移行や公開は行いません。
+- SUIのマルチテナント化は、TEIによる再構築の後に扱います。
+- パイロットの成功を、全プロダクトの移行成功やTEIの製品受入として扱いません。
+- 公開gateは`blocked`のままです。
+
+## 9. 未決
+
+1. パイロットの意味を受理する主体と、生成物を確認する責任者。
+2. SUIのどの範囲を最初の意味の単位とするか（DocumentV1全体か、投影だけか）。
+3. 比較測定の基準となる現行実装の版と、変更課題の選び方。
+4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。

@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "record_type": "event",
+  "event_id": "evt-ad-001",
+  "domain": "ad",
+  "occurred_at": "2026-11-02T08:20:00+09:00",
+  "task_id": "task-l4-urban-001",
+  "vehicle_id": "veh-002",
+  "automation_level": 4,
+  "odd": "urban, rain, night",
+  "mrc": "roadside_stop",
+  "actor": { "type": "vehicle", "id": "veh-002" },
+  "action": "emergency_brake",
+  "authority_ref": "auth-ad-001",
+  "safety_envelope_ref": "se-ad-002",
+  "outcome": "incident",
+  "evidence_refs": ["edr-ad-003", "dssad-ad-003"],
+  "handoff_ref": "hnd-ad-002"
+}

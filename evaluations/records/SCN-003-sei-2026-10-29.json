@@ -1,0 +1,70 @@
+{
+  "schema": "tai.reference.sei-decision/v0",
+  "variant": "scn003",
+  "seiCommit": "3ae1d85af14e2380d2e73a9756232d33c9d26fec",
+  "goVersion": "go version go1.27.3 windows/amd64",
+  "storeCreated": true,
+  "readOnlyProjection": true,
+  "bundleId": "scn003-grant-review",
+  "recordCount": 3,
+  "decision": {
+    "id": "dec-scn003-01",
+    "statement": "Aは収入要件確認待ち、Bは上限超過、Cは利益相反で通常審査外",
+    "recommendations": [
+      "recommendation:rec-scn003"
+    ],
+    "responsible": [
+      "role:facility-owner"
+    ]
+  },
+  "provisionalDecision": {
+    "id": "dec-scn003-02",
+    "statement": "D-08採択候補を内部レビュー用に仮承認。採択・公開は未承認",
+    "recommendations": [
+      "recommendation:rec-scn003"
+    ],
+    "responsible": [
+      "role:provisional-owner"
+    ]
+  },
+  "rejected": false,
+  "unresolved": [
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-scn003-01"
+    },
+    {
+      "ref": "authority:unknown",
+      "left_open_by_decision": "dec-scn003-02"
+    },
+    {
+      "ref": "conflict:C",
+      "left_open_by_decision": "dec-scn003-01"
+    },
+    {
+      "ref": "eligibility:A-conflict",
+      "left_open_by_decision": "dec-scn003-01"
+    },
+    {
+      "ref": "publication:unapproved",
+      "left_open_by_decision": "dec-scn003-02"
+    },
+    {
+      "ref": "review:real-object",
+      "left_open_by_decision": "dec-scn003-02"
+    }
+  ],
+  "notVerifiedRecordCount": 0,
+  "provisionalApproved": true,
+  "reviewTrigger": "real-object",
+  "authorityVerified": false,
+  "humanReviewed": false,
+  "published": false,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "SEIの一時storeへ合成variant fixtureを記録し、resumeのprojectionだけを読む参照。",
+    "決定の意味・権限・公開を検証しない。実運用のstoreではない。"
+  ]
+}
