@@ -1,0 +1,176 @@
+{
+  "schema": "sk-f-2026-11-02/public-example-v0",
+  "status": "synthetic-input-with-visible-expected-not-an-independent-product-oracle",
+  "description": "Public cross-product example to test whether instruction-level action routing overclaims access, rule sufficiency, or disclosure.",
+  "cases": [
+    {
+      "id": "SK-F01",
+      "kind": "footprint",
+      "declared": [
+        "order.amount"
+      ],
+      "requested": null,
+      "witness": null,
+      "expected": "declared_only"
+    },
+    {
+      "id": "SK-F02",
+      "kind": "footprint",
+      "declared": [
+        "order.amount"
+      ],
+      "requested": [
+        "order.amount"
+      ],
+      "witness": {
+        "level": "adapter",
+        "accesses": [
+          "order.amount"
+        ]
+      },
+      "expected": "physical_access_unknown"
+    },
+    {
+      "id": "SK-F03",
+      "kind": "footprint",
+      "declared": [
+        "order.amount"
+      ],
+      "requested": [
+        "order.amount"
+      ],
+      "witness": {
+        "level": "provider",
+        "accesses": [
+          "order.amount",
+          "account.private_note"
+        ]
+      },
+      "expected": "observed_overfetch"
+    },
+    {
+      "id": "SK-F04",
+      "kind": "output_comparison",
+      "worlds": [
+        {
+          "projection": {
+            "amount": 600
+          },
+          "reads": [
+            "order.amount"
+          ]
+        },
+        {
+          "projection": {
+            "amount": 600
+          },
+          "reads": [
+            "order.amount",
+            "account.private_note"
+          ]
+        }
+      ],
+      "expected": "same_output_different_reads"
+    },
+    {
+      "id": "SK-F05",
+      "kind": "rule",
+      "display": {
+        "amount": 600
+      },
+      "rule_dependencies": [
+        "account.credit_limit"
+      ],
+      "observed_dependencies": [],
+      "internal_result": null,
+      "consumer_may_view_result": false,
+      "expected": "rule_unresolved"
+    },
+    {
+      "id": "SK-F06",
+      "kind": "rule",
+      "display": {
+        "amount": 600
+      },
+      "rule_dependencies": [
+        "account.credit_limit"
+      ],
+      "observed_dependencies": [
+        "account.credit_limit"
+      ],
+      "internal_result": true,
+      "consumer_may_view_result": false,
+      "expected": "result_withheld"
+    },
+    {
+      "id": "SK-F07",
+      "kind": "completeness",
+      "requested": "all",
+      "observed_count": 1,
+      "fixture_known_total": 3,
+      "observed_complete": false,
+      "expected": "completeness_unproved"
+    },
+    {
+      "id": "SK-F08",
+      "kind": "snapshot",
+      "observations": [
+        {
+          "source": "S1",
+          "epoch": 1
+        },
+        {
+          "source": "S1",
+          "epoch": 2
+        }
+      ],
+      "expected": "mixed_snapshot"
+    },
+    {
+      "id": "SK-F09",
+      "kind": "planner",
+      "public_actions": [
+        "read_amount"
+      ],
+      "private_actions": [
+        "credit_rule"
+      ],
+      "chosen_action": "credit_rule",
+      "expected": "private_route_leaked"
+    },
+    {
+      "id": "SK-F10",
+      "kind": "planner",
+      "public_actions": [
+        "read_amount"
+      ],
+      "private_actions": [
+        "credit_rule"
+      ],
+      "chosen_action": "read_amount",
+      "expected": "public_only_route"
+    },
+    {
+      "id": "SK-F11",
+      "kind": "egress",
+      "tool_effect": "read-only",
+      "external_send_allowed": false,
+      "external_send_attempted": true,
+      "expected": "egress_forbidden"
+    },
+    {
+      "id": "SK-F12",
+      "kind": "action",
+      "rule_preview_ok": true,
+      "current_grant_observed": false,
+      "commit_receipt_observed": false,
+      "expected": "preview_only"
+    }
+  ],
+  "qualification": {
+    "expected_visible_to_agent_in_real_ab": false,
+    "observed_product_tool_execution": false,
+    "observed_real_os_or_network": false,
+    "observed_sealed_holdout": false
+  }
+}
