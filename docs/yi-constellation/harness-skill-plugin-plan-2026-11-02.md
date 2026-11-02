@@ -472,3 +472,11 @@ SC-AはMarkdownリンク整理→必要な元資料の取得・SEI/SUIの根拠/
 **実証の先後を更新**：[TEI PR #2626](https://github.com/hat47x/tei-platform/pull/2626)は2026-11-02T18:35:59Zにmainへmerge済みで、実Go CLI read-only/Context Consumerの限定観測は存在する。よって「TEI CLIはすべて静的文書のみ」という過去記述は**現在のTEI製品レーンには当てはまらない**。ただしTAIの外部HarnessでのH2/H3、複数Harness切替、TAI Activityでの実Skill load/Tool invocation、実OS/Host等は未実施。最初はTEI製品側実Tool・Source/Consumerの既存証拠を固定し、Product Skill有無の差→必要な最小Product組合せ→Activity再開J0/J1/J2へ進める。探索や新Issueは並列に増やし、品質を主張するための検証単位は小さく保つ。
 
 **Scope**：ProductのQuery依存解析・Reactive State/Role Resolver・Authority・Policyの正本は各Owner。TAIで中央Reactive Engine、Negative Cache、統合Agent Runtime/Host、第二の共通Capability Registryを作らない。現在のHost Grant/Disclosure・実Consumer読取・実DB/業務Effectと独立Oracle/Owner受理は別の資格。SK-N/Activity実ProductテストはNOT RUN。
+
+## 26. 2026-11-03：最初の実Skill有効性を盲検ペアで測る（SK-02）
+
+これまでのSK-01 H2/H3と[TEI merged #2626](https://github.com/hat47x/tei-platform/pull/2626)の現物CLI証拠の間を、[**SK-02実行試行票**](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)で具体的に接続した。初回は**Product TEI Skillのみ**を対象として、**H2 Tool-only vs H3 Product Skillあり**を一つの実Harness、同じ実CLI binary／公開Source／Prompt／実Tool契約／開示条件／独立Oracleで比較する。Skill packageの存在、実Loaded byte（root+references/scripts）、実CLI/Tool呼出し、Source/Warning/Unknown、消費Token・人手確認を別々に記録する。二Product連携とTAI横断Skill H4/H5は**この初回の合格条件ではない**。
+
+方法上の新しい決定は(1) H2→H3とH3→H2の**逆順ペア＋各Session独立**、(2) 実Skillロードの**明示指定と自動発見を別条件**として混ぜない、(3) 期待値をSkill/Promptに埋め込まず独立採点する、(4) 有効性の比較資格と結果の正しさを別軸にする、(5) Tool/CLIの実コマンド範囲と`artifacts -out`等のFile writeを同一read-only Permissionに含めない、(6) WorldFP一致でもSourceIndex/Trace/引用locatorsが変わる改版は別task groupにする、の六点。**条件が揃わない「改善0」は不当**で、比較不能/unsupported/unknownとして残す。
+
+候補Harnessは実利用可能なClaude Code／Codex／OpenCodeから一つずつ検証、続いて第二Harnessへ同Task/Skillを移植する。Dots/Grok Bot等の利用資格は実確認がない限り採用したと扱わない。各Productの適合・Host認可・開示・本番Effectは引き続きそれぞれのOwner。**SK-02の実Session、実Skill Load、実Harness比較は全件NOT RUN**。現状は実行計画・記録欄が成熟した段階であり、繰り返し公開fixtureを増やすことを実証の代替にしない。
