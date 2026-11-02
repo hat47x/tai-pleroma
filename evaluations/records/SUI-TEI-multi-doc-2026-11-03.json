@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.tei-sui-multi-doc/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/multi_save.py --sui-repo D:\\GIT\\hat47x\\sui-wt-exist --artifact D:\\GIT\\hat47x\\tai-wt-multi\\evaluations\\artifacts\\documentv1-projection.json --documents 10",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-multi\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
+  },
+  "observed": {
+    "documents": 10,
+    "createdAll": true,
+    "readAll": true,
+    "isolatedIds": true,
+    "writes": true,
+    "database": "temporary SQLite",
+    "runtimeProfile": "local-dev"
+  },
+  "scope": "The same projection is saved under several document ids. Each document keeps its own id. It does not verify production storage, concurrent writers, or large card counts."
+}
