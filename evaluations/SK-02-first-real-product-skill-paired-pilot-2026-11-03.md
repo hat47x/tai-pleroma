@@ -69,3 +69,25 @@ Skill実ロード・独立Oracle・実Tool出力が揃わなければ、H2/H3 Sk
 - **TEI #2018**：モデル/Skill/横断/手書きの生産性比較では、品質条件を同じにした総費用の観測へ再利用。
 
 **現在の実験結果：四試行は未着手（NOT RUN）。** 本票の作成はProduct Skillの導入・Harness操作・Owner受理ではない。#2626 mergedの限定CI観測と#2607 Draftの静的Checkerは別の既存Evidenceであり、SK-02の実測値として加算しない。
+
+## 7. 評価前の比較適格性を実行可能にする（2026-11-03、test-only E01〜E20）
+
+**既存の実製品Evidenceの適用範囲を更新**：TEI [merged #2626](https://github.com/hat47x/tei-platform/pull/2626)のexact-head [Focused CI #41462654810](https://github.com/hat47x/tei-platform/actions/runs/41462654810)は、公開`reference/workspace`で**実Go CLI**のCatalog 72件・Trace 2 direct rows・診断3件・Source relocation後のMeaning/SourceIndex差・Human/AI二素材の同一Witness再読取を確認した。これはTEI製品の**限定read-only実測**であり、TAI Skillを実Harnessにloadして比較した証拠ではない。TEI [#2587](https://github.com/hat47x/tei-platform/pull/2587)もmainへmerge済みで、選抜`tei commands`に載らない`operations`/`artifacts`までを一律read-only Skill Toolとして実行可能と推定しない（`artifacts -out`はファイル出力を伴う）。最新TEI mainの実コード/実CLIを参照する場合は、新しいexact revisionを採取する。
+
+**試験の焦点**：四試行で得た情報の**比較適格性**と、外部独立Oracleによる**Task正答性**を分離する。同一Task・Repo/Source/Prompt/Model/Tool/Principal/Grant/Disclosure/Oracle版、四つの独立Session、H2→H3→H3→H2、H3で実ロードした同一Product Skill版、H2へSkillが混入していないことを、H2/H3の対照比較前に確認する。forced activationとauto discoveryは**別Group**。Tool実呼出し・Skill実ロード・Egress/現在Grantの**記録がない**試行は、Agentの「使った」という自己申告で補わない。元出力やSourceが同じでもSourceIndex/Trace tokenの移動前後を同一条件にしない。
+
+**追加した限定の実行ツール**：[SK-02ペア比較適格性チェッカー](./tools/check-sk02-pair-eligibility.cjs)（このMarkdownの隣接`tools/check-sk02-pair-eligibility.cjs`を指す。リポジトリ上の実パスは`evaluations/tools/check-sk02-pair-eligibility.cjs`）。Node 22.16.0で`node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test`を実行し、**E01〜E20の20/20件PASS**（`node --check` PASS）。8つの対照列のほか、4 Session、World/SourceIndex/Promptの同一性、Skillロード観測、H2 contamination、H3のpackage差、Oracle漏出、Permission/実Tool evidence欠落を独立負例で評価した。分類結果は`eligible-to-score`／`ineligible`／`insufficient-evidence`の三種類。**このチェックはTaskの正答・Skill効果・実Observerの真偽を評価しない**ため、出力の`answerCorrectness`と`skillBenefit`は常に`not-evaluated`とする。
+
+**実測の再現情報**：実行した同一ソースは9,361 bytes、SHA-256 `be2185ff77fb8ab0e03a3c7fc6462f21ad3ce3ede8c83448482e86073274e565`、Git blob `7ea3d34387eee832d4f190d6264d19988d8027f1`。GitHubへ保存したexact blobと一致。結果は**公開架空Session／模擬「観測済」フラグ**を用いる単体自己検査であり、実Harness/TEI CLI Skill Load/外部Network/OS/製品CIの実行ではない。CheckerをCIのProduct Gateへ無条件に追加しない。
+
+### 最初の実試行で残す観測不足と判断
+
+| ケース | 既存証拠として保持すること | SK-02として次に要る独立観測 |
+| --- | --- | --- |
+| TEI merged #2626 Focused CI | 公開Reference CLI 9プロセス・二表示・Source-only移動での限定実測 | **この試行Groupの**実Binary/Workspace/Toolの版・呼出し・SourceIndex |
+| TEI Product Skill Draft #2607 | 提案されたSkill文書と静的整合条件 | H3のHarnessによる**実際のPackage/References/Scripts読込み**、H2の非混入 |
+| SK-02 Checker E01〜E20 | 合成Trial票の不適格・Evidence不足の分類条件 | 四つの独立実Harness Sessionで埋めた実観測レコードと、由来のある実Log |
+| 正答・効果 | **未測定**。Checkerの`eligible-to-score`は正答の主張ではない | Modelへ渡さない独立Oracle＋Blind score、品質同等性を保ったTime/Token/人手費用 |
+| Source/Grant/Disclosure移動 | 同一文字列Value/WorldFPだけでは固定版が十分とは限らない | Principal/Host/Tool/実送信byteをScopeに照合。未観測はUnknownとして報告 |
+
+**優先順**：P0＝実TEI #2626由来の公開read-onlyコマンドでS1 Product-only観測をTAIに取り込み、Tool-only H2の実出力を固定。P1＝別SessionでH3 Product Skill forced loadを実観測し、四試行を成立させる。P2＝独立Oracleを適用して比較、auto discoveryを別Groupで実施。P3＝H4/H5／SHO・EKI連携・Source改版／Egress負例へ拡張する。**H3未ロード・権限差・プロンプト差で不適格になった試行を、Skillの効果ゼロと算出しない**。TEI実CLIの成功もTAI Harnessの成果へ合算しない。
