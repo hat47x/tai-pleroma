@@ -27,6 +27,10 @@
 
 [YI Constellation 64卦システム分析](yi-constellation/README.md)は、TAIを中心とする製品シリーズを、易の64卦をシステム全体として読む分析です。要件候補、課題探索領域、計画、レビューを含みます。分析草稿であり、要件の受理や設計の採用を示しません。
 
+## 横断的な証拠・引渡し境界（Draft）
+
+- [ハーネス横断の認知・作用・証拠の境界](harness-evidence-boundary.md) — 外部ハーネスに引き継いでよい主張と、その裏付け・Owner・未観測を区別する非規範的設計。受入試験は[負例マトリクス](../evaluations/harness-boundary-negative-cases.md)を参照。
+
 ## 上流の整合
 
 - [SCN-001「実行→検証→受理」の三視点整合](scn001-three-view-alignment.md)

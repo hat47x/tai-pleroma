@@ -35,3 +35,7 @@
 - [robotics/](fixtures/robotics/): ロボティクスの合成fixture。ピックアンドプレースの受け渡し、出来事、判断、意味の対応。
 - [schemas/](../docs/yi-constellation/schemas/): 出来事、受け渡し、判断、意味の対応のJSON Schema。暫定版0.1。
 - [46-四つの記録のスキーマ](../docs/yi-constellation/analysis/46-四つの記録のスキーマ.md): 四つの記録の暫定スキーマ、合成fixture、検証結果、回収した知見。
+
+## ハーネス引渡しの負例（新規実験NOT RUN）
+
+- [証拠・権限の負例マトリクス](harness-boundary-negative-cases.md) — ハーネス切替時の過去Decision、Source/Scope、Pluginの検証、EKIの結果受理と実世界Outcome、個人・組織・社会の権限を別々に検査する候補。これは試験結果ではなく、[横断設計](../docs/harness-evidence-boundary.md)に対応する評価計画。
