@@ -84,3 +84,38 @@ CLIやMCPのどちらかを**必ず**通すのではなく、実Harnessにとっ
 **公開仕様の出典と条件**：OpenAI Skills <https://developers.openai.com/plugins/concepts/skills>、Codex/ClaudeのMCP Client例 <https://developers.openai.com/learn/docs-mcp>、OpenCode Skills <https://opencode.ai/docs/skills> とv2 MCP <https://opencode.ai/v2/docs/mcp-servers>、Gemini CLI <https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/skills.md>、Cursor MCP <https://cursor.com/docs/mcp>、Copilot Agent <https://docs.github.com/en/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-agent-mode>。これらは**公称仕様**であり、特定のAccount/Session/OSでの実可用性・安全性や本パイロット合格を証明しない。
 
 **2026-11-03時点の資格**：TEI #2626の限定CLI証拠や既存TAI合成ReferenceはOwner別に存在するが、HX-01〜10、SK-03-G0〜G4、2 HarnessでのProduct Skill実Load/Tool Call、実OS/外部Receiver/継続Task/Current Authority、独立OracleによるTool Skill増分、Owner受理は**NOT RUN／未採用**。まず既存SK-02の実試行が必要であり、さらに合成Checkerだけを追加して実Harnessの代用とはしない。
+
+## 7. 実Product CIの成果をSkill／Source／納品の一般資格へ昇格させない：一件の実TEI Artifactと他Productの反証
+
+### 固定した実証起点（合成Checkerではなく実Go CLIのCI）
+
+[TEI PR #2649](https://github.com/hat47x/tei-platform/pull/2649)の**exact HEAD `30a486324c6ca1fe0b5cd16d6e358dc7fa5a8fa0`**に対する[CI Run #41503235605](https://github.com/hat47x/tei-platform/actions/runs/41503235605)、Job `real-cli-one-revision`（Job ID `125475831812`）は2026-11-02T19:21Zに**completed/success**。TAIが実行したことにせず、TEI Owner実行のJob logから限定観測値を抽出し、TAI Draftに**読み取り専用の[Evidence Pointer JSON](../../evaluations/records/TEI-PR2649-one-revision-actual-cli-observation-2026-11-03.json)**として保存した。このJSONはProduct別Source/DB/Policyを統合する新共通Schemaではなく、元Runへ戻れる比較票である。
+
+- **本物のCLIとReader**：Go 1.26.10、Linux、指定HEADのCLIが`operations`／`artifacts`を別プロセスで実行、`artifacts -out`が一時出力した**5つのArtifact実ファイル**を独立Python Readerで再読取し、期待Content bytesと一致（`reader_validated_bytes=true`）。
+- **完結性の反例**：前後とも`Manifest.Complete=false`／**Operation Gaps=4**、Findings=0。**5つのbyte一致・Findings=0を「全ての必要Artifactが揃った」「業務Operationが実行可能」「納品/Review受理完了」へ読み替えない**。ConsumerのRequiredMemberを独立に定める必要がある（TEI #2630/#2633／MMI #658）。
+- **版の反例**：Source fileをbyte不変で移動させると、World fingerprint `sha256:bd53dbac...`は一致する一方、**Source Tree、Model Revision、Manifest Digestは変化**。実Checkerは旧Operationと新Artifactの混合を`qualified=false`として拒否。**「同じWorld意味」と「同じSource引用、同じManifest/Consumerに渡せる世代」を混同しない**。
+- **行為の範囲**：`-out`による一時ファイル生成は明確なローカル副作用。TEI #2649の実CLI CI成功は、SK-02の**初期read-only H2/H3 Profileでそのコマンドを許可したことではない**。今回の実Runで確認できるのはテスト用Workspace/Readerまでであり、外部HarnessへArtifact bytesが届いた実績ではない。
+- **時間的な限界**：前後でSource digestを照合しても、二つの呼出しの間に書換えがなかったことや、履歴がABAを含まないことは示さない。TEIのObservationが立証した「その時のResult」とStorageの原子的Snapshot/Fenceは別保証。
+
+### 外部への受渡しを誤る三つの反例
+
+| 経路 | 既に確認できた局所事実 | **このパイロットでまだ取得していない**資格 |
+| --- | --- | --- |
+| **SHO [Draft #13](https://github.com/hat47x/sho-composer/pull/13)** | Python test-only CLIの17/17局所実行記録。**同bytes別パス、A→B→Aの未検知、出力部分書込みや作成後Source変更の要照合状態**を区別。 | SHO実製品/Node/Editor/Storage fence/現在のReview・Consumer読取。旧bytes復帰はReview復活ではない |
+| **MMI [#756](https://github.com/hat47x/markdown-matrix-injector/issues/756)** | 旧mainの実MCP/CLIでveryHidden Sheet・非表示Row/Columnがinspect/select/renderへ展開され、結果にVisibilityの説明がない。 | 原本Ownerの意図・機密区分、選択Scope/非表示属性の実Provenance、SHO引用・外部Recipientの開示資格 |
+| **MMI [#758](https://github.com/hat47x/markdown-matrix-injector/issues/758)** | 旧mainの実MCP/CLIでCP932 CSVは値へ復号されるが、出力には採用Decoderがない。 | Raw Source digestとDecoder rule/versionからValueへの再現保証、別Harnessの値一致、外部送信 |
+
+重要なのは、**Source bytes／Source identity／Interpretation（Decoder・Parser）／Selection（Visibility・Scope）／Published artifact／実Consumer読取／現在Audience資格／継続的な版不変性**を一つの`sameHash`や`success`で代替しないこと。反対に、同digest別SourceやVisibility不明を即「秘密漏えい・業務不合格」と決めつけない。MMI #756/#758のDefault、SHO #13の正式保存・復旧、TEI #2630のRequiredMember、TAI #232のEgress強制はいずれも既存Ownerに留める。
+
+### 次の実行票：先行するSK-02と後続SK-03を混ぜない
+
+| ID | 実施対象／Inputを固定する箇所 | 実際のExit（Owner・現状） |
+| --- | --- | --- |
+| **HX-11** | TEI #2649実CIの固定Sourceと5 ArtifactをReaderが実読取した事実を、**TAI実H2/H3のTrial IDへ誤転記しない** | 前述のJSON Evidence Pointerとして**元Run実観測を固定済み**。TAI Skill/H2/H3はNOT RUN |
+| **HX-12** | TEI旧Operation＋Source移動後の新Manifest、同WorldFPだが異ModelRevision | Consumer必要集合/Actual Reader版の一致を試す前は**混合再利用を拒否**。元TEI Checker限定PASS、実SHO未実行 |
+| **HX-13** | SHO #13 A→B→A、部分作業ファイル残存、同digest別パスの3独立ケース | 履歴不変／未作用と断言せず、`unknown/reconciliationRequired`をConsumerへ引き渡す。**SHO実Product/TAI Skill未実行** |
+| **HX-14** | MMI #756 hidden・#758 CP932の実Toolを将来の**別公開合成Task Group**でH2/H3比較 | `sourceDigest`と値が一致してもVisibility/Decoder/開示が未知ならそのClaimのみunknown。MMI実Product改修、Harness実ロード・EgressはNOT RUN |
+
+**優先工程**：(P0) SK-02のTEI`commands→catalog→inspect→trace→validate`を一つの外部Harnessから実呼出し、現在のSource/Skill版・Tool argv/結果を観測。(P1) H3のSkill実ロードと四独立Sessionの比較適格性、独立Oracleと総費用を測定。(P2) SK-03の第二Harnessへ公開Evidenceだけを引継ぎ、同Sourceの参照再解決・現在Host/Disclosureの確認を行う。(P3) SHOまたはMMIを必要とする別Taskへ進む。**TEI実CIの成功を最初の外部Harness実行として数えない**。
+
+この追加は実TEI CIの独立再読取と他Productの局所反証を受渡し条件に変換した**設計・Evidence Pointerの更新のみ**。本稿でTAI実Harness・SHO/MMI製品・OS/DB/外部Receiver試験を実行したわけではない。既存SK-02、TAI #271／#74、TEI #2605/#2516/#1119、SHO #4、MMI #658の受入とOwnerは変更せず、中央Host/Reader/Claim Store・自動許可Engineを追加しない。
