@@ -480,3 +480,19 @@ SC-AはMarkdownリンク整理→必要な元資料の取得・SEI/SUIの根拠/
 方法上の新しい決定は(1) H2→H3とH3→H2の**逆順ペア＋各Session独立**、(2) 実Skillロードの**明示指定と自動発見を別条件**として混ぜない、(3) 期待値をSkill/Promptに埋め込まず独立採点する、(4) 有効性の比較資格と結果の正しさを別軸にする、(5) Tool/CLIの実コマンド範囲と`artifacts -out`等のFile writeを同一read-only Permissionに含めない、(6) WorldFP一致でもSourceIndex/Trace/引用locatorsが変わる改版は別task groupにする、の六点。**条件が揃わない「改善0」は不当**で、比較不能/unsupported/unknownとして残す。
 
 候補Harnessは実利用可能なClaude Code／Codex／OpenCodeから一つずつ検証、続いて第二Harnessへ同Task/Skillを移植する。Dots/Grok Bot等の利用資格は実確認がない限り採用したと扱わない。各Productの適合・Host認可・開示・本番Effectは引き続きそれぞれのOwner。**SK-02の実Session、実Skill Load、実Harness比較は全件NOT RUN**。現状は実行計画・記録欄が成熟した段階であり、繰り返し公開fixtureを増やすことを実証の代替にしない。
+
+---
+
+<!-- yi-skill-multi-harness-sk03-20261103 -->
+## 27. 2026-11-03：DSHを唯一の基準にせず、Skill・Tool・Handoffを直交的に評価する（SK-03）
+
+[代表Harness相互運用と段階実証 SK-03](harness-interoperability-and-handoff-pilot-2026-11-03.md)を、既存[SK-02](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)と[SK-01 §Y](../../evaluations/SK-01-harness-skills.md)の**後続の実証計画**として採用候補に追加。DSHと「OpenCodeでDeepSeekモデルを使用」は別Harness実装であり、Model/Provider、Harness、Subscription/請求経路、OS/Tool権限を同一視しない。Claude Code／Codex／OpenCode／DSHを初期P0、Gemini CLI／Copilot Agent／Cursor／Clineを次群、Cloud型のDots／Grok Bot／ChatGPT Workを別環境として評価する。
+
+**新たに固定する設計判断**：
+- Productが公開するSource/意味・型付き結果・CLI/APIの契約が先。Skillは目的/手順、MCPは任意のTool搬送、Harness Adapterは環境依存の配置・Tool alias/設定。特定HarnessのAgent LoopやPermission EngineをTAIで再実装しない。
+- 対応可否はSkill discover/load、CLI/MCP実call、Source/Unknown/Version、現在Grant/Disclosure、実受信/Effect、費用の**別軸**。MCP無しでもCLI利用、Skill無しでもTool-only利用を正確に部分対応とする。公称仕様やSkill root存在を実可用性に昇格しない。
+- **比較因果を守る**：まず1 HarnessでSK-02 H2/H3を同版・独立Session・逆順ペアで実測。続くSK-03で第2 Harnessへ同じProduct Skill/Tool/公開Sourceを移植し、Adapter差のみを確認。Model/Permissionが異なる場合は「構成間の契約互換性」だけを比較し、SkillやModelの優劣を断定しない。
+- **Handoffはデータのコピーではなく現在資格の再確認**。別Harnessへ渡すのは許可済みのSource/Scope/既存Result/Unknown/残作業の限定Projection。旧Tool/Grant/公開権限/ACKを移植せず、同Attempt Body/実Consumer Read/Provider Effectを別観測。TAI #271のJ0/J1/J2を再利用する。
+- 初期SK-03のHX-01〜10は**NOT RUN**。TEI merged #2626のread-only CLI観測とTAI SK-02合成20件CheckerのPASSは、外部Harness Skillロード/跨Harness再開のPASSではない。既存Critical Pathや他Product単体利用を全Harness実証待ちにしない。
+
+対応先：TAI #168（一覧と比較）、#74（版固定・配布）、#271（再資格化）、TEI #2605（製品Skill/CLI）、#2509（DSH固有）、#2018（生産性/費用）、TAI #232/TEI #2515（機密実隔離）。新Core enum、共通Host/Registry、二重Authority/Oracleは作らない。
