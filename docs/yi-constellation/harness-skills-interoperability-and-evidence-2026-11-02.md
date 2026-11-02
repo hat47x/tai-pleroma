@@ -1,0 +1,123 @@
+# YI Constellation：Skill選択・意味連携・実効権限・可搬性の深化（2026-11-02）
+
+状態：**提案／設計検証の追加、Owner未受理**。本ファイルは[親構成計画](harness-skill-plugin-plan-2026-11-02.md)と[SK-01](../../evaluations/SK-01-harness-skills.md)の補助設計。新しい共通ABI/Schema・共通Host・中央Registry・第二Authority/意味正本の採用を宣言しない。別Harness実接続、Skill選択精度、OS隔離、TEI/SEI/SUI/SHO/EKIの新E2Eは**NOT RUN**。
+
+## 1. 現行Product Skillの実在状況を固定（2026-11-02 GitHub main静的調査）
+
+この表で検査したのは、各mainの**ルート直下の`skills/`ディレクトリ**。他のディレクトリ・ユーザー環境に存在しないことまでの証明ではない。代表Skill名はすべて設計候補。
+
+| Repo | main commit（照合時） | ルートの`skills/` | 資格 |
+| --- | --- | --- | --- |
+| `tai-pleroma` | `95253b11c18c0c335442194edec15e9ba7985646` | なし。PR #270内`examples/skills/yi-tai-activity`は**未配布の試作** | 正式Skill未確認 |
+| `sei-cognition` | `234c3f91ce86b59b0f202295f454bad74dc6758c` | `ponytail`のみ | 汎用開発支援Skillであり、SEIの認知Method/製品呼出しSkillではない |
+| `sui-sensemaking` | `42ec002699766d3eec5efa9754b90353cc0c01e7` | `ponytail`のみ | 同上。SUIのCard/Island/Projection操作Skillではない |
+| `tei-platform` | `9c9ef4d160640908e06ad13afb6c2b45c664c748` | ルートに`skills/`なし | TEI専用Skill未確認 |
+| `markdown-matrix-injector` | `e293927e7decb548c9662c4a19a140c1d017a1a8` | **`mmi`**、`ponytail` | `mmi`は実在のMMI CLI/MCPを用いた**製品向け**Agent Skill（ただし本調査ではHarness実接続していない） |
+| `sho-composer` | `489e9e7d84c783f35ee029d8eee500cdff091c23` | ルートに`skills/`なし | SHO製品Skill未確認。MMIを機能正本として再利用 |
+| `eki-fabric` | `eceb997c5c2261b279a0bc320275a35e37a0a04b` | `ponytail`のみ | 同上。Task/Resultの製品向けSkillではない |
+
+**補正**：既存`ponytail`を「各Productの実在するSkill接続」と扱わない。これは共通のコーディング方針Skillであり、`yi-sei-inquiry`や`yi-eki-delegation`の代替にならない。各RepoにProduct固有Skillを作る場合は別Ownerの新規実装資格。既存`mmi`も記述と実CLIの存在が確認できることと、特定Harnessへの導入・実実行・ユーザー便益は別のEvidence。
+
+## 2. 三つのSkill役割＋二つの独立したPlugin
+
+**役割A：製品技能（Product Skill）**。各製品が自分の具体的な操作を教える。何を読んだか、どの版のCLI/API/MCPが使えるか、どの範囲が検証済みかを示す。自Repoで正本を更新し、TAIを要求しない。
+
+**役割B：認知・専門Method（Method Skill）**。SEIのMethod適用、CSWの自由探索、数学/単位/SQL/学術論文解析等の専門手順。ユーザーの問いに応じてMethodを**提案・適用**しても、SEI Method Applicationの正式な経緯やTEI受理済み意味をSkill文書に代替保存しない。専門家がAI、人、決定的実装のいずれでもMethodの入力・根拠・残余を区別（[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)）。
+
+**役割C：活動・組合せ（TAI Activity Skill）**。利用者の目的/用途に応じて必要な製品・Methodを**選択/省略**し、成果と残余を次の操作や別Harnessへ引き継ぐ。実行スケジューラや第二Agent/Model Routerを自作しない。ハーネス内のSkill-to-Skillの直接呼出し機能は環境により異なるため、**複数Skillの「自動入れ子呼出し」を前提条件にしない**。必要ならTAIが製品のCLI/Toolを直接使い、専門Skillは参照手順として利用する。
+
+**Plugin-I：Productの機能拡張Plugin**。例：TEI DSL/Domain Plugin/TALON系Composite Function、外部Host向けService Contract＋Provider実現、UI contribution。これは製品のモデル意味／Target機能に関わる（[TEI #2390](https://github.com/hat47x/tei-platform/issues/2390)、[#988](https://github.com/hat47x/tei-platform/issues/988)）。「Agent Skillを置けば製品Pluginが実装された」と扱わない。外部HostでのC0契約-only/C1静的組込み/C2隔離呼出し/C3 Host拡張の実証資格とも別。
+
+**Plugin-II：外部Harness向け配布Plugin**。Skills、MCP/CLI接続設定、必要ならHooks/Commands/依存を、選択されたHarnessの形式でまとめる。Skillsが基本の再利用可能な手順、Pluginが配布単位（[OpenAI仕様](https://learn.chatgpt.com/docs/customization/overview)、[Plugin docs](https://developers.openai.com/plugins/concepts/skills)）。**Harness Pluginの導入やProductへのログインはProduct Pluginの登録・業務効果の許可ではない**。
+
+この二Pluginは別名前空間・別ライフサイクルで管理する。Skillが`scripts/`を含む場合は**実行可能コード**として依存・改ざん・ファイル/ネットワーク/権限を監査する。文章だけでもPrompt Injectionで外部Toolを操作し得るので、SkillのSource trustはToolの認可ではない。
+
+### 推奨する発見・読込み
+
+外部Harnessが最初に見える`name/description`は短く、**必要時にだけ詳細Skill/Referencesを読み込む**。Agent Skills仕様のProgressive Disclosureを利用し、多数の専門Skillを増やしても全本文を一括投入しない（[Codex Skills公式](https://learn.chatgpt.com/docs/build-skills)）。探索・大量AI並列を目的別のSkill細分化で許容するが、常時全Skillロードは設計目標にしない。
+
+Skill名の衝突は、実際のHarnessが実装する選択挙動を検査する。たとえば同名`mmi`の改変Skillを別パスへ導入した場合、`Skill name`のみで同一Source/信頼資格と扱わず、**実際に読み込んだファイルのpath＋content digest＋呼出しProfile**を特定する。ImplicitとExplicit invocationも別ケースとする。
+
+## 3. Capability情報は「発見できる」「使える」「資格がある」を分離
+
+Capability Discoveryは利用者の作業のための**候補発見**。自己申告のManifestを全信頼しない。新しい共通常駐Registryは不要。
+
+| 資格段階 | 要求する観測 | それだけでは言えないこと |
+| --- | --- | --- |
+| D0 Declared | Skill/README/Manifestに能力の説明がある | 現環境にTool/実装が存在するか |
+| D1 Installed | Toolバイナリ/Endpoint/Skill pathの実存在とexact版 | 実行可能・呼出し許可があるか |
+| D2 Listed | Tool/CLI Catalogに現在の入力出力が列挙される | 強い操作が実Hostで拒否されるか |
+| D3 Accessible | 現Actor/Scopeでread-only／mock callが成功し、実入力を検証 | 現在の意味契約・外部作用が受理されたか |
+| D4 Qualified | 対象のClaim/時点/Source/Target/PermissionでProduct側Conformance＋Owner必要判断が成立 | 別用途・別Consumer・将来の資格 |
+| D5 Effect Observed | 実作用が必要な場合は同一Task/Attempt/Provider Receiptと独立Observationで結果を確認 | 何も行わずとも効果がある、または全体の活動価値 |
+
+**D0〜D5は評価票上の説明用であり、全製品共通Runtime状態enumではない。** Product Ownerの既存証拠を参照し、Agentごとに同じ事実の独立正本を作らない。CLI/MCP/PluginのTransportやMCP tool annotationはD4/D5の根拠にしない。
+
+同じTaskを異なるHarnessで実現する場合は、`Capability identity`と`現Harness上のTool名`を分ける。Tool nameだけで別Owner・別環境の同一契約を自動joinしない。明示的に未対応のCapabilityは`unsupported`、Toolが一時的に落ちた場合は`unavailable`、照合情報が得られない場合は`unknown`。
+
+## 4. Cross-Product Skill Handoffを「情報量」でなくClaimと受渡しの適格性で設計
+
+TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、**用途に必要なSource/Claim/Operation/時点/開示資格への参照**と、正本側が許した投影。TEI [#2516](https://github.com/hat47x/tei-platform/issues/2516)のConstruction ContextとSEI [#767](https://github.com/hat47x/sei-cognition/issues/767)のInquiry診断を参照する。
+
+- 同一の数値でも、Grain/Bag multiplicity/Group/Unit/Quantifier/時間/Scopeが違えば同一Claimとは限らない。値が異なっても比較範囲が異なるなら「矛盾」としない。
+- **同じ公開Projection `P(x)=P(y)`でも判定Claim `Q(x)≠Q(y)`になり得るなら、外部HarnessはQを確定できない。** Source保有Product内部の用途限定照会が必要であり、回答の真偽や理由そのものにも開示判断が必要。繰返し照会・件数・エラー・差分による推知を防ぐ。
+- SEI Skillが担うのは「どの追加証拠や専門Methodを要求すべきか」の選択であり、TEI Query/Math比較器の再実装ではない。SUI Skillは複数仮説の生成・保留を損なわず、探索中に強制採否Gateを入れない。
+- SHO Skillは「文書保存（作業成立）／Source再解決／説明成立／レビュー／固定納品資格」を独立に扱い、TEI意味受理やHTML表示成功で一括PASSにしない（[SHO #1](https://github.com/hat47x/sho-composer/issues/1)、[#6](https://github.com/hat47x/sho-composer/issues/6)、MMI #658/#672）。
+- TEI Skillで「論文→実装」を扱う場合は、原論文のSource/引用・数学的意味/単位・TEIモデル仮説・検証済みGenerator/TargetとSHO説明文書を分ける。**論文URL/索引/インデントによる親子関係の記録だけ**でも独立した最小ユースケースとし、すべての論文を実行コードへ変換しない。論文同士の参照、親子、版間の対応は探索・発見と意味受理を分離する。
+- TEI Script/DSL、Composite Function、Domain Plugin、SQL/組織構造へのSkill適用では、`Definition/Instance/Realization`、入力・出力・効果・Assumptions/Guarantees、Targetの外部Hostを尊重。Skillはモデルの編集手順であり、実行意味を定義する権限ではない。
+
+### 受渡しの連続性は4種類
+
+1. **Informational**：原資料への再到達、版、Scope、開示された根拠とunknown。
+2. **Semantic**：Claim/モデル/Methodの意味・受理範囲・必要な未決/再確認。
+3. **Operational**：実Task/Attempt/Artifactと可視な状態（EKIのClaim ACK/Body/AcceptedResultを別観測）。
+4. **Authority/Effect**：現時点のGrant・本人/Owner判断・外部Providerの実効果。**他HarnessへGrantをコピーして継続とはしない**。
+
+活動継続は4つが常に全部揃うことを意味せず、どの連続性を保存したかを明示する。とくに[EKI #465](https://github.com/hat47x/eki-fabric/issues/465)のRun→Body senderの断絶が残る場合、Claimの状態から成果物本体取得を推定しない。
+
+## 5. ハーネス環境とSkill配布の実装差分
+
+| 対象 | 先に検査すること | TAIで固定しないこと |
+| --- | --- | --- |
+| Codex/ChatGPT | 実Skill path、name/descriptionの発見、implicit/explicit、Tool依存、Plugin導入の可否 | ChatGPTとCodexの全環境の機能同等性。Codexは`.agents/skills`等を使うが、試作`examples/skills`は自動検出位置ではない |
+| Claude Code | `.claude/skills`や配布Pluginとの違い、CLI/MCP接続、明示Skill/暗黙選択 | 他社Plugin manifestをそのまま読み込めるとの仮定 |
+| OpenCode/DSH | 実Profile/Tool接続、外部Subagent/Goal/Scheduleの有無、モデル・料金枠、OS資格 | DSHの`sdk-minimal`とheadless/Baseを同じ機能・安全性とみなすこと |
+| Dots/Grok等 | 各ユーザーの実利用可能な連携方式・Plugin/Skillのサポート | Claude Codeの`SKILL.md`をそのままアップロード可能との決めつけ |
+
+**実送出を独立測定**：DSHの`dsh-session-log-deepseek`は`messages`以外の`dsh_session_log`や未受理backlogを送る可能性がある（[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)、[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)）。Model input token数だけを機密送出量と扱わない。Credential/OS user/Network/Session cache/Tool response/Clipboard/Issue出力を合成canaryで確認し、Skillの「送らない」指示を防護の証拠としない。TEI外部UI制御（[#2391](https://github.com/hat47x/tei-platform/issues/2391)）はE0〜E3 Headless先行で、E4のTest instrumentation・Production物理除去を追加資格とする。Skill有無が本番生成物に危険な制御入口を残さないことを実Artifactで検証する。
+
+## 6. Skill更新・衝突・縮退：変更の種類ごとの再確認
+
+| 変更 | 再確認の候補 | 勝手に復活しない資格 |
+| --- | --- | --- |
+| Skill `description`・選択語 | Intent routing、誤起動/不足/同名衝突、経路間優先順位 | Product機能/Owner意味受理は再認定されない |
+| Skill `SKILL.md`手順・Scripts・依存 | 脆弱性/Tool呼出し・許可path・実送出・再生試験 | 以前のTool挙動や権限 |
+| CLI/MCP Tool signature/JSON/Output変更 | 使うSkillだけ入力出力互換・negative tests | 別Consumer/別Hostの有効性 |
+| TEI意味/Model/Rule/Source/Target改版 | 影響を受けるClaim・生成/Business/再実行契約の既存Owner検証 | 旧生成/旧受理/旧Effect |
+| SHO本文/テンプレート/KaTeX/SVG変更 | 引用出典・Render入力・説明・配布済固定版への影響を分離 | TEIモデルの意味受理 |
+| SUI・SEIの開示／用途条件改訂 | Product内投影資格、外部問合せ、通知/未決の保存 | 過去に外部送信したbytesは取り消せない |
+| EKI Task/Result/Provider改版 | 同一Attempt/実Body bytes/受理/Effectの追跡 | 結果不明の自動再試行 |
+| Harness/Plugin/Profile入替 | 読込Skill exact path/hash、Tool発見・Host実効権限・Session Log・外向き通信 | 以前のHarnessへの受入資格 |
+
+**局所再検証**は、明示的に依存関係が確認された範囲に限定する。未知の依存を「影響なし」としない。Deploy前固定manifestの記録は有用だが、実行するSkill/Tool/Provider bytesの**実同一性**を別途観測する。
+
+## 7. 多数のSkillを増やすための製品横断ポートフォリオ
+
+必要な代表Skillは入口であり、領域別のMethodや手順は自由に増やせる。大きなSkill一つへ全部の知識を入れるのではなく、**用途・対象・期待する証拠が異なる場合に分割**する。データ構造やDomain PluginとSkill数の間に1:1を強制しない。
+
+- TEI：モデル再利用/合成、自己記述DSL、SQL構造/粒度、時間・組織・数学/単位/Topology、Java/.NET/WASM Target、多言語Conformance、外部Provider、テスト/Lean、論文からの設計、Headless UI。
+- SEI：Method候補探索、Evidence Sufficiency/Question triage、人物や組織の暗黙要求の用途別Fit（人に関する機微情報は最小限）。
+- SUI/CSW：仮説・反例・多解釈、非レビューの開示、自由な生成と意味編集、対象へのTarget-return。
+- SHO/MMI：Source reference、C-01/T2再解決、文章/図表/式/KaTeXと文書固定版、アクセシビリティ、専門分野の説明。
+- EKI：委任Profile、同一Task/Attempt/Outputの実送達・受理・取消、実OS SandboxとProvider効果。
+- TAI：SCN-001の読取り連携、SCN-004の業務横断、SCN-005の生活支援、Skill発見・選択・統合、別Harness再開と実効果照合。ユーザーのQoL/負担は別の独立評価とする。
+
+**優先実証**（新Skill評価はNOT RUN）：①MMI既存Skill vs Toolのみ、②TEI単体既存CUIからのProduct Skill試作、③SEI Claim診断とSHO文書へ用途別Projection、④TAI Skillのある／なしで同じ複数Product作業、⑤EKI mock成果物の同一Attempt引継ぎ、⑥機密・UI・DSHの負例、⑦複数Harnessの配布/再開。候補の探索は並行拡大、正式意味/権限/本番資格は各Ownerが保持。
+
+## 8. Owner判断と停止条件
+
+**Owner判断待ち**：製品入口Skillの正式名称・版表現、どのProduct/Methodを既定暗黙ロードするか、Skill script利用と署名/配布、技術能力の公開/非公開Profile、Handoffの最小参照、比較するHarness実環境、ProductionのAuthorityとRelease資格。
+
+**停止条件**：存在しないToolの推測呼出し／別Product Rawの越境／同じ可視投影から全体Claimの断定／Skill更新のすり替え／AIが業務意味を自動受理／不明Taskの無条件retry／SDK/Pluginの存在からHostの動作保証／新共通Host・共通意味SSOTの先行導入。
+
+関連する既存Owner：TAI #168/#74/#232/#234、TEI #2390/#2391/#2515/#2516/#2493、SEI #660/#677/#767、SUI #3275（既に修正PRが別途存在）／agent projection、SHO #1/#6・MMI #658/#672、EKI #407/#465。正式受理や実装の証拠は各Issueへ戻す。
