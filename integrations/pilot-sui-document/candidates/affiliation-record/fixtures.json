@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "sui.affiliation.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {"id": "aff-1", "cardId": "card-1", "islandId": "island-1"},
+      "want": {"state": "present", "text": "{\"cardId\":\"card-1\",\"id\":\"aff-1\",\"islandId\":\"island-1\"}"}
+    },
+    {
+      "id": "empty-island",
+      "input": {"id": "aff-1", "cardId": "card-1", "islandId": ""},
+      "want": {"state": "present", "text": "{\"cardId\":\"card-1\",\"id\":\"aff-1\",\"islandId\":\"\"}"}
+    },
+    {
+      "id": "missing-card",
+      "input": {"id": "aff-1", "islandId": "island-1"},
+      "want": {"state": "missing", "text": "[\"cardId\"]"}
+    },
+    {
+      "id": "unresolved-island",
+      "input": {"id": "aff-1", "cardId": "card-1", "islandId": null},
+      "want": {"state": "unresolved"}
+    }
+  ]
+}

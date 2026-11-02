@@ -56,6 +56,16 @@ class AssembleTest(unittest.TestCase):
         with self.assertRaises(AssemblyError):
             assemble({}, CARDS, ISLANDS, [])
 
+    def test_accepts_affiliation(self):
+        affiliations = [{"id": "aff-1", "cardId": "card-1", "islandId": "island-1"}]
+        composed = assemble(DOCUMENT, CARDS, ISLANDS, EDGES, affiliations)
+        self.assertEqual(len(composed["affiliations"]), 1)
+
+    def test_rejects_affiliation_to_unknown_island(self):
+        affiliations = [{"id": "aff-1", "cardId": "card-1", "islandId": "island-9"}]
+        with self.assertRaises(AssemblyError):
+            assemble(DOCUMENT, CARDS, ISLANDS, EDGES, affiliations)
+
 
 if __name__ == "__main__":
     unittest.main()

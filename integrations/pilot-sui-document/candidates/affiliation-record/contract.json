@@ -1,0 +1,21 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "sui.affiliation.record",
+  "version": "1",
+  "status": "reference-local",
+  "note": "SUI Affiliationのid・cardId・islandIdを投影する参照用の契約。CardとIslandの多対多所属を表す。",
+  "inputs": [
+    {"attribute": "sui.affiliation.affiliation_id", "primitive": "std.identifier"},
+    {"attribute": "sui.affiliation.card_id", "primitive": "std.identifier"},
+    {"attribute": "sui.affiliation.island_id", "primitive": "std.identifier"}
+  ],
+  "output": {"primitive": "std.text"},
+  "projection": {
+    "kind": "record",
+    "fields": [
+      {"name": "id", "input": "id", "attribute": "sui.affiliation.affiliation_id", "primitive": "std.identifier"},
+      {"name": "cardId", "input": "cardId", "attribute": "sui.affiliation.card_id", "primitive": "std.identifier"},
+      {"name": "islandId", "input": "islandId", "attribute": "sui.affiliation.island_id", "primitive": "std.identifier"}
+    ]
+  }
+}

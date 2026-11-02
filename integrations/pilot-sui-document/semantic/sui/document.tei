@@ -26,3 +26,9 @@ data Edge {
     attribute fromKind type std.code
     attribute toKind type std.code
 }
+
+data Affiliation {
+    attribute affiliationId type std.identifier
+    attribute cardId type std.identifier
+    attribute islandId type std.identifier
+}
