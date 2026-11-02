@@ -126,3 +126,21 @@ TAIのActivity継続を、前のAgentの「成功」文章を再利用する処�
 **優先実証**：P1＝TEI既存read-only CLI/Go（#2586）から**Source/Role/Function Context/Query/Rule/Provider Route/実Result**の同Attempt参照を一件取得できるか。P2＝実Consumer Requiredと読取Artifact版、必要なSnapshot/Dependency証拠、EKI同Attempt Bodyを段階的に接続。P3＝別Harnessへ再開し、J0/J1/J2の偽再利用・再読取数・token/手戻りを比較。Mutation合格は製品の閉包証明ではなく、独立Source/Oracleと実Read traceが揃った場合だけより強い主張へ進む。
 
 **資格**：今回PASSは**保存済み公開synthetic checkerのNode実行のみ**。TEI #2632/#2633/#2634の実Go製品試験（それぞれのPRに記載された観測資格を参照）、実Provider/DB/OS、SHO保存再開、EKI送受信、TAI実Skillロード、正式完全性Oracle/Owner意味受理はこの試行でNOT RUN。既存SK-C/RQ、MMI C-01/T2 G0-0、TEI #1119 Gateを変更しない。
+
+## 8. 2026-11-02：値が変わらない変更でも、公開・提案・消費資格は再確認対象になり得る
+
+[TAI Draft #272](https://github.com/hat47x/tai-pleroma/pull/272)の[回答前観測面の計画](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/docs/yi-constellation/preanswer-observable-surface-and-consumer-handoff-2026-11-02.md)と、[Mock Receiverを用いた限定6/6局所実行](https://github.com/hat47x/tai-pleroma/blob/docs/preanswer-observation-surface-20261102/evaluations/records/AS-LB-loopback-http-2026-11-02.json)を現在資格の依存評価へ接続する。**今回の実Mockで検証したのは架空のHTTP送信を一つのlocalhost Portが受信した範囲**であり、実Productの外部送信・非干渉・OS拒否は未観測。
+
+| 変更（内部Value/元Sourceが同じ場合もある） | 必要な再確認の候補 | 保持してよい可能性があるもの／追加注意 |
+| --- | --- | --- |
+| **開示Policy/Audienceが変更** | Consumerへ今から提供するSkill/Tool一覧、結果・非公開Reason、Request/Log、現在のEgress資格 | 内部Read・過去の意味判断の**履歴**は保持。ただし従来の公開物を再送する権限はない |
+| **Planner/Skillの参照Scriptが変更** | 実ロード依存閉包、候補Action/Probe名、実Tool call、Audience向けTrace | Product Sourceが不変でも「同じSkillが同じ応答を出す」と言えない |
+| **SHO Renderer profileだけ変更** | 表示DOM/anchor/a11y/Clipboard/リンク自動取得とConsumerの表示資格 | Markdown Link Token/原文保持は可。表示一式や公開Egressの無変更を保証しない |
+| **Tool/Action discovery集合が変更** | 公開Tool候補の理由・件数、実Available、明示Context、Current Grant | 昔のTool実行・研究結果は歴史として保持。隠れた新Toolの存在は開示Policyによっては非公開 |
+| **EKI Body受領/SHO Consumer readだけ変化** | 同じTask/Attemptのdigest・実Artifact到達・Reader確認、必要な公開資格 | ResultClaim ACKの履歴は保持。受領から業務Effect/Owner意味受理へ自動昇格しない |
+
+この表は**TAI #271の再確認候補**であり、TAIがProductの依存Graph・Policy正本・Rendererを再実装する指示ではない。依存が未観測のまま「現在値が同じだから無影響」「最終回答が同じだから送出問題なし」とするのは避ける。一方、影響のない独立なread-only活動をOS/Providerの資格が許す範囲で継続できるようにする。
+
+**最初の反証**：開示Policyだけを狭め、内部Sourceと値を固定した二世界で、J0（全面再検証）、J1（当該外部Consumerの公開再資格化）、J2（過去成功を無条件再利用）を比較する。J1では内部Ownerの以前の確定Claimを無意味に破棄せず、**新規の外部Tool候補・Session Event・送信内容**の公開だけ現行Policyに従うか観測。さらにRenderer profileだけ変える別対照で、SHOの原文保持と表示再検証が分離できるかを試す。[SK-01 §U](../../evaluations/SK-01-harness-skills.md)で実Product側に引き渡す。合成Mock 6/6をJ1の実Product評価成功とは扱わない。
+
+**状態**：Source差分/公開変更と選択的再資格化の検証計画。外部Harnessからの実Planner Trace・DOM・実Network/OS拒否・現在の業務Authority、SHO実読取、EKI実BodyやOwner受理は**NOT RUN**。
