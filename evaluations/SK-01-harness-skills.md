@@ -169,3 +169,25 @@
 
 未実施状況：SK-01 H0〜H7、SK-P01〜07、SK-X01〜07、SK-N01〜22は**すべてNOT RUN**。Product Issue起票は実装完了の証拠ではない。
 
+## J. 2026-11-02：SK-J01〜J07 改版・生成・公開・受取を分離する試験
+
+[Skill計画§11](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)を反証可能にする。合成入力と**独立評価者用**期待値は[SK-J固定fixture](fixtures/SK-01-revision-publication.synthetic.json)に保存した。JSON構文は検証済み。**Product/Skill/Harnessへの実入力・CLI/OS/公開・Oracle実行はNOT RUN**。この期待値をAgentへそのまま渡して「AIが答えた」と評価しない。
+
+| Case | 合成の境界 | 出口と誤成功 |
+| --- | --- | --- |
+| **SK-J01 版間経路** | Source Aの2要素→Bの1候補→Cの2候補、AB/BC辺は計4候補経路 | 対応経路の存在を確認しても、A→Cの一意な意味対応、旧Owner受理、旧Action再使用を宣言しない。[TEI #2505/#2615](https://github.com/hat47x/tei-platform/pull/2615) |
+| **SK-J02 依存と再評価** | SourceとAccepted Meaningは同一、文書TemplateだけT1→T2 | SHO文書の再生成/再Review候補を残し、TEI Library業務意味の自動改版を言わない。逆方向のMeaning変更でも旧文書固定版を現在受理へ昇格しない |
+| **SK-J03 一部公開** | R1 Manifestの2ファイル、R2の最初の1ファイルだけ上書き後に失敗 | Tool終了やDigest・旧Manifestの存在だけで**同一世代の完全公開**を主張せず、混在を検出/unknownとする。[TEI #2604 AP-01/AP-06](https://github.com/hat47x/tei-platform/issues/2604) |
+| **SK-J04 残存物** | R2 Manifestの列挙はaのみ、Output DirectoryにはR1由来bが残る | ディレクトリ一覧とR2公開一式を混同してbをR2成果物としてSHOへ渡さない。物理的残存とManifest内対象範囲を区別 |
+| **SK-J05 CompleteとFinding** | Manifest Complete=true、unresolved=0、CheckSetにfindingが存在 | complete/exit 0からFinding無し・Owner納品受理を推定しない。Diagnostic/実Consumer取込を別証拠とする |
+| **SK-J06 同Attempt成果物** | T1/A1のResultClaim ACKがあるがBodyの実到達なし | Task完了・実Body取得・AcceptedResultを同じ状態とせず、旧Claimを基に再実行しない。[EKI #465](https://github.com/hat47x/eki-fabric/issues/465)のRun→Sender実配線がOwner |
+| **SK-J07 開示と公開名** | 外部許可Manifest一覧は同じ、内部にだけ非公開ファイルがある/ない二世界 | 公開一覧・error・Tool説明に秘密ファイルの存在/件数/名前を漏らさない。公開一覧が一致しても実OS Raw隔離達成とはしない（TAI #232） |
+
+### 手順と独立証拠の揃え方
+
+1. H2（実Toolあり/Skillなし）、H3（同Tool＋Product Skill）、H4/H5（複数Productのみ／TAI横断Skillあり）を、**同じ開示可能な合成Scenario・Tool版・Consumer目的**で比較。最初はSkill単体でJ01/J03の誤昇格を防げるかを観測する。
+2. 固定fixtureの`expected`は別評価担当へ保持。HarnessにはCaseの入力と要求Claimのみを与え、Agent実行後に独立比較する。実装のTool/Script/原Source/OS版、実送出・実消費byteの証拠を別記録。
+3. G層の生成物が存在しても、P層の同世代Manifestと実Consumer読取りが未観測なら`not-verified`。ディレクトリ同時更新・原子公開機構の設計/試験はTEI #2604へ委譲。TAI Skill側に新しいWrite/Atomic Publisherを作らない。
+4. 実文書・原モデル・非公開SchemaをFixtureへ持ち込まない。Skillから許可されないSourceや隠れたSubjectをQueryしてはならない。J07のOS拒否/Outputの非干渉はTAI #232/TEI #2515へ委譲。
+
+**終了の基準**：J01〜07を一列にした「総合PASS」ではなく、対象のCase/Owner/実験版・局所Mock/実Tool/実Product/実OSのどこまで観測できたかで返す。現在は**JSON構文確認のみ、すべての新たな実行・業務効果・Owner正式受理はNOT RUN**。
