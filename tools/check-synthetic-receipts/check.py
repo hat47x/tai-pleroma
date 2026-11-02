@@ -122,6 +122,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
     "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json",
+    "evaluations/records/SUI-TEI-etag-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json",
@@ -133,6 +134,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-determinism-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
     "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json",
+    "evaluations/records/SUI-TEI-etag-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -233,6 +235,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-sui-etag" in relative:
+            observed = data.get("observed", {})
+            if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
+                errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
         if "tei-multi-doc" in relative:
             observed = data.get("observed", {})
             if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
@@ -286,6 +292,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
+        if "tei-sui-etag" in relative:
+            observed = data.get("observed", {})
+            if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
+                errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
         if "tei-multi-doc" in relative:
             observed = data.get("observed", {})
             if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
