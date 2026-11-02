@@ -389,7 +389,7 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **資格**：Markdownの設計と受入ケースのみ。TEIの実DSL/Operator/Provider、Product間接続、実Clock/Event/Host、Agent Skill load・Owner意味受理・独立OracleはNOT RUN。複数製品の局所Reference PASSを横断E2Eへ昇格させない。
 
-## 19. 2026-11-02：合成評価の拡大と最初の実Product観測を分けて進める
+## 20. 2026-11-02：合成評価の拡大と最初の実Product観測を分けて進める
 
 [最初の実Product Skill資格確認Runbook](first-real-skill-qualification-runbook-2026-11-02.md)を追加した。TEI mainの`docs/getting-started.md`・`cmd/tei/cli_contract.go`を静的に再照合し、**実CLIの存在を文書上で確認できる範囲**と、実環境で実Toolを呼んで観測すべき範囲を分けた。これは今まで増やした公開合成SK-M/TB/F/RQ/C/Jなどを縮小する方針ではない。開発の対象とProduct Skill候補を引き続き並列拡張する一方、**品質・実装の成熟度として主張する証拠**は次の実測に進める。
 
