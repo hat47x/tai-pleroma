@@ -208,3 +208,7 @@ dangling edge: rejected
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。
 - Edgeの関係は、`relation`を`std.code`の文字列として保持する。関係の意味の検証は、この契約では行わない。
+
+## SUI本体との差分
+
+DocumentV1と現在の投影契約の差分は[SUI DocumentV1とTEI投影の差分](../../docs/sui-documentv1-tei-gap.md)に整理しました。名前・関係の一般性・未モデル要素が残っています。
