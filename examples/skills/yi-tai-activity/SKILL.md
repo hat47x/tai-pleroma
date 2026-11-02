@@ -81,3 +81,13 @@ description: >-
 - [MMI既存Skill](https://github.com/hat47x/markdown-matrix-injector/blob/main/skills/mmi/SKILL.md)
 
 本ファイルは`examples/`内のportable Skill例であり、各Harnessへの自動インストール・Plugin配布は行わない。
+
+
+## Semantic Contextと操作候補を組み合わせる場合（評価用追加）
+
+- **目的に合う実在するProduct機能を選ぶ**。外部HarnessでのAction選択は、利用者の目的・Subject/Grain/Role・ContextのSource/epoch・必要Operation・許可Projectionと、実際に提供されているCLI/MCP/Providerを突合する。Table/Form/CUI/GraphのどのUI入口かだけでBusiness Actionの意味を決めない。
+- **Offerと実行を分ける**。意味的に適用できるActionが候補として示されても、その時点の認可・Target revision・実Provider効果は別に照合する。集計行/Join結果/Graph Edgeと業務Entity IDを混同しない。部分集合しか取得していない場合、全件操作・不存在Claimを確定しない。
+- **単独製品を優先できる**。TEIの意味/ActionはTEI製品Skillへ、SEI MethodはSEIへ、SUI意味探索はSUIへ、SHOの執筆・SourceはSHO/MMIへ、EKIの委任はEKIへ委ねる。TAI Skillは一件のTaskが複数製品を必要とする場合にActivityを組み合わせ、実行系を二重実装しない。
+- **UIとHarnessの届く範囲を観測する**。Productが実際に開示したCapability/Toolだけを案内する。ボタン表示・MCP Annotation・HTTP Ackを権限/完了の根拠としない。元Productが現在のTarget/権限/Effectを確認できないなら未確認と記録する。
+
+[設計とSK-M評価](../../../docs/yi-constellation/harness-skill-semantic-action-routing-2026-11-02.md)。新Action API・CLI・Providerを本Skillが実装済みと宣言するものではない。
