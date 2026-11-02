@@ -117,7 +117,8 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | --- | --- | --- |
 | record投影（`kind=record`、`fields`）を参照ローカルで採用する | Card全体を1つの契約で扱え、4ケースで検証できる | TEIの統合モデラーが別の表現を採用したとき |
 | PoC中は生産性を評価しない | 中間評価は人の判断材料にならず、完成後の評価が原則 | 完成後の評価設計を行うとき |
-| `documentv1-projection`はAPIの読み取り専用消費に限定し、フロントエンドconsumerは作らない | 既存UIはepistemic系のみを扱い、DocumentV1表示は再構築の対象 | 再構築で表示・編集が必要になったとき |
+| SUI側に読み取り専用のartifact consumerを置き、型付きrecordへ読む | API・UIへ接続する前に、artifactの検証と参照整合性をSUI側で確認できる | DocumentV1の保存・API接続を行うとき |
+| documentv1-projectionはAPIの読み取り専用消費に限定し、フロントエンドconsumerは作らない | 既存UIはepistemic系のみを扱い、DocumentV1表示は再構築の対象 | 再構築で表示・編集が必要になったとき |
 | 管理経路（/admin/tei-epistemic/artifacts/{kind}）でも同じartifact kindを読む | tenant面と運用者面で同じ成果物を参照でき、検証を共有できる | 管理面のkindを分ける必要が出たとき |
 | Document/Islandの	itleはoptionalとして投影する | SUI側で省略可能な項目を、必須recordで欠落扱いにしない | 必須に戻す仕様変更があったとき |
 | 構造体配列・	ransform・時刻は投影せず、SUI側の元データを正本とする | flatな投影契約で無理に写像せず、読み取り専用artifactの範囲を保つ | 完全なDocumentV1写像が必要になったとき |
