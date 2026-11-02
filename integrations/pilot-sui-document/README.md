@@ -204,6 +204,23 @@ dangling edge: rejected
 
 生成した候補を実際にプロセスとして実行し、その標準出力を入力にしている点が、これまでの選抜との違いです。結合経路全体は[receipt](../../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)に記録しました。
 
+### SUI名への統一（契約v3、2026-11-02）
+
+差分整理で挙げた識別子名とEdgeの端点種別を、契約v3でSUIに寄せました。
+
+```text
+Document: id, title
+Card:     id, text
+Island:   id, title
+Edge:     id, fromId, toId, type, fromKind, toKind
+```
+
+- `sui.edge.from_id` / `to_id` / `from_kind` / `to_kind`を意味モデルへ追加
+- 合成層を`id`と`fromKind`/`toKind`へ追従（`card`/`island`の両端を解決）
+- 単体テスト6件と結合経路17ケースを再実行
+
+結合経路は`cases=17/17`、`composed=2 cards, 1 island, 1 edge`、未知端点のEdgeは拒否です（[receipt](../../evaluations/records/SUI-TEI-alignment-2026-11-02.json)）。
+
 ### 暫定意思決定（AI）
 
 - Document全体は、flatなrecordを要素ごとに投影し、アプリケーション側で合成する。入れ子のDocument契約は、TEIの投影契約が複合構造を扱えるようになるまで作らない。

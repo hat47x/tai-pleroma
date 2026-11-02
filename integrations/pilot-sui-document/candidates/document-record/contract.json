@@ -1,21 +1,19 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.document.record",
-  "version": "1",
+  "version": "3",
   "status": "reference-local",
-  "note": "SUIのDocumentを、documentId・title・digestからなるrecordとして投影する参照用の契約。Card/Island/Edgeは別recordとして合成する。",
+  "note": "SUI DocumentV1のDocument部分を、idとtitleからなるrecordとして投影する参照用の契約。座標・時刻・変換は対象外。",
   "inputs": [
     {"attribute": "sui.document.document_id", "primitive": "std.identifier"},
-    {"attribute": "sui.document.title", "primitive": "std.text"},
-    {"attribute": "sui.document.digest", "primitive": "std.text"}
+    {"attribute": "sui.document.title", "primitive": "std.text"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
     "kind": "record",
     "fields": [
-      {"name": "documentId", "input": "documentId", "attribute": "sui.document.document_id", "primitive": "std.identifier"},
-      {"name": "title", "input": "title", "attribute": "sui.document.title", "primitive": "std.text"},
-      {"name": "digest", "input": "digest", "attribute": "sui.document.digest", "primitive": "std.text"}
+      {"name": "id", "input": "id", "attribute": "sui.document.document_id", "primitive": "std.identifier"},
+      {"name": "title", "input": "title", "attribute": "sui.document.title", "primitive": "std.text"}
     ]
   }
 }

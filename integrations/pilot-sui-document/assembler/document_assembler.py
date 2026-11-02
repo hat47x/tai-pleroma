@@ -1,57 +1,47 @@
 """Compose a SUI DocumentV1 from flat TEI projection records.
 
 The TEI projection contracts are flat. This module is the application-side
-composition step: it checks that cards, islands and edges belong to the same
-document and that edges point at existing cards.
+composition step: it checks identifier uniqueness and resolves edge endpoints
+against cards or islands according to fromKind/toKind.
 """
+
+KINDS = ("card", "island")
 
 
 class AssemblyError(ValueError):
     """Raised when flat records cannot be composed into one document."""
 
 
+def _unique(records, label):
+    ids = set()
+    for record in records:
+        identifier = record.get("id")
+        if not identifier:
+            raise AssemblyError(f"{label}.id is required")
+        if identifier in ids:
+            raise AssemblyError(f"{label} {identifier} is duplicated")
+        ids.add(identifier)
+    return ids
+
+
 def assemble(document, cards, islands, edges):
-    document_id = document.get("documentId")
-    if not document_id:
-        raise AssemblyError("document.documentId is required")
+    if not document.get("id"):
+        raise AssemblyError("document.id is required")
 
-    card_ids = set()
-    for card in cards:
-        if card.get("documentId") != document_id:
-            raise AssemblyError(
-                f"card {card.get('cardId')} belongs to {card.get('documentId')}, not {document_id}"
-            )
-        card_id = card.get("cardId")
-        if not card_id:
-            raise AssemblyError("card.cardId is required")
-        if card_id in card_ids:
-            raise AssemblyError(f"card {card_id} is duplicated")
-        card_ids.add(card_id)
+    card_ids = _unique(cards, "card")
+    island_ids = _unique(islands, "island")
+    _unique(edges, "edge")
 
-    island_ids = set()
-    for island in islands:
-        if island.get("documentId") != document_id:
-            raise AssemblyError(
-                f"island {island.get('islandId')} belongs to {island.get('documentId')}, not {document_id}"
-            )
-        island_id = island.get("islandId")
-        if not island_id:
-            raise AssemblyError("island.islandId is required")
-        if island_id in island_ids:
-            raise AssemblyError(f"island {island_id} is duplicated")
-        island_ids.add(island_id)
-
-    edge_ids = set()
+    known = {"card": card_ids, "island": island_ids}
     for edge in edges:
-        edge_id = edge.get("edgeId")
-        if not edge_id:
-            raise AssemblyError("edge.edgeId is required")
-        if edge_id in edge_ids:
-            raise AssemblyError(f"edge {edge_id} is duplicated")
-        edge_ids.add(edge_id)
-        for side in ("fromCard", "toCard"):
-            if edge.get(side) not in card_ids:
-                raise AssemblyError(f"edge {edge_id} references unknown card {edge.get(side)}")
+        edge_id = edge["id"]
+        for side in ("from", "to"):
+            kind = edge.get(f"{side}Kind") or "card"
+            if kind not in KINDS:
+                raise AssemblyError(f"edge {edge_id} has unknown {side}Kind {kind}")
+            endpoint = edge.get(f"{side}Id")
+            if endpoint not in known[kind]:
+                raise AssemblyError(f"edge {edge_id} references unknown {kind} {endpoint}")
 
     return {
         "document": dict(document),

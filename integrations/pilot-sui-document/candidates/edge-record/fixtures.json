@@ -1,26 +1,26 @@
 {
   "schema": "tei.reference.generator-fixture/v0",
   "contractId": "sui.edge.record",
-  "contractVersion": "1",
+  "contractVersion": "3",
   "cases": [
     {
       "id": "present",
-      "input": {"edgeId": "edge-1", "fromCard": "card-1", "toCard": "card-2", "relation": "supports"},
-      "want": {"state": "present", "text": "{\"edgeId\":\"edge-1\",\"fromCard\":\"card-1\",\"relation\":\"supports\",\"toCard\":\"card-2\"}"}
+      "input": {"id": "edge-1", "fromId": "card-1", "toId": "card-2", "type": "supports", "fromKind": "card", "toKind": "card"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"fromKind\":\"card\",\"id\":\"edge-1\",\"toId\":\"card-2\",\"toKind\":\"card\",\"type\":\"supports\"}"}
     },
     {
-      "id": "empty-relation",
-      "input": {"edgeId": "edge-1", "fromCard": "card-1", "toCard": "card-2", "relation": ""},
-      "want": {"state": "present", "text": "{\"edgeId\":\"edge-1\",\"fromCard\":\"card-1\",\"relation\":\"\",\"toCard\":\"card-2\"}"}
+      "id": "card-to-island",
+      "input": {"id": "edge-2", "fromId": "card-1", "toId": "island-1", "type": "contains", "fromKind": "card", "toKind": "island"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"fromKind\":\"card\",\"id\":\"edge-2\",\"toId\":\"island-1\",\"toKind\":\"island\",\"type\":\"contains\"}"}
     },
     {
       "id": "missing-to",
-      "input": {"edgeId": "edge-1", "fromCard": "card-1", "relation": "supports"},
-      "want": {"state": "missing", "text": "[\"toCard\"]"}
+      "input": {"id": "edge-1", "fromId": "card-1", "type": "supports", "fromKind": "card", "toKind": "card"},
+      "want": {"state": "missing", "text": "[\"toId\"]"}
     },
     {
       "id": "unresolved-from",
-      "input": {"edgeId": "edge-1", "fromCard": null, "toCard": "card-2", "relation": "supports"},
+      "input": {"id": "edge-1", "fromId": null, "toId": "card-2", "type": "supports", "fromKind": "card", "toKind": "card"},
       "want": {"state": "unresolved"}
     }
   ]

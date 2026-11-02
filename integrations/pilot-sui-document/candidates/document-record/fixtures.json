@@ -1,26 +1,26 @@
 {
   "schema": "tei.reference.generator-fixture/v0",
   "contractId": "sui.document.record",
-  "contractVersion": "1",
+  "contractVersion": "3",
   "cases": [
     {
       "id": "present",
-      "input": {"documentId": "doc-1", "title": "Notes", "digest": "sha256:abc"},
-      "want": {"state": "present", "text": "{\"digest\":\"sha256:abc\",\"documentId\":\"doc-1\",\"title\":\"Notes\"}"}
+      "input": {"id": "doc-1", "title": "Notes"},
+      "want": {"state": "present", "text": "{\"id\":\"doc-1\",\"title\":\"Notes\"}"}
     },
     {
       "id": "empty-title",
-      "input": {"documentId": "doc-1", "title": "", "digest": "sha256:abc"},
-      "want": {"state": "present", "text": "{\"digest\":\"sha256:abc\",\"documentId\":\"doc-1\",\"title\":\"\"}"}
+      "input": {"id": "doc-1", "title": ""},
+      "want": {"state": "present", "text": "{\"id\":\"doc-1\",\"title\":\"\"}"}
     },
     {
-      "id": "missing-digest",
-      "input": {"documentId": "doc-1", "title": "Notes"},
-      "want": {"state": "missing", "text": "[\"digest\"]"}
+      "id": "missing-title",
+      "input": {"id": "doc-1"},
+      "want": {"state": "missing", "text": "[\"title\"]"}
     },
     {
       "id": "unresolved-title",
-      "input": {"documentId": "doc-1", "title": null, "digest": "sha256:abc"},
+      "input": {"id": "doc-1", "title": null},
       "want": {"state": "unresolved"}
     }
   ]
