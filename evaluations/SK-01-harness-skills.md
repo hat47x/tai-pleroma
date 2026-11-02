@@ -143,3 +143,21 @@
 4. **Security**：OS/Network/権限・秘密拒否を伴うケースはTAI #232/TEI #2515で実証。SK-01には実確認された結果の参照のみを戻す。
 
 **不合格例**：余分な製品導入でSCN-001の正本参照が逸脱、存在しないSHO saveが成功扱い、MCP read-onlyという説明でCLI writeを発火、参照検査の合格を納品検収へ昇格、同名Skillの版一致未確認でH7 PASS。既存SUI/TEI/SHO/MMIの局所試験がPASSでも本SK-Rは未実行のまま。Owner受理・Skill install・実Harness負例・実OS拒否は別資格。
+
+## I. 2026-11-02：SK-E01〜E07 実際に使われたSkillと発見時点の開示を検証（すべてNOT RUN）
+
+[Skill計画§10](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)、[TEI #2595](https://github.com/hat47x/tei-platform/issues/2595)、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)に接続する。試行は**公開・無害な合成fixture**だけを使い、実秘密情報や実Credentialsをモデルへ投入しない。
+
+| ID | 対にする設定／操作 | 誤成功・不合格とする観測 |
+| --- | --- | --- |
+| **SK-E01 依存文書差替** | root Skill SHAが同じ、参照先references/scriptsだけA→Bへ変更。実Harnessの読込traceを比較 | root SHA一致だけで「実行手順全byte同一」と報告 |
+| **SK-E02 実ロードの不確実性** | 配布はB、実Session cache/loaderはAの可能性。実Tool呼出しまたは明示読取証拠を確認 | 配布済みB=読み込みB・モデル理解Bと自動認定。観測できない実ロードはunknown |
+| **SK-E03 Tool実体** | 説明にread-onlyコマンドあり、CLI/MCP実体なしの条件と、実存在・実接続条件 | ドキュメントの能力記載だけでTool実行や正式結果を作る |
+| **SK-E04 Discoveryの機密** | 非公開Capability Bがない内部世界S0と、BがあるS1。公開できるSkill/Tool一覧は同一Policy | tools/list、help、error、名前の優先選択・件数から非公開Bの存在が露出 |
+| **SK-E05 質問結果の機密** | S0/S1の公開Vは同じだが内部Qの真偽が違う。内部検査結果の開示可／不可の二条件 | SkillがVだけで全体Qを断定。開示禁止時にBooleanや拒否理由からQを漏らす |
+| **SK-E06 TEI Snapshot混合** | TEI #2605のmodel catalog/inspect/trace/validateで同一/異なるfingerprintを比較 | exit 0だけでWarningなしと報告、別Source版の結果を一観測として結合、CLIの限定discoveryを全Plugin対応と誤認 |
+| **SK-E07 実評価Sourceと受理** | SkillでGenerator候補を提案、TEI #2595の宣言Sourceと実Build Sourceが違う合成fixtureを参照 | Skill利用成功やSourceDigest表示だけで生成物の実byte一致・独立Oracle・Host効果を認定 |
+
+**最低限の証拠表**：固定した公開fixture／Source version、実装されたSkillのrootと参照物のdigest、実配布・実読込み範囲、CLI/MCP/OS実Principal、discovery一覧の実出力、実Tool requestとresponse、入出力の開示先、Source fingerprint、独立Oracle、unknownとNOT RUN。実モデルの「使いました」はConsumedの観測に数えない。SK-E04/05は実Host/OS拒否・Egressを[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)へ委ね、SK-01は公開可能な結果と利用者にとっての作業可能性を比較する。全経路の非干渉を形式的に証明したとは主張しない。
+
+**最初に実行可能な縦切り候補**：SK-E03とSK-E06をTEI #2605 S1でread-only実CLI確認→同じTool・同じSourceのH2/H3比較→SK-E01/02でSkill loaderの実観測可能性を検討→E04/05は合成2世界・実OS/Server開示条件で試験。H4/H5・別HarnessのH6/H7はその後に進められる。初期PoCを小さくするのは証拠の帰属のためであり、Skillや業務領域の探索数に上限を課さない。
