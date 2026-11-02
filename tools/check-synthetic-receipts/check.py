@@ -156,6 +156,7 @@ REAL_RECORDS = (
     "evaluations/records/SEI-TEI-real-artifact-2026-11-03.json",
     "evaluations/records/MMI-TEI-consumer-2026-11-03.json",
     "evaluations/records/MMI-TEI-real-artifact-2026-11-03.json",
+    "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -276,6 +277,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "EKI-TEI-consumer" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 4 or observed.get("callsControl") is not False:
+                errors.append(f"EKI consumer receipt did not record four non-calling tests: {relative}")
         if "MMI-TEI-real-artifact" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("profileId") != "profile-a":
