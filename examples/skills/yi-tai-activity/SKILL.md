@@ -111,3 +111,15 @@ description: >-
 - 他Harnessへ再開する際は、旧Skillの内容一致やTask受付履歴を現在の機密Source開示資格・実行Grantへ昇格させない。権限確認が不足する作用は保留し、実権限のある非機密の調査や文書下書きを継続可能とする。
 
 本節は[SK-01 SK-TB01〜09](../../../evaluations/SK-01-harness-skills.md)の合成比較計画であり、EKI #433/#466/#467の製品修正・実mTLS合格や現在の外部ハーネス接続を保証しない。
+
+## Data取得・Rule依存・Planner開示の手順案
+
+ProductにData/Rule/ProviderのEvidenceがある場合は、**何を要求したか**（Function Data ContextとRule Dependency）、**実Requestが何を要求したか**、**どの範囲を実際に読んだと観測できたか**、**目的Claimを評価できるか**、**どこへ開示できるか**を別々に確認する。実ProductにTraceがなければ取得量を推測で断定しない。
+
+- Display Mapping外のDataをRuleが必要とする場合、受理済みRule DependencyをProduct側で調べる。Ruleを評価するために秘密入力が必要でも、外部Harnessが無断でその原値や判定Booleanを要求・取得しない。Product内で評価でき、かつ結果公開が許される範囲を利用する。
+- `all`という取得宣言は、実観測したResultの完全性とは異なる。別Source/時点/epochのReadを統合する場合は、Product側の同一Snapshot根拠がなければ結合Claimを未確定として保持する。
+- Tool/Skillの存在・候補・非公開Field名・拒否理由自体が開示対象になり得る。外部Plannerに非公開のProvider/Actionの有無を直接使わせず、許可済みの公開Capability/Toolから作業を構成する。
+- Toolがread-onlyでも、LLM/APIへの外部送出許可は別。実Host/NetworkとConsumer Policyによる送出証拠を参照する。Rule Preview/Method提案/Claim ACKと外部Action完了も区別する。
+
+これは[SK-01 SK-F](../../../evaluations/SK-01-harness-skills.md)の反例用の作業指針。TAI SkillがTEI Rule Engine、SEI Inquiry、OS非干渉監査や新Capabilityを実装した事実ではない。
+
