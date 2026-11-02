@@ -70,3 +70,14 @@ H4＝必要なProduct Tools＋Product Skills、H5＝H4＋TAI横断Skill。実Too
 | 作業が利用者の価値へ届いた | 本人の目的・結果・負担についての独立評価 | TAI #165/#167、YI価値研究 |
 
 **進行管理**：上のS1/S2を一つの実測ルートとして優先しつつ、TEI数学/SQL/DSL/多Target、SEI Method、SUI、SHO Research Index、EKIの専門Product SkillやIssueは並行して拡大できる。トークン消費数・新規PR数を直接の成功指標とせず、**実際に確認できたClaimがどのOwnerからどのConsumerへ届いたか**と、そのための費用・誤断定・確認負荷を測る。現状はPlan-only、実行資格を得たとみなさない。
+
+## 6. 大規模Draftをレビュー可能な差分へ整理する条件
+
+2026-11-02の照合ではTAI Draft #270は**mainに93コミット先行・後行0、32ファイル差分、未Merge**。多くの合成評価と設計文書の蓄積は研究成果である一方、**93コミットあることを92個の独立実証より成熟している証拠とは扱わない**。実行可能な改善と仕様候補を段階的に審査できるよう、既存Draftを将来次の**責務別差分**へ整理する方針を提案する（今回は新PR・rebase・mergeを実行しない）。
+
+- **A 最初の実動作**：TEI Product Skillのread-only CLI現物とH2/H3。最初の正負結果が生じて初めて実効Skill評価とする。
+- **B 役割と境界**：TAI横断/各ProductのSkill Owner、声明／利用／Current Grant／Product開示。既存TAI #168/#232/#271を参照し、重複する設計を削減して小差分にする。
+- **C 合成Reference**：SK-01各Corpus、独立の公開fixture checker、実行記録と未実行資格。どの成果が公開Expectedに依存するセルフチェックかを明記する。
+- **D 配布・再開**：TAI #74のProduct ReleaseとSkill依存閉包、各Harness Adapter、現在Trust/Disclosureの差分確認。Owner採否・実配布を別Gateとする。
+
+**統合前に照合すること**：mainの現行変更、同一Issue内の重複案・見出し/相対リンク、Productの正式採用範囲、機密データの公開権限、脚注・合成fixtureの独立性、現在の実Product可用性。実行証拠が不足する項目はDraftとして維持でき、他の独立PoCを止める理由にはしない。
