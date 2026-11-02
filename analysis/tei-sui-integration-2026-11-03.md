@@ -125,3 +125,13 @@ receiptは`evaluations/records/`にあり、合成61件・実実行85件がcheck
 
 - SUIが投影だけからこれらの要素を復元する必要が出たとき
 - 要素の契約（必須項目・参照関係）が確定したとき
+## Postgresでの保存試行（2026-11-03）
+
+埋め込みPostgreSQL 16.2（`pgserver`）を起動し、SUIを`local-dev`で接続するところまでは到達した。テーブルは`Base.metadata.create_all`で作成した。
+
+- 結果: `PUT /docs/doc-1`が**409 "Document changed concurrently"**
+- 読み戻しは404、`documents`と`canvas_revisions`は0行
+- 例外はルート側で409へ変換されるため、DB側の原因は未特定
+- 仮説: Alembicのmigrationで作られる制約・トリガーが不足している
+
+SQLiteの一時DBでは同じ手順が200で通る。Postgres経路は未検証のまま。[attempt](../evaluations/postgres-attempt-2026-11-03.json)
