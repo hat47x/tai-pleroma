@@ -138,7 +138,7 @@
       "attempt_id": "A1",
       "result_claim": {
         "ack": true,
-        "output_digest_declared": "sha256-of-abc-synthetic"
+        "output_digest_declared": "opaque-digest-claim-only-unverified"
       },
       "body_delivery": {
         "observed": false,
@@ -180,9 +180,10 @@
     }
   ],
   "evaluation_notes": [
-    "Expected answers are for an independent evaluator. Do not copy them into a tested agent's context when measuring independent competence.",
-    "Cases contain no real/private Source, secrets, credentials or external URLs.",
+    "This public fixture deliberately includes expected outcomes for a transparent deterministic SELF-CHECK, not a sealed holdout.",
+    "For blinded Harness/Skill A/B evaluation, prepare unreleased variants and expected results in a separately permissioned evaluator; never supply expected outcomes to the tested agent.",
+    "Cases contain no real/private Source, secrets, credentials or privileged paths.",
     "No runtime skill loading, TEI/SHO/EKI product E2E, filesystem fault injection, OS isolation or user acceptance has been executed.",
-    "Do not treat JSON as a required cross-product schema or adopted Oracle."
+    "Do not treat JSON as a required cross-product schema or adopted Product Oracle."
   ]
 }
