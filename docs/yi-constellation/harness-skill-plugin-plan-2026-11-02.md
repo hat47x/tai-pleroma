@@ -297,3 +297,15 @@ TAIの責務は利用者の目的・対象・時点から**実在する製品と
 
 [SK-01 §M](../../evaluations/SK-01-harness-skills.md)では、L1を異なるUI/CUIから参照する同一性、Chart aggregate更新の逆写像不能、D2の部分取得での全件操作、Graph edgeとEntityの差、JOIN行とEntity数、stale epoch、secret CapabilityのDiscovery、Provider ACKの未完了、Event等の専門Operationを10件の合成反例として追加する。公開[fixture](../../evaluations/fixtures/SK-M-semantic-action.synthetic.json)と[Node selfcheck source](../../evaluations/tools/check-sk-m-fixture.cjs)を付けた。V8で**公開fixture内の宣言と分類の限定整合10/10を確認**した[記録](../../evaluations/records/SK-M-public-fixture-selfcheck-2026-11-02.json)があるが、**Node runner自体・TEI実CLI/Pattern・実Harness/OS/権限/Effect・独立sealed OracleはNOT RUN**。Product側実装・意味/権限の受理は従来Ownerへ委譲し、TAIはH2/H3/H4/H5でSkillを追加する価値だけを評価する。
 
+
+
+## 14. 2026-11-02：Capabilityから製品Skillへ派生する参照とドリフト検証
+
+[設計・評価計画](capability-derived-skill-projections-2026-11-02.md)に、TEI [#2620](https://github.com/hat47x/tei-platform/issues/2620)の「Plugin schemaからのSkill生成・版固定」構想をYI全体の**責務境界**として接続した。
+
+製品自身の意味Role/Operator・実CLI/API/MCP契約から**技術的に照合できる説明をProduct Skillへ参照・投影**し、課題別の使い方や専門MethodのRecipeは各Productが独立に編集する。TAIの活動SkillはProductの意味/ツール契約を複製せず、必要なProductとSkillの選択・引継ぎを行う。DSL表層（Markdown表・式・Graphviz・チェーン）と正規化された意味が一致する場合、表層ごとに別の実行能力を宣言する必要はない。未確定Role、引用中の例、Source構文の類似から受理や実行許可を推定しない。
+
+同じ意味Roleでも、Provider/Target/Scope、実CLI/Tool版、Agentへの公開範囲、SkillのReferences/Scriptsと実ロード、現在の権限/Effectは別の観測対象。[SK-01 §N](../../evaluations/SK-01-harness-skills.md)にSK-D01〜D10を追加して、Source/Meaning/Capability/Skill/Adapterの版間ドリフトとDisclosureを評価する。**初回P0はTEI #2605とDraft #2607のread-only Skillと実CLI H2/H3の比較を維持**する。全製品用の新共通Skill Compilerや共有Registryを先に確定せず、実際に重複と誤案内が減るかから判断する。
+
+**状態**：構成・評価計画のみ。自動投影の実装、実Skill/CLIロード、複数Harnessでの実証、Product意味/OS認可/外部Effect/Owner受理はNOT RUN。
+
