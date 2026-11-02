@@ -141,3 +141,13 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-2026-11-03.j
 - unittest 5件がPASS
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-merge-2026-11-03.json)
+### 保存計画への非破壊マージ統合（2026-11-03）
+
+`plan_save`へ`preserve_existing`を追加しました（[sui-sensemaking #3378](https://github.com/hat47x/sui-sensemaking/pull/3378)、`56133c7`）。
+
+- 既存Card/Islandと投影外フィールドを保持した計画を作る
+- 保持時は削除警告を出さず、`preserved_cards`/`preserved_islands`で示す
+- 書き込みは行わない
+- unittest 6件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json)
