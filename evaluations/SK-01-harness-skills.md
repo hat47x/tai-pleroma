@@ -237,3 +237,24 @@
 
 **新実証：全件NOT RUN。** 提供した[公開合成fixture](fixtures/SK-M-semantic-action.synthetic.json)の`expected`はAgentによる独立評価の投入物に含めない。公開[Node selfcheck](tools/check-sk-m-fixture.cjs)は決定的な入力分類を再計算するだけで、実TEIのPredicate/ActionやOS権限を証明しない。2026-11-02にTool内V8による公開fixture限定の[整合確認10/10](records/SK-M-public-fixture-selfcheck-2026-11-02.json)を記録した。**Node.js環境でのScript実行・外部Tool起動・Model利用・実Product E2Eは未実施**。テスト時は同じSource/Context/開示資格のH2→H3、H4→H5を比較し、Product別のOracleと権限検査の結果を別に引用する。期待値の公開自己整合PASSを盲検評価PASSへ昇格しない。
 
+
+
+## N. Product Capability由来のSkill Projectionとドリフト（SK-D01〜D10）
+
+[設計・受入方針](../docs/yi-constellation/capability-derived-skill-projections-2026-11-02.md)。TEI [#2620](https://github.com/hat47x/tei-platform/issues/2620)のEverything is Data／Plugin契約とSkill生成の構想を、TAI Skill/Tool/各ProductのSource同一性の**比較軸**として追加する。Product固有のRole/Operator/Target/Meaning OracleはTEI等の既存Ownerに残す。
+
+| ID | 合成/実Tool比較の正負対 | Owner |
+| --- | --- | --- |
+| SK-D01 | 現行read-only CLIの入力・出力・失敗・実versionとProduct Skill説明を比較。架空コマンドを誤って案内しない | TEI #2605、TAI H2/H3 |
+| SK-D02 | 同じ型付きRole/Operatorに正規化する複数構文のSkill選択。Source/Occurrenceは別、実意味は一つになり得る | TEI #2625/#988 |
+| SK-D03 | 未解決Role・説明用Markdown表・引用中の構造表現を、実Function/Call権限へ誤昇格させない | TEI #2620/#2621 |
+| SK-D04 | Root SKILL.mdは不変で実CLI署名のみ新版。古い呼出し方を有効な現Toolと誤認しない | TEI #2605、TAI SK-E |
+| SK-D05 | Root Skillは同一だがReference/Script/Harness adapterが改版。配布資産の依存閉包を検査する | TAI SK-E、各Product |
+| SK-D06 | 公開可能データは同一で非公開Capabilityのみ異なる二環境。公開Skill一覧・件数・エラーに差がないか | TAI #232、Productの開示Owner |
+| SK-D07 | 同じSemantic Subjectに複数Provider・Alias・Mapping/版があり、単一Skill候補から同一実Providerを断定しない | TEI #2622／Draft #2627 |
+| SK-D08 | Tool hintはread-onlyでもOS/Host/外部LLM送出資格が不足する環境。実権限・送信先で拒否を確かめる | TAI #232、TEI #2515 |
+| SK-D09 | TEI単独（Product Skill）とTAI経由（横断Skill）の同一Task。Tool/Context/公開情報を揃えて追加価値とコストを測る | TAI H2/H3/H4/H5 |
+| SK-D10 | Capability版変更に伴いSHO説明・TAI Activity・別Harnessの配布を更新。旧受理/旧説明を自動復活させない | 各Product、SHO、TAI #74 |
+
+**評価資格**：SK-D全件**NOT RUN**。公開Issueの設計・TEI別Draftの局所合成PASSはSK-Dの実Harness/Tool互換資格ではない。初期はread-only実ToolでH2/H3を実行し、操作説明とSource/Tool版を対応づける。その後、必要時に生Data露出/依存Script/Provider/複数Harnessの負例を追加する。Capabilityから自動でSkillを生成する方式が採用されるまでは、**人手で版固定したProduct Skillの照合**も適切な受入対象とする。期待値と生成Agentの入力は分離する。
+
