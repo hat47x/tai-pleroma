@@ -1,7 +1,7 @@
 {
   "schema": "tai.reference.tei-sui-large-doc/v0",
   "synthetic": true,
-  "evidenceKind": "synthetic-test",
+  "evidenceKind": "synthetic",
   "publicationAllowed": false,
   "date": "2026-11-03",
   "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
