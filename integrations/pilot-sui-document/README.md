@@ -255,3 +255,7 @@ sui.island.record: id, title, cardIds[]
 ## SUI本体との差分
 
 DocumentV1と現在の投影契約の差分は[SUI DocumentV1とTEI投影の差分](../../docs/sui-documentv1-tei-gap.md)に整理しました。名前・関係の一般性・未モデル要素が残っています。
+
+## SUI API境界への接続案
+
+`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とする案を[SUI API境界とTEI投影の接続案](../../docs/sui-api-boundary-tei-mapping.md)に整理しました。読み取り専用のartifact kind追加を先に行い、DocumentV1の書き込みは後回しにします。
