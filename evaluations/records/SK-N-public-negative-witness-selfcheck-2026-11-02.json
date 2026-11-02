@@ -6,7 +6,7 @@
     "repo": "hat47x/tai-pleroma",
     "branch": "docs/yi-harness-skills-20261102",
     "path": "evaluations/tools/check-sk-n-negative-witness.cjs",
-    "github_blob_sha": "92eed571d4e04f568eefce96b725a56994eb6eb0",
+    "github_blob_sha": "beeaf0d0b48ba75564f74668c3276e0360dd5776",
     "executed_source": "Exact UTF-8 GitHub fetch_file content"
   },
   "cases": [
@@ -23,9 +23,12 @@
     "NX-11-transitive-implementation-pin",
     "NX-12-discovery-not-complete",
     "NX-13-policy-only-change",
-    "NX-14-output-unchanged-rule-change"
+    "NX-14-output-unchanged-rule-change",
+    "NX-15-unqualified-scope-witness",
+    "NX-16-stale-witness",
+    "NX-17-no-notification-is-not-no-change"
   ],
-  "checks_passed": 14,
+  "checks_passed": 17,
   "checks_failed": 0,
   "assertion_type": "Authored public reference predicates against authored public synthetic values; not an independent sealed Oracle",
   "includes": [
@@ -41,7 +44,9 @@
     "eager dependency implementation pin",
     "incomplete discovery catalog",
     "disclosure-only change",
-    "output unchanged but rule changed"
+    "output unchanged but rule changed",
+    "current scoped predicate witness is required even to refute nonexistence",
+    "missing notifications without a complete change coverage witness do not establish continuity"
   ],
   "excluded": [
     "Node.js CLI execution",
@@ -55,5 +60,5 @@
     "independent holdout",
     "Owner meaning acceptance"
   ],
-  "notes": "Current reuse classifications are exploratory; the script does not decide actual product authority. Positive synthetic outcomes are not real no-change proofs. Product-level guarantees remain NOT RUN."
+  "notes": "Updated to 17/17 after strengthening current scoped witness and no-notification conditions. Same public synthetic authored predicates; independent Product Oracle and real read-set/change coverage remain NOT RUN."
 }
