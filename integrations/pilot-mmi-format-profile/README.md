@@ -31,3 +31,16 @@ passed: true
 ## 注意
 
 MMIの文書に出てくる「TEI」はText Encoding Initiativeを指す場合が多く、製品群のTEI（`tei-platform`）とは別です。このパイロットは`tei-platform`側の投影であり、TEI XMLの実装ではない。
+
+## artifact（2026-11-03）
+
+`build_artifact.py`で、fixtureの`present`からFormat Profileの投影artifactを作ります。
+
+```text
+schema: tai.reference.tei-mmi-format-profile-projection/v0
+profileValid: true
+cases: 3
+```
+
+- [artifact](../../evaluations/artifacts/mmi-format-profile-projection.json)
+- [receipt](../../evaluations/records/MMI-TEI-artifact-2026-11-03.json)
