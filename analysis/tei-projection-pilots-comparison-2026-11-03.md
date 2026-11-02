@@ -31,7 +31,7 @@ source     {teiCommit, contract{contractId, contractVersion, contractDigest, sou
 | 製品 | 選抜 | artifact | スキーマ検証 | 製品側consumer | 保存 |
 | --- | --- | --- | --- | --- | --- |
 | SUI | 21ケース | あり | あり | あり（Python） | あり（HTTP・一時SQLite） |
-| SEI | 4ケース | あり | あり | なし | なし |
+| SEI | 4ケース | あり | あり | あり（Go） | なし |
 | MMI | 3ケース | あり | あり | なし | なし |
 | EKI | 4ケース | あり | あり | なし | なし |
 
@@ -51,7 +51,7 @@ source     {teiCommit, contract{contractId, contractVersion, contractDigest, sou
 - 封筒を共通にすると、製品ごとの違いをpayloadへ閉じ込められる
 - 単一recordの製品は、選抜からartifactまでが短く、同じ手順で4製品に広げられた
 - 参照整合性が必要なのはSUIだけで、合成層に検査を置く形が合う
-- 製品側consumerと保存まで進んだのはSUIだけ。他はartifactで止まっている
+- 製品側consumerはSUI（Python）とSEI（Go）にある。保存まで進んだのはSUIだけ
 
 ## つまずきの共有
 
