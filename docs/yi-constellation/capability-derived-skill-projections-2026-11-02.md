@@ -73,3 +73,15 @@ TEI main `9c9ef4d160640908e06ad13afb6c2b45c664c748` の [`cmd/tei/cli_contract.g
 
 これが確認するのは、**read-only Tool名とSkill文章の対応候補**である。現行環境でそのToolが実行できること、CLIの全Plugin能力、Source/Modelの同一Snapshot、非公開データの送出資格、意味受理、外部Host作用の保証にはならない。ここを最初のH2/H3の実験基準点とし、機械由来説明の自動生成は**追加価値が確認された後の比較候補**に置く。
 
+
+
+## 2026-11-02 証拠の更新：CLI実行とSkill利用を分けて扱う
+
+初版の「実CLI NOT RUN」は、**TAIが直接実行した試験およびSkill利用に関する旧記述**である。TEI [Draft #2626](https://github.com/hat47x/tei-platform/pull/2626)では、[Focused CI #41456256348](https://github.com/hat47x/tei-platform/actions/runs/41456256348)の**2 Job success**を確認しており、HEAD `31c62e8bb44c1c5c59933a46924aa4c338637085`の実Go read-only CLIが9プロセスで限定Readを行い、同じRead witnessから人間MarkdownとAI JSONを作り**当該Job内で再読取した**。この実Product観測はCapability-derived Referenceの必要な基礎証拠となる。ただし**TEI Product Skillの実インストール・実ロード／H2-H3差／独立SHO Writer-Reader／外部Harness/OS公開資格は未確認**である。
+
+新しい[Role Bootstrap合成Draft #2638](https://github.com/hat47x/tei-platform/pull/2638)では、Role/Interpreterの**Eager依存の版・実装内容の推移閉包**が未Pinなら、Root Role名/Version一致だけで解釈資格を導けない。逆にデータ構造の通常の遅延再帰Refは必ずしも不正なInterpreter起動循環ではない。Skill投影では、`Capability ID + declared version`だけでなく、Product Ownerが提供可能な範囲の**選択済み実装と必要依存・Source/Operator**を参照し、Lockの実閉包が不明な場合は「説明済み候補」「現在実行可能」を区別する。非公開依存名を外部のCatalogやErrorに漏らす必要はない。
+
+[既存Go Language Pluginへの試験Draft #2639](https://github.com/hat47x/tei-platform/pull/2639)の二表層→Plain Data候補は、同じ形式の候補であっても受理済みMeaningやSource occurrenceの一致を主張しない。Script/Roleの能力を説明するSkillは、同じ表層の例示文を**真の受理済み操作の列挙**と扱わない。正式TEI DSL/Pluginの採用やAIによる構文理解成功も、別に測る。
+
+Test-as-DataはTEI [#2621](https://github.com/hat47x/tei-platform/issues/2621#issuecomment-6578796587)と[#2514](https://github.com/hat47x/tei-platform/issues/2514)が独立Expected・Mutation・Source/改版を受け持つ。Skillに含まれるHow-toや公開Fixtureが利用者へ期待答を提示しても、Agentに同じExpectedを与えた結果を**独立・盲検のProduct正答率**として計測しない。[TAI SK-01 §V](../../evaluations/SK-01-harness-skills.md)のSK-IQ01〜12に引き渡す。
+
