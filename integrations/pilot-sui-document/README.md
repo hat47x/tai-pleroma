@@ -606,3 +606,14 @@ sui.document.record v5: id, title?, readingOrder[]?
 
 - [receipt](../../evaluations/records/SUI-TEI-reading-order-2026-11-03.json)
 - [validation](../../evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json)
+## 追加フィールドの往復（2026-11-03）
+
+`sources`と`readingOrder`を含むartifactで保存し、読み戻しを比較しました。
+
+```text
+cardSources: true / readingOrder: true
+roundTrip: true（8項目すべて一致）
+planAction: update / 差分なし
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json)

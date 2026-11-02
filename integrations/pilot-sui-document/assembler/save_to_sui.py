@@ -98,6 +98,12 @@ def main():
             if cid in saved_cards
         ),
         "islandIds": set(projected_islands) == set(saved_islands),
+        "cardSources": all(
+            saved_cards[cid].get("sources", []) == card.get("sources", [])
+            for cid, card in projected_cards.items()
+            if cid in saved_cards
+        ),
+        "readingOrder": saved.get("readingOrder", []) == payload.get("readingOrder", []),
         "islandCardIds": all(
             saved_islands[iid].get("cardIds") == island.get("cardIds")
             for iid, island in projected_islands.items()
