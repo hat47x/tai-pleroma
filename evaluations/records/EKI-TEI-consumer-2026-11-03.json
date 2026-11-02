@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-eki-consumer/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "ekiCommit": "f22b397544e9da8aaa53e2dd54a221810de127c0",
+  "host": "Windows with Go 1.27",
+  "command": "TEI_EKI_PROJECTION_ARTIFACT=<artifact> go test ./spikes/tei-projection-consumer/...",
+  "result": "PASS",
+  "observed": {
+    "package": "github.com/hat47x/eki-fabric/spikes/tei-projection-consumer",
+    "tests": 4,
+    "passed": 4,
+    "executorId": "dev.example.transform",
+    "readsArtifact": true,
+    "writes": false,
+    "callsControl": false
+  },
+  "scope": "The EKI spike parses the TAI task request projection artifact and checks the envelope and flat header. It does not call eki-control, admit tasks, or prove a product integration."
+}
