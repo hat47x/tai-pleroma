@@ -437,10 +437,22 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 Owner分担：TEI #2620/#988はMeaning/Role/Plugin、#2605は実Product Skill、#2621/#2514はTest/Oracle、#2516は二Consumerの用途相対Projection、#2600は再生成/再資格化、TAI #168/#271は選択/Harness比較/Activity引継ぎ、SHOはWriter/Readerの実到達。共通Host/Registry/第二Role Resolver・Oracle Runnerは追加しない。**SK-IQ01〜12とH2/H3/H4/H5実験はNOT RUN**。
 
 
-## 22. 必要最小のSkill構成を実利用タスクで比較する（SK-MIN）
+## 23. 必要最小のSkill構成を実利用タスクで比較する（SK-MIN）
 
 [二つの実利用シナリオとSK-MIN01〜12](skill-composition-minimal-routing-scenarios-2026-11-02.md)を[SK-01 §X](../../evaluations/SK-01-harness-skills.md)へ接続した。横断Productを全て使うことは統合品質ではない。**Research Index L0のリンク編集だけならSHO/通常Markdown単独、TEI read-onlyモデル調査だけならTEI単独**を先に評価し、Source取得・問い相対の根拠・正式な意味採否・文書Consumer・外部作用が実際に必要になった段階だけ各Product/TAIを候補にする。
 
 SC-AはMarkdownリンク整理→必要な元資料の取得・SEI/SUIの根拠/探索→TEI意味候補とOwner受理→SHO Writer/Reader・レビュー・納品を**未取得/未実装を伏せずに**追う。SC-BはTEI実read-only CLI→Product Skill有無→Context-aware Action Offer→隔離mock Host/Providerの実Effectを分ける。各段階で実Tool/Skill/Consumer/権限がなければunsupported、存在するだけならstatic-known、実到達は該当Ownerの独立証拠として記録する。TAIがProduct内Method/Role/権限/出典正本を複製せず、許可済み最小Handoffだけを担当する。
 
 **追加の測定目的**：H2/H3とH4/H5の質の向上だけでなく、不要なSkill呼出し・未必要なTool発見・誤った完了・Tool/Plannerの余剰開示・Token/人の確認/時間の追加費用を同一Taskで測定する。Product数増加を加点しない。実行の優先は既に一部成功した[TEI Draft #2626](https://github.com/hat47x/tei-platform/pull/2626)実CLIの範囲を利用するH2/H3であり、実Skillロード・SHO別Reader・別Harness・Host/OSの証拠は未取得。**SK-MIN全件NOT RUN、Owner正式受理・main統合なし**。
+
+## 24. 2026-11-03：代表的な外部Harnessと意味→実Capabilityの非単調な到達を接続（SK-HP）
+
+[詳細設計・Harness別評価群](harness-portability-and-capability-qualification-2026-11-03.md)に、DSH以外の**Claude Code／Codex／OpenCode／利用可能なDots・Grok Bot等**を代表候補として、アカウントと環境の実可用性を未確認のまま「対応済み」としない受入方式を追加した。Harnessの利用可否とモデル提供者、Skill導入場所、Skill実ロード、CLI/MCP到達、現在Grant/公開資格、実Consumer結果は独立に評価する。既存SK-G0〜G6、H2/H3・H4/H5、[SK-MIN](skill-composition-minimal-routing-scenarios-2026-11-02.md)を置換しない。
+
+[TEI Draft #2649](https://github.com/hat47x/tei-platform/pull/2649)が整理した**C0 意味Source/Role→C1 Operation候補→C2 実CLI/Tool→C3 Skill/Harness→C4 Consumer/Disclosure→C5実Effect**の照合を、TAI側の横断記録として参照する。ただしTEI正式Core状態型ではない。特にTEI `commands`の選抜read-only catalogから `operations/artifacts` の不掲載＝未実装と推測しない。逆に実dispatchやCLI `artifacts -out` のファイル書込み経路を確認しても、最初のread-only Product Skill/外部Hostのwrite権限へ昇格しない。実引数でeffect分類が変化する。
+
+**後着進捗の訂正**：[TEI #2626](https://github.com/hat47x/tei-platform/pull/2626)は2026-11-02T18:35Z時点で**merged**、merge commit `00eb8e148daadbc2cf40145d8e8473d56531514c`。以前の本Draft §20〜22で「別Draft」「main未統合」と書いた箇所は当時の履歴であり、実Go CLI read-only 9回と同JobのMarkdown/JSON再読取、Source-only移動によるSourceIndex/Trace変化の限定証拠は現mainへ統合済みのPRに帰属する。ただし**本Draft #270の外部Harness Product Skill H2/H3・二Harness移植・SHO独立Reader・Host実Effectは全てNOT RUN**。別のTEI #2649は依然Draft／Source-static 15件の限定照合で、merged #2626の実CI資格を自己の実行証拠に転用しない。
+
+[SK-01 §Y](../../evaluations/SK-01-harness-skills.md)にSK-HP01〜14を追加。代表Harnessの実験では「Skill未ロード／Tool未接続／現在Grant不足／公開Raw送信不可／同SourceでTool呼出可能」を区別し、異Harness間のUnsupported・unknownを明示する。さらに**同一目的がTEI単独で満たせればTAI横断Skillを不要として評価する**。Role/Tool/Skill Scriptの版変化、Source移動、Tool discovery→Planner→実Egress、EKI同Attempt Body/SHO実Readerを、各Ownerの証拠のまま引き継ぐ。
+
+**現在の資格**：公開仕様と既存Repoの文書に基づく設計・評価票の追補のみ。実Harness Skill install/load/Tool invoke、別Harnessの比較、実OS/Network、正式配布・Owner意味受理はNOT RUN。新たな共通Host/Registry/Tool schema／第二Policy Engineは作らない。
