@@ -51,6 +51,7 @@ python probe.py --base-url http://127.0.0.1:8765 --doc-id scn001-demo   --expect
 - `/openapi.json`の`info.version`はFastAPIの既定値で版を識別しないため、記録のみです。
 - 実行前後の`/version`の間の差し替えと戻しは防げません。ロードバランサ背後で別インスタンスが答える場合も検出できません。
 - `--sui-checkout`のHEAD一致は、サーバがそのチェックアウトから起動したことを示しません。`core.fsmonitor`は無効化していますが、リポジトリの`.git/config`に`filter.*.clean`などが設定されていると`git diff`が外部コマンドを実行し得ます（残リスク。信頼できるチェックアウトにだけ使う）。
+- リポジトリ側のgit設定で差分が隠れ得ます。`core.fileMode=false`では実行ビットだけの変更が、`diff.ignoreSubmodules`ではsubmoduleの変更が「追跡変更なし」になります（残リスク。`core.fileMode`の強制はWindowsの既定と食い違うため行いません）。試験が支えるのは、ステージ済み変更・`git rm --cached`・`git replace`による差し替え・実行中のHEAD移動とassume-unchanged設定・indexコピーのmtime保持までで、`GIT_*`変数ごとの除去と`-c core.fsmonitor=false`・`--no-replace-objects`以外の個別の防御は変異試験で確認していません。
 - `/openapi.json`が無効な本番系プロファイルと、`X-API-Key`設定時の`/docs`は従来どおり対象外です（鍵は送りません）。
 - 実SUIの`/version`の実応答は未確認です（ソース読みのみ）。
 

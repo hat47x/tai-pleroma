@@ -228,6 +228,16 @@ class RecordOnlyTest(PinTestCase):
         self.assertEqual(receipt["serverIdentity"]["runtimeProfile"], "")
         self.assertNotIn("script", json.dumps(receipt))
 
+    def test_pinned_failure_receipt_is_not_a_real_product_connection(self):
+        # revision mismatch stops before any read; a digest mismatch is found after the read succeeded.
+        receipt = self.run_probe(self.fake(), Binding(expect_revision=HEX_B), doc_id="doc-1")
+        self.assertFalse(receipt["passed"])
+        self.assertFalse(receipt["realProductConnected"])
+        receipt = self.run_probe(self.fake(), Binding(expect_digest="sha256:" + "0" * 64), doc_id="doc-1")
+        self.assertFalse(receipt["passed"])
+        self.assertEqual(receipt["pin"]["documentDigest"]["status"], "mismatch")
+        self.assertFalse(receipt["realProductConnected"])
+
     def test_unreachable_default_reason_is_unchanged(self):
         receipt = probe("http://127.0.0.1:1", timeout=1)
         self.assertFalse(receipt["passed"])
@@ -394,6 +404,12 @@ class ArgumentTest(unittest.TestCase):
         self.assertRejected([], {"TAI_SUI_EXPECT_REVISION": "unknown"})
         self.assertRejected([], {"TAI_SUI_EXPECT_DOCUMENT_DIGEST": "nope"})
 
+    def test_upper_case_digest_is_normalised_to_lower_case(self):
+        digest = _document_digest(DOC)
+        upper = "sha256:" + digest[len("sha256:"):].upper()
+        self.assertEqual(self.parse(["--expect-document-digest", upper]).expect_document_digest, digest)
+        self.assertEqual(self.parse([], {"TAI_SUI_EXPECT_DOCUMENT_DIGEST": upper}).expect_document_digest, digest)
+
     def test_flag_beats_env_and_env_is_used(self):
         self.assertEqual(self.parse([], {"TAI_SUI_EXPECT_REVISION": HEX_A}).expect_revision, HEX_A)
         self.assertEqual(self.parse(["--expect-revision", HEX_B], {"TAI_SUI_EXPECT_REVISION": HEX_A}).expect_revision, HEX_B)
@@ -491,6 +507,72 @@ class CheckoutTest(PinTestCase):
         self.assertGreaterEqual(receipt["checkout"]["trackedChanges"], 1)
         self.assertFalse(receipt["passed"])
         self.assertEqual(receipt["pin"]["checkout"]["status"], "mismatch")
+        self.assertEqual(fake.log, [])
+
+    def test_staged_changes_matching_the_worktree_are_tracked_changes(self):
+        self.write("bbbb\n")
+        run_git(self.root, "add", "tracked.txt")
+        fake, receipt = self.go(Binding(expect_revision=self.head, checkout=self.root))
+        self.assertGreaterEqual(receipt["checkout"]["trackedChanges"], 1)
+        self.assertFalse(receipt["passed"])
+        self.assertEqual(fake.log, [])
+        run_git(self.root, "reset", "-q", "--hard")
+        run_git(self.root, "rm", "-q", "--cached", "tracked.txt")
+        fake, receipt = self.go(Binding(expect_revision=self.head, checkout=self.root))
+        self.assertGreaterEqual(receipt["checkout"]["trackedChanges"], 1)
+        self.assertFalse(receipt["passed"])
+
+    def test_replace_refs_cannot_hide_a_dirty_tree(self):
+        self.write("bbbb\n")
+        run_git(self.root, "commit", "-q", "-a", "-m", "two")
+        other = subprocess.run(["git", "rev-parse", "HEAD"], cwd=self.root, check=True, capture_output=True, text=True).stdout.strip()
+        run_git(self.root, "reset", "-q", "--hard", self.head)
+        self.write("bbbb\n")
+        run_git(self.root, "replace", self.head, other)
+        fake, receipt = self.go(Binding(expect_revision=self.head, checkout=self.root))
+        self.assertGreaterEqual(receipt["checkout"]["trackedChanges"], 1)
+        self.assertFalse(receipt["passed"])
+
+    def test_head_or_flags_changing_during_the_run_fail(self):
+        def move_head():
+            run_git(self.root, "commit", "-q", "--allow-empty", "-m", "moved")
+
+        def hide():
+            run_git(self.root, "update-index", "--assume-unchanged", "tracked.txt")
+
+        for hook in (move_head, hide):
+            with self.subTest(hook=hook.__name__):
+                fake = self.fake(versions=self.versions, on_docs=hook)
+                _, receipt = self.go(Binding(expect_revision=self.head, checkout=self.root), fake)
+                self.assertFalse(receipt["passed"])
+                self.assertEqual(receipt["reason"], "pin mismatch: checkout changed during the run")
+                run_git(self.root, "reset", "-q", "--hard", self.head)
+                run_git(self.root, "update-index", "--no-assume-unchanged", "tracked.txt")
+
+    def test_index_copy_keeps_the_original_mtime(self):
+        import suipin
+        seen = []
+        real = suipin._git
+        index = os.path.join(self.root, ".git", "index")
+        original = os.stat(index).st_mtime_ns
+
+        def spy(args, cwd, index_copy=""):
+            if index_copy:
+                seen.append(os.stat(index_copy).st_mtime_ns)
+            return real(args, cwd, index_copy)
+
+        with mock.patch.object(suipin, "_git", spy):
+            self.assertIsNotNone(suipin.checkout_facts(self.root))
+        self.assertTrue(seen)
+        self.assertEqual(set(seen), {original})
+
+    def test_short_hex_expectation_cannot_be_checked_against_a_checkout(self):
+        short = self.head[:12]
+        fake = self.fake(versions=[{"revision": short, "runtimeProfile": "p"}])
+        _, receipt = self.go(Binding(expect_revision=short, checkout=self.root), fake)
+        self.assertFalse(receipt["passed"])
+        self.assertEqual(receipt["pin"]["checkout"]["status"], "unavailable")
+        self.assertFalse(receipt["realProductConnected"])
         self.assertEqual(fake.log, [])
 
     def test_untracked_files_are_recorded_but_do_not_fail(self):
