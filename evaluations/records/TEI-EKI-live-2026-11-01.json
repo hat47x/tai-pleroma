@@ -1,0 +1,38 @@
+{
+  "schema": "tai.reference.tei-eki-live/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "teiCommit": "25d68095aaa9f7c775385379286bf6760d9ab28c",
+  "ekiControlCommit": "d1571cce9cb62d4ef47df7b0785a68a4372488c6",
+  "host": "Windows test process to a WSL2 Ubuntu eki-control through localhost forwarding",
+  "command": "EKI_CONTROL_URL=http://127.0.0.1:18084 EKI_CONTROL_TOKEN=<token> go test ./reference/product-contracts/bindings -run TestLiveEKI -count=1",
+  "result": "PASS",
+  "tests": {
+    "TestLiveEKITaskSubmitHTTP": "PASS",
+    "TestLiveEKIProblemJSON": "PASS"
+  },
+  "accepted": {
+    "resultStatus": 202,
+    "taskIdPrefix": "tsk_",
+    "observedTaskId": "tsk_9f471a10e32177398bbcdcee615e048c",
+    "previousObservedTaskId": "tsk_e158d3e9bd0c0577c1ca719f60449fdd"
+  },
+  "rejected": {
+    "resultStatus": 400,
+    "code": "INVALID_TASK_REQUEST",
+    "input": "empty TaskRequest"
+  },
+  "idempotentReplay": {
+    "sameKey": true,
+    "replayTaskId": "tsk_9f471a10e32177398bbcdcee615e048c",
+    "equalsAcceptedTaskId": true
+  },
+  "idempotencyConflict": {
+    "sameKeyDifferentRequest": true,
+    "resultStatus": 409,
+    "code": "IDEMPOTENCY_KEY_CONFLICT"
+  },
+  "scope": "A loopback test token and the EKI test profile. The Task was accepted and deduplicated, but no Worker executed it. This is not a production deployment or a publication approval."
+}

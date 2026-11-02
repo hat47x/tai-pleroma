@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tai-pleroma.local/schemas/robotics/meaning.schema.json",
+  "title": "MeaningRecord",
+  "description": "移行前後の工程、役割、権限、失われるものを対応付ける。意味の対応と損失の承認を残す。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_type",
+    "meaning_id",
+    "domain",
+    "source_step",
+    "target_step",
+    "role",
+    "permission",
+    "status",
+    "owner",
+    "loss_note",
+    "safety_case_ref"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "record_type": { "const": "meaning" },
+    "meaning_id": { "type": "string", "pattern": "^mean-[a-z0-9-]+$" },
+    "domain": { "enum": ["ad", "robotics"] },
+    "source_step": { "type": "string", "minLength": 1 },
+    "target_step": { "type": "string", "minLength": 1 },
+    "role": { "type": "string", "minLength": 1 },
+    "permission": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["same", "split", "merged", "dropped", "new"] },
+    "owner": { "type": "string", "minLength": 1 },
+    "loss_note": { "type": "string" },
+    "safety_case_ref": { "type": "string", "minLength": 1 },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

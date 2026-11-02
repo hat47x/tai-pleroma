@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "record_type": "handoff",
+  "handoff_id": "hnd-ad-001",
+  "domain": "ad",
+  "task_id": "task-l3-highway-001",
+  "vehicle_id": "veh-001",
+  "automation_level": 3,
+  "odd": "highway, dry, day",
+  "mrc": "shoulder_stop",
+  "from": { "type": "vehicle", "id": "veh-001" },
+  "to": { "type": "human", "id": "driver-001" },
+  "sent": ["takeover_request", "mrc_plan", "odd_exit_reason"],
+  "not_sent": ["route_alternative"],
+  "ack": "accepted",
+  "next_action": "driver_takeover",
+  "deadline": "2026-11-02T08:10:05+09:00",
+  "takeover_request": {
+    "requested_at": "2026-11-02T08:10:00+09:00",
+    "reason": "road_construction"
+  },
+  "safety_envelope_ref": "se-ad-001",
+  "evidence_refs": ["edr-ad-001", "dssad-ad-001"]
+}

@@ -6,6 +6,8 @@ TAI Pleromaは、人が知識を得て、考え、判断し、成果を生み、
 
 「泰」は易経第11卦の「地天泰」、「Pleroma」は充足した全体性に由来します。目指すのは、個々の機能を増やすことよりも、必要な知的能力を組み合わせて、利用者が一つの課題を継続して扱えることです。
 
+製品群全体の構想と役割の分担は、[YI Constellation 構想と設計](docs/YI_Constellation.pptx)をご覧ください。YI Constellationはシリーズの名称であり、TAI Pleromaは課題を横断して扱う製品です。資料の確認状況は2026年10月時点のものです。
+
 ## 何をつなぐのか
 
 TAIは、役割の異なる五つの関連基盤を必要に応じて利用します。
@@ -19,6 +21,14 @@ TAIは、役割の異なる五つの関連基盤を必要に応じて利用し�
 | EKI | 範囲や権限を定めた処理の委任と、その結果の確認 |
 
 各基盤には独立した役割と開発の進め方があります。TAIはそれらの機能を重複して実装したり、独自の中央Hostへ集約したりすることを目的にしていません。
+
+## YI Constellationとの関係（統合・配布の構想）
+
+**YI Constellation**は、関連製品群を紹介する**ブランドとウェブサイト**の名称です。専用のリポジトリは設けず、サイトの制作・公開設定はTAIリポジトリで管理する方向で検討しています。
+
+TAI Pleromaは知的課題を横断して扱う**統合製品**です。さらに本リポジトリを、各製品で独立して開発・検証した版付き成果物を必要に応じて**選択・統合検証・組立て・配布する拠点**とする構想を進めます。各製品の正本、単独リリース、意味上の判断と実行権限は、それぞれのOwnerに残します。
+
+これは[製品群統合・配布の設計案](docs/product-family-delivery.md)、[受入条件案](docs/product-family-release-requirements.md)、[ウェブサイト構想](docs/yi-constellation-website.md)および[Issue #74](https://github.com/hat47x/tai-pleroma/issues/74)で審議する**提案**です。現状のTAI CIは参照試験を中心とし、シリーズ全体の統合ビルド・リリース機能やYIの公開サイトが既に成立したという意味ではありません。
 
 ## 最初に扱う課題
 
@@ -46,6 +56,7 @@ SCN-001について、次の参照実装と検証記録があります。
 | [SUIとの接続](tools/reference-sui-api/README.md)・[観測照合](tools/reference-sui-link/README.md)・[D-04照合](tools/reference-sui-draft/README.md) | 文書内のカードと観測本文の対応、島の構成、D-04の根拠行を確認 |
 | [TEIとの接続](tools/reference-tei-model/README.md) | SCN-001で使う型宣言の検証 |
 | [EKIとの接続](tools/reference-eki-api/README.md)・[CLI確認](tools/reference-eki-cli/README.md) | API認証と合成Taskの受付・待機状態、CLI起動を確認 |
+| [ハーネス境界](tools/reference-harness-boundary/README.md) | 合成の製品とハーネスで、読み取り専用、書き込み拒否、文脈の受け渡しと保留、提供元の遭遇と交換、セッション終了を検査 |
 | [EKI Worker test環境](tools/reference-eki-worker/README.md) | WSL/DockerでAgent/Control test profileとバイナリbuildを確認 |
 | [公開条件の検査](tools/reference-publication-gate/README.md) | レビュー項目R-01〜R-07の状態を判定。現在は公開を保留 |
 | [公開境界の検査](tools/check-public-boundary/check.py) | 非公開リソース名・秘密鍵・tokenの混入をtracked fileから検出 |
@@ -79,6 +90,7 @@ TEI Platformの非公開作業資料、第三者の原文・抽出物は、著�
 | [scenarios/](scenarios/) | 利用者の課題と検証用シナリオ |
 | [integrations/](integrations/) | 既存基盤との接続の調査 |
 | [evaluations/](evaluations/) | 評価条件、合成試験、実行記録 |
+| [analysis/](analysis/) | 複数リポジトリにまたがる整理・監査の成果物 |
 | [tools/](tools/) | 参照実装と検証用ツール |
 
 開発時の作業規則は[AGENTS.md](AGENTS.md)を参照してください。脆弱性の報告は[SECURITY.md](SECURITY.md)、変更の進め方は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。

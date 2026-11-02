@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-text-selection/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-01",
+  "teiCommit": "1639152a1ed0f7913bf9453d30aefc117d58133d",
+  "host": "Windows with Go 1.27.3 and a local TEI checkout",
+  "command": "go run ./tools/reference-generator-selection/cmd/tei-generator-select -workspace <TAI>/integrations/pilot-sui-document -contract <TAI>/integrations/pilot-sui-document/candidates/text-identity/contract.json -fixtures <TAI>/integrations/pilot-sui-document/candidates/text-identity/fixtures.json -candidates <TAI>/integrations/pilot-sui-document/candidates",
+  "result": "PASS",
+  "observed": {
+    "contractId": "sui.card.text",
+    "contractDigest": "sha256:12e3428fa726f3ce52ccac0ae3f7a221541c561d0177ae963472cc560d3a3dd8",
+    "fixturesDigest": "sha256:23e70fc056f9dcc462a292d65c046e0f4129b61de9d51c65b081645a69207247",
+    "cases": 4,
+    "passedCases": 4,
+    "qualified": ["text-identity"],
+    "candidateSourceDigest": "sha256:4e27643296e20f0fb61ffc48acf3c285d35a269eb16d0fd7fb4d7581b5507215"
+  },
+  "scope": "A reference-local text projection contract and one handwritten candidate selected by the modified reference-generator-selection tool. It does not generate the candidate from the contract, generate SUI code, run a Target Profile, or show human acceptance."
+}

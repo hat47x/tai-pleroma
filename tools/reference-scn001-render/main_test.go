@@ -63,3 +63,32 @@ func TestRenderRejectsPublishedProvisional(t *testing.T) {
 		t.Fatal("published provisional approval was accepted")
 	}
 }
+
+func TestRenderReportsDigestsOfRenderedEvidenceRows(t *testing.T) {
+	fixture := loadFixture(t)
+	content, receipt, err := Render(fixture)
+	if err != nil {
+		t.Fatal(err)
+	}
+	d04, _ := findDraft(fixture.Drafts, "D-04")
+	if len(receipt.ObservationDigests) != len(d04.References) {
+		t.Fatalf("rendered digests do not cover D-04 references: %v", receipt.ObservationDigests)
+	}
+	for _, observation := range fixture.Observations {
+		want, rendered := receipt.ObservationDigests[observation.ID]
+		if !rendered {
+			continue
+		}
+		if want != digest(observation.Text) || !strings.Contains(content, "`"+want+"`") {
+			t.Fatalf("rendered digest for %s does not match the artifact row", observation.ID)
+		}
+	}
+	fixture.Observations[1].Text = "差し替えた本文"
+	_, changed, err := Render(fixture)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if changed.ObservationDigests[fixture.Observations[1].ID] == receipt.ObservationDigests[fixture.Observations[1].ID] {
+		t.Fatal("changed input was reported with the previous digest")
+	}
+}

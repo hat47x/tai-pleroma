@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "scn003-grant-review",
+  "title": "SCN-003 grant review",
+  "createdAt": "2026-10-29T00:00:00Z",
+  "updatedAt": "2026-10-29T00:00:00Z",
+  "transform": {"panX": 0, "panY": 0, "zoom": 1},
+  "cards": [
+    {"id": "O-02", "text": "申請Aは収入要件を満たす", "x": 0, "y": 0, "claimType": "fact", "sources": ["application-summary#2026-10-01"], "textReviewed": false},
+    {"id": "O-03", "text": "申請Aは収入要件を満たさない", "x": 160, "y": 0, "claimType": "fact", "sources": ["eligibility-check#2026-10-02"], "textReviewed": false},
+    {"id": "O-10", "text": "申請Bの事業費は上限500万円を超える", "x": 320, "y": 0, "claimType": "fact", "sources": ["budget-check#2026-10-01"], "textReviewed": false},
+    {"id": "O-11", "text": "申請Cの審査担当は申請者と親族", "x": 480, "y": 0, "claimType": "unknown", "sources": ["conflict-check#2026-10-03"], "textReviewed": false},
+    {"id": "O-12", "text": "2026年度の採択枠は2件", "x": 640, "y": 0, "claimType": "fact", "sources": ["grant-notice#2026-04-01"], "textReviewed": false}
+  ],
+  "edges": [
+    {"id": "E-01", "fromId": "I-01", "toId": "I-02", "fromKind": "island", "toKind": "island", "type": "contradicts"}
+  ],
+  "islands": [
+    {"id": "I-01", "cardIds": ["O-02", "O-12"], "title": "申請Aと採択枠", "collapsed": false},
+    {"id": "I-02", "cardIds": ["O-03", "O-10"], "title": "不適格・上限超過", "collapsed": false},
+    {"id": "I-03", "cardIds": ["O-11"], "title": "利益相反", "collapsed": false}
+  ]
+}

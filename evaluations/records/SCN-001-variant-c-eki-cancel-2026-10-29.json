@@ -1,0 +1,25 @@
+{
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "schema": "tai.reference.eki-task-cancel/v0",
+  "baseUrl": "http://127.0.0.1:18086",
+  "readOnly": false,
+  "taskSubmitted": true,
+  "cancelled": true,
+  "taskExecuted": false,
+  "workerResult": false,
+  "resultAvailable": false,
+  "authorityVerified": false,
+  "passed": true,
+  "notes": [
+    "EKI Control APIへ合成Taskを1件送信し、cancelを要求してcancelledを読む。",
+    "Workerは起動しておらず、Taskの実行・結果は未検証。"
+  ],
+  "submitStatus": 202,
+  "taskId": "tsk_241b0556feae1ec7e80d50402b5298ad",
+  "cancelStatus": 202,
+  "statusReadStatus": 200,
+  "taskStatus": "cancelled",
+  "terminalCode": "CANCELLED",
+  "resultStatus": 501
+}

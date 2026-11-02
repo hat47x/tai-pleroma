@@ -1,0 +1,5 @@
+{
+  "logical_ref": {"kind": "artifact", "id": "guidance-draft", "scope": "source-v1"},
+  "content_digest": "sha256:1feabaa3835cbe8812d75655659254d5b4e3f0538b0a9f8105b74fa90e65d499",
+  "representation_profile": {"profile_id": "sei.raw-bytes+sha256", "version": "v1alpha1"}
+}

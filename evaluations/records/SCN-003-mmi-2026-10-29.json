@@ -1,0 +1,71 @@
+{
+  "schema": "tai.reference.mmi-readonly/v0",
+  "server": "markdown-matrix-injector/0.2.0",
+  "protocolVersion": "2024-11-05",
+  "mmiCommit": "e3a199c806381eaa9944792e17287cc90e414878",
+  "packageLockDigest": "sha256:becc3b2d5e4b1aa554d2786540c369abe84c62419852467fa1856f0f10b92f02",
+  "nodeVersion": "v24.19.0",
+  "tool": "inspect",
+  "candidateCount": 1,
+  "selectedRows": 5,
+  "observedIds": [
+    "O-02",
+    "O-03",
+    "O-10",
+    "O-11",
+    "O-12"
+  ],
+  "selected": [
+    {
+      "id": "O-02",
+      "text": "申請Aは収入要件を満たす",
+      "source": "application-summary",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-03",
+      "text": "申請Aは収入要件を満たさない",
+      "source": "eligibility-check",
+      "version": "2026-10-02",
+      "availability": "available"
+    },
+    {
+      "id": "O-10",
+      "text": "申請Bの事業費は上限500万円を超える",
+      "source": "budget-check",
+      "version": "2026-10-01",
+      "availability": "available"
+    },
+    {
+      "id": "O-11",
+      "text": "申請Cの審査担当は申請者と親族",
+      "source": "conflict-check",
+      "version": "2026-10-03",
+      "availability": "available"
+    },
+    {
+      "id": "O-12",
+      "text": "2026年度の採択枠は2件",
+      "source": "grant-notice",
+      "version": "2026-04-01",
+      "availability": "available"
+    }
+  ],
+  "conflictPreserved": true,
+  "sourceDigestBefore": "sha256:6fcc18d0c31e5a72be3fb9508acb38f7b96c82330d4e525dcb83a170a89cfa0b",
+  "sourceDigestAfter": "sha256:6fcc18d0c31e5a72be3fb9508acb38f7b96c82330d4e525dcb83a170a89cfa0b",
+  "guideDigestBefore": "sha256:b0100b794d6d6634b9d13e4e8557940fab54bfa7995a0ed6aabd291f72e6eaec",
+  "guideDigestAfter": "sha256:b0100b794d6d6634b9d13e4e8557940fab54bfa7995a0ed6aabd291f72e6eaec",
+  "boundaryRejected": true,
+  "missingSourceRejected": true,
+  "readOnly": true,
+  "realProductConnected": true,
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "passed": true,
+  "notes": [
+    "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
+    "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
+  ]
+}

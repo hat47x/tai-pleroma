@@ -24,11 +24,11 @@
 | R-02 | 公開権限者を`unknown`のまま保持できるか | 実在の権限者・承認範囲は未確認 |
 | R-03 | MMIで読み取り専用参照できるか | 実ワークスペース・実資料ではない |
 | R-04 | SEIで未決判断を保持できるか | 実store・実決定ではない |
-| R-05 | D-04の意味・公開境界を独立レビューできるか | 人間の独立レビューは未実施 |
+| R-05 | D-04の意味・公開境界を独立レビューできるか | 生成AI評価でdevelopment accepted。人間の独立レビューは未実施 |
 
-**R-01〜R-05を`accepted`や`evidenceKind=real-object`へ更新しない。** 合成入力の検出結果を、実物レビューの受理へ読み替えない。
+2026-10-29のOwner判断により、R-01〜R-05は合成入力を根拠に`status=accepted`、`evidenceKind=synthetic`のdevelopment review acceptedとする。**実物レビューの受理や公開承認へ読み替えない。**
 
-review statusでは、R-01〜R-05を`status=pending`、`evidenceKind=synthetic`、合成入力への参照つきで記録する。`accepted`へ変更しても、公開gateは`real-object`以外を拒否する。
+review statusでは、R-01〜R-05を`status=accepted`、`evidenceKind=synthetic`、合成入力への参照つきで記録する。公開gateは`real-object`以外を`developmentAccepted`として記録し、公開はblockedのままにする。
 
 ## 検出する工程欠陥
 
