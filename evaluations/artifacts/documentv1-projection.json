@@ -12,7 +12,7 @@
         "cases": 4
       },
       "card-record": {
-        "sourceDigest": "sha256:a3e9b50739c5c01fbc24a5d31beda48bc5594d8c785b30cd39716a91b65e081c",
+        "sourceDigest": "sha256:f7c60ac5d91a74c079b186d7a3080d87f0b636b5daa278caa324a717a6437cba",
         "cases": 5
       },
       "island-record": {
@@ -45,6 +45,10 @@
         "claimType": "claim",
         "holdState": "held",
         "id": "card-2",
+        "sources": [
+          "src-1",
+          "src-2"
+        ],
         "text": "world",
         "textReviewed": true,
         "x": 0,
