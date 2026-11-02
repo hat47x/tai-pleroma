@@ -1,0 +1,59 @@
+{
+  "id": "SK-N-negative-dependency-reference-2026-11-02",
+  "status": "PASS-public-selfcheck-only",
+  "runtime": "Tool V8 isolate (NOT Node.js CLI; no filesystem/real Product)",
+  "source": {
+    "repo": "hat47x/tai-pleroma",
+    "branch": "docs/yi-harness-skills-20261102",
+    "path": "evaluations/tools/check-sk-n-negative-witness.cjs",
+    "github_blob_sha": "92eed571d4e04f568eefce96b725a56994eb6eb0",
+    "executed_source": "Exact UTF-8 GitHub fetch_file content"
+  },
+  "cases": [
+    "NX-01-complete-zero",
+    "NX-02-partial-zero",
+    "NX-03-partial-positive",
+    "NX-04-no-predicate-proof",
+    "NX-05-ABA-history-vs-current",
+    "NX-06-filter-limit-noncommutative",
+    "NX-07-two-windows-local-stale",
+    "NX-08-relation-rebinding",
+    "NX-09-unobserved-not-unchanged",
+    "NX-10-unrelated-change",
+    "NX-11-transitive-implementation-pin",
+    "NX-12-discovery-not-complete",
+    "NX-13-policy-only-change",
+    "NX-14-output-unchanged-rule-change"
+  ],
+  "checks_passed": 14,
+  "checks_failed": 0,
+  "assertion_type": "Authored public reference predicates against authored public synthetic values; not an independent sealed Oracle",
+  "includes": [
+    "negative membership and scoped completeness",
+    "partial positive refutation",
+    "non-output predicate witness",
+    "ABA temporality",
+    "filter-vs-limit ordering",
+    "separate window epochs",
+    "relation retarget",
+    "opaque dependency conservatism",
+    "unrelated-change preservation",
+    "eager dependency implementation pin",
+    "incomplete discovery catalog",
+    "disclosure-only change",
+    "output unchanged but rule changed"
+  ],
+  "excluded": [
+    "Node.js CLI execution",
+    "TEI Query/Provider/DB/real read witness",
+    "TEI Role Extension Lock and implementation fingerprint",
+    "TEI actual operations/artifacts run",
+    "TAI Skill/Harness execution",
+    "Current OS/Host Grant",
+    "read-set fence and provider change notifications",
+    "network/egress/secret handling",
+    "independent holdout",
+    "Owner meaning acceptance"
+  ],
+  "notes": "Current reuse classifications are exploratory; the script does not decide actual product authority. Positive synthetic outcomes are not real no-change proofs. Product-level guarantees remain NOT RUN."
+}
