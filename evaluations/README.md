@@ -4,6 +4,12 @@
 
 対象シナリオ・対象版、期待結果、負例、実行条件、結果と未実施項目を記録してください。合成fixture・モック・実環境観測を明確に区別します。機微情報の原本は格納せず、公開可能な証拠への参照を利用します。
 
+## P-06 利用者価値と協働統治の比較（計画／NOT RUN）
+
+- [個人・組織・社会の比較プロトコル](P-06-cogovernance-protocol.md)：AIの提案、各主体の決定・承認・公開を区別し、手作業との対照で増分価値を確かめる。
+- [試行記録テンプレート](P-06-trial-template.md)：評価前の目標、版、負例、判定と未実施を記録する。**このファイルは試験結果ではない**。
+- [Issue #127](https://github.com/hat47x/tai-pleroma/issues/127)：最初の利用者・権限者と、開始条件のOwner判断を追跡する。
+
 ## 参照実行の記録
 
 - [SCN-001実物ベース再レビュー](SCN-001-real-object-review.md): 合成後に行う公開用実物レビューの計画。R-06/R-07は未実施。
@@ -35,3 +41,7 @@
 - [robotics/](fixtures/robotics/): ロボティクスの合成fixture。ピックアンドプレースの受け渡し、出来事、判断、意味の対応。
 - [schemas/](../docs/yi-constellation/schemas/): 出来事、受け渡し、判断、意味の対応のJSON Schema。暫定版0.1。
 - [46-四つの記録のスキーマ](../docs/yi-constellation/analysis/46-四つの記録のスキーマ.md): 四つの記録の暫定スキーマ、合成fixture、検証結果、回収した知見。
+
+## ハーネス引渡しの負例（新規実験NOT RUN）
+
+- [証拠・権限の負例マトリクス](harness-boundary-negative-cases.md) — ハーネス切替時の過去Decision、Source/Scope、Pluginの検証、EKIの結果受理と実世界Outcome、個人・組織・社会の権限を別々に検査する候補。これは試験結果ではなく、[横断設計](../docs/harness-evidence-boundary.md)に対応する評価計画。
