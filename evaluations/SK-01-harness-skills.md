@@ -85,6 +85,28 @@
 
 提出する最小Evidence：`scenario, arm, input_revision, source_digest, harness/profile, model, skill_digest, tools_versions, authority_scope, disclosure_profile, calls, produced_artifacts, independent_oracle, status(PASS/FAIL/NOT_RUN/UNSUPPORTED), unresolved`。既存SW-01/製品のreceiptで表現できるところは参照し、TAIの新しい共通Storeや全製品強制schemaを設けない。
 
+## F.1 2026-11-02追加：意味的な誤保証・配布・間接送出の横断負例
+
+各ケースは**未実施（NOT RUN）**。既存の単体試験・Issueに書かれた静的根拠をSK-01合格に流用しない。試験の正本となる実装・Oracleは各Product側を参照する（[構成の深化](../docs/yi-constellation/harness-skills-interoperability-and-evidence-2026-11-02.md)）。
+
+| ID | 反例 | 期待する区別／担当 |
+| --- | --- | --- |
+| SK-N10 | `ponytail`が存在するためSEI/EKIの製品Toolを既に使えると誤認 | 汎用開発Skill vs Product専用Skill。実Tool inventory別照合（TAI SK-G0） |
+| SK-N11 | 同じ`name`のSkillを別pathに改変・優先配置／暗黙ロード | 実際に選んだSkill path/hash/profileを記録し、候補名だけで信頼同一性を推定しない |
+| SK-N12 | `tools/list`に掲載されたread-only Toolが、実際は別API/OSファイルへ直接アクセス可能 | Tool説明／Host認可／OS到達を独立検証（TEI #2515・TAI #232） |
+| SK-N13 | 二つのRaw世界が同じ許可Projectionを出力するが、全体SUM/不存在/件数のClaimは異なる | Source保持側へ用途限定照会。不可なら`unknown`、理由の漏洩も検査（TEI #2516、SEI #767） |
+| SK-N14 | D1×D2 Joinで同じ数値なのにGrain/Bagが違う、または可視Scope違いで数値が異なる | 数値一致・差異から自動的に意味一致・矛盾を判定しない。必要な独立根拠を選ぶ（SEI #767／TEI #2516） |
+| SK-N15 | 文書の出典は旧版、SVG/KaTeXだけ改版、`check`成功で説明と納品も合格扱い | SHO文書作業/出典表示/説明受理/納品資格の4区分。MMI C-01/T2は現在未実証（SHO #1/#6、MMI #658） |
+| SK-N16 | EKI Claim ACKがあるが実RunnerのBodyがSenderへ渡っていない | 実Output bytesの同一Attempt送達／Result受理/Business Effectを分離。EKI #465/#407を参照 |
+| SK-N17 | DSHの`messages`は無害でも別Request field/Session Log/backlogに未許可情報 | 実Network raw bytes・宛先を監査。ProfileやSkillの指示だけで非送出保証としない（TEI #2515／TAI #234） |
+| SK-N18 | Test Skillで許可されたUI制御をProduction Buildへ残す | 実配布artifact・登録入口・依存閉包で物理不在を確認。通常a11y/Browser操作と区別（TEI #2391） |
+| SK-N19 | TEI DSL/論文からの候補コードを「検証済み業務意味」と報告 | Model/Definition/Instance/Realization、生成Build/Target/Oracle/SHO説明、人の受理を別資格（TEI #2390/#2516） |
+| SK-N20 | あるHarnessが別Skillをプログラム的に呼べると期待し、他Harnessで不達 | 文書の参照/Tool経由の連携へ縮退し、Harness固有のSkill-to-Skill APIを必須化しない |
+| SK-N21 | Skill/Tool/Sourceの改版後に旧Receipt/旧受理を自動再利用 | 既知依存範囲だけ局所再検証、未知依存はunknown。Owner/Host/外部Resultは現在資格を確認 |
+| SK-N22 | 量の多い全Skill本文を常時contextへ投入し、用途外Raw/秘密・費用を増やす | name/descriptionだけ先行発見、必要時だけReferences読込。Prepared/Delivered/観測できたUsedを区別 |
+
+**判定**：SK-N10〜22は今後の実Host・実Harness試験の候補であり、表を追加しただけではPASS/FAILは付けない。配布・選択の誤りとProductの機能不足を分離し、SK-G2/G4/G5へ還流する。
+
 ## G. 実施順序
 
 1. 現行製品に実在する`SKILL.md`と利用可能なCLI/MCPを実版で棚卸し（MMI `mmi`を最初の比較対象）。
