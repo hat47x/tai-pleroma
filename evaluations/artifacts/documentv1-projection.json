@@ -5,7 +5,7 @@
     "version": "1"
   },
   "source": {
-    "teiCommit": "3784a4432a28502ca04057325689e409d14d9140",
+    "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
     "contracts": {
       "document-record": {
         "sourceDigest": "sha256:de794933e07e450cd69aa749d25fc3db665e8d521ca86b9d14aae576d0af45e3",
@@ -54,8 +54,7 @@
     "islands": [
       {
         "cardIds": [
-          "card-1",
-          "card-2"
+          "card-1"
         ],
         "id": "island-1",
         "title": "Group A"
@@ -73,7 +72,7 @@
     ],
     "affiliations": [
       {
-        "cardId": "card-1",
+        "cardId": "card-2",
         "id": "aff-1",
         "islandId": "island-1"
       }

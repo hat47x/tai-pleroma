@@ -118,6 +118,8 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-http-route-2026-11-02.json",
     "evaluations/records/SUI-TEI-auth-2026-11-02.json",
     "evaluations/records/SUI-TEI-tenant-route-2026-11-03.json",
+    "evaluations/records/SUI-TEI-containment-2026-11-03.json",
+    "evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -218,6 +220,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "documentv1-validation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documentV1Valid") is not True or observed.get("cards") != 2:
+                errors.append(f"DocumentV1 validation receipt did not validate two cards: {relative}")
         if "tei-tenant-route" in relative:
             observed = data.get("observed", {})
             if observed.get("boundArtifactStatus") != 200 or observed.get("agentCredentialStatus") != 403:
