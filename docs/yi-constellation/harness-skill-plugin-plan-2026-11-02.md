@@ -309,7 +309,7 @@ TAIの責務は利用者の目的・対象・時点から**実在する製品と
 
 **状態**：構成・評価計画のみ。自動投影の実装、実Skill/CLIロード、複数Harnessでの実証、Product意味/OS認可/外部Effect/Owner受理はNOT RUN。
 
-## 14. 2026-11-02：Skillが参照する「信頼の現在性」と失敗時の縮退
+## 15. 2026-11-02：Skillが参照する「信頼の現在性」と失敗時の縮退
 
 **新たな横断反例**：[EKI #466](https://github.com/hat47x/eki-fabric/issues/466)ではIssuer Fingerprintの二重SHA-256、[#467](https://github.com/hat47x/eki-fabric/issues/467)では**導入済みTrust Bundleの読取エラーを「未設定」と同じfalseへ畳み、現行版検査を省略し得る**経路がSource-staticで指摘された。これは実mTLS攻撃・本番バイパスの実証ではなく、EKI #433の製品Ownerが修正・検証する個別Blocker。外部Harness向け[EKI Skill #468](https://github.com/hat47x/eki-fabric/issues/468)と、TEI/SEI/SUI/SHOのProduct Skill群に**「SkillやToolの見え方」と「現在のTrust/開示/実作用の資格」を分ける**横断評価を追加する。
 
@@ -340,7 +340,7 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **状態**：本節は各Productの最新Issueから成熟した失敗境界を横断評価へ整理した**計画**。公開合成SK-TB 9件の[Node.js再実行Script](../../evaluations/tools/check-sk-tb-fixture.cjs)は、固定fixture/ScriptがGitHub Blobと完全一致する環境で**9/9の限定セルフチェックPASS**（[記録](../../evaluations/records/SK-TB-public-fixture-selfcheck-2026-11-02.json)）。期待値が公開されており、外部Harnessの独立能力試験ではない。実EKI mTLS、Trust Bundle migration、Skill経由作業、別Harness現在認可、OS/Network送出の正負試験は**NOT RUN**。トークン大量調達を前提に探索領域は並行拡張しつつ、実証資格は各Ownerに維持する。
 
-## 15. 2026-11-02：Requested／Rule／Actual Read／Disclosureの接続
+## 16. 2026-11-02：Requested／Rule／Actual Read／Disclosureの接続
 
 [新設計・Owner接続表](harness-skill-read-witness-rule-disclosure-2026-11-02.md)に、TEI [Draft #2624](https://github.com/hat47x/tei-platform/pull/2624)のDisplay Mapping≠Rule依存（合成20+18件）、TEI [Draft #2628](https://github.com/hat47x/tei-platform/pull/2628)のOutput同値≠実Provider取得範囲（合成12件）、SEI [Draft #770](https://github.com/hat47x/sei-cognition/pull/770)のClaim相対十分性・複数Read版混合・Planner Discovery時の情報開示を**各Ownerの独立Evidenceのまま**組み込んだ。
 
@@ -348,7 +348,7 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 
 **新たな重要反例**：画面がOrder Amount 600のみ表示していても、与信Ruleの評価は内部Credit Limit 700/500で変わり得る。一方、そのRule結果のBoolean自体を外部AIへ公開できない場合、どちらの世界でも開示済み情報から結果を判別させない。読取り結果が同じでもProviderが秘密Fieldを追加で取得した可能性があり、Adapterのread-only TraceをDB物理I/Oの保証と混同しない。最終回答の非開示だけでなく、Tool/Skill発見・Planner候補・途中のAPI呼出し名による存在推知を検査する。
 
-[SK-01 §O](../../evaluations/SK-01-harness-skills.md)にSK-F01〜F12と、[公開合成fixture](../../evaluations/fixtures/SK-F-access-rule-disclosure.synthetic.json)、[整合チェッカー](../../evaluations/tools/check-sk-f-fixture.cjs)、[限定V8記録](../../evaluations/records/SK-F-public-fixture-selfcheck-2026-11-02.json)を追加。**GitHubから再取得した正確なscriptとfixtureをV8上でfs-shimを用いて実行し、公開期待値との自己整合12/12を確認**。Node.js環境での実行、ProductのRule/Provider/実DB監査、外部Harness/OS/Network、独立holdout、Owner受理は**NOT RUN**。H2/H3とH4/H5ではProduct単独Skillとの比較と、機密/完全性/誤成功の検出を別軸で測る。
+[SK-01 §P](../../evaluations/SK-01-harness-skills.md)にSK-F01〜F12と、[公開合成fixture](../../evaluations/fixtures/SK-F-access-rule-disclosure.synthetic.json)、[整合チェッカー](../../evaluations/tools/check-sk-f-fixture.cjs)、[限定V8記録](../../evaluations/records/SK-F-public-fixture-selfcheck-2026-11-02.json)を追加。**GitHubから再取得した正確なscriptとfixtureをV8上でfs-shimを用いて実行し、公開期待値との自己整合12/12を確認**。Node.js環境での実行、ProductのRule/Provider/実DB監査、外部Harness/OS/Network、独立holdout、Owner受理は**NOT RUN**。H2/H3とH4/H5ではProduct単独Skillとの比較と、機密/完全性/誤成功の検出を別軸で測る。
 
 **採用上の先後**：既存TEI read-only CLI実利用（#2605）→現ProductのRule/Providerの実根拠→必要なProduct間データ連携→外部Harnessの消費・開示/送出と実効権限。候補探索と独立PoCは並列に増やしてよい。局所合成PASSを一Activityの業務成果受理として扱わない。
 
@@ -363,3 +363,14 @@ EKI #466の特定実装では、要求が「CA DERのSHA-256一回」である�
 [SK-01 §P](../../evaluations/SK-01-harness-skills.md)にSK-RQ01〜12を追加し、[公開合成fixture](../../evaluations/fixtures/SK-RQ-selective-requalification.synthetic.json)と[Node用再実行Script](../../evaluations/tools/check-sk-rq-fixture.cjs)を保存した。GitHubに保存されたfixtureをV8参照分類で**12ケース／14項目の自己整合PASS**（[限定記録](../../evaluations/records/SK-RQ-public-fixture-selfcheck-2026-11-02.json)）。**Nodeスクリプト自体・実Product/Tool/AI Harness/OS/Provider・独立sealed Oracle・Owner受理はNOT RUN**。公開Expectedは盲検ではない。
 
 **評価順**：SK-G0・TEI #2605実read-only→RQ01〜03の過少/過剰再確認→RQ07の共同ClaimとSource時点→RQ05/06の実権限／開示→H2/H3 Product Skillありなし→H4/H5横断Skillの追加価値。並列探索範囲を広く取りながら、実行資格は各製品の正本へ戻す。
+
+## 17. 2026-11-02：Activity継続の選択的再資格化とProduct横断Handoff
+
+[新しい計画](activity-selective-requalification-and-handoff-2026-11-02.md)に、TEI [#2586](https://github.com/hat47x/tei-platform/issues/2586)/[#2516](https://github.com/hat47x/tei-platform/issues/2516)のClaim相対・局所結論と、SEI [#767](https://github.com/hat47x/sei-cognition/issues/767)の問いQ相対の限定十分性、EKI [#465](https://github.com/hat47x/eki-fabric/issues/465)のClaim ACKとBody受取の断絶、SHO [#10](https://github.com/hat47x/sho-composer/issues/10)の文書読取/納品資格、TAI #168のHarness交換・活動再開を統合した。
+
+**成熟した設計判断**：履歴における有効な観測（Historical Evidence）と、その証拠を現在の目的・Source/epoch/Scope/Host/Consumerに使える資格（Current Qualification）を区別する。**変更を受けた依存Claimだけ**再評価し、正当な旧記録は履歴として保つ。依存線が不明なら無影響を宣言せず、必要な確認を追加する。Skillが既存ProductのAuthority、意味受理、DB Read/Result本体の実観測を代行しない。
+
+比較軸は、**J0全面再検証／J1依存限定の選択的再資格化／J2旧成功の無検証再利用**。J1では見落とし・過剰再検証・Tool/Token/人のReview・情報開示・実作用誤成功を別々に測り、単なる作業回数削減を品質向上とは呼ばない。
+
+[SK-01 §Q](../../evaluations/SK-01-harness-skills.md)へ**SK-C01〜C15**を追加し、公開の[依存/委譲Fixture](../../evaluations/fixtures/SK-C-continuation-requalification.synthetic.json)と[自己整合Checker](../../evaluations/tools/check-sk-c-fixture.cjs)、[限定V8実行記録](../../evaluations/records/SK-C-public-fixture-selfcheck-2026-11-02.json)を接続した。GitHub保存済みJS・JSONのexact bytesをV8＋fs/path Shimで評価し、**公開合成15/15整合、Mutation負例4/4検出**。**実Node.js実行、実Product/OS/外部Harness、Owner意味受理、EKI Body送達/SHO実読取、独立sealed OracleはNOT RUN**。これはTAI/TEI/EKIの製品仕様採用ではなく、Draft設計・反証用Corpusである。
+
