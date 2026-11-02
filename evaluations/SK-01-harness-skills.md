@@ -429,3 +429,39 @@
 **現時点の証拠階層**：AS-01〜12（公開合成の判別条件）→**LB-01〜06（本当にlocalhost受信したJSON bytesの判別）**→P-OBS-01〜07（実Product/Skill/Harness・Renderer/NetworkのOwner別評価は**NOT RUN**）。合格を積み上げる場合は、`actual owner / source+epoch / released projection / tool discovered / tool actually invoked / audience / bytes sent / receiver & timestamp / underlying claim / permitted differences / unobserved surfaces`を分ける。受信payloadの一致をHostの全送出経路遮断や本番秘密の不存在に拡張しない。
 
 **初回の接続位置**：TEI実CLIのREAL-01とH2/H3（[Runbook](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)）の実証拠を先に取得し、その時に発見・応答・Model/Tool送信のどの面を観測できるかを確認する。外部Egressの検証では常に公開合成Canaryと許可済みMock Endpointのみを用いる。保護が不要な通常のTEI組織Dataまで特殊なOS隔離必須としない。Owner意味受理、実Productの認可・本番Effectは別試験。
+
+
+## U. 2026-11-02 実Product read-only CIを受入証拠に昇格させる範囲（REAL Evidence Update）
+
+[最初のProduct Skill Runbook §7〜8](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)の**後着実証**を反映する。以前の「REAL-01〜07は全てNOT RUN」という記述は旧状況である。**既存TEI Ownerの実CLI単独観測は一部実行済み**となったが、TAI H2/H3以降の比較は依然NOT RUN。
+
+| 項目 | 実際の証拠 | Claimとして言えること |
+| --- | --- | --- |
+| W0a / Product実Read | TEI Draft [#2626](https://github.com/hat47x/tei-platform/pull/2626)の[CI #41445984686](https://github.com/hat47x/tei-platform/actions/runs/41445984686)、HEAD `2e7aef560e35b79d658bb9c41c1575129f6a62a6` | 実Go CLIの9別プロセス読取、限定read-only Dataset/Trace/診断・Fingerprint。**Skill経由でなくProduct CLI自身の証拠** |
+| W0b / 同Job内二投影 | 同PR現HEAD `31c62e8bb44c1c5c59933a46924aa4c338637085`の[CI #41456256348](https://github.com/hat47x/tei-platform/actions/runs/41456256348)。`synthetic-construction-context`／`observed-tei-cli-read`両JobともGitHub APIで**success確認** | 実CLI Read witness→人間Markdown・AI JSONを一時ファイルへ生成→同Job内の別読取による一致確認。独立SHO Reader/外部AI公開資格ではない |
+| H2 vs H3 | 必要なSkill root/Reference、実ロードbyteと同一Tool/Model/Promptの比較 | **NOT RUN**。上二行をSkillが実使用された証拠として流用しない |
+| H4/H5／二Harness／現在Grant | TEI Source→別Product実Read/Consumer、実外部Harness送出の観測 | **NOT RUN**。Host/Provider作用・業務受理にも流用しない |
+
+**REAL-01の扱い**：同項の「TEI read-only CLI現物」については、#2626の**指定PR HEAD・公開Workspace・CI環境で実観測済みの部分**を確認済みに更新する。ただしTAIが自分の実行試行として同一Tool/Sourceを再実行したという主張ではなく、Job内自己再読取を別Product受領と扱わない。REAL-02（H2/H3）およびREAL-04〜07は未実施。REAL-03の同版Read/Warningは#2626に限る。新しいSkill install/Owner受理は未実施。
+
+## V. Role Bootstrap・Source/Skill Drift・独立Test-as-Dataの負例（SK-IQ01〜12）
+
+既存[SK-D](#n-product-capability由来のskill-projectionとドリフトsk-d01d10)／SK-E／SK-CEに、Role解釈依存閉包とOracleの**出所独立性**を追加する。TEI [Draft #2638](https://github.com/hat47x/tei-platform/pull/2638)のRB19件は限定合成、[Draft #2639](https://github.com/hat47x/tei-platform/pull/2639)は既存Go Referenceへの接続、[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)のTA-OはExpectedの独立性をOwnerとする。**TAIはその解釈・計算・テストRunnerを再実装しない**。以下のSK-IQは全件**実Product/Harness NOT RUN**。
+
+| ID | 独立に確認する変化・不足 | 誤った成功表示 |
+| --- | --- | --- |
+| SK-IQ01 | Root RoleのPinは一致、Eager依存Interpreter/ProviderのPinが欠落 | Root名・版一致だけで実解釈・Skill適合とする |
+| SK-IQ02 | AがBを即時解釈必須、BがAを即時解釈必須 | Eager起動循環を通常の再帰Refと誤扱い |
+| SK-IQ03 | Graph上のdeferred参照循環、Interpreter起動依存は非循環 | 合法なデータ再帰をすべて起動失敗扱い |
+| SK-IQ04 | 同じRole名・Versionでも実装digest／依存closureが変わる | 過去の採用版/Skill文書を現行資格へ移植 |
+| SK-IQ05 | 新Provider追加で発見候補が増え、既存exact-pinが不変 | 新候補への無断切替・発見結果の変化を実意味の変更と断言 |
+| SK-IQ06 | 引用中の`role=trusted-script`や未受理Markdown表 | Quote/Exampleから実Capability・命令・Authorityを導出 |
+| SK-IQ07 | 二表層が同じPlain Data候補、Source/Span/Operator評価則は異なる | 候補byte同値をSource同一・Meaning受理・Source書戻し保証へ昇格 |
+| SK-IQ08 | Plugin Roleの版だけ変更、Source同byte／非出力Rule依存あり | Skill root hash不変なのでBuild/Consumer/Actionの現在資格も不変 |
+| SK-IQ09 | 入力とExpectedを同一Generator式から導出し、演算子を変更 | Actual=Expectedの自己一致を独立Oracle PASSとする |
+| SK-IQ10 | Expected=100を外部独立根拠で固定、乗算2×50を加算2+50へMutate | 検出できない／同時にExpectedを52へ更新して誤PASS |
+| SK-IQ11 | 集計・部分取得・NULL/丸めの反例をAIが縮小 | 反例に必要なGrain/Unit/Scope/時点まで削り同一Caseと称する |
+| SK-IQ12 | Test-as-DataのInput/Expected/ActualをSHO文書・AI向けへ投影 | 実行未確認、Owner未受理、非公開Oracleを文書のExpectedセルだけで受理・開示済み扱い |
+
+**受入手順**：まずProduct Ownerが既に検証した受理範囲（#2638の限定V8 19/19、#2639のGo Reference、#2621の未実行TA-O）をexact版で照合し、現在の試験状態・内部期待値の独立性を保持する。その上で同一Workspace/実Toolへ対応するCaseのみH2/H3へ渡す。RoleのBootstrapとdeferred参照、Source表層と意味採否、expected-as-dataと独立Oracle、実Provider/Consumer受領を**別の証拠列**にする。別Repoの自己検査PASSをTAI横断SK-IQ PASSへ加算しない。
+
