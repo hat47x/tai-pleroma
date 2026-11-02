@@ -499,3 +499,14 @@ roundTrip: true
 ```
 
 - [receipt](../../evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json)
+## 実サーバでの保存（2026-11-03）
+
+`assembler/serve_and_save.py`で、SUIをuvicorn上の実HTTPサーバとして起動して保存します。
+
+- 127.0.0.1の実ソケット、一時SQLite、APIキーあり
+- `PUT /docs/doc-1` 作成: 200
+- `GET` 読み戻し: 200、roundTrip: true
+- APIキーなしの`PUT`: 401
+
+- [receipt](../../evaluations/records/SUI-TEI-server-2026-11-03.json)
+- 本番DB・TLS・リバースプロキシ・実配備は未検証
