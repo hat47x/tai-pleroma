@@ -1,4 +1,8 @@
-"""Build and select a reference generator for one contract, then record it."""
+"""Build and select a reference generator for one contract, then record it.
+
+Shared by the pilot integrations. Windows needs TMP/TEMP to point at a
+writable directory; the script passes that environment through to `go run`.
+"""
 
 import argparse
 import json
@@ -37,7 +41,6 @@ def main():
             capture_output=True,
             encoding="utf-8",
             errors="replace",
-            text=True,
         )
         if build.returncode != 0:
             print(build.stderr, file=sys.stderr)
@@ -60,13 +63,13 @@ def main():
             capture_output=True,
             encoding="utf-8",
             errors="replace",
-            text=True,
         )
         if select.returncode != 0:
             print(select.stderr, file=sys.stderr)
             return 1
         result = json.loads(select.stdout)
 
+    passed = bool(result.get("passed"))
     receipt = {
         "schema": "tai.reference.tei-selection/v0",
         "synthetic": False,
@@ -75,12 +78,12 @@ def main():
         "date": time.strftime("%Y-%m-%d"),
         "host": "Windows with Go on PATH and Python 3.12",
         "command": f"python {Path(__file__)} --tei-repo {args.tei_repo} --workspace {args.workspace} --contract {args.contract}",
-        "result": "PASS" if result.get("passed") else "FAIL",
+        "result": "PASS" if passed else "FAIL",
         "observed": {
             "contract": args.contract,
             "strategy": args.strategy,
-            "passed": result.get("passed"),
-            "candidates": result.get("candidates"),
+            "passed": passed,
+            "cases": len(result.get("candidates", [{}])[0].get("results", [])),
         },
         "scope": "Builds one reference generator and runs the fixture selection for the given contract. It does not compose a document or touch a product.",
     }
@@ -88,7 +91,7 @@ def main():
         json.dump(receipt, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
     print(json.dumps(receipt["observed"]))
-    return 0 if result.get("passed") else 1
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":
