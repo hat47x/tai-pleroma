@@ -68,6 +68,7 @@ RECORDS = (
     "evaluations/records/EKI-acceptance-2026-10-31.json",
     "evaluations/records/EKI-runtime-limits-2026-11-01.json",
     "evaluations/records/TEI-product-capabilities-2026-10-31.json",
+    "evaluations/records/SUI-TEI-large-doc-2026-11-03.json",
     "evaluations/records/TEI-capability-chain-2026-10-31.json",
     "evaluations/records/SW-01-S1-harness-2026-10-31.json",
     "evaluations/records/SW-01-S1-harnessA-rerun-2026-10-31.json",
@@ -235,6 +236,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-large-doc" in relative:
+            observed = data.get("observed", {})
+            if data.get("synthetic") is not True or observed.get("savedCards") != 300:
+                errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
         if "tei-sui-etag" in relative:
             observed = data.get("observed", {})
             if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
@@ -292,6 +297,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
+        if "tei-large-doc" in relative:
+            observed = data.get("observed", {})
+            if data.get("synthetic") is not True or observed.get("savedCards") != 300:
+                errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
         if "tei-sui-etag" in relative:
             observed = data.get("observed", {})
             if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
