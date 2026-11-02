@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def main():
     sui_repo = Path(sys.argv[1])
+    extra = [item.split("=", 1) for item in sys.argv[2:]]
     import pgserver
 
     pg = pgserver.get_server(tempfile.mkdtemp(prefix="sui-saas-pg-"))
@@ -38,6 +39,7 @@ def main():
         encoding="utf-8",
         errors="replace",
     )
+    env.update(dict(extra))
     sys.path.insert(0, str(backend / "src"))
     from sui_sensemaking_api.db import engine
     from sui_sensemaking_api.models import Base
@@ -80,6 +82,7 @@ def main():
             "seconds": round(time.time() - started, 2),
             "missing": missing,
             "missingCount": len(missing),
+            "extraEnv": dict(extra),
             "outputTail": output.splitlines()[-5:],
         },
         "scope": "Starts SUI under the SaaS profile against a migrated embedded PostgreSQL. It records the startup refusal; it does not configure the policy or change SUI.",

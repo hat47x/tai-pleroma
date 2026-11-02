@@ -10,7 +10,7 @@
   "observed": {
     "runtimeProfile": "saas-multitenant",
     "migration": "alembic upgrade head",
-    "seconds": 3.55,
+    "seconds": 2.49,
     "missing": [
       "external access control",
       "deny fail-safe mode",
@@ -20,6 +20,7 @@
       "SaaS auth-session hash key configured"
     ],
     "missingCount": 6,
+    "extraEnv": {},
     "outputTail": [
       "  File \"D:\\GIT\\hat47x\\sui-wt-latest\\03_Implement\\backend\\src\\sui_sensemaking_api\\trusted_saas_runtime.py\", line 112, in validate",
       "    raise RuntimeError(\"trusted SaaS runtime policy is incomplete: \" + \", \".join(missing))",
