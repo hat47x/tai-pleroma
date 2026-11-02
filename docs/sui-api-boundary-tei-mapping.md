@@ -81,3 +81,13 @@ SUI側へ読み取り専用のconsumerを追加しました（[sui-sensemaking #
 - DocumentV1の保存・API・UIには接続していない
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-consumer-2026-11-02.json)
+### DocumentV1型への組み立て（2026-11-02）
+
+`to_documentv1_payload`を追加しました（[sui-sensemaking #3366](https://github.com/hat47x/sui-sensemaking/pull/3366)、`ba660d7`）。
+
+- 投影から`DocumentV1`相当のmappingを組み立てる
+- `transform`・`createdAt`・`updatedAt`は投影に含まれないため、呼び出し側が渡す
+- 保存・Pydantic検証・API呼び出しは行わない
+- unittest 9件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-adapter-2026-11-02.json)
