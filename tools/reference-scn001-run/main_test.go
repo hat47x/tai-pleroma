@@ -225,7 +225,7 @@ func TestMMIResolvedObservationIsAlsoRenderedInD04(t *testing.T) {
 		"readOnly":             true,
 		"conflictPreserved":    true,
 		"selected": []map[string]string{
-			{"id": "O-02", "text": modified, "source": "mmi-test", "version": "test-v0", "availability": "available"},
+			{"id": "O-02", "text": modified, "source": "mmi-test", "version": "v0", "availability": "available"},
 			{"id": "O-03", "text": "会議室の利用には事前予約が必要", "source": "mmi-test", "version": "test-v1", "availability": "available"},
 			{"id": "O-07", "text": modified, "source": "mmi-test", "version": "test-v2", "availability": "available"},
 		},
@@ -266,7 +266,7 @@ func TestMMIResolvedObservationIsAlsoRenderedInD04(t *testing.T) {
 		t.Fatalf("rendered artifact byte mismatch: declared=%s actual=%s", artifactReceipt.ArtifactDigest, artifactHash)
 	}
 	digest := fmt.Sprintf("sha256:%x", sha256.Sum256([]byte(modified)))
-	if !strings.Contains(string(markdown), "| O-02 | "+modified+" | mmi-test | test-v0 |") ||
+	if !strings.Contains(string(markdown), "| O-02 | "+modified+" | mmi-test | v0 |") ||
 		!strings.Contains(string(markdown), digest) ||
 		strings.Contains(string(markdown), "| O-02 | 施設の利用は予約不要 |") {
 		t.Fatalf("D-04 does not use the same MMI-resolved observation as SCN: %s", markdown)
