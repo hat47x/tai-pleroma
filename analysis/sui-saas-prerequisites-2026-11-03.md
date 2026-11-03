@@ -119,3 +119,19 @@ stubは常に許可を返すため、実認可・OAuth brokerの挙動は未確�
 - 認証セッション鍵は64桁の小文字16進（32バイト）が必要
 
 コールバック、token交換の接続、セッション発行は未確認である。
+
+## コールバックの拒否経路（2026-11-03）
+
+`oauth_bff.handle_callback`の拒否経路を確認した。[receipt](../evaluations/records/SUI-saas-callback-contract-2026-11-03.json)
+
+| 条件 | 応答 |
+| --- | --- |
+| pending cookieなし | 400 |
+| brokerがエラーを返す | 400 |
+| state不一致 | 400 |
+| codeなし | 400 |
+| broker未設定 | 503 |
+| brokerが拒否 | 400 |
+| broker到達不可 | 503 |
+
+成功経路（IdPの署名済みtoken検証・利用者の事前provision・セッション発行）は未確認である。
