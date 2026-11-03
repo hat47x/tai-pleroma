@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.sei-decision-record/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12 and jsonschema",
+  "command": "python integrations/tools/sei_record_from_projection.py --schema <SEI schema>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/sei-decision-projection.json",
+    "digest": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+  },
+  "record": {
+    "path": "evaluations/artifacts/sei-decision-memory-record.json",
+    "digest": "sha256:4725f6f4a325a8f37278f291652c8d44afcf64bc8d1247c761ffa6b84597a42a"
+  },
+  "observed": {
+    "valid": true,
+    "errors": [],
+    "refId": "decision-1",
+    "recordType": "decision",
+    "schema": "D:\\GIT\\hat47x\\sei-cognition\\contracts\\schemas\\v1alpha1\\decision-memory.schema.json"
+  },
+  "scope": "Maps one projection artifact to the SEI decision-memory schema and validates it. It does not write to SEI or prove SEI ingestion."
+}
