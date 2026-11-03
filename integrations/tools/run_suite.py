@@ -101,6 +101,17 @@ def main():
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-etag-2026-11-03.json",
             ],
+        ),        "postgres_concurrency": run_step(
+            "postgres_concurrency",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_concurrency_check.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-concurrency-2026-11-03.json",
+            ],
         ),
     }
     passed = all(step["returncode"] == 0 for step in steps.values())
