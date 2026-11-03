@@ -43,6 +43,7 @@ def main():
     steps = {
         "checker": run_step("checker", ["tools/check-synthetic-receipts/check.py", "--root", str(ROOT)]),
         "artifacts": run_step("artifacts", ["integrations/tools/validate_artifacts.py"]),
+        "digests": run_step("digests", ["integrations/tools/verify_artifact_digests.py"]),
         "scenario": run_step("scenario", ["integrations/tools/check_scenario_artifacts.py"]),
         "pipeline": run_step(
             "pipeline",

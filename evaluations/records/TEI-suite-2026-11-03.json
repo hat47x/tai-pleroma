@@ -11,25 +11,33 @@
   "steps": {
     "checker": {
       "returncode": 0,
-      "seconds": 0.48,
+      "seconds": 0.67,
       "stdoutTail": [
         "  \"recordCount\": 61,",
-        "  \"realRecordCount\": 98",
+        "  \"realRecordCount\": 99",
         "}"
       ],
       "stderrTail": []
     },
     "artifacts": {
       "returncode": 0,
-      "seconds": 0.26,
+      "seconds": 0.5,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
       "stderrTail": []
     },
+    "digests": {
+      "returncode": 0,
+      "seconds": 0.19,
+      "stdoutTail": [
+        "{\"allMatch\": true, \"count\": 4}"
+      ],
+      "stderrTail": []
+    },
     "scenario": {
       "returncode": 0,
-      "seconds": 0.07,
+      "seconds": 0.16,
       "stdoutTail": [
         "{\"allFound\": true, \"count\": 4}"
       ],
@@ -37,7 +45,7 @@
     },
     "pipeline": {
       "returncode": 0,
-      "seconds": 10.09,
+      "seconds": 15.28,
       "stdoutTail": [
         "{\"result\": \"PASS\", \"steps\": {\"flow\": {\"returncode\": 0, \"casesPassed\": 21}, \"schema\": {\"returncode\": 0, \"valid\": true}, \"documentV1\": {\"returncode\": 0, \"valid\": true}, \"contractDigests\": {\"returncode\": 0, \"allMatch\": true}}}"
       ],
@@ -45,7 +53,7 @@
     },
     "compose": {
       "returncode": 0,
-      "seconds": 1.03,
+      "seconds": 1.2,
       "stdoutTail": [
         "{\"valid\": true, \"cards\": 5, \"decisionRef\": \"decision-1\", \"taskExecutor\": \"dev.example.transform\", \"profileId\": \"profile-a\", \"cardIds\": [\"card-decision-1\", \"card-task-1\", \"card-profile-1\"]}"
       ],
@@ -53,15 +61,15 @@
     },
     "tls": {
       "returncode": 0,
-      "seconds": 5.51,
+      "seconds": 4.74,
       "stdoutTail": [
-        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:54308\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
+        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:54855\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
       ],
       "stderrTail": []
     },
     "postgres": {
       "returncode": 0,
-      "seconds": 15.94,
+      "seconds": 16.0,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -69,7 +77,7 @@
     },
     "postgres_migrate": {
       "returncode": 0,
-      "seconds": 18.41,
+      "seconds": 18.97,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\", \"migration\": \"alembic upgrade head\"}"
       ],
@@ -77,7 +85,7 @@
     },
     "postgres_etag": {
       "returncode": 0,
-      "seconds": 13.38,
+      "seconds": 13.73,
       "stdoutTail": [
         "{\"createStatus\": 200, \"etagPresent\": true, \"staleStatus\": 409, \"matchingStatus\": 200, \"database\": \"embedded PostgreSQL 16.2\", \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -88,31 +96,31 @@
     },
     "postgres_concurrency": {
       "returncode": 0,
-      "seconds": 15.16,
+      "seconds": 15.49,
       "stdoutTail": [
-        "{\"createStatus\": 200, \"statuses\": [409, 200], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
+        "{\"createStatus\": 200, \"statuses\": [200, 409], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
       ],
       "stderrTail": []
     },
     "postgres_contention": {
       "returncode": 0,
-      "seconds": 21.27,
+      "seconds": 20.34,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}]}"
       ],
       "stderrTail": []
     },
     "postgres_retry": {
       "returncode": 0,
-      "seconds": 28.47,
+      "seconds": 19.86,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}]}"
       ],
       "stderrTail": []
     },
     "postgres_multidoc": {
       "returncode": 0,
-      "seconds": 14.35,
+      "seconds": 14.04,
       "stdoutTail": [
         "{\"created\": true, \"read\": true, \"rows\": 10, \"titlesMatch\": true}"
       ],
@@ -123,7 +131,7 @@
     },
     "records": {
       "returncode": 0,
-      "seconds": 2.87,
+      "seconds": 1.9,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -131,9 +139,9 @@
     },
     "eki_submit": {
       "returncode": 0,
-      "seconds": 0.79,
+      "seconds": 0.8,
       "stdoutTail": [
-        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_2ed9dd7a53f35be6d87cfbdd25fc498d\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
+        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_cfaa3654efbf2c49ad1717462f3b65fd\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
       ],
       "stderrTail": []
     }
