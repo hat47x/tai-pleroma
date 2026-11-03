@@ -45,3 +45,27 @@
 ## ハーネス引渡しの負例（新規実験NOT RUN）
 
 - [証拠・権限の負例マトリクス](harness-boundary-negative-cases.md) — ハーネス切替時の過去Decision、Source/Scope、Pluginの検証、EKIの結果受理と実世界Outcome、個人・組織・社会の権限を別々に検査する候補。これは試験結果ではなく、[横断設計](../docs/harness-evidence-boundary.md)に対応する評価計画。
+
+## TEI投影・保存の検証（2026-11-03）
+
+4製品の投影から、合成・TLS・実DB保存までを記録した。いずれも`publicationAllowed=false`で、受入・公開の判断ではない。
+
+### 投影とconsumer
+
+- [SEI Decision選抜](records/SEI-TEI-decision-selection-2026-11-03.json)・[artifact](records/SEI-TEI-artifact-2026-11-03.json)・[consumer](records/SEI-TEI-consumer-2026-11-03.json)・[実artifact読み取り](records/SEI-TEI-real-artifact-2026-11-03.json)
+- [MMI Format Profile選抜](records/MMI-TEI-format-profile-selection-2026-11-03.json)・[artifact](records/MMI-TEI-artifact-2026-11-03.json)・[consumer](records/MMI-TEI-consumer-2026-11-03.json)・[実artifact読み取り](records/MMI-TEI-real-artifact-2026-11-03.json)
+- [EKI TaskRequest選抜](records/EKI-TEI-task-request-selection-2026-11-03.json)・[artifact](records/EKI-TEI-artifact-2026-11-03.json)・[consumer spike](records/EKI-TEI-consumer-2026-11-03.json)
+- 横断: [4製品のスキーマ検証](records/TEI-artifacts-crosscheck-2026-11-03.json)・[再生成の同一性](records/TEI-artifacts-determinism-2026-11-03.json)
+
+### 合成と保存
+
+- [SCN-003の識別子確認](records/SCN-003-artifact-links-2026-11-03.json)・[合成](records/SCN-003-compose-2026-11-03.json)・[SUI保存](records/SCN-003-save-2026-11-03.json)
+- [TLS配信](records/SUI-TEI-tls-2026-11-03.json)
+- [埋め込みPostgres保存](records/SUI-TEI-postgres-2026-11-03.json)・[Alembic migration経由](records/SUI-TEI-postgres-migrate-2026-11-03.json)
+- 一括: [suite](records/TEI-suite-2026-11-03.json)（8段）
+
+### 失敗・未解決
+
+- [Postgres最初の試行](postgres-attempt-2026-11-03.json): 409。原因はテナント行の欠落で、後に解消。
+- [SaaS起動試行](saas-startup-probe-2026-11-03.json)・[stub起動](saas-stub-startup-2026-11-03.json): 6項目の不足と、stub設定での起動・401。外部HTTP先は未実装。
+- [SaaS前提の整理](../analysis/sui-saas-prerequisites-2026-11-03.md)
