@@ -1,0 +1,91 @@
+{
+  "schema": "tai.reference.sui-postgres-contention/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, uvicorn, and an embedded PostgreSQL 16.2",
+  "command": "python integrations/pilot-sui-document/assembler/postgres_contention_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-latest --artifact D:\\GIT\\hat47x\\tai-wt-sx6\\evaluations\\artifacts\\scn-003-document.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-sx6\\evaluations\\artifacts\\scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "rounds": [
+      {
+        "round": 1,
+        "statuses": [
+          200,
+          409,
+          200
+        ],
+        "retries": [
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 2,
+        "statuses": [
+          409,
+          409,
+          200
+        ],
+        "retries": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 3,
+        "statuses": [
+          409,
+          409,
+          200
+        ],
+        "retries": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 4,
+        "statuses": [
+          409,
+          200,
+          409
+        ],
+        "retries": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 5,
+        "statuses": [
+          409,
+          409,
+          200
+        ],
+        "retries": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "roundCount": 5,
+    "writers": 3,
+    "transient": 0,
+    "retries": 1,
+    "documentRows": 1,
+    "database": "embedded PostgreSQL 16.2"
+  },
+  "scope": "Repeats conditional-PUT contention for a few rounds against a real PostgreSQL. It does not prove throughput, fairness, or long-running stability."
+}

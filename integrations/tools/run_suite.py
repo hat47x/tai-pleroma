@@ -128,6 +128,19 @@ def main():
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-contention-2026-11-03.json",
             ],
+        ),        "postgres_retry": run_step(
+            "postgres_retry",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_contention_check.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--retry-transient",
+                "2",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-retry-2026-11-03.json",
+            ],
         ),        "postgres_multidoc": run_step(
             "postgres_multidoc",
             [
