@@ -383,3 +383,14 @@ proxyReady true / create 200 / fetch 200 / roundTrip true / anonymous 401
 ```
 
 プロキシは検証用の小さな実装で、実運用のリバースプロキシ・HSTS・実証明書は未検証である。
+
+## Worker登録（mTLS）と実行の範囲（2026-11-03）
+
+`eki-control gen-worker-ca`でCAを作り、`enroll-token`を発行し、mTLSのWorker listenerへ`eki-agent enroll`で登録できた。[receipt](../evaluations/EKI-worker-enroll-2026-11-03.json)
+
+```text
+enrolled as wrk_5daff2b4de9773099aed44b43b5aa10b in trust domain tei.test
+state: control-anchor.pem / worker-ca.pem / worker-identity.pem
+```
+
+ただし、Agentのassignment実行は**設定済みの固定コマンドを1つ実行する**ものであり、Taskの内容を実行するものではない（`internal/agent/service/assignments.go`の`ExecutionConfig`: "This is not a sandbox."、`events_file`が観測結果）。したがってClient APIのTaskからAgentへ仕事が渡って実行される縦断は、現時点のEKIでは成立しない。
