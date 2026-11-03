@@ -575,3 +575,20 @@ HX-01＝DSH≠OpenCode＋DeepSeekモデル、HX-02＝Skill rootと実参照閉�
 **順序を固定**：最初の外部Harness実証は従来どおり[SK-02](SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)のH2/H3 read-only TEI Skill。Studio/Job/Orgの新受入票は**Productが提供する実入口の証拠が得られてから**個別に試す。全Productの一斉実装・一律新Skill/Hookは条件ではない。
 
 **現在の事実**：[TEI #2747](https://github.com/hat47x/tei-platform/pull/2747)はmerged、Studio Command Reference呼出しのCode/Go/Node局所テストは既存PRの証拠。[TEI #2616](https://github.com/hat47x/tei-platform/pull/2616)の実Go誤対象Referenceと[TEI #2781](https://github.com/hat47x/tei-platform/pull/2781)の33件合成は別Ownerの限定検査。**本SK-IVでWails実UI、Host/DB/Grant/OS/EKI、独立Reader、実Harnessロード・意味受理を新たに実行していない**。共通Runtime/API/Registry/Authorityの新設なし。
+
+## AD. 2026-11-03：TAI root縮小と段階的参照ロードの妥当性（SK-LAZY01〜08）
+
+[TAI Sample Skill root](../examples/skills/yi-tai-activity/SKILL.md)を13,967→3,162文字へ再構成。旧rootの**詳細13節を3つの`references/`に全文移動**し、13/13節内容一致と全相対リンクの静的照合を確認済み。これは**ファイル量の改善**であり、実Harnessの発見・Loader・読取やToken節約を実証しない。TAIはProduct単独Taskで原則不要なので、root縮小だけでなく**Skillを全く呼ばない選択**が最も重要な対照である。
+
+| Case | 正負対・失敗させるClaim | 試験で測るOutcome |
+| --- | --- | --- |
+| **SK-LAZY01** | TEI read-only調査だけ必要なのにTAI Skillを起動 | P0 Tool-only/P1 TEI Skillと、P2 TAI Skill追加の不要なLoad・Token・手戻り |
+| **SK-LAZY02** | 2 Product以上の実Activityでrootのみ読んだ | 正しいOwner/Tool選択・未確認Source/Consumer・Unknownを保持できるか |
+| **SK-LAZY03** | TEI Studio/cron/Org Scopeを問う依頼 | Product入口の詳細だけロードし、実ないTool/Hook/業務Commitを捏造しない |
+| **SK-LAZY04** | 外部へTool/Source候補を送る依頼 | 開示参照だけを使い、Tool Planner/DOM/Log/Egressに未許可名を出さない |
+| **SK-LAZY05** | EKI Job期限と失敗後回復を扱う依頼 | 再資格化・期限参照だけを使い、別Attempt再実行やQuality PASSを勝手に宣言しない |
+| **SK-LAZY06** | root内容が同じだが参照Script/一ファイルだけ変更 | 実参照Load closureと現在資格を別判定し、未読の無関係ファイルで全資格を失効させない |
+| **SK-LAZY07** | 参照ファイルがない／パス移動／Harnessで相対参照が解決不能 | Packageに存在するだけをLoad成功にしない。未取得を記録し許可されたProduct単独作業へ縮退 |
+| **SK-LAZY08** | 旧全量rootと新Lazy rootが同Taskに答える | 正答、誤完了、実Tool・Source、必要なref取得、入力Token・費用・wall time・人の確認を同条件／独立Oracleで比較。文字数減を品質/Token改善と呼ばない |
+
+**現時点のEvidence**：GitHub exact filesの構造・本文一致・リンク存在の限定静的検査のみ。**SK-LAZY01〜08の実Harness、比較・Token測定・二Product Handoff/Owner受理は全件NOT RUN**。評価のOwnerは既存SK-MIN/TAI #168/#271、Product正答はTEI #2514、総費用はTEI #2018。新共通Skill Registry/Loader/Runner/必須Release Gateを作らない。
