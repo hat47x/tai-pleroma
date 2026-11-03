@@ -25,7 +25,8 @@ def main():
         return 2
     repo = Path(sys.argv[2])
     backend = repo / "03_Implement" / "backend"
-    env = {**os.environ, "PYTHONPATH": str(backend / "src")}
+    env = {key: value for key, value in os.environ.items() if not key.startswith("SUI_")}
+    env["PYTHONPATH"] = str(backend / "src")
     result = subprocess.run(
         [sys.executable, "-m", "pytest", *FILES, "-q"],
         cwd=backend,

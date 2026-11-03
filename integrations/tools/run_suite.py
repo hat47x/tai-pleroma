@@ -49,6 +49,8 @@ def main():
         "saas_login": run_step("saas_login", ["integrations/tools/sui_saas_login_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_callback": run_step("saas_callback", ["integrations/tools/sui_saas_callback_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_identity": run_step("saas_identity", ["integrations/tools/sui_saas_identity_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
+        "sui_saas_tests": run_step("sui_saas_tests", ["integrations/tools/sui_saas_tests.py", "--sui-repo", args.sui_repo]),
+        "sui_docs_tests": run_step("sui_docs_tests", ["integrations/tools/sui_docs_tests.py", "--sui-repo", args.sui_repo]),
         "scenario": run_step("scenario", ["integrations/tools/check_scenario_artifacts.py"]),
         "pipeline": run_step(
             "pipeline",
