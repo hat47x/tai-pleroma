@@ -249,3 +249,6 @@ reasons="...: reserve lease: NOT_YET_VALID: approval is issued in the future"
 - Worker行の直接投入は登録手続きの代替ではない
 
 [receipt](../evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json)・[log](../evaluations/records/EKI-TEI-dispatch-running-2026-11-03.log)
+## 更新後の一括検証（2026-11-03）
+
+TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証16段を実行し、すべて通った。EKI投入には現在のEKIからビルドした`eki-control`を使った。[receipt](../evaluations/records/TEI-suite-2026-11-03.json)
