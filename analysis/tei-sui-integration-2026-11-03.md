@@ -217,3 +217,19 @@ EKIの`internal/control/dispatch/dispatch.go`では、`admitted`のTaskを`ready
 
 - 署名鍵の`algorithm`は`EdDSA`（`Ed25519`は拒否される）
 - policy storeの用意が、実行へ進むための次の前提
+### policyを投入した後（2026-11-03）
+
+`policy_history`（epoch 1、active）と`policy_current`へ行を入れて再起動すると、配置ループは止まらず、Taskを検討対象にする。
+
+```text
+dispatch tick considered=2 dispatched=0 deferred=2
+reasons="...: no usable worker is registered"
+```
+
+つまり次の不足は**Workerの登録**である。Taskは依然`queued`で、実行はされない。
+
+- policyはstate storeの行として投入できた
+- 配置はWorker registryを見る段で止まる
+- 次に必要なのはWorker plane（登録・セッション）の用意
+
+[attempt](../evaluations/eki-dispatch-attempt-2026-11-03.json)・[log](../evaluations/eki-dispatch-attempt-2026-11-03.log)
