@@ -53,6 +53,44 @@ def main():
                 "evaluations/records/TEI-suite-pipeline-2026-11-03.json",
             ],
         ),
+        "compose": run_step(
+            "compose",
+            ["integrations/tools/compose_scn_003.py", "--sui-repo", args.sui_repo],
+        ),
+        "tls": run_step(
+            "tls",
+            [
+                "integrations/pilot-sui-document/assembler/tls_check.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--out",
+                "evaluations/records/SUI-TEI-tls-2026-11-03.json",
+            ],
+        ),
+        "postgres": run_step(
+            "postgres",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_save.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
+            ],
+        ),
+        "postgres_migrate": run_step(
+            "postgres_migrate",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_migrate_save.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json",
+            ],
+        ),
     }
     passed = all(step["returncode"] == 0 for step in steps.values())
     receipt = {
