@@ -366,7 +366,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
         if "TEI-records" in relative:
             observed = data.get("observed", {})
-            if observed.get("allValid") is not True or observed.get("count") != 3:
+            if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
         if "EKI-TEI-record" in relative:
             observed = data.get("observed", {})

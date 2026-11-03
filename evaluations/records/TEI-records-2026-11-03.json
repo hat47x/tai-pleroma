@@ -9,6 +9,11 @@
   "result": "PASS",
   "observed": {
     "records": {
+      "sui": {
+        "valid": true,
+        "errors": [],
+        "returncode": 0
+      },
       "sei": {
         "valid": true,
         "errors": [],
@@ -26,7 +31,7 @@
       }
     },
     "allValid": true,
-    "count": 3
+    "count": 4
   },
   "scope": "Converts the SEI, MMI, and EKI projection artifacts into their product records and validates each. It does not write to any product."
 }
