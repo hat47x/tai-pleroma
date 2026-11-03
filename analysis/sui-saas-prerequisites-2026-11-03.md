@@ -146,3 +146,14 @@ RS256のJWTをローカルJWKSで検証し、issuer・audience・subject・tenan
 - 検証結果は`VerifiedTenantClaim`（tenant_id・identity_provider_id・issuer・audience・subject）になる
 
 セッションcookieの発行と、認証済みリクエストの通しは未確認である。
+
+## SUI側テストの実行（2026-11-03）
+
+SUIのSaaS関連テスト4ファイルを実行し、56件すべて通った。[receipt](../evaluations/records/SUI-saas-tests-2026-11-03.json)
+
+- `test_saas_session_csrf.py`
+- `test_trusted_saas_runtime.py`
+- `test_saas_document_read_pdp_outage.py`
+- `test_tenant_session_precondition.py`
+
+`PYTHONPATH=03_Implement/backend/src`が必要（未インストールのため）。実配備ではない。

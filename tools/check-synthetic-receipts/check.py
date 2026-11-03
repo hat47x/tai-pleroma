@@ -170,6 +170,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-saas-login-contract-2026-11-03.json",
     "evaluations/records/SUI-saas-callback-contract-2026-11-03.json",
     "evaluations/records/SUI-saas-identity-2026-11-03.json",
+    "evaluations/records/SUI-saas-tests-2026-11-03.json",
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
     "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
     "evaluations/records/SCN-003-compose-2026-11-03.json",
@@ -393,6 +394,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allIdentical") is not True or observed.get("count") != 3:
                 errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
+        if "SUI-saas-tests" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
+                errors.append(f"SUI SaaS test subset did not pass: {relative}")
         if "SUI-saas-identity" in relative:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
