@@ -90,6 +90,17 @@ def main():
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json",
             ],
+        ),        "postgres_etag": run_step(
+            "postgres_etag",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_etag_check.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-etag-2026-11-03.json",
+            ],
         ),
     }
     passed = all(step["returncode"] == 0 for step in steps.values())
