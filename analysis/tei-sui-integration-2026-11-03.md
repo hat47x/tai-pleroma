@@ -258,3 +258,19 @@ TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括�
 SUIの文書ルートに関するテスト7ファイルを実行し、122件すべて通った。[receipt](../evaluations/records/SUI-docs-tests-2026-11-03.json)
 
 往復・境界・テナント分離・アクセス制御連携・監査連携・A1エラー契約を含む。`PYTHONPATH=03_Implement/backend/src`が必要で、実配備ではない。
+
+## SUI全テストの1回実行（2026-11-03）
+
+SUIのbackendテスト全体を1回実行した。[記録](../evaluations/SUI-full-tests-2026-11-03.json)
+
+```text
+passed 2082 / failed 14 / skipped 49 / deselected 8
+所要 約23分
+```
+
+失敗14件の内訳は、実行環境に由来するものだった。
+
+- `test_codegen_pipeline.py` 12件: 子プロセスの出力がcp932で表現できず失敗
+- `test_external_content_store.py` 2件: `C:\Users\...\Temp`配下への書き込みが拒否される
+
+製品の挙動に関する表明の失敗ではないが、再実行していないため件数は1回の観測である。
