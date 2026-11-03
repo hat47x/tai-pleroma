@@ -530,3 +530,21 @@ EKIの明示的な委任時は既存Task/Attempt/Admission/Worker/Lease/Recovery
 **Handoff/失効**：Action Purpose/Target/Scope/Expected-state、Source/Role/Build・Org valid/known time、現在Grant、Provider/Receipt/Reader、期限/品質/開示を各Productの実証へ結ぶ。Previewや`rows=[]`や`COMPLETED`を、現在の更新許可・全件不存在・業務品質PASSへ昇格しない。Role/Rule/Source変更を、UI書式だけの変更と同じ再受理コストにしない。
 
 [SK-01 §AC](../../evaluations/SK-01-harness-skills.md)へ**SK-IV01〜12**を追加（全件NOT RUN）。SK-02の最初の実H2/H3は引き続き**TEI mainのread-onlyモデル調査だけ**を対象として、Studio/Job/Org/Provider全体の未証明によって停止させない。その後、実装が存在する範囲だけ用途別のUI/Job/Org試験・SK-03第2Harness比較に拡張する。OwnerはTEI #1130/#1824/#2507/#2598/#1174/#2386/#2605、EKI #112/#57、TAI #168/#74/#271、SHO #4の既存責務を維持。
+
+## 30. 2026-11-03：TAI Skillの常時読込を最小化し、詳細手順を必要時だけ参照する
+
+**既存PoCの設計矛盾を修正**：TAIは一製品で済む仕事に不要、外部Harnessへの情報開示とtoken負担も最小化すべきだが、[旧`examples/skills/yi-tai-activity/SKILL.md`](https://github.com/hat47x/tai-pleroma/blob/5e578c05b8c4ad8e17e08fb7891dfc7c448cde13/examples/skills/yi-tai-activity/SKILL.md)は、追加した評価・Role・UI・EKI・Source・Trustの詳細を全量rootに積み重ねて**13,967文字**となっていた。Skillが自動発見・ロードされる環境で常時この説明を投入するのは、必要最小のSelection/Contextと相反し、手順の優先順位を理解しにくくする。
+
+**今回の実体変更**：TAI例示Skillのrootを**3,162文字（文字数で77.4%減）**へ整理し、作業の核となる「複数製品が必要な場合だけ起動→目的と停止条件→実能力→Source/意味/開示→作用前資格→期限/品質/回復→必要範囲の結果」を7段階へ統合。詳細13節は欠落させず、同じProduct Repo内の3つの遅延参照ファイルへ移動した。
+
+| 参照範囲 | 必要なときだけ読むファイル | 旧rootから保存した節 |
+| --- | --- | --- |
+| Product/入口/意味 | [`references/product-entrypoints.md`](../../examples/skills/yi-tai-activity/references/product-entrypoints.md) | 6節：TEI CLI/Studio/UI/Job/Org、Markdown/SHO、Action、型付きConnectionなど |
+| Source/Tool/Disclosure | [`references/source-disclosure-evidence.md`](../../examples/skills/yi-tai-activity/references/source-disclosure-evidence.md) | 4節：Skill実ロード/Tool/Source/Artifact/現在Trust/Planner Disclosure |
+| 再資格化/期限/回復 | [`references/requalification-deadline-recovery.md`](../../examples/skills/yi-tai-activity/references/requalification-deadline-recovery.md) | 3節：過去成果の局所再確認、Activity再開、EKI/品質期限 |
+
+**検査結果（実GitHubファイル照合）**：変更前のexact commitと新ファイルをGitHubから再取得し、13節の本文を相対リンク調整後に**一節ずつ文字列比較して13/13一致、欠落0**。4つの新ファイルに含まれるローカル参照**27件／重複排除14 PathをGitHub実ファイルとして確認し、broken link 0**。Frontmatterの`name: yi-tai-activity`と`NOT RUN`警告は維持した。これは**文書・パッケージ構造の静的確認**であり、Harnessによる選択/参照ロード実行、Token計測、正答・安全性向上の実測ではない。詳細3ファイルを全部読んだ場合に総Prompt量が減るとは主張しない。
+
+**利用時規則**：rootはTAIが必要なときだけ適用。詳細は一件のTaskで必要な一つだけを優先し、Readerが実際に読んだ参照版を記録する。Agentの「読んだ」という自己申告は実Loader証拠の代用ではない。**root縮小の良否は[SK-01 §AD](../../evaluations/SK-01-harness-skills.md)で、最小Tool/Skill選択・正答・誤選択・資料過少/過剰ロード・Token/費用・人のReviewを同一Taskで比較する**。既存SK-02 H2/H3（TEI Product Skill）にTAI Skillを混入させず、TAI Skill追加群は後続SK-MIN P2/H4/H5で扱う。
+
+**採用範囲**：TAI Draft #270の**試作Skillの構造改善のみ**。各Productの正式Skill、実CLI、Owner Meaning/Authority/Current Grant、外部Harness install/load、シリーズReleaseは変更・受理していない。新Host/Registry/Tool ABIを加えない。
