@@ -35,6 +35,7 @@ def main():
     parser.add_argument("--sei-schema", default="")
     parser.add_argument("--mmi-schema", default="")
     parser.add_argument("--eki-openapi", default="")
+    parser.add_argument("--eki-control", default="")
     parser.add_argument("--out", default="evaluations/records/TEI-suite-2026-11-03.json")
     args = parser.parse_args()
 
@@ -152,6 +153,19 @@ def main():
             ],
         ),
     }
+    if args.eki_control:
+        steps["eki_submit"] = run_step(
+            "eki_submit",
+            [
+                "integrations/tools/eki_submit_projection.py",
+                "--control-binary",
+                args.eki_control,
+                "--artifact",
+                "evaluations/artifacts/eki-task-request-record.json",
+                "--out",
+                "evaluations/records/EKI-TEI-submit-2026-11-03.json",
+            ],
+        )
     passed = all(step["returncode"] == 0 for step in steps.values())
     receipt = {
         "schema": "tai.reference.tei-suite/v0",

@@ -5,16 +5,16 @@
   "publicationAllowed": false,
   "date": "2026-11-03",
   "host": "Windows with a locally built eki-control and an embedded SQLite state store",
-  "command": "python integrations/tools/eki_submit_projection.py --control-binary <eki-control> --artifact D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-record.json",
+  "command": "python integrations/tools/eki_submit_projection.py --control-binary <eki-control> --artifact evaluations/artifacts/eki-task-request-record.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-record.json",
+    "path": "evaluations/artifacts/eki-task-request-record.json",
     "digest": "sha256:fb1c5693cdc744e512adf9ec95bbb784b3f35d86e4f4680a5a13680950d770c4"
   },
   "observed": {
     "submitStatus": 202,
     "repeatStatus": 202,
-    "taskId": "tsk_cd6dfd68e4abe8c83339d4167242e070",
+    "taskId": "tsk_646e0daf56505482a74fc55b9d4110f5",
     "statusReadStatus": 200,
     "taskStatus": "queued",
     "idempotent": true,
