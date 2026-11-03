@@ -54,3 +54,13 @@
 - **機密RawのOS/Host境界（2026-11-01追補）**：[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、[横断計画§19](harness-capability-lifecycle-2026-10.md)、[SW-01 S3/S5追加試験](../evaluations/SW-01-harness-handoff-qualification.md)。SEI/SUI等のSourceは用途に応じ管理境界内へ保持し、別Product/外部Harnessへはサーバ側で許可した最小Projectionのみ。機密Profileでは別OS Identity/ACL/Process/IPC/Network/Secret等でRawの直接読取り・外向き送出を実拒否する。EKIの資源制限と機密隔離は別。最初のC0アクセス棚卸し→合成Rawのread-only正例・直接読取り/egress負例→Linux/Windows実Profile比較を検討。新中央Host/認可正本なし、実隔離試験NOT RUN。SW-01 A2/B1の入力条件は許可済みProjectionでそろえる。
 - **大量AI並列開発によるスコープ拡張（2026-11-01）**：[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)／[横断計画§20](harness-capability-lifecycle-2026-10.md)へ、TEI #2493の広範な業務・Plugin・Target Pressure、#2495のデータ構造/数学・単位・トポロジーの多facet分類、SEI組織文脈、SUI開示投影、SHO一体文書、EKI実委任を横断接続する。候補/Issue/製品領域の固定上限を置かず、逐次対並列Agent・共通Contract競合・機密OS隔離・別Harness/料金の4件ベースの独立対照を提案。探索候補と実証済み実能力、CI/Owner・統合負荷を別計測し、低価格トークンを実Owner意味受理や実Host権限に昇格させない。TAI #232で型名/Schema/件数等メタデータの機密性も評価。初回P-A〜P-Eと実利用料金の試験は未実施。従来SW-01 A2/B1の比較は独立に継続し、スコープ縮小のための固定上限は導入しない。
 - **機密下でのClaim十分性とConsumer比較（2026-11-02）**：[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、[横断計画§21](harness-capability-lifecycle-2026-10.md)、[SW-01 C1〜5](../evaluations/SW-01-harness-handoff-qualification.md)。同じ公開Projectionで内部世界が異なり全件Claimが相違する二世界の反例により、外部AIへ隠れた情報を想像で補わせない。Ownerの開示Policyが許す場合に限りSource側で限定Questionを検査して、許可した結果だけ返す候補を評価（**boolean結果自体も秘匿対象**）。TEI #2516 CC-01〜06、SEI #767、TAI #234/TEI #2515のSession Event/Team送出へ参照接続。通常TEI内の組織Dataを機密Profile一律対象にしない。C1/C3をSW-01 A2/B1へ最小追加、反復照会/実OS/Network/異Harnessは別資格。評価案・新規NOT RUN。Draft #169はmainに大幅後行中につき、最新mainを基準に評価票／情報保護／ポートフォリオをレビュー可能な小差分に分離する案を検討し、旧PRを無断統合しない。
+
+## 横断要件の適正化・多モデル独立レビュー（2026-11-04：提案）
+
+[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)および[主要価値からの要件適正化と独立レビュー計画](yi-constellation/product-value-scope-audit-2026-11-04.md)を、Phase 0〜3と並列の**横断レビュー・計画更新レーン**として追加する。
+
+- **目的はIssue数や研究領域を減らすことではない**。各Productの主要価値から必須要件、用途条件付き要件、研究候補、他Product/外部Harnessとの重複を区別し、標準構成・初期受入に不要な義務を積まない。安価なトークンによる広域・並列の探索は維持する。
+- **多エージェント運用**：製品別の一次評価（TAI/TEI/SEI/SUI/SHO/EKI）、作成者から独立した反証、Source/Evidence/機密・Authority確認、Integratorによる小差分提案を分ける。モデルの合意は独立証拠でもOwner受理でもない。
+- **初回の出口**：各製品の価値→最小体験→重要要件2〜3件の適用条件・負例・代替を照合し、少なくとも高優先2件について独立の反証票を作る。実験未実施はNOT RUN。Product固有変更は既存Issue/ADRのOwnerへ、Draft PRで提案する。
+- **守る境界**：意味・出典・版・実行認可・機密と実効果の確認を削減対象にしない。新しい中央Host、第二Meaning/Authority正本、全Agent共通Runner/Registryを作らない。単独Productと外部Harnessの価値・費用の対照を用い、必要に応じて詳細だけ遅延読込みする。
+- **現在地**：主要価値・Issueの一次Source-static照合と規則案の登録まで。全Issue網羅、2モデル比較、製品の正式な要件再分類、実ユーザー価値・Owner受理はNOT RUN。
