@@ -195,6 +195,7 @@ def main():
                 args.sui_repo,
             ],
         ),
+        "gate": run_step("gate", ["integrations/tools/gate_recheck.py"]),
     }
     if args.eki_control:
         steps["eki_submit"] = run_step(
