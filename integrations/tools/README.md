@@ -21,7 +21,7 @@ python integrations/tools/run_suite.py \
   --eki-control <eki-control binary>
 ```
 
-15段（checker・artifact・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
+16段（checker・artifact・digest・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
 
 - receipt自身をcheckerが読むため、FAILのreceiptが残っていると次の実行もFAILになる。その場合は`--skip-checker`で実行し、後からcheckerを単独で回す
 - `--eki-control`を省くとEKI投入の段は実行しない
@@ -32,6 +32,7 @@ python integrations/tools/run_suite.py \
 | --- | --- |
 | `run_selection.py` | 1契約の生成・fixture選抜 |
 | `validate_artifacts.py` | 4製品artifactのスキーマ検証 |
+| `verify_artifact_digests.py` | artifactのcontractDigestを契約ファイルから再計算 |
 | `check_scenario_artifacts.py` | SCN-003の識別子確認 |
 | `compose_scn_003.py` | 判断・仕事・形式をSUI文書へ合成 |
 | `check_determinism.py` | 単一record artifactの再生成同一性 |
