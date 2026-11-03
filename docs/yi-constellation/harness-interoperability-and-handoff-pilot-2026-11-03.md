@@ -119,3 +119,34 @@ CLIやMCPのどちらかを**必ず**通すのではなく、実Harnessにとっ
 **優先工程**：(P0) SK-02のTEI`commands→catalog→inspect→trace→validate`を一つの外部Harnessから実呼出し、現在のSource/Skill版・Tool argv/結果を観測。(P1) H3のSkill実ロードと四独立Sessionの比較適格性、独立Oracleと総費用を測定。(P2) SK-03の第二Harnessへ公開Evidenceだけを引継ぎ、同Sourceの参照再解決・現在Host/Disclosureの確認を行う。(P3) SHOまたはMMIを必要とする別Taskへ進む。**TEI実CIの成功を最初の外部Harness実行として数えない**。
 
 この追加は実TEI CIの独立再読取と他Productの局所反証を受渡し条件に変換した**設計・Evidence Pointerの更新のみ**。本稿でTAI実Harness・SHO/MMI製品・OS/DB/外部Receiver試験を実行したわけではない。既存SK-02、TAI #271／#74、TEI #2605/#2516/#1119、SHO #4、MMI #658の受入とOwnerは変更せず、中央Host/Reader/Claim Store・自動許可Engineを追加しない。
+
+## 8. 2026-11-03：Harness選択の時間・費用・品質期限をEKI/TEIへ正しく引き渡す
+
+**横断成熟事項**：[TAI #168 CQ-01〜08](https://github.com/hat47x/tai-pleroma/issues/168)は「利用者の許容lead time・予算・中断/再開」を前提にHarnessを選ぶが、実Worker/Placementの実行制御は[EKI #19](https://github.com/hat47x/eki-fabric/issues/19)/[#57](https://github.com/hat47x/eki-fabric/issues/57)/[#155](https://github.com/hat47x/eki-fabric/issues/155)等がOwner。[TEI横断Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)は**Data/Quality Checkの期限・Scope・例外**を別論点として持つ。TAI/Skillが単一の「ジョブ完了」「品質PASS」「納品完了」に畳むと、安価なHarness選択でも業務結果を誤報する。**本節は既存のTask・Product契約を使った候補選択/説明/評価であり、新Scheduler/予測API/共通Schemaを作らない。**
+
+### 8.1 二つの時間軸と三つのOwner
+
+| 時間軸／制約 | Skill／TAIが行うこと | 最終的な判断と現物Owner |
+| --- | --- | --- |
+| Taskの最大Lead Time／締切 | 利用者が要求した期限、現在時点、完了の定義、データ・初期化・レビュー・再開/復旧に必要な時間・不確実性を記録。候補の実績分布がなければ「期限内できる」と予測で断言しない | 外部Harness/Providerの実Tool実行・実結果。EKIへの明示委任では既存Admission/Lease/Recovery |
+| Data Quality／監査結果の有効期限 | 完了という返答が必要なCheckSetのScope、Snapshot/recorded/valid time、必須Online・期限付きDeferred・Advisory・例外期限に依存するかを**Productへ確認**。Product側が指定していない全検査強制をしない | TEI Data Quality Rule/CheckSet/Provider/Owner（#2667）。EKI `COMPLETED`は品質が期限内に検査されたという意味ではない |
+| 費用／回復予備 | 対象Model/Provider・課金経路、承認された価格/量、成功に必要な予備時間/Retry予算/データ転送/人手、Quota/Rate Limitの違いを比較。料金上限不明なら未知とする | 当該Harness/契約/費用Owner。EKIは物理資源Budget/Permit/LeaseのOwnerで、金額/通貨・外部料金をCoreへ埋め込まない（EKI ADR-0010、#19） |
+
+**選択の順序**：(1) Source/Meaning/Disclosure/Host Grant・Tool/Adapter現在性・必要品質というhard constraints、(2) Deadlineに対する観測済み分布・復旧余裕／中断時のResume資格、(3) 予算・人のReviewと総費用、(4) 判定不能なら期限保証を保留し安全な限定成果へ縮退。費用最小化を安全・現在意味・Quality期限の不足を覆う目的関数にしない。逆に、全タスクに重いQuality Gateを機械的に挿入せず**用途/Ownerが必要とした検査のみ**評価する。
+
+**回復予備の区別**：予測残余時間／将来利用できそうな資源／予約済みcapacity／実際のLease・Permitと消費済みBudgetは異なる。Skill側の「あと一回試せそう」は実EKI回復余裕ではなく、別Attemptの再実行を認める承認でもない。実EKIへ委任していない単なる外部Harness Taskを、暗黙にEKI Task/Workerと呼ばない。
+
+### 8.2 既存CQ/HXに追加する四つの受入負例（SK-03の拡張、NOT RUN）
+
+| ID | 同一タスクの対照 | Skillが避ける誤判定／必要なProduct実証 |
+| --- | --- | --- |
+| **HX-15 安いが期限不適** | 価格が低いHarness Aの平均所要時間は短い一方、Rate Limit/再開で尾部完了が期限を越え得る。Bは高価だが実績分布と復旧余裕がある | token単価・平均時間だけでAを確定しない。Bも実Tool/Grant/Disclosureに適合しなければ選ばず、不足分は`unknown / cannot-qualify-deadline` |
+| **HX-16 ResultとQualityの締切差** | EKIでJobが`COMPLETED`だが、TEIの必須CheckSetが別Snapshot・期限超過、またはRLSで観測Scopeが不足 | 実Task完了・品質観測・使用可能な業務Claimを分離。ProductのCheckSet/例外・現在Audienceへ問い合わせ、全社品質PASSへ昇格しない |
+| **HX-17 RecoveryとAttempt** | Worker停止→Claim ACKはあるが同Attempt Body未受領。再送できる見込みがある一方、別Attempt再実行は副作用不明 | 同AttemptのBody取得/再転送と別Attemptの再実行を分離。EKI #465/#468の現実装・許可・期限を参照し、Skillが追加Effectを勝手に作らない |
+| **HX-18 公平性と最短完了** | urgent Taskが連続到着、best-effort Taskの回復枠が長期飢餓。最安値ルートは他利用者の予約・Fair shareを侵す | Product Skillが優先順位・fairness/回復枠を上書きしない。EKI #155/実Admission/Recoveryを尊重、勝手な資源横取りを「最適化」と呼ばない |
+
+**次に試す具体順序**：まず既存SK-02の公開WorkspaceでTEI実CLI/H2-H3（Skill merged・実Harness未実施）→二Harness SK-03 HX-01〜14（実Tool/Source/Disclosureを固定）→既存TAI #168 CQ-04/05に対して**公開mock rate-limit/quota/中断時刻・既存EKIの実API資格が確認できるものだけ**HX-15〜18を重ねる。次にTEI #2667側の独立Quality Fixtureが実証された範囲だけ品質期限を検査する。Source fidelity/SHO M0のdraft成功、EKI scheduling predictionや公平性の研究段階を、ここでProduct Coreの合格・自動Scheduler採用と呼ばない。
+
+**評価列**：`requested_deadline; actual_started/completed/consumer_received; deadline_probability+calibration_source; source_epoch/consumer_scope; required_quality_checkset/validation_epoch/expiry/exception; rate_limit_vs_quota; requested_price_budget/approved_billing_route; recovery_reserve_predicted_vs_held_vs_consumed; output_claim_vs_body_receipt; cancellation/retry authority; unmeasured`。これは**記録欄の候補**であり正式な交換Schema/機密データの外部送信を定めない。
+
+**現在の事実と未証明**：TEI [#2607](https://github.com/hat47x/tei-platform/pull/2607) Product Skillと[#2649](https://github.com/hat47x/tei-platform/pull/2649) Capability/Artifact証拠計画は**2026-11-03にmerged**。TEI #2607の[実CI #41532988114](https://github.com/hat47x/tei-platform/actions/runs/41532988114)は同PR merge-ref上で**静的14 tests・Skill整合Check・Go CLI read-only smokeの限定成功**を確認済み。ただし**H2/H3・二Harness・EKI実Worker、期限内確率の校正・TEI実Quality Rule/Provider・Host/OS実Egress、Owner業務受理はNOT RUN**。既存Owner #168/#74/#271/TEI #2018/EKI #19/#155/TEI #2667へ還流し、非対応・未測定・実権限拒否を隠さない。
