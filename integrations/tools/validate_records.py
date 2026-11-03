@@ -30,6 +30,7 @@ def main():
     parser.add_argument("--sei-schema", required=True)
     parser.add_argument("--mmi-schema", required=True)
     parser.add_argument("--eki-openapi", required=True)
+    parser.add_argument("--sui-repo", required=True)
     parser.add_argument("--out", default="evaluations/records/TEI-records-2026-11-03.json")
     args = parser.parse_args()
 
@@ -39,6 +40,29 @@ def main():
             "sei": ("integrations/tools/sei_record_from_projection.py", ["--schema", args.sei_schema]),
             "mmi": ("integrations/tools/mmi_record_from_projection.py", ["--schema", args.mmi_schema]),
             "eki": ("integrations/tools/eki_record_from_projection.py", ["--openapi", args.eki_openapi]),
+        }
+        sui_receipt = Path(tmp) / "sui.json"
+        sui_run = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "integrations/pilot-sui-document/assembler/validate_against_sui.py"),
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                str(ROOT / "evaluations/artifacts/scn-003-document.json"),
+                "--out",
+                str(sui_receipt),
+            ],
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=ROOT,
+        )
+        sui_observed = json.loads(sui_receipt.read_text(encoding="utf-8")).get("observed", {}) if sui_receipt.exists() else {}
+        results["sui"] = {
+            "valid": bool(sui_observed.get("documentV1Valid")),
+            "errors": [] if sui_observed.get("documentV1Valid") else [sui_run.stderr.strip()[-300:]],
+            "returncode": sui_run.returncode,
         }
         for name, (script, extra) in plans.items():
             code, valid, errors = run(script, extra, Path(tmp) / f"{name}.json")
