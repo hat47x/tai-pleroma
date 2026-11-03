@@ -1,6 +1,6 @@
 # TAI Pleromaの現在状態
 
-更新日: 2026-11-02。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
+更新日: 2026-11-03。状態: **参照実装と仮承認の記録**。製品受入・公開承認ではない。
 
 ## 要約
 
@@ -122,3 +122,14 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 ## 次の判断
 
 実物ベース再レビューの担当・日程・証拠の入手方法を決める。実装を先行させる場合は、R-01〜R-05の証拠が揃うまで仮承認の範囲を超えない。
+
+## 2026-11-03の追加（TEI構築移行の検証）
+
+- 4製品（SUI・SEI・MMI・EKI）の投影artifactと正規レコード、製品側consumer（実artifact読み取り込み）を用意した
+- SUIは保存・往復・TLS・Postgres・ETag・競合・再試行まで確認した
+- EKIは投影TaskRequestの受理（202/queued）と、policy・Worker行を入れた場合の`running`到達まで確認した
+- TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証16段がPASSした
+- 実実行receiptは100件、合成receiptは61件
+- 公開gateは`allowed=false`・blocker 7件のまま
+
+詳細は[TEI/SUI統合の整理](../analysis/tei-sui-integration-2026-11-03.md)と[フィージビリティ整理](../analysis/tei-construction-feasibility-2026-11-03.md)にある。実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証である。
