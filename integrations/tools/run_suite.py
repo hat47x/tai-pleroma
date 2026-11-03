@@ -36,6 +36,7 @@ def main():
     parser.add_argument("--mmi-schema", default="")
     parser.add_argument("--eki-openapi", default="")
     parser.add_argument("--eki-control", default="")
+    parser.add_argument("--skip-checker", action="store_true")
     parser.add_argument("--out", default="evaluations/records/TEI-suite-2026-11-03.json")
     args = parser.parse_args()
 
@@ -166,6 +167,9 @@ def main():
                 "evaluations/records/EKI-TEI-submit-2026-11-03.json",
             ],
         )
+    if args.skip_checker:
+        steps.pop("checker", None)
+    tei_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=args.tei_repo, capture_output=True, text=True).stdout.strip()
     passed = all(step["returncode"] == 0 for step in steps.values())
     receipt = {
         "schema": "tai.reference.tei-suite/v0",
@@ -176,6 +180,7 @@ def main():
         "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
         "command": "python integrations/tools/run_suite.py --tei-repo <TEI> --sui-repo <SUI>",
         "result": "PASS" if passed else "FAIL",
+        "teiCommit": tei_commit,
         "steps": steps,
         "scope": "Runs the checker, artifact schema checks, SCN-003 link check, and the SUI pipeline (without save). It does not run Postgres, deployment, or external effects.",
     }

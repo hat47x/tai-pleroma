@@ -17,9 +17,9 @@
       {
         "round": 1,
         "statuses": [
-          200,
           409,
-          409
+          200,
+          503
         ]
       },
       {
@@ -33,8 +33,8 @@
       {
         "round": 3,
         "statuses": [
-          409,
           200,
+          409,
           409
         ]
       },
@@ -49,14 +49,15 @@
       {
         "round": 5,
         "statuses": [
+          200,
           409,
-          409,
-          200
+          409
         ]
       }
     ],
     "roundCount": 5,
     "writers": 3,
+    "transient": 1,
     "documentRows": 1,
     "database": "embedded PostgreSQL 16.2"
   },

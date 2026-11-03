@@ -8,7 +8,7 @@
   "command": "python integrations/pilot-sui-document/assembler/run_pilot.py",
   "result": "PASS",
   "artifact": {
-    "digest": "sha256:d1c8605ee8a28d7feefe5ca919677f2e575af22d30dfc1dd9244422ac2b8d3b2"
+    "digest": "sha256:e15904031721aa20a1500e78fbb19b10466da0816a490bcea6f8a4d0fe8e909b"
   },
   "steps": {
     "flow": {
