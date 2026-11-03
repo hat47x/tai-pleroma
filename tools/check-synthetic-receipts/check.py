@@ -452,7 +452,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SEI MCP check_decision allow/deny pair did not hold: {relative}")
-        if "SEI-TEI-mcp" in relative:
+        if "SEI-TEI-mcp" in relative and "mcp-check" not in relative:
             observed = data.get("observed", {})
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
