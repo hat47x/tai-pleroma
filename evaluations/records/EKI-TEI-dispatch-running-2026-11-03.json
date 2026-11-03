@@ -1,0 +1,28 @@
+{
+  "schema": "tai.reference.tei-eki-dispatch/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with a locally built eki-control, an embedded SQLite state store, generated Ed25519 keys, and rows seeded into policy_history/policy_current/workers",
+  "command": "eki-control --config dispatch.json (dispatch enabled), POST /v1/tasks with the projected TaskRequest, then GET /v1/tasks/{id}",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/eki-task-request-record.json",
+    "digest": "sha256:fb1c5693cdc744e512adf9ec95bbb784b3f35d86e4f4680a5a13680950d770c4"
+  },
+  "observed": {
+    "policySeeded": true,
+    "workerIdentity": "wrk_641f905126844e7693410257166ce406",
+    "workerRowSeeded": true,
+    "dispatchConsidered": 2,
+    "dispatched": 1,
+    "deferred": 1,
+    "deferredReason": "reserve lease: NOT_YET_VALID: approval is issued in the future",
+    "taskStatus": "running",
+    "taskExecuted": false,
+    "workerResult": false
+  },
+  "evidence": "EKI-TEI-dispatch-running-2026-11-03.log",
+  "scope": "Shows the projected TaskRequest reaching the running state once a policy row and a registered-worker row exist. The worker row was inserted directly, no worker process ran, and no result was produced."
+}

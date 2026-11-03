@@ -42,7 +42,7 @@ TEI契約（record投影）
 | ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
 | 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成61件・実実行99件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成61件・実実行100件がcheckerを通る。
 
 ## 未検証
 
@@ -233,3 +233,19 @@ reasons="...: no usable worker is registered"
 - 次に必要なのはWorker plane（登録・セッション）の用意
 
 [attempt](../evaluations/eki-dispatch-attempt-2026-11-03.json)・[log](../evaluations/eki-dispatch-attempt-2026-11-03.log)
+### Workerを登録するとrunningへ進む（2026-11-03）
+
+`workers`と`enrollment_credentials`へ行を入れ（Workerプロセスは起動せず）、policy投入済みの状態で再起動すると、配置ループはTaskを1件dispatchした。
+
+```text
+dispatch tick considered=2 dispatched=1 deferred=1
+reasons="...: reserve lease: NOT_YET_VALID: approval is issued in the future"
+```
+
+タスクの公開状態は`queued`から**`running`**へ変わった。ただしWorkerは動いていないため、実行結果は無く、`taskExecuted=false`である。
+
+- 投影したTaskRequestが、EKIの配置・lease予約の段まで進むことを確認
+- 残るのはWorkerプロセスの実行と結果受理（未配線）
+- Worker行の直接投入は登録手続きの代替ではない
+
+[receipt](../evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json)・[log](../evaluations/records/EKI-TEI-dispatch-running-2026-11-03.log)

@@ -162,6 +162,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
     "evaluations/records/EKI-TEI-record-2026-11-03.json",
     "evaluations/records/EKI-TEI-submit-2026-11-03.json",
+    "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
     "evaluations/records/TEI-artifact-digests-2026-11-03.json",
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
@@ -395,6 +396,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
+        if "EKI-TEI-dispatch-running" in relative:
+            observed = data.get("observed", {})
+            if observed.get("taskStatus") != "running" or observed.get("taskExecuted") is not False:
+                errors.append(f"EKI task did not reach running without executing: {relative}")
         if "EKI-TEI-submit" in relative:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202 or observed.get("taskStatus") != "queued":
