@@ -11,12 +11,30 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 SUI_SRC = None
+TOKEN = {"value": ""}
 JWKS = {"keys": []}
+
+
+class RecordingStore:
+    def __init__(self):
+        self.created = []
+
+    def create_auth_session(self, **kwargs):
+        self.created.append(kwargs)
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         payload = json.dumps(JWKS).encode("utf-8")
+        self.send_response(200)
+        self.send_header("content-type", "application/json")
+        self.send_header("content-length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_POST(self):
+        self.rfile.read(int(self.headers.get("content-length", "0")))
+        payload = json.dumps({"access_token": TOKEN["value"], "token_type": "Bearer", "expires_in": 3600}).encode("utf-8")
         self.send_response(200)
         self.send_header("content-type", "application/json")
         self.send_header("content-length", str(len(payload)))
@@ -70,7 +88,8 @@ def main():
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
-    jwks_uri = f"http://127.0.0.1:{server.server_address[1]}/jwks"
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    jwks_uri = f"{base}/jwks"
 
     engine = create_engine("sqlite+pysqlite:///:memory:")
     models.Base.metadata.create_all(engine)
@@ -131,6 +150,39 @@ def main():
         )
         user_id, claim = bff._verify_broker_identity(db=db, token=token)
 
+        TOKEN["value"] = token
+        from starlette.applications import Starlette
+        from starlette.requests import Request
+        from sui_sensemaking_api import oauth_broker_client as broker
+
+        store = RecordingStore()
+        app = Starlette()
+        app.state.runtime_profile = "saas-multitenant"
+        app.state.saas_auth_session_store = store
+        app.state.saas_auth_session_hash_key = b"a" * 64
+        app.state.saas_oauth_broker_config = broker.ExternalOauthBrokerConfig(
+            token_endpoint=f"{base}/token",
+            client_id="client-1",
+            client_secret="secret-1",
+            redirect_uri="https://sui.example/session/callback",
+            timeout_seconds=5,
+        )
+        pending = json.dumps({"state": "state-1", "code_verifier": "v" * 43, "next": "/docs"})
+        cookie_name = bff._OAUTH_PENDING_COOKIE
+        scope = {
+            "type": "http",
+            "method": "GET",
+            "path": "/session/callback",
+            "query_string": b"",
+            "headers": [(b"cookie", f"{cookie_name}={pending}".encode())],
+            "app": app,
+            "scheme": "https",
+            "server": ("sui.example", 443),
+        }
+        redirect = bff.handle_callback(
+            request=Request(scope), db=db, code="code-1", state="state-1", error=None
+        )
+
     server.shutdown()
 
     checks = {
@@ -138,6 +190,11 @@ def main():
         "tenantResolved": claim.tenant_id == "tenant-a",
         "providerResolved": claim.identity_provider_id == "idp-1",
         "subjectResolved": claim.subject == "sub-1",
+        "callbackStatus": redirect.status_code == 302,
+        "sessionCookie": any(bff._AUTH_SESSION_COOKIE in value for value in redirect.headers.getlist("set-cookie")),
+        "sessionPersisted": bool(store.created),
+        "sessionPrincipal": store.created[0]["principal_id"] == "user-1" if store.created else False,
+        "sessionTenant": store.created[0]["active_tenant_id"] == "tenant-a" if store.created else False,
     }
     passed = all(checks.values())
     receipt = {
@@ -150,7 +207,7 @@ def main():
         "command": "python integrations/tools/sui_saas_identity_contract.py --sui-src <SUI>/03_Implement/backend/src",
         "result": "PASS" if passed else "FAIL",
         "observed": {"checks": checks, "tenantId": claim.tenant_id},
-        "scope": "Verifies a broker-issued RS256 token through SUI's JWKS, issuer/audience, subject and tenant-claim checks. It does not run the full callback, mint a session cookie, or prove production identity provisioning.",
+        "scope": "Runs the callback with a broker-issued RS256 token through SUI's JWKS, issuer/audience, subject and tenant-claim checks, then records that a session cookie is minted and persisted to the configured store. The store is a recording double, not the product's durable store.",
     }
     Path("evaluations/records/SUI-saas-identity-2026-11-03.json").write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
