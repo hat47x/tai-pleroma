@@ -518,3 +518,15 @@ EKIの明示的な委任時は既存Task/Attempt/Admission/Worker/Lease/Recovery
 **採用を推奨する設計境界**：外部Harness-first、Product Skillは各Product owner、TAIの横断SkillはTaskの必要最小の選択と受渡し、Data/Quality・Policy・Pricing・HPC/Provider専門実装を共通化せず各Ownerへ委ねる。Runtimeに追加するのは現時点では**なし**。これらは設計上の候補であって正式Owner採用ではない。
 
 **実施の順序**：公開Workspace上の既存TEI Skill/CLIを**同一Harnessで実ロード・4セッションH2/H3**→独立Expectedと警告/Source/Scopeの正しさ・Token/Tool/時間を測る→**二つ目の利用可能Harnessへ同Task/Skillの実移植**→必要な条件でOnly Product/TAI/SHO/EKI・期限/Recovery・Data Qualityの横断Handoffへ拡張する。未完了がある工程のPASSを他工程へ伝播しない。[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)のBundle配布受入・[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の現在性再資格化を既存Ownerとして維持。
+
+## 29. 2026-11-03：UI・Job・組織ScopeをSkillの入口別に分解する（SK-IV）
+
+[新しい入口別契約・SK-IV01〜12](skill-entrypoint-ui-job-organization-boundaries-2026-11-03.md)を、Product単体の実行モデルとYICのSkill選択が衝突しない**用途別判断票**として加えた。利用者が「モデルを読む」「Studioで計画/参照実行」「UIを拡張」「業務Actionを作用」「cron/ServiceからFunction起動」「組織に基づくReader/参照専用」「EKIへTask委任」「保存・納品」を要求する場合、**同じTEI Skill名でも実CLI・生成物・Interaction・Host権限・Consumerの資格を分ける**。
+
+**既存実装と提案を分離**：[TEI #2747](https://github.com/hat47x/tei-platform/pull/2747)はmergedでStudio `PlanCommand/ExecuteCommand`のWails/Node/Go Reference経路が実在する。ただしReference応答`Committed=true`を外部Provider/DB commitとして扱わない。[TEI #2616](https://github.com/hat47x/tei-platform/pull/2616)では、正しいBinding＋成功Outcomeが選択O-1でなくO-2の変更でも成立する限定Go負例がある（実Host事前拒否は未証明）。[TEI #2781](https://github.com/hat47x/tei-platform/pull/2781)の組織可視性33件は合成検査であって実RLS/Providerの証明ではない。
+
+**成熟した責務境界**：TEIの業務System/SubSystem/Function IdentityとBuild/Deployment/Triggerの分割を混ぜず、ユーザー方針の**Go単一バイナリを基本**に、複数Buildが必要になった場合だけ対応表と固定版を追加する。WailsはPresentation側のAdapterであり、業務Action意味/Host実権限を担わない。UI拡張は宣言→Component→生成Code→独立Processの候補を評価するが、安定Hook/ABI実在・更新互換はOwner/実試験待ち。EKIは実際に明示委任するときだけTask/Attempt/Lease/Resultを所有。TAI/Skillは新しいJob Runtime、Wails Extension API、Org ACL、共通Hostや中央Capability Registryを作らない。
+
+**Handoff/失効**：Action Purpose/Target/Scope/Expected-state、Source/Role/Build・Org valid/known time、現在Grant、Provider/Receipt/Reader、期限/品質/開示を各Productの実証へ結ぶ。Previewや`rows=[]`や`COMPLETED`を、現在の更新許可・全件不存在・業務品質PASSへ昇格しない。Role/Rule/Source変更を、UI書式だけの変更と同じ再受理コストにしない。
+
+[SK-01 §AC](../../evaluations/SK-01-harness-skills.md)へ**SK-IV01〜12**を追加（全件NOT RUN）。SK-02の最初の実H2/H3は引き続き**TEI mainのread-onlyモデル調査だけ**を対象として、Studio/Job/Org/Provider全体の未証明によって停止させない。その後、実装が存在する範囲だけ用途別のUI/Job/Org試験・SK-03第2Harness比較に拡張する。OwnerはTEI #1130/#1824/#2507/#2598/#1174/#2386/#2605、EKI #112/#57、TAI #168/#74/#271、SHO #4の既存責務を維持。
