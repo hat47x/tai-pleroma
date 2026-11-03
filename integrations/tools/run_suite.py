@@ -135,6 +135,8 @@ def main():
                 "--artifact",
                 "evaluations/artifacts/scn-003-document.json",
                 "--out",
+                "--retry-transient",
+                "0",
                 "evaluations/records/SUI-TEI-postgres-contention-2026-11-03.json",
             ],
         ),        "postgres_retry": run_step(
