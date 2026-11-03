@@ -44,6 +44,9 @@ def main():
         "checker": run_step("checker", ["tools/check-synthetic-receipts/check.py", "--root", str(ROOT)]),
         "artifacts": run_step("artifacts", ["integrations/tools/validate_artifacts.py"]),
         "digests": run_step("digests", ["integrations/tools/verify_artifact_digests.py"]),
+        "saas_adapters": run_step("saas_adapters", ["integrations/tools/sui_saas_adapter_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
+        "saas_oauth": run_step("saas_oauth", ["integrations/tools/sui_saas_oauth_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
+        "saas_login": run_step("saas_login", ["integrations/tools/sui_saas_login_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "scenario": run_step("scenario", ["integrations/tools/check_scenario_artifacts.py"]),
         "pipeline": run_step(
             "pipeline",
