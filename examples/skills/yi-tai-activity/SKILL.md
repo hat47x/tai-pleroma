@@ -166,3 +166,14 @@ Product間の引用、Graph Edge、Event、データの受渡し、Command、Con
 - 必要な期限・品質・費用が確認できない場合はその不足と実際に成立した限定成果を報告し、read-only調査や独立した文書作業は継続できる範囲で進める。Skillを多く呼んだことや最安モデルの採用を成功条件にしない。
 
 出典／反例：[SK-03 §8](../../../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)、[TAI #168 CQ-04/05](https://github.com/hat47x/tai-pleroma/issues/168)、[EKI #19](https://github.com/hat47x/eki-fabric/issues/19)/[#155](https://github.com/hat47x/eki-fabric/issues/155)、[TEI #2667](https://github.com/hat47x/tei-platform/pull/2667)。本節は配布前の**試作Skill手順**であり、実Harness/Provider/Worker予算最適化・品質受理を実証したものではない。
+
+## TEIの入口をUI・Job・組織Scopeごとに選ぶ場合（評価用）
+
+- **依頼の動詞と完成条件を先に決める**。「読む」「計画を表示」「参照実行」「業務Actionを実作用」「CLI/cron/APIから起動」「UIを拡張」「組織Scopeで閲覧」「文書を出版」は別。必要Productと実Command/Interactionを確認し、同一Skill名・画面名・標準Operation名から対象/権限を推測しない。
+- **TEI単独read-only**：main統合済みのTEI `yi-tei-modeling`と実CLIが使えるなら、まずその範囲で調査できる。TAIやStudio/Wails/Job/EKIを必須にしない。Skill文書内の候補と実ロード・実CLI結果を区別する。
+- **Studio**：[merged #2747](https://github.com/hat47x/tei-platform/pull/2747)の`PlanCommand/ExecuteCommand`はReference経路。`Committed=true`を外部DB/Provider Commit/Receiptにしない。UIのAction Offer・Labelと実Action Purpose/Entity ID/Target/Host Grantを分離し、未確認の操作を勝手に実行しない。
+- **Function／Job／配布**：業務Function identityとBuild/Target/Triggerを別に確認する。Go単一バイナリを標準とし、複数Buildは必要な時だけ明示Mappingを持つ設計候補。実CLI/cron/Service/EKI経路が存在しない場合は未対応と説明し、`job run`等の架空コマンドを使わない。EKIのResource/Task/Attempt/Recoveryは実委任時にのみ利用する。
+- **組織の可視性**：Org階層・所属・有効期間・画面可視性・参照専用・業務承認/更新権限を同一視しない。部分取得/非表示/古いReplicaの0件から業務対象不存在やAction可を宣言せず、許可されたProjectionだけを他Harnessへ公開する。
+- **完了と再資格化**：Source/Role/Build/Org/Permission/Provider/Timeのうち実際に依存するものを必要な時点で再照合。Preview、Plan、Reference Execute、Provider Effect、Receipt、Consumer Read、品質期限は別Claim。UI書式変更だけで無関係なAccepted Meaningを失効させず、意味/Authority変更は旧PASSのまま流用しない。
+
+出典と反証：[入口別SK-IV01〜12](../../../docs/yi-constellation/skill-entrypoint-ui-job-organization-boundaries-2026-11-03.md)、[SK-01 §AC](../../../evaluations/SK-01-harness-skills.md)。**これは試作Skillの利用手順**であり、新UI Extension API・複数Build Tool・Business Host認可・実Product/Harnessの動作実証ではない。
