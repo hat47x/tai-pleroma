@@ -52,3 +52,14 @@ Status: **提案（仮決定で進行中）**。受入判断ではない。
 ## 検証
 
 `integrations/tools/check_scenario_artifacts.py`で4つの識別子の存在を確認する。`integrations/tools/compose_scn_003.py`でSEIの判断・EKIの仕事・MMIの形式をSUIのカードとして合成し（5カード）、`serve_and_save.py`で一時SQLiteのSUIへ保存して往復を確認する。
+
+## 現在の到達点（2026-11-03）
+
+| 段 | 確認できたこと | 未確認 |
+| --- | --- | --- |
+| SEI | 判断recordのスキーマ適合とconsumer読み取り | 実判断データ、永続化 |
+| EKI | 投影TaskRequestの受理、policy・Worker行ありでの`running`到達 | 実行、結果受理、実Worker登録 |
+| MMI | 形式プロファイルのスキーマ適合とconsumer読み取り | 実プロファイル、適用 |
+| SUI | 合成文書の保存・往復、ETag、競合、再試行 | 実資料、実テナント、実認可 |
+
+保存・投入は合成データに対する実実行であり、公開・外部作用の承認ではない。公開gateは`allowed=false`・blocker 7件のまま。
