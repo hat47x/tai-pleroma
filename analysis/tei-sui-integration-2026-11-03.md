@@ -295,3 +295,11 @@ checks 6/6
 - 責任者とrecommendationを備えた判断: `verdict=allow`、終了コード0、`decision_digest`あり
 - 責任者の無い判断: `verdict=deny`、終了コード3、理由は「責任者を挙げていない」
 - gateはAuthority・行為との一致・Semantic Lineageを検証しないと明示している
+
+## SEIのMCPでAIツールから読む（2026-11-03）
+
+SEIのstdio MCPサーバを起動し、`initialize`・`tools/list`・`tools/call resume`を送った。[receipt](../evaluations/records/SEI-TEI-mcp-2026-11-03.json)
+
+- 公開されるツール: `resume`・`add_recommendation`・`check_decision`
+- `resume`は記録済みの判断を返す
+- 実AIクライアント・write系ツール・セッション分離は未確認
