@@ -157,3 +157,13 @@ SUIのSaaS関連テスト4ファイルを実行し、56件すべて通った。[
 - `test_tenant_session_precondition.py`
 
 `PYTHONPATH=03_Implement/backend/src`が必要（未インストールのため）。実配備ではない。
+
+## モックIdPの連携テスト（2026-11-03）
+
+SUIの認証連携テスト3ファイルを実行し、41件すべて通った。[receipt](../evaluations/records/SUI-auth-flow-tests-2026-11-03.json)
+
+- `test_auth_federation_level2.py`（モックIdPでの連携）
+- `test_oauth_bff_login_flow.py`
+- `test_oauth_bff_callback_retry_safety.py`
+
+`python-multipart`が必要（未導入だったため追加）。実IdPではない。
