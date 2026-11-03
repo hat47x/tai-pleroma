@@ -351,3 +351,16 @@ form profileをMMI側の型として成立させるには、投影に`provenance
 ```
 
 取り消しは受理されるが、attemptが飛行中でWorkerが動いていないため、公開状態は`running`のままだった。Idempotency-Keyが必須で、無い場合は400になる。
+
+## EKIの実行系の範囲（2026-11-03 修正）
+
+EKI `8159af1`には`internal/agent/executor`・`internal/agent/nativerunner`・`internal/agent/assignment`があり、Agent側でWorkOrderのassignmentを受けてコマンドを実行する仕組みがある（sandbox・資源上限・停止を含む）。したがって「実行系が無い」は正確ではない。
+
+これまで確認したのは次である。
+
+- Client APIのTaskは`queued`→（policy・Worker行ありで）`running`まで進む
+- Client APIのTaskがassignmentとしてAgentへ届き、実行され、結果がClient APIのTask状態へ戻る経路は未確認
+- 結果受理（Result Acceptance）の部品はあるが、`eki-control`の起動経路との接続は未確認
+
+次に確かめるべきは、Client APIのTaskからAgent実行までの縦断である。
+
