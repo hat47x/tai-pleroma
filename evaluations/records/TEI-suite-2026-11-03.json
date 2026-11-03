@@ -10,17 +10,17 @@
   "steps": {
     "checker": {
       "returncode": 0,
-      "seconds": 1.14,
+      "seconds": 0.29,
       "stdoutTail": [
         "  \"recordCount\": 61,",
-        "  \"realRecordCount\": 90",
+        "  \"realRecordCount\": 94",
         "}"
       ],
       "stderrTail": []
     },
     "artifacts": {
       "returncode": 0,
-      "seconds": 0.62,
+      "seconds": 0.31,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -28,7 +28,7 @@
     },
     "scenario": {
       "returncode": 0,
-      "seconds": 0.17,
+      "seconds": 0.08,
       "stdoutTail": [
         "{\"allFound\": true, \"count\": 4}"
       ],
@@ -36,7 +36,7 @@
     },
     "pipeline": {
       "returncode": 0,
-      "seconds": 19.23,
+      "seconds": 10.31,
       "stdoutTail": [
         "{\"result\": \"PASS\", \"steps\": {\"flow\": {\"returncode\": 0, \"casesPassed\": 21}, \"schema\": {\"returncode\": 0, \"valid\": true}, \"documentV1\": {\"returncode\": 0, \"valid\": true}, \"contractDigests\": {\"returncode\": 0, \"allMatch\": true}}}"
       ],
@@ -44,7 +44,7 @@
     },
     "compose": {
       "returncode": 0,
-      "seconds": 1.3,
+      "seconds": 1.04,
       "stdoutTail": [
         "{\"valid\": true, \"cards\": 5, \"decisionRef\": \"decision-1\", \"taskExecutor\": \"dev.example.transform\", \"profileId\": \"profile-a\", \"cardIds\": [\"card-decision-1\", \"card-task-1\", \"card-profile-1\"]}"
       ],
@@ -52,15 +52,15 @@
     },
     "tls": {
       "returncode": 0,
-      "seconds": 5.5,
+      "seconds": 4.56,
       "stdoutTail": [
-        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:51339\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
+        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:65354\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
       ],
       "stderrTail": []
     },
     "postgres": {
       "returncode": 0,
-      "seconds": 16.48,
+      "seconds": 15.08,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -68,7 +68,7 @@
     },
     "postgres_migrate": {
       "returncode": 0,
-      "seconds": 17.85,
+      "seconds": 19.15,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\", \"migration\": \"alembic upgrade head\"}"
       ],
@@ -76,7 +76,7 @@
     },
     "postgres_etag": {
       "returncode": 0,
-      "seconds": 13.92,
+      "seconds": 14.78,
       "stdoutTail": [
         "{\"createStatus\": 200, \"etagPresent\": true, \"staleStatus\": 409, \"matchingStatus\": 200, \"database\": \"embedded PostgreSQL 16.2\", \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -87,7 +87,7 @@
     },
     "postgres_concurrency": {
       "returncode": 0,
-      "seconds": 15.64,
+      "seconds": 16.08,
       "stdoutTail": [
         "{\"createStatus\": 200, \"statuses\": [200, 409], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
       ],
@@ -95,15 +95,15 @@
     },
     "postgres_contention": {
       "returncode": 0,
-      "seconds": 23.71,
+      "seconds": 21.67,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200]}, {\"round\": 2, \"statuses\": [200, 409, 409]}, {\"round\": 3, \"statuses\": [409, 409, 200]}, {\"round\": 4, \"statuses\": [409, 200, 409]}, {\"round\": 5, \"statuses\": [409, 409, 200]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200]}, {\"round\": 2, \"statuses\": [409, 409, 200]}, {\"round\": 3, \"statuses\": [200, 409, 409]}, {\"round\": 4, \"statuses\": [409, 409, 200]}, {\"round\": 5, \"statuses\": [200, 409, 409]}]}"
       ],
       "stderrTail": []
     },
     "postgres_multidoc": {
       "returncode": 0,
-      "seconds": 14.67,
+      "seconds": 15.13,
       "stdoutTail": [
         "{\"created\": true, \"read\": true, \"rows\": 10, \"titlesMatch\": true}"
       ],
@@ -111,6 +111,14 @@
         "C:\\Users\\yhata\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
         "  from starlette.testclient import TestClient as TestClient  # noqa"
       ]
+    },
+    "records": {
+      "returncode": 0,
+      "seconds": 2.72,
+      "stdoutTail": [
+        "{\"allValid\": true, \"count\": 4}"
+      ],
+      "stderrTail": []
     }
   },
   "scope": "Runs the checker, artifact schema checks, SCN-003 link check, and the SUI pipeline (without save). It does not run Postgres, deployment, or external effects."
