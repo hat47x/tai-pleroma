@@ -132,4 +132,4 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 - 実実行receiptは108件、合成receiptは61件
 - 公開gateは`allowed=false`・blocker 7件のまま（[2026-11-03の再確認](../evaluations/SCN-001-publication-gate-recheck-2026-11-03.json)）
 
-詳細は[TEI/SUI統合の整理](../analysis/tei-sui-integration-2026-11-03.md)と[フィージビリティ整理](../analysis/tei-construction-feasibility-2026-11-03.md)にある。実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証である。
+詳細は[TEI/SUI統合の整理](../analysis/tei-sui-integration-2026-11-03.md)と[フィージビリティ整理](../analysis/tei-construction-feasibility-2026-11-03.md)にある。残課題は[Issue #394](https://github.com/hat47x/tai-pleroma/issues/394)へ整理した。実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証である。
