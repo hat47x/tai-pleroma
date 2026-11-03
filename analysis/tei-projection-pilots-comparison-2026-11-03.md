@@ -32,7 +32,7 @@ source     {teiCommit, contract{contractId, contractVersion, contractDigest, sou
 | --- | --- | --- | --- | --- | --- |
 | SUI | 21ケース | あり | あり | あり（Python） | あり（HTTP・一時SQLite） |
 | SEI | 4ケース | あり | あり | あり（Go） | なし |
-| MMI | 3ケース | あり | あり | あり（TypeScript） | なし |
+| MMI | 4ケース | あり | あり | あり（TypeScript、features/sourceEvidence対応） | なし |
 | EKI | 4ケース | あり | あり | あり（Go spike） | なし |
 
 ## 投影の表現力

@@ -386,7 +386,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"MMI real artifact receipt did not parse profile-a: {relative}")
         if "MMI-TEI-consumer" in relative:
             observed = data.get("observed", {})
-            if observed.get("passed") != 4 or observed.get("writes") is not False:
+            if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"MMI consumer receipt did not record four non-writing tests: {relative}")
         if "SEI-TEI-record" in relative:
             observed = data.get("observed", {})
@@ -526,7 +526,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
         if "tei-sui-save-plan" in relative:
             observed = data.get("observed", {})
-            if observed.get("passed") != 4 or observed.get("writes") is not False:
+            if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save plan receipt did not record four non-writing tests: {relative}")
         if "documentv1-validation" in relative:
             observed = data.get("observed", {})
