@@ -9,16 +9,27 @@
     "contract": {
       "contractId": "eki.task-request.record",
       "contractVersion": "1",
-      "contractDigest": "sha256:3be8fb0dc04e3016fbd2d9c7ef8e9f6d06dbe4cc6794a60235396c38935d6c21",
-      "sourceDigest": "sha256:6f827aade7882104ee749779039bf81ee76c3ec7f6002059904ed53ea4f740bd",
-      "cases": 4
+      "contractDigest": "sha256:2be368d6b2c335b90cf4adc4f079256e81867a7a9530d3c8e44bf7e8f7425ad2",
+      "sourceDigest": "sha256:3e9ae9818b8453492024c3697036ac57a3b919fad46db785044c94572498599b",
+      "cases": 5
     }
   },
   "taskRequest": {
+    "checkpointable": false,
     "clientRequestId": "req-001",
+    "cpuMillis": 1000,
+    "deterministic": true,
+    "effectMode": "none",
     "executorId": "dev.example.transform",
+    "maxAttempts": 3,
+    "memoryBytes": 268435456,
+    "networkBytesMax": 134217728,
+    "outputBytesMax": 16777216,
+    "preemptible": true,
     "priority": "normal",
+    "retryable": true,
     "schema": "eki.task-request/v1",
-    "versionConstraint": "^1"
+    "versionConstraint": "^1",
+    "wallTimeSeconds": 300
   }
 }

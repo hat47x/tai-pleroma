@@ -53,11 +53,11 @@
         "errors": [],
         "artifact": {
           "path": "evaluations/artifacts/eki-task-request-projection.json",
-          "digest": "sha256:8fae849023b801a296eaa68afde460635823bdf3e24a299ef1fa56436b8c9db0"
+          "digest": "sha256:1d25d0c0bcb5203eaa4b91ce4d38ece3d699236a0f84cfc343be64e701d30f75"
         },
         "schema": {
           "path": "integrations/pilot-eki-task-request/artifact.schema.json",
-          "digest": "sha256:cb4f67ea09156cd93edf41a0b3a28e529931dbf0512c006f7bf869f469798d37"
+          "digest": "sha256:8808dba03e4bcec8beca189b6d47d22264b0568a6ba8bc94149b5ae421bf7997"
         },
         "schemaId": "tai.reference.tei-eki-task-request-projection/v0"
       }
