@@ -61,3 +61,11 @@ SUIだけは複数要素の合成が必要で、`document_assembler.py`と参照
 2. SaaSの外部署をstubではなく実物にする
 3. 管理DB・TLS・配備を実環境に近づける
 4. 実データを扱う範囲と、扱わない範囲を決める
+
+## 100ラウンド時点の追記
+
+- 4製品のartifact・正規レコード化・consumer・実artifact読み取りが揃った
+- SUIは保存・往復・TLS・Postgres・ETag・競合・再試行まで確認した
+- EKIは投影TaskRequestの投入（202/queued）と、policy/Worker行を入れた場合の`running`到達まで確認した
+- 一括検証は16段（checker・artifact・digest・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）
+- 実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証のまま
