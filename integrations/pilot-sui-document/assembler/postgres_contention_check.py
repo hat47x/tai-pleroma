@@ -22,7 +22,7 @@ def main():
     parser.add_argument("--out", required=True)
     parser.add_argument("--rounds", type=int, default=5)
     parser.add_argument("--writers", type=int, default=3)
-    parser.add_argument("--retry-transient", type=int, default=2)
+    parser.add_argument("--retry-transient", type=int, default=0)
     args = parser.parse_args()
 
     import pgserver
