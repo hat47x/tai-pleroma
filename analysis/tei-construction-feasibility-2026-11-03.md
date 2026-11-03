@@ -44,7 +44,7 @@ SUIだけは複数要素の合成が必要で、`document_assembler.py`と参照
 ## 未検証
 
 - 実データでの投影（すべて合成fixture）
-- 製品側の保存・実行（SUI以外は読み取りのみ。EKIはTask受理までで、実行系は未配線）
+- 製品側の保存・実行（SUI以外は読み取りのみ。EKIはTask受理までで、実行系は未配線。Dispatchを有効にしてもpolicy storeが無いため配置へ進まない）
 - SaaSの外部認証・ポリシー・capabilityの実接続
 - 管理DB、TLS証明書の実CA、リバースプロキシ、実配備
 - 生産性・開発効率の測定（PoC完了後に評価する前提）

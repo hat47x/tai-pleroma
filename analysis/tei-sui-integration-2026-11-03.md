@@ -205,3 +205,15 @@ EKIへ投影TaskRequestを投入すると202で`queued`になるが、実行ま�
 - こちらで観測したのは`queued`まで
 - Dispatch設定（署名鍵・trust domain・各種principal・ExecutorApproval）を用意すれば配置まで進む可能性はあるが、実行結果の受理は未配線
 - したがって「Workerを繋いだ実行」は、現時点のEKIでは確かめられない
+### Dispatchを有効にした場合（2026-11-03）
+
+署名鍵（Ed25519、EdDSA）とDispatch設定を用意して`eki-control`を起動すると、配置ループ自体は動く。しかし投入したTaskは`queued`のまま進まず、ログには次が出る。
+
+```text
+dispatch tick considered=0 dispatched=0 deferred=1 reasons="...: policy is not available"
+```
+
+EKIの`internal/control/dispatch/dispatch.go`では、`admitted`のTaskを`ready`へ昇格させる前に`Policies.LoadCurrentPolicy`を要求し、取得できない場合は「policy is not available」で据え置く。今回の構成にはpolicy storeが無いため、ここで止まる。
+
+- 署名鍵の`algorithm`は`EdDSA`（`Ed25519`は拒否される）
+- policy storeの用意が、実行へ進むための次の前提
