@@ -108,3 +108,14 @@ stubは常に許可を返すため、実認可・OAuth brokerの挙動は未確�
 - 応答は`access_token`・`token_type`・`expires_in`が必須で、未知の項目は拒否
 - HTTPエラー（400等）は拒否として扱われる
 - ブラウザのリダイレクト、実IdPの検証、セッション発行は未確認
+
+## ログイン開始の契約テスト（2026-11-03）
+
+`oauth_bff.initiate_login`をテスト設定で呼び、リダイレクトの内容を確認した。[receipt](../evaluations/records/SUI-saas-login-contract-2026-11-03.json)
+
+- 302で`authorize_endpoint`へリダイレクトする
+- `response_type=code`・`client_id`・`redirect_uri`・`scope=openid`・`state`・`code_challenge`・`code_challenge_method=S256`を付ける
+- pending cookieはHttpOnly・Secure
+- 認証セッション鍵は64桁の小文字16進（32バイト）が必要
+
+コールバック、token交換の接続、セッション発行は未確認である。
