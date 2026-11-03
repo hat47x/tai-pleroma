@@ -18,13 +18,13 @@
         "round": 1,
         "statuses": [
           409,
-          409,
+          200,
           200
         ],
         "retries": [
           0,
           0,
-          0
+          1
         ]
       },
       {
@@ -43,14 +43,14 @@
       {
         "round": 3,
         "statuses": [
-          200,
           409,
-          409
+          200,
+          200
         ],
         "retries": [
           0,
           0,
-          0
+          1
         ]
       },
       {
@@ -83,7 +83,7 @@
     "roundCount": 5,
     "writers": 3,
     "transient": 0,
-    "retries": 0,
+    "retries": 2,
     "documentRows": 1,
     "database": "embedded PostgreSQL 16.2"
   },

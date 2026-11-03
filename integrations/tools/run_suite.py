@@ -51,6 +51,7 @@ def main():
         "saas_identity": run_step("saas_identity", ["integrations/tools/sui_saas_identity_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "sui_saas_tests": run_step("sui_saas_tests", ["integrations/tools/sui_saas_tests.py", "--sui-repo", args.sui_repo]),
         "sui_docs_tests": run_step("sui_docs_tests", ["integrations/tools/sui_docs_tests.py", "--sui-repo", args.sui_repo]),
+        "sui_auth_flow_tests": run_step("sui_auth_flow_tests", ["integrations/tools/sui_auth_flow_tests.py", "--sui-repo", args.sui_repo]),
         "scenario": run_step("scenario", ["integrations/tools/check_scenario_artifacts.py"]),
         "pipeline": run_step(
             "pipeline",
