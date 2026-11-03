@@ -1,0 +1,34 @@
+{
+  "schema": "tai.reference.sui-saas-startup/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, uvicorn, and an embedded PostgreSQL 16.2",
+  "command": "python integrations/tools/saas_startup_probe.py <SUI repo>",
+  "result": "STARTED",
+  "observed": {
+    "runtimeProfile": "saas-multitenant",
+    "migration": "alembic upgrade head",
+    "seconds": 30.65,
+    "missing": [],
+    "missingCount": 0,
+    "requestStatus": 401,
+    "started": true,
+    "extraEnv": {
+      "SUI_ACCESS_CONTROL_ADAPTER": "external_http",
+      "SUI_ACCESS_CONTROL_FAIL_SAFE_MODE": "deny",
+      "SUI_ACCESS_CONTROL_EXTERNAL_HTTP_ENDPOINT": "http://127.0.0.1:9999",
+      "SUI_DOCUMENT_POLICY_BINDING_RESOLVER": "external_http",
+      "SUI_DOCUMENT_POLICY_BINDING_HTTP_ENDPOINT": "http://127.0.0.1:9999",
+      "SUI_TENANT_CAPABILITY_RESOLVER": "external_http",
+      "SUI_TENANT_CAPABILITY_HTTP_ENDPOINT": "http://127.0.0.1:9999",
+      "SUI_SAAS_OAUTH_BROKER_HTTP_AUTHORIZE_ENDPOINT": "http://127.0.0.1:9999/authorize",
+      "SUI_SAAS_AUTH_SESSION_HASH_KEY": "<redacted>"
+    },
+    "outputTail": [
+      "process stayed up for 30 seconds"
+    ]
+  },
+  "scope": "Starts SUI under the SaaS profile against a migrated embedded PostgreSQL. It records the startup refusal; it does not configure the policy or change SUI."
+}

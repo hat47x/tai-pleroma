@@ -1,0 +1,78 @@
+{
+    "schema":  "tei.reference.generator-fixture/v0",
+    "contractId":  "mmi.format-profile.record",
+    "contractVersion":  "1",
+    "cases":  [
+                  {
+                      "id":  "present",
+                      "input":  {
+                                    "schemaVersion":  "mmi-format-profile-v1",
+                                    "id":  "profile-a",
+                                    "label":  "Profile A",
+                                    "purpose":  "Render tables",
+                                    "status":  "candidate",
+                                    "featureVersion":  "1.0.0",
+                                    "sourceProfileId":  "profile-base",
+                                    "features":  [
+                                                     "table"
+                                                 ],
+                                    "sourceEvidence":  [
+                                                           "structure"
+                                                       ]
+                                },
+                      "want":  {
+                                   "state":  "present",
+                                   "text":  "{\"featureVersion\":\"1.0.0\",\"features\":[\"table\"],\"id\":\"profile-a\",\"label\":\"Profile A\",\"purpose\":\"Render tables\",\"schemaVersion\":\"mmi-format-profile-v1\",\"sourceEvidence\":[\"structure\"],\"sourceProfileId\":\"profile-base\",\"status\":\"candidate\"}"
+                               }
+                  },
+                  {
+                      "id":  "missing-purpose",
+                      "input":  {
+                                    "schemaVersion":  "mmi-format-profile-v1",
+                                    "id":  "profile-a",
+                                    "label":  "Profile A",
+                                    "status":  "candidate",
+                                    "featureVersion":  "1.0.0",
+                                    "sourceProfileId":  "profile-base"
+                                },
+                      "want":  {
+                                   "state":  "missing",
+                                   "text":  "[\"purpose\"]"
+                               }
+                  },
+                  {
+                      "id":  "unresolved-id",
+                      "input":  {
+                                    "schemaVersion":  "mmi-format-profile-v1",
+                                    "id":  null,
+                                    "label":  "Profile A",
+                                    "purpose":  "Render tables",
+                                    "status":  "candidate",
+                                    "featureVersion":  "1.0.0",
+                                    "sourceProfileId":  "profile-base"
+                                },
+                      "want":  {
+                                   "state":  "unresolved"
+                               }
+                  },
+                  {
+                      "id":  "missing-features",
+                      "input":  {
+                                    "schemaVersion":  "mmi-format-profile-v1",
+                                    "id":  "profile-a",
+                                    "label":  "Profile A",
+                                    "purpose":  "Render tables",
+                                    "status":  "candidate",
+                                    "featureVersion":  "1.0.0",
+                                    "sourceProfileId":  "profile-base",
+                                    "features":  [
+                                                     "table"
+                                                 ]
+                                },
+                      "want":  {
+                                   "state":  "missing",
+                                   "text":  "[\"sourceEvidence\"]"
+                               }
+                  }
+              ]
+}

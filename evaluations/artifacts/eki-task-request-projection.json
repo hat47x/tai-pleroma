@@ -1,0 +1,35 @@
+{
+  "schema": "tai.reference.tei-eki-task-request-projection/v0",
+  "contract": {
+    "id": "eki.task-request.projection",
+    "version": "1"
+  },
+  "source": {
+    "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
+    "contract": {
+      "contractId": "eki.task-request.record",
+      "contractVersion": "1",
+      "contractDigest": "sha256:2be368d6b2c335b90cf4adc4f079256e81867a7a9530d3c8e44bf7e8f7425ad2",
+      "sourceDigest": "sha256:3e9ae9818b8453492024c3697036ac57a3b919fad46db785044c94572498599b",
+      "cases": 5
+    }
+  },
+  "taskRequest": {
+    "checkpointable": false,
+    "clientRequestId": "req-001",
+    "cpuMillis": 1000,
+    "deterministic": true,
+    "effectMode": "none",
+    "executorId": "dev.example.transform",
+    "maxAttempts": 3,
+    "memoryBytes": 268435456,
+    "networkBytesMax": 134217728,
+    "outputBytesMax": 16777216,
+    "preemptible": true,
+    "priority": "normal",
+    "retryable": true,
+    "schema": "eki.task-request/v1",
+    "versionConstraint": "^1",
+    "wallTimeSeconds": 300
+  }
+}

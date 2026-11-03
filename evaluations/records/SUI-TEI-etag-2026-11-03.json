@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.tei-sui-etag/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/etag_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-exist --artifact D:\\GIT\\hat47x\\tai-wt-etag\\evaluations\\artifacts\\documentv1-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-etag\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
+  },
+  "observed": {
+    "createStatus": 200,
+    "etagPresent": true,
+    "staleIfMatchStatus": 409,
+    "matchingIfMatchStatus": 200,
+    "noPreconditionStatus": 200,
+    "database": "temporary SQLite",
+    "runtimeProfile": "local-dev",
+    "writes": true
+  },
+  "scope": "Checks stale and matching If-Match preconditions on the save route with a temporary SQLite database. It does not verify concurrent writers or the SaaS precondition profile."
+}
