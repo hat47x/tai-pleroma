@@ -156,3 +156,13 @@ Product間の引用、Graph Edge、Event、データの受渡し、Command、Con
 
 [型付きHandoff設計](../../../docs/yi-constellation/typed-connection-handoff-and-computation-context-2026-11-02.md)／[SK-CE01〜16](../../../evaluations/SK-01-harness-skills.md)は、正式Toolの導入・現実の権限の保証ではなく、説明と反例の計画である。
 
+
+## Taskの期限・成果の品質期限・回復可能性を扱う場合（評価案）
+
+- 利用者の明示した**最大lead time、求める成果の質、費用上限、開示先、許容中断・回復範囲**を確認し、Product／Harness候補と実権限を比較する。Taskに無い数値・SLA・許可をSkillが創作しない。所要時間分布や復旧余裕に証拠がないときは、安価な候補を「期限内成功確実」と報告しない。
+- まずSource/意味・Tool/CLI実在性・Audience/Host Grant・品質要件を守り、次に期限内の成功可能性と回復余裕、その後に実Token/Tool/人手/料金を比較。Rate Limitの一時停止とQuotaの枠切れ、定額権利と課金APIは別。無断で有料経路・別Audienceへ切り替えない。
+- **実行時間と品質確認時間を分ける**。EKI `COMPLETED`／Agentの回答完了は、必要なTEI品質CheckSet・対象Scope・Snapshot・有効期限・例外採否・SHO Consumer再読取を証明しない。必要な検査をProduct Ownerが指定していなければ、全件をブロックする汎用Quality Gateは追加しない。
+- **EKIを使うのは明示的な委任が必要な場合だけ**。EKIは既存Worker/Lease/Admission/Recovery Permit/物理資源予算のOwner。TAI SkillはWorker順位や金銭の中央台帳を実装しない。予測残余・回復用の確保・実予約・使用済み予算を分け、同Attempt Body再送と別Attempt業務再実行を混同しない。
+- 必要な期限・品質・費用が確認できない場合はその不足と実際に成立した限定成果を報告し、read-only調査や独立した文書作業は継続できる範囲で進める。Skillを多く呼んだことや最安モデルの採用を成功条件にしない。
+
+出典／反例：[SK-03 §8](../../../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)、[TAI #168 CQ-04/05](https://github.com/hat47x/tai-pleroma/issues/168)、[EKI #19](https://github.com/hat47x/eki-fabric/issues/19)/[#155](https://github.com/hat47x/eki-fabric/issues/155)、[TEI #2667](https://github.com/hat47x/tei-platform/pull/2667)。本節は配布前の**試作Skill手順**であり、実Harness/Provider/Worker予算最適化・品質受理を実証したものではない。
