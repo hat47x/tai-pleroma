@@ -364,3 +364,12 @@ EKI `8159af1`には`internal/agent/executor`・`internal/agent/nativerunner`・`
 
 次に確かめるべきは、Client APIのTaskからAgent実行までの縦断である。
 
+## PostgresとTLSの同時構成（2026-11-03）
+
+埋め込みPostgresと自己署名TLSを同時に有効にしてSUIを起動し、保存・取得を確認した。[receipt](../evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json)
+
+```text
+httpsReady true / create 200 / fetch 200 / roundTrip true / anonymous 401
+```
+
+証明書は自己署名で、リバースプロキシは介していない。管理DB・実CA・配備は依然として未検証である。
