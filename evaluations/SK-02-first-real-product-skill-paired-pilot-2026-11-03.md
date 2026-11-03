@@ -131,3 +131,19 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **次の独立実験**は、H2/H3の四独立Session・実Tool argv/exit/出力・実Skill package読み込み・Reader側と出典/Version・OS/Host Current Grant・Disclosureを、**各Session固有の観測**として記録すること。TAIにはTEIが持つModel/Artifact検証器を移植しない。Source/Modelの値がいったん同じ状態へ戻るA→B→Aは、二度のハッシュ一致だけでは「中間の変更なし」の証明にならない。新たに[SK-03 §7](../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)で、SHO [#13](https://github.com/hat47x/sho-composer/pull/13)の同bytes別Source/ABA/部分作用と、MMI [#756](https://github.com/hat47x/markdown-matrix-injector/issues/756)のHidden Excel、[#758](https://github.com/hat47x/markdown-matrix-injector/issues/758)のDecoder不明を**別Taskの後続引渡し負例**として整理した。初回TEI Skill比較をこれらのProduct未受理によって停止させない。
 
 **実証状態**：TEI #2649のexact HEAD CI・ローカル5 Artifact Readerは**Owner別に実証済**。TAIのH2/H3 Skillロード、四Session、他Harnessへの移植、SHO/MMI実Consumer、Owner意味受理は**NOT RUN**。新しい共通Evidence Schema・全局Snapshot/Permission Engine・独自Hostを採用しない。
+
+## 11. 2026-11-03：TEI Skillがmainへ統合された後の実験起点（実CI vs Harness未実行）
+
+**後着した事実（PR #2607／#2649）**：TEI [Product Skill #2607](https://github.com/hat47x/tei-platform/pull/2607)は**merged**（merge commit `ca6cbf5745b5ddb22185782e0f9ea37f6f8566b9`）。TEI mainで`skills/yi-tei-modeling/SKILL.md`（Git blob `9cd8475bd6489c6661ae644bf771cfcce04188b1`）、`references/read-only-model-investigation.md`（`ec2f90e85ed42659aca8b44a9be216987860b099`）、`verify_skill.py`（`d0b1b6ee0fa3f479d01f9e4dff6163f68c872185`）を実取得した。**本書§1/6/9/10にある「Draft #2607」は作成時の履歴であり、現在の利用候補はTEI mainの実物**。配布・ロード・受理済みという意味ではない。
+
+[TEI Product Skill bounded qualification GitHub Actions #41532988114](https://github.com/hat47x/tei-platform/actions/runs/41532988114)のjob `product-skill-read-only` は**completed/success**。実Job logを確認：
+- `python3 -m unittest discover -s skills/yi-tei-modeling/tests -p 'test_*.py' -v` は **14 tests / OK**。
+- `python3 skills/yi-tei-modeling/verify_skill.py` は**静的文書・CLI宣言整合 PASS**。
+- `go build -o "$RUNNER_TEMP/tei" ./cmd/tei` で単一Go実行物をビルドし、`commands/model catalog/inspect/trace/validate`の限定read-only smoke **PASS**、Validation diagnostics **3件**を保持した。
+- これはPR CIの**merge-ref checkout `8d442c41f81fda64119fe41cef5ef44cd49034ac`**での限定観測。PR head `d0de429ae5aac38b7949c2cfe6eacafff059675f` や将来のTEI main binaryと同一と**推定しない**。CIの生成binary SHA-256は当該log `f496806e637e97c215778048fda8b3b689324acf6038a2bfe6a6bf01176c3daf`。実Trialでは新たにbuild/executable/ToolとSkillのloadを同一Sessionへ固定する。
+
+また[TEI #2649](https://github.com/hat47x/tei-platform/pull/2649)も**merged**（merge commit `e98ec5f475c60b53cc1cc91c9b44ce2bc502a111`）。従来の「#2649はDraft」は履歴の記載とする。[実CI](https://github.com/hat47x/tei-platform/actions/runs/41518355097)で別のArtifact/Reader実観測があるが、**本SK-02 H2/H3の実Harnessロード成功と合算しない**。
+
+**変えない判定**：`SKILL.md`がmainに存在し、同PR CIで静的Checker/本物のCLIが通ったことは、Product側のS0/S1として具体的な前進。一方、SK-02の**4独立Harness Session、forced/auto Skill実ロード、外部Agent経由の同じCLI実Invoke、独立Oracle採点、Token/人手/費用・実Egress観測はNOT RUN**。H2とH3の対照条件は据え置く。新しいProduct Toolやwrite Permissionをこの実験のために追加しない。
+
+**実験前に採取する現在版のチェック**：TEI main exact commitとclean/dirty、上記3 Skill Fileのblob/参照Closure、同一Go executable SHA、実Workspace bytes/SourceIndexFP/WorldFP、実`commands`のscope、Tool/Model/Harness SessionとAudience、独立Oracleを**実行時に採り直す**。前日のCI証拠やGitHubのSkill file閲覧を、実LoaderのSession証拠に代用しない。
