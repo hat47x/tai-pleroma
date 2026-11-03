@@ -62,7 +62,7 @@ SUIだけは複数要素の合成が必要で、`document_assembler.py`と参照
 3. 管理DB・TLS・配備を実環境に近づける
 4. 実データを扱う範囲と、扱わない範囲を決める
 
-## 100ラウンド時点の追記
+## 残課題の整理\n\n確認できたことと残っていることを[Issue #394](https://github.com/hat47x/tai-pleroma/issues/394)へまとめた。受入判断ではない。\n\n## 100ラウンド時点の追記
 
 - 4製品のartifact・正規レコード化・consumer・実artifact読み取りが揃った
 - SUIは保存・往復・TLS・Postgres・ETag・競合・再試行まで確認した
