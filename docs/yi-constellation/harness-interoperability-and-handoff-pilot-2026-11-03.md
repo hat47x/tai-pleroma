@@ -150,3 +150,55 @@ CLIやMCPのどちらかを**必ず**通すのではなく、実Harnessにとっ
 **評価列**：`requested_deadline; actual_started/completed/consumer_received; deadline_probability+calibration_source; source_epoch/consumer_scope; required_quality_checkset/validation_epoch/expiry/exception; rate_limit_vs_quota; requested_price_budget/approved_billing_route; recovery_reserve_predicted_vs_held_vs_consumed; output_claim_vs_body_receipt; cancellation/retry authority; unmeasured`。これは**記録欄の候補**であり正式な交換Schema/機密データの外部送信を定めない。
 
 **現在の事実と未証明**：TEI [#2607](https://github.com/hat47x/tei-platform/pull/2607) Product Skillと[#2649](https://github.com/hat47x/tei-platform/pull/2649) Capability/Artifact証拠計画は**2026-11-03にmerged**。TEI #2607の[実CI #41532988114](https://github.com/hat47x/tei-platform/actions/runs/41532988114)は同PR merge-ref上で**静的14 tests・Skill整合Check・Go CLI read-only smokeの限定成功**を確認済み。ただし**H2/H3・二Harness・EKI実Worker、期限内確率の校正・TEI実Quality Rule/Provider・Host/OS実Egress、Owner業務受理はNOT RUN**。既存Owner #168/#74/#271/TEI #2018/EKI #19/#155/TEI #2667へ還流し、非対応・未測定・実権限拒否を隠さない。
+
+
+---
+
+<!-- hx19-hx26-mcp2026-live-conformance-20261103 -->
+## 9. 2026-11-03横断深化：MCP 2026-07-28のTool一覧鮮度・追加入力・非同期TaskをHarness互換と誤認しない
+
+### 9.1 新たに解消する不確実性と一次資料
+
+[Agent Skills仕様](https://agentskills.io/specification)は`SKILL.md`と参照素材/Scriptの**配布形式**を規定するが、各Harnessの探索・自動起動・Tool実効権限・読み込んだbyte列の一致までは保証しない。従来のSK-02 H2/H3とSK-03 HX-01〜18は継続し、単なるSkill形式の共通化を実動作互換へ昇格させない。
+
+[MCP 2026-07-28仕様の公式リリース説明](https://blog.modelcontextprotocol.io/posts/2026-07-28/)では、statelessなrequest、`tools/list`等の`ttlMs/cacheScope`によるキャッシュ可能性、ToolのHTTPルーティング用`Mcp-Method/Mcp-Name`、`resultType: input_required`と`inputResponses`を使うMulti Round-Trip Requests、coreから分離されたTasks拡張が導入されている。[Python SDKのキャッシュ説明](https://py.sdk.modelcontextprotocol.io/client/caching/)ではprivate/publicの認可文脈別キャッシュに言及される。**仕様がその機能を許すことと、対象Harness・Server・中継Proxyが当該Revisionを交渉して安全に実装したことは異なる。** 2025世代等への下位互換経路は実handshake/通信経路で別確認する。ACPはEditor↔Agentの連携面であり、Product ToolのMCP/TEI業務契約/EKIのTask正本に置き換えない。
+
+### 9.2 コアの意味と実在能力の五つの境界
+
+1. **宣言された能力（Catalog）**：`tei commands`はselected read-only commandsのみ、MCP `tools/list`も特定Server/Principalで返された時点の候補。両者の「非掲載」は製品全体の不存在証明ではない。
+2. **発見に使った有効文脈（Discovery Context）**：Harness/Server/Protocol revision、認可主体、Audience/Scope、cache scope・TTL・実取得時刻・実config。Cache hitとServer実応答を同一観測にしない。
+3. **実起動面（Effective Binding）**：呼び出し直前に実Tool名/schema/alias、CLI executable+argv全体、Skill+Script closure、必要Source/Provider/Toolの版・契約を照合。表示名一致やHTTP route headerの一致は意味同値ではない。
+4. **現在の行為資格（Current Authority）**：権限変更後もキャッシュ済みToolは画面に見え得る。実Host/Provider/OSが各Actionの現在Grant・開示先・Tenant・Effectを拒否できる必要がある。TTL/スキーマ/Skillの自己申告をAuthorityとしない。
+5. **実結果と到達（Effect/Consumer Evidence）**：MCP `tools/call`、input required、別Requestでの再開、Task handle/状態、Provider Receipt、独立Readback、同Attempt Body/Consumer受領は別。これらの段階を単一「成功」に折り畳まない。
+
+**異種Harness共通の資格表**では`(Harness revision, Model/Provider/billing, protocol negotiated, Tool/Skill actual closure, principal+audience, source+scope+epoch, measured calls/results, eligibility, residual)`を読み取り専用の比較票として組み立てる。固定の新ABI/API/schemaを製品に要求せず、既存TAI #168/TEI #2605/#2516/TAI #271の証拠参照へ接続する。
+
+### 9.3 HX-19〜26：既存SK-03に追加する独立反証（提案・実試験NOT RUN）
+
+| Case | 正負の独立入力・故障注入 | 必須観測／誤った昇格の拒否 |
+| --- | --- | --- |
+| **HX-19 Cache scope** | 同じMCP URLでPrincipal AにはTool X、Principal Bには非公開Tool Yが許可される。Proxy/Clientが`tools/list`をcacheする | 実`cacheScope`、caller/tenant、server response、client visible catalog、cache hitの区別。Aのprivate listがBへ再利用されれば**漏えい**。Tool名・schemaも開示対象（TAI #232） |
+| **HX-20 CatalogとGrantのTOCTOU** | 取得時はX許可、TTL内にHost Grantが失効。Harnessには旧Tool名が表示されたまま | Tool listingが残っていても**実invokeをHost/Providerで拒否**。catalog更新待ちやTTL満了を認可失効の強制手段にしない |
+| **HX-21 「一覧にない」と「利用できない」** | TEI選抜`commands`外の実dispatch、MCP Server側のTool追加、Server起動不全を独立注入 | 本体で不存在／catalog未掲載／不許可／未接続／古いcacheを分類。旧一覧だけで「実装なし」や「現在実行可」を断言しない |
+| **HX-22 Revision/alias差と下位互換** | 2026-07-28と旧RevisionのServer/Client、MCP名prefix、`Mcp-Name`経路で異なるToolが解決される条件 | negotiated Revision、実route、実Tool schema/args/result/失敗が一致する範囲のみ資格化。旧clientへのsilent fallbackを同一プロトコルPASSにしない |
+| **HX-23 MRTR再試行と承認** | `tools/call`が`input_required`を返し、利用者回答後に`inputResponses`付きで再要求。応答前のProvider Effectは未知 | 追加入力UI/別Requestを「新しい業務承認」「副作用未発生」「同一Attempt継続」だと勝手に認定しない。実Effect不明ならHost/Provider Receipt照会へ。読取り専用Taskは独立して継続可 |
+| **HX-24 MCP Tasks≠EKI Task** | MCP Tasks拡張のhandle/Cancel/Resultと、EKI Task/Attempt/Lease/ResultClaimを同名扱いするAdapter | 物理Transport/Agent Job statusとEKI Authority、実Body受領、Business Verifiedを分離。cancel APIの応答は実Provider停止/副作用取消しの証拠ではない |
+| **HX-25 Tool集合の非単調変化** | 同名候補Provider追加、alias変更、Tool列挙順変化、prompt-injection入りTool description | 以前選んだContract/Provider/Scopeの意図しない代替・権限昇格を拒否。未信頼descriptionはTool/GrantのAuthorityでない。推奨順序の変化は変更理由を記録 |
+| **HX-26 Cached resourceとSource所在** | `resources/read`のcacheは存続するがSource同bytes別path、SourceIndex/引用locatorまたはDecoder規則が変化 | 資源cacheのFresh判定≠Product Source occurrence/Accepted Meaning/実Consumer読取の現在資格。再解決が未観測なら関連Claimのみunknown。SHO/MMI/TEI元Ownerへ戻す |
+
+**局所の観測可能性**：本表での「実拒否」「漏えいなし」は、実Server・Proxy・OS/Networkを含め、検査したSink/Principal/版に限る。可視化されたTool名・最終回答一致・Modelの「安全」との自己申告では保証しない。Mock canary、公開TEI Workspace、独立Expected、Error/Unknown/未取得の区別を使い、保護対象Raw/実Credential/有料Providerの送信をP0実験の前提にしない。
+
+### 9.4 最小の実行順とProtocol観点を追加する判定表
+
+- **S1（前提）**：merged TEI Product Skill #2607とCLIで、Skillなし／ありのSK-02実4 Sessionが開始できることを固定。Tool/Skill実Load未観測ならSkill効果は`insufficient-evidence`。これを代替する新Mock Skill Harnessを構築しない。
+- **S2（二Harness）**：SK-03で固定公開Workspace/独立Expectedを二Harnessで呼ぶ。同じモデルを設定できなければ**構成上の相互運用**に限定し、Skill/Model効果の因果帰属をしない。
+- **S3（MCP差分）**：S2でMCPが実可用と確認できた場合のみ、ローカルMock/ProxyでHX-19/20/21/22/25のCatalog/Grant/Revisionを一条件ずつ変更。**CLI-only経路は別対照として継続**し、MCP必須Core化しない。
+- **S4（対話・非同期）**：MCP MRTR/Tasksに実対応するHarness/ServerでのみHX-23/24の`input_required`、Task Cancel、Result/Body/Receiverを測る。EKIに実委任していないHarness TaskにEKIのAttempt/Lease/保証を付与しない。
+- **S5（Source/配布）**：HX-26、Skill/Adapter/Protocolの必要依存閉包変更、TAI #271のJ0全再検証／J1選択的再資格化／J2旧成功の無検証採用を比較。危険なJ2は公開合成環境のみ。現在の権限は古い証拠で免除しない。
+- **S6（運用）**：第8節のDeadline・Quality期限・Budget・Recoveryと接合。単にTool callが完了しても、必要なQuality Check/Artifact Body/Consumerが締切内に完了しない場合は`business-usable`としない。
+
+**比較列**：`actual handshake revision / discover and list endpoint / ttlMs / cacheScope / cache hit / principal+audience / actual tool identity+schema+route / call attempt / input_required+inputResponses / async handle+cancel / Host deny/allow point / effect receipt / reader outcome / actual network sink / unknown coverage`。実装/仕様の異なるHarnessで取れない列は未観測とする。公開仕様の列に値があることを実起動証拠へ昇格しない。
+
+**Owner**：本SK-03／TAI #168が**外部Harnessとの運用互換**を担当。**TAI #74**は版付きPackage/Adapter/Tool/Protocolの配布、**TAI #271**は現在性とHandoff、**TEI #2605/#2354/#2516**はCLI/Source/意味/実Consumer、**TAI #232/TEI #2515**はOS/Network/Receiver、**EKI #57/#465**はTask/Lease/Body/実Effectを担当。MCP公式仕様適合検査とProduct意味/Host認可は別。MCP特有の本体改変は実測必要性が見えるまで提案のみ。
+
+**状態（2026-11-03）**：HX-19〜26とS1〜S6の新規実Harness実行はNOT RUN。MCP 2026-07-28は外部仕様調査に基づく候補。TEI限定CLI CIやTAI合成Checker、旧MCPクライアントの静的設定を本パイロットの実証PASSに合算しない。
