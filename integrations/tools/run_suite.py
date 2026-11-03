@@ -112,6 +112,17 @@ def main():
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-concurrency-2026-11-03.json",
             ],
+        ),        "postgres_contention": run_step(
+            "postgres_contention",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_contention_check.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-contention-2026-11-03.json",
+            ],
         ),
     }
     passed = all(step["returncode"] == 0 for step in steps.values())
