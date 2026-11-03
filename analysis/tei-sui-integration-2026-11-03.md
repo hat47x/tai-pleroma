@@ -274,3 +274,16 @@ passed 2082 / failed 14 / skipped 49 / deselected 8
 - `test_external_content_store.py` 2件: `C:\Users\...\Temp`配下への書き込みが拒否される
 
 製品の挙動に関する表明の失敗ではないが、再実行していないため件数は1回の観測である。
+
+## SEIのCLIで判断を記録する（2026-11-03）
+
+投影したSEI判断recordを、SEI自身のCLIで記録し、bundleの書き出しと検証まで通した。[receipt](../evaluations/records/SEI-TEI-cli-2026-11-03.json)
+
+```text
+sei init → sei add decision → sei resume → sei export → sei verify
+checks 6/6
+```
+
+- storeは一時ディレクトリ
+- `resume`のスナップショットdigestを記録
+- policy gateは通していない
