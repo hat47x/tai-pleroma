@@ -43,3 +43,48 @@ external系のHTTP先には、それぞれ次の設定がある。
 - stubで起動を通した場合の挙動
 - 実OAuth broker・実ポリシーサーバとの接続
 - 管理DB・TLS・配備
+
+## 外部HTTPの契約（コードから抽出）
+
+実装済みのアダプタが送受信する形。実サーバは未接続で、以下はコードの読み取りに基づく。
+
+### access control（`access_control.py`）
+
+POST。ヘッダは`content-type: application/json`、`x-acl-auth-mode`、必要に応じて`x-trace-id`・`x-idp-issuer`・`Authorization: Bearer ...`。
+
+```json
+{
+  "action": "read",
+  "auth": {"actorRef": "...", "roles": [], "groups": [], "userId": "..."},
+  "resource": {"docId": "...", "visibility": "Org", "policyRef": "...", "tenantId": "...", "kind": "document"},
+  "safeMode": true,
+  "readOnly": false,
+  "tenant": {"tenantId": "...", "membershipId": "...", "resolvedBy": "..."}
+}
+```
+
+応答は`allow`（真偽値）を含むJSONで、`readOnly`・`reason`などを任意で持つ。400/401/403/422は拒否、その他は再試行可能な失敗として扱われる。
+
+### document policy binding（`document_policy_binding.py`）
+
+POST。
+
+```json
+{"tenantId": "...", "bindingId": "...", "policyVersion": "..."}
+```
+
+応答は`{"policyRef": "..."}`のみ。
+
+### tenant capability（`tenant_capability.py`）
+
+POST。
+
+```json
+{"principalId": "...", "tenantId": "...", "membershipId": "..."}
+```
+
+応答は`effectiveCapabilities`と`capabilityVersion`のみ。
+
+### OAuth broker
+
+`SUI_SAAS_OAUTH_BROKER_HTTP_AUTHORIZE_ENDPOINT`などの設定名のみ確認済みで、要求・応答の形は未確認。
