@@ -8,4 +8,6 @@ data FormatProfile {
     attribute status type std.text
     attribute featureVersion type std.text
     attribute sourceProfileId type std.text
+    attribute features type std.text
+    attribute sourceEvidence type std.text
 }

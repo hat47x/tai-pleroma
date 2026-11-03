@@ -40,11 +40,11 @@
         "errors": [],
         "artifact": {
           "path": "evaluations/artifacts/mmi-format-profile-projection.json",
-          "digest": "sha256:feaae850106f12da1927348d314d14a72594c4ff73eba87a8bd59581a6a0ca77"
+          "digest": "sha256:18ce475ec074f007d65d7d6aae36aad433dda3d9631bc4464161826074ff9ed9"
         },
         "schema": {
           "path": "integrations/pilot-mmi-format-profile/artifact.schema.json",
-          "digest": "sha256:832f5055eb0c623bf18a73ae5c75ef37fcdd577131dd7db42e76b9ad19a3a2c1"
+          "digest": "sha256:5d041d42898508df2706fdfd8eaa58e51331205d7c96cd000b9f4fc280d4a7e7"
         },
         "schemaId": "tai.reference.tei-mmi-format-profile-projection/v0"
       },

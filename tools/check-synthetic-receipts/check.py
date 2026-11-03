@@ -157,6 +157,7 @@ REAL_RECORDS = (
     "evaluations/records/SEI-TEI-record-2026-11-03.json",
     "evaluations/records/MMI-TEI-consumer-2026-11-03.json",
     "evaluations/records/MMI-TEI-real-artifact-2026-11-03.json",
+    "evaluations/records/MMI-TEI-record-2026-11-03.json",
     "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
     "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
@@ -365,6 +366,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("passed") != 4 or observed.get("callsControl") is not False:
                 errors.append(f"EKI consumer receipt did not record four non-calling tests: {relative}")
+        if "MMI-TEI-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True:
+                errors.append(f"MMI format-profile record did not validate: {relative}")
         if "MMI-TEI-real-artifact" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("profileId") != "profile-a":

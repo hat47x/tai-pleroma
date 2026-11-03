@@ -4,8 +4,8 @@ MMIのFormat Profile v1（`02_Architecture/format-profile-v1.schema.json`）か�
 
 ## 範囲
 
-- 対象: `schemaVersion`・`id`・`label`・`purpose`・`status`・`featureVersion`・`sourceProfileId`
-- 対象外: `sourceEvidence`・`features`・`provenance`
+- 対象: `schemaVersion`・`id`・`label`・`purpose`・`status`・`featureVersion`・`sourceProfileId`・`features`・`sourceEvidence`
+- 対象外: `provenance`
 - MMIのコード・API・保存へは接続していない
 
 ## 実行
