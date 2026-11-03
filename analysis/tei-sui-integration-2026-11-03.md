@@ -252,3 +252,9 @@ reasons="...: reserve lease: NOT_YET_VALID: approval is issued in the future"
 ## 更新後の一括検証（2026-11-03）
 
 TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証16段を実行し、すべて通った。EKI投入には現在のEKIからビルドした`eki-control`を使った。[receipt](../evaluations/records/TEI-suite-2026-11-03.json)
+
+## SUIの文書ルートのテスト（2026-11-03）
+
+SUIの文書ルートに関するテスト7ファイルを実行し、122件すべて通った。[receipt](../evaluations/records/SUI-docs-tests-2026-11-03.json)
+
+往復・境界・テナント分離・アクセス制御連携・監査連携・A1エラー契約を含む。`PYTHONPATH=03_Implement/backend/src`が必要で、実配備ではない。
