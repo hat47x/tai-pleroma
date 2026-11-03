@@ -429,3 +429,16 @@ Agentのassignment実行には`assignment`設定が必要で、次の項目が�
 - `machine`・`ceiling_percent`・任意の`execution`
 
 `eki-control`/`eki-agent`のCLIにはTrust Bundleを署名・発行するサブコマンドが無く、`conformance/process`のテストが内部パッケージで組み立てている。したがって、TAI側から実プロセスでassignment実行まで進めるには、まずTrust Bundleの発行手順（#78・#478）が必要になる。
+
+## MMIのinspect（実xlsx・2026-11-03）
+
+MMIのCLIでリポジトリ内の実xlsxを読み取り専用でinspectした。[receipt](../evaluations/records/MMI-inspect-2026-11-03.json)
+
+```text
+candidates 3 / contract mmi.semantic-candidate/v1
+checks 5/5（exit 0・contract・候補あり・sourceDigestあり・table-rangeあり）
+```
+
+- シートごとの領域とヘッダを候補として返す
+- 各候補に`sourceDigest`（sha256）が付く
+- 形式プロファイルの適用や書き込みは行わない
