@@ -496,3 +496,25 @@ SC-AはMarkdownリンク整理→必要な元資料の取得・SEI/SUIの根拠/
 - 初期SK-03のHX-01〜10は**NOT RUN**。TEI merged #2626のread-only CLI観測とTAI SK-02合成20件CheckerのPASSは、外部Harness Skillロード/跨Harness再開のPASSではない。既存Critical Pathや他Product単体利用を全Harness実証待ちにしない。
 
 対応先：TAI #168（一覧と比較）、#74（版固定・配布）、#271（再資格化）、TEI #2605（製品Skill/CLI）、#2509（DSH固有）、#2018（生産性/費用）、TAI #232/TEI #2515（機密実隔離）。新Core enum、共通Host/Registry、二重Authority/Oracleは作らない。
+
+## 28. 2026-11-03：実Product Skill統合後の基準版と期限・品質・回復制約のSkillルーティング
+
+### 28.1 歴史的Draft記述の更新と実証境界
+
+[TEI Product Skill PR #2607](https://github.com/hat47x/tei-platform/pull/2607)（merge `ca6cbf5745b5ddb22185782e0f9ea37f6f8566b9`）と[TEI Capability/CLI/Artifact PR #2649](https://github.com/hat47x/tei-platform/pull/2649)（merge `e98ec5f475c60b53cc1cc91c9b44ce2bc502a111`）が**mainへ統合済み**。旧§20〜27やSK-02内で「Draft #2607/#2649」と書いた箇所は当時の時系列記録であり、現在の試行には**実mainに存在するSkill/実CLI**を使う。この更新によって外部Harnessの導入や意味受理まで証明されたわけではない。
+
+[SK-02 §11](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)に、[TEI GitHub Actions #41532988114](https://github.com/hat47x/tei-platform/actions/runs/41532988114)の**14 Python Checker tests + document/CLI static check + 単一Go binaryのread-only `commands/catalog/inspect/trace/validate` smoke success**を、**PR merge-ref `8d442c41f81fda64119fe41cef5ef44cd49034ac`限定Evidence**として記載。実Skillロード・同一Harness H2/H3四Session・第二Harness SK-03は**未実施**である。CIに出たbinary SHA/Job・Product Skill実Blobは登録候補であり、現行Harnessで実消費した実行物とは区別する。
+
+### 28.2 目標関数を単なる「低Token単価」にしない
+
+[SK-03 §8](harness-interoperability-and-handoff-pilot-2026-11-03.md)に、他チャットの[TAI #168 CQ-04/05](https://github.com/hat47x/tai-pleroma/issues/168)、[EKI #19](https://github.com/hat47x/eki-fabric/issues/19)/[#155](https://github.com/hat47x/eki-fabric/issues/155)、[TEI Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)を接続した。HarnessやProductの選択は、**(a) Source/Disclosure/Contract/Host Grant/必要品質のhard constraints → (b) 許容lead timeと障害後の回復余裕 → (c) 総費用・人間レビュー → (d) 不足時の縮退/保留**の順。推定成功確率・安価なToken・Skillが説明するCapabilityを、現在の実行権限や品質/期限保証に昇格しない。費用実績や時間分布がなければその部分は`unknown`であり、架空の最適Workerを選ばない。
+
+**二つの完了時点**を明示する。①Task実行/Body Consumer受領の期限、②そのOutputを特定用途で利用するためのTEI Quality Check/例外/Scope/期限。EKIでJob完了でもTEI品質検査が未実行、またはSHOが文書を書けてもReaderが新Versionを読んでいないなら、依頼の成果条件を達成したと報告しない。他方、OwnerがDeferred/Advisoryと定義するCheckSetをTAI Skillで全用途ブロックしない。
+
+EKIの明示的な委任時は既存Task/Attempt/Admission/Worker/Lease/Recovery/物理資源予算だけをEKIへ渡し、TAIは二重Schedulerや価格/通貨の中央台帳を持たない。安価なHarness再起動とEKI Result Bodyの同Attempt再送を同じRetryとして扱わない。公開合成条件の[HX-15〜18](harness-interoperability-and-handoff-pilot-2026-11-03.md)で、期限miss/Quality期限違反/Body ACK不一致/資源回復公平性を反証する。いずれも現在**NOT RUN**。
+
+### 28.3 採用候補・保留・次の実証
+
+**採用を推奨する設計境界**：外部Harness-first、Product Skillは各Product owner、TAIの横断SkillはTaskの必要最小の選択と受渡し、Data/Quality・Policy・Pricing・HPC/Provider専門実装を共通化せず各Ownerへ委ねる。Runtimeに追加するのは現時点では**なし**。これらは設計上の候補であって正式Owner採用ではない。
+
+**実施の順序**：公開Workspace上の既存TEI Skill/CLIを**同一Harnessで実ロード・4セッションH2/H3**→独立Expectedと警告/Source/Scopeの正しさ・Token/Tool/時間を測る→**二つ目の利用可能Harnessへ同Task/Skillの実移植**→必要な条件でOnly Product/TAI/SHO/EKI・期限/Recovery・Data Qualityの横断Handoffへ拡張する。未完了がある工程のPASSを他工程へ伝播しない。[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)のBundle配布受入・[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の現在性再資格化を既存Ownerとして維持。
