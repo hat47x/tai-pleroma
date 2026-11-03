@@ -69,3 +69,11 @@
 - [Postgres最初の試行](postgres-attempt-2026-11-03.json): 409。原因はテナント行の欠落で、後に解消。
 - [SaaS起動試行](saas-startup-probe-2026-11-03.json)・[stub起動](saas-stub-startup-2026-11-03.json): 6項目の不足と、stub設定での起動・401。外部HTTP先は未実装。
 - [SaaS前提の整理](../analysis/sui-saas-prerequisites-2026-11-03.md)
+
+### EKIへの投入と配置（2026-11-03）
+
+- [EKIへ投入](records/EKI-TEI-submit-2026-11-03.json): 投影TaskRequestを実`eki-control`へPOSTし、202・queued・同一Idempotency-Keyの同一task_idを確認。
+- [Dispatch有効化の試行](eki-dispatch-attempt-2026-11-03.json): 署名鍵とDispatch設定で起動。policy未投入では「policy is not available」。
+- [policy投入後の試行](eki-dispatch-attempt-2026-11-03.log): Taskは検討対象になるが「no usable worker is registered」。
+- [policyとWorker行の投入](records/EKI-TEI-dispatch-running-2026-11-03.json): Taskがrunningへ進む。Workerプロセスは動かしておらず、結果は無い。
+- 実行・結果受理はEKI側で未配線（[EKIの実行系が未配線](../analysis/tei-sui-integration-2026-11-03.md)）。
