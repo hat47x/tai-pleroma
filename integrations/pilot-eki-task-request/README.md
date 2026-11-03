@@ -5,7 +5,7 @@ EKIの公開契約`eki.task-request/v1`（`spec/external/openapi.json`）から�
 ## 範囲
 
 - 対象: `schema`・`executor.id`・`executor.version_constraint`・`priority`・`client_request_id`
-- 対象外: `inputs`・`parameters`・`resources`・`reliability`・`extensions`
+- 対象: `resources`の5項目と`reliability`の6項目も平坦な値として投影（`inputs`は空配列、`parameters`は空オブジェクトとして再構成）`n- 対象外: `inputs`の要素・`extensions`
 - EKIのコード・APIへは接続していない
 
 ## EKIの既存Spikeとの違い

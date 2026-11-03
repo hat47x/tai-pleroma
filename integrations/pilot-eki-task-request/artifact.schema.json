@@ -3,44 +3,160 @@
   "$id": "https://tai-pleroma.example/schemas/tei-eki-task-request-projection-v0.schema.json",
   "title": "TEI EKI task request projection artifact v0",
   "type": "object",
-  "required": ["schema", "contract", "source", "taskRequest"],
+  "required": [
+    "schema",
+    "contract",
+    "source",
+    "taskRequest"
+  ],
   "properties": {
-    "schema": {"const": "tai.reference.tei-eki-task-request-projection/v0"},
+    "schema": {
+      "const": "tai.reference.tei-eki-task-request-projection/v0"
+    },
     "contract": {
       "type": "object",
-      "required": ["id", "version"],
+      "required": [
+        "id",
+        "version"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "version": {"type": "string", "minLength": 1}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "source": {
       "type": "object",
-      "required": ["teiCommit", "contract"],
+      "required": [
+        "teiCommit",
+        "contract"
+      ],
       "properties": {
-        "teiCommit": {"type": "string", "minLength": 1},
+        "teiCommit": {
+          "type": "string",
+          "minLength": 1
+        },
         "contract": {
           "type": "object",
-          "required": ["contractId", "contractVersion", "contractDigest", "sourceDigest", "cases"],
+          "required": [
+            "contractId",
+            "contractVersion",
+            "contractDigest",
+            "sourceDigest",
+            "cases"
+          ],
           "properties": {
-            "contractId": {"type": "string", "minLength": 1},
-            "contractVersion": {"type": "string", "minLength": 1},
-            "contractDigest": {"type": "string", "pattern": "^sha256:"},
-            "sourceDigest": {"type": "string", "pattern": "^sha256:"},
-            "cases": {"type": "integer", "minimum": 1}
+            "contractId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contractVersion": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contractDigest": {
+              "type": "string",
+              "pattern": "^sha256:"
+            },
+            "sourceDigest": {
+              "type": "string",
+              "pattern": "^sha256:"
+            },
+            "cases": {
+              "type": "integer",
+              "minimum": 1
+            }
           }
         }
       }
     },
     "taskRequest": {
       "type": "object",
-      "required": ["schema", "executorId", "versionConstraint"],
+      "required": [
+        "schema",
+        "executorId",
+        "versionConstraint",
+        "cpuMillis",
+        "memoryBytes",
+        "wallTimeSeconds",
+        "outputBytesMax",
+        "networkBytesMax",
+        "retryable",
+        "preemptible",
+        "checkpointable",
+        "deterministic",
+        "maxAttempts",
+        "effectMode"
+      ],
       "properties": {
-        "schema": {"const": "eki.task-request/v1"},
-        "executorId": {"type": "string", "minLength": 1},
-        "versionConstraint": {"type": "string", "minLength": 1},
-        "priority": {"enum": ["background", "normal", "high"]},
-        "clientRequestId": {"type": "string", "minLength": 1, "maxLength": 64}
+        "schema": {
+          "const": "eki.task-request/v1"
+        },
+        "executorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionConstraint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "enum": [
+            "background",
+            "normal",
+            "high"
+          ]
+        },
+        "clientRequestId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "cpuMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "memoryBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "wallTimeSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputBytesMax": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "networkBytesMax": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "preemptible": {
+          "type": "boolean"
+        },
+        "checkpointable": {
+          "type": "boolean"
+        },
+        "deterministic": {
+          "type": "boolean"
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "effectMode": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     }
   }
