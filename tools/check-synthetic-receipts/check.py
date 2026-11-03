@@ -168,6 +168,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-saas-adapter-contract-2026-11-03.json",
     "evaluations/records/SUI-saas-oauth-contract-2026-11-03.json",
     "evaluations/records/SUI-saas-login-contract-2026-11-03.json",
+    "evaluations/records/SUI-saas-callback-contract-2026-11-03.json",
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
     "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
     "evaluations/records/SCN-003-compose-2026-11-03.json",
@@ -391,6 +392,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allIdentical") is not True or observed.get("count") != 3:
                 errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
+        if "SUI-saas-callback-contract" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI callback rejection checks did not all pass: {relative}")
         if "SUI-saas-login-contract" in relative:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
