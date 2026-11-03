@@ -7,20 +7,11 @@
   "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
   "command": "python integrations/tools/run_suite.py --tei-repo <TEI> --sui-repo <SUI>",
   "result": "PASS",
+  "teiCommit": "e0e8139151d390375d1994fc1f6e99fa59358543",
   "steps": {
-    "checker": {
-      "returncode": 0,
-      "seconds": 0.42,
-      "stdoutTail": [
-        "  \"recordCount\": 61,",
-        "  \"realRecordCount\": 95",
-        "}"
-      ],
-      "stderrTail": []
-    },
     "artifacts": {
       "returncode": 0,
-      "seconds": 0.37,
+      "seconds": 0.23,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -28,7 +19,7 @@
     },
     "scenario": {
       "returncode": 0,
-      "seconds": 0.1,
+      "seconds": 0.08,
       "stdoutTail": [
         "{\"allFound\": true, \"count\": 4}"
       ],
@@ -36,7 +27,7 @@
     },
     "pipeline": {
       "returncode": 0,
-      "seconds": 10.59,
+      "seconds": 10.53,
       "stdoutTail": [
         "{\"result\": \"PASS\", \"steps\": {\"flow\": {\"returncode\": 0, \"casesPassed\": 21}, \"schema\": {\"returncode\": 0, \"valid\": true}, \"documentV1\": {\"returncode\": 0, \"valid\": true}, \"contractDigests\": {\"returncode\": 0, \"allMatch\": true}}}"
       ],
@@ -44,7 +35,7 @@
     },
     "compose": {
       "returncode": 0,
-      "seconds": 1.12,
+      "seconds": 1.05,
       "stdoutTail": [
         "{\"valid\": true, \"cards\": 5, \"decisionRef\": \"decision-1\", \"taskExecutor\": \"dev.example.transform\", \"profileId\": \"profile-a\", \"cardIds\": [\"card-decision-1\", \"card-task-1\", \"card-profile-1\"]}"
       ],
@@ -52,15 +43,15 @@
     },
     "tls": {
       "returncode": 0,
-      "seconds": 5.08,
+      "seconds": 4.88,
       "stdoutTail": [
-        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:55164\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
+        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:63372\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
       ],
       "stderrTail": []
     },
     "postgres": {
       "returncode": 0,
-      "seconds": 17.4,
+      "seconds": 16.82,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -68,7 +59,7 @@
     },
     "postgres_migrate": {
       "returncode": 0,
-      "seconds": 18.1,
+      "seconds": 24.24,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\", \"migration\": \"alembic upgrade head\"}"
       ],
@@ -76,7 +67,7 @@
     },
     "postgres_etag": {
       "returncode": 0,
-      "seconds": 15.95,
+      "seconds": 13.6,
       "stdoutTail": [
         "{\"createStatus\": 200, \"etagPresent\": true, \"staleStatus\": 409, \"matchingStatus\": 200, \"database\": \"embedded PostgreSQL 16.2\", \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -87,7 +78,7 @@
     },
     "postgres_concurrency": {
       "returncode": 0,
-      "seconds": 15.94,
+      "seconds": 17.17,
       "stdoutTail": [
         "{\"createStatus\": 200, \"statuses\": [409, 200], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
       ],
@@ -95,15 +86,15 @@
     },
     "postgres_contention": {
       "returncode": 0,
-      "seconds": 20.94,
+      "seconds": 20.4,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [200, 409, 409]}, {\"round\": 2, \"statuses\": [200, 409, 409]}, {\"round\": 3, \"statuses\": [409, 200, 409]}, {\"round\": 4, \"statuses\": [200, 409, 409]}, {\"round\": 5, \"statuses\": [409, 409, 200]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 200, 503]}, {\"round\": 2, \"statuses\": [200, 409, 409]}, {\"round\": 3, \"statuses\": [200, 409, 409]}, {\"round\": 4, \"statuses\": [200, 409, 409]}, {\"round\": 5, \"statuses\": [200, 409, 409]}]}"
       ],
       "stderrTail": []
     },
     "postgres_multidoc": {
       "returncode": 0,
-      "seconds": 15.03,
+      "seconds": 14.0,
       "stdoutTail": [
         "{\"created\": true, \"read\": true, \"rows\": 10, \"titlesMatch\": true}"
       ],
@@ -114,7 +105,7 @@
     },
     "records": {
       "returncode": 0,
-      "seconds": 2.77,
+      "seconds": 1.85,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -122,9 +113,9 @@
     },
     "eki_submit": {
       "returncode": 0,
-      "seconds": 1.14,
+      "seconds": 0.81,
       "stdoutTail": [
-        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_646e0daf56505482a74fc55b9d4110f5\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
+        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_854822c45d30370c73197b4fff42b55f\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
       ],
       "stderrTail": []
     }

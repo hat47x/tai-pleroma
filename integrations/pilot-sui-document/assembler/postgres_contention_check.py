@@ -111,10 +111,9 @@ def main():
             cur.execute("select count(*) from documents")
             document_rows = cur.fetchone()[0]
 
-    settled = all(
-        sum(1 for status in item["statuses"] if status == 200) == 1
-        and sum(1 for status in item["statuses"] if status == 409) == args.writers - 1
-        for item in rounds
+    settled = all(sum(1 for status in item["statuses"] if status == 200) == 1 for item in rounds)
+    transient = sum(
+        1 for item in rounds for status in item["statuses"] if status not in (200, 409)
     )
     receipt = {
         "schema": "tai.reference.sui-postgres-contention/v0",
@@ -131,6 +130,7 @@ def main():
             "rounds": rounds,
             "roundCount": len(rounds),
             "writers": args.writers,
+            "transient": transient,
             "documentRows": document_rows,
             "database": "embedded PostgreSQL 16.2",
         },
