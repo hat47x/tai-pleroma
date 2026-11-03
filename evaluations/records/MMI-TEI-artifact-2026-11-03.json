@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-mmi-artifact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Go on PATH, Python 3.12, and jsonschema",
+  "command": "python integrations/pilot-mmi-format-profile/build_artifact.py --tei-repo D:\\GIT\\hat47x\\tei-wt-cur --out D:\\GIT\\hat47x\\tai-wt-mmir\\evaluations\\artifacts\\mmi-format-profile-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-mmir\\evaluations\\artifacts\\mmi-format-profile-projection.json",
+    "digest": "sha256:18ce475ec074f007d65d7d6aae36aad433dda3d9631bc4464161826074ff9ed9"
+  },
+  "observed": {
+    "profileValid": true,
+    "cases": 4,
+    "profileId": "profile-a"
+  },
+  "scope": "Builds one Format Profile record from the fixture and validates the artifact against its JSON Schema. It does not connect to MMI or save anything."
+}

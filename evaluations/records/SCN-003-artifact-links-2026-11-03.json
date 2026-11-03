@@ -1,0 +1,41 @@
+{
+  "schema": "tai.reference.scn-003-artifact-links/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/tools/check_scenario_artifacts.py",
+  "result": "PASS",
+  "observed": {
+    "artifacts": {
+      "sei": {
+        "found": true,
+        "identifier": "decision-1",
+        "artifact": "evaluations/artifacts/sei-decision-projection.json",
+        "digest": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+      },
+      "eki": {
+        "found": true,
+        "identifier": "dev.example.transform",
+        "artifact": "evaluations/artifacts/eki-task-request-projection.json",
+        "digest": "sha256:1d25d0c0bcb5203eaa4b91ce4d38ece3d699236a0f84cfc343be64e701d30f75"
+      },
+      "mmi": {
+        "found": true,
+        "identifier": "profile-a",
+        "artifact": "evaluations/artifacts/mmi-format-profile-projection.json",
+        "digest": "sha256:18ce475ec074f007d65d7d6aae36aad433dda3d9631bc4464161826074ff9ed9"
+      },
+      "sui": {
+        "found": true,
+        "identifier": "doc-1",
+        "artifact": "evaluations/artifacts/documentv1-projection.json",
+        "digest": "sha256:d1c8605ee8a28d7feefe5ca919677f2e575af22d30dfc1dd9244422ac2b8d3b2"
+      }
+    },
+    "allFound": true,
+    "count": 4
+  },
+  "scope": "Checks that the four SCN-003 artifacts exist and contain the documented identifiers. It does not prove that a product would accept them."
+}

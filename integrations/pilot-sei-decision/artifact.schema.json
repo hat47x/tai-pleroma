@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tai-pleroma.example/schemas/tei-sei-decision-projection-v0.schema.json",
+  "title": "TEI SEI decision projection artifact v0",
+  "type": "object",
+  "required": ["schema", "contract", "source", "decision"],
+  "properties": {
+    "schema": {"const": "tai.reference.tei-sei-decision-projection/v0"},
+    "contract": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["teiCommit", "contract"],
+      "properties": {
+        "teiCommit": {"type": "string", "minLength": 1},
+        "contract": {
+          "type": "object",
+          "required": ["contractId", "contractVersion", "contractDigest", "sourceDigest", "cases"],
+          "properties": {
+            "contractId": {"type": "string", "minLength": 1},
+            "contractVersion": {"type": "string", "minLength": 1},
+            "contractDigest": {"type": "string", "pattern": "^sha256:"},
+            "sourceDigest": {"type": "string", "pattern": "^sha256:"},
+            "cases": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["contract", "recordType", "refKind", "refId", "statement"],
+      "properties": {
+        "contract": {"type": "string", "minLength": 1},
+        "recordType": {"const": "decision"},
+        "refKind": {"type": "string", "minLength": 1},
+        "refId": {"type": "string", "minLength": 1},
+        "statement": {"type": "string", "minLength": 1},
+        "rationale": {"type": "string"}
+      }
+    }
+  }
+}

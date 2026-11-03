@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-eki-artifact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Go on PATH, Python 3.12, and jsonschema",
+  "command": "python integrations/pilot-eki-task-request/build_artifact.py --tei-repo D:\\GIT\\hat47x\\tei-wt-cur --out D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-projection.json",
+    "digest": "sha256:1d25d0c0bcb5203eaa4b91ce4d38ece3d699236a0f84cfc343be64e701d30f75"
+  },
+  "observed": {
+    "taskRequestValid": true,
+    "cases": 5,
+    "executorId": "dev.example.transform"
+  },
+  "scope": "Builds one TaskRequest header record from the fixture and validates the artifact against its JSON Schema. It does not call EKI or save anything."
+}

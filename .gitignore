@@ -13,3 +13,4 @@ __pycache__/
 # Local review artifacts and temporary inputs
 .tmp/
 *.tmp
+sui_sensemaking.db

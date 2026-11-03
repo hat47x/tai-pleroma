@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.sui-saas-startup/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, uvicorn, and an embedded PostgreSQL 16.2",
+  "command": "python integrations/tools/saas_startup_probe.py <SUI repo>",
+  "result": "TIMEOUT",
+  "observed": {
+    "runtimeProfile": "saas-multitenant",
+    "migration": "alembic upgrade head",
+    "seconds": 33.24,
+    "missing": [],
+    "missingCount": 0,
+    "requestStatus": "ConnectError",
+    "started": false,
+    "extraEnv": {},
+    "outputTail": [
+      "process stayed up for 30 seconds"
+    ]
+  },
+  "scope": "Starts SUI under the SaaS profile against a migrated embedded PostgreSQL. It records the startup refusal; it does not configure the policy or change SUI."
+}

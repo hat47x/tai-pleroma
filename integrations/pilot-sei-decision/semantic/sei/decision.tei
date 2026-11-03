@@ -1,0 +1,10 @@
+namespace sei
+
+data Decision {
+    attribute contract type std.text
+    attribute recordType type std.text
+    attribute refKind type std.text
+    attribute refId type std.identifier
+    attribute statement type std.text
+    attribute rationale type std.text
+}

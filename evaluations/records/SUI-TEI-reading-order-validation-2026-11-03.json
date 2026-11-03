@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.tei-documentv1-validation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python and pydantic 2.14.2",
+  "command": "python integrations/pilot-sui-document/assembler/validate_against_sui.py --sui-repo D:\\GIT\\hat47x\\sui-wt-ro --artifact D:\\GIT\\hat47x\\tai-wt-ro\\evaluations\\artifacts\\documentv1-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-ro\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:9ab052be815b1dd91d55995675cb6345bd0476d3a6d6dbdce10f0eb5202c3a14"
+  },
+  "observed": {
+    "documentId": "doc-1",
+    "cards": 2,
+    "islands": 1,
+    "affiliations": 1,
+    "documentV1Valid": true
+  },
+  "scope": "The artifact is read by SUI's consumer and validated by SUI's DocumentV1 model with caller-supplied transform and timestamps. It does not save, call the API, or prove human acceptance."
+}

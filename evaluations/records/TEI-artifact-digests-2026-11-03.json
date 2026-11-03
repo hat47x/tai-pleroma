@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.tei-artifact-digests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/tools/verify_artifact_digests.py",
+  "result": "PASS",
+  "observed": {
+    "artifacts": {
+      "sui": {
+        "match": true,
+        "expected": "sha256:097e10334421891d106cfcd793239b0d16269f25905f46620bf610375b4c4261",
+        "found": "per-record"
+      },
+      "sei": {
+        "match": true,
+        "expected": "sha256:f8b499187dac7f68ec7fe897858e6b7321e5437a42bf8ab04b16492384239901",
+        "found": "sha256:f8b499187dac7f68ec7fe897858e6b7321e5437a42bf8ab04b16492384239901"
+      },
+      "mmi": {
+        "match": true,
+        "expected": "sha256:7fbc9f800ef4a62453ce6a0b462eebfb6cb2c6605033cdf1eae91277f3db81bb",
+        "found": "sha256:7fbc9f800ef4a62453ce6a0b462eebfb6cb2c6605033cdf1eae91277f3db81bb"
+      },
+      "eki": {
+        "match": true,
+        "expected": "sha256:2be368d6b2c335b90cf4adc4f079256e81867a7a9530d3c8e44bf7e8f7425ad2",
+        "found": "sha256:2be368d6b2c335b90cf4adc4f079256e81867a7a9530d3c8e44bf7e8f7425ad2"
+      }
+    },
+    "allMatch": true,
+    "count": 4
+  },
+  "scope": "Recomputes each artifact's contractDigest from the contract file with LF normalization. It does not verify sourceDigest or the generator binary."
+}

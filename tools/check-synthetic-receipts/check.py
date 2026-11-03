@@ -68,6 +68,7 @@ RECORDS = (
     "evaluations/records/EKI-acceptance-2026-10-31.json",
     "evaluations/records/EKI-runtime-limits-2026-11-01.json",
     "evaluations/records/TEI-product-capabilities-2026-10-31.json",
+    "evaluations/records/SUI-TEI-large-doc-2026-11-03.json",
     "evaluations/records/TEI-capability-chain-2026-10-31.json",
     "evaluations/records/SW-01-S1-harness-2026-10-31.json",
     "evaluations/records/SW-01-S1-harnessA-rerun-2026-10-31.json",
@@ -121,6 +122,8 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-containment-2026-11-03.json",
     "evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-2026-11-03.json",
+    "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json",
+    "evaluations/records/SUI-TEI-etag-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json",
@@ -128,6 +131,60 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-save-e2e-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-auth-2026-11-03.json",
     "evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json",
+    "evaluations/records/SUI-TEI-server-2026-11-03.json",
+    "evaluations/records/SUI-TEI-determinism-2026-11-03.json",
+    "evaluations/records/SUI-TEI-sources-2026-11-03.json",
+    "evaluations/records/SUI-TEI-sources-validation-2026-11-03.json",
+    "evaluations/records/SUI-TEI-reading-order-2026-11-03.json",
+    "evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json",
+    "evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json",
+    "evaluations/records/SUI-TEI-contract-versions-2026-11-03.json",
+    "evaluations/records/SUI-TEI-contract-versions-validation-2026-11-03.json",
+    "evaluations/records/SUI-TEI-contract-digest-2026-11-03.json",
+    "evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json",
+    "evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json",
+    "evaluations/records/SUI-TEI-compat-2026-11-03.json",
+    "evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json",
+    "evaluations/records/SEI-TEI-decision-selection-2026-11-03.json",
+    "evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json",
+    "evaluations/records/SEI-TEI-artifact-2026-11-03.json",
+    "evaluations/records/MMI-TEI-format-profile-selection-2026-11-03.json",
+    "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
+    "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
+    "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json",
+    "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
+    "evaluations/records/SEI-TEI-consumer-2026-11-03.json",
+    "evaluations/records/SEI-TEI-real-artifact-2026-11-03.json",
+    "evaluations/records/SEI-TEI-record-2026-11-03.json",
+    "evaluations/records/MMI-TEI-consumer-2026-11-03.json",
+    "evaluations/records/MMI-TEI-real-artifact-2026-11-03.json",
+    "evaluations/records/MMI-TEI-record-2026-11-03.json",
+    "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
+    "evaluations/records/EKI-TEI-record-2026-11-03.json",
+    "evaluations/records/EKI-TEI-submit-2026-11-03.json",
+    "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
+    "evaluations/records/TEI-records-2026-11-03.json",
+    "evaluations/records/TEI-artifact-digests-2026-11-03.json",
+    "evaluations/records/SUI-saas-adapter-contract-2026-11-03.json",
+    "evaluations/records/SUI-saas-oauth-contract-2026-11-03.json",
+    "evaluations/records/SUI-saas-login-contract-2026-11-03.json",
+    "evaluations/records/SUI-saas-callback-contract-2026-11-03.json",
+    "evaluations/records/SUI-saas-identity-2026-11-03.json",
+    "evaluations/records/SUI-saas-tests-2026-11-03.json",
+    "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
+    "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
+    "evaluations/records/SCN-003-compose-2026-11-03.json",
+    "evaluations/records/SCN-003-save-2026-11-03.json",
+    "evaluations/records/TEI-suite-pipeline-2026-11-03.json",
+    "evaluations/records/TEI-suite-2026-11-03.json",
+    "evaluations/records/SUI-TEI-tls-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-etag-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-concurrency-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-contention-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-retry-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-retry-evidence-2026-11-03.json",
     "evaluations/records/SUI-TEI-workflow-2026-11-02.json",
     "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json",
 )
@@ -228,6 +285,268 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "tei-affiliation" in relative:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
+        if "tei-large-doc" in relative:
+            observed = data.get("observed", {})
+            if data.get("synthetic") is not True or observed.get("savedCards") != 300:
+                errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
+        if "tei-sui-etag" in relative:
+            observed = data.get("observed", {})
+            if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
+                errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
+        if "tei-multi-doc" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
+                errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
+        if "tei-sui-save-plan" in relative:
+            observed = data.get("observed", {})
+            if observed.get("planAction") != "update" or observed.get("roundTrip") is not True:
+                errors.append(f"TEI save plan receipt did not record an idempotent update: {relative}")
+        if "tei-determinism" in relative:
+            observed = data.get("observed", {})
+            if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
+                errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SUI-TEI-postgres-retry-evidence" in relative:
+            observed = data.get("observed", {})
+            if observed.get("retries", 0) < 1 or data.get("result") != "PASS":
+                errors.append(f"SUI Postgres retry evidence did not record a recovered retry: {relative}")
+        if "SUI-TEI-postgres-retry" in relative:
+            rounds = data.get("observed", {}).get("rounds", [])
+            terminal = all(all(status in (200, 409) for status in item.get("statuses", [])) for item in rounds)
+            if data.get("result") != "PASS" or not terminal:
+                errors.append(f"SUI Postgres retry run left a transient status: {relative}")
+        if "SUI-TEI-postgres-contention" in relative:
+            rounds = data.get("observed", {}).get("rounds", [])
+            settled = bool(rounds) and all(
+                sum(1 for status in item.get("statuses", []) if status == 200) == 1 for item in rounds
+            )
+            if data.get("result") != "PASS" or not settled:
+                errors.append(f"SUI Postgres contention did not settle every round: {relative}")
+        if "SUI-TEI-postgres-concurrency" in relative:
+            observed = data.get("observed", {})
+            if observed.get("winners") != 1 or observed.get("conflicts") != 1:
+                errors.append(f"SUI Postgres concurrency check did not settle on one winner: {relative}")
+        if "SUI-TEI-postgres-etag" in relative:
+            observed = data.get("observed", {})
+            if observed.get("staleStatus") != 409 or observed.get("matchingStatus") != 200:
+                errors.append(f"SUI Postgres ETag check did not enforce preconditions: {relative}")
+        if "SUI-TEI-postgres-migrate" in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
+                errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
+        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative:
+            observed = data.get("observed", {})
+            expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
+            if data.get("result") != expected:
+                errors.append(f"SUI Postgres receipt result does not match roundTrip: {relative}")
+        if "SUI-TEI-postgres-retry-evidence" in relative:
+            observed = data.get("observed", {})
+            if observed.get("retries", 0) < 1 or data.get("result") != "PASS":
+                errors.append(f"SUI Postgres retry evidence did not record a recovered retry: {relative}")
+        if "SUI-TEI-postgres-retry" in relative:
+            rounds = data.get("observed", {}).get("rounds", [])
+            terminal = all(all(status in (200, 409) for status in item.get("statuses", [])) for item in rounds)
+            if data.get("result") != "PASS" or not terminal:
+                errors.append(f"SUI Postgres retry run left a transient status: {relative}")
+        if "SUI-TEI-postgres-contention" in relative:
+            rounds = data.get("observed", {}).get("rounds", [])
+            settled = bool(rounds) and all(
+                sum(1 for status in item.get("statuses", []) if status == 200) == 1 for item in rounds
+            )
+            if data.get("result") != "PASS" or not settled:
+                errors.append(f"SUI Postgres contention did not settle every round: {relative}")
+        if "SUI-TEI-postgres-concurrency" in relative:
+            observed = data.get("observed", {})
+            if observed.get("winners") != 1 or observed.get("conflicts") != 1:
+                errors.append(f"SUI Postgres concurrency check did not settle on one winner: {relative}")
+        if "SUI-TEI-postgres-etag" in relative:
+            observed = data.get("observed", {})
+            if observed.get("staleStatus") != 409 or observed.get("matchingStatus") != 200:
+                errors.append(f"SUI Postgres ETag check did not enforce preconditions: {relative}")
+        if "SUI-TEI-postgres-migrate" in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
+                errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
+        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("documentRows") != 1:
+                errors.append(f"SUI Postgres save did not persist one document: {relative}")
+        if "SUI-TEI-tls" in relative:
+            observed = data.get("observed", {})
+            if observed.get("tls") is not True or observed.get("authenticatedStatus") != 200:
+                errors.append(f"SUI TLS check did not succeed: {relative}")
+        if "TEI-suite-2026" in relative:
+            steps = data.get("steps", {})
+            if data.get("result") != "PASS" or any(step.get("returncode") != 0 for step in steps.values()):
+                errors.append(f"TEI suite did not pass every step: {relative}")
+        if "SCN-003-save" in relative:
+            observed = data.get("observed", {})
+            if observed.get("roundTrip") is not True or observed.get("cards") != 5:
+                errors.append(f"SCN-003 save did not round trip three cards: {relative}")
+        if "SCN-003-compose" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True:
+                errors.append(f"SCN-003 compose did not validate: {relative}")
+        if "SCN-003-artifact-links" in relative:
+            observed = data.get("observed", {})
+            if observed.get("allFound") is not True or observed.get("count") != 4:
+                errors.append(f"SCN-003 artifact links were not all found: {relative}")
+        if "artifacts-determinism" in relative:
+            observed = data.get("observed", {})
+            if observed.get("allIdentical") is not True or observed.get("count") != 3:
+                errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
+        if "SUI-saas-tests" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
+                errors.append(f"SUI SaaS test subset did not pass: {relative}")
+        if "SUI-saas-identity" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI broker identity checks did not all pass: {relative}")
+        if "SUI-saas-callback-contract" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI callback rejection checks did not all pass: {relative}")
+        if "SUI-saas-login-contract" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI login initiation contract checks did not all pass: {relative}")
+        if "SUI-saas-oauth-contract" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI OAuth broker contract checks did not all pass: {relative}")
+        if "SUI-saas-adapter-contract" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI SaaS adapter contract checks did not all pass: {relative}")
+        if "TEI-artifact-digests" in relative:
+            observed = data.get("observed", {})
+            if observed.get("allMatch") is not True or observed.get("count") != 4:
+                errors.append(f"artifact contract digests did not all match: {relative}")
+        if "TEI-records" in relative:
+            observed = data.get("observed", {})
+            if observed.get("allValid") is not True or observed.get("count") != 4:
+                errors.append(f"product record conversions did not all validate: {relative}")
+        if "EKI-TEI-dispatch-running" in relative:
+            observed = data.get("observed", {})
+            if observed.get("taskStatus") != "running" or observed.get("taskExecuted") is not False:
+                errors.append(f"EKI task did not reach running without executing: {relative}")
+        if "EKI-TEI-submit" in relative:
+            observed = data.get("observed", {})
+            if observed.get("submitStatus") != 202 or observed.get("taskStatus") != "queued":
+                errors.append(f"EKI did not accept the projected TaskRequest: {relative}")
+        if "EKI-TEI-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True:
+                errors.append(f"EKI task-request record did not validate: {relative}")
+        if "EKI-TEI-consumer" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 4 or observed.get("callsControl") is not False:
+                errors.append(f"EKI consumer receipt did not record four non-calling tests: {relative}")
+        if "MMI-TEI-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True:
+                errors.append(f"MMI format-profile record did not validate: {relative}")
+        if "MMI-TEI-real-artifact" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 5 or observed.get("profileId") != "profile-a":
+                errors.append(f"MMI real artifact receipt did not parse profile-a: {relative}")
+        if "MMI-TEI-consumer" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 5 or observed.get("writes") is not False:
+                errors.append(f"MMI consumer receipt did not record four non-writing tests: {relative}")
+        if "SEI-TEI-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True or observed.get("refId") != "decision-1":
+                errors.append(f"SEI decision-memory record did not validate: {relative}")
+        if "SEI-TEI-real-artifact" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") is not True or observed.get("refId") != "decision-1":
+                errors.append(f"SEI real artifact receipt did not parse decision-1: {relative}")
+        if "SEI-TEI-consumer" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") != 3 or observed.get("writes") is not False:
+                errors.append(f"SEI consumer receipt did not record three non-writing tests: {relative}")
+        if "EKI-TEI-artifact" in relative:
+            observed = data.get("observed", {})
+            if observed.get("taskRequestValid") is not True:
+                errors.append(f"EKI artifact did not validate: {relative}")
+        if "EKI-TEI-task-request-selection" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") is not True:
+                errors.append(f"EKI task request selection did not pass: {relative}")
+        if "artifacts-crosscheck" in relative:
+            observed = data.get("observed", {})
+            if observed.get("allValid") is not True or observed.get("count") != 4:
+                errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
+        if "MMI-TEI-artifact" in relative:
+            observed = data.get("observed", {})
+            if observed.get("profileValid") is not True:
+                errors.append(f"MMI artifact did not validate: {relative}")
+        if "MMI-TEI-format-profile-selection" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") is not True:
+                errors.append(f"MMI format profile selection did not pass: {relative}")
+        if "SEI-TEI-artifact" in relative:
+            observed = data.get("observed", {})
+            if observed.get("decisionValid") is not True:
+                errors.append(f"SEI artifact did not validate: {relative}")
+        if "artifact-schema" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True:
+                errors.append(f"TEI artifact schema check did not validate: {relative}")
+        if "SEI-TEI-decision-selection" in relative:
+            observed = data.get("observed", {})
+            if observed.get("passed") is not True:
+                errors.append(f"SEI decision selection did not pass: {relative}")
+        if "tei-pipeline-save" in relative:
+            steps = data.get("steps", {})
+            if data.get("result") != "PASS" or steps.get("save", {}).get("roundTrip") is not True:
+                errors.append(f"TEI pipeline save did not pass with a round trip: {relative}")
+        if "SUI-TEI-compat" in relative:
+            steps = data.get("steps", {})
+            if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:
+                errors.append(f"SUI pipeline did not pass against the newer TEI: {relative}")
+        if "tei-pipeline-run" in relative:
+            steps = data.get("steps", {})
+            if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:
+                errors.append(f"TEI pilot run did not pass all steps: {relative}")
+        if "tei-contract-digest-check" in relative:
+            observed = data.get("observed", {})
+            if observed.get("allMatch") is not True:
+                errors.append(f"TEI contract digest check found a mismatch: {relative}")
+        if "tei-contract-versions-validation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documentV1Valid") is not True:
+                errors.append(f"TEI contract versions validation did not validate DocumentV1: {relative}")
+        elif "tei-contract-versions" in relative:
+            contracts = data.get("contracts", {})
+            if not contracts or not all(item.get("contractVersion") for item in contracts.values()):
+                errors.append(f"TEI contract versions receipt is missing contract versions: {relative}")
+        if "tei-fields-roundtrip" in relative:
+            observed = data.get("observed", {})
+            checks = observed.get("roundTripChecks", {})
+            if observed.get("roundTrip") is not True or not checks or not all(checks.values()):
+                errors.append(f"TEI fields roundtrip receipt has failing checks: {relative}")
+        if "tei-reading-order-validation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documentV1Valid") is not True:
+                errors.append(f"TEI reading order validation did not validate DocumentV1: {relative}")
+        elif "tei-reading-order" in relative:
+            if data.get("result") != "PASS":
+                errors.append(f"TEI reading order receipt did not pass: {relative}")
+        if "tei-sources-validation" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documentV1Valid") is not True:
+                errors.append(f"TEI sources validation did not validate DocumentV1: {relative}")
+        elif "tei-sources" in relative:
+            if data.get("result") != "PASS":
+                errors.append(f"TEI sources receipt did not pass: {relative}")
+        if "tei-sui-server" in relative:
+            observed = data.get("observed", {})
+            if observed.get("serverReady") is not True or observed.get("anonymousStatus") != 401:
+                errors.append(f"TEI server receipt did not record readiness and 401: {relative}")
+            if observed.get("transport") != "uvicorn on 127.0.0.1":
+                errors.append(f"TEI server receipt must disclose the transport: {relative}")
         if "tei-save-roundtrip" in relative:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True:
@@ -263,9 +582,21 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
+        if "tei-large-doc" in relative:
+            observed = data.get("observed", {})
+            if data.get("synthetic") is not True or observed.get("savedCards") != 300:
+                errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
+        if "tei-sui-etag" in relative:
+            observed = data.get("observed", {})
+            if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
+                errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
+        if "tei-multi-doc" in relative:
+            observed = data.get("observed", {})
+            if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
+                errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
         if "tei-sui-save-plan" in relative:
             observed = data.get("observed", {})
-            if observed.get("passed") != 4 or observed.get("writes") is not False:
+            if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save plan receipt did not record four non-writing tests: {relative}")
         if "documentv1-validation" in relative:
             observed = data.get("observed", {})

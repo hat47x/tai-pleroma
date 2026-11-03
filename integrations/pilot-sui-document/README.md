@@ -499,3 +499,186 @@ roundTrip: true
 ```
 
 - [receipt](../../evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json)
+## 実サーバでの保存（2026-11-03）
+
+`assembler/serve_and_save.py`で、SUIをuvicorn上の実HTTPサーバとして起動して保存します。
+
+- 127.0.0.1の実ソケット、一時SQLite、APIキーあり
+- `PUT /docs/doc-1` 作成: 200
+- `GET` 読み戻し: 200、roundTrip: true
+- APIキーなしの`PUT`: 401
+
+- [receipt](../../evaluations/records/SUI-TEI-server-2026-11-03.json)
+- 本番DB・TLS・リバースプロキシ・実配備は未検証
+## 決定性（2026-11-03）
+
+`assembler/determinism_check.py`で、同じ入力の投影を2回実行し、artifactのdigestを比較します。
+
+```text
+runs: 2 / identical: true
+digest: 6d39148c...bacf34（両回一致）
+casesPassed: 21 / 21
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-determinism-2026-11-03.json)
+- 異なるホスト・ツールチェーン間の決定性は未検証
+## 保存計画と保存の統合（2026-11-03）
+
+`save_to_sui.py`は、既存文書がある場合に`plan_save(preserve_existing=True)`のpayloadをそのまま`PUT`へ渡します。
+
+観測（2回目の保存）:
+
+```text
+planAction: update
+planCardsAdded: 0 / planCardsChanged: 0
+planPreservedCards: 0 / planWarnings: 0
+roundTrip: true
+```
+
+同じ内容の再保存が差分ゼロで通ることを確認しました。
+
+- [receipt](../../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
+## 複数文書の保存（2026-11-03）
+
+`assembler/multi_save.py`で、同じ投影を10の文書IDへ保存します。
+
+```text
+documents: 10
+createdAll: true / readAll: true
+isolatedIds: true
+writes: true
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-multi-doc-2026-11-03.json)
+- 大量カード・同時書き込み・本番DBは未検証
+## 大量カードの保存（合成、2026-11-03）
+
+`assembler/large_save.py`は、パイロット投影へ合成Cardを追加して保存します。
+
+```text
+requestedCards: 300 / savedCards: 300
+putStatus: 200 / readStatus: 200
+payloadBytes: 22744
+syntheticCardsAdded: 298
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-large-doc-2026-11-03.json)
+- **合成fixture**であり、パイロットの実証ではない
+- 本番上限・同時書き込みは未検証
+## ETag前提条件（2026-11-03）
+
+`assembler/etag_check.py`で、保存経路の`If-Match`を確認します。
+
+```text
+ETagあり: true
+古い If-Match: 409
+一致する If-Match: 200
+前提条件なし: 200（local-devのlast-write-wins）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-etag-2026-11-03.json)
+- SaaSプロファイルの前提条件必須動作、同時書き込みは未検証
+## Cardのsources（2026-11-03）
+
+Cardのoptionalな`sources`配列を投影へ追加しました。
+
+```text
+sui.card.record v8: id, text, x, y, claimType?, holdState?, textReviewed?, sources[]?
+```
+
+- 契約・fixture・SUI consumer・DocumentV1 payloadまで反映
+- 21ケースPASS、SUI unittest 21件PASS
+- `validate_against_sui`でDocumentV1妥当性を確認
+
+- [receipt](../../evaluations/records/SUI-TEI-sources-2026-11-03.json)
+- [validation](../../evaluations/records/SUI-TEI-sources-validation-2026-11-03.json)
+## DocumentのreadingOrder（2026-11-03）
+
+Documentのoptionalな`readingOrder`配列を投影へ追加しました。
+
+```text
+sui.document.record v5: id, title?, readingOrder[]?
+```
+
+- 契約・fixture・SUI consumer・DocumentV1 payloadまで反映
+- 21ケースPASS、SUI unittest 24件PASS
+- `validate_against_sui`でDocumentV1妥当性を確認
+
+- [receipt](../../evaluations/records/SUI-TEI-reading-order-2026-11-03.json)
+- [validation](../../evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json)
+## 追加フィールドの往復（2026-11-03）
+
+`sources`と`readingOrder`を含むartifactで保存し、読み戻しを比較しました。
+
+```text
+cardSources: true / readingOrder: true
+roundTrip: true（8項目すべて一致）
+planAction: update / 差分なし
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json)
+## 契約の版をartifactへ記録（2026-11-03）
+
+artifactの`source.contracts`へ`contractId`と`contractVersion`を記録するようにしました。
+
+```text
+card-record: sui.card.record v8 / cases 5
+document-record: sui.document.record v5 / cases 4
+```
+
+契約ファイルのハッシュは`sourceDigest`（生成候補ソースのdigest）とは別物なので、版の確認には`contractVersion`を使います。
+
+- [receipt](../../evaluations/records/SUI-TEI-contract-versions-2026-11-03.json)
+## 契約内容の照合（2026-11-03）
+
+artifactの`contractDigest`（契約JSONのLF正規化ハッシュ）と、契約ファイルを比較できます。
+
+```text
+contracts: 5
+mismatches: []
+allMatch: true
+```
+
+- [artifact flow receipt](../../evaluations/records/SUI-TEI-contract-digest-2026-11-03.json)
+- [digest check](../../evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json)
+## 一括実行（2026-11-03）
+
+`assembler/run_pilot.py`で、投影フロー・DocumentV1検証・契約digest照合を1コマンドで実行します。
+
+```text
+flow: 21ケースPASS
+schema: valid
+documentV1: valid
+contractDigests: allMatch
+result: PASS
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json)
+- 保存は含まない
+## 一括実行に保存を追加（2026-11-03）
+
+`--save`を付けると、検証の後に保存と往復整合まで実行します（既定は無効）。
+
+```text
+flow: 21ケースPASS
+schema: valid
+documentV1: valid
+contractDigests: allMatch
+save: roundTrip true / planAction update / 200
+result: PASS
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json)
+- 一時SQLite・`local-dev`
+## artifactのJSON Schema（2026-11-03）
+
+`artifact.schema.json`を追加し、`assembler/validate_artifact_schema.py`でartifactを検証します。
+
+```text
+valid: true
+errors: []
+```
+
+- 検証する: envelope・契約メタデータ・要素の形
+- 検証しない: 参照整合性・DocumentV1
+- [receipt](../../evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json)

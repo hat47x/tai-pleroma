@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.tei-mmi-format-profile-projection/v0",
+  "contract": {
+    "id": "mmi.format-profile.projection",
+    "version": "1"
+  },
+  "source": {
+    "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
+    "contract": {
+      "contractId": "mmi.format-profile.record",
+      "contractVersion": "1",
+      "contractDigest": "sha256:7fbc9f800ef4a62453ce6a0b462eebfb6cb2c6605033cdf1eae91277f3db81bb",
+      "sourceDigest": "sha256:11303f4c45c5ddcaca6840945d0fe580c8fe613467bceb7fb76fdd275a65b1e3",
+      "cases": 4
+    }
+  },
+  "profile": {
+    "featureVersion": "1.0.0",
+    "features": [
+      "table"
+    ],
+    "id": "profile-a",
+    "label": "Profile A",
+    "purpose": "Render tables",
+    "schemaVersion": "mmi-format-profile-v1",
+    "sourceEvidence": [
+      "structure"
+    ],
+    "sourceProfileId": "profile-base",
+    "status": "candidate"
+  }
+}
