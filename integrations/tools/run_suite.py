@@ -32,6 +32,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tei-repo", required=True)
     parser.add_argument("--sui-repo", required=True)
+    parser.add_argument("--sei-schema", default="")
+    parser.add_argument("--mmi-schema", default="")
+    parser.add_argument("--eki-openapi", default="")
     parser.add_argument("--out", default="evaluations/records/TEI-suite-2026-11-03.json")
     args = parser.parse_args()
 
@@ -133,6 +136,19 @@ def main():
                 "evaluations/artifacts/scn-003-document.json",
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-multidoc-2026-11-03.json",
+            ],
+        ),        "records": run_step(
+            "records",
+            [
+                "integrations/tools/validate_records.py",
+                "--sei-schema",
+                args.sei_schema,
+                "--mmi-schema",
+                args.mmi_schema,
+                "--eki-openapi",
+                args.eki_openapi,
+                "--sui-repo",
+                args.sui_repo,
             ],
         ),
     }
