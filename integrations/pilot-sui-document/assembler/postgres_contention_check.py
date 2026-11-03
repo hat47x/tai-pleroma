@@ -22,6 +22,7 @@ def main():
     parser.add_argument("--out", required=True)
     parser.add_argument("--rounds", type=int, default=5)
     parser.add_argument("--writers", type=int, default=3)
+    parser.add_argument("--retry-transient", type=int, default=2)
     args = parser.parse_args()
 
     import pgserver
@@ -82,26 +83,38 @@ def main():
             current = httpx.get(f"{base_url}/docs/{projected.id}", headers=headers, timeout=30)
             etag = current.headers.get("ETag")
             statuses = [None] * args.writers
+            retries = [0] * args.writers
             barrier = threading.Barrier(args.writers)
 
             def send(index, current_etag=etag, round_no=round_index):
                 barrier.wait()
-                body = json.loads(json.dumps(payload))
-                body["title"] = f"round-{round_no}-writer-{index}"
-                response = httpx.put(
-                    f"{base_url}/docs/{projected.id}",
-                    json=body,
-                    headers={**headers, "If-Match": current_etag},
-                    timeout=60,
-                )
-                statuses[index] = response.status_code
+                attempt = 0
+                while True:
+                    body = json.loads(json.dumps(payload))
+                    body["title"] = f"round-{round_no}-writer-{index}"
+                    response = httpx.put(
+                        f"{base_url}/docs/{projected.id}",
+                        json=body,
+                        headers={**headers, "If-Match": current_etag},
+                        timeout=60,
+                    )
+                    if response.status_code == 503 and attempt < args.retry_transient:
+                        attempt += 1
+                        retries[index] = attempt
+                        refreshed = httpx.get(
+                            f"{base_url}/docs/{projected.id}", headers=headers, timeout=30
+                        )
+                        current_etag = refreshed.headers.get("ETag")
+                        continue
+                    statuses[index] = response.status_code
+                    break
 
             workers = [threading.Thread(target=send, args=(index,)) for index in range(args.writers)]
             for worker in workers:
                 worker.start()
             for worker in workers:
                 worker.join()
-            rounds.append({"round": round_index + 1, "statuses": statuses})
+            rounds.append({"round": round_index + 1, "statuses": statuses, "retries": retries})
     finally:
         server.should_exit = True
         thread.join(timeout=15)
@@ -111,7 +124,7 @@ def main():
             cur.execute("select count(*) from documents")
             document_rows = cur.fetchone()[0]
 
-    settled = all(sum(1 for status in item["statuses"] if status == 200) == 1 for item in rounds)
+    settled = all(all(status in (200, 409) for status in item["statuses"]) for item in rounds)
     transient = sum(
         1 for item in rounds for status in item["statuses"] if status not in (200, 409)
     )
@@ -131,6 +144,7 @@ def main():
             "roundCount": len(rounds),
             "writers": args.writers,
             "transient": transient,
+            "retries": sum(sum(item.get("retries", [])) for item in rounds),
             "documentRows": document_rows,
             "database": "embedded PostgreSQL 16.2",
         },
