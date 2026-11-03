@@ -21,7 +21,7 @@ python integrations/tools/run_suite.py \
   --eki-control <eki-control binary>
 ```
 
-23段（checker・artifact・digest・SaaS外部HTTP3種・ログイン開始・コールバック・token検証・SUIのSaaSテスト・SUIの文書テスト・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
+24段（checker・artifact・digest・SaaS外部HTTP3種・ログイン開始・コールバック・token検証・SUIのSaaSテスト・SUIの文書テスト・SUIの認証連携テスト・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
 
 - receipt自身をcheckerが読むため、FAILのreceiptが残っていると次の実行もFAILになる。その場合は`--skip-checker`で実行し、後からcheckerを単独で回す
 - `--eki-control`を省くとEKI投入の段は実行しない
