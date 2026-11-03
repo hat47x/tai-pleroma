@@ -303,3 +303,11 @@ SEIのstdio MCPサーバを起動し、`initialize`・`tools/list`・`tools/call
 - 公開されるツール: `resume`・`add_recommendation`・`check_decision`
 - `resume`は記録済みの判断を返す
 - 実AIクライアント・write系ツール・セッション分離は未確認
+
+## MCP経由のcheck_decision（2026-11-03）
+
+SEIのMCPツール`check_decision`を、許可・拒否の両方で呼んだ。[receipt](../evaluations/records/SEI-TEI-mcp-check-2026-11-03.json)
+
+- 責任者とrecommendationを備えた判断: `verdict=allow`、`decision_digest`あり
+- 責任者の無い判断: `verdict=deny`、理由あり
+- 応答は`content[].text`にJSON文字列として入る

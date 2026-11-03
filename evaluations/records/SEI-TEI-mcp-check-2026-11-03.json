@@ -1,0 +1,35 @@
+{
+  "schema": "tai.reference.tei-sei-mcp-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with a locally built sei CLI and a temporary record store",
+  "command": "python integrations/tools/sei_mcp_check_decision.py",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "allowVerdict": true,
+      "denyVerdict": true,
+      "allowHasBinding": true,
+      "denyHasReasons": true
+    },
+    "allowResult": {
+      "content": [
+        {
+          "text": "{\"decision\":\"decision-1\",\"verdict\":\"allow\",\"policy\":{\"require_responsible\":true,\"require_recommendation\":true,\"deny_unresolved\":false},\"binding\":{\"bundle_id\":\"sei-store-2026-11-03\",\"bundle_digest\":\"sha256:970d42fa74ddefa70e9c28028189657506844d1bc7e7e9f49c61558d5c632996\",\"decision_record_id\":\"decision-1\",\"decision_scope\":\"\",\"decision_digest\":\"sha256:25d9c34708826ba6e382165a4f88bfa59fc5e64d96fafd61e15e51982acc399d\",\"decision_representation_profile\":\"sei.jcs+sha256/v1alpha1\"},\"not_verified\":[\"that the responsible party holds Authority for this action\",\"that the action matches what the decision covers\",\"whether a later Semantic Lineage (revises, supersedes, withdraws) changes how this decision stands; the gate does not evaluate Semantic Lineage\",\"whether each basis reference exists, and for an exact reference whether its content_digest matches the real content; the gate checks neither\"]}",
+          "type": "text"
+        }
+      ]
+    },
+    "denyResult": {
+      "content": [
+        {
+          "text": "{\"decision\":\"decision-no-owner\",\"verdict\":\"deny\",\"reasons\":[\"the decision names no responsible party\"],\"policy\":{\"require_responsible\":true,\"require_recommendation\":false,\"deny_unresolved\":false},\"binding\":{\"bundle_id\":\"sei-store-2026-11-03\",\"bundle_digest\":\"sha256:970d42fa74ddefa70e9c28028189657506844d1bc7e7e9f49c61558d5c632996\",\"decision_record_id\":\"decision-no-owner\",\"decision_scope\":\"\",\"decision_digest\":\"sha256:a6ed9cbae89c0272c0692635b41e4a42b0de8486afb705fae1992c5802680ff9\",\"decision_representation_profile\":\"sei.jcs+sha256/v1alpha1\"},\"not_verified\":[\"that the responsible party holds Authority for this action\",\"that the action matches what the decision covers\",\"whether a later Semantic Lineage (revises, supersedes, withdraws) changes how this decision stands; the gate does not evaluate Semantic Lineage\",\"whether each basis reference exists, and for an exact reference whether its content_digest matches the real content; the gate checks neither\"]}",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  "scope": "Calls SEI's MCP check_decision for one allow and one deny case. It does not test a real AI client or Authority verification."
+}
