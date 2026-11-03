@@ -340,3 +340,14 @@ form profileをMMI側の型として成立させるには、投影に`provenance
 - 属性は3つ増え、契約は12項目になった
 - `generationMethod`は`worksheet-prototype-v1`に固定
 - `approval`は対象外のまま
+
+## EKIの取り消し受理（2026-11-03）
+
+実行中（`running`）のTaskへ`POST /v1/tasks/{id}/cancel`を送った。[attempt](../evaluations/EKI-cancel-attempt-2026-11-03.json)
+
+```text
+202 {"schema":"eki.task-cancel-accepted/v1","status":"cancellation-requested"}
+4秒後の公開状態: running
+```
+
+取り消しは受理されるが、attemptが飛行中でWorkerが動いていないため、公開状態は`running`のままだった。Idempotency-Keyが必須で、無い場合は400になる。
