@@ -418,3 +418,14 @@ instancesReady true / create(A) 200 / crossRead(B) 200 / crossUpdate(B) 200 / st
 - Aで作成した文書をBで読める
 - Bの更新後、Aの古いETagは409で拒否される
 - 同一ホスト上の2プロセスであり、別ホスト配備ではない
+
+## Worker実行を止めているもの（2026-11-03）
+
+Agentのassignment実行には`assignment`設定が必要で、次の項目がすべて必須である（`internal/agent/service/assignments.go`）。
+
+- `trust_anchor_file`: `internal/agent/trustanchor`の形式。`trust_domain`・`policy_revision`・`bundle_revision`・`validated_at`・各種上限・Authority公開鍵に加え、`control_public_key`と`trust_bundle_versions`（Control Planeが署名したTrust Bundleの履歴）を持つ
+- `replay_db`・`events_file`
+- `approved_executors`（`decision_id`・`payload_digest`・`executor_digest`）
+- `machine`・`ceiling_percent`・任意の`execution`
+
+`eki-control`/`eki-agent`のCLIにはTrust Bundleを署名・発行するサブコマンドが無く、`conformance/process`のテストが内部パッケージで組み立てている。したがって、TAI側から実プロセスでassignment実行まで進めるには、まずTrust Bundleの発行手順（#78・#478）が必要になる。
