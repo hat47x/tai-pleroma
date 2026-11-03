@@ -311,3 +311,14 @@ SEIのMCPツール`check_decision`を、許可・拒否の両方で呼んだ。[
 - 責任者とrecommendationを備えた判断: `verdict=allow`、`decision_digest`あり
 - 責任者の無い判断: `verdict=deny`、理由あり
 - 応答は`content[].text`にJSON文字列として入る
+
+## MMIのunitレーン1回実行（2026-11-03）
+
+MMIの`test:unit`を1回実行した。[記録](../evaluations/MMI-unit-tests-2026-11-03.json)
+
+```text
+tests 1329 / fail 1
+失敗: hashed sample and kit text assets contain no CR after checkout
+```
+
+失敗は、WindowsのCRLFチェックアウトで文書資産にCRが含まれるためだった。製品挙動の失敗ではないが、LFのチェックアウトでの再実行はしていない。CLIにformat profileを適用する経路は無く、形式プロファイルは拡張側の資産である。
