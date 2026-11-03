@@ -11,7 +11,9 @@
     {"attribute": "mmi.format_profile.purpose", "primitive": "std.text"},
     {"attribute": "mmi.format_profile.status", "primitive": "std.text"},
     {"attribute": "mmi.format_profile.feature_version", "primitive": "std.text"},
-    {"attribute": "mmi.format_profile.source_profile_id", "primitive": "std.text"}
+    {"attribute": "mmi.format_profile.source_profile_id", "primitive": "std.text"},
+    {"attribute": "mmi.format_profile.features", "primitive": "std.text"},
+    {"attribute": "mmi.format_profile.source_evidence", "primitive": "std.text"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
@@ -23,7 +25,9 @@
       {"name": "purpose", "input": "purpose", "attribute": "mmi.format_profile.purpose", "primitive": "std.text"},
       {"name": "status", "input": "status", "attribute": "mmi.format_profile.status", "primitive": "std.text"},
       {"name": "featureVersion", "input": "featureVersion", "attribute": "mmi.format_profile.feature_version", "primitive": "std.text"},
-      {"name": "sourceProfileId", "input": "sourceProfileId", "attribute": "mmi.format_profile.source_profile_id", "primitive": "std.text"}
+      {"name": "sourceProfileId", "input": "sourceProfileId", "attribute": "mmi.format_profile.source_profile_id", "primitive": "std.text"},
+      {"name": "features", "input": "features", "attribute": "mmi.format_profile.features", "primitive": "std.text", "many": true},
+      {"name": "sourceEvidence", "input": "sourceEvidence", "attribute": "mmi.format_profile.source_evidence", "primitive": "std.text", "many": true}
     ]
   }
 }

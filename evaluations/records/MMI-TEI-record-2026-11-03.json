@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.mmi-format-profile-record/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12 and jsonschema",
+  "command": "python integrations/tools/mmi_record_from_projection.py --schema <MMI schema>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/mmi-format-profile-projection.json",
+    "digest": "sha256:18ce475ec074f007d65d7d6aae36aad433dda3d9631bc4464161826074ff9ed9"
+  },
+  "record": {
+    "path": "evaluations/artifacts/mmi-format-profile-record.json",
+    "digest": "sha256:663c1a1a833a622aae280d2d6e21c925128d2d85c670fb6b999fd107e885b025"
+  },
+  "observed": {
+    "valid": true,
+    "errors": [],
+    "featureCount": 1
+  },
+  "scope": "Shows whether the flat format-profile projection can satisfy the MMI format-profile schema. It does not change MMI or claim a valid profile."
+}
