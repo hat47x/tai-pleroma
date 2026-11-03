@@ -62,6 +62,7 @@ def main():
         "sui_saas_tests": run_step("sui_saas_tests", ["integrations/tools/sui_saas_tests.py", "--sui-repo", args.sui_repo]),
         "sui_docs_tests": run_step("sui_docs_tests", ["integrations/tools/sui_docs_tests.py", "--sui-repo", args.sui_repo]),
         "sui_auth_flow_tests": run_step("sui_auth_flow_tests", ["integrations/tools/sui_auth_flow_tests.py", "--sui-repo", args.sui_repo]),
+        "sui_session_tests": run_step("sui_session_tests", ["integrations/tools/sui_session_tests.py", "--sui-repo", args.sui_repo]),
         "sei_cli": run_step("sei_cli", ["integrations/tools/sei_cli_record.py"]),
         "sei_gate": run_step("sei_gate", ["integrations/tools/sei_gate_check.py"]),
         "sei_mcp": run_step("sei_mcp", ["integrations/tools/sei_mcp_probe.py"]),
