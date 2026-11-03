@@ -442,3 +442,15 @@ checks 5/5（exit 0・contract・候補あり・sourceDigestあり・table-range
 - シートごとの領域とヘッダを候補として返す
 - 各候補に`sourceDigest`（sha256）が付く
 - 形式プロファイルの適用や書き込みは行わない
+
+## 監査ログのHTTPエクスポート（2026-11-03）
+
+SUIの監査エクスポートをHTTPトランスポートで有効にし、ローカルのシンクで受信した。[receipt](../evaluations/records/SUI-TEI-audit-2026-11-03.json)
+
+```text
+create 200 / view 200 / eventCount 1 / docId一致 / Bearerヘッダ一致
+```
+
+- 監査イベントは文書の閲覧（view）で発行される
+- `SUI_AUDIT_ALLOW_IN_SAFE_MODE=true`が無いとsafe modeのイベントは送られない
+- シンクはローカルの受信用プロセス
