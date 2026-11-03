@@ -406,3 +406,15 @@ chainTrusted true / create 200 / fetch 200 / roundTrip true / untrustedRefused t
 - サーバ証明書はローカルCAが署名（SANに`127.0.0.1`）
 - システム信頼ストアのままのクライアントは接続を拒否される
 - 公開CAではないため、実運用の証明書ではない
+
+## 複数インスタンスと共有DB（2026-11-03）
+
+1つのPostgresに2つのSUIプロセスを接続し、インスタンス間の読み書きとETagの扱いを確認した。[receipt](../evaluations/records/SUI-TEI-multi-instance-2026-11-03.json)
+
+```text
+instancesReady true / create(A) 200 / crossRead(B) 200 / crossUpdate(B) 200 / staleUpdate(A) 409
+```
+
+- Aで作成した文書をBで読める
+- Bの更新後、Aの古いETagは409で拒否される
+- 同一ホスト上の2プロセスであり、別ホスト配備ではない
