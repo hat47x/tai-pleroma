@@ -88,3 +88,14 @@ POST。
 ### OAuth broker
 
 `SUI_SAAS_OAUTH_BROKER_HTTP_AUTHORIZE_ENDPOINT`などの設定名のみ確認済みで、要求・応答の形は未確認。
+
+## 契約テスト（2026-11-03）
+
+SUIの3つの外部HTTPアダプタを、ローカルのstubサーバへ実際に接続して確認した。[receipt](../evaluations/records/SUI-saas-adapter-contract-2026-11-03.json)
+
+- access control: `allow`の応答を受け取り、`action`・`auth.actorRef`・`resource.docId`・`tenant.tenantId`・Bearerヘッダを送る
+- document policy binding: `tenantId`・`bindingId`・`policyVersion`を送り、`policyRef`を受け取る
+- tenant capability: `principalId`・`tenantId`・`membershipId`を送り、`effectiveCapabilities`と`capabilityVersion`を受け取る
+- capabilityの値は`document.read`などの既知集合に限られる
+
+stubは常に許可を返すため、実認可・OAuth brokerの挙動は未確認である。

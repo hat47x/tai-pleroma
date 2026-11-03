@@ -165,6 +165,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
     "evaluations/records/TEI-artifact-digests-2026-11-03.json",
+    "evaluations/records/SUI-saas-adapter-contract-2026-11-03.json",
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
     "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
     "evaluations/records/SCN-003-compose-2026-11-03.json",
@@ -388,6 +389,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allIdentical") is not True or observed.get("count") != 3:
                 errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
+        if "SUI-saas-adapter-contract" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SUI SaaS adapter contract checks did not all pass: {relative}")
         if "TEI-artifact-digests" in relative:
             observed = data.get("observed", {})
             if observed.get("allMatch") is not True or observed.get("count") != 4:
