@@ -25,7 +25,7 @@
         "found": true,
         "identifier": "profile-a",
         "artifact": "evaluations/artifacts/mmi-format-profile-projection.json",
-        "digest": "sha256:18ce475ec074f007d65d7d6aae36aad433dda3d9631bc4464161826074ff9ed9"
+        "digest": "sha256:0743e38b06c5a7f6322821512237d0c2765a5adf0a1198822ae3ad09229d150c"
       },
       "sui": {
         "found": true,
