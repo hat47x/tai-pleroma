@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-mmi-profile-assert/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Node 24 and MMI's tsx toolchain",
+  "command": "python integrations/tools/mmi_profile_assert.py",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/mmi-format-profile-projection.json"
+  },
+  "observed": {
+    "accepted": true,
+    "message": null,
+    "returncode": 0,
+    "stderrTail": []
+  },
+  "scope": "Calls MMI's assertFormatProfile on the projected profile. It does not build an approved profile, run a worksheet prototype, or exercise MMI's review workflow."
+}

@@ -10,4 +10,7 @@ data FormatProfile {
     attribute sourceProfileId type std.text
     attribute features type std.text
     attribute sourceEvidence type std.text
+    attribute sourceKind type std.text
+    attribute sourceDigest type std.text
+    attribute generationMethod type std.text
 }

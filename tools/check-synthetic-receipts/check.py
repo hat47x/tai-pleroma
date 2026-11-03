@@ -150,6 +150,7 @@ REAL_RECORDS = (
     "evaluations/records/SEI-TEI-artifact-2026-11-03.json",
     "evaluations/records/MMI-TEI-format-profile-selection-2026-11-03.json",
     "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
+    "evaluations/records/MMI-TEI-profile-2026-11-03.json",
     "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
     "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json",
     "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
@@ -514,6 +515,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
+        if "MMI-TEI-profile" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("accepted") is not True:
+                errors.append(f"MMI did not accept the projected format profile: {relative}")
         if "MMI-TEI-artifact" in relative:
             observed = data.get("observed", {})
             if observed.get("profileValid") is not True:
