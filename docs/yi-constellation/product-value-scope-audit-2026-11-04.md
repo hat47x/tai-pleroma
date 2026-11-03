@@ -141,3 +141,49 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 - **作業を始められる範囲**：公開された価値文書/IssueのSource-static棚卸し、製品別の負例候補生成、別モデルの反証票、合成・read-only比較、既存Ownerへの小さな差分提案。
 
 本計画の成果は**削ったIssue数や生成コード量ではなく、主要価値を失わずに減らした必須の複雑さ、反対に守るべき条件を正しく残せたこと、利用者の利益、未解決の明瞭さ**で評価する。
+
+
+## 9. 他Workstreamとの具体的な照合（2026-11-04追補）
+
+初回の評価を実際のAgentへ渡せる比較票に落とした：[VA-01：主要価値レビュー・初回反証パケット](../../evaluations/VA-01-product-value-necessity.md)。ここにある分類は**Source-staticの監査仮説**であって、OwnerによるRequirement変更・実テストPASSではない。
+
+### 9.1 TEI：価値への最短経路と拡張機構を別レーンにする
+
+- **専門家可読DSLを先に判定**する。Go単一バイナリは実行/配布の基準であり、日常DSLに`func`/`struct`等のGo構文を強制する根拠ではない。Go式AST、独自構文、Hybrid、DSL→Goコード生成を同じ意味、診断、Source位置、NULL、金額精度、演算順、負例で比較する。構文方式は未採用。
+- **Function / Invocation / Trigger / Buildを別概念とし、単一実行バイナリで足りる間は分割しない**。[TEI #1130](https://github.com/hat47x/tei-platform/issues/1130)、[#1097](https://github.com/hat47x/tei-platform/issues/1097)、[#1182](https://github.com/hat47x/tei-platform/issues/1182)を参照。cron/Webから同じ業務Functionを呼べても、TargetのAPI・Credential・Commit権限が同一とは推定しない。異配備・異隔離・ライフサイクルが必要なときだけMulti-Buildを検証する。
+- **生成AIに自由にテストを拡張させる足場**は、[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)が所有するDriver ScenarioのSSOTからCLI/Web/Target別Assertionを派生させる案を再利用する。UI画像差・Host認可・Runtime/Provider差は同一Scenarioの**Target固有試験**として保持し、CLI PASSでWeb PASSとしない。生成AI専用の第二Scenario DB/DSLや、全GUIの即時自動化を初期必須にしない。
+- **高速ビルド**は入力・Artifact・Evidence・現在の実行資格の再利用を別判定する（[TEI #2600](https://github.com/hat47x/tei-platform/issues/2600)）。同一Sourceのbyte一致は別ToolchainやGrant更新時の現在資格を保証しない。高速化のため新Cache/Registryを先に増やさず、既存Referenceへ差分試験を追加する。
+- **TEI/EKI境界**は、TEIが業務Function・条件・結果の意味を所有し、EKIは選択された委任Taskの資源配置・Attempt・回復を扱い、実Host/Providerが外部Effectとその証拠を所有する。EKI未接続でもTEIの単独業務Functionとread-only検証を止めない。
+
+### 9.2 EKI：高度な資源割当は「リードタイム・復旧可能性・総費用」から段階化
+
+[EKI #58](https://github.com/hat47x/eki-fabric/issues/58)のSuitabilityによる**分散しない判断**は最小製品価値。割当ての候補は、明示された締切、転送、計算、復旧余裕、予算、許可された資源群、過去の実績（あるときのみ）に基づき比較する。相関故障や予定以上の遅延により、廉価なAttemptを繰り返しても締切に間に合わない負例を先に固定する。
+
+- **中核**：合法な配置候補のフィルタリング、利用者のreclaim/opt-out、期限内に完了できない場合の誠実な拒否、Task/Attempt/Result/業務Effectの区別、結果不明時の無条件再実行禁止。
+- **条件付き**：Recovery Reserve、複数資源群の予約、公平性、期限接近時の切替。これらが必要なワークロードとローカル実行の対照を示して導入する。
+- **研究のみ**：[EKI #19](https://github.com/hat47x/eki-fabric/issues/19)の学習型予測は既存deterministic scoreに対するresidual/shadow比較から開始。MLが配置・業務許可・組織横断の権限を得る仕様にはしない。
+- **状態ドリフト修正**：[EKI #381](https://github.com/hat47x/eki-fabric/issues/381)は2026-11-04取得時点でClosed。旧文書の「未配線」を現在の未解決事実とせず、実TaskのE2E・費用最適化・期限内回復の証拠とは別に確認する。
+
+### 9.3 TAI/SEI/SUI/SHO：ユーザーに義務を負わせず、本当に必要な詳細だけを起動
+
+- **TAI**：外部Harnessを活動の入口にし、必要なProduct/Skill/Toolだけ選択・遅延読込する。[TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)のSkill軽量化は設計・配布改善の局所証拠であり、外部Harnessでの利用者価値は別実測。Product単体で足りるならTAI統合フローを起動しない。
+- **SEI**：小さな判断のresume-first体験を基準とし、全Methodの記録や認識論的な詳細入力を本人に初回から義務付けない。ただし、Sourceの現在性・Unknown・Claimの対象集合・開示資格が必要な場面は省かない。[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)を研究と実際のユーザー操作の負担で別評価する。
+- **SUI**：異論・保留・未解決を保つことで意味形成を支援する。発散時に一律の受理/合意Gateを強制しない。高度な文化的Methodや順位付けは選択できる機能候補であり、実利用で保留/再検討の質が改善するかを対照する。開示範囲を越える投影は禁ずる。
+- **SHO**：単独の文書編集・保存・出典照合を成立させる。[SHO #7](https://github.com/hat47x/sho-composer/issues/7)のL0 Markdown文献リンク一覧はPDF・DOI・研究用Graph DBなしで完結する。L1書誌情報→L2本文→L3人の確認した関係→L4開発受渡しは条件付き拡張。原資料を未取得なのに内容を理解したと推定しない。
+
+### 9.4 過剰要件レビューに特有の誤判定
+
+**誤った削減**：危険な業務Effectの直前認可、未知のSource依存、情報非開示、Task/Attempt/結果不明の回復判定を「複雑だから削除」とする。
+
+**誤った高度化**：データ取得・テスト・Agent分担・文書引用・スケジューリングの各境界に、既存Ownerが既に保持する資格・正本を複製する共通Controller/DB/Pluginを追加する。
+
+**判定手順**：同じUser JobでB0既存手段／B1必要な1製品／B2高度化を比較し、不変条件が破れるケースでは設計方式を見直す。利用者の確認負担・起動時間・再開時間・編集しやすさ・失敗復旧・維持費を別に観測。差が確認できない場合は価値がないと断定せず、未確認の適用条件と次の反証を残す。
+
+## 10. 実施順（既存Phase・各Product Ownerを変更しない）
+
+- **VA-G0**：TAI #422をCoordinator、[VA-01](../../evaluations/VA-01-product-value-necessity.md)を初回の作業票として、対象Source・版・Issue状態のドリフトを記録。代表Issueの一次レビューを、全Issue/全コードの網羅と表現しない。
+- **VA-G1**：TEI Driver Scenario（VA-T2）、EKI Suitability/期限内回復（VA-E1）について、作成担当とは別のVA-Xが「省くと壊れる」と「増やさなくてもよい」の両方を事前登録。SHO L0/SEI resume-firstは独立に進める。
+- **VA-G2**：実Fixture・実Targetと独立Expectedを確認し、各Product既存Issue内の試験へ接合。実行できない場合はNOT RUN。Source-staticから推定した結果を実験PASSと呼ばない。
+- **VA-G3**：VA-EでScope・環境・事実を点検し、VA-Iが製品の既存Issue/ADRへの最小差分を提案。Owner未受理なら確定しない。複数モデルの一致だけで製品要件を変更しない。
+
+**計画上のExit**：少なくとも2件の独立反証とSource/Evidence点検を、Owner判断可能な形で記録し、「標準で残す／用途で選ぶ／研究で続ける／他Ownerへ移す／撤回候補／未確認」を理由付きで提案する。プロセスのための新Harness・検証エンジン・中央評価DBを製品要件化しない。
