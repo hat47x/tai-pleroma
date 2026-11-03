@@ -135,3 +135,14 @@ stubは常に許可を返すため、実認可・OAuth brokerの挙動は未確�
 | broker到達不可 | 503 |
 
 成功経路（IdPの署名済みtoken検証・利用者の事前provision・セッション発行）は未確認である。
+
+## ブローカーtokenの身元検証（2026-11-03）
+
+RS256のJWTをローカルJWKSで検証し、issuer・audience・subject・tenant claimの対応を確認した。[receipt](../evaluations/records/SUI-saas-identity-2026-11-03.json)
+
+- JWKSの鍵で署名を検証できる
+- `sub`から`user_identities`を引いて利用者を解決できる
+- tenant claimを`tenant_identity_providers`で`tenant_id`へ対応できる
+- 検証結果は`VerifiedTenantClaim`（tenant_id・identity_provider_id・issuer・audience・subject）になる
+
+セッションcookieの発行と、認証済みリクエストの通しは未確認である。
