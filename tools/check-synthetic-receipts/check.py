@@ -143,6 +143,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-contract-digest-2026-11-03.json",
     "evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json",
     "evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json",
+    "evaluations/records/SUI-TEI-compat-2026-11-03.json",
     "evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json",
     "evaluations/records/SEI-TEI-decision-selection-2026-11-03.json",
     "evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json",
@@ -441,6 +442,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or steps.get("save", {}).get("roundTrip") is not True:
                 errors.append(f"TEI pipeline save did not pass with a round trip: {relative}")
+        if "SUI-TEI-compat" in relative:
+            steps = data.get("steps", {})
+            if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:
+                errors.append(f"SUI pipeline did not pass against the newer TEI: {relative}")
         if "tei-pipeline-run" in relative:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:

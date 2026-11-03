@@ -42,7 +42,7 @@ TEI契約（record投影）
 | ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
 | 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成61件・実実行95件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成61件・実実行96件がcheckerを通る。
 
 ## 未検証
 
@@ -176,3 +176,6 @@ roundTrip: true
 6. SaaS auth-session hash key configured
 
 APIキーと管理者キーを設定しても、この6項目は自動では満たされない。[probe](../evaluations/saas-startup-probe-2026-11-03.json)
+## TEI本体の更新に対する再確認（2026-11-03）
+
+検証時のTEIは`2e16b2af9`だった。その後TEIの`main`は`e0e813915`まで進んでいる。同じSUIパイロットを新しいTEIで実行し、21ケース・スキーマ・DocumentV1・契約digestがすべて通ることを確認した。[receipt](../evaluations/records/SUI-TEI-compat-2026-11-03.json)
