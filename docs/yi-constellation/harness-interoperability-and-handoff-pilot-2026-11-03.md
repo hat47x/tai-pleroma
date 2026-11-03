@@ -202,3 +202,50 @@ CLIやMCPのどちらかを**必ず**通すのではなく、実Harnessにとっ
 **Owner**：本SK-03／TAI #168が**外部Harnessとの運用互換**を担当。**TAI #74**は版付きPackage/Adapter/Tool/Protocolの配布、**TAI #271**は現在性とHandoff、**TEI #2605/#2354/#2516**はCLI/Source/意味/実Consumer、**TAI #232/TEI #2515**はOS/Network/Receiver、**EKI #57/#465**はTask/Lease/Body/実Effectを担当。MCP公式仕様適合検査とProduct意味/Host認可は別。MCP特有の本体改変は実測必要性が見えるまで提案のみ。
 
 **状態（2026-11-03）**：HX-19〜26とS1〜S6の新規実Harness実行はNOT RUN。MCP 2026-07-28は外部仕様調査に基づく候補。TEI限定CLI CIやTAI合成Checker、旧MCPクライアントの静的設定を本パイロットの実証PASSに合算しない。
+
+
+---
+
+<!-- sk03-negative-closure-witness-20261103 -->
+## 10. 2026-11-03横断統合：否定的な結論をHarnessの要約・Handoffで強めない（NC-01〜16）
+
+### 10.1 未解決だった問題と原則
+
+他レーンの[TEI #2586（Query→Context→Claim）](https://github.com/hat47x/tei-platform/issues/2586)、[#2516（用途別Projection/現在性）](https://github.com/hat47x/tei-platform/issues/2516)、[#2497（投影の情報保存）](https://github.com/hat47x/tei-platform/issues/2497)、[TAI #271（再資格化）](https://github.com/hat47x/tai-pleroma/issues/271)を接続すると、**異なるHarnessが同じ空配列`[]`や「見つからない」という文字列を返しても、元Source/母集団・読取範囲・非出力条件・権限・観測時点が一致する保証はない**。例えば「明細が存在しない」と「部分取得でまだ見えていない」「組織権限外で非開示」「SQL/Providerが失敗」「Tool結果が途中で切られた」は、薄いAdapterの表示では同じ`[]`に見える。
+
+形式的には、許されたProjection `P` について`P(x)=P(y)`なのに、要求する否定Claim `Q(x)≠Q(y)`となる二つの世界があれば、`P`の結果だけではQを断定できない。これは**情報保存に関する設計条件**であり、Harnessが真のQuery/業務意味を推論し直す機構ではない。最初は「言える結論を強めない」「足りない根拠をProductに照会する」「照会/開示ができなければunknownを残す」だけを義務とする。
+
+### 10.2 既存Productが出せるEvidenceを運び、第二のOracleを作らない
+
+HarnessやSkillが結果を「0件」「存在しない」「問題なし」「完了」「実行可能」と表示する場合、最低限**主張の種類ごとに**以下の成立範囲を確認する（全出力へ同一の巨大共通Schemaを要求しない）。
+
+| 主張の型 | 実観測が必要な条件 | 対照する誤った結論 |
+| --- | --- | --- |
+| **局所的な存在** | 実読取した1件のID・Source/Scope/epoch・可視範囲・重複/粒度 | 部分集合の実在1件を全件数や永続的存在へ拡張 |
+| **局所的な不存在** | 母集団・Predicate（非表示条件/Relation path含む）・authorized population・Source/Read cohort・全ページ/coverage・例外/欠損・Productの「このScopeで判定可能」という根拠 | `[]`やnull/Tool timeoutからグローバル不存在を断定 |
+| **操作が利用できない** | 実Harness/SessionにおけるCLI dispatchとTool/Skill discovery・版・現在Grantを分ける | `tools/list` cacheに非掲載なのでTEI本体にOperationが存在しない |
+| **副作用が起きていない** | 意図/要求/Attempt・Provider Receipt・独立Readback・不明Commitの扱い | MCP Cancel/通信失敗・EKI ACK欠落から未実行・安全Retryを断定 |
+| **チェック完了/利用可能** | 当該ConsumerのRequiredMember/CheckSet・Scope・Quality期限・実Artifact Body/Reader・未完・部分結果 | TEI manifest `Complete=false`／EKI Claim ACKだけで業務成果が完成 |
+| **非公開である/漏れていない** | そのAudience・Tool候補/診断・実Egress/DOM/Log等、検査した各SinkにおけるHost/OS/Receiver観測 | 最終回答同値・redacted promptだけで全出口非漏えいを断定 |
+
+同一Query結果でも、肯定Claimは実読取した存在証人だけで成立することがある一方、否定Claimは**閉じた探索範囲**が必要。SQL `WHERE`の**出力に現れないPredicate/組織Rule/Provider Route**も不存在の依存となる（TEI #2586/#2634/#2637）。部分取得やRLSで非表示の行を「無い」とも「ある」とも無断公開しない。Source/Scope/epochが一致しない共同Claimは各Productへ戻す。Claimの正誤・SQL/RLS意味・Original RawのOwnerはTEI/保持Productであり、TAIは受領者が判断に必要な差異を失っていないか検査するConsumerである。
+
+**Handoffの安全則**：Harness Aで`not-found`と回答した履歴はBで`currently-absent`へ昇格しない。Aの根拠/対象/時刻を保持し、Bに公開可能な範囲でSource/実Read/現在Host Grant/required quality/Consumerを必要に応じて再確認する。可視性の理由が秘匿対象なら「権限範囲内で確認不能」など用途相対の許可済み説明に限定。原因/Tool名/候補件数の露出も開示制御を受ける（TAI #232/#272）。
+
+### 10.3 実行した限定Referenceと実製品で残る義務
+
+**新たに実際に検査したもの（局所16/16 PASS）**：
+
+- [test-only Node script](../../evaluations/tools/check-sk03-negative-claim-transport.cjs)を追加。`node --check`と`node ... --self-test`をNode v22.16.0/Linux上で実行。7種類の**人工Producer Profileを別のNode子プロセスから実stdout/stderr/exitとして取得**し、Adapterの投影を変更した16正負ケースで検査した。
+- [限定実行記録](../../evaluations/records/SK03-NC-local-transport-2026-11-03.json)にScript SHA-256/Blob・ケース結果を保持。**NC-01**は「列の存在が保持され、独立したProduct採点に回せる」ことだけを`evidence-preserved-for-scoring`とする。**真の不存在を確認したわけではない**。
+- **NC-02〜05/12/16**：部分取得、権限外に隠れた母集団、coverage/非出力依存/read cohort欠落、全Tenantへの量化を`insufficient-evidence`へ。**NC-06〜08**：partial→complete捏造、Predicate差替え、Warning欠落を`evidence-mismatch`へ。**NC-09〜11/15**：実行で行が存在、Producer失敗、壊れた/切れたstdoutを「正常0件」にせず分類。**NC-13/14**：epoch/SourceIndex移動を`stale-or-different-binding`へ。
+- 現在のScriptは**合成Sourceからの実ローカルProcess通信**であり、実TEI CLI/SQL/DB/MCP/Claude Code/Codex/OpenCode/DSH/SHO/EKI、実RLS・OS/Network遮断、独立業務Oracleではない。Sourceに宣言した`coverage=complete`の真偽を自動認定しない。リアルなSource未観測の成功に転用しない。
+
+**次の真正なExit**（既存SK-02/03/TAI #271に接続。新Gate/Oracle/Runtimeを増やさない）：
+1. **P0 Product**：TEI [merged #2607](https://github.com/hat47x/tei-platform/pull/2607)のread-only `commands→model catalog→inspect→trace→validate`を、固定公開Workspace・実Binary・全argv/Exit/Warning/SourceIndex付きで実行。すでにあるTEI製品CIの実証を再利用し、TAI Harness試験へ偽転記しない。
+2. **P1 Harness A**：実Tool-onlyとSkill Loadの別Sessionを比較し、元CLI JSON→受信Tool結果→利用者への説明で、失敗・未取得・Source引用と否定Claimの限定を維持。Tool結果切り捨て/Response縮約/出力上限を観測する。
+3. **P2 Harness B**：Aの許可済みread-only HandoffをBへ移す。全探索・現在Grant・実Consumerが確認できない場合の`unknown`を認め、単に回答文が一致しただけではPASSしない。
+4. **P3 Productの否定Claim**：TEI #2586で独立Oracleと実Query/Context/Scopeのread closureが実証された範囲だけ、RLS・0件・Window/NULL・非出力Predicate・Quality期限の具体的Claimを適合判定する。未実装APIは作らず、実Toolを使える範囲に限定。
+5. **P4 Outcome**：EKI同Attempt Body／SHO Reader・実Deliver、OS/Network/Egressと実Effectは各Ownerへ。Agentの`done`文字列で納品や非漏えいを保証しない。
+
+**本節の資格**：新しいNode Scriptの局所16/16は観測済。2 Harnessや実Source/ConsumerのSK-03試験、否定ClaimのProduct Oracle、実保護/業務効果、Owner採用は**NOT RUN**。ScriptをProduct/TAI CoreのValidatorへ格上げしない。
