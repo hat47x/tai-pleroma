@@ -198,3 +198,10 @@ Postgresで条件付きPUTを競争させると、通常は1勝2敗（200と409�
 - したがって「1ラウンド1勝」は再試行なしの場合の性質で、再試行を含む場合は「最終的に200か409」を条件にする
 
 [receipt](../evaluations/records/SUI-TEI-postgres-retry-evidence-2026-11-03.json)
+## EKIの実行系は未配線（2026-11-03）
+
+EKIへ投影TaskRequestを投入すると202で`queued`になるが、実行までは進まない。EKI自身の`docs/development.md`が、Placement・Lease・WorkOrderの発行が`eki-control`の起動経路に配線されていないこと、ResultClaimが受理結果へ繋がっていないことを記している（#242）。
+
+- こちらで観測したのは`queued`まで
+- Dispatch設定（署名鍵・trust domain・各種principal・ExecutorApproval）を用意すれば配置まで進む可能性はあるが、実行結果の受理は未配線
+- したがって「Workerを繋いだ実行」は、現時点のEKIでは確かめられない
