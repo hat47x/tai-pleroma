@@ -45,6 +45,7 @@ def main():
     parser.add_argument("--eki-control", default="")
     parser.add_argument("--skip-checker", action="store_true")
     parser.add_argument("--sei-repo", default="")
+    parser.add_argument("--mmi-repo", default="")
     parser.add_argument("--out", default="evaluations/records/TEI-suite-2026-11-03.json")
     args = parser.parse_args()
     if args.sei_repo:
@@ -54,6 +55,8 @@ def main():
         "checker": run_step("checker", ["tools/check-synthetic-receipts/check.py", "--root", str(ROOT)]),
         "artifacts": run_step("artifacts", ["integrations/tools/validate_artifacts.py"]),
         "digests": run_step("digests", ["integrations/tools/verify_artifact_digests.py"]),
+        "mmi_profile": run_step("mmi_profile", ["integrations/tools/mmi_profile_assert.py"]),
+        "mmi_consumer": run_step("mmi_consumer", ["integrations/tools/mmi_consumer_tests.py"]),
         "saas_adapters": run_step("saas_adapters", ["integrations/tools/sui_saas_adapter_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_oauth": run_step("saas_oauth", ["integrations/tools/sui_saas_oauth_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_login": run_step("saas_login", ["integrations/tools/sui_saas_login_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
