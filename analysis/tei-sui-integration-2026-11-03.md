@@ -332,3 +332,11 @@ MMIの`FormatProfileV1`は`provenance`（`sourceKind`・`sourceDigest`・`genera
 - MMIのCLIにもformat profileを適用する経路が無い
 
 form profileをMMI側の型として成立させるには、投影に`provenance`を足すか、MMIの受理境界を別に定める必要がある。
+
+## MMI形式プロファイルにprovenanceを足す（2026-11-03）
+
+投影の契約とTEIへ`sourceKind`・`sourceDigest`・`generationMethod`を足し、artifactの`profile.provenance`として組み立てるようにした。これでMMIの`assertFormatProfile`が投影を受け付ける。[receipt](../evaluations/records/MMI-TEI-profile-2026-11-03.json)
+
+- 属性は3つ増え、契約は12項目になった
+- `generationMethod`は`worksheet-prototype-v1`に固定
+- `approval`は対象外のまま
