@@ -154,6 +154,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
     "evaluations/records/SEI-TEI-consumer-2026-11-03.json",
     "evaluations/records/SEI-TEI-real-artifact-2026-11-03.json",
+    "evaluations/records/SEI-TEI-record-2026-11-03.json",
     "evaluations/records/MMI-TEI-consumer-2026-11-03.json",
     "evaluations/records/MMI-TEI-real-artifact-2026-11-03.json",
     "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
@@ -372,6 +373,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("passed") != 4 or observed.get("writes") is not False:
                 errors.append(f"MMI consumer receipt did not record four non-writing tests: {relative}")
+        if "SEI-TEI-record" in relative:
+            observed = data.get("observed", {})
+            if observed.get("valid") is not True or observed.get("refId") != "decision-1":
+                errors.append(f"SEI decision-memory record did not validate: {relative}")
         if "SEI-TEI-real-artifact" in relative:
             observed = data.get("observed", {})
             if observed.get("passed") is not True or observed.get("refId") != "decision-1":

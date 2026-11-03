@@ -1,4 +1,4 @@
-﻿# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
+# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
 
 2026-11-03時点の整理。実装と検証の正本は各リポジトリのGit履歴とreceipt。
 
@@ -42,7 +42,7 @@ TEI契約（record投影）
 | ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
 | 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成61件・実実行90件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成61件・実実行91件がcheckerを通る。
 
 ## 未検証
 

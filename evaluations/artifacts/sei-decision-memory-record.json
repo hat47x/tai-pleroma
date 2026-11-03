@@ -1,0 +1,12 @@
+{
+  "contract": "sei.decision-memory/v1alpha1",
+  "record_type": "decision",
+  "decision": {
+    "ref": {
+      "kind": "decision",
+      "id": "decision-1"
+    },
+    "statement": "Adopt option A",
+    "rationale": "Lower cost"
+  }
+}
