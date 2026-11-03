@@ -162,6 +162,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
     "evaluations/records/EKI-TEI-record-2026-11-03.json",
     "evaluations/records/SEI-TEI-cli-2026-11-03.json",
+    "evaluations/records/SEI-TEI-gate-2026-11-03.json",
     "evaluations/records/EKI-TEI-submit-2026-11-03.json",
     "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
@@ -445,6 +446,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202 or observed.get("taskStatus") != "queued":
                 errors.append(f"EKI did not accept the projected TaskRequest: {relative}")
+        if "SEI-TEI-gate" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("allowVerdict") != "allow" or observed.get("denyVerdict") != "deny":
+                errors.append(f"SEI gate allow/deny pair did not hold: {relative}")
         if "SEI-TEI-cli" in relative:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):

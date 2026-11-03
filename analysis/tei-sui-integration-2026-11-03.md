@@ -287,3 +287,11 @@ checks 6/6
 - storeは一時ディレクトリ
 - `resume`のスナップショットdigestを記録
 - policy gateは通していない
+
+## SEIのgateで許可と拒否（2026-11-03）
+
+投影した判断の文面で、SEIのpolicy gateの許可・拒否の両方を確認した。[receipt](../evaluations/records/SEI-TEI-gate-2026-11-03.json)
+
+- 責任者とrecommendationを備えた判断: `verdict=allow`、終了コード0、`decision_digest`あり
+- 責任者の無い判断: `verdict=deny`、終了コード3、理由は「責任者を挙げていない」
+- gateはAuthority・行為との一致・Semantic Lineageを検証しないと明示している
