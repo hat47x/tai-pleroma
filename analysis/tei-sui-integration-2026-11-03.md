@@ -42,7 +42,7 @@ TEI契約（record投影）
 | ETag前提条件 | 409/200 | `SUI-TEI-etag-2026-11-03.json` |
 | 大量カード（300枚、合成） | 200/200 | `SUI-TEI-large-doc-2026-11-03.json` |
 
-receiptは`evaluations/records/`にあり、合成61件・実実行97件がcheckerを通る。
+receiptは`evaluations/records/`にあり、合成61件・実実行98件がcheckerを通る。
 
 ## 未検証
 
@@ -197,4 +197,4 @@ Postgresで条件付きPUTを競争させると、通常は1勝2敗（200と409�
 - ただし、再試行が新しいETagで成功すると、同じラウンドに200が2件並ぶことがある（別バージョンへの条件付き更新になるため）
 - したがって「1ラウンド1勝」は再試行なしの場合の性質で、再試行を含む場合は「最終的に200か409」を条件にする
 
-[receipt](../evaluations/records/SUI-TEI-postgres-retry-2026-11-03.json)
+[receipt](../evaluations/records/SUI-TEI-postgres-retry-evidence-2026-11-03.json)
