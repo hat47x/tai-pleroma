@@ -322,3 +322,13 @@ tests 1329 / fail 1
 ```
 
 失敗は、WindowsのCRLFチェックアウトで文書資産にCRが含まれるためだった。製品挙動の失敗ではないが、LFのチェックアウトでの再実行はしていない。CLIにformat profileを適用する経路は無く、形式プロファイルは拡張側の資産である。
+
+## MMI形式プロファイルとの差分（2026-11-03）
+
+MMIの`FormatProfileV1`は`provenance`（`sourceKind`・`sourceDigest`・`generationMethod`）と任意の`approval`を必須に含む。こちらの投影recordは`features`・`sourceEvidence`までで、`provenance`を持たない。
+
+- 契約の`note`にも「provenanceは対象外」と書いてある
+- そのため、MMIの`assertFormatProfile`にそのまま通すことはできない
+- MMIのCLIにもformat profileを適用する経路が無い
+
+form profileをMMI側の型として成立させるには、投影に`provenance`を足すか、MMIの受理境界を別に定める必要がある。
