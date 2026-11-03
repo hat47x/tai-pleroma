@@ -167,6 +167,11 @@ def main():
 
 
 def _write(out, artifact, steps, result):
+    tei_commit = None
+    try:
+        tei_commit = json.loads(artifact.read_text(encoding="utf-8"))["source"]["teiCommit"]
+    except Exception:
+        tei_commit = None
     receipt = {
         "schema": "tai.reference.tei-pilot-run/v0",
         "synthetic": False,
@@ -176,6 +181,7 @@ def _write(out, artifact, steps, result):
         "host": "Windows with Go on PATH and Python 3.12",
         "command": "python integrations/pilot-sui-document/assembler/run_pilot.py",
         "result": result,
+        "teiCommit": tei_commit,
         "artifact": {"digest": digest(artifact)} if artifact.exists() else None,
         "steps": steps,
         "scope": "Runs the projection flow, the DocumentV1 validation, and the contract digest check in one command. It does not save documents or prove deployment.",

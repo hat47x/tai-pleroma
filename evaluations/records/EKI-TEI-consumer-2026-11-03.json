@@ -4,7 +4,7 @@
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
   "date": "2026-11-03",
-  "ekiCommit": "f22b397544e9da8aaa53e2dd54a221810de127c0",
+  "ekiCommit": "8159af1",
   "host": "Windows with Go 1.27",
   "command": "TEI_EKI_PROJECTION_ARTIFACT=<artifact> go test ./spikes/tei-projection-consumer/...",
   "result": "PASS",

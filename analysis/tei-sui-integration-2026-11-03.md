@@ -178,7 +178,7 @@ roundTrip: true
 APIキーと管理者キーを設定しても、この6項目は自動では満たされない。[probe](../evaluations/saas-startup-probe-2026-11-03.json)
 ## TEI本体の更新に対する再確認（2026-11-03）
 
-検証時のTEIは`2e16b2af9`だった。その後TEIの`main`は`e0e813915`まで進んでいる。同じSUIパイロットを新しいTEIで実行し、21ケース・スキーマ・DocumentV1・契約digestがすべて通ることを確認した。[receipt](../evaluations/records/SUI-TEI-compat-2026-11-03.json)
+検証時のTEIは`2e16b2af9`だった。その後TEIの`main`は`e0e813915`、`25a15110d`と進んでいる。最新でも同じパイロットが通ることを確認した。同じSUIパイロットを新しいTEIで実行し、21ケース・スキーマ・DocumentV1・契約digestがすべて通ることを確認した。[receipt](../evaluations/records/SUI-TEI-compat-2026-11-03.json)
 ## 競合時の503（2026-11-03）
 
 Postgresで条件付きPUTを競争させると、通常は1勝2敗（200と409）に収束する。しかし再実行の一部で、409ではなく**503**が1件返る場合があった（4回中1回、5ラウンド中1ラウンド）。
