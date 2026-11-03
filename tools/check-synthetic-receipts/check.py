@@ -161,6 +161,7 @@ REAL_RECORDS = (
     "evaluations/records/MMI-TEI-record-2026-11-03.json",
     "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
     "evaluations/records/EKI-TEI-record-2026-11-03.json",
+    "evaluations/records/SEI-TEI-cli-2026-11-03.json",
     "evaluations/records/EKI-TEI-submit-2026-11-03.json",
     "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
@@ -444,6 +445,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202 or observed.get("taskStatus") != "queued":
                 errors.append(f"EKI did not accept the projected TaskRequest: {relative}")
+        if "SEI-TEI-cli" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SEI CLI recording did not pass: {relative}")
         if "EKI-TEI-record" in relative:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
