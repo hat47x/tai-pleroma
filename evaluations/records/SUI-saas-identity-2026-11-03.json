@@ -12,9 +12,14 @@
       "userResolved": true,
       "tenantResolved": true,
       "providerResolved": true,
-      "subjectResolved": true
+      "subjectResolved": true,
+      "callbackStatus": true,
+      "sessionCookie": true,
+      "sessionPersisted": true,
+      "sessionPrincipal": true,
+      "sessionTenant": true
     },
     "tenantId": "tenant-a"
   },
-  "scope": "Verifies a broker-issued RS256 token through SUI's JWKS, issuer/audience, subject and tenant-claim checks. It does not run the full callback, mint a session cookie, or prove production identity provisioning."
+  "scope": "Runs the callback with a broker-issued RS256 token through SUI's JWKS, issuer/audience, subject and tenant-claim checks, then records that a session cookie is minted and persisted to the configured store. The store is a recording double, not the product's durable store."
 }
