@@ -6,7 +6,7 @@ TEI投影パイロットを検証するための小さなツール群。製品�
 
 - Goが`PATH`にあり、`GOCACHE`/`GOMODCACHE`/`TMP`が書き込み可能
 - Python 3.12に`jsonschema`
-- MMIのconsumerを動かすときだけNode 24と`tsx`\n- SaaS契約テストは`SUI_ADMIN_API_KEY`を必要とする
+- MMIのconsumerを動かすときだけNode 24と`tsx`\n- SaaS契約テストは`SUI_ADMIN_API_KEY`を必要とする。SUIのpytestは`SUI_*`環境変数を外して実行する
 - EKIへ投入するときだけ、ビルド済みの`eki-control`
 - 各製品リポジトリのパス（TEI・SUI・SEI・MMI・EKI）
 
@@ -21,7 +21,7 @@ python integrations/tools/run_suite.py \
   --eki-control <eki-control binary>
 ```
 
-21段（checker・artifact・digest・SaaS外部HTTP3種・ログイン開始・コールバック・token検証・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
+23段（checker・artifact・digest・SaaS外部HTTP3種・ログイン開始・コールバック・token検証・SUIのSaaSテスト・SUIの文書テスト・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
 
 - receipt自身をcheckerが読むため、FAILのreceiptが残っていると次の実行もFAILになる。その場合は`--skip-checker`で実行し、後からcheckerを単独で回す
 - `--eki-control`を省くとEKI投入の段は実行しない
