@@ -99,3 +99,12 @@ SUIの3つの外部HTTPアダプタを、ローカルのstubサーバへ実際�
 - capabilityの値は`document.read`などの既知集合に限られる
 
 stubは常に許可を返すため、実認可・OAuth brokerの挙動は未確認である。
+
+## OAuth brokerの契約テスト（2026-11-03）
+
+`oauth_broker_client.exchange_code_for_tokens`をローカルstubへ接続して確認した。[receipt](../evaluations/records/SUI-saas-oauth-contract-2026-11-03.json)
+
+- 送信は`application/x-www-form-urlencoded`で、`grant_type=authorization_code`・`code`・`redirect_uri`・`client_id`・`client_secret`・`code_verifier`
+- 応答は`access_token`・`token_type`・`expires_in`が必須で、未知の項目は拒否
+- HTTPエラー（400等）は拒否として扱われる
+- ブラウザのリダイレクト、実IdPの検証、セッション発行は未確認
