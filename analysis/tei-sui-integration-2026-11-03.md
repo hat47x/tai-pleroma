@@ -373,3 +373,13 @@ httpsReady true / create 200 / fetch 200 / roundTrip true / anonymous 401
 ```
 
 証明書は自己署名で、リバースプロキシは介していない。管理DB・実CA・配備は依然として未検証である。
+
+## TLS終端プロキシ配下（2026-11-03）
+
+SUIを平文で起動し、手前のローカルTLS終端プロキシ（`X-Forwarded-Proto`等を付与）経由で保存・取得した。[receipt](../evaluations/records/SUI-TEI-proxy-2026-11-03.json)
+
+```text
+proxyReady true / create 200 / fetch 200 / roundTrip true / anonymous 401
+```
+
+プロキシは検証用の小さな実装で、実運用のリバースプロキシ・HSTS・実証明書は未検証である。
