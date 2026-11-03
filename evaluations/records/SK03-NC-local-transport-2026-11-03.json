@@ -1,0 +1,99 @@
+{
+  "title": "SK-03-NC local subprocess transport-loss self-test (NOT Product/Harness)",
+  "date": "2026-11-03",
+  "repo": "hat47x/tai-pleroma",
+  "branch": "docs/yi-harness-skills-20261102",
+  "source": {
+    "path": "evaluations/tools/check-sk03-negative-claim-transport.cjs",
+    "git_blob_sha1": "a0315bab692cc8828237d919dbaeb656ec045a63",
+    "sha256": "7cdf125018e609b014ebdc6117d6eeacc22cafc4de51ec3b2c8d57fa9694dcc3",
+    "bytes": 6723
+  },
+  "environment": {
+    "os": "Linux",
+    "node": "v22.16.0",
+    "execution": "local container"
+  },
+  "commands": [
+    "node --check evaluations/tools/check-sk03-negative-claim-transport.cjs",
+    "node evaluations/tools/check-sk03-negative-claim-transport.cjs --self-test"
+  ],
+  "check": "syntax PASS; synthetic local-process transport-loss checks 16/16 PASS",
+  "unique_producer_profiles": 7,
+  "results": [
+    {
+      "id": "NC01",
+      "verdict": "evidence-preserved-for-scoring"
+    },
+    {
+      "id": "NC02",
+      "verdict": "insufficient-evidence"
+    },
+    {
+      "id": "NC03",
+      "verdict": "insufficient-evidence"
+    },
+    {
+      "id": "NC04",
+      "verdict": "insufficient-evidence"
+    },
+    {
+      "id": "NC05",
+      "verdict": "insufficient-evidence"
+    },
+    {
+      "id": "NC06",
+      "verdict": "evidence-mismatch"
+    },
+    {
+      "id": "NC07",
+      "verdict": "evidence-mismatch"
+    },
+    {
+      "id": "NC08",
+      "verdict": "evidence-mismatch"
+    },
+    {
+      "id": "NC09",
+      "verdict": "claim-contradicted"
+    },
+    {
+      "id": "NC10",
+      "verdict": "producer-failed"
+    },
+    {
+      "id": "NC11",
+      "verdict": "producer-unparseable"
+    },
+    {
+      "id": "NC12",
+      "verdict": "insufficient-evidence"
+    },
+    {
+      "id": "NC13",
+      "verdict": "stale-or-different-binding"
+    },
+    {
+      "id": "NC14",
+      "verdict": "stale-or-different-binding"
+    },
+    {
+      "id": "NC15",
+      "verdict": "producer-unparseable"
+    },
+    {
+      "id": "NC16",
+      "verdict": "insufficient-evidence"
+    }
+  ],
+  "scope": "Actual child Node processes emitted synthetic JSON. Does not run TEI CLI, any real external AI harness/MCP server, Product Source/SQL/Provider, independent business Oracle, Host Authority, OS/Network egress, human acceptance. Reported coverage/visibility are fixture data, not verified conditions.",
+  "claims_not_established": [
+    "absence of real orders",
+    "actual data completeness",
+    "RLS/tenant isolation",
+    "two-harness compatibility",
+    "actual LLM egress behavior",
+    "business effect",
+    "production reliability"
+  ]
+}
