@@ -560,3 +560,18 @@ HX-01＝DSH≠OpenCode＋DeepSeekモデル、HX-02＝Skill rootと実参照閉�
 **必須Evidence（必要なScopeのみ）**：Harness/build/Model/Session、OS principal、当該Tool/Skillの実可用・実loaded bytes、正確なCLI argsまたはMCP実negotiation/tool call、Source/Scope/Warning/Unknown、現在Grant/Recipient、実受信/Consumer、Oracle provenance、費用・Observer・unknown。Model/Tool/Host条件が異なる場合はその**構成の成立/非成立**だけを主張し、Skill固有の因果効果比較から除外する。受渡しの現在資格はTAI #271、機密・NetworkはTAI #232/TEI #2515、Product CLIはTEI #2605/merged #2626の各Ownerに戻す。
 
 **現在**：SK-03-G0〜G4、HX-01〜10、2 Harness移植、Handoff、実Skill/Tool、実OS/Receiverはすべて**NOT RUN**。TAI Draft #270の既存SK-02単体CheckerやTEI既存CIと合算せず、新たな共通Gate/Runner、独自Host・Registryを先に作らない。
+
+## AC. 2026-11-03：ユーザーIntent別のUI・Job・組織Scope Skill境界（SK-IV01〜12）
+
+[根拠・責務表と12件の正負対](../docs/yi-constellation/skill-entrypoint-ui-job-organization-boundaries-2026-11-03.md)を既存のSK-M（Action Applicability）、SK-HP（Tool/Effect）、SK-RQ（選択的再資格化）、SK-MIN（最小Product選択）の**用途別統合受入**として接続する。**12件とも設計案／NOT RUN**。元ProductのGo/CI/syntheticを横断Skillが実行した件数として足さない。
+
+| 群 | Case | 特に混同しない資格と一次Owner |
+| --- | --- | --- |
+| **Studio／Action** | SK-IV01〜03 | TEI #2747 mergedの`PlanCommand/ExecuteCommand`はReference実行で実Provider Commitではない。Action Purpose/Target/Expected-StateとBinding/Outcomeを分離。#1124/#1824/#2598/#1174、TAI #232 |
+| **Function／Build／UI Extension** | SK-IV04〜06 | Function/Action意味IDとcron/API/UI Trigger、単一Go binary/必要時multi-buildの配布Identity、Wails UI拡張の生成物契約を分離。架空CLI・Wails Hook・自動Hostを案内しない。#1130/#997/#1824 |
+| **Organization／Disclosure** | SK-IV07〜09 | Org階層/時点/Scope、実Query完全性/Read-only/Host Grant、Reader cache/非公開Actionの権限を分離。`rows=[]`は実Provider/RLS完全性なしで不存在にならない。#2386/#2510/#2516、Draft #2781 |
+| **Job結果・変更後の再利用・Planner** | SK-IV10〜12 | EKI Task/Attempt/Result Body、TEI Quality/Deadline/BusinessVerified、Role/Source/UI Build影響、Tool候補・DOM/ARIA・実Egressを分ける。TEI #2667、EKI #465、TAI #271/#272 |
+
+**順序を固定**：最初の外部Harness実証は従来どおり[SK-02](SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)のH2/H3 read-only TEI Skill。Studio/Job/Orgの新受入票は**Productが提供する実入口の証拠が得られてから**個別に試す。全Productの一斉実装・一律新Skill/Hookは条件ではない。
+
+**現在の事実**：[TEI #2747](https://github.com/hat47x/tei-platform/pull/2747)はmerged、Studio Command Reference呼出しのCode/Go/Node局所テストは既存PRの証拠。[TEI #2616](https://github.com/hat47x/tei-platform/pull/2616)の実Go誤対象Referenceと[TEI #2781](https://github.com/hat47x/tei-platform/pull/2781)の33件合成は別Ownerの限定検査。**本SK-IVでWails実UI、Host/DB/Grant/OS/EKI、独立Reader、実Harnessロード・意味受理を新たに実行していない**。共通Runtime/API/Registry/Authorityの新設なし。
