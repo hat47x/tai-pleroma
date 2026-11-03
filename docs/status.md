@@ -126,9 +126,11 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 ## 2026-11-03の追加（TEI構築移行の検証）
 
 - 4製品（SUI・SEI・MMI・EKI）の投影artifactと正規レコード、製品側consumer（実artifact読み取り込み）を用意した
-- SUIは保存・往復・TLS・Postgres・ETag・競合・再試行まで確認した
+- SUIは保存・往復・TLS・Postgres・ETag・競合・503再試行、SaaS外部HTTP3種・OAuth broker・ログイン開始・コールバック拒否・token検証・セッション発行まで確認した
+- SEIはCLIでの記録（init/add/resume/export/verify）、policy gateの許可・拒否、MCPのresumeとcheck_decisionを確認した
+- MMIはformat profileの受理（`assertFormatProfile`）とconsumerの5件を確認した
 - EKIは投影TaskRequestの受理（202/queued）と、policy・Worker行を入れた場合の`running`到達まで確認した
-- TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証16段がPASSした
+- TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証31段がPASSした
 - 実実行receiptは114件、合成receiptは61件
 - 公開gateは`allowed=false`・blocker 7件のまま（[2026-11-03の再確認](../evaluations/SCN-001-publication-gate-recheck-2026-11-03.json)）
 
