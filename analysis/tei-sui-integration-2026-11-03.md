@@ -394,3 +394,15 @@ state: control-anchor.pem / worker-ca.pem / worker-identity.pem
 ```
 
 ただし、Agentのassignment実行は**設定済みの固定コマンドを1つ実行する**ものであり、Taskの内容を実行するものではない（`internal/agent/service/assignments.go`の`ExecutionConfig`: "This is not a sandbox."、`events_file`が観測結果）。したがってClient APIのTaskからAgentへ仕事が渡って実行される縦断は、現時点のEKIでは成立しない。
+
+## ローカルCAの証明書チェーン（2026-11-03）
+
+ルートCAとサーバ証明書の二層構成でSUIを起動し、クライアントはルートCAだけを信頼して接続した。[receipt](../evaluations/records/SUI-TEI-ca-chain-2026-11-03.json)
+
+```text
+chainTrusted true / create 200 / fetch 200 / roundTrip true / untrustedRefused true
+```
+
+- サーバ証明書はローカルCAが署名（SANに`127.0.0.1`）
+- システム信頼ストアのままのクライアントは接続を拒否される
+- 公開CAではないため、実運用の証明書ではない

@@ -189,6 +189,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-proxy-2026-11-03.json",
+    "evaluations/records/SUI-TEI-ca-chain-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-etag-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-concurrency-2026-11-03.json",
@@ -315,6 +316,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SUI-TEI-ca-chain" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("untrustedRefused") is not True:
+                errors.append(f"SUI CA chain check did not hold: {relative}")
         if "SUI-TEI-proxy" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("anonymousStatus") not in (401, 403):
