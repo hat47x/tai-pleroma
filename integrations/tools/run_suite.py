@@ -123,6 +123,17 @@ def main():
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-contention-2026-11-03.json",
             ],
+        ),        "postgres_multidoc": run_step(
+            "postgres_multidoc",
+            [
+                "integrations/pilot-sui-document/assembler/postgres_multi_save.py",
+                "--sui-repo",
+                args.sui_repo,
+                "--artifact",
+                "evaluations/artifacts/scn-003-document.json",
+                "--out",
+                "evaluations/records/SUI-TEI-postgres-multidoc-2026-11-03.json",
+            ],
         ),
     }
     passed = all(step["returncode"] == 0 for step in steps.values())
