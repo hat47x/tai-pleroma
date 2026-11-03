@@ -11,7 +11,8 @@
   "steps": {
     "artifacts": {
       "returncode": 0,
-      "seconds": 1.49,
+      "attempts": 1,
+      "seconds": 0.27,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -19,7 +20,8 @@
     },
     "digests": {
       "returncode": 0,
-      "seconds": 0.42,
+      "attempts": 1,
+      "seconds": 0.09,
       "stdoutTail": [
         "{\"allMatch\": true, \"count\": 4}"
       ],
@@ -27,7 +29,8 @@
     },
     "saas_adapters": {
       "returncode": 0,
-      "seconds": 8.68,
+      "attempts": 1,
+      "seconds": 2.06,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"accessAllow\": true, \"accessPayloadAction\": true, \"accessPayloadAuth\": true, \"accessPayloadResource\": true, \"accessPayloadTenant\": true, \"accessBearer\": true, \"bindingPayload\": true, \"bindingPolicyRef\": true, \"capabilityPayload\": true, \"capabilityValues\": true}}"
       ],
@@ -35,7 +38,8 @@
     },
     "saas_oauth": {
       "returncode": 0,
-      "seconds": 1.25,
+      "attempts": 1,
+      "seconds": 0.86,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"grantType\": true, \"code\": true, \"redirectUri\": true, \"clientId\": true, \"clientSecret\": true, \"codeVerifier\": true, \"formContentType\": true, \"accessToken\": true, \"tokenType\": true, \"expiresIn\": true, \"idToken\": true, \"rejectsHttpError\": true, \"rejectsUnexpectedField\": true}}"
       ],
@@ -43,7 +47,8 @@
     },
     "saas_login": {
       "returncode": 0,
-      "seconds": 3.83,
+      "attempts": 1,
+      "seconds": 1.71,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"status\": true, \"authorizeEndpoint\": true, \"responseType\": true, \"clientId\": true, \"redirectUri\": true, \"scope\": true, \"statePresent\": true, \"pkceMethod\": true, \"pkceChallenge\": true, \"pendingCookie\": true, \"pendingHttpOnly\": true, \"pendingSecure\": true}}"
       ],
@@ -51,7 +56,8 @@
     },
     "saas_callback": {
       "returncode": 0,
-      "seconds": 7.78,
+      "attempts": 1,
+      "seconds": 2.29,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"missingPending\": true, \"brokerDenied\": true, \"stateMismatch\": true, \"missingCode\": true, \"brokerNotConfigured\": true, \"brokerRejects\": true, \"brokerUnavailable\": true}}"
       ],
@@ -59,7 +65,8 @@
     },
     "saas_identity": {
       "returncode": 0,
-      "seconds": 4.45,
+      "attempts": 1,
+      "seconds": 3.25,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"userResolved\": true, \"tenantResolved\": true, \"providerResolved\": true, \"subjectResolved\": true, \"callbackStatus\": true, \"sessionCookie\": true, \"sessionPersisted\": true, \"sessionPrincipal\": true, \"sessionTenant\": true}}"
       ],
@@ -67,7 +74,8 @@
     },
     "sui_saas_tests": {
       "returncode": 0,
-      "seconds": 17.94,
+      "attempts": 1,
+      "seconds": 15.01,
       "stdoutTail": [
         "{\"files\": [\"tests/test_saas_session_csrf.py\", \"tests/test_trusted_saas_runtime.py\", \"tests/test_saas_document_read_pdp_outage.py\", \"tests/test_tenant_session_precondition.py\"], \"passed\": 56, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -75,7 +83,8 @@
     },
     "sui_docs_tests": {
       "returncode": 0,
-      "seconds": 189.67,
+      "attempts": 1,
+      "seconds": 179.05,
       "stdoutTail": [
         "{\"files\": [\"tests/test_docs_roundtrip.py\", \"tests/test_docs_bounds.py\", \"tests/test_docs_tenant_isolation.py\", \"tests/test_docs_tenant_isolation_surfaces.py\", \"tests/test_docs_access_control_integration.py\", \"tests/test_docs_audit_integration.py\", \"tests/test_docs_a1_error_contract.py\"], \"passed\": 122, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -83,15 +92,53 @@
     },
     "sui_auth_flow_tests": {
       "returncode": 0,
-      "seconds": 9.74,
+      "attempts": 1,
+      "seconds": 7.68,
       "stdoutTail": [
         "{\"files\": [\"tests/test_auth_federation_level2.py\", \"tests/test_oauth_bff_login_flow.py\", \"tests/test_oauth_bff_callback_retry_safety.py\"], \"passed\": 41, \"failed\": 0, \"returncode\": 0}"
       ],
       "stderrTail": []
     },
+    "sei_cli": {
+      "returncode": 0,
+      "attempts": 1,
+      "seconds": 2.1,
+      "stdoutTail": [
+        "{\"passed\": true, \"checks\": {\"init\": true, \"add\": true, \"resume\": true, \"export\": true, \"verify\": true, \"snapshotDigest\": true}}"
+      ],
+      "stderrTail": []
+    },
+    "sei_gate": {
+      "returncode": 0,
+      "attempts": 1,
+      "seconds": 2.1,
+      "stdoutTail": [
+        "{\"passed\": true, \"checks\": {\"allowVerdict\": true, \"allowExit\": true, \"allowBinding\": true, \"denyVerdict\": true, \"denyExit\": true, \"denyReason\": true, \"notVerifiedListed\": true}}"
+      ],
+      "stderrTail": []
+    },
+    "sei_mcp": {
+      "returncode": 0,
+      "attempts": 1,
+      "seconds": 1.89,
+      "stdoutTail": [
+        "{\"passed\": true, \"checks\": {\"initialize\": true, \"toolsListed\": true, \"resumeTool\": true, \"callOk\": true, \"callMentionsRecord\": true}, \"tools\": [\"resume\", \"add_recommendation\", \"check_decision\"]}"
+      ],
+      "stderrTail": []
+    },
+    "sei_mcp_check": {
+      "returncode": 0,
+      "attempts": 1,
+      "seconds": 1.83,
+      "stdoutTail": [
+        "{\"passed\": true, \"checks\": {\"allowVerdict\": true, \"denyVerdict\": true, \"allowHasBinding\": true, \"denyHasReasons\": true}}"
+      ],
+      "stderrTail": []
+    },
     "scenario": {
       "returncode": 0,
-      "seconds": 0.14,
+      "attempts": 1,
+      "seconds": 0.09,
       "stdoutTail": [
         "{\"allFound\": true, \"count\": 4}"
       ],
@@ -99,7 +146,8 @@
     },
     "pipeline": {
       "returncode": 0,
-      "seconds": 15.53,
+      "attempts": 1,
+      "seconds": 10.98,
       "stdoutTail": [
         "{\"result\": \"PASS\", \"steps\": {\"flow\": {\"returncode\": 0, \"casesPassed\": 21}, \"schema\": {\"returncode\": 0, \"valid\": true}, \"documentV1\": {\"returncode\": 0, \"valid\": true}, \"contractDigests\": {\"returncode\": 0, \"allMatch\": true}}}"
       ],
@@ -107,7 +155,8 @@
     },
     "compose": {
       "returncode": 0,
-      "seconds": 1.63,
+      "attempts": 1,
+      "seconds": 1.11,
       "stdoutTail": [
         "{\"valid\": true, \"cards\": 5, \"decisionRef\": \"decision-1\", \"taskExecutor\": \"dev.example.transform\", \"profileId\": \"profile-a\", \"cardIds\": [\"card-decision-1\", \"card-task-1\", \"card-profile-1\"]}"
       ],
@@ -115,15 +164,17 @@
     },
     "tls": {
       "returncode": 0,
-      "seconds": 6.38,
+      "attempts": 1,
+      "seconds": 4.88,
       "stdoutTail": [
-        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:50186\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
+        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:49440\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
       ],
       "stderrTail": []
     },
     "postgres": {
       "returncode": 0,
-      "seconds": 29.25,
+      "attempts": 1,
+      "seconds": 17.14,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -131,7 +182,8 @@
     },
     "postgres_migrate": {
       "returncode": 0,
-      "seconds": 46.72,
+      "attempts": 1,
+      "seconds": 20.35,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\", \"migration\": \"alembic upgrade head\"}"
       ],
@@ -139,7 +191,8 @@
     },
     "postgres_etag": {
       "returncode": 0,
-      "seconds": 20.11,
+      "attempts": 1,
+      "seconds": 16.63,
       "stdoutTail": [
         "{\"createStatus\": 200, \"etagPresent\": true, \"staleStatus\": 409, \"matchingStatus\": 200, \"database\": \"embedded PostgreSQL 16.2\", \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -150,31 +203,35 @@
     },
     "postgres_concurrency": {
       "returncode": 0,
-      "seconds": 21.23,
+      "attempts": 1,
+      "seconds": 24.34,
       "stdoutTail": [
-        "{\"createStatus\": 200, \"statuses\": [409, 200], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
+        "{\"createStatus\": 200, \"statuses\": [200, 409], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
       ],
       "stderrTail": []
     },
     "postgres_contention": {
       "returncode": 0,
-      "seconds": 28.47,
+      "attempts": 1,
+      "seconds": 22.26,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 200, 200], \"retries\": [0, 0, 1]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 200, 200], \"retries\": [0, 0, 1]}, {\"round\": 4, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}]}"
       ],
       "stderrTail": []
     },
     "postgres_retry": {
       "returncode": 0,
-      "seconds": 23.42,
+      "attempts": 2,
+      "seconds": 43.87,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}]}"
       ],
       "stderrTail": []
     },
     "postgres_multidoc": {
       "returncode": 0,
-      "seconds": 21.26,
+      "attempts": 1,
+      "seconds": 16.11,
       "stdoutTail": [
         "{\"created\": true, \"read\": true, \"rows\": 10, \"titlesMatch\": true}"
       ],
@@ -185,7 +242,8 @@
     },
     "records": {
       "returncode": 0,
-      "seconds": 4.37,
+      "attempts": 1,
+      "seconds": 2.21,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -193,9 +251,10 @@
     },
     "eki_submit": {
       "returncode": 0,
-      "seconds": 1.16,
+      "attempts": 1,
+      "seconds": 0.95,
       "stdoutTail": [
-        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_083566846062efaa0b78187984c27ecd\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
+        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_8694384949204bd63968405ad01410a1\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
       ],
       "stderrTail": []
     }

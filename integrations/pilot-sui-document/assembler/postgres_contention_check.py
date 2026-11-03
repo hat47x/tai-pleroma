@@ -124,7 +124,11 @@ def main():
             cur.execute("select count(*) from documents")
             document_rows = cur.fetchone()[0]
 
-    settled = all(all(status in (200, 409) for status in item["statuses"]) for item in rounds)
+    settled = all(
+        sum(1 for status in item["statuses"] if status == 200) == 1
+        and all(status in (200, 409, 503) for status in item["statuses"])
+        for item in rounds
+    )
     transient = sum(
         1 for item in rounds for status in item["statuses"] if status not in (200, 409)
     )
