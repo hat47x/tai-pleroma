@@ -604,3 +604,20 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 - **価値と実装境界**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の過剰要件監査に従い、生成AIに検証候補の数を制限せず、標準構成に必要な機構を増やさない。Owner/Authority/実Source読込の確認自体は削減対象とせず、Product単独TaskにTAI、EKI、SHO、全Scenarioを必須化しない。
 
 今回の差分は**実験Runbook＋SK-02採点範囲＋計画の更新**。TEI #2822〜24/merged #2819はProduct Ownerが別環境で行った限定実観測、TAI #105は既存Connection実装。TAI自身による今回の実TEI CLI／外部Harness／AI自動生成のScenario 実Trial、独立Oracle採点、実Provider/Consumer効果は **NOT RUN**。Draft #270を維持する。
+
+
+### 33.1 JSON入力の重複と外部Sourceの指示混入を、必要な実験の範囲で扱う（2026-11-04）
+
+**実装済みの差分**：[SK-02 §12.1](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)のE42〜48。AI生成／外部由来の試行JSONに同名keyが重複した場合、`JSON.parse`の後勝ち上書きは比較前に監査・不正送出欄を失わせる。文字列`"false"`の型検査（E33〜41）に加え、**JSON解釈前の重複member拒否を既存Node Checker内部だけへ実装**した。GitHub Actions #41849280505は合成48/48 PASS。ただし記録票の真実性・Skill実ロード・Task正答を保証しない。
+
+**外部Source／Promptの別境界**：[TEI PR #2669](https://github.com/hat47x/tei-platform/pull/2669)では、`ignore_prior_instructions_validation_test.go`のような**実Source候補のファイル名**が、実Go Rerank経路からモデル向け`Instructions`文字列へ入り得ることを限定的に確認している。これはモデルが指示に従ったという証拠ではない。TAI Skillはファイル名、Markdown本文、検索結果、Tool応答、Skill候補説明を**低信頼の資料内容**として扱い、利用者/Hostが認めたInstruction・実Tool契約・Grantへ自動昇格しない。実送信/受信byte、Audience、外部開示制限はTAI #232/#272と各Provider/Harnessが検証する。普遍的Prompt Sanitizerや第二Policy Engineは増設しない。
+
+**初回実証の条件付き分類（[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)）**：
+- **Blocking**：SK-02一件の実H2/H3では、公開Sourceの対象Subject・実Binary/argv/版・実Skillのロード、四つの独立Session、比較適格性、独立Oracleが必要。JSON票に重複があれば記録を棄却する。
+- **Conditional**：非公開Sourceの外部送出、Tool出力に紛れた不正Instruction、SHO/MMI ReaderやEKI委任、組織Scopeは、その経路を実際に使うときに対象Ownerの開示・Role・Consumer/Result資格を確認する。
+- **Nonblocking**：初回のread-only Product Skill比較に、全Harness/全CLI/Web/GUI/Provider、Go生成物、低遅延Event・マルチモーダルEKI、SHOの実Editor/Saveまで必須化しない。
+- **Unknown**：許可済み範囲で実観測できないGrant/Source/Consumerは不明と記録。未観測を「安全」「不存在」や費用0の成功に変換しない。
+
+**他チャットの実Product成果の置き場**：[SHO Draft #14](https://github.com/hat47x/sho-composer/pull/14)で固定MMI CLIの合成Markdown→HTML RenderがCIで実行されたが、SHO自身のReader/Writerの実証ではない。EKI低遅延/マルチモーダルは[TAI Draft #423](https://github.com/hat47x/tai-pleroma/pull/423)で条件付き扱いを維持。これらをSK-02のBlocking条件にも、YIC全体の必須機構にも追加しない。
+
+今回の実体変更は**既存SK-02の試行票読込とその限定CI**だけ。Product正本の契約変更、新Skill/Host/Registryの設置、外部Harness実ロード・実Provider/実OS実験はしない。
