@@ -2,7 +2,7 @@
 
 状態: **Draft / NOT RUN**。本書はTAIの製品群カタログと図が満たすべき条件の**提案**であり、現行実装やOwnerの合意を示さない。  
 対象: [Product Landscape](product-landscape.md)、[公開棚卸し候補](product-inventory-candidates.md)、[知識モデル](product-knowledge-model.md)。  
-関連: TAI [#28](https://github.com/hat47x/tai-pleroma/issues/28)、[#33](https://github.com/hat47x/tai-pleroma/issues/33)、[#67](https://github.com/hat47x/tai-pleroma/issues/67)、[PR #71](https://github.com/hat47x/tai-pleroma/pull/71)（2026-10-31 merged）；TEI [#1120](https://github.com/hat47x/tei-platform/issues/1120)（Closed・共通参照契約）、[#1124](https://github.com/hat47x/tei-platform/issues/1124)（Consumer/Presenter）、[#267](https://github.com/hat47x/tei-platform/issues/267)（Proposal Acceptance）、[PR #2226](https://github.com/hat47x/tei-platform/pull/2226)（Draft・未merge）。
+関連: TAI [#28](https://github.com/hat47x/tai-pleroma/issues/28)、[#33](https://github.com/hat47x/tai-pleroma/issues/33)、[#67](https://github.com/hat47x/tai-pleroma/issues/67)、[PR #71](https://github.com/hat47x/tai-pleroma/pull/71)（2026-10-31 merged）；TEI [#1120](https://github.com/hat47x/tei-platform/issues/1120)（Closed・共通参照契約）、[#1124](https://github.com/hat47x/tei-platform/issues/1124)（Consumer/Presenter）、[#267](https://github.com/hat47x/tei-platform/issues/267)（Proposal Acceptance）、[PR #2226](https://github.com/hat47x/tei-platform/pull/2226)（Draft・未merge。現在：Draft のまま2026-11-02 merged、TEI側で方針として受理されたかは未確認）。
 
 ## 1. 第一原則: 事実の評価と横断方針の採用を別工程にする
 

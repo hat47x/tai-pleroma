@@ -92,5 +92,5 @@ flowchart LR
 - G1の読者による確認がない段階で、専用Product Registryや`tai.*`独自共通契約を確定しない。
 - Product/Method分類、SHO/MMI・TEI Studio・CSWの扱い、公開対象と情報の所有権はOwner判断とする。
 - 外部基盤のAPI/契約が改訂されても、TAIがその基盤の技術的Authorityを乗っ取らない。
-- [TEI Draft #2226](https://github.com/hat47x/tei-platform/pull/2226)のHost非必須、[TEI Draft #2298](https://github.com/hat47x/tei-platform/pull/2298)の`tei.*` namespace/opt-in compositionは、TAI側で公式実装とみなさない。
+- [TEI Draft #2226](https://github.com/hat47x/tei-platform/pull/2226)のHost非必須、[TEI Draft #2298](https://github.com/hat47x/tei-platform/pull/2298)の`tei.*` namespace/opt-in compositionは、TAI側で公式実装とみなさない（現在：#2226 は2026-11-02、#2298 は2026-11-03 merged。TEI側で方針として受理されたかは未確認）。
 - 各ビューの受入は、[横断要求](product-landscape-requirements.md)と[未実行の負例](product-landscape-acceptance.md)に紐付ける。
