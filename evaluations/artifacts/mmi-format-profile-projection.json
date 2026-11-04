@@ -5,12 +5,12 @@
     "version": "1"
   },
   "source": {
-    "teiCommit": "2e16b2af9531225b73430a32a6dbb2031e07f4c1",
+    "teiCommit": "25a15110db61eb48721a8057cb8fc424d260f927",
     "contract": {
       "contractId": "mmi.format-profile.record",
       "contractVersion": "1",
-      "contractDigest": "sha256:7fbc9f800ef4a62453ce6a0b462eebfb6cb2c6605033cdf1eae91277f3db81bb",
-      "sourceDigest": "sha256:11303f4c45c5ddcaca6840945d0fe580c8fe613467bceb7fb76fdd275a65b1e3",
+      "contractDigest": "sha256:5ab24ba452462cac6f77ab61d3e13003cc3e4e615c724085a7f81b3722d5fecc",
+      "sourceDigest": "sha256:4fcbeaac8a902b92dea6f798f527080ba4dff49655d028fc3f3e713ce2d542c5",
       "cases": 4
     }
   },
@@ -27,6 +27,11 @@
       "structure"
     ],
     "sourceProfileId": "profile-base",
-    "status": "candidate"
+    "status": "candidate",
+    "provenance": {
+      "sourceKind": "worksheet",
+      "sourceDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "generationMethod": "worksheet-prototype-v1"
+    }
   }
 }

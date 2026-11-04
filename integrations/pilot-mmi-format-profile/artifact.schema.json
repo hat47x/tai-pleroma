@@ -52,7 +52,16 @@
         "featureVersion": {"type": "string", "minLength": 1},
         "sourceProfileId": {"type": "string", "minLength": 1},
         "features": {"type": "array", "items": {"type": "string", "minLength": 1}},
-        "sourceEvidence": {"type": "array", "items": {"enum": ["structure", "fill", "border"]}}
+        "sourceEvidence": {"type": "array", "items": {"enum": ["structure", "fill", "border"]}},
+        "provenance": {
+          "type": "object",
+          "required": ["sourceKind", "sourceDigest", "generationMethod"],
+          "properties": {
+            "sourceKind": {"type": "string", "minLength": 1},
+            "sourceDigest": {"type": "string", "pattern": "^sha256:"},
+            "generationMethod": {"type": "string", "const": "worksheet-prototype-v1"}
+          }
+        }
       }
     }
   }

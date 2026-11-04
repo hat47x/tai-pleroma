@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sui-ca-chain/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with a local two-tier PKI (root CA and server certificate)",
+  "command": "python integrations/pilot-sui-document/assembler/ca_chain_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-ca-chain-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-sxl\\evaluations\\artifacts\\scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "chainTrusted": true,
+    "createStatus": 200,
+    "fetchStatus": 200,
+    "roundTrip": true,
+    "untrustedRefused": true
+  },
+  "scope": "Runs SUI with a server certificate signed by a local root CA, verifies the chain through that root, and checks that an unverified client fails. The CA is local and test-only; no public CA is involved."
+}

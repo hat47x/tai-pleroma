@@ -5,11 +5,11 @@
   "publicationAllowed": false,
   "date": "2026-11-03",
   "host": "Windows with Go on PATH, Python 3.12, and jsonschema",
-  "command": "python integrations/pilot-mmi-format-profile/build_artifact.py --tei-repo D:\\GIT\\hat47x\\tei-wt-cur --out D:\\GIT\\hat47x\\tai-wt-mmir\\evaluations\\artifacts\\mmi-format-profile-projection.json",
+  "command": "python integrations/pilot-mmi-format-profile/build_artifact.py --tei-repo D:\\GIT\\hat47x\\tei-wt-latest --out D:\\GIT\\hat47x\\tai-wt-sxj\\evaluations\\artifacts\\mmi-format-profile-projection.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-mmir\\evaluations\\artifacts\\mmi-format-profile-projection.json",
-    "digest": "sha256:18ce475ec074f007d65d7d6aae36aad433dda3d9631bc4464161826074ff9ed9"
+    "path": "D:\\GIT\\hat47x\\tai-wt-sxj\\evaluations\\artifacts\\mmi-format-profile-projection.json",
+    "digest": "sha256:0743e38b06c5a7f6322821512237d0c2765a5adf0a1198822ae3ad09229d150c"
   },
   "observed": {
     "profileValid": true,
