@@ -210,3 +210,21 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 **初回実証の順序**：AI-EXT-01（独立Anchorを維持したJSON候補拡張）、AI-EXT-02（既存6 Stepの版固定CLI実行とfail-closed）、AI-EXT-03（Code/Rule/データ/Scenario/Target/Providerの分母を別管理）。その後、Web Host/実Provider/Consumer実受領に進む。対応なし・未取得・分母不明は未検証。AI生成Case数の増加をCoverage率や製品価値の向上と同一視しない。
 
 **現状**：計画とSource-static照合のみ。各AI-EXTの実行、独立Oracle受理、実Web/OS/ProviderのE2E、横断価値測定はNOT RUN。
+
+
+## 13. VA-00実監査をVA-03検証前提へ接続（2026-11-04）
+
+[VA-00調整台帳・実監査記録 TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)では、9 Lane（TAI/TEI-A/TEI-B/SEI/SUI/SHO/EKI/MMI/CSW）のS1〜S3、別担当S4照合、#422への集約が完了。意味的Owner判断事項F2は59件（高20/中28/低11）に整理済み。これは**文書/Issue/ADRのSource-static監査**であり、コード全域・実Target・実ユーザーの製品価値受入ではない。別contextによる再点検は行われたが異モデル実証ではない。TAI #424の機械的F1修正PRもOwner判断前に無断mergeしない。
+
+この結果を[VA-03：入力閉包と契約発見の事前確認](../../evaluations/VA-03-evidence-readiness-preflight.md)へ接合し、[VA-02](../../evaluations/VA-02-cross-product-first-run-protocol.md)のP0/P1に次を追加する。
+
+1. **Declared / Discovered / Consumed / Asserted / Eligible+Received**：manifestの宣言、ファイル発見、Parser/Providerの実読込、Assertionの対象、現在実行許可と実Consumer受領を区別。fingerprintや終了コード0のみで完全性を保証しない。
+2. **TEIの局所事実を条件付きで取り込む**：[TEI #2822](https://github.com/hat47x/tei-platform/issues/2822)（宣言0件でもvalidate成功）、[#2823](https://github.com/hat47x/tei-platform/issues/2823)（未読込Sourceが黙って無視される）、[#2824](https://github.com/hat47x/tei-platform/issues/2824)（19 command/文書13件、discoveryのschema契約不明）からPF-01〜04を作成。製品Issueにある実再現とVA-03の未実行を別記。
+3. **EKIの結果値の衝突を未決として扱う**：[EKI #698](https://github.com/hat47x/eki-fabric/issues/698) EKI-CA-02にあるSuitability ADR 4値と実装3値の差を、EKI #58のVA-E1へ反映。NOT_SUPPORTEDを実Suitability戻り値として固定しない。Admission/Policy拒否と実装による非分散判定は別証拠。
+4. **独立レビューと研究の責務**：F2 Owner判断はVA-00各検査Issue、価値必要性はVA-01、実証はVA-02、Claim上限/入力閉包はVA-03。議論の横断連携により第二Validator/Runner/Host/Authorityを作らない。
+
+**G0更新**：製品別 full SHA、実CLI/Plugin/Provider版、検査対象Scope、取得済み/未読込、独立Expected、実行された環境を確認。Sourceが不完全なら全体PASSを禁止しつつ、許容された公開合成テスト候補の探索は継続可能とする。
+
+**後続研究**：EKIの軽量認知・低レイテンシ・マルチモーダル通信では、Workload/データ様式に応じたTransport Profile選択を比較候補とする（VA-03 §5）。現行実装・採用プロトコル・低遅延の保証は未確認であり、初期EKI Suitability/結果受理の合格条件へ無条件追加しない。
+
+本追加は計画反映。VA-03の再現試験、AI-EXT/CLI実行、Web/実Provider、独立Oracle受理、Ownerの要求採用は**NOT RUN**。
