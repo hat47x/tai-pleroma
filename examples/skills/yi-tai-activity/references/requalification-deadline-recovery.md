@@ -32,3 +32,10 @@
 - 必要な期限・品質・費用が確認できない場合はその不足と実際に成立した限定成果を報告し、read-only調査や独立した文書作業は継続できる範囲で進める。Skillを多く呼んだことや最安モデルの採用を成功条件にしない。
 
 出典／反例：[SK-03 §8](../../../../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)、[TAI #168 CQ-04/05](https://github.com/hat47x/tai-pleroma/issues/168)、[EKI #19](https://github.com/hat47x/eki-fabric/issues/19)/[#155](https://github.com/hat47x/eki-fabric/issues/155)、[TEI #2667](https://github.com/hat47x/tei-platform/pull/2667)。本節は配布前の**試作Skill手順**であり、実Harness/Provider/Worker予算最適化・品質受理を実証したものではない。
+
+
+## EKI Suitabilityの現行APIと低遅延委任を扱う場合（2026-11-04／条件付き）
+
+[EKI #698](https://github.com/hat47x/eki-fabric/issues/698)のsource-static監査では、提案ADR-0029のSuitability **4値**（FABRIC_ELIGIBLE等）と現行実装側の**3値**（FABRIC_JUSTIFIED／FABRIC_NOT_JUSTIFIED／NEEDS_MEASUREMENT）が不一致で、Owner未決。SkillはADR案の値を現API戻り値・Tool引数として創作しない。NOT_SUPPORTED相当の拒否もSuitability応答とは限らず、Admission/Policyの実戻り値を区別する。
+
+**明示的な委任が必要な場合のみ**、使えるProvider/Transport/データ様式、実Deadline・Quality・回復条件、現在のGrant、結果Body/Receiptを確認する。低遅延イベントやマルチモーダル表現は用途別の能力選択候補であって、単純なread-only TEI調査の必須EKI経路や全Workerの要件ではない。Source-staticの監査は本番API互換性や実低遅延性能の証拠ではない。
