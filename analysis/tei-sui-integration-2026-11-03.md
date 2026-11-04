@@ -466,3 +466,15 @@ anonymous 401 / business key 401 / admin key 200（events配列）
 - 管理者キーは`X-Admin-Api-Key`ヘッダ
 - 業務キー`X-Api-Key`では管理APIに到達できない
 - 利用者provisionとIdP段階（stage B）は未確認
+
+## 利用者provision（2026-11-03）
+
+管理APIで合成利用者を1件provisionした。[receipt](../evaluations/records/SUI-TEI-provision-2026-11-03.json)
+
+```text
+POST 201 / provisioned true / reviewerRef・ownerRefはuser: / 同一リクエストで同一userId / 匿名401 / 監査3件
+```
+
+- 再実行しても同じ利用者に解決される（冪等）
+- 管理操作は監査に残る
+- IdP接続は未実施
