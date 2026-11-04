@@ -211,24 +211,6 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 
 **現状**：計画とSource-static照合のみ。各AI-EXTの実行、独立Oracle受理、実Web/OS/ProviderのE2E、横断価値測定はNOT RUN。
 
-
-## 13. VA-00実監査をVA-03検証前提へ接続（2026-11-04）
-
-[VA-00調整台帳・実監査記録 TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)では、9 Lane（TAI/TEI-A/TEI-B/SEI/SUI/SHO/EKI/MMI/CSW）のS1〜S3、別担当S4照合、#422への集約が完了。意味的Owner判断事項F2は59件（高20/中28/低11）に整理済み。これは**文書/Issue/ADRのSource-static監査**であり、コード全域・実Target・実ユーザーの製品価値受入ではない。別contextによる再点検は行われたが異モデル実証ではない。TAI #424の機械的F1修正PRもOwner判断前に無断mergeしない。
-
-この結果を[VA-03：入力閉包と契約発見の事前確認](../../evaluations/VA-03-evidence-readiness-preflight.md)へ接合し、[VA-02](../../evaluations/VA-02-cross-product-first-run-protocol.md)のP0/P1に次を追加する。
-
-1. **Declared / Discovered / Consumed / Asserted / Eligible+Received**：manifestの宣言、ファイル発見、Parser/Providerの実読込、Assertionの対象、現在実行許可と実Consumer受領を区別。fingerprintや終了コード0のみで完全性を保証しない。
-2. **TEIの局所事実を条件付きで取り込む**：[TEI #2822](https://github.com/hat47x/tei-platform/issues/2822)（宣言0件でもvalidate成功）、[#2823](https://github.com/hat47x/tei-platform/issues/2823)（未読込Sourceが黙って無視される）、[#2824](https://github.com/hat47x/tei-platform/issues/2824)（19 command/文書13件、discoveryのschema契約不明）からPF-01〜04を作成。製品Issueにある実再現とVA-03の未実行を別記。
-3. **EKIの結果値の衝突を未決として扱う**：[EKI #698](https://github.com/hat47x/eki-fabric/issues/698) EKI-CA-02にあるSuitability ADR 4値と実装3値の差を、EKI #58のVA-E1へ反映。NOT_SUPPORTEDを実Suitability戻り値として固定しない。Admission/Policy拒否と実装による非分散判定は別証拠。
-4. **独立レビューと研究の責務**：F2 Owner判断はVA-00各検査Issue、価値必要性はVA-01、実証はVA-02、Claim上限/入力閉包はVA-03。議論の横断連携により第二Validator/Runner/Host/Authorityを作らない。
-
-**G0更新**：製品別 full SHA、実CLI/Plugin/Provider版、検査対象Scope、取得済み/未読込、独立Expected、実行された環境を確認。Sourceが不完全なら全体PASSを禁止しつつ、許容された公開合成テスト候補の探索は継続可能とする。
-
-**後続研究**：EKIの軽量認知・低レイテンシ・マルチモーダル通信では、Workload/データ様式に応じたTransport Profile選択を比較候補とする（VA-03 §5）。現行実装・採用プロトコル・低遅延の保証は未確認であり、初期EKI Suitability/結果受理の合格条件へ無条件追加しない。
-
-本追加は計画反映。VA-03の再現試験、AI-EXT/CLI実行、Web/実Provider、独立Oracle受理、Ownerの要求採用は**NOT RUN**。
-
 ## 13. VA-COND-01：用途相対の価値と文書ドリフトを同じレビューに束縛（2026-11-04）
 
 [VA-03：用途条件付き能力・Source状態ドリフト](../../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、VA-01（要件の必要性）・VA-02（実証資格連鎖）に追加する**独立した用途適合性の判定軸**とする。既存の[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)（9 Lane整合性監査、S4は同一モデルの別Context）と[TAI #425](https://github.com/hat47x/tai-pleroma/issues/425)（TAIのF1/F2/F3所見）を再利用し、第二のIssue/ADR台帳・監査Runtimeは設けない。
@@ -248,3 +230,20 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 G0では監査所見・最新Source状態・各Productの実Valueを再取得。G1ではVA-COND-01の用途条件とB0/B1/B2の候補を登録。G2では必要になったデータ様式と時間制約だけを測り、独立Expectedを確保。G3では各Product Ownerへの**差分のみ**返す。G4では経路/Provider/Grant/Target/Source変更に対する必要な再確認だけ行う。新Quality/Transport共通Engineをこの監査から作らない。
 
 **成熟度**：Source-static／設計提案。実EKI low-latency benchmark、Media Data Plane、異モデル反証、正式なTransport選択、Owner受理は **NOT RUN**。
+
+## 14. VA-00実監査をVA-04の入力閉包検証へ接続（2026-11-04）
+
+[VA-00調整台帳・実監査記録 TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)では、9 Lane（TAI/TEI-A/TEI-B/SEI/SUI/SHO/EKI/MMI/CSW）のS1〜S3、別担当S4照合、#422への集約が完了。意味的Owner判断事項F2は59件（高20/中28/低11）に整理済み。これは**文書/Issue/ADRのSource-static監査**であり、コード全域・実Target・実ユーザーの製品価値受入ではない。別contextによる再点検は行われたが異モデル実証ではない。TAI #424の機械的F1修正PRもOwner判断前に無断mergeしない。
+
+この結果を[VA-04：入力閉包と契約発見の事前確認](../../evaluations/VA-04-evidence-readiness-preflight.md)へ接合し、[VA-02](../../evaluations/VA-02-cross-product-first-run-protocol.md)のP0/P1に次を追加する。
+
+1. **Declared / Discovered / Consumed / Asserted / Eligible+Received**：manifestの宣言、ファイル発見、Parser/Providerの実読込、Assertionの対象、現在実行許可と実Consumer受領を区別。fingerprintや終了コード0のみで完全性を保証しない。
+2. **TEIの局所事実を条件付きで取り込む**：[TEI #2822](https://github.com/hat47x/tei-platform/issues/2822)（宣言0件でもvalidate成功）、[#2823](https://github.com/hat47x/tei-platform/issues/2823)（未読込Sourceが黙って無視される）、[#2824](https://github.com/hat47x/tei-platform/issues/2824)（19 command/文書13件、discoveryのschema契約不明）からPF-01〜04を作成。製品Issueにある実再現とVA-04の未実行を別記。
+3. **EKIの結果値の衝突を未決として扱う**：[EKI #698](https://github.com/hat47x/eki-fabric/issues/698) EKI-CA-02にあるSuitability ADR 4値と実装3値の差を、EKI #58のVA-E1へ反映。NOT_SUPPORTEDを実Suitability戻り値として固定しない。Admission/Policy拒否と実装による非分散判定は別証拠。
+4. **独立レビューと研究の責務**：F2 Owner判断はVA-00各検査Issue、価値必要性はVA-01、実証はVA-02、Claim上限/入力閉包はVA-04。議論の横断連携により第二Validator/Runner/Host/Authorityを作らない。
+
+**G0更新**：製品別 full SHA、実CLI/Plugin/Provider版、検査対象Scope、取得済み/未読込、独立Expected、実行された環境を確認。Sourceが不完全なら全体PASSを禁止しつつ、許容された公開合成テスト候補の探索は継続可能とする。
+
+**後続研究**：EKIの軽量認知・低レイテンシ・マルチモーダル通信では、Workload/データ様式に応じたTransport Profile選択を比較候補とする（[VA-COND-01：用途相対と通信条件](../../evaluations/VA-03-conditional-capabilities-and-source-drift.md) §2/§5）。現行実装・採用プロトコル・低遅延の保証は未確認であり、初期EKI Suitability/結果受理の合格条件へ無条件追加しない。
+
+本追加は計画反映。VA-04の再現試験、AI-EXT/CLI実行、Web/実Provider、独立Oracle受理、Ownerの要求採用は**NOT RUN**。
