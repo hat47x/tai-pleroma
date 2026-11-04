@@ -1,0 +1,27 @@
+{
+  "schema": "tai.reference.tei-sei-gate-variants/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-05",
+  "host": "Windows with a locally built sei CLI and a temporary record store",
+  "command": "python integrations/tools/sei_gate_variants.py",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "allowWithoutPolicy": true,
+      "denyUnresolved": true,
+      "denyMissingRecommendation": true,
+      "unresolvedReason": true,
+      "recommendationReason": true
+    },
+    "allowVerdict": "allow",
+    "denyUnresolved": [
+      "the decision left 1 question(s) unresolved"
+    ],
+    "denyMissingRecommendation": [
+      "the decision relies on no recorded recommendation"
+    ]
+  },
+  "scope": "Exercises deny-unresolved and require-recommendation against recorded decisions. It does not verify Authority."
+}
