@@ -10,7 +10,7 @@
 | 段階 | 試す能力・最小構成 | 開始条件 | 出口の証拠／次へ進めない場合 |
 | --- | --- | --- | --- |
 | P0 出典・Oracle固定 | TAI/TEI/EKI/SHO/SEI/SUIのIssue・main・対象Sectionと合成fixtureを記録 | Product Ownerの既存Issueと権限が特定できる | full SHA、Issue取得時点、未確認範囲、生成Agentから独立したExpected。未固定はNOT RUN |
-| P1 TEI単独 | [TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)の現行test-local Go ScenarioをCharacterizeし、小さな保存済みDriver Scenario→CLI plan生成を比較 | 保存可能Scenarioは**未実装とのIssue記述**があるため、実在確認を先行 | 未対応Stepを黙示skipしないCoverage Matrix、入力/操作/結果/実Read。保存Scenarioが無ければ未実装Gapと記録し、生成成功と偽らない |
+| P1 TEI単独 | [TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)でmainに存在する6-Step保存ScenarioとCLI verify/generate/run/checkをCharacterizeし、AI拡張候補を別に評価 | 2026-11-04にmainのScenario JSON/Parser/CLIの実ファイルを確認済み。対応範囲/実試験の成功は別検証 | 固定6 StepのCoverage、pins/digest、独立Expected、実Readと非対応拒否を別票。Sourceの存在だけで製品PASS/Web E2E成立としない |
 | P2 入口差 | 同じAccepted Application/ScenarioからCLIとWeb経路を実行 | Target binding、Host/Policy、実行環境を個別に固定 | 共通Business AssertionとTarget固有のAuth/Transport/UI/Visualの別票。CLI PASS≠Web PASS |
 | P3 外部Harness | Product CLI単独(H2)と必要時だけSkillを読む(H3)を同一公開入力で比較 | 実binary・Skillの現行版、必要なTool、許可された開示範囲 | Tool発見→実呼出し→結果Reader→再開を観測。説明だけの能力は不合格。二つ目のHarnessは独立の別実験 |
 | P4 単独Consumer/委任 | SHO L0 Markdown保存と再読込／EKI #58のLOCAL判定を各々単独で確認 | SHOは[SHO #4/#7](https://github.com/hat47x/sho-composer/issues/7)、EKIは[Suitability #58](https://github.com/hat47x/eki-fabric/issues/58)の現行契約を確認 | SHO文書保存≠原典を理解、EKI Task完了≠Body受領・業務Effect。各製品が単独成立するかを先に判定 |
@@ -73,6 +73,31 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 4. **G3**：VA-EがSource/版/入力範囲/Host・Actual Read/結果の主張を照合。各Product Owner Issueへ小さな差分を提案し、#422には索引と異論だけ還流する。
 5. **G4**：Source、Role、Toolchain、Provider、Grant、Consumerを個別に変えて再資格化範囲を確認。実Artifact/証拠/意味/資格の失効判定を独立に記録。
 
-**Exit**：VA-T2・VA-E1のそれぞれで実測の正例/負例、独立Oracle、VA-X・VA-E署名相当の明記、B0/B1/B2比較可否、少なくとも一つの実Consumer/Reader観測が揃うこと。ただし未実装のScenario source/実Web Host/実EKI Provider/外部Harness/Owner受理は別々の未達として扱う。
+**Exit**：VA-T2・VA-E1のそれぞれで実測の正例/負例、独立Oracle、VA-X・VA-E署名相当の明記、B0/B1/B2比較可否、少なくとも一つの実Consumer/Reader観測が揃うこと。ただし汎用Scenario拡張・Web E2E生成/実Host/実EKI Provider/外部Harness/Owner受理は別々の未達として扱う。
 
 **現状**：この文書自体はSource-staticの提案。2026-11-04時点でV02-01〜09の実行結果、実Harness比較、独立モデル割当、正式なProduct受理を示すものではない。
+
+
+## 6. 2026-11-04 Source再確認：AI-firstテスト拡張の三層
+
+前段P1の「保存Scenario未実装」は古いIssue記述由来であり、現在のmainの限定実装に対して誤り。2026-11-04に下記のファイル実体を確認。これは**Source-static**であり、今回のGo test/CLI実行成功を意味しない。main full SHAとDraft HEADは各実証RunのG0で別途固定する。
+
+- [保存済み6-Step JSON](https://github.com/hat47x/tei-platform/blob/main/reference/driver-scenarios/order-entry-pattern-smoke.json)（schema: tei.driver-scenario/v0、blob SHA 371487312eacf2cbd7f425f33ea1ce5dfc9dfec3）
+- [Scenario parser](https://github.com/hat47x/tei-platform/blob/main/internal/scenariotest/scenario.go)（blob SHA 5990584dbf1415363a1940092d4e388ef757bb74）
+- [CLI implementation](https://github.com/hat47x/tei-platform/blob/main/cmd/tei/scenario.go)（verify/generate/run/check、blob SHA a6525579fc083060b400c970990a64d57fd0a6d3）
+- [TEI Draft PR #2811](https://github.com/hat47x/tei-platform/pull/2811)：AI-first Scaffold/Coverage設計。限定実装とWeb E2E未検証を区別（open/draft）。
+- [TEI Draft PR #2813](https://github.com/hat47x/tei-platform/pull/2813)：AIがJSONを追加するPipeline構文・Operator pin・型連続性・Source byte spanのテスト専用Reference（open/draft）。保存業務Scenarioの正本ではない。
+
+### P1で混同しない三層
+| 層 | 保持する正本/役割 | AIが拡張できること | 禁止する昇格 |
+| --- | --- | --- | --- |
+| L1: Pipeline Candidate | #2813等の構文/型/Operator固定テスト。業務意味のSSOTではない | 固定Anchorを改変せず候補JSON・負例を増やす。Expectedは独立点検 | Candidate PASS→Accepted Scenario/業務意味 |
+| L2: Driver Scenario | Accepted Canonicalは意味SSOT、保存済みScenarioはシナリオテストSSOT | 隔離コピーでCase/Step候補を提示し、verify/generateの差分を観察。Accepted本体の自動上書きは不可 | 現存6 Step→任意Command/Provider対応済み |
+| L3: Target Evidence | CLI plan/run、将来のWeb E2E、実Provider effect、Consumer readは派生物/観測 | 実Target・fixture・Grantがある範囲のみ実行 | CLI PASS→Web/Auth/Commit/Owner受理 |
+
+### G0〜G3に追加する最小の実験（提案・NOT RUN）
+- **AI-EXT-01: 拡張性** — main/PR HEADと基準JSONを固定し、AIが新JSONファイルで正例・不正Type・effect拒否候補を追加。重複JSON member・Operator pin・UTF-8 source位置の拒否を観測。独立Expectedを事前に別担当が保管。採用を自動決定しない。
+- **AI-EXT-02: 既存Scenarioの上限** — 6-Step保存Scenarioのverify→generate→run→checkを同一版で実行。対応Operationのみを数え、意図的なStep欠落、stale fingerprint、未知Operationのfail-closedを検証。Web E2Eと実DB/Host Writeは別Run/NOT RUN。
+- **AI-EXT-03: Coverageの分母** — L1候補数、L2 Step/Rule/Branch/データ分割、L3 Target/Host/Effect/Consumerを別分母で列挙。enumerated、applicable、attempted、executed、asserted、independently-qualified、unsupported、unknownを区別。空分母と未発見を100%にしない。Candidate件数が増えても未試験Targetが合格に変わらない反例を採用。
+
+**変更後の優先順位**：「新Scenario基盤の再実装」ではなく、**現有CLI/Scenarioの範囲固定→AIに自由な候補拡張→独立ExpectedとCoverage/差分→Target/Host実検証**。実行やOwner受理がない限り製品PASSと書かない。実装と試験SSOTはTEI #1180/PR #2811/#2813のOwnerへ戻し、VA-02は横断判定の索引に限定する。
