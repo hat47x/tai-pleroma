@@ -650,3 +650,10 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **限定CI Evidence**：[TAI GitHub Actions #41850429887](https://github.com/hat47x/tai-pleroma/actions/runs/41850429887)にて既存E01〜E48とE49〜E60を含む合成60/60 PASSを実Job logで確認。これまでの48件に対して実入力条件の負例を12件追加した。Product経路で実観測された4 Session、Token/Wall time/独立Oracle/外部Egressは未実行。CI緑をProduct効果へ転用しない。
 
 **負担の制限**：[初回Runbook §12](first-real-skill-qualification-runbook-2026-11-02.md)の同一read-only Workspace Taskだけに適用し、複数Source／EKI分散ジョブ／SHO文書再開／別環境へHandoffする場合はそれぞれの既存Owner・既存SK-03へ返す。root TAI Activity Skillを増大させず、Product Skillに新たな共通Host/Schemaを要求しない。結論として初回の次の価値検証は依然**実H2/H3 Skill Loadと独立Oracleの4 Session**であり、今回追加したのはその判定票の実装品質だけである。
+
+
+### 33.3 H2/H3のWorkspace同一性を、申告HashだけでなくCLI引数に結ぶ（2026-11-04）
+
+[SK-02 §15](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)で、四SessionのWorkspace Hash/WorldFPが一致しても実argvで異なるSourceを読んでいる可能性を、新たな独立メタデータ負例 **E49〜E60** として判別する。従来のE01〜E48を維持し、最初のread-only一Workspace課題に限ってCLIの作業ディレクトリとworkspace引数の文字列同一性をチェックする。これはファイル解決・実Read・権限・Source完全性の証明ではなく、**同じタスク条件で比較できるための必要条件**である。
+
+[SK-02 GitHub Actions #41850563772](https://github.com/hat47x/tai-pleroma/actions/runs/41850563772) の実Job LogでNode構文検査、**合成60/60 PASS**、重複・不正JSONを実ファイルCLI入口から拒否する確認を実施。別Product/別Harness/実TEI CLI／独立OracleのPASSへ加算しない。相対パスの物理Source実同一性やsymlinkの解析は現Checkerが保証せず、実試行のSource/Process Observerへ委ねる。SK-02の初回対象はTEI Product-onlyの限定read-only調査であり、EKI/SHO、組織API、Generator Buildや全Protocol対応を必須化しない。
