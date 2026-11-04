@@ -88,4 +88,4 @@
 [VA-03：用途条件付き能力・Source状態ドリフト](../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、VA-01/VA-02の補助評価票として追加。EKIのProduct Valueにある四つの外面（バッチ資源最適化／AIツール委任／隔離実行／軽量常駐認知）を、一律の長時間バッチ要件に縮めない。**低遅延・ストリーミング・マルチモーダルなData Planeは、仕事のデータ様式・応答期限・jitter・損失・開示資格が要求するときに検証する条件付き能力**であり、初回2 Worker E2Eにあらゆる通信方式を必須としない。認可、Local Governor、Task/Attempt、Results/Consumerは省略しない。
 
 - **VA-00監査からの差分**：[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の文書整合性9 Lane・別ContextによるS4監査を参照。F2のOwner判断待ちを価値レビューの受入と誤認しない。同一モデルの別Contextであり異モデル独立性は未達。
-- **現状**：VA-03はSource-staticの設計と反証候補のみ。EKIの実Latency/SLO、Media配信、TEI実Web、異モデル反証、Owner採否はNOT RUN。正式なTransport/Codec・新Agent Runner/中央Registryは採用しない。
+- **現状**：VA-COND-01はSource-staticの設計と反証候補のみ。EKIの実Latency/SLO、Media配信、TEI実Web、異モデル反証、Owner採否はNOT RUN。正式なTransport/Codec・新Agent Runner/中央Registryは採用しない。
