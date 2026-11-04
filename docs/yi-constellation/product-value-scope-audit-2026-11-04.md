@@ -265,3 +265,14 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 **後続研究**：EKIの軽量認知・低レイテンシ・マルチモーダル通信では、Workload/データ様式に応じたTransport Profile選択を比較候補とする（[VA-COND-01：用途相対と通信条件](../../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md) §2/§5）。現行実装・採用プロトコル・低遅延の保証は未確認であり、初期EKI Suitability/結果受理の合格条件へ無条件追加しない。
 
 本追加は計画反映。VA-04の再現試験、AI-EXT/CLI実行、Web/実Provider、独立Oracle受理、Ownerの要求採用は**NOT RUN**。
+
+## 15. 既存の試験資産で検証する「必要最小限」と独立判別力（2026-11-04）
+
+製品価値の検証は**新しい構成要素の数**でなく、現行の最小手段からの増分と、守るべき条件を満たす証拠で判断する。[VA-02 §8](../../evaluations/VA-02-cross-product-first-run-protocol.md)と[VA-04 §6](../../evaluations/VA-04-evidence-readiness-preflight.md)に実験手順を集約し、横断側で新しいScenario SSOT／Build Registry／Runnerを設けない。
+
+- **TEI：AI-firstテストは最小増築を優先**。[TEI #2828](https://github.com/hat47x/tei-platform/pull/2828)の既存6-Stepと限定CLIを使ったtest-only JSON候補追加を最小案とする。生成Case数ではなく、独立Expected、既知Mutantの検出、固定Anchor/Plan失効、Source/TargetのCoverage分母で評価する。[#2811](https://github.com/hat47x/tei-platform/pull/2811)の設計と[#2813](https://github.com/hat47x/tei-platform/pull/2813)のPipeline JSON候補は**異なるConsumer**であり、一つの万能Test DSLへ性急に統合しない。
+- **TEI：安全性を削らず実装機構を減らす**。[TEI #2819](https://github.com/hat47x/tei-platform/pull/2819)で、宣言Source D1と実Go builder入力D2の相違が現行Selectorで拒否されない局所ケースが確認された。DigestやReceiptを追加で重複保存するのでなく、**実際にビルドで消費した入力集合との一致**を必要なClaimの不変条件にする。修正/実証Ownerは[TEI #2595](https://github.com/hat47x/tei-platform/issues/2595)。この局所負例を全Target E2Eの失敗や完了と推定しない。
+- **TAI：Skillの説明削減と能力の削減を混同しない**。[TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)と[SK-02の既存対照](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)を用い、Harness＋Product CLIだけのH2と、必要なProduct Skillを実ロードするH3を同一条件・四独立Sessionで比較する。既に報告のあるTEI Product Skillの限定read-only CIと、TAI Harness上でのTool呼出し・文書負担・利用者成果は別資格。Skill実Loader/Token/人手費用を観測せずに「Skillが不要」「軽量化で価値向上」と断定しない。
+- **共通の停止・進行規則**：未読込Source・不明Grant・Builder入力差は、その証拠を必要とする**実行・納品Claimだけ**を止める。許可済みの静的調査、AI候補生成、SHO L0編集、SEIの限定再開、SUIの公開合成での保留検討まで一括停止しない。新しい万能Gateを導入せず、TAI #424のF2と各Product IssueにOwner判断を残す。
+
+**証拠の現在地**：#2828は実テスト候補PR、#2819はProduct側の限定的な再現報告、TAI #270はSK-02実験を定義済み。しかし本横断PRでの二Case実走、異モデル反証、TAI H2/H3実Harness、User Job増分、各Product正式受理は **NOT RUN**。
