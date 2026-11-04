@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'evaluations/tools/check-sk02-pair-eligibility.cjs'
+      - 'evaluations/tools/check-sk03-negative-claim-transport.cjs'
+      - 'docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md'
       - 'evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md'
       - '.github/workflows/tai-sk02-synthetic-pair-check.yml'
   workflow_dispatch:
@@ -46,3 +48,18 @@ jobs:
             exit 1
           fi
           node -e 'const fs=require("fs"); const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(v.verdict!=="ineligible" || !v.invalid.includes("INVALID_TRIAL_JSON")) process.exit(1)' "$RUNNER_TEMP/sk02-malformed.out"
+
+      - name: "SK-03 actual Node child-process test (synthetic JSON only)"
+        shell: bash
+        run: |
+          node --check evaluations/tools/check-sk03-negative-claim-transport.cjs
+          node evaluations/tools/check-sk03-negative-claim-transport.cjs --self-test > "$RUNNER_TEMP/sk03-negative-claim.json"
+          node -e '
+            const fs=require("fs");
+            const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            if(v.total!==19 || v.passed!==19) process.exit(1);
+            const byId=Object.fromEntries(v.results.map(x=>[x.id,x.result]));
+            for(const id of ["NC17","NC18","NC19"]) if(byId[id]!=="producer-unparseable") process.exit(1);
+            if(!v.scope.includes("no real TEI/Harness")) process.exit(1);
+            console.log(JSON.stringify({passed:v.passed,total:v.total,NC17:byId.NC17,NC18:byId.NC18,NC19:byId.NC19,scope:"local synthetic subprocess only"}));
+          ' "$RUNNER_TEMP/sk03-negative-claim.json"
