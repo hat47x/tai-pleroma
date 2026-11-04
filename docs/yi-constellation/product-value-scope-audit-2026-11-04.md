@@ -229,9 +229,9 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 
 本追加は計画反映。VA-03の再現試験、AI-EXT/CLI実行、Web/実Provider、独立Oracle受理、Ownerの要求採用は**NOT RUN**。
 
-## 13. VA-03：用途相対の価値と文書ドリフトを同じレビューに束縛（2026-11-04）
+## 13. VA-COND-01：用途相対の価値と文書ドリフトを同じレビューに束縛（2026-11-04）
 
-[VA-03：用途条件付き能力・Source状態ドリフト](../../evaluations/VA-03-conditional-capabilities-and-source-drift.md)を、VA-01（要件の必要性）・VA-02（実証資格連鎖）に追加する**第三の判定軸**とする。既存の[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)（9 Lane整合性監査、S4は同一モデルの別Context）と[TAI #425](https://github.com/hat47x/tai-pleroma/issues/425)（TAIのF1/F2/F3所見）を再利用し、第二のIssue/ADR台帳・監査Runtimeは設けない。
+[VA-03：用途条件付き能力・Source状態ドリフト](../../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、VA-01（要件の必要性）・VA-02（実証資格連鎖）に追加する**独立した用途適合性の判定軸**とする。既存の[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)（9 Lane整合性監査、S4は同一モデルの別Context）と[TAI #425](https://github.com/hat47x/tai-pleroma/issues/425)（TAIのF1/F2/F3所見）を再利用し、第二のIssue/ADR台帳・監査Runtimeは設けない。
 
 ### 実際のUser Jobを先に固定する
 - [EKI Product Value](https://github.com/hat47x/eki-fabric/blob/main/product/value.md)の委任の核は、長時間バッチだけでなく、AI推論・ツール実行、隔離実行、軽量常駐認知の外面へ広がる。**高速通信・マルチモーダルを一律に「過剰」としない**。ただし必須化は用途別：有限Job→従来型Task/Artifact、低遅延イベント→期限・jitter・再送/順序/Backpressure、Media→受信・同期、常駐→有限Grantの更新とLocal Governor、を個別の負例で評価する。
