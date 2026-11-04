@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sui-tei-reference/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-04",
+  "host": "Windows with SUI reading a local TEI reference directory",
+  "command": "python integrations/pilot-sui-document/assembler/tei_reference_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-reference-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-sxm\\evaluations\\artifacts\\scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "projectionStatus": 200,
+    "artifactEchoed": true,
+    "unknownBindingStatus": 404,
+    "unknownBindingCode": "epistemic_binding_not_found"
+  },
+  "scope": "Binds one TEI projection artifact into SUI's local reference directory and reads it back through the document API. SUI echoes the artifact verbatim; consumer-side schema validation is out of scope."
+}
