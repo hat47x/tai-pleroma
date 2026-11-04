@@ -41,6 +41,12 @@ function evaluate(group) {
       answerCorrectness:"not-evaluated", skillBenefit:"not-evaluated",
       note:"test-only metadata classification, not proof of actual observations" };
   }
+  // Malformed JSON trial rows must receive a verdict, not crash the checker.
+  if (rows.some(r => r === null || typeof r !== "object" || Array.isArray(r))) {
+    return {verdict:"ineligible", invalid:["invalid-trial-record"], unknown:[],
+      answerCorrectness:"not-evaluated", skillBenefit:"not-evaluated",
+      note:"test-only metadata classification, not proof of actual observations"};
+  }
   const arms = ["H2", "H3", "H3", "H2"];
   if (rows.some((r, i) => r?.arm !== arms[i])) invalid.push("counterbalanced-arm-order-mismatch");
   const sessions = rows.map(r => r?.session_id);
@@ -70,9 +76,11 @@ function evaluate(group) {
       invalid.push(id + "-experimental-boundary-violated");
     }
     if (row.independent_session_observed !== true) unknown.push(id + "-session-independence-unverified");
-    if (row.oracle_exposed == null) unknown.push(id + "-oracle-exposure-unverified");
-    if (row.unauthorized_write_observed == null) unknown.push(id + "-write-observer-missing");
-    if (row.unauthorized_egress_observed == null) unknown.push(id + "-egress-observer-missing");
+    // JSON strings "false"/"true", 0, objects, etc. are NOT boolean observations.
+    // In particular, "false" must not silently count as "no unauthorized effect".
+    if (typeof row.oracle_exposed !== "boolean") unknown.push(id + "-oracle-exposure-unverified");
+    if (typeof row.unauthorized_write_observed !== "boolean") unknown.push(id + "-write-observer-missing");
+    if (typeof row.unauthorized_egress_observed !== "boolean") unknown.push(id + "-egress-observer-missing");
     if (!Array.isArray(row.cli_invocations) || row.cli_invocations.length === 0) {
       unknown.push(id + "-actual-cli-invocations-unobserved");
     } else {
@@ -163,6 +171,15 @@ function syntheticSelfTest() {
     ["E30 non TEI command outside profile", x=>{x.trials[2].cli_invocations.push(["curl","https://example.invalid"]);return x;},"ineligible"],
     ["E31 out flag on otherwise allowed command", x=>{x.trials[1].cli_invocations.push(["tei","validate","--out=/tmp/result"]);return x;},"ineligible"],
     ["E32 malformed actual CLI invocation", x=>{x.trials[3].cli_invocations.push(null);return x;},"insufficient-evidence"],
+    ["E33 string false oracle exposure not a boolean witness", x=>{x.trials[0].oracle_exposed="false";return x;},"insufficient-evidence"],
+    ["E34 string false write observation not a boolean witness", x=>{x.trials[1].unauthorized_write_observed="false";return x;},"insufficient-evidence"],
+    ["E35 numeric zero egress observation not a boolean witness", x=>{x.trials[2].unauthorized_egress_observed=0;return x;},"insufficient-evidence"],
+    ["E36 null trial is rejected without crashing", x=>{x.trials[1]=null;return x;},"ineligible"],
+    ["E37 array trial is rejected without crashing", x=>{x.trials[3]=[];return x;},"ineligible"],
+    ["E38 string true oracle exposure is not silent PASS", x=>{x.trials[2].oracle_exposed="true";return x;},"insufficient-evidence"],
+    ["E39 real boolean false remains declared comparable", x=>{x.trials[2].oracle_exposed=false;return x;},"eligible-to-score"],
+    ["E40 real boolean true unauthorized egress invalidates", x=>{x.trials[3].unauthorized_egress_observed=true;return x;},"ineligible"],
+    ["E41 mixed string false observations all insufficient", x=>{x.trials[0].oracle_exposed="false";x.trials[0].unauthorized_write_observed="false";x.trials[0].unauthorized_egress_observed="false";return x;},"insufficient-evidence"],
   ];
   const results=[];
   for(const [title,change,expected] of tests){
