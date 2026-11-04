@@ -30,3 +30,19 @@ jobs:
         run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
       - name: Execute public synthetic E01-E48 only
         run: node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test
+
+      - name: Reject ambiguous JSON from the actual SK-02 CLI file argument
+        shell: bash
+        run: |
+          printf '%s\n' '{"trials":[],"trials":[]}' > "$RUNNER_TEMP/sk02-duplicate.json"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-duplicate.json" > "$RUNNER_TEMP/sk02-duplicate.out"; then
+            echo "Duplicate JSON incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs"); const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(v.verdict!=="ineligible" || !v.invalid.includes("DUPLICATE_TRIAL_JSON_MEMBER")) process.exit(1)' "$RUNNER_TEMP/sk02-duplicate.out"
+          printf '%s\n' '{"trials":,}' > "$RUNNER_TEMP/sk02-malformed.json"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-malformed.json" > "$RUNNER_TEMP/sk02-malformed.out"; then
+            echo "Malformed JSON incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs"); const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(v.verdict!=="ineligible" || !v.invalid.includes("INVALID_TRIAL_JSON")) process.exit(1)' "$RUNNER_TEMP/sk02-malformed.out"
