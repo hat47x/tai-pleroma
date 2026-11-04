@@ -545,7 +545,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = data.get("observed", {})
             if data.get("result") != "PASS" or checks.get("firstStatus") != 200 or checks.get("secondStatus") != 200 or checks.get("firstNotSei") is not True:
                 errors.append(f"SUI did not isolate two TEI artifacts: {relative}")
-        if "SUI-TEI-reference" in relative:
+        if "SUI-TEI-reference" in relative and "-multi" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("projectionStatus") != 200 or observed.get("artifactEchoed") is not True:
                 errors.append(f"SUI did not serve the bound TEI artifact: {relative}")
