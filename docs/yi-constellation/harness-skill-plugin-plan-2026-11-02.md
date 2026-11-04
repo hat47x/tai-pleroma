@@ -548,3 +548,34 @@ EKIの明示的な委任時は既存Task/Attempt/Admission/Worker/Lease/Recovery
 **利用時規則**：rootはTAIが必要なときだけ適用。詳細は一件のTaskで必要な一つだけを優先し、Readerが実際に読んだ参照版を記録する。Agentの「読んだ」という自己申告は実Loader証拠の代用ではない。**root縮小の良否は[SK-01 §AD](../../evaluations/SK-01-harness-skills.md)で、最小Tool/Skill選択・正答・誤選択・資料過少/過剰ロード・Token/費用・人のReviewを同一Taskで比較する**。既存SK-02 H2/H3（TEI Product Skill）にTAI Skillを混入させず、TAI Skill追加群は後続SK-MIN P2/H4/H5で扱う。
 
 **採用範囲**：TAI Draft #270の**試作Skillの構造改善のみ**。各Productの正式Skill、実CLI、Owner Meaning/Authority/Current Grant、外部Harness install/load、シリーズReleaseは変更・受理していない。新Host/Registry/Tool ABIを加えない。
+
+
+## 31. 2026-11-04：軽量Skillの参照閉包をCIで固定し、品質・組織・Actionの資格を分離する
+
+### 31.1 Skill rootの軽量化を再び無効化しない
+
+前節のTAI Skill root 3,162文字＋3参照資料という構成は維持し、広域なTEI/SHO/EKI設計追補をrootに追加しない。追加機能はそのProductがOwner。TAIが担当するのは「そのProductを実際に使う必要があるか」「適切な情報だけをその実Productへ渡し、結果と未知を説明できるか」の判断。Rootの文字数には必須の固定上限を設けず、実Taskで正答・過剰ロード・Token/人手を測る。
+
+**実行できる変更**：[TAI例示Skill package静的Checker](../../evaluations/tools/check-tai-skill-package.cjs)と[独立GitHub Actions](../../.github/workflows/tai-example-skill-package-check.yml)をDraft #270に追加。Skill frontmatter name/description、3参照ファイルの実在とrootリンク、root+references内の相対Markdownリンクを読み、参照切れ・Repository外へのPath escape・Symbolic Link越境を拒否する。標準Node 22以外の依存やSkill専用Runtimeは導入しない。
+
+Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落、name不一致、必須参照未結合、参照切れ、Repository外パス、詳細資料の参照切れ、URL encoding異常）。単なるファイル構造とパスの試験であり、実Harnessによるread/loaded、Semantic/Owner受理、機密情報送出、Skillの正答率を調べるものではない。CIは前述の4ファイル/Checker変更だけで起動し、既存SK-02の比較適格性Workflowとは独立とする。Exact HEADのCI結論はJob logの確認後に限定記録し、queued/in-progressをPASSにしない。
+
+### 31.2 Productの受入能力を「何を読んだ」「何を検出できる」「何をしてよい」に分ける
+
+他チャットの[TEI Everything is Data Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)では、Data Coverage（取得・検査したScope）とFault Detection（独立Expected/Mutationを用いて本当に検出できた誤り）の分離が成熟した。すべての行にアクセスできても、生成した検査式が誤っているなら品質PASSとは限らない。よってYIC Skillが出す「検証済み」には **(A)実Source/Query Cohort/Row・Field Completeness/版、(B)Accepted Ruleと独立Oracleに対するFault Detectionの範囲、(C)現在のConsumer用途・Quality期限・例外**を別々に置く。AIが生成したRuleとAIの自己期待を相互に照合しただけで独立Oracleと呼ばない。
+
+[TEI Organization Draft #2781](https://github.com/hat47x/tei-platform/pull/2781)のRecord visibility/read-only圧力試験でも、Hierarchy/Membershipのvalid-at・known-at、Policy scope-root/axis、部分Queryの隠れたRow/Field、ReadとExportの許可、未保存編集、既配布コピーを分けている。組織上の閲覧/参照専用/Reader UI状態をHost/Providerの実Grant・Approval/Write権限へ昇格させない。公開対象でないRole/Tool/Recordの件数・ヒント自体もSkillの開示対象となる。実Providerでの強制はTEI Ownerの未検証領域。
+
+[TEI Action PR #2616](https://github.com/hat47x/tei-platform/pull/2616)／[#2784](https://github.com/hat47x/tei-platform/pull/2784)の現行実証では、Offer時のPurpose/Target/Periodと、実Invocation/Provider Commit時のTarget・現在Grant・Periodは異なる時点の資格。正しいBindingや参照Executionのsuccessを、同対象へのBusiness Commit／現在権限に昇格しない。期間未指定のReference挙動も、全業務で期間省略を正式受理した根拠にはならない。実DB Transaction/Receipt/独立Readは#1174/#2598等のOwner。
+
+### 31.3 一つの必要十分な実証順序
+
+**P0 静的準備**：Skill package Integrity Checkの実CIを確認し、TEI merged #2607 Skill root+refsとCLI binary/Source版・公開範囲を採取。参照資料全部の強制ロードはしない。
+
+**P1 実比較**：単一の利用可能な外部HarnessでTEI Tool-only H2／Product Skill H3を同Source・Binary・権限・Task/独立Oracleで4独立Session比較。Package/Python静的成功を実Skillロードに数えない。
+
+**P2 実引継ぎ**：別Harnessで実Tool結果、実Reader/開示、Changed Source/Revision/Grantの必要部分を再資格化。SK-03の既存子Process公開合成16件を二Harness互換と呼ばない。
+
+**P3 必要なProductだけ拡張**：Quality/Organization/Actionなど、利用者の実Taskが必要とする既存Product実API・Providerと独立Expectedに限り追加試験し、各Ownerが出した限定結果だけをTAI Skillへ引き継ぐ。Full Query/全Org機能/全Provider/全Harness対応を先行Gateにしない。
+
+**状態・Owner**：本節はTAI Draft上の試作Skill静的保全＋Product別の受入境界設計であり、実Harness・品質Oracle・Provider/OS/Host認可・Owner業務受理はNOT RUN。対応先はTAI #168/#74/#271、TEI #2605/#2514/#2667/#2781/#2598/#1174、EKI #57、SHO #4。第二Host・Registry・Policy Engine・共通Oracleを作らない。
