@@ -12,7 +12,7 @@ const fs = require("node:fs");
 const SAME = ["task_id", "repo_head", "binary_digest", "workspace_tree_digest",
   "world_fingerprint", "source_index_fingerprint", "prompt_digest",
   "harness_build", "model_profile", "tool_profile_digest", "principal",
-  "grant_profile_digest", "disclosure_profile_digest", "oracle_version"];
+  "grant_profile_digest", "disclosure_profile_digest", "oracle_version", "cli_cwd"];
 const DIGEST = /^sha256:[a-f0-9]{64}$/;
 const HEAD = /^[a-f0-9]{40}$/;
 
@@ -79,6 +79,36 @@ function readOnlyCommandFamily(argv) {
   return "outside-initial-readonly-profile";
 }
 
+/**
+ * SK-02's first task uses one workspace. The selected CLI catalog is NOT a
+ * guarantee that two recorded invocations selected the same source root.
+ * This is an argv-shape and literal binding check, not a filesystem/Loader proof.
+ */
+function recordedWorkspace(argv) {
+  const scoped = argv?.[1] === "inspect" || argv?.[1] === "trace" ||
+    argv?.[1] === "validate" || (argv?.[1] === "model" && argv?.[2] === "catalog");
+  if (!scoped) return {status:"not-needed"};
+  const args = argv.slice(argv[1] === "model" ? 3 : 2);
+  const workspaces = [];
+  for (let i = 0; i < args.length; i++) {
+    const t = args[i];
+    if (t === "-world" || t === "--world" ||
+        t.startsWith("-world=") || t.startsWith("--world="))
+      return {status:"world-outside-initial-profile"};
+    if (t === "-workspace" || t === "--workspace") {
+      workspaces.push(args[i + 1]);
+      i++;
+    } else if (t.startsWith("-workspace=") || t.startsWith("--workspace=")) {
+      workspaces.push(t.slice(t.indexOf("=") + 1));
+    }
+  }
+  if (workspaces.length > 1) return {status:"ambiguous-workspace-argv"};
+  if (!workspaces.length || typeof workspaces[0] !== "string" ||
+      !workspaces[0].trim() || workspaces[0].startsWith("-"))
+    return {status:"workspace-argv-unobserved"};
+  return {status:"bound",value:workspaces[0]};
+}
+
 function evaluate(group) {
   const invalid = [], unknown = [];
   const rows = group?.trials;
@@ -115,6 +145,7 @@ function evaluate(group) {
       && h3[0].skill_activation !== h3[1].skill_activation) invalid.push("H3-activation-mode-mismatch");
   if (h3.length === 2 && h3.every(r => DIGEST.test(r.skill_package_digest || ""))
       && h3[0].skill_package_digest !== h3[1].skill_package_digest) invalid.push("H3-package-version-mismatch");
+  const readWorkspaceBindings = [];
   for (const [i, row] of rows.entries()) {
     const id = "trial" + (i + 1);
     if (row.independent_session_observed === false || row.oracle_exposed === true ||
@@ -130,11 +161,24 @@ function evaluate(group) {
     if (!Array.isArray(row.cli_invocations) || row.cli_invocations.length === 0) {
       unknown.push(id + "-actual-cli-invocations-unobserved");
     } else {
+      const withinTrial = new Set();
       for (const argv of row.cli_invocations) {
         const family = readOnlyCommandFamily(argv);
-        if (family === "unobserved") unknown.push(id + "-cli-argv-unobserved");
-        else if (family !== "allowed-family") invalid.push(id + "-cli-" + family);
+        if (family === "unobserved") {unknown.push(id + "-cli-argv-unobserved");continue;}
+        if (family !== "allowed-family") {
+          invalid.push(id + "-cli-" + family);continue;
+        }
+        const binding = recordedWorkspace(argv);
+        if (binding.status === "bound") withinTrial.add(binding.value);
+        else if (binding.status === "world-outside-initial-profile" ||
+                 binding.status === "ambiguous-workspace-argv")
+          invalid.push(id + "-" + binding.status);
+        else if (binding.status === "workspace-argv-unobserved")
+          unknown.push(id + "-workspace-argv-unobserved");
       }
+      if (withinTrial.size > 1) invalid.push(id + "-mixed-actual-workspaces");
+      if (withinTrial.size === 0) unknown.push(id + "-workspace-read-unobserved");
+      else if (withinTrial.size === 1) readWorkspaceBindings.push([...withinTrial][0]);
     }
     if (row.tool_invocation_observed !== true || row.actual_cli_output_observed !== true)
       unknown.push(id + "-actual-tool-evidence-unobserved");
@@ -156,6 +200,12 @@ function evaluate(group) {
         unknown.push(id + "-H3-real-skill-load-unverified");
     }
   }
+  // A shared workspace digest in a JSON ticket cannot substitute for the argv
+  // that the real CLI was asked to read. Literal equality is a necessary but
+  // not sufficient condition: cli_cwd, symlinks and actual loaded bytes still
+  // require a separate real process/Source observer.
+  if (new Set(readWorkspaceBindings).size > 1)
+    invalid.push("pair-differs-actual-workspace-argv");
   // The output deliberately makes no assertion that the trial answers were correct.
   const verdict = invalid.length ? "ineligible" : unknown.length ? "insufficient-evidence" : "eligible-to-score";
   return {verdict, invalid:[...new Set(invalid)].sort(), unknown:[...new Set(unknown)].sort(),
@@ -168,7 +218,7 @@ function seed() {
     binary_digest:hash("1"), workspace_tree_digest:hash("2"),
     world_fingerprint:"public-world-A",source_index_fingerprint:"public-source-index-A",
     prompt_digest:hash("3"),harness_build:"mock-harness-v0",model_profile:"mock-model-fixed",
-    tool_profile_digest:hash("4"),principal:"public-evaluator",
+    tool_profile_digest:hash("4"),principal:"public-evaluator",cli_cwd:"/fixture/tei",
     grant_profile_digest:hash("5"),disclosure_profile_digest:hash("6"),
     oracle_version:"private-oracle-reference-v1"};
   return {trials:["H2","H3","H3","H2"].map((arm, i) => ({...common,arm,
@@ -226,6 +276,18 @@ function syntheticSelfTest() {
     ["E39 real boolean false remains declared comparable", x=>{x.trials[2].oracle_exposed=false;return x;},"eligible-to-score"],
     ["E40 real boolean true unauthorized egress invalidates", x=>{x.trials[3].unauthorized_egress_observed=true;return x;},"ineligible"],
     ["E41 mixed string false observations all insufficient", x=>{x.trials[0].oracle_exposed="false";x.trials[0].unauthorized_write_observed="false";x.trials[0].unauthorized_egress_observed="false";return x;},"insufficient-evidence"],
+    ["E49 missing cli cwd witness", x=>{delete x.trials[0].cli_cwd;return x;},"insufficient-evidence"],
+    ["E50 different cli cwd across arms", x=>{x.trials[2].cli_cwd="/fixture/other";return x;},"ineligible"],
+    ["E51 different workspace argv despite matching declared digests", x=>{x.trials[1].cli_invocations[1][4]="other/workspace";return x;},"ineligible"],
+    ["E52 one read with missing workspace flag", x=>{x.trials[0].cli_invocations[2]=["tei","validate","-json"];return x;},"insufficient-evidence"],
+    ["E53 duplicate workspace flags on one invocation", x=>{x.trials[1].cli_invocations[2].push("-workspace","reference/workspace");return x;},"ineligible"],
+    ["E54 two valid workspace flags to different roots within trial", x=>{x.trials[0].cli_invocations.push(["tei","inspect","-workspace","other/workspace"]);return x;},"ineligible"],
+    ["E55 world file outside initial workspace profile", x=>{x.trials[1].cli_invocations[2]=["tei","validate","-world","other.json"];return x;},"ineligible"],
+    ["E56 workspace equals syntax accepted", x=>{x.trials[0].cli_invocations[2]=["tei","validate","-workspace=reference/workspace","-json"];return x;},"eligible-to-score"],
+    ["E57 commands without an actual scoped read are insufficient", x=>{x.trials[0].cli_invocations=[["tei","commands"]];return x;},"insufficient-evidence"],
+    ["E58 workspace flag with option instead of path", x=>{x.trials[1].cli_invocations[2]=["tei","validate","-workspace","-json"];return x;},"insufficient-evidence"],
+    ["E59 double dash workspace syntax accepted", x=>{x.trials[2].cli_invocations[2]=["tei","validate","--workspace","reference/workspace","-json"];return x;},"eligible-to-score"],
+    ["E60 different workspace across one arm despite same workspace hash", x=>{x.trials[3].cli_invocations=x.trials[3].cli_invocations.map(a=>a.map(t=>t==="reference/workspace"?"alternative/workspace":t));return x;},"ineligible"],
   ];
   const results=[];
   for(const [title,change,expected] of tests){
@@ -275,4 +337,4 @@ if (require.main===module) {
     }
   } else {console.error("usage: node check_sk02_pair_eligibility.cjs --self-test | path/to/trial-group.json");process.exitCode=2;}
 }
-module.exports={evaluate,parseTrialJSON,syntheticSelfTest};
+module.exports={evaluate,recordedWorkspace,parseTrialJSON,syntheticSelfTest};
