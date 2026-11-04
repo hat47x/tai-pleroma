@@ -59,3 +59,13 @@ PF-01〜04は実際のIssue再現手順を元にした**再検査案**であり�
 EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通信は、[VA-COND-01：用途条件付き能力とSource状態ドリフト](VA-COND-01-conditional-capabilities-and-source-drift.md)のVA-F1が価値・適用条件・Transport比較を扱う。本VA-04は、どのTransportにも共通する「実際に読んだ入力範囲／権限／結果の受領」をClaimとして過大評価しないための事前確認に限定する。具体的な通信プロトコルや低遅延保証はEKI Ownerの未決事項であり、ここで独自の第二設計を作らない。
 
 **非目標**：既存TEI CLI契約・EKI Admission/Trust/Transportの仕様を横断Issueで勝手に改訂すること、新しい統合Host・Permission Engine・中央Evidence DB・Run Controllerを設けること、整合性監査を正式な製品受入に読み替えること。
+
+## 6. Sourceを「発見した」だけでなく実Build入力へ束縛する
+
+[TEI PR #2819](https://github.com/hat47x/tei-platform/pull/2819)の限定反例は、manifestに宣言されたGo Source D1と、実go buildへ渡るD2が異なる場合でも、従来のSelectorが受容し、生成物はD2に由来する一方、ReceiptのSourceDigestはD1を示し得るというもの。この事実は、C1〜C5のうち**C3 ConsumedとC4 Assertedの接合が破綻する**実例である。D1/D2の一致を単一のhashの存在だけで推定せず、正確なBuilder入力集合、構築順、実Target、生成物集合、Toolchainを実観測と結び付ける。
+
+**PF-B01（新たな負例候補）**：同一Source/Generator固定のControlと、宣言D1・ビルドD2のMismatchを実行。現状不一致の発見と、修正後に実入力closureの証拠がなければ当該Build適合を拒否することを別判定する。Controlも単にexit=0やbinary digestが同じだからPASSとはしない。独立Oracle担当はBuildの実入力をCandidate/Receiptの宣言値から導出しない。
+
+ただし、これを全Productの実行を止める横断Gateにはしない。Sourceの**read-only調査**、合成DSLテスト候補作成、限定Scenario verifyは実Build・実Effectの資格に届かないと明記して進められる。**実Artifact/Target/業務Effectの適合Claim**には、当該Product Ownerが要求するBuilder入力の対応を必要条件とする。[TEI #2595](https://github.com/hat47x/tei-platform/issues/2595)へ修正・再実証のOwnerを返し、本VA-04では第二Build Registry/Validator/CLIを作らない。
+
+本VA-04でのPF-B01実行、TEI EB-04修正、他Targetの資格、Owner受理は **NOT RUN**。
