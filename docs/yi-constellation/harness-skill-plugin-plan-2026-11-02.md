@@ -589,3 +589,18 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 次の一件は**実Harness一種類、TEI Product Skill一つ、公開Source一つ、read-only CLI**に限定する。記録の型を満たしただけでは弱いため、実Tool出力の取得元と手順・Binary/Source/Skill消費版・Observation/Disclosure・独立Oracleを、SK-02の既存Runbookと試行票に追加資料を増やさず記録する。Tool-onlyが十分ならSkill非採用という結論を許し、第二HarnessやEKIを初回の必須要件としない。TAIは新Host/Provider/API/中央Registry/Oracleを持たない。
 
 **確認状況**：本更新時点で修正コード・41件を実GitHub branchへ保存。exact HEADでのCIは別途Job log確認、実ハーネス・本番権限・独立Business Oracleは**NOT RUN**。
+
+
+## 33. 2026-11-04：Source読込・検証・実使用を分離し、SK-02の誤成功を防ぐ
+
+他チャットの[TEI Everything is Data横断計画 #2667](https://github.com/hat47x/tei-platform/pull/2667)、AI-firstテスト基盤[Draft #2811](https://github.com/hat47x/tei-platform/pull/2811)、実CLI Source診断Issue [#2822](https://github.com/hat47x/tei-platform/issues/2822)/[#2823](https://github.com/hat47x/tei-platform/issues/2823)/[#2824](https://github.com/hat47x/tei-platform/issues/2824)、Build Source不一致を特性化した[merged #2819](https://github.com/hat47x/tei-platform/pull/2819)、[AI JSON Scenario Draft #2828](https://github.com/hat47x/tei-platform/pull/2828)を横断照合した。採用済みのTEI CLI/Go Scenario実装と、未実装のSource完全性／Build入力固定／独立Oracleを分ける。
+
+**成熟した判断**：Source/Skill/Function/Scenarioに「宣言がある」「発見できた」「Reader/Parserが実読込した」「要求された意味へ適用した」「選択した実Binary/Build/Providerで消費した」「利用者・外部Consumerが実結果を受領した」という違う資格がある。空Workspaceでvalidate okかつ標準catalog13件、存在しないmanifest root、managedだがParser未読込、commands19件と文書13件の不整合を、**初回Skill実証の負例**へ接続する。技能の説明やツール列挙を正本Source読込へ昇格させない。
+
+- **P0 read-only Taskのみ**：[実行Runbook §11](first-real-skill-qualification-runbook-2026-11-02.md)で独立期待Subject・実Source根拠・Catalog/Inspect/Validateの同版を照合する。SK-SRC01〜06は**評価案／NOT RUN**。実LoaderはTEI Ownerへ委譲し、新公共Schema/Registryを設計しない。
+- **P1 現H2/H3比較**：[SK-02 §13](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)の**比較適格性とTask正答の分離**を徹底。四Session/元CLI出力/独立Oracleで正答を採点し、両腕が同じ「空Workspace」を読めてもTask成功にしない。Checkerの41件合成PASSはJSON比較条件の限定証拠。
+- **P2 範囲拡張は必要時のみ**：AIが自発追加するJSON ScenarioはTEI mainの既存Scenario v0／各DraftのTest-only候補へ渡し、独立Expected/Mutant Detectionを別証拠とする。Build/Targetを要するときだけ実Source byteと実Build入力を照合（TEI #2595）；Batch/低レイテンシ/マルチモーダルを初回Harness選択の必須要件にしない。EKI Taskを要する時だけ契約・Body/Recoveryを検証する。
+- **TAIの既存資産再利用**：[merged TAI #105](https://github.com/hat47x/tai-pleroma/pull/105)のreference-tei-modelは限定SCN-001のvalidate/Catalog/ModelBinding/Pinned Checkoutを実接続できる。別TEI Workspace、別Source、Skillハーネスロードまでの共通証明とはしない。新たなTEI Bridge/Pin EngineをTAI Draft #270へ実装しない。
+- **価値と実装境界**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の過剰要件監査に従い、生成AIに検証候補の数を制限せず、標準構成に必要な機構を増やさない。Owner/Authority/実Source読込の確認自体は削減対象とせず、Product単独TaskにTAI、EKI、SHO、全Scenarioを必須化しない。
+
+今回の差分は**実験Runbook＋SK-02採点範囲＋計画の更新**。TEI #2822〜24/merged #2819はProduct Ownerが別環境で行った限定実観測、TAI #105は既存Connection実装。TAI自身による今回の実TEI CLI／外部Harness／AI自動生成のScenario 実Trial、独立Oracle採点、実Provider/Consumer効果は **NOT RUN**。Draft #270を維持する。
