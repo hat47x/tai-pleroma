@@ -3,12 +3,12 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-03",
+  "date": "2026-11-04",
   "host": "Windows with a local TLS-terminating proxy in front of SUI on loopback",
   "command": "python integrations/pilot-sui-document/assembler/proxy_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-proxy-2026-11-03.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-sxl\\evaluations\\artifacts\\scn-003-document.json",
+    "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {

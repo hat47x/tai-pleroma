@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def run_step(name, args, timeout=900, retries=1):
+def run_step(name, args, timeout=900, retries=2):
     started = time.time()
     attempts = 0
     while True:
@@ -26,6 +26,7 @@ def run_step(name, args, timeout=900, retries=1):
         )
         if completed.returncode == 0 or attempts > retries:
             break
+        time.sleep(3)
     return {
         "returncode": completed.returncode,
         "attempts": attempts,
@@ -196,6 +197,14 @@ def main():
             ],
         ),
         "gate": run_step("gate", ["integrations/tools/gate_recheck.py"]),
+        "sui_pg_tls": run_step("sui_pg_tls", ["integrations/pilot-sui-document/assembler/postgres_tls_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json"]),
+        "sui_ca_chain": run_step("sui_ca_chain", ["integrations/pilot-sui-document/assembler/ca_chain_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-ca-chain-2026-11-03.json"]),
+        "sui_proxy": run_step("sui_proxy", ["integrations/pilot-sui-document/assembler/proxy_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-proxy-2026-11-03.json"]),
+        "sui_multi_instance": run_step("sui_multi_instance", ["integrations/pilot-sui-document/assembler/postgres_multi_instance_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-multi-instance-2026-11-03.json"]),
+        "sui_audit": run_step("sui_audit", ["integrations/pilot-sui-document/assembler/audit_export_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-audit-2026-11-03.json"]),
+        "sui_admin": run_step("sui_admin", ["integrations/pilot-sui-document/assembler/admin_plane_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-admin-2026-11-03.json"]),
+        "sui_provision": run_step("sui_provision", ["integrations/pilot-sui-document/assembler/provision_user_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-provision-2026-11-03.json"]),
+        "sui_tei_reference": run_step("sui_tei_reference", ["integrations/pilot-sui-document/assembler/tei_reference_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-reference-2026-11-03.json"]),
     }
     if args.eki_control:
         steps["eki_submit"] = run_step(
