@@ -141,3 +141,44 @@ Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Opera
 4. **Independent Oracleと総費用**：比較適格なGroupについてのみ、独立採点者がTool原出力と期待を照合し、正答/誤成功/Token/Time/人手確認を別に記録する。Oracleを片側SessionやSkill本文へ混入させない。
 
 **限定の新規実測**：Checker本体9,361byte、SHA-256 `be2185ff77fb8ab0e03a3c7fc6462f21ad3ce3ede8c83448482e86073274e565`／Git blob `7ea3d34387eee832d4f190d6264d19988d8027f1`。Node.js v22.16.0で公開架空Trial票の**20/20自己試験PASS**（`node --check` PASS）。実Harnessでの4試行、Product Skillの実Load、外部AIの送出、OS/Host Policy強制、独立Oracle採点・Owner受理は**NOT RUN**。別の新Runnerや中央Host・新しい認可正本を追加しない。
+
+
+## 11. 2026-11-04：Source実消費とCLI検証成功を分離するS1/SK-02入場条件
+
+### 他チャットの実測を既存実験に接合
+
+- [TEI #2822](https://github.com/hat47x/tei-platform/issues/2822)（WSL/Go実CLI、main 97aba8146）：利用者定義0件のWorkspaceでも **validateはok=true／diagnostics=[]／exit0**。model catalogは **標準stdの13件**を返し、sourceStatus=not-indexed。従ってvalidate成功＋Catalog非空は利用者のSourceをロードした証拠ではない。
+- [TEI #2823](https://github.com/hat47x/tei-platform/issues/2823)（同環境の実CLI）：Workspace manifestの未知・不存在rootが無診断となる例、workspace-filesにはあるがLoaderで解析しない拡張子／ファイル名がある。**Declared・Enumerated・Parsed/Loadedを区別**し、未読込ファイルの不存在や品質合格を主張しない。
+- [TEI #2824](https://github.com/hat47x/tei-platform/issues/2824)（同環境の実CLI）：commandsは**19件**の限定一覧だが、既存契約文書に「13件」の古い記述。catalog上のworldは安定したtei.cli.* JSON契約外、各entryに個別schemaVersionなし。**Tool名・read-only属性・安定JSON契約・全Tool可用性は別**。標準型catalog13件とcommands19件は別の数値。
+- [TEI merged #2819](https://github.com/hat47x/tei-platform/pull/2819)はGenerator宣言Source D1と実Go Build入力D2の相違を拒否しない限定Go Characterization。宣言したSourceのHash一致は、実Buildが消費したByte同一性を証明しない。ただし最初のSK-02 read-only試験へGeneratorの検証まで必須化しない。
+- [TEI Draft #2828](https://github.com/hat47x/tei-platform/pull/2828)は既存Driver Scenario v0にAI生成JSON候補をつなぐtest-only提案。AIが追加したテストの自己ExpectedとProduct独立Oracleは別。TAIに第二Scenario Runnerを作らない。
+
+### 実Sourceに到達したことを一件のClaimへ束縛
+
+| 段階 | S1で固定・実確認するもの | 合格とみなさないもの |
+| --- | --- | --- |
+| W0 **Declared** | manifestのroot、元Source bytes、実行前に固定した期待Subject kind/id | YAMLに記述しただけのもの |
+| W1 **Discovered** | 同一実Binaryのcommandsと、必要ならProduct-only S1でworkspace-files | 管理対象ファイルの一覧を実Parser消費と同一視すること |
+| W2 **Loaded/Applicable** | model catalogで期待する**利用者定義**SubjectをID/namespace/sourceStatusまで確認、同版inspectでSource locatorへ到達 | 標準std13件だけ、空・未解析のSource、他Subjectの成功 |
+| W3 **Validated** | validateのexit、ok、Warning/diagnostics、WorldFP/SourceIndexFPをW2と照合 | validate.ok=trueだけで必要Sourceを全ロードしたという結論 |
+| W4 **Executed** | 実Binary SHA/argv/cwd、Tool stdout・exit/diagnostics、同一Session・Audience、必要なLoaded Source版 | Skill文書・Agent自己申告・Tool候補だけによる実実行主張 |
+| W5 **Observed** | 外部Harnessへの許可済み実受信範囲、独立ExpectedによるTask正答・Warning/Unknown・Sourceの引用 | Product Skill配布、比較適格、外部Effect/Reader/品質期限の自動PASS |
+
+**二つの採点を統合しない**：現[SK-02比較適格性Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)は四Sessionのメタデータ整合のみを検査する。H2/H3がともに空Workspaceなら、実験条件は一致していても**要求した利用者SubjectのRead成功は不成立**。SK-02正答採点の独立OracleがW0〜W3に対する実CLI/Source Evidenceを評価する。型が正しい自己申告を実Sourceのロード証明にしない。新Loader/Registry/共通Schema追加なし。
+
+### 既存TAI接続を重複実装しない
+
+[TAI merged #105](https://github.com/hat47x/tai-pleroma/pull/105)のmainにある [reference-tei-model](https://github.com/hat47x/tai-pleroma/blob/main/tools/reference-tei-model/README.md) は、SCN-001のObservation／RuleCandidateの**宣言された属性と実CatalogのmodelBinding=bound**、validateJson=consistent、選択時のexpect-commit/expect-go-version／Checkout不変を照合する。実TEI接続の限定証拠となるが、SK-02で選ぶ他Workspace/Subject、H2/H3実Harness Loader、全Source Closure、Host/Owner受理を代表するものではない。新しいTAI Pin Driver/Tool正本を増やさない。
+
+### SK-SRC01〜06：独立Expected候補（追加試行はすべてNOT RUN）
+
+| ID | 負例・正例 | 期待する判定 |
+| --- | --- | --- |
+| SRC01 | 利用者定義0件でもvalidate.ok=true、標準13件 | Tool正常と要求Subject読込成功を分け、後者は未達 |
+| SRC02 | workspace-filesに列挙されるが未解析のファイル | Enumeratedのみ、Loadedではない |
+| SRC03 | manifestの存在しないroot／typoが無診断 | 安全拒否済みと主張せず、宣言と実Load差を記録 |
+| SRC04 | commands 19件、古い文書13件、world契約外 | Command存在と安定JSON/全Tool契約を分離 |
+| SRC05 | 独立に指定した利用者Subjectへcatalog＋inspect＋validateが同版で到達 | **指定Subjectの限定read-only観測**のみ合格 |
+| SRC06 | Generator宣言D1と実Build D2が相違 | Generator試行は不適格／証拠不足。初回read-only Taskには不要な追加要件を課さない |
+
+**帰属**：TEI #2822〜24のSource/CLI修正、#2595のBuild Source固定は各TEI Ownerの判断。TAIが実測したのは本節の文書照合のみ。新SK-SRC試験、実H2/H3四Session、独立Oracle/Provider/OS/Network、Owner Meaning Acceptanceは**NOT RUN**。既存のTool-onlyとProduct Skillの実験順を変更しない。
