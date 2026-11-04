@@ -252,3 +252,217 @@ reasons="...: reserve lease: NOT_YET_VALID: approval is issued in the future"
 ## 更新後の一括検証（2026-11-03）
 
 TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証16段を実行し、すべて通った。EKI投入には現在のEKIからビルドした`eki-control`を使った。[receipt](../evaluations/records/TEI-suite-2026-11-03.json)
+
+## SUIの文書ルートのテスト（2026-11-03）
+
+SUIの文書ルートに関するテスト7ファイルを実行し、122件すべて通った。[receipt](../evaluations/records/SUI-docs-tests-2026-11-03.json)
+
+往復・境界・テナント分離・アクセス制御連携・監査連携・A1エラー契約を含む。`PYTHONPATH=03_Implement/backend/src`が必要で、実配備ではない。
+
+## SUI全テストの1回実行（2026-11-03）
+
+SUIのbackendテスト全体を1回実行した。[記録](../evaluations/SUI-full-tests-2026-11-03.json)
+
+```text
+passed 2082 / failed 14 / skipped 49 / deselected 8
+所要 約23分
+```
+
+失敗14件の内訳は、実行環境に由来するものだった。
+
+- `test_codegen_pipeline.py` 12件: 子プロセスの出力がcp932で表現できず失敗
+- `test_external_content_store.py` 2件: `C:\Users\...\Temp`配下への書き込みが拒否される
+
+製品の挙動に関する表明の失敗ではないが、再実行していないため件数は1回の観測である。
+
+## SEIのCLIで判断を記録する（2026-11-03）
+
+投影したSEI判断recordを、SEI自身のCLIで記録し、bundleの書き出しと検証まで通した。[receipt](../evaluations/records/SEI-TEI-cli-2026-11-03.json)
+
+```text
+sei init → sei add decision → sei resume → sei export → sei verify
+checks 6/6
+```
+
+- storeは一時ディレクトリ
+- `resume`のスナップショットdigestを記録
+- policy gateは通していない
+
+## SEIのgateで許可と拒否（2026-11-03）
+
+投影した判断の文面で、SEIのpolicy gateの許可・拒否の両方を確認した。[receipt](../evaluations/records/SEI-TEI-gate-2026-11-03.json)
+
+- 責任者とrecommendationを備えた判断: `verdict=allow`、終了コード0、`decision_digest`あり
+- 責任者の無い判断: `verdict=deny`、終了コード3、理由は「責任者を挙げていない」
+- gateはAuthority・行為との一致・Semantic Lineageを検証しないと明示している
+
+## SEIのMCPでAIツールから読む（2026-11-03）
+
+SEIのstdio MCPサーバを起動し、`initialize`・`tools/list`・`tools/call resume`を送った。[receipt](../evaluations/records/SEI-TEI-mcp-2026-11-03.json)
+
+- 公開されるツール: `resume`・`add_recommendation`・`check_decision`
+- `resume`は記録済みの判断を返す
+- 実AIクライアント・write系ツール・セッション分離は未確認
+
+## MCP経由のcheck_decision（2026-11-03）
+
+SEIのMCPツール`check_decision`を、許可・拒否の両方で呼んだ。[receipt](../evaluations/records/SEI-TEI-mcp-check-2026-11-03.json)
+
+- 責任者とrecommendationを備えた判断: `verdict=allow`、`decision_digest`あり
+- 責任者の無い判断: `verdict=deny`、理由あり
+- 応答は`content[].text`にJSON文字列として入る
+
+## MMIのunitレーン1回実行（2026-11-03）
+
+MMIの`test:unit`を1回実行した。[記録](../evaluations/MMI-unit-tests-2026-11-03.json)
+
+```text
+tests 1329 / fail 1
+失敗: hashed sample and kit text assets contain no CR after checkout
+```
+
+失敗は、WindowsのCRLFチェックアウトで文書資産にCRが含まれるためだった。製品挙動の失敗ではないが、LFのチェックアウトでの再実行はしていない。CLIにformat profileを適用する経路は無く、形式プロファイルは拡張側の資産である。
+
+## MMI形式プロファイルとの差分（2026-11-03）
+
+MMIの`FormatProfileV1`は`provenance`（`sourceKind`・`sourceDigest`・`generationMethod`）と任意の`approval`を必須に含む。こちらの投影recordは`features`・`sourceEvidence`までで、`provenance`を持たない。
+
+- 契約の`note`にも「provenanceは対象外」と書いてある
+- そのため、MMIの`assertFormatProfile`にそのまま通すことはできない
+- MMIのCLIにもformat profileを適用する経路が無い
+
+form profileをMMI側の型として成立させるには、投影に`provenance`を足すか、MMIの受理境界を別に定める必要がある。
+
+## MMI形式プロファイルにprovenanceを足す（2026-11-03）
+
+投影の契約とTEIへ`sourceKind`・`sourceDigest`・`generationMethod`を足し、artifactの`profile.provenance`として組み立てるようにした。これでMMIの`assertFormatProfile`が投影を受け付ける。[receipt](../evaluations/records/MMI-TEI-profile-2026-11-03.json)
+
+- 属性は3つ増え、契約は12項目になった
+- `generationMethod`は`worksheet-prototype-v1`に固定
+- `approval`は対象外のまま
+
+## EKIの取り消し受理（2026-11-03）
+
+実行中（`running`）のTaskへ`POST /v1/tasks/{id}/cancel`を送った。[attempt](../evaluations/EKI-cancel-attempt-2026-11-03.json)
+
+```text
+202 {"schema":"eki.task-cancel-accepted/v1","status":"cancellation-requested"}
+4秒後の公開状態: running
+```
+
+取り消しは受理されるが、attemptが飛行中でWorkerが動いていないため、公開状態は`running`のままだった。Idempotency-Keyが必須で、無い場合は400になる。
+
+## EKIの実行系の範囲（2026-11-03 修正）
+
+EKI `8159af1`には`internal/agent/executor`・`internal/agent/nativerunner`・`internal/agent/assignment`があり、Agent側でWorkOrderのassignmentを受けてコマンドを実行する仕組みがある（sandbox・資源上限・停止を含む）。したがって「実行系が無い」は正確ではない。
+
+これまで確認したのは次である。
+
+- Client APIのTaskは`queued`→（policy・Worker行ありで）`running`まで進む
+- Client APIのTaskがassignmentとしてAgentへ届き、実行され、結果がClient APIのTask状態へ戻る経路は未確認
+- 結果受理（Result Acceptance）の部品はあるが、`eki-control`の起動経路との接続は未確認
+
+次に確かめるべきは、Client APIのTaskからAgent実行までの縦断である。
+
+## PostgresとTLSの同時構成（2026-11-03）
+
+埋め込みPostgresと自己署名TLSを同時に有効にしてSUIを起動し、保存・取得を確認した。[receipt](../evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json)
+
+```text
+httpsReady true / create 200 / fetch 200 / roundTrip true / anonymous 401
+```
+
+証明書は自己署名で、リバースプロキシは介していない。管理DB・実CA・配備は依然として未検証である。
+
+## TLS終端プロキシ配下（2026-11-03）
+
+SUIを平文で起動し、手前のローカルTLS終端プロキシ（`X-Forwarded-Proto`等を付与）経由で保存・取得した。[receipt](../evaluations/records/SUI-TEI-proxy-2026-11-03.json)
+
+```text
+proxyReady true / create 200 / fetch 200 / roundTrip true / anonymous 401
+```
+
+プロキシは検証用の小さな実装で、実運用のリバースプロキシ・HSTS・実証明書は未検証である。
+
+## Worker登録（mTLS）と実行の範囲（2026-11-03）
+
+`eki-control gen-worker-ca`でCAを作り、`enroll-token`を発行し、mTLSのWorker listenerへ`eki-agent enroll`で登録できた。[receipt](../evaluations/EKI-worker-enroll-2026-11-03.json)
+
+```text
+enrolled as wrk_5daff2b4de9773099aed44b43b5aa10b in trust domain tei.test
+state: control-anchor.pem / worker-ca.pem / worker-identity.pem
+```
+
+ただし、Agentのassignment実行は**設定済みの固定コマンドを1つ実行する**ものであり、Taskの内容を実行するものではない（`internal/agent/service/assignments.go`の`ExecutionConfig`: "This is not a sandbox."、`events_file`が観測結果）。したがってClient APIのTaskからAgentへ仕事が渡って実行される縦断は、現時点のEKIでは成立しない。
+
+## ローカルCAの証明書チェーン（2026-11-03）
+
+ルートCAとサーバ証明書の二層構成でSUIを起動し、クライアントはルートCAだけを信頼して接続した。[receipt](../evaluations/records/SUI-TEI-ca-chain-2026-11-03.json)
+
+```text
+chainTrusted true / create 200 / fetch 200 / roundTrip true / untrustedRefused true
+```
+
+- サーバ証明書はローカルCAが署名（SANに`127.0.0.1`）
+- システム信頼ストアのままのクライアントは接続を拒否される
+- 公開CAではないため、実運用の証明書ではない
+
+## 複数インスタンスと共有DB（2026-11-03）
+
+1つのPostgresに2つのSUIプロセスを接続し、インスタンス間の読み書きとETagの扱いを確認した。[receipt](../evaluations/records/SUI-TEI-multi-instance-2026-11-03.json)
+
+```text
+instancesReady true / create(A) 200 / crossRead(B) 200 / crossUpdate(B) 200 / staleUpdate(A) 409
+```
+
+- Aで作成した文書をBで読める
+- Bの更新後、Aの古いETagは409で拒否される
+- 同一ホスト上の2プロセスであり、別ホスト配備ではない
+
+## Worker実行を止めているもの（2026-11-03）
+
+Agentのassignment実行には`assignment`設定が必要で、次の項目がすべて必須である（`internal/agent/service/assignments.go`）。
+
+- `trust_anchor_file`: `internal/agent/trustanchor`の形式。`trust_domain`・`policy_revision`・`bundle_revision`・`validated_at`・各種上限・Authority公開鍵に加え、`control_public_key`と`trust_bundle_versions`（Control Planeが署名したTrust Bundleの履歴）を持つ
+- `replay_db`・`events_file`
+- `approved_executors`（`decision_id`・`payload_digest`・`executor_digest`）
+- `machine`・`ceiling_percent`・任意の`execution`
+
+`eki-control`/`eki-agent`のCLIにはTrust Bundleを署名・発行するサブコマンドが無く、`conformance/process`のテストが内部パッケージで組み立てている。したがって、TAI側から実プロセスでassignment実行まで進めるには、まずTrust Bundleの発行手順（#78・#478）が必要になる。
+
+## MMIのinspect（実xlsx・2026-11-03）
+
+MMIのCLIでリポジトリ内の実xlsxを読み取り専用でinspectした。[receipt](../evaluations/records/MMI-inspect-2026-11-03.json)
+
+```text
+candidates 3 / contract mmi.semantic-candidate/v1
+checks 5/5（exit 0・contract・候補あり・sourceDigestあり・table-rangeあり）
+```
+
+- シートごとの領域とヘッダを候補として返す
+- 各候補に`sourceDigest`（sha256）が付く
+- 形式プロファイルの適用や書き込みは行わない
+
+## 監査ログのHTTPエクスポート（2026-11-03）
+
+SUIの監査エクスポートをHTTPトランスポートで有効にし、ローカルのシンクで受信した。[receipt](../evaluations/records/SUI-TEI-audit-2026-11-03.json)
+
+```text
+create 200 / view 200 / eventCount 1 / docId一致 / Bearerヘッダ一致
+```
+
+- 監査イベントは文書の閲覧（view）で発行される
+- `SUI_AUDIT_ALLOW_IN_SAFE_MODE=true`が無いとsafe modeのイベントは送られない
+- シンクはローカルの受信用プロセス
+
+## 管理プレーンの認証分離（2026-11-03）
+
+`GET /admin/provision/audit`で、管理キーと業務キーの分離を確認した。[receipt](../evaluations/records/SUI-TEI-admin-2026-11-03.json)
+
+```text
+anonymous 401 / business key 401 / admin key 200（events配列）
+```
+
+- 管理者キーは`X-Admin-Api-Key`ヘッダ
+- 業務キー`X-Api-Key`では管理APIに到達できない
+- 利用者provisionとIdP段階（stage B）は未確認

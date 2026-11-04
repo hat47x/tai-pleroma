@@ -78,6 +78,11 @@ def main():
             print(executed.stderr, file=sys.stderr)
             return 1
         record = json.loads(json.loads(executed.stdout)["text"])
+        record["provenance"] = {
+            "sourceKind": record.pop("sourceKind"),
+            "sourceDigest": record.pop("sourceDigest"),
+            "generationMethod": record.pop("generationMethod"),
+        }
 
     tei_commit = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=args.tei_repo, capture_output=True, text=True

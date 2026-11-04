@@ -150,6 +150,10 @@ REAL_RECORDS = (
     "evaluations/records/SEI-TEI-artifact-2026-11-03.json",
     "evaluations/records/MMI-TEI-format-profile-selection-2026-11-03.json",
     "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
+    "evaluations/records/MMI-TEI-profile-2026-11-03.json",
+    "evaluations/records/MMI-inspect-2026-11-03.json",
+    "evaluations/records/SUI-TEI-audit-2026-11-03.json",
+    "evaluations/records/SUI-TEI-admin-2026-11-03.json",
     "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
     "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json",
     "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
@@ -161,6 +165,10 @@ REAL_RECORDS = (
     "evaluations/records/MMI-TEI-record-2026-11-03.json",
     "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
     "evaluations/records/EKI-TEI-record-2026-11-03.json",
+    "evaluations/records/SEI-TEI-cli-2026-11-03.json",
+    "evaluations/records/SEI-TEI-gate-2026-11-03.json",
+    "evaluations/records/SEI-TEI-mcp-2026-11-03.json",
+    "evaluations/records/SEI-TEI-mcp-check-2026-11-03.json",
     "evaluations/records/EKI-TEI-submit-2026-11-03.json",
     "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
@@ -171,6 +179,9 @@ REAL_RECORDS = (
     "evaluations/records/SUI-saas-callback-contract-2026-11-03.json",
     "evaluations/records/SUI-saas-identity-2026-11-03.json",
     "evaluations/records/SUI-saas-tests-2026-11-03.json",
+    "evaluations/records/SUI-docs-tests-2026-11-03.json",
+    "evaluations/records/SUI-auth-flow-tests-2026-11-03.json",
+    "evaluations/records/SUI-session-tests-2026-11-03.json",
     "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
     "evaluations/records/SCN-003-artifact-links-2026-11-03.json",
     "evaluations/records/SCN-003-compose-2026-11-03.json",
@@ -179,6 +190,10 @@ REAL_RECORDS = (
     "evaluations/records/TEI-suite-2026-11-03.json",
     "evaluations/records/SUI-TEI-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json",
+    "evaluations/records/SUI-TEI-proxy-2026-11-03.json",
+    "evaluations/records/SUI-TEI-ca-chain-2026-11-03.json",
+    "evaluations/records/SUI-TEI-multi-instance-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-migrate-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-etag-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-concurrency-2026-11-03.json",
@@ -305,6 +320,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
+        if "SUI-TEI-multi-instance" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("crossUpdateStatus") != 200 or observed.get("staleUpdateStatus") != 409:
+                errors.append(f"SUI multi-instance check did not hold: {relative}")
+        if "SUI-TEI-ca-chain" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("untrustedRefused") is not True:
+                errors.append(f"SUI CA chain check did not hold: {relative}")
+        if "SUI-TEI-proxy" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("anonymousStatus") not in (401, 403):
+                errors.append(f"SUI behind the proxy did not round-trip or refuse anonymous writes: {relative}")
+        if "SUI-TEI-postgres-tls" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("anonymousStatus") not in (401, 403):
+                errors.append(f"SUI over PostgreSQL+TLS did not round-trip or refuse anonymous writes: {relative}")
         if "SUI-TEI-postgres-retry-evidence" in relative:
             observed = data.get("observed", {})
             if observed.get("retries", 0) < 1 or data.get("result") != "PASS":
@@ -333,7 +364,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative:
+        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
             observed = data.get("observed", {})
             expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
             if data.get("result") != expected:
@@ -366,7 +397,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative:
+        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("documentRows") != 1:
                 errors.append(f"SUI Postgres save did not persist one document: {relative}")
@@ -394,6 +425,18 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allIdentical") is not True or observed.get("count") != 3:
                 errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
+        if "SUI-session-tests" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
+                errors.append(f"SUI session test subset did not pass: {relative}")
+        if "SUI-auth-flow-tests" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
+                errors.append(f"SUI auth flow tests did not pass: {relative}")
+        if "SUI-docs-tests" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
+                errors.append(f"SUI docs test subset did not pass: {relative}")
         if "SUI-saas-tests" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
@@ -434,6 +477,23 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202 or observed.get("taskStatus") != "queued":
                 errors.append(f"EKI did not accept the projected TaskRequest: {relative}")
+        if "SEI-TEI-mcp-check" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SEI MCP check_decision allow/deny pair did not hold: {relative}")
+        if "SEI-TEI-mcp" in relative and "mcp-check" not in relative:
+            observed = data.get("observed", {})
+            checks = observed.get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
+                errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
+        if "SEI-TEI-gate" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("allowVerdict") != "allow" or observed.get("denyVerdict") != "deny":
+                errors.append(f"SEI gate allow/deny pair did not hold: {relative}")
+        if "SEI-TEI-cli" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SEI CLI recording did not pass: {relative}")
         if "EKI-TEI-record" in relative:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
@@ -478,6 +538,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
+        if "SUI-TEI-admin" in relative and "admin-path" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
+                errors.append(f"SUI admin plane check did not hold: {relative}")
+        if "SUI-TEI-audit" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("eventCount", 0) < 1 or observed.get("viewStatus") != 200:
+                errors.append(f"SUI audit export did not deliver an event: {relative}")
+        if "MMI-inspect" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"MMI inspect contract checks did not all pass: {relative}")
+        if "MMI-TEI-profile" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("accepted") is not True:
+                errors.append(f"MMI did not accept the projected format profile: {relative}")
         if "MMI-TEI-artifact" in relative:
             observed = data.get("observed", {})
             if observed.get("profileValid") is not True:

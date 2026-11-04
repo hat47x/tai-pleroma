@@ -1,0 +1,19 @@
+﻿{
+  "schema": "tai.reference.eki-worker-enroll/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with a locally built eki-control and eki-agent, a generated Worker CA and a self-signed Control Plane certificate",
+  "command": "eki-control gen-worker-ca, eki-control enroll-token, eki-agent enroll (mTLS worker listener)",
+  "result": "PASS",
+  "observed": {
+    "workerIdentity": "wrk_5daff2b4de9773099aed44b43b5aa10b",
+    "trustDomain": "tei.test",
+    "stateFiles": ["control-anchor.pem", "worker-ca.pem", "worker-identity.pem"],
+    "enrolled": true,
+    "assignmentExecution": "fixed configured command only; the Agent does not execute Task payloads"
+  },
+  "scope": "Registers a Worker through the mTLS enrollment path and records the resulting identity. It does not dispatch a Task to the Worker or verify execution.",
+  "limitations": ["The Control Plane and Worker ran on one host for less than a minute.", "The Worker CA is test-only."]
+}

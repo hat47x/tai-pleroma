@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -10,18 +11,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def run_step(name, args, timeout=900):
+def run_step(name, args, timeout=900, retries=1):
     started = time.time()
-    completed = subprocess.run(
-        [sys.executable, *args],
-        capture_output=True,
-        encoding="utf-8",
-        errors="replace",
-        timeout=timeout,
-        cwd=ROOT,
-    )
+    attempts = 0
+    while True:
+        attempts += 1
+        completed = subprocess.run(
+            [sys.executable, *args],
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout,
+            cwd=ROOT,
+        )
+        if completed.returncode == 0 or attempts > retries:
+            break
     return {
         "returncode": completed.returncode,
+        "attempts": attempts,
         "seconds": round(time.time() - started, 2),
         "stdoutTail": completed.stdout.strip().splitlines()[-3:],
         "stderrTail": completed.stderr.strip().splitlines()[-3:],
@@ -37,18 +44,32 @@ def main():
     parser.add_argument("--eki-openapi", default="")
     parser.add_argument("--eki-control", default="")
     parser.add_argument("--skip-checker", action="store_true")
+    parser.add_argument("--sei-repo", default="")
+    parser.add_argument("--mmi-repo", default="")
     parser.add_argument("--out", default="evaluations/records/TEI-suite-2026-11-03.json")
     args = parser.parse_args()
+    if args.sei_repo:
+        os.environ["SEI_REPO"] = args.sei_repo
 
     steps = {
         "checker": run_step("checker", ["tools/check-synthetic-receipts/check.py", "--root", str(ROOT)]),
         "artifacts": run_step("artifacts", ["integrations/tools/validate_artifacts.py"]),
         "digests": run_step("digests", ["integrations/tools/verify_artifact_digests.py"]),
+        "mmi_profile": run_step("mmi_profile", ["integrations/tools/mmi_profile_assert.py"]),
+        "mmi_consumer": run_step("mmi_consumer", ["integrations/tools/mmi_consumer_tests.py"]),
         "saas_adapters": run_step("saas_adapters", ["integrations/tools/sui_saas_adapter_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_oauth": run_step("saas_oauth", ["integrations/tools/sui_saas_oauth_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_login": run_step("saas_login", ["integrations/tools/sui_saas_login_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_callback": run_step("saas_callback", ["integrations/tools/sui_saas_callback_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_identity": run_step("saas_identity", ["integrations/tools/sui_saas_identity_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
+        "sui_saas_tests": run_step("sui_saas_tests", ["integrations/tools/sui_saas_tests.py", "--sui-repo", args.sui_repo]),
+        "sui_docs_tests": run_step("sui_docs_tests", ["integrations/tools/sui_docs_tests.py", "--sui-repo", args.sui_repo]),
+        "sui_auth_flow_tests": run_step("sui_auth_flow_tests", ["integrations/tools/sui_auth_flow_tests.py", "--sui-repo", args.sui_repo]),
+        "sui_session_tests": run_step("sui_session_tests", ["integrations/tools/sui_session_tests.py", "--sui-repo", args.sui_repo]),
+        "sei_cli": run_step("sei_cli", ["integrations/tools/sei_cli_record.py"]),
+        "sei_gate": run_step("sei_gate", ["integrations/tools/sei_gate_check.py"]),
+        "sei_mcp": run_step("sei_mcp", ["integrations/tools/sei_mcp_probe.py"]),
+        "sei_mcp_check": run_step("sei_mcp_check", ["integrations/tools/sei_mcp_check_decision.py"]),
         "scenario": run_step("scenario", ["integrations/tools/check_scenario_artifacts.py"]),
         "pipeline": run_step(
             "pipeline",
@@ -131,6 +152,8 @@ def main():
                 args.sui_repo,
                 "--artifact",
                 "evaluations/artifacts/scn-003-document.json",
+                "--retry-transient",
+                "0",
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-contention-2026-11-03.json",
             ],
@@ -172,6 +195,7 @@ def main():
                 args.sui_repo,
             ],
         ),
+        "gate": run_step("gate", ["integrations/tools/gate_recheck.py"]),
     }
     if args.eki_control:
         steps["eki_submit"] = run_step(

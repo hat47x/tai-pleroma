@@ -1,0 +1,19 @@
+﻿{
+  "schema": "tai.reference.eki-cancel-attempt/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with a locally built eki-control, an embedded SQLite store with a policy row and a registered-worker row",
+  "command": "POST /v1/tasks/{id}/cancel with Idempotency-Key, then GET /v1/tasks/{id}",
+  "result": "OBSERVED",
+  "observed": {
+    "cancelStatus": 202,
+    "cancelBody": {"schema": "eki.task-cancel-accepted/v1", "status": "cancellation-requested"},
+    "statusAfterSeconds4": "running",
+    "attemptInFlight": true,
+    "workerRunning": false
+  },
+  "scope": "Records that cancellation is accepted while the task's public status stays running when an attempt is in flight and no worker acts on it. It does not prove cancellation semantics for a running worker.",
+  "limitations": ["The task came from an earlier dispatch run; the store was not reset."]
+}
