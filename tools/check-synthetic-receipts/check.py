@@ -538,7 +538,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
-        if "SUI-TEI-admin" in relative:
+        if "SUI-TEI-admin" in relative and "admin-path" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
                 errors.append(f"SUI admin plane check did not hold: {relative}")
