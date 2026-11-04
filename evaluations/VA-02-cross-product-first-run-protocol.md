@@ -105,7 +105,7 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 
 ## 7. 入力閉包・CLI Discovery・EKI結果値を実証前に再照合
 
-[VA-03：入力閉包と契約発見の事前確認](VA-03-evidence-readiness-preflight.md)をP0→P1の**証拠Claim限定**に接続する。TEI #2822/#2823の実再現ではvalidate ok=trueでも利用者宣言0件またはSourceが未読込となり得る。[TEI #2824](https://github.com/hat47x/tei-platform/issues/2824)ではdiscoveryと契約一覧にドリフトがある。従って**Scenario/World/Toolchainのfingerprintがあることは、その前段で要求されたSourceがすべて実消費された証拠ではない**。
+[VA-04：入力閉包と契約発見の事前確認](VA-04-evidence-readiness-preflight.md)をP0→P1の**証拠Claim限定**に接続する。TEI #2822/#2823の実再現ではvalidate ok=trueでも利用者宣言0件またはSourceが未読込となり得る。[TEI #2824](https://github.com/hat47x/tei-platform/issues/2824)ではdiscoveryと契約一覧にドリフトがある。従って**Scenario/World/Toolchainのfingerprintがあることは、その前段で要求されたSourceがすべて実消費された証拠ではない**。
 
 - P0：宣言→発見→消費→Assertion→現在資格/実受領を5つのClosureで点検し、欠落/不明/取得不能なら該当Claimをlimitedまたはunknownと表示。安全な静的候補追加は継続してよい。
 - P1/AI-EXT：既存6-Step ScenarioのCLI結果と、読み込めたUser定義/対象Scope、命令の現行JSON契約、未対応/skipを別々に記録。Candidate増加をCoverage完全性としない。
