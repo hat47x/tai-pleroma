@@ -8,6 +8,8 @@
  */
 const assert = require("node:assert/strict");
 const {spawnSync} = require("node:child_process");
+// SK03_DUPLICATE_JSON_HARDENING_20261104: share the existing test-only JSON duplicate-member guard.
+const {parseTrialJSON} = require("./check-sk02-pair-eligibility.cjs");
 
 function producer(kind) {
   const meta = {
@@ -23,6 +25,21 @@ function producer(kind) {
   if (kind === "one") process.stdout.write(JSON.stringify({rows:[{id:"order-1"}],meta}));
   else if (kind === "broken") {process.stderr.write("simulated provider error\n");process.exitCode = 2;}
   else if (kind === "malformed") process.stdout.write('{"rows":[');
+  else if (kind === "duplicate-coverage") {
+    const raw=JSON.stringify({rows:[],meta});
+    process.stdout.write(raw.replace('"coverage":"complete"',
+      '"coverage":"partial","coverage":"complete"'));
+  }
+  else if (kind === "escaped-duplicate-coverage") {
+    const raw=JSON.stringify({rows:[],meta});
+    process.stdout.write(raw.replace('"coverage":"complete"',
+      '"coverage":"partial","cover\\u0061ge":"complete"'));
+  }
+  else if (kind === "duplicate-rows") {
+    const raw=JSON.stringify({rows:[],meta});
+    process.stdout.write(raw.replace('"rows":[]',
+      '"rows":[{"id":"a"}],"rows":[]'));
+  }
   else process.stdout.write(JSON.stringify({rows:[],meta}));
 }
 
@@ -39,7 +56,7 @@ function clone(v){return JSON.parse(JSON.stringify(v));}
 function decode(run) {
   if (run.error || run.signal || run.exit !== 0) return {error:"producer-failed"};
   try {
-    const value=JSON.parse(run.stdout);
+    const value=parseTrialJSON(run.stdout);
     if (!value || !Array.isArray(value.rows) || !value.meta || typeof value.meta!=="object")
       return {error:"producer-unparseable"};
     return {value};
@@ -91,6 +108,9 @@ function selfTest() {
     ["NC14 same World value, SourceIndex moved",valid,clone(projected),{...claim,sourceIndex:"index-2"},"stale-or-different-binding"],
     ["NC15 Tool truncates output",{...valid,stdout:valid.stdout.slice(0,20)},clone(projected),clone(claim),"producer-unparseable"],
     ["NC16 no read cohort in source witness",valid,((v)=>{delete v.meta.cohort;return v;})(clone(projected)),clone(claim),"insufficient-evidence"],
+    ["NC17 duplicate coverage overrides partial",observe("duplicate-coverage"),clone(projected),clone(claim),"producer-unparseable"],
+    ["NC18 unicode escaped duplicate coverage",observe("escaped-duplicate-coverage"),clone(projected),clone(claim),"producer-unparseable"],
+    ["NC19 duplicate root rows overrides witness",observe("duplicate-rows"),clone(projected),clone(claim),"producer-unparseable"],
   ];
   const results=[];
   for (const [name,run,p,requested,expected] of cases){
