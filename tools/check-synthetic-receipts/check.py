@@ -494,7 +494,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SEI gate variant checks did not all pass: {relative}")
-        if "SEI-TEI-gate" in relative:
+        if "SEI-TEI-gate" in relative and "gate-variants" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allowVerdict") != "allow" or observed.get("denyVerdict") != "deny":
                 errors.append(f"SEI gate allow/deny pair did not hold: {relative}")
