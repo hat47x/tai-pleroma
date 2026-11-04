@@ -478,3 +478,15 @@ POST 201 / provisioned true / reviewerRef・ownerRefはuser: / 同一リクエ�
 - 再実行しても同じ利用者に解決される（冪等）
 - 管理操作は監査に残る
 - IdP接続は未実施
+
+## SUIがTEIアーティファクトを配信する（2026-11-03）
+
+SUIの`SUI_TEI_REFERENCE_DIR`に、`epistemic-bindings.json`と`tenants/<tenant>/<doc>/<kind>.json`を置き、`GET /docs/{id}/epistemic/projection`で読んだ。[receipt](../evaluations/records/SUI-TEI-reference-2026-11-03.json)
+
+```text
+create 200 / projection 200 / artifactEchoed true / 未結合 doc 404（epistemic_binding_not_found）
+```
+
+- バインドは（tenant, doc, artifact種別）単位
+- SUIはartifactをそのまま返し、スキーマ検証はconsumer側の責務
+- 種別は`documentv1-projection`などを許可リストで制限
