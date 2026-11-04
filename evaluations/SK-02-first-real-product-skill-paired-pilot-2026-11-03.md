@@ -207,7 +207,7 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **次の評価**：SK-SRC01〜06のSource実読込と独立Task Oracleを優先し、AI-generated JSON Candidateに対しても実Log・実Skill Package Closure・現在Grant/Disclosureを照合できる場合だけ増分効果を測る。TAI #422の最小価値原則に従い、初回のTEI単独TaskへSHO Reader／EKI Suitability／他Product Skillを強制しない。
 
 
-## 14. 2026-11-04：実CLIの作業ディレクトリとWorkspace引数の比較資格（E49〜E60）
+## 15. 2026-11-04：実CLIの作業ディレクトリとWorkspace引数の比較資格（E49〜E60）
 
 他チャットのTEI「必要なSourceを宣言したことと実際に消費したことを分離する」という判断を、[実SK-02 Checker](./tools/check-sk02-pair-eligibility.cjs)の**観測メタデータ照合**へ追加した。従来Checkerは`workspace_tree_digest`、`world_fingerprint`、`source_index_fingerprint`が一致すれば、H2とH3で**実argvが違う`-workspace`を指していても比較候補とし得た**。同一Digestの自己申告は実CLIの対象同一性を証明しない。
 
