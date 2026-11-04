@@ -232,3 +232,14 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 - **今回確定している局所実績**：TEI本体にmergedの`yi-tei-modeling`があり、TEIの実CLIの限定CIとTAIの既存`reference-tei-model`は別の実証として存在。SK-02 Checkerは[合成E01〜48の限定Node CI](https://github.com/hat47x/tai-pleroma/actions/runs/41849280505)で48/48 PASS。
 - **まだない実績**：SK-02の**実四Session/実Skill Loader/モデルからのCLI実呼出し／独立業務正答採点／実モデル送出/実OS強制**。それらの未実行分を`NOT RUN`として明示し、旧局所CI・合成試験・Agent自己申告で埋めない。
 - **Owner/Gate**：本票は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)とTAI Draft #270のSK-02実行準備であり、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)がProduct CLI/Skill、[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)が独立Driver Scenario、[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)が費用と品質、TAI #232/TEI #2515が外向き開示/実OS、TAI #422が過剰要件回避。**新Host/Registry/Agent Loop/Schemaや追加Mandatory Test Suiteを先行しない。**
+
+
+## 12. 2026-11-04：初回H2/H3でCLIの作業場所と実argvのWorkspaceを固定する
+
+[SK-02 §14](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)へ**実CLIのCWD・Workspace引数の比較資格**を接続した。四Sessionで`workspace_tree_digest`とWorldFP/SourceIndexFPだけが同一でも、`tei model catalog -workspace A`と`tei validate -workspace B`では同じSourceに到達したとは言えない。H2/H3の結果を比較する際は、同じ実Binary・公開Workspace・元Source・Tool/Profileに加え、**実行時のCLI作業ディレクトリ文字列（`cli_cwd`）と各Scoped Readの実`-workspace`引数**を記録する。
+
+既存[比較適格性Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)にE49〜E60を追加した。CWDの欠落は証拠不足、CWD差は不適格。最初の一Workspace Taskに限り、複数の異なるWorkspaceを同一Trialで使う／4Trialで対象を変更する／`-world`へ切り替える／Workspace二重指定は比較不適格。Scoped Read自体の欠落、Workspace値が空・Option名しかない場合は証拠不足。`-workspace=path`と`--workspace path`は正当な記述として扱う。
+
+**対象を過大に固定しない**：この判定は原argv内のWorkspace文字列同一性だけを確認する。CWDが同じでもsymbolic link先・入力実Byte・実Loaderが消費したFile/Role、実Processによるargv取得の真正性は保証しない。その確認は[§11](#11-2026-11-04source実消費とcli検証成功を分離するs1sk-02入場条件)のS0〜S5と独立Oracle/実Observerが担う。別Workspaceを比較する正当なTaskは**異なるTask Group／別Profile**にし、無理にこの初回比較へ押し込まない。TEI製品CLIに新しいFlagやProviderを要求しない。
+
+**実行済みの範囲**：[GitHub Actions #41850429887](https://github.com/hat47x/tai-pleroma/actions/runs/41850429887)の実Node Jobで、E01〜E60の公開合成票**60/60 PASS**（新規E49〜E60を含む）。実H2/H3四Session、実CLI Source読込、実外部Harness/独立Oracle採点、Host/OS Egress、Owner意味受理は**NOT RUN**。
