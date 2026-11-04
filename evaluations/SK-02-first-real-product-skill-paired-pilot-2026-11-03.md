@@ -205,3 +205,26 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 これは**TAI Checkerが実ファイルを読み、判定結果を出力した観測**であり、TEI Go CLI・外部AI Harness・実Source消費・実Egress/権限・独立Task Oracleを使った比較ではない。「無許可の操作がなかった」と記されたbooleanの真正性は未保証。実H2/H3の4独立Sessionをこの2つのCLI入力試験で代替しない。
 
 **次の評価**：SK-SRC01〜06のSource実読込と独立Task Oracleを優先し、AI-generated JSON Candidateに対しても実Log・実Skill Package Closure・現在Grant/Disclosureを照合できる場合だけ増分効果を測る。TAI #422の最小価値原則に従い、初回のTEI単独TaskへSHO Reader／EKI Suitability／他Product Skillを強制しない。
+
+
+## 14. 2026-11-04：実CLIの作業ディレクトリとWorkspace引数の比較資格（E49〜E60）
+
+他チャットのTEI「必要なSourceを宣言したことと実際に消費したことを分離する」という判断を、[実SK-02 Checker](./tools/check-sk02-pair-eligibility.cjs)の**観測メタデータ照合**へ追加した。従来Checkerは`workspace_tree_digest`、`world_fingerprint`、`source_index_fingerprint`が一致すれば、H2とH3で**実argvが違う`-workspace`を指していても比較候補とし得た**。同一Digestの自己申告は実CLIの対象同一性を証明しない。
+
+**今回の限定実装**：全4 Sessionに`cli_cwd`（実CLI呼出しの作業ディレクトリ文字列）を必須の同一条件として追加。実argv中`model catalog`／`inspect`／`trace`／`validate`の`-workspace`（`--workspace`・`=path`も許容）を抽出し、各Trial内と4 Trial間の**文字列上の一致**を照合する。初回の「一Workspaceを調べるread-only Profile」では`-world`、二重指定や一Trialの混在を不適格、Workspaceの記録不足やScoped Readそのものがない場合を証拠不足として判定。CLIが実際にそのargvを実行したか、CWDの実在やsymlinkの物理同一性、LoaderがそのSourceを解析したかは**別の実Process/Source Witness**を要する。これはTEI CLI全FlagsのParserではなく、一般の`-world`業務を禁止する仕様でもない。
+
+| case | 追加した合成反証 | 期待する分類 |
+| --- | --- | --- |
+| E49〜E50 | `cli_cwd`欠落／4試行で不一致 | 証拠不足／不適格 |
+| E51 | 自己申告Hash同一でもCLIのWorkspace引数が異なる | 不適格 |
+| E52 | `validate`にWorkspace引数がない | 証拠不足 |
+| E53〜E54 | 二重Workspace指定／一Trialで異なるWorkspaceを読み分ける | 不適格 |
+| E55 | 初回Workspace限定Profile外の`-world`利用 | 不適格 |
+| E56 | `-workspace=path`形式 | 同条件なら比較候補 |
+| E57〜E58 | `commands`だけで実Scoped Readなし／Workspace値がOptionに化けた | 証拠不足 |
+| E59 | `--workspace path`形式 | 同条件なら比較候補 |
+| E60 | 4試行の一方だけ別Workspaceを使用 | 不適格 |
+
+**重要な限界**：`eligible-to-score`は依然**記載された観測票の整合**だけである。独立Oracleは[初回Runbook §11](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)のDeclared→Loaded→Validated/Actual CLI→Consumerを別に照合する。H3でSkillロード、実ToolのExit/Stdout/Source/Diag、実Observerの署名・独立Oracle・実送信を確認していなければSkill効果は未測定。最初の四試行で実Working Directoryを固定できないなら**異なる条件のTrialは比較しない**が、Productの単独read-only観測は継続可能。全Host/Provider/OS機密やWeb/GUIのCI Gateを増やさない。
+
+**試験の状態**：E49〜E60は公開合成票のChecker用。実外部HarnessのH2/H3四セッション・実CLI実行・正式業務意味受理・独立Oracleは引き続き**NOT RUN**。CI成功についてはこのコードを含むGitHub ActionsのJob logを確認した時点でのみ記録する。
