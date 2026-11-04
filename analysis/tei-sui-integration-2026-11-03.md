@@ -490,3 +490,16 @@ create 200 / projection 200 / artifactEchoed true / 未結合 doc 404（epistemi
 - バインドは（tenant, doc, artifact種別）単位
 - SUIはartifactをそのまま返し、スキーマ検証はconsumer側の責務
 - 種別は`documentv1-projection`などを許可リストで制限
+
+## 複数artifactの文書別配信（2026-11-03）
+
+2つの文書に別種別のTEI artifactを結合し、それぞれ自分のartifactだけが返ることを確認した。[receipt](../evaluations/records/SUI-TEI-reference-multi-2026-11-03.json)
+
+```text
+doc-1 → documentv1-projection（SUI文書）
+doc-2 → epistemic-context（SEI判断record）
+未結合doc → 404
+```
+
+- 文書ごとにartifactが混ざらない
+- SEIの判断recordも、TEI artifactとしてSUIから配信できる

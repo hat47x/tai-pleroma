@@ -156,6 +156,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-admin-2026-11-03.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
+    "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
     "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
     "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json",
     "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
@@ -540,6 +541,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
+        if "SUI-TEI-reference-multi" in relative:
+            checks = data.get("observed", {})
+            if data.get("result") != "PASS" or checks.get("firstStatus") != 200 or checks.get("secondStatus") != 200 or checks.get("firstNotSei") is not True:
+                errors.append(f"SUI did not isolate two TEI artifacts: {relative}")
         if "SUI-TEI-reference" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("projectionStatus") != 200 or observed.get("artifactEchoed") is not True:
