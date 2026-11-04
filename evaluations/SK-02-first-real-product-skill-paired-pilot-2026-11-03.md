@@ -158,4 +158,6 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 
 **実測経路の優先**：TEI merged #2607の実CLI/Skill Sourceに基づき、TAIで一つの実HarnessへProduct Skillを強制ロードするH3と、同じHarnessのTool-only H2を**独立4 Session**で観測する。既存TEI CIやこの41ケースの自己テストを実Harness試験の代用にしない。第2Harness/TAI Skill/SHO・EKIの複合TaskとToken・Quality効果は条件をそろえた後続比較。既存#2514/#2018の独立正答・総費用Ownerへ引き継ぐ。
 
-**状態**：上記はGitHub上のChecker修正と非Product Workflowの対象更新。exact-head GitHub Actionsの成功は実Job結果を確認した場合のみ主張する。外部Harnessの実Loader、四Session、実Egress、Oracle、Product Owner受理は**NOT RUN**。
+**CIで確認した範囲（2026-11-04）**：[TAI SK-02 Checker Actions #41788067694](https://github.com/hat47x/tai-pleroma/actions/runs/41788067694) は **completed/success**。実Job `JavaScript syntax and 41 synthetic cases` のログで `node --check` PASS、`--self-test` **41/41**（E33〜E41を含む）を確認。これは**PRの当該Runのmerge checkoutにある同Checker**への実Node試験であり、更新前Runや別ProductのPassと合算しない。GitHubの試験実行は本物だが、入力は全て公開合成JSONであり、実Harnessや実Observerの検証を含まない。
+
+**未実施**：外部Harnessの実Loader、四Session、TEI実Tool経由の同一試行、実Egress/Grant、独立Oracle、Product Owner受理は**NOT RUN**。後続のMarkdown変更に対する新HEAD CIは、そのCommitの結果を別に確認する。
