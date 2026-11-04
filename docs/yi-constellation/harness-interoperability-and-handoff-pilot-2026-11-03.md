@@ -249,3 +249,30 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 5. **P4 Outcome**：EKI同Attempt Body／SHO Reader・実Deliver、OS/Network/Egressと実Effectは各Ownerへ。Agentの`done`文字列で納品や非漏えいを保証しない。
 
 **本節の資格**：新しいNode Scriptの局所16/16は観測済。2 Harnessや実Source/ConsumerのSK-03試験、否定ClaimのProduct Oracle、実保護/業務効果、Owner採用は**NOT RUN**。ScriptをProduct/TAI CoreのValidatorへ格上げしない。
+
+
+---
+
+<!-- sk03-strict-json-witness-followup-20261104 -->
+## 11. 2026-11-04：受信証拠の二重memberによる偽合格を、既存検査の再利用で封じる（NC-17〜19）
+
+### 前節§10の限界を具体的に一つ解消
+
+[TAI SK-02](../../evaluations/tools/check-sk02-pair-eligibility.cjs)では、AI生成のTrial JSONに`"unauthorized_egress_observed":true`と同名の`false`が続いた場合、通常の`JSON.parse`が後者を採用して安全な観測と誤るため、**重複memberを拒否する試験専用Parser**（E42〜48）が導入済み。SK-03の[既存ローカルProcess検証](../../evaluations/tools/check-sk03-negative-claim-transport.cjs)はProducerのstdoutに`JSON.parse`を直接適用しており、**同じ種類の証拠消失が別の入口から再発する**ことをSource-staticで確認した。
+
+[更新したSK-03 script](../../evaluations/tools/check-sk03-negative-claim-transport.cjs)では、すでにSK-02がexportする`parseTrialJSON`を**test-onlyの範囲で再利用**する。一つのSource/stdout中の同じJSON object member名が重複すると、末尾の値を「正しい証拠」として採用せず`producer-unparseable`を返す。これは**試験入力の曖昧さを拒否する限定修正**であり、TEI ProductのJSON Reader、外部MCP Schema、業務Sourceの重複行/複合Keyや一般Policy Engineを新規規定するものではない。
+
+| Case | 人工Process出力 | 期待 |
+| --- | --- | --- |
+| NC-17 | `meta.coverage=partial`の後に同じmemberで`complete`を書いて上書き | `producer-unparseable`：partialを全件へ昇格させない |
+| NC-18 | 二つ目のmember名をUnicode escapeで書き、decode後に`coverage`と一致 | `producer-unparseable`：見かけの表記差を証拠差にしない |
+| NC-19 | `rows=[{id:a}]`の後に同名`rows=[]`を書いて上書き | `producer-unparseable`：存在する観測行を空にしない |
+
+### 事実・状態・引渡し
+
+- **実装**：SK-03スクリプトに上記3件を追加し、既存[SK-02限定CI workflow](../../.github/workflows/tai-sk02-synthetic-pair-check.yml)へ**既存Jobの一段**として`node --check`＋SK-03 `--self-test` 19件を追加した。新たなMandatory Harness CI/第二Parser/別Agent Runnerは作らない。合成SK-02と人工SK-03が同じJobにあっても、製品独立Oracleではない。
+- **検証の範囲**：現在のソースのJavaScript意味処理について、V8にNode依存の**模擬Child IO**を与えた試験で既存SK-02 60ケース、SK-03 19ケースの期待判定を確認。これは実Node child process/Actions jobのPASSではなく、模擬IOでの局所検査。CIの実結論は当該Runのexact HEAD/logを別に参照して初めて取得する。前回[NC-01〜16の保存済み実行記録](../../evaluations/records/SK03-NC-local-transport-2026-11-03.json)は歴史的16ケースの実績であり、今回の19ケース実行記録へ書換えない。
+- **次の本当に必要な検証**：[TEI #2823](https://github.com/hat47x/tei-platform/issues/2823)で、`workspace-files`に列挙されたSourceが実Loaderには消費されない実例が確認されている。JSONの重複を防いでも、`coverage=complete`の値自体を**Productの実Parser/Source Closureで立証したことにはならない**。SK-02実Harness/実Product検証では宣言→列挙→実Parsed/Loaded→Requested Subjectに適用の違いを[初回Runbook §11/12](first-real-skill-qualification-runbook-2026-11-02.md)と独立Expectedで照合する。Tool結果の表現だけが整っても、真の不存在や利用者Source完全性・Audienceへの開示許可を主張しない。
+- **順序とOwner**：最初はTEI Product-onlyの実Source W0、次に同じ実Binaryと同一SubjectをHarness H2/H3の4 Sessionで読めるか（TAI #168、TEI #2605）。その後SK-03別Harness、TAI #271 Handoff、TAI #232/TEI #2515実Egress、TEI #2586/#2516のQuery/Claim Closureに進む。EKIの低遅延・マルチモーダル、TEIのDSL自己記述/多Buildは、このread-only Taskに必要でなければ条件付き研究に留める。
+
+**改修はDraft #270内、未merge。実Node CIの新NC-17〜19、外部HarnessでのSkill Load/Invoke、実TEI Query/DB/Source closure、独立業務Oracle、実Host/OS拒否は最新の実Job記録がない限りNOT RUN/未受理として扱う。**
