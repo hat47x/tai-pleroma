@@ -199,3 +199,14 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 - **Exit条件**：VA-T2とVA-E1の双方について実測正負例、VA-X反証、VA-E Source/Evidence照合、比較可能なBaseline、Consumer/Reader観測を揃える。未実施・未受理を合格へ昇格させない。
 
 既存[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)、[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)、[EKI #58](https://github.com/hat47x/eki-fabric/issues/58)へ実証のOwnerを返す。横断#422と本計画へ第二のRegistry、別Scenario DB、Runnerや実認可を実装しない。
+
+
+## 12. AI-first実証入口の再判定（2026-11-04）
+
+既存[VA-02](../../evaluations/VA-02-cross-product-first-run-protocol.md) §6を参照。TEI mainには **6-Step保存済みDriver Scenarioと限定CLI verify/generate/run/checkの実ファイルが存在する**。#1180の初期説明を根拠に「保存Scenario全体が未実装」とは扱わない。これらのSource確認と、実Goテスト・実Web E2E・実Provider Writeの成功は別の証拠階層。
+
+横断G0/G1で、(a)言語/Operatorテスト候補（[TEI Draft #2813](https://github.com/hat47x/tei-platform/pull/2813)）、(b)シナリオテスト正本（既存保存Driver Scenario）、(c)Target/Host実行結果を分離。Candidate JSON追加を正式な業務Scenario、独立Expected、実Web Coverageへ自動昇格しない。[TEI Draft #2811](https://github.com/hat47x/tei-platform/pull/2811)と[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)の既存Owner・Issueを再利用し、第二Scenario DB/AI専用Runnerは作らない。
+
+**初回実証の順序**：AI-EXT-01（独立Anchorを維持したJSON候補拡張）、AI-EXT-02（既存6 Stepの版固定CLI実行とfail-closed）、AI-EXT-03（Code/Rule/データ/Scenario/Target/Providerの分母を別管理）。その後、Web Host/実Provider/Consumer実受領に進む。対応なし・未取得・分母不明は未検証。AI生成Case数の増加をCoverage率や製品価値の向上と同一視しない。
+
+**現状**：計画とSource-static照合のみ。各AI-EXTの実行、独立Oracle受理、実Web/OS/ProviderのE2E、横断価値測定はNOT RUN。
