@@ -176,7 +176,7 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **今回の成果は受入票とRunbookの更新のみ**。TEI Issueの元実測、TAI既存Connectorの限定既存実測、新SK-SRCの未実施、Skillの実H2/H3比較を分離する。**実Product Skill Load、4独立Session、独立Oracle実採点、実OS/ネットワーク、Owner意味受理はNOT RUN**。
 
 
-### 12.1 追試：AI生成試行JSONの重複キーを拒否する（E42〜E48、2026-11-04）
+## 14. 追試：AI生成試行JSONの重複キーを拒否する（E42〜E48、2026-11-04）
 
 他チャットの[TEI Draft #2813](https://github.com/hat47x/tei-platform/pull/2813)では、AIが追加するJSONの二重member（特に`source`や`expected`）を標準decodeが後勝ちで上書きする危険に対し、**TEIに既存の重複member拒否を再利用**する修正が進んでいる。TAIの既存SK-02 Checkerも`JSON.parse(raw)`のみでJSON票を受理していたため、`unauthorized_egress_observed:true`が同じmemberの`false`で上書きされ、E33〜E41のboolean型検査の前に見えなくなる反例があった。
 
