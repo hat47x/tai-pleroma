@@ -1,7 +1,7 @@
 # VA-04：AI-first検証の入力閉包と契約発見の事前確認
 
 - **状態**：2026-11-04、横断実証へのSource-static監査結果の受け渡し／実証手順案。VA-04固有の実行、独立Expectedの受理、Web/Provider E2E、Owner採用は **NOT RUN**。
-- **参照**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)、[VA-01](VA-01-product-value-necessity.md)、[VA-02](VA-02-cross-product-first-run-protocol.md)、[VA-03：用途別能力](VA-COND-01-conditional-capabilities-and-source-drift.md)、[TAI #424（VA-00監査台帳）](https://github.com/hat47x/tai-pleroma/issues/424)。
+- **参照**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)、[VA-01](VA-01-product-value-necessity.md)、[VA-02](VA-02-cross-product-first-run-protocol.md)、[VA-COND-01：用途別能力](VA-COND-01-conditional-capabilities-and-source-drift.md)、[TAI #424（VA-00監査台帳）](https://github.com/hat47x/tai-pleroma/issues/424)。
 - **目的**：既存の実TEI CLI・Scenarioと他ProductのResultをAI/外部Harnessが誤って「全対象検証済み」と認定しないために、**何が宣言されたか・発見されたか・実際に読まれたか・何を検査したか・現在利用資格があるか**を分ける。第二のValidator/Source Registry/Execution Authorityは実装しない。
 - **責務**：VA-00はIssue・ADR・文書の整合性監査、VA-01は価値・過剰要件、VA-02は実証ラダー、本VA-04は証拠から言えるClaimの上限を定める。製品側の不具合修正・仕様採否は当該Owner Issue。
 
