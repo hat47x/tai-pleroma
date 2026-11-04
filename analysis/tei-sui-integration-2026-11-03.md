@@ -511,3 +511,15 @@ SEIのgateで`--deny-unresolved`と`--require-recommendation`を確認した。[
 - 未解決の問いを残す判断: 既定では`allow`、`--deny-unresolved`で`deny`
 - recommendationを欠く判断: 既定では`allow`、`--require-recommendation`で`deny`
 - 理由文にunresolved/recommendationが現れる
+
+## MMIのsource inventory（2026-11-03）
+
+MMIの`inventory`でディレクトリを読み取り専用で棚卸しした。[receipt](../evaluations/records/MMI-inventory-2026-11-03.json)
+
+```text
+contract mmi.source-inventory/v0 / status complete / entries 16
+各entryにidentity.digest（sha256）とbyteLength
+```
+
+- 文書内容は返さず、識別子とダイジェストだけを返す
+- 一貫性の表明は`per-file-observation`

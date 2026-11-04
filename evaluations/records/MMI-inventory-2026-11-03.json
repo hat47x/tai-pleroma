@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.mmi-inventory/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-05",
+  "host": "Windows with Node 24 and MMI's tsx CLI",
+  "command": "python integrations/tools/mmi_inventory_check.py",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "exitOk": true,
+      "contract": true,
+      "complete": true,
+      "hasEntries": true,
+      "anyDigest": true,
+      "digestsWellFormed": true
+    },
+    "entries": 16,
+    "scope": "04_Documentation/samples/practical/data",
+    "consistency": "per-file-observation"
+  },
+  "scope": "Runs MMI's read-only source inventory over one repository directory and checks the inventory contract, status and per-entry digests. It does not inspect document contents or write anything."
+}
