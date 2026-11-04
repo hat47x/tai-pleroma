@@ -592,3 +592,35 @@ HX-01＝DSH≠OpenCode＋DeepSeekモデル、HX-02＝Skill rootと実参照閉�
 | **SK-LAZY08** | 旧全量rootと新Lazy rootが同Taskに答える | 正答、誤完了、実Tool・Source、必要なref取得、入力Token・費用・wall time・人の確認を同条件／独立Oracleで比較。文字数減を品質/Token改善と呼ばない |
 
 **現時点のEvidence**：GitHub exact filesの構造・本文一致・リンク存在の限定静的検査のみ。**SK-LAZY01〜08の実Harness、比較・Token測定・二Product Handoff/Owner受理は全件NOT RUN**。評価のOwnerは既存SK-MIN/TAI #168/#271、Product正答はTEI #2514、総費用はTEI #2018。新共通Skill Registry/Loader/Runner/必須Release Gateを作らない。
+
+
+## AE. 2026-11-04：TAI Skill package静的検査とProduct実受入の分離（SK-PKG）
+
+[計画 §31](../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)に対応し、[実TAI例示Skill](../examples/skills/yi-tai-activity/SKILL.md)／[3つの遅延参照](../examples/skills/yi-tai-activity/references/product-entrypoints.md)などについて、[実Node checker](tools/check-tai-skill-package.cjs)で**ファイルの実在・参照閉包を検証する**。従来の「13節内容保持／静的リンク切れなし」の一度きりの手作業確認を、今後のPR更新で繰り返し検査できる状態へ進めた。
+
+### SK-PKG01〜08：実コードを使うがProduct/Harness適合ではない
+
+| case | 実行するテスト入力 | 判別結果 |
+| --- | --- | --- |
+| PKG01 | 正しいfrontmatter・3参照・存在する局所文書 | PASS |
+| PKG02 | frontmatter欠落 | MISSING_FRONTMATTER |
+| PKG03 | nameがyi-tai-activity以外 | WRONG_NAME |
+| PKG04 | 必須詳細のrootリンクを外部HTTPに置換 | UNLINKED_REFERENCE |
+| PKG05 | rootの相対リンク先が不存在 | BROKEN_LINK |
+| PKG06 | repository外への相対パス | PATH_ESCAPE |
+| PKG07 | 詳細参照文書のリンク先が不存在 | BROKEN_LINK |
+| PKG08 | 不正なURL percent-encoding | BAD_URL_ENCODING |
+
+Node.jsの標準APIだけを用い、合成一時directoryに対する**8 assertionの実プロセス実行**と、**実checkout内のSkill package**を二つの別のコマンドで検証する（runbookはWorkflow内）。参照先ScriptやToolは**実行しない**。現在のCheckerは簡素なMarkdownリンクSyntaxとPath Integrityを調べるものに限られ、完全なMarkdown Parser、Signature/Trust/Disclosureの検証器ではない。
+
+**観測した実CI（新しい非Product Workflow）**：[TAI example Skill package static integrity #41787153535](https://github.com/hat47x/tai-pleroma/actions/runs/41787153535) Job “Check Skill reference closure (not Harness certification)” は completed/success。実Job logを照合し、Node JavaScript syntax check／公開合成**8 assertions PASS**／PR merge-refチェックアウトの**実package CHECK PASS**、root 3,162文字、3 references 合計12,427文字、相対リンク27件を確認した。**これは当該Runのmerge-ref \`21505ad2541d5be6135ed84fc33697146cf75b8e\` の限定結果**であり、今後のコミットのCIや実Harnessロードを保証しない。
+
+### Product受入は別の独立評価を要求
+
+- **Data Quality**：[TEI #2667](https://github.com/hat47x/tei-platform/pull/2667)のQFVでは、読んだ行/列/時点のCoverageと、独立Expected/Mutantで誤りを検出したFault Detectionを分離する。Skillが正しいパスの資料を読んでいても、検証式が誤った生成物なら品質PASSにしない。元Source/Snapshot、Accepted Rule、独立Oracle、Output/Consumer/期限を必要な範囲で要求。
+- **Organization**：[TEI #2781](https://github.com/hat47x/tei-platform/pull/2781)のrecord visibility/read-onlyはHierarchy/valid・known時点/Policy・Scope、実Query completeness、ReadとExport/Write、未保存変更、現Grantを分ける。Org fixtureの合成PASSは実Provider/RLS/Hostの許可強制ではない。
+- **Action**：[TEI #2616](https://github.com/hat47x/tei-platform/pull/2616)/[#2784](https://github.com/hat47x/tei-platform/pull/2784)のOffer/Target/Periodは、Provider Commit直前の現Grant/対象一致、Receipt/独立Readerと別時点。Reference successやSkillの説明を実業務Effectと呼ばない。
+
+**試験の階段を守る**：PKG（文書package整合）→SK-02 H2/H3実Harnessロード/Tool実呼出し→独立Task Oracle/Tool費用→SK-03第二Harness→必要なTEI実Query・組織Provider・Host Action。不要な詳細参照・TAI Skillを発動しない対照も保持。SK-PKGのために新中央Registry/Host、Product側のParser/Quality Validator、全Task共通の必須Quality Gateを追加しない。
+
+**NOT RUN**：SK-PKGの外部HarnessでのLoader/Source使用、実TEI Read/Quality/Org Policy/Provider Commit/OS/Network、Owner意味受理、Token節減率・Skill選択の実改善。CI緑はその資格を満たさない。
