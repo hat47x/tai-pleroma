@@ -72,3 +72,13 @@
 - **同条件のB0/B1/B2**：既存Harness/ファイル/ローカル実行、必要なProduct最小機能、汎用化した高度実装を比較し、利用価値・維持費・復旧・認可を別計測。高度化しないと安全/意味が壊れる負例と、加えても価値が増さない反例を両方保存する。
 - **Issue更新の正確性**：EKI #381は11/4取得時点Closed。修正済み個別Issueの状態と、実EKI Jobの期限内完了・独立結果受理・外部業務EffectのE2E実証を同一視しない。
 - **レビュー状態**：VA-01はSource-staticで作ったテスト候補。実モデル割当・Holdout・テスト実行・製品受理・利用者価値評価はNOT RUN。新しい中央Agent Host/Tester/第二SSOTは追加しない。
+
+
+### 入力閉包と契約発見の実証前確認（2026-11-04追補）
+
+[VA-00監査台帳 TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の9 Laneの文書整合性照合とF2のOwner判断59件を受け、[VA-03](../evaluations/VA-03-evidence-readiness-preflight.md)を[VA-02](../evaluations/VA-02-cross-product-first-run-protocol.md)のP0/P1前提に接続する。既存Phase 0〜3・各Productの採否は変更しない。
+
+- **最優先の反証**：TEI #2822/#2823/#2824で確認された「validate okでも利用者Source未読込」「managed file≠Parser実消費」「CLI discovery≠安定版付きJSON」を、実Source/CLI/Scenario/Expectedの別証拠に分けて検証する。Source不足でも安全なCandidate探索は妨げず、完全な検証成功を名乗らない。
+- **EKIの契約追随**：EKI #698の3値実装と4値ADR案の不整合をOwner待ちとして扱い、VA-E1はSuitabilityの非分散判断・Admission/Policy拒否・期限内回復を別々に記録する。
+- **監査結果の扱い**：#424 S4完了はSource-static。実テスト、複数モデルの独立実証、Owner受理、製品E2Eは未実施。#424の担当Laneや各OwnerのIssueを二重化しない。
+- **拡張研究**：EKI低レイテンシ/マルチモーダルのTransport選択は研究候補として残し、最小委任MVPへの先行義務にはしない。
