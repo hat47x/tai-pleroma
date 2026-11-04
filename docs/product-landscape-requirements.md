@@ -1,6 +1,6 @@
 # Product Landscape 横断要求 v0（提案・未採用）
 
-状態: **Draft / Proposed / acceptance NOT RUN**。この文書は製品群の位置づけをTAIへ集約するための**要求候補**である。TAI main `88a6fad6d088f98ccab6080b3b7be24b62399113` と [Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72) のレビュー対象であり、製品の仕様変更・正式な横断契約・製品リリース判断ではない。
+状態: **Draft / Proposed / acceptance NOT RUN**。この文書は製品群の位置づけをTAIへ集約するための**要求候補**である。TAI main `88a6fad6d088f98ccab6080b3b7be24b62399113` と [Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72) のレビュー対象として書かれた（現在：#72 は2026-11-02 merged。G1分類は [Issue #73](https://github.com/hat47x/tai-pleroma/issues/73) で未決）。この文書は製品の仕様変更・正式な横断契約・製品リリース判断ではない。
 
 ## 1. 要求の対象と、対象外
 
