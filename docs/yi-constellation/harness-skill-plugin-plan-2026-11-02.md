@@ -621,3 +621,21 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **他チャットの実Product成果の置き場**：[SHO Draft #14](https://github.com/hat47x/sho-composer/pull/14)で固定MMI CLIの合成Markdown→HTML RenderがCIで実行されたが、SHO自身のReader/Writerの実証ではない。EKI低遅延/マルチモーダルは[TAI Draft #423](https://github.com/hat47x/tai-pleroma/pull/423)で条件付き扱いを維持。これらをSK-02のBlocking条件にも、YIC全体の必須機構にも追加しない。
 
 今回の実体変更は**既存SK-02の試行票読込とその限定CI**だけ。Product正本の契約変更、新Skill/Host/Registryの設置、外部Harness実ロード・実Provider/実OS実験はしない。
+
+
+### 33.2 製品横断の実証ゲートは、Ownerの現行契約に基づき条件付きで選択する（2026-11-04）
+
+[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)と[Draft #423](https://github.com/hat47x/tai-pleroma/pull/423)の過剰要件監査では、機能要件の数を減らすのではなく、**各Productの単独での主要価値を成立させる最小受入**と、横断時にだけ必要な資格を分ける。今回照合したOwnerの現状は次のとおり。
+
+| Product・条件 | 確認した現在の到達点 | YIC Skillが主張しないこと／必要な場合の次Gate |
+| --- | --- | --- |
+| **TEI一製品のread-onlyモデル調査** | merged #2607のProduct Skill、既存CLI、SK-02試験票とJSON 48件の合成検査。CLIファイル入力でも重複JSON・不正JSONを拒否する実Node CI [#41849868908](https://github.com/hat47x/tai-pleroma/actions/runs/41849868908) | 実AI Harness 4 Session／実Skill Load／独立Oracle・利用者価値は未実施。TAI Skillを自動追加しない |
+| **SHO単独の文書・Research Index** | [SHO Draft #14](https://github.com/hat47x/sho-composer/pull/14)はpinされた実MMI CLIの合成Markdown→HTML Renderを限定CIで確認 | **SHO自身のReader／編集・保存・再開は未実施**。[SHO #15](https://github.com/hat47x/sho-composer/issues/15)はG1b／G1-SHO等のゲートIDの不一致をOwner判断待ちと記録。IDだけで「SHO Reader完了」にしない。TEI SK-02へSHOを必須化しない |
+| **EKI委任・結果・Recovery** | [EKI #698](https://github.com/hat47x/eki-fabric/issues/698)のsource-static監査では、提案ADR-0029のSuitability **4値**と実API／設計の**3値**が不一致（Owner未決） | 初回TEI Skill比較にEKIを要件化しない。委任Taskを実施する場合は現APIの判定値・Admission拒否・実Body/Receipt/Recoveryを照合し、提案の4値を実装済みと偽らない。低遅延／マルチモーダルTransportは用途に応じた条件付き検証 |
+| **SEI・SUIの認知／意味探索** | 根拠十分性・残余の問い・異論/保留を扱うProduct別計画がある | Source候補を増やしたことを網羅・正答・開示適格と認定せず、実際に使う場合だけ問い相対のRead／Owner判断とSource/Disclosureを検証 |
+
+**ゲート適用の規則**：初回SK-02ではTEI実Tool/実Skill Load/独立Task Oracleに限りBlocking。SHO Reader・EKI Suitability・SEI/SUI Method・外部2nd Harness・TEI Build/Provider/Studioは、そのProductを実際に経由するTaskのConditional Gateとする。Owner未決の4値／3値、G1bの名称差、Catalog/Source読込の未確認は**Unknown**として保存し、TAIの便宜で共通正本・共通Gateへ再定義しない。
+
+**検査資格**：TAIのJSON重複拒否は入力試行票の構文・一部型とメタデータ整合しか保証しない。[TEI #2813](https://github.com/hat47x/tei-platform/pull/2813)のAI候補や[TEI #2669](https://github.com/hat47x/tei-platform/pull/2669)のSource→モデルInstructions流入に対する独立検証・安全保証を代行しない。新たな一般JSON ParserやPrompt Sanitizer、Agent Host、中央Policy、Product別RuntimeをTAIへ追加しない。Product横断の価値と費用は既存のSK-MIN/H2/H3実証で比較する。
+
+**状態**：この節は既存Ownerのsource-static／実CI範囲の対応づけ。上記の別Product実操作・二Product Consumer Handoff、EKI新Transport、SHO Reader、複数モデル実験、Owner正式受理は **NOT RUN**。
