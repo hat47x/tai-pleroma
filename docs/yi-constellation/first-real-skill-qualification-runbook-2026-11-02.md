@@ -189,7 +189,7 @@ Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Opera
 <!-- sk02-one-real-trial-freeze-20261104 -->
 ## 12. 2026-11-04：これ以上の合成PASSを実Harness資格の代替にしない――最初の実試行を凍結する実施票
 
-**決めること**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の要求（DSHに限定しない代表Harness）、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)の実Product Skill、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の過剰要件監査に基づき、最初の実験で必要なものを**1 Product／1 read-only User Subject／1 Harness／同じ実CLI／四つの独立Session／独立Expected**へ限定する。第2 Harnessはこの実験の後のSK-03に含める。合成E01〜48、NC01〜16、外部MCP仕様のケース追加はそれぞれ有用だが、この最初の真の証拠を置き換えるものではない。
+**決めること**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の要求（DSHに限定しない代表Harness）、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)の実Product Skill、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の過剰要件監査に基づき、最初の実験で必要なものを**1 Product／1 read-only User Subject／1 Harness／同じ実CLI／四つの独立Session／独立Expected**へ限定する。第2 Harnessはこの実験の後のSK-03に含める。合成E01〜60、NC01〜19、外部MCP仕様のケース追加はそれぞれ有用だが、この最初の真の証拠を置き換えるものではない。
 
 ### 12.1 事前に固定する一枚のTrial Card（新Canonical Schemaではない）
 
@@ -229,12 +229,12 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 
 ### 12.3 採用判断と価値の確認
 
-- **今回確定している局所実績**：TEI本体にmergedの`yi-tei-modeling`があり、TEIの実CLIの限定CIとTAIの既存`reference-tei-model`は別の実証として存在。SK-02 Checkerは[合成E01〜48の限定Node CI](https://github.com/hat47x/tai-pleroma/actions/runs/41849280505)で48/48 PASS。
+- **今回確定している局所実績**：TEI本体にmergedの`yi-tei-modeling`があり、TEIの実CLIの限定CIとTAIの既存`reference-tei-model`は別の実証として存在。SK-02 Checkerは[合成E01〜60／人工SK-03 NC01〜19の限定Node CI](https://github.com/hat47x/tai-pleroma/actions/runs/41851651173)で60/60・19/19 PASS。SK-03の実Node子プロセスは人工JSON Producerであり、TEI/外部Harness実呼出しではない。
 - **まだない実績**：SK-02の**実四Session/実Skill Loader/モデルからのCLI実呼出し／独立業務正答採点／実モデル送出/実OS強制**。それらの未実行分を`NOT RUN`として明示し、旧局所CI・合成試験・Agent自己申告で埋めない。
 - **Owner/Gate**：本票は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)とTAI Draft #270のSK-02実行準備であり、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)がProduct CLI/Skill、[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)が独立Driver Scenario、[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)が費用と品質、TAI #232/TEI #2515が外向き開示/実OS、TAI #422が過剰要件回避。**新Host/Registry/Agent Loop/Schemaや追加Mandatory Test Suiteを先行しない。**
 
 
-## 12. 2026-11-04：初回H2/H3でCLIの作業場所と実argvのWorkspaceを固定する
+## 13. 2026-11-04：初回H2/H3でCLIの作業場所と実argvのWorkspaceを固定する
 
 [SK-02 §14](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)へ**実CLIのCWD・Workspace引数の比較資格**を接続した。四Sessionで`workspace_tree_digest`とWorldFP/SourceIndexFPだけが同一でも、`tei model catalog -workspace A`と`tei validate -workspace B`では同じSourceに到達したとは言えない。H2/H3の結果を比較する際は、同じ実Binary・公開Workspace・元Source・Tool/Profileに加え、**実行時のCLI作業ディレクトリ文字列（`cli_cwd`）と各Scoped Readの実`-workspace`引数**を記録する。
 
