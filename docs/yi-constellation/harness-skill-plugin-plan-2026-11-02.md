@@ -579,3 +579,13 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **P3 必要なProductだけ拡張**：Quality/Organization/Actionなど、利用者の実Taskが必要とする既存Product実API・Providerと独立Expectedに限り追加試験し、各Ownerが出した限定結果だけをTAI Skillへ引き継ぐ。Full Query/全Org機能/全Provider/全Harness対応を先行Gateにしない。
 
 **状態・Owner**：本節はTAI Draft上の試作Skill静的保全＋Product別の受入境界設計であり、実Harness・品質Oracle・Provider/OS/Host認可・Owner業務受理はNOT RUN。対応先はTAI #168/#74/#271、TEI #2605/#2514/#2667/#2781/#2598/#1174、EKI #57、SHO #4。第二Host・Registry・Policy Engine・共通Oracleを作らない。
+
+## 32. 2026-11-04：SK-02実証前の観測票を型付きにし、生成AIテストの足場を小さく保つ
+
+[SK-02 §12](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)で、**Product/Skillの意味や適合より先に、試験票そのものの観測型が正しいかを検査**する実装差分を追加した。旧Checkerは`unauthorized_*_observed="false"`等のJSON文字列を観測不足として検出せず、架空の実験Metadataを比較可能と誤分類し得た。実Booleanのみ認め、String/Numberを`insufficient-evidence`、不正なTrial Rowを`ineligible`として判定。E01〜E32を維持しE33〜E41へ拡張した。
+
+これはユーザーの「必要なテストをAIが自発生成・拡張できる足場」を、**巨大な共通Test Runtimeや新たなOwner受理Engineを置かずに**具体化する試みである。モデルが増やした負例を既存Checkerへ足せる一方、Expectedが同一AI/同一Scriptから生成される自己整合と、Productの独立Oracleとは区別する。Syntheticsの件数・CI緑・実Sourceを読んだとする自己申告を、実H2/H3 Skill改善率や非漏えい保証に昇格しない。
+
+次の一件は**実Harness一種類、TEI Product Skill一つ、公開Source一つ、read-only CLI**に限定する。記録の型を満たしただけでは弱いため、実Tool出力の取得元と手順・Binary/Source/Skill消費版・Observation/Disclosure・独立Oracleを、SK-02の既存Runbookと試行票に追加資料を増やさず記録する。Tool-onlyが十分ならSkill非採用という結論を許し、第二HarnessやEKIを初回の必須要件としない。TAIは新Host/Provider/API/中央Registry/Oracleを持たない。
+
+**確認状況**：本更新時点で修正コード・41件を実GitHub branchへ保存。exact HEADでのCIは別途Job log確認、実ハーネス・本番権限・独立Business Oracleは**NOT RUN**。
