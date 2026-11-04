@@ -228,3 +228,23 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 **後続研究**：EKIの軽量認知・低レイテンシ・マルチモーダル通信では、Workload/データ様式に応じたTransport Profile選択を比較候補とする（VA-03 §5）。現行実装・採用プロトコル・低遅延の保証は未確認であり、初期EKI Suitability/結果受理の合格条件へ無条件追加しない。
 
 本追加は計画反映。VA-03の再現試験、AI-EXT/CLI実行、Web/実Provider、独立Oracle受理、Ownerの要求採用は**NOT RUN**。
+
+## 13. VA-03：用途相対の価値と文書ドリフトを同じレビューに束縛（2026-11-04）
+
+[VA-03：用途条件付き能力・Source状態ドリフト](../../evaluations/VA-03-conditional-capabilities-and-source-drift.md)を、VA-01（要件の必要性）・VA-02（実証資格連鎖）に追加する**第三の判定軸**とする。既存の[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)（9 Lane整合性監査、S4は同一モデルの別Context）と[TAI #425](https://github.com/hat47x/tai-pleroma/issues/425)（TAIのF1/F2/F3所見）を再利用し、第二のIssue/ADR台帳・監査Runtimeは設けない。
+
+### 実際のUser Jobを先に固定する
+- [EKI Product Value](https://github.com/hat47x/eki-fabric/blob/main/product/value.md)の委任の核は、長時間バッチだけでなく、AI推論・ツール実行、隔離実行、軽量常駐認知の外面へ広がる。**高速通信・マルチモーダルを一律に「過剰」としない**。ただし必須化は用途別：有限Job→従来型Task/Artifact、低遅延イベント→期限・jitter・再送/順序/Backpressure、Media→受信・同期、常駐→有限Grantの更新とLocal Governor、を個別の負例で評価する。
+- TEI/TAI/SHO/SEI/SUIの拡張要件も同様に、B0既存Harness/ファイル/CLI、B1単体製品の最小能力、B2高度構成という**同じUser Job・権限の下でのみ**比較する。要求を満たすB0/B1を退役・置換するためにB2を導入しない。
+- **省略できない保証と選べる実装**を分ける。Source/Meaning/Scope・Host/Provider認可・実Effect・独立Consumer Read・期限内回復は必要な用途で保全するが、それらを守るために一律の中央Host/Registry/Process・同じ通信方式が必要とは推論しない。
+
+### 既存監査で明らかになったドリフトへの対応
+- TAIロードマップのPR #169の古い未統合表示を、2026-11-02 mergedの状態へ改める。ただしmergeはOwner受理・ユーザー価値・実Host接続の証拠ではない。
+- TEI #2488 ClosedとPR #2489 mergedを、現行のrecord/string全Consumer成功と同義にしない。
+- 2026-10-29のSCN-001 Owner判断に従い、現段階の開発評価者を生成AIとして記述し、実物の人間レビュー・公開・Authority資格は別の後続工程とする。
+- **同一モデルの別Contextによる文書整合性チェック**と、異なるモデルを使った独立反証、実Provider/OS/Consumerの実証はそれぞれ別のEvidence tier。TAI #424の監査完了を本Issue #422の価値比較完了へ転用しない。
+
+### G0〜G4への最小差分
+G0では監査所見・最新Source状態・各Productの実Valueを再取得。G1ではVA-03の用途条件とB0/B1/B2の候補を登録。G2では必要になったデータ様式と時間制約だけを測り、独立Expectedを確保。G3では各Product Ownerへの**差分のみ**返す。G4では経路/Provider/Grant/Target/Source変更に対する必要な再確認だけ行う。新Quality/Transport共通Engineをこの監査から作らない。
+
+**成熟度**：Source-static／設計提案。実EKI low-latency benchmark、Media Data Plane、異モデル反証、正式なTransport選択、Owner受理は **NOT RUN**。
