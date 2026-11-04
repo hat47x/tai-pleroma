@@ -60,3 +60,10 @@ SUI / TEI / SEI / SHO / EKIは、それぞれ独立した能力・ライフサ�
 - 作業の開始時に**repo・exact commit・Source位置・評価対象・利用可能なツール・未閲覧範囲**を記録する。製品別分析、独立反証、証拠監査、統合の担当を分け、できる場合は別モデル・別Contextを使う。同じ根拠を使った複数モデルの一致を独立の実証と呼ばない。
 - 対案には「機構なしの最小代替」と「機構を省くと破れる不変条件」の両方を示す。観測・設計案・合成実行・製品実接続・Owner受理を混同しない。Agentが触れられない/実行できない範囲はNOT RUNと明示する。
 - 標準CLI・通常ファイル・既存外部Harnessで足りるかを最初に検討し、必要なSkill/資料だけを選択して読む。Product OwnerのSource/Contract/Authorityを横断担当が編集・採用確定しない。同一ファイルの並行編集、未承認merge/close、機密Rawの外部送出は禁止する。
+
+
+## VA-00/VA-03：整合性監査と実証前のSource確認
+
+- [TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の文書整合性監査（別担当再点検を含む）と、[VA-03](evaluations/VA-03-evidence-readiness-preflight.md)の入力閉包/契約発見の事前確認は別工程。元ProductのIssue/ADR採否に踏み込まず、既存Lane・Draft PRと編集範囲が重なれば記録してOwnerへ返す。
+- TEIのvalidate/commands等の結果は、宣言されたSource、発見されたSource、実消費されたSource、Assertion対象、実権限・Consumer受領の範囲を示せる場合にのみその範囲でPASSとする。ok=trueや発見数、Case件数、Source fingerprintのみから全モデル検証済みと推定しない。
+- EKIのSuitabilityについて提案ADRと現行実装の結果値が異なる場合、どちらかを新しい横断標準として固定せず、Admission/Policy拒否とSuitability判定を分けて既存Ownerへ差し戻す。
