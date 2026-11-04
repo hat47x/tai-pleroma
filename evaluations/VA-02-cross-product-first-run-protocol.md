@@ -13,7 +13,7 @@
 | P1 TEI単独 | [TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)でmainに存在する6-Step保存ScenarioとCLI verify/generate/run/checkをCharacterizeし、AI拡張候補を別に評価 | 2026-11-04にmainのScenario JSON/Parser/CLIの実ファイルを確認済み。対応範囲/実試験の成功は別検証 | 固定6 StepのCoverage、pins/digest、独立Expected、実Readと非対応拒否を別票。Sourceの存在だけで製品PASS/Web E2E成立としない |
 | P2 入口差 | 同じAccepted Application/ScenarioからCLIとWeb経路を実行 | Target binding、Host/Policy、実行環境を個別に固定 | 共通Business AssertionとTarget固有のAuth/Transport/UI/Visualの別票。CLI PASS≠Web PASS |
 | P3 外部Harness | Product CLI単独(H2)と必要時だけSkillを読む(H3)を同一公開入力で比較 | 実binary・Skillの現行版、必要なTool、許可された開示範囲 | Tool発見→実呼出し→結果Reader→再開を観測。説明だけの能力は不合格。二つ目のHarnessは独立の別実験 |
-| P4 単独Consumer/委任 | SHO L0 Markdown保存と再読込／EKI #58のLOCAL判定を各々単独で確認 | SHOは[SHO #4/#7](https://github.com/hat47x/sho-composer/issues/7)、EKIは[Suitability #58](https://github.com/hat47x/eki-fabric/issues/58)の現行契約を確認 | SHO文書保存≠原典を理解、EKI Task完了≠Body受領・業務Effect。各製品が単独成立するかを先に判定 |
+| P4 単独Consumer/委任 | SHO L0 Markdown保存と再読込／EKI #58の非分散判定（実装のSuitability結果値は別途固定）を各々単独で確認 | SHOは[SHO #4/#7](https://github.com/hat47x/sho-composer/issues/7)、EKIは[Suitability #58](https://github.com/hat47x/eki-fabric/issues/58)の現行契約を確認 | SHO文書保存≠原典を理解、EKI Task完了≠Body受領・業務Effect。各製品が単独成立するかを先に判定 |
 | P5 任意の連携 | TAI再開→TEI証拠→EKI Attempt→SHO Consumerという**必要な部分だけ**のHandoff | P1〜P4の該当部分が実証済み・公開可能なsynthetic projectionがある | 同一Attempt・同一Source/Semantic/Toolchain/Provider・Consumer実Readと現在資格。連携不能でも単独製品のPASSを取り消さない |
 
 **依存規則**：P4のSHO単独とEKIのLOCAL判定はP1〜P3完成を待たず並走できる。P5を全製品の標準起動順序と解釈しない。Go単一バイナリはTEIの基本配布形態だが、Function/Invocation/Trigger/Buildを混同せず、必要性を示せないMulti-Buildを初回必須にしない（[TEI #1130](https://github.com/hat47x/tei-platform/issues/1130)、[#2600](https://github.com/hat47x/tei-platform/issues/2600)）。
@@ -44,7 +44,7 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 | V02-04 | 更新POST送信後503、Commit返答なし、同一要求再送候補 | Effect=unknown。Receipt確認前の無条件再試行を拒否。送信済みと未送信を分ける | TEI #1130、EKI #58 |
 | V02-05 | Source A→B→A、同byte別Toolchain、Role/Policy変更 | Artifact可再利用・Evidence可再利用・Meaning再受理・現在Grantを各別判定 | TEI #2600、TAI #271 |
 | V02-06 | EKI Claim ACKのみ、Body欠損または別AttemptのBody | Received=false、AcceptedResult/SHO実受領へ昇格不可 | EKI #407/#465、TAI #271 |
-| V02-07 | 同じ故障ドメインの安価Workerへ再割当、締切前に回復不可 | Fabric選択を成功としない。LOCAL/NEEDS_MEASUREMENT/NOT_SUPPORTED等を比較 | EKI #58 |
+| V02-07 | 同じ故障ドメインの安価Workerへ再割当、締切前に回復不可 | Fabric選択を成功としない。現行実装の3値とAdmission/Policyの拒否を分離し、ADRの4値との差はEKI Owner判断待ちとして比較 | EKI #58 |
 | V02-08 | SHO Markdown 3リンクの保存・再開、原典URL移動・同名異内容 | 文書保存は独立PASS可能、原典再解決/引用の現在性は別FAIL/Unknown | SHO #4/#7 |
 | V02-09 | 履歴Evidenceは一致するがHost Grant失効、read-only操作は継続可能 | 履歴Evidence保持・危険ActionはDenied。過剰な全停止も無条件実行も不適合 | TAI #232/#271 |
 
@@ -101,3 +101,15 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 - **AI-EXT-03: Coverageの分母** — L1候補数、L2 Step/Rule/Branch/データ分割、L3 Target/Host/Effect/Consumerを別分母で列挙。enumerated、applicable、attempted、executed、asserted、independently-qualified、unsupported、unknownを区別。空分母と未発見を100%にしない。Candidate件数が増えても未試験Targetが合格に変わらない反例を採用。
 
 **変更後の優先順位**：「新Scenario基盤の再実装」ではなく、**現有CLI/Scenarioの範囲固定→AIに自由な候補拡張→独立ExpectedとCoverage/差分→Target/Host実検証**。実行やOwner受理がない限り製品PASSと書かない。実装と試験SSOTはTEI #1180/PR #2811/#2813のOwnerへ戻し、VA-02は横断判定の索引に限定する。
+
+
+## 7. 入力閉包・CLI Discovery・EKI結果値を実証前に再照合
+
+[VA-03：入力閉包と契約発見の事前確認](VA-03-evidence-readiness-preflight.md)をP0→P1の**証拠Claim限定**に接続する。TEI #2822/#2823の実再現ではvalidate ok=trueでも利用者宣言0件またはSourceが未読込となり得る。[TEI #2824](https://github.com/hat47x/tei-platform/issues/2824)ではdiscoveryと契約一覧にドリフトがある。従って**Scenario/World/Toolchainのfingerprintがあることは、その前段で要求されたSourceがすべて実消費された証拠ではない**。
+
+- P0：宣言→発見→消費→Assertion→現在資格/実受領を5つのClosureで点検し、欠落/不明/取得不能なら該当Claimをlimitedまたはunknownと表示。安全な静的候補追加は継続してよい。
+- P1/AI-EXT：既存6-Step ScenarioのCLI結果と、読み込めたUser定義/対象Scope、命令の現行JSON契約、未対応/skipを別々に記録。Candidate増加をCoverage完全性としない。
+- P4/EKI：実装側Suitabilityは現時点3結果、ADR-0029案は4結果で衝突（[EKI #698](https://github.com/hat47x/eki-fabric/issues/698) EKI-CA-02）。非分散という業務上の判定と具体enum/Policy拒否を分離し、4値を現行APIと断定しない。
+- VA-00：文書整合性の監査S4は[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)で完了済み（Source-static）。59件のF2 Owner判断項目と修正Draft PRは尊重し、VA-02に第二の文書監査Laneを追加しない。
+
+**更新に伴う分類**：既存CLI/Scenarioの実ファイル確認＝source-static、TEI #2822〜24の製品Issueに記録されたWSL再現＝そのIssueの局所実験、本VA-02での再実行・Web/Provider/EKI E2E＝NOT RUN。証拠の水準を混合しない。
