@@ -608,7 +608,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 ### 33.1 JSON入力の重複と外部Sourceの指示混入を、必要な実験の範囲で扱う（2026-11-04）
 
-**実装済みの差分**：[SK-02 §12.1](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)のE42〜48。AI生成／外部由来の試行JSONに同名keyが重複した場合、`JSON.parse`の後勝ち上書きは比較前に監査・不正送出欄を失わせる。文字列`"false"`の型検査（E33〜41）に加え、**JSON解釈前の重複member拒否を既存Node Checker内部だけへ実装**した。GitHub Actions #41849280505は合成48/48 PASS。ただし記録票の真実性・Skill実ロード・Task正答を保証しない。
+**実装済みの差分**：[SK-02 §14](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)のE42〜48。AI生成／外部由来の試行JSONに同名keyが重複した場合、`JSON.parse`の後勝ち上書きは比較前に監査・不正送出欄を失わせる。文字列`"false"`の型検査（E33〜41）に加え、**JSON解釈前の重複member拒否を既存Node Checker内部だけへ実装**した。GitHub Actions #41849280505は合成48/48 PASS。ただし記録票の真実性・Skill実ロード・Task正答を保証しない。
 
 **外部Source／Promptの別境界**：[TEI PR #2669](https://github.com/hat47x/tei-platform/pull/2669)では、`ignore_prior_instructions_validation_test.go`のような**実Source候補のファイル名**が、実Go Rerank経路からモデル向け`Instructions`文字列へ入り得ることを限定的に確認している。これはモデルが指示に従ったという証拠ではない。TAI Skillはファイル名、Markdown本文、検索結果、Tool応答、Skill候補説明を**低信頼の資料内容**として扱い、利用者/Hostが認めたInstruction・実Tool契約・Grantへ自動昇格しない。実送信/受信byte、Audience、外部開示制限はTAI #232/#272と各Provider/Harnessが検証する。普遍的Prompt Sanitizerや第二Policy Engineは増設しない。
 
