@@ -147,3 +147,15 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **変えない判定**：`SKILL.md`がmainに存在し、同PR CIで静的Checker/本物のCLIが通ったことは、Product側のS0/S1として具体的な前進。一方、SK-02の**4独立Harness Session、forced/auto Skill実ロード、外部Agent経由の同じCLI実Invoke、独立Oracle採点、Token/人手/費用・実Egress観測はNOT RUN**。H2とH3の対照条件は据え置く。新しいProduct Toolやwrite Permissionをこの実験のために追加しない。
 
 **実験前に採取する現在版のチェック**：TEI main exact commitとclean/dirty、上記3 Skill Fileのblob/参照Closure、同一Go executable SHA、実Workspace bytes/SourceIndexFP/WorldFP、実`commands`のscope、Tool/Model/Harness SessionとAudience、独立Oracleを**実行時に採り直す**。前日のCI証拠やGitHubのSkill file閲覧を、実LoaderのSession証拠に代用しない。
+
+## 12. 2026-11-04：実観測JSONの型を比較適格性の前提にする（E33〜E41）
+
+**実装欠陥と修正**：[SK-02比較適格性Checker](./tools/check-sk02-pair-eligibility.cjs)を再読したところ、旧実装は`oracle_exposed`と`unauthorized_write_observed`／`unauthorized_egress_observed`を`true`または`null`等で判定するため、JSON文字列の`"false"`や`"true"`、数値`0`を**「未検査」でなく実際のfalse相当として通し、旧合成ベースラインで`eligible-to-score`になり得た**。この不正な通過は実Observerの真偽以前の入力型欠陥である。現Checkerを修正し、三項目を**実boolean以外は`insufficient-evidence`**として扱う（実boolean trueの侵害は従来どおり`ineligible`）。4 Trialの一つが`null`やArrayであれば例外クラッシュでなく`invalid-trial-record`の`ineligible`を返す。
+
+**最小追加試験**：従来のE01〜E32を維持し、E33〜E41として、`oracle_exposed="false"`、`unauthorized_write_observed="false"`、`unauthorized_egress_observed=0`、null Trial、Array Trial、`oracle_exposed="true"`、boolean falseの正例、実boolean trueのegress侵害、三項目同時文字列化を独立に判定する。実コード・Workflowの対象件数を**41**に更新した。
+
+**観測資格の階段**：このCheckerは「記録が型付きで、同一Task/Session/CLI条件を宣言しているか」を判定するだけで、(1)記録値の発生源・署名・実Process/Network観測の真正性、(2)Product CLI出力の本物性、(3)Skill Loader実消費、(4)業務正答の独立Oracle、(5)Host/OSでの非漏えいや実Provider効果を検証しない。したがって`eligible-to-score`は**記録整合の候補**であり、本物のH2/H3比較が成立したというPASSではない。実験者は元Tool argv/Exit/診断、Skill root・refsの読取元、現在Grant/開示の観測媒体、Oracleの隔離、費用の観測先を別証拠へ結ぶ。取得できない場合は`unknown/insufficient-evidence`を保つ。
+
+**実測経路の優先**：TEI merged #2607の実CLI/Skill Sourceに基づき、TAIで一つの実HarnessへProduct Skillを強制ロードするH3と、同じHarnessのTool-only H2を**独立4 Session**で観測する。既存TEI CIやこの41ケースの自己テストを実Harness試験の代用にしない。第2Harness/TAI Skill/SHO・EKIの複合TaskとToken・Quality効果は条件をそろえた後続比較。既存#2514/#2018の独立正答・総費用Ownerへ引き継ぐ。
+
+**状態**：上記はGitHub上のChecker修正と非Product Workflowの対象更新。exact-head GitHub Actionsの成功は実Job結果を確認した場合のみ主張する。外部Harnessの実Loader、四Session、実Egress、Oracle、Product Owner受理は**NOT RUN**。
