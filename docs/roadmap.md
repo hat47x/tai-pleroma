@@ -89,3 +89,4 @@
 
 - **VA-00監査からの差分**：[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の文書整合性9 Lane・別ContextによるS4監査を参照。F2のOwner判断待ちを価値レビューの受入と誤認しない。同一モデルの別Contextであり異モデル独立性は未達。
 - **現状**：VA-COND-01はSource-staticの設計と反証候補のみ。EKIの実Latency/SLO、Media配信、TEI実Web、異モデル反証、Owner採否はNOT RUN。正式なTransport/Codec・新Agent Runner/中央Registryは採用しない。
+- **次の小さな検証の固定（2026-11-04、[VA-02 §8](../evaluations/VA-02-cross-product-first-run-protocol.md)・[VA-04 §6](../evaluations/VA-04-evidence-readiness-preflight.md)）**：TEI #2828のJSON候補追加を既存Driver Scenario/CLIで限定試験し、独立Expected・Known Mutantを含む判別力を測る。並行してTEI #2819の宣言D1と実Build入力D2の相違を、当該SelectorのFail-closed必要条件として#2595に戻す。TAI H2/H3はDraft #270の既存4 Session比較を使い、実Skill Load/Task正答/費用を試験するまで増分価値を未確認とする。各実験は独立に進め、実CLI/実Builder/実Harnessを横断PRの新Runtimeへまとめない。今回の新規実験・異モデル反証はNOT RUN。
