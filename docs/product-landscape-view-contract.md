@@ -70,7 +70,7 @@ V1の現在のデータ根拠は、[公開棚卸し](product-inventory-candidate
 - Productの**改名**は必ずしもProduct同一性を変えない。
 - Productの**分割・統合**は、Product同一性とContract移行をそれぞれ検討する。
 - Contractの**版変更**は、既存Consumerが自動互換という意味ではない。
-- SourceやDecisionが元のbyte列に戻る**A→B→A**でも、旧意味受理・公開権限の自動復活にはならない（[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)と[Draft #71](https://github.com/hat47x/tai-pleroma/pull/71)）。
+- SourceやDecisionが元のbyte列に戻る**A→B→A**でも、旧意味受理・公開権限の自動復活にはならない（[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)と[Draft #71](https://github.com/hat47x/tai-pleroma/pull/71)、2026-10-31 merged）。
 
 Snapshot案: `taiCatalogCommit + productSourceRevisions[] + evidenceRefs[] + viewpoint/filter + asOfTime`。採用前に最少の再現要件を確認する。外部URIの現行内容を読み直して旧図の再現に使ったとは言わない。
 
