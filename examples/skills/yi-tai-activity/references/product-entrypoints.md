@@ -68,3 +68,10 @@ TEIモデル調査は、(1)Workspace宣言、(2)管理Fileの列挙、(3)実Pars
 利用者が求めたSubject kind/idを実catalog＋inspectのSource位置と同版validateへ結び、取得/診断/未確認を分ける。Generatorの作業が実際に必要な場合のみ、[merged TEI #2819](https://github.com/hat47x/tei-platform/pull/2819)の「宣言Source D1と実Build入力D2が異なり得る」負例に沿ってArtifact/Consumerを別照合する。
 
 出典：[TAI最初のRead実証Runbook §11](../../../../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)。本Skillのテキストは**実Tool/実Loaded Source/権限を保証しない**。TEI単独TaskにTAIを必須化しない。
+
+
+## SHOのRenderと製品Reader・保存を区別する（2026-11-04／条件付き）
+
+[SHO Draft #14](https://github.com/hat47x/sho-composer/pull/14)の限定CIで成立したのは、固定MMI CLIによる合成Markdown 2文書の**HTML Renderと参照Link集合**である。SHOの実Research Index Reader、編集・保存・再開、利用者への納品を同じPASSにしない。[SHO #15](https://github.com/hat47x/sho-composer/issues/15)ではG1b/G1-SHOのゲート名称が二通り使われておりOwner判断待ち。Skillは曖昧なゲートIDで機能完了を宣言せず、実Consumer名・実操作・Source版・結果を個別確認する。
+
+資料リンクの整理だけならSHOの独立成立を尊重し、TEI/EKI/TAIを標準必須としない。TEI SourceとSHO文書を実際に結びつける場合だけ、明示的なSource/Meaning対応とSHO Readerの実観測を追加で要求する。
