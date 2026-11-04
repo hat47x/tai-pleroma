@@ -213,7 +213,7 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 
 ## 13. VA-COND-01：用途相対の価値と文書ドリフトを同じレビューに束縛（2026-11-04）
 
-[VA-03：用途条件付き能力・Source状態ドリフト](../../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、VA-01（要件の必要性）・VA-02（実証資格連鎖）に追加する**独立した用途適合性の判定軸**とする。既存の[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)（9 Lane整合性監査、S4は同一モデルの別Context）と[TAI #425](https://github.com/hat47x/tai-pleroma/issues/425)（TAIのF1/F2/F3所見）を再利用し、第二のIssue/ADR台帳・監査Runtimeは設けない。
+[VA-COND-01：用途条件付き能力・Source状態ドリフト](../../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、VA-01（要件の必要性）・VA-02（実証資格連鎖）に追加する**独立した用途適合性の判定軸**とする。既存の[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)（9 Lane整合性監査、S4は同一モデルの別Context）と[TAI #425](https://github.com/hat47x/tai-pleroma/issues/425)（TAIのF1/F2/F3所見）を再利用し、第二のIssue/ADR台帳・監査Runtimeは設けない。
 
 ### 実際のUser Jobを先に固定する
 - [EKI Product Value](https://github.com/hat47x/eki-fabric/blob/main/product/value.md)の委任の核は、長時間バッチだけでなく、AI推論・ツール実行、隔離実行、軽量常駐認知の外面へ広がる。**高速通信・マルチモーダルを一律に「過剰」としない**。ただし必須化は用途別：有限Job→従来型Task/Artifact、低遅延イベント→期限・jitter・再送/順序/Backpressure、Media→受信・同期、常駐→有限Grantの更新とLocal Governor、を個別の負例で評価する。
@@ -243,6 +243,24 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 4. **独立レビューと研究の責務**：F2 Owner判断はVA-00各検査Issue、価値必要性はVA-01、実証はVA-02、Claim上限/入力閉包はVA-04。議論の横断連携により第二Validator/Runner/Host/Authorityを作らない。
 
 **G0更新**：製品別 full SHA、実CLI/Plugin/Provider版、検査対象Scope、取得済み/未読込、独立Expected、実行された環境を確認。Sourceが不完全なら全体PASSを禁止しつつ、許容された公開合成テスト候補の探索は継続可能とする。
+
+
+### 監査由来の未決を実験依存へ絞る（整合性監査を再実施しない）
+
+[TAI #424 のS6判断項目59件](https://github.com/hat47x/tai-pleroma/issues/422#issuecomment-6623059604)を実験ごとに次のように扱う。**Blocking**＝対象・安全・独立Expectedが決まらず当該実験が成立しない、**Conditional**＝明記した範囲だけ進行可能、**Nonblocking**＝実験自体を止めない、**Unknown**＝現在のSourceでは判定不能。分類はIssueの優先度や正式Requirementではなく、指定した実験の開始条件に相対的。
+
+| 対象実験 | S6で判明した不一致／既存Owner | 最小の実験条件と判定 |
+| --- | --- | --- |
+| **VA-T2：TEI Scenario→CLI/Web** | [TEI #2823](https://github.com/hat47x/tei-platform/issues/2823) 未知Source rootが未読込、[TEI #2825](https://github.com/hat47x/tei-platform/issues/2825) 認証Ownerの記述差 | **Conditional**：限定Source/Stepを固定したCLIの静的/合成検査は継続。完全なSource CoverageやWeb Host AuthのPASSはSource closure/実Hostが未確認なら**Blocking** |
+| **VA-E1：EKI Suitability** | [EKI #698 EKI-CA-02](https://github.com/hat47x/eki-fabric/issues/698)：提案ADRの4状態と実APIの3状態が不一致 | **Conditional**：実API 3値とAdmission/Policy拒否を別結果として限定比較。NOT_SUPPORTEDを実戻り値と主張する試験、正式Contract採用はOwner決着まで**Blocking** |
+| **VA-H1：SHO単独Markdown保存・Reader** | [SHO #15](https://github.com/hat47x/sho-composer/issues/15)：G1b/G1c/G1-SHOの意味に衝突 | **Nonblocking**：L0の保存・再開は実験可能。実MMI RunnerをSHOの実Reader/根拠再解決済みと呼ぶ資格はOwnerの定義が確定するまで**Blocking** |
+| **VA-C1：SEI再開** | [SEI #792](https://github.com/hat47x/sei-cognition/issues/792)：Method根拠十分性と製品Requirementsの参照関係に未決 | **Conditional**：小さいResume/Unknown維持は限定比較。全Method・全域のSource十分性を要求/実証済みとするのは**Blocking** |
+| **VA-SUI-01：SUI異論・保留** | [SUI #3384](https://github.com/hat47x/sui-sensemaking/issues/3384)：SafeMode下の本文読取に関する説明が現挙動と相違 | **Conditional**：非機密の公開合成データで保留維持を確認。実Private Rawの安全なTool/Agent読取はコード・Host/egressが未検証なら**Blocking** |
+| **VA-A1：TAI製品分類・外部Harness** | [TAI #73](https://github.com/hat47x/tai-pleroma/issues/73) 分類・公開境界がOwner未決 | **Nonblocking**：既存Product CLI/Skill単独の比較は可能。正式なYIシリーズ全体の公開分類・製品同一性・一括配布はOwner判断が必要 |
+
+**判断の節約**：各Laneの既存Issueに「実験ID／差分の未決／試験で固定する代替条件／Owner／再確認条件」をコメントで返す。別F2台帳やProduct共通のGate Engineは作らず、59件全体をG2ブロッカーにしない。VA-Xの反証は、まずBlockingか否かの具体的負例に集中させ、モデル多数決や文書の引用数だけで完了としない。
+
+**ケースID訂正**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の重複したVA-S1を、SUIはVA-SUI-01、SHOはVA-H1に統一した。過去の固定済み監査コメントは書き換えず、最新の試験票で誤読しないための編集上の修正である。
 
 **後続研究**：EKIの軽量認知・低レイテンシ・マルチモーダル通信では、Workload/データ様式に応じたTransport Profile選択を比較候補とする（[VA-COND-01：用途相対と通信条件](../../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md) §2/§5）。現行実装・採用プロトコル・低遅延の保証は未確認であり、初期EKI Suitability/結果受理の合格条件へ無条件追加しない。
 
