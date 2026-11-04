@@ -503,3 +503,11 @@ doc-2 → epistemic-context（SEI判断record）
 
 - 文書ごとにartifactが混ざらない
 - SEIの判断recordも、TEI artifactとしてSUIから配信できる
+
+## gateのポリシー変種（2026-11-03）
+
+SEIのgateで`--deny-unresolved`と`--require-recommendation`を確認した。[receipt](../evaluations/records/SEI-TEI-gate-variants-2026-11-03.json)
+
+- 未解決の問いを残す判断: 既定では`allow`、`--deny-unresolved`で`deny`
+- recommendationを欠く判断: 既定では`allow`、`--require-recommendation`で`deny`
+- 理由文にunresolved/recommendationが現れる

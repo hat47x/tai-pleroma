@@ -170,6 +170,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-record-2026-11-03.json",
     "evaluations/records/SEI-TEI-cli-2026-11-03.json",
     "evaluations/records/SEI-TEI-gate-2026-11-03.json",
+    "evaluations/records/SEI-TEI-gate-variants-2026-11-03.json",
     "evaluations/records/SEI-TEI-mcp-2026-11-03.json",
     "evaluations/records/SEI-TEI-mcp-check-2026-11-03.json",
     "evaluations/records/EKI-TEI-submit-2026-11-03.json",
@@ -489,7 +490,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
                 errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
-        if "SEI-TEI-gate" in relative:
+        if "SEI-TEI-gate-variants" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SEI gate variant checks did not all pass: {relative}")
+        if "SEI-TEI-gate" in relative and "gate-variants" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allowVerdict") != "allow" or observed.get("denyVerdict") != "deny":
                 errors.append(f"SEI gate allow/deny pair did not hold: {relative}")
