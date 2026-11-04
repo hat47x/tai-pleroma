@@ -113,3 +113,18 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 - VA-00：文書整合性の監査S4は[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)で完了済み（Source-static）。59件のF2 Owner判断項目と修正Draft PRは尊重し、VA-02に第二の文書監査Laneを追加しない。
 
 **更新に伴う分類**：既存CLI/Scenarioの実ファイル確認＝source-static、TEI #2822〜24の製品Issueに記録されたWSL再現＝そのIssueの局所実験、本VA-02での再実行・Web/Provider/EKI E2E＝NOT RUN。証拠の水準を混合しない。
+
+## 8. 実在するテスト候補とSource→Buildの資格を分離した最初の二実験（2026-11-04）
+
+[#1180](https://github.com/hat47x/tei-platform/issues/1180)と[TEI PR #2828](https://github.com/hat47x/tei-platform/pull/2828)を照合した結果、**AIがJSONの候補を追加→既存Scenario CLIを再利用**する最小test-only経路はSource上の具体案として存在する。一方、[#2819](https://github.com/hat47x/tei-platform/pull/2819)には**宣言Source D1と実Goビルド入力D2の不一致を現状で拒否できない**限定的な再現がある。単一のSourceDigest・BinaryDigestがあっても、実入力の一致が保証されなければBuild資格を主張しない。#2819の発見をTEI全体のあらゆるBuildに一般化せず、対象Selectorでの既知の不一致として扱う。
+
+| 事前登録ID | B0/比較する小さい操作 | Expectedと失敗注入 | 実行結果として主張できる上限 |
+| --- | --- | --- | --- |
+| **V02-AI-01：追加候補の判別力** | 保存済み6-Stepを変更せず、#2828のJSON候補（Validation成功/拒否）を既存 verify→generate→check→pinned run へ渡す。Go test-onlyの固定Anchorと独立Oracleを比較 | 固定Case/Stepの衝突、Expected改変、旧生成Plan、入力Parserの未サポートStep、同根Expectedによる偽PASSを別々に注入。独立Expectedは候補の作成者と分離し、少なくとも既知Mutantを1件検出 | #2828のコードとPR説明の**存在はsource-static**。同HEADの実テスト/CIがPASSした場合でも限定CLI/Fixtureまで。実Web/Auth/Provider、6-Step業務意味の全面受理、全分母Coverageは別 |
+| **V02-BUILD-01：宣言と実消費Sourceの束縛** | 同一のGo入力を宣言・ビルドするcontrolと、宣言D1/ビルドD2を意図的に食い違わせるcase（#2819の既知反例を再利用） | Controlは宣言と実Build入力のbyte/順序・Generator/Toolchain pinが一致したときだけ資格候補。Mismatchは少なくとも**現行の不一致を露出する**こと。修正後は該当Selectorがfail-closedになること | #2819で確認されたのは特定Selectorの不一致受容（source-staticで記録された製品側局所試験）。修正EB-04や実TEI全Target E2Eは未確認。Byte一致≠Owner Meaning/Host Grant |
+
+**最初の判断順**：①製品側の実Baselineとexact HEADを固定、②独立Expected/既知Mutantを別担当に委ねる、③既存テスト・既存CLIの範囲内で上記二Caseを実行、④必要になったときだけWeb/Provider/外部Harnessへ接続する。過剰要件判定では、**追加Case数やRunnerの機能数ではなく、誤PASSを拒否できた範囲・独立Expectedの判別力・導入/保守の費用**を測る。
+
+**他の独立レーン**：TAI [Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)のH2（外部Harness+Product CLI、Skillなし）/H3（同Harness+実ロードした必要Skill）の4独立Sessionは、モデル/Tool/Source/Grantを一致させて比較する。TEI Product Skillの静的CIやmainの存在は、そのTAI Harness上でのSkill実ロード・追加価値の証拠ではない。SK-02がすでに保持する既存Checkerと評価票を再利用し、VA-02側へ第二Skill評価Runnerを追加しない。
+
+**現状**：本節は既存Issue/PRのSource-static照合に基づく反証手順。V02-AI-01／V02-BUILD-01の本活動による実走、独立Expected、TAI H2/H3の実Harness、TEI実Web/DB、Owner意味受理は**NOT RUN**。Product側局所CIの事実は実験Ownerとexact HEADごとに再確認する。
