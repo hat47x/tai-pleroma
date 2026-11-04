@@ -245,6 +245,6 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 - **同一モデルの別Contextによる文書整合性チェック**と、異なるモデルを使った独立反証、実Provider/OS/Consumerの実証はそれぞれ別のEvidence tier。TAI #424の監査完了を本Issue #422の価値比較完了へ転用しない。
 
 ### G0〜G4への最小差分
-G0では監査所見・最新Source状態・各Productの実Valueを再取得。G1ではVA-03の用途条件とB0/B1/B2の候補を登録。G2では必要になったデータ様式と時間制約だけを測り、独立Expectedを確保。G3では各Product Ownerへの**差分のみ**返す。G4では経路/Provider/Grant/Target/Source変更に対する必要な再確認だけ行う。新Quality/Transport共通Engineをこの監査から作らない。
+G0では監査所見・最新Source状態・各Productの実Valueを再取得。G1ではVA-COND-01の用途条件とB0/B1/B2の候補を登録。G2では必要になったデータ様式と時間制約だけを測り、独立Expectedを確保。G3では各Product Ownerへの**差分のみ**返す。G4では経路/Provider/Grant/Target/Source変更に対する必要な再確認だけ行う。新Quality/Transport共通Engineをこの監査から作らない。
 
 **成熟度**：Source-static／設計提案。実EKI low-latency benchmark、Media Data Plane、異モデル反証、正式なTransport選択、Owner受理は **NOT RUN**。
