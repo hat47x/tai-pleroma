@@ -11,7 +11,7 @@
 | --- | --- | --- |
 | [TEI #2822](https://github.com/hat47x/tei-platform/issues/2822) | WSL Go 1.27で利用者宣言0件のworkspaceでもvalidate ok=true。model catalogは標準stdの13件があり、件数だけでは利用者定義の実在を示さない | ok=trueは「この読込経路で検出された診断なし」という限定Claim。宣言数、標準/利用者の区分、対象Scopeは別証拠が得られない限りunknown |
 | [TEI #2823](https://github.com/hat47x/tei-platform/issues/2823) | manifestの未知/不存在sourcesやworkspace-filesに見える非対応拡張子が黙って読み飛ばされる場合がある | workspace-filesに存在＝Parser消費済みとはしない。要求されたSourceが未読込/不明なら対象範囲のfull validationを主張しない |
-| [TEI #2824](https://github.com/hat47x/tei-platform/issues/2824) | tei commandsは19件、CLI契約文書は13件と記載。discoveryは各commandのschemaVersion/安定契約対象外worldを区別しない | 実binary・出力のschemaVersion・契約対象/非対象の個別照合を用い、発見一覧だけで稳定JSON/Versionを保証しない |
+| [TEI #2824](https://github.com/hat47x/tei-platform/issues/2824) | tei commandsは19件、CLI契約文書は13件と記載。discoveryは各commandのschemaVersion/安定契約対象外worldを区別しない | 実binary・出力のschemaVersion・契約対象/非対象の個別照合を用い、発見一覧だけで安定した外部JSON契約/Versionを保証しない |
 | [EKI #698のEKI-CA-02](https://github.com/hat47x/eki-fabric/issues/698) | Suitabilityの提案ADRは4結果値だが、実装/設計は3結果値（FABRIC_JUSTIFIED / FABRIC_NOT_JUSTIFIED / NEEDS_MEASUREMENT）。NOT_SUPPORTED相当はAdmission/Policy拒否 | [EKI #58](https://github.com/hat47x/eki-fabric/issues/58)を参照する比較表は実装結果とAdmission拒否を分ける。4値を実APIの戻り値と決めつけず、対応表はOwner判断待ち |
 | [TAI #424](https://github.com/hat47x/tai-pleroma/issues/424) | 9 Laneの文書監査と別担当S4照合完了。F2はOwner判断項目59件（高20/中28/低11）。別context同一modelでありモデル独立ではない | VA-00の監査件数をVA-01の6Product価値受入・VA-02の実E2E成功として数えない。F1 Draft PRのmergeやF2採否を勝手に行わない |
 
