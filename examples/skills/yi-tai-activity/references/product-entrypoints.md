@@ -59,3 +59,12 @@ Product間の引用、Graph Edge、Event、データの受渡し、Command、Con
 - **完了と再資格化**：Source/Role/Build/Org/Permission/Provider/Timeのうち実際に依存するものを必要な時点で再照合。Preview、Plan、Reference Execute、Provider Effect、Receipt、Consumer Read、品質期限は別Claim。UI書式変更だけで無関係なAccepted Meaningを失効させず、意味/Authority変更は旧PASSのまま流用しない。
 
 出典と反証：[入口別SK-IV01〜12](../../../../docs/yi-constellation/skill-entrypoint-ui-job-organization-boundaries-2026-11-03.md)、[SK-01 §AC](../../../../evaluations/SK-01-harness-skills.md)。**これは試作Skillの利用手順**であり、新UI Extension API・複数Build Tool・Business Host認可・実Product/Harnessの動作実証ではない。
+
+
+## TEI Source実読込と検証成功を区別する（2026-11-04／評価用）
+
+TEIモデル調査は、(1)Workspace宣言、(2)管理Fileの列挙、(3)実Parser/Loaderでの消費、(4)要求された利用者定義Subjectの存在と参照元、(5)validate結果を区別する。[TEI #2822](https://github.com/hat47x/tei-platform/issues/2822)で実測された空Workspaceのvalidate ok=true／標準std 13件catalogは、利用者の定義のロード成功を意味しない。[TEI #2823](https://github.com/hat47x/tei-platform/issues/2823)の未知root／未解析managed fileもLoadedとは言えない。[TEI #2824](https://github.com/hat47x/tei-platform/issues/2824)のcommands 19件・契約文書13件・world安定JSON契約外は、AIが補完して一つのAPIとしない。
+
+利用者が求めたSubject kind/idを実catalog＋inspectのSource位置と同版validateへ結び、取得/診断/未確認を分ける。Generatorの作業が実際に必要な場合のみ、[merged TEI #2819](https://github.com/hat47x/tei-platform/pull/2819)の「宣言Source D1と実Build入力D2が異なり得る」負例に沿ってArtifact/Consumerを別照合する。
+
+出典：[TAI最初のRead実証Runbook §11](../../../../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)。本Skillのテキストは**実Tool/実Loaded Source/権限を保証しない**。TEI単独TaskにTAIを必須化しない。
