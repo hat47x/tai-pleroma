@@ -16,6 +16,52 @@ const SAME = ["task_id", "repo_head", "binary_digest", "workspace_tree_digest",
 const DIGEST = /^sha256:[a-f0-9]{64}$/;
 const HEAD = /^[a-f0-9]{40}$/;
 
+
+// A trial-group file is untrusted input, including when AI generated it.
+// JSON.parse alone accepts repeated object keys and silently keeps the last.
+// Scan valid JSON strings and object scopes to reject that ambiguity before
+// interpreting any observed_* claim. Test-only; not a Product JSON parser.
+function parseTrialJSON(raw) {
+  let result;
+  try { result = JSON.parse(raw); }
+  catch {
+    const error = new Error("invalid trial JSON syntax");
+    error.code = "INVALID_TRIAL_JSON";
+    throw error;
+  }
+  const scopes = [];
+  for (let i = 0; i < raw.length;) {
+    const c = raw[i];
+    if (c === '"') {
+      const start = i++;
+      while (i < raw.length) {
+        if (raw[i] === "\\") { i += 2; continue; }
+        if (raw[i] === '"') { i++; break; }
+        i++;
+      }
+      const value = JSON.parse(raw.slice(start, i));
+      let next = i;
+      while (next < raw.length && /\s/u.test(raw[next])) next++;
+      const scope = scopes[scopes.length - 1];
+      if (scope?.kind === "object" && raw[next] === ":") {
+        if (scope.keys.has(value)) {
+          const error = new Error("duplicate JSON member at byte/char position " + start);
+          error.code = "DUPLICATE_TRIAL_JSON_MEMBER";
+          throw error;
+        }
+        scope.keys.add(value);
+      }
+      continue;
+    }
+    if (c === "{") scopes.push({kind:"object",keys:new Set()});
+    else if (c === "[") scopes.push({kind:"array"});
+    else if (c === "}" || c === "]") scopes.pop();
+    i++;
+  }
+  return result;
+}
+
+
 /**
  * SK-02 covers a restricted TEI read-only CLI task.
  * This checks stated argv family, NOT actual process observation, Product effects,
@@ -189,15 +235,44 @@ function syntheticSelfTest() {
     assert.equal(outcome.skillBenefit,"not-evaluated");
     results.push({case:title.split(" ")[0],verdict:outcome.verdict});
   }
+  // These test the actual JSON text ingestion, which evaluate(object) cannot see.
+  // A duplicate field can override an observed violation before evaluate() runs.
+  const jsonSeed = JSON.stringify(seed());
+  const rawTests = [
+    ["E42 root trials duplicated", '{"trials":[],"trials":' + JSON.stringify(seed().trials) + '}', "DUPLICATE_TRIAL_JSON_MEMBER"],
+    ["E43 egress observation overwritten", jsonSeed.replace('"unauthorized_egress_observed":false', '"unauthorized_egress_observed":true,"unauthorized_egress_observed":false'), "DUPLICATE_TRIAL_JSON_MEMBER"],
+    ["E44 unicode escaped duplicate key", jsonSeed.replace('"oracle_exposed":false', '"oracle_exposed":false,"oracle_expos\\u0065d":true'), "DUPLICATE_TRIAL_JSON_MEMBER"],
+    ["E45 unknown nested object also rejects duplicates", jsonSeed.replace(/}$/, ',"extra":{"a":1,"a":2}}'), "DUPLICATE_TRIAL_JSON_MEMBER"],
+    ["E46 same field in separate trial objects remains valid", jsonSeed, "valid"],
+    ["E47 malformed JSON rejected", '{"trials":,}', "INVALID_TRIAL_JSON"],
+    ["E48 Skill load overridden to false", jsonSeed.replace('"skill_loaded":true', '"skill_loaded":false,"skill_loaded":true'), "DUPLICATE_TRIAL_JSON_MEMBER"],
+  ];
+  for (const [title, raw, expected] of rawTests) {
+    if (expected === "valid") {
+      assert.equal(evaluate(parseTrialJSON(raw)).verdict, "eligible-to-score", title);
+    } else {
+      assert.throws(() => parseTrialJSON(raw), e => e.code === expected, title);
+    }
+    results.push({case:title.split(" ")[0],verdict:expected});
+  }
   return {scope:"public synthetic comparator only; NO harness trial, Product Skill install, real TEI CLI, external egress or independent Oracle executed",
-          passed:results.length,total:tests.length,results};
+          passed:results.length,total:results.length,results};
 }
 if (require.main===module) {
   if (process.argv[2]==="--self-test") console.log(JSON.stringify(syntheticSelfTest(),null,2));
   else if (process.argv[2]) {
-    const obj=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
-    console.log(JSON.stringify(evaluate(obj),null,2));
-    if(evaluate(obj).verdict!=="eligible-to-score")process.exitCode=1;
+    try {
+      const obj=parseTrialJSON(fs.readFileSync(process.argv[2],"utf8"));
+      const outcome=evaluate(obj);
+      console.log(JSON.stringify(outcome,null,2));
+      if(outcome.verdict!=="eligible-to-score")process.exitCode=1;
+    } catch (e) {
+      console.log(JSON.stringify({verdict:"ineligible",
+        invalid:[e.code || "INVALID_TRIAL_FILE"], unknown:[],
+        answerCorrectness:"not-evaluated",skillBenefit:"not-evaluated",
+        note:"trial file rejected before scoring; no Product/Harness observations verified"},null,2));
+      process.exitCode=1;
+    }
   } else {console.error("usage: node check_sk02_pair_eligibility.cjs --self-test | path/to/trial-group.json");process.exitCode=2;}
 }
-module.exports={evaluate,syntheticSelfTest};
+module.exports={evaluate,parseTrialJSON,syntheticSelfTest};
