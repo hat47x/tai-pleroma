@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-03",
+  "date": "2026-11-04",
   "host": "Windows with Python 3.12 and SUI modules imported from the local checkout",
   "command": "python integrations/tools/sui_saas_login_contract.py --sui-src <SUI>/03_Implement/backend/src",
   "result": "PASS",
@@ -24,14 +24,14 @@
     },
     "authorizeParams": {
       "client_id": "sui-client",
-      "code_challenge": "mI8-ICjSy1G8m4G56M2HeatZG10pAuzA1xAGwzn2HIA",
+      "code_challenge": "tCaIavfdnLXPJvnlRBY-KQFQybbrKAK6_zDbeQf7-qU",
       "code_challenge_method": "S256",
       "redirect_uri": "https://sui.example/session/callback",
       "response_type": "code",
       "scope": "openid",
-      "state": "Jb8L-6fvMn2c7aVnN_koZOtRf1qSmkWzouiDn2dA6m8"
+      "state": "tHMFlm_QD5lyMQNRvXWcujVMag1fBlN4nbMO2QWeZlc"
     },
-    "redirectDigest": "sha256:2a6ee90da4104e8f963785d1e15e0ae256e677f1489571a6bd8ba700c1596234"
+    "redirectDigest": "sha256:fba7de1a7b0028308219833d166e3a5734570c7d19fdd9cdf7dee00bd6a75302"
   },
   "scope": "Calls SUI's login initiation with test settings and checks the redirect parameters and pending cookie. No broker, callback, token exchange, or session issuance is exercised."
 }
