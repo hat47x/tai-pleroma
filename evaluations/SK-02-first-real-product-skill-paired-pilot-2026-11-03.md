@@ -193,3 +193,15 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 | E48 | H3`skill_loaded`の二重記録 | 重複として拒否 |
 
 **限定実行Evidence**：[SK-02 GitHub Actions #41849280505](https://github.com/hat47x/tai-pleroma/actions/runs/41849280505)のJob logでNode構文検査と合成E01〜E48 **48/48 PASS**を確認。実RunのcheckoutはPR merge-refであり、開発Branchの後続文書更新の検査結果へ無条件に流用しない。これは**実Node実行によるtest-only JSON読込処理**の結果で、実TEI Product/実Harnessの四Session、実Tool/Source読込、独立Oracle、OS/Network Egress、Ownerの意味受理は**NOT RUN**。
+
+
+### 14.1 合成単体から実CLIファイル入口へ進めた限定確認
+
+[GitHub Actions #41849868908](https://github.com/hat47x/tai-pleroma/actions/runs/41849868908)の実Job Logを確認し、Node構文検査・E01〜E48の合成**48/48 PASS**に加えて、既存Checkerの**CLI実ファイル引数経路**を使用した二つの入力拒否を確認した。
+
+1. 合成JSONファイルの重複したtrialsキーはCLI終了非0、出力JSONのverdict=ineligible、invalidにDUPLICATE_TRIAL_JSON_MEMBERを含む。
+2. 不正なJSON構文はCLI終了非0、invalidにINVALID_TRIAL_JSONを含む。
+
+これは**TAI Checkerが実ファイルを読み、判定結果を出力した観測**であり、TEI Go CLI・外部AI Harness・実Source消費・実Egress/権限・独立Task Oracleを使った比較ではない。「無許可の操作がなかった」と記されたbooleanの真正性は未保証。実H2/H3の4独立Sessionをこの2つのCLI入力試験で代替しない。
+
+**次の評価**：SK-SRC01〜06のSource実読込と独立Task Oracleを優先し、AI-generated JSON Candidateに対しても実Log・実Skill Package Closure・現在Grant/Disclosureを照合できる場合だけ増分効果を測る。TAI #422の最小価値原則に従い、初回のTEI単独TaskへSHO Reader／EKI Suitability／他Product Skillを強制しない。
