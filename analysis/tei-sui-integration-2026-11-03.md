@@ -454,3 +454,15 @@ create 200 / view 200 / eventCount 1 / docId一致 / Bearerヘッダ一致
 - 監査イベントは文書の閲覧（view）で発行される
 - `SUI_AUDIT_ALLOW_IN_SAFE_MODE=true`が無いとsafe modeのイベントは送られない
 - シンクはローカルの受信用プロセス
+
+## 管理プレーンの認証分離（2026-11-03）
+
+`GET /admin/provision/audit`で、管理キーと業務キーの分離を確認した。[receipt](../evaluations/records/SUI-TEI-admin-2026-11-03.json)
+
+```text
+anonymous 401 / business key 401 / admin key 200（events配列）
+```
+
+- 管理者キーは`X-Admin-Api-Key`ヘッダ
+- 業務キー`X-Api-Key`では管理APIに到達できない
+- 利用者provisionとIdP段階（stage B）は未確認
