@@ -161,3 +161,16 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **CIで確認した範囲（2026-11-04）**：[TAI SK-02 Checker Actions #41788067694](https://github.com/hat47x/tai-pleroma/actions/runs/41788067694) は **completed/success**。実Job `JavaScript syntax and 41 synthetic cases` のログで `node --check` PASS、`--self-test` **41/41**（E33〜E41を含む）を確認。これは**PRの当該Runのmerge checkoutにある同Checker**への実Node試験であり、更新前Runや別ProductのPassと合算しない。GitHubの試験実行は本物だが、入力は全て公開合成JSONであり、実Harnessや実Observerの検証を含まない。
 
 **未実施**：外部Harnessの実Loader、四Session、TEI実Tool経由の同一試行、実Egress/Grant、独立Oracle、Product Owner受理は**NOT RUN**。後続のMarkdown変更に対する新HEAD CIは、そのCommitの結果を別に確認する。
+
+
+## 13. 2026-11-04：メタデータ適格と実Read達成の独立採点（SRC01〜06）
+
+[TAI初回資格Runbook §11](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)に、[TEI #2822](https://github.com/hat47x/tei-platform/issues/2822)の空Workspaceのvalidate ok／標準catalog13件、[#2823](https://github.com/hat47x/tei-platform/issues/2823)の列挙済だが未読込Source、[#2824](https://github.com/hat47x/tei-platform/issues/2824)のcommands19件とCLI文書13件／契約外world、[merged #2819](https://github.com/hat47x/tei-platform/pull/2819)の宣言Go Source D1と実Build入力D2不一致を、**異なる資格の既存TEI実測・Owner境界**として照合した。
+
+**SK-02の重要な判定補強**：既存Checkerのeligible-to-scoreは四Sessionの条件・自己申告メタデータが整っているという**試行比較候補**でしかない。「Taskが必要とした利用者定義を本当に読めたか」は独立Oracleで別採点。特に空Workspace／標準stdだけのcatalogでvalidate okでも、**利用者定義がLoadedされたとは言わない**。最初の正答課題は、事前に固定された利用者の型付きSubject kind/id、当該Source/Workspace版、Catalog/Inspectの対象一致、validateの診断保持を実Tool logへ照合する。H2/H3両腕で対象が未読込でも、比較の資格とタスク正答を混同しない。
+
+**最短反証**：RunbookのSK-SRC01〜06を使い、empty/unknown root/unparsed managed file/CLI contract mismatch/real named subject/Build D1→D2を判別。ここで原CLI修正やJSON Contractの新仕様をTAIが定義しない。最初の4セッションでは**TEI read-onlyの一Subject**だけを採点し、複数Build・AI生成Scenario・EKI/SHO/全管理Fileの完全ロードを必須にしない。Goの実Function/Scenarioについては既存[TEI #2811](https://github.com/hat47x/tei-platform/pull/2811)/[#2828](https://github.com/hat47x/tei-platform/pull/2828)のJSON test-only候補と独立Expectedに任せる。
+
+[TAI mainのreference-tei-model](https://github.com/hat47x/tai-pleroma/blob/main/tools/reference-tei-model/README.md)には、固定されたSCN-001の型定義とCatalogを実照合できる限定入口が存在する（[merged TAI #105](https://github.com/hat47x/tai-pleroma/pull/105)）。同ConnectorのPin/ModelBinding/Checkout PASSは当該Sourceの参照結果であり、SK-02の別Workspace/外部Harness/独立正答を自動充足しない。追加の中央Source RegistryやSkill Loaderを作らない。
+
+**今回の成果は受入票とRunbookの更新のみ**。TEI Issueの元実測、TAI既存Connectorの限定既存実測、新SK-SRCの未実施、Skillの実H2/H3比較を分離する。**実Product Skill Load、4独立Session、独立Oracle実採点、実OS/ネットワーク、Owner意味受理はNOT RUN**。
