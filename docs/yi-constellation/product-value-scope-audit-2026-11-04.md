@@ -187,3 +187,15 @@ Changed files and PR / tests actually run / NOT RUN / disclosure scope
 - **VA-G3**：VA-EでScope・環境・事実を点検し、VA-Iが製品の既存Issue/ADRへの最小差分を提案。Owner未受理なら確定しない。複数モデルの一致だけで製品要件を変更しない。
 
 **計画上のExit**：少なくとも2件の独立反証とSource/Evidence点検を、Owner判断可能な形で記録し、「標準で残す／用途で選ぶ／研究で続ける／他Ownerへ移す／撤回候補／未確認」を理由付きで提案する。プロセスのための新Harness・検証エンジン・中央評価DBを製品要件化しない。
+
+
+## 11. 初回実証手順：VA-02への受け渡し
+
+[VA-02：製品独立性を保った初回実証・証拠引継ぎ手順](../../evaluations/VA-02-cross-product-first-run-protocol.md)を、既存[VA-01](../../evaluations/VA-01-product-value-necessity.md)の**試験実行側の入口**として追加する。VA-01は価値と過剰要件の判定票、VA-02は実行ラダー・停止条件・Expectedと観測の取り違えを防ぐRunbookであり、Product固有のテスト/Meaning/Authorizationの正本ではない。
+
+- **依存を不必要に直列化しない**：TEIのtest-local Go Scenario→保存Scenario→CLI→Webは段階的検証。SHO Markdown L0保存やEKIの「分散しない」判断はTEI/TAIの全面完成を待たず並走可。TAI外部Harnessや製品横断Handoffは、それぞれの単独製品証拠を利用する任意の後続検証とする。
+- **7段階の資格連鎖**：Declared/Available/Resolved/Eligible/Observed effect/Received/Qualifiedを個別記録。説明上の能力、実CLIの存在、実行資格、Commit後観測、同一AttemptのConsumer実Read、Owner品質受理を混ぜない。
+- **独立Expected先行**：VA-02 V02-01〜09に、未実装CLI、Web 403、1,000件上限、POST後503、A→B→A、Claim ACKのみ、期限内復旧不能、SHO出典未解決、Grant失効を置く。全Caseは現段階では**NOT RUN**。
+- **Exit条件**：VA-T2とVA-E1の双方について実測正負例、VA-X反証、VA-E Source/Evidence照合、比較可能なBaseline、Consumer/Reader観測を揃える。未実施・未受理を合格へ昇格させない。
+
+既存[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)、[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)、[EKI #58](https://github.com/hat47x/eki-fabric/issues/58)へ実証のOwnerを返す。横断#422と本計画へ第二のRegistry、別Scenario DB、Runnerや実認可を実装しない。
