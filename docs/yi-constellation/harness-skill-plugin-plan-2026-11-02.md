@@ -639,3 +639,14 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **検査資格**：TAIのJSON重複拒否は入力試行票の構文・一部型とメタデータ整合しか保証しない。[TEI #2813](https://github.com/hat47x/tei-platform/pull/2813)のAI候補や[TEI #2669](https://github.com/hat47x/tei-platform/pull/2669)のSource→モデルInstructions流入に対する独立検証・安全保証を代行しない。新たな一般JSON ParserやPrompt Sanitizer、Agent Host、中央Policy、Product別RuntimeをTAIへ追加しない。Product横断の価値と費用は既存のSK-MIN/H2/H3実証で比較する。
 
 **状態**：この節は既存Ownerのsource-static／実CI範囲の対応づけ。上記の別Product実操作・二Product Consumer Handoff、EKI新Transport、SHO Reader、複数モデル実験、Owner正式受理は **NOT RUN**。
+
+
+## 34. 2026-11-04：同じHashだけで異なるCLI Workspaceを比較しない
+
+既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)には、4 Sessionの`workspace_tree_digest`・WorldFP・SourceIndexFPを揃えても、**実argvのWorkspace pathやCLI CWDが一方だけ異なる試行を比較候補と誤分類し得る**欠陥があった。外部ハーネス間のSource忠実性、TEI SourceのDeclared/Loaded/Consumed、TAI #271の再資格化の議論を、追加の正本やRuntimeを作らず**既存試験票の比較可能性**へ還元した。
+
+**実装**：[SK-02 §14](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)に従い`cli_cwd`を初回試行の同条件欄に追加し、`model catalog/inspect/trace/validate`の各`-workspace`引数を同Trial・全4Trialで検査する。曖昧なWorkspace二重指定、異なるpath、初回Profile外の`-world`は不適格、記録不足は`insufficient-evidence`とする。これはGo CLI全flagやSource Byteを解析するものではなく、同一path文字列＝同一原Source、同一Authority、同一Business Meaningという判断はしない。
+
+**限定CI Evidence**：[TAI GitHub Actions #41850429887](https://github.com/hat47x/tai-pleroma/actions/runs/41850429887)にて既存E01〜E48とE49〜E60を含む合成60/60 PASSを実Job logで確認。これまでの48件に対して実入力条件の負例を12件追加した。Product経路で実観測された4 Session、Token/Wall time/独立Oracle/外部Egressは未実行。CI緑をProduct効果へ転用しない。
+
+**負担の制限**：[初回Runbook §12](first-real-skill-qualification-runbook-2026-11-02.md)の同一read-only Workspace Taskだけに適用し、複数Source／EKI分散ジョブ／SHO文書再開／別環境へHandoffする場合はそれぞれの既存Owner・既存SK-03へ返す。root TAI Activity Skillを増大させず、Product Skillに新たな共通Host/Schemaを要求しない。結論として初回の次の価値検証は依然**実H2/H3 Skill Loadと独立Oracleの4 Session**であり、今回追加したのはその判定票の実装品質だけである。
