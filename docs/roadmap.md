@@ -76,7 +76,7 @@
 
 ### 入力閉包と契約発見の実証前確認（2026-11-04追補）
 
-[VA-00監査台帳 TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の9 Laneの文書整合性照合とF2のOwner判断59件を受け、[VA-03](../evaluations/VA-03-evidence-readiness-preflight.md)を[VA-02](../evaluations/VA-02-cross-product-first-run-protocol.md)のP0/P1前提に接続する。既存Phase 0〜3・各Productの採否は変更しない。
+[VA-00監査台帳 TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の9 Laneの文書整合性照合とF2のOwner判断59件を受け、[VA-04](../evaluations/VA-04-evidence-readiness-preflight.md)を[VA-02](../evaluations/VA-02-cross-product-first-run-protocol.md)のP0/P1前提に接続する。既存Phase 0〜3・各Productの採否は変更しない。
 
 - **最優先の反証**：TEI #2822/#2823/#2824で確認された「validate okでも利用者Source未読込」「managed file≠Parser実消費」「CLI discovery≠安定版付きJSON」を、実Source/CLI/Scenario/Expectedの別証拠に分けて検証する。Source不足でも安全なCandidate探索は妨げず、完全な検証成功を名乗らない。
 - **EKIの契約追随**：EKI #698の3値実装と4値ADR案の不整合をOwner待ちとして扱い、VA-E1はSuitabilityの非分散判断・Admission/Policy拒否・期限内回復を別々に記録する。
