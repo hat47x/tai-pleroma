@@ -174,3 +174,22 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 [TAI mainのreference-tei-model](https://github.com/hat47x/tai-pleroma/blob/main/tools/reference-tei-model/README.md)には、固定されたSCN-001の型定義とCatalogを実照合できる限定入口が存在する（[merged TAI #105](https://github.com/hat47x/tai-pleroma/pull/105)）。同ConnectorのPin/ModelBinding/Checkout PASSは当該Sourceの参照結果であり、SK-02の別Workspace/外部Harness/独立正答を自動充足しない。追加の中央Source RegistryやSkill Loaderを作らない。
 
 **今回の成果は受入票とRunbookの更新のみ**。TEI Issueの元実測、TAI既存Connectorの限定既存実測、新SK-SRCの未実施、Skillの実H2/H3比較を分離する。**実Product Skill Load、4独立Session、独立Oracle実採点、実OS/ネットワーク、Owner意味受理はNOT RUN**。
+
+
+### 12.1 追試：AI生成試行JSONの重複キーを拒否する（E42〜E48、2026-11-04）
+
+他チャットの[TEI Draft #2813](https://github.com/hat47x/tei-platform/pull/2813)では、AIが追加するJSONの二重member（特に`source`や`expected`）を標準decodeが後勝ちで上書きする危険に対し、**TEIに既存の重複member拒否を再利用**する修正が進んでいる。TAIの既存SK-02 Checkerも`JSON.parse(raw)`のみでJSON票を受理していたため、`unauthorized_egress_observed:true`が同じmemberの`false`で上書きされ、E33〜E41のboolean型検査の前に見えなくなる反例があった。
+
+[既存Checker](./tools/check-sk02-pair-eligibility.cjs)の**JSON読込入口だけ**を限定修正：まず標準`JSON.parse`で構文を確認し、同じ原JSONテキストのオブジェクト内keyをスコープごとに検査する。`\\u`エスケープ後に等しいmember名も重複として拒否。別のTrialオブジェクトに同名keyがある正常票は許容。重複・不正JSONは`ineligible`とし、Task正答は一切採点しない。独立のProduct Schema、共通Parser、外部Harness Loaderは追加しない。このテキスト走査は*有効なJSONを受理した後*の限定検査であり、外部から来る他形式、巨大入力、OS実効権限まで保護する一般的入力安全機構ではない。
+
+| case | 入力負例／正例 | 判定 |
+| --- | --- | --- |
+| E42 | ルート`trials`の重複 | 重複として拒否 |
+| E43 | `unauthorized_egress_observed`のtrue→false上書き | 重複として拒否 |
+| E44 | エスケープで表記を変えた同一key | 重複として拒否 |
+| E45 | 外側からは未使用の入れ子Objectに重複key | 重複として拒否 |
+| E46 | 4 Trialの**異なるObject**で同じkeyを使用 | 正常票として許容（Task正答は未採点） |
+| E47 | JSON構文が不正 | 入力不適格として拒否 |
+| E48 | H3`skill_loaded`の二重記録 | 重複として拒否 |
+
+**限定実行Evidence**：[SK-02 GitHub Actions #41849280505](https://github.com/hat47x/tai-pleroma/actions/runs/41849280505)のJob logでNode構文検査と合成E01〜E48 **48/48 PASS**を確認。実RunのcheckoutはPR merge-refであり、開発Branchの後続文書更新の検査結果へ無条件に流用しない。これは**実Node実行によるtest-only JSON読込処理**の結果で、実TEI Product/実Harnessの四Session、実Tool/Source読込、独立Oracle、OS/Network Egress、Ownerの意味受理は**NOT RUN**。
