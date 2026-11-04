@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   synthetic-sk02-only:
-    name: JavaScript syntax and 41 synthetic cases
+    name: JavaScript syntax and 48 synthetic cases
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -28,5 +28,5 @@ jobs:
           git status --porcelain
       - name: Check JavaScript syntax
         run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
-      - name: Execute public synthetic E01-E41 only
+      - name: Execute public synthetic E01-E48 only
         run: node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test
