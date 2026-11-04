@@ -60,3 +60,10 @@
 **最初のレビュー終了条件**：6製品の一次判定と未調査母集団、VA-T2/VA-E1の各正負例の独立Expected、少なくとも2件のVA-X反証とVA-E裏付け、Ownerへの差分提案。作業者未配置・実験未実行・ホールドアウト未構成なら、その事実を完了と誤認しない。
 
 **本票は試験定義であり、上表のケースを実行した記録ではない。**
+
+
+## 5. 2026-11-04 実装状態の更新注記
+
+VA-T2のG0に補足。[TEI mainの6-Step Scenario](https://github.com/hat47x/tei-platform/blob/main/reference/driver-scenarios/order-entry-pattern-smoke.json)、[Scenario parser](https://github.com/hat47x/tei-platform/blob/main/internal/scenariotest/scenario.go)、[CLI verify/generate/run/check](https://github.com/hat47x/tei-platform/blob/main/cmd/tei/scenario.go)の実在を2026-11-04にSource-static確認。旧Issueの「保存Scenario未実装」は限定Referenceが追加された現mainにそのまま適用しない。汎用Scenario compiler/Web E2E/実Provider Write/現行Owner受理は別の未実証領域。
+
+生成AIの自由なCase追加は[Draft #2813](https://github.com/hat47x/tei-platform/pull/2813)のPipeline候補JSONと、[Draft #2811](https://github.com/hat47x/tei-platform/pull/2811)のAI-first Coverage設計を区別。テスト専用JSONとAccepted Driver Scenarioを混同しない。詳細な作業・Negative・資格連鎖は[VA-02 §6](VA-02-cross-product-first-run-protocol.md)に集約。独立ExpectedとCoverage分母の実証は **NOT RUN**。
