@@ -182,3 +182,53 @@ Product Skillの能力一覧／Source→Role解釈の**実依存閉包**／Opera
 | SRC06 | Generator宣言D1と実Build D2が相違 | Generator試行は不適格／証拠不足。初回read-only Taskには不要な追加要件を課さない |
 
 **帰属**：TEI #2822〜24のSource/CLI修正、#2595のBuild Source固定は各TEI Ownerの判断。TAIが実測したのは本節の文書照合のみ。新SK-SRC試験、実H2/H3四Session、独立Oracle/Provider/OS/Network、Owner Meaning Acceptanceは**NOT RUN**。既存のTool-onlyとProduct Skillの実験順を変更しない。
+
+
+---
+
+<!-- sk02-one-real-trial-freeze-20261104 -->
+## 12. 2026-11-04：これ以上の合成PASSを実Harness資格の代替にしない――最初の実試行を凍結する実施票
+
+**決めること**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の要求（DSHに限定しない代表Harness）、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)の実Product Skill、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の過剰要件監査に基づき、最初の実験で必要なものを**1 Product／1 read-only User Subject／1 Harness／同じ実CLI／四つの独立Session／独立Expected**へ限定する。第2 Harnessはこの実験の後のSK-03に含める。合成E01〜48、NC01〜16、外部MCP仕様のケース追加はそれぞれ有用だが、この最初の真の証拠を置き換えるものではない。
+
+### 12.1 事前に固定する一枚のTrial Card（新Canonical Schemaではない）
+
+| 固定項目 | 採取元・決め方 | 失格/保留 |
+| --- | --- | --- |
+| **Task／唯一のSubject** | 公開TEI Workspace（初期候補：`reference/workspace`）、**実Catalogで存在が確認できる利用者定義**の`subject.kind/id`を、Agentへ渡す前に独立担当が固定。候補例`semantic-data:sales.order`は実版未確認ならCandidate | `validate.ok=true`や標準stdのCatalog 13件だけではRequired User Subject読込の証拠にならない（TEI #2822/#2823） |
+| **Source／再現性** | checkout exact HEAD・clean/dirty、workspace Source tree byte／改行・World/SourceIndex FP・該当Subjectの実元Source locator | Source位置だけが移動した試行やdirty差が混在すれば、同じ条件の腕として採点しない |
+| **CLI／能力** | `go build`した**一つの実Binary**のSHA256・Go/toolchain/OS・実argv/cwd/exit/stdout/stderr・`commands`の現物。既存TAI [reference-tei-model](https://github.com/hat47x/tai-pleroma/blob/main/tools/reference-tei-model/README.md)の厳格Pin/Checkout/ModelBindingを**別の限定比較証拠**として再利用可能 | `commands`の19件を「全CLI／全JSON安定契約」としない（TEI #2824）。`operations -out`、`artifacts -out`、Shell redirect/chainを初期read-only Scopeに混ぜない |
+| **Harness条件** | 実起動できた外部Harness名・版・model/provider・plan/請求経路・Profile・Session・実Tool可用性・現在の公開/権限。最初のHarnessのブランドを**必須指定しない** | Claude Code/Codex/OpenCode/DSHの公称仕様で実Install/実Skill loadを代替しない。Cloud/IDEは異なる実行Profile |
+| **Skill差分** | H2=実CLI Tool-only、H3=同Tool＋TEI Product `yi-tei-modeling`の実Package/References/Scripts closure。TAI横断Skillは投入しない。H3のforced loadとauto discoveryは別のTrial Group | H2にSkill文書・前Sessionの答・Oracleが紛れたら比較を中止。H3の実Load byte/経路が未観測ならSkillの因果効果は採点不能 |
+| **独立Oracle** | Productの実Catalog/inspect/Source/Warningに基づき、Agent試行前に独立担当が対象ID・元Source・Version・必須Warning/Unknown・許可Toolを事前登録。Agent/Skillへの正答漏出を防ぐ | Agent自身の回答や合成Checkerを独立Expectedへ転用しない。空/部分Sourceを「完全な正解」にしない |
+| **利用と開示** | **合成・公開済みTEI Modelだけ**を実験に使用。Harnessが読み込んだTool結果、外部へ許可された送信内容/実観測先、current Grantと未観測面を限定記録 | 実OS/Network全面非漏えい・Cloud retention・本番Host権限はこの実験の合格範囲外。秘密Rawや内部OracleをHarnessへ投入しない |
+
+**コマンド例（利用者が実TEI checkoutと公開Fixtureを固定した後にのみ実行）**：
+```sh
+# Product-only baseline。独立した一時directory、固定したGo/toolchainで一度だけビルド
+go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
+/tmp/tei-sk02 version -json
+/tmp/tei-sk02 commands
+/tmp/tei-sk02 model catalog -workspace reference/workspace
+# Catalog実出力を見てSubject kind/idを確定。以下は公開資料上の候補
+/tmp/tei-sk02 inspect -workspace reference/workspace -subject-kind semantic-data -subject-id sales.order
+/tmp/tei-sk02 validate -workspace reference/workspace -json
+```
+`/tmp/tei-sk02`は例示の保存先でありWindows等では環境に合わせて変更する。Git HEAD/実Binary hash、workspace tree、Exit/Warningを別途採取する。stdoutに含まれるSource path等は公開する前に用途とAudienceを確認する。上の`inspect`候補が見つからない場合は**現在のCatalogから実在する一つを選ぶ**。存在しないSubjectのまま「成功」させない。Traceは必要なときだけ別に実行する。
+
+### 12.2 実行順序と停止規則（既存SK-02 Checkerを再利用）
+
+1. **W0／No Harness Product baseline**：Product単独CLIの実Source読込・各exit・実Source Indexを照合。TAI [merged #105](https://github.com/hat47x/tai-pleroma/pull/105)のConnectorを使う場合は、そこで照合したSCN-001の型と**今回のSubjectが同一か**別に記録し、別Task/版を混用しない。
+2. **W1／H2 2独立Session**：同じ公開Taskと実Binaryを外部Harness Tool-onlyで呼ぶ。初期設定の違い、実Tool args/results、許可開示、Prompt/Source/Model/Grantの一致を観測。CLIを手元で動かしただけでは「Harnessが呼べた」にならない。
+3. **W2／H3 2独立Session**：TEI Product Skillの同一closureを**実ロード**し、別Sessionで同じToolを呼ぶ。順序は`H2→H3→H3→H2`、forced loadを先にしてよい。auto discoveryは別Group。
+4. **W3／比較資格と正答**：[既存SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)で**合成専用の事前チェックを実Trialの記録の検査にも再利用**する（新Checkerを作らない）。非重複JSON key、実観測の証拠参照・Source同一性を確認するが、Checker出力`eligible-to-score`は回答正答/機密非漏えいを意味しない。独立Oracleが指定Subject/Source/Warning/Unknownと実Tool結果を別採点。
+5. **W4／決定**：正答、余分なTool/Token/Adapter/人手、誤った成功、現在Grant未確認を**別欄**で比較。Skillが実ロードできなければ`ineligible/insufficient-evidence`、Skillに効果がなければ**Tool-onlyを維持**。最初の1組の限定結果から全Harnessの改善・p95・標準配布を主張しない。
+6. **W5／別Harnessは後続**：W0〜W4のTask/Source/独立Expectedを引継ぐ条件が満たされた時点で、[SK-03](harness-interoperability-and-handoff-pilot-2026-11-03.md)の二Harness Tool/Skill互換と[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の現在性再資格化へ進む。MCP cache/MRTR/Tasks、組織別Read、EKI低遅延/マルチモーダル、TEI複数Buildは**必要な実環境が現れた時だけ**追加検査し、初回をブロックしない。
+
+**直ちにSTOP／Claimを制限する条件**：実HarnessにAccess不可／実Tool未呼出し／Product CLI/Skill実Load不明／対象User Subjectが未読込／Sourceの版または試行腕が混在／公開許可なし／入力JSONが重複member／Oracle混入／予期しない書込み／実Host Grant不足。停止時は成功扱いにも「全Harness非対応」にもしない。安全なProduct-only read-only診断を維持して不足点だけ各Ownerへ返す。
+
+### 12.3 採用判断と価値の確認
+
+- **今回確定している局所実績**：TEI本体にmergedの`yi-tei-modeling`があり、TEIの実CLIの限定CIとTAIの既存`reference-tei-model`は別の実証として存在。SK-02 Checkerは[合成E01〜48の限定Node CI](https://github.com/hat47x/tai-pleroma/actions/runs/41849280505)で48/48 PASS。
+- **まだない実績**：SK-02の**実四Session/実Skill Loader/モデルからのCLI実呼出し／独立業務正答採点／実モデル送出/実OS強制**。それらの未実行分を`NOT RUN`として明示し、旧局所CI・合成試験・Agent自己申告で埋めない。
+- **Owner/Gate**：本票は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)とTAI Draft #270のSK-02実行準備であり、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)がProduct CLI/Skill、[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)が独立Driver Scenario、[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)が費用と品質、TAI #232/TEI #2515が外向き開示/実OS、TAI #422が過剰要件回避。**新Host/Registry/Agent Loop/Schemaや追加Mandatory Test Suiteを先行しない。**
