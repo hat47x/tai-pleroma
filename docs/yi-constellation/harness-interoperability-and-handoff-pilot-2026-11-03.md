@@ -403,7 +403,7 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 
 [TEI限定実S1 #42101157330](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330)は、固定TEI Go実行物から公開`semantic-data:sales.order`をCatalog/Inspect/Validateで取得し、Source Indexのartifact fingerprint/definition referenceと独立Source byteが一致したことを示す。**TEI Toolが一つの公開Subjectを実際に読める基線は存在する**。しかしAI HarnessがそのToolを呼んだわけではなく、Product SkillをLoad/Useしたわけでもない。
 
-[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)の現状は異なる。SHO mainは確認時LICENSEのみで、Draft #12〜14のMarkdown Fixture/Python test-only Readerは**SHO製品CLI/Readerの実証ではない**。G1bではMarkdown一文書の実raw byte、実選択Parserとversion/profile/options、実Parsed link occurrence／階層／未対応Grammar、独立Expectedをつないで初めてProduct read-only資格が成立する。SHOの通常Markdown編集・読取はTEI接続、MMI再接続、AI、PDF/DOIの取得を必須としない。
+[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)では、新たに[Draft #17](https://github.com/hat47x/sho-composer/pull/17)の**実Node製品Reader候補**が確認された。固定HEAD `b4176b0df6ac62b02b40108391d024336ed71d7b`にある`src/g1b-reader.cjs`と`bin/sho-inspect.cjs`は、Markdown一文書の実disk bytesを読んでsha256と`markdown-it 14.3.3`の選択Parser条件、リンク出現と階層、未対応範囲を返す。[CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)のUbuntu/Windows実Jobで各14/14 PASS。これは**候補実装の実CLI・有限Fixtureの限定成功**であり、main統合・正式G1b受理・外部HarnessでのSkill利用ではない。SHOの通常Markdown読取にTEI接続、MMI再接続、AI、PDF/DOI取得を必須化しない。
 
 **対称な抽象契約を先に作らず、共通の『主張を支える観測点』だけ揃える**。TEIはGo CLI/SourceIndex/Subject、SHOはMarkdown Reader/Parser/Occurrenceで実証単位が違う。`Skill supported`という一語で両者を同じ完成状態にしない。選択済みParser versionの変化が同一raw Markdownから異なるLink/階層を生む時、過去の解釈/索引を無条件再利用しない。一方、同Bundleへ未選択Parser候補を追加しただけで、実選択・実消費・必要Artifactが不変なら全面失効を前提にしない（TEI #1251/#2600と同じ評価上の区別）。
 
@@ -411,15 +411,15 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 
 | 資格段階 | TEIで観測済み／未実施 | SHOで必要な最初の観測 | TAI/Harness側での停止線 |
 | --- | --- | --- | --- |
-| **Product source consumed** | S1の一Subject Indexed Source/definition/byteが実CIで照合済み | G1b製品ReaderがMarkdown raw byteを実Parserへ渡し、selected version/profileを固定する必要あり | ファイル配置、Manifest列挙、Fixture PASSだけではProduct read成功としない |
-| **Consumer capability** | 固定Go CLIコマンドが実Node Probeから呼ばれた | G1bのread-only製品Command/Readerとstdout/exit/未取得診断の実測が必要 | Feature/CLIが実在しなければSkillは利用資格なし。文書説明はCandidate |
+| **Product source consumed** | S1の一Subject Indexed Source/definition/byteが実CIで照合済み | Draft #17の実CLIが一文書のdisk raw byte・sha256と選択Parser 14.3.3を有限Fixtureで実観測。Source revisionは`unknown` | Fixtureと同じ実ファイルを読めた範囲のみ。配布版・任意文書・全Source閉包へ一般化しない |
+| **Consumer capability** | 固定Go CLIコマンドが実Node Probeから呼ばれた | 候補`sho-inspect.cjs inspect <local.md>`のstdout/exit、missing-file=非0、invalid UTF-8/size拒否が実Node試験済み。正式公開CLI契約は未採用 | `status=indexed`でも`coverage.allDocumentReferencesEnumerated=false`。全参照取得・外部URL取得・Renderer出力を宣言しない |
 | **Harness load/invoke** | H2 Tool-only、H3 Skillありの実AI Sessionは未実施 | G1b成立後、SHOにTool/Skillが必要なら別途実Harness接続 | Skill配置/パッケージ公開≠実ロード/Tool呼出し/現在Grant |
-| **Independent task outcome** | SK-02正答・費用・Warning/Unknown/実Audienceは未採点 | RI-L0のLink/Occurrence/Grammar範囲を独立Expectedと照合 | Testerの自己申告boolではなく実Reader/Loaderログを要求 |
+| **Independent task outcome** | SK-02正答・費用・Warning/Unknown/実Audienceは未採点 | RI-L0 fixtureのLink/Occurrence/Grammarを独立Expectedと比較した限定14件（Ubuntu/Windows）PASS。選択Parser 15系・実Writer/Consumerは未試験 | 候補Readerの局所一致をReader正式採用やSkill効果に代用せず、後続の実Reader/Loaderログを要求 |
 | **Package／Release** | 単一Go BinaryとSkill closureを対象別に固定。シリーズ全体未資格 | SHO製品Reader main統合、選択Parser lock、実配布Memberと実CLI Reader | Bundle Digest更新、root CI PASSを選択Target/実Install/Invokeの資格に代用しない |
 
 ### 16.3 独立反証 QSB-01〜05（新Runner・Parser Registryを作らない）
 
-- **QSB-01：Parserが実在しないSkill**。SHO Draft Fixtureは存在するがProduct G1b Readerは未実装。シリーズ案にSHO Product Skillを加えても、`Product Tool usable`／`Harness validated`はともに未資格と報告。TEIのCLI成功を横流ししない。
+- **QSB-01：実Reader候補を正式Skill資格と誤認**。SHO Draft #17には固定HEADで実Read-only Node/CLI候補が存在し、有限Fixtureの両OS 14/14 PASSも実測済み。しかし未merge・Owner未受理・最終配布Contract未確定であり、シリーズ案にSHO Product Skillを加えても`Harness validated`は未資格。従来の「Reader未実装」は訂正し、TEI CLIの成功とも合算しない。
 - **QSB-02：Parser selection drift**。同じMarkdown raw byte・Path/Source SHAでも、実選択Parser 14系→15系やoptions変更で参照定義・occurrenceの解釈が異なる場合。前索引の現在資格を再評価。版差の有無は[SHO #16](https://github.com/hat47x/sho-composer/issues/16)の実G1b試験で判定し、差が生じたと未実行で断定しない。
 - **QSB-03：未選択Candidate追加**。Bundle内にParser/Provider候補が増えても選択・実Read Closureが不変なら、当該Consumer解釈を全面失効させる理由にはならない場合がある。ただしdefault selection/fallbackが変化したなら必要再資格化。
 - **QSB-04：実Parserと入力不一致**。Fixture raw digestと実Readerの消費Byte/Disk path/dirty bufferが異なる。Parsed Link件数一致でも別Input/別Sourceとし、`unknown`を保持する。
@@ -427,8 +427,18 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 
 ### 16.4 最初の実証を増やさないための優先順
 
-**P0**：既存TEI W0/S1実CLI基線を保存して、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の最初のH2実Tool call→H3実Skill Load→四Session比較に集中。**P1（別の独立Product lane）**：SHO #16のG1b一文書Readerと独立Expected/Parser版差を実検証。ここでTOOL/Harness/TEI/AI/PDF連携を必須にしない。**P2（条件付き）**：SHO Product Readerが成立し用途価値がある場合のみ、Tool/Skillの配布・別Harness使用を試す。QSB-01〜05は既存ケース/証拠票へ追加評価するだけで、TEIの初回S2をSHOのReader待ちでブロックしない。
+**P0**：既存TEI W0/S1実CLI基線を保存して、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の最初のH2実Tool call→H3実Skill Load→四Session比較に集中。**P1（別の独立Product lane）**：SHO #17のG1b候補Readerは有限14/14が両OSで実測済み。次は#16 Ownerの正式Grammar／Byte・Revision/Parser版／診断受入、実Parser版差・未定義参照などの**未充足項目だけ**を別に検証。TEI/AI/PDF連携は必須にしない。**P2（条件付き）**：SHO Readerの用途別資格が成立し利用価値がある場合のみ、Tool/Skill配布・別Harness使用を試す。QSB-01〜05は既存ケース/証拠票へ集約し、TEI初回S2をSHO待ちにしない。
 
 **Owner**：TEI #2605がTEI実Source/Skill、SHO #16/#7/#4がParser/Read/Document、TEI #1251/#2600が未使用候補と選択依存、TAI #74が配布Profile・公表、#168が実Harness互換と価値、#422が独立反証。新Product統合Host、第二Parser Reader、共通Proof/Capability Registry、全Agent対応宣言は作らない。
 
-**現在の事実**：TEI S1の限定Source-binding CIとTEI #2889のtoy RunPlan Go 3/3の局所実測は別の証拠であり、本節から統合E2Eを主張しない。SHO G1b製品Reader、QSB-01〜05の実Product/二Harness試験、SHO/TEI価値比較、OS外向き送出制御、Owner採用は**NOT RUN／NOT ACCEPTED**。
+**現在の事実**：TEI S1の限定Source-binding CI、TEI #2889のtoy RunPlan Go 3/3、SHO Draft #17のread-only実CLI候補14/14両OSは**異なる版・別Owner・別実験の観測**。SHO候補の実Reader試験はRUN済みだが、正式Reader採用と製品全機能は未受理。QSB-01〜05のHarness/二Product縦断、SHO/TEI価値比較、OS外向き送出制御、Owner採用は**NOT RUN／NOT ACCEPTED**。
+
+### 16.5 2026-11-06：SHO実Reader候補のClaim Ceilingを固定する（新しい実証を正しく反映）
+
+[SHO Draft #17](https://github.com/hat47x/sho-composer/pull/17)の同一HEAD `b4176b0d…`で、[Ubuntu/Windows実CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)はそれぞれNode22・`npm ci --ignore-scripts`・実`markdown-it 14.3.3`を確認し、14/14 PASS。候補`sho-inspect.cjs`は実disk Markdownを読んで原byte hash・長さ・`requestedPath`を返し、入力を再書込みしない試験がある。欠損Fileとリンク0件を別に扱い、UTF-8不正・2MiB超（指定上限）を拒否する局所試験も通過。
+
+ただし`requestedPath`は選択したローカルファイル名であって、Sourceの永続Identityではなく`source.revision=unknown`。`linkOccurrences[].ordinal`は当該Snapshot内の出現順であり永続Occurrence IDではない。位置は**包含するブロックの1-based行**で、厳密なByte offsetではない。`status=indexed`と`linkOccurrenceCount=0`のときも、`coverage.allDocumentReferencesEnumerated=false`／`renderedAnchorsObserved=false`／`externalSourcesAcquired=false`が明示される。よって「Markdown link tokenを解析した」から「全参照・リンク先が存在する・外部Webを取得した・公開できる・SHO文書が正しい」へ主張を増やさない。
+
+**QSB補正の負例**：QSB-01は「Parser不存在」の歴史的前提を除き、「候補の実存在と正式採用を混同する」反例へ更新。QSB-04には原byte一致・実Reader使用・Parser profile/Revisionの差、同じHref列だがLF/CRLFや再インデントでSource/位置意味が異なるケースを既存SHO #16の受入へ残す。QSB-02の異Parser版比較（14.3.3→15.x）は依然**NOT RUN**であり、実際に異なると断言しない。TAIはSHOの独立Reader/Parserを再実装しない。
+
+**初回実験への影響**：TEI H2/H3のTask／Oracle／Session構成は**変更なし**。SHO実Reader候補はP1の独立Product実証として記録し、将来SHO文書TaskがあればReaderの現資格をOwnerが確定した後にTool／Skill配布・Handoffを評価する。QSBの将来Harness試験、第二Harness、正式Owner Meaning/Grammar受理、OS Network Egressは未実行。
