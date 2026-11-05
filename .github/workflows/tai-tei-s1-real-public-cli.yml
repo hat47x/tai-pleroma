@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'evaluations/tools/probe-tei-s1-real-source.cjs'
+      - 'evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json'
       - '.github/workflows/tai-tei-s1-real-public-cli.yml'
   workflow_dispatch:
 
@@ -62,3 +63,18 @@ jobs:
       - name: Confirm evidence remains locally scoped and no unsupported certification
         run: |
           node -e 'const fs=require("fs"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.schema!=="tai.s1.real-tei-public-read/v0" || x.catalogMatches!==1 || x.negative.userSubjectLoaded!==false || x.sourceWitness?.artifactPath!=="semantic/sales/order.tei" || x.sourceWitness?.artifactFingerprint!=="sha256:"+x.sourceDigest?.slice(7) || x.sourceWitness?.definitionReferences<1 || !x.notEstablished.includes("H2/H3 four independent sessions")) process.exit(1)' "$RUNNER_TEMP/tei-s1-receipt.json"
+
+      - name: Cross-check fresh Product receipt against committed S1 ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          LEDGER="tai/evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json"
+          RECEIPT="$RUNNER_TEMP/tei-s1-receipt.json"
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RECEIPT" | tee "$RUNNER_TEMP/tei-s1-ledger-check.json"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.verdict!=="matching-bounded-S1-evidence"||x.compared<30)process.exit(1)' "$RUNNER_TEMP/tei-s1-ledger-check.json"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.sourceDigest="sha256:"+"0".repeat(64);fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-tampered-receipt.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-tampered-receipt.json" > "$RUNNER_TEMP/tei-s1-tampered-log.txt" 2>&1; then
+            echo "Tampered S1 receipt incorrectly accepted"
+            exit 1
+          fi
+          grep -F "ledger mismatch: source bytes" "$RUNNER_TEMP/tei-s1-tampered-log.txt"
