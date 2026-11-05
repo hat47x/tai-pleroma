@@ -287,3 +287,23 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 **実行Evidence**：[GitHub Actions #42011655021](https://github.com/hat47x/tai-pleroma/actions/runs/42011655021) の実Jobログで、SK-02のRequired E01〜E60が **60/60、distinct60、missingなし**、SK-03のRequired NC01〜NC19が **19/19、distinct19、missing／unexpected／resultsDifferすべてなし**を確認。双方ともWorkflowが期待した合成結果が得られたという限定的な成功である。SK-03のProducerは**人工Node子プロセスと合成JSON**で、実TEI Provider・Harness A/Bのデータ交換・現在Grant・秘密データ非送出・独立Business Oracleではない。
 
 **次の実証を増やさない原則**：実HarnessのSK-02 H2/H3では「required／discovered／loaded／executed／qualified」を分け、実Skillのロード・Tool argv/Source・独立Task Expectedを照合する。結果が同じか、CI終了0か、ケース数だけを頼りに「必要なことは確認済み」としない。SK-03は二Harnessを本当に使用する必要が生じた後の実handoffへ進める。実H2/H3四Session・二Harness・Owner意味受理は **NOT RUN**。
+
+
+## 13. 2026-11-05：実DB Commandのunknown結果を別Harnessへ引き渡す場合の停止条件
+
+今回、read-onlyの初回SK-02/SK-03の**次段**として、書込みを実際に必要とするTaskに限ったHandoffの受入を明文化する。TEIの[merged #2853](https://github.com/hat47x/tei-platform/pull/2853)は、限定した実PostgreSQL 14.24環境で製品Invoker→Lifecycle→実CASのE2Eを確認。応答喪失によるunknown後、**同一Operation IDの再照会**でcommittedが分かり、同じ作用の再実行を避ける実例がある。対して[merged #2854](https://github.com/hat47x/tei-platform/pull/2854)では、値のA→B→A後に**新しい冪等キー**で再送すると値一致CASが再び成立し、二つのReceiptが生じる反例を実DBで固定した。従って「最後の値が期待値」「旧処理のレスポンスがない」「再試行したい」だけで新しい論理Operationを作らない。
+
+**条件付きHandoffの最小束**：業務Commandの対象・Purpose・Current Grant・受理した意味とSource/Model/Artifact版／**Operation ID**・**idempotency key**・Attempt/Owner generation／ProviderとTransactionの観測対象／最後に確認したStage（not-started/unknown/committed/rejected等、実Product結果に合わせる）／Receipt IDと保存先・再照会経路／独立ReadとConsumer受領の有無／有効期限・非公開Projectionの許可を**既存Productが出せる範囲で**保存する。欄を埋められない場合は推定せずunknownとする。EKIのTask/Attempt ID、TAI Activity ID、TEI Operation IDを同一の識別子と推定しない。新しい統一Receipt Schemaや中央Operation Ledgerは作らない。
+
+| 状況 | 引継ぎ先の次動作 | 実行/判断Owner |
+| --- | --- | --- |
+| 実行前／未Commitの証拠あり | 現在のGrant・Target/Period・Preconditionを再確認してProductの正規Invokeを検討 | TEI Host/Provider |
+| **Commit結果unknown**／応答喪失 | **同一Operation IDの既存Product照会が先**。二重効果を避けるため、新Operation/keyでの自動再送を保留 | TEI Product／効果Observer |
+| Receiptがcommittedを示す | 必要なScopeで**独立Read/Consumer到達を別に確認**。Receiptだけで利用者への完了宣言をしない | TEI／Consumer Owner |
+| 同じ値へ戻ったABA／別キー再送の提案 | 新しい更新として扱われ得るので、元Operationとの同一性と版/第三者変更を再照合。無人再実行しない | TEI #2564/#2845／業務Owner |
+| after-commit／compensation効果にObserver不在 | [merged TEI #2850](https://github.com/hat47x/tei-platform/pull/2850)の限定停止条件に従い、その効果の無人実行を手前で止める | TEI実行Owner |
+| 第二Harnessへ再開 | 履歴と現在のGrant/Source/Toolを照合し、未知の効果は未知のまま運ぶ。非作用的なread-only調査は続行可能 | TAI #271／各Product |
+
+**反証票（計画、未実行）**：HX-CM01＝unknown直後の新Key再送を拒否／CM02＝同一Operation照会でcommitted判明／CM03＝ReceiptありだがConsumer未読取／CM04＝ABA後の値一致と新Keyの二重適用／CM05＝Observer不在のafter-commit/compensation／CM06＝旧HarnessのPermit・Grantを新Harnessが流用／CM07＝EKIのACK・BodyとTEI DB Receiptを一つの成功に合算しない。各実現はTEI/EKI既存Owner・Toolの実提供可能範囲だけで検証し、架空CLIや再送APIを設計しない。
+
+**証拠と停止線**：実PostgreSQLの限定観測はTEI #2853/#2854、無人効果停止はTEI #2850の成果。TAIが実TEI Command／PostgreSQL／EKI／第二Harnessを今回操作したわけではない。本節は条件付き評価設計であり、HX-CM01〜07、現行Grant・OS/Network・本番Receipt保持/署名・Owner受理は**NOT RUN**。初回TEI read-only H2/H3四Sessionの必要条件へ書込み・DB・EKIを追加しない。
