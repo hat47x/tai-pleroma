@@ -536,3 +536,19 @@ referentialCompleteness empty / references 0 / exit 1
 - 対象は**ファイル全体参照**のみで、範囲参照（`#sheet|A1:F13`）は数えない
 - そのため件数0・`empty`・終了コード1（差異または不確定）になる
 - 納品の完全性を主張しない、という製品の境界どおりの挙動
+
+## EKIの実行は製品テストで成立している（2026-11-03 再修正）
+
+EKI自身のプロセス試験`TestHTTPTaskSubmissionIsExecutedByTheAgent`をWindowsで実行し、PASSした。[receipt](../evaluations/records/EKI-TEI-http-execution-2026-11-03.json)
+
+```text
+task=tsk_0392f98887715afb385a41e0020e9980
+attempt=atm_b1d8db7f810e3bc11f2cb8ca88e2121c
+claim/accepted result digest=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676
+```
+
+- HTTPで投入したTaskがAgentに実行され、ResultClaimが受理される
+- ただしEKIのTEST PROFILE（#198の決定ではない）と、試験自身のTaskによる
+- TAIの投影TaskRequestを被験体にした実行は未実施
+
+これまでの「実行系は成立しない」という記述は、TAI側の経路についてのみ当てはまる。製品の試験用経路では成立している。
