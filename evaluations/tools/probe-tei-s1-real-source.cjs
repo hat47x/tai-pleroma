@@ -28,6 +28,51 @@ function jsonOf(call) {
   try {return JSON.parse(call.stdout);}
   catch(e){throw new Error("non-JSON result [" + call.argv.slice(1).join(" ") + "]: " + e.message);}
 }
+// Bind an independently-read byte fingerprint to the actual TEI Index
+// artifact and subject's definition reference. Both must come from Inspect,
+// not just from a separately selected file or a catalog name.
+function qualifySubjectSource(result, expectedPath, expectedFingerprint) {
+  assert.deepEqual(result?.subject, SUBJECT, "Inspect resolved a different canonical subject");
+  assert.equal(result?.sourceStatus, "indexed", "subject needs an indexed source witness");
+  const artifacts = result?.sources?.artifacts;
+  const refs = result?.sources?.references;
+  assert.ok(Array.isArray(artifacts) && Array.isArray(refs), "Inspect source witness missing");
+  const selected = artifacts.filter(x => x?.path === expectedPath);
+  assert.equal(selected.length, 1, "expected exactly one Source Index artifact for requested file");
+  assert.equal(selected[0].fingerprint, expectedFingerprint,
+    "the bytes indexed by Product CLI differ from the independent source read");
+  const definitions = refs.filter(x => x?.artifactPath === expectedPath &&
+    x?.subject?.kind === SUBJECT.kind && x?.subject?.id === SUBJECT.id &&
+    x?.role === "definition");
+  assert.ok(definitions.length > 0, "no canonical definition reference to expected file");
+  return {artifactPath:expectedPath,artifactFingerprint:selected[0].fingerprint,
+    definitionReferences:definitions.length, sourceStatus:result.sourceStatus};
+}
+
+function selfTest() {
+  const fp = digest(Buffer.from("fixture"));
+  const good = () => ({subject:{...SUBJECT},sourceStatus:"indexed",sources:{
+    artifacts:[{path:SOURCE,format:"tei",fingerprint:fp}],
+    references:[{artifactPath:SOURCE,subject:{...SUBJECT},role:"definition"}]
+  }});
+  const tests = [
+    ["S1-W01 actual artifact and definition match", () => qualifySubjectSource(good(),SOURCE,fp)],
+    ["S1-W02 relocated artifact cannot masquerade", () => {const x=good();x.sources.artifacts[0].path="semantic/other/order.tei";qualifySubjectSource(x,SOURCE,fp);},true],
+    ["S1-W03 stale Source bytes cannot qualify", () => qualifySubjectSource(good(),SOURCE,digest(Buffer.from("changed"))),true],
+    ["S1-W04 reference to a different file is not provenance", () => {const x=good();x.sources.references[0].artifactPath="semantic/other/order.tei";qualifySubjectSource(x,SOURCE,fp);},true],
+    ["S1-W05 missing canonical definition cannot qualify", () => {const x=good();x.sources.references[0].role="derived";qualifySubjectSource(x,SOURCE,fp);},true],
+    ["S1-W06 same Source path but different Subject cannot qualify", () => {const x=good();x.subject.id="sales.order_line";qualifySubjectSource(x,SOURCE,fp);},true],
+    ["S1-W07 unindexed subject cannot qualify", () => {const x=good();x.sourceStatus="not-indexed";qualifySubjectSource(x,SOURCE,fp);},true],
+    ["S1-W08 duplicate artifact paths cannot qualify", () => {const x=good();x.sources.artifacts.push({...x.sources.artifacts[0]});qualifySubjectSource(x,SOURCE,fp);},true]
+  ];
+  for (const [name, task, shouldFail] of tests) {
+    if (shouldFail) assert.throws(task,undefined,name);
+    else task();
+  }
+  console.log(JSON.stringify({scope:"synthetic Index binding assertions, not TEI/Harness",
+    passed:tests.length,total:tests.length,cases:tests.map(([name])=>name.split(" ")[0])},null,2));
+}
+
 function main() {
   const binary = path.resolve(process.argv[2] || "");
   const tei = path.resolve(process.argv[3] || "");
@@ -53,10 +98,19 @@ function main() {
   const inspection=jsonOf(inspect);
   assert.equal(inspection.ok,true,"inspect CLI envelope must report ok");
   assert.equal(inspection.schemaVersion,"tei.cli.inspect/v0");
+  const sourceWitness=qualifySubjectSource(inspection.result,SOURCE,digest(declared));
+  assert.equal(cat.result.worldFingerprint,inspection.result.worldFingerprint,
+    "Catalog and Inspect refer to different World fingerprints");
+  assert.equal(cat.result.sourceIndexFingerprint,inspection.result.sourceIndexFingerprint,
+    "Catalog and Inspect refer to different Source Index fingerprints");
   const validate=run(binary,["validate","-workspace",root,"-json"],tei);
   const val=jsonOf(validate);
   assert.equal(typeof val.ok,"boolean","validate status must be a boolean");
   assert.ok(Array.isArray(val.diagnostics),"validate diagnostics must be an array");
+  assert.equal(val.worldFingerprint,inspection.result.worldFingerprint,
+    "Validate and Inspect refer to different World fingerprints");
+  assert.equal(val.sourceIndexFingerprint,inspection.result.sourceIndexFingerprint,
+    "Validate and Inspect refer to different Source Index fingerprints");
   const git=run("git",["rev-parse","HEAD"],tei);
   const binaryDigest=digest(fs.readFileSync(binary));
   // Independent negative control: an empty workspace can validate, but must
@@ -78,7 +132,8 @@ function main() {
     evidence:"real TEI CLI executed from pinned checkout; no AI Harness",
     teiCommit:git.stdout.trim(),binaryDigest,source:SOURCE,sourceDigest:digest(declared),
     subject:SUBJECT,catalogMatches:matches.length,catalogSourceStatus:matches[0].sourceStatus || "unreported",
-    inspectedJson:true,validationOk:val.ok,diagnostics:val.diagnostics.length,
+    inspectedJson:true,sourceWitness,worldFingerprint:val.worldFingerprint,
+    sourceIndexFingerprint:val.sourceIndexFingerprint,validationOk:val.ok,diagnostics:val.diagnostics.length,
     observations:[commands,catalog,inspect,validate].map(x=>({
       args:x.argv.slice(1),cwd:x.cwd,exit:x.exit,stdoutDigest:x.stdoutDigest,
       stderrPresent:x.stderr.length>0
@@ -88,6 +143,9 @@ function main() {
   },null,2));
 }
 if(require.main===module){
-  try {main();}
-  catch(e){console.error("TAI S1 FAIL: "+e.message);process.exitCode=1;}
+  try {
+    if (process.argv[2] === "--self-test") selfTest();
+    else main();
+  } catch(e){console.error("TAI S1 FAIL: "+e.message);process.exitCode=1;}
 }
+module.exports={qualifySubjectSource,selfTest};
