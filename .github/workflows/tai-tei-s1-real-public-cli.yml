@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'evaluations/tools/probe-tei-s1-real-source.cjs'
+      - 'evaluations/tools/check-sk02-pair-eligibility.cjs'
       - 'evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json'
       - '.github/workflows/tai-tei-s1-real-public-cli.yml'
   workflow_dispatch:
@@ -57,6 +58,7 @@ jobs:
           GOWORK: 'off'
         run: |
           set -euo pipefail
+          node --check tai/evaluations/tools/check-sk02-pair-eligibility.cjs
           node --check tai/evaluations/tools/probe-tei-s1-real-source.cjs
           node tai/evaluations/tools/probe-tei-s1-real-source.cjs --self-test
           node tai/evaluations/tools/probe-tei-s1-real-source.cjs "$RUNNER_TEMP/tei-s1" "$GITHUB_WORKSPACE/tei" | tee "$RUNNER_TEMP/tei-s1-receipt.json"
@@ -78,3 +80,18 @@ jobs:
             exit 1
           fi
           grep -F "ledger mismatch: source bytes" "$RUNNER_TEMP/tei-s1-tampered-log.txt"
+
+          # A JSON parser may normally keep the last duplicate member, hiding
+          # a forged byte digest even when all expected top-level fields exist.
+          node -e 'const fs=require("fs");const p=process.argv[1],o=process.argv[2];const s=fs.readFileSync(p,"utf8");fs.writeFileSync(o,s.replace(/^\s*\{/,"{\"sourceDigest\":\"sha256:"+"0".repeat(64)+"\","))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-duplicate-receipt.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-duplicate-receipt.json" > "$RUNNER_TEMP/tei-s1-duplicate-receipt.log" 2>&1; then
+            echo "Duplicate-key S1 receipt incorrectly accepted"
+            exit 1
+          fi
+          grep -F 'DUPLICATE_TRIAL_JSON_MEMBER' "$RUNNER_TEMP/tei-s1-duplicate-receipt.log"
+          node -e 'const fs=require("fs");const p=process.argv[1],o=process.argv[2];const s=fs.readFileSync(p,"utf8");fs.writeFileSync(o,s.replace(/^\s*\{/,"{\"source\":{},\"extra\":0,"))' "$LEDGER" "$RUNNER_TEMP/tei-s1-duplicate-ledger.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$RUNNER_TEMP/tei-s1-duplicate-ledger.json" "$RECEIPT" > "$RUNNER_TEMP/tei-s1-duplicate-ledger.log" 2>&1; then
+            echo "Duplicate-key S1 ledger incorrectly accepted"
+            exit 1
+          fi
+          grep -F 'DUPLICATE_TRIAL_JSON_MEMBER' "$RUNNER_TEMP/tei-s1-duplicate-ledger.log"
