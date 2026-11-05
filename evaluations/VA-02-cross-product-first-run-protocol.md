@@ -143,3 +143,19 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 **次の拡張候補（未採用）**：[TEI #2555](https://github.com/hat47x/tei-platform/issues/2555)の旧新並走／Migration段階、[#1251](https://github.com/hat47x/tei-platform/issues/1251)のPlugin Bundleの実選択依存、[#2831](https://github.com/hat47x/tei-platform/issues/2831)のG4セルフビルドは、各自のUser Jobを指定してから比較。業務Writeに全Migrationフレームワーク、Readに全Self-buildを前提化しない。
 
 **受入資格**：TEIの局所PG試験・別IssueのCLI CIを利用可能な既存Evidenceとして提示できるが、各々のexact HEAD/実行環境/対象/Scopeを維持し、異なるRunを単一TEI価値実験のPASSへ合成しない。VA-X別モデル反証とVA-E独立Oracle照合、実User Jobの費用比較、Owner正式受理は本比較ではNOT RUN。
+
+## 10. 変更・再起動・選択先更新時の限定再資格化（11月5日議論の反証票）
+
+[横断計画§17](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)のN0〜N3を、新しい実行方式でなく**既存Case／Receiptを再利用する故障注入**としてVA-02に接続する。
+
+| ケース | Setup／正負の対照 | Expectedと誤成功の拒否 | Owner・現在の実証 |
+| --- | --- | --- | --- |
+| **V02-RCV-01** | TEI Commandで応答不明→同一Key／同じOperationでProvider Receipt lookup→Lifecycle再起動相当。対照は別KeyでA→B→Aを経た更新 | 同じKeyのPG側replayを「新しい業務実行成功」にしない。Restart後のin-memory unknownの消失は回復成功でなくGuard喪失。別Key ABAによる再適用を検出し、Provider確認まで新Key再送禁止 | TEI [#2870](https://github.com/hat47x/tei-platform/pull/2870)／[#2854](https://github.com/hat47x/tei-platform/pull/2854)／[#1174](https://github.com/hat47x/tei-platform/issues/1174)。局所実PGは他Ownerで観測。本VA-02の同一Attempt実製品E2EはNOT RUN |
+| **V02-MIG-01** | Expand→Backfill→Validate→Cutover→Contractの限定2 Client。旧側の歴史的Read、Cutover後の同じ表面値・別Owner、CDC遅延0件、ACK Unknownを各1件 | 行数一致／逆同期差分0／同一WorldFPから現在read/write主体・全不存在・現Grantを推定しない。過去Readは履歴として保持し、必要時に現在Cohort/Scope/Watermarkと元OperationIDのReceiptを再確認 | [TEI #2555 MIG-H01〜07](https://github.com/hat47x/tei-platform/issues/2555)、[TAI #271 SC-13](https://github.com/hat47x/tai-pleroma/issues/271)。本横断実移行はNOT RUN |
+| **V02-SEL-01** | 同じTEI Targetに未選択Pluginを追加/更新（N0）と、実選択Provider/Nested moduleの依存を変更（N1） | 未使用変更で必要Target Artifact/実initが変われば非干渉失敗。一方、root test PASSでも選択Studio moduleのgo.sum不足ならTarget不適合。選択された実依存の欠落を未使用非干渉の成功で相殺しない | [TEI #1251 PB-01/02/07/10](https://github.com/hat47x/tei-platform/issues/1251)、[TEI #2831](https://github.com/hat47x/tei-platform/issues/2831)。PB-10の歴史的バグはmainで修正済み。本横断実BuildはNOT RUN |
+| **V02-SHO-01** | 一文書Markdownを固定Parser profileでReadしてL0作成。未選択Parser追加（N0）／選択Parser欠落（N1）／原文移動/Review版変更（N2） | 明示固定Parserなら未選択候補追加で索引自動失効を強制しない。選択Parser欠落は無音fallback禁止。索引値再利用と現在引用/Review/外部AI送出資格を別判定。L0保存・再開は継続 | [SHO #7 RI-PS01〜07](https://github.com/hat47x/sho-composer/issues/7)、[#4 FR-01〜08](https://github.com/hat47x/sho-composer/issues/4)。実SHO ReaderはNOT RUN |
+| **V02-H23-01** | TAI H2（Tool-only）2試行/H3（実Product Skill Load）2試行、公開TEI 1 Subject、同じ実CLI/Source/Oracle/Host条件 | 実Loaded Witness＋実Tool argv/Scope/Warnings＋独立Expectedと費用を分ける。Skillファイル存在、人工Checker PASS、Product単独CIをH3のSkill追加価値と呼ばない | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)・[TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)。実四Harness SessionはNOT RUN |
+
+**Go/No-Go**：各ケースにRequired Source/Condition、独立Expectedの出典と版、実行Byteと環境、実際に使ったSelector/Parser/Provider、実Observation、現在Authority/Disclosure、実Readerの受領を**必要な範囲だけ**記載する。Not-run・unknown・unavailable・unsupported・拒否は区別し、Caseが成立しないときは当該User Jobの結論のみ保留。単一のRunの成功を別Target/別Revision/別Ownerへ転載しない。
+
+**最初の実行順**：V02-H23-01を先行（TEIのProduct-only S1の実データは対照に留める）。並行してV02-RCV-01の合成→実PG局所を既存Ownerで確認。その後、明示的なPlugin選択の最小A/B、SHO製品Reader、実旧新Client移行へ順に拡張。H23の初回実行へ実DB MigrationやStudio/SHO完成を必須化しない。今回は**実行なし・評価票更新のみ**。
