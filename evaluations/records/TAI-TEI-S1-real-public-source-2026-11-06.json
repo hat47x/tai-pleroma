@@ -58,6 +58,55 @@
   "notes": [
     "This JSON transcribes selected values directly observed in the linked CI log; it is not a signed machine-export of the complete receipt.",
     "Reference S1 differs from earlier TAI main reference-tei-model SCN-001 scope.",
-    "Do not treat product-only CLI execution as a real AI or Skill evaluation."
-  ]
+    "Do not treat product-only CLI execution as a real AI or Skill evaluation.",
+    "2026-11-06: a later S1 CI (#42101157330) additionally bound Inspect artifact path/byte fingerprint/definition reference to the independently read Source, and cross-checked Catalog/Inspect/Validate fingerprints."
+  ],
+  "indexedSourceBinding": {
+    "runId": 42101157330,
+    "jobId": 127503995252,
+    "runUrl": "https://github.com/hat47x/tai-pleroma/actions/runs/42101157330",
+    "conclusion": "success",
+    "independentSourceRead": {
+      "path": "semantic/sales/order.tei",
+      "sha256": "f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33"
+    },
+    "productInspect": {
+      "subject": {
+        "kind": "semantic-data",
+        "id": "sales.order"
+      },
+      "artifactPath": "semantic/sales/order.tei",
+      "artifactFingerprint": "sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33",
+      "definitionReferences": 1,
+      "sourceStatus": "indexed"
+    },
+    "sameSnapshotClaims": [
+      "Catalog/Inspect World Fingerprint equality",
+      "Catalog/Inspect Source Index Fingerprint equality",
+      "Validate/Inspect World Fingerprint equality",
+      "Validate/Inspect Source Index Fingerprint equality"
+    ],
+    "syntheticControls": {
+      "cases": [
+        "S1-W01",
+        "S1-W02",
+        "S1-W03",
+        "S1-W04",
+        "S1-W05",
+        "S1-W06",
+        "S1-W07",
+        "S1-W08"
+      ],
+      "passed": 8,
+      "total": 8,
+      "scope": "synthetic Index binding assertions executed by real Node; Product CLI tested separately"
+    },
+    "limitations": [
+      "same CLI invocation set, but not atomic multi-file snapshot",
+      "Source Index fingerprint of this declared file is not independent Owner Meaning Acceptance",
+      "the declared Source was observed in Product Index; not all transitive imports and Source roots",
+      "not an external AI Harness session or Skill activation",
+      "not proof of current Host capability, actual network egress, Provider effect, or downstream Consumer"
+    ]
+  }
 }
