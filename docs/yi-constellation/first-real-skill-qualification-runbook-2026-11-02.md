@@ -433,6 +433,16 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 **本節の実施状態**：W0固定公開Source・実CLI・台帳照合のCIだけが限定成功。**外部Harness H2-01の実Tool log、H3のSkill Loader/Reference実読込、H2/H3四Session、比較採点、OS/Network非漏えい・Owner意味受理はNOT RUN**。
 
 
+
+<!-- sk02-dbcheck-outside-readonly-scope-20261106 -->
+### 19.5 新CLIを読むだけでread-only対応コマンドと誤認しない（2026-11-06）
+
+[TEI merged #2894](https://github.com/hat47x/tei-platform/pull/2894)で新しくProduct CLIに`tei dbcheck`が加わった。ただしこのCommandはDSNが与えられれば実PostgreSQLに接続し、**一時表のCREATE/DROP DDL**を実行する。成功したら表が消える設計でも、初回SK-02の「Source/モデルを読み取るだけのTool」とは異なる。DSNが無い場合のexit 2／非実行も実DB資格ではない。
+
+**H2/H3両腕の既定Command whitelistを変更しない**：`commands`、`model catalog`、`inspect`、`trace`、`validate`の必要read-only呼出しのみ。既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)の`readOnlyCommandFamily`は`dbcheck`を`outside-initial-readonly-profile`に分類する。`commands`一覧に載っていること・CLIに実装されていること・内部で一時表を削除することは実行許可ではない。`dbcheck`やその他未選択コマンドを起動した試行は比較資格を停止し、実Host/DB側の副作用が無かったとも断定しない。OS/Tool Policyの実許可境界は別観測。
+
+**実DB準備確認はTEI [#2555](https://github.com/hat47x/tei-platform/issues/2555)の後続専用レーン**に置く。H2 Tool-onlyのToolが`dbcheck`実行を必要とする設計なら、このread-only Taskの範囲を変えた新実験として両腕を同時に再設計し、最初の四Sessionに混入させない。
+
 ## 20. 2026-11-06：実Harness四試行へ渡す参加者TaskとHoldout隔離
 
 ### 実参加者へ渡す唯一のTask（H2/H3共通）
