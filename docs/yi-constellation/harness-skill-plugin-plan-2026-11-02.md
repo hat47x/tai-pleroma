@@ -723,3 +723,14 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **他チャットとの整合**：[TEI自己記述Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)の独立Required対照と同じく、**候補が自分で宣言したRequired・Role/Source・返したPASSだけで自身の意味を認定しない**。TAIのS1では固定の外側Expectedを先に持ち、TEI実LoaderのIndexと比較する。ただしAtomic全Import closure・Owner Meaning Acceptance・現在Host Grant・Build/Targetの実消費は別。§38の実DB/未知Commitは将来の**write Taskのみの条件付き出口**とし、実AI Harness read-only H2/H3のBlocked条件に追加しない。
 
 **次の実証**：既に成立したProduct-only S1を同版でH2/H3の両腕へ引き継ぎ、実HarnessによるSkillロード、CLI呼出し、独立正答判定と実費用を比較する。TAI側に新しい共通Source Resolver／実行Host／Test Runner・第二のOracleを導入しない。AIによる試験候補の増加は制限しないが、必須結果と未実行を識別する。二Harness Handoff・実DB/Provider・SHO/EKIは用途別に後続する。
+
+
+### 39.1 実S1の再現性を台帳・実CLI再実行で検査（2026-11-06）
+
+**成熟した実装差分**：既存S1 Source Probeへ[`--verify-ledger`](../../evaluations/tools/probe-tei-s1-real-source.cjs)を追加し、新しいProduct-only実CLI Receiptと従来の固定[Evidence JSON](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)を**31項目**突合する。[Actions #42106804110](https://github.com/hat47x/tai-pleroma/actions/runs/42106804110)では実TEI Go CLIを固定改訂で再ビルド・実読取して**31項目一致**、Source digestを改ざんしたReceiptは`ledger mismatch: source bytes`で非0拒否。この検査をCIの実ファイル入力経路に接続し、Evidence台帳そのものの変更でもWorkflowが起動するよう更新。[初回実Skill Runbook §17](first-real-skill-qualification-runbook-2026-11-02.md)へ再資格化の停止規則を反映した。
+
+**比較実験への取り込み**：SK-02のH2/H3に使うS1 Source/実Binary Pinの**再現性証拠**として使うが、対象を実Harnessが読んだこと、実Skillがロード・利用されたこと、独立Task Oracleで正答したこと、通信が実Grantの範囲内だったことは別Gate。新HEADや別Hostへ旧Ledgerを「そのままPASSで移植」しない。差分はMismatch→Source/Expectedの再固定→新Ledger作成の順であり、**旧記録を上書きして履歴を消さない**。以上はTAIのProduct S1 test-only検査であり、TEI本体のSource/Role/Host契約を変更しない。
+
+**他チャットからの条件付き判断**：[TEI merged #2882](https://github.com/hat47x/tei-platform/pull/2882)は実Workspaceテキスト由来のPeriod/Effect前提を合成した限定Go試験で未充足ならStep実行を止める。[TEI Draft #2884](https://github.com/hat47x/tei-platform/pull/2884)はScript起動のSelection/Context Epoch、Operation identity、Commit結果不明、Required/Observed/Undischargedを区別する**文書設計**であって実Restart試験ではない。両成果はTAIから実際にWrite/再開を委任するときだけ、既存§38のTEI/EKI Ownerによる`EffectPreconditions`・Operation Receipt・Current Grant照合へ引き継ぐ。初回のread-only TEI Product Skill比較へCommit/Period/二Process再開を必須化しない。
+
+**未実施**：実AI HarnessによるH2→H3→H3→H2、Skill実ロード、別Harness Transfer、Consumer実受信、業務意味Owner受理、現行OS/Network開示強制。実CIの再現性PASSを外部Agentや本番業務のPASSへ昇格しない。
