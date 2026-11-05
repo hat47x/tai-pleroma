@@ -628,3 +628,16 @@ registered へ戻す操作: 拒否（revoked is final）
 
 - 失効は最終状態として扱われ、再登録で戻せない
 - Agent側の拒否は未確認（assignmentを持たないAgentはWorker listenerを呼ばないため）
+
+## 失効したWorkerのAgent拒否（2026-11-03）
+
+Workerを失効させた後、assignment付きのAgentを起動した。[receipt](../evaluations/records/EKI-TEI-revoked-agent-2026-11-03.json)
+
+```text
+control: worker authentication refused reason=worker_not_usable
+agent: assignment poll failed: control plane answered HTTP 401
+executed false
+```
+
+- 失効はControl Planeの認証段で止まる（assignmentの取得すら通らない）
+- Agent側は401を受けて実行に進まない
