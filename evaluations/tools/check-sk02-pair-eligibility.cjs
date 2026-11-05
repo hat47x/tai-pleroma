@@ -8,6 +8,7 @@
  */
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
+const crypto = require("node:crypto");
 
 const SAME = ["task_id", "repo_head", "binary_digest", "workspace_tree_digest",
   "world_fingerprint", "source_index_fingerprint", "prompt_digest",
@@ -109,13 +110,25 @@ function recordedWorkspace(argv) {
   return {status:"bound",value:workspaces[0]};
 }
 
-function evaluate(group) {
+function evaluate(group, options = {}) {
   const invalid = [], unknown = [];
   const rows = group?.trials;
   if (!Array.isArray(rows) || rows.length !== 4) {
     return { verdict: "ineligible", invalid: ["four-independent-trials-required"], unknown: [],
       answerCorrectness:"not-evaluated", skillBenefit:"not-evaluated",
       note:"test-only metadata classification, not proof of actual observations" };
+  }
+  // The same wrong prompt can be used in every arm, making SAME pass.
+  // Only a separately supplied, raw-byte Task pin can establish the intended
+  // participant prompt. This is not evidence that the Harness received it.
+  if (Object.prototype.hasOwnProperty.call(options,"expectedPromptDigest")) {
+    if (options.expectedPromptDigest === null) {
+      unknown.push("participant-task-raw-not-bound");
+    } else if (!DIGEST.test(options.expectedPromptDigest)) {
+      invalid.push("invalid-expected-participant-task-digest");
+    } else if (rows.some(r => r?.prompt_digest !== options.expectedPromptDigest)) {
+      invalid.push("participant-task-digest-mismatch");
+    }
   }
   // Malformed JSON trial rows must receive a verdict, not crash the checker.
   if (rows.some(r => r === null || typeof r !== "object" || Array.isArray(r))) {
@@ -324,8 +337,14 @@ if (require.main===module) {
   if (process.argv[2]==="--self-test") console.log(JSON.stringify(syntheticSelfTest(),null,2));
   else if (process.argv[2]) {
     try {
+      if(process.argv.length !== 3 && !(process.argv.length===5 && process.argv[3]==="--task-file"))
+        throw Object.assign(new Error("usage: checker trial.json --task-file participant-task.txt"),{code:"INVALID_CLI_ARGUMENTS"});
       const obj=parseTrialJSON(fs.readFileSync(process.argv[2],"utf8"));
-      const outcome=evaluate(obj);
+      const taskPath=process.argv[3]==="--task-file" ? process.argv[4] : null;
+      const expectedPromptDigest=taskPath
+        ? "sha256:"+crypto.createHash("sha256").update(fs.readFileSync(taskPath)).digest("hex")
+        : null;
+      const outcome=evaluate(obj,{expectedPromptDigest});
       console.log(JSON.stringify(outcome,null,2));
       if(outcome.verdict!=="eligible-to-score")process.exitCode=1;
     } catch (e) {
@@ -337,4 +356,4 @@ if (require.main===module) {
     }
   } else {console.error("usage: node check_sk02_pair_eligibility.cjs --self-test | path/to/trial-group.json");process.exitCode=2;}
 }
-module.exports={evaluate,recordedWorkspace,parseTrialJSON,syntheticSelfTest};
+module.exports={evaluate,recordedWorkspace,parseTrialJSON,syntheticSelfTest,syntheticSeed:seed};
