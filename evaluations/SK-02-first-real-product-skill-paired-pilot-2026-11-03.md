@@ -228,3 +228,14 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **重要な限界**：`eligible-to-score`は依然**記載された観測票の整合**だけである。独立Oracleは[初回Runbook §11](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)のDeclared→Loaded→Validated/Actual CLI→Consumerを別に照合する。H3でSkillロード、実ToolのExit/Stdout/Source/Diag、実Observerの署名・独立Oracle・実送信を確認していなければSkill効果は未測定。最初の四試行で実Working Directoryを固定できないなら**異なる条件のTrialは比較しない**が、Productの単独read-only観測は継続可能。全Host/Provider/OS機密やWeb/GUIのCI Gateを増やさない。
 
 **試験の状態**：E49〜E60は公開合成票のChecker用。実外部HarnessのH2/H3四セッション・実CLI実行・正式業務意味受理・独立Oracleは引き続き**NOT RUN**。CI成功についてはこのコードを含むGitHub ActionsのJob logを確認した時点でのみ記録する。
+
+
+## 16. 2026-11-05：必須合成ケースの存在と実行をCIで検査する
+
+[TEI merged #2835](https://github.com/hat47x/tei-platform/pull/2835)の実PostgreSQL試験では、DBがない場合に必要なGoテストがSKIPしてもGo自体はexit 0となる偽緑を実観測し、**必須Case IDがログに実在してPASSしたか**で検査を強めた。TAI SK-02の従来WorkflowもNode自己試験の終了コードを確認するだけでは、将来Case列挙の削除・重複・全件未実行を検出できない場合がある。
+
+**実装した最小変更**：[既存のSK-02 CI](../.github/workflows/tai-sk02-synthetic-pair-check.yml)に、実Node自己試験の出力JSONを保存して検査する一段を追加。E01〜E60の**事前登録IDを60件すべて確認**し、total=passed=60、出力件数=60、unique=60、missing/unexpected=[]、実験非実施を示すscopeを満たさなければCI失敗とする。[実CI #42011377630](https://github.com/hat47x/tai-pleroma/actions/runs/42011377630)のJob Logでは、required=60、reported=60、distinct=60、missing=[]、unexpected=[]、passed=total=60で **PASS**。同JobのSK-03公開合成子Process NC01〜19も19/19だが、別の受入領域であり合算しない。
+
+**資格の上限**：これは既存Node自身の公開合成E01〜E60が列挙・実行結果として報告されたことを確認する**test-only Inventory Gate**。独立Observerや外部Harnessが実際にSkillをロードしたか／各ToolのSourceを読んだか／Business Taskが正しいかは評価していない。自分で生成した結果票の真実性を暗号学的に証明したり、各Caseの独立Expectedを第三者が承認したりするものでもない。CI結果の件数が正しくてもSK-SRC01〜06・H2/H3の実Task正答は**NOT RUN**。
+
+**実H2/H3への適用**：固定したタスクObligationを別に先行登録し、実行結果の「required／discovered／attempted／PASS／SKIP／unsupported／qualified」を混同しない。特にSkillありH3で実Skill loadが未観測なら比較適格から除き、CLIを呼んでも指定Subject/Sourceの実Readが無ければTask正答にしない。Tool-onlyで十分な場合はSkillの追加利益なしを正当な結果として認める。必要な根拠取得・独立Oracleが揃うまで、新しい共通Runner／テスト正本／Product必須Gateを増やさない。
