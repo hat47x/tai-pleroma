@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.mmi-delivery-audit/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-05",
+  "host": "Windows with Node 24 and MMI's tsx CLI",
+  "command": "python integrations/tools/mmi_delivery_audit_check.py",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "schema": true,
+      "fileScope": true,
+      "emptyCompleteness": true,
+      "zeroReferences": true,
+      "exitIndeterminate": true
+    },
+    "exitCode": 1,
+    "referentialCompleteness": "empty",
+    "counts": {
+      "references": 0,
+      "resolved": 0,
+      "missing": 0,
+      "outsideWorkspace": 0,
+      "notFile": 0,
+      "unreadable": 0,
+      "duplicateReferences": 0,
+      "sameContentDifferentFiles": 0
+    }
+  },
+  "scope": "Runs MMI's delivery audit over one sample document. The audit only covers whole-file Excel references, so this document's range references count as none and the audit exits 1 (indeterminate). It does not assert delivery completeness."
+}
