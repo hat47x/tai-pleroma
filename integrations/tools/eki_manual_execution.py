@@ -249,6 +249,21 @@ def run_once():
                     break
                 time.sleep(1)
 
+        result_status = None
+        result_body = None
+        if task_id:
+            request = urllib.request.Request(
+                f"http://127.0.0.1:{client_port}/v1/tasks/{task_id}/result",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=30) as response:
+                    result_status = response.status
+                    result_body = json.loads(response.read())
+            except urllib.error.HTTPError as exc:
+                result_status = exc.code
+                result_body = json.loads(exc.read())
+
         agent_proc.terminate()
         agent_proc.wait(timeout=20)
     finally:
@@ -256,7 +271,7 @@ def run_once():
         proc.wait(timeout=20)
         control_log.close()
 
-    return {"submit": submit_status, "task": task_id, "worker": worker_id, "executed": executed, "claimed": claimed}
+    return {"submit": submit_status, "task": task_id, "worker": worker_id, "executed": executed, "claimed": claimed, "resultStatus": result_status, "resultBody": result_body}
 
 
 
@@ -287,10 +302,12 @@ def main():
             "workerId": last["worker"],
             "executed": last["executed"],
             "claimed": last["claimed"],
+            "resultStatus": last["resultStatus"],
+            "resultBody": last["resultBody"],
         },
-        "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest and lets the Agent execute the fixed command. It uses EKI's TEST PROFILE and one host.",
+        "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest, lets the Agent execute the fixed command and then reads the Task result endpoint. The claim is submitted but the read answers RESULT_NOT_READY, because result acceptance is not wired into the running Control Plane.",
     }
-    receipt_path = Path(r"D:/GIT/hat47x/tai-wt-sxs/evaluations/records/EKI-TEI-manual-execution-2026-11-03.json")
+    receipt_path = Path(__file__).resolve().parents[2] / "evaluations/records/EKI-TEI-manual-execution-2026-11-03.json"
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"passed": passed, "task": last["task"], "attempts": len(attempts)}))
 

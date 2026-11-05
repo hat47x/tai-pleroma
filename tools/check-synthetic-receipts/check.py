@@ -482,8 +482,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"product record conversions did not all validate: {relative}")
         if "EKI-TEI-manual-execution" in relative:
             observed = data.get("observed", {})
+            body = observed.get("resultBody") or {}
             if data.get("result") != "PASS" or observed.get("executed") is not True or observed.get("claimed") is not True or not observed.get("taskId"):
                 errors.append(f"EKI manual execution evidence did not hold: {relative}")
+            elif observed.get("resultStatus") != 409 or body.get("code") != "RESULT_NOT_READY":
+                errors.append(f"EKI result acceptance changed; update the finding: {relative}")
         if "EKI-TEI-policy-execution" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("projectedSubmissionRejected") is not False or not observed.get("claimDigest"):

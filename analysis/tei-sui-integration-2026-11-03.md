@@ -605,3 +605,14 @@ submit 202 / task=tsk_2ab3ccd1... / executed true / claimed true
 - native runnerはnetwork上限が非0だと実行を拒否する（`native runner does not enforce network limits`）。`NetworkBytesMax`は0にする
 - sandbox profileは`native-fixed-spike`を使う。`NetworkProfile`を付けても`native runner does not implement network profile`になる
 - 稀に`approval is issued in the future`でdispatchが延期されることがあるため、再試行を入れた（今回は1回目で成功）
+
+## 実行結果の受入はControl Planeに配線されていない（2026-11-03）
+
+自前構成で実行したTaskについて、ResultClaimは`result_claim_submitted`（`claim_decision: new`）まで進むが、`GET /v1/tasks/{id}/result`は`409 RESULT_NOT_READY`を返す。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
+
+```text
+executed true / claimed true / result 409 RESULT_NOT_READY
+```
+
+- `internal/control`に`resultacceptance`の組み立てが無く、受入は`conformance/process`の試験が内部で構成している
+- したがって「実行して結果が受け入れられる」縦断は、製品プロセスとしては未配線
