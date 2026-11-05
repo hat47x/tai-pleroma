@@ -75,3 +75,11 @@ TEIモデル調査は、(1)Workspace宣言、(2)管理Fileの列挙、(3)実Pars
 [SHO Draft #14](https://github.com/hat47x/sho-composer/pull/14)の限定CIで成立したのは、固定MMI CLIによる合成Markdown 2文書の**HTML Renderと参照Link集合**である。SHOの実Research Index Reader、編集・保存・再開、利用者への納品を同じPASSにしない。[SHO #15](https://github.com/hat47x/sho-composer/issues/15)ではG1b/G1-SHOのゲート名称が二通り使われておりOwner判断待ち。Skillは曖昧なゲートIDで機能完了を宣言せず、実Consumer名・実操作・Source版・結果を個別確認する。
 
 資料リンクの整理だけならSHOの独立成立を尊重し、TEI/EKI/TAIを標準必須としない。TEI SourceとSHO文書を実際に結びつける場合だけ、明示的なSource/Meaning対応とSHO Readerの実観測を追加で要求する。
+
+
+## TEIのDB別SQL・Role・Actionを案内する場合（2026-11-05／条件付き）
+
+- **Query/DB**：[TEI Draft #2862](https://github.com/hat47x/tei-platform/pull/2862)は設計段階。Function/Queryの対象とRead/Write Scopeを確定し、**実Data Source Bindingを先に解決**してからProvider別SQL候補を選ぶ。DB名やSQLファイル名だけで接続先・実権限を推定しない。固定済み専用SQLの不在・Source変更時に共通SQLへ無音でフォールバックしない。2way SQLのサンプル値はRuntime引数でも独立Expectedでもない。SQL選択の成功・実DB Read・Business Effectは別Claim。
+- **RoleとAction**：[TEI Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)のAttribute.Role/Parser SourceはRole意味のOwner受理・実Interpreter権限ではない。[TEI #2616](https://github.com/hat47x/tei-platform/pull/2616)のPreconditionは渡されたCheckの結果であり、必要な全CheckのCoverageは別。RunPlanがBlockしても先行Stepの作用なしとは断定しない。実Provider/DB更新が必要な場合だけそのProductの明示Target・現Grant・Receipt・独立Readへ照合する。
+
+上記は通常のTEIモデル読取りを複雑にする標準条件ではなく、**対象TaskがDB方言・業務Action・Role自己記述を実際に要求するときに限る補助指針**。TAIのSkill/Tool説明によってTEI正式DSL・SQL Selector・認可APIの実装が成立することはない。[YIC構成計画 §35](../../../../docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)へ現行の資格境界をまとめた。
