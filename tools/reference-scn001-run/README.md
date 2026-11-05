@@ -133,6 +133,16 @@ go run . -root ../.. -verify-sui-evidence review-evidence
 - `runDigest`はcomponentのJSONに対するSHA-256。
 - 入力の結び付け: `mmi.selectedDigests`・`scn001.observationDigests`・`reviewArtifact.observationDigests`が同じ本文digestを指し、`inputBindingVerified=true`。
 
+## 版固定の結果の取り込み
+
+各ツールの版固定は、期待値を渡したときだけ働きます。MMIは環境変数`TAI_MMI_EXPECT_COMMIT`などで指定でき、この統合実行が`go run`で起動するツールへそのまま引き継がれます。統合実行のreceiptは、ツールが返した`pin`のうち`checked`と`result`だけを、`components.mmi.pin`（SEI・SUI linkのツールが`pin`を返す場合は同じ形で`components.sei.pin`・`components.suiLink.pin`）へ残します。期待値・実際の値・checkoutの状態などの詳細は、各ツール自身のreceiptにあります。
+
+- `pin`は`runDigest`の対象です。版固定の結果を後から書き換えるとdigestが合わなくなります。`pin`を持たない保存済みrecordは、digestもverifyも従来どおりです。
+- 検証（`-verify`）は、`pin.checked=true`で`result`が`match`でないのに`passed`な構成要素、および`checked=false`で`result`が`not-checked`でないrecordを拒否します。一致した構成要素は`pinnedComponents`に列挙します。
+- 期待値を渡した実行で不一致なら、ツールが失敗するため、この統合実行も失敗（receiptなし）になります。
+- 一致が示すのは、checkoutの版・追跡内容・実行環境が期待と合ったことだけです。製品の正しさ、Authority、公開承認、保存済みrecordの版は示しません。保存済みrecord（`evaluations/records/`）は再生成していません。
+- 現状、この統合実行が`pin`を読む構成要素は、`pin`を返すツールだけです。TEI・EKIは統合実行の対象外です。
+
 ## 境界
 
 - 4ツールの`passed`は、それぞれのローカル参照実行の範囲だけを示す。
