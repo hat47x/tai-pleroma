@@ -734,3 +734,12 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **他チャットからの条件付き判断**：[TEI merged #2882](https://github.com/hat47x/tei-platform/pull/2882)は実Workspaceテキスト由来のPeriod/Effect前提を合成した限定Go試験で未充足ならStep実行を止める。[TEI Draft #2884](https://github.com/hat47x/tei-platform/pull/2884)はScript起動のSelection/Context Epoch、Operation identity、Commit結果不明、Required/Observed/Undischargedを区別する**文書設計**であって実Restart試験ではない。両成果はTAIから実際にWrite/再開を委任するときだけ、既存§38のTEI/EKI Ownerによる`EffectPreconditions`・Operation Receipt・Current Grant照合へ引き継ぐ。初回のread-only TEI Product Skill比較へCommit/Period/二Process再開を必須化しない。
 
 **未実施**：実AI HarnessによるH2→H3→H3→H2、Skill実ロード、別Harness Transfer、Consumer実受信、業務意味Owner受理、現行OS/Network開示強制。実CIの再現性PASSを外部Agentや本番業務のPASSへ昇格しない。
+
+
+### 39.1 既存S1 Ledgerの曖昧JSONを実行前に拒否する（2026-11-06）
+
+実ProductのS1証拠は、固定された[公開台帳](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)と実CLIの当回Receiptの31項目照合まで進んだ。一方、`JSON.parse`単体では同一member二重定義が後勝ちで上書きされ、台帳／Receipt／CLI戻り値に曖昧な入力があっても一致に見える余地があった。そこで**新しい正本やParserを導入せず**、既存SK-02の[重複キー拒否](../../evaluations/tools/check-sk02-pair-eligibility.cjs)を[実S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)で再利用し、S1-W09〜13と、実Receipt/台帳への二重key注入を[既存CI](../../.github/workflows/tai-tei-s1-real-public-cli.yml)へ接続した。
+
+初回CI [#42107218625](https://github.com/hat47x/tai-pleroma/actions/runs/42107218625)では、実Go Binary→Source照合31項目・既存SHA改変拒否は通過したが、**重複key拒否ログに機械判定用エラーコードが出ず、新しく加えたgrepでJob失敗**。受入を推測のPASSにせず、S1 ProbeのCLIエラー出力へ既存`e.code`を付与する限定修正を実施。成功判定はその後のexact-head実CI完了を待って記録する。
+
+**資格の上限**：JSONの解釈を一意にすること≠Ledgerの第三者署名、独立Oracle、Source全閉包、Productのmeaning受理、外部HarnessのSkill Load。**次の価値確認は依然H2 Tool-onlyを実Harnessの一Sessionで動かした記録**であり、S1で新しいハーネス／DB／Actor Runtimeを作らない。[実施Runbook §17/18](first-real-skill-qualification-runbook-2026-11-02.md)に従う。
