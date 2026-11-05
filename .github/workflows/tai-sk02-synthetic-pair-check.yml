@@ -77,9 +77,33 @@ jobs:
           node -e '
             const fs=require("fs");
             const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
-            if(v.total!==19 || v.passed!==19) process.exit(1);
-            const byId=Object.fromEntries(v.results.map(x=>[x.id,x.result]));
-            for(const id of ["NC17","NC18","NC19"]) if(byId[id]!=="producer-unparseable") process.exit(1);
-            if(!v.scope.includes("no real TEI/Harness")) process.exit(1);
-            console.log(JSON.stringify({passed:v.passed,total:v.total,NC17:byId.NC17,NC18:byId.NC18,NC19:byId.NC19,scope:"local synthetic subprocess only"}));
+            const required=Array.from({length:19},(_,i)=>"NC"+String(i+1).padStart(2,"0"));
+            const seen=Array.isArray(v.results)?v.results.map(x=>x?.id):[];
+            const distinct=new Set(seen);
+            const missing=required.filter(id=>!distinct.has(id));
+            const unexpected=seen.filter(id=>!required.includes(id));
+            const byId=Object.fromEntries((v.results||[]).map(x=>[x.id,x.result]));
+            const expected={
+              NC01:"evidence-preserved-for-scoring",
+              NC02:"insufficient-evidence",NC03:"insufficient-evidence",
+              NC04:"insufficient-evidence",NC05:"insufficient-evidence",
+              NC06:"evidence-mismatch",NC07:"evidence-mismatch",NC08:"evidence-mismatch",
+              NC09:"claim-contradicted",NC10:"producer-failed",
+              NC11:"producer-unparseable",NC12:"insufficient-evidence",
+              NC13:"stale-or-different-binding",NC14:"stale-or-different-binding",
+              NC15:"producer-unparseable",NC16:"insufficient-evidence",
+              NC17:"producer-unparseable",NC18:"producer-unparseable",NC19:"producer-unparseable"
+            };
+            const resultsDiffer=required.filter(id=>byId[id]!==expected[id]);
+            const ok=v.total===19 && v.passed===19 && seen.length===19 &&
+              distinct.size===19 && missing.length===0 && unexpected.length===0 &&
+              resultsDiffer.length===0 && typeof v.scope==="string" &&
+              v.scope.includes("no real TEI/Harness");
+            console.log(JSON.stringify({
+              check:"SK-03 synthetic required-case inventory, not multi-Harness",
+              required:required.length, reported:seen.length, distinct:distinct.size,
+              missing,unexpected,resultsDiffer,passed:v.passed,total:v.total,
+              status:ok?"PASS":"FAIL"
+            }));
+            if(!ok) process.exit(1);
           ' "$RUNNER_TEMP/sk03-negative-claim.json"
