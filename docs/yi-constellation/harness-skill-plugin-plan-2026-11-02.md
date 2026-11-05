@@ -736,7 +736,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **未実施**：実AI HarnessによるH2→H3→H3→H2、Skill実ロード、別Harness Transfer、Consumer実受信、業務意味Owner受理、現行OS/Network開示強制。実CIの再現性PASSを外部Agentや本番業務のPASSへ昇格しない。
 
 
-### 39.1 既存S1 Ledgerの曖昧JSONを実行前に拒否する（2026-11-06）
+### 39.2 既存S1 Ledgerの曖昧JSONを実行前に拒否する（2026-11-06）
 
 実ProductのS1証拠は、固定された[公開台帳](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)と実CLIの当回Receiptの31項目照合まで進んだ。一方、`JSON.parse`単体では同一member二重定義が後勝ちで上書きされ、台帳／Receipt／CLI戻り値に曖昧な入力があっても一致に見える余地があった。そこで**新しい正本やParserを導入せず**、既存SK-02の[重複キー拒否](../../evaluations/tools/check-sk02-pair-eligibility.cjs)を[実S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)で再利用し、S1-W09〜13と、実Receipt/台帳への二重key注入を[既存CI](../../.github/workflows/tai-tei-s1-real-public-cli.yml)へ接続した。
 
@@ -754,7 +754,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **変えない範囲**：TEIのS1実CLI/Source/Indexの再現性ゲートは保持。SK-02の一つのread-only Product TaskにEKI/SHO DB Provider/Target Build/TAI横断Skillを投入しない。新Wrapper・Task Runner/Owner Oracleの実装を増やさない。次の本質的な証拠は**実HarnessでH2の一Sessionが動き、Skill非露出と実Tool argv/Sourceの観測が得られたこと**から開始する。Skillあり二Session・残りH2を続け、4試行後にのみ増分価値を採点する。現在は**NOT RUN**。
 
 
-### 39.2 S1の実CLI実行引数と証拠Hashを別々に検査する（2026-11-06）
+### 39.4 S1の実CLI実行引数と証拠Hashを別々に検査する（2026-11-06）
 
 **成熟した欠落の修正**：[S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)が実CLIの`stdoutDigest`をLedgerの固定Digestへ照合していても、元Receiptの`observations[].args`と`cwd`の一致は検査していなかった。実Source読込、モデル/ワークスペースの参照閉包、H2/H3比較条件を横断して検討した結果、**「結果Byteが一致」と「どの対象を要求したか」が別証拠である**ことを既存検査へ反映した。4つの固定read-only argv・同一絶対CWDを照合し、31既存比較→39項目（追加8項目）、合成S1-W14〜W19と実CLI Receipt改変負例を追加した。
 
@@ -763,7 +763,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 順序は従来どおり、固定TEI実CLIによるW0/S1→**外部Harnessで最初のH2実Tool呼出し**→H3のProduct Skill実ロード→H2/H3四Session／独立Oracleと費用比較→必要時のみSK-03の第二Harness。新Runner／万能Evidence Platform／中央Validatorは増やさず、書込み/未知Commitは既存条件付きHandoffへ残す。[実証Runbook §18.2](first-real-skill-qualification-runbook-2026-11-02.md)で具体的実装・停止条件を管理する。
 
 
-### 39.4 実Skill比較の評価母集団とOracleを分離する
+### 39.5 実Skill比較の評価母集団とOracleを分離する
 
 実H2/H3の価値評価では、Skillの配布・Load失敗を除外したPP（実利用に限った適格比較）だけを示すと実運用の価値を過大評価し得る。初回4独立Sessionについては[SK-02 §20](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)の**ITT＝割付全数**と**PP＝実Skill/Source/Tool利用が観測された比較対象**を分け、試行数・Loaded/Not Loaded・Task Oracle・Tool回数・費用と未確認の割合を一緒に記録する。Checker`eligible-to-score`はPP候補の形式判定であってITT実績を消さず、Skillの因果改善率にもならない。
 
