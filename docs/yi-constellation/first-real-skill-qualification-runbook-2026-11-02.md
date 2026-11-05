@@ -377,6 +377,14 @@ S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失
 ---
 
 <!-- sk02-h2-first-real-session-operational-cut-20261106 -->
+### 18.2 実argvと作業ディレクトリをS1証拠台帳に束縛する（2026-11-06）
+
+[前節の31項目Ledger照合](../../evaluations/tools/probe-tei-s1-real-source.cjs)は、CLI 4呼出しの標準出力Hash/終了コードを固定していたものの、Receiptの`observations[].args`・`cwd`は実際には比較していなかった。これでは、同じstdout digestを引用しながら異なるWorkspace・Subjectを読んだかのようにargv/cwdだけを書き換えた票を形式上PASSにできる。最初のread-only S1ではその差がTaskの意味に直結する。
+
+**実装**：既存S1 Probeの`verifyLedger`内で、Ledgerに固定された`reference/workspace`と当回Receiptの絶対CWDを使い、**4つのCLI argvをコマンド・順序・Workspace・Subject/Format・追加Optionまで完全一致**で照合。4呼出しすべてのCWDが同じことも検査する。これを既存31項目に8比較追加して計39項目とする。S1-W14〜W19は正常な4呼出し／別Workspace／別Subject／write-option混入／別CWD／CLI順序交換の合成負例。さらに既存の[TAI S1実CLI Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)で、**本物の実CLI出力Digestを残したまま**ReceiptのCatalog Workspaceだけ、Inspect CWDだけをそれぞれ改変して拒否を確認する。
+
+**証拠の限界**：同じargv/cwd文字列が記録されていることは、Host/Processが本当にその引数を渡したことの第三者証明ではなく、symbolic linkや別mountの実Target同一性も示さない。このテストは既存Probeが生成した実CLI Receiptの**内部整合と失効検知**に限る。歴史台帳の新しい認証方式や実Harness連携、追加Product Gateは作らない。CIのPASSは当該実行のexact-head/Jobログで確認するまでは宣言しない。最初のH2独立Sessionの実Tool/Loader観測を引き続き優先する。
+
 ## 19. 2026-11-06：W0成立後に実施する「最初のH2実Session」実行票
 
 本節は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**次のBlocking Exit**を、準備の議論ではなく**外部AI Harnessが実TEI Toolを起動した一つの実観測**へ収束するための最小運用手順。既存§12 Trial Card／§17 W0→H2/H3／§18 S1 ledgerを使用し、第二Script・独立Runtime・新共通Evidence Schemaを追加しない。実H2は**本節追加時点ではNOT RUN**。
@@ -453,13 +461,6 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 **合格・停止**：Checkerの`eligible-to-score`はメタデータ比較資格のみ。次に別保管した独立Expectedで**回答の正しさ/不明とWarningの保持**を採点し、実Tool回数、実Token/コスト、経過時間、手直し回数を独立欄で比較する。実Skillがロードできなければ「H3結果」ではなく試行不成立、どちらも誤答ならSkill Benefitにしない。n=4の結果を統計的優越/全Harness適用へ一般化しない。外部Harnessへの実Skill Install/Loadと4 Sessionは現時点**NOT RUN**。新Runner・別共通Oracle・新Policyを実装しない。
 
 
-### 18.2 実argvと作業ディレクトリをS1証拠台帳に束縛する（2026-11-06）
-
-[前節の31項目Ledger照合](../../evaluations/tools/probe-tei-s1-real-source.cjs)は、CLI 4呼出しの標準出力Hash/終了コードを固定していたものの、Receiptの`observations[].args`・`cwd`は実際には比較していなかった。これでは、同じstdout digestを引用しながら異なるWorkspace・Subjectを読んだかのようにargv/cwdだけを書き換えた票を形式上PASSにできる。最初のread-only S1ではその差がTaskの意味に直結する。
-
-**実装**：既存S1 Probeの`verifyLedger`内で、Ledgerに固定された`reference/workspace`と当回Receiptの絶対CWDを使い、**4つのCLI argvをコマンド・順序・Workspace・Subject/Format・追加Optionまで完全一致**で照合。4呼出しすべてのCWDが同じことも検査する。これを既存31項目に8比較追加して計39項目とする。S1-W14〜W19は正常な4呼出し／別Workspace／別Subject／write-option混入／別CWD／CLI順序交換の合成負例。さらに既存の[TAI S1実CLI Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)で、**本物の実CLI出力Digestを残したまま**ReceiptのCatalog Workspaceだけ、Inspect CWDだけをそれぞれ改変して拒否を確認する。
-
-**証拠の限界**：同じargv/cwd文字列が記録されていることは、Host/Processが本当にその引数を渡したことの第三者証明ではなく、symbolic linkや別mountの実Target同一性も示さない。このテストは既存Probeが生成した実CLI Receiptの**内部整合と失効検知**に限る。歴史台帳の新しい認証方式や実Harness連携、追加Product Gateは作らない。CIのPASSは当該実行のexact-head/Jobログで確認するまでは宣言しない。最初のH2独立Sessionの実Tool/Loader観測を引き続き優先する。
 
 
 ---
@@ -492,8 +493,3 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 - **RD-05：実Skill Loadは成功、回答は誤り**。Dは成立しても独立Oracle不合格。技術的ロード成功を価値成功へ昇格しない。
 
 **実行の優先順**：§19の最初の外部H2一Sessionを実Toolログ込みで観測→H3の実Loader/参照文書消費を別Sessionで確認→固定順`H2→H3→H3→H2`の四Sessionと事前Holdoutによる独立採点。追加合成CI・第二Agent Host・配布Registryは初回に不要。今回の追補は**試験方法の補正**であり、実H2/H3四Session、ITT/PPの正答・費用、Owner受理は**NOT RUN**。
-
-
-### 20.1 割付結果とSkill実利用結果を別に残す（ITT／PP）
-
-[SK-02 §20](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)に従い、**実H3へ割付した事実**と**実Skillのロード・利用を観測できた事実**を別々に記録する。H3でロードできなかったケースは現CheckerのPP適格性に入れないが、ITT（全割付Session）から黙って消さない。実装・配布/Tool選択ができなかったという運用上の結果として残し、次のH3を恣意的に取り直して成功率を見せない。H2→H3→H3→H2の計画4 Sessionは固定したまま、失敗・unsupported・unknownも件数を保持する。Skill追加利益はTool-onlyと比較できる実Consumer答え・独立Expectedを別採点し、n=4を一般的な改善率へ外挿しない。
