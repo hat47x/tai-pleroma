@@ -393,3 +393,42 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 **W0/SK-02の変更なし**：最初に一つの公開TEI Workspace/実CLIの実read-only H2/H3四独立Sessionを成立させる。これが成功するまでMigration→別Harness→SHOを一続きの必須E2Eにしない。**後続P1**では既存TEI旧新PG合成Fixtureと、MCU-01/03のSource/読取対象・水位差を独立Expectedで比較。**P2**で二Harnessが実使える場合に限りSC-13のHandoff/J0-J1-J2を比較。**P3**でwrite/SHO納品がタスクに現れたときだけMCU-02/04の実Provider Receipt・実SHO Reader・Owner承認を要求。実読取対象とWindowを固定できなければ本番移行PASSにしない。
 
 **Owner／非目標**：TEI #2555が移行のPlan/正本/差分と切替判断、TEI #1174/#2564が実Commit/Unknown、TAI #271が用途限定Handoff、SHO #4/#6が文書の引用・Review。新Migration Engine、共通Agent Host、第二Source Registry、汎用Handoff Validator、中央CDC製品を作らない。既存移行PG Referenceは局所観測済みだが、**MCU-01〜04、実旧新Client/Harness、異種DB/本番Cutover、実SHO納品、正式Owner受理はNOT RUN**。
+
+
+---
+<!-- sk03-product-readiness-source-consumption-tei-sho-20261106 -->
+## 16. 2026-11-06：Productの実読込能力とHarness Skillの配布・実利用資格を製品別に切り分ける
+
+### 16.1 新しい横断実装状態を受入資格へつなぐ
+
+[TEI限定実S1 #42101157330](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330)は、固定TEI Go実行物から公開`semantic-data:sales.order`をCatalog/Inspect/Validateで取得し、Source Indexのartifact fingerprint/definition referenceと独立Source byteが一致したことを示す。**TEI Toolが一つの公開Subjectを実際に読める基線は存在する**。しかしAI HarnessがそのToolを呼んだわけではなく、Product SkillをLoad/Useしたわけでもない。
+
+[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)の現状は異なる。SHO mainは確認時LICENSEのみで、Draft #12〜14のMarkdown Fixture/Python test-only Readerは**SHO製品CLI/Readerの実証ではない**。G1bではMarkdown一文書の実raw byte、実選択Parserとversion/profile/options、実Parsed link occurrence／階層／未対応Grammar、独立Expectedをつないで初めてProduct read-only資格が成立する。SHOの通常Markdown編集・読取はTEI接続、MMI再接続、AI、PDF/DOIの取得を必須としない。
+
+**対称な抽象契約を先に作らず、共通の『主張を支える観測点』だけ揃える**。TEIはGo CLI/SourceIndex/Subject、SHOはMarkdown Reader/Parser/Occurrenceで実証単位が違う。`Skill supported`という一語で両者を同じ完成状態にしない。選択済みParser versionの変化が同一raw Markdownから異なるLink/階層を生む時、過去の解釈/索引を無条件再利用しない。一方、同Bundleへ未選択Parser候補を追加しただけで、実選択・実消費・必要Artifactが不変なら全面失効を前提にしない（TEI #1251/#2600と同じ評価上の区別）。
+
+### 16.2 既存配布・受入票に付加する最小の観測列
+
+| 資格段階 | TEIで観測済み／未実施 | SHOで必要な最初の観測 | TAI/Harness側での停止線 |
+| --- | --- | --- | --- |
+| **Product source consumed** | S1の一Subject Indexed Source/definition/byteが実CIで照合済み | G1b製品ReaderがMarkdown raw byteを実Parserへ渡し、selected version/profileを固定する必要あり | ファイル配置、Manifest列挙、Fixture PASSだけではProduct read成功としない |
+| **Consumer capability** | 固定Go CLIコマンドが実Node Probeから呼ばれた | G1bのread-only製品Command/Readerとstdout/exit/未取得診断の実測が必要 | Feature/CLIが実在しなければSkillは利用資格なし。文書説明はCandidate |
+| **Harness load/invoke** | H2 Tool-only、H3 Skillありの実AI Sessionは未実施 | G1b成立後、SHOにTool/Skillが必要なら別途実Harness接続 | Skill配置/パッケージ公開≠実ロード/Tool呼出し/現在Grant |
+| **Independent task outcome** | SK-02正答・費用・Warning/Unknown/実Audienceは未採点 | RI-L0のLink/Occurrence/Grammar範囲を独立Expectedと照合 | Testerの自己申告boolではなく実Reader/Loaderログを要求 |
+| **Package／Release** | 単一Go BinaryとSkill closureを対象別に固定。シリーズ全体未資格 | SHO製品Reader main統合、選択Parser lock、実配布Memberと実CLI Reader | Bundle Digest更新、root CI PASSを選択Target/実Install/Invokeの資格に代用しない |
+
+### 16.3 独立反証 QSB-01〜05（新Runner・Parser Registryを作らない）
+
+- **QSB-01：Parserが実在しないSkill**。SHO Draft Fixtureは存在するがProduct G1b Readerは未実装。シリーズ案にSHO Product Skillを加えても、`Product Tool usable`／`Harness validated`はともに未資格と報告。TEIのCLI成功を横流ししない。
+- **QSB-02：Parser selection drift**。同じMarkdown raw byte・Path/Source SHAでも、実選択Parser 14系→15系やoptions変更で参照定義・occurrenceの解釈が異なる場合。前索引の現在資格を再評価。版差の有無は[SHO #16](https://github.com/hat47x/sho-composer/issues/16)の実G1b試験で判定し、差が生じたと未実行で断定しない。
+- **QSB-03：未選択Candidate追加**。Bundle内にParser/Provider候補が増えても選択・実Read Closureが不変なら、当該Consumer解釈を全面失効させる理由にはならない場合がある。ただしdefault selection/fallbackが変化したなら必要再資格化。
+- **QSB-04：実Parserと入力不一致**。Fixture raw digestと実Readerの消費Byte/Disk path/dirty bufferが異なる。Parsed Link件数一致でも別Input/別Sourceとし、`unknown`を保持する。
+- **QSB-05：配布/実起動の差**。TEIまたは将来SHOのPackaged Skill/CLI版とHarnessが実Load/InvokeしたFile/Executableが異なる。Self-declared `loaded=true`やRelease Versionのみから互換と断言しない。
+
+### 16.4 最初の実証を増やさないための優先順
+
+**P0**：既存TEI W0/S1実CLI基線を保存して、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の最初のH2実Tool call→H3実Skill Load→四Session比較に集中。**P1（別の独立Product lane）**：SHO #16のG1b一文書Readerと独立Expected/Parser版差を実検証。ここでTOOL/Harness/TEI/AI/PDF連携を必須にしない。**P2（条件付き）**：SHO Product Readerが成立し用途価値がある場合のみ、Tool/Skillの配布・別Harness使用を試す。QSB-01〜05は既存ケース/証拠票へ追加評価するだけで、TEIの初回S2をSHOのReader待ちでブロックしない。
+
+**Owner**：TEI #2605がTEI実Source/Skill、SHO #16/#7/#4がParser/Read/Document、TEI #1251/#2600が未使用候補と選択依存、TAI #74が配布Profile・公表、#168が実Harness互換と価値、#422が独立反証。新Product統合Host、第二Parser Reader、共通Proof/Capability Registry、全Agent対応宣言は作らない。
+
+**現在の事実**：TEI S1の限定Source-binding CIとTEI #2889のtoy RunPlan Go 3/3の局所実測は別の証拠であり、本節から統合E2Eを主張しない。SHO G1b製品Reader、QSB-01〜05の実Product/二Harness試験、SHO/TEI価値比較、OS外向き送出制御、Owner採用は**NOT RUN／NOT ACCEPTED**。
