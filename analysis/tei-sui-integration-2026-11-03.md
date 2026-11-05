@@ -523,3 +523,16 @@ contract mmi.source-inventory/v0 / status complete / entries 16
 
 - 文書内容は返さず、識別子とダイジェストだけを返す
 - 一貫性の表明は`per-file-observation`
+
+## MMIのdelivery audit（2026-11-03）
+
+サンプル文書に対して`delivery-audit`を実行した。[receipt](../evaluations/records/MMI-delivery-audit-2026-11-03.json)
+
+```text
+schema mmi.delivery-audit/v0 / scope file-only-excel-mmi-embeds
+referentialCompleteness empty / references 0 / exit 1
+```
+
+- 対象は**ファイル全体参照**のみで、範囲参照（`#sheet|A1:F13`）は数えない
+- そのため件数0・`empty`・終了コード1（差異または不確定）になる
+- 納品の完全性を主張しない、という製品の境界どおりの挙動
