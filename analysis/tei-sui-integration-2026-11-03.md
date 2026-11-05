@@ -566,3 +566,15 @@ TAIの投影TaskRequest（平坦なrecord）から、Client APIの封筒（execu
 - 投影値は試験ポリシーの予算（60s/1MiB/1MiB）を超えるため拒否される
 - 丸めた場合、EKIのTEST PROFILEで実行とResultClaimまで到達する
 - 本番のWorker Protocol互換や権限は未検証
+
+## 予算を製品ポリシーに合わせた投影（2026-11-03）
+
+`present-policy-aligned`ケース（wall 60s・output 1MiB・network 1MiB）を契約へ追加し、その投影をEKIへ投入した。[receipt](../evaluations/records/EKI-TEI-policy-execution-2026-11-03.json)
+
+```text
+投影値のまま受理（422なし）→ task=tsk_52632a0a... 実行・claim取得
+cases 5→6
+```
+
+- 予算はTEIの契約側で表現でき、製品ポリシーに合わせた投影は丸めなしで通る
+- 元の`present`ケース（300s/16MiB/128MiB）は製品ポリシーより大きい
