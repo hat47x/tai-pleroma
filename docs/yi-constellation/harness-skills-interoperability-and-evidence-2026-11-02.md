@@ -121,3 +121,33 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 **停止条件**：存在しないToolの推測呼出し／別Product Rawの越境／同じ可視投影から全体Claimの断定／Skill更新のすり替え／AIが業務意味を自動受理／不明Taskの無条件retry／SDK/Pluginの存在からHostの動作保証／新共通Host・共通意味SSOTの先行導入。
 
 関連する既存Owner：TAI #168/#74/#232/#234、TEI #2390/#2391/#2515/#2516/#2493、SEI #660/#677/#767、SUI #3275（既に修正PRが別途存在）／agent projection、SHO #1/#6・MMI #658/#672、EKI #407/#465。正式受理や実装の証拠は各Issueへ戻す。
+
+
+---
+
+<!-- 20261106-product-reader-before-skill-and-parser-safety -->
+## 9. 2026-11-06：Product Readerの実在とParserの安全性をSkill配布・再資格化へ接続
+
+**直近Product証拠の非対称性**：[TEI Product Skill #2605](https://github.com/hat47x/tei-platform/issues/2605)はTAI側からも固定公開Source/実Go CLI/SourceIndexを限定実証済み（[TAI実CI #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)）。外部HarnessのH2/H3は依然NOT RUN。対して[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)は最初のSHO本体read-only Markdown Research Index Readerを**これから実装**する段階。SHO Draft #12〜14のPython test-only CLI／MMI Renderer成功は、SHO Product Readerが存在する証拠ではない。[SHO #10](https://github.com/hat47x/sho-composer/issues/10)の`yi-sho-compose`を「Product CLI利用可能」「配布受理済み」に昇格させない。
+
+### 適用に必要な資格を分離する（新共通State Schemaは採用しない）
+
+| 資格／Owner | TEI先行の実観測 | SHO G1bの現在状態 |
+| --- | --- | --- |
+| Product read-only Tool実装／Product Owner | 指定公開Subjectで実CLIのCatalog/Inspect/ValidateをTAI CIから実読取済み | mainのSHO自身のMarkdown Index Readerは未実装・未検収。MMIのCLI/ProbeをSHOの正式Toolへ読み替えない |
+| Parser/Source consumption／Product Owner | SourceIndex artifact/definition refと独立Source bytesが同一Fixtureで一致 | 最初のMarkdown raw bytes、Disk/dirty buffer、実Parser/lock/Profile/Grammar scope、OccurrenceのReadが必要。名称/予定Versionだけでは未資格 |
+| Skill Package／TAI Release Owner | Product Skill文書はmainに存在、実外部H3 Loadは未観測 | SHO Skillは提案候補。Parser/Toolが無い場合でも文書候補の検証はできるが**実装済みSkillによるReader実行とは表示しない** |
+| Harness invocation／TAI #168 | 先にTEI H2実Tool log 1 Session、その後H3実Loadと四Session比較 | G1b Product実走とTool/契約を固定してから、必要があればSHO別TaskのH2/H3へ |
+| Owner Meaning／SHO #4/#7・TEI #267 | CLI正常終了はMeaning/Owner受理ではない | Markdown Link/ReferenceのSyntax Projectionと著者Review、公開/納品、TEI連携Meaningは別資格 |
+
+### G1b版・入力・失敗の最小Negative Qualification（SHOの既存Issueへ渡す）
+
+- **SHO-PQ01（危険Parser版）**：同じMarkdown/`package.json`記載でも、実`lockfile`/`require.resolve`でロードした`markdown-it`のexact版がCVE-2026-111758影響域（14.1.0以上14.3.3未満、または15.0.0以上15.0.3未満）なら、当該Readerを安全性確認済みと公表しない。GitHub [GHSA-gfr2-rv44-r23c](https://github.com/advisories/GHSA-gfr2-rv44-r23c)の修正版は14.3.3／15.0.3。**修正版本体を使ったことだけで入力資源上限・DoS対策・OS非送信まで証明したとはしない**。
+- **SHO-PQ02（Parser変更と見た目同一）**：14系と15系でraw MarkdownのLink occurrence・参照定義解決・見出し/List階層を独立Expectedと比較。同じLink件数・Rendered HTMLでも同じIndex/Source positionとは断定しない。Parser/profile/Optionsの無言fallbackを禁止。
+- **SHO-PQ03（未検証のLinkやSource）**：code fence・raw HTML・未定義参照・裸URL・部分入力・誤字によるReader不発を「Linkなし／Sourceが存在しない」としない。実読み取り可否、Grammar scope、warning/unknownを分離する。
+- **SHO-PQ04（配布Skillだけ存在）**：`yi-sho-compose`がHarnessに発見/LoadedされてもSHO Readerが無い・実参照Fileを消費していなければ`Product Reader invoked`は未成立。MMIの実Toolを代わりに用いたなら別Product/Toolの限定効果とラベルする。
+- **SHO-PQ05（非公開ソース）**：ローカルでReaderがMarkdownを読めても外部LLMへの原byte/引用メタデータ送信は別Grant。Skill説明文やParser設定から外向き送信許可を付与しない。
+
+**導入順**：TEIのH2 Tool-only初回セッションは既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Runbook §19](first-real-skill-qualification-runbook-2026-11-02.md)のまま最優先。SHOは同時並行で[#16 G1b](https://github.com/hat47x/sho-composer/issues/16)の最小Reader/actual parser/lock/独立Expectedを確認し、その後SHO #10のProduct Skill評価を検討。TAI #74は配布資格の表示だけ、TAI #271は跨ProductのSource/Revision変更時の限定再資格化だけを担当。**この節は既存実装の証拠を正しく配置する設計追補で、新Parser/Reader/Skillや実Harness連携のコードは追加していない。**
+
+**状態**：TEIの公開実CLI限定S1のみ実観測済。SHO G1b実製品ReaderのCI、Parser安全性の実依存試験、SHO Skill Install/Load/Tool invocation、TAI外部Harness実H2/H3、Product間文書納品・Owner受理はNOT RUN。
