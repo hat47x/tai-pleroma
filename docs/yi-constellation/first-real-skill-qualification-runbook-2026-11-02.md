@@ -354,3 +354,14 @@ S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失
 既存の`H2→H3→H3→H2`四独立Sessionをそのまま実行し、**最初のH2一Sessionの実Tool log/実CLI receiptが存在するか**を初期停止線にする。無ければH3や第2Harnessを先に増やさず、Harnessで実CLI Toolが使えるかを明らかにする。H2が成立したときのみH3の実Load/Reference File利用を評価し、その後同条件で四Sessionと独立採点へ進む。効果がなければTool-only維持。必要な実観測が取れないHarnessは`unsupported / unknown`であり、全Harnessが使用不能という断定にしない。
 
 **状態**：この§17は既存実S1証拠と次の実Harness実験を接合したRunbook追補であり、Product/Checker/Loader/Hostに新実装なし。H2/H3四独立Session・外部Harness Tool invocation・実Skill loader・独立採点/Cost・Owner受理・実Network非漏えいは**NOT RUN**。初回read-onlyへDB移行/RunPlan/Plugin全セットを必須化しない。
+
+
+## 17. 2026-11-06：実TEI S1証拠台帳を新しい実行結果へ再束縛する
+
+§15〜16で証拠をJSONに転記しただけでは、将来の再実行でSource/実Binary/CLI/Source Indexが変化しても、古いEvidence票を読んで成功したと誤認し得る。今回、既存[TAI S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)に**限定的な`--verify-ledger`入口**を追加。実Go CLIで生成した当回Receiptを、先に固定された[公開S1証拠台帳](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)へ突合する。別のE2E Runner/新Source Registry/Owner受理システムは作らない。
+
+**実装された一致条件**：固定TEI Commit、実Source path/byte SHA-256、実GoバイナリSHA-256、Subject kind/id、Catalog 1件/indexed、Inspect成功、Validate結果と診断件数、空Workspace対照、Inspectが示すSource artifact/path/fingerprint/definition reference、WorldFP/SourceIndexFP、各CLI 4呼出しのexit・stdout SHA-256を**計31項目**照合する。過去RunのID/日時/Owner受理を新Runで再発行する仕組みではない。採点が一致しても「新しいModel Revisionに自動更新済み」「AIがSkillを使用した」にはならない。
+
+**CI実証**：[TAI 実S1＋台帳照合 #42106804110](https://github.com/hat47x/tai-pleroma/actions/runs/42106804110) は**completed/success**。実ジョブログで`compared=31`、`verdict=matching-bounded-S1-evidence`を確認。さらに当回ReceiptのSource SHA-256を意図的に0へ置換した負例は非0終了し、`ledger mismatch: source bytes`を記録した。[専用GitHub Actions](../../.github/workflows/tai-tei-s1-real-public-cli.yml)には**台帳だけが変更された場合もCIを起動**するパス条件を追加した。これは公開固定Fixture・一環境の実CLI比較であり、第三者署名済みReceipt・H2/H3の実Skillロード・現行Grant・Business Oracleではない。
+
+**差分時の判断**：新TEI HEADへ移る際は、古い台帳の一致を証明するためSourceやBinaryを暗黙に差し替えない。まず失効として扱い、独立Expected・対象Subject・Source bytes・実CLIを両腕で再固定したうえで**新しい版の受入票を別途作る**。旧Ledgerは過去のS1限定証拠として保持。GoのTarget、Provider、本番組織Action、SHO Reader、EKI回復へ証拠を一般化しない。
