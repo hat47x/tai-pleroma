@@ -706,7 +706,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **最優先の未達Gateは変わらない**：外部Harness一つでH2 Tool-only/H3 TEI Product Skill実Loadedを同一公開Subject・固定Binary・独立Task OracleでH2→H3→H3→H2と比較する。新S1はTEI側既存CLIをTAIから直接実行した**Product-only実観測**であり、実AI/Skill Loader・第二Harness・実Grant/外部Egress・独立業務Oracle・Owner意味受理を証明しない。TEI既存#2605・TAI #168/#271/#422を継続Ownerとし、DB/Provider、Studio、EKI、SHOの高度機構や新Host/中央Registry/第二Readerを初回の必須Gateへ追加しない。
 
 
-## 37. 2026-11-05：実DB/未知Commitの成果を条件付きHandoffへ接続する
+## 38. 2026-11-06：実DB/未知Commitの成果を条件付きHandoffへ接続する
 
 他チャットのTEI Script起動・実DBテスト・Harness #8の証拠鎖を[SK-03 §13](harness-interoperability-and-handoff-pilot-2026-11-03.md)へ集約した。特にTEI [merged #2853](https://github.com/hat47x/tei-platform/pull/2853)による**製品Invoker→Lifecycle→実PostgreSQL CASの限定E2E**、[merged #2854](https://github.com/hat47x/tei-platform/pull/2854)の**A→B→A／新idempotency keyで再適用され得る反例**、[merged #2850](https://github.com/hat47x/tei-platform/pull/2850)の**観測不能なafter-commit／compensationを無人で開始しない停止条件**を、既存Productの実装事実として採用する。Receiptの本番永続化・署名・保持、OS/Network障害、業務受理をこれらの試験結果から推定しない。
 
