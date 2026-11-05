@@ -229,6 +229,8 @@ def main():
             "eki_projection", ["integrations/tools/eki_projection_execution.py"]
         )
         steps["eki_manual"] = run_step("eki_manual", ["integrations/tools/eki_manual_execution.py"])
+        steps["eki_revoke"] = run_step("eki_revoke", ["integrations/tools/eki_worker_revoke.py"])
+        steps["eki_revoke_agent"] = run_step("eki_revoke_agent", ["integrations/tools/eki_revoke_agent.py"])
     if args.skip_checker:
         steps.pop("checker", None)
     tei_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=args.tei_repo, capture_output=True, text=True).stdout.strip()
