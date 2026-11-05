@@ -539,3 +539,11 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 実H2起動時には、①固定BinaryとWorkspaceをParticipantへ渡す位置、②その位置にSkill・評価票・他Session Logが存在しないこと、③GitHub・汎用Web・親ディレクトリの読取等の迂回経路が**実Tool Profileとして制限・観測**されていること、④実CLIのargv/cwd/exit/stdoutと対象Sourceの一致を記録する。H3のみProduct Skill rootと必要referenceを別に提供するが、**ファイルが置かれている＝実ロードではない**。Skill rootからリンクされた追加Product文書の参照閉包／その実Readは別に報告し、欠落を架空の成功にしない。
 
 **再現性の注意**：上のCIビューはRun終了時に破棄する臨時ファイル群で、正式な配布Bundleでも、専用Harness Adapterでも、新しいKernelやSandboxではない。`chmod`とCLIの限定読込だけで実OS/Egressの非漏洩を証明できるわけではない。実H2で隔離状態を観測できない場合は、成功したW0/S1を根拠に`skill_exposed=false`へ補完せず、Unknown/不適格として扱う。
+
+### 22.4 固定Skill候補と最小ファイルビューの実CLI証拠
+
+[実GitHub Actions #42112462908](https://github.com/hat47x/tai-pleroma/actions/runs/42112462908)のProduct-only Jobは**completed/success**。Go 1.26.10/Linuxの同じ固定TEI Binaryを、必要な公開`reference/workspace`だけをコピーした**H2 Skillなし／H3候補ありの一時ファイルビュー**からそれぞれ実起動。両ビューの`model catalog`／`inspect`／`validate`が固定S1 LedgerのSource／World FP／Source Index FP／診断件数と一致し、`h2SkillPresent=false`／`h3CandidateFilesPresent=true`を出力した。StepごとのSuccessと実ログを確認し、**H2/H3外部Harness 4 Sessionの成功には計上しない**。
+
+同Jobは固定TEI Checkout内のProduct Skill root SHA-256 `cf137ae534e655881dfc686d70afbf14138cb21a61885b987c224dd893ea2282`、reference SHA-256 `72f6deb92e8800f0846c8ec6a8ac4e69eed7b637fc3b02868db9fe116dd49497`を出力し、Git Blob pinを確認した。[Product Skill限定Evidence記録](../../evaluations/records/TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json)に固定し、CIから実原byteに再照合する。TEI Product Owner [#2605への契約不一致報告](https://github.com/hat47x/tei-platform/issues/2605#issuecomment-6670006488)を別途作成。修正案を今回の固定H3 Skill byteに黙って混入させない。
+
+**実H2セッションへ引渡す条件**：参加者は実Binary/公開Workspaceの限定ビューだけを受け取り、別の親Directory・GitHub/Search経由でProduct Skill/採点票へ到達できない実Tool Profileを用いる。H3は同じTool/Source条件に加え、上記固定Skill候補の実Loader Readを必ず別ログで確認。CIの局所`chmod`を実OS隔離／External Egress防止／Skill非露出の本番保証へ読み替えない。
