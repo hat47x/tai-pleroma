@@ -276,3 +276,38 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 - **共通の停止・進行規則**：未読込Source・不明Grant・Builder入力差は、その証拠を必要とする**実行・納品Claimだけ**を止める。許可済みの静的調査、AI候補生成、SHO L0編集、SEIの限定再開、SUIの公開合成での保留検討まで一括停止しない。新しい万能Gateを導入せず、TAI #424のF2と各Product IssueにOwner判断を残す。
 
 **証拠の現在地**：#2828は実テスト候補PR、#2819はProduct側の限定的な再現報告、TAI #270はSK-02実験を定義済み。しかし本横断PRでの二Case実走、異モデル反証、TAI H2/H3実Harness、User Job増分、各Product正式受理は **NOT RUN**。
+
+## 16. 11月5日の成熟成果：主要価値と内部成熟度を別々に検証する
+
+[TAI #422への11月5日VA-TEI受渡し](https://github.com/hat47x/tai-pleroma/issues/422#issuecomment-6655780152)と[TEI #1119](https://github.com/hat47x/tei-platform/issues/1119)を、**価値実証の着手順**に具体化する。新しい共通Gateや第二の正本を作らず、各Productが持つMeaning・Provider・テストのOwnerに戻す。本節は2026-11-06時点のSource/Issue静的照合による計画案であり、下記実験の実行・正式受理ではない。
+
+### 16.1 TEIの4経路：価値への必要条件を局所化
+
+| 経路・比較 | 同じUser Jobで比較するB0/B1/B2 | 必須の負例と資格 | 他経路を止めない条件 |
+| --- | --- | --- | --- |
+| **A：VA-T2-R／Source→Model→CLI Read** | B0＝通常のコード・資料調査、B1＝TEI固定Sourceの実CLI読取、B2＝AIテスト拡張やStudio/Skill | Source宣言・発見・実読込・解析・対象Scope・Warning/Unknown・独立Expectedを別観測。TEI #2822〜24の空/未解析Source、#1180の限定Scenarioを使用 | 読取だけなら実DB Commit、EKI分散、Self-buildの完成を要しない。TEIの単なるCatalog件数やvalidate okで完全性を主張しない |
+| **B：VA-T2-W／Function→Command→実DB Effect** | B0＝明示SQL/既存Provider、B1＝TEI Function/Commandと実PGを一件接続、B2＝複数DB/移行・無人Workflow | [#2853](https://github.com/hat47x/tei-platform/pull/2853)は実PG CAS＋Invokerの局所進捗。[#2854](https://github.com/hat47x/tei-platform/pull/2854)はABA後の別Key再適用を示す負例。元OperationID／Current Grant／実Commit結果／Receipt／別Connection再読取／Consumerを分離 | Bの実書込み資格はAやSHO単独編集の完成条件ではない。Commit応答喪失は「未作用」でなくunknown、無条件の新Key再試行はしない |
+| **C：VA-H1・TEI Studio／SHO Authoring** | B0＝通常のMarkdown等、B1＝SHO単独の保存・再開／TEIモデルの最小編集、B2＝UI Kit・複数Target・高度論文連携 | Sourceの版・引用位置・権限、表示成功と編集保存／実Effectを分離。[TEI #997](https://github.com/hat47x/tei-platform/issues/997)は案件UIの入替可能性、SHO #7はL0からの段階化を評価 | GUI価値を測るときは実編集体験が必要だが、CLI/Read、実PG縦切りを待たせない。SHO L0にTEI Studioや高度PDF解析を義務化しない |
+| **D：TEI全体Self-build** | B0＝現在のGo Buildと既存Plugin SB-3、B1＝代表TEI Artifactの標準Graph→実入力→出力の一対一対応、B2＝全Stage/複数Targetの再現 | [#2831](https://github.com/hat47x/tei-platform/issues/2831)／[Draft #2877](https://github.com/hat47x/tei-platform/pull/2877)のSB-A/B/C。nested moduleの依存欠落・実Builder入力の不一致を検出 | G4内部成熟度の並行評価であり、A/B/Cの最初のユーザー価値比較へ新たなHard dependencyを追加しない |
+
+**初回二試行**：VA-T2-Rは「既存資料／実TEI read-only CLI」を、VA-T2-Wは「同じ業務Functionを既存SQL/Provider／TEI Command＋実PG」で比較する。両者に独立Expectedと同じPurpose/Source/必要権限を指定し、結果の正確性・偽成功・保留の正確さ・作業手数・時間・再確認の費用を別列とする。現在のGitHub上の局所CIや実PG証拠を横断試験実施済みとは数えない。
+
+### 16.2 「必要な複雑さ」と「初期に義務化しない複雑さ」
+
+| テーマ | そのUser Jobでは省けないもの | 条件が成立するまで初期の全体前提にしないもの・既存Owner |
+| --- | --- | --- |
+| **DB移行・旧新並走** | Expand→Backfill→Validate→Cutover→Contractの各段階で、旧/新Client共存、業務キー/物理PKと履歴、再開/rollback、独立観測、Ownerの正本切替判断を別確認。Migration成功ログだけで完了としない | 通常のread-only・一件PG Commandを実証する前に全汎用CDC/ETL・異種DB移行を要求しない。[TEI #2555](https://github.com/hat47x/tei-platform/issues/2555)の同一機械PG3インスタンス限定実測と異種DB/本番未実施を分け、DB/正本切替Ownerへ |
+| **Plugin・Build形態** | Contractの意味と版、選択したProvider/Targetの実依存閉包、Host権限とProviderの外部Effect、未選択Plugin非干渉、selected nested moduleの実Build成立 | 一つのPluginを小Interfaceごとに分割したり、動的Hot-swap/全Target常時Buildを初期義務にしない。[TEI #1251](https://github.com/hat47x/tei-platform/issues/1251)、[#951](https://github.com/hat47x/tei-platform/issues/951)、[#2831](https://github.com/hat47x/tei-platform/issues/2831)へ。凝集度の高いBundleの配布と実選択/Artifact組込を別に検証 |
+| **生成AIの提案と実行** | AI候補のSource/引用/Revision、未確定のまま保持する曖昧さ、独立検査、Owner意味受理、現在のHost/Provider認可、Execution Receipt／独立Read | AI候補を直接Providerへ作用させる汎用Autonomous Runtime、第二Meaning Registryは採用しない。[TEI #267](https://github.com/hat47x/tei-platform/issues/267)、[#988](https://github.com/hat47x/tei-platform/issues/988)、[#1174](https://github.com/hat47x/tei-platform/issues/1174)の責務を維持 |
+| **Tool/Skill・EKI** | Product単独の利用価値と、実Skill Loaded/必要Tool実Invoke/実Consumer受領/Grantの現在資格を区別。EKIは委任・Human-first・Task/Attempt/Resultを保持 | 外部Harness全件常時Load、全Jobでの低遅延マルチモーダル、全件分散/学習Schedulerを義務化しない。[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、[Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)、[EKI #58](https://github.com/hat47x/eki-fabric/issues/58)の比較に委譲 |
+
+**過剰削減の反証**：Read側で未解析Sourceを「0件」、実PG側でCommit不明を「失敗だから新Keyで再送」、移行側でBackfill件数一致を「正本切替済み」、Plugin側でroot go test PASSを「選択Studioの実Binaryも適合」、AI側で提案が妥当を「実行許可」と扱う構成は、より簡単でもB1の合格にはしない。
+
+**過剰拡張の反証**：一件のread-only調査に全DB Migration、全GUI、self-build G4、複数Harness、複数Provider、全Plugin方式選定を必須にする構成は、同じJobで必要性・増分価値を示さない限りB2の条件付き候補に置く。
+
+### 16.3 既存Issueと証拠の更新・停止線
+
+- [VA-00 #424](https://github.com/hat47x/tai-pleroma/issues/424)は2026-11-05時点で**Closed**。9 LaneのSource-static整合性監査と機械的修正は成果として利用するが、Owner未決のADR・製品分類・実価値の受理までCloseされたとは扱わない。
+- [TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)と[#2514](https://github.com/hat47x/tei-platform/issues/2514)のScenario SSOT／独立Oracleを再利用する。各評価票には、必要なSource/Scenario/Contract/Build/Runtime/Grant/Consumerのうち**Required／Observed／Undischarged**を示し、合成試験・実PG局所試験・同一Revision全経路試験のClaim ceilingを別記する。
+- [TEI #1163](https://github.com/hat47x/tei-platform/issues/1163)の一改訂証拠票、[#1174](https://github.com/hat47x/tei-platform/issues/1174)のEffect Fence、[#2555](https://github.com/hat47x/tei-platform/issues/2555)のMigration正本切替、[#1251](https://github.com/hat47x/tei-platform/issues/1251)のPlugin Buildは**各Ownerが実実装・受入**を担う。横断計画が新しいDB移行器・Tx Coordinator・Plugin Host・AI実行権限を所有しない。
+- 既存GitHubの局所PASSは正しく対象範囲に帰属させる。2026-11-06時点、TAIのこの比較（VA-T2-R/W、実GUI UX、異モデルVA-X、横断同一改訂E2E、Owner正式受理）は**NOT RUN**。mainとDraft PR #423の乖離は、別の統合時差分レビュー対象とし、この追補をmainの機能完了宣言に使わない。
