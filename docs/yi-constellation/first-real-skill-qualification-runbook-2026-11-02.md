@@ -492,3 +492,8 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 - **RD-05：実Skill Loadは成功、回答は誤り**。Dは成立しても独立Oracle不合格。技術的ロード成功を価値成功へ昇格しない。
 
 **実行の優先順**：§19の最初の外部H2一Sessionを実Toolログ込みで観測→H3の実Loader/参照文書消費を別Sessionで確認→固定順`H2→H3→H3→H2`の四Sessionと事前Holdoutによる独立採点。追加合成CI・第二Agent Host・配布Registryは初回に不要。今回の追補は**試験方法の補正**であり、実H2/H3四Session、ITT/PPの正答・費用、Owner受理は**NOT RUN**。
+
+
+### 20.1 割付結果とSkill実利用結果を別に残す（ITT／PP）
+
+[SK-02 §20](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)に従い、**実H3へ割付した事実**と**実Skillのロード・利用を観測できた事実**を別々に記録する。H3でロードできなかったケースは現CheckerのPP適格性に入れないが、ITT（全割付Session）から黙って消さない。実装・配布/Tool選択ができなかったという運用上の結果として残し、次のH3を恣意的に取り直して成功率を見せない。H2→H3→H3→H2の計画4 Sessionは固定したまま、失敗・unsupported・unknownも件数を保持する。Skill追加利益はTool-onlyと比較できる実Consumer答え・独立Expectedを別採点し、n=4を一般的な改善率へ外挿しない。
