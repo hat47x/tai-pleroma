@@ -57,7 +57,8 @@ jobs:
         run: |
           set -euo pipefail
           node --check tai/evaluations/tools/probe-tei-s1-real-source.cjs
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs --self-test
           node tai/evaluations/tools/probe-tei-s1-real-source.cjs "$RUNNER_TEMP/tei-s1" "$GITHUB_WORKSPACE/tei" | tee "$RUNNER_TEMP/tei-s1-receipt.json"
       - name: Confirm evidence remains locally scoped and no unsupported certification
         run: |
-          node -e 'const fs=require("fs"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.schema!=="tai.s1.real-tei-public-read/v0" || x.catalogMatches!==1 || x.negative.userSubjectLoaded!==false || !x.notEstablished.includes("H2/H3 four independent sessions")) process.exit(1)' "$RUNNER_TEMP/tei-s1-receipt.json"
+          node -e 'const fs=require("fs"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.schema!=="tai.s1.real-tei-public-read/v0" || x.catalogMatches!==1 || x.negative.userSubjectLoaded!==false || x.sourceWitness?.artifactPath!=="semantic/sales/order.tei" || x.sourceWitness?.artifactFingerprint!=="sha256:"+x.sourceDigest?.slice(7) || x.sourceWitness?.definitionReferences<1 || !x.notEstablished.includes("H2/H3 four independent sessions")) process.exit(1)' "$RUNNER_TEMP/tei-s1-receipt.json"
