@@ -67,3 +67,4 @@ SUI / TEI / SEI / SHO / EKIは、それぞれ独立した能力・ライフサ�
 - [TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の文書整合性監査（別担当再点検を含む）と、[VA-04](evaluations/VA-04-evidence-readiness-preflight.md)の入力閉包/契約発見の事前確認は別工程。元ProductのIssue/ADR採否に踏み込まず、既存Lane・Draft PRと編集範囲が重なれば記録してOwnerへ返す。
 - TEIのvalidate/commands等の結果は、宣言されたSource、発見されたSource、実消費されたSource、Assertion対象、実権限・Consumer受領の範囲を示せる場合にのみその範囲でPASSとする。ok=trueや発見数、Case件数、Source fingerprintのみから全モデル検証済みと推定しない。
 - EKIのSuitabilityについて提案ADRと現行実装の結果値が異なる場合、どちらかを新しい横断標準として固定せず、Admission/Policy拒否とSuitability判定を分けて既存Ownerへ差し戻す。
+- **価値比較の停止はUser Job単位**：TEIのread-only CLI、実PG Command、Studio/SHO Authoring、Self-build G4は異なる観測対象。Source/Target/Effectの資格不足は該当Claimだけ未検証・停止とし、他Laneへ無関係な必須条件を波及させない。DB移行の正本切替、Plugin/Target選択、AI提案とHost実行権限は各Product Ownerへ委ね、局所CIやPR mergeをOwner受理に昇格しない。参照は[横断計画§16](docs/yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-02 §9](evaluations/VA-02-cross-product-first-run-protocol.md)。
