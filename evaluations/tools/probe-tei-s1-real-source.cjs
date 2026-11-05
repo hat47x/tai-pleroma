@@ -49,6 +49,51 @@ function qualifySubjectSource(result, expectedPath, expectedFingerprint) {
     definitionReferences:definitions.length, sourceStatus:result.sourceStatus};
 }
 
+// The evidence ledger is a reviewed, pinned public S1 baseline, not a signed
+// attestation. Comparing a fresh real CLI receipt detects drift of claimed
+// observed bytes, bindings, and diagnostics without pretending to validate
+// external Harness behavior or Owner Meaning.
+function verifyLedger(ledger, receipt) {
+  let compared=0;
+  const eq = (key, actual, expected) => {
+    assert.deepStrictEqual(actual, expected, "ledger mismatch: " + key);
+    compared++;
+  };
+  eq("receipt schema",receipt.schema,"tai.s1.real-tei-public-read/v0");
+  eq("TEI repository",ledger.source.repo,"hat47x/tei-platform");
+  eq("pinned commit",receipt.teiCommit,ledger.source.commit);
+  eq("source path",receipt.source,ledger.source.path);
+  eq("source bytes",receipt.sourceDigest,"sha256:"+ledger.source.sha256);
+  eq("compiled binary bytes",receipt.binaryDigest,"sha256:"+ledger.build.binary_sha256);
+  eq("subject",receipt.subject,ledger.source.subject);
+  eq("catalog matches",receipt.catalogMatches,ledger.actualRead.catalogMatches);
+  eq("catalog source status",receipt.catalogSourceStatus,ledger.actualRead.catalogSourceStatus);
+  eq("inspect success",receipt.inspectedJson,ledger.actualRead.inspectOk);
+  eq("validate success",receipt.validationOk,ledger.actualRead.validateOk);
+  eq("diagnostic count",receipt.diagnostics,ledger.actualRead.diagnosticsCount);
+  eq("empty root has no user Subject",receipt.negative.userSubjectLoaded,false);
+  eq("empty root validate",receipt.negative.validationOk,ledger.negativeControl.validateOk);
+  eq("empty root standard entries",receipt.negative.stdEntries,ledger.negativeControl.observedStdEntries);
+  const witness=ledger.indexedSourceBinding.productInspect;
+  eq("Source Index subject",receipt.subject,witness.subject);
+  eq("Source Index file",receipt.sourceWitness.artifactPath,witness.artifactPath);
+  eq("Source Index file bytes",receipt.sourceWitness.artifactFingerprint,witness.artifactFingerprint);
+  eq("Source Index definition references",receipt.sourceWitness.definitionReferences,witness.definitionReferences);
+  eq("Source Index status",receipt.sourceWitness.sourceStatus,witness.sourceStatus);
+  eq("World fingerprint",receipt.worldFingerprint,witness.worldFingerprint);
+  eq("Source Index fingerprint",receipt.sourceIndexFingerprint,witness.sourceIndexFingerprint);
+  eq("four actual selected command calls",receipt.observations.length,4);
+  for(const [i,key] of ["commands","catalog","inspect","validate"].entries()){
+    eq("stdout digest of "+key,receipt.observations[i].stdoutDigest,
+      "sha256:"+ledger.actualRead.stdoutSha256[key]);
+    eq("CLI exit of "+key,receipt.observations[i].exit,0);
+  }
+  assert.ok(receipt.notEstablished.includes("H2/H3 four independent sessions"));
+  return {scope:"pinned public TEI Product S1 ledger-to-fresh-CLI-receipt",
+    compared,verdict:"matching-bounded-S1-evidence",
+    notQualified:["external Harness/Skill","Business Oracle","Owner Meaning","actual Host/Provider effects"]};
+}
+
 function selfTest() {
   const fp = digest(Buffer.from("fixture"));
   const good = () => ({subject:{...SUBJECT},sourceStatus:"indexed",sources:{
@@ -145,7 +190,12 @@ function main() {
 if(require.main===module){
   try {
     if (process.argv[2] === "--self-test") selfTest();
-    else main();
+    else if (process.argv[2] === "--verify-ledger") {
+      if(process.argv.length !== 5) throw new Error("usage: --verify-ledger ledger.json receipt.json");
+      const ledger=JSON.parse(fs.readFileSync(process.argv[3],"utf8"));
+      const receipt=JSON.parse(fs.readFileSync(process.argv[4],"utf8"));
+      console.log(JSON.stringify(verifyLedger(ledger,receipt),null,2));
+    } else main();
   } catch(e){console.error("TAI S1 FAIL: "+e.message);process.exitCode=1;}
 }
-module.exports={qualifySubjectSource,selfTest};
+module.exports={qualifySubjectSource,verifyLedger,selfTest};
