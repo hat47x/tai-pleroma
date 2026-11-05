@@ -442,3 +442,16 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 **QSB補正の負例**：QSB-01は「Parser不存在」の歴史的前提を除き、「候補の実存在と正式採用を混同する」反例へ更新。QSB-04には原byte一致・実Reader使用・Parser profile/Revisionの差、同じHref列だがLF/CRLFや再インデントでSource/位置意味が異なるケースを既存SHO #16の受入へ残す。QSB-02の異Parser版比較（14.3.3→15.x）は依然**NOT RUN**であり、実際に異なると断言しない。TAIはSHOの独立Reader/Parserを再実装しない。
 
 **初回実験への影響**：TEI H2/H3のTask／Oracle／Session構成は**変更なし**。SHO実Reader候補はP1の独立Product実証として記録し、将来SHO文書TaskがあればReaderの現資格をOwnerが確定した後にTool／Skill配布・Handoffを評価する。QSBの将来Harness試験、第二Harness、正式Owner Meaning/Grammar受理、OS Network Egressは未実行。
+
+
+---
+<!-- sk03-20261106-real-sho-eki-milestones-conditional -->
+### 16.5 2026-11-06 実行資格の更新：SHO G1b／EKI TaskRequestを条件付き実証として登録
+
+**SHOは候補実装まで進んだ**。[SHO Draft #17](https://github.com/hat47x/sho-composer/pull/17)のHEAD `b4176b0df6ac62b02b40108391d024336ed71d7b`に実Reader/CLIがあり、[push CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)・[PR CI #42109414161](https://github.com/hat47x/sho-composer/actions/runs/42109414161)のNode22 Ubuntu/Windowsで各14/14 PASS。§16.1〜16.4の「未実装」は起票時点のmain状態として残すが、現在の評価列は**`candidate reader executed in CI`**。Baseであるfixture-only Draft #12は未mergeであり、`main shipped`、`released`、`Tool installed`、`Skill loaded`、`Harness invoked`、`Owner accepted`ではない。未定義参照とUTF-8 BOMの説明被覆は[SHO #16 R17-01/02](https://github.com/hat47x/sho-composer/issues/16)が別査読。`link_open`だけのReader結果を全引用の不存在へ昇格させない。
+
+**EKIは限定TEST PROFILE Task到達まで進んだ**。[TAI merged #445](https://github.com/hat47x/tai-pleroma/pull/445)はBudget適合TaskRequestを実EKI Client API試験へ投影し、試験Profileにおける受理・実行・ResultClaimの局所観測を記録。これは外部HarnessからのSkill実ロード、Worker Protocol一般互換、TEIの業務Effect/Commit Receiptではない。Task/Attempt/ResultClaimとProduct Operation/Receiptは同一IDにせず、詳細を[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)へ委譲。非公開扱いの証拠ファイルの実IDや環境個別情報はProduct Capability公表へ転記しない。
+
+**初回Skill比較での新しい拒否例**：[TEI merged #2894](https://github.com/hat47x/tei-platform/pull/2894)の`tei dbcheck`はDSNがあれば`CREATE TEMPORARY TABLE`と`DROP TABLE`を実行するため、たとえ表がセッション限りでも初回read-only Tool Profileには含めない。既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)のCommand Family whitelistは`dbcheck`を初期read-only profile外として扱う。DSN無しexit 2は未接続・未実施の診断であり、実DB/read-only能力の証拠にはならない。DB-ready確認はTEI #2555の実PG/Owner laneのみで行う。
+
+**進行順**：TAI #168の最初のH2一Session→H3実Loader→四Session採点は変更しない。SHO G1b正式採用とEKI Test Profileから先のHandoffが必要になったときだけSC-01/04/09の後続試験へ。ここでは新Adapter、第二Runner、共通Capability Registryを設けない。実二Harness Handoff／SHO Skill／本番EKI Worker／TEI migration read/write／Owner正式受理は**NOT RUN**。
