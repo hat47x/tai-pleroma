@@ -589,3 +589,19 @@ for _, k := range a.PublicKeys { doc.Keys = append(...) }
 ```
 
 したがって、assignment実行に必要なのは、Trust Bundleの署名済み履歴ではなく、**Authority公開鍵・trust domain・policy revision・bundle revision・鮮度上限**を持つanchorである。以前の「Trust Bundleの発行手順が先に必要」という記述は誤りだった。発行手段が無いのは`control_public_key`を使う経路（ADR-0036）だけである。
+
+## 自前構成でのEKI実行（2026-11-03）
+
+製品テストに依存せず、Control Planeの設定・Trust Anchor・Agent設定を自前で組み立てて、投影TaskRequestを実行した。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
+
+```text
+submit 202 / task=tsk_2ab3ccd1... / executed true / claimed true
+```
+
+分かったこと:
+
+- 必要なTrust Anchorは`trust_domain`・`policy_revision`（**有効なpolicyのrevision**）・`bundle_revision`・`validated_at`・上限・Authority公開鍵。`control_public_key`と`trust_bundle_versions`は不要
+- `policy_revision`を鍵ポリシー（`kp-*`）にすると`lease_policy_revision_mismatch`で拒否される
+- native runnerはnetwork上限が非0だと実行を拒否する（`native runner does not enforce network limits`）。`NetworkBytesMax`は0にする
+- sandbox profileは`native-fixed-spike`を使う。`NetworkProfile`を付けても`native runner does not implement network profile`になる
+- 稀に`approval is issued in the future`でdispatchが延期されることがあるため、再試行を入れた（今回は1回目で成功）

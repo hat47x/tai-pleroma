@@ -1,0 +1,27 @@
+{
+  "schema": "tai.reference.eki-manual-execution/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with the EKI binaries, a generated Worker CA, a Control Plane TLS certificate and a hand-written trust anchor",
+  "command": "python integrations/tools/eki_manual_execution.py",
+  "result": "PASS",
+  "observed": {
+    "attempts": [
+      {
+        "submit": 202,
+        "task": "tsk_2ab3ccd1fd2719cfc70d931bcafbeb41",
+        "worker": "wrk_2a344a6f66d0dee701e2d8b779a80eac",
+        "executed": true,
+        "claimed": true
+      }
+    ],
+    "submitStatus": 202,
+    "taskId": "tsk_2ab3ccd1fd2719cfc70d931bcafbeb41",
+    "workerId": "wrk_2a344a6f66d0dee701e2d8b779a80eac",
+    "executed": true,
+    "claimed": true
+  },
+  "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest and lets the Agent execute the fixed command. It uses EKI's TEST PROFILE and one host."
+}
