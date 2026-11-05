@@ -505,3 +505,27 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 - **RD-05：実Skill Loadは成功、回答は誤り**。Dは成立しても独立Oracle不合格。技術的ロード成功を価値成功へ昇格しない。
 
 **実行の優先順**：§19の最初の外部H2一Sessionを実Toolログ込みで観測→H3の実Loader/参照文書消費を別Sessionで確認→固定順`H2→H3→H3→H2`の四Sessionと事前Holdoutによる独立採点。追加合成CI・第二Agent Host・配布Registryは初回に不要。今回の追補は**試験方法の補正**であり、実H2/H3四Session、ITT/PPの正答・費用、Owner受理は**NOT RUN**。
+
+## 22. 2026-11-06：H3 Product Skillを実Toolと同一TEI改訂から固定する（Load未実証）
+
+初回H2/H3比較の前提として、**H3だけ別TEI改訂のSkillを読むこと**と、**Skillファイルを実Harnessがロードしたこと**を混同しない。W0の実Product Source pin `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`に、H3で使用候補とする次のTEI Product Skillファイルが実際にあることを、固定Git blobで確認した。
+
+| H3候補（TEI Product管理の原文） | 固定Git Blob SHA-1（Git object identity） |
+| --- | --- |
+| `skills/yi-tei-modeling/SKILL.md` | `9cd8475bd6489c6661ae644bf771cfcce04188b1` |
+| `skills/yi-tei-modeling/references/read-only-model-investigation.md` | `ec2f90e85ed42659aca8b44a9be216987860b099` |
+
+[既存TAI実Product S1 CI](../../.github/workflows/tai-tei-s1-real-public-cli.yml)に固定TEI Checkoutから`git hash-object`で上記2ファイルの**実バイト所属**を検査するPreflightを追加した。Git blob identityと実H3 LoaderのRead観測は別。実H3では配置したSkill root・実参照ファイルのPath/byte/Load時点・既存Loader観測方法を新Sessionの証拠へ記録する。H2には同ファイルを**公開・Mount・Tool検索対象に含めない**。H2のTEI SourceやCLI実行バイナリだけを保持し、両腕のTool Profile・Grant・実Buildを合わせる。`git hash-object`合格で`skill_loaded=true`を記入しない。
+
+### 22.1 この固定版に実在する内容上のリスク
+
+- **Catalog JSONの形式不一致**：この固定Product Skill rootの手順は `entries[].subject.kind/id` と書くが、同一改訂の実`model catalog` CLIは`tei.cli.model/v0` envelopeに含まれる **`result.entries[].subject.kind/id`** を返す。[実CLI契約](https://github.com/hat47x/tei-platform/blob/50ebf8014340fd1906f6b35cfa30173e0ee2fc6c/cmd/tei/cli_model.go)およびTAI S1初回失敗[#42099147476](https://github.com/hat47x/tai-pleroma/actions/runs/42099147476)から独立に確認できる。H3がSkillの記述に従って失敗しても、実験後に回答や観測を修正して成功にしない。製品文書の修正はTEI #2605へ引き渡し、新版なら新しいSkill treatmentを登録する。
+- **`go run`と固定Binaryの混同**：同Skillは例示コマンドに `go run ./cmd/tei` を示すが、今回比較は既存S1で固定した実Go Binaryだけを両腕の**同一Tool Profile**として使う。H3の提案が許可外 `go run`へ逸れたときは、Tool Profile差/不成立と、実際に何を試したかを別に記録する。`go run`を同じBinary使用と偽らない。実Harness Adapterが呼出しを制限・拒否した場合もToolログを残す。
+- **参加者課題と既存例の近接**：参照ファイルには `semantic-data:sales.order`と同じ`subject-id sales.order`の実行例が存在する。これは固定Taskが直接指名したSubjectであるため、独立Oracleの答えを漏洩したという証明ではない。ただし**例示ありの公開Taskに対する手順効果**という評価範囲に限定し、未例示Subjectの自律発見・一般的Skill優位を結論にしない。将来の未例示Taskは、別の事前固定Task/Source/Expectedを持つ別Trial Groupで評価する。
+- **文書の状態表示**：同改訂のSkillには旧`NOT RUN`表記が残る。[TEI Draft #2863](https://github.com/hat47x/tei-platform/pull/2863)は限定Product CLI成功／Harness未実施を正しく書き分ける文書修正であり、この固定S1改訂と同一内容ではない。H3だけDraft #2863を混入させることは初回Skill PackageのPin変更。新版を採用するときは両H3 SessionのPackage byteとTrial Groupを明示して登録し、旧S1と新Skillを同一Versionとして扱わない。
+
+### 22.2 実H2/H3着手の停止線
+
+初回のH2 Tool-onlyではTEI Product **Skill非露出**と実Binary呼出しを観測する。H3は同じCLI/Task/Sourceで上記root＋必要referencesの実ロード証拠が揃ったときだけD（Delivered）成立とする。ファイルがCheckoutに存在するだけなら**Available**であり**Loaded**ではない。`R=H3`でLoad失敗はITTに含め、PPのSkill実提供条件は未成立。Tool呼出しが間違ったcommand/result pathを参照した場合は、その失敗をそのまま記録し、修正されたSkillを試すなら別治験とする。
+
+**状態**：上記はTEI固定CheckoutからのGit原文照合と再現可能なCI Preflightの設計・実装。外部Harnessへの実配布／実Load／4 Sessionは**NOT RUN**。Source Index／Skill byte／AI Tool Usage／Owner Meaning／Current Grantの証拠を混同しない。
