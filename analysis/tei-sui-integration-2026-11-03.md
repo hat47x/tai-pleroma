@@ -616,3 +616,15 @@ executed true / claimed true / result 409 RESULT_NOT_READY
 
 - `internal/control`に`resultacceptance`の組み立てが無く、受入は`conformance/process`の試験が内部で構成している
 - したがって「実行して結果が受け入れられる」縦断は、製品プロセスとしては未配線
+
+## Workerの失効（2026-11-03）
+
+`eki-control worker-state`で登録済みWorkerを`revoked`にし、その後の状態を確認した。[receipt](../evaluations/records/EKI-TEI-worker-revoke-2026-11-03.json)
+
+```text
+revoked への遷移: 成功
+registered へ戻す操作: 拒否（revoked is final）
+```
+
+- 失効は最終状態として扱われ、再登録で戻せない
+- Agent側の拒否は未確認（assignmentを持たないAgentはWorker listenerを呼ばないため）
