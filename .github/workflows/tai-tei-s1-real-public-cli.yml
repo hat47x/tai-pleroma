@@ -55,6 +55,7 @@ jobs:
           GOTOOLCHAIN: local
           GOWORK: 'off'
         run: |
+          set -euo pipefail
           node --check tai/evaluations/tools/probe-tei-s1-real-source.cjs
           node tai/evaluations/tools/probe-tei-s1-real-source.cjs "$RUNNER_TEMP/tei-s1" "$GITHUB_WORKSPACE/tei" | tee "$RUNNER_TEMP/tei-s1-receipt.json"
       - name: Confirm evidence remains locally scoped and no unsupported certification
