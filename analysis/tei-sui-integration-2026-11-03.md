@@ -578,3 +578,14 @@ cases 5→6
 
 - 予算はTEIの契約側で表現でき、製品ポリシーに合わせた投影は丸めなしで通る
 - 元の`present`ケース（300s/16MiB/128MiB）は製品ポリシーより大きい
+
+## Trust Bundleは必須ではない（2026-11-03 修正）
+
+`internal/agent/trustanchor`の`File`で`control_public_key`と`trust_bundle_versions`は`omitempty`／任意であり、`conformance/signedchain`の`TrustAnchor`は両方を省いてanchorを作っている（`signedchain.go`）。
+
+```go
+doc := trustanchor.File{TrustDomain: ..., PolicyRevision: ..., BundleRevision: ..., ValidatedAt: ...}
+for _, k := range a.PublicKeys { doc.Keys = append(...) }
+```
+
+したがって、assignment実行に必要なのは、Trust Bundleの署名済み履歴ではなく、**Authority公開鍵・trust domain・policy revision・bundle revision・鮮度上限**を持つanchorである。以前の「Trust Bundleの発行手順が先に必要」という記述は誤りだった。発行手段が無いのは`control_public_key`を使う経路（ADR-0036）だけである。
