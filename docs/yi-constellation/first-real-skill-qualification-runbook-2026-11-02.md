@@ -243,3 +243,31 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 **対象を過大に固定しない**：この判定は原argv内のWorkspace文字列同一性だけを確認する。CWDが同じでもsymbolic link先・入力実Byte・実Loaderが消費したFile/Role、実Processによるargv取得の真正性は保証しない。その確認は[§11](#11-2026-11-04source実消費とcli検証成功を分離するs1sk-02入場条件)のS0〜S5と独立Oracle/実Observerが担う。別Workspaceを比較する正当なTaskは**異なるTask Group／別Profile**にし、無理にこの初回比較へ押し込まない。TEI製品CLIに新しいFlagやProviderを要求しない。
 
 **実行済みの範囲**：[GitHub Actions #41850429887](https://github.com/hat47x/tai-pleroma/actions/runs/41850429887)の実Node Jobで、E01〜E60の公開合成票**60/60 PASS**（新規E49〜E60を含む）。実H2/H3四Session、実CLI Source読込、実外部Harness/独立Oracle採点、Host/OS Egress、Owner意味受理は**NOT RUN**。
+
+
+---
+
+<!-- sk02-live-s1-witness-reuse-20261105 -->
+## 14. 2026-11-05：既存のTEI S1実CLI証拠を再利用し、残るS2の実ハーネス価値検証へ進む
+
+### 最新の製品事実とTAIが行うべきこと
+
+[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)を最新化。[Product Skill #2607 merged](https://github.com/hat47x/tei-platform/pull/2607)、[実CLI Actions #41532988114](https://github.com/hat47x/tei-platform/actions/runs/41532988114)（対象 HEAD `d0de429ae5aac38b7949c2cfe6eacafff059675f`、product-skill-read-only Job success）は**既存Product S0/S1の限定実績**。公開`reference/workspace`と`sales.order`／`sales.order.customer`について、実ビルド済同一TEI Binaryの`commands → model catalog → inspect → trace → validate`を実行した。[TEI Draft #2863](https://github.com/hat47x/tei-platform/pull/2863)では、Skill本文に残る「Product CLI未実行」の古い記述を修正提案中。これは**main統合済Skillと、今回の文書Draftの区別**である。
+
+**既存W0を再実行すべきかの基準**：
+
+- **既存S1の限定Evidenceを歴史Observationとして参照できる**：同じTask／元Source／必要Subject／同じGo/CLI実Binary/版／元回答で必要なProofがそろう場合。実験の独立Expectedが要求する全項目について実ジョブログと実データを照合し、証拠が足りない部分は追加で読取る。
+- **現在の実験W0をやり直す**：現在mainや別Binary、別Workspace、別Source位置・内容、異なるRequired Subject、実行時のUnknown/Warning、異なる実開示条件が必要な場合。旧Run successを新Binaryの実実行とみなさず、同じ独立Expectedを試行前に確定する。
+- **STOP／実験資格不足**：標準`std` 13件／`validate.ok=true`のみ、manifest宣言・workspace-files列挙だけの未Parsed Source、`world`の契約外出力、別Workspaceへの暗黙変更、Current Grant不明。TEI [#2822](https://github.com/hat47x/tei-platform/issues/2822)／[#2823](https://github.com/hat47x/tei-platform/issues/2823)／[#2824](https://github.com/hat47x/tei-platform/issues/2824)は製品側の未解決事項。TAI側に第二Loader/Validatorを設けない。
+
+### 残る初回実証は同じHarnessのH2/H3四Session
+
+- **最小受入の単位**：一Harness実版・一公開TEIユーザー定義Subject・一実Binary・同一Tool ProfileとDisclosure、独立Expected、四独立Session `H2→H3→H3→H2`。TAI横断Skillは不要。固定していない実モデル/ProviderをSKILL.mdで推測しない。
+- **Skill効果の因果的区別**：H2はTool-onlyかつSkill非表示、H3は[Product Skill root/参照資料](https://github.com/hat47x/tei-platform/tree/main/skills/yi-tei-modeling)が実ロードされた場合のみ比較する。H3の単なる配置／AIが文書を引用しただけではSkill効果を認定しない。
+- **受入分離**：[SK-02 test-only Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)の`eligible-to-score`はメタデータ比較の適格候補。Product Sourceの実読込、独立Expectedに対する正答／Warning・Unknown保持、Toolの実argv・受信、Token/Time/人手、実開示のCurrent Grantを別々に採点する。[局所合成CI #41851651173](https://github.com/hat47x/tai-pleroma/actions/runs/41851651173)は60件の適格性と人工Node子Process19件の表現整合を試験しただけである。
+
+### 後続へ渡す方式判断を意図的に制限
+
+[TEI #2850 merged](https://github.com/hat47x/tei-platform/issues/2850)は`after-commit/compensation`効果を観測する`EffectObserver`が無いとき**当該無人Actionの手前で停止**する実装。この成熟した判断はTAIの将来のAction Handoff／EKI Task再委任で、実Provider Receipt/不明結果に応じて**必要時に**検証する。read-onlyのH2/H3比較へWrite/Commit/compensation Engineを必須化しない。TEI [Role自己記述 #2860 Draft](https://github.com/hat47x/tei-platform/pull/2860)、DB別SQL Asset/2way SQL案、EKI低レイテンシ・マルチモーダルやSHOは各Ownerの限定機能として、求めるTaskが現れた段階で追加する。
+
+**実行状態**：TEI実Binaryによる限定S1は**既存実CIで確認済み**、SK-02合成60/60とSK-03人工Node19/19は別の局所試験。**実AI HarnessのSkill install/load/invoke、H2/H3四Session、第二Harness、現在OS/Networkの非漏えい・実書込みEffect・Owner意味受理は引き続きNOT RUN**。新しい独立Host/Registry/Oracle/Runnerは作らない。
