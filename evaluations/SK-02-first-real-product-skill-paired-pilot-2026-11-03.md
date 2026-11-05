@@ -285,3 +285,19 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **固定Task原文との照合（2026-11-06）**：SK-02 CheckerのCLI入力は、4腕の`prompt_digest`が互いに同じだけでは`eligible-to-score`にしない。事前固定の[参加者Task](fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)を**Reviewer側のファイルパス**として渡し、Checkerがその原byte SHA-256を計算して4件と照合する。実行例：`node evaluations/tools/check-sk02-pair-eligibility.cjs actual-four-trials.json --task-file evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt`。原文を渡さなければ`participant-task-raw-not-bound`で`insufficient-evidence`、全腕で同じ誤Promptを使っても`participant-task-digest-mismatch`で`ineligible`。[実CI #42110536408](https://github.com/hat47x/tai-pleroma/actions/runs/42110536408)は**合成TrialのCLIファイル入口**で正例と二負例を確認した。Checkerはこの初回試験に限り、実ファイルの指紋が事前登録値`sha256:38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf`にも一致することを要求し、**任意の別Taskファイルへの置換**を`participant-task-not-preregistered`で拒否する。別Taskを評価する場合はTrial GroupとTask Pinを明示的に改訂する。TaskがHarnessへ実配信・読取られた証拠、Oracleの独立性、SkillのLoad因果は別途観測し、`prompt_digest`自己申告だけで認定しない。
 
 **状態**：これは既存SK-02の**結果解釈規則**で、外部Harness、実H2/H3 Session、Task Oracle採点は**NOT RUN**。同条件CLIの実S1は別途観測済み。新しい実行器・中央Evidence台帳は作らない。
+
+## 21. 2026-11-06：H2の非露出とH3 Skill TreatmentのProduct固定版を分離する
+
+[初回実験Runbook §22](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)を初回H2/H3に適用する。**実験条件の非対称性は「H3でProduct Skillが実提供されたか」のみ**とし、Task、公開TEI Source、実CLI Binary、実Workspace、モデル/Tool Profile/Grantを両腕で一致させる。TEI元Repositoryを丸ごとH2へMountすると、H2もその中のSkillを読めるため、Skill非ロードだけをもって`skill_exposed=false`としない。
+
+| 固定する比較条件 | H2 Tool-only | H3 Skillあり |
+| --- | --- | --- |
+| Participant Task | 同一UTF-8原文・事前登録SHA | 同左 |
+| 実Product Binary/Source | TEI `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`の固定Go Binary＋公開`reference/workspace`のみ | 同じBinaryとWorkspace |
+| Skill原文 | Skill/root/ref・TAI Evidence/Oracleが参加者へ露出しないことを現物確認 | Product root blob `9cd8475bd6489c6661ae644bf771cfcce04188b1`＋reference blob `ec2f90e85ed42659aca8b44a9be216987860b099`を実Load時のbytesと照合 |
+| 実Tool/Network | 同一read-only CLI argv/結果と現時点のTool scope・evidence | 同左。例示の`go run`を許可済み固定Binaryの代わりに実行した扱いにしない |
+| 資格と採点 | Skill非露出・CLI実Read・独立Expected | root/ref実ロード・CLI実Read・同じ独立Expected。ロード失敗はITTへ残しPPから除外 |
+
+**既知のProduct Skill文面差**：固定版rootのCatalog手順は`entries[].subject`と記述するが、同版実CLIは`result.entries[].subject`。初回H3がこの文面に従って回答を誤れば、**そのまま観測した品質結果**とする。参照ファイルには既に`sales.order`の実行例があるため、初回の品質比較は**この明示Subjectの調査**に限定し、未例示Subjectの自律発見一般への外挿はしない。TEI Owner [#2605](https://github.com/hat47x/tei-platform/issues/2605)にこの差分を返し、修正版Skillを試すなら新Treatment Versionとして別Trial Groupで評価する。
+
+**実CIの位置付け**：[TAI S1固定Go CLI Workflow](../.github/workflows/tai-tei-s1-real-public-cli.yml)で両腕に見せる一時ファイルビューを作成し、H2にSkillファイルが無いことと、H2/H3両ビューが同じSource・Index FPを実CLIで読めることを検査する。ただし**実HarnessでMount・ネットワーク・親パス検索が遮断されているか、実Skill Loaderがroot/refを読み込んだか**は別のセッション実ログが必要。CIに成功してもH2/H3 0/4は変わらない。
