@@ -350,3 +350,35 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 **P0：初回read-only Skill比較の後**に、TEI #1130の実Workspace FixtureでGH-01/02の『必要Guard欠落』だけを独立Expectedへ照合し、Product側のGuard宣言に対応する最小実行票が存在するか判断。**P1：書込みを使うTaskの時のみ**#1174/#2564の実PG/Receipt・ABA／先行Effectの独立Readへ。**P2：Report/ETLのConsumerを使う場合のみ**#2542 EF-01〜05／#2604の必要Artifact・実受領へ。新しいAgent Host/Transaction Coordinator/プロトコル互換エンジンを要求しない。
 
 **本節の実行資格**：TEI #2882の実Workspace→Go RunPlan局所テストと実CIは観測済。GH-01〜07の実Harness間Handoff、実Guard Coverage、RunPlan→実PG→Consumer同一Attempt、実ネットワーク断、OS保護、Business Owner受理は**NOT RUN**。SK-02 H2/H3四SessionにGuard/PG/MFTを必須導入せず、#168の初回優先を維持。
+
+---
+
+<!-- sk03-migration-read-epoch-handoff-20261106 -->
+## 15. 2026-11-06：段階的DB移行を越えたRead／Write／文書引継ぎを現在の資格へ昇格させない
+
+### 15.1 新しく接続する成熟した実証と、その限界
+
+[TEI #2555](https://github.com/hat47x/tei-platform/issues/2555)の元となる`reference-order-migration-dual-db`は、合成219受注・PostgreSQL 16.14の3インスタンスで、旧DBに書き続けながらの写し/変更取込み、逆同期途中kill後の重複抑止、巻戻し後の差分0などを確認した**限定実PG Reference**である。しかし、実旧Client/異種DB/本番規模、継続的な現在Read資格、正本切替の正式承認は未実証。既存closed [#2147](https://github.com/hat47x/tei-platform/issues/2147)のExpand/Backfill/Validate/Cutover/Contractの技術候補を引き継ぐが、製品Generic Migration Engine/中央Hostを新設しない。
+
+### 15.2 一つの移行成功ログをHandoff PASSへ変換しない
+
+| Product/Consumer側で独立観測する境界 | Harness/Activity側で再利用してよいこと | 必要なら止めるClaim |
+| --- | --- | --- |
+| **Source／Meaning**：Accepted Meaning/Business Key/PK/Relation有効期間・コード変換版・実Source引用 | 前のRead時点・用途に対する歴史Evidenceを保持 | 同一World FPだけで新Schema・新用途の意味受理を断定しない |
+| **Migration／DB**：Expand/Backfill/Validate段階、Plan revision、旧新Schema、Snapshot+CDC位置/lag/coverage、各差分・チェックポイント | 当時の差分検査の結果を利用範囲付きで参照 | 行数・digest/単一Successログだけで全件ReadやCutover適格としない |
+| **Current read**：read owner/DB alias、実Query predicate/Scope/Grant、Read Cohort、非出力依存、Provider結果 | 影響がないObservationのみ再利用し、変更した依存だけProductへ照会 | 旧DBの0件を切替後の新DBにおける現在の不存在へ昇格しない |
+| **Current write**：Cutover owner/旧Client write停止、実Host Grant、OperationID/Receipt、Commit不明と独立Read | OperationIDとUnknown履歴を失わず元Providerへ照会 | Bで新Key生成や別DBへの自動再送禁止。Rollback/RecutoverでAuthority自動復活禁止 |
+| **SHO／外部Consumer**：固定Document revision/引用Occurrence、歴史的Review、現在根拠適用・対象版、実受領と開示資格 | 過去の有効な固定引用を保存、現在用途に必要な再確認を限定 | Cutoverで過去引用を暗黙再ターゲット、全失効、現在説明PASSへ昇格させない |
+
+### 15.3 SK-03の既存試験へ集約する四つの反証（新Runnerを作らない）
+
+- **MCU-01（Read cohort drift）**：A旧DBで`[]`、Bが新DB/別CDC水位からReader利用。Source/World/Subjectが同じでも現在のabsenceはunknownに戻す。Owner=[TEI #2555](https://github.com/hat47x/tei-platform/issues/2555)＋#2586、Handoff=[TAI #271 SC-13a](https://github.com/hat47x/tai-pleroma/issues/271)。
+- **MCU-02（Write owner drift）**：A旧Provider Commit応答不明、Cutover後Bが新Providerで新Key再送。Ownerの明示Policyがない限り再送不可。同OperationID Receipt Lookupを優先、独立Read/Targetを確かめる。実PG CAS/ABA局所Reference（#2853/#2854）を利用しても、旧新二DBにまたがるExactly-onceは未証明。
+- **MCU-03（Client／Mapping co-existence）**：旧ClientがCutover後も書込み、または旧コードの有効期間でA/Bへの対応が異なる。旧Client書込み停止とMapping多重度を実観測し、Contract/自動変換を保留。Ownerの業務判断をTAIが代理しない。
+- **MCU-04（Fixed historical citation）**：SHO D1がr1（旧Schema）を固定引用し、D2はr2（新Schema）を説明。本文一致・A→B→A値戻りだけでReviewを復活させず、固定引用保持と現在用途Reviewを別列にする。Owner=[SHO #6 M6](https://github.com/hat47x/sho-composer/issues/6)。
+
+### 15.4 実験順序・受入上限
+
+**W0/SK-02の変更なし**：最初に一つの公開TEI Workspace/実CLIの実read-only H2/H3四独立Sessionを成立させる。これが成功するまでMigration→別Harness→SHOを一続きの必須E2Eにしない。**後続P1**では既存TEI旧新PG合成Fixtureと、MCU-01/03のSource/読取対象・水位差を独立Expectedで比較。**P2**で二Harnessが実使える場合に限りSC-13のHandoff/J0-J1-J2を比較。**P3**でwrite/SHO納品がタスクに現れたときだけMCU-02/04の実Provider Receipt・実SHO Reader・Owner承認を要求。実読取対象とWindowを固定できなければ本番移行PASSにしない。
+
+**Owner／非目標**：TEI #2555が移行のPlan/正本/差分と切替判断、TEI #1174/#2564が実Commit/Unknown、TAI #271が用途限定Handoff、SHO #4/#6が文書の引用・Review。新Migration Engine、共通Agent Host、第二Source Registry、汎用Handoff Validator、中央CDC製品を作らない。既存移行PG Referenceは局所観測済みだが、**MCU-01〜04、実旧新Client/Harness、異種DB/本番Cutover、実SHO納品、正式Owner受理はNOT RUN**。
