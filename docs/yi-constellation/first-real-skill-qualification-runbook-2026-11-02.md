@@ -271,3 +271,16 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 [TEI #2850 merged](https://github.com/hat47x/tei-platform/issues/2850)は`after-commit/compensation`効果を観測する`EffectObserver`が無いとき**当該無人Actionの手前で停止**する実装。この成熟した判断はTAIの将来のAction Handoff／EKI Task再委任で、実Provider Receipt/不明結果に応じて**必要時に**検証する。read-onlyのH2/H3比較へWrite/Commit/compensation Engineを必須化しない。TEI [Role自己記述 #2860 Draft](https://github.com/hat47x/tei-platform/pull/2860)、DB別SQL Asset/2way SQL案、EKI低レイテンシ・マルチモーダルやSHOは各Ownerの限定機能として、求めるTaskが現れた段階で追加する。
 
 **実行状態**：TEI実Binaryによる限定S1は**既存実CIで確認済み**、SK-02合成60/60とSK-03人工Node19/19は別の局所試験。**実AI HarnessのSkill install/load/invoke、H2/H3四Session、第二Harness、現在OS/Networkの非漏えい・実書込みEffect・Owner意味受理は引き続きNOT RUN**。新しい独立Host/Registry/Oracle/Runnerは作らない。
+
+
+<!-- sk02-conditional-write-resume-real-pg-20261105 -->
+### 14.1 初回read-onlyの後に接続する「結果不明の書込み」条件（実PG証拠へ更新）
+
+実験がwrite/after-commit/Provider Effectへ進む場合のみ、[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)／[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)を必要条件として再確認する。初回SK-02のread-only四Sessionには組み込まない。
+
+- [merged TEI #2853](https://github.com/hat47x/tei-platform/pull/2853)の**製品Command→実PostgreSQL CAS、模擬ACK-loss→`COMMAND_COMMIT_UNCERTAIN`/unknown、同OperationIDのReceipt lookup/独立Read**は、過去の「全て合成Mock」から一歩進んだ限定Product証拠。ただし実Network断・Process kill・完全な本番権限ではない。
+- [merged TEI #2854](https://github.com/hat47x/tei-platform/pull/2854)の実DB ABA反例は**別Keyによる同一論理操作の再適用があり得る**ことを示す。Harness Bの新Session/新Taskや新idempotency key生成を、安全なRetryの資格としない。同じOperationIDと別Keyは明確に区別する。
+- [merged TEI #2850](https://github.com/hat47x/tei-platform/pull/2850)の`EffectPreconditions`はObserver**有無のpreflight**であってEffect観測済みのReceiptではない。停止Stepより前のEffectが発生していない保証にもならない。
+- その段階の追加受入は**Current Host/Provider Grant・Operation identity・同Attempt/Result/Receipt・ACK lossの実確認・Consumer実読取**。認可や実Effectの意味はProduct/Host/EKIが所有。TAIは実Harness間のTransfer/選択的再資格化/費用を検証し、第二のTx/Evidence Engineを作らない。
+
+この追補の採用は**計画上の条件付き判断**。実PostgreSQLの製品局所試験は存在するが、TAIの実Harness A→B書込み再開／実Network断／Business Owner受理は**NOT RUN**。
