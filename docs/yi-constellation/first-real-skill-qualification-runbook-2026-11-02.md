@@ -425,7 +425,7 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 **本節の実施状態**：W0固定公開Source・実CLI・台帳照合のCIだけが限定成功。**外部Harness H2-01の実Tool log、H3のSkill Loader/Reference実読込、H2/H3四Session、比較採点、OS/Network非漏えい・Owner意味受理はNOT RUN**。
 
 
-## 18. 2026-11-06：実Harness四試行へ渡す参加者TaskとHoldout隔離
+## 20. 2026-11-06：実Harness四試行へ渡す参加者TaskとHoldout隔離
 
 ### 実参加者へ渡す唯一のTask（H2/H3共通）
 
