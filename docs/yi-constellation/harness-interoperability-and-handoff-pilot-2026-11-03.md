@@ -232,14 +232,16 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 
 **Handoffの安全則**：Harness Aで`not-found`と回答した履歴はBで`currently-absent`へ昇格しない。Aの根拠/対象/時刻を保持し、Bに公開可能な範囲でSource/実Read/現在Host Grant/required quality/Consumerを必要に応じて再確認する。可視性の理由が秘匿対象なら「権限範囲内で確認不能」など用途相対の許可済み説明に限定。原因/Tool名/候補件数の露出も開示制御を受ける（TAI #232/#272）。
 
-### 10.3 実行した限定Referenceと実製品で残る義務
+### 10.3 限定Referenceと実製品で残る義務（2026-11-06証拠訂正）
 
-**新たに実際に検査したもの（局所16/16 PASS）**：
+**歴史的16ケースの期待結果と実行証拠は区別する**：11月3日の「ローカル16/16 PASS」「Node v22.16.0/Linuxで実行」「Script SHA-256」は、対応する実行ログ・独立ハッシュ算出を確認できないため**当時の実行済み主張を撤回**する。[歴史記録](../../evaluations/records/SK03-NC-local-transport-2026-11-03.json)を訂正。後続の[GitHub Actions実Run #41851651173](https://github.com/hat47x/tai-pleroma/actions/runs/41851651173)で人工Node子プロセスNC01〜19 **19/19 PASS**を確認しており、NC01〜16はこの後続実行で限定的に裏付けられる。**実Product/Harnessではない**。
 
-- [test-only Node script](../../evaluations/tools/check-sk03-negative-claim-transport.cjs)を追加。`node --check`と`node ... --self-test`をNode v22.16.0/Linux上で実行。7種類の**人工Producer Profileを別のNode子プロセスから実stdout/stderr/exitとして取得**し、Adapterの投影を変更した16正負ケースで検査した。
-- [限定実行記録](../../evaluations/records/SK03-NC-local-transport-2026-11-03.json)にScript SHA-256/Blob・ケース結果を保持。**NC-01**は「列の存在が保持され、独立したProduct採点に回せる」ことだけを`evidence-preserved-for-scoring`とする。**真の不存在を確認したわけではない**。
+**元の合成Case設計（当時の実行証拠ではない）**：
+
+- [test-only Node script](../../evaluations/tools/check-sk03-negative-claim-transport.cjs)の旧版には7種類の人工Producer Profileと16正負ケースを定義。旧版の実行主張を本節では採用せず、後続19ケースCIの実行ログのみ合格の根拠とする。
+- [歴史的ケース記録（2026-11-06証拠訂正済み）](../../evaluations/records/SK03-NC-local-transport-2026-11-03.json)に期待分類と旧出典を保持。SHA-256や当時のローカル実行は未検証としている。**NC-01**は「列の存在が保持され、独立したProduct採点に回せる」ことだけを`evidence-preserved-for-scoring`とする。**真の不存在を確認したわけではない**。
 - **NC-02〜05/12/16**：部分取得、権限外に隠れた母集団、coverage/非出力依存/read cohort欠落、全Tenantへの量化を`insufficient-evidence`へ。**NC-06〜08**：partial→complete捏造、Predicate差替え、Warning欠落を`evidence-mismatch`へ。**NC-09〜11/15**：実行で行が存在、Producer失敗、壊れた/切れたstdoutを「正常0件」にせず分類。**NC-13/14**：epoch/SourceIndex移動を`stale-or-different-binding`へ。
-- 現在のScriptは**合成Sourceからの実ローカルProcess通信**であり、実TEI CLI/SQL/DB/MCP/Claude Code/Codex/OpenCode/DSH/SHO/EKI、実RLS・OS/Network遮断、独立業務Oracleではない。Sourceに宣言した`coverage=complete`の真偽を自動認定しない。リアルなSource未観測の成功に転用しない。
+- 後続の検証済みScriptは**GitHub Actions内の実Node子プロセスと人工Sourceの通信**であり、実TEI CLI/SQL/DB/MCP/Claude Code/Codex/OpenCode/DSH/SHO/EKI、実RLS・OS/Network遮断、独立業務Oracleではない。Sourceに宣言した`coverage=complete`の真偽を自動認定しない。リアルなSource未観測の成功に転用しない。
 
 **次の真正なExit**（既存SK-02/03/TAI #271に接続。新Gate/Oracle/Runtimeを増やさない）：
 1. **P0 Product**：TEI [merged #2607](https://github.com/hat47x/tei-platform/pull/2607)のread-only `commands→model catalog→inspect→trace→validate`を、固定公開Workspace・実Binary・全argv/Exit/Warning/SourceIndex付きで実行。すでにあるTEI製品CIの実証を再利用し、TAI Harness試験へ偽転記しない。
@@ -248,7 +250,7 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 4. **P3 Productの否定Claim**：TEI #2586で独立Oracleと実Query/Context/Scopeのread closureが実証された範囲だけ、RLS・0件・Window/NULL・非出力Predicate・Quality期限の具体的Claimを適合判定する。未実装APIは作らず、実Toolを使える範囲に限定。
 5. **P4 Outcome**：EKI同Attempt Body／SHO Reader・実Deliver、OS/Network/Egressと実Effectは各Ownerへ。Agentの`done`文字列で納品や非漏えいを保証しない。
 
-**本節の資格**：新しいNode Scriptの局所16/16は観測済。2 Harnessや実Source/ConsumerのSK-03試験、否定ClaimのProduct Oracle、実保護/業務効果、Owner採用は**NOT RUN**。ScriptをProduct/TAI CoreのValidatorへ格上げしない。
+**本節の資格**：歴史的な11月3日ローカル16/16実行は未検証。11月4日の実Node CI人工19/19は観測済。2 Harnessや実Source/ConsumerのSK-03試験、否定ClaimのProduct Oracle、実保護/業務効果、Owner採用は**NOT RUN**。ScriptをProduct/TAI CoreのValidatorへ格上げしない。
 
 
 ---
