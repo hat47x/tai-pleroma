@@ -7,6 +7,7 @@ on:
       - 'evaluations/tools/probe-tei-s1-real-source.cjs'
       - 'evaluations/tools/check-sk02-pair-eligibility.cjs'
       - 'evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json'
+      - 'evaluations/records/TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json'
       - '.github/workflows/tai-tei-s1-real-public-cli.yml'
   workflow_dispatch:
 
@@ -53,6 +54,17 @@ jobs:
           test "$(git -C tei hash-object "$ROOT")" = '9cd8475bd6489c6661ae644bf771cfcce04188b1'
           test "$(git -C tei hash-object "$REFS")" = 'ec2f90e85ed42659aca8b44a9be216987860b099'
           sha256sum "tei/$ROOT" "tei/$REFS"
+          node -e '
+            const fs=require("node:fs"),crypto=require("node:crypto"),assert=require("node:assert/strict");
+            const e=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            assert.equal(e.product.commit,"50ebf8014340fd1906f6b35cfa30173e0ee2fc6c");
+            for(const o of [e.candidateSkill.root,e.candidateSkill.reference]){
+              const bytes=fs.readFileSync("tei/"+o.path);
+              const actual=crypto.createHash("sha256").update(bytes).digest("hex");
+              assert.equal(actual,o.sha256,"registered candidate Skill byte pin drift: "+o.path);
+            }
+            assert.equal(e.candidateSkill.status,"available-as-pinned-source; not Harness loaded");
+          ' tai/evaluations/records/TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json
           echo "Candidate H3 root and reference bytes belong to fixed Product commit; no external Skill Loader observed."
       - name: Build exact Product CLI once (no local workspace writes)
         working-directory: tei
