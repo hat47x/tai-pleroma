@@ -128,16 +128,16 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 <!-- 20261106-product-reader-before-skill-and-parser-safety -->
 ## 9. 2026-11-06：Product Readerの実在とParserの安全性をSkill配布・再資格化へ接続
 
-**直近Product証拠の非対称性**：[TEI Product Skill #2605](https://github.com/hat47x/tei-platform/issues/2605)はTAI側からも固定公開Source/実Go CLI/SourceIndexを限定実証済み（[TAI実CI #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)）。外部HarnessのH2/H3は依然NOT RUN。対して[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)は最初のSHO本体read-only Markdown Research Index Readerを**これから実装**する段階。SHO Draft #12〜14のPython test-only CLI／MMI Renderer成功は、SHO Product Readerが存在する証拠ではない。[SHO #10](https://github.com/hat47x/sho-composer/issues/10)の`yi-sho-compose`を「Product CLI利用可能」「配布受理済み」に昇格させない。
+**直近Product証拠の非対称性**：[TEI Product Skill #2605](https://github.com/hat47x/tei-platform/issues/2605)はTAI側からも固定公開Source/実Go CLI/SourceIndexを限定実証済み（[TAI実CI #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)）。外部HarnessのH2/H3は依然NOT RUN。対して[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)には実装候補[Draft #17](https://github.com/hat47x/sho-composer/pull/17)が追加され、限定実Reader／Disk CLIとUbuntu/Windows各14/14の[実CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)が成立。**SHO mainへの統合・正式CLI/Parser採用は未了**。従来のDraft #12〜14はFixture/Python test-only CLI／MMI Rendererの別資格として扱う。[SHO #10](https://github.com/hat47x/sho-composer/issues/10)の`yi-sho-compose`を「Product CLI利用可能」「配布受理済み」に昇格させない。
 
 ### 適用に必要な資格を分離する（新共通State Schemaは採用しない）
 
 | 資格／Owner | TEI先行の実観測 | SHO G1bの現在状態 |
 | --- | --- | --- |
-| Product read-only Tool実装／Product Owner | 指定公開Subjectで実CLIのCatalog/Inspect/ValidateをTAI CIから実読取済み | mainのSHO自身のMarkdown Index Readerは未実装・未検収。MMIのCLI/ProbeをSHOの正式Toolへ読み替えない |
-| Parser/Source consumption／Product Owner | SourceIndex artifact/definition refと独立Source bytesが同一Fixtureで一致 | 最初のMarkdown raw bytes、Disk/dirty buffer、実Parser/lock/Profile/Grammar scope、OccurrenceのReadが必要。名称/予定Versionだけでは未資格 |
+| Product read-only Tool実装／Product Owner | 指定公開Subjectで実CLIのCatalog/Inspect/ValidateをTAI CIから実読取済み | SHO mainのReaderは未統合。Draft #17では実Reader+Disk CLIが限定Ubuntu/Windows CI成功。MMIのCLI/ProbeをSHOの正式Toolへ読み替えない |
+| Parser/Source consumption／Product Owner | SourceIndex artifact/definition refと独立Source bytesが同一Fixtureで一致 | Draft #17は実disk raw bytes・厳格UTF-8・SHA-256・Parser 14.3.3/lock/profile/限定Link occurrenceを観測。dirty buffer／全Grammar／永続Occurrence ID／精密byte spanは未立証 |
 | Skill Package／TAI Release Owner | Product Skill文書はmainに存在、実外部H3 Loadは未観測 | SHO Skillは提案候補。Parser/Toolが無い場合でも文書候補の検証はできるが**実装済みSkillによるReader実行とは表示しない** |
-| Harness invocation／TAI #168 | 先にTEI H2実Tool log 1 Session、その後H3実Loadと四Session比較 | G1b Product実走とTool/契約を固定してから、必要があればSHO別TaskのH2/H3へ |
+| Harness invocation／TAI #168 | 先にTEI H2実Tool log 1 Session、その後H3実Loadと四Session比較 | Draft G1b候補は実GoでなくNode製品候補のDisk CLIまで確認。Owner採用とexact実契約固定後、必要があればSHO別TaskのH2/H3へ |
 | Owner Meaning／SHO #4/#7・TEI #267 | CLI正常終了はMeaning/Owner受理ではない | Markdown Link/ReferenceのSyntax Projectionと著者Review、公開/納品、TEI連携Meaningは別資格 |
 
 ### G1b版・入力・失敗の最小Negative Qualification（SHOの既存Issueへ渡す）
@@ -148,6 +148,6 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 - **SHO-PQ04（配布Skillだけ存在）**：`yi-sho-compose`がHarnessに発見/LoadedされてもSHO Readerが無い・実参照Fileを消費していなければ`Product Reader invoked`は未成立。MMIの実Toolを代わりに用いたなら別Product/Toolの限定効果とラベルする。
 - **SHO-PQ05（非公開ソース）**：ローカルでReaderがMarkdownを読めても外部LLMへの原byte/引用メタデータ送信は別Grant。Skill説明文やParser設定から外向き送信許可を付与しない。
 
-**導入順**：TEIのH2 Tool-only初回セッションは既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Runbook §19](first-real-skill-qualification-runbook-2026-11-02.md)のまま最優先。SHOは同時並行で[#16 G1b](https://github.com/hat47x/sho-composer/issues/16)の最小Reader/actual parser/lock/独立Expectedを確認し、その後SHO #10のProduct Skill評価を検討。TAI #74は配布資格の表示だけ、TAI #271は跨ProductのSource/Revision変更時の限定再資格化だけを担当。**この節は既存実装の証拠を正しく配置する設計追補で、新Parser/Reader/Skillや実Harness連携のコードは追加していない。**
+**導入順**：TEIのH2 Tool-only初回セッションは既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Runbook §19](first-real-skill-qualification-runbook-2026-11-02.md)のまま最優先。SHOは同時並行で[#16 G1b](https://github.com/hat47x/sho-composer/issues/16)の[Draft #17](https://github.com/hat47x/sho-composer/pull/17)実Runner/実Parser/独立Fixture #12をレビューし、未取得のParser14/15比較・脆弱入力資源上限・正式API受理を狭く検証。その後にSHO #10のProduct Skill評価を検討。TAI #74は配布資格の表示だけ、TAI #271は跨ProductのSource/Revision変更時の限定再資格化だけを担当。**この節は既存実装の証拠を正しく配置する設計追補で、新Parser/Reader/Skillや実Harness連携のコードは追加していない。**
 
-**状態**：TEIの公開実CLI限定S1のみ実観測済。SHO G1b実製品ReaderのCI、Parser安全性の実依存試験、SHO Skill Install/Load/Tool invocation、TAI外部Harness実H2/H3、Product間文書納品・Owner受理はNOT RUN。
+**状態**：TEI公開CLI限定S1と、SHO Draft #17のReader候補（exact HEAD `b4176b0df6ac62b02b40108391d024336ed71d7b`／Ubuntu・Windows各14/14）が実観測済。実ロードParser 14.3.3はCVE-2026-111758の該当系列修正版であり、**Parser選定承認・敵対的入力のCPU/Memory保証・OS egressまでの安全性実証ではない**。SHO main統合・正式G1b受理、SHO Skill Install/Load/Tool invocation、TAI外部Harness実H2/H3、Product間文書納品・Owner受理はNOT RUN。
