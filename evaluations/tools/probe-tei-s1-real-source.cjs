@@ -11,6 +11,8 @@ const os = require("node:os");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const {spawnSync} = require("node:child_process");
+// Reuse SK-02 test-only JSON duplicate-member rejection at the evidence boundary.
+const {parseTrialJSON} = require("./check-sk02-pair-eligibility.cjs");
 
 const digest = bytes => "sha256:" + crypto.createHash("sha256").update(bytes).digest("hex");
 const SUBJECT = {kind:"semantic-data", id:"sales.order"};
@@ -25,7 +27,7 @@ function run(file, args, cwd) {
   return {argv:[file,...args],cwd,exit:p.status,stdout:p.stdout,stderr:p.stderr,stdoutDigest:digest(Buffer.from(p.stdout))};
 }
 function jsonOf(call) {
-  try {return JSON.parse(call.stdout);}
+  try {return parseTrialJSON(call.stdout);}
   catch(e){throw new Error("non-JSON result [" + call.argv.slice(1).join(" ") + "]: " + e.message);}
 }
 // Bind an independently-read byte fingerprint to the actual TEI Index
@@ -110,6 +112,22 @@ function selfTest() {
     ["S1-W07 unindexed subject cannot qualify", () => {const x=good();x.sourceStatus="not-indexed";qualifySubjectSource(x,SOURCE,fp);},true],
     ["S1-W08 duplicate artifact paths cannot qualify", () => {const x=good();x.sources.artifacts.push({...x.sources.artifacts[0]});qualifySubjectSource(x,SOURCE,fp);},true]
   ];
+  tests.push(
+    ["S1-W09 duplicate Source digest in receipt text is rejected",
+      () => assert.throws(() => parseTrialJSON('{"sourceDigest":"a","sourceDigest":"b"}'),
+        e => e.code === "DUPLICATE_TRIAL_JSON_MEMBER")],
+    ["S1-W10 escaped-key duplicate is rejected",
+      () => assert.throws(() => parseTrialJSON(String.raw`{"sourceDigest":"a","sourceDiges\u0074":"b"}`),
+        e => e.code === "DUPLICATE_TRIAL_JSON_MEMBER")],
+    ["S1-W11 nested Ledger object duplicate is rejected",
+      () => assert.throws(() => parseTrialJSON('{"source":{"commit":"a","commit":"b"}}'),
+        e => e.code === "DUPLICATE_TRIAL_JSON_MEMBER")],
+    ["S1-W12 identical field names in different JSON objects are allowed",
+      () => assert.equal(parseTrialJSON('{"source":{"commit":"a"},"build":{"commit":"b"}}').source.commit,"a")],
+    ["S1-W13 malformed evidence JSON is rejected",
+      () => assert.throws(() => parseTrialJSON('{"source":,}'),
+        e => e.code === "INVALID_TRIAL_JSON")]
+  );
   for (const [name, task, shouldFail] of tests) {
     if (shouldFail) assert.throws(task,undefined,name);
     else task();
@@ -192,8 +210,8 @@ if(require.main===module){
     if (process.argv[2] === "--self-test") selfTest();
     else if (process.argv[2] === "--verify-ledger") {
       if(process.argv.length !== 5) throw new Error("usage: --verify-ledger ledger.json receipt.json");
-      const ledger=JSON.parse(fs.readFileSync(process.argv[3],"utf8"));
-      const receipt=JSON.parse(fs.readFileSync(process.argv[4],"utf8"));
+      const ledger=parseTrialJSON(fs.readFileSync(process.argv[3],"utf8"));
+      const receipt=parseTrialJSON(fs.readFileSync(process.argv[4],"utf8"));
       console.log(JSON.stringify(verifyLedger(ledger,receipt),null,2));
     } else main();
   } catch(e){console.error("TAI S1 FAIL: "+e.message);process.exitCode=1;}
