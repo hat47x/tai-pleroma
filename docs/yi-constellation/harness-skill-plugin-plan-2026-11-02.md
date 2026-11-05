@@ -772,3 +772,14 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **今回の実装をP0へ反映**：比較腕の`prompt_digest`を互いに比較するだけでは、**4腕すべて同じ誤Prompt**でも比較資格ありと誤認し得る。既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)に`--task-file`を設け、[事前固定Participant Task](../../evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)の**原byte SHA-256**をReviewer側で算出して試行票と照合。原文が無ければ`insufficient-evidence`、全腕同じ誤Promptなら`ineligible`。[GitHub Actions #42110536408](https://github.com/hat47x/tai-pleroma/actions/runs/42110536408)では実CLIファイル引数の合成正例・二負例と旧E01〜60が成功。SK-02 §20とRunbook §21に引継ぎ、**実Harnessへ受信したPromptの一次記録は依然必要**とする。新共有Runtime/Oracle/Adapterは導入しない。
 
 **他チャットの新しい反証を条件付き保持**：[TEI自己記述Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)が確認した同PathのLoad後Source変更と、同一属性への重複Role宣言がParserで上書きされ得る例は、Candidate/宣言値だけでSourceの版・Role一意性・Owner受理を主張できないことを示す。必要なTaskで元Source byte・Source Index・使用時点の差を調べるが、今回の公開`sales.order` read-only TaskにRole InterpreterやStudio Writerを実装させない。[TEI Script起動Draft #2884](https://github.com/hat47x/tei-platform/pull/2884)の再起動後Operation ID／Receipt未確定の扱いは、実Write Taskへ進む場合だけ§38のConditional Gateへ接続する。いずれも**Draftの設計・限定characterizationを本番完全性の実証とは見なさない**。
+
+
+## 40. 2026-11-06：SHO実Reader候補の両OS実証を条件付きProduct Skillへ引き継ぐ
+
+[SK-03 §16.5](harness-interoperability-and-handoff-pilot-2026-11-03.md)へ、SHO [Draft Reader #17](https://github.com/hat47x/sho-composer/pull/17)の実装と[Ubuntu/Windows実CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)のJobログを反映。固定HEAD `b4176b0d…`では`markdown-it 14.3.3`を実ロードし、Markdown raw file/digestを読み、限定GrammarのLink Occurrenceを抽出する**実Node Reader候補**が各OSで14/14 PASS。旧計画の「SHOには製品Reader実装がない」は、少なくともDraft候補の存在という点で更新が必要だった。
+
+**製品ごとの異なる資格**：TEIには固定Go CLI/一公開Source Indexの実S1が存在する。SHOにはNode22の実disk Reader／選択Parser／発生順・包含行を確認する局所CIが存在する。いずれも**外部AI HarnessがSkillを実ロード・活用した証拠ではなく**、Source/Parser/Targetの全てに同じPlugin資格を付与しない。SHO候補の`status=indexed`は`coverage.allDocumentReferencesEnumerated=false`を伴い、全参照・リンク先取得・実レンダリング・文書意味受理の主張ではない。`source.revision=unknown`とSnapshot局所ordinalを永続Source/Occurrence IDへ昇格させない。
+
+**優先条件の更新**：P0は依然、固定Participant TaskによるTEIの**最初のH2実Harness Tool call**→H3実Skillロード→4独立SessionのITT/PP・独立Oracle比較。P1のSHOは「Readerを0から作る」ではなく、#16/#17の**正式Reader/Parser契約・未定義参照/BOM等の不足・Parser版差・Source失効**のOwner受入に必要な残差を検証する。P2のSHO Skill配布やTEI↔SHO引継ぎはProduct能力・実Audience/現在Grant・実Reader/Consumer受領が必要なTaskが存在したときだけ実施。Document WriterやProvider/外部Webを初回のTEI H2/H3試験へ足さない。
+
+この統合は文書上の**観測事実・次試験の優先順修正**であり、TAIがSHO Readerを実CLIで呼んだことや、SHO #17がmain統合・Owner正式受理されたことを意味しない。QSB-01〜05、実SHO Skill、実二Harness、実ネットワーク/公開、Source Identity／全引用の意味受理は引き続き**NOT RUN／NOT ACCEPTED**。新中央Host/Plugin Registry/Readerを導入しない。
