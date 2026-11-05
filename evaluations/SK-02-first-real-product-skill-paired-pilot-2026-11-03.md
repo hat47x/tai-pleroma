@@ -266,3 +266,20 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **実行上の留意点**：S1固定Sourceの実Binary/Source SHAは開始条件だが、別OSや異Binaryでは同じDigestだと偽らず新Trial Groupを作る。比較Checkerの`eligible-to-score`を正答と混同せず、Sessionごとの実Tool argv/cwd/exit/Stdout/Subject・SourceIndex、Loader bytes、Grant/Egress観測の根拠、Token/費用・時間/人手を記録。モニターできないwrite/egress欄へ恣意的に`false`を入れず、証拠不足として扱う。Skill自体が無益な結果も評価として認める。
 
 **状態**：Task本文・SHA/CI Trigger・手順を固定しただけであり、実4 Session、実Skill Load、独立Task Oracleの採点、実Tool/OS/Provider Observationは**NOT RUN**。新Agent Loop/Controller、第二Test Engineは導入しない。
+
+
+## 20. 2026-11-06：割付後のSkill未ロードも結果として保存する（ITT／PP分離）
+
+実Harness比較の`eligible-to-score`は、現在のSK-02 CheckerではH3の実Skill Loadが観測できないと**比較適格ではない**。ただし、実際にH3へ割り付けたのにSkillをロードできない現象そのものを全件除外すると、製品の配布・可用性・Discoverabilityに関する**運用失敗を見落とし、Skillが成功した試行だけで便益を過大評価**しかねない。
+
+初回の4 Sessionでは、以下の**異なる評価母集団**を、追加Runner/Schemaを作らず既存Trialと採点票の別列として扱う。
+
+| 集計 | 全体に含むSession | 言えること／言えないこと |
+| --- | --- | --- |
+| **ITT（割付基準）** | H2/H3へ予定どおり割り付けた**全4 Session**。H3でSkill未ロード・Tool未使用・Agent回答失敗も残す | 採用・配布を含めた運用結果。未ロードをSkill使用効果0と自動認定せず、理由と失敗段階を残す |
+| **PP（実利用基準）** | 独立Session・同条件Tool/Source/Grant・H3実Skill loaded・必要な資料/Tool消費の実証を満たす試行のみ | 条件を満たした時のTask品質・費用の探索的比較。自己選択によりSkill因果・一般改善率を断定しない |
+| **SK-02 Checker** | 記録された条件が比較可能な4試行のときだけ`eligible-to-score` | 形式的な比較資格。ITTの全割付履歴の記録・Oracle正答の資格を置き換えない |
+
+実行ログには**割付/露出/Loaded/実Tool使用/実Subject Read/独立Oracle採点/不明・拒否/Cost**を別に残す。H3でSkill未ロードなら、PP適格ではない一方、ITTの運用上の結果としては失敗または未確認として記録する。PPだけを報告せず、割付Session総数・未ロード数・分析対象数を必ず併記。4試行の小さなパイロットは統計的効果推定ではない。最初の公開Subjectを使うR（明示Task）を先行し、非例示Subjectを探索するDは実Provider/Source能力が揃った場合だけ別Taskとして事前登録する。R/Dを混ぜて期待正答を後から選ばない。
+
+**状態**：これは既存SK-02の**結果解釈規則**で、外部Harness、実H2/H3 Session、Task Oracle採点は**NOT RUN**。同条件CLIの実S1は別途観測済み。新しい実行器・中央Evidence台帳は作らない。
