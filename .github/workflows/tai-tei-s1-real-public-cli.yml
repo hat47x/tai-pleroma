@@ -95,3 +95,17 @@ jobs:
             exit 1
           fi
           grep -F 'DUPLICATE_TRIAL_JSON_MEMBER' "$RUNNER_TEMP/tei-s1-duplicate-ledger.log"
+
+          # A reused stdout hash must not conceal different actual argv/cwd.
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.observations[1].args[3]="/tmp/unrelated-workspace";fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-wrong-argv.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-wrong-argv.json" > "$RUNNER_TEMP/tei-s1-wrong-argv.log" 2>&1; then
+            echo "S1 argv tamper incorrectly accepted"
+            exit 1
+          fi
+          grep -F "ledger mismatch: actual CLI argv 1" "$RUNNER_TEMP/tei-s1-wrong-argv.log"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.observations[2].cwd="/tmp/unrelated-cwd";fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-wrong-cwd.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-wrong-cwd.json" > "$RUNNER_TEMP/tei-s1-wrong-cwd.log" 2>&1; then
+            echo "S1 cwd tamper incorrectly accepted"
+            exit 1
+          fi
+          grep -F "ledger mismatch: actual CLI cwd 2" "$RUNNER_TEMP/tei-s1-wrong-cwd.log"
