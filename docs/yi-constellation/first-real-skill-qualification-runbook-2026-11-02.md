@@ -423,3 +423,31 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 最終順序 `H2→H3→H3→H2`、モデル/ハーネス/Profile・固定Source・Task・Tool Set・最大許容費用を同条件に保ち、**各Sessionは会話・結果・Skill状態を引き継がない**。結果判定は①比較適格性（既存SK-02 Checkerと実ログ照合）、②独立Expectedに対する正答・Warning/Unknown保持、③Skill差分の追加価値とToken/時間/人手を別票で扱う。H3が同等または悪化すればTool-onlyを維持。第二Harness・TAI Handoff・write/DB/RunPlan/MFTは**四Sessionの実在性と差分が判定可能になった後の条件付き工程**。
 
 **本節の実施状態**：W0固定公開Source・実CLI・台帳照合のCIだけが限定成功。**外部Harness H2-01の実Tool log、H3のSkill Loader/Reference実読込、H2/H3四Session、比較採点、OS/Network非漏えい・Owner意味受理はNOT RUN**。
+
+
+## 18. 2026-11-06：実Harness四試行へ渡す参加者TaskとHoldout隔離
+
+### 実参加者へ渡す唯一のTask（H2/H3共通）
+
+[参加者向け固定Task本文](../../evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)を**全4独立Sessionへ同じbyte列**で渡す。UTF-8・末尾LF込みのSHA-256は `38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf`。Participant Taskはモデル要素 `semantic-data:sales.order`、公開 `reference/workspace` を明示するが、**回答すべき属性名・型、実Source file、診断件数、正答判定票を記さない**。実CLI・Product Sourceの読取りに基づく回答を要求する。Taskの自然言語をH3だけ言い換えない。
+
+**Participant隔離が必須**：両腕からアクセス可能にするのは当該Task本文と公開TEI Checkout・各腕で許可したToolだけ。TAI repo全体、SK-02の評価計画、S1 Evidence台帳、Reviewer用独立Expected/採点表、他SessionログをParticipant向けWorkspace・添付・Tool出力へ配置しない。H2にProduct Skill root/referencesを一切示さない。H3は同一TEI版の[Product Skill `yi-tei-modeling`](https://github.com/hat47x/tei-platform/tree/main/skills/yi-tei-modeling)を**実Load可能な仕組みに置き、その実ロードSource byteと経路を別記**。単にファイルを配置してもLoadedと見なさない。GitHub等を自由に検索できるProfileでは評価資料が漏れるため、両腕の実Tool scopeを固定・観測し、Oracleが取得可能なら盲検評価とは呼ばず停止する。
+
+### 実行者向け準備と独立Holdout（Participantへ送らない）
+
+- **Product証拠のPin**：実S1 [#42106804110](https://github.com/hat47x/tai-pleroma/actions/runs/42106804110)の固定TEI commit `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`、Source digest `sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33`、Go 1.26.10 Linux/amd64 binary digest `sha256:6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f`を**基準候補**にする。実Harnessが別OSやビルド方法なら値を旧S1に偽装せず、双方の腕を新しい同一実Binary/環境/Sourceに再固定し、Holdoutも同時に再確認する。`workspace_tree_digest`はS1の単一Source digestやWorldFPを代入して捏造せず、実Checkout全管理対象の明示したScope・順序・byteから算出・記録する。
+- **Reviewer-only Expected**：実Sourceの原byteと固定TEI実CLI出力をAgentとは独立の手順で確認し、Subject kind/id、定義元Sourceとbyte、注文合計属性名と型、validateの診断・Warning/Unknown・許容される未確認表現、引用必須項目、実行してはならない操作を**Session開始前に別保管**。採点表の完全byte/digestは実Reviewer管理下に置き、四Sessionが終了するまでParticipantへ配布しない。公開SourceをAgentが調査すること自体は正常だが、答えを評価票から漏らしてよいことにはならない。
+- **選定するHarness**：モデル・Build・Provider、tool/profile/権限、実ネットワーク/外部送信観測可能範囲、Product Skill実Load表示、Session分離能力を現物で確認。選べないHarness名を事前に合格扱いしない。観測不能な効果欄は`unknown`で保持し、`false`を作らない。
+
+### 四つの新規Session／独立評価
+
+| 順序 | 腕 | 実際に必要な隔離・観測 |
+| --- | --- | --- |
+| 1 | H2 Tool-only | 独立Session・Skill非公開かつ非ロード・実Tool args/outputs |
+| 2 | H3 Product Skillあり | 新Session・同じToolとTask、同一Skill Packageの**実ロード** |
+| 3 | H3 Product Skillあり | 再び新Session・2とは会話履歴を共有せず、同一Skill byte/activation |
+| 4 | H2 Tool-only | 新Session・Product Skillを露出せず、先行三回答の漏出なし |
+
+[既存SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)に供給する4 Trialの`session_id/arm`、同一`prompt_digest/repo_head/binary_digest/workspace_tree_digest/world_fingerprint/source_index_fingerprint/cli_cwd/harness_build/model_profile/tool_profile_digest/principal/grant_profile_digest/disclosure_profile_digest/oracle_version`、CLI argv・実Exit/Stdout・Tool/Skill Load根拠を、**観測した元ログの位置**と結びつける。H2の`skill_exposed=false/skill_loaded=false`、H3の`skill_loaded=true`などは**実Harnessから検証できたときだけ**記入する。Egress/Grant不明なら比較適格性を自動PASSとしない。
+
+**合格・停止**：Checkerの`eligible-to-score`はメタデータ比較資格のみ。次に別保管した独立Expectedで**回答の正しさ/不明とWarningの保持**を採点し、実Tool回数、実Token/コスト、経過時間、手直し回数を独立欄で比較する。実Skillがロードできなければ「H3結果」ではなく試行不成立、どちらも誤答ならSkill Benefitにしない。n=4の結果を統計的優越/全Harness適用へ一般化しない。外部Harnessへの実Skill Install/Loadと4 Sessionは現時点**NOT RUN**。新Runner・別共通Oracle・新Policyを実装しない。
