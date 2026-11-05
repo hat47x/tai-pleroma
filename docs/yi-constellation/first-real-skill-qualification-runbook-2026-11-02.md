@@ -484,6 +484,8 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 | **回答品質** | 出典、対象Source/属性・型・診断・Warning・Unknownを別Reviewerが事前Expectedと比較 | loadedやeligible-to-scoreは正答保証ではない |
 | **運用費** | 成功／失敗を問わずToken/Tool呼出/経過時間/準備・人手再実行／観測範囲 | 四試行の記述的結果まで。配布済み/全Harness適合へ外挿しない |
 
+**Participant Taskの原byteを比較条件に結ぶ**：実4 Sessionの記録を採点するReviewerは、固定[参加者Task](../../evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)とTrial JSONを別々に保持する。Checkerを`node evaluations/tools/check-sk02-pair-eligibility.cjs actual-four-trials.json --task-file evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt`の形式で使用し、原byteから計算したSHA-256が4試行の記録に等しいときだけ比較資格の判定へ進む。Task原文未指定なら`insufficient-evidence`、全腕の記録が同じでも事前固定Taskと異なるなら`ineligible`。元Promptの実Harness受信、試行の実Source読取・Skill非露出/実Loadは別のログで確認する。[CI #42110536408](https://github.com/hat47x/tai-pleroma/actions/runs/42110536408)では**合成4 TrialのCLI評価**で一致・全腕誤Prompt・原文不明を実検査し成功。実4 Sessionの結果ではない。
+
 ### 21.3 追加の反証は既存Checker／実ログ照合で扱う
 
 - **RD-01：H3割付だがSkill未ロード**。R=H3を維持し、D=not-deliveredならITTに失敗を含め、PPには不適格。勝手にH2へ付替えない。
