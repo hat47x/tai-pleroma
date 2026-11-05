@@ -25,8 +25,8 @@
     "contentType": "application/json",
     "body": {
       "schemaVersion": 1,
-      "eventId": "audit-e59f0f60-f0ac-4ccb-bf38-a6ac9133f1c4",
-      "occurredAt": "2026-11-05T19:54:01.007702+00:00",
+      "eventId": "audit-c4809e48-027e-47cb-aa12-c6abc25c8158",
+      "occurredAt": "2026-11-05T23:01:28.572429+00:00",
       "eventType": "view",
       "tenantId": "local-default",
       "docId": "doc-1",
