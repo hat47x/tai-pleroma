@@ -247,3 +247,11 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 この成功をSK-02の必要条件（Source/CLI/Subjectを実固定したProduct-only baseline）へ引き渡す。ただし**Skill Loader、Harness呼出し、4独立Session、タスクOracle、同じ実バイナリをH2/H3で呼んだことは未実施**。本CIのPackage/Source名を見ただけの新Sessionと、新Binary/Sourceで測定したSessionを一つの比較Groupに混ぜない。
 
 **次の直接実験**：任意の利用可能な一HarnessでH2/H3の実Toolを同じ固定Binary/Workspaceから呼び、実セッションのTool argv、stdout/diagnostics、実Skill loaded byte、Current Audience/Grant、独立Task Oracle、回答/Token/人手をそれぞれ記録。実Harnessで同じパスが使えない場合はそのEnvironmentに適したSource locationを明示し、物理ReadとSource digestを再観測してからGroupを構成する。ScopeをCLIからWeb/DB/EKI/SHOへ拡大しない。
+
+## 18. 2026-11-06：CLI Source Indexの実byte束縛を比較の事前条件にする
+
+[TAI S1 Runbook §16](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)で、固定TEI実CLIのInspectに含まれるpath・fingerprint・definition referenceを**独立読取済みSource byte**に照合する検査を導入した。実GitHub Actions [#42101157330](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330)ではCatalog/Inspect/ValidateのFP整合、単一Source/Subjectの実参照が成功。S1-W01〜08はNode合成の負例で8/8 PASS。SK-02のE01〜60、SK-03のNC01〜19とは**別の受入領域**であり、件数を合算しない。
+
+**H2/H3の比較適格性への反映**：あらかじめ固定したSourceのpath・byte digest・Subject kind/idと、実Product LoaderのIndex/Inspect証拠が一致しなければTask Read達成としない。H2とH3の両方が同じ空Workspaceや別Sourceを誤読してもSkillの品質比較で正答扱いしない。一方、実Source Pinの固定は**必要条件であって**AI Skillの実ロード/作用因果・独立Oracle・Business Meaning受理ではない。S1 ProbeをSK-02の4 Sessionや新Harness Runnerに見立てず、実Tool invocation/cwd/receipt・Audience/Grant・Skill loader bytes・正答と費用の観測は別票のまま維持する。
+
+**未実証**：実AI Harness 4 Session、H3 Product Skill load、同環境でのSource byte/Index保持、現時点のDisclosure/Host Grant、独立Task Oracle・改善率はNOT RUN。結果不明のwrite回復を初回read-onlyのBlockingとせず、TEI #1174/#2853/#2854とTAI #271のOwner境界へ残す。
