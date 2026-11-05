@@ -356,6 +356,15 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 ---
 
 <!-- sk03-migration-read-epoch-handoff-20261106 -->
+### 14.5 TEI #2889 の実Go負例で、既存GH候補を限定更新
+
+<!-- 20261106-oc-rp-real-go-negatives-scope -->
+[TEI Draft PR #2889](https://github.com/hat47x/tei-platform/pull/2889)（[exact-head CI #42100472921](https://github.com/hat47x/tei-platform/actions/runs/42100472921)、Go 1.26.10／Linux、`TestOrgCaseRunPlan*` **3/3 PASS**）で、**実RunPlan Runnerに対する合成Step/JournalのCharacterization**が成立した。1) Required Host GrantをCallerが渡さなくてもPeriodだけならtoy Stepがcompletedし得る（OC-RP-01）、2) Observer指定は実ObserveEffectの結果でない（OC-RP-02）、3) 先行toy Stepの記録は後続blockedでも残る（OC-RP-03）。これらは#2882の肯定Fixtureの**前提未供給に関する反証**である。
+
+**GH-01〜GH-07の状態訂正**：上記の実Go局所CaseはGH-01/02/03/05の「危険な推論」を具体化するが、**GHそのものの二Harness、実Workspace→実Grant、実Provider Effect／Owner受理の試験ではない**。Plan §14.2のGuard Closureが製品で強制されたという主張にもならない。次に必要なのは**必須Guardの要求集合と実Supply集合を結合するProduct側の受入／欠落拒否**で、TAIが第二のGuard APIを発明することではない。[TEI #1130](https://github.com/hat47x/tei-platform/issues/1130)・[#1174](https://github.com/hat47x/tei-platform/issues/1174)がOwner、TAI #271はHandoff時の現在性・依存限定再確認。最初のTEI実Harness H2/H3 read-only比較より先にこれを全機能のMandatoryへしない。
+
+**現状**：PR #2889はDraft／未merge。専用Go 3/3 CIのみ観測済みであり、Repository全体のHealth、実PG＋同一Org Case、実Harness二種、業務Owner受理の全面合格ではない。
+
 ## 15. 2026-11-06：段階的DB移行を越えたRead／Write／文書引継ぎを現在の資格へ昇格させない
 
 ### 15.1 新しく接続する成熟した実証と、その限界
