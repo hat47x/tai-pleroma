@@ -743,3 +743,12 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 初回CI [#42107218625](https://github.com/hat47x/tai-pleroma/actions/runs/42107218625)では、実Go Binary→Source照合31項目・既存SHA改変拒否は通過したが、**重複key拒否ログに機械判定用エラーコードが出ず、新しく加えたgrepでJob失敗**。受入を推測のPASSにせず、S1 ProbeのCLIエラー出力へ既存`e.code`を付与する限定修正を実施。成功判定はその後のexact-head実CI完了を待って記録する。
 
 **資格の上限**：JSONの解釈を一意にすること≠Ledgerの第三者署名、独立Oracle、Source全閉包、Productのmeaning受理、外部HarnessのSkill Load。**次の価値確認は依然H2 Tool-onlyを実Harnessの一Sessionで動かした記録**であり、S1で新しいハーネス／DB／Actor Runtimeを作らない。[実施Runbook §17/18](first-real-skill-qualification-runbook-2026-11-02.md)に従う。
+
+
+### 39.3 実Skill比較のParticipant Taskを固定し、評価票を隔離する（2026-11-06）
+
+現行S1の「公開TEI Productを実読めた」成功から、次の価値検証SK-02へ直接渡す**新しい実装・運用差分**を確定した。[参加者向け固定Task](../../evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)の本文だけをH2/H3各Sessionへ渡し、SHA-256 `38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf`を既存の[SK-02 CI](../../.github/workflows/tai-sk02-synthetic-pair-check.yml)で固定した。Taskは公開Subjectを調査させるが、採点対象の属性名・型、Source path、診断件数を教えない。**H3だけ異なるPromptを使うとSkill差を測れない**ため、4 Sessionに同じbyte列を使用する。[Runbook §18](first-real-skill-qualification-runbook-2026-11-02.md)と[SK-02 §19](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)に実H2→H3→H3→H2の運用手順、Skill実Loaded/Tool実受信とChecker比較資格/独立Oracle正答を分離する停止条件を記載した。
+
+**隔離の重要条件**：TAIリポジトリ全体を外部HarnessへMountすると、本Repo内のRunbook/証拠台帳から評価対象の答えが閲覧され得る。Participantには固定Task本文＋許可された公開TEI Source・Toolのみを渡す。Reviewerの独立Expected/答え合わせ票・他Session回答を、Prompt・Skill・閲覧可能なFile/Tool出力へ漏らさない。共有できる公開Sourceをモデルが自ら読むことは正常なTask行為。Host観測が無いのに`oracle_exposed=false`、`unauthorized_egress_observed=false`と自己申告することは比較資格ではない。
+
+**変えない範囲**：TEIのS1実CLI/Source/Indexの再現性ゲートは保持。SK-02の一つのread-only Product TaskにEKI/SHO DB Provider/Target Build/TAI横断Skillを投入しない。新Wrapper・Task Runner/Owner Oracleの実装を増やさない。次の本質的な証拠は**実HarnessでH2の一Sessionが動き、Skill非露出と実Tool argv/Sourceの観測が得られたこと**から開始する。Skillあり二Session・残りH2を続け、4試行後にのみ増分価値を採点する。現在は**NOT RUN**。
