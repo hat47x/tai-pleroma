@@ -276,3 +276,14 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 - **順序とOwner**：最初はTEI Product-onlyの実Source W0、次に同じ実Binaryと同一SubjectをHarness H2/H3の4 Sessionで読めるか（TAI #168、TEI #2605）。その後SK-03別Harness、TAI #271 Handoff、TAI #232/TEI #2515実Egress、TEI #2586/#2516のQuery/Claim Closureに進む。EKIの低遅延・マルチモーダル、TEIのDSL自己記述/多Buildは、このread-only Taskに必要でなければ条件付き研究に留める。
 
 **改修はDraft #270内、未merge。NC-17〜19の**実Node/人工JSONの限定CIはPASS済み**。外部HarnessでのSkill Load/Invoke、実TEI Query/DB/Source closure、独立業務Oracle、実Host/OS拒否、Owner正式受理は**NOT RUN／未受理**。
+
+
+## 12. 2026-11-05：必須SK-03ケースの欠落・重複・結果変質をCIで止める
+
+[TEI merged #2835](https://github.com/hat47x/tei-platform/pull/2835)では、実PostgreSQLの必須テストがSKIPでもGoプロセス終了0となる「偽緑」を実ログで確認し、Required Test IDがPASSしたかを別に検査するようになった。TAIの**SK-02**はすでにE01〜E60のRequired ID完全一致をCIに持つ。一方、これまで**SK-03**はNC01〜NC19の総数19件とNC17〜19だけを照合しており、他IDの欠落／二重出現でも総数19件なら通る余地があった。
+
+**既存Workflowを限定修正**：[TAI SK-02/03 CI](../../.github/workflows/tai-sk02-synthetic-pair-check.yml)のSK-03判定に、NC01〜NC19の**全Required ID・重複なし・未定義IDなし**を追加。各IDに期待する分類（evidence-preserved-for-scoring／insufficient-evidence／evidence-mismatch／claim-contradicted／producer-failed／producer-unparseable／stale-or-different-binding）を事前に書いた表で照合し、総数だけが19でも誤った内訳は失敗する。製品正本のテストRunner・新Schema・中央Oracleを導入せず、既存の人工Node subprocess CIの結果解釈だけを固定した。
+
+**実行Evidence**：[GitHub Actions #42011655021](https://github.com/hat47x/tai-pleroma/actions/runs/42011655021) の実Jobログで、SK-02のRequired E01〜E60が **60/60、distinct60、missingなし**、SK-03のRequired NC01〜NC19が **19/19、distinct19、missing／unexpected／resultsDifferすべてなし**を確認。双方ともWorkflowが期待した合成結果が得られたという限定的な成功である。SK-03のProducerは**人工Node子プロセスと合成JSON**で、実TEI Provider・Harness A/Bのデータ交換・現在Grant・秘密データ非送出・独立Business Oracleではない。
+
+**次の実証を増やさない原則**：実HarnessのSK-02 H2/H3では「required／discovered／loaded／executed／qualified」を分け、実Skillのロード・Tool argv/Source・独立Task Expectedを照合する。結果が同じか、CI終了0か、ケース数だけを頼りに「必要なことは確認済み」としない。SK-03は二Harnessを本当に使用する必要が生じた後の実handoffへ進める。実H2/H3四Session・二Harness・Owner意味受理は **NOT RUN**。
