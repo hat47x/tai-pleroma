@@ -284,3 +284,23 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 - その段階の追加受入は**Current Host/Provider Grant・Operation identity・同Attempt/Result/Receipt・ACK lossの実確認・Consumer実読取**。認可や実Effectの意味はProduct/Host/EKIが所有。TAIは実Harness間のTransfer/選択的再資格化/費用を検証し、第二のTx/Evidence Engineを作らない。
 
 この追補の採用は**計画上の条件付き判断**。実PostgreSQLの製品局所試験は存在するが、TAIの実Harness A→B書込み再開／実Network断／Business Owner受理は**NOT RUN**。
+
+## 15. 2026-11-06：TAIから固定TEI実Binaryの公開Sourceを独立S1観測
+
+従来の[TAI mainにあるreference-tei-model](https://github.com/hat47x/tai-pleroma/tree/main/tools/reference-tei-model)はSCN-001の限定型宣言を実TEIに対照していた。今回はSK-02に直接関係する公開reference/workspaceのユーザー定義semantic-data:sales.orderについて、TAI独立CI Jobから**固定版TEIの実Go CLIを実読取**した。TEI側CIの結果を引用しただけではない。
+
+**再現資産**：[TAI S1 Source Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)／[専用GitHub Actions](../../.github/workflows/tai-tei-s1-real-public-cli.yml)。TEIをfull SHAで別Checkoutし、go.modに対応するToolchainで一度ビルド。実Binaryをcommands、model catalog、inspect、validate -jsonの4呼出しに用いる。Git Checkout・Source/実Binary SHA256・実argv/cwd/exit/stdout digestを限定JSON Receiptに保存する。Sourceを直接読み固定のdata Order・attribute total type std.moneyと照合し、CLI Catalog/InspectからSubjectの実ロードを別確認する。テスト用の独立静的期待条件であって、業務意味の独立Oracleではない。
+
+| 証拠（固定CI checkout） | 実測した限定結果 |
+| --- | --- |
+| [最終Workflow #42099390431](https://github.com/hat47x/tai-pleroma/actions/runs/42099390431) | 完了・成功、実ジョブログ確認 |
+| TEI Source pin | 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c |
+| 実バイナリSHA-256 | 6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f |
+| 実Source SHA-256 | reference/workspace/semantic/sales/order.tei = f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33 |
+| 利用者Subject | semantic-data:sales.orderをCatalogで1件、sourceStatus=indexed、Inspect ok=true |
+| Validate | ok=true、diagnostics=3。診断ゼロとは扱わない |
+| 空Workspaceの負例 | validate.ok=trueでも対象Subject 0件、同fixtureの標準std entries 12件。TEI #2822の別fixture 13件と混同しない |
+
+**失敗履歴**：[初回CI #42099147476](https://github.com/hat47x/tai-pleroma/actions/runs/42099147476)はTEI Go Build成功後、TAI ProbeがTEI Catalogの実契約result.entriesをトップレベルentriesと誤認しFAIL。[TEI cli_model.go](https://github.com/hat47x/tei-platform/blob/50ebf8014340fd1906f6b35cfa30173e0ee2fc6c/cmd/tei/cli_model.go)で応答Contractを照合して修正し、Pipeにset -euo pipefailを設定。[修正後CI #42099390431](https://github.com/hat47x/tai-pleroma/actions/runs/42099390431)でBuild→CLI→Receipt検査が成功した。初回の失敗を最初からPASSだったと扱わない。
+
+**次の資格**：この実測は指定公開SourceとSubjectを固定版の**実TEI Product CLIから読む限定S1**。Product Skillは実Harnessへロードしていない。H2→H3→H3→H2の4独立Session、モデルが実Toolを使用した証拠、外部開示/Grant、独立Task Oracle、Owner意味受理、実Provider Effect、Windowsは**NOT RUN**。同一版・実バイナリ・Sourceを両腕へ受け渡すか、新版へ更新するなら両腕のSource・Oracleも再固定する。S1の旧PASSを新HEADの同値・全Source closure・実効認可に移さない。常時必須の新Product Gateや第二のTEI Bridgeは追加しない。
