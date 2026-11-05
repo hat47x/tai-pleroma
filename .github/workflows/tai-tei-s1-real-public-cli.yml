@@ -60,7 +60,8 @@ jobs:
           set -euo pipefail
           node --check tai/evaluations/tools/check-sk02-pair-eligibility.cjs
           node --check tai/evaluations/tools/probe-tei-s1-real-source.cjs
-          node tai/evaluations/tools/probe-tei-s1-real-source.cjs --self-test
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs --self-test | tee "$RUNNER_TEMP/tei-s1-selftest.json"
+          node -e 'const fs=require("fs"),assert=require("assert/strict"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));const required=Array.from({length:19},(_,i)=>"S1-W"+String(i+1).padStart(2,"0"));assert.deepEqual(x.cases,required);assert.equal(x.passed,19);assert.equal(x.total,19);assert.match(x.scope,/synthetic/);' "$RUNNER_TEMP/tei-s1-selftest.json"
           node tai/evaluations/tools/probe-tei-s1-real-source.cjs "$RUNNER_TEMP/tei-s1" "$GITHUB_WORKSPACE/tei" | tee "$RUNNER_TEMP/tei-s1-receipt.json"
       - name: Confirm evidence remains locally scoped and no unsupported certification
         run: |
@@ -73,7 +74,7 @@ jobs:
           LEDGER="tai/evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json"
           RECEIPT="$RUNNER_TEMP/tei-s1-receipt.json"
           node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RECEIPT" | tee "$RUNNER_TEMP/tei-s1-ledger-check.json"
-          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.verdict!=="matching-bounded-S1-evidence"||x.compared<30)process.exit(1)' "$RUNNER_TEMP/tei-s1-ledger-check.json"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.verdict!=="matching-bounded-S1-evidence"||x.compared!==39)process.exit(1)' "$RUNNER_TEMP/tei-s1-ledger-check.json"
           node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.sourceDigest="sha256:"+"0".repeat(64);fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-tampered-receipt.json"
           if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-tampered-receipt.json" > "$RUNNER_TEMP/tei-s1-tampered-log.txt" 2>&1; then
             echo "Tampered S1 receipt incorrectly accepted"
