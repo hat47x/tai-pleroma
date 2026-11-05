@@ -696,3 +696,11 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 - [TEI Scenario Draft #2830](https://github.com/hat47x/tei-platform/pull/2830)の合成6 Step証拠をAIが追加したScenarioの独立Oracleや実Provider E2Eへ昇格させない。Scenarioを実使用する場合だけ必要CaseのDiscovered/Executed/PASS、ExecutionMode/EvidenceNature/Source版・独立Expectedを照合。
 
 **選択基準**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値適正化に従い、上記を一括導入するのでなく、利用者Taskに必要なProduct・検証能力だけを条件付きで追加。無関係なDomain固有の検査をTAI Skill rootへ移さず、Product Ownerの契約を保つ。今回の追加は既存Workflowと計画の差分であり、実H2/H3のSkill効果／実第二Harness／実DB／Provider／Owner意味受理は **NOT RUN**。
+
+## 37. 2026-11-06：TAIからTEI実Product CLIの公開Sourceを実読取し、次を実Harnessへ限定する
+
+横断計画§35〜36のNode合成必須Case Gateは維持しつつ、**実Product S1へ進めた成果**を独立に追加した。[TAI S1実Go CLI #42099390431](https://github.com/hat47x/tai-pleroma/actions/runs/42099390431)（実Job PASS）：TEI full SHA 50ebf8014340fd1906f6b35cfa30173e0ee2fc6cのGoバイナリをTAI CIでBuildし、公開Sourceのsemantic-data:sales.orderをmodel catalogで1件indexed・inspect OK・validate ok=true/診断3件として確認。空Workspace対照はvalidate ok=trueでもSubject 0件であり、検証成功と必要なSource消費を区別した。
+
+実験用の[Node S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)・[限定GitHub Actions](../../.github/workflows/tai-tei-s1-real-public-cli.yml)をDraft #270に追加。CLI応答がresult.entriesに包まれる点を初回失敗[#42099147476](https://github.com/hat47x/tai-pleroma/actions/runs/42099147476)で発見・修正し、最終Jobはexit propagationを含めてPASS。[Runbook §15](first-real-skill-qualification-runbook-2026-11-02.md)がSource/実Binaryハッシュと完全な実測範囲の記録、[SK-02 §17](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)が次のH2/H3への引き渡しを担当する。
+
+**最優先の未達Gateは変わらない**：外部Harness一つでH2 Tool-only/H3 TEI Product Skill実Loadedを同一公開Subject・固定Binary・独立Task OracleでH2→H3→H3→H2と比較する。新S1はTEI側既存CLIをTAIから直接実行した**Product-only実観測**であり、実AI/Skill Loader・第二Harness・実Grant/外部Egress・独立業務Oracle・Owner意味受理を証明しない。TEI既存#2605・TAI #168/#271/#422を継続Ownerとし、DB/Provider、Studio、EKI、SHOの高度機構や新Host/中央Registry/第二Readerを初回の必須Gateへ追加しない。
