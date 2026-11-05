@@ -1,6 +1,6 @@
 # YI Constellation：最初の実Product Skill資格確認 Runbook（2026-11-02）
 
-状態（**2026-11-06の最新観測**）：**TAIから固定した実TEI CLIを呼んだ公開Source W0/S1は限定達成**。[TAI実S1 #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)で、実Binary・Source Index・指定Subject・固定台帳の照合とJSON重複キー拒否を確認。ただし**外部AI HarnessによるTool実呼出し、Skill実ロード、H2/H3四独立Session、Owner意味受理はNOT RUN**。最新の実験準備・停止線は§17〜19。旧§1〜14の「TAIでCLI未実行」等は当時の記録であり、現在のW0状態を示さない。実OS/Host/Provider資格、正式ReleaseやProduct横断E2Eへ一般化しない。新Harness Runner/統合Registryを設けず既存検査を再利用する。
+状態（**2026-11-06の最新観測**）：**TAIから固定した実TEI CLIを呼んだ公開Source W0/S1は限定達成**。[TAI実S1 #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)で、実Binary・Source Index・指定Subject・固定台帳の照合とJSON重複キー拒否を確認。ただし**外部AI HarnessによるTool実呼出し、Skill実ロード、H2/H3四独立Session、Owner意味受理はNOT RUN**。最新の実験準備・停止線は§17〜21。旧§1〜14の「TAIでCLI未実行」等は当時の記録であり、現在のW0状態を示さない。実OS/Host/Provider資格、正式ReleaseやProduct横断E2Eへ一般化しない。新Harness Runner/統合Registryを設けず既存検査を再利用する。
 
 ## 目的：合成fixture中心の議論から、実際のProductを使用した証拠へ
 
@@ -396,11 +396,11 @@ S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失
 
 実BinaryのハッシュとWorkspaceの実Source byteを**各Sessionの使用直前**に確認する。Linux CIのバイナリは別Host/別OSで同じSHAと推定できない。別OS/Go版/新ビルドでSHAが違えば、その試行専用の**新W0実測**を先に取り、H2とH3の両方がその同じ実行物を使うことを保証する。固定Rootをコピーした後のSource移動・差替えはTrialの失効事由とする。Toolが単純なshellを備えず認可済みMCP/CLI Adapterで呼ぶ場合も、当該実動作・実引数の観測を要求し、**新たなMCP Server開発を初回の前提にしない**。
 
-### 19.2 実験Task（H2/H3へ同じ文章を与え、答えを事前に渡さない）
+### 19.2 参加者向けの実験Taskは一つの固定ファイルを使う
 
-> 支給された公開TEIモデルの `semantic-data:sales.order` を、使用可能なread-only TEI CLI/Toolで調査してください。Catalog/Inspect/Validateの実結果に基づき、(1)利用者定義の対象kind/idを特定できるか、(2)そのSource Indexのファイル・指紋・definition参照を確認できるか、(3)Validationの `ok`／診断・Warningの有無を区別できるか、(4)その結果だけでは確認できない事項は何かを、使用したコマンドと出典を示して報告してください。Source編集・DB書込み・外部公開・権限追加は行わず、実行不能または未確認ならそう記してください。
+H2/H3の4独立Sessionに渡す唯一の参加者向け指示は、[固定Participant Task](../../evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)の**実byte列**。§17や§19の設計用Obligation・例示BlockquoteをTaskの代替にしない。固定SHA-256は§20を参照する。
 
-このTaskは具体的な期待結果やハッシュの正答をHarnessへ教えない。初回H2では**実Tool呼出しを観測することが先決**であり、`trace`/追加Operator/複数DBへの展開を要求しない。H3でも**Task本文は完全に同じ**とし、Skill Loaderのある/なしだけを主な介入変数にする。
+固定Taskは、**対象の意味、定義元Source、注文合計額を表す属性の識別子と型、Validateの診断/Warning/未知、実CLI根拠**を要求する。Source Indexのfingerprint/definition referenceはReviewerの技術的な証拠照合であり、Participantへ正答を教える別指示ではない。Taskの文面・末尾LFを含むbyteを四Sessionで維持する。変更が必要なら両腕同時に新Task raw SHAと独立Expectedを再固定し、旧Trial Groupへ混入させない。
 
 ### 19.3 実Tool呼出しの最小Receiptと、最初の一Session出口
 
@@ -460,3 +460,35 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 **実装**：既存S1 Probeの`verifyLedger`内で、Ledgerに固定された`reference/workspace`と当回Receiptの絶対CWDを使い、**4つのCLI argvをコマンド・順序・Workspace・Subject/Format・追加Optionまで完全一致**で照合。4呼出しすべてのCWDが同じことも検査する。これを既存31項目に8比較追加して計39項目とする。S1-W14〜W19は正常な4呼出し／別Workspace／別Subject／write-option混入／別CWD／CLI順序交換の合成負例。さらに既存の[TAI S1実CLI Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)で、**本物の実CLI出力Digestを残したまま**ReceiptのCatalog Workspaceだけ、Inspect CWDだけをそれぞれ改変して拒否を確認する。
 
 **証拠の限界**：同じargv/cwd文字列が記録されていることは、Host/Processが本当にその引数を渡したことの第三者証明ではなく、symbolic linkや別mountの実Target同一性も示さない。このテストは既存Probeが生成した実CLI Receiptの**内部整合と失効検知**に限る。歴史台帳の新しい認証方式や実Harness連携、追加Product Gateは作らない。CIのPASSは当該実行のexact-head/Jobログで確認するまでは宣言しない。最初のH2独立Sessionの実Tool/Loader観測を引き続き優先する。
+
+
+---
+
+<!-- sk02-rd-itt-pp-separation-20261106 -->
+## 21. 2026-11-06：Skill割付と実提供を区別した比較・価値評価
+
+### 21.1 R/DとITT/PPの分離
+
+**R（Requested/assigned）**は実験で割り付けたH2＝Tool-only／H3＝Product Skill付き条件。**D（Delivered/observed）**は、外部Harness/Adapterの実ログでSkill root・必要referencesをロードした事実、Tool request→実CLI result、Source/実Binary/Current Grantの同条件が確認された状態。RがH3でもDが不明・未提供ならSkillが有効だったとしない。Trial JSONの`skill_loaded=true`やLLMの自己説明はDの一次証拠ではない。
+
+**ITT（割付ベースの記述的比較）**は、実Skillロード失敗・Tool利用不能・未知を含め、割り付けた4 Sessionすべての運用結果・追加費用・失敗分類を残す。成功したH3だけを抽出して運用上の価値を過大評価しない。**PP（実提供ベースの条件付き比較）**は、H3でSkill/必要refsの実Load、H2でSkill非露出、両腕で実Tool/Source/Model/Taskの比較条件が観測された試行だけを、既存SK-02の比較資格と独立Oracleで分析する。PPの「条件成立サブセット」はITTや全Harnessの導入利益と同一ではない。4 Sessionは実用的な初期反証であって、母集団の効果推定・p95比較ではない。
+
+### 21.2 既存Trial Cardに記録すべき内容（新Runtime/Oracle Schemaは不要）
+
+| 項目 | 試行中に保持する実証拠 | Claimの限界 |
+| --- | --- | --- |
+| **固定Task** | §20のParticipant Task raw SHA、Task本文、Independent Expectedの別保管状態 | 各腕でTaskが変わったらSkillの効果ではなくTask差 |
+| **R：割付** | Session ID、割付arm、順序、固定Tool/Profile/Model/実Binary | 割付だけでSkill実Loadとは言えない |
+| **D：提供** | Harness Tool Request／Adapter実CLI argv/exit/stdout、Loaderの実Skill root/refs byte-read | 申告boolのみならunknown、PP不適格 |
+| **回答品質** | 出典、対象Source/属性・型・診断・Warning・Unknownを別Reviewerが事前Expectedと比較 | loadedやeligible-to-scoreは正答保証ではない |
+| **運用費** | 成功／失敗を問わずToken/Tool呼出/経過時間/準備・人手再実行／観測範囲 | 四試行の記述的結果まで。配布済み/全Harness適合へ外挿しない |
+
+### 21.3 追加の反証は既存Checker／実ログ照合で扱う
+
+- **RD-01：H3割付だがSkill未ロード**。R=H3を維持し、D=not-deliveredならITTに失敗を含め、PPには不適格。勝手にH2へ付替えない。
+- **RD-02：H2がSkillを閲覧可能**。Skill非ロードでもTool/GitHub/Workspace経由でSkillの文書が見えていた場合、H2の非接触の前提を再評価しPPを停止。
+- **RD-03：H3だけ別Task/Oracle版**。同一Pair不適格。§20の同じbyte Taskを唯一の配布物とする。
+- **RD-04：回答が一致しても実Tool未観測**。D=unknown、別CIの実CLI S1成功はHarness実呼出しの代理不可。
+- **RD-05：実Skill Loadは成功、回答は誤り**。Dは成立しても独立Oracle不合格。技術的ロード成功を価値成功へ昇格しない。
+
+**実行の優先順**：§19の最初の外部H2一Sessionを実Toolログ込みで観測→H3の実Loader/参照文書消費を別Sessionで確認→固定順`H2→H3→H3→H2`の四Sessionと事前Holdoutによる独立採点。追加合成CI・第二Agent Host・配布Registryは初回に不要。今回の追補は**試験方法の補正**であり、実H2/H3四Session、ITT/PPの正答・費用、Owner受理は**NOT RUN**。
