@@ -16,6 +16,9 @@ const SAME = ["task_id", "repo_head", "binary_digest", "workspace_tree_digest",
   "grant_profile_digest", "disclosure_profile_digest", "oracle_version", "cli_cwd"];
 const DIGEST = /^sha256:[a-f0-9]{64}$/;
 const HEAD = /^[a-f0-9]{40}$/;
+// The pre-registered Task is deliberately bound for this FIRST SK-02 Product pilot.
+// A different Task belongs in a new trial group and a separately reviewed pin.
+const PRE_REGISTERED_PARTICIPANT_TASK = "sha256:38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf";
 
 
 // A trial-group file is untrusted input, including when AI generated it.
@@ -126,6 +129,8 @@ function evaluate(group, options = {}) {
       unknown.push("participant-task-raw-not-bound");
     } else if (!DIGEST.test(options.expectedPromptDigest)) {
       invalid.push("invalid-expected-participant-task-digest");
+    } else if (options.expectedPromptDigest !== PRE_REGISTERED_PARTICIPANT_TASK) {
+      invalid.push("participant-task-not-preregistered");
     } else if (rows.some(r => r?.prompt_digest !== options.expectedPromptDigest)) {
       invalid.push("participant-task-digest-mismatch");
     }
