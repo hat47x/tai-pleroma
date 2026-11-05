@@ -53,7 +53,7 @@ python probe.py --base-url http://127.0.0.1:8765 --doc-id scn001-demo   --expect
 - `--sui-checkout`のHEAD一致は、サーバがそのチェックアウトから起動したことを示しません。`core.fsmonitor`は無効化していますが、リポジトリの`.git/config`に`filter.*.clean`などが設定されていると`git diff`が外部コマンドを実行し得ます（残リスク。信頼できるチェックアウトにだけ使う）。
 - リポジトリ側のgit設定で差分が隠れ得ます。`core.fileMode=false`では実行ビットだけの変更が、`diff.ignoreSubmodules`ではsubmoduleの変更が「追跡変更なし」になります（残リスク。`core.fileMode`の強制はWindowsの既定と食い違うため行いません）。試験が支えるのは、ステージ済み変更・`git rm --cached`・`git replace`による差し替え・実行中のHEAD移動とassume-unchanged設定・indexコピーのmtime保持までで、`GIT_*`変数ごとの除去と`-c core.fsmonitor=false`・`--no-replace-objects`以外の個別の防御は変異試験で確認していません。
 - `/openapi.json`が無効な本番系プロファイルと、`X-API-Key`設定時の`/docs`は従来どおり対象外です（鍵は送りません）。
-- 実SUIの`/version`の実応答は未確認です（ソース読みのみ）。
+- 実SUI（`sui-sensemaking`のmain `21d07f01`、`SUI_APP_REVISION`にそのHEADを設定、一時sqlite、`local-dev`、Windows・Python 3.12のvenv、uvicorn）で1回測定しました。`/version`は`{"revision":"<40桁>","runtimeProfile":"local-dev"}`を返し、期待revisionの一致でprobeは`passed=true`・`pin.result=match`・`openapiInfoVersion=0.1.0`（定数）、`--sui-checkout`もHEAD一致・追跡変更なしでした。誤ったrevisionでは`/healthz`以降を送らず`pin mismatch`で止まりました。DBが未migrateだと`/docs`が500になり、probeは`request failed: HTTP 500`で失敗します（`alembic upgrade head`後に解消）。別のrevision・`unknown`・本番系プロファイル・認証付き構成・Postgres・Linux・複数インスタンスは未確認です。
 
 ## 境界
 
