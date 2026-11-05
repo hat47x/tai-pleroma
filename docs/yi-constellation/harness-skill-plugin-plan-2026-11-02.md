@@ -715,3 +715,11 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **ロードマップの変更点**：P0のread-only TEI Product Skill H2/H3は**変更しない**。P1の第二Harness引継ぎは実read-only Source/Tool/Grantを対象に開始し、P2で必要な**実書込みTaskだけ**HX-CM01〜07を条件付き実証する。Script起動設計の失敗時境界・TEI #1129/#1174/#2564、EKI Result/Recovery Ownerとの重複Issueを増やさない。横断価値の測定は「何を実際に安全に完遂できたか／回復できたか」とToken/時間/人手を別々に扱う。
 
 **実証資格**：本節のGitHub変更はTAIの文書・試作Skill参照に限り、実DB・Command・Effect/OS・外部Harnessの新実行ではない。正式Runbook・Product契約の採用、実接続・Owner意味受理は**NOT RUN**。
+
+## 39. 2026-11-06：実Sourceの宣言・Index byte・Requiredを独立に照合し、実Harnessへ進む
+
+前節§37の実TEI S1について、Catalog/Inspect成功を**指定原文がIndexに取り込まれた証拠**へ一段強めた。[TAI S1 Source Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)と専用CIで、実InspectのSubject、artifacts.pathとSHA-256、role=definitionのSource Index referenceを、別読込した公開Sourceのbyteへ照合。さらにCatalog／Inspect／ValidateのWorldFP・SourceIndexFPを突合し、別file・古いfingerprint・他Subject・Index/definition欠落などS1-W01〜08の負例を検査。**[実CI #42101157330](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330) completed/success**：合成8/8、同一固定TEIの実InspectでSource一致・definition参照1件を確認。[Runbook §16](first-real-skill-qualification-runbook-2026-11-02.md)と[SK-02 §18](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)を実行／比較の正本へ追補。元Runの証拠値は[記録JSON](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)へ保存。
+
+**他チャットとの整合**：[TEI自己記述Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)の独立Required対照と同じく、**候補が自分で宣言したRequired・Role/Source・返したPASSだけで自身の意味を認定しない**。TAIのS1では固定の外側Expectedを先に持ち、TEI実LoaderのIndexと比較する。ただしAtomic全Import closure・Owner Meaning Acceptance・現在Host Grant・Build/Targetの実消費は別。§38の実DB/未知Commitは将来の**write Taskのみの条件付き出口**とし、実AI Harness read-only H2/H3のBlocked条件に追加しない。
+
+**次の実証**：既に成立したProduct-only S1を同版でH2/H3の両腕へ引き継ぎ、実HarnessによるSkillロード、CLI呼出し、独立正答判定と実費用を比較する。TAI側に新しい共通Source Resolver／実行Host／Test Runner・第二のOracleを導入しない。AIによる試験候補の増加は制限しないが、必須結果と未実行を識別する。二Harness Handoff・実DB/Provider・SHO/EKIは用途別に後続する。
