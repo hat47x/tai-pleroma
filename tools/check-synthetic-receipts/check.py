@@ -180,6 +180,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-http-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-projection-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-policy-execution-2026-11-03.json",
+    "evaluations/records/EKI-TEI-manual-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-budget-aligned-artifact-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
     "evaluations/records/TEI-artifact-digests-2026-11-03.json",
@@ -479,6 +480,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
+        if "EKI-TEI-manual-execution" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("executed") is not True or observed.get("claimed") is not True or not observed.get("taskId"):
+                errors.append(f"EKI manual execution evidence did not hold: {relative}")
         if "EKI-TEI-policy-execution" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("projectedSubmissionRejected") is not False or not observed.get("claimDigest"):
