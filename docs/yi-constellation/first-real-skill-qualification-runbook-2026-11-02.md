@@ -316,3 +316,41 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 **CI実測**：[TAI S1 #42101157330](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330) **completed/success**。Product pin 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c、Source semantic/sales/order.tei、Subject semantic-data:sales.order。Inspectは当該SourceのFingerprint `sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33`と**definition reference 1件**を返し、独立Readと一致。S1-W01〜08の公開合成テスト8/8 PASS（別file、stale bytes、ref欠落、別Subject、not-indexed、重複artifact等を拒否）。S1の旧空Workspace negativeは維持。詳細は[限定証拠JSON](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)に転記した。
 
 **資格の上限と次の差分**：この検査は**固定された単一TEI Checkout／単一SubjectのSource Index参照を実CLIで確認**したことまで。[TEI自己記述Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)のRequired/Observed分離と同様、Role文字列やSource一致をOwner意味受理・Build Closure・外部Authorityへ昇格させない。H2/H3では、実HarnessのSkill Loader/Tool実呼出し・Context Audience・独立Task Oracle/費用が次の未了。Business Writeの結果不明・ABA・Receiptは既存§14.1とSK-03の**Conditional**であり、初回read-only試験をブロックしない。
+
+
+---
+
+<!-- sk02-harness-live-observation-witness-20261106 -->
+## 17. 2026-11-06：S1の実Source証拠が揃った後のH2/H3「実利用」入場票
+
+### 17.1 進捗の位置：W0は一つの公開Sourceに限って実測済み
+
+[TAI 実S1 Run #42101157330](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330)のsuccessを[証拠記録](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)と照合。TEI `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`、Go 1.26.10、公開`reference/workspace`、`semantic-data:sales.order`について、Catalog/Inspect/Validateを**実ビルド済CLI**で呼び、別読取した`semantic/sales/order.tei`のbyte SHA-256と**実Inspect Source Index artifact fingerprint/definition reference**を照合。S1-W01〜08合成負例8/8と実CLIの限定観測が完了した。初回失敗Run #42099147476（Catalog JSONの`result.entries`契約の誤読）と後続修正Runの違いは保持する。
+
+ここで達成したのは、**単一Source Index/Subjectの実CLI読取基線**。全Required Source解析、Ownerの意味受理、外部Harness/Skillロード、Windows、Host実権限・DB Effectはまだ未証明である。H2/H3実行時に上記固定版・Binary byte／Sourceが使われなければ歴史S1を現在の実呼出しとして継承せず、新しいW0で再固定する。
+
+### 17.2 次の最小Taskと提出物を固定（新Runner・第二Oracle Schemaは作らない）
+
+**Task**：同一の公開Subject `semantic-data:sales.order`を既存TEI CLIで調べ、(a)実Catalog/Inspectのkind/id、(b)Source Indexの実File/Byte fingerprintと参照、(c)Validateの警告/diagnostics、(d)未観測範囲を**それぞれ出典と共に説明**する。外部Provider Write/DB/経済取引や非公開入力は含めない。Independent Expectedは[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)のScenario/ObligationとS1固定実Sourceを使い**試行前**に別担当が保持し、Harness/Skill文書へ正答を入れない。
+
+| Evidenceの当事者 | 受け取るべき実観測（試験者の記入欄として既存票へ付ける） | 言ってはいけないこと |
+| --- | --- | --- |
+| **Product基線 W0** | 固定TEI checkout/Binary SHA、実Source byte、実CLI stdout/exit、World/SourceIndex FP、今回の対象/時点 | 歴史S1のPASSから新HEADの同一性、全Source解析、意味受理を推定しない |
+| **Harness H2 Tool-only** | 実Session IDとHarness/Model/Provider/Profile、Skillが与えられなかったConfig/Context、Tool呼出しの**Harness/Adapter実ログ**、実argv/cwd/exit/stdout digest、現在許可の用途・Audience | モデル回答の「Toolを使った」だけでToolの起動、Skill非接触、実権限を主張しない |
+| **Harness H3 Skillあり** | H2と同じ実Binary/Workspace/Task・Tool権限、実LoaderのSkill root/参照ファイル**消費ログとbyte digest**、実Tool呼出し/出力、独立Session | Skillを配布場所にコピーしただけでLoaded、本文を回答へ引用しただけで使われたとしない |
+| **独立採点** | 固定Expectedと実Consumer Answer/Warning/Unknownを第三者が比較。適格・正答・追加価値・Token/時間/人手を別判断 | SK-02 Checkerの`eligible-to-score`から正答やSkill有益性を導かない |
+| **現在資格** | 実Host/Tool permission、送出Audienceと可観測の実境界、別Harnessへ持ち出せるEvidence範囲 | Configに書いた`egress_scope_observed=true`をOS/Network全経路の非漏えい実証としない |
+
+**現有Checkerの利用制限**：[SK-02 test-only `check-sk02-pair-eligibility.cjs`](../../evaluations/tools/check-sk02-pair-eligibility.cjs)はJSON内の`tool_invocation_observed`、`skill_loaded`等の**申告された状態と比較整合**を検査するもので、実Tool、実Skill loader、実Hostの実ログを読み取っているわけではない。比較資格の前に、記録されたbooleanをどの具体的log/receipt/Source refが裏付けるか検査者が別欄で照合する。根拠未提出なら`insufficient-evidence`として、記録を真のH2/H3四Session実証と称しない。新Generic Evidence Validatorは作らない。
+
+### 17.3 5つの検査段階と失効を混同しない
+
+[TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)の**Obligation→実Evidence→Claim資格**を、既存の[TEI #1163](https://github.com/hat47x/tei-platform/issues/1163)と同じ考え方で適用する。Unit/合成Fixtureは入力分類・否定Control、Conformanceは特定Contract、実Product CLI/Providerは実Source/Backend、Harness/Host観測は消費・操作境界、Owner受理は業務Meaning/用途承認をそれぞれ検査する。どの一段階のPASSも他段階の証明にはならない。
+
+S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失効条件を①Source/Index/Meaning変更、②Binary/Skill/Tool Closure・Model・Harness Profile変更、③現在Grant/Recipient/開示変化、④Task/Expected/Consumer用途変更、⑤観測期限・Unknown/Partialの変化に分類し、影響したClaimのみ再資格化する。単に同じSHAや同じ説明文という理由で現在の許可・全件性・Skill実ロードを復活させない。
+
+### 17.4 最初に実行する順と出口
+
+既存の`H2→H3→H3→H2`四独立Sessionをそのまま実行し、**最初のH2一Sessionの実Tool log/実CLI receiptが存在するか**を初期停止線にする。無ければH3や第2Harnessを先に増やさず、Harnessで実CLI Toolが使えるかを明らかにする。H2が成立したときのみH3の実Load/Reference File利用を評価し、その後同条件で四Sessionと独立採点へ進む。効果がなければTool-only維持。必要な実観測が取れないHarnessは`unsupported / unknown`であり、全Harnessが使用不能という断定にしない。
+
+**状態**：この§17は既存実S1証拠と次の実Harness実験を接合したRunbook追補であり、Product/Checker/Loader/Hostに新実装なし。H2/H3四独立Session・外部Harness Tool invocation・実Skill loader・独立採点/Cost・Owner受理・実Network非漏えいは**NOT RUN**。初回read-onlyへDB移行/RunPlan/Plugin全セットを必須化しない。
