@@ -44,11 +44,15 @@ function main() {
     assert.ok(discovered.commands?.some(x=>x.name===name && x.effect==="read-only"),"required command is not advertised read-only: "+name);
   const catalog=run(binary,["model","catalog","-workspace",root],tei);
   const cat=jsonOf(catalog);
-  const matches=(cat.entries||[]).filter(x=>x?.subject?.kind===SUBJECT.kind && x.subject.id===SUBJECT.id);
+  assert.equal(cat.ok,true,"model catalog CLI envelope must report ok");
+  assert.equal(cat.schemaVersion,"tei.cli.model/v0");
+  const matches=(cat.result?.entries||[]).filter(x=>x?.subject?.kind===SUBJECT.kind && x.subject.id===SUBJECT.id);
   assert.equal(matches.length,1,"expected non-std sales.order semantic-data must be loaded exactly once");
   assert.notEqual(matches[0].sourceStatus,"not-indexed","required user-defined Subject must not be std-only/not-indexed");
   const inspect=run(binary,["inspect","-workspace",root,"-subject-kind",SUBJECT.kind,"-subject-id",SUBJECT.id],tei);
   const inspection=jsonOf(inspect);
+  assert.equal(inspection.ok,true,"inspect CLI envelope must report ok");
+  assert.equal(inspection.schemaVersion,"tei.cli.inspect/v0");
   const validate=run(binary,["validate","-workspace",root,"-json"],tei);
   const val=jsonOf(validate);
   assert.equal(typeof val.ok,"boolean","validate status must be a boolean");
@@ -62,11 +66,11 @@ function main() {
   try {
     fs.writeFileSync(path.join(temp,"tei.workspace.yaml"),"workspace: tai_empty\nformatVersion: 1\nsources:\n  - semantic\n");
     const negCat=jsonOf(run(binary,["model","catalog","-workspace",temp],tei));
-    assert.equal((negCat.entries||[]).filter(x=>x?.subject?.kind===SUBJECT.kind && x.subject.id===SUBJECT.id).length,0,
+    assert.equal((negCat.result?.entries||[]).filter(x=>x?.subject?.kind===SUBJECT.kind && x.subject.id===SUBJECT.id).length,0,
       "empty workspace must not claim selected user Subject");
     const negValidate=jsonOf(run(binary,["validate","-workspace",temp,"-json"],tei));
     negative={userSubjectLoaded:false,validationOk:negValidate.ok,
-      stdEntries:(negCat.entries||[]).filter(x=>x.subject?.id?.startsWith("std.")).length,
+      stdEntries:(negCat.result?.entries||[]).filter(x=>x.subject?.id?.startsWith("std.")).length,
       interpretation:"validate.ok and nonempty std catalog cannot prove requested user source was read"};
   } finally { fs.rmSync(temp,{recursive:true,force:true}); }
   console.log(JSON.stringify({
