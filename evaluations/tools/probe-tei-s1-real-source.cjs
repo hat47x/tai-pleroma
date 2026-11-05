@@ -214,6 +214,6 @@ if(require.main===module){
       const receipt=parseTrialJSON(fs.readFileSync(process.argv[4],"utf8"));
       console.log(JSON.stringify(verifyLedger(ledger,receipt),null,2));
     } else main();
-  } catch(e){console.error("TAI S1 FAIL: "+e.message);process.exitCode=1;}
+  } catch(e){console.error("TAI S1 FAIL: "+(e.code ? e.code+": " : "")+e.message);process.exitCode=1;}
 }
 module.exports={qualifySubjectSource,verifyLedger,selfTest};
