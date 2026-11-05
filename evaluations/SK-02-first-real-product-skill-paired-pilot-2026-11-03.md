@@ -280,6 +280,6 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 | **PP（実利用基準）** | 独立Session・同条件Tool/Source/Grant・H3実Skill loaded・必要な資料/Tool消費の実証を満たす試行のみ | 条件を満たした時のTask品質・費用の探索的比較。自己選択によりSkill因果・一般改善率を断定しない |
 | **SK-02 Checker** | 記録された条件が比較可能な4試行のときだけ`eligible-to-score` | 形式的な比較資格。ITTの全割付履歴の記録・Oracle正答の資格を置き換えない |
 
-実行ログには**割付/露出/Loaded/実Tool使用/実Subject Read/独立Oracle採点/不明・拒否/Cost**を別に残す。H3でSkill未ロードなら、PP適格ではない一方、ITTの運用上の結果としては失敗または未確認として記録する。PPだけを報告せず、割付Session総数・未ロード数・分析対象数を必ず併記。4試行の小さなパイロットは統計的効果推定ではない。最初の公開Subjectを使うR（明示Task）を先行し、非例示Subjectを探索するDは実Provider/Source能力が揃った場合だけ別Taskとして事前登録する。R/Dを混ぜて期待正答を後から選ばない。
+実行ログには**割付/露出/Loaded/実Tool使用/実Subject Read/独立Oracle採点/不明・拒否/Cost**を別に残す。H3でSkill未ロードなら、PP適格ではない一方、ITTの運用上の結果としては失敗または未確認として記録する。PPだけを報告せず、割付Session総数・未ロード数・分析対象数を必ず併記。4試行の小さなパイロットは統計的効果推定ではない。最初は公開Subjectを明示したTaskを先行する。未例示Subjectを探索するTaskは、実Provider/Source能力が揃った場合だけ別Taskとして事前登録し、期待正答を後から選ばない。Task種別にR/Dを割り当てず、Runbook §21のR＝割付・D＝実提供と混同しない。
 
 **状態**：これは既存SK-02の**結果解釈規則**で、外部Harness、実H2/H3 Session、Task Oracle採点は**NOT RUN**。同条件CLIの実S1は別途観測済み。新しい実行器・中央Evidence台帳は作らない。
