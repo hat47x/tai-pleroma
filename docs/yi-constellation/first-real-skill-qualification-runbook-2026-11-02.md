@@ -529,3 +529,13 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 初回のH2 Tool-onlyではTEI Product **Skill非露出**と実Binary呼出しを観測する。H3は同じCLI/Task/Sourceで上記root＋必要referencesの実ロード証拠が揃ったときだけD（Delivered）成立とする。ファイルがCheckoutに存在するだけなら**Available**であり**Loaded**ではない。`R=H3`でLoad失敗はITTに含め、PPのSkill実提供条件は未成立。Tool呼出しが間違ったcommand/result pathを参照した場合は、その失敗をそのまま記録し、修正されたSkillを試すなら別治験とする。
 
 **状態**：上記はTEI固定CheckoutからのGit原文照合と再現可能なCI Preflightの設計・実装。外部Harnessへの実配布／実Load／4 Sessionは**NOT RUN**。Source Index／Skill byte／AI Tool Usage／Owner Meaning／Current Grantの証拠を混同しない。
+
+### 22.3 H2のSkill非露出は「Loadしない」だけでは足りない
+
+**同一TEI Checkoutを丸ごとHarnessへ公開してはならない**。固定TEI commitには`skills/yi-tei-modeling/SKILL.md`が元から含まれるため、H2へTEI Repositoryのファイル検索・GitHub Browser等を自由に渡すと、`skill_loaded=false`でもSkill本文や手順例を**閲覧できる可能性**がある。その場合はH2の非露出条件が未確認／汚染であり、PP比較資格を与えない。
+
+[既存TAI実S1 Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)に、**同じTEI Binaryと公開`reference/workspace`をH2/H3それぞれへコピー**し、H2にSkillファイルが存在せず、H3だけ固定Product rootとreferenceが存在する作業用ビューを一時的に作るStepを追加。両方のビューで実TEI CLIの`model catalog`・`inspect`・`validate`を実行し、Source artifact fingerprint、WorldFP、Source Index FP、診断数が先のS1 Ledgerと一致するか検査する。元CheckoutのGoソース・TAIの評価票・独立Oracleはビューに含めない。この準備は**ローカルCIにおけるファイル露出の反証**であり、実HarnessのTool/ネットワーク範囲・OS隔離やSkill Loaderを確認したことではない。
+
+実H2起動時には、①固定BinaryとWorkspaceをParticipantへ渡す位置、②その位置にSkill・評価票・他Session Logが存在しないこと、③GitHub・汎用Web・親ディレクトリの読取等の迂回経路が**実Tool Profileとして制限・観測**されていること、④実CLIのargv/cwd/exit/stdoutと対象Sourceの一致を記録する。H3のみProduct Skill rootと必要referenceを別に提供するが、**ファイルが置かれている＝実ロードではない**。Skill rootからリンクされた追加Product文書の参照閉包／その実Readは別に報告し、欠落を架空の成功にしない。
+
+**再現性の注意**：上のCIビューはRun終了時に破棄する臨時ファイル群で、正式な配布Bundleでも、専用Harness Adapterでも、新しいKernelやSandboxではない。`chmod`とCLIの限定読込だけで実OS/Egressの非漏洩を証明できるわけではない。実H2で隔離状態を観測できない場合は、成功したW0/S1を根拠に`skill_exposed=false`へ補完せず、Unknown/不適格として扱う。
