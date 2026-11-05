@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-04",
+  "date": "2026-11-05",
   "host": "Windows with Go on PATH and Python 3.12",
   "command": "python integrations/pilot-sui-document/assembler/run_pilot.py",
   "result": "PASS",
