@@ -224,6 +224,10 @@ def main():
                 "evaluations/records/EKI-TEI-submit-2026-11-03.json",
             ],
         )
+    if args.eki_control:
+        steps["eki_projection"] = run_step(
+            "eki_projection", ["integrations/tools/eki_projection_execution.py"]
+        )
     if args.skip_checker:
         steps.pop("checker", None)
     tei_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=args.tei_repo, capture_output=True, text=True).stdout.strip()
