@@ -128,3 +128,18 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 **他の独立レーン**：TAI [Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)のH2（外部Harness+Product CLI、Skillなし）/H3（同Harness+実ロードした必要Skill）の4独立Sessionは、モデル/Tool/Source/Grantを一致させて比較する。TEI Product Skillの静的CIやmainの存在は、そのTAI Harness上でのSkill実ロード・追加価値の証拠ではない。SK-02がすでに保持する既存Checkerと評価票を再利用し、VA-02側へ第二Skill評価Runnerを追加しない。
 
 **現状**：本節は既存Issue/PRのSource-static照合に基づく反証手順。V02-AI-01／V02-BUILD-01の本活動による実走、独立Expected、TAI H2/H3の実Harness、TEI実Web/DB、Owner意味受理は**NOT RUN**。Product側局所CIの事実は実験Ownerとexact HEADごとに再確認する。
+
+## 9. 11月5日以降のRead/Write二経路：同じ価値と実行資格を混ぜない
+
+[TEI Critical Path #1119](https://github.com/hat47x/tei-platform/issues/1119)と[TAI #422のVA-TEI受渡し](https://github.com/hat47x/tai-pleroma/issues/422#issuecomment-6655780152)に従い、VA-T2を**VA-T2-R（参照）／VA-T2-W（更新）**へ分ける。どちらもB0通常手段とB1 TEIを同じUser Job／Source／独立Expectedで比較し、B2汎用化を標準条件に含めない。
+
+| 比較票 | 最小固定条件 | 必須正例・負例／結果の記録 | 現在地 |
+| --- | --- | --- | --- |
+| **VA-T2-R** | 同じ公開Source、実CLI版・実読込Source closure、Read-only Tool/Skillの有無、Warning/Unknown、独立Expected | 対象Source存在と正常Read／宣言したが読んでいないSource・空Workspace・部分対象・同名Source移動。正答、unknown保持、必要な操作数・再検証時間を個別記録 | TEI #1180の保存6-Step/限定CLIと#2822〜24の負例を再利用。今回のB0/B1実試行はNOT RUN |
+| **VA-T2-W** | 一件のFunction・Purpose・Target/Key、Provider、OperationID、Caller/Grant、PG Schema/Period、実Commit/Receipt/独立Reader | 正常一回適用／認可拒否／Commit応答喪失unknown／同Key replay／別Key ABA再適用／Rollback後の先行副作用。実Effect・Business Result・Reader取得・二重適用の有無を別列 | TEI merged #2853は製品Invoker+実PGの限定成功、merged #2854はABAの反例。横断の同一Revision/Web/Host/Consumer受入はNOT RUN |
+
+**Source→Acceptanceの連鎖**：宣言→発見→実Parse/Read→実Build/Runtime消費→個別Oracle/Guard→現在Grant→実Effect→独立Reader→Consumer/Owner Meaningを、当該Claimに必要な段階だけRequiredにする。AのReadにはWrite Effect不要、BのWriteにはCallback ACK/RunPlan precheckだけでは不足。各試行ごとに`required／observed／unknown-or-undischarged／exact revision／environment／independent oracle／elapsed+review cost`を既存Issueコメントに記録するだけでよく、共通Receipt DBは作らない。
+
+**次の拡張候補（未採用）**：[TEI #2555](https://github.com/hat47x/tei-platform/issues/2555)の旧新並走／Migration段階、[#1251](https://github.com/hat47x/tei-platform/issues/1251)のPlugin Bundleの実選択依存、[#2831](https://github.com/hat47x/tei-platform/issues/2831)のG4セルフビルドは、各自のUser Jobを指定してから比較。業務Writeに全Migrationフレームワーク、Readに全Self-buildを前提化しない。
+
+**受入資格**：TEIの局所PG試験・別IssueのCLI CIを利用可能な既存Evidenceとして提示できるが、各々のexact HEAD/実行環境/対象/Scopeを維持し、異なるRunを単一TEI価値実験のPASSへ合成しない。VA-X別モデル反証とVA-E独立Oracle照合、実User Jobの費用比較、Owner正式受理は本比較ではNOT RUN。
