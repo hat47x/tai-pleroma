@@ -307,3 +307,46 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 **反証票（計画、未実行）**：HX-CM01＝unknown直後の新Key再送を拒否／CM02＝同一Operation照会でcommitted判明／CM03＝ReceiptありだがConsumer未読取／CM04＝ABA後の値一致と新Keyの二重適用／CM05＝Observer不在のafter-commit/compensation／CM06＝旧HarnessのPermit・Grantを新Harnessが流用／CM07＝EKIのACK・BodyとTEI DB Receiptを一つの成功に合算しない。各実現はTEI/EKI既存Owner・Toolの実提供可能範囲だけで検証し、架空CLIや再送APIを設計しない。
 
 **証拠と停止線**：実PostgreSQLの限定観測はTEI #2853/#2854、無人効果停止はTEI #2850の成果。TAIが実TEI Command／PostgreSQL／EKI／第二Harnessを今回操作したわけではない。本節は条件付き評価設計であり、HX-CM01〜07、現行Grant・OS/Network・本番Receipt保持/署名・Owner受理は**NOT RUN**。初回TEI read-only H2/H3四Sessionの必要条件へ書込み・DB・EKIを追加しない。
+
+
+---
+
+<!-- 20261106-runplan-guard-coverage-handoff -->
+## 14. 2026-11-06 横断深化：RunPlanの「検査した」から「必要な検査が揃った」への昇格を禁止する
+
+### 14.1 新しく確定した製品証拠と、TAI側の未成立部分
+
+- **実Product限定P0**：[TEI merged #2882](https://github.com/hat47x/tei-platform/pull/2882)（merge 2026-11-05 19:58 UTC）、[exact-HEAD Repository Health #42097287333](https://github.com/hat47x/tei-platform/actions/runs/42097287333) success。mainの `internal/execution/runplan_workspace_test.go` は実一時Workspaceの `period`／`effect-rule`／`capability` を `workspace.Load` で解析し、`DeriveOperationSurface`→`PeriodPreconditions`／`EffectPreconditions`→`CombinePreconditions`→`RunPlan` へ接続した。closedなら合成Step未実行でblocked、openなら合成Step resolved/completed、after-commitでObserver不在ならRule IDを示してblocked、という**3本のGoテスト**に対応する。
+- **P0の上限**：上述のPeriod Stateはテスト内map、StepFunc/Journalは合成。**必要なGuardが全部呼出元から渡されたかを照合する処理ではない**。`CombinePreconditions`にPeriodやEffectのチェック自体を渡さない経路、preflight後の権限/期間/対象の変化、Observer非nilでも実Effectが未観測、既に済んだStep AのEffect、再起動でRun Stageが消失した時の実Provider副作用は別資格。`RunLog Completed`は業務検証済みの証拠でない。
+- **実PGによる別の限定反例**：[merged TEI #2870](https://github.com/hat47x/tei-platform/pull/2870) はin-memory RuntimeStageのunknownが再起動後に失われ得ることを示し、実PostgreSQLの**同一キーのreplay**だけを限定確認。[merged #2854](https://github.com/hat47x/tei-platform/pull/2854)の値ABA＋別キーによる再適用の可能性は残る。#2882/#2870の別経路・別HEADのPASSを一つのRunPlan→PG実Effect試験へ合算しない。
+
+### 14.2 ハーネス／Activity間引継ぎに必要なGuard Closure
+
+「必要なGuard一覧」があることと、「チェック実装が渡された」「実際に当該Source/Period/Grant/Effectを確認した」「Commit/Consumerで有効だった」はそれぞれ異なる。TAIは**Product Ownerに照合を求めるべき情報**をHandoffへ残すが、新しいGuard Registry、汎用Permission Engine、RunPlan Runnerや第二Oracleを作らない。
+
+| 層 | 元のOwnerと確認物 | 後続が主張してはいけないこと |
+| --- | --- | --- |
+| Declared / Required | TEIの実Workspace・Accepted Source/Role/RunPlan・Period/Effect/Current Grant等の用途別Required Guards | `workspace.Load`成功→必要検査は自動的に網羅済み |
+| Supplied / Bound | 実呼出しで渡されたPrecondition実装と該当Source/Rule/Period/Principal/Target/版 | `CombinePreconditions`が呼ばれた→Period/Effect Guardが必ず含まれた |
+| Evaluated / Observed | 実検査したStatus・時刻・Scope・Observerの実Read／失敗・Unknown | Observerが非nil／Step Completed→副作用・Receiptが確認済み |
+| Commit / Consumer | Host/Providerの同OperationID/実Receipt/独立Readと、用途別Artifact/Reader受領 | RunLog完成／Artifact描画／Transfer ACK→業務完了 |
+
+最初の実装手順はTEI #1130が一つの公開Fixtureを使って**Required Guard Set と Supplied Guard Set の差**を外部独立Expectedで比較し、欠落があればそのRunの『必要な検査を全て実施した』Claimを`unknown/unqualified`へ留めること。Current Grantや期間を実Commit直前の同一Txに束縛するOwnerはTEI #1174であり、TAIがGuard不足を独自に補完して実行を許可しない。
+
+### 14.3 既存SC-09〜11へ接続する反例（SK-03条件付き、実Harness NOT RUN）
+
+| ケース | 操作と独立Expected | 配置先 |
+| --- | --- | --- |
+| **GH-01 必須Period未供給** | Workspaceにclosed PeriodがあるのにHarness B側でPeriodPreconditionsを組み立てずStepが進む。Supplied不足として**比較不適格/実行資格unknown**。元AのPASS継承を拒否 | TEI #1130／TAI #271 |
+| **GH-02 EffectGuard未供給** | after-commit RuleがあるのにEffectPreconditionsを省略。Observer無しで実行可能と称しない（#2882の正常拒否はGuardが正しく供給された場合） | TEI #1130/#1174 |
+| **GH-03 Observerは存在、Effect未読取** | Observerインターフェースの存在だけでCompleted/Receiptへ昇格しない。実対象/Rule/時点/Resultの観測証拠が必要 | TEI #1174、TAI #271 |
+| **GH-04 事前検査後の変化** | Aのopen/Grant有効をBが使い回し、その間にPeriod closed／Grant失効。Bは現在Target/Grant/PeriodをProductに確認できるまでAction再開を止める | TEI #1174/#2146 |
+| **GH-05 A成功後B停止** | RunPlan Step Aに実Effectがあり、Step Bがblocked。全体Stopped≠Effectゼロ。Step単位のReceipt/Unknownと未完了Outputを残す | TEI #1130、TAI #271 |
+| **GH-06 再起動とOperation ID** | in-memory Stageが失われ、別Harnessが新Keyで再送。DB同一Key replayの限定証拠はあっても別Key・ABAは安全でない。同じOperationのReceipt lookupを先に行う | TEI #2564/#1174、TAI #271 |
+| **GH-07 Result/Artifact/MFTの異時点** | Reportの0件、Reader失敗、Artifact宣言なし、ETL/MFT Transfer ACKを混同しない。Manifest世代・Import Unit・Business Receiptは各Ownerの実Consumer検証が必要 | TEI #2542/#2604、TAI #271 |
+
+### 14.4 実証優先順と棄却条件
+
+**P0：初回read-only Skill比較の後**に、TEI #1130の実Workspace FixtureでGH-01/02の『必要Guard欠落』だけを独立Expectedへ照合し、Product側のGuard宣言に対応する最小実行票が存在するか判断。**P1：書込みを使うTaskの時のみ**#1174/#2564の実PG/Receipt・ABA／先行Effectの独立Readへ。**P2：Report/ETLのConsumerを使う場合のみ**#2542 EF-01〜05／#2604の必要Artifact・実受領へ。新しいAgent Host/Transaction Coordinator/プロトコル互換エンジンを要求しない。
+
+**本節の実行資格**：TEI #2882の実Workspace→Go RunPlan局所テストと実CIは観測済。GH-01〜07の実Harness間Handoff、実Guard Coverage、RunPlan→実PG→Consumer同一Attempt、実ネットワーク断、OS保護、Business Owner受理は**NOT RUN**。SK-02 H2/H3四SessionにGuard/PG/MFTを必須導入せず、#168の初回優先を維持。
