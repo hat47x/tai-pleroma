@@ -783,3 +783,15 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **優先条件の更新**：P0は依然、固定Participant TaskによるTEIの**最初のH2実Harness Tool call**→H3実Skillロード→4独立SessionのITT/PP・独立Oracle比較。P1のSHOは「Readerを0から作る」ではなく、#16/#17の**正式Reader/Parser契約・未定義参照/BOM等の不足・Parser版差・Source失効**のOwner受入に必要な残差を検証する。P2のSHO Skill配布やTEI↔SHO引継ぎはProduct能力・実Audience/現在Grant・実Reader/Consumer受領が必要なTaskが存在したときだけ実施。Document WriterやProvider/外部Webを初回のTEI H2/H3試験へ足さない。
 
 この統合は文書上の**観測事実・次試験の優先順修正**であり、TAIがSHO Readerを実CLIで呼んだことや、SHO #17がmain統合・Owner正式受理されたことを意味しない。QSB-01〜05、実SHO Skill、実二Harness、実ネットワーク/公開、Source Identity／全引用の意味受理は引き続き**NOT RUN／NOT ACCEPTED**。新中央Host/Plugin Registry/Readerを導入しない。
+
+## 41. 2026-11-06：初回H2のSkill非露出とH3のProduct Skill版を同じ実TEIで固定する
+
+横断SK-02の次価値Gateは実AI Harnessの**最初のH2 Tool-only 1 Session**であり、合成CheckerやProduct CLI CIを積み増すことではない。ただし、初回のファイル露出とSkill Package pinに**実験条件の欠落**があった。固定TEI Checkout自体に`skills/yi-tei-modeling`が含まれているため、**H2へTEI repo丸ごと公開してSkill Loaderだけ無効化しても、Skillの原文を読む迂回経路が残る**。これをH2の非露出成立とは認めない。
+
+**同じProduct改訂からの2種類の証拠**：固定TEI commit `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`の実Go CLI／公開`reference/workspace`を共通に用いる一方、H3でだけ与えるProduct Skill root（Git blob `9cd8475bd6489c6661ae644bf771cfcce04188b1`）とreference（`ec2f90e85ed42659aca8b44a9be216987860b099`）の原文を固定。[既存TAI実S1 CI](../../.github/workflows/tai-tei-s1-real-public-cli.yml)に`git hash-object`による2ファイルの照合と、**H2にはBinary＋Workspaceのみ／H3には同じもの＋Skill candidate root/referenceだけ**を配置した一時ファイルビューによる実`model catalog`／`inspect`／`validate`の対照を追加。CIが成功した場合に言えるのは、同じ実CLIの限られたSourceをH2/H3両ビューで読めるという**準備段階の事実**まで。実HarnessのMount・Tool、ネットワーク遮断、Skill実Loader、Ownerの意味受理を証明しない。
+
+**固定Product Skillに残る真正の不一致を保持する**：同Product Skill rootは`model catalog`を`entries[].subject.kind/id`と記載するが、同TEI版のCLIは `result.entries[].subject.kind/id` を返す。TAI S1初回の同じ契約誤読失敗と実Go sourceから確認済み。詳細referenceには今回Task指定の`subject-id sales.order`そのものを使う例がある。またSkillは`go run ./cmd/tei`を例示するが、比較Tool Profileの実行対象は両腕の固定済みGo Binaryに限定する。これらをH3の実験途中で黙って修正・差し替えず、**Skill版由来の手順エラー／例示依存／逸脱として実観測**する。[TEI Product Owner #2605](https://github.com/hat47x/tei-platform/issues/2605)へCLI envelope記載の訂正を戻し、[文書修正Draft #2863](https://github.com/hat47x/tei-platform/pull/2863)を混ぜるなら別Skill treatment・別Trial Groupで再資格化する。
+
+**判断**：初回の問いは「公開Subjectを**提示した**場合に、既存のProduct Skillが同じToolで誤操作を減らすか」。Skill詳細に同Subjectの例示がある以上、未例示Subjectの自律発見一般・平均因果改善の主張はしない。実H2/H3では、同一Task SHA・元Source/Tool/Model/Grant・独立Oracleを固定し、H2にSkillやTAI試験票がTool/GitHub/検索経由で漏れないこと、H3の実root/reference byte Loadを別ログで観測する。**R（割付）／D（実提供）・ITT／PP**は既存Runbook §21、[新§22](first-real-skill-qualification-runbook-2026-11-02.md)に接続し、実Loaderが無ければ成功試行のふりをしない。新Harness Host、専用Sandbox、第二Skill配布Registry／再実装CLIを作らない。
+
+**他Productとの接続**：SHO [Draft #17](https://github.com/hat47x/sho-composer/pull/17)の限定Readerの実Node/両OS証拠は§40へ既に反映済み。TEI [Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)の同Source時間差・Role繰返し情報落ちと[Script起動Draft #2884](https://github.com/hat47x/tei-platform/pull/2884)の再起動後Unknown/Operation IDは、将来その機能がTaskに必要な場合のみ既存Owner受入Gateへ戻す。これらをTEI初回read-only Harnessの必須実装としない。
