@@ -61,6 +61,13 @@ jobs:
             exit 1
           fi
           node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="insufficient-evidence"||!x.unknown.includes("participant-task-raw-not-bound"))process.exit(1)' "$RUNNER_TEMP/sk02-unpinned.out"
+          printf 'A different trial task not approved for this SK-02 group\n' > "$RUNNER_TEMP/sk02-unregistered-task.txt"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-wrong-prompt-mock.json" --task-file "$RUNNER_TEMP/sk02-unregistered-task.txt" > "$RUNNER_TEMP/sk02-unregistered.out"; then
+            echo "An arbitrary alternate Task file was incorrectly accepted as preregistered"
+            exit 1
+          fi
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="ineligible"||!x.invalid.includes("participant-task-not-preregistered"))process.exit(1)' "$RUNNER_TEMP/sk02-unregistered.out"
+
 
       - name: Check JavaScript syntax
         run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
