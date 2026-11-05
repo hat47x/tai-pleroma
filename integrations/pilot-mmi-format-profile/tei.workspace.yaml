@@ -1,3 +1,4 @@
 workspace: mmi_format_profile_projection_pilot
+formatVersion: 1
 sources:
   - semantic

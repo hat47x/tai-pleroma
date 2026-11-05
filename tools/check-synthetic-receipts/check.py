@@ -152,7 +152,12 @@ REAL_RECORDS = (
     "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
     "evaluations/records/MMI-TEI-profile-2026-11-03.json",
     "evaluations/records/MMI-inspect-2026-11-03.json",
+    "evaluations/records/MMI-inventory-2026-11-03.json",
     "evaluations/records/SUI-TEI-audit-2026-11-03.json",
+    "evaluations/records/SUI-TEI-admin-2026-11-03.json",
+    "evaluations/records/SUI-TEI-provision-2026-11-03.json",
+    "evaluations/records/SUI-TEI-reference-2026-11-03.json",
+    "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
     "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
     "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json",
     "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
@@ -166,6 +171,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-record-2026-11-03.json",
     "evaluations/records/SEI-TEI-cli-2026-11-03.json",
     "evaluations/records/SEI-TEI-gate-2026-11-03.json",
+    "evaluations/records/SEI-TEI-gate-variants-2026-11-03.json",
     "evaluations/records/SEI-TEI-mcp-2026-11-03.json",
     "evaluations/records/SEI-TEI-mcp-check-2026-11-03.json",
     "evaluations/records/EKI-TEI-submit-2026-11-03.json",
@@ -485,7 +491,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
                 errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
-        if "SEI-TEI-gate" in relative:
+        if "SEI-TEI-gate-variants" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"SEI gate variant checks did not all pass: {relative}")
+        if "SEI-TEI-gate" in relative and "gate-variants" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allowVerdict") != "allow" or observed.get("denyVerdict") != "deny":
                 errors.append(f"SEI gate allow/deny pair did not hold: {relative}")
@@ -537,10 +547,30 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
+        if "SUI-TEI-reference-multi" in relative:
+            checks = data.get("observed", {})
+            if data.get("result") != "PASS" or checks.get("firstStatus") != 200 or checks.get("secondStatus") != 200 or checks.get("firstNotSei") is not True:
+                errors.append(f"SUI did not isolate two TEI artifacts: {relative}")
+        if "SUI-TEI-reference" in relative and "-multi" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("projectionStatus") != 200 or observed.get("artifactEchoed") is not True:
+                errors.append(f"SUI did not serve the bound TEI artifact: {relative}")
+        if "SUI-TEI-provision" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
+                errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-admin" in relative and "admin-path" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
+                errors.append(f"SUI admin plane check did not hold: {relative}")
         if "SUI-TEI-audit" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("eventCount", 0) < 1 or observed.get("viewStatus") != 200:
                 errors.append(f"SUI audit export did not deliver an event: {relative}")
+        if "MMI-inventory" in relative:
+            checks = data.get("observed", {}).get("checks", {})
+            if data.get("result") != "PASS" or not checks or not all(checks.values()):
+                errors.append(f"MMI inventory checks did not all pass: {relative}")
         if "MMI-inspect" in relative:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):

@@ -454,3 +454,72 @@ create 200 / view 200 / eventCount 1 / docId一致 / Bearerヘッダ一致
 - 監査イベントは文書の閲覧（view）で発行される
 - `SUI_AUDIT_ALLOW_IN_SAFE_MODE=true`が無いとsafe modeのイベントは送られない
 - シンクはローカルの受信用プロセス
+
+## 管理プレーンの認証分離（2026-11-03）
+
+`GET /admin/provision/audit`で、管理キーと業務キーの分離を確認した。[receipt](../evaluations/records/SUI-TEI-admin-2026-11-03.json)
+
+```text
+anonymous 401 / business key 401 / admin key 200（events配列）
+```
+
+- 管理者キーは`X-Admin-Api-Key`ヘッダ
+- 業務キー`X-Api-Key`では管理APIに到達できない
+- 利用者provisionとIdP段階（stage B）は未確認
+
+## 利用者provision（2026-11-03）
+
+管理APIで合成利用者を1件provisionした。[receipt](../evaluations/records/SUI-TEI-provision-2026-11-03.json)
+
+```text
+POST 201 / provisioned true / reviewerRef・ownerRefはuser: / 同一リクエストで同一userId / 匿名401 / 監査3件
+```
+
+- 再実行しても同じ利用者に解決される（冪等）
+- 管理操作は監査に残る
+- IdP接続は未実施
+
+## SUIがTEIアーティファクトを配信する（2026-11-03）
+
+SUIの`SUI_TEI_REFERENCE_DIR`に、`epistemic-bindings.json`と`tenants/<tenant>/<doc>/<kind>.json`を置き、`GET /docs/{id}/epistemic/projection`で読んだ。[receipt](../evaluations/records/SUI-TEI-reference-2026-11-03.json)
+
+```text
+create 200 / projection 200 / artifactEchoed true / 未結合 doc 404（epistemic_binding_not_found）
+```
+
+- バインドは（tenant, doc, artifact種別）単位
+- SUIはartifactをそのまま返し、スキーマ検証はconsumer側の責務
+- 種別は`documentv1-projection`などを許可リストで制限
+
+## 複数artifactの文書別配信（2026-11-03）
+
+2つの文書に別種別のTEI artifactを結合し、それぞれ自分のartifactだけが返ることを確認した。[receipt](../evaluations/records/SUI-TEI-reference-multi-2026-11-03.json)
+
+```text
+doc-1 → documentv1-projection（SUI文書）
+doc-2 → epistemic-context（SEI判断record）
+未結合doc → 404
+```
+
+- 文書ごとにartifactが混ざらない
+- SEIの判断recordも、TEI artifactとしてSUIから配信できる
+
+## gateのポリシー変種（2026-11-03）
+
+SEIのgateで`--deny-unresolved`と`--require-recommendation`を確認した。[receipt](../evaluations/records/SEI-TEI-gate-variants-2026-11-03.json)
+
+- 未解決の問いを残す判断: 既定では`allow`、`--deny-unresolved`で`deny`
+- recommendationを欠く判断: 既定では`allow`、`--require-recommendation`で`deny`
+- 理由文にunresolved/recommendationが現れる
+
+## MMIのsource inventory（2026-11-03）
+
+MMIの`inventory`でディレクトリを読み取り専用で棚卸しした。[receipt](../evaluations/records/MMI-inventory-2026-11-03.json)
+
+```text
+contract mmi.source-inventory/v0 / status complete / entries 16
+各entryにidentity.digest（sha256）とbyteLength
+```
+
+- 文書内容は返さず、識別子とダイジェストだけを返す
+- 一貫性の表明は`per-file-observation`
