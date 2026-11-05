@@ -69,7 +69,7 @@ flowchart TB
 - [Issue #67](https://github.com/hat47x/tai-pleroma/issues/67): SUI/EKIの接続面に関する調査材料。Ownerの確認なしに、接続契約の正式採用へ昇格させない。
 - [Issue #28](https://github.com/hat47x/tai-pleroma/issues/28)・[Issue #33](https://github.com/hat47x/tai-pleroma/issues/33): 観測と成果物のbyte対応、旧判断の再受理に関する負例。一般的な横断カタログ検査へ安易に置き換えない。
 - [TEI #1124](https://github.com/hat47x/tei-platform/issues/1124): TEIの編集・投影・Source Acceptanceの実証責務。本書はその実装をTAIに移さない。
-- [TEI Draft PR #2226](https://github.com/hat47x/tei-platform/pull/2226): TEI独自Host非必須の方針案。**Draft・未merge**を採用済み実装と扱わず、他者Draftを変更しない。
+- [TEI Draft PR #2226](https://github.com/hat47x/tei-platform/pull/2226): TEI独自Host非必須の方針案。**Draft・未merge**を採用済み実装と扱わず、他者Draftを変更しない（現在：Draft のまま2026-11-02 merged。TEI側で方針として受理されたかは未確認）。
 
 ## 5. 採用判断に必要な次の成果
 

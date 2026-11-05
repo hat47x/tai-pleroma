@@ -35,7 +35,7 @@ H1〜H3を第一期の対象とする。H4・H5は追跡項目として定義す
 | H1/H5: A→B→Aの判断有効性 | [TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)、SEIのDecision/Reference契約 | 時点別の誤復活を実験項目として記録。受理状態機械の採否はOwnerへ戻す |
 | H2: 意味を保つ継続変更 | [TEI #2018](https://github.com/hat47x/tei-platform/issues/2018) と[既存Benchmark手順](https://github.com/hat47x/tei-platform/blob/main/plan/design/PRODUCTIVITY_BENCHMARK_PROTOCOL_2026-10.md) | 測定条件・結果の比較可能性のみ対応付け。TEIの生成器や契約を再実装しない |
 | H3: 委任・結果確認 | [EKIのMVP計画](https://github.com/hat47x/eki-fabric/blob/main/architecture/MVP_IMPLEMENTATION_PLAN.md)、TAIのN-05 | 委任の要否とOutcomeをTask状態と区別し、横断的な失敗例を評価 |
-| H4: 共同認知と三規模比較 | SUIのカード・仮説・保留、[TAI #127](https://github.com/hat47x/tai-pleroma/issues/127)、[P-06 Draft PR #128](https://github.com/hat47x/tai-pleroma/pull/128) | 共通の測定観点を研究に取り込む。P-06の三規模プロトコルは二重に作らない |
+| H4: 共同認知と三規模比較 | SUIのカード・仮説・保留、[TAI #127](https://github.com/hat47x/tai-pleroma/issues/127)、[P-06 Draft PR #128](https://github.com/hat47x/tai-pleroma/pull/128)（2026-11-02 merged） | 共通の測定観点を研究に取り込む。P-06の三規模プロトコルは二重に作らない |
 | 参考・追跡 | [TAI #67](https://github.com/hat47x/tai-pleroma/issues/67)など各製品の接続計画 | 接続可能性と実行証拠を混同せず、追加契約が必要ならOwner判断へ渡す |
 
 各基盤に個別の正本と受入条件を残す。TAIの研究文書は外部製品の仕様を変更しない。研究結果から製品Issueへの提案は、既存Issueの本文・コメント・Draft PRとの重複を確認してから行う。
@@ -80,7 +80,7 @@ W1–2のプロトコルが確定するまでは研究実験を「実施済み�
 
 TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠点の設備更新](https://github.com/hat47x/tai-pleroma/blob/c388e47c708c6f35b6c6f8f42a546a1b31710f3d/scenarios/SCN-002-synthetic-maintenance/README.md)の合成実験系も存在する。SCN-001で調整した検査が他ドメインへ適用できるかを調べる**候補**とするが、同等のGoldケースは未固定であり、外部妥当性を実証したとは扱わない。
 
-[TAI Draft PR #142](https://github.com/hat47x/tai-pleroma/pull/142)はMMI選択→SCN評価→D-04根拠本文の同一run内の結び付けを強化する提案であり、既存のSUI `-sui-receipt` による現在観測照合とは異なる境界である。PR #142の検査を未統合のまま現行mainの保証として数えたり、H1の独立した実験結果として数えたりしない。
+[TAI Draft PR #142](https://github.com/hat47x/tai-pleroma/pull/142)（2026-10-31 merged）はMMI選択→SCN評価→D-04根拠本文の同一run内の結び付けを強化する提案であり、既存のSUI `-sui-receipt` による現在観測照合とは異なる境界である。PR #142の検査を未統合のまま現行mainの保証として数えたり、H1の独立した実験結果として数えたりしない。
 
 研究実験の固定版は、対象コードの現在mainではなく、各runのSHAと入力blob・記録digestで定める。研究計画の追補でプロダクトのOwner・実験結果・採用状態が自動的に変わることはない。
 
@@ -90,6 +90,6 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 - [TAI PR #142](https://github.com/hat47x/tai-pleroma/pull/142) は2026-10-31に統合済み。MMI選択・SCN評価・D-04の本文の同一run内照合は、統合前の別実装候補でなくmain側の限定された製品機構となった。ただしSource真正性・Owner意味受理・公開権限は未検証。
 - EKIの[合成Result Acceptance記録](https://github.com/hat47x/tai-pleroma/blob/95253b11c18c0c335442194edec15e9ba7985646/evaluations/records/EKI-acceptance-2026-10-31.json)は固定コマンドと合成VerifierによるAcceptedResultまでの証拠であり、本番sandbox・実業務Outcomeではない。旧記述の`queued`だけを現行全体の実装上限と読まない。
 - CSWの[現行README](https://github.com/hat47x/cultural-substrate-weaving/blob/70d8db5eab9cef76e340e196e0cb8c09f85f7086/README.md)は創作・執筆のための3つのスキルを中心に簡素化されている。文化的体系や生成・批評・媒介をTAIで研究する場合も、CSW本体をTAIの必須製品・固定マルチエージェントとして扱わない。
-- [TAI Draft #177](https://github.com/hat47x/tai-pleroma/pull/177) はHarness間の認知・権限・結果境界のConsumer側評価、[Draft #231](https://github.com/hat47x/tai-pleroma/pull/231) は価値・要望・要件の往復と利用者価値の研究。研究PR #129は仮説、反証条件、実験計画と解釈上の限界を担い、他Draftの正本を移さない。
+- [TAI Draft #177](https://github.com/hat47x/tai-pleroma/pull/177)（2026-11-02 merged）はHarness間の認知・権限・結果境界のConsumer側評価、[Draft #231](https://github.com/hat47x/tai-pleroma/pull/231)（2026-11-02 merged）は価値・要望・要件の往復と利用者価値の研究。研究PR #129は仮説、反証条件、実験計画と解釈上の限界を担い、他Draftの正本を移さない。
 
 この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。

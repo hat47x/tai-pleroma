@@ -2,7 +2,7 @@
 
 状態：**Draft / 非規範 / 提案、実際のハーネス間統合は未受入**  
 基準TAI main：`74981e9b02e8c74f4950e2dbc57ac4a8058f72b8`（2026-10-31、作業ブランチの基点）。  
-追跡：[Harness-first #168](https://github.com/hat47x/tai-pleroma/issues/168)、[P-06 #127](https://github.com/hat47x/tai-pleroma/issues/127)、[外部ハーネス計画 Draft #169](https://github.com/hat47x/tai-pleroma/pull/169)、[研究計画 Draft #129](https://github.com/hat47x/tai-pleroma/pull/129)。
+追跡：[Harness-first #168](https://github.com/hat47x/tai-pleroma/issues/168)、[P-06 #127](https://github.com/hat47x/tai-pleroma/issues/127)、[外部ハーネス計画 Draft #169](https://github.com/hat47x/tai-pleroma/pull/169)、[研究計画 Draft #129](https://github.com/hat47x/tai-pleroma/pull/129)（いずれも2026-11-02 merged）。
 
 ## 1. 必要な設計判断
 

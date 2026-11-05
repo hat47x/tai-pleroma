@@ -70,7 +70,7 @@ V1の現在のデータ根拠は、[公開棚卸し](product-inventory-candidate
 - Productの**改名**は必ずしもProduct同一性を変えない。
 - Productの**分割・統合**は、Product同一性とContract移行をそれぞれ検討する。
 - Contractの**版変更**は、既存Consumerが自動互換という意味ではない。
-- SourceやDecisionが元のbyte列に戻る**A→B→A**でも、旧意味受理・公開権限の自動復活にはならない（[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)と[Draft #71](https://github.com/hat47x/tai-pleroma/pull/71)）。
+- SourceやDecisionが元のbyte列に戻る**A→B→A**でも、旧意味受理・公開権限の自動復活にはならない（[TAI #33](https://github.com/hat47x/tai-pleroma/issues/33)と[Draft #71](https://github.com/hat47x/tai-pleroma/pull/71)、2026-10-31 merged）。
 
 Snapshot案: `taiCatalogCommit + productSourceRevisions[] + evidenceRefs[] + viewpoint/filter + asOfTime`。採用前に最少の再現要件を確認する。外部URIの現行内容を読み直して旧図の再現に使ったとは言わない。
 
@@ -92,5 +92,5 @@ flowchart LR
 - G1の読者による確認がない段階で、専用Product Registryや`tai.*`独自共通契約を確定しない。
 - Product/Method分類、SHO/MMI・TEI Studio・CSWの扱い、公開対象と情報の所有権はOwner判断とする。
 - 外部基盤のAPI/契約が改訂されても、TAIがその基盤の技術的Authorityを乗っ取らない。
-- [TEI Draft #2226](https://github.com/hat47x/tei-platform/pull/2226)のHost非必須、[TEI Draft #2298](https://github.com/hat47x/tei-platform/pull/2298)の`tei.*` namespace/opt-in compositionは、TAI側で公式実装とみなさない。
+- [TEI Draft #2226](https://github.com/hat47x/tei-platform/pull/2226)のHost非必須、[TEI Draft #2298](https://github.com/hat47x/tei-platform/pull/2298)の`tei.*` namespace/opt-in compositionは、TAI側で公式実装とみなさない（現在：#2226 は2026-11-02、#2298 は2026-11-03 merged。TEI側で方針として受理されたかは未確認）。
 - 各ビューの受入は、[横断要求](product-landscape-requirements.md)と[未実行の負例](product-landscape-acceptance.md)に紐付ける。

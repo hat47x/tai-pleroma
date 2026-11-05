@@ -3,7 +3,7 @@
 状態: **Proposed / Ownerレビュー待ち / 実装・統合リリースNOT RUN**  
 基準: TAI main `88a6fad6d088f98ccab6080b3b7be24b62399113`（2026-10-27確認）。  
 意思決定の追跡: [Issue #74](https://github.com/hat47x/tai-pleroma/issues/74)。  
-既存の横断分類: [Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72)／[Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)。
+既存の横断分類: [Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72)（2026-11-02 merged）／[Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)。
 
 ## 1. 定義：ブランド、製品、リポジトリ、配布物は異なる
 
