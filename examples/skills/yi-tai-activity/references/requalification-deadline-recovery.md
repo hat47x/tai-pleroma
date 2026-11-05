@@ -39,3 +39,12 @@
 [EKI #698](https://github.com/hat47x/eki-fabric/issues/698)のsource-static監査では、提案ADR-0029のSuitability **4値**（FABRIC_ELIGIBLE等）と現行実装側の**3値**（FABRIC_JUSTIFIED／FABRIC_NOT_JUSTIFIED／NEEDS_MEASUREMENT）が不一致で、Owner未決。SkillはADR案の値を現API戻り値・Tool引数として創作しない。NOT_SUPPORTED相当の拒否もSuitability応答とは限らず、Admission/Policyの実戻り値を区別する。
 
 **明示的な委任が必要な場合のみ**、使えるProvider/Transport/データ様式、実Deadline・Quality・回復条件、現在のGrant、結果Body/Receiptを確認する。低遅延イベントやマルチモーダル表現は用途別の能力選択候補であって、単純なread-only TEI調査の必須EKI経路や全Workerの要件ではない。Source-staticの監査は本番API互換性や実低遅延性能の証拠ではない。
+
+
+## 実DB更新の結果が不明なまま活動を再開するとき（条件付き・2026-11-05）
+
+**書込みを実際に委任した場合だけ**：TEI [merged #2853](https://github.com/hat47x/tei-platform/pull/2853)の実PostgreSQL限定E2Eでは、応答喪失時に同一Operation IDを照会して結果を判定できる例がある。TAI Activityを再開する際、古いHarnessの「未回答」を**未Commitと同義にせず**、既存Productが提供するOperation/Receipt照会と現在のGrant/Target/Source版を確認する。
+
+[merged TEI #2854](https://github.com/hat47x/tei-platform/pull/2854)の実DB ABA反例では、新idempotency keyで再送すると同じ値に見えても別の効果が成立する。**結果unknownから新しいkeyで自動再送しない**。同一key/Operationの結果照会と、業務上の再実行判断を区別する。after-commit／compensationで実Observerが必要なのに無い場合は[merged #2850](https://github.com/hat47x/tei-platform/pull/2850)の無人実行停止を尊重する。
+
+Receiptでcommittedが分かっても、必要な独立DB Read・EKI Body・SHO等Consumerの受領と、Ownerの意味受理は別。再照会Toolが現Harnessで使えない場合は`unknown / requires Product Owner`のまま保留し、非作用的な作業だけを続ける。[SK-03 §13](../../../../docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md)のHX-CM票は**未実行の評価案**。このTAI SkillにTEI DB操作APIや再送権限を追加しない。
