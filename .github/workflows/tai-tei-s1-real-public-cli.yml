@@ -43,6 +43,17 @@ jobs:
           git -C tai rev-parse HEAD
           go version
           node --version
+      - name: Preflight pinned H3 Product Skill bytes (not loaded into a Harness)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='skills/yi-tei-modeling/SKILL.md'
+          REFS='skills/yi-tei-modeling/references/read-only-model-investigation.md'
+          test "$(git -C tei rev-parse HEAD)" = '50ebf8014340fd1906f6b35cfa30173e0ee2fc6c'
+          test "$(git -C tei hash-object "$ROOT")" = '9cd8475bd6489c6661ae644bf771cfcce04188b1'
+          test "$(git -C tei hash-object "$REFS")" = 'ec2f90e85ed42659aca8b44a9be216987860b099'
+          sha256sum "tei/$ROOT" "tei/$REFS"
+          echo "Candidate H3 root and reference bytes belong to fixed Product commit; no external Skill Loader observed."
       - name: Build exact Product CLI once (no local workspace writes)
         working-directory: tei
         env:
