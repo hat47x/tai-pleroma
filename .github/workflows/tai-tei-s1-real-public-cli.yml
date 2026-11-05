@@ -63,6 +63,59 @@ jobs:
         run: |
           go build -trimpath -buildvcs=false -o "$RUNNER_TEMP/tei-s1" ./cmd/tei
           sha256sum "$RUNNER_TEMP/tei-s1"
+      - name: Exercise skill-free H2 and explicit H3 staged file views (not Harness)
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/sk02-staged"
+          for ARM in h2 h3; do
+            mkdir -p "$BASE/$ARM"
+            cp -a tei/reference/workspace "$BASE/$ARM/workspace"
+            cp "$RUNNER_TEMP/tei-s1" "$BASE/$ARM/tei"
+            test ! -e "$BASE/$ARM/go.mod"
+            test -z "$(find "$BASE/$ARM" -type l -print -quit)"
+            test "$(sha256sum "$BASE/$ARM/workspace/semantic/sales/order.tei" | cut -d ' ' -f1)" = 'f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33'
+            test "$(sha256sum "$BASE/$ARM/tei" | cut -d ' ' -f1)" = '6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f'
+          done
+          mkdir -p "$BASE/h3/skills/yi-tei-modeling/references"
+          cp tei/skills/yi-tei-modeling/SKILL.md "$BASE/h3/skills/yi-tei-modeling/SKILL.md"
+          cp tei/skills/yi-tei-modeling/references/read-only-model-investigation.md "$BASE/h3/skills/yi-tei-modeling/references/read-only-model-investigation.md"
+          test ! -e "$BASE/h2/skills"
+          test -z "$(find "$BASE/h2" -type f -name 'SKILL.md' -print -quit)"
+          cmp -s tei/skills/yi-tei-modeling/SKILL.md "$BASE/h3/skills/yi-tei-modeling/SKILL.md"
+          cmp -s tei/skills/yi-tei-modeling/references/read-only-model-investigation.md "$BASE/h3/skills/yi-tei-modeling/references/read-only-model-investigation.md"
+          chmod -R a-w "$BASE"
+          for ARM in h2 h3; do
+            "$BASE/$ARM/tei" model catalog -workspace "$BASE/$ARM/workspace" > "$RUNNER_TEMP/sk02-$ARM-catalog.json"
+            "$BASE/$ARM/tei" inspect -workspace "$BASE/$ARM/workspace" -subject-kind semantic-data -subject-id sales.order > "$RUNNER_TEMP/sk02-$ARM-inspect.json"
+            "$BASE/$ARM/tei" validate -workspace "$BASE/$ARM/workspace" -json > "$RUNNER_TEMP/sk02-$ARM-validate.json"
+          done
+          node -e '
+            const fs=require("fs"),assert=require("node:assert/strict");
+            const root=process.argv[1],ledger=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+            const good=ledger.indexedSourceBinding.productInspect;
+            for(const arm of ["h2","h3"]){
+              const load=kind=>JSON.parse(fs.readFileSync(root+"/sk02-"+arm+"-"+kind+".json","utf8"));
+              const cat=load("catalog"),ins=load("inspect"),val=load("validate");
+              assert.equal(cat.ok,true);
+              assert.equal(ins.ok,true);
+              assert.equal(cat.result.entries.filter(e=>e.subject?.kind==="semantic-data"&&e.subject.id==="sales.order").length,1);
+              assert.equal(ins.result.subject.kind,"semantic-data");
+              assert.equal(ins.result.subject.id,"sales.order");
+              assert.equal(ins.result.sourceStatus,"indexed");
+              assert.equal(ins.result.sources.artifacts.find(x=>x.path==="semantic/sales/order.tei")?.fingerprint,good.artifactFingerprint);
+              assert.equal(cat.result.worldFingerprint,good.worldFingerprint);
+              assert.equal(cat.result.sourceIndexFingerprint,good.sourceIndexFingerprint);
+              assert.equal(ins.result.worldFingerprint,good.worldFingerprint);
+              assert.equal(val.worldFingerprint,good.worldFingerprint);
+              assert.equal(val.sourceIndexFingerprint,good.sourceIndexFingerprint);
+              assert.equal(val.ok,true);
+              assert.equal(val.diagnostics.length,ledger.actualRead.diagnosticsCount);
+            }
+            console.log(JSON.stringify({status:"PASS",evidence:"actual fixed TEI CLI on ephemeral scoped filesystem views",
+              h2SkillPresent:false,h3CandidateFilesPresent:true,
+              claimLimit:"not an external Harness; no Skill loaded, no actual OS/network isolation proven"}));
+          ' "$RUNNER_TEMP" tai/evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json
       - name: Read named Product Source and perform negative control
         env:
           GOTOOLCHAIN: local
