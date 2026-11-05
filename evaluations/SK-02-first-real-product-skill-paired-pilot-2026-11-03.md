@@ -282,4 +282,6 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 
 実行ログには**割付/露出/Loaded/実Tool使用/実Subject Read/独立Oracle採点/不明・拒否/Cost**を別に残す。H3でSkill未ロードなら、PP適格ではない一方、ITTの運用上の結果としては失敗または未確認として記録する。PPだけを報告せず、割付Session総数・未ロード数・分析対象数を必ず併記。4試行の小さなパイロットは統計的効果推定ではない。最初は公開Subjectを明示したTaskを先行する。未例示Subjectを探索するTaskは、実Provider/Source能力が揃った場合だけ別Taskとして事前登録し、期待正答を後から選ばない。Task種別にR/Dを割り当てず、Runbook §21のR＝割付・D＝実提供と混同しない。
 
+**固定Task原文との照合（2026-11-06）**：SK-02 CheckerのCLI入力は、4腕の`prompt_digest`が互いに同じだけでは`eligible-to-score`にしない。事前固定の[参加者Task](fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)を**Reviewer側のファイルパス**として渡し、Checkerがその原byte SHA-256を計算して4件と照合する。実行例：`node evaluations/tools/check-sk02-pair-eligibility.cjs actual-four-trials.json --task-file evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt`。原文を渡さなければ`participant-task-raw-not-bound`で`insufficient-evidence`、全腕で同じ誤Promptを使っても`participant-task-digest-mismatch`で`ineligible`。[実CI #42110536408](https://github.com/hat47x/tai-pleroma/actions/runs/42110536408)は**合成TrialのCLIファイル入口**で正例と二負例を確認した。TaskがHarnessへ実配信・読取られた証拠、Oracleの独立性、SkillのLoad因果は別途観測し、`prompt_digest`自己申告だけで認定しない。
+
 **状態**：これは既存SK-02の**結果解釈規則**で、外部Harness、実H2/H3 Session、Task Oracle採点は**NOT RUN**。同条件CLIの実S1は別途観測済み。新しい実行器・中央Evidence台帳は作らない。
