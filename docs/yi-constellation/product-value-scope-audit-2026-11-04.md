@@ -311,3 +311,25 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 - [TEI #1180](https://github.com/hat47x/tei-platform/issues/1180)と[#2514](https://github.com/hat47x/tei-platform/issues/2514)のScenario SSOT／独立Oracleを再利用する。各評価票には、必要なSource/Scenario/Contract/Build/Runtime/Grant/Consumerのうち**Required／Observed／Undischarged**を示し、合成試験・実PG局所試験・同一Revision全経路試験のClaim ceilingを別記する。
 - [TEI #1163](https://github.com/hat47x/tei-platform/issues/1163)の一改訂証拠票、[#1174](https://github.com/hat47x/tei-platform/issues/1174)のEffect Fence、[#2555](https://github.com/hat47x/tei-platform/issues/2555)のMigration正本切替、[#1251](https://github.com/hat47x/tei-platform/issues/1251)のPlugin Buildは**各Ownerが実実装・受入**を担う。横断計画が新しいDB移行器・Tx Coordinator・Plugin Host・AI実行権限を所有しない。
 - 既存GitHubの局所PASSは正しく対象範囲に帰属させる。2026-11-06時点、TAIのこの比較（VA-T2-R/W、実GUI UX、異モデルVA-X、横断同一改訂E2E、Owner正式受理）は**NOT RUN**。mainとDraft PR #423の乖離は、別の統合時差分レビュー対象とし、この追補をmainの機能完了宣言に使わない。
+
+## 17. 11月5日夜の横断反証：候補・実選択・実消費・現在資格を分ける
+
+**統合する成熟成果**：Plugin、DB移行、SHO Parser、TEI Effect Recovery、TAI Skillに共通するのは「候補がある」「実際に選ばれた」「その版で消費された」「今もこの用途に使える」が異なること。標準化するのは**評価時に確認すべき問い**であり、製品を横断するSelector／Registry／Operation Ledgerを実装することではない。[TEI #1251](https://github.com/hat47x/tei-platform/issues/1251)、[#2555](https://github.com/hat47x/tei-platform/issues/2555)、[SHO #7](https://github.com/hat47x/sho-composer/issues/7)、[TEI #2870](https://github.com/hat47x/tei-platform/pull/2870)、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の各Ownerの既存受入票を再利用する。
+
+| 何を選ぶか | B1の最小経路と、変化したときの資格 | 複雑さを減らすが、絶対に削れない反例 |
+| --- | --- | --- |
+| **業務Command／実Provider** | まず一つのFunction/OperationIDと実PG CAS/Receipt/独立Readを固定。[#2853](https://github.com/hat47x/tei-platform/pull/2853)の局所実PG成功、[#2870](https://github.com/hat47x/tei-platform/pull/2870)の再起動でin-memory unknownが失われる観測、[#2854](https://github.com/hat47x/tei-platform/pull/2854)の別Key/ABA再適用を分ける | **同じKey**なら実PG側の冪等記録が再適用を止め得るが、再起動後のLifecycle自体が永続安全という意味ではない。新Keyでの自動Retry、ACK消失＝無作用、外側Rollback＝内側Commit取消はいずれも拒否/unknownとして扱う |
+| **旧新DBの読取・書込正本** | [#2555](https://github.com/hat47x/tei-platform/issues/2555)のMIG-H01〜07。Expand/Backfill/Validate/Cutover/Contractのうち、実User Jobに必要な段階だけ旧新Client/Authority/Read Cohort/履歴を照合。TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271) SC-13へHandoffを委譲 | Backfill件数・Rollback後差分0・同じ値/Schema名でも、**現在のread/write owner・CDC水位・参照時点・権限**は証明できない。Cutoverを越えてUnknown Commitを新Providerへ別Keyで盲再送しない |
+| **Plugin／Target Builder** | 最初はGo単一Binaryと凝集Bundleの選択的Build。[#1251](https://github.com/hat47x/tei-platform/issues/1251) PB-01/02/07（未選択の非干渉）とPB-10（選択したnested moduleの依存閉包）を**別のA/B**で実測 | 未使用PluginがCatalogにあるだけで実Binaryに混入する問題と、root Go Test成功なのにStudioの依存sum不足でBuild不能な問題は異なる。後者はmainで修正PR統合済みだが検出条件は維持。Pluginの小分割や動的Hostは未採用 |
+| **SHO Research Index Parser** | [SHO #7](https://github.com/hat47x/sho-composer/issues/7) G1bは明示固定Parser/Grammar/option/Source byteで最初のMarkdown L0索引を試す。Parser候補追加と実選択変更、実入力とIndex再利用を区別 | 選択Parserの欠落を無音で別Parserへ切替えない。古い索引や同じURLを、同一Occurrence/引用原文/Reader現在資格と扱わない。全文再解析をBaseline、Cacheは後測定。L0単独編集に外部論文取得や全Plugin探索を義務化しない |
+| **TAI外部HarnessとProduct Skill** | [#168](https://github.com/hat47x/tai-pleroma/issues/168)の実TEI CLI S1とSK-02 H2/H3四独立Sessionの対照を再利用。実Loaded Subject・Source span/byteと警告を同じScopeで観測 | Skillの存在、静的CI、Tool広告、人工60/60は、H3での実Skill load/Tool呼出し/独立Expected達成ではない。Skill不要という結論も認める。二Harness/実PG/SHO/EKIは最初のread-only対照の先行条件にしない |
+
+### 最小の変更注入と採点（新しい実行Engineではない）
+
+選択対象について、**N0＝対象外候補だけ変更**、**N1＝選択した実装／実消費byte変更**、**N2＝現在のGrant/Authority/Reader/受理版変更**、**N3＝途中停止・再起動／別Attempt／移行境界**の4種類を既存Fixtureへ適用する。N0が非干渉なら必要な局所Evidenceだけ再利用可能。N1では該当Artifact/結果、N2では現在資格、N3では同一OperationID/Receipt/実Readを別々に照合する。依存閉包・観測権限・必要な正本が不明ならunknownに留め、古いPASSの消去・無条件全面再実行・無検証再利用の三択に閉じない。
+
+**一行Claim**：User Job／Sourceと実消費版／選択根拠／実行Target・Attempt／独立Expected／Observed／未充足Required／失効要因／現在Authority／必要な再試験／追加費用。元のTAI #422・TEI #2514/#2600・各ProductのIssueコメントへの参照列とし、第二のClaim DB・新共通Schemaを定義しない。
+
+**記録上の訂正**：[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)のS7〜S11で機械的/推奨一意な文書修正Draftの一部は11月5日にmain統合され、台帳はClosed。59件すべてがOwner受理された意味ではなく、残るADR/分類/ライセンス等は各OwnerのS9最終状態を正とする。[SHO #7の三系列対応表](https://github.com/hat47x/sho-composer/issues/7#issuecomment-6652422013)はOwner受理済みであり、以前の「提案のみ」という説明を現在の状態としない。ただし未確認セルは受理によって自動確定しない。
+
+**実施段階**：まずTEI読取／同Harness H2/H3の最小比較、次にWrite RecoveryとPlugin選択の反例、必要時にCutoverやSHO実Reader/別Harnessへ拡張。上記の新たな横断実行・独立Oracle採点・異モデルVA-X・Owner意味受理は**NOT RUN**。既存Productでの限定実Go/実PGやCIの実績は当該Source/Environmentでのみ認める。
