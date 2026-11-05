@@ -678,3 +678,21 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **Blocking**はまずTEI Product Skillの同一Harness H2/H3・4独立Session、実Skill Load・許可されたCLI/Source・独立Task Oracle・総コストだけ。DB方言、2way SQL、Role自己解釈、実DB更新、SHO Reader、EKI低遅延/マルチモーダル、第二Harnessは**その能力を要する実TaskでのみConditional**。同じ形式のSourceや成功したテストがあっても、用途・Audience・期限・Scope・Provider資格が異なれば結果を移植しない。不要なSkillを使用しなかったことも成功条件にできる。
 
 状態：本節は**既存CIの小変更とProduct別Design/CI証拠の整理**。外部Harnessの4Session、DB別SQLの実行・性能、自己Roleの正式解釈、Owner意味受理、TAI製品間Consumer E2EはNOT RUN。#2862/#2860の後着CIはそのexact HEAD/実Jobごとに判定する。Product側正本をTAIへ複製しない。
+
+
+## 35. 2026-11-05：Required Evidenceの欠落を拒否し、Product固有拡張を初回Skill実証へ持ち込まない
+
+**成熟した実装差分**：[SK-03 §12](harness-interoperability-and-handoff-pilot-2026-11-03.md)に対応し、既存SK-02/03のGitHub Actionsを修正。SK-02のE01〜E60に続いて、SK-03のNC01〜NC19の**Required ID・件数・重複・期待する結果分類**を独立表と照合し、必要なケースが実行されていなくてもプロセス終了0／総数一致だけでPASSとなる抜け道を閉じた。[限定的な実CI #42011655021](https://github.com/hat47x/tai-pleroma/actions/runs/42011655021)ではSK-02 60/60、SK-03 19/19のケース一覧と分類が一致。今回の「PASS」は**Node実プロセス上の人工テスト**の完全性であり、実Product/Harness、Source Load、独立Oracleを保証しない。
+
+**背景**：[TEI merged #2835](https://github.com/hat47x/tei-platform/pull/2835)は実PostgreSQL TestのSKIPにもかかわらずGo exit0の反例を確認済み。[TEI Draft #2811](https://github.com/hat47x/tei-platform/pull/2811)が区別する Required／Discovered／Loaded／Executed／Qualified と、[TEI Draft #2830](https://github.com/hat47x/tei-platform/pull/2830)のScenario Execution Mode／Evidence Natureを、TAIでも**必要な実Taskの観測票の欄として**受け取る。すべてのCaseがPASSということと、実行が何を消費し、どの効力を持ち、現在どの用途で有効かは別。別製品のGo testをTAI Checkerで再実装したり、新横断Test Runner/Oracleを作ったりしない。
+
+**初回H2/H3の入場条件**：TEI Product Skillの実ロード有無、同一の実CLI Binary/Workspace/Source、4独立Sessionと実Tool invocation、現時点の必要な開示/Grant、独立Expected・Task正答/Warning/Unknownを照合する。再実行されなかった必須項目はSKIP／NOT RUN／Unknownとして保存し、実際に成功した件数へ含めない。CI適格性と実験Value／Token/時間/人手は別票。初回一つのread-onlyモデル調査に、全DB/多Provider/GUI/Web/EKI/SHOを義務化しない。
+
+**Product別の条件付き接続**：
+
+- [TEI DSL自己記述 Draft #2860](https://github.com/hat47x/tei-platform/pull/2860)は実Workspace/Source Index/Go Parserに紐づくtest-only境界を追加したが、Role文字列を解析できることはRequired Shape／意味受理／実Host権限ではない。必要なTaskにのみTEI OwnerのSource/Role/Operator版と実Loaded Witnessを要求。
+- [TEI DB別Query/2way SQL Draft #2862](https://github.com/hat47x/tei-platform/pull/2862)はDocs-only。特殊SQLを必要とする場合だけ実対象DB/Provider Bindingから候補を選び、SQL Asset版・適用Scope・失効・無音fallback禁止・動的条件の全件化・Provider実Effectを別検証。DB名やSQLファイル名が実接続先／実権限を自動確定したとは言わない。最初のSkill比較にDB別SQL仕様採用を要求しない。
+- [TEI merged #2850](https://github.com/hat47x/tei-platform/pull/2850)はafter-commit／compensation EffectObserverが必要なのに無い場合、無人Actionを**その手前で停止する**限定実装。Actionを本当に委任するときにだけ現在Grant・PreconditionのRequired Set・実Observer・Commit／不明結果・Consumer再読取をOwnerの実Receiptで確認する。read-only TaskにWrite Gateを追加しない。
+- [TEI Scenario Draft #2830](https://github.com/hat47x/tei-platform/pull/2830)の合成6 Step証拠をAIが追加したScenarioの独立Oracleや実Provider E2Eへ昇格させない。Scenarioを実使用する場合だけ必要CaseのDiscovered/Executed/PASS、ExecutionMode/EvidenceNature/Source版・独立Expectedを照合。
+
+**選択基準**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値適正化に従い、上記を一括導入するのでなく、利用者Taskに必要なProduct・検証能力だけを条件付きで追加。無関係なDomain固有の検査をTAI Skill rootへ移さず、Product Ownerの契約を保つ。今回の追加は既存Workflowと計画の差分であり、実H2/H3のSkill効果／実第二Harness／実DB／Provider／Owner意味受理は **NOT RUN**。
