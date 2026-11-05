@@ -9,8 +9,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ARTIFACT = ROOT / "evaluations/artifacts/eki-task-request-projection.json"
-RECEIPT = ROOT / "evaluations/records/EKI-TEI-projection-execution-2026-11-03.json"
+ARTIFACT = ROOT / "evaluations/artifacts/eki-task-request-policy-aligned.json"
+RECEIPT = ROOT / "evaluations/records/EKI-TEI-policy-execution-2026-11-03.json"
 
 TEST_TEMPLATE = """package process
 
