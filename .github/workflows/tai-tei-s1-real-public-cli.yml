@@ -1,0 +1,62 @@
+name: TAI S1 actual TEI public-source read (not Harness)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'evaluations/tools/probe-tei-s1-real-source.cjs'
+      - '.github/workflows/tai-tei-s1-real-public-cli.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-product-s1-only:
+    name: TEI pinned Go binary + named Source read (non-Harness)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tai
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: hat47x/tei-platform
+          ref: 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c
+          path: tei
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: tei/go.mod
+          cache: false
+      - name: Record source and actual build toolchain
+        run: |
+          git -C tei rev-parse HEAD
+          git -C tei status --porcelain
+          git -C tai rev-parse HEAD
+          go version
+          node --version
+      - name: Build exact Product CLI once (no local workspace writes)
+        working-directory: tei
+        env:
+          GOTOOLCHAIN: local
+          GOWORK: 'off'
+          GOFLAGS: -mod=readonly
+        run: |
+          go build -trimpath -buildvcs=false -o "$RUNNER_TEMP/tei-s1" ./cmd/tei
+          sha256sum "$RUNNER_TEMP/tei-s1"
+      - name: Read named Product Source and perform negative control
+        env:
+          GOTOOLCHAIN: local
+          GOWORK: 'off'
+        run: |
+          node --check tai/evaluations/tools/probe-tei-s1-real-source.cjs
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs "$RUNNER_TEMP/tei-s1" "$GITHUB_WORKSPACE/tei" | tee "$RUNNER_TEMP/tei-s1-receipt.json"
+      - name: Confirm evidence remains locally scoped and no unsupported certification
+        run: |
+          node -e 'const fs=require("fs"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.schema!=="tai.s1.real-tei-public-read/v0" || x.catalogMatches!==1 || x.negative.userSubjectLoaded!==false || !x.notEstablished.includes("H2/H3 four independent sessions")) process.exit(1)' "$RUNNER_TEMP/tei-s1-receipt.json"
