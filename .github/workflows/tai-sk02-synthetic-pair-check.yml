@@ -34,6 +34,34 @@ jobs:
         run: |
           set -euo pipefail
           printf '%s  %s\n' '38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf' 'evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt' | sha256sum --check
+      - name: Bind all four mock-session Prompt digests to the real pinned Task file
+        shell: bash
+        run: |
+          set -euo pipefail
+          TASK="evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt"
+          node -e '
+            const fs=require("fs"), crypto=require("crypto");
+            const checker=require("./evaluations/tools/check-sk02-pair-eligibility.cjs");
+            const digest="sha256:"+crypto.createHash("sha256").update(fs.readFileSync(process.argv[1])).digest("hex");
+            const mock=checker.syntheticSeed();
+            for(const r of mock.trials) r.prompt_digest=digest;
+            fs.writeFileSync(process.argv[2],JSON.stringify(mock));
+            for(const r of mock.trials) r.prompt_digest="sha256:"+"f".repeat(64);
+            fs.writeFileSync(process.argv[3],JSON.stringify(mock));
+          ' "$TASK" "$RUNNER_TEMP/sk02-bound-mock.json" "$RUNNER_TEMP/sk02-wrong-prompt-mock.json"
+          node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-bound-mock.json" --task-file "$TASK" > "$RUNNER_TEMP/sk02-bound.out"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="eligible-to-score")process.exit(1)' "$RUNNER_TEMP/sk02-bound.out"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-wrong-prompt-mock.json" --task-file "$TASK" > "$RUNNER_TEMP/sk02-wrong-prompt.out"; then
+            echo "Same wrong prompt in all arms incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="ineligible"||!x.invalid.includes("participant-task-digest-mismatch"))process.exit(1)' "$RUNNER_TEMP/sk02-wrong-prompt.out"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-bound-mock.json" > "$RUNNER_TEMP/sk02-unpinned.out"; then
+            echo "Trial comparison without independent Task bytes incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="insufficient-evidence"||!x.unknown.includes("participant-task-raw-not-bound"))process.exit(1)' "$RUNNER_TEMP/sk02-unpinned.out"
+
       - name: Check JavaScript syntax
         run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
       - name: Verify every required SK-02 synthetic case was reported (not just exit 0)
