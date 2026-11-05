@@ -552,3 +552,17 @@ claim/accepted result digest=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed
 - TAIの投影TaskRequestを被験体にした実行は未実施
 
 これまでの「実行系は成立しない」という記述は、TAI側の経路についてのみ当てはまる。製品の試験用経路では成立している。
+
+## 投影TaskRequestをEKIで実行する（2026-11-03）
+
+TAIの投影TaskRequest（平坦なrecord）から、Client APIの封筒（executor/inputs/parameters/resources/reliability/priority）を組み立てて投入した。[receipt](../evaluations/records/EKI-TEI-projection-execution-2026-11-03.json)
+
+```text
+投影値のまま: 422 RESOURCE_BUDGET_EXCEEDED（wall 300s・output 16MiB・network 128MiBが試験ポリシー超過）
+ポリシー上限へ丸め: task=tsk_a5916e55... 実行・claim取得
+```
+
+- 平坦なrecordはそのままでは投入できない（封筒へ組み立てる必要がある）
+- 投影値は試験ポリシーの予算（60s/1MiB/1MiB）を超えるため拒否される
+- 丸めた場合、EKIのTEST PROFILEで実行とResultClaimまで到達する
+- 本番のWorker Protocol互換や権限は未検証
