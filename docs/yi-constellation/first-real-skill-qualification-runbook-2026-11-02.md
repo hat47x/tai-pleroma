@@ -289,6 +289,8 @@ go build -mod=readonly -buildvcs=false -o /tmp/tei-sk02 ./cmd/tei
 
 従来の[TAI mainにあるreference-tei-model](https://github.com/hat47x/tai-pleroma/tree/main/tools/reference-tei-model)はSCN-001の限定型宣言を実TEIに対照していた。今回はSK-02に直接関係する公開reference/workspaceのユーザー定義semantic-data:sales.orderについて、TAI独立CI Jobから**固定版TEIの実Go CLIを実読取**した。TEI側CIの結果を引用しただけではない。
 
+**記録された実証値**：[限定JSON Evidence票](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)へCIジョブログで確認したSource/実Binary/4 CLI stdoutのSHAと負例を転記した。これは独立署名済みの生Receiptではなく、観測値と未立証Claimの読取り用要約である。
+
 **再現資産**：[TAI S1 Source Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)／[専用GitHub Actions](../../.github/workflows/tai-tei-s1-real-public-cli.yml)。TEIをfull SHAで別Checkoutし、go.modに対応するToolchainで一度ビルド。実Binaryをcommands、model catalog、inspect、validate -jsonの4呼出しに用いる。Git Checkout・Source/実Binary SHA256・実argv/cwd/exit/stdout digestを限定JSON Receiptに保存する。Sourceを直接読み固定のdata Order・attribute total type std.moneyと照合し、CLI Catalog/InspectからSubjectの実ロードを別確認する。テスト用の独立静的期待条件であって、業務意味の独立Oracleではない。
 
 | 証拠（固定CI checkout） | 実測した限定結果 |
