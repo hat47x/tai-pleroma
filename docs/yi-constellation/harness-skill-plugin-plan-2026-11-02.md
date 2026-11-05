@@ -680,7 +680,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 状態：本節は**既存CIの小変更とProduct別Design/CI証拠の整理**。外部Harnessの4Session、DB別SQLの実行・性能、自己Roleの正式解釈、Owner意味受理、TAI製品間Consumer E2EはNOT RUN。#2862/#2860の後着CIはそのexact HEAD/実Jobごとに判定する。Product側正本をTAIへ複製しない。
 
 
-## 35. 2026-11-05：Required Evidenceの欠落を拒否し、Product固有拡張を初回Skill実証へ持ち込まない
+## 36. 2026-11-05：Required Evidenceの欠落を拒否し、Product固有拡張を初回Skill実証へ持ち込まない
 
 **成熟した実装差分**：[SK-03 §12](harness-interoperability-and-handoff-pilot-2026-11-03.md)に対応し、既存SK-02/03のGitHub Actionsを修正。SK-02のE01〜E60に続いて、SK-03のNC01〜NC19の**Required ID・件数・重複・期待する結果分類**を独立表と照合し、必要なケースが実行されていなくてもプロセス終了0／総数一致だけでPASSとなる抜け道を閉じた。[限定的な実CI #42011655021](https://github.com/hat47x/tai-pleroma/actions/runs/42011655021)ではSK-02 60/60、SK-03 19/19のケース一覧と分類が一致。今回の「PASS」は**Node実プロセス上の人工テスト**の完全性であり、実Product/Harness、Source Load、独立Oracleを保証しない。
 
