@@ -1,6 +1,6 @@
 # YI Constellation：最初の実Product Skill資格確認 Runbook（2026-11-02）
 
-状態：**TAI本RunbookによるTEI CLI実行・外部Harness Skillロード・製品横断実験はNOT RUN／Owner未受理**。ただしTEI側の[merged PR #2626](https://github.com/hat47x/tei-platform/pull/2626)では、公開Referenceによる実Go CLIと二表示・Source移動のFocused CIが成功している。両者を混同しない。設計の参照資料であり、将来のCI必須Gateや新しい統合Runner/Registryではない。
+状態（**2026-11-06の最新観測**）：**TAIから固定した実TEI CLIを呼んだ公開Source W0/S1は限定達成**。[TAI実S1 #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)で、実Binary・Source Index・指定Subject・固定台帳の照合とJSON重複キー拒否を確認。ただし**外部AI HarnessによるTool実呼出し、Skill実ロード、H2/H3四独立Session、Owner意味受理はNOT RUN**。最新の実験準備・停止線は§17〜19。旧§1〜14の「TAIでCLI未実行」等は当時の記録であり、現在のW0状態を示さない。実OS/Host/Provider資格、正式ReleaseやProduct横断E2Eへ一般化しない。新Harness Runner/統合Registryを設けず既存検査を再利用する。
 
 ## 目的：合成fixture中心の議論から、実際のProductを使用した証拠へ
 
@@ -372,3 +372,54 @@ S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失
 実S1の履歴台帳と当回Receiptが「31項目で一致した」という主張は、そもそも**同じJSON memberが二回現れて値を後勝ちで上書きした入力**を受理しては成立しない。[SK-02試行JSONの重複member拒否](../../evaluations/tools/check-sk02-pair-eligibility.cjs)を、[TAI S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)の実CLI JSON読込および`--verify-ledger`の台帳／当回Receipt読込から再利用する。**新Parserや横断Schemaは追加しない**。構文不正・同一Object内のmember重複・Unicode escape後に等価なmemberを入力不適格として拒否し、別Object内の同じkeyは合法とする。
 
 合成負例S1-W09〜13と、実S1 CIで固定台帳／当回Receiptの実ファイルそれぞれへ重複keyを注入する故障試験を追加。検査失敗は`DUPLICATE_TRIAL_JSON_MEMBER`として非0終了し、Ledger照合の合格記録を出さない。テスト結果は当該変更後のActions実Jobで判定する。**正規JSONの同一値が署名済み・独立収集済み・出典の鮮度が保証されたこととは異なる**。履歴S1に署名や実Harnessロード資格を付与しない。次段の最初のH2セッションは§17で独立に実施する。
+
+
+---
+
+<!-- sk02-h2-first-real-session-operational-cut-20261106 -->
+## 19. 2026-11-06：W0成立後に実施する「最初のH2実Session」実行票
+
+本節は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**次のBlocking Exit**を、準備の議論ではなく**外部AI Harnessが実TEI Toolを起動した一つの実観測**へ収束するための最小運用手順。既存§12 Trial Card／§17 W0→H2/H3／§18 S1 ledgerを使用し、第二Script・独立Runtime・新共通Evidence Schemaを追加しない。実H2は**本節追加時点ではNOT RUN**。
+
+### 19.1 固定した公開実験入力（歴史的S1 Witnessと新しい実起動物を混同しない）
+
+| 要素 | 実験で固定する値と現在の資格 |
+| --- | --- |
+| TEI Product Source | `hat47x/tei-platform` exact commit `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`。新HEADへ切替えるなら新W0で再固定 |
+| Workspace／Subject | `reference/workspace`／`semantic-data:sales.order`。Sourceは `semantic/sales/order.tei`、SHA-256 `f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33` |
+| W0実CLI Witness | Go `go1.26.10`／`linux/amd64`、歴史的CI実Binary SHA-256 `6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f`。**H2で同じBinaryが実起動された証拠ではない** |
+| W0台帳 | [公開S1結果](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)、[台帳照合付き実CI #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)。台帳は試験者が保持し、HarnessのTask/Toolに事前投入しない |
+| H2 Tool-only | 外部Harnessの**実名称・版・Model・Session ID・実Tool Profile**をTrial Cardへ実記入。Skillをロードしない構成／参照ファイルの非露出を確認。候補名だけで対応済みとしない |
+| H3 Product Skill | H2のTask・Binary/Workspace・Tool権限を同一にし、TEI Product Skillの**固定実byte**のみ追加。現在の実験候補は[TEI Draft #2863 exact commit `97161e2b5535378edb5a8b6ea6b398454aa0c84c`](https://github.com/hat47x/tei-platform/pull/2863)の `skills/yi-tei-modeling/SKILL.md` と必要な `references/`。Draft/未mergeを正式配布物として扱わない |
+
+**実行環境の準備**：外部Harnessへは**固定済みの実行バイナリと公開Workspaceだけ**をTool側の作業空間として与える。W0台帳／独立Expected／前Session回答／採点表はAIから見えない試験者側に保管。H2のTool経由でSkill文書を検索・開ける状態なら、Skill非ロード対照としての適格性を再評価する。H3のSkill追加が隠れたTool/権限/モデル/Source変更を伴えば同一Pairにしない。
+
+実BinaryのハッシュとWorkspaceの実Source byteを**各Sessionの使用直前**に確認する。Linux CIのバイナリは別Host/別OSで同じSHAと推定できない。別OS/Go版/新ビルドでSHAが違えば、その試行専用の**新W0実測**を先に取り、H2とH3の両方がその同じ実行物を使うことを保証する。固定Rootをコピーした後のSource移動・差替えはTrialの失効事由とする。Toolが単純なshellを備えず認可済みMCP/CLI Adapterで呼ぶ場合も、当該実動作・実引数の観測を要求し、**新たなMCP Server開発を初回の前提にしない**。
+
+### 19.2 実験Task（H2/H3へ同じ文章を与え、答えを事前に渡さない）
+
+> 支給された公開TEIモデルの `semantic-data:sales.order` を、使用可能なread-only TEI CLI/Toolで調査してください。Catalog/Inspect/Validateの実結果に基づき、(1)利用者定義の対象kind/idを特定できるか、(2)そのSource Indexのファイル・指紋・definition参照を確認できるか、(3)Validationの `ok`／診断・Warningの有無を区別できるか、(4)その結果だけでは確認できない事項は何かを、使用したコマンドと出典を示して報告してください。Source編集・DB書込み・外部公開・権限追加は行わず、実行不能または未確認ならそう記してください。
+
+このTaskは具体的な期待結果やハッシュの正答をHarnessへ教えない。初回H2では**実Tool呼出しを観測することが先決**であり、`trace`/追加Operator/複数DBへの展開を要求しない。H3でも**Task本文は完全に同じ**とし、Skill Loaderのある/なしだけを主な介入変数にする。
+
+### 19.3 実Tool呼出しの最小Receiptと、最初の一Session出口
+
+**実H2-01で試験者が取得する項目**：①外部Harness/Model/設定版・独立Session ID、②Harnessから発行された実Tool Request/Invocationの順序と時刻、③Tool側が実起動したTEI executableのpath/byte digest＋cwd＋実argv＋exit＋stdout/stderr byte digest、④その時点のWorkspace/Source/Subject/World・SourceIndexの照合値、⑤Harnessが実受信したTool Responseと利用者向け回答の差、⑥実Task・Audience/Grant・許可されたDisclosure、⑦Token/時間/人手と失敗理由。**実値が無い項目は空欄のまま推定せずunknown**。独立ExpectedはTask提出後に試験者が採点する。
+
+CLIで必要となるread-only呼出し例（実際に使ったargvは**HarnessのToolログ**で観測する。これは試験者の参考値であり、Tool呼出しの代替証拠ではない）：
+
+```sh
+"$TEI_BIN" model catalog -workspace "$TEI_WORKSPACE"
+"$TEI_BIN" inspect -workspace "$TEI_WORKSPACE" -subject-kind semantic-data -subject-id sales.order
+"$TEI_BIN" validate -workspace "$TEI_WORKSPACE" -json
+```
+
+**H2-01のPASS**＝外部Harnessの実Session→実Tool request→Product CLI実起動→CLI responseを同一Taskで突合できたこと（CLI Outputの正答/警告保持は**別採点**）。LLM回答中の「Toolを使った」、TAI CIの直接呼出し、Trial JSON自己申告boolだけでは不足。実Toolログを取得できない場合は `insufficient-evidence`、Tool自体がない場合は`unsupported/unknown`としてそのHarnessのH3へ進まず、既存#168の実接続経路を確認する。新Runner/常駐Agentを追加しない。
+
+### 19.4 H2後のH3と四Session比較の条件
+
+H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH3の実Skill root消費と必要reference消費を、Harness/Adapterの実ログまたは参照byteの実Readと照合する。Skill Directoryに置いた/Skill名が宣言された/AIがSkillを引用しただけでは**Loaded**としない。H3でTool権限やRepository全体アクセスまで増えた場合は、Skillの効果と混ぜずPair不適格とする。
+
+最終順序 `H2→H3→H3→H2`、モデル/ハーネス/Profile・固定Source・Task・Tool Set・最大許容費用を同条件に保ち、**各Sessionは会話・結果・Skill状態を引き継がない**。結果判定は①比較適格性（既存SK-02 Checkerと実ログ照合）、②独立Expectedに対する正答・Warning/Unknown保持、③Skill差分の追加価値とToken/時間/人手を別票で扱う。H3が同等または悪化すればTool-onlyを維持。第二Harness・TAI Handoff・write/DB/RunPlan/MFTは**四Sessionの実在性と差分が判定可能になった後の条件付き工程**。
+
+**本節の実施状態**：W0固定公開Source・実CLI・台帳照合のCIだけが限定成功。**外部Harness H2-01の実Tool log、H3のSkill Loader/Reference実読込、H2/H3四Session、比較採点、OS/Network非漏えい・Owner意味受理はNOT RUN**。
