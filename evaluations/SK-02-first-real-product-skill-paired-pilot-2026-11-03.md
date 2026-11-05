@@ -239,3 +239,11 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **資格の上限**：これは既存Node自身の公開合成E01〜E60が列挙・実行結果として報告されたことを確認する**test-only Inventory Gate**。独立Observerや外部Harnessが実際にSkillをロードしたか／各ToolのSourceを読んだか／Business Taskが正しいかは評価していない。自分で生成した結果票の真実性を暗号学的に証明したり、各Caseの独立Expectedを第三者が承認したりするものでもない。CI結果の件数が正しくてもSK-SRC01〜06・H2/H3の実Task正答は**NOT RUN**。
 
 **実H2/H3への適用**：固定したタスクObligationを別に先行登録し、実行結果の「required／discovered／attempted／PASS／SKIP／unsupported／qualified」を混同しない。特にSkillありH3で実Skill loadが未観測なら比較適格から除き、CLIを呼んでも指定Subject/Sourceの実Readが無ければTask正答にしない。Tool-onlyで十分な場合はSkillの追加利益なしを正当な結果として認める。必要な根拠取得・独立Oracleが揃うまで、新しい共通Runner／テスト正本／Product必須Gateを増やさない。
+
+## 17. 2026-11-06：実TEI S1のSource証拠をH2/H3へ渡す（Loadは未実証）
+
+[実S1 Runbook §15](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)で、TAI固有の新[Go CLI実読取CI #42099390431](https://github.com/hat47x/tai-pleroma/actions/runs/42099390431)が実行され成功。TEI pin 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c、実バイナリsha256:6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f、公開Source semantic/sales/order.tei sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33。Catalogで実Subject semantic-data:sales.order 1件 indexed、Inspect成功、validate ok=trueだがdiagnostics3件。独立の空Workspace負例ではvalidate ok=trueでも指定Subject 0件。
+
+この成功をSK-02の必要条件（Source/CLI/Subjectを実固定したProduct-only baseline）へ引き渡す。ただし**Skill Loader、Harness呼出し、4独立Session、タスクOracle、同じ実バイナリをH2/H3で呼んだことは未実施**。本CIのPackage/Source名を見ただけの新Sessionと、新Binary/Sourceで測定したSessionを一つの比較Groupに混ぜない。
+
+**次の直接実験**：任意の利用可能な一HarnessでH2/H3の実Toolを同じ固定Binary/Workspaceから呼び、実セッションのTool argv、stdout/diagnostics、実Skill loaded byte、Current Audience/Grant、独立Task Oracle、回答/Token/人手をそれぞれ記録。実Harnessで同じパスが使えない場合はそのEnvironmentに適したSource locationを明示し、物理ReadとSource digestを再観測してからGroupを構成する。ScopeをCLIからWeb/DB/EKI/SHOへ拡大しない。
