@@ -255,3 +255,14 @@ SK-02は**まず同HarnessでのH2対H3**という因果比較に集中する。
 **H2/H3の比較適格性への反映**：あらかじめ固定したSourceのpath・byte digest・Subject kind/idと、実Product LoaderのIndex/Inspect証拠が一致しなければTask Read達成としない。H2とH3の両方が同じ空Workspaceや別Sourceを誤読してもSkillの品質比較で正答扱いしない。一方、実Source Pinの固定は**必要条件であって**AI Skillの実ロード/作用因果・独立Oracle・Business Meaning受理ではない。S1 ProbeをSK-02の4 Sessionや新Harness Runnerに見立てず、実Tool invocation/cwd/receipt・Audience/Grant・Skill loader bytes・正答と費用の観測は別票のまま維持する。
 
 **未実証**：実AI Harness 4 Session、H3 Product Skill load、同環境でのSource byte/Index保持、現時点のDisclosure/Host Grant、独立Task Oracle・改善率はNOT RUN。結果不明のwrite回復を初回read-onlyのBlockingとせず、TEI #1174/#2853/#2854とTAI #271のOwner境界へ残す。
+
+
+## 19. 2026-11-06：実H2/H3参加者Taskの固定とOracle隔離
+
+[初回Runbook §18](../docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)を本SK-02の次の実行手順として適用する。**実参加者の依頼文**を[UTF-8固定Task](fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)へ切り出し、H2→H3→H3→H2の4つの新Sessionで同じbyte列を使用する。固定prompt SHA-256 = `38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf`（末尾改行込み）。[既存SK-02 GitHub Actions](../.github/workflows/tai-sk02-synthetic-pair-check.yml)は該当Taskファイルの変更でも起動し、SHA-256を照合する。**CIのTask digest確認≠HarnessがそのPromptを実受信したこと**。
+
+**盲検を守る最小条件**：参加者側へ渡すのは固定Task、公開のTEI Product checkoutと当該腕で許可した実Tool/Skillだけ。TAI repositoryの評価票・台帳・他Session結果・事前採点表をParticipantが読めるCheckout、Tool出力、会話、添付へ入れない。H2はSkillを露出させず、H3は同一Skill packageの**実ロード**をログで確認。Reviewer-onlyの独立Expectedは公開TEI Sourceを元に別途事前固定し、属性名/型、定義Source、診断/Unknown保持、元ログ参照を採点する。公開Source自体をAgentが読むのはこのTaskの目的であり、答えを含む採点票を閲覧できることとは区別。
+
+**実行上の留意点**：S1固定Sourceの実Binary/Source SHAは開始条件だが、別OSや異Binaryでは同じDigestだと偽らず新Trial Groupを作る。比較Checkerの`eligible-to-score`を正答と混同せず、Sessionごとの実Tool argv/cwd/exit/Stdout/Subject・SourceIndex、Loader bytes、Grant/Egress観測の根拠、Token/費用・時間/人手を記録。モニターできないwrite/egress欄へ恣意的に`false`を入れず、証拠不足として扱う。Skill自体が無益な結果も評価として認める。
+
+**状態**：Task本文・SHA/CI Trigger・手順を固定しただけであり、実4 Session、実Skill Load、独立Task Oracleの採点、実Tool/OS/Provider Observationは**NOT RUN**。新Agent Loop/Controller、第二Test Engineは導入しない。
