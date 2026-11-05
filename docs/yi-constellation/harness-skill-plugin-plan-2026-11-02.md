@@ -704,3 +704,14 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 実験用の[Node S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)・[限定GitHub Actions](../../.github/workflows/tai-tei-s1-real-public-cli.yml)をDraft #270に追加。CLI応答がresult.entriesに包まれる点を初回失敗[#42099147476](https://github.com/hat47x/tai-pleroma/actions/runs/42099147476)で発見・修正し、最終Jobはexit propagationを含めてPASS。[Runbook §15](first-real-skill-qualification-runbook-2026-11-02.md)がSource/実Binaryハッシュと完全な実測範囲の記録、[SK-02 §17](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)が次のH2/H3への引き渡しを担当する。
 
 **最優先の未達Gateは変わらない**：外部Harness一つでH2 Tool-only/H3 TEI Product Skill実Loadedを同一公開Subject・固定Binary・独立Task OracleでH2→H3→H3→H2と比較する。新S1はTEI側既存CLIをTAIから直接実行した**Product-only実観測**であり、実AI/Skill Loader・第二Harness・実Grant/外部Egress・独立業務Oracle・Owner意味受理を証明しない。TEI既存#2605・TAI #168/#271/#422を継続Ownerとし、DB/Provider、Studio、EKI、SHOの高度機構や新Host/中央Registry/第二Readerを初回の必須Gateへ追加しない。
+
+
+## 37. 2026-11-05：実DB/未知Commitの成果を条件付きHandoffへ接続する
+
+他チャットのTEI Script起動・実DBテスト・Harness #8の証拠鎖を[SK-03 §13](harness-interoperability-and-handoff-pilot-2026-11-03.md)へ集約した。特にTEI [merged #2853](https://github.com/hat47x/tei-platform/pull/2853)による**製品Invoker→Lifecycle→実PostgreSQL CASの限定E2E**、[merged #2854](https://github.com/hat47x/tei-platform/pull/2854)の**A→B→A／新idempotency keyで再適用され得る反例**、[merged #2850](https://github.com/hat47x/tei-platform/pull/2850)の**観測不能なafter-commit／compensationを無人で開始しない停止条件**を、既存Productの実装事実として採用する。Receiptの本番永続化・署名・保持、OS/Network障害、業務受理をこれらの試験結果から推定しない。
+
+**判断**：Skillを通じた業務操作には、Source/Meaning/Current Grant、実Invocation、Operationの永続同一性、Tx outcome、Receipt、独立read、Consumer納品の段階を設ける。しかし**これらはTEI/EKI/Hostの実機能・観測を使う**のであり、TAI Skillが自動再送Policy・第二のOperation ledger・共通Provider/Hostを実装するのではない。結果不明時は、同じOperation IDを再照会できる証拠が無い限り、新Keyの再送を成功回復として扱わない。値一致のCASだけで二重作用を防止できるとも主張しない。
+
+**ロードマップの変更点**：P0のread-only TEI Product Skill H2/H3は**変更しない**。P1の第二Harness引継ぎは実read-only Source/Tool/Grantを対象に開始し、P2で必要な**実書込みTaskだけ**HX-CM01〜07を条件付き実証する。Script起動設計の失敗時境界・TEI #1129/#1174/#2564、EKI Result/Recovery Ownerとの重複Issueを増やさない。横断価値の測定は「何を実際に安全に完遂できたか／回復できたか」とToken/時間/人手を別々に扱う。
+
+**実証資格**：本節のGitHub変更はTAIの文書・試作Skill参照に限り、実DB・Command・Effect/OS・外部Harnessの新実行ではない。正式Runbook・Product契約の採用、実接続・Owner意味受理は**NOT RUN**。
