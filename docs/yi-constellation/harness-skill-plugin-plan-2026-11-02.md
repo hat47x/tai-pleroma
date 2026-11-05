@@ -763,8 +763,8 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 順序は従来どおり、固定TEI実CLIによるW0/S1→**外部Harnessで最初のH2実Tool呼出し**→H3のProduct Skill実ロード→H2/H3四Session／独立Oracleと費用比較→必要時のみSK-03の第二Harness。新Runner／万能Evidence Platform／中央Validatorは増やさず、書込み/未知Commitは既存条件付きHandoffへ残す。[実証Runbook §18.2](first-real-skill-qualification-runbook-2026-11-02.md)で具体的実装・停止条件を管理する。
 
 
-### 39.3 実Skill比較の評価母集団とOracleを分離する
+### 39.4 実Skill比較の評価母集団とOracleを分離する
 
 実H2/H3の価値評価では、Skillの配布・Load失敗を除外したPP（実利用に限った適格比較）だけを示すと実運用の価値を過大評価し得る。初回4独立Sessionについては[SK-02 §20](../../evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)の**ITT＝割付全数**と**PP＝実Skill/Source/Tool利用が観測された比較対象**を分け、試行数・Loaded/Not Loaded・Task Oracle・Tool回数・費用と未確認の割合を一緒に記録する。Checker`eligible-to-score`はPP候補の形式判定であってITT実績を消さず、Skillの因果改善率にもならない。
 
-まず既定の公開Subject R（明示されたTask）で最初の実H2一Sessionを観測し、H3実Loaderと4Session比較へ進む。事前に例示されていないSubjectを探すDは将来の**別Task/別Expected**とし、参加者Promptや参照ファイルに正答を漏らさない。[Runbook §20.1](first-real-skill-qualification-runbook-2026-11-02.md)へ連携。TEI実S1とSK-02メタデータ合成CIの合格は、この実験の利用価値・外部Harness機能をまだ証明しない。
+まず既定の公開Subject R（明示されたTask）で最初の実H2一Sessionを観測し、H3実Loaderと4Session比較へ進む。事前に例示されていないSubjectを探すDは将来の**別Task/別Expected**とし、参加者Promptや参照ファイルに正答を漏らさない。[Runbook §21.1](first-real-skill-qualification-runbook-2026-11-02.md)へ連携。TEI実S1とSK-02メタデータ合成CIの合格は、この実験の利用価値・外部Harness機能をまだ証明しない。
