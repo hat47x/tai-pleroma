@@ -59,7 +59,8 @@
     "This JSON transcribes selected values directly observed in the linked CI log; it is not a signed machine-export of the complete receipt.",
     "Reference S1 differs from earlier TAI main reference-tei-model SCN-001 scope.",
     "Do not treat product-only CLI execution as a real AI or Skill evaluation.",
-    "2026-11-06: a later S1 CI (#42101157330) additionally bound Inspect artifact path/byte fingerprint/definition reference to the independently read Source, and cross-checked Catalog/Inspect/Validate fingerprints."
+    "2026-11-06: a later S1 CI (#42101157330) additionally bound Inspect artifact path/byte fingerprint/definition reference to the independently read Source, and cross-checked Catalog/Inspect/Validate fingerprints.",
+    "Values fixed from real Product S1 CI logs. Later equivalent pinned CI must compare its generated receipt to this ledger; the prior entries alone do not attest against drift."
   ],
   "indexedSourceBinding": {
     "runId": 42101157330,
@@ -78,7 +79,9 @@
       "artifactPath": "semantic/sales/order.tei",
       "artifactFingerprint": "sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33",
       "definitionReferences": 1,
-      "sourceStatus": "indexed"
+      "sourceStatus": "indexed",
+      "worldFingerprint": "sha256:c92de09f9595b1f46bfc18e6f99260d8391113b6d2639357d372abf634a1d65a",
+      "sourceIndexFingerprint": "sha256:1827f4b46169710cbe26179498bf30ef775aecba858c3beff8e2e0d53ca23531"
     },
     "sameSnapshotClaims": [
       "Catalog/Inspect World Fingerprint equality",
