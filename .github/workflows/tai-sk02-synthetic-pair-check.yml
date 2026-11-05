@@ -30,8 +30,28 @@ jobs:
           git status --porcelain
       - name: Check JavaScript syntax
         run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
-      - name: Execute public synthetic E01-E60 only
-        run: node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test
+      - name: Verify every required SK-02 synthetic case was reported (not just exit 0)
+        shell: bash
+        run: |
+          node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test > "$RUNNER_TEMP/sk02-evidence.json"
+          node -e '
+            const fs=require("fs");
+            const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            const required=Array.from({length:60},(_,i)=>"E"+String(i+1).padStart(2,"0"));
+            const seen=Array.isArray(v.results)?v.results.map(r=>r?.case):[];
+            const unique=new Set(seen);
+            const missing=required.filter(id=>!unique.has(id));
+            const unexpected=seen.filter(id=>!required.includes(id));
+            const ok=v.passed===60 && v.total===60 && seen.length===60 &&
+              unique.size===60 && missing.length===0 && unexpected.length===0 &&
+              typeof v.scope==="string" && v.scope.includes("NO harness trial");
+            console.log(JSON.stringify({
+              kind:"SK-02 synthetic required-case inventory (not actual Product/Harness)",
+              required:required.length, reported:seen.length, distinct:unique.size,
+              missing,unexpected,passed:v.passed,total:v.total,status:ok?"PASS":"FAIL"
+            }));
+            if(!ok)process.exit(1);
+          ' "$RUNNER_TEMP/sk02-evidence.json"
 
       - name: Reject ambiguous JSON from the actual SK-02 CLI file argument
         shell: bash
