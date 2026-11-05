@@ -51,6 +51,30 @@ function qualifySubjectSource(result, expectedPath, expectedFingerprint) {
     definitionReferences:definitions.length, sourceStatus:result.sourceStatus};
 }
 
+// The receipt's stdout hashes do not bind their argv/cwd by themselves.
+// This checks literal recorded CLI provenance, not execution authenticity.
+function verifyInvocationBinding(ledger, receipt) {
+  const obs=receipt?.observations;
+  assert.ok(Array.isArray(obs) && obs.length===4,"ledger mismatch: four invocations required");
+  const cwd=obs[0]?.cwd;
+  assert.ok(typeof cwd==="string" && path.isAbsolute(cwd) && path.normalize(cwd)===cwd,
+    "ledger mismatch: absolute normalized cwd required");
+  assert.equal(ledger?.source?.workspace,"reference/workspace",
+    "ledger mismatch: initial public workspace not pinned");
+  const root=path.join(cwd,ledger.source.workspace);
+  const expected=[
+    ["commands"],
+    ["model","catalog","-workspace",root],
+    ["inspect","-workspace",root,"-subject-kind",SUBJECT.kind,"-subject-id",SUBJECT.id],
+    ["validate","-workspace",root,"-json"]
+  ];
+  for(let i=0;i<4;i++){
+    assert.deepStrictEqual(obs[i]?.args,expected[i],"ledger mismatch: actual CLI argv "+i);
+    assert.equal(obs[i]?.cwd,cwd,"ledger mismatch: actual CLI cwd "+i);
+  }
+  return {cwd,root,compared:8};
+}
+
 // The evidence ledger is a reviewed, pinned public S1 baseline, not a signed
 // attestation. Comparing a fresh real CLI receipt detects drift of claimed
 // observed bytes, bindings, and diagnostics without pretending to validate
@@ -85,6 +109,7 @@ function verifyLedger(ledger, receipt) {
   eq("World fingerprint",receipt.worldFingerprint,witness.worldFingerprint);
   eq("Source Index fingerprint",receipt.sourceIndexFingerprint,witness.sourceIndexFingerprint);
   eq("four actual selected command calls",receipt.observations.length,4);
+  compared+=verifyInvocationBinding(ledger,receipt).compared;
   for(const [i,key] of ["commands","catalog","inspect","validate"].entries()){
     eq("stdout digest of "+key,receipt.observations[i].stdoutDigest,
       "sha256:"+ledger.actualRead.stdoutSha256[key]);
@@ -127,6 +152,22 @@ function selfTest() {
     ["S1-W13 malformed evidence JSON is rejected",
       () => assert.throws(() => parseTrialJSON('{"source":,}'),
         e => e.code === "INVALID_TRIAL_JSON")]
+  );
+  // S1-W14..19: synthetic receipt tampering controls; not actual Harness runs.
+  const fixture=()=>({ledger:{source:{workspace:"reference/workspace"}},
+    receipt:{observations:[
+      {args:["commands"],cwd:"/fixture/tei"},
+      {args:["model","catalog","-workspace","/fixture/tei/reference/workspace"],cwd:"/fixture/tei"},
+      {args:["inspect","-workspace","/fixture/tei/reference/workspace","-subject-kind","semantic-data","-subject-id","sales.order"],cwd:"/fixture/tei"},
+      {args:["validate","-workspace","/fixture/tei/reference/workspace","-json"],cwd:"/fixture/tei"}
+    ]}});
+  tests.push(
+    ["S1-W14 bound argv and cwd are accepted",()=>{const x=fixture();assert.equal(verifyInvocationBinding(x.ledger,x.receipt).compared,8);}],
+    ["S1-W15 catalog points to another workspace",()=>{const x=fixture();x.receipt.observations[1].args[3]="/fixture/other";verifyInvocationBinding(x.ledger,x.receipt);},true],
+    ["S1-W16 inspect points to another subject",()=>{const x=fixture();x.receipt.observations[2].args[6]="sales.order_line";verifyInvocationBinding(x.ledger,x.receipt);},true],
+    ["S1-W17 validate contains unapproved output flag",()=>{const x=fixture();x.receipt.observations[3].args.push("-out","/tmp/file");verifyInvocationBinding(x.ledger,x.receipt);},true],
+    ["S1-W18 inspect runs from a different cwd",()=>{const x=fixture();x.receipt.observations[2].cwd="/fixture/other";verifyInvocationBinding(x.ledger,x.receipt);},true],
+    ["S1-W19 catalog and inspect invocation order swapped",()=>{const x=fixture();const a=x.receipt.observations;x.receipt.observations=[a[0],a[2],a[1],a[3]];verifyInvocationBinding(x.ledger,x.receipt);},true]
   );
   for (const [name, task, shouldFail] of tests) {
     if (shouldFail) assert.throws(task,undefined,name);
@@ -216,4 +257,4 @@ if(require.main===module){
     } else main();
   } catch(e){console.error("TAI S1 FAIL: "+(e.code ? e.code+": " : "")+e.message);process.exitCode=1;}
 }
-module.exports={qualifySubjectSource,verifyLedger,selfTest};
+module.exports={qualifySubjectSource,verifyLedger,verifyInvocationBinding,selfTest};
