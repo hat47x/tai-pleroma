@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-04",
+  "date": "2026-11-05",
   "host": "Windows with Python 3.12",
   "command": "python integrations/tools/check_scenario_artifacts.py",
   "result": "PASS",
