@@ -752,3 +752,12 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **隔離の重要条件**：TAIリポジトリ全体を外部HarnessへMountすると、本Repo内のRunbook/証拠台帳から評価対象の答えが閲覧され得る。Participantには固定Task本文＋許可された公開TEI Source・Toolのみを渡す。Reviewerの独立Expected/答え合わせ票・他Session回答を、Prompt・Skill・閲覧可能なFile/Tool出力へ漏らさない。共有できる公開Sourceをモデルが自ら読むことは正常なTask行為。Host観測が無いのに`oracle_exposed=false`、`unauthorized_egress_observed=false`と自己申告することは比較資格ではない。
 
 **変えない範囲**：TEIのS1実CLI/Source/Indexの再現性ゲートは保持。SK-02の一つのread-only Product TaskにEKI/SHO DB Provider/Target Build/TAI横断Skillを投入しない。新Wrapper・Task Runner/Owner Oracleの実装を増やさない。次の本質的な証拠は**実HarnessでH2の一Sessionが動き、Skill非露出と実Tool argv/Sourceの観測が得られたこと**から開始する。Skillあり二Session・残りH2を続け、4試行後にのみ増分価値を採点する。現在は**NOT RUN**。
+
+
+### 39.2 S1の実CLI実行引数と証拠Hashを別々に検査する（2026-11-06）
+
+**成熟した欠落の修正**：[S1 Probe](../../evaluations/tools/probe-tei-s1-real-source.cjs)が実CLIの`stdoutDigest`をLedgerの固定Digestへ照合していても、元Receiptの`observations[].args`と`cwd`の一致は検査していなかった。実Source読込、モデル/ワークスペースの参照閉包、H2/H3比較条件を横断して検討した結果、**「結果Byteが一致」と「どの対象を要求したか」が別証拠である**ことを既存検査へ反映した。4つの固定read-only argv・同一絶対CWDを照合し、31既存比較→39項目（追加8項目）、合成S1-W14〜W19と実CLI Receipt改変負例を追加した。
+
+これにより、外部Harnessへの移行前に偽のWorkspace・別Subject・write option・別CWD・順序入替を**実S1票の内部矛盾として**拒否できる。GitHub Actionsの成否は変更後のJobログに束縛する。**改変可能なReceiptの文字列検査は実Processの第三者証明でも実Host認可でもなく**、Source実消費の全閉包、Owner Meaning、H2/H3 Tool呼出しやSkill実Loadを保証しない。
+
+順序は従来どおり、固定TEI実CLIによるW0/S1→**外部Harnessで最初のH2実Tool呼出し**→H3のProduct Skill実ロード→H2/H3四Session／独立Oracleと費用比較→必要時のみSK-03の第二Harness。新Runner／万能Evidence Platform／中央Validatorは増やさず、書込み/未知Commitは既存条件付きHandoffへ残す。[実証Runbook §18.2](first-real-skill-qualification-runbook-2026-11-02.md)で具体的実装・停止条件を管理する。
