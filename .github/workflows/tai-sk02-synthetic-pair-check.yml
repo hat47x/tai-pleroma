@@ -8,6 +8,7 @@ on:
       - 'evaluations/tools/check-sk03-negative-claim-transport.cjs'
       - 'docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md'
       - 'evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md'
+      - 'evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt'
       - '.github/workflows/tai-sk02-synthetic-pair-check.yml'
   workflow_dispatch:
 
@@ -28,6 +29,11 @@ jobs:
         run: |
           git rev-parse HEAD
           git status --porcelain
+      - name: Freeze participant Task bytes before real H2/H3 sessions
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' '38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf' 'evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt' | sha256sum --check
       - name: Check JavaScript syntax
         run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
       - name: Verify every required SK-02 synthetic case was reported (not just exit 0)
