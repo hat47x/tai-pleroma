@@ -109,6 +109,20 @@ TAI mainには、SUIの`/context/query`と`/context/bundle`を読出し・検査
 
 **実験のGoldと評価**：候補の重要性は実行した製品と独立した担当者が事前に固定する。方法A/B/CやRQ6の既存比較を上書きせず、まず同じrun内の候補ID一致と閉包の観測可能性だけを扱う。未知の分母を補完して改善率を出さない。
 
+### SUI Contextの選択集合と参照集合の区別（合成prepilot）
+
+SUI main `09c240460017d0a4ecc6ab55582631d3e1a8b0a9` の `models_context.py`、`context_adapter.py`、`routes/context.py` と `test_context_bundle_routes.py` を照合した（2026-11-06）。現在の`/context/bundle`は `MockContextFoundationAdapter` の `A2-minimal-v1` stub に依拠する。この契約では、`reviewedOnly`と厳格なSafeModeによって`selected`から未レビューのカードを除いても、`evidence`と`relations`にはそのcardIdを含む**別集合**が残る。SUI側の既存テストは、この状態と未決の保持を期待値として持つ。
+
+- `selected`に無いから**不存在**、**検索していない**、**正式に棄却した**とは言えない。
+- `evidence`にIDがあることは**根拠・関係として言及された**という観測であり、カード本文の閲覧権限、意味上の承認、本人の閲覧同意を証明しない。
+- `excludedReason=["unreviewed_filtered"]`は**Bundle全体の理由**であり、どのcardIdがなぜ排除されたかを証明するper-candidate判定ではない。
+- `reviewFlags`は`selected`集合の状態を示す。そこに含まれないカードまで「全資料がreviewed」と評価しない。
+- `bundleHash`の決定性や`queryCanonicalHash`は、直接読んだDocument集合と同一source revisionである保証ではない。
+
+この境界を再現するため、[合成fixture](../fixtures/sui-context-visibility.synthetic.json)、[観測器](../check_sui_context_visibility.py)、[9件のテスト](../test_sui_context_visibility.py)を追加。固定stubの二つのカードのうち、レビュー済みの1件を`selected`、未レビューの反証1件を`referenceOnly`として識別する。**実Serverの実行/実ユーザーカードの到達率/認可・SafeModeの実受入ではない**。CLIは個別IDを標準出力に出さず件数のみを示す。実入力は、明示的に許可された合成データ以外を拒否する。
+
+次の製品接続Gateは、SUI Ownerが許可した合成カードを固定し、独立したread-only元集合のscope・source revisionと、実`/context/bundle`の応答を同一試行で保存すること。**現行Bundle応答には元集合と結び付くsource revisionがないため、単なるID一致でも比較は`UNVERIFIED_SAME_SOURCE_REVISION`のまま**。新しい共通Schemaを先に作らず、各Productの既存契約・適用権限をレビューする。SUIの`ADR-0077`と`ADR-0090`の候補/根拠・人間の採否の分離に従い、Mockだけで製品の認知的な性能や情報開示の適否を判定しない。
+
 ## 6. 適用規模と次の最小Gate
 
 | 規模 | 具体的な問い | 既存Ownerとの関係 |
