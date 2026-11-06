@@ -994,3 +994,20 @@ If-Match: "abc"（更新） / If-None-Match: * （新規） → 通過
 - 抑止は「送信に成功したキー」だけを記録するため、失敗した初回は再試行できる
 - 抑止の単位は呼び出し側が渡す論理キーで、イベント内容では判定しない
 - HTTP輸送路や再起動をまたぐ挙動は未確認
+
+## 実行プロファイルの政策表（2026-11-06）
+
+`resolve_tenant_session_bootstrap_mode`を5つのプロファイル名で呼び、`main.py`/`access_control.py`のガードと突き合わせた。[receipt](../evaluations/records/SUI-TEI-profile-policy-2026-11-06.json)
+
+```text
+local-dev / evaluation / enterprise-production → single-tenant
+saas-multitenant → tenant-session-required
+未知のプロファイル → RuntimeError（fail-closed）
+APIドキュメント公開: local-dev / evaluation のみ
+agent系配線: saas-multitenant のみ
+export/share のSafeMode拒否: access_control に存在
+```
+
+- どの機能がどのプロファイルで有効かは、プロファイル文字列を条件にした分散したifで決まる
+- 未知のプロファイルは起動時点で拒否される
+- 各プロファイルの実起動は未確認（saas-multitenantは実IdP等が必要）
