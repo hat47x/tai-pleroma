@@ -191,11 +191,11 @@ def main():
     first_body = first.json() if first is not None and first.status_code == 200 else {}
     second_body = second.json() if second is not None and second.status_code == 200 else {}
     checks = {
-        "firstStatus": first.status_code if first else None,
+        "firstStatus": first.status_code if first is not None else None,
         "bundleHash": first_body.get("bundleHash"),
         "deterministic": bool(first_body.get("bundleHash")) and first_body.get("bundleHash") == second_body.get("bundleHash"),
         "hasQueryHash": isinstance(first_body.get("queryCanonicalHash"), str),
-        "noPreviewStatus": no_preview.status_code if no_preview else None,
+        "noPreviewStatus": no_preview.status_code if no_preview is not None else None,
         "noPreviewCode": (no_preview.json().get("detail") or {}).get("code") if no_preview is not None else None,
     }
     visibility = observe_stub_visibility(first_body)
@@ -224,6 +224,7 @@ def main():
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":
