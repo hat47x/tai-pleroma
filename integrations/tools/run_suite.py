@@ -222,6 +222,7 @@ def main():
         "sui_audit_pagination": run_step("sui_audit_pagination", ["integrations/pilot-sui-document/assembler/admin_audit_pagination_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json"]),
         "sui_etag_stability": run_step("sui_etag_stability", ["integrations/pilot-sui-document/assembler/etag_stability_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-etag-stability-2026-11-06.json"]),
         "sui_archive_lifecycle": run_step("sui_archive_lifecycle", ["integrations/pilot-sui-document/assembler/archive_lifecycle_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-archive-lifecycle-2026-11-06.json"]),
+        "sui_merge_decision_log": run_step("sui_merge_decision_log", ["integrations/pilot-sui-document/assembler/merge_decision_log_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-merge-decision-log-2026-11-06.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}

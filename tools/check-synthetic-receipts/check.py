@@ -165,6 +165,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json",
     "evaluations/records/SUI-TEI-etag-stability-2026-11-06.json",
     "evaluations/records/SUI-TEI-archive-lifecycle-2026-11-06.json",
+    "evaluations/records/SUI-TEI-merge-decision-log-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -608,6 +609,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-merge-decision-log" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("duplicateStatus") != 409:
+                errors.append(f"SUI merge decision log accepted a duplicate: {relative}")
         if "SUI-TEI-archive-lifecycle" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("writeArchivedStatus") != 423:
