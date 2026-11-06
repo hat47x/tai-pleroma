@@ -774,3 +774,16 @@ agent有効・監査出力なし → guard true
 - 実装は起動を止めず、警告ログを出す（fail-openの警告）
 - したがって「監査なしでは起動しない」という前提は誤り。統制は警告と運用に依存する
 - 起動ログ自体の捕捉はしていない（規則の評価のみ）
+
+## Agent資格情報の登録APIの拒否（2026-11-06）
+
+`POST /tenant-admin/agent-credentials`を、tenant adminセッションなしで呼んだ。[receipt](../evaluations/records/SUI-TEI-agent-credential-admin-2026-11-06.json)
+
+```text
+匿名 → 401
+業務キー（X-API-Key）のみ → 503
+```
+
+- 業務キーはtenant admin経路の代用にならない
+- local-devでは信頼済みSaaSランタイムが未構成のため503（fail-closed）
+- SaaSプロファイルで実際のtenant adminセッションを使った登録は未確認
