@@ -607,3 +607,14 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 4. **資格更新**：SourceやHarness、Skill、Product Reader、Grantが変われば、新Attemptと現在用途に対する適用だけ再照合し、履歴の正しいObservationを保存する。比較の成果はProduct側の受理/修正Ownerへ戻し、TAIを第二の正本にしない。
 
 **状態（2026-11-06）**：SCN-001は架空Sourceの参照工程・評価を持つが、ここで提案したB0/B1/B2の実独立Session比較、外部HarnessにまたがるActivity再開、現在Grant/非送出の実強制、Owner価値受入は**NOT RUN**。固定TEI CLIのProduct-only S1とH2/H3準備CIをこれらへ加算しない。
+
+<!-- harness-h8-goless-cli-probe-20261106 -->
+### 22.6 Productの単一バイナリ実行とBuild環境の資格を分ける
+
+[TEI #2953](https://github.com/hat47x/tei-platform/issues/2953)の実観測では、`go.mod`要求版より古いGoで `go run` を行うと失敗する。これは**SourceからのBuild／`go run`前提**であり、すでにBuildされた固定TEI実行ファイルを使う今回のH2/H3条件を直接否定しない。先行する[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)のProduct Skill文面にはなお`go run`例があるため、実験用ToolはあらかじめBuild済みの同じBinaryだけを両腕へ提供し、Skillの提案が`go run`へ逸れたら観測Outcomeとして記録する。
+
+**実証済みの範囲**：既存[TAI実S1 Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)の両方の一時ビューで、`env -i PATH=/nonexistent <実TEI Binary> model catalog -workspace <公開Workspace>`を実行し、通常CLIとWorld/Source Index Fingerprint・対象`semantic-data:sales.order`が一致することを検査。実行Commit `6a5c8eddac5ed48c3952ef02ff429508112d6ffb`の[GitHub Actions #42182253212](https://github.com/hat47x/tai-pleroma/actions/runs/42182253212)で**completed/success**、実Jobログの該当コマンドと結果を確認した。同HEADの[SK-02](https://github.com/hat47x/tai-pleroma/actions/runs/42182253192)、[Skill静的](https://github.com/hat47x/tai-pleroma/actions/runs/42182253318)、[tai-reference](https://github.com/hat47x/tai-pleroma/actions/runs/42182253249)も成功。
+
+**Claimの上限**：これはLinux CIで**Go実行コマンドをPATHから解決できない環境変数下**の固定Executable動作を示す。Goがホストから完全にアンインストールされていること、別OS/アーキテクチャへの適合、単一Binaryの全依存の封入、Sandboxの隔離、外部HarnessでのTool呼出し・Skill実Loadを実証したものではない。`go version`が採れないことはPrebuilt Toolの不適格理由にならず、**実Binary byte＋Platform＋実CLI呼出し**で資格化する。一方、Source Buildを要求する別Taskには`go.mod`とToolchainの別Gateを使う。
+
+次の`H2-01`は依然、外部Harnessにおける実Tool Request→実Executable→実Tool Replyの同一Session証拠が必要。Product-only CI成功とSkill有益性/業務Owner受理を合算しない。
