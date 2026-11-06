@@ -266,3 +266,48 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 - **TAI #168／#422**：初回H2 Tool-only 1 Session→H3実ロード→固定4 Sessionを優先。後続SCN-001 O-01〜06のB0手動/B1単独Product/B2 TAI追加価値とJ0全面/J1限定/J2未検証を別軸で比較。SCN-001では公開や業務Effectを実施せず、IF-02〜07は**別の合成/隔離委任ケース**で検査する。
 - **TEI #2996/#1174、EKI #745、SEI #802、SHO #20**：Result/状態・取消・Grant/Provider実作用・構造化出力・保存/同期はそれぞれのProduct Ownerが検証・修正する。TAIが製品内部の不具合を別Runtimeで修正しない。
 - **状態**：IF-01〜08のTAI/二Harness実Session、実Effect取消/回復、Receipt/Consumer受信、OS/Network、Owner受理、実ユーザー価値は**NOT RUN**。参照Issueの局所観測と横断の受入資格を混同しない。
+
+
+<!-- tai-sc20-21-profile-readiness-20261107 -->
+## 13. 2026-11-07：SC-20のIssue判定を実Activity計画へ同期する（追加試験はNOT RUN）
+
+[TAI #271 SC-20](https://github.com/hat47x/tai-pleroma/issues/271)は、過去のDecision/Sourceと「現在行ってよいAction」、実Tool/HTTP受理、応答本文のVerdict、実Provider Effect、独立Consumer読取を**別々の主張**として判定する既存Ownerである。SC-18（目的変更）・SC-19（旧Attemptの作用不明）を置換しない。
+
+限定的な実測は[TAI #493](https://github.com/hat47x/tai-pleroma/issues/493)（archive中Read200/Write423）、[#494](https://github.com/hat47x/tai-pleroma/issues/494)（Decision追加201/重複409/未知グループ200空）、[#495](https://github.com/hat47x/tai-pleroma/issues/495)（CE4順序前提/Hash・Operation差）、[#496](https://github.com/hat47x/tai-pleroma/issues/496)（HTTP200でも本文rollback_required）、[TEI merged #3042](https://github.com/hat47x/tei-platform/pull/3042)（事前未設定の拒否、Executor後の宣言外Effectをunknown）・[#3047](https://github.com/hat47x/tei-platform/pull/3047)（GrantAuthorizer局所照合）。これらは別々の固定Fixture/製品側試験であり、TAIが同一Task/実Provider/外部Harnessから連携に成功した証拠ではない。
+
+既存AT-01〜06は#271の表を唯一のExpected正本として参照する。**追加のConsumer反例**（本節は後続の提案、未実施）：
+
+| Case | 新しい製品側観測と変更 | 現在のTAI引継ぎ・禁止する結論 |
+| --- | --- | --- |
+| **AT-07 類似候補** | [TAI #497](https://github.com/hat47x/tai-pleroma/issues/497)はSUIの正規化/Tokenヒューリスティックによる候補群と除外条件を限定観測 | 候補が同一群・理由コード2つでも、同じ意味・同じSource/時点・Review済み・自動統合可能とはしない。O-02/O-03の相反する根拠を自動消去しない |
+| **AT-08 Export監査の重複抑止** | [TAI #498](https://github.com/hat47x/tai-pleroma/issues/498)では同exportId監査の重複を抑止、別IDは別件、safeMode=trueは403 | Audit 1件≠外向き送信1件≠実受取1件。再送の安全性は実送信先/Operation/Recipient/Receipt/独立Readと現在Grantを別照合し、unknownを別exportIdで勝手に再試行しない |
+| **AT-09 Action受付と適用** | [TAI #499](https://github.com/hat47x/tai-pleroma/issues/499)のSUI native Actionでは旗無効404、Origin/Revision/読取専用の拒否、正常200で座標反映、同じ要求の再送409を限定観測 | 当該SUI DocumentのAction成立と、TEI/業務ProviderのEffect・公開承認・別Hostでの実行資格を分ける。404/403/409の違いを機密Audienceへ無条件に説明しない |
+
+**評価票は新Schemaではない**：Intent原文/Scope/Audience、Source/版、現在実行ProfileとAuthority、実Tool invocation、HTTP status、本文型付きVerdict、Operation identity、Product Receipt、実Consumer read、未実施/unknownを既存Issue/Runbookへ参照する。アーカイブ復帰、候補群、Export監査、Action受理が一つのActivity全体の完了を保証することはない。
+
+## 14. 2026-11-07：SC-21 実行Profile変更後のCapability資格を再確認する（提案・NOT RUN）
+
+### 14.1 「起動・設定・読取資格・実Tool利用可能」を別判定
+
+横断Harness切替やActivity再開時、Skill説明・Tool Catalog・環境変数・HTTP 200・Product version応答が変わらなくても、**実行Profileでの配線・資格・Sourceへの到達・実利用**は変化し得る。実装/運用の一次反例：
+- [TAI #503](https://github.com/hat47x/tai-pleroma/issues/503)/[#504](https://github.com/hat47x/tai-pleroma/issues/504)：SUI Agent資格情報はlocal-devで鍵設定があっても app.state に配線されず、Agent route 503。SaaS Profileの実配備は未確認。AgentのDoc Readは確認済みCard等に制限され、書込み/派生Routeは別に拒否される。
+- [TAI #508](https://github.com/hat47x/tai-pleroma/issues/508)：SUI Runtime Profileごとの能力/認証条件は分散した条件分岐に依存し、単なる名前やドキュメントの存在では全機能の実提供を証明しない。
+- [TAI #509](https://github.com/hat47x/tai-pleroma/issues/509)：SUI /healthz=200 はDBを検査しない。/readyz はDB接続とSchemaを一括catchし、スキーマ不一致をdatabase=unreachableと分類し得る。/versionのrevisionは実Build Artifact SHAの独立証明ではない。
+- [TAI #510](https://github.com/hat47x/tai-pleroma/issues/510)：Authentication assuranceのhasStepUpはAAL/ACRと独立、auth_time未来/不正はunknown。実IdPの保証は別。
+- [SUI #3389](https://github.com/hat47x/sui-sensemaking/issues/3389)/[#3390](https://github.com/hat47x/sui-sensemaking/issues/3390)：bundleHashの並び順や不正Unicode文字のCanonicalizationが他言語間で未確定。Hash文字列の一致・不一致を意味・Source同一性やCross-runtime Consumerの完全保証としない。
+
+**責務**：TAIは実Target Profile/Source Scope/Consumerに対するCurrent Qualificationの要求と判別だけを持つ。各ProductのProfile配線、Authentication Authority、API response、Digest canonicalization、独立Receiver観測の実装はProduct/Host Ownerが持つ。通常のTEI内組織Dataに新しい特別ACLを一律義務化しない。
+
+### 14.2 既存試験資産へ渡す独立Expected（全ケースNOT RUN）
+
+| ID | 変更・負例 | 期待する局所判定 |
+| --- | --- | --- |
+| **RQ-01 Config済みだが未配線** | Agent鍵設定とTool記述あり、local-dev実Routeは503 | Declared/configuredと実Availableを分離。Handoffに現用Skill成功を転用せず当該Routeをblocked/unknown |
+| **RQ-02 起動とReadiness** | /healthz 200、DB利用不可、/readyzがDB/Schema失敗をまとめる | Process aliveまでの資格。DB読取・Schema妥当・Source完全性・Tool実呼出は未確認 |
+| **RQ-03 Build/Runtime版** | /versionのrevision表示同一、実Binary/Role/Projection RuleまたはProfileが異なる | Source/Tool/実Artifactの独立Pinと必要Dependency閉包を再評価。表示revisionだけで再使用不可 |
+| **RQ-04 Scope別の成功/拒否** | 付与文書Read200、未付与404、書込403、別Route403 | 許可Readを継続し、非表示内容/未公開Card・書込Grantへ拡張しない。非公開原因・ID/countを漏らさない |
+| **RQ-05 Authentication stale/unknown** | step-up表明、未来auth_time、AAL/ACRの不一致 | 見かけのstep-up≠現在の用途/Target/Action Grant。実Hostの現在の判断が無ければ外部Effect停止 |
+| **RQ-06 Cross-language fingerprint** | 同じ文書でもlocaleCompare由来の並べ替え、lone surrogateを含む投影 | Digest検証の規則/実装/Source版を固定。不一致の理由が不明なら正本入替えや無条件再取得完了としない |
+| **RQ-07 Legitimate continuation** | SUI Agentが当該Profileで使えないが、公開TEI read-only CLI/SHOローカルDraftは許可される | 利用不能なRouteのみ停止し、独立して適格な作業まで全停止しない。TAI Skillの追加が不要なら不採用も許す |
+
+**導入順は変更しない**。[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI CLIでH2実Harness Tool Call 1 Session→H3実Skill root/参照のLoader Read→4独立Session（割付Rと実提供Dを分離）を先行。SUI Profile/AgentとSCN-001旧新目的・SUI→SHO受領は**条件付き後続**。RQ-01〜07の横断二Harness/OS/Network/実Product Source/独立Expected・実利用者価値・Owner採用はNOT RUN。中央Capability Registry／新Host／第二認可器は設けない。
