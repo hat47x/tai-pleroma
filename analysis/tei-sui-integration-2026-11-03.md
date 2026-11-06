@@ -677,3 +677,18 @@ tasks: 2件 verifying / 2件 active
 - 署名時刻がtick開始時のスナップショットより後になると、再検証の`now`が署名時刻より前になり、延期される
 
 この順序に起因する可能性が高いが、Control Planeの時計の取得箇所を計測していないため**未確定**。観測上は次tickで解消し、同時投入時にだけ目立つ。
+
+## SUIのcontext query契約（2026-11-03）
+
+`POST /context/query`の受理と拒否を確認した。[receipt](../evaluations/records/SUI-TEI-context-2026-11-03.json)
+
+```text
+200 accepted + queryCanonicalHash
+422 preview_required（previewConfirmed=false）
+400 unknown_contract_key（未知キー）
+400（depth=9）
+```
+
+- 契約キーは`extra=forbid`で閉じている
+- プレビュー確認が無い問い合わせは受けない
+- bundle構築は未実施
