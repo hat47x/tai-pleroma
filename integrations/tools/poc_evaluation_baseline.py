@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITE_RECEIPT = ROOT / "evaluations/records/TEI-suite-2026-11-03.json"
-OUT = ROOT / "evaluations/records/TEI-suite-timing-2026-11-06.json"
+OUT = ROOT / "evaluations/TEI-suite-timing-2026-11-06.json"
 
 
 def rev(path):

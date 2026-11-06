@@ -183,3 +183,4 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 3. 比較測定の基準となる現行実装の版と、変更課題の選び方。
 4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。
 
+
