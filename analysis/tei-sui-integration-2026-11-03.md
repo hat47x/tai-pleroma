@@ -705,3 +705,17 @@ tasks: 2件 verifying / 2件 active
 - bundleのハッシュは同一入力で安定する
 - 使用したstub datasetは`A2-minimal-v1`（合成）
 - 実データや実テナントでの構築は未実施
+
+## SUIのCE4 bundle resolve（2026-11-03）
+
+`POST /context/bundles:resolve`をdry-runとapplyで実行した。[receipt](../evaluations/records/SUI-TEI-ce4-2026-11-03.json)
+
+```text
+dryRun=true → 200（bundleHash・equivalenceKey・auditChain・proposalLifecycle・sideEffect）
+dryRun=false → 200
+不正なsourceBundleHash → 400
+未知キー → 400
+```
+
+- 応答は解決結果と監査連鎖の要約を含む
+- 実コンテキスト提供者には接続していない（モック）
