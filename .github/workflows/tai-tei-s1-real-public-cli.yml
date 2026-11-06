@@ -152,25 +152,47 @@ jobs:
             "$RUNNER_TEMP/tei-s1" model catalog -workspace "$ROOT" > "$RUNNER_TEMP/sk02-extension-$EXT-catalog.json"
           done
           "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/tei.md" -json > "$RUNNER_TEMP/sk02-extension-renamed-validate.json"
+          # A recognized legacy Source and a changed .tei.md definition coexist.
+          # The legacy parser can keep the World unchanged while the Source Index
+          # observes the additional managed artifact. Neither implies semantic load.
+          mkdir -p "$BASE/mixed/semantic"
+          cp "$BASE/tei/tei.workspace.yaml" "$BASE/mixed/tei.workspace.yaml"
+          cp "$BASE/tei/semantic/order.tei" "$BASE/mixed/semantic/order.tei"
+          sed 's/attribute total type std.money/attribute total type std.text/' \
+            "$BASE/tei/semantic/order.tei" > "$BASE/mixed/semantic/order.tei.md"
+          grep -Fq 'attribute total type std.text' "$BASE/mixed/semantic/order.tei.md"
+          "$RUNNER_TEMP/tei-s1" model catalog -workspace "$BASE/mixed" > "$RUNNER_TEMP/sk02-extension-mixed-catalog.json"
+          "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/mixed" -json > "$RUNNER_TEMP/sk02-extension-mixed-validate.json"
           node -e '
             const fs=require("node:fs"),assert=require("node:assert/strict");
             const load=p=>JSON.parse(fs.readFileSync(p,"utf8"));
             const legacy=load(process.argv[1]);
             const renamed=load(process.argv[2]);
             const validated=load(process.argv[3]);
+            const mixed=load(process.argv[4]),mixedValidated=load(process.argv[5]);
             const count=r=>r.result.entries.filter(x=>x.subject?.kind==="semantic-data"&&x.subject?.id==="sales.order").length;
             assert.equal(legacy.ok,true);
             assert.equal(renamed.ok,true);
             assert.equal(count(legacy),1,"legacy .tei must load the expected user Subject");
             assert.equal(count(renamed),0,"fixed historical Loader does not discover .tei.md");
             assert.equal(validated.ok,true,"silent missing Source can coexist with validate ok");
+            assert.equal(mixed.ok,true);
+            assert.equal(mixedValidated.ok,true);
+            assert.equal(count(mixed),1,"legacy definition still wins in mixed source tree");
+            assert.equal(mixed.result.worldFingerprint,legacy.result.worldFingerprint,
+              "ignored new meaning must leave old interpreted World unchanged");
+            assert.notEqual(mixed.result.sourceIndexFingerprint,legacy.result.sourceIndexFingerprint,
+              "new managed file must change Source Index despite unchanged interpreted World");
             console.log(JSON.stringify({
               status:"EXPECTED_NEGATIVE_BEHAVIOR_REPRODUCED", historicalVersionOnly:true,
               legacySubjectCount:count(legacy),renamedSubjectCount:count(renamed),
               renamedValidateOK:validated.ok,
-              claimLimit:"Current pinned CLI silently omits .tei.md. This is NOT migration compatibility or acceptable fail-closed behavior."
+              mixedLegacySubjectCount:count(mixed),mixedValidateOK:mixedValidated.ok,
+              mixedWorldUnchanged:mixed.result.worldFingerprint===legacy.result.worldFingerprint,
+              mixedSourceIndexChanged:mixed.result.sourceIndexFingerprint!==legacy.result.sourceIndexFingerprint,
+              claimLimit:"Fixed historical CLI sees added .tei.md as Source Index input but not interpreted Meaning; neither validate ok nor an Index delta establishes loaded definitions."
             }));
-          ' "$RUNNER_TEMP/sk02-extension-tei-catalog.json" "$RUNNER_TEMP/sk02-extension-tei.md-catalog.json" "$RUNNER_TEMP/sk02-extension-renamed-validate.json"
+          ' "$RUNNER_TEMP/sk02-extension-tei-catalog.json" "$RUNNER_TEMP/sk02-extension-tei.md-catalog.json" "$RUNNER_TEMP/sk02-extension-renamed-validate.json" "$RUNNER_TEMP/sk02-extension-mixed-catalog.json" "$RUNNER_TEMP/sk02-extension-mixed-validate.json"
       - name: Read named Product Source and perform negative control
         env:
           GOTOOLCHAIN: local
