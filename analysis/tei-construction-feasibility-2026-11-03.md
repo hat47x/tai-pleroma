@@ -44,7 +44,7 @@ SUIだけは複数要素の合成が必要で、`document_assembler.py`と参照
 ## 未検証
 
 - 実データでの投影（すべて合成fixture）
-- 製品側の保存・実行（SUI以外は読み取りのみ。EKIはTask受理までで、実行系は未配線。policyとWorker行を投入するとTaskはrunningまで進むが、Workerプロセスが無いため結果は出ない）
+- 製品側の保存・実行のうち、EKIの実行は製品テストで成立を確認済み（本番Worker Protocol互換と結果受入の配線は未確認）
 - SaaSの外部認証・ポリシー・capabilityの実接続
 - 管理DB、TLS証明書の実CA、リバースプロキシ、実配備
 - 生産性・開発効率の測定（PoC完了後に評価する前提）
@@ -69,3 +69,20 @@ SUIだけは複数要素の合成が必要で、`document_assembler.py`と参照
 - EKIは投影TaskRequestの投入（202/queued）と、policy/Worker行を入れた場合の`running`到達まで確認した
 - 一括検証は16段（checker・artifact・digest・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）
 - 実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証のまま
+
+## 到達点の更新（2026-11-06）
+
+初版の記述のうち、その後の実執行で変わった点を記す。数値は同日時点の実実行receiptに基づく。
+
+| 項目 | 初版 | 現在 |
+| --- | --- | --- |
+| EKIの実行 | 未配線 | 製品テストでHTTP投入→Agent実行→claim受理を確認。自前のControl Plane設定・Trust Anchor・Agent設定でも実行とclaimまで到達 |
+| EKIの登録・失効 | 未確認 | mTLSで登録でき、失効は最終状態。失効後は認証段で401 |
+| SUIの保存 | 合成文書 | Postgres・TLS・ローカルCA・TLS終端プロキシ・2インスタンス共有でも確認 |
+| SUIの製品面 | 未確認 | 監査エクスポート・管理APIの認証分離・利用者provision・TEI artifact配信・context query/bundle・CE4 resolve・モデル登録を確認 |
+| 実行結果の受入 | 未配線 | 未配線のまま。claimは`new`で止まり、result APIは`409 RESULT_NOT_READY` |
+| 複数Workerの分散 | 未確認 | 2台登録は成功。同時投入ではdispatchが一部を`NOT_YET_VALID`で延期し、Attemptが2件しか作られなかった |
+
+未確認のまま残るもの: 実データ・実テナント・実IdP、管理DB、公開CA、本番Worker Protocol互換、結果受入の配線、複数Workerの分散、生産性の測定。
+
+これらはTAI側の接続では解消できず、製品側の判断（受入の配線、時計の計測）か、利用可能な実インフラを要する。
