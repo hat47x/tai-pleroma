@@ -653,3 +653,19 @@ workers 2 / submitted 4 / executed 2 / claimed 2 / distributed false
 - 2台の登録自体は成功する
 - この構成ではAttemptが1台に集中し、4件中2件だけが待ち時間内に実行された
 - 割り当ての分散や並列度は、この観測だけでは保証できない（未検証）
+
+### 分散しなかった理由の切り分け（2026-11-03）
+
+複数Workerの観測で、Control Planeのログは次の順で動いていた。
+
+```text
+dispatch tick considered=2 dispatched=2 deferred=0
+dispatch tick considered=2 dispatched=0 deferred=2
+  reasons="...: reserve lease: NOT_YET_VALID: approval is issued in the future; ..."
+tasks: 2件 verifying / 2件 active
+```
+
+- 同時に4件投入すると、dispatchは2件だけをdispatchedし、残り2件を`NOT_YET_VALID`で延期した
+- 延期された2件は`active`へ進んだまま、待ち時間内に実行が完了しなかった
+- したがって「2台に分散しなかった」のは、Worker選択の偏りではなく、Attemptが2件しか作られなかったため
+- `approval is issued in the future`の原因（署名時刻とControl Planeの時計のずれ）は未特定
