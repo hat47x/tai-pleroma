@@ -1,4 +1,4 @@
-# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
+﻿# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
 
 2026-11-03時点の整理。実装と検証の正本は各リポジトリのGit履歴とreceipt。
 
@@ -959,5 +959,5 @@ context-audit（channel=mcp） → 200 / channel=api → 403
 
 - agentは文書の本文を「人が確認したカード」に限って読める。未確認カードは本文もidも返さない
 - 派生データ（類似候補など）は経路ごとに閉じており、許可は明示リストで管理する
-- **`SUI_AGENT_CREDENTIAL_HASH_KEY`を設定しても、local-devプロファイルではapp.stateへ配線されない**（配線はsaas-multitenantの分岐内にある）。本検証は検証内で鍵を配線して経路を評価した
+- **`SUI_AGENT_CREDENTIAL_HASH_KEY`を設定しても、local-devプロファイルではapp.stateへ配線されない**（配線は`settings.runtime_profile == "saas-multitenant"`の分岐内にある。ASTで確認済み）。本検証は検証内で鍵を配線して経路を評価した
 - 本番相当プロファイルでの配線と、実外部agentとの接続は未確認
