@@ -6,7 +6,7 @@ Status: **整理**。TAIが接続検証で突き当たった、製品側の設�
 
 観測: 自前構成でTaskを実行し、Agentは`result_claim_submitted`（`claim_decision: new`）まで進むが、`GET /v1/tasks/{id}/result`は`409 RESULT_NOT_READY`を返す。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
 
-根拠: `internal/control`に`resultacceptance`の組み立てが無く、受入は`conformance/process`の試験が内部で構成している。
+根拠: `internal/control`に`resultacceptance`の組み立てが無く、受入は`conformance/process`の試験が内部で構成している。2026-11-06時点の上流（`f4451df`）でも同じで、`internal/control/service/config.go`に受入の設定キーが無い。
 
 論点: 受入（RA2等のポリシー、署名者の集合、閾値）をControl Planeの構成として持つのか、運用側の別プロセスに置くのか。
 
