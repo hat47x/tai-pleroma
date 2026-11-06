@@ -15,8 +15,8 @@
     "attempts": [
       {
         "submit": 202,
-        "task": "tsk_d828c3532f6b0d109b8fee6e0f951cda",
-        "worker": "wrk_4f91ce12dd0e4ec0e90899be97b14194",
+        "task": "tsk_a8ae5c32eaece4178c13d135aacc5e24",
+        "worker": "wrk_c6298533ec926a7585dbfed7061493f5",
         "executed": false,
         "claimed": false,
         "resultStatus": 409,
@@ -26,13 +26,13 @@
           "status": 409,
           "code": "RESULT_NOT_READY",
           "retryable": true,
-          "task_id": "tsk_d828c3532f6b0d109b8fee6e0f951cda"
+          "task_id": "tsk_a8ae5c32eaece4178c13d135aacc5e24"
         }
       },
       {
         "submit": 202,
-        "task": "tsk_799b6c3f263f47d17039ffa8194b9d71",
-        "worker": "wrk_7056499a380c8be5183df481b902aa14",
+        "task": "tsk_7bcabf510bbaf55c44d50818f5acdf7f",
+        "worker": "wrk_b7cab7b9f1dd9c29b1f173f39492027f",
         "executed": true,
         "claimed": true,
         "resultStatus": 409,
@@ -42,13 +42,13 @@
           "status": 409,
           "code": "RESULT_NOT_READY",
           "retryable": true,
-          "task_id": "tsk_799b6c3f263f47d17039ffa8194b9d71"
+          "task_id": "tsk_7bcabf510bbaf55c44d50818f5acdf7f"
         }
       }
     ],
     "submitStatus": 202,
-    "taskId": "tsk_799b6c3f263f47d17039ffa8194b9d71",
-    "workerId": "wrk_7056499a380c8be5183df481b902aa14",
+    "taskId": "tsk_7bcabf510bbaf55c44d50818f5acdf7f",
+    "workerId": "wrk_b7cab7b9f1dd9c29b1f173f39492027f",
     "executed": true,
     "claimed": true,
     "resultStatus": 409,
@@ -58,7 +58,7 @@
       "status": 409,
       "code": "RESULT_NOT_READY",
       "retryable": true,
-      "task_id": "tsk_799b6c3f263f47d17039ffa8194b9d71"
+      "task_id": "tsk_7bcabf510bbaf55c44d50818f5acdf7f"
     }
   },
   "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest, lets the Agent execute the fixed command and then reads the Task result endpoint. The claim is submitted but the read answers RESULT_NOT_READY, because result acceptance is not wired into the running Control Plane."
