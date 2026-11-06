@@ -761,3 +761,4 @@ result PASS / steps 53 / TEI 2d0b09b13 / SUI 09c24046 / SEI e8d13e0 / MMI b07ed4
 - 端末固有のreceipt（ID・時刻）は再生成されるため、追跡するのはsuite receiptと本節のみ
 
 公開gateは`allowed=false`のまま。
+
