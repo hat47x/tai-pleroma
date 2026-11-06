@@ -64,6 +64,12 @@ jobs:
       - name: public boundary scan
         working-directory: .
         run: python tools/check-public-boundary/check.py --root .
+      - name: YI 64-hexagram audit regression tests
+        working-directory: .
+        run: python -m unittest -v evaluations/test_yi_constellation_audit.py
+      - name: YI 64-hexagram structural audit
+        working-directory: .
+        run: python evaluations/audit-yi-constellation.py
       - name: synthetic facility test
         working-directory: tools/reference-synthetic-facility
         run: python -m unittest -v check_test.py

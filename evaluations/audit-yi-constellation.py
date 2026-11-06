@@ -1,7 +1,7 @@
 """Yi Constellationの構造を、原典の卦序と六十四卦の対応から検算する。
 
-対象は docs/yi-constellation/01-64卦のシステム地図.md と
-docs/yi-constellation/09-変爻の分析.md である。番号、卦名、上下卦、
+対象は docs/yi-constellation/analysis/01-64卦のシステム地図.md と
+docs/yi-constellation/analysis/09-変爻の分析.md である。番号、卦名、上下卦、
 八×八の配置、三十六の変爻、之卦の象の引用、序卦伝・雑卦伝の引用、
 綜卦の対、序卦の連続を機械的に確かめる。象の意味の解釈は検算しない。
 
@@ -18,7 +18,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parents[1] / "docs" / "yi-constellation"
+BASE = Path(__file__).resolve().parents[1] / "docs" / "yi-constellation" / "analysis"
 
 HEX = [
     (1, "乾", "111111"), (2, "坤", "000000"), (3, "屯", "100010"), (4, "蒙", "010001"),
@@ -186,6 +186,65 @@ def check_pairs() -> list[str]:
     return errors
 
 
+
+def check_product_identity(doc: str) -> list[str]:
+    """Prevent a prose-only naming change from silently reusing the old 36-line table."""
+    errors: list[str] = []
+    for product, name in PRODUCTS.items():
+        headings = re.findall(rf"^## \d+\. {re.escape(product)}\s+(.+?)\s*$", doc, re.M)
+        if headings != [name]:
+            errors.append(f"identity {product}: heading {headings!r}, expected {name}")
+        summaries = re.findall(rf"^\| {re.escape(product)}\s+([^|]+?)\s*\|", doc, re.M)
+        if summaries != [name]:
+            errors.append(f"identity {product}: summary {summaries!r}, expected {name}")
+    return errors
+
+
+def check_fixture_integrity() -> list[str]:
+    """Check the independent fixture representation against the canonical lookup."""
+    errors: list[str] = []
+    entries = json.loads(FIXTURE.read_text(encoding="utf-8"))["hexagrams"]
+    if len(entries) != 64:
+        errors.append(f"fixture row count: {len(entries)}")
+    seen: set[int] = set()
+    seen_bits: set[str] = set()
+    for row in entries:
+        number, bits = row.get("number"), row.get("bits")
+        if not isinstance(number, int) or number not in BY_NUM:
+            errors.append(f"fixture unknown number: {number}")
+            continue
+        if number in seen or bits in seen_bits:
+            errors.append(f"fixture duplicate number/bits: {number}/{bits}")
+        seen.add(number)
+        seen_bits.add(bits)
+        expected_name, expected_bits = BY_NUM[number]
+        if (row.get("name"), bits) != (expected_name, expected_bits):
+            errors.append(f"fixture mismatch for {number}: name/bits")
+    if seen != set(BY_NUM):
+        errors.append("fixture incomplete number set")
+    return errors
+
+
+def check_one_line_neighborhood() -> list[str]:
+    """Topology only, not a score for product, social, or conceptual coverage."""
+    roots = {BY_NAME[name][0] for name in PRODUCTS.values()}
+    targets = {
+        BY_BITS[changed(BY_NAME[name][1], line)][0]
+        for name in PRODUCTS.values()
+        for line in range(6)
+    }
+    union = roots | targets
+    errors: list[str] = []
+    if (len(roots), len(targets), len(union)) != (6, 32, 35):
+        errors.append(f"one-line neighborhood: {len(roots)} roots, {len(targets)} targets, {len(union)} union, expected 6/32/35")
+    # These are structural identity guards. SUI is 萃 (45), NOT 隨 (17).
+    if BY_NAME[PRODUCTS["SUI"]][0] != 45:
+        errors.append("SUI mapping must be 萃/45, not 隨/17")
+    if BY_NUM[45][1][::-1] != BY_NUM[46][1]:
+        errors.append("SUI 萃/45 and SHO 升/46 must form a reversed-line pair")
+    return errors
+
+
 def normalize(text: str) -> str:
     return re.sub(r"[\s，、；。：,.;:（）()「」『』]", "", text)
 
@@ -232,6 +291,9 @@ def main() -> int:
     doc09 = (BASE / "09-変爻の分析.md").read_text(encoding="utf-8")
 
     errors: list[str] = []
+    errors += check_fixture_integrity()
+    errors += check_product_identity(doc09)
+    errors += check_one_line_neighborhood()
     errors += check_64_table(doc01)
     errors += check_matrix(doc01)
     errors += check_changes(doc09)
@@ -243,10 +305,13 @@ def main() -> int:
         "schema": "tai.evaluation.yi-constellation-structure/v0",
         "checkedAt": datetime.now(timezone.utc).isoformat(),
         "documents": [
-            "docs/yi-constellation/01-64卦のシステム地図.md",
-            "docs/yi-constellation/09-変爻の分析.md",
+            "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
+            "docs/yi-constellation/analysis/09-変爻の分析.md",
         ],
         "checks": {
+            "fixture": "64 canonical rows, unique names/bits, consistent numbering",
+            "identity": "6 product names, headings and summary labels (SUI=萃/45)",
+            "neighborhood": "6 roots / 32 one-line targets / 35 union (structural only)",
             "64table": "number, name, upper/lower trigram, position",
             "matrix": "8x8 upper/lower placement",
             "changes": "36 summary and detailed line changes, polarity labels",
