@@ -661,3 +661,21 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **Fixtureの形式上限**：今回の`order.tei.md`は旧DSL原bytesを単純に改名／一属性だけ改稿した**未対応ファイル**であり、MarkdownのFenceやRoleを持つ正式な`*.tei.md`著者入力を模したものではない。これは`*.tei.md`の内容が実Semanticへ反映されたかを検査する以前の、**実LoaderによるSource選択漏れ**の反証である。将来の合法Markdown/Roleを伴うReader受入は別PoC／独立Expected。
 
 **今回の範囲**：実Go CLIと一時公開FixtureのSource/Index/World/diagnostics比較を観測。新Readerの受理、Markdown Source Span、業務意味Owner判断、実Provider/Build Consumer、外部AI Harness H2/H3、Skill実Load/Costは**NOT RUN**。失敗した先行CI `#42256065696` は独立最小Workspaceのvalidateが必ず`ok=true`という仮定の誤りを含むため合格証拠にせず、修正後の同条件比較だけを参照する。
+
+<!-- harness8-one-factor-unparsed-source-byte-mutation-20261107 -->
+### 22.9 Sourceパス追加と同一パスの原byte変更を分け、解析済みMeaningとの束縛を検査（実CLI）
+
+[TAI実S1 CI #42297500012](https://github.com/hat47x/tai-pleroma/actions/runs/42297500012)（exact HEAD `f968dd55b2c8344e38e91407c5797d60c042ba8b`、Job `128166440777`、固定TEI `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`）で、§22.8の「管理File**追加**でIndexFPが変わる」試験を、一因子の「**同じFile path、変更するのは未解析`order.tei.md`の内容byteだけ**」へ補完した。
+
+比較した2つの一時Workspaceは、Manifestの原byte、旧`order.tei`原byte、両方のSource path名が一致し、`order.tei.md`内の`attribute total type std.money` → `std.text`だけ異なる。どちらも旧固定バイナリで`model catalog`を実行した。実ログは`samePathUnparsedBytesChangeIndex=true`、`samePathUnparsedBytesKeepWorld=true`、旧`semantic-data:sales.order`が両方1件。元の単純Renameは対象0件／`validate.ok=true`、旧新併存は診断件数3件・WorldFP不変・IndexFP変化の別負例として維持。
+
+**今回、反例で分離できた3つの命題**：
+1. `Source path追加→IndexFP差`：管理ファイルの有無をIndexが識別する。
+2. `同じSource pathの原byte変更→IndexFP差`：未解析であっても管理Fileのbyte変化をIndexが識別する。
+3. `同じSource pathの原byte変更→WorldFP同値`：同じ管理Sourceがあっても、現行Parserがその内容を実消費したとは限らない。
+
+**受入への適用**：SourceIndexの差を「新内容の意味採用済み」と呼ばず、WorldFP一致を「新Sourceは実際に解析・無影響と検証済み」と呼ばない。独立Expectedで必要なSource occurrence／Role／属性型・依存集合を指定し、Inventory→実Reader消費→World→Owner Meaning→実Build消費を段階別に確認する。逆に、選択外で必要依存のない文書のbyte変更を理由にすべてのClaimを無条件失効させるのも避ける。**必要依存集合の完全性が実証できない間は「影響なし」も「一律再受理」も自動判定しない**（TEI [#3030 TM-03/14、AU-07](https://github.com/hat47x/tei-platform/pull/3030)、[#2514](https://github.com/hat47x/tei-platform/issues/2514)、[#2600](https://github.com/hat47x/tei-platform/issues/2600)）。
+
+別の横断論点である[TAI #271 SC-21](https://github.com/hat47x/tai-pleroma/issues/271)（実行Profile変更時の現在Capability再資格化）はこれらのSource証拠とは独立。仮に同じBinary/Index/Worldの履歴が維持されても、次のHarness Sessionで同じTool・現在のGrantが利用可能とは推論しない。最初のH2-01実Sessionでは実Tool Request→Process→Tool Reply受領、Profile/許可範囲を、その時点で別観測する。これは初回Trialの条件を増やすものではなく既存Required evidenceの確認である。
+
+**状態・限界**：旧版のProduct-only Go CLI／公開一時Workspaceで3命題を実測。今回の`order.tei.md`は旧DSLを移した**未対応形式**であり、正式Markdown Frontend/Role/Source spanの成功ではない。[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)の未対応Parser明示拒否は別ビルドのCI、採用済みmainではない。外部Harness H2/H3四Session、H3 Skill実ロード、Markdown Parser、意味Owner受理、Provider Effectは**NOT RUN**。
