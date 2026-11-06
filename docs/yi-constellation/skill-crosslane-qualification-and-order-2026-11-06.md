@@ -131,3 +131,47 @@ Skill discoveryは「業務上必要な操作に対応する入口候補」を�
 探索は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の方式に従い、(1)業務意味とTenantのモデル照合＝TEI #2386/#2510、(2)Skill/Task/Context差＝TAI #488、(3)実OS/Host/開示＝TAI #232/TEI #2515、(4)実Effect/回復＝TEI #1174/EKI Owner、(5)現行Evidence＝TAI #271とする。各Agentは自分のOwnerと使用したSource SHA/Revision、Expected、観測、未確認、反証条件を報告し、別レーンの意味受理やIssue本文を上書きしない。独立Reviewerは、`組織Role = Grant`、`ローカルRead = 外部送出許可`、`Tool成功 = 業務完了`の三つの誤昇格を具体的に反証する。
 
 **この追補は文書上の接続提案であり、新たな組織/認可/Skill実装や実Harness・実Provider/テナント隔離・Oracleの実行、Ownerの正式採用を意味しない。**
+
+
+## 11. 用途によるSkill非選択・保留を独立に評価する（YIC-ROUTE、後続試験／NOT RUN）
+
+### 11.1 追加理由とOwner
+
+Skillが多くあることと、必要なSkillを正しく選べることは別。特に「Product単独で足りる」「TAI横断が初めて付加価値を持つ」「実ToolがなくSkillだけ候補」「Product/Toolの存在自体を開示できない」を同じルーティング成功に数えない。TAIの役割は常時の共通Dispatcherではなく、**必要となったときだけ複数Productの根拠・未決・現在資格を条件付きで連携すること**。外部Harnessの既存Skill discoveryを利用し、ここに共通Skill Registry・Routing Engine・正本を増設しない。
+
+ルーティング試験は[#488](https://github.com/hat47x/tai-pleroma/issues/488)の横断照合に属し、**実Trial/独立Expected/費用は[#168](https://github.com/hat47x/tai-pleroma/issues/168)・[Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)のSK-01/SK-02/SK-03、Product入口は各Owner Issue**を使用する。以下は追加の判別条件であり、最初の固定TEI H2/H3に新Skillや新負例を差し込まない。
+
+### 11.2 正例・反例の照合表
+
+| Case | Task/観測できる情報 | 独立Expected（推奨経路の上限） | 誤成功とOwner |
+| --- | --- | --- | --- |
+| YIC-ROUTE-01 単独Read | 公開TEI Workspaceの一Subjectを調べる。実TEI CLIと固定Product Skill候補がある | **TEIのみ**で成立。TAI横断Skillを必須にしない。Tool-only対Product SkillはSK-02で別採点 | TAIが介在しないことを「YIC失敗」にする誤採点／TAI #168、TEI #2605 |
+| YIC-ROUTE-02 多Product目的 | Sourceに基づくTEIの説明をSHO文書へ反映し、根拠・未決を中断後にも保持する | 各Productで意味・文書・保存後実読取が成立した**範囲でのみ**TAI候補。SHO Writer未成立なら全体は未完 | TAI呼出し・連続回答だけで文書保存/納品合格／TAI #271、SHO #10 |
+| YIC-ROUTE-03 入口未成立 | SEI/SUI/SHO/EKIのSkill候補はあるが、要求操作の実Tool/API/権限がその版では未確認 | Candidate/Unsupported/Unknownを区別。代替する既存手段があればそちらを利用し、架空Toolを作らない | Skill Issueの存在またはClosed状態を実Load/実Tool成功とみなす／各Product Owner、TAI #74 |
+| YIC-ROUTE-04 曖昧な意図 | 「注文について教えて」など、TEIモデル説明か実業務操作かを確定できない | 用途/対象/作用の不足を明示し、安全な公開read-only候補までに限定。自動Write/代理Actionへ進まない | 語彙一致によるTool選択からHost Grantを生成／TEI #1174、TAI #232 |
+| YIC-ROUTE-05 非公開の候補 | 許可された可視Tool/Skill一覧Vは同一だが、内部世界A/Bでは非公開能力の有無が異なる | 外部の回答・一覧・エラー・追加Tool Requestで秘密の有無を識別できない。可視Vだけから全件不存在を断定しない | 非公開Skill名や件数/理由の漏洩、未知を「無し」に変換／TAI #232、SUI #3368 |
+| YIC-ROUTE-06 版・資格変化 | Skill選択時はToolあり、実呼出前にTool Schema/Source/Grant/参照Scriptが改版・失効 | 旧Selectionは履歴。現在のTool/Source/Permissionを既存Ownerで再確認し、不適格なら停止 | 選択成功や旧digest一致から現行利用資格を復活／TAI #271、TEI #2605 |
+| YIC-ROUTE-07 正当な不要選択 | 一般的な文章校正などProduct固有Capabilityを要しない依頼 | 外部Harnessの通常機能だけで終了可能。Product/TAI導入を価値の必要条件にしない | Skill過剰ロードによる費用・誤情報・過剰Sourceアクセス／TAI #422 |
+| YIC-ROUTE-08 限定アクセス | 許可されたProduct-local Readは可能だが外部LLMへのRaw送出は許可されない | 必要な範囲のローカルReadは妨げず、外部には許可済みProjectionのみ。利用不能なら停止理由の開示も制約 | Read許可をexport許可と混同、または全Readを過剰拒否／TAI #232、TEI #2515 |
+
+### 11.3 判別力と測定（既存SK票への追加列の提案）
+
+- **Routingの品質**はTaskごとに「必要なProductを選択／不必要なProductを選ばない／必要時の保留／不正な選択や秘匿漏洩を防止」を区別する。正答率だけでなく誤陽性、誤陰性、過剰保留、Tool不存在の架空補完を別計数。Product意味の正答・独立Oracleとは別に採点する。
+- **不要な横断化のコスト**はTool/Skill実Load数、追加Context byte/token、実呼出し、Source再取得、人的承認、再開までの実時間と失敗回復で計る。費用を減らしても権限・Source・意味品質が崩れたら改善としない。サンプルが少ない場合は頻度・効果率を一般化しない。
+- **入力の固定**はHarness/Model/Tool Profile/許可Projection/Task/実Product pinと独立Expected。前回のSkillを知ったセッション・隠しReferences・他条件の採点票がH2/H3に届いた場合は、Treatmentsの混線としてineligible/insufficient-evidenceを残す。
+- **不成立時**は未公開のToolやProduct自体の有無を推定せず、選択可能な公開候補だけを示す。新API/Manifest/Skill Routerを作らず、既存SK-01のH4/H5やSK-03に追加ケースを**実際に実施する段階でのみ**接続する。
+
+**実行順を変えない**：H2-01実Tool Session → H3固定Skill実Loader → 4独立Session比較 → 必要な用途のYIC-ROUTE検証。初回read-only TEI Trialの後に評価対象を広げる。全YIC-ROUTE試験は現時点NOT RUN。
+
+## 12. Product Skillの所有・実際の到達状況の確認（2026-11-06時点）
+
+| Product | Skill所有のIssue/確認できる段階 | 未達を推定しないための上限 |
+| --- | --- | --- |
+| TEI | [#2605](https://github.com/hat47x/tei-platform/issues/2605) Open。固定公開Workspaceの実CLIによる限定S1 ReadはTAI #168で確認 | 実Harness H2/H3 Loader/Model Call・意味Owner受理は別。CLI応答envelope不一致は未修正Trialで観測 |
+| SEI | [#769](https://github.com/hat47x/sei-cognition/issues/769) Open。Method/Inquiry Skillは提案 | Product API/Skill実Loadの試験を成立済みとしない |
+| SUI | [#3368](https://github.com/hat47x/sui-sensemaking/issues/3368) Open。Agent Projectionの機密境界を含む提案 | 公開されないCard/ID/件数・未レビューの探索結果をSkill可用性から推定しない |
+| SHO | [#10](https://github.com/hat47x/sho-composer/issues/10) Open。Draft #17のReaderは限定実CI、Writer/Save/Deliverは別 | Reader CIとSHO Compose Skillの実Loader/Writer利用を混同しない |
+| EKI | [#468](https://github.com/hat47x/eki-fabric/issues/468) Closed。委任Skillの条件を記録したIssue | **Closedであること自体は**Skill正式Release・実Harness Tool・Task Body受領の証拠ではない。#407/#465の実Task/Attemptと対照 |
+| TAI | [#488](https://github.com/hat47x/tai-pleroma/issues/488) Open、[Draft #270](https://github.com/hat47x/tai-pleroma/pull/270) に例示Skill | 横断SkillはProduct単独利用の必須依存ではなく、継続/引渡しの増分価値を測ってから任意採用 |
+
+この表は**2026-11-06時点で参照したIssue状態と限定的Evidenceの監査用メモ**であり、Productの最新Release全数調査・現在Capability Catalog・版付き配布Manifestではない。正式配布適格性はTAI #74と各Product Owner、横断増分価値はTAI #422、現在の再利用資格はTAI #271が持つ。IssueのOpen/Closedや研究計画を製品実装・Harness支援・Owner採用として集計しない。
