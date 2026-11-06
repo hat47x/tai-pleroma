@@ -515,3 +515,32 @@ TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)のSC-19（旧Attemp
 新たな試験Suiteを作らずTAI #514 **AC-01〜12**を既存SK-03/#271の評価票から参照する。先に公開合成Concept 1件（必要なら `computations/order-total.md`）とTEI公開 `sales.order` の**別の後続Trial Group**を固定し、同じDefinition/typed input/独立Expectedで、正規Run、AgentのSQL差替え、偽Job/別Attempt、stale/Owner撤回、NULL/empty/partial、外部送出拒否、常時PASS Attesterを一因子変更で判別する。独立再Read不能なら`insufficient-evidence`と記録し、LLMがReceipt/Verdictを作成して空欄を埋めない。
 
 最初のBlocking Exitは引き続き[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**固定公開TEI read-only H2 Tool-only実Harness一Session→H3 Product Skill実root/reference Read→四独立Session**。既存の固定Skill byte、旧 `.tei` Source、Task、CLI Profile/ExpectedへOKF文書/計算Skillを途中挿入しない。`*.tei.md`正式Reader、Attester実コード/ABI、実Job/DB/Consumer再読取、実Host/OS Grant、正式Owner Meaning受理、横断Skillの増分価値実測は全て**NOT RUN**。TEI側の限定CLI CIはこれらの実証へ加算しない。
+
+## 25. OKF一般知識交換でのClaim単位の証拠とSkill非選択境界（SEI #820／既存KOケースへ接続、計画・NOT RUN）
+
+### 25.1 OKF Conformanceと認知的な判断資格は直交する
+
+[SEI #820](https://github.com/hat47x/sei-cognition/issues/820)はOKF v0.2をSEI native Observation/Hypothesis/Recommendation/Decision/Method/Unknown/Lineageの正本へ置き換えず、**選択式のportable Markdown Concept Projection**として扱う構想を整理した。[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)はOKFの発見・来歴・鮮度とAttested Computationを扱い、§24は実計算のClaim資格。本§25はYICが**SEIの知識を含むProduct Skillを選択・非選択し、SHO等へ引き継ぐとき**の情報損失と誤昇格だけを規律する。SEIの意味判断、文書生成器、Native Import/Exportは作らない。
+
+OKF Conceptの`type`以外の多数のMetadata/未知type・未知key・broken link・index欠落は形式上寛容であり得る。一方、SEIのExact Binding/必要Sourceの実Read・根拠十分性/未決、実Actor、現在Owner受理、現在Audience/Host Grantは独立評価する。`status`省略時のOKF stableはSEI Decision accepted/currentでなく、`human-reviewed`という派生trust tierや`verified[].by`の文字列`human:alice`は本人認証・Owner Meaning Acceptanceではない。引用Sourceの数、`usage_count`、鮮度は根拠の独立性や真実性を自動保証しない。
+
+### 25.2 YICが要求する最小のSource/Claim/Consumer対応
+
+| 受渡し対象 | 情報がある場合に維持するもの | 認めない推論 |
+| --- | --- | --- |
+| OKF Concept/索引 | Bundle pathによるConcept IDと選択したDocument Scope、実ReadしたConcept/Raw Revision | indexに無いConceptは存在しない、Concept ID＝SEI Logical Ref/TEI Meaning ID |
+| 文書内の複数Claim | 観測・仮説・未決・判断の別Claim、各脚注`[^id]`→`sources[].id`→実Source Span/Revision | 1 Concept＝1 Native SEI Recordまたは1受理済みDecision、配列順によるSource対応 |
+| 出典の独立性 | Original locator/lineage、転載・引用の起点、部分取得・非開示・不確実性 | 同一原資料の転載とAI再引用を独立3根拠として数える |
+| Actorと時刻 | OKF generated/verified/source last_modified/stale_after、SEI observed/recorded/valid/checkedを別時点で扱う | ラベル/文字列を実PrincipalやOwner Grantと同一視、期限内＝Source不変 |
+| Markdownのリンク/履歴 | 通常リンク、index/logを検索・説明用途に利用。SEI typed relation/withdrawal/Decision eventはNativeに保持 | logに撤回が書かれただけで実Decision取消、無型リンクから`supersedes`推定 |
+| 他Product受渡しとImport | Task Purpose、Recipient、選択した開示Projection、Concept/Claim/Sourceの対応とUnknownを示す | OKF形式読込成功＝SEI Native StoreへのMerge権限、別Tenantへの全公開 |
+
+特に[SEI #775](https://github.com/hat47x/sei-cognition/issues/775)では実CLIの`export --output -`がstdoutでなく文字通り`-`ファイルへ書かれる、正式Importが未決定という**実Product入出力の制約**が報告されている。SkillがCLI説明から存在しないpipe/Importを捏造しない。外部Bundle閲覧は許容されても、Native Storeへの更新・上書きは、Record ID衝突、Exact Binding/Authority/現在Grantの別判断が完了するまで実行しない。
+
+### 25.3 Skillの選択・縮退・後続試験
+
+YICはまずTaskの必要Claim/現在Audienceに合わせ、**SEI Product単独のread-only Tool/SkillでSource・未決を説明できるか**を判定する。文書の作成・保存・引用が必要になった場合のみSHOのReader/Writer（[SHO #18](https://github.com/hat47x/sho-composer/issues/18)）を検討し、複数Productにまたがる現在性・未決引継ぎが必要な場合だけTAI Activity Skillを検討する。SEI #820のConcept Projectionは**提案段階**なので実Export成功や実Skill Loadedとは表示しない。OKF Plugin無効でも通常Markdownの閲覧・編集を保ち、`*.tei.md`やOKF Metadataを全Productの必須Hot Pathにしない。
+
+後続の評価はSEI #820 **KO-01〜15**の既存独立Expectedに接続。とくにKO-01/02（Source ID/引用起点）、KO-03/04/05（Actor/状態/鮮度）、KO-10/11（文書粒度/隠れConcept）、KO-14/15（Store Import/Resumeの不明）を、TAI #488のYIC-ROUTEと#271のB0/B1/B2に**参照対応**させる。新Fixture/SEI Converter/Registry/共通Trust Score/自動Import/Attesterは作らない。作業負担、誤った受理・根拠喪失、過剰なProduct呼出し、正当に継続できるread-only作業を独立に測る。
+
+先行Blocking Exitは変更しない：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定TEI公開SourceによるH2外部Harness実Tool一Session→H3実Skill root/reference Load→固定四Session比較を先行。SEIのOKF Import/Export・SHO Writer・SK-03横断実Handoff、KO-01〜15の実Runner/Consumer、正式Owner受理と現在Disclosureは**NOT RUN**。文書形式適合、Claimの知識適格性、実Toolと現在の利用権限を混同しない。
