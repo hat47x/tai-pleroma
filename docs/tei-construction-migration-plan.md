@@ -1,4 +1,4 @@
-# TEIによるプロダクト構築への移行 — フィージビリティ検証計画
+﻿# TEIによるプロダクト構築への移行 — フィージビリティ検証計画
 
 状態: **Draft（提案）**。Owner指示（2026-11-01）を前提にした検証計画であり、製品要求・採用済み設計ではありません。要求の正本は各リポジトリの`requirements/`、TEIの方法は[TEIの業務システム設計要求](https://github.com/hat47x/tei-platform/blob/main/requirements/BUSINESS_SYSTEM_DESIGN_REQUIREMENTS.md)を参照します。
 
@@ -182,3 +182,4 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 2. SUIのどの範囲を最初の意味の単位とするか（DocumentV1全体か、投影だけか）。
 3. 比較測定の基準となる現行実装の版と、変更課題の選び方。
 4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。
+

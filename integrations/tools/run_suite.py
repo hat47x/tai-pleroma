@@ -189,7 +189,8 @@ def main():
                 "--out",
                 "evaluations/records/SUI-TEI-postgres-multidoc-2026-11-03.json",
             ],
-        ),        "records": run_step(
+        ),
+        "records": run_step(
             "records",
             [
                 "integrations/tools/validate_records.py",
@@ -217,6 +218,7 @@ def main():
         "sui_ce4": run_step("sui_ce4", ["integrations/pilot-sui-document/assembler/ce4_resolve_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-ce4-2026-11-03.json"]),
         "sui_registry": run_step("sui_registry", ["integrations/pilot-sui-document/assembler/model_registry_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-registry-2026-11-03.json"]),
     }
+    steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}
     if args.eki_control:
         eki_env["EKI_CONTROL"] = args.eki_control
