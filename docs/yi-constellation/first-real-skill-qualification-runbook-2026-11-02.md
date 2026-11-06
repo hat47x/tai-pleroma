@@ -618,3 +618,25 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **Claimの上限**：これはLinux CIで**Go実行コマンドをPATHから解決できない環境変数下**の固定Executable動作を示す。Goがホストから完全にアンインストールされていること、別OS/アーキテクチャへの適合、単一Binaryの全依存の封入、Sandboxの隔離、外部HarnessでのTool呼出し・Skill実Loadを実証したものではない。`go version`が採れないことはPrebuilt Toolの不適格理由にならず、**実Binary byte＋Platform＋実CLI呼出し**で資格化する。一方、Source Buildを要求する別Taskには`go.mod`とToolchainの別Gateを使う。
 
 次の`H2-01`は依然、外部Harnessにおける実Tool Request→実Executable→実Tool Replyの同一Session証拠が必要。Product-only CI成功とSkill有益性/業務Owner受理を合算しない。
+
+<!-- sk02-tei-md-migration-versioned-groups-20261107 -->
+### 22.7 `*.tei.md`全面統一の製品決定を、固定S1/H2/H3の版比較とは分離する（2026-11-07）
+
+**製品方針と実装状態を区別**：TEI Authoringの標準名を`*.tei.md`へ寄せ、`*.tei`を原則段階廃止するのはOwnerが選択した方向。[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)は形式選択・Source Fidelity・段階移行の計画、[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は未接続の`*.tei.md`が存在するとき明示診断`TEI_MD_PARSER_UNBOUND`で止める暫定Guard。**両PRは現時点Draft／未merge**で、後者は新形式をParseできる保証ではない。
+
+**現在の製品にある3つの独立した状態**：
+
+| 段階 | 製品ビルド／入力 | Source・Resultの期待 | 実証資格 |
+| --- | --- | --- | --- |
+| V0 歴史的固定S1 | 初回比較固定TEI `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`＋`semantic/sales/order.tei` | `semantic-data:sales.order`が1件Loaded、実Byte/World/Source Index Pin一致 | 従来形式の限定Product-only実CLI証拠；**このSource/Skill/Taskを四Session途中で移行しない** |
+| V1 非互換検知 | 同一旧バイナリ＋同じDSL bytesを`order.tei.md`へRename | 旧Loaderの`*.tei`列挙から漏れ、対象Subjectが0件でも`validate.ok=true`となり得る | **拒否されない非互換は失敗**。一時Fixtureで実挙動を観測し、独立Expectedの「対象1件」を保つ |
+| V2 暫定Fail-closed | 新Guardを含む別TEI改訂＋未Parser対応`*.tei.md` | 明示`TEI_MD_PARSER_UNBOUND`／Source pathを報告、意味受理・生成・実行は停止 | 新形式の**安全な不受理**まで。Loader/Markdown/DSL意味解釈の対応済みとは呼ばない |
+| V3 将来の実対応 | 明示Frontend/Role/Operator版・Markdown Source/構造範囲をPinした新Reader／Binary | Source実Read、対象Subject・定義・Relation・診断／Source byte位置・依存、独立Expected一致。併存時の同一Subject重複拒否も確認 | **別Trial Group**で初めてSkill比較／実Consumerの受入を実施可能 |
+
+初回四SessionはV0で比較する。V1/V2/V3を同じ`repo_head`・`workspace_tree_digest`・`source_index_fingerprint`・`binary_digest`のまま流用しない。`order.tei`の旧S1 Source pathと`order.tei.md`の新Source pathが異なれば、内容bytesが同じでもSource Identity／引用・Source Index／Bundle／Reader・Skillが参照したVersionを別に記録し、意味が不変かは独立Expectedで評価する。A→B→Aや古いReceiptの再利用も自動資格化しない。Migration後のLegacy Sourceを無条件Deleteしたり新旧両方を同時に有効化したりしない。
+
+**文字列拡張子とMarkdown文法も独立**：新拡張子はTEI用途を表すMarkdownであり、旧裸DSL bytesを改名だけで正式Markdownへ昇格させない。Markdown内のどのCode Fence／Table／BlockがTEI Role/Sourceなのか、OKF frontmatter、Source byte範囲・原表記保持、Parser選択、失敗時のraw Draft保持はTEI #2621/#988と[Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)のOwner契約。H3 SkillがMarkdown形式を知らない場合も旧Skillの試行と新版の試行を混ぜない。
+
+**試験Ownerと非目標**：旧V0→V1の一時負例だけは既存[TAIのProduct-only S1 Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)へ局所追加し、旧Runnerが誤って`ok=true`を成功扱いすることの**回帰特性**として保存する。V2/V3の正式実装・Go単体試験・非互換診断・Source Index/Studio/SHO/OKF対応はTEIの担当計画へ戻す。TAI SK-02 Checker、実際の4 Trial、Task/Expected、Tool/Host/OS権限に移行特例を追加しない。新形式の試行を開始する前にSource/Skill/Binary/実Tool Profile/Expectedを新規事前登録する。
+
+**現在地**：V0 Product-onlyのCIは既存成功済み。V1は新CIのexact HEADが成功し、結果がログで確認できるまでは実証済みとは書かない。V2/V3についてはTEI側の独立Draft／計画が存在するだけで、外部AI Harness実行や旧新互換・Owner受理・実Source移行が完了したという主張はしない。
