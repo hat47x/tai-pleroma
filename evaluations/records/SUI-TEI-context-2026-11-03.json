@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.sui-context-contract/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with SUI in local-dev profile",
+  "command": "python integrations/pilot-sui-document/assembler/context_query_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-context-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-sx1\\evaluations\\artifacts\\scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "acceptedStatus": 200,
+    "accepted": true,
+    "hashPresent": true,
+    "previewStatus": 422,
+    "previewCode": "preview_required",
+    "unknownKeyStatus": 400,
+    "unknownKeyCode": "unknown_contract_key",
+    "outOfRangeStatus": 400
+  },
+  "scope": "Exercises SUI's /context/query validation: an accepted query, a query without preview confirmation, an unknown key and an out-of-range depth. It does not build a bundle."
+}

@@ -156,6 +156,7 @@ REAL_RECORDS = (
     "evaluations/records/MMI-delivery-audit-2026-11-03.json",
     "evaluations/records/SUI-TEI-audit-2026-11-03.json",
     "evaluations/records/SUI-TEI-admin-2026-11-03.json",
+    "evaluations/records/SUI-TEI-context-2026-11-03.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -599,6 +600,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-context" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("acceptedStatus") != 200 or observed.get("previewStatus") != 422:
+                errors.append(f"SUI context query contract did not hold: {relative}")
         if "SUI-TEI-admin" in relative and "admin-path" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
