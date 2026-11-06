@@ -147,7 +147,7 @@ jobs:
           for EXT in tei tei.md; do
             ROOT="$BASE/$EXT"
             mkdir -p "$ROOT/semantic"
-            printf '%s\\n' 'workspace: extension_probe' 'formatVersion: 1' 'sources:' '  - semantic' > "$ROOT/tei.workspace.yaml"
+            printf '%s\n' 'workspace: extension_probe' 'formatVersion: 1' 'sources:' '  - semantic' > "$ROOT/tei.workspace.yaml"
             cp tei/reference/workspace/semantic/sales/order.tei "$ROOT/semantic/order.$EXT"
             "$RUNNER_TEMP/tei-s1" model catalog -workspace "$ROOT" > "$RUNNER_TEMP/sk02-extension-$EXT-catalog.json"
           done
