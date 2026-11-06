@@ -719,3 +719,17 @@ dryRun=false → 200
 
 - 応答は解決結果と監査連鎖の要約を含む
 - 実コンテキスト提供者には接続していない（モック）
+
+## SUIのモデル登録（2026-11-03）
+
+管理APIでモデルレジストリを読み、プロバイダを1件登録した。[receipt](../evaluations/records/SUI-TEI-registry-2026-11-03.json)
+
+```text
+GET  /admin/provision/models → 200（providers/models）
+POST /admin/provision/models/providers（providerKind=local）→ 201
+匿名 → 401
+未対応のproviderKind → 422
+```
+
+- 登録できるproviderKindは`local`・`large-scale`・`deepseek`
+- 実モデル呼び出しは行っていない

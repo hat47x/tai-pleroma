@@ -159,6 +159,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-context-2026-11-03.json",
     "evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
     "evaluations/records/SUI-TEI-ce4-2026-11-03.json",
+    "evaluations/records/SUI-TEI-registry-2026-11-03.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -602,6 +603,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-registry" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("listStatus") != 200 or observed.get("createStatus") != 201:
+                errors.append(f"SUI model registry did not hold: {relative}")
         if "SUI-TEI-ce4" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("dryStatus") != 200 or observed.get("hasBundleHash") is not True:
