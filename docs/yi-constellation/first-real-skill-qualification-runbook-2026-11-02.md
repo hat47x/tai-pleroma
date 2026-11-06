@@ -639,7 +639,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **試験Ownerと非目標**：旧V0→V1の一時負例だけは既存[TAIのProduct-only S1 Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)へ局所追加し、旧Runnerが誤って`ok=true`を成功扱いすることの**回帰特性**として保存する。V2/V3の正式実装・Go単体試験・非互換診断・Source Index/Studio/SHO/OKF対応はTEIの担当計画へ戻す。TAI SK-02 Checker、実際の4 Trial、Task/Expected、Tool/Host/OS権限に移行特例を追加しない。新形式の試行を開始する前にSource/Skill/Binary/実Tool Profile/Expectedを新規事前登録する。
 
-**現在地（2026-11-07再照合）**：V0は固定版Product-only CI成功。V1の単純RenameによるSubject 1→0／validate.ok=trueは[旧版実CLI CI #42239797449](https://github.com/hat47x/tai-pleroma/actions/runs/42239797449)で観測済み。さらに**V1の旧新併存**は[実CLI CI #42256480002](https://github.com/hat47x/tai-pleroma/actions/runs/42256480002)でSourceIndexFP変化・WorldFP不変・検証診断不変を観測した（次節§22.8）。V2はTEI [Draft #3031の専用CI #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)で**未対応Sourceの明示拒否**だけ成功。V3のMarkdown Parser/Loader実読込、旧新意味同等、外部AI Harness H2/H3、Owner意味受理は引き続き**NOT RUN**。Product-only負例やDraft GuardのCIをV3に加算しない。
+**現在地（2026-11-07再照合）**：V0は固定版Product-only CI成功。V1の単純RenameによるSubject 1→0／validate.ok=trueは[旧版実CLI CI #42239797449](https://github.com/hat47x/tai-pleroma/actions/runs/42239797449)で観測済み。さらに**V1の旧新併存**は[実CLI CI #42256480002](https://github.com/hat47x/tai-pleroma/actions/runs/42256480002)でSourceIndexFP変化・WorldFP不変・検証の診断**件数**不変を観測した（次節§22.8）。V2はTEI [Draft #3031の専用CI #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)で**未対応Sourceの明示拒否**だけ成功。V3のMarkdown Parser/Loader実読込、旧新意味同等、外部AI Harness H2/H3、Owner意味受理は引き続き**NOT RUN**。Product-only負例やDraft GuardのCIをV3に加算しない。
 
 <!-- harness8-source-index-versus-interpreted-world-20261107 -->
 ### 22.8 旧 `*.tei` と未対応 `*.tei.md` が併存する際のSource Index／意味実消費の差（実CLI負例）
@@ -657,5 +657,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **受入規則（新しい判定器は不要）**：Source inventory、ManifestIdentity/Source Root、Source Index Artifact（発見/byte）、**Parserが実消費したSource/Occurrence**、World/Model Revision、必要なSubject/Role/依存集合のCoverage、Owner Accepted Meaningを別列で照合する。Source Index差だけで意味変更を推測しない一方、World FPが一致するから新Sourceを未読込でも完全と扱わない。「新しい管理Fileが有る」と「必要定義が有効」は独立Expectedで別採点。対象Sourceが未読込なら `unbound/partial/unknown` を残し、旧モデルを新ファイルのMeaningと見立てて利用・Build・Artifactへ進めない。完全性を否定するためにSource IndexのArtifact列だけを利用しない。
 
 **移行段階への帰属**：TEI [#3030 TM-03/14](https://github.com/hat47x/tei-platform/pull/3030)で実Parser対応・旧新衝突をOwner検収し、[Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は未接続`*.tei.md`の**明示拒否**だけを実証済みとする。旧固定Binaryの併存例を、#3031のGuardに誤用しない。原文・Role・Parse範囲の確認後でなければ失効範囲/再受理の最適化はしない（#2621/#2582/#2514）。**初回H2/H3の4 Session、固定Skill・Task・Sourceの版は変更しない**。新形式の実Skill評価は別Group。
+
+**Fixtureの形式上限**：今回の`order.tei.md`は旧DSL原bytesを単純に改名／一属性だけ改稿した**未対応ファイル**であり、MarkdownのFenceやRoleを持つ正式な`*.tei.md`著者入力を模したものではない。これは`*.tei.md`の内容が実Semanticへ反映されたかを検査する以前の、**実LoaderによるSource選択漏れ**の反証である。将来の合法Markdown/Roleを伴うReader受入は別PoC／独立Expected。
 
 **今回の範囲**：実Go CLIと一時公開FixtureのSource/Index/World/diagnostics比較を観測。新Readerの受理、Markdown Source Span、業務意味Owner判断、実Provider/Build Consumer、外部AI Harness H2/H3、Skill実Load/Costは**NOT RUN**。失敗した先行CI `#42256065696` は独立最小Workspaceのvalidateが必ず`ok=true`という仮定の誤りを含むため合格証拠にせず、修正後の同条件比較だけを参照する。
