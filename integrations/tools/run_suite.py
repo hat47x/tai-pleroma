@@ -219,6 +219,7 @@ def main():
         "sui_registry": run_step("sui_registry", ["integrations/pilot-sui-document/assembler/model_registry_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-registry-2026-11-03.json"]),
         "sui_agent_guard": run_step("sui_agent_guard", ["integrations/pilot-sui-document/assembler/agent_credential_guard_check.py"]),
         "sui_agent_admin": run_step("sui_agent_admin", ["integrations/pilot-sui-document/assembler/agent_credential_admin_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-agent-credential-admin-2026-11-06.json"]),
+        "sui_audit_pagination": run_step("sui_audit_pagination", ["integrations/pilot-sui-document/assembler/admin_audit_pagination_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}
