@@ -15,40 +15,8 @@
     "attempts": [
       {
         "submit": 202,
-        "task": "tsk_471aeafeb8c93e434c89ee9f66eee73f",
-        "worker": "wrk_222984c298a78e9a2ffb6aa2faab3be3",
-        "executed": false,
-        "claimed": false,
-        "resultStatus": 409,
-        "resultBody": {
-          "type": "urn:eki:problem:result-not-ready",
-          "title": "The task has not produced an accepted result yet",
-          "status": 409,
-          "code": "RESULT_NOT_READY",
-          "retryable": true,
-          "task_id": "tsk_471aeafeb8c93e434c89ee9f66eee73f"
-        }
-      },
-      {
-        "submit": 202,
-        "task": "tsk_d64c3e747a6f51305e3b4ff96e1c43aa",
-        "worker": "wrk_40f8af7302eb686b7ef11caabcad1b5f",
-        "executed": false,
-        "claimed": false,
-        "resultStatus": 409,
-        "resultBody": {
-          "type": "urn:eki:problem:result-not-ready",
-          "title": "The task has not produced an accepted result yet",
-          "status": 409,
-          "code": "RESULT_NOT_READY",
-          "retryable": true,
-          "task_id": "tsk_d64c3e747a6f51305e3b4ff96e1c43aa"
-        }
-      },
-      {
-        "submit": 202,
-        "task": "tsk_392d3961995686b1c9f0a7aac7f1446e",
-        "worker": "wrk_16ef34e067aa59ac16575fae1985a60d",
+        "task": "tsk_9e7adc4e9db33baa426aad2ec43373d9",
+        "worker": "wrk_dd5a043c6917b08117c5e3945d495078",
         "executed": true,
         "claimed": true,
         "resultStatus": 409,
@@ -58,13 +26,13 @@
           "status": 409,
           "code": "RESULT_NOT_READY",
           "retryable": true,
-          "task_id": "tsk_392d3961995686b1c9f0a7aac7f1446e"
+          "task_id": "tsk_9e7adc4e9db33baa426aad2ec43373d9"
         }
       }
     ],
     "submitStatus": 202,
-    "taskId": "tsk_392d3961995686b1c9f0a7aac7f1446e",
-    "workerId": "wrk_16ef34e067aa59ac16575fae1985a60d",
+    "taskId": "tsk_9e7adc4e9db33baa426aad2ec43373d9",
+    "workerId": "wrk_dd5a043c6917b08117c5e3945d495078",
     "executed": true,
     "claimed": true,
     "resultStatus": 409,
@@ -74,7 +42,7 @@
       "status": 409,
       "code": "RESULT_NOT_READY",
       "retryable": true,
-      "task_id": "tsk_392d3961995686b1c9f0a7aac7f1446e"
+      "task_id": "tsk_9e7adc4e9db33baa426aad2ec43373d9"
     }
   },
   "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest, lets the Agent execute the fixed command and then reads the Task result endpoint. The claim is submitted but the read answers RESULT_NOT_READY, because result acceptance is not wired into the running Control Plane."
