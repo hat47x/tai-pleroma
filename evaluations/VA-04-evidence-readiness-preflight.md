@@ -69,3 +69,13 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 ただし、これを全Productの実行を止める横断Gateにはしない。Sourceの**read-only調査**、合成DSLテスト候補作成、限定Scenario verifyは実Build・実Effectの資格に届かないと明記して進められる。**実Artifact/Target/業務Effectの適合Claim**には、当該Product Ownerが要求するBuilder入力の対応を必要条件とする。[TEI #2595](https://github.com/hat47x/tei-platform/issues/2595)へ修正・再実証のOwnerを返し、本VA-04では第二Build Registry/Validator/CLIを作らない。
 
 本VA-04でのPF-B01実行、TEI EB-04修正、他Targetの資格、Owner受理は **NOT RUN**。
+
+## 7. 2026-11-07：新TEI形式の明示診断とSource移行の資格差
+
+[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は、旧Readerが新`*.tei.md`を無視すると`validate.ok=true`のままSubjectが消えるという誤成功に対し、未対応Sourceを`TEI_MD_PARSER_UNBOUND`として明示診断する限定コードを追加した。固定HEAD `63953ccb5c12ead26ec1268e7c0afdba4eff66ae`の[focused CI #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)は成功。これは**未対応入力の拒否**であり、MarkdownをTEI定義として解析・受理できるという証拠ではない。
+
+**PF-MD-01（履歴と現在実装の区別）**：V0＝旧`order.tei`が選択された結果、V1＝同じ定義を単純に`order.tei.md`へ改名してSource数が減る結果、V2＝#3031の診断で拒否される結果、V3＝将来の正式Markdown Readerで実Parse/Meaning照合が成功する結果を**別々の資格**とする。V0からV3へ試験結果を流用しない。独立Expectedは宣言数・実選択Source・解析済みSubject/Role・診断・実Source Indexを個別に固定する。V2の拒否試験が通っても、V3の成功条件は未達。
+
+**Ownerと移行順**：旧新Sourceの全体移行・参照/固定Gate・実Reader互換は[TEI Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)の移行計画と[#1920](https://github.com/hat47x/tei-platform/issues/1920)へ寄せる。[Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)は専門家向けMarkdown Authoringの表層・原文保持比較、[#988](https://github.com/hat47x/tei-platform/issues/988)はK0 Source Kind/Language Pluginの初回選択を所有する。二つの移行正本・新Parser/Registry/HostをTAI側に作らない。
+
+**資格状態**：#3031の限定CIは実証済み、旧形式での公開CLI S1も限定実証済み。一方、`*.tei.md`の実Parser、旧新移行の全一改訂E2E、Owner意味受理、TAI外部Harness H2/H3は**NOT RUN**。この差があるため、旧固定SourceでのH2 Tool-only実験は継続できるが、新形式の利用可能性は主張しない。
