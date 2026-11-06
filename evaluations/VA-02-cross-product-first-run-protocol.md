@@ -159,3 +159,19 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 **Go/No-Go**：各ケースにRequired Source/Condition、独立Expectedの出典と版、実行Byteと環境、実際に使ったSelector/Parser/Provider、実Observation、現在Authority/Disclosure、実Readerの受領を**必要な範囲だけ**記載する。Not-run・unknown・unavailable・unsupported・拒否は区別し、Caseが成立しないときは当該User Jobの結論のみ保留。単一のRunの成功を別Target/別Revision/別Ownerへ転載しない。
 
 **最初の実行順**：V02-H23-01を先行（TEIのProduct-only S1の実データは対照に留める）。並行してV02-RCV-01の合成→実PG局所を既存Ownerで確認。その後、明示的なPlugin選択の最小A/B、SHO製品Reader、実旧新Client移行へ順に拡張。H23の初回実行へ実DB MigrationやStudio/SHO完成を必須化しない。今回は**実行なし・評価票更新のみ**。
+
+## 11. 11月6日：拡張子移行・Skill割付・SHO G1bを独立に反証する
+
+[横断計画§18](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)に接続。**TEI `*.tei.md`方向転換の実装/互換性判定、TEI/TAI実Harnessの増分価値、SHO G1b Parserの正式受理を同じPASSへ潰さない**。独立ExpectedとSource/Build/Attempt/Ownerの参照を既存Case/Issueへ付けるのみ。以下は追加の試験**案**であり、実行済みFixture・CIではない。
+
+| 番号・Owner | 固定するControl／独立負例 | 期待結果・禁止推論 |
+| --- | --- | --- |
+| **FMT-01：.tei.mdの意図表示** ([TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)) | plain.md、OKF`tags:[tei]`付き.md、`model.tei.md`の3入力。説明表と未確定Rule、実Parser対象を混在 | `*.tei.md`という認識可能性は高めても、名前/tagだけで構造を解釈済み／OwnerがMeaningを受理済み／実Build許可としない。SHO単独Markdown編集は継続 |
+| **FMT-02：旧.tei→.tei.md移行** ([TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)/[#1180](https://github.com/hat47x/tei-platform/issues/1180)) | 同一原byteの旧名/新名、旧Source Reference/Workspace manifest/Build Selector、移動後のSourceIndexとDiagnosticを別取得 | 移行前後に実Readerが何を読んだかを数え、未読込が黙って`ok`となったらfail/unknown。Source path/Occurrence変更とMeaning byte不変を区別し、旧Receipt/Reviewを現在資格へ自動復活させない。移行互換規則はOwner未決 |
+| **FMT-03：編集の忠実性** ([TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)/[#1440](https://github.com/hat47x/tei-platform/issues/1440)) | 表・式・DOT・フェンス・CRLF/UTF-8を含む`*.tei.md`。No-op Save、一意箇所の値Patch、曖昧/競合Patch | No-opでbyte同一、構造化編集で非対象byte不変、選択外の未確認意味を自動確定しない。AI候補は根拠・不明とともにPreview、同じAIが生成したExpectedは独立Oracle不可 |
+| **H23-RD-01：割付／実提供** ([TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/[#488](https://github.com/hat47x/tai-pleroma/issues/488)) | 固定Participant Task raw byte・同Source/Model/Tool/Grant。H2/H3各2 Session。H3でSkill非ロード、H2にSkill混入、CLI未実呼出しを各負例 | R=割付とD=実ログ証明を分離。H3未ロードをH2成功へ付替えずITTに全4試行を残す。PPは実提供成立試行だけ採点。Tool原結果・独立Expected/Warning/Unknown・時間/Token/Review費用を別取得。4試行だけで有意な一般差を主張しない |
+| **SHO-G1B-01：索引の限定被覆** ([SHO #16](https://github.com/hat47x/sho-composer/issues/16)) | 固定Markdownとraw BOMあり/なし、未定義Reference Linkと定義済みLink、2MiB境界、同一Parser profile/lock | BOMで同じ索引でもraw SHA相違を明示。サイズ超過は原文非書換え・適切な拒否。未解決候補のdiagnosticは`unresolvedReferenceCandidatesEvaluated=false`のままなら**未検証**とする。16/16 CIを全Grammar・Writer・Owner受理へ昇格しない |
+
+**実験の分母と段階**：TEI B0のCLI実Product S1は限定証拠がある。最初の新しい出口は、**外部Harnessが実H2 Tool Request→固定CLI→結果を実受信した1 Session**。その後H3実Loaderを別観測し4独立SessionでITT/PPを区別する。FMT試験はTEI #2621の新方針と互換性設計のOwner決定後に実装Ownerが必要なConsumerへ反映、SHO-G1BはSHO既存#16のOwnerが受理/実行。新Runner・中央Editor・第二Oracle/Scenario SSOTをこのPRで作らない。
+
+**資格**：本§11追加の新Fixture／実Migration／外部Harness H2/H3／TEI Reader/Writer／SHO正式G1b／Owner受理は**NOT RUN**。TEI S1/Prebuilt CIとSHO候補16/16は元Job・版・Scopeに限り既存実験として参照する。
