@@ -12,7 +12,7 @@
       {
         "submit": null,
         "task": null,
-        "worker": "wrk_6642f856ca24393d7d8340e068d45c49",
+        "worker": "wrk_8bea33c4f0654dd7f222a2ae918a85b8",
         "executed": false,
         "claimed": false,
         "resultStatus": null,
@@ -22,7 +22,7 @@
     ],
     "submitStatus": null,
     "taskId": null,
-    "workerId": "wrk_6642f856ca24393d7d8340e068d45c49",
+    "workerId": "wrk_8bea33c4f0654dd7f222a2ae918a85b8",
     "executed": false,
     "claimed": false,
     "refusedStatus": 401,
