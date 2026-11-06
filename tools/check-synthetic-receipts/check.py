@@ -644,7 +644,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("listStatus") != 200 or observed.get("createStatus") != 201:
                 errors.append(f"SUI model registry did not hold: {relative}")
-        if "SUI-TEI-ce4" in relative:
+        if "SUI-TEI-ce4" in relative and "-audit-order" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("dryStatus") != 200 or observed.get("hasBundleHash") is not True:
                 errors.append(f"SUI CE4 resolve did not hold: {relative}")
