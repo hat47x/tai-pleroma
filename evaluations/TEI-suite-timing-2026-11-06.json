@@ -8,32 +8,32 @@
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 53,
-    "totalSeconds": 807.9,
+    "steps": 54,
+    "totalSeconds": 829.32,
     "slowest": [
       {
         "name": "sui_docs_tests",
-        "seconds": 204.94,
-        "attempts": 1
-      },
-      {
-        "name": "sui_session_tests",
-        "seconds": 94.89,
+        "seconds": 204.28,
         "attempts": 1
       },
       {
         "name": "eki_projection",
-        "seconds": 45.11,
+        "seconds": 112.45,
+        "attempts": 1
+      },
+      {
+        "name": "sui_session_tests",
+        "seconds": 83.4,
+        "attempts": 1
+      },
+      {
+        "name": "postgres_retry",
+        "seconds": 57.49,
         "attempts": 1
       },
       {
         "name": "postgres_contention",
-        "seconds": 31.38,
-        "attempts": 1
-      },
-      {
-        "name": "sui_multi_instance",
-        "seconds": 30.79,
+        "seconds": 26.51,
         "attempts": 1
       }
     ],
