@@ -1063,3 +1063,21 @@ agent資格情報の要求 → Cache-Control: private, no-store / Vary に agent
 - セキュリティヘッダーはミドルウェアで全応答に付く。401でも付く
 - 呼び出し側のtrace idは安全な不透明トークンのときだけ引き継ぐ
 - agent経路は共有キャッシュに残さない設定になる（本検証では503でも付与を確認）
+
+## カード移動のドメイン規則（2026-11-06）
+
+`apply_card_move`を直接呼び、拒否系と適用系を確かめた。[receipt](../evaluations/records/SUI-TEI-card-move-2026-11-06.json)
+
+```text
+同じ座標への移動 → refused「no-op move must not advance revision」
+未知のcardId → refused「card identity missing or ambiguous」
+NaN座標 / 空のcardId → refused「invalid move input」
+正規の移動 → applied（座標反映、updatedAtが更新）
+cardIdの重複 → refused（曖昧な識別子）
+islandIdの重複 → refused「ambiguous island identity」
+島の矩形に入る移動 → applied
+```
+
+- 版を進めないno-opは明示的に拒否される（CASの前提を保つ）
+- 識別子の曖昧さは適用前に検出する
+- 永続化・CAS・HTTP経路は対象外（ドメイン変換のみ）
