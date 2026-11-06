@@ -96,3 +96,12 @@ VA-T2のG0に補足。[TEI mainの6-Step Scenario](https://github.com/hat47x/tei
 
 **実行状態**：TEIの限定Product S1とTAIの固定stub/多Repo CIは既存の局所証拠である。**SCN-001 B0/B1/B2の実Activity試行、外部Harness H2/H3、SUI非公開Scopeの実Host確認、SHO D-04再読取の同一Attempt、異モデルVA-X/VA-Eの独立採点、Owner価値受理はNOT RUN**。初回H2をこれらの完成待ちでブロックしない。
 
+### 6.3 再開時の目的・対象・Audienceが変わる場合は別の価値判定
+
+[TAI #271 SC-18](https://github.com/hat47x/tai-pleroma/issues/271)にPD-01〜07の独立Expected案が追加された。**同じSourceと保存済みObservationが存在しても、利用者が今求める成果は変わり得る**。SCN-001のO-06再開時に、目的が「会議室予約案内の矛盾を整理する」から「利用者向け案内を公開する」へ変われば、過去の証拠は歴史的に残せても、公開の適用性、Review、現在のGrant、実送出の許可は別確認である。
+
+**VA-TAI-PD最小対照**：PD-01同一目的でのread-only継続、PD-02整理→公開、PD-03対象の縮小、PD-04内部→外部Audience、PD-05目的取消、PD-06言い換え、PD-07複数目的の同時進行。元依頼/新依頼の原文、Purpose、対象、公開先、固定Source/Revision、独立Expectedを先に照合する。旧目的を無条件継承して未承認公開・Effectを行うことも、ただの言い換えなのに全面停止・再取得することも失敗候補とする。
+
+B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較**にだけこの条件を加え、先行するTEI一SubjectのH2/H3 **能力比較**を停止しない。J0/J1/J2再資格化方式は別軸。再開に必要な過去Evidenceの保持と、新用途に対する現在資格を明示的に分ける。判定基準は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)、開示は[#232](https://github.com/hat47x/tai-pleroma/issues/232)に委ね、中央のPurpose Resolverを増やさない。
+
+**現状**：PD-01〜07は未実行の試験案であり、SCN-001 B0/B1/B2の実比較、実送出、実Host認可、異モデルVA-X/VA-E、Owner価値受理も**NOT RUN**。
