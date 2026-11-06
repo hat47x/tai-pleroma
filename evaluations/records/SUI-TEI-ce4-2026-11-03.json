@@ -1,0 +1,33 @@
+{
+  "schema": "tai.reference.sui-ce4-resolve/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with SUI in local-dev profile",
+  "command": "python integrations/pilot-sui-document/assembler/ce4_resolve_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-ce4-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "dryStatus": 200,
+    "dryBodyKeys": [
+      "auditChain",
+      "bundleHash",
+      "equivalenceKey",
+      "proposalLifecycle",
+      "queryCanonicalHash",
+      "schemaVersion",
+      "sideEffect"
+    ],
+    "hasBundleHash": true,
+    "hasEquivalenceKey": true,
+    "applyStatus": 200,
+    "applyStatusOk": true,
+    "badHashStatus": 400,
+    "unknownKeyStatus": 400
+  },
+  "scope": "Calls SUI's CE4 bundle resolve endpoint in dry-run and apply modes, with a malformed source hash and with an unknown key. It does not connect a real context provider."
+}

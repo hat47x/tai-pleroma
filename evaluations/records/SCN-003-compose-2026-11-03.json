@@ -1,0 +1,27 @@
+{
+  "schema": "tai.reference.scn-003-compose/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with Python 3.12 and the SUI consumer",
+  "command": "python integrations/tools/compose_scn_003.py --sui-repo <SUI>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "valid": true,
+    "cards": 5,
+    "decisionRef": "decision-1",
+    "taskExecutor": "dev.example.transform",
+    "profileId": "profile-a",
+    "cardIds": [
+      "card-decision-1",
+      "card-task-1",
+      "card-profile-1"
+    ]
+  },
+  "scope": "Adds the SEI decision, EKI task request, and MMI format profile as SUI cards and validates the composed artifact with the SUI consumer. It does not save the document or change SUI."
+}

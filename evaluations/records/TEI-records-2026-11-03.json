@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.tei-records/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with Python 3.12 and jsonschema",
+  "command": "python integrations/tools/validate_records.py --sei-schema <...> --mmi-schema <...> --eki-openapi <...>",
+  "result": "PASS",
+  "observed": {
+    "records": {
+      "sui": {
+        "valid": true,
+        "errors": [],
+        "returncode": 0
+      },
+      "sei": {
+        "valid": true,
+        "errors": [],
+        "returncode": 0
+      },
+      "mmi": {
+        "valid": true,
+        "errors": [],
+        "returncode": 0
+      },
+      "eki": {
+        "valid": true,
+        "errors": [],
+        "returncode": 0
+      }
+    },
+    "allValid": true,
+    "count": 4
+  },
+  "scope": "Converts the SEI, MMI, and EKI projection artifacts into their product records and validates each. It does not write to any product."
+}

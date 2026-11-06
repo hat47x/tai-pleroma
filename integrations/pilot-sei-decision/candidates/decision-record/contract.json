@@ -1,0 +1,27 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "sei.decision.record",
+  "version": "1",
+  "status": "reference-local",
+  "note": "SEI Decision Memory v1alpha1のDecisionから、平坦に投影できる部分だけをrecordとして写す参照用の契約。参照配列・lineage・extensionsは対象外。",
+  "inputs": [
+    {"attribute": "sei.decision.contract", "primitive": "std.text"},
+    {"attribute": "sei.decision.record_type", "primitive": "std.text"},
+    {"attribute": "sei.decision.ref_kind", "primitive": "std.text"},
+    {"attribute": "sei.decision.ref_id", "primitive": "std.identifier"},
+    {"attribute": "sei.decision.statement", "primitive": "std.text"},
+    {"attribute": "sei.decision.rationale", "primitive": "std.text"}
+  ],
+  "output": {"primitive": "std.text"},
+  "projection": {
+    "kind": "record",
+    "fields": [
+      {"name": "contract", "input": "contract", "attribute": "sei.decision.contract", "primitive": "std.text"},
+      {"name": "recordType", "input": "recordType", "attribute": "sei.decision.record_type", "primitive": "std.text"},
+      {"name": "refKind", "input": "refKind", "attribute": "sei.decision.ref_kind", "primitive": "std.text"},
+      {"name": "refId", "input": "refId", "attribute": "sei.decision.ref_id", "primitive": "std.identifier"},
+      {"name": "statement", "input": "statement", "attribute": "sei.decision.statement", "primitive": "std.text"},
+      {"name": "rationale", "input": "rationale", "attribute": "sei.decision.rationale", "primitive": "std.text", "optional": true}
+    ]
+  }
+}

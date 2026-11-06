@@ -1,0 +1,56 @@
+{
+  "schema": "tai.reference.sui-audit-export/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with SUI exporting audit events over HTTP to a local sink",
+  "command": "python integrations/pilot-sui-document/assembler/audit_export_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-audit-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "viewStatus": 200,
+    "eventCount": 1,
+    "eventHasDoc": true,
+    "eventHasAction": true,
+    "authorizationHeader": true
+  },
+  "sampleEvent": {
+    "path": "/events",
+    "authorization": "Bearer sink-key",
+    "contentType": "application/json",
+    "body": {
+      "schemaVersion": 1,
+      "eventId": "audit-98e38f23-33ca-4465-95dc-2ce81b82e905",
+      "occurredAt": "2026-11-06T01:08:42.135483+00:00",
+      "eventType": "view",
+      "tenantId": "local-default",
+      "docId": "doc-1",
+      "safeMode": true,
+      "actorRefHash": null,
+      "principalKind": "member",
+      "metadata": {
+        "route": "/docs/doc-1",
+        "reviewedTextExposed": false,
+        "method": "GET",
+        "action": "read",
+        "decision_allow": true,
+        "decision_read_only": false,
+        "decision_reason": null,
+        "visibility": null,
+        "policyRefPresent": false,
+        "adapterName": "noop",
+        "traceId": null,
+        "hasStepUp": false,
+        "amrClass": "unknown",
+        "assuranceLevel": "unknown",
+        "authAgeBucket": "unknown"
+      }
+    }
+  },
+  "scope": "Enables SUI's HTTP audit export, saves one document, and checks that an event naming the document reached the sink with the configured bearer token. The sink is local and in-process."
+}

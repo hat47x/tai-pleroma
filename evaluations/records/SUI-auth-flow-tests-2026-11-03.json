@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sui-auth-flow-tests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with Python 3.12 and the SUI checkout on PYTHONPATH",
+  "command": "python integrations/tools/sui_auth_flow_tests.py --sui-repo <SUI>",
+  "result": "PASS",
+  "suiCommit": "21d07f0178818c60aa75384227a08d7da2beef3d",
+  "observed": {
+    "files": [
+      "tests/test_auth_federation_level2.py",
+      "tests/test_oauth_bff_login_flow.py",
+      "tests/test_oauth_bff_callback_retry_safety.py"
+    ],
+    "passed": 41,
+    "failed": 0,
+    "returncode": 0
+  },
+  "scope": "Runs three SUI test files covering the mock-IdP federation flow, login initiation, and callback retry safety. It does not exercise a live deployment."
+}

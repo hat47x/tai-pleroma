@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-sei-artifact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Go on PATH, Python 3.12, and jsonschema",
+  "command": "python integrations/pilot-sei-decision/build_artifact.py --tei-repo D:\\GIT\\hat47x\\tei-wt-cur --out D:\\GIT\\hat47x\\tai-wt-sea\\evaluations\\artifacts\\sei-decision-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-sea\\evaluations\\artifacts\\sei-decision-projection.json",
+    "digest": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+  },
+  "observed": {
+    "decisionValid": true,
+    "cases": 4,
+    "refId": "decision-1"
+  },
+  "scope": "Builds one Decision record from the fixture and validates the artifact against its JSON Schema. It does not connect to SEI, compose multiple records, or save anything."
+}

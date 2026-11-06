@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-mmi-consumer/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "mmiCommit": "49ff7da30e7372c7604e6f5604fe79230aab19e0",
+  "host": "Windows with Node 24 and tsx",
+  "command": "node --import tsx --test test/teiProjection.test.ts",
+  "result": "PASS",
+  "observed": {
+    "module": "src/teiProjection.ts",
+    "tests": 5,
+    "passed": 5,
+    "readsArtifact": true,
+    "realArtifact": true,
+    "writes": false,
+    "typecheck": "pass"
+  },
+  "scope": "The MMI module parses the TAI format profile projection artifact and checks the envelope and flat profile fields. It does not write profiles, change the format profile schema, or prove a product integration."
+}

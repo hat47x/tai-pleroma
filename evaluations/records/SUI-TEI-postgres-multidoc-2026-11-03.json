@@ -1,0 +1,85 @@
+{
+  "schema": "tai.reference.sui-postgres-multidoc/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with Python 3.12, TestClient, and an embedded PostgreSQL 16.2",
+  "command": "python integrations/pilot-sui-document/assembler/postgres_multi_save.py --sui-repo D:\\GIT\\hat47x\\sui-wt-latest --artifact evaluations/artifacts/scn-003-document.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "documents": 10,
+    "createStatuses": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "reads": [
+      {
+        "id": "doc-1",
+        "status": 200,
+        "title": "Document 1"
+      },
+      {
+        "id": "doc-2",
+        "status": 200,
+        "title": "Document 2"
+      },
+      {
+        "id": "doc-3",
+        "status": 200,
+        "title": "Document 3"
+      },
+      {
+        "id": "doc-4",
+        "status": 200,
+        "title": "Document 4"
+      },
+      {
+        "id": "doc-5",
+        "status": 200,
+        "title": "Document 5"
+      },
+      {
+        "id": "doc-6",
+        "status": 200,
+        "title": "Document 6"
+      },
+      {
+        "id": "doc-7",
+        "status": 200,
+        "title": "Document 7"
+      },
+      {
+        "id": "doc-8",
+        "status": 200,
+        "title": "Document 8"
+      },
+      {
+        "id": "doc-9",
+        "status": 200,
+        "title": "Document 9"
+      },
+      {
+        "id": "doc-10",
+        "status": 200,
+        "title": "Document 10"
+      }
+    ],
+    "documentRows": 10,
+    "titlesMatch": true,
+    "database": "embedded PostgreSQL 16.2"
+  },
+  "scope": "Saves several documents with distinct ids into a real PostgreSQL and reads them back. It does not verify tenancy isolation, access control, or deployment."
+}

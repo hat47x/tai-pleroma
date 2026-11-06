@@ -85,3 +85,7 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 - 投影する: Documentのidとoptionalなtitle、Cardのid/text/x/y/claimType/holdState/textReviewed、Islandのid/title/cardIds、Edgeのid/fromId/toId/type/fromKind/toKind、Affiliationのid/cardId/islandId。
 - 投影しない: `critiqueHistory`などの構造体配列、`transform`、`createdAt`/`updatedAt`、図形・要約・履歴。これらはSUI側の元データを正本とする。
 - artifactは読み取り専用で、SUIのDocumentV1そのものではない。
+## 追加で分かった規則（2026-11-03）
+
+- `DocumentV1`は、`Island.cardIds`の包含と`Affiliation`が同じ`(cardId, islandId)`を指すと拒否する。合成層とfixtureを、重複しない形へ変更した。
+- 合成結果は、`transform`と時刻を供給すれば`DocumentV1.model_validate`を通る。

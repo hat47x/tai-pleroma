@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-sui-tenant-route/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "suiCommit": "bee69d08247301041586ccf3e02f064b8714e557",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and SUI runtime dependencies",
+  "command": "PYTHONPATH=src python -m pytest tests/test_tei_epistemic_tenant_projection_route.py -q",
+  "result": "PASS",
+  "observed": {
+    "endpoint": "/docs/{doc_id}/epistemic/projection",
+    "boundArtifactStatus": 200,
+    "agentCredentialStatus": 403,
+    "unboundStatus": 503,
+    "tests": 3,
+    "passed": 3,
+    "authorizationStubbed": true
+  },
+  "scope": "The tenant-plane route is exercised with the authorization function replaced by a test double. It does not verify real tenant sessions, access control, a real database, a running server, or deployment."
+}

@@ -1,0 +1,136 @@
+{
+  "schema": "tei.reference.generator-fixture/v0",
+  "contractId": "eki.task-request.record",
+  "contractVersion": "1",
+  "cases": [
+    {
+      "id": "present",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": "^1",
+        "priority": "normal",
+        "clientRequestId": "req-001",
+        "cpuMillis": 1000,
+        "memoryBytes": 268435456,
+        "wallTimeSeconds": 300,
+        "outputBytesMax": 16777216,
+        "networkBytesMax": 134217728,
+        "retryable": true,
+        "preemptible": true,
+        "checkpointable": false,
+        "deterministic": true,
+        "maxAttempts": 3,
+        "effectMode": "none"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"checkpointable\":false,\"clientRequestId\":\"req-001\",\"cpuMillis\":1000,\"deterministic\":true,\"effectMode\":\"none\",\"executorId\":\"dev.example.transform\",\"maxAttempts\":3,\"memoryBytes\":268435456,\"networkBytesMax\":134217728,\"outputBytesMax\":16777216,\"preemptible\":true,\"priority\":\"normal\",\"retryable\":true,\"schema\":\"eki.task-request/v1\",\"versionConstraint\":\"^1\",\"wallTimeSeconds\":300}"
+      }
+    },
+    {
+      "id": "present-policy-aligned",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": "^1",
+        "priority": "normal",
+        "clientRequestId": "req-001",
+        "cpuMillis": 1000,
+        "memoryBytes": 268435456,
+        "wallTimeSeconds": 60,
+        "outputBytesMax": 1048576,
+        "networkBytesMax": 1048576,
+        "retryable": true,
+        "preemptible": true,
+        "checkpointable": false,
+        "deterministic": true,
+        "maxAttempts": 3,
+        "effectMode": "none"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"checkpointable\":false,\"clientRequestId\":\"req-001\",\"cpuMillis\":1000,\"deterministic\":true,\"effectMode\":\"none\",\"executorId\":\"dev.example.transform\",\"maxAttempts\":3,\"memoryBytes\":268435456,\"networkBytesMax\":1048576,\"outputBytesMax\":1048576,\"preemptible\":true,\"priority\":\"normal\",\"retryable\":true,\"schema\":\"eki.task-request/v1\",\"versionConstraint\":\"^1\",\"wallTimeSeconds\":60}"
+      }
+    },
+    {
+      "id": "present-minimal",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": "^1",
+        "cpuMillis": 1000,
+        "memoryBytes": 268435456,
+        "wallTimeSeconds": 300,
+        "outputBytesMax": 16777216,
+        "networkBytesMax": 134217728,
+        "retryable": true,
+        "preemptible": true,
+        "checkpointable": false,
+        "deterministic": true,
+        "maxAttempts": 3,
+        "effectMode": "none"
+      },
+      "want": {
+        "state": "present",
+        "text": "{\"checkpointable\":false,\"cpuMillis\":1000,\"deterministic\":true,\"effectMode\":\"none\",\"executorId\":\"dev.example.transform\",\"maxAttempts\":3,\"memoryBytes\":268435456,\"networkBytesMax\":134217728,\"outputBytesMax\":16777216,\"preemptible\":true,\"retryable\":true,\"schema\":\"eki.task-request/v1\",\"versionConstraint\":\"^1\",\"wallTimeSeconds\":300}"
+      }
+    },
+    {
+      "id": "missing-executor",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "versionConstraint": "^1",
+        "cpuMillis": 1000,
+        "memoryBytes": 268435456,
+        "wallTimeSeconds": 300,
+        "outputBytesMax": 16777216,
+        "networkBytesMax": 134217728,
+        "retryable": true,
+        "preemptible": true,
+        "checkpointable": false,
+        "deterministic": true,
+        "maxAttempts": 3,
+        "effectMode": "none"
+      },
+      "want": {
+        "state": "missing",
+        "text": "[\"executorId\"]"
+      }
+    },
+    {
+      "id": "unresolved-version",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": null,
+        "cpuMillis": 1000,
+        "memoryBytes": 268435456,
+        "wallTimeSeconds": 300,
+        "outputBytesMax": 16777216,
+        "networkBytesMax": 134217728,
+        "retryable": true,
+        "preemptible": true,
+        "checkpointable": false,
+        "deterministic": true,
+        "maxAttempts": 3,
+        "effectMode": "none"
+      },
+      "want": {
+        "state": "unresolved"
+      }
+    },
+    {
+      "id": "missing-resources",
+      "input": {
+        "schema": "eki.task-request/v1",
+        "executorId": "dev.example.transform",
+        "versionConstraint": "^1"
+      },
+      "want": {
+        "state": "missing",
+        "text": "[\"cpuMillis\",\"memoryBytes\",\"wallTimeSeconds\",\"outputBytesMax\",\"networkBytesMax\",\"retryable\",\"preemptible\",\"checkpointable\",\"deterministic\",\"maxAttempts\",\"effectMode\"]"
+      }
+    }
+  ]
+}
