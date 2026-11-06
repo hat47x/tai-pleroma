@@ -682,3 +682,30 @@ errors: []
 - 検証する: envelope・契約メタデータ・要素の形
 - 検証しない: 参照整合性・DocumentV1
 - [receipt](../../evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json)
+
+## SUI Contextの選択集合・参照集合の実HTTP観測（2026-11-06・追加試験）
+
+この補助検査は、既存の`assembler/context_bundle_check.py`が**localhostのSUI local-dev APIを実際に呼ぶ**とき、`/context/bundle`の選択と参照の分離も観測する。対象はSUIの既存`A2-minimal-v1`**合成stub**であり、実ユーザーのカードや業務原資料の検索ではない。
+
+SUI側（確認版`09c240460017d0a4ecc6ab55582631d3e1a8b0a9`）の`models_context.py`と`test_context_bundle_routes.py`では、`reviewFilter=reviewedOnly`＋`safeModePolicy=strict`のとき、未レビューの`counter_opinion`は`selected`から除外されながら、`evidence`・`relations`に参照が残る。ここで検査するのは、**選択されたカード1件、参照のみ1件、未レビュー参照のみ1件、反証参照のみ1件**という固定stubの観測形と、既存のBundle hash決定性・preview拒否である。
+
+- `selected`に無いことは、元カードの不存在／検索未実行／Owner棄却を意味しない。`evidence`にIDがあることは、内容の利用・公開許可も意味しない。
+- `excludedReason=unreviewed_filtered`は**Bundle単位の理由**であり、どのcardIdがどの理由で除外されたかという個別判断ではない。
+- 集計は個別のcardIdや本文を標準出力・receiptに追加せず、**件数のみ**記録する。ただし、Sourceの参照IDそのものの開示可否はSUIのPolicy/Ownerが別途判断する。これは情報開示Policyの受入テストではない。
+- `synthetic=false`／`evidenceKind=real-execution`という既存receipt表示は「SUIのHTTPを実際に実行した」ことを示す。**入力stubの合成性は残る**。実資料の真正性、独立したSource revision一致、正式な意味受理、外部効果や利用者の認知増分を保証しない。
+- SUI/TAIの版固定契約は[別Draft #292](https://github.com/hat47x/tai-pleroma/pull/292)の担当であり、本変更では版固定・認可方式を拡張しない。既存の[YI候補可視性研究 Draft #443](https://github.com/hat47x/tai-pleroma/pull/443)とは、**こちらは実SUI HTTPの合成stubに限定した証拠取得**という分担とする。
+
+### 試験と受入境界
+
+```sh
+cd integrations/pilot-sui-document/assembler
+python -m unittest -v test_context_bundle_visibility.py
+# SUIのローカル実行環境が利用可能な場合のみ：
+python context_bundle_check.py --sui-repo <SUI checkout> \
+  --artifact <TAI>/evaluations/artifacts/scn-003-document.json \
+  --out <private receipt file>
+```
+
+前者は**pure Pythonの合成応答による単体テスト**。後者はSUI実Serverへのread-only POST（構造検査のみ）であり、SUI Python環境、SQLite等の実行可能な環境が必要になる。単体テストの成功だけで後者を実行済みとはしない。
+
+観測が異なれば`result=FAIL`で停止し、個別カードを自動採用したり推奨・決定に昇格させたりしない。正しい合法な候補除外が起きたときに無条件で障害と呼ばないため、検査は**固定stubの期待値**に限る。生きたSUI Document/Cardを比較する研究には、同一Source revisionと許可された参照範囲を別途確定する必要がある。
