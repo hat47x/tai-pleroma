@@ -167,6 +167,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-archive-lifecycle-2026-11-06.json",
     "evaluations/records/SUI-TEI-merge-decision-log-2026-11-06.json",
     "evaluations/records/SUI-TEI-ce4-audit-order-2026-11-06.json",
+    "evaluations/records/SUI-TEI-polygon-handoff-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -610,6 +611,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-polygon-handoff" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("paddingDecision") != "rollback_required":
+                errors.append(f"SUI polygon handoff did not require rollback: {relative}")
         if "SUI-TEI-ce4-audit-order" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("applyBeforeAnyEventStatus") != 409:
