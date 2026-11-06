@@ -1027,3 +1027,23 @@ export/share のSafeMode拒否: access_control に存在
 - `/healthz`は生存だけを見る。DBが落ちていても`ok`を返す
 - `/readyz`のスキーマ照合はDB照会と同じtry内にあり、`alembic_version`が無いと`database=unreachable`と報告する（`schema=mismatch`とは区別されない）
 - 3つのprobeはAPIキーを要求しない。`/admin/*`は鍵が未設定かつ開発プロファイルのとき開放される
+
+## 認証保証の分類（2026-11-06）
+
+`build_auth_assurance_metadata`を16通りの`AuthContext`で評価した。[receipt](../evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json)
+
+```text
+AMRなし → amrClass=unknown / hasStepUp=false
+pwd のみ → single_factor
+pwd,totp / mfa / webauthn / MFA（大文字） → multi_factor / hasStepUp=true
+aal3 → assuranceLevel=high
+AAL未知 + ACR high → high
+ACR high + AAL aal1 → low（AALを優先）
+auth_time 10分前 / ちょうど15分 / Z表記 / naive表記 → fresh
+2時間前 → stale
+未来のauth_time / 解釈不能 → unknown
+```
+
+- `hasStepUp`はAMRの語彙で決まり、AAL/ACRとは独立している
+- 保証水準はAALを優先し、AALが未知のときだけACRへ落ちる
+- 15分ちょうどは`fresh`（境界は`<=`）。未来の時刻と解釈不能は`unknown`に寄せる
