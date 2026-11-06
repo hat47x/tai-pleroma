@@ -73,6 +73,9 @@ def main():
             else None
         )
         too_many = client.get("/docs", params={"limit": 501}, headers=headers)
+        archived = client.post(f"/docs/{doc_ids[-1]}/archive", headers=headers)
+        after_archive = client.get("/docs", headers=headers)
+        other_creator = client.get("/docs", params={"createdBy": "someone-else"}, headers=headers)
 
     page1 = [item.get("id") for item in first.json()] if first.status_code == 200 else []
     page2 = [item.get("id") for item in second.json()] if second is not None and second.status_code == 200 else []
@@ -88,6 +91,14 @@ def main():
         "allSeenOnce": sorted(page1 + page2 + page3) == sorted(doc_ids),
         "thirdHasCursor": bool(second_cursor),
         "overLimitStatus": too_many.status_code,
+        "archiveStatus": archived.status_code,
+        "archivedStillListed": doc_ids[-1]
+        in [item.get("id") for item in after_archive.json()] if after_archive.status_code == 200 else None,
+        "archivedState": next(
+            (item.get("lifecycle_state") for item in after_archive.json() if item.get("id") == doc_ids[-1]), None
+        ) if after_archive.status_code == 200 else None,
+        "otherCreatorStatus": other_creator.status_code,
+        "otherCreatorCount": len(other_creator.json()) if other_creator.status_code == 200 else None,
         "payloadHasNoText": all(
             "cards" not in item or not item.get("cards")
             for page in (first.json() if first.status_code == 200 else [])
@@ -104,6 +115,11 @@ def main():
         and checks["noOverlap12"]
         and checks["allSeenOnce"]
         and checks["overLimitStatus"] == 422
+        and checks["archiveStatus"] == 204
+        and checks["archivedStillListed"] is True
+        and checks["archivedState"] == "archived"
+        and checks["otherCreatorStatus"] == 200
+        and checks["otherCreatorCount"] == 0
     )
     receipt = {
         "schema": "tai.reference.sui-document-list-pagination/v0",
@@ -116,7 +132,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Writes four documents, then reads the list with limit=2 and follows X-Next-Cursor to the end, checking for overlap and completeness, plus an over-limit request. It does not test concurrent writes during pagination.",
+        "scope": "Writes four documents, then reads the list with limit=2 and follows X-Next-Cursor to the end, checking for overlap and completeness, plus an over-limit request. It also archives one document and lists with an unrelated createdBy. It does not test concurrent writes during pagination.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
