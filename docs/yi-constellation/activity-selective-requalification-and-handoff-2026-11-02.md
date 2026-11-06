@@ -429,7 +429,7 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 - **P0**：#168の固定TEI H2実Tool request→実argv/cwd→exit/stdout・Harness受信を同一Sessionで確認。SCN-001やOKFを投入しない。
 - **P1**：H3実Skill root/reference Loader Read→固定4 Session、割付R/提供Dと正答・費用を別採点。
 - **P2**：上記SCN-001一回中断→O-06→再開をB0/B1/B2で実比較。公開・施設予約・DB書込みは実施しない。
-- **P3**：特定の観測不能・失敗で必要になった場合だけ他Product/HandoffやEffect試行を追加。SC-19 IF-02〜07/ EK I Lease/TEI Commit unknownの作用付き負例は**隔離した別Task Group**でProvider Receipt・独立Readを用意する。
+- **P3**：特定の観測不能・失敗で必要になった場合だけ他Product/HandoffやEffect試行を追加。SC-19 IF-02〜07/ EKI Lease/TEI Commit unknownの作用付き負例は**隔離した別Task Group**でProvider Receipt・独立Readを用意する。
 - **停止**：出所/Source/実Receipt/Consumer Readが観測不能なら該当Claimはinsufficient-evidence。事前Expected未固定なら比較しない。B1で十分ならB2を追加しない。
 
 **状態**：本節は既存計画の優先順位・範囲整理のみ。実H2/H3、SCN-001 B0/B1/B2、OKF/SEI交換・業務Provider/Owner受理はNOT RUN。
