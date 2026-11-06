@@ -439,7 +439,7 @@ CLIで必要となるread-only呼出し例（実際に使ったargvは**Harness�
 
 [TEI merged #2894](https://github.com/hat47x/tei-platform/pull/2894)で新しくProduct CLIに`tei dbcheck`が加わった。ただしこのCommandはDSNが与えられれば実PostgreSQLに接続し、**一時表のCREATE/DROP DDL**を実行する。成功したら表が消える設計でも、初回SK-02の「Source/モデルを読み取るだけのTool」とは異なる。DSNが無い場合のexit 2／非実行も実DB資格ではない。
 
-**H2/H3両腕の既定Command whitelistを変更しない**：`commands`、`model catalog`、`inspect`、`trace`、`validate`の必要read-only呼出しのみ。既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)の`readOnlyCommandFamily`は`dbcheck`を`outside-initial-readonly-profile`に分類する。`commands`一覧に載っていること・CLIに実装されていること・内部で一時表を削除することは実行許可ではない。`dbcheck`やその他未選択コマンドを起動した試行は比較資格を停止し、実Host/DB側の副作用が無かったとも断定しない。OS/Tool Policyの実許可境界は別観測。
+**H2/H3両腕の既定Command whitelistを変更しない**：既存SK-02 Checkerが選択済みとする`version`、`commands`、`model catalog`、`inspect`、`trace`、`validate`の必要read-only呼出しのみ。既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)の`readOnlyCommandFamily`は`dbcheck`を`outside-initial-readonly-profile`に分類する。`commands`一覧に載っていること・CLIに実装されていること・内部で一時表を削除することは実行許可ではない。`dbcheck`やその他未選択コマンドを起動した試行は比較資格を停止し、実Host/DB側の副作用が無かったとも断定しない。OS/Tool Policyの実許可境界は別観測。
 
 **実DB準備確認はTEI [#2555](https://github.com/hat47x/tei-platform/issues/2555)の後続専用レーン**に置く。H2 Tool-onlyのToolが`dbcheck`実行を必要とする設計なら、このread-only Taskの範囲を変えた新実験として両腕を同時に再設計し、最初の四Sessionに混入させない。
 
@@ -693,6 +693,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 - **実Tool transportの限定成立**：固定TEI commit 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c、同じ公開sales.orderと、参加者用固定Task原byteSHA-256 38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf。h2-08のSessionはcompletedで、Tool call 56件／受領Tool result 55件、うちTEI実行物の起動32件。commands／version／catalog／inspect／source-index／validateの実結果が残る。Workspaceのコピーと固定worktreeでWorld/SourceIndex fingerprint一致。最終回答は存在するが独立Expectedによる正答採点は**未実施**。
 - **9試行の別分母**：[構造化記録](https://github.com/hat47x/tei-platform/blob/docs/dsh-h2-readonly-evidence-20261107/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07/attempts-summary.json)には、Participant Task完了1、短い接続確認Task完了2、MALFORMED_RESPONSE停止5、INVALID_CONFIG停止1がある。複数Tool呼出しを一つの不正なJSONへ連結して返す問題は、maxParallelToolCalls:1でも防げなかった。最初の試行は隔離用cwdでなかった。これらを成功した4Session Trialに遡及編入しない。
 - **比較適格性の未成立**：read-only設定のまま作業Directory外の固定TEI worktreeを実Readできたため、参加者の作業DirだけへSource/Skill/Reviewer Expectedを隔離する§20の条件を実証していない。「Skillを配置しなかった」だけでは親Path・他Tool・GitHub/Web経由の非露出を証明できない。session-log-deepseekをoffにした設定だけでは実Egress不在を証明しない。Windows workspace-write Sandboxの準備はWin32 5で失敗。
+- **固定Tool Profileとの差**：DSHの実ログには`tei source-index`の起動がある。しかし[既存SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)の`readOnlyCommandFamily`は`version`／`commands`／`model catalog`／`inspect`／`trace`／`validate`だけを初回許可群とし、**`source-index`を`outside-initial-readonly-profile`に分類**する。実Toolが読取専用だったとしても、選択外Commandを使った探索Attemptを比較適格H2へ後付け編入しない。`pwsh/read/grep`が限定Directory外を読む可能性も、実Toolの公開面／FS拒否点として別観測する。
 - **実証の上限**：DSH usage/token数はDSH自己集計であり実請求費用・H3効果・TAI Activity価値ではない。Tool結果ファイルと9試行の要約はPRにあるが、生DSH JSONL全体はコミットされておらず、原Logの独立再構成は別。Sourceだけで回答を採点したと宣言しない。
 
 | Claim | 現在の到達と上限 |
@@ -705,7 +706,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 ### 24.2 次の最小ゲートを「H2が起動したか」から「H2比較に適格な1Session」へ更新
 
 1. **先に実隔離**：既存OS/VM/Container/Harnessの強制境界で、固定TEI実行物・公開Workspace・参加者TaskだけをReaderへ到達させる。原Worktree、親Path、H3 Skill、Reviewer-only Expected、過去Session logへのPath/他Tool/Network経由のアクセス拒否を実観測。read-onlyを物理的な読取範囲制限と誤解しない。実強制不能ならTrialはenvironment-ineligibleとし歴史Tool witnessは保持。
-2. **別Trial Groupとして事前固定**：固定Task byte/Source/Binary、Harness Version/Model/Tool/permission profile、同一論理cwdとargv、4SlotのH2→H3→H3→H2割付R、実Deliver D、独立Expected保管・停止条件・費用/失敗分母を起動前に固定。今回の9探索試行を後から成功4試行へ選抜しない。
+2. **別Trial Groupとして事前固定**：固定Task byte/Source/Binary、Harness Version/Model/Tool/permission profile、同一論理cwdとargv、4SlotのH2→H3→H3→H2割付R、実Deliver D、独立Expected保管・停止条件・費用/失敗分母を起動前に固定。**許可したCLI familyと引数を実Tool側で拘束・観測**し、`source-index`など未選択Commandが必要なら事前に両腕・独立Expectedを改訂した**別Group**とする。使用後にCheckerの許可群やTrial JSONを都合よく変更しない。今回の9探索試行を後から成功4試行へ選抜しない。
 3. **MALFORMED_RESPONSEを保持**：Model/AdapterがTool JSONを壊す場合は失敗として記録し、Tool引数修正や未サポートConfigで成功を捏造しない。Model/Adapter修正版は別Pin/Groupで比較。途中の実Tool実行とSession最終結果を分ける。
 4. **実送出とGrant**：session-log設定、実Provider/Proxy送出、Source Read scope、実Host/OS拒否を別資格として記録する。否定証拠が無いならegress unknown。未承認の実データや私的な原文を外部Modelに送らない。
 5. **実Tool→Consumer評価**：実Request→Process argv/cwd/exit/stdout→Harness ReplyとSource/Warning/Unknownを同一Attemptで照合し、§21のITT全割付とPP適格を分ける。適格化した後にH3で固定Product Skill root＋必要referencesの実Loader Readを比較する。Skillなしで十分なら常時TAI/Skill介在を推奨しない。
