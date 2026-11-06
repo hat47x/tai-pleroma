@@ -6,6 +6,7 @@
 - 起点: [SCN-001](../scenarios/SCN-001-shared-space-guidance.md) と [TAIの現状](../docs/status.md)
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
 - **2026-11-02研究追補**: [生成的探索と証拠制約の接続](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)（CSWの認知Method、SUIの仮説、SEI/TEIの意味、EKIの権限・結果を分離して比較する提案。RQ6、実験NOT RUN）
+- **2026-11-06研究手順**: [候補の可視性・媒介選択と「無かった」の誤認](protocols/YI_CANDIDATE_VISIBILITY_AND_SELECTION.md)（未生成/未記録/未検索/未提示/未評価/未推奨を閉じたrun内に限定して区別する。CSW/YI探索比較の補助指標。合成traceの構造検査のみ、認知Methodの比較実験はNOT RUN）
 - 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
 - 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
 
