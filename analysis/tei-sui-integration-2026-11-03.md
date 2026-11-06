@@ -1081,3 +1081,20 @@ islandIdの重複 → refused「ambiguous island identity」
 - 版を進めないno-opは明示的に拒否される（CASの前提を保つ）
 - 識別子の曖昧さは適用前に検出する
 - 永続化・CAS・HTTP経路は対象外（ドメイン変換のみ）
+
+## マイグレーションの単一headとDB照合（2026-11-06）
+
+39本のリビジョンを読み、`_migration_script_heads`と`/readyz`を突き合わせた。[receipt](../evaluations/records/SUI-TEI-migrations-2026-11-06.json)
+
+```text
+スクリプトのhead: ["20261012_0038"]（単一）
+起動時の検査: 単一headでなければRuntimeError
+SQLAlchemyで作ったDB: alembic_version 表は作られない
+/readyz: 503 / database=unreachable（schema は報告されない）
+/healthz: 200
+alembic_version を読むのは /readyz の1箇所のみ
+```
+
+- 起動時は**スクリプト側**のheadだけを見て、DBの`alembic_version`は読まない
+- DB照合は`/readyz`が担うが、`alembic_version`が無いDBでは`schema=mismatch`ではなく`database=unreachable`と報告される
+- 実DBへ`alembic upgrade`を適用した状態での照合は未確認

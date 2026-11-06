@@ -181,6 +181,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json",
     "evaluations/records/SUI-TEI-headers-2026-11-06.json",
     "evaluations/records/SUI-TEI-card-move-2026-11-06.json",
+    "evaluations/records/SUI-TEI-migrations-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -624,6 +625,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-migrations" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("singleHead") is not True:
+                errors.append(f"SUI migration heads are not linear: {relative}")
         if "SUI-TEI-card-move" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("noOp", {}).get("outcome") != "refused":
