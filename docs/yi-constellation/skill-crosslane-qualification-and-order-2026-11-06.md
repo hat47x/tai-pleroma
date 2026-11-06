@@ -418,3 +418,33 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 後続のSCN-001 B0通常Harness/B1単独Product/B2必要時TAI横断比較で、SR-01〜07を既存PD-01〜07の独立Expectedに一対一で対応させ、①必要なSkillの選択、②不必要なSkillの非選択、③有効なread-only継続、④旧Grant/旧Purposeの誤継承を阻止、⑤Unknown/非公開の保持、⑥Tool・Context・Token・人手と再確認量を別採点する。SK-02の4 Session実験へPDを混ぜず、Purposeが試験中に変更されたTrialを固定TaskのSkill差分評価へ無断算入しない。
 
 **現実の順序は変えない**：既存 #168 の固定公開TEIで最初の実外部Harness H2 Tool Request→実CLI→Harness Response、H3 Skill root+refs実Loader、H2→H3→H3→H2比較を先行。その後に用途が必要とするSC-17/18・Skill再選択・横断Handoffを別Trial Groupにする。本節は反証条件の接続であり、新SR試験、実外部Harness、実Purpose変更の利用者検証、Owner意味受理、Publish/Provider Effectは**NOT RUN**。
+
+## 22. 現在のRuntime可用性・認証配線・Digest互換をSkill選択へ反映する（SC-21への実装判断の接続／後続実証NOT RUN）
+
+### 22.1 Capabilityの掲載と現在の実提供は異なる
+
+[TAI #271 SC-21](https://github.com/hat47x/tai-pleroma/issues/271)は既存Activity引継ぎの**現在資格**をRQ-01〜07で評価する正本。本節が扱うのは、その結果をYICの**Skill選択／非選択／縮退**へ反映する判断だけであり、SC-21のFixture/Expectedを複製しない。
+
+- [TAI #503](https://github.com/hat47x/tai-pleroma/issues/503)／[#504](https://github.com/hat47x/tai-pleroma/issues/504)：SUI Agent用 `SUI_AGENT_CREDENTIAL_HASH_KEY` を設定してもlocal-devでは実 `app.state`へ配線されず、`503 agent_credential_unavailable`となる限定実測。saas-multitenant側は実IdPを含む起動未検証。環境変数の存在／Skill説明に記載／Profile名から、現在Tool実Availableと推論しない。局所試験で鍵を手動配線して評価した経路を本番既定動作としない。
+- [TAI #508](https://github.com/hat47x/tai-pleroma/issues/508)：Runtime Profile別のif条件を静的・限定的に整理したが、全Profileの実起動は未確認。未知Profile拒否、agent配線・API Docs・tenant方式の違いを一つの一般的Product能力へ丸めない。
+- [TAI #509](https://github.com/hat47x/tai-pleroma/issues/509)：`/healthz`の200は生存確認でDB準備を検査しない。`/readyz`はDB接続・schema mismatchを同じ異常報告へまとめ得る。`/version`のrevision/runtimeProfile表示は実Binary SHA、Selected Tool、Current Permissionや全Dependencyの実準備と同義ではない。
+- [TAI #510](https://github.com/hat47x/tai-pleroma/issues/510)：`hasStepUp`・AMR・AAL/ACR・認証時点は別の属性。未来のauth_timeなどunknownを正当な現行Grantへ昇格させない。実IdP→Hostの発行者真正性、操作目的とScope、Provider実作用は別。
+
+### 22.2 Skill選択で取り得る判定を既存証拠に接続する
+
+| 実際に観測できたこと | YICでの扱い | 判定してはいけないこと |
+| --- | --- | --- |
+| Skill文書やTool schemaが存在するだけ | `advertised`/Candidateまで。実Tool起動・H3 Loaderを別観測 | 実Product Available/現在許可済み/Task達成 |
+| 要求したAgent RouteがProfileで503（#504） | **当該Routeは利用不可**。無権限の自動設定変更や別Credential注入はしない。Taskに許されたread-only別入口があれば別に適格性を確認 | 全Product停止、または未認可の別Routeへ黙ってFallback |
+| `healthz=200`、`version`文字列は表示 | 生存と表示Revを記録し、Taskが要する実Reader/Schema/Tool/Responseを別検査 | DB/Reader Ready、実Artifact pin、外部開示資格 |
+| step-up/AAL等のメタデータあり | `authentication observed`の限定Claim。実Host Grant/Target Scope/Operationを要求 | 対象Doc/Provider writeやPublishへの自動許可 |
+| SUI bundleHashが表示され、Go側へ引き継ぐ | 元Product version・Selected Projection・Source/Revision・構造と実Bodyを束縛。異言語で再計算可能か未検証ならhashを信頼境界の唯一の証拠にしない | hash一致だけで同Meaning/同Selection/同公開資格 |
+| SUI Agent Route不可、TEI/SHOの許可済み読取は実利用可 | Product単独の安全な読取・説明を必要範囲で継続。未解決の操作だけ保留 | 一機能の503を全Activity失敗、あるいは別ProductのGrantとみなす |
+
+特に[SUI #3389](https://github.com/hat47x/sui-sensemaking/issues/3389)では`localeCompare`による配列順序が実行ロケールに依存し得ること、[#3390](https://github.com/hat47x/sui-sensemaking/issues/3390)ではlone surrogateのJSONエスケープと仕様上のraw UTF-8規則の差が指摘されている。どちらもCross-languageでの完全再計算・Input拒否/正規化方針は**未確定**。YIC側で独自の暫定canonicalizerを標準化せず、SUI Product OwnerによるVersion/Spec/固定ベクトルとTAI Consumer側の実照合を待つ。hashだけではSource identityや現在Grantは証明できない。
+
+### 22.3 受入の範囲と試験優先順
+
+本節の判断表はTAI #271 SC-21のRQ-01〜07と既存#488のYIC-ROUTE-03/05/06/07へ**対応付けるだけ**で、新しい試験ID、Runtime/Policy/Capability Registry、共有Resolver、Host認可器、Go側の第二Canonicalizerは増やさない。後続の同一Taskで比較する場合、(a)実Runtime Profile/Effective Config、(b)実Tool Route+schema/CLI argvと応答、(c)Source/Projection/Scope/Grant、(d)read-only継続が可能だった範囲、(e)不必要な停止/権限昇格・Tool/Token/人手をそれぞれ観測する。実験の分母は先に固定する。
+
+**最初のBlocking Exitは変更しない**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の公開TEI固定H2-01外部Harness実Tool Call→H3実Skill root/reference Loader→H2/H3四独立Sessionを先行。SUIのSaaS Agent認証配線・DB Ready・実IdP・Cross-language hashの全面適合を先行条件にしない。Runtime Profile横断でのRQ実Harness試験、Digestの実異言語互換、実Host Grant/OS送出、Product間Handoff/正式Owner受理は**NOT RUN**。既存Product限定観測や一括検証段数はこの判定のPASSには加算しない。
