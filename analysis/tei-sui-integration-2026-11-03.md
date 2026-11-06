@@ -892,3 +892,18 @@ snapshotVersion は12桁
 - 2つのヒューリスティックが一致した場合、1グループに両方の理由コードが付く
 - 対象外カードの除外は、統合・出典・正規IDのいずれでも効く
 - 実類似モデルとの接続は未確認（規則ベースのみ）
+
+## 書き出し監査の重複抑止（2026-11-06）
+
+`POST /docs/{id}/export-audit`で、同じ`exportId`の再送・別`exportId`・`exportId`なしを順に送り、ローカルのsinkに届いたイベントを数えた。[receipt](../evaluations/records/SUI-TEI-export-dedup-2026-11-06.json)
+
+```text
+同一exportIdの2回 → bundleのイベントは1件（再送は抑止）
+別exportId → bundleが計2件（別の書き出しは残る）
+exportIdなし → markdownが1件（抑止しない）
+```
+
+- 重複抑止の単位は`exportId`で、書き出しの種類や回数ではない
+- `exportId`を省いた古いクライアントの記録は落とさない
+- 抑止窓の境界と再起動をまたぐ挙動は未確認
+- `safeMode=true`では`export`が403（fail-safe）になるため、本検証は`safeMode=false`で行った

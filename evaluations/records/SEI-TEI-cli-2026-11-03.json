@@ -21,12 +21,12 @@
       "snapshotDigest": true
     },
     "recordId": "decision-1",
-    "snapshotDigest": "sha256:522d9f0e71291238ba99fc314a509e992728cee56ba2411b2e6b2d378b5d0e18",
+    "snapshotDigest": "sha256:c028888d7c4d3dd96ded532f0c1eae6229886e2b75a8d00168ac5ded42c75d91",
     "resume": [
       "Store sei-store-2026-11-06: 1 records",
       "Unresolved scope: recognized Decision.unresolved_refs only; not a case-wide inventory.",
       "0 entries; 0 distinct logical references. Case completeness: not assessed.",
-      "Snapshot SHA-256: sha256:522d9f0e71291238ba99fc314a509e992728cee56ba2411b2e6b2d378b5d0e18",
+      "Snapshot SHA-256: sha256:c028888d7c4d3dd96ded532f0c1eae6229886e2b75a8d00168ac5ded42c75d91",
       ""
     ]
   },
