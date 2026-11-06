@@ -787,3 +787,15 @@ agent有効・監査出力なし → guard true
 - 業務キーはtenant admin経路の代用にならない
 - local-devでは信頼済みSaaSランタイムが未構成のため503（fail-closed）
 - SaaSプロファイルで実際のtenant adminセッションを使った登録は未確認
+
+## 管理監査のカーソルページング（2026-11-06）
+
+`GET /admin/provision/audit`を`limit=1`で2回読み、カーソルで次ページを取得した。[receipt](../evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json)
+
+```text
+1ページ目: 200 / events 1 / nextCursor あり
+2ページ目: 200 / events 1 / 1ページ目と重複なし
+```
+
+- カーソルは単調に進み、ページ間で同じイベントを返さない
+- カーソルの失効や大量の監査での挙動は未確認
