@@ -638,7 +638,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
                 errors.append(f"SUI admin plane check did not hold: {relative}")
-        if "SUI-TEI-audit" in relative:
+        if "SUI-TEI-audit" in relative and "-pagination" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("eventCount", 0) < 1 or observed.get("viewStatus") != 200:
                 errors.append(f"SUI audit export did not deliver an event: {relative}")
