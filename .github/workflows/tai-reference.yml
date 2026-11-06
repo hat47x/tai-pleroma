@@ -85,6 +85,9 @@ jobs:
       - name: document consistency
         working-directory: .
         run: python integrations/tools/doc_consistency_check.py
+      - name: PoC evaluation template
+        working-directory: .
+        run: python integrations/tools/poc_evaluation_template_check.py
       - name: synthetic flow test
         working-directory: tools/check-synthetic-flow
         run: python -m unittest -v check_test.py
