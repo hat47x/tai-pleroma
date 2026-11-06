@@ -562,3 +562,48 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 **試験時の反例（実Harnessは未実施）**：PV-01＝H2自身のDirectoryだけ不在だが `../h3` 経由でSkillに到達、PV-02＝別pathを同一 `-workspace` と虚偽報告、PV-03＝同じbyteでもH3のLoaderがroot/refを未読込、PV-04＝H3だけ追加Document/Toolまたは他Session Answerへアクセス。これらは既存Trial CardのObservationとSK-02比較資格へ写し、独立のSandbox/Runner/Permission Registryを新設しない。
 
 **到達点**：CIでのProduct-only 2-view read は実測済み。ここで定義した実Sandbox隔離、同一論理パスの実Tool呼出し、H2からの拒否点、H3実Loader、外部AI Harness四Session、Oracle/Costは **NOT RUN**。最初のBlocking Exit は引き続き外部HarnessからのH2-01実Tool Request→TEI CLI実行→Harness側応答受信である。
+
+
+---
+
+<!-- tai-scn001-first-activity-value-exit-20261106 -->
+## 23. 2026-11-06：Tool/Skillの成立と「活動を継続できる価値」を別に実証する（SCN-001／計画）
+
+### 23.1 二種類の価値を混同しない
+
+本RunbookのW0/S1→H2/H3は、**公開TEIの一要素を実際に調査できるか**、Product Skillによって正答・不明点の保持・費用がどう変わるかを判別する**能力利用の試験**である。これが合格しても、TAI Pleroma固有の「中断後も目的・根拠・未決・成果を取り戻し、別の必要能力へつなぐ」**活動継続の価値**は未実証である。逆に、活動継続の試行をH2/H3の最初の実Tool観測のBlocking条件に追加しない。
+
+活動価値のOwnerは[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)（根拠・現在資格・Handoff）と[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)（価値・必要性の比較）。本Runbookは**引渡し先と独立した最小比較の入口**だけを固定する。SCN-001のSource・成果・判定は既存[Scenario](../../scenarios/SCN-001-shared-space-guidance.md)、Product意味・認可・文書保存/公開・委任は各Ownerが正本。TAI用の中央Activity DB、共通Host、判断Engine、承認者Registryを作らない。
+
+### 23.2 既存SCN-001の一つのUser Jobで比較する
+
+**目的を固定**：架空の案内の「予約不要」と「会議室は要予約」の相違を、O-01〜O-05の原文・出典・時点に基づき説明し、H-01〜03を未採用の候補として残したまま、案内文Draft D-04を作る。中断後にO-06を受領し、過去の記録を消さず、差分・必要な再確認・現在利用可能なDraftを提示する。管理者の正式承認、施設への公開、実予約、外部DB書込みは**試験対象外**。
+
+| 比較構成 | 同じ利用目的に必要な最小手順 | TAIの価値として数えないもの |
+| --- | --- | --- |
+| **B0：既存手段** | Markdown／ファイル・手動索引・外部Harnessで原典／仮説／未決／D-04／中断点を保存し、O-06後に再照合 | 手作業やHarness自身ですでに実現する能力 |
+| **B1：Product単独** | 必要な範囲だけ既存MMI/SHO・SUI・SEI等の公開・利用可能な入口を利用し、それぞれのSource/Receiptを保持。未実装のProduct機能は「不可／未確認」とする | Product自身の意味解釈、文書Read/Save、決定Methodの効果 |
+| **B2：TAI横断** | **同じTask/許可入力**から必要なProductの実在能力だけ選択し、中断時の既存参照と未完了義務を許可Projectionで引継ぎ、O-06時の再確認先を提示 | TAIがProductのOwner受理・現在Grant・公開許可・実Effectを代理したとする主張 |
+
+B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値比較に準拠し、[#271](https://github.com/hat47x/tai-pleroma/issues/271)の**J0全面再確認／J1選択的／J2無検査再利用**とは別軸である。最初から全五基盤を起動する必要はない。B1で一製品だけで十分なら、その結果を正例として採用する。B2だけ追加のTool・Source・権限を許す比較や、未提供Product機能の推測補完は**不適格**。
+
+### 23.3 独立Expectedと「役に立つ再開」の判定
+
+同じ合成Source版・入力可視性・Audience/Grant・時点で、比較開始前に**参加者から分離したExpected**を固定する。評価票は新Schemaにせず、既存SCN-001／#271／VA-X/VA-Eに置く。
+
+1. **理解の保存**：O-02/O-03を現行規程と断定せず、矛盾／例外／旧版の候補を識別し、O-05の「確認した範囲に見当たらない」を権限者の不存在へ昇格しない。
+2. **中断と再開**：Source原文・位置・版、H-01〜03の採否未決、D-04のDraft/非公開、完了／未完了のProduct/Consumer責務を参照可能な状態で再構成する。LLMの会話記憶や「完了しました」だけを証拠にしない。
+3. **変化時の現在資格**：O-06でA→B→Aの同文面へ戻っても旧判断の現在有効性を復活させない。変更を受けたClaim・Source/Parser・Grant・開示だけ再確認を提案し、依存不明を無影響としない。
+4. **成果物と利用権限**：D-04が実ファイルとして保存・再読取できたかを文面生成と区別し、Owner未承認なら公開しない。ProductからのACK、Body実受領、最終Consumer読取を必要な場合だけ別観測とする。
+5. **作業負担と安全**：根拠復元の欠落数／誤った現在Claim／不要な再取得、Tool回数、Token・経過時間・人手修正、実際の書込み／外部送出の可視範囲を別欄で比較。機密・現在Grantは実Host/Source Ownerで確認し、TAIの自己申告でPASSにしない。
+
+**反証の出口**：B0またはB1で同等の安全性・根拠・再開をより少ない負担で達成すれば、当該用途へのTAI横断Skillは**任意／不要**と判定できる。B2が有利でも、出所欠落、Unknownの消去、権限拡大、未観測の保存・送出があれば合格にしない。これはTAIという製品の存否の判断ではなく、このUser Jobで追加する構成の必要性の判断である。
+
+### 23.4 進める順と実証の現在地
+
+1. **先行P0は変更なし**：#168/SK-02の最初の外部Harness **H2 Tool-only一Sessionの実Tool Request→実CLI argv/exit/stdout観測**。次にH3実Loader、その後固定4 SessionのITT/PP・独立Expected/費用採点。ここへSCN-001の新Toolを混入させない。
+2. **並行準備**：SCN-001の既存O-01〜06・D-04・Reference実装と必要Product CLI/Readerの現物を#271/#422の担当で棚卸し、できること／未実装／Owner未受理を分ける。公開合成資料のみ使う。独立ExpectedをTrial開始前に封印する。
+3. **後続の最小活動試行**：B0→B1→B2を同じTaskで別Session/明示したConsumer Scopeとして実施し、最初は**一度の中断→O-06→Draft再開**を比較する。2 Harness切替、実EKI業務Effect、SHO Publish、全Product構成はこの試行の必須条件ではない。必要性を示す反例が得られたときだけ追加する。
+4. **資格更新**：SourceやHarness、Skill、Product Reader、Grantが変われば、新Attemptと現在用途に対する適用だけ再照合し、履歴の正しいObservationを保存する。比較の成果はProduct側の受理/修正Ownerへ戻し、TAIを第二の正本にしない。
+
+**状態（2026-11-06）**：SCN-001は架空Sourceの参照工程・評価を持つが、ここで提案したB0/B1/B2の実独立Session比較、外部HarnessにまたがるActivity再開、現在Grant/非送出の実強制、Owner価値受入は**NOT RUN**。固定TEI CLIのProduct-only S1とH2/H3準備CIをこれらへ加算しない。
