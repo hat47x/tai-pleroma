@@ -842,3 +842,19 @@ unarchive 204 → 書き込み 200
 - 判断ログは追記専用で、同じ判断の上書き・重複は409で拒否する
 - 未知のグループは空の一覧を返し、存在しない文書の404とは区別される
 - 並行追記や他tenantの認可は未確認
+
+## CE4監査イベントの順序規則（2026-11-06）
+
+`POST /docs/{id}/context-audit`で、イベント順と整合性の規則を順に試した。[receipt](../evaluations/records/SUI-TEI-ce4-audit-order-2026-11-06.json)
+
+```text
+他のイベント前のapply → 409 missing_event（不足: bundle, proposal, query）
+query → 200 / bundle → 200 / proposal → 200
+全イベント後のapply → 200
+sourceBundleHashの不一致 → 409 equivalence_mismatch
+operationとcommandの不一致 → 422 operation_command_mismatch
+```
+
+- applyは先行イベントが揃うまで拒否され、不足分を`missingEvents`で返す
+- 提案と適用の`sourceBundleHash`連鎖は不一致を409で止める
+- trackerの失効窓や別tenantとの干渉は未確認
