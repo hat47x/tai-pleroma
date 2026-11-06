@@ -231,6 +231,7 @@ def main():
         "sui_list_pagination": run_step("sui_list_pagination", ["integrations/pilot-sui-document/assembler/list_pagination_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-list-pagination-2026-11-06.json"]),
         "sui_agent_read_path": run_step("sui_agent_read_path", ["integrations/pilot-sui-document/assembler/agent_read_path_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-agent-read-path-2026-11-06.json"]),
         "sui_agent_key_wiring": run_step("sui_agent_key_wiring", ["integrations/pilot-sui-document/assembler/agent_key_wiring_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-agent-key-wiring-2026-11-06.json"]),
+        "sui_saas_precondition": run_step("sui_saas_precondition", ["integrations/pilot-sui-document/assembler/saas_precondition_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-saas-precondition-2026-11-06.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}

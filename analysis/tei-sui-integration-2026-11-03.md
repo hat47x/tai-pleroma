@@ -1,4 +1,4 @@
-﻿# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
+# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
 
 2026-11-03時点の整理。実装と検証の正本は各リポジトリのGit履歴とreceipt。
 
@@ -961,3 +961,21 @@ context-audit（channel=mcp） → 200 / channel=api → 403
 - 派生データ（類似候補など）は経路ごとに閉じており、許可は明示リストで管理する
 - **`SUI_AGENT_CREDENTIAL_HASH_KEY`を設定しても、local-devプロファイルではapp.stateへ配線されない**（配線は`settings.runtime_profile == "saas-multitenant"`の分岐内にある。ASTで確認済み）。本検証は検証内で鍵を配線して経路を評価した
 - 本番相当プロファイルでの配線と、実外部agentとの接続は未確認
+
+## SaaSの書き込み前提条件（2026-11-06）
+
+`_require_saas_document_precondition`を9通りのヘッダーで直接呼び、返る状態とコードを記録した。[receipt](../evaluations/records/SUI-TEI-saas-precondition-2026-11-06.json)
+
+```text
+If-Match/If-None-Match なし（更新・作成） → 428 document_precondition_required
+両方指定 → 400 document_precondition_conflict
+If-Match: * → 428（ワイルドカードで版検査を迂回できない）
+If-Match: "abc", * → 428
+If-None-Match: "abc"（作成） → 400 document_precondition_invalid
+If-None-Match: * で既存 → 409 document_already_exists
+If-Match: "abc"（更新） / If-None-Match: * （新規） → 通過
+```
+
+- SaaSプロファイルは暗黙の上書きを許さず、更新は具体版、作成は`If-None-Match: *`を要求する
+- ワイルドカードは一覧に混ぜても迂回にならない
+- local-devではこの前提条件が有効でないため、HTTP経路ではなくヘルパーを直接呼んで評価した
