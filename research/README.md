@@ -93,3 +93,5 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 - [TAI Draft #177](https://github.com/hat47x/tai-pleroma/pull/177)（2026-11-02 merged）はHarness間の認知・権限・結果境界のConsumer側評価、[Draft #231](https://github.com/hat47x/tai-pleroma/pull/231)（2026-11-02 merged）は価値・要望・要件の往復と利用者価値の研究。研究PR #129は仮説、反証条件、実験計画と解釈上の限界を担い、他Draftの正本を移さない。
 
 この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。
+
+- **RQ7（2026-11-06）**: [有界Graph完全性の比較研究](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)と[公開Gold偏り・設計意図/実装特性のClaim境界](protocols/RQ7_DESIGN_CLAIMS_AND_GOLD_BALANCE_2026-11-06.md)。前者の公開合成刺激ツール14/14は研究機材の局所テストであり、認知効果・TEI実製品・Owner受理の検証ではない。
