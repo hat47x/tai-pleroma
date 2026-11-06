@@ -64,6 +64,9 @@ jobs:
       - name: public boundary scan
         working-directory: .
         run: python tools/check-public-boundary/check.py --root .
+      - name: SUI live-stub visibility observer unit tests
+        working-directory: integrations/pilot-sui-document/assembler
+        run: python -m unittest -v test_context_bundle_visibility.py
       - name: YI 64-hexagram audit regression tests
         working-directory: .
         run: python -m unittest -v evaluations/test_yi_constellation_audit.py
