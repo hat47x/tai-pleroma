@@ -1,0 +1,50 @@
+{
+  "schema": "tai.reference.suite-timing/v0",
+  "synthetic": false,
+  "evidenceKind": "observation",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
+  "command": "python integrations/tools/poc_evaluation_baseline.py",
+  "result": "PASS",
+  "observed": {
+    "steps": 53,
+    "totalSeconds": 807.9,
+    "slowest": [
+      {
+        "name": "sui_docs_tests",
+        "seconds": 204.94,
+        "attempts": 1
+      },
+      {
+        "name": "sui_session_tests",
+        "seconds": 94.89,
+        "attempts": 1
+      },
+      {
+        "name": "eki_projection",
+        "seconds": 45.11,
+        "attempts": 1
+      },
+      {
+        "name": "postgres_contention",
+        "seconds": 31.38,
+        "attempts": 1
+      },
+      {
+        "name": "sui_multi_instance",
+        "seconds": 30.79,
+        "attempts": 1
+      }
+    ],
+    "suiteResult": "PASS"
+  },
+  "products": {
+    "tei": "2d0b09b13",
+    "sui": "09c24046",
+    "sei": "e8d13e0",
+    "mmi": "b07ed4a2",
+    "eki": "66b0c04"
+  },
+  "scope": "Reads the committed suite receipt and records per-step timings and the checked-out product revisions. It is a baseline observation for later comparison, not a productivity measurement."
+}

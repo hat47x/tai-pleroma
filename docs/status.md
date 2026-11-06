@@ -146,3 +146,5 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 - 未確認: 実データ・実テナント・実IdP、管理DB、公開CA、本番Worker Protocol互換、結果受入の配線、複数Workerの分散、生産性の測定
 
 整理は[製品側の判断が必要な3点](analysis/product-side-decisions-2026-11-06.md)と[TEI構築のフィージビリティ](analysis/tei-construction-feasibility-2026-11-03.md)を参照。公開gateは`allowed=false`のまま。
+
+
