@@ -679,3 +679,35 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 別の横断論点である[TAI #271 SC-21](https://github.com/hat47x/tai-pleroma/issues/271)（実行Profile変更時の現在Capability再資格化）はこれらのSource証拠とは独立。仮に同じBinary/Index/Worldの履歴が維持されても、次のHarness Sessionで同じTool・現在のGrantが利用可能とは推論しない。最初のH2-01実Sessionでは実Tool Request→Process→Tool Reply受領、Profile/許可範囲を、その時点で別観測する。これは初回Trialの条件を増やすものではなく既存Required evidenceの確認である。
 
 **状態・限界**：旧版のProduct-only Go CLI／公開一時Workspaceで3命題を実測。今回の`order.tei.md`は旧DSLを移した**未対応形式**であり、正式Markdown Frontend/Role/Source spanの成功ではない。[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)の未対応Parser明示拒否は別ビルドのCI、採用済みmainではない。外部Harness H2/H3四Session、H3 Skill実ロード、Markdown Parser、意味Owner受理、Provider Effectは**NOT RUN**。
+
+---
+
+<!-- tai-sk02-dsh-external-h2-real-tool-noneligible-20261107 -->
+## 24. 2026-11-07：DSH外部Harness実Tool到達とH2比較資格を分ける
+
+### 24.1 実測証拠を既存Runbookへ取り込む
+
+[TEI #2509／Draft PR #3113](https://github.com/hat47x/tei-platform/pull/3113)に、外部AI HarnessであるDSH 0.2.2-rc.1（Windows、headless、read-only、OpenRouter経由DeepSeek）の実行記録が追加された。[Product側Evidence原本](https://github.com/hat47x/tei-platform/blob/docs/dsh-h2-readonly-evidence-20261107/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07/README.md)を参照し、TAIへTool原文・Model思考・Credentialを複写しない。
+
+- **実Tool transportの限定成立**：固定TEI commit 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c、同じ公開sales.orderと、参加者用固定Task原byteSHA-256 38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf。h2-08のSessionはcompletedで、Tool call 56件／受領Tool result 55件、うちTEI実行物の起動32件。commands／version／catalog／inspect／source-index／validateの実結果が残る。Workspaceのコピーと固定worktreeでWorld/SourceIndex fingerprint一致。最終回答は存在するが独立Expectedによる正答採点は**未実施**。
+- **9試行の別分母**：[構造化記録](https://github.com/hat47x/tei-platform/blob/docs/dsh-h2-readonly-evidence-20261107/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07/attempts-summary.json)には、Participant Task完了1、短い接続確認Task完了2、MALFORMED_RESPONSE停止5、INVALID_CONFIG停止1がある。複数Tool呼出しを一つの不正なJSONへ連結して返す問題は、maxParallelToolCalls:1でも防げなかった。最初の試行は隔離用cwdでなかった。これらを成功した4Session Trialに遡及編入しない。
+- **比較適格性の未成立**：read-only設定のまま作業Directory外の固定TEI worktreeを実Readできたため、参加者の作業DirだけへSource/Skill/Reviewer Expectedを隔離する§20の条件を実証していない。「Skillを配置しなかった」だけでは親Path・他Tool・GitHub/Web経由の非露出を証明できない。session-log-deepseekをoffにした設定だけでは実Egress不在を証明しない。Windows workspace-write Sandboxの準備はWin32 5で失敗。
+- **実証の上限**：DSH usage/token数はDSH自己集計であり実請求費用・H3効果・TAI Activity価値ではない。Tool結果ファイルと9試行の要約はPRにあるが、生DSH JSONL全体はコミットされておらず、原Logの独立再構成は別。Sourceだけで回答を採点したと宣言しない。
+
+| Claim | 現在の到達と上限 |
+| --- | --- |
+| Product-only S1 | 既存CIで公開固定CLI/Sourceの限定PASS |
+| **実外部Harness H2 Tool呼出し** | **限定成立**。同一Sessionで実argv・Tool reply・回答が観測された |
+| **H2の固定4Session比較適格性** | **未成立／未確認**。実作業Dir隔離、Skill非露出、同条件、独立Expected、実Audience/Egressが未実証 |
+| H3実Skill Load／四Session比較 | **NOT RUN**。Skillの増分価値、Owner受理、TAI Activity OutcomeもNOT RUN |
+
+### 24.2 次の最小ゲートを「H2が起動したか」から「H2比較に適格な1Session」へ更新
+
+1. **先に実隔離**：既存OS/VM/Container/Harnessの強制境界で、固定TEI実行物・公開Workspace・参加者TaskだけをReaderへ到達させる。原Worktree、親Path、H3 Skill、Reviewer-only Expected、過去Session logへのPath/他Tool/Network経由のアクセス拒否を実観測。read-onlyを物理的な読取範囲制限と誤解しない。実強制不能ならTrialはenvironment-ineligibleとし歴史Tool witnessは保持。
+2. **別Trial Groupとして事前固定**：固定Task byte/Source/Binary、Harness Version/Model/Tool/permission profile、同一論理cwdとargv、4SlotのH2→H3→H3→H2割付R、実Deliver D、独立Expected保管・停止条件・費用/失敗分母を起動前に固定。今回の9探索試行を後から成功4試行へ選抜しない。
+3. **MALFORMED_RESPONSEを保持**：Model/AdapterがTool JSONを壊す場合は失敗として記録し、Tool引数修正や未サポートConfigで成功を捏造しない。Model/Adapter修正版は別Pin/Groupで比較。途中の実Tool実行とSession最終結果を分ける。
+4. **実送出とGrant**：session-log設定、実Provider/Proxy送出、Source Read scope、実Host/OS拒否を別資格として記録する。否定証拠が無いならegress unknown。未承認の実データや私的な原文を外部Modelに送らない。
+5. **実Tool→Consumer評価**：実Request→Process argv/cwd/exit/stdout→Harness ReplyとSource/Warning/Unknownを同一Attemptで照合し、§21のITT全割付とPP適格を分ける。適格化した後にH3で固定Product Skill root＋必要referencesの実Loader Readを比較する。Skillなしで十分なら常時TAI/Skill介在を推奨しない。
+
+**Owner／順序**：TEI #2509／PR #3113は外部DSH実Tool実測、TAI #168／SK-02は比較資格と独立Expected、#232はDisclosure/OS境界、#271はActivityの再資格化、#422はB0/B1/B2価値、#514は後続OKF定義/Run Attestation。新Runner、独立Verifier、Agent Host、正本Registryは追加しない。初回固定TEI H2/H3のTask/Skill bytes/Tool profileは、今回の探索的証拠で自動改訂しない。
+
