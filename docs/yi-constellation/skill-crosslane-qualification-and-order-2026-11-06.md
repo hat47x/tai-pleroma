@@ -271,3 +271,57 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 各ケースは *新しいRunner/Oracle/ParserをTAIに作るためではない*。TEI #2621の既存FM・SF/AP、#1440のAI-TAG、#2823のSource閉包、TAI #488のRouting/X02/X04、SK-03のHandoffへ必要な場合に紐付ける。初回H2/H3の固定Source/Skillを変更せず、**新形式対応が実Productで成立した後**にProduct read-only→Skillなし/あり→必要時だけTAI連携の順で評価。構文の正しさ、Source Revision、意味Owner受理、外部Harness実Loader、文書配布、実DB/Host Effectは別証拠。
 
 **現状**：最新Owner方針の設計反映。ファイル実移行、Source Reader/Parserの新形式対応、CLI/Studio/SHO往復、YIC-FM試験、外部Harness実Tool/H3 Skill、Ownerによる実Meaning受理はすべてNOT RUN。既存のS1/CIに由来する旧 `.tei` Referenceの限定実績は保持する。
+
+
+## 15. `*.tei.md`統一決定とProduct SkillのAuthoring境界
+
+### 15.1 2026-11-06のOwner方針と、実装済み範囲を分ける
+
+**ユーザーの新しい方針**：TEI用ファイルの標準名を `*.tei.md` に統一し、従来 `*.tei` の新規作成は原則廃止・既存資産は段階移行する。目的は、**Markdownとしてそのまま扱え、かつファイル一覧からTEI向け文書と一般`.md`を識別できること**。この命名方針は、文書のSemantic Role／Parser／生成・実行適格性の自動承認ではない。`*.tei.md`は文章・表・図・DSLの候補記述を含められるTEI向けMarkdownの目印であり、`*.md`を一括でTEIへ変換したり、すべての表/コードを実行対象とみなしたりしない。
+
+**新方針と旧記録の優先**：[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)に残る2026-11-06以前の「`.tei.md`を標準化しない／`.md`＋タグを標準にするか検討」「`.tei`を厳密Sourceに残す」という比較案は**経緯**であり、新しいOwner方針より優先しない。ただし、移行の実際のParser/Workspace/Source Index/Studio/生成器対応は未検証。旧`*.tei`を物理的に削除したこと、現在のCLIが`*.tei.md`を選択・Parseできること、OKF適合/意味受理が成立したことは主張しない。TEI側のReader/SelectionとNamingの正式実装判断は#2621/#988/#2620等がOwner。
+
+### 15.2 ファイル名・OKF・Role・実Authorityの四つの独立軸
+
+| 軸 | 例 | 主張できること／できないこと |
+| --- | --- | --- |
+| 表示上の命名 | `order.tei.md` / `notes.md` / 既存`order.tei` | `*.tei.md`はTEI向けの作者意図。旧`.tei`は移行対象。**命名だけでParse/Role/Meaningは成立しない** |
+| Markdown/OKF文書 | 通常Markdown、任意のfrontmatter、OKF `type`/`tags` | [OKF v0.2公式仕様](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)におけるConceptは`.md`＋parse可能なYAML frontmatter＋非空`type`が必要。`*.tei.md`は`.md`で終わるが**命名だけではOKF適合しない**。未知の拡張キーは許容、`tags: [tei]`も正式TEI意味受理ではない。`index.md`/`log.md`はOKFの予約ファイル |
+| TEI Role/Interpretation | 選択した表/式/コードのRole、Language Plugin、Operator/Source/Revision | Markdown本文の一部分を**明示的な選択・根拠付き候補**として解釈。説明表やコードフェンスの存在から実Function/Testへ昇格しない |
+| 正式意味/実行 | Shared Acceptance、実Host Grant、Provider Effect、独立Read | `*.tei.md`への改名、OKF `verified`やSkillの出力だけでOwner受理・実行権限・実成果を生み出さない |
+
+**提案する最小Authoring経路**：`notes.md`（自由な発想・通常の文書）→ユーザーが用途を明示してAI/TEI Skillが**対象部分だけ**構造化Candidate・独立Expected・Source位置・Diffを提示→必要なら `subject.tei.md` に**明示的に保存**→実Source/Role/Operator/Plugin選択→候補検証→Ownerによる意味受理→必要に応じBuild/Host/実効果。`.md`→`.tei.md`は**義務的なPromote段階ではなく作者の意図表示**。AIは提案者であり、採用・移行・外部送出・実行の権限主体ではない。
+
+### 15.3 `*.tei`→`*.tei.md`移行の安全な段階化（新Codeを本PRで実装しない）
+
+1. **Inventory**：現行`*.tei`、README/Manifest/Workspace selection、Import/Source Index/Definition Ref、生成器・Skill例・Editor/テストFixture、外部SHO参照を実Revisionで列挙。名前/Pathだけで意味上の同一性を推定しない。
+2. **Expand/Preview**：旧Parserが要求するGrammarとMarkdownの両立範囲を確認。単純リネームで読めないDSLは**原byteを保持したまま**明示Syntax/Pluginもしくは意味を限定したコードフェンス/埋込み表現への変換候補を出し、Selected Parser/Roleを別に固定。読み取れないものはUnsupportedで止める。新規`*.tei`作成は禁止方向、旧読み取り互換は移行期間中だけ必要に応じ維持。
+3. **Backfill/Validate**：既存Source/Role ID、NULL/Missing、Bag/Grain、Relation方向・多重、時間条件、Rule/Operator/Target、Independent Expected、Build入力、File/Link/Use-siteを**変換前後で対照**。同一Semantic Subjectが旧新両Pathで二重有効化されるならConflictとして停止。`source bytes changed`と`meaning changed`を別診断とする。
+4. **Cutover**：既存のSource選択/Language Plugin契約で`*.tei.md`を正式入力として**明示選択**し、旧Pathの実参照を改版・再解決。Owner受理の必要範囲、Studio/SHOの保存後再Read、現在Grant、実Targetの再Qualificationをそれぞれ独立に記録。空のWorkspaceや部分取得を成功扱いしない。
+5. **Contract**：既存`*.tei`は監査対象のlegacy read-only/移行例外へ。新規生成・Skillが旧拡張子を再生しないよう、既存Lint/Fixture/Docsで検査。完全に移行された範囲のみに廃止判定を付け、全Repositoryの一括移行完了を推定しない。
+
+### 15.4 SkillとSHOの責務・失敗時の停止線
+
+- **TEI Product Skill（TEI #2605/#2621）**：ユーザーの明示要求があれば `.md`の選択箇所から構造化候補・TEST独立Expected・`*.tei.md`保存案を生成する。Source/Edition/Role/Parser/CLIが当該版で実在するかを実Toolで確認し、未実装ならPreview/候補で停止。実保存をSourceの意味採用・実Build成功と混同しない。
+- **SHO Product Skill（SHO #10/#17/#18/#19）**：普通のMarkdownや`*.tei.md`の**原文保存・文書編集・参照・描画**を扱うが、リンク抽出Readerの`link_open`の範囲だけで全参照列挙/TEI Role理解を主張しない。TEIへの構造化候補・実MeaningはTEI Ownerへ戻し、SHOの保存/納品資格をTEI Parse成功から推定しない。
+- **TAI横断Skill（TAI #168/#271/#488）**：TEI単独でのAuthoring/Readが十分なら不要。SHO文書とTEIモデルのSource・未決・変更影響を**同時に引き継ぐ目的がある場合**のみ、各Productの許可Projectionを使う。現行Grantと実Consumer Readを再確認し、Second SSOT、共通Editor、全Markdown自動Promoterを作らない。
+- **未信頼入力**：Frontmatter内の`tei`やMarkdown本文に「実行せよ」「認可済み」「全件確認済み」と書かれていてもSkillの指示・Host Grant・Owner Decisionにはならない。Sourceに不正構文/重複Role/未定義参照があってもRaw Draft保存候補とSemantic Promote拒否を分ける（TEI #2621、Draft #2898）。
+
+### 15.5 既存受入票へ追加する独立Expected（すべて新実行NOT RUN）
+
+| ID | 反例／期待（Owner：TEI #2621/#988/#2620、SHO #18/#19、TAI #488） |
+| --- | --- |
+| YIC-TMD-01 | plain `notes.md`の本文/表は自動でTEI Meaning・Function/Testにならない |
+| YIC-TMD-02 | `notes.md`の`tags:[tei]`のみでは命名・Role/Owner受理・Tool実行資格は変わらない |
+| YIC-TMD-03 | `subject.tei.md`に名前を変えただけでは旧DSLが新Markdown Parserで実読取可能・Meaning同一とは言えない |
+| YIC-TMD-04 | OKF仕様の`type`欠落は「OKF Concept不適合」とするが、TEI Raw Draftの文字列保存能力や構造化候補の保持を破棄しない |
+| YIC-TMD-05 | 許可された独自`tei` frontmatter keyを未知とする汎用OKF ConsumerでもMarkdown原文・未知フィールドを保持し、勝手なRole適用をしない |
+| YIC-TMD-06 | 旧`order.tei`と新`order.tei.md`が同一Semantic IDのまま両方Activeなら、二重登録を拒否・曖昧な方へ自動優先しない |
+| YIC-TMD-07 | Source移動・ABA・Use-site差・Parser/Operator変更後、旧Review/旧Readの現行資格を自動復活させない |
+| YIC-TMD-08 | 編集対象外Markdown・コメント・BOM/CRLF・説明表・重複Role/非可逆Viewでは原byte保全・診断・Preview拒否の範囲を別々に観測 |
+| YIC-TMD-09 | `*.tei.md`のTEI Skillが未導入／実Reader非対応ならunsupported/unknownを返し、架空のTool・成功Receiptを作らない |
+| YIC-TMD-10 | SHOで`*.tei.md`を原文保存できても、TEIのSemantic Promoteや実Provider Write、SHO最終納品の合格とみなさない |
+
+これらの独立Expectedは既存[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)のFM-01〜08やSF/AP、[TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)のSK-01/02、[SHO #18](https://github.com/hat47x/sho-composer/issues/18)のOKF試験へ**差分として接続**する。新しいFixture/Checker/Host/Registryは作らない。対象Reader/Parser/Writer、CLI/Source Index実改版・再帰的Link解決、二Harness実ロード、本番Effectを本追補で実行/合格したとは主張しない。
+
+**初回H2/H3の固定TEI公開Source（旧形式）・Skill Package・実Binary・Participant Task・Expectedは変更しない。** `*.tei.md`採用に伴う実CLI/Skill版の変更は別のSource/Tool Treatment・新Trial Groupとして評価する。初回実Harness H2-01のBlocking Exitを遅らせない。
