@@ -175,3 +175,17 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 **実験の分母と段階**：TEI B0のCLI実Product S1は限定証拠がある。最初の新しい出口は、**外部Harnessが実H2 Tool Request→固定CLI→結果を実受信した1 Session**。その後H3実Loaderを別観測し4独立SessionでITT/PPを区別する。FMT試験はTEI #2621の新方針と互換性設計のOwner決定後に実装Ownerが必要なConsumerへ反映、SHO-G1BはSHO既存#16のOwnerが受理/実行。新Runner・中央Editor・第二Oracle/Scenario SSOTをこのPRで作らない。
 
 **資格**：本§11追加の新Fixture／実Migration／外部Harness H2/H3／TEI Reader/Writer／SHO正式G1b／Owner受理は**NOT RUN**。TEI S1/Prebuilt CIとSHO候補16/16は元Job・版・Scopeに限り既存実験として参照する。
+
+## 12. 2026-11-07：事前拒否、実行後Unknown、独立な誤実装検出を別資格とする
+
+前節のTEI Read/Write価値比較に、現在の限定的なProduct実証を**互いに加算しない証拠**として取り込む。新しいCommand Host・検証基準Store・Mutant Runnerは作らず、[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)、[#2514](https://github.com/hat47x/tei-platform/issues/2514)、[#1180](https://github.com/hat47x/tei-platform/issues/1180)の既存Ownerが持つ期待値を使う。
+
+| ケース | 正負対照・観測する根拠 | 合格と誤認してはいけないこと |
+| --- | --- | --- |
+| **VA-W-A01 作用前の拒否** | [TEI merged #3042](https://github.com/hat47x/tei-platform/pull/3042)でAuthorizer未設定は`COMMAND_AUTHORIZER_UNAVAILABLE`、宣言された期間状態が不明なら`COMMAND_PERIOD_STATE_UNAVAILABLE`。認可→期間の順で検査し、未認可呼出しへ期間情報を不必要に返さない。[merged #3047](https://github.com/hat47x/tei-platform/pull/3047)は宣言許可と発行済み許可の不足を判別する局所Go対照 | ReferenceAuthorizerやGrantAuthorizerの局所試験は現在の主体・実Host/CLIのPermission発行や正式Grant接続を証明しない。拒否前にExecutorが未到達かを独立に観測 |
+| **VA-W-A02 作用後に結果不明** | Executorが呼ばれた後で宣言外Effect/Outcomeを検出したら、#3042は`EffectUnknown`／Lifecycle `unknown` を返す。事前拒否、作用後unknown、実Receipt＋独立Readで確定した結果を別扱い。元OperationID/Keyを保持 | `rejected`表示、Cancel ACK、期限切れ、`UnitOfWork`存在だけでrollback/no effectとしない。応答喪失後の別Key自動再送を禁じ、Provider照会前はunknownのまま。#3042の実PostgreSQL検証は未実施 |
+| **VA-E-M01 AI追加Caseの検出力** | [TEI #2514](https://github.com/hat47x/tei-platform/issues/2514)の正例[PR #2901の限定Health](https://github.com/hat47x/tei-platform/pull/2901)と、誤実装[Draft #3017](https://github.com/hat47x/tei-platform/pull/3017)を**同一Scenario/Fixture/独立Expected**で比較。MutantはEvaluatorのrelation-unique結果を一行だけ誤変更。負例の[Health #42181290981](https://github.com/hat47x/tei-platform/actions/runs/42181290981)では対象AI追加Case自身が実失敗 | CI全体が赤いだけでは検出力とはしない。対象Caseが誤りを検出した局所M1と、他のTestのみ失敗・Infraのみ失敗・Mutant生存を区別。#3017は**意図的に誤ったコードを含む絶対merge禁止Draft**。合格はこの1 Rule/Fixture/Go実装に限定し、全Rule/実Provider・業務Meaning受理を主張しない |
+
+**価値への接続**：VA-T2-Rの公開Source CLI read-only価値や[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の初回H2はVA-W-A01/02の実DB対応や全AI Caseの網羅性でブロックしない。VA-T2-Wで業務Effectを価値とする場合には、作用前拒否と作用後unknownを正しく区別し、Host Grant／Providerの実作用／受領側の独立ReadをそのScopeの必須条件とする。通常成功の正例と異常の負例を**同じSource/操作/独立Expected**で比較し、「全部拒否する実装」が合格する試験も避ける。
+
+**状態**：#3042/#3047は限定的なmain統合済み局所Go試験、#2514のM1は合成Fixture・意図的Redの限定実測。それらを今回のVA横断E2EやOwner意味採用に統合したわけではない。新VA-W-A01/A02/E-M01の同一Attempt横断実行、実DB照会、外部Harness、異モデル独立採点、正式Owner受理は**NOT RUN**。
