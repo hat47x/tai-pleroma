@@ -748,3 +748,16 @@ executed true / claimed true / result 409 RESULT_NOT_READY
 - 実行系は旧版（8159af1）と同じ手順で通る
 - 結果の受入は`66b0c04`でも未配線（409が継続）
 - receiptの`binaries`欄に使用したバイナリを記録するようにした
+
+## 更新後のSUI・EKIでの一括検証（2026-11-06）
+
+SUIを`09c24046`、EKIを`66b0c04`へ更新して、一括検証53段を再実行した。[suite receipt](../evaluations/records/TEI-suite-2026-11-03.json)
+
+```text
+result PASS / steps 53 / SUI 09c24046 / EKI 66b0c04
+```
+
+- 更新後も保存・TLS・Postgres・監査・管理API・context系・EKI実行系の段が通る
+- 端末固有のreceipt（ID・時刻）は再生成されるため、追跡するのはsuite receiptと本節のみ
+
+公開gateは`allowed=false`のまま。
