@@ -294,6 +294,9 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 
 ### 15.3 `*.tei`→`*.tei.md`移行の安全な段階化（新Codeを本PRで実装しない）
 
+**現行mainの具体的断層（2026-11-06静的Source確認）**：[TEI `internal/workspace/loader.go`](https://github.com/hat47x/tei-platform/blob/main/internal/workspace/loader.go)（blob `ddae9bf724b685b1109b015c169da72ea740ada5`）で`loadSemantics`は`strings.HasSuffix(name, ".tei")`、`loadPlugins`は`plugin.tei`、`loadBundles`は`bundle.tei`、`loadApplications`は`application.tei`を選択する。`model.tei.md`はこのSemantic Finderの**列挙条件を満たさない**。各Domainの固定ファイル名にも移行対応が必要であり、Sourceを並べただけ／`validate ok`だけでは実消費を主張できない。現行ParserのDSL構文をMarkdownのfrontmatter/任意コードフェンスと自動互換にした実装証拠もない。既存[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)のTM試験と[#2823](https://github.com/hat47x/tei-platform/issues/2823)の実Source消費照合を再利用し、TAI側にファイル形式Readerを複製しない。
+
+
 1. **Inventory**：現行`*.tei`、README/Manifest/Workspace selection、Import/Source Index/Definition Ref、生成器・Skill例・Editor/テストFixture、外部SHO参照を実Revisionで列挙。名前/Pathだけで意味上の同一性を推定しない。
 2. **Expand/Preview**：旧Parserが要求するGrammarとMarkdownの両立範囲を確認。単純リネームで読めないDSLは**原byteを保持したまま**明示Syntax/Pluginもしくは意味を限定したコードフェンス/埋込み表現への変換候補を出し、Selected Parser/Roleを別に固定。読み取れないものはUnsupportedで止める。新規`*.tei`作成は禁止方向、旧読み取り互換は移行期間中だけ必要に応じ維持。
 3. **Backfill/Validate**：既存Source/Role ID、NULL/Missing、Bag/Grain、Relation方向・多重、時間条件、Rule/Operator/Target、Independent Expected、Build入力、File/Link/Use-siteを**変換前後で対照**。同一Semantic Subjectが旧新両Pathで二重有効化されるならConflictとして停止。`source bytes changed`と`meaning changed`を別診断とする。
