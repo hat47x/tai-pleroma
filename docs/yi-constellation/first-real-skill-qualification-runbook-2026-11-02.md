@@ -398,7 +398,7 @@ S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失
 | W0実CLI Witness | Go `go1.26.10`／`linux/amd64`、歴史的CI実Binary SHA-256 `6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f`。**H2で同じBinaryが実起動された証拠ではない** |
 | W0台帳 | [公開S1結果](../../evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json)、[台帳照合付き実CI #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)。台帳は試験者が保持し、HarnessのTask/Toolに事前投入しない |
 | H2 Tool-only | 外部Harnessの**実名称・版・Model・Session ID・実Tool Profile**をTrial Cardへ実記入。Skillをロードしない構成／参照ファイルの非露出を確認。候補名だけで対応済みとしない |
-| H3 Product Skill | H2のTask・Binary/Workspace・Tool権限を同一にし、TEI Product Skillの**固定実byte**のみ追加。現在の実験候補は[TEI Draft #2863 exact commit `97161e2b5535378edb5a8b6ea6b398454aa0c84c`](https://github.com/hat47x/tei-platform/pull/2863)の `skills/yi-tei-modeling/SKILL.md` と必要な `references/`。Draft/未mergeを正式配布物として扱わない |
+| H3 Product Skill | H2のTask・Binary/Workspace・Tool権限を同一にし、TEI Product Skillの**固定実byte**のみ追加。初回の固定Treatmentは**同じTEI commit `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`に含まれる**[Product Skill](https://github.com/hat47x/tei-platform/tree/50ebf8014340fd1906f6b35cfa30173e0ee2fc6c/skills/yi-tei-modeling)のroot Git blob `9cd8475bd6489c6661ae644bf771cfcce04188b1`＋reference Git blob `ec2f90e85ed42659aca8b44a9be216987860b099`（§22）。[Draft #2863](https://github.com/hat47x/tei-platform/pull/2863)は別Treatmentであり初回に混ぜない |
 
 **実行環境の準備**：外部Harnessへは**固定済みの実行バイナリと公開Workspaceだけ**をTool側の作業空間として与える。W0台帳／独立Expected／前Session回答／採点表はAIから見えない試験者側に保管。H2のTool経由でSkill文書を検索・開ける状態なら、Skill非ロード対照としての適格性を再評価する。H3のSkill追加が隠れたTool/権限/モデル/Source変更を伴えば同一Pairにしない。
 
@@ -449,7 +449,7 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 
 [参加者向け固定Task本文](../../evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt)を**全4独立Sessionへ同じbyte列**で渡す。UTF-8・末尾LF込みのSHA-256は `38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf`。Participant Taskはモデル要素 `semantic-data:sales.order`、公開 `reference/workspace` を明示するが、**回答すべき属性名・型、実Source file、診断件数、正答判定票を記さない**。実CLI・Product Sourceの読取りに基づく回答を要求する。Taskの自然言語をH3だけ言い換えない。
 
-**Participant隔離が必須**：両腕からアクセス可能にするのは当該Task本文と公開TEI Checkout・各腕で許可したToolだけ。TAI repo全体、SK-02の評価計画、S1 Evidence台帳、Reviewer用独立Expected/採点表、他SessionログをParticipant向けWorkspace・添付・Tool出力へ配置しない。H2にProduct Skill root/referencesを一切示さない。H3は同一TEI版の[Product Skill `yi-tei-modeling`](https://github.com/hat47x/tei-platform/tree/main/skills/yi-tei-modeling)を**実Load可能な仕組みに置き、その実ロードSource byteと経路を別記**。単にファイルを配置してもLoadedと見なさない。GitHub等を自由に検索できるProfileでは評価資料が漏れるため、両腕の実Tool scopeを固定・観測し、Oracleが取得可能なら盲検評価とは呼ばず停止する。
+**Participant隔離が必須**：両腕からアクセス可能にするのは当該Task本文と**固定TEI実Binary＋公開`reference/workspace`のみを抽出した限定ビュー**、および各腕で許可したToolだけ。**TEI Repository全体のCheckoutを参加者へ公開しない**（そこにはH3のSkillも含まれる）。TAI repo全体、SK-02の評価計画、S1 Evidence台帳、Reviewer用独立Expected/採点表、他SessionログをParticipant向けWorkspace・添付・Tool出力へ配置しない。H2にProduct Skill root/referencesを一切示さない。H3は同一TEI固定版の[Product Skill `yi-tei-modeling`](https://github.com/hat47x/tei-platform/tree/50ebf8014340fd1906f6b35cfa30173e0ee2fc6c/skills/yi-tei-modeling)（§22のroot＋必須referenceの固定byte）だけを**実Load可能な仕組みに置き、その実ロードSource byteと経路を別記**。単にファイルを配置してもLoadedと見なさない。GitHub等を自由に検索できるProfileでは評価資料が漏れるため、両腕の実Tool scopeを固定・観測し、Oracleが取得可能なら盲検評価とは呼ばず停止する。
 
 ### 実行者向け準備と独立Holdout（Participantへ送らない）
 
@@ -567,46 +567,6 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 ---
 
 <!-- tai-scn001-first-activity-value-exit-20261106 -->
-## 23. 2026-11-06：Tool/Skillの成立と「活動を継続できる価値」を別に実証する（SCN-001／計画）
-
-### 23.1 二種類の価値を混同しない
-
-本RunbookのW0/S1→H2/H3は、**公開TEIの一要素を実際に調査できるか**、Product Skillによって正答・不明点の保持・費用がどう変わるかを判別する**能力利用の試験**である。これが合格しても、TAI Pleroma固有の「中断後も目的・根拠・未決・成果を取り戻し、別の必要能力へつなぐ」**活動継続の価値**は未実証である。逆に、活動継続の試行をH2/H3の最初の実Tool観測のBlocking条件に追加しない。
-
-活動価値のOwnerは[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)（根拠・現在資格・Handoff）と[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)（価値・必要性の比較）。本Runbookは**引渡し先と独立した最小比較の入口**だけを固定する。SCN-001のSource・成果・判定は既存[Scenario](../../scenarios/SCN-001-shared-space-guidance.md)、Product意味・認可・文書保存/公開・委任は各Ownerが正本。TAI用の中央Activity DB、共通Host、判断Engine、承認者Registryを作らない。
-
-### 23.2 既存SCN-001の一つのUser Jobで比較する
-
-**目的を固定**：架空の案内の「予約不要」と「会議室は要予約」の相違を、O-01〜O-05の原文・出典・時点に基づき説明し、H-01〜03を未採用の候補として残したまま、案内文Draft D-04を作る。中断後にO-06を受領し、過去の記録を消さず、差分・必要な再確認・現在利用可能なDraftを提示する。管理者の正式承認、施設への公開、実予約、外部DB書込みは**試験対象外**。
-
-| 比較構成 | 同じ利用目的に必要な最小手順 | TAIの価値として数えないもの |
-| --- | --- | --- |
-| **B0：既存手段** | Markdown／ファイル・手動索引・外部Harnessで原典／仮説／未決／D-04／中断点を保存し、O-06後に再照合 | 手作業やHarness自身ですでに実現する能力 |
-| **B1：Product単独** | 必要な範囲だけ既存MMI/SHO・SUI・SEI等の公開・利用可能な入口を利用し、それぞれのSource/Receiptを保持。未実装のProduct機能は「不可／未確認」とする | Product自身の意味解釈、文書Read/Save、決定Methodの効果 |
-| **B2：TAI横断** | **同じTask/許可入力**から必要なProductの実在能力だけ選択し、中断時の既存参照と未完了義務を許可Projectionで引継ぎ、O-06時の再確認先を提示 | TAIがProductのOwner受理・現在Grant・公開許可・実Effectを代理したとする主張 |
-
-B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値比較に準拠し、[#271](https://github.com/hat47x/tai-pleroma/issues/271)の**J0全面再確認／J1選択的／J2無検査再利用**とは別軸である。最初から全五基盤を起動する必要はない。B1で一製品だけで十分なら、その結果を正例として採用する。B2だけ追加のTool・Source・権限を許す比較や、未提供Product機能の推測補完は**不適格**。
-
-### 23.3 独立Expectedと「役に立つ再開」の判定
-
-同じ合成Source版・入力可視性・Audience/Grant・時点で、比較開始前に**参加者から分離したExpected**を固定する。評価票は新Schemaにせず、既存SCN-001／#271／VA-X/VA-Eに置く。
-
-1. **理解の保存**：O-02/O-03を現行規程と断定せず、矛盾／例外／旧版の候補を識別し、O-05の「確認した範囲に見当たらない」を権限者の不存在へ昇格しない。
-2. **中断と再開**：Source原文・位置・版、H-01〜03の採否未決、D-04のDraft/非公開、完了／未完了のProduct/Consumer責務を参照可能な状態で再構成する。LLMの会話記憶や「完了しました」だけを証拠にしない。
-3. **変化時の現在資格**：O-06でA→B→Aの同文面へ戻っても旧判断の現在有効性を復活させない。変更を受けたClaim・Source/Parser・Grant・開示だけ再確認を提案し、依存不明を無影響としない。
-4. **成果物と利用権限**：D-04が実ファイルとして保存・再読取できたかを文面生成と区別し、Owner未承認なら公開しない。ProductからのACK、Body実受領、最終Consumer読取を必要な場合だけ別観測とする。
-5. **作業負担と安全**：根拠復元の欠落数／誤った現在Claim／不要な再取得、Tool回数、Token・経過時間・人手修正、実際の書込み／外部送出の可視範囲を別欄で比較。機密・現在Grantは実Host/Source Ownerで確認し、TAIの自己申告でPASSにしない。
-
-**反証の出口**：B0またはB1で同等の安全性・根拠・再開をより少ない負担で達成すれば、当該用途へのTAI横断Skillは**任意／不要**と判定できる。B2が有利でも、出所欠落、Unknownの消去、権限拡大、未観測の保存・送出があれば合格にしない。これはTAIという製品の存否の判断ではなく、このUser Jobで追加する構成の必要性の判断である。
-
-### 23.4 進める順と実証の現在地
-
-1. **先行P0は変更なし**：#168/SK-02の最初の外部Harness **H2 Tool-only一Sessionの実Tool Request→実CLI argv/exit/stdout観測**。次にH3実Loader、その後固定4 SessionのITT/PP・独立Expected/費用採点。ここへSCN-001の新Toolを混入させない。
-2. **並行準備**：SCN-001の既存O-01〜06・D-04・Reference実装と必要Product CLI/Readerの現物を#271/#422の担当で棚卸し、できること／未実装／Owner未受理を分ける。公開合成資料のみ使う。独立ExpectedをTrial開始前に封印する。
-3. **後続の最小活動試行**：B0→B1→B2を同じTaskで別Session/明示したConsumer Scopeとして実施し、最初は**一度の中断→O-06→Draft再開**を比較する。2 Harness切替、実EKI業務Effect、SHO Publish、全Product構成はこの試行の必須条件ではない。必要性を示す反例が得られたときだけ追加する。
-4. **資格更新**：SourceやHarness、Skill、Product Reader、Grantが変われば、新Attemptと現在用途に対する適用だけ再照合し、履歴の正しいObservationを保存する。比較の成果はProduct側の受理/修正Ownerへ戻し、TAIを第二の正本にしない。
-
-**状態（2026-11-06）**：SCN-001は架空Sourceの参照工程・評価を持つが、ここで提案したB0/B1/B2の実独立Session比較、外部HarnessにまたがるActivity再開、現在Grant/非送出の実強制、Owner価値受入は**NOT RUN**。固定TEI CLIのProduct-only S1とH2/H3準備CIをこれらへ加算しない。
 
 <!-- harness-h8-goless-cli-probe-20261106 -->
 ### 22.6 Productの単一バイナリ実行とBuild環境の資格を分ける
@@ -711,3 +671,43 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **Owner／順序**：TEI #2509／PR #3113は外部DSH実Tool実測、TAI #168／SK-02は比較資格と独立Expected、#232はDisclosure/OS境界、#271はActivityの再資格化、#422はB0/B1/B2価値、#514は後続OKF定義/Run Attestation。新Runner、独立Verifier、Agent Host、正本Registryは追加しない。初回固定TEI H2/H3のTask/Skill bytes/Tool profileは、今回の探索的証拠で自動改訂しない。
 
+## 23. 2026-11-06：Tool/Skillの成立と「活動を継続できる価値」を別に実証する（SCN-001／計画）
+
+### 23.1 二種類の価値を混同しない
+
+本RunbookのW0/S1→H2/H3は、**公開TEIの一要素を実際に調査できるか**、Product Skillによって正答・不明点の保持・費用がどう変わるかを判別する**能力利用の試験**である。これが合格しても、TAI Pleroma固有の「中断後も目的・根拠・未決・成果を取り戻し、別の必要能力へつなぐ」**活動継続の価値**は未実証である。逆に、活動継続の試行をH2/H3の最初の実Tool観測のBlocking条件に追加しない。
+
+活動価値のOwnerは[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)（根拠・現在資格・Handoff）と[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)（価値・必要性の比較）。本Runbookは**引渡し先と独立した最小比較の入口**だけを固定する。SCN-001のSource・成果・判定は既存[Scenario](../../scenarios/SCN-001-shared-space-guidance.md)、Product意味・認可・文書保存/公開・委任は各Ownerが正本。TAI用の中央Activity DB、共通Host、判断Engine、承認者Registryを作らない。
+
+### 23.2 既存SCN-001の一つのUser Jobで比較する
+
+**目的を固定**：架空の案内の「予約不要」と「会議室は要予約」の相違を、O-01〜O-05の原文・出典・時点に基づき説明し、H-01〜03を未採用の候補として残したまま、案内文Draft D-04を作る。中断後にO-06を受領し、過去の記録を消さず、差分・必要な再確認・現在利用可能なDraftを提示する。管理者の正式承認、施設への公開、実予約、外部DB書込みは**試験対象外**。
+
+| 比較構成 | 同じ利用目的に必要な最小手順 | TAIの価値として数えないもの |
+| --- | --- | --- |
+| **B0：既存手段** | Markdown／ファイル・手動索引・外部Harnessで原典／仮説／未決／D-04／中断点を保存し、O-06後に再照合 | 手作業やHarness自身ですでに実現する能力 |
+| **B1：Product単独** | 必要な範囲だけ既存MMI/SHO・SUI・SEI等の公開・利用可能な入口を利用し、それぞれのSource/Receiptを保持。未実装のProduct機能は「不可／未確認」とする | Product自身の意味解釈、文書Read/Save、決定Methodの効果 |
+| **B2：TAI横断** | **同じTask/許可入力**から必要なProductの実在能力だけ選択し、中断時の既存参照と未完了義務を許可Projectionで引継ぎ、O-06時の再確認先を提示 | TAIがProductのOwner受理・現在Grant・公開許可・実Effectを代理したとする主張 |
+
+B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値比較に準拠し、[#271](https://github.com/hat47x/tai-pleroma/issues/271)の**J0全面再確認／J1選択的／J2無検査再利用**とは別軸である。最初から全五基盤を起動する必要はない。B1で一製品だけで十分なら、その結果を正例として採用する。B2だけ追加のTool・Source・権限を許す比較や、未提供Product機能の推測補完は**不適格**。
+
+### 23.3 独立Expectedと「役に立つ再開」の判定
+
+同じ合成Source版・入力可視性・Audience/Grant・時点で、比較開始前に**参加者から分離したExpected**を固定する。評価票は新Schemaにせず、既存SCN-001／#271／VA-X/VA-Eに置く。
+
+1. **理解の保存**：O-02/O-03を現行規程と断定せず、矛盾／例外／旧版の候補を識別し、O-05の「確認した範囲に見当たらない」を権限者の不存在へ昇格しない。
+2. **中断と再開**：Source原文・位置・版、H-01〜03の採否未決、D-04のDraft/非公開、完了／未完了のProduct/Consumer責務を参照可能な状態で再構成する。LLMの会話記憶や「完了しました」だけを証拠にしない。
+3. **変化時の現在資格**：O-06でA→B→Aの同文面へ戻っても旧判断の現在有効性を復活させない。変更を受けたClaim・Source/Parser・Grant・開示だけ再確認を提案し、依存不明を無影響としない。
+4. **成果物と利用権限**：D-04が実ファイルとして保存・再読取できたかを文面生成と区別し、Owner未承認なら公開しない。ProductからのACK、Body実受領、最終Consumer読取を必要な場合だけ別観測とする。
+5. **作業負担と安全**：根拠復元の欠落数／誤った現在Claim／不要な再取得、Tool回数、Token・経過時間・人手修正、実際の書込み／外部送出の可視範囲を別欄で比較。機密・現在Grantは実Host/Source Ownerで確認し、TAIの自己申告でPASSにしない。
+
+**反証の出口**：B0またはB1で同等の安全性・根拠・再開をより少ない負担で達成すれば、当該用途へのTAI横断Skillは**任意／不要**と判定できる。B2が有利でも、出所欠落、Unknownの消去、権限拡大、未観測の保存・送出があれば合格にしない。これはTAIという製品の存否の判断ではなく、このUser Jobで追加する構成の必要性の判断である。
+
+### 23.4 進める順と実証の現在地
+
+1. **先行P0は変更なし**：#168/SK-02の最初の外部Harness **H2 Tool-only一Sessionの実Tool Request→実CLI argv/exit/stdout観測**。次にH3実Loader、その後固定4 SessionのITT/PP・独立Expected/費用採点。ここへSCN-001の新Toolを混入させない。
+2. **並行準備**：SCN-001の既存O-01〜06・D-04・Reference実装と必要Product CLI/Readerの現物を#271/#422の担当で棚卸し、できること／未実装／Owner未受理を分ける。公開合成資料のみ使う。独立ExpectedをTrial開始前に封印する。
+3. **後続の最小活動試行**：B0→B1→B2を同じTaskで別Session/明示したConsumer Scopeとして実施し、最初は**一度の中断→O-06→Draft再開**を比較する。2 Harness切替、実EKI業務Effect、SHO Publish、全Product構成はこの試行の必須条件ではない。必要性を示す反例が得られたときだけ追加する。
+4. **資格更新**：SourceやHarness、Skill、Product Reader、Grantが変われば、新Attemptと現在用途に対する適用だけ再照合し、履歴の正しいObservationを保存する。比較の成果はProduct側の受理/修正Ownerへ戻し、TAIを第二の正本にしない。
+
+**状態（2026-11-06）**：SCN-001は架空Sourceの参照工程・評価を持つが、ここで提案したB0/B1/B2の実独立Session比較、外部HarnessにまたがるActivity再開、現在Grant/非送出の実強制、Owner価値受入は**NOT RUN**。固定TEI CLIのProduct-only S1とH2/H3準備CIをこれらへ加算しない。
