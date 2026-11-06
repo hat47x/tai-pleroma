@@ -175,3 +175,50 @@ Skillが多くあることと、必要なSkillを正しく選べることは別�
 | TAI | [#488](https://github.com/hat47x/tai-pleroma/issues/488) Open、[Draft #270](https://github.com/hat47x/tai-pleroma/pull/270) に例示Skill | 横断SkillはProduct単独利用の必須依存ではなく、継続/引渡しの増分価値を測ってから任意採用 |
 
 この表は**2026-11-06時点で参照したIssue状態と限定的Evidenceの監査用メモ**であり、Productの最新Release全数調査・現在Capability Catalog・版付き配布Manifestではない。正式配布適格性はTAI #74と各Product Owner、横断増分価値はTAI #422、現在の再利用資格はTAI #271が持つ。IssueのOpen/Closedや研究計画を製品実装・Harness支援・Owner採用として集計しない。
+
+
+## 13. 技術的Skill適合と利用者の活動価値を別Claimとして試す（SCN-001、計画）
+
+### 13.1 横断からの成熟した差分
+
+[TAI #271 SC-14](https://github.com/hat47x/tai-pleroma/issues/271)、[Draft #270 Runbook §23](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)と[価値実現研究計画](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/value-realization-research-protocol-2026-11-01.md)を照合した。**技術的なSkill/Tool適合（H2/H3）と、利用者の仕事が安全に中断・再開できたこと（SCN-001）は独立Claim**。前節YIC-ROUTEはTaskの選択判断であり、選択後の利用者Outcomeの証明ではない。
+
+- **能力利用Claim**（#168/SK-02）：実Loader、Tool request→実CLI argv/exit/stdout、Source/診断/回答、同一Task/Grant条件でのH2/H3比較。Skillが正しい回答を生んだかとSkillが存在・Loadedしたかも別。
+- **Activity Outcome Claim**（#271 SC-14、#422 VA-TAI）：目的、O-01〜O-06の原文・未決・D-04 Draft・中断点・現在資格を再構成できたか。会話の連続性やTool successだけでは未達。
+- **差分価値Claim**（#422）：B0/B1と比べてB2（TAI横断）に用途固有の追加価値があるか。B0/B1が同等ならTAIを必須化しない。B2だけへのTool/Raw/Grant増加は不適格。
+
+### 13.2 一つの実利用目的で比較する（新Fixtureなし）
+
+対象は[SCN-001](https://github.com/hat47x/tai-pleroma/blob/main/scenarios/SCN-001-shared-space-guidance.md)の架空の共同スペース案内。O-01〜05の相反する予約説明を原文・時点と結び、H-01〜03を未採用の仮説として残し、D-04を非公開Draftにする。一度中断し、O-06の更新後に過去の観測と版を失わず再開する。**施設公開・実予約・本番作用・規程の正式受理は対象外**。
+
+| 比較構成 | 実現すること | 独立Expected／誤った加点の禁止 |
+| --- | --- | --- |
+| B0：通常Harness＋Markdown/手作業 | 出典、版、未決、Draft、再開点を通常ファイルで保持し手動再開 | B0ができたことをProductやTAIの利益にしない |
+| B1：必要な単独Product | 実在するMMI/SHO・SEI/SUI等の必要な入口だけ使い、各ProductのSource/Receiptを保つ | 未実装SHO Writer・SEI APIの補完を禁じ、Product自身の効果をTAIの成果にしない |
+| B2：必要時だけTAI横断 | 許可済みSource・未完了義務を連結し、O-06後の変更影響・再確認先を提示 | 再開できたことと旧承認の復活を区別し、旧A→B→Aを自動受理しない |
+
+**判別する成果**：①原文とSource位置・版の再解決、②相反する観測・未決H-01〜03・unknown/非開示の保持、③D-04の**実ファイル保存・再読取**と未承認公開停止、④O-06後の必要十分な再確認（依存不明は保留）、⑤等しい品質下でのTool/Token/人手/再開時間/過剰介入、⑥Host/Providerの許可外送出・作用の独立観測。
+
+作業をしないことを本人が選んだ成果と、Tool不在で作業できなかった未達を区別。正しさと安全を時間短縮で相殺しない。独立Expectedは参加者Prompt/Skill文書から隔離し、公開合成情報を使用。実ユーザーの満足度や実生活の改善は、この合成試験では主張しない。
+
+### 13.3 実施順と所有者
+
+**先行のBlocking Exitを変更しない**：固定TEI H2-01実Harness Tool call→H3 root/reference実Loader→H2→H3→H3→H2四Session（ITT/PP）。その後、SCN-001 B0/B1/B2は別Trial Groupで検証。H2/H3＝能力適合、B0/B1/B2＝活動価値、#271 J0/J1/J2＝再資格化方式であり、同一スコア/成功件数に混ぜない。
+
+実験の詳細と独立Expectedは#271/#422と既存SCN-001/Runbookが所有。本Draftと#488はTask別の選択・境界・不足の照合のみ。Product意味・Reader/Save/Owner、Host認可、Provider Effectは各Ownerを保持。**新SCN-001 B0/B1/B2実Session、保存後Consumer実読取、正式Owner価値受入はNOT RUN**。
+
+## 14. Prebuilt実行とSource Buildの資格を分ける（限定実CIを反映）
+
+[TEI #2953](https://github.com/hat47x/tei-platform/issues/2953)のGo版不足と[Draft #270 Runbook §22.6](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)を照合。最初のH2/H3では**固定された実Executable**をToolとして提供するため、Source Build前提のGo toolchain資格と独立に扱う。
+
+| 条件 | 要求する証拠 | 禁止する推論 |
+| --- | --- | --- |
+| Prebuilt固定Tool（初回H2/H3） | 実Executable SHA、OS/arch、argv/cwd/exit/stdout、同じSourceとTool Profile | Goコマンドが使えないためBinaryも不適格／Binaryが動いたから全OSに対応 |
+| Sourceからのgo run/build（別Trial） | go.mod要求版、実Go/GOTOOLCHAIN、依存取得、実Build Source、出力Binary | Skill文書にgo run例があるだけで、実HarnessがBuild可能・許可済み |
+| Skillの案内と実提供Toolの差 | H2/H3双方へ同じBinary。H3がSkill案内からgo runへ逸れたら誤操作・比較逸脱として記録 | H3だけ途中でSkill/Toolを修正供与してSkill効果に算入 |
+
+[TAI固定S1 Actions #42182253212](https://github.com/hat47x/tai-pleroma/actions/runs/42182253212)はLinux CI上でPATHにGoコマンドを見つけられない環境変数を設定して固定Binaryを直接起動し、通常時とFingerprint・対象一致を観測してcompleted/success。ただしこれは**GoコマンドをPATH経由で解決できない条件下の限定動作**であり、Goがアンインストールされていること、全OS/arch互換性、Sandbox強制、外部HarnessのTool CallやSkill Loadを証明しない。
+
+Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)。固定Trial Groupの既知の案内不一致は観測結果として保存し、修正版は別Groupで比較する。共通Tool Bridge/新Runner/資格Registryは作らない。
+
+**今回の状態**：設計・限定CI根拠の追補のみ。新H2/H3実Harness、SCN-001再開、実ユーザーOutcome、正式Owner受理はNOT RUN。
