@@ -185,3 +185,11 @@ Goldは「真の完全な世界の情報」を仮定せず、**隔離した試�
 V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relation/Module/Period/Consumer/Readerを、誰のどの権限で次に確かめるか」を別の`next-check`欄で評価する。確認不能を単に全否定する方式、正当なskipを止める方式、権限外のSourceを照会して秘密を漏らす方式は高得点としない。
 
 この研究対象は、完全なGraphを万能に証明する技術ではなく、**有界な証拠と図表が人間・AIの判断をどこまで改善するか**である。形式証明・学術的新規性は未確定。前節のPublic Fixture 10件のGoldをこの追補で事後変更せず、追加候補は別コホート／独立holdoutでOwnerと実験前固定する。TEI本体のCritical Path、Plugin/ETL実装、Studio M0→M1、現在のHost/Provider権限、CSWの探索手法はそのOwnerに残す。
+
+## 11. 2026-11-06: Intent/Source/ObservationのClaimと公開Gold分布
+
+[Gold分布と設計特性の自動判定に関する研究追補](RQ7_DESIGN_CLAIMS_AND_GOLD_BALANCE_2026-11-06.md)で、公開10ケースのV0/V1 Goldは supported=2/refuted=0/undetermined=8、V2/V3は4/3/3と実データを再集計した。これは人間/AIの実行結果ではなく**刺激側の分類分布**。従来の公開Goldを事後変更せず、次の独立Caseセットでは「宣言だけで反証可能」な問いも含め、always-unknownの過大評価を防ぐ。
+
+併せて、TEIのEnum的な閉値域・Key/FD・Relation scope/Role・必須値・Pipeline閉包を**Intended / Source-static / Inferred / Observed / Accepted**のClaimへ分離。設計者のClosed-world宣言とSource上の列挙・DB観測の同一視を止める。`strong attribute`の一次定義は未確認であり、TEI Coreや正式判定を追加しない。検証結果のsupported/refuted/undeterminedと、Policyによるwithheldを同一の真理値Enumへ混合しない。
+
+研究では確認済み齟齬と情報不足と低権限非開示を別に数え、誤警告・過剰拒否・確認負担を評価する。独立Oracle・現在のHost/Provider Authority・Owner意味受理は既存TEI側の責務。研究対象の設計補完であって、実Constraint Runnerや人間/AIの改善実験の成果ではない。
