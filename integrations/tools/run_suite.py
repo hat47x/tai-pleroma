@@ -237,6 +237,7 @@ def main():
         "sui_probes": run_step("sui_probes", ["integrations/pilot-sui-document/assembler/probe_endpoints_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-probes-2026-11-06.json"]),
         "sui_auth_assurance": run_step("sui_auth_assurance", ["integrations/pilot-sui-document/assembler/auth_assurance_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json"]),
         "sui_headers": run_step("sui_headers", ["integrations/pilot-sui-document/assembler/response_headers_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-headers-2026-11-06.json"]),
+        "sui_card_move": run_step("sui_card_move", ["integrations/pilot-sui-document/assembler/card_move_domain_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-card-move-2026-11-06.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}
