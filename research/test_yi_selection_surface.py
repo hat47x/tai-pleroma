@@ -60,6 +60,50 @@ class CandidateSelectionTests(unittest.TestCase):
         d["claims"][1]["candidate"] = "H01"
         self.assert_refused(d, "contradicts the observed stage")
 
+    def test_retention_is_scoped_to_declared_closed_run(self):
+        r = check(self.base)
+        self.assertTrue(r["passed"], r)
+        transitions = r["boundedTransitions"]
+        self.assertEqual(len(transitions), 5)
+        self.assertEqual(transitions[1]["retentionFraction"],
+                         {"numerator": 3, "denominator": 4})
+        self.assertEqual(transitions[2]["droppedObservedIds"], ["H02"])
+        # A rate within an authored fixture is NOT completeness of all possible ideas.
+        self.assertIn("no proof of exporter completeness", r["scope"])
+
+    def test_open_stage_has_unknown_retention_not_zero_or_full(self):
+        d = copy.deepcopy(self.base)
+        d["stages"][2]["closedForRun"] = False
+        d["claims"] = [c for c in d["claims"] if c["stage"] != "searched"]
+        r = check(d)
+        self.assertTrue(r["passed"], r)
+        # captured -> searched and searched -> presented cannot claim denominators.
+        self.assertIsNone(r["boundedTransitions"][1]["retentionFraction"])
+        self.assertIsNone(r["boundedTransitions"][2]["retentionFraction"])
+        self.assertEqual(r["boundedTransitions"][1]["closure"], "not_qualified")
+        self.assertIsNone(r["boundedTransitions"][1]["droppedObservedIds"])
+
+    def test_bad_trace_does_not_emit_success_like_summary(self):
+        d = copy.deepcopy(self.base)
+        d["stages"][3]["observedIds"].append("H04")
+        r = check(d)
+        self.assertFalse(r["passed"])
+        self.assertEqual(r["boundedTransitions"], [])
+        self.assertEqual(r["observedCounts"], {})
+
+    def test_unobserved_internal_ideas_cannot_be_declared_absent(self):
+        d = copy.deepcopy(self.base)
+        d["claims"][0]["kind"] = "not_generated_anywhere"
+        self.assert_refused(d, "unlicensed kind")
+
+    def test_new_attempt_can_rereport_idea_without_cross_run_authority(self):
+        # Monotone stage snapshots are scoped to ONE attempt, not a universal
+        # prohibition on rediscovery or recombination in a later CSW/SUI attempt.
+        d = copy.deepcopy(self.base)
+        d["run"]["id"] = "YI-SEL-02-synthetic"
+        self.assertTrue(check(d)["passed"])
+        self.assertEqual(d["candidates"][1]["id"], "H02")
+
     def test_duplicate_json_key_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "duplicate.json"
