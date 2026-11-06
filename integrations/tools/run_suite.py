@@ -213,6 +213,7 @@ def main():
         "sui_context": run_step("sui_context", ["integrations/pilot-sui-document/assembler/context_query_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-context-2026-11-03.json"]),
         "sui_context_bundle": run_step("sui_context_bundle", ["integrations/pilot-sui-document/assembler/context_bundle_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-context-bundle-2026-11-03.json"]),
         "sui_ce4": run_step("sui_ce4", ["integrations/pilot-sui-document/assembler/ce4_resolve_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-ce4-2026-11-03.json"]),
+        "sui_registry": run_step("sui_registry", ["integrations/pilot-sui-document/assembler/model_registry_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-registry-2026-11-03.json"]),
     }
     if args.eki_control:
         steps["eki_submit"] = run_step(
