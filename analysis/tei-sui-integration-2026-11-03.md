@@ -1139,3 +1139,20 @@ auth session hash key なし → SaaS auth-session hash key configured
 - 各要件は独立に評価され、不足は列挙されて1つのRuntimeErrorになる
 - 壊した要件は必ずその名前で報告されるため、運用時にどの設定が足りないか特定できる
 - 本番相当の起動は未確認（実IdP・管理DB・外部PDPが要る）
+
+## ポリシー部品の組み立てと退避（2026-11-06）
+
+`build_access_control_adapter`・`build_tenant_capability_resolver`・`build_document_policy_binding_resolver`を既定設定で呼んだ。[receipt](../evaluations/records/SUI-TEI-builders-2026-11-06.json)
+
+```text
+adapter=noop → NoopAccessControlAdapter
+adapter=mock → MockAccessControlAdapter（allow=false でも同じ型）
+adapter=未知の値 → NoopAccessControlAdapter（無言で退避）
+adapter=external_http / http / external（endpoint未設定）→ RuntimeError
+tenant_capability_resolver → UnavailableTenantCapabilityResolver
+document_policy_binding_resolver → UnavailableDocumentPolicyBindingResolver
+```
+
+- 未知のadapter名は**エラーにせずnoopへ退避**する。設定の綴り違いが「制御なし」に化ける
+- endpoint未設定のexternal系は明示的に拒否される
+- tenant/文書ポリシーの解決器は未設定時にUnavailableへ退避し、SaaS事前検査がこれを弾く

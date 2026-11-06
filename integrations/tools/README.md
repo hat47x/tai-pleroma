@@ -21,7 +21,7 @@ python integrations/tools/run_suite.py \
   --eki-control <eki-control binary>
 ```
 
-77段（checker・artifact・digest・MMIのassert/consumer/inspect/inventory/delivery・SEIのgate変種・TEI artifact複数配信・公開gateの再確認・SUI製品面8段・SaaS外部HTTP3種・ログイン開始・コールバック・token検証・SUIのSaaS/文書/認証連携/セッションテスト・SEIのCLI/gate/MCP・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
+78段（checker・artifact・digest・MMIのassert/consumer/inspect/inventory/delivery・SEIのgate変種・TEI artifact複数配信・公開gateの再確認・SUI製品面8段・SaaS外部HTTP3種・ログイン開始・コールバック・token検証・SUIのSaaS/文書/認証連携/セッションテスト・SEIのCLI/gate/MCP・シナリオ・pipeline・compose・TLS・Postgres・migration・ETag・同時更新・継続競合・再試行・複数文書・レコード・EKI投入）を実行し、`evaluations/records/TEI-suite-2026-11-03.json`へ記録する。
 
 - receipt自身をcheckerが読むため、FAILのreceiptが残っていると次の実行もFAILになる。その場合は`--skip-checker`で実行し、後からcheckerを単独で回す
 - `--eki-control`・`--eki-agent`を省くとEKI投入の段は実行しない
@@ -47,6 +47,7 @@ python integrations/tools/run_suite.py \
 - 外部作用は行わない。EKI投入はTaskの受理までで、Workerは起動しない
 
 - doc_consistency_check.py: 一括検証の段数とreceipt件数が文書と一致するかを確認する
+
 
 
 
