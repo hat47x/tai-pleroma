@@ -1047,3 +1047,19 @@ auth_time 10分前 / ちょうど15分 / Z表記 / naive表記 → fresh
 - `hasStepUp`はAMRの語彙で決まり、AAL/ACRとは独立している
 - 保証水準はAALを優先し、AALが未知のときだけACRへ落ちる
 - 15分ちょうどは`fresh`（境界は`<=`）。未来の時刻と解釈不能は`unknown`に寄せる
+
+## 応答ヘッダーの既定（2026-11-06）
+
+成功応答・401応答・agent資格情報の応答でヘッダーを比べた。[receipt](../evaluations/records/SUI-TEI-headers-2026-11-06.json)
+
+```text
+どの応答にも X-Content-Type-Options: nosniff / X-Frame-Options: DENY
+401の本文にも requestId が入る
+x-trace-id に安全な値 → そのまま返す（caller-supplied-id）
+x-trace-id に空白やスラッシュ → サーバ生成IDへ置換
+agent資格情報の要求 → Cache-Control: private, no-store / Vary に agent 2種
+```
+
+- セキュリティヘッダーはミドルウェアで全応答に付く。401でも付く
+- 呼び出し側のtrace idは安全な不透明トークンのときだけ引き継ぐ
+- agent経路は共有キャッシュに残さない設定になる（本検証では503でも付与を確認）
