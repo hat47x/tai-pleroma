@@ -234,6 +234,11 @@ def main() -> int:
             "意味の対応は移行の記録であり、移行の正しさを検証したものではない。",
         ],
     }
+    args.json = args.json.resolve()
+    try:
+        record_label = args.json.relative_to(BASE).as_posix()
+    except ValueError:
+        record_label = args.json.as_posix()
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -245,10 +250,10 @@ def main() -> int:
         print(f"FAILED: {len(errors)} error(s)")
         for error in errors:
             print(f"  - {error}")
-        print(f"record: {args.json.relative_to(BASE).as_posix()}")
+        print(f"record: {record_label}")
         return 1
     print("PASSED: schemas, cross-record checks, and self-test")
-    print(f"record: {args.json.relative_to(BASE).as_posix()}")
+    print(f"record: {record_label}")
     return 0
 
 
