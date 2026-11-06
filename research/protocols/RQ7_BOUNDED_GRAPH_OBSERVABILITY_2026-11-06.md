@@ -145,3 +145,43 @@ Goldは「真の完全な世界の情報」を仮定せず、**隔離した試�
 [TAI研究用公開刺激](../fixtures/RQ7_BOUNDED_COMPLETENESS_PILOT.synthetic.json)、[公開Gold](../fixtures/RQ7_BOUNDED_COMPLETENESS_GOLD.public.json)、[読取り専用レンダラー](../tools/rq7_pilot.py)を追加。公開開発セットなので評価用sealed holdoutではない。既存の[TEI self-build #2831](https://github.com/hat47x/tei-platform/issues/2831)のP0-A0/A1/実CLI Artifact、[ETL/MFT Draft #2827](https://github.com/hat47x/tei-platform/pull/2827)のTransport/Data Processing/Business Atomic/Execution Grouping、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness H2/H3は各Ownerへ残す。
 
 **未実証**: 実Go/Node/外部MFT/Model、独立した図表示の認知効果、正式Observer閉包、実Grant/Disclosure、実最適化後の意味同値、TEI全体Self-build G4とProduct Owner受理。研究Goldを製品Gateへ移植しない。
+
+## 10. 2026-11-06: 関係scope・時間窓・再入Buildによる完全性の限界（他チャット研究との接合）
+
+**更新元**: [公開予備Tool実測](../results/RQ7_PUBLIC_PILOT_TOOL_VERIFICATION_2026-11-06.md)は元Git blobと一致するPython 3.13.5環境で`14/14`を確認。これは表示刺激ツールの局所結果で、TEI/EKI実Runner・独立研究Gold/被験者の認知効果は未検査。
+
+### 10.1 関係の同一性は端点や表示名から導出しない
+
+[TEI標準Graph/Tableの限定不在Draft #2881](https://github.com/hat47x/tei-platform/pull/2881)、[TEI自己記述 #2620](https://github.com/hat47x/tei-platform/issues/2620)は同名・異scope／表示ID再利用の拒否を扱う。研究用のGraph刺激では、必要な対象を次の**別々の参照**として保持する。
+
+- `RelationSubject=(relation-scope, relation-id, revision)`。関係自身のscopeと端点のscopeは一致すると仮定しない。
+- `EndpointSubject=(endpoint-scope, semantic-id, source-revision)`。端点の対応解決は関係の見た目と独立した証拠。
+- `Occurrence/DisplayID`はUIの一時的キーであって、Qualified Subject、Source内容、Accept済MeaningやRuntime AgentのIDではない。
+- 同じRelationの外観/配置だけを根拠に、別scopeのRelationや別Source occurrenceへ現在のGraph資格を移さない。
+
+**追加の研究候補（未実装・NOT RUN）**: `Q-N01` = Relation表示名・始点終点labelが同じだがRelation scopeのみ異なる／`Q-N02` = 同じRelation scope+IDでも端点revisionが失効／`Q-P01` = 開示済みGraphだけで対象内の完全性を正しく限定し、未開示の存在件数を漏らさない。これらは公開10ケースの分母に加えず、TEIの実Consumer／Oracleが独立に対象を固定してから評価する。
+
+### 10.2 「期間を閉じた」「入力がすべて届いた」「業務が確定した」は異なるClaim
+
+[TEI ETL/ELT・MFT Draft #2827](https://github.com/hat47x/tei-platform/pull/2827)と[#2542](https://github.com/hat47x/tei-platform/issues/2542)では、配送の順序・ACK・Import Unit・業務イベントが異なる実体として整理されている。観測窓`[t0,t1]`の`complete`は、その期間・基準日・配送保証・利用可能なSource集合・確定規則の範囲でのみ妥当。遅延到着・欠番・更正・reopen時に`t1`の完了を現行全体へ自動更新しない。
+
+**追加の研究候補（未実装・NOT RUN）**: `T-N01` = Transfer ACKは全件だがBusiness periodのclosed判定は未確認／`T-N02` = 期間closed後の遅延イベントにより再集計・改版が必要／`T-P01` = gap-freeな受領集合と業務受理が**別の独立証拠**で成立。ReceiptやManifestのdigestが同じでも、Transfer Attempt/Import Unit/Business Eventを同一IDへ統合しない。期間・watermark・reopenの技術方式はTEI/Product Ownerの設計判断とする。
+
+### 10.3 Self-buildの「完了」は3つの独立段階
+
+[TEI全体セルフビルド #2831](https://github.com/hat47x/tei-platform/issues/2831)の2026-11-06追補は、新たなP0を実施順に分類している。
+
+- `SB-0`: `cmd/tei`の実選択外部moduleとオフラインSupply/Source closure/Toolchainの確認。
+- `L1`: 外部のGo Toolchain/Adapterによる実TEI CLI Artifactの生成。
+- `L2`: TEI標準BuildIntent・Typed Graphから実Build・Source/Target/Artifactを結ぶ。
+- `L3`: stage1生成TEI自身の**実Process**がstage2のPlan解決・Builder実行を駆動してArtifactへ到達したという再入証拠。
+
+`stage1/stage2`のbyte一致や外部Go launcherの2回起動だけを`L3`と評価しない。さらに`L3`が成立してもSeed Trust・Owner意味受理は別。研究側は別Build SystemやLauncherを製品に導入しない。
+
+**追加の研究候補（未実装・NOT RUN）**: `S-N01` = stage1 digest一致でもstage2実Processが別Builder／`S-N02` = 外部moduleが未選択か未取得かを観測できず、Build graph完全と誤称／`S-P01` = L1/L2の到達を正しく支持し、L3については判断保留。自己構築を異なる深さで正答する能力を測る。
+
+### 10.4 未知を抑制するのでなく、正しい確認操作へつなげる
+
+V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relation/Module/Period/Consumer/Readerを、誰のどの権限で次に確かめるか」を別の`next-check`欄で評価する。確認不能を単に全否定する方式、正当なskipを止める方式、権限外のSourceを照会して秘密を漏らす方式は高得点としない。
+
+この研究対象は、完全なGraphを万能に証明する技術ではなく、**有界な証拠と図表が人間・AIの判断をどこまで改善するか**である。形式証明・学術的新規性は未確定。前節のPublic Fixture 10件のGoldをこの追補で事後変更せず、追加候補は別コホート／独立holdoutでOwnerと実験前固定する。TEI本体のCritical Path、Plugin/ETL実装、Studio M0→M1、現在のHost/Provider権限、CSWの探索手法はそのOwnerに残す。
