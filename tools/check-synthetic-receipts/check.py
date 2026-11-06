@@ -162,6 +162,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-registry-2026-11-03.json",
     "evaluations/records/SUI-TEI-agent-guard-2026-11-06.json",
     "evaluations/records/SUI-TEI-agent-credential-admin-2026-11-06.json",
+    "evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -605,6 +606,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-audit-pagination" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("noOverlap") is not True or observed.get("hasCursor") is not True:
+                errors.append(f"SUI admin audit pagination did not hold: {relative}")
         if "SUI-TEI-agent-credential-admin" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("anonymousStatus") not in (401, 403):
@@ -633,7 +638,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
                 errors.append(f"SUI admin plane check did not hold: {relative}")
-        if "SUI-TEI-audit" in relative:
+        if "SUI-TEI-audit" in relative and "-pagination" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("eventCount", 0) < 1 or observed.get("viewStatus") != 200:
                 errors.append(f"SUI audit export did not deliver an event: {relative}")
