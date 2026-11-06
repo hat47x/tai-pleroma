@@ -28,5 +28,5 @@
       "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t22.080s"
     ]
   },
-  "scope": "Submits TAI's projected TaskRequest through EKI's Client API. The projected wall-time budget exceeds the harness policy, so when it is rejected the tool retries with wall_time_seconds, output_bytes_max and network_bytes_max clamped to the harness policy (60 s, 1 MiB, 1 MiB) to show the execution path. This is EKI's TEST PROFILE, not Worker Protocol compatibility."
+  "scope": "Submits TAI's projected TaskRequest through EKI's Client API. The policy-aligned first submission completed without a retry. The test uses EKI's TEST PROFILE; a ResultClaim in this test does not establish real resource consumption/cost, delivered Consumer Body, production authority, or Worker Protocol compatibility."
 }
