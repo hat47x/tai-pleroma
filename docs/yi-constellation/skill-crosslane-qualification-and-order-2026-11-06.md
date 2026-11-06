@@ -490,3 +490,28 @@ TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)のSC-19（旧Attemp
 
 **最初のBlocking Exitは不変**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Draft #270 Runbook](https://github.com/hat47x/tai-pleroma/pull/270)の固定TEI公開Sourceに対する外部Harness **H2-01実Tool Call一Session→H3実Skill root/reference Load→H2/H3四独立Session**を先行。初回read-only TaskへSaaS Agent Credential、監査Dispatcher、Writeを混入させない。現在のProduct限定試験は実横断Harness、実SaaS/IdP/Proxy、外部Consumer受領、実Provider Effect、Owner正式受理のPASSではない。これらは**NOT RUN**。
 
+## 24. OKF Attested ComputationをYICのSkill選択とClaim表示へ接続する（TAI #514・各Productの既存受入に委譲／後続・NOT RUN）
+
+### 24.1 原典の採用範囲とOwner
+
+[OKF v0.2 §10](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)は `type: Attested Computation` のConceptに正規計算、`runtime`、型付き `parameters`、`executor.resource/receipt`、決定的（no-LLM）`attester.resource` を持たせる。ただし**OKFは計算を実行しない**。§12はReceipt/Verdictのwire protocol、Attester ABI、sandbox、cacheを未規定とする。OKF §10.5の利用手順はinformativeであり、TEI/TAIに自動的な実行権限を与える規格ではない。
+
+詳細と独立Expected（AC-01〜12）の**単一Ownerは[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)**。実Product Skill/CLIのOwnerは開いている[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)、独立Expected/Attesterの判別力は[TEI #2514](https://github.com/hat47x/tei-platform/issues/2514)。[TEI #2614](https://github.com/hat47x/tei-platform/issues/2614)はclosed/duplicate（履歴参照）なので再開・併記して二重Ownerにしない。SHOは[#18](https://github.com/hat47x/sho-composer/issues/18)でConcept閲覧・原文/引用・実Runへの許可済みリンクだけを扱う。再開・用途別現在資格は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)、実Harness利用は[#168](https://github.com/hat47x/tai-pleroma/issues/168)、Scope/開示は[#232](https://github.com/hat47x/tai-pleroma/issues/232)、Host/Provider Effectは各既存Ownerに残す。
+
+### 24.2 Product Skillと横断Skillの利用を段階選択する
+
+| Task/実観測 | 選択対象と許されるClaim | 絶対に飛び越えない境界 |
+| --- | --- | --- |
+| OKF/TEIの文書を探す、意味を調べる | 既存Product CLI/Toolだけで足りればSkillなし。Product SkillはSource/Concept/Role/Operatorを説明する任意のread-only補助 | `type`/`verified`/ファイル名からOwner受理・実行可能性を推測しない。未知typeは閲覧可でも計算実行しない |
+| 公開合成の正規計算に値を渡したい | **既存TEI Product Skillが適用可**なら契約をexact bytes/Role・Runtime Pinで確認し、AIには宣言済みtyped parameter値の提示だけを認める | Agent生成SQL/定義書換えを「正規Computation」と称しない。未登録Runtime、旧Readerの未束縛 `*.tei.md`、欠けた依存はunsupported |
+| 実行して数値を出す | 実Host/Providerが許可した場合だけExecutor/Toolを実呼出し、実argv・Job ID・実行Artifact/Binding・Receipt/ResultをProduct側で観測 | `executor.resource`へのリンク、Skill説明文、LLMのTool実行自己申告だけではRunの証拠にならない |
+| 結果を「正規計算で確認済み」と説明する | 決定的Attester自身の実byte/版を固定し、**正規定義＋typed bindingから再生成した実行Artifact**と実Runを照合。Job IDから権威ある結果を独立再読取し、表示Resultと比較できたScopeだけを限定Claim | no-LLMであること≠独立正答。Attester/Expectedを同一誤仕様から作成した常時PASS、捏造Receipt、別Attempt、部分集合/時点未確認ならFAIL/unknown。定義fresh/verifiedとRun-attestedを混同しない |
+| その結果をSHO文書・SEI判断・別ProductのActivityへ渡す | Task/Source・時点・現在Audience・出典/Attester Verdict・unknownを許可済みProjectionで引き渡す。複数Product間で必要なときだけTAI Activity Skillを追加 | Bundle内に秘匿Run Receiptを転記しない。Run-attested≠現在Owner Meaning/公開Grant/Provider更新結果/利用者の目的達成 |
+
+**TAI Skillの増分価値は仮定しない**。TEI Product単独でSource確認・計算結果の限定説明が完了するなら横断Skillなしが適格。別Productの引用・再開・開示条件の引継ぎが必要な場合に限って既存YIC-ROUTE・SK-03でTAIの選択価値を比較する。機能が文書化されたこと、OKF `executor.resource`が指すこと、実Providerが選ばれたことは、それぞれ別の判定列とする。
+
+### 24.3 初回実験と後続PoCを混同しない
+
+新たな試験Suiteを作らずTAI #514 **AC-01〜12**を既存SK-03/#271の評価票から参照する。先に公開合成Concept 1件（必要なら `computations/order-total.md`）とTEI公開 `sales.order` の**別の後続Trial Group**を固定し、同じDefinition/typed input/独立Expectedで、正規Run、AgentのSQL差替え、偽Job/別Attempt、stale/Owner撤回、NULL/empty/partial、外部送出拒否、常時PASS Attesterを一因子変更で判別する。独立再Read不能なら`insufficient-evidence`と記録し、LLMがReceipt/Verdictを作成して空欄を埋めない。
+
+最初のBlocking Exitは引き続き[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**固定公開TEI read-only H2 Tool-only実Harness一Session→H3 Product Skill実root/reference Read→四独立Session**。既存の固定Skill byte、旧 `.tei` Source、Task、CLI Profile/ExpectedへOKF文書/計算Skillを途中挿入しない。`*.tei.md`正式Reader、Attester実コード/ABI、実Job/DB/Consumer再読取、実Host/OS Grant、正式Owner Meaning受理、横断Skillの増分価値実測は全て**NOT RUN**。TEI側の限定CLI CIはこれらの実証へ加算しない。
