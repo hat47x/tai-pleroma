@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def run_step(name, args, timeout=900, retries=2):
+def run_step(name, args, timeout=900, retries=2, env=None):
     started = time.time()
     attempts = 0
     while True:
@@ -23,6 +23,7 @@ def run_step(name, args, timeout=900, retries=2):
             errors="replace",
             timeout=timeout,
             cwd=ROOT,
+            env={**os.environ, **(env or {})},
         )
         if completed.returncode == 0 or attempts > retries:
             break
@@ -44,6 +45,7 @@ def main():
     parser.add_argument("--mmi-schema", default="")
     parser.add_argument("--eki-openapi", default="")
     parser.add_argument("--eki-control", default="")
+    parser.add_argument("--eki-agent", default="")
     parser.add_argument("--skip-checker", action="store_true")
     parser.add_argument("--sei-repo", default="")
     parser.add_argument("--mmi-repo", default="")
@@ -215,6 +217,11 @@ def main():
         "sui_ce4": run_step("sui_ce4", ["integrations/pilot-sui-document/assembler/ce4_resolve_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-ce4-2026-11-03.json"]),
         "sui_registry": run_step("sui_registry", ["integrations/pilot-sui-document/assembler/model_registry_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-registry-2026-11-03.json"]),
     }
+    eki_env = {}
+    if args.eki_control:
+        eki_env["EKI_CONTROL"] = args.eki_control
+    if args.eki_agent:
+        eki_env["EKI_AGENT"] = args.eki_agent
     if args.eki_control:
         steps["eki_submit"] = run_step(
             "eki_submit",
@@ -228,13 +235,18 @@ def main():
                 "evaluations/records/EKI-TEI-submit-2026-11-03.json",
             ],
         )
+    eki_env = {}
+    if args.eki_control:
+        eki_env["EKI_CONTROL"] = args.eki_control
+    if args.eki_agent:
+        eki_env["EKI_AGENT"] = args.eki_agent
     if args.eki_control:
         steps["eki_projection"] = run_step(
-            "eki_projection", ["integrations/tools/eki_projection_execution.py"]
+            "eki_projection", ["integrations/tools/eki_projection_execution.py"], env=eki_env
         )
-        steps["eki_manual"] = run_step("eki_manual", ["integrations/tools/eki_manual_execution.py"])
-        steps["eki_revoke"] = run_step("eki_revoke", ["integrations/tools/eki_worker_revoke.py"])
-        steps["eki_revoke_agent"] = run_step("eki_revoke_agent", ["integrations/tools/eki_revoke_agent.py"])
+        steps["eki_manual"] = run_step("eki_manual", ["integrations/tools/eki_manual_execution.py"], env=eki_env)
+        steps["eki_revoke"] = run_step("eki_revoke", ["integrations/tools/eki_worker_revoke.py"], env=eki_env)
+        steps["eki_revoke_agent"] = run_step("eki_revoke_agent", ["integrations/tools/eki_revoke_agent.py"], env=eki_env)
     if args.skip_checker:
         steps.pop("checker", None)
     tei_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=args.tei_repo, capture_output=True, text=True).stdout.strip()
