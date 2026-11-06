@@ -99,7 +99,7 @@ python check_yi_selection_surface.py
 
 ### 既存SUIに接続する場合の観測境界（候補・NOT RUN）
 
-TAI mainには、SUIの`/context/query`と`/context/bundle`を読出し・検査する既存参照ハーネスがある。2026-11-06時点の限定的なreceiptは[query](../../evaluations/records/SUI-TEI-context-2026-11-03.json)と[bundle](../../evaluations/records/SUI-TEI-context-bundle-2026-11-03.json)にある。
+TAI mainには、SUIの`/context/query`と`/context/bundle`を読出し・検査する既存参照ハーネスがある。2026-11-06時点の限定的なreceiptは[query](https://github.com/hat47x/tai-pleroma/blob/51196bc941609f5a9dfaafa7afb0ef2c6ed2dd0f/evaluations/records/SUI-TEI-context-2026-11-03.json)と[bundle](https://github.com/hat47x/tai-pleroma/blob/51196bc941609f5a9dfaafa7afb0ef2c6ed2dd0f/evaluations/records/SUI-TEI-context-bundle-2026-11-03.json)にある。
 
 - `/context/query`：accept、preview未確認、未知キー、depth範囲の検証を確認。**カード全数の検索、モデルの生成候補の観測、重要な反証の提示率**を確認したものではない。
 - `/context/bundle`：同じクエリ・合成stubでのbundle hash決定性を確認。**実文書の選択品質、元資料の意味受理、社会的合意**を確認したものではない。
