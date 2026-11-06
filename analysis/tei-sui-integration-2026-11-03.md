@@ -1116,3 +1116,26 @@ alembic_version を読むのは /readyz の1箇所のみ
 - プロファイルとアダプタ束の組み合わせは**両方向**で検査される（SaaSには束が必須、single-tenantには束があると拒否）
 - saas-multitenantの拒否理由は、PostgreSQLのtenantガード・外部アクセス制御・deny fail-safe・外部ポリシー束縛・外部tenant能力解決・OAuth broker・セッション鍵の7項目
 - 本検証の束はスタブで、実IdP・実DBでの通過は未確認
+
+## SaaS実行ポリシーの10要件（2026-11-06）
+
+`TrustedSaasRuntimePolicy.validate`を、要件を1つずつ壊して評価した。[receipt](../evaluations/records/SUI-TEI-policy-requirements-2026-11-06.json)
+
+```text
+全要件充足 → 通過
+database_backend=sqlite → PostgreSQL tenant DB guard
+allow_jit_provisioning=true → disabled JIT provisioning
+access_control_adapter=noop → external access control
+fail_safe_mode=read_only → deny fail-safe mode
+document_policy_binding=none → external document policy binding
+tenant_capability=none → external tenant capability resolution
+jwt_algorithms 空白 → JWT algorithm allowlist set
+tenant_claim_name 空 → tenant claim name set
+authorize endpoint なし → SaaS OAuth broker authorize endpoint configured
+auth session hash key なし → SaaS auth-session hash key configured
+10件すべて壊す → 10項目をまとめて列挙
+```
+
+- 各要件は独立に評価され、不足は列挙されて1つのRuntimeErrorになる
+- 壊した要件は必ずその名前で報告されるため、運用時にどの設定が足りないか特定できる
+- 本番相当の起動は未確認（実IdP・管理DB・外部PDPが要る）
