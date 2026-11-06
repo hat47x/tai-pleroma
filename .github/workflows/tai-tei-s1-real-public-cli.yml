@@ -101,6 +101,9 @@ jobs:
             "$BASE/$ARM/tei" model catalog -workspace "$BASE/$ARM/workspace" > "$RUNNER_TEMP/sk02-$ARM-catalog.json"
             "$BASE/$ARM/tei" inspect -workspace "$BASE/$ARM/workspace" -subject-kind semantic-data -subject-id sales.order > "$RUNNER_TEMP/sk02-$ARM-inspect.json"
             "$BASE/$ARM/tei" validate -workspace "$BASE/$ARM/workspace" -json > "$RUNNER_TEMP/sk02-$ARM-validate.json"
+            # A released, prebuilt TEI executable must work without the Go SDK
+            # being discoverable by PATH. This is not a sandbox/host isolation test.
+            env -i PATH=/nonexistent "$BASE/$ARM/tei" model catalog -workspace "$BASE/$ARM/workspace" > "$RUNNER_TEMP/sk02-$ARM-no-go-catalog.json"
           done
           node -e '
             const fs=require("fs"),assert=require("node:assert/strict");
@@ -109,6 +112,11 @@ jobs:
             for(const arm of ["h2","h3"]){
               const load=kind=>JSON.parse(fs.readFileSync(root+"/sk02-"+arm+"-"+kind+".json","utf8"));
               const cat=load("catalog"),ins=load("inspect"),val=load("validate");
+              const noGo=load("no-go-catalog");
+              assert.equal(noGo.ok,true,"prebuilt binary must read Source with Go absent from PATH");
+              assert.equal(noGo.result.worldFingerprint,cat.result.worldFingerprint);
+              assert.equal(noGo.result.sourceIndexFingerprint,cat.result.sourceIndexFingerprint);
+              assert.equal(noGo.result.entries.filter(e=>e.subject?.kind==="semantic-data"&&e.subject.id==="sales.order").length,1);
               assert.equal(cat.ok,true);
               assert.equal(ins.ok,true);
               assert.equal(cat.result.entries.filter(e=>e.subject?.kind==="semantic-data"&&e.subject.id==="sales.order").length,1);
