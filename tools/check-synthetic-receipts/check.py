@@ -183,6 +183,7 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-manual-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-worker-revoke-2026-11-03.json",
     "evaluations/records/EKI-TEI-revoked-agent-2026-11-03.json",
+    "evaluations/records/EKI-TEI-multi-worker-2026-11-03.json",
     "evaluations/records/EKI-TEI-budget-aligned-artifact-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
     "evaluations/records/TEI-artifact-digests-2026-11-03.json",
@@ -482,6 +483,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
+        if "EKI-TEI-multi-worker" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or len(observed.get("workers", [])) != 2 or observed.get("executed", 0) < 1:
+                errors.append(f"EKI multi-worker evidence did not hold: {relative}")
         if "EKI-TEI-revoked-agent" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("executed") is not False or observed.get("refusedStatus") not in (401, 403):
