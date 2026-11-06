@@ -669,3 +669,11 @@ tasks: 2件 verifying / 2件 active
 - 延期された2件は`active`へ進んだまま、待ち時間内に実行が完了しなかった
 - したがって「2台に分散しなかった」のは、Worker選択の偏りではなく、Attemptが2件しか作られなかったため
 - `approval is issued in the future`の原因（署名時刻とControl Planeの時計のずれ）は未特定
+
+### `NOT_YET_VALID`の当たり（2026-11-03・仮説）
+
+- 検証は`internal/core/placementverify/verify.go`の`Revalidate`で`now.Before(a.IssuedAt())`のとき`NOT_YET_VALID`を返す
+- dispatchは`internal/control/dispatch/dispatch.go`で`l.now()`のスナップショットを取り、`place`で署名し、`Reserve`で再検証する
+- 署名時刻がtick開始時のスナップショットより後になると、再検証の`now`が署名時刻より前になり、延期される
+
+この順序に起因する可能性が高いが、Control Planeの時計の取得箇所を計測していないため**未確定**。観測上は次tickで解消し、同時投入時にだけ目立つ。
