@@ -160,16 +160,25 @@ jobs:
           cp "$BASE/tei/semantic/order.tei" "$BASE/mixed/semantic/order.tei"
           sed 's/attribute total type std.money/attribute total type std.text/' \
             "$BASE/tei/semantic/order.tei" > "$BASE/mixed/semantic/order.tei.md"
-          grep -Fq 'attribute total type std.text' "$BASE/mixed/semantic/order.tei.md"
+          grep -Fn 'attribute total type std.text' "$BASE/mixed/semantic/order.tei.md"
           "$RUNNER_TEMP/tei-s1" model catalog -workspace "$BASE/mixed" > "$RUNNER_TEMP/sk02-extension-mixed-catalog.json"
+          # The extracted sales.order is incomplete by itself (external customer
+          # relation etc.). Compare the exact legacy diagnostics and exit rather
+          # than assuming validation succeeds when all other source roots are absent.
+          set +e
+          "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/tei" -json > "$RUNNER_TEMP/sk02-extension-legacy-validate.json"
+          LEGACY_VALIDATE_EXIT=$?
           "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/mixed" -json > "$RUNNER_TEMP/sk02-extension-mixed-validate.json"
+          MIXED_VALIDATE_EXIT=$?
+          set -e
+          test "$LEGACY_VALIDATE_EXIT" -eq "$MIXED_VALIDATE_EXIT"
           node -e '
             const fs=require("node:fs"),assert=require("node:assert/strict");
             const load=p=>JSON.parse(fs.readFileSync(p,"utf8"));
             const legacy=load(process.argv[1]);
             const renamed=load(process.argv[2]);
             const validated=load(process.argv[3]);
-            const mixed=load(process.argv[4]),mixedValidated=load(process.argv[5]);
+            const mixed=load(process.argv[4]),mixedValidated=load(process.argv[5]),legacyValidated=load(process.argv[6]);
             const count=r=>r.result.entries.filter(x=>x.subject?.kind==="semantic-data"&&x.subject?.id==="sales.order").length;
             assert.equal(legacy.ok,true);
             assert.equal(renamed.ok,true);
@@ -177,7 +186,11 @@ jobs:
             assert.equal(count(renamed),0,"fixed historical Loader does not discover .tei.md");
             assert.equal(validated.ok,true,"silent missing Source can coexist with validate ok");
             assert.equal(mixed.ok,true);
-            assert.equal(mixedValidated.ok,true);
+            assert.equal(mixedValidated.schemaVersion,"tei.cli.validate/v0");
+            assert.equal(legacyValidated.schemaVersion,"tei.cli.validate/v0");
+            assert.equal(mixedValidated.ok,legacyValidated.ok,"unparsed .tei.md must not change parsed validation result");
+            assert.equal(mixedValidated.diagnostics.length,legacyValidated.diagnostics.length);
+            assert.equal(mixedValidated.worldFingerprint,legacyValidated.worldFingerprint);
             assert.equal(count(mixed),1,"legacy definition still wins in mixed source tree");
             assert.equal(mixed.result.worldFingerprint,legacy.result.worldFingerprint,
               "ignored new meaning must leave old interpreted World unchanged");
@@ -187,12 +200,13 @@ jobs:
               status:"EXPECTED_NEGATIVE_BEHAVIOR_REPRODUCED", historicalVersionOnly:true,
               legacySubjectCount:count(legacy),renamedSubjectCount:count(renamed),
               renamedValidateOK:validated.ok,
-              mixedLegacySubjectCount:count(mixed),mixedValidateOK:mixedValidated.ok,
+              mixedLegacySubjectCount:count(mixed),mixedValidationMatchesLegacy:mixedValidated.ok===legacyValidated.ok,
+              mixedDiagnosticCount: mixedValidated.diagnostics.length,
               mixedWorldUnchanged:mixed.result.worldFingerprint===legacy.result.worldFingerprint,
               mixedSourceIndexChanged:mixed.result.sourceIndexFingerprint!==legacy.result.sourceIndexFingerprint,
               claimLimit:"Fixed historical CLI sees added .tei.md as Source Index input but not interpreted Meaning; neither validate ok nor an Index delta establishes loaded definitions."
             }));
-          ' "$RUNNER_TEMP/sk02-extension-tei-catalog.json" "$RUNNER_TEMP/sk02-extension-tei.md-catalog.json" "$RUNNER_TEMP/sk02-extension-renamed-validate.json" "$RUNNER_TEMP/sk02-extension-mixed-catalog.json" "$RUNNER_TEMP/sk02-extension-mixed-validate.json"
+          ' "$RUNNER_TEMP/sk02-extension-tei-catalog.json" "$RUNNER_TEMP/sk02-extension-tei.md-catalog.json" "$RUNNER_TEMP/sk02-extension-renamed-validate.json" "$RUNNER_TEMP/sk02-extension-mixed-catalog.json" "$RUNNER_TEMP/sk02-extension-mixed-validate.json" "$RUNNER_TEMP/sk02-extension-legacy-validate.json"
       - name: Read named Product Source and perform negative control
         env:
           GOTOOLCHAIN: local
