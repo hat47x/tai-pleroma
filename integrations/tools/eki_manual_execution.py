@@ -294,6 +294,7 @@ def main():
         "date": time.strftime("%Y-%m-%d"),
         "host": "Windows with the EKI binaries, a generated Worker CA, a Control Plane TLS certificate and a hand-written trust anchor",
         "command": "python integrations/tools/eki_manual_execution.py",
+        "binaries": {"control": os.environ.get("EKI_CONTROL"), "agent": os.environ.get("EKI_AGENT")},
         "result": "PASS" if passed else "FAIL",
         "observed": {
             "attempts": attempts,
