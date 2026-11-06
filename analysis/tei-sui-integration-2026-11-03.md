@@ -858,3 +858,20 @@ operationとcommandの不一致 → 422 operation_command_mismatch
 - applyは先行イベントが揃うまで拒否され、不足分を`missingEvents`で返す
 - 提案と適用の`sourceBundleHash`連鎖は不一致を409で止める
 - trackerの失効窓や別tenantとの干渉は未確認
+
+## ポリゴン受け渡し契約の検証（2026-11-06）
+
+`POST /docs/{id}/polygon-handoff/verify-contract`を、正常系と違反系で試した。[receipt](../evaluations/records/SUI-TEI-polygon-handoff-2026-11-06.json)
+
+```text
+違反なし → 200 ok / rollbackRequired=false / verificationKey 64桁
+paddingViolationCount=2 → 200 rollback_required / ["paddingViolationCount>0"]
+tieBreakOrderを逆順 → 200 rollback_required / ["tieBreakOrderChanged=true"]
+既定順を明示 → 200 ok
+存在しない文書 → 404
+不正なinputHash → 422
+```
+
+- 判定は決定的で、違反の種類を`failureReasons`で区別する
+- 成功・失敗いずれも200で返し、状態は本文で表す
+- 実ポリゴン計算との接続は未確認（契約検証のみ）
