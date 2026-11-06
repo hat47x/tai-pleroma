@@ -105,3 +105,17 @@ VA-T2のG0に補足。[TEI mainの6-Step Scenario](https://github.com/hat47x/tei
 B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較**にだけこの条件を加え、先行するTEI一SubjectのH2/H3 **能力比較**を停止しない。J0/J1/J2再資格化方式は別軸。再開に必要な過去Evidenceの保持と、新用途に対する現在資格を明示的に分ける。判定基準は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)、開示は[#232](https://github.com/hat47x/tai-pleroma/issues/232)に委ね、中央のPurpose Resolverを増やさない。
 
 **現状**：PD-01〜07は未実行の試験案であり、SCN-001 B0/B1/B2の実比較、実送出、実Host認可、異モデルVA-X/VA-E、Owner価値受理も**NOT RUN**。
+
+### 6.4 成果の誤認と過剰停止を同じ価値比較で測る
+
+[TAI #271 SC-19〜21](https://github.com/hat47x/tai-pleroma/issues/271)の成熟分は既存OwnerのAT-01〜09／RQ-01〜07に試験定義があるため、ここでは**B0手動／B1単独製品／B2 TAI条件付き連携**の差分価値に必要な採点軸だけを追加する。
+
+| 軸 | 具体的な限定実測／後続反証 | 利用者価値に対する判定 |
+| --- | --- | --- |
+| **誤った完了主張** | [TAI merged #493〜#496](https://github.com/hat47x/tai-pleroma/pull/496)のSUI局所TestClient：Archived Read 200でもWrite 423、必要Event欠落は409、HTTP 200で本文`rollback_required`。TEI [merged #3042](https://github.com/hat47x/tei-platform/pull/3042)のExecutor後`EffectUnknown` | HTTP受付・本文のVerdict・現在Grant・実Provider Effect/Receipt・Consumer再読取を別採点。Cancel ACK・rejected・Export監査記録から作用なし／外部到着を推定しない |
+| **過剰停止・過剰利用** | [TAI #271 SC-21](https://github.com/hat47x/tai-pleroma/issues/271)で、SUI Agent Profileが未配線ならAgent Route 503でも、他の許可済みread-only Productは使える場合がある。healthz 200はDB/Reader Readyではない | 不適格なActionだけ止め、正当な履歴閲覧・未完成Draft保存・独立Readを継続できるか。TAI追加の不要Tool呼出し、Token/時間、人間の再確認を費用として数える |
+| **目的と結果の取り違え** | SC-18/19の目的変更後、旧AttemptのBody遅着や作用不明が存在し得る。SUI候補類似、Export監査重複防止、Local Action成功は業務意味受理や外部受領と異なる | 旧Attempt/Source/Scope/Recipientの帰属を維持し、新しい公開依頼へ実行資格を移さない。同時に履歴自体は消さず、必要な局所再確認で仕事を再開できるか |
+
+**優先順は変更しない**。まず[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI H2実Tool 1 Session→H3 Skill実Load→4独立Sessionを評価し、その後SCN-001 Activity B0/B1/B2へ。本表のEffect/Export/Hostの負例はSCN-001の公開・実書込みを捏造せず、用途が必要になった段階で隔離した別Caseにする。B1で同等の正確さ・費用ならTAIは任意と判断してよい。
+
+**試験状態**：#493〜#496/#3042の各局所結果は既存Productに帰属する。AT/RQの**横断実Task**、実Host Grant、外部Recipient受領、SCN-001利用者価値比較、異モデル独立評価、Owner正式受理はNOT RUN。
