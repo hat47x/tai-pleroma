@@ -69,7 +69,7 @@ SK-01/SK-02のFixture・Expected・実験票を複製しない。#488は「未�
 
 ## 7. 並行開発・レビューへの落とし込み
 
-- **実験実施レーン**：TAI #168 / SK-02 Ownerは最初のH2 Sessionと4 Sessionの一次ログ・独立Oracleを保管。Harnessが使えない場合はNOT RUNを維持。
+- **実験実施レーン**：TAI #168 / SK-02 Ownerは最初のH2 Sessionと4 Sessionの一次ログ・独立期待値と判定記録を保管。Harnessが使えない場合はNOT RUNを維持。
 - **Product修正レーン**：TEI #2605はSkill/CLI応答Path、#2822は空Workspace、#2953は前提Go版。修正は別PR/別Trial GroupのPinにする。SHOなど他製品は各Repo Ownerで独立進行。
 - **横断照合レーン**：TAI #488は既存SK-01/SK-02とProduct Issueの不足・整合だけを追跡。TAI #422/#424の独立レビュー規則を適用し、他レーンのファイル・試験結果・受理状態を上書きしない。
 - **安全/配布レーン**：#232は実OS/Host/Disclosure、#271は現在資格、#74はシリーズ束ね。Taskに不要な本番書込み・PG/Provider/別HarnessをH2の前提に追加しない。
@@ -130,7 +130,7 @@ Skill discoveryは「業務上必要な操作に対応する入口候補」を�
 
 探索は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の方式に従い、(1)業務意味とTenantのモデル照合＝TEI #2386/#2510、(2)Skill/Task/Context差＝TAI #488、(3)実OS/Host/開示＝TAI #232/TEI #2515、(4)実Effect/回復＝TEI #1174/EKI Owner、(5)現行Evidence＝TAI #271とする。各Agentは自分のOwnerと使用したSource SHA/Revision、Expected、観測、未確認、反証条件を報告し、別レーンの意味受理やIssue本文を上書きしない。独立Reviewerは、`組織Role = Grant`、`ローカルRead = 外部送出許可`、`Tool成功 = 業務完了`の三つの誤昇格を具体的に反証する。
 
-**この追補は文書上の接続提案であり、新たな組織/認可/Skill実装や実Harness・実Provider/テナント隔離・Oracleの実行、Ownerの正式採用を意味しない。**
+**この追補は文書上の接続提案であり、新たな組織/認可/Skill実装や実Harness・実Provider/テナント隔離・独立期待値による判定試験、Ownerの正式採用を意味しない。**
 
 
 ## 11. 用途によるSkill非選択・保留を独立に評価する（YIC-ROUTE、後続試験／NOT RUN）
@@ -156,7 +156,7 @@ Skillが多くあることと、必要なSkillを正しく選べることは別�
 
 ### 11.3 判別力と測定（既存SK票への追加列の提案）
 
-- **Routingの品質**はTaskごとに「必要なProductを選択／不必要なProductを選ばない／必要時の保留／不正な選択や秘匿漏洩を防止」を区別する。正答率だけでなく誤陽性、誤陰性、過剰保留、Tool不存在の架空補完を別計数。Product意味の正答・独立Oracleとは別に採点する。
+- **Routingの品質**はTaskごとに「必要なProductを選択／不必要なProductを選ばない／必要時の保留／不正な選択や秘匿漏洩を防止」を区別する。正答率だけでなく誤陽性、誤陰性、過剰保留、Tool不存在の架空補完を別計数。Product意味の正答・独立判定基準とは別に採点する。
 - **不要な横断化のコスト**はTool/Skill実Load数、追加Context byte/token、実呼出し、Source再取得、人的承認、再開までの実時間と失敗回復で計る。費用を減らしても権限・Source・意味品質が崩れたら改善としない。サンプルが少ない場合は頻度・効果率を一般化しない。
 - **入力の固定**はHarness/Model/Tool Profile/許可Projection/Task/実Product pinと独立Expected。前回のSkillを知ったセッション・隠しReferences・他条件の採点票がH2/H3に届いた場合は、Treatmentsの混線としてineligible/insufficient-evidenceを残す。
 - **不成立時**は未公開のToolやProduct自体の有無を推定せず、選択可能な公開候補だけを示す。新API/Manifest/Skill Routerを作らず、既存SK-01のH4/H5やSK-03に追加ケースを**実際に実施する段階でのみ**接続する。
@@ -250,7 +250,7 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 
 - Product単独の既存 `yi-tei-modeling` は **現行実在read-only CLI調査**を先に担う。現行Skillには`go run`/現行`.tei`前提があるため、新拡張子への対応を文書だけで宣言しない。
 - Markdownの文章・表・図からの定式化支援は [TEI #1440](https://github.com/hat47x/tei-platform/issues/1440)の **原文→解釈候補→曖昧さ確認→部分受理**を再利用。新しい独立Skill名やWriterを先に増やすのではなく、Productの実CLI/Parser/Editor入口が成立してから必要なreference手順を追加するか、別Product Skillとして独立配布するかを比較する。
-- 生成AIは選択範囲と原文Source位置、明示された業務主体・時点・NULL/未取得/非開示・単位・独立Expectedの不足を保留する。AI生成Expectedを独立Oracleにせず、書込みはOwner/Host経由のPreview/Acceptanceに限定。AIが使えなくても通常Markdown編集と手動モデリングを阻害しない。
+- 生成AIは選択範囲と原文Source位置、明示された業務主体・時点・NULL/未取得/非開示・単位・独立Expectedの不足を保留する。AI生成Expectedを独立期待値と同一視せず、書込みはOwner/Host経由のPreview/Acceptanceに限定。AIが使えなくても通常Markdown編集と手動モデリングを阻害しない。
 - TAI横断SkillはTEIの形式仕様やParserを所有せず、必要な場合だけTEIの結果をSHO/SEI/SUIに許可済みSource/Meaning/Unknownとして引き渡す。SHO文書保存/納品、TEIモデル受理、実Host Grantは別。
 
 ## 16. `*.tei.md` のファイル認識・Source閉包・改版を誤認しない反証（既存Ownerの試験に接続）
@@ -264,11 +264,11 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 | YIC-FM-05 Rename/ABA | 同raw byteでパスだけ `.tei`→`.tei.md`、次に元へ戻す | Source locator・Parser selection・Current Reviewを再確認。旧Review/Grant自動復権なし | TEI #2600/TAI #271 |
 | YIC-FM-06 Tagのみ | `notes.md`へOKF `tags:[tei]` を追加／未知拡張キー | 分類候補は変わるが正式なMeaning/Tool/Grantは不変。未知キーは勝手に削除しない | SHO #18、TEI #2621 |
 | YIC-FM-07 Parse限定 | `*.tei.md`が文法未対応、部分文書、重複Role、未定義Refを含む | raw Draftを保全し、Parse不成立箇所と意味昇格禁止を区別。Writer未実装ならread-only | TEI #988/#2621、SHO #16 |
-| YIC-FM-08 独立Expected | AIがMarkdown表からTestとExpectedを同時に生成 | 候補として保持し、独立Oracle/Owner受理の代わりにしない。実実行0ならNOT RUN | TEI #2514/#1440 |
+| YIC-FM-08 独立Expected | AIがMarkdown表からTestとExpectedを同時に生成 | 候補として保持し、独立期待値/Owner受理の代わりにしない。実実行0ならNOT RUN | TEI #2514/#1440 |
 | YIC-FM-09 Bundle/Harness | Product Skillは `*.tei.md` を説明するが、実CLIが旧`.tei`しか読めない | Skillロードや文書説明からCapability実装済みとせず、実Parsed Source/CLI/Consumer evidenceを要求 | TAI #74/#488、TEI #2605 |
 | YIC-FM-10 部分定式化 | 普通の `.md` の選択した段落だけを構造化し、別領域は自由文 | 選択外文章・コメント・保留・原稿のraw byteを勝手に破棄/再解釈しない。必要時の書込前Diffを示す | TEI #1440/#2621、SHO #19 |
 
-各ケースは *新しいRunner/Oracle/ParserをTAIに作るためではない*。TEI #2621の既存FM・SF/AP、#1440のAI-TAG、#2823のSource閉包、TAI #488のRouting/X02/X04、SK-03のHandoffへ必要な場合に紐付ける。初回H2/H3の固定Source/Skillを変更せず、**新形式対応が実Productで成立した後**にProduct read-only→Skillなし/あり→必要時だけTAI連携の順で評価。構文の正しさ、Source Revision、意味Owner受理、外部Harness実Loader、文書配布、実DB/Host Effectは別証拠。
+各ケースは *新しいRunner/判定器/ParserをTAIに作るためではない*。TEI #2621の既存FM・SF/AP、#1440のAI-TAG、#2823のSource閉包、TAI #488のRouting/X02/X04、SK-03のHandoffへ必要な場合に紐付ける。初回H2/H3の固定Source/Skillを変更せず、**新形式対応が実Productで成立した後**にProduct read-only→Skillなし/あり→必要時だけTAI連携の順で評価。構文の正しさ、Source Revision、意味Owner受理、外部Harness実Loader、文書配布、実DB/Host Effectは別証拠。
 
 **現状**：最新Owner方針の設計反映。ファイル実移行、Source Reader/Parserの新形式対応、CLI/Studio/SHO往復、YIC-FM試験、外部Harness実Tool/H3 Skill、Ownerによる実Meaning受理はすべてNOT RUN。既存のS1/CIに由来する旧 `.tei` Referenceの限定実績は保持する。
 
@@ -284,7 +284,7 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 
 **新しいProduct側の限定実装候補**：[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は未Bindingの`*.tei.md`を発見したとき、単なる`validate ok`で済ませず`TEI_MD_PARSER_UNBOUND`＋Pathで停止する暫定Guardを追加した。固定Commit `63953ccb5c12ead26ec1268e7c0afdba4eff66ae`の[Actions #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)はcompleted/success（focused Go 4件、workspace package tests、vet）。初回Runのgofmt失敗と修正後PASSを分離する。**これは未対応Sourceの検出能力であって、Markdown AST/TEI Role/Meaning/Build対応の実証ではない**。旧`.tei`処理は維持し、H2/H3の固定TEI Binary/Source資格へこの新Draftの結果を流用しない。
 
-**正式な移行計画のOwner**：[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)はM0〜M6とTM-01〜14の独立Expectedを所有。本節の5段階はYIC側の**連携状態の照合表**であり、TEIに別のMigration Engine/独立Oracleを導入しない。特に管理ディレクトリ`.tei/decisions/`はファイル拡張子の廃止対象ではない。未マージのDraftを現行mainの実Loader適合へ昇格しない。
+**正式な移行計画のOwner**：[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)はM0〜M6とTM-01〜14の独立Expectedを所有。本節の5段階はYIC側の**連携状態の照合表**であり、TEIに別のMigration Engine/独立期待値の第二正本を導入しない。特に管理ディレクトリ`.tei/decisions/`はファイル拡張子の廃止対象ではない。未マージのDraftを現行mainの実Loader適合へ昇格しない。
 ### 17.2 移行の段階と独立Exit（既存Ownerへ委譲）
 
 | 段階 | 最小作業／停止条件 | Owner/確認対象 |
@@ -324,7 +324,7 @@ Product側の出力形式をSkill説明で補完しない。SEIのtextから構�
 | YIC-HO-04 TEI *.tei.md移行と旧Skill | 旧Sourceに対するSkill/CLI/S1成果を新Parser・新Sourceへの適合と判定しない | TEI #2621/Draft #3030、TAI #488 |
 | YIC-HO-05 同一可視Projection・異なる秘密World | 外部の回答・診断・件数から許可外のSource/Capability存在を識別できない。非公開を不存在へ変えない | TAI #232、SUI #3368 |
 
-評価順は変更しない：固定TEI H2-01実AI Harness Tool Request→実CLI argv/exit/stdout → H3 Skill root/reference実Load → H2/H3四独立Session → 必要時だけProduct間Handoff。新Runner/Registry/Oracle/Hostは作らず、初回TEI TrialにSEI/SUI/SHOを加えない。本節の横断実Tool・実保存後Reader・正式Owner受理はNOT RUN。
+評価順は変更しない：固定TEI H2-01実AI Harness Tool Request→実CLI argv/exit/stdout → H3 Skill root/reference実Load → H2/H3四独立Session → 必要時だけProduct間Handoff。新Runner/Registry/判定器/Hostは作らず、初回TEI TrialにSEI/SUI/SHOを加えない。本節の横断実Tool・実保存後Reader・正式Owner受理はNOT RUN。
 
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
@@ -345,7 +345,7 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 | H3提供 | 固定Root＋必要Referencesの実Loader Read byteとTool呼出し・回答を別々に観測 | 配置・root SHA・`skill_loaded=true`自己申告だけではD（実提供）成立せず |
 | 回答と増分価値 | 隔離した独立Expected、正答/誤操作/Warning/unknown、Tool回数・Token・時間・人手を実4 Sessionで比較 | 一部PASS・Tool-only CI・他Product CIからSkillの有用性を推定しない |
 
-ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加のOracleは作らない。次のBlocking Exitは実外部Harnessによる**H2-01一SessionのTool Request→実TEI CLI→Harness Reply**で不変。実隔離・Skill実Load・四Session採点は**NOT RUN**。
+ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加の独立判定器は作らない。次のBlocking Exitは実外部Harnessによる**H2-01一SessionのTool Request→実TEI CLI→Harness Reply**で不変。実隔離・Skill実Load・四Session採点は**NOT RUN**。
 
 ### 19.3 既存の5製品一括検証が示す範囲
 
@@ -364,6 +364,24 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 最初のTEI公開Read-only H2/H3には追加しない。後続の書込み/委任Taskを選ぶ場合だけ、(1)Task目的・対象、(2)選択済Contract/Tool/実Source、(3)実行環境の現行Grant／対象Scope／発行主体と検証されたTrust、(4)実Invocation/Effect Fence、(5)Receipt/独立Readを**各Product/Hostの証拠で段階照合**する。Grantの自己申告・Scope解像が未grounded・Issuer真正性未確認なら、必要な危険作用を保留し、許可された独立read-only調査は継続する。
 
 この条件付き受入はTAI #232/#271/#488とTEI #951/#1174、既存EKI Task/Result Ownerへ委譲。新しい中央認証器・署名Store・Grant発行器・Permission RuntimeをYICへ設けない。実YIC Action/Harness/本番Host Grant/Effect・Owner受理は**NOT RUN**。
+
+### 20.3 Archive・Decision・監査イベントを伴うSkill Actionの限定受入
+
+### 20.3.1 製品APIの限定実測と誤った成功・再送の防止
+
+最新のTAI統合試験は、実APIの**状態と順序を飛ばせない**という条件を追加した。[TAI PR #493](https://github.com/hat47x/tai-pleroma/pull/493)・[#494](https://github.com/hat47x/tai-pleroma/pull/494)・[#495](https://github.com/hat47x/tai-pleroma/pull/495)の記載は、個々の固定テストProfileでの限定結果として受け取る。YICは新しい共通HTTP Protocolや第二Decision Storeを採用しない。
+
+| 実際に検証された局所API契約 | Skillがしてはいけない推論／現在の照合先 |
+| --- | --- |
+| Archive状態：保存文書のReadは継続、Writeは`423 document_archived`、復帰後は同操作が許容（#493） | **読める=書ける**とみなさない。元の作業意図と現行Document状態/Grantを再確認し、書込み禁止時はDraft/Previewへ縮退。復帰したから別Owner承認済みとも扱わない |
+| 追記専用Decision Log：初回`201`、同一`decisionId`再送は`409`、未知グループの一覧は`200`と0件（#494） | `409`を重複作用防止の自動成功Receiptや決定採用済みとして数えない。未知グループの空結果をDocument不存在/全件確認に拡大しない。Decision ID・実受信・対象Scopeの照合をProductへ戻す |
+| CE4 Context Audit：必要なbundle/proposal/queryイベント前の`apply`は`409 missing_event`、整列後は`200`、Hash不一致は`409 equivalence_mismatch`、Operation/Command不一致は`422`（#495） | Skillは不足イベントを推測で補ってApplyを通さない。`200`も**当該API操作の応答**に限り、別ProductのProvider Commit/Consumer受領/正式公開と同一視しない |
+
+これらの拒否にはそれぞれ異なる原因がある。`409`を全て再試行対象・重複OK・権限拒否として一括変換せず、**Product返却のError code・Target/Version・既存Operation ID・現在Grantと実Effect**を用途別に評価する。Commit ACK喪失や部分作用の可能性があれば、新Keyの盲再送を行わず既存TEI #1174／EKIのResult/Receipt/独立再読取で状態を調べる。アーカイブの解除、Decision追加、Auditイベント作成をSkill自身の判断で実行しない。
+
+### 20.3.2 TrialとOwner境界
+
+実測されたのはこれらの**局所API／統合試験**であり、生成AIが当該Skillを選び、実Toolを呼び、正しく停止/再開した証拠ではない。一括検証の段数（#493:58、#494:59、#495:60）をHarness Skillの品質スコアへ加算しない。Skillを介する実Actionの独立期待値は実際に後続Taskが要求した場合だけTAI #271／既存SK-03とProduct Ownerで照合する。初回TEI read-only H2-01→H3→四SessionのExitは変更せず、独自Runtime/Validator/Grant Engineを増設しない。YIC実Action/Host Grant/Provider Effect/Owner受理は**NOT RUN**。
 
 ## 21. 再開時の目的変更とSkill再選択の資格を分ける（後続検証・NOT RUN）
 
@@ -393,7 +411,7 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 - 取得が続いているか：実Cursor系列・各Pageの実Body/Member、重複・欠落・終端/epoch、実ETagと実HTTP Response。200で先頭が戻っても「追加0件」や全件完了としない。
 - Cache再利用が正当か：304が将来使える場合でも同一Resource/Variant/Audience/Authorization Scopeの過去の実Bodyなしではunknown。本文付き200なら実Bodyを読んで再評価する。過去のread-only Scope適格性を現在の外部開示/実Effectに昇格しない。
 
-これはTAIがSUI APIを修正する要求ではない。Cursor/ETag/ReaderはSUI Product Owner、SC-17のActivity再開証拠はTAI #271、選択のOver/Under-routingは既存YIC-ROUTE/#488、実Handoffの応答形式は§18/既存SK-03が担当する。**新Cursor検証器・Cache・第二Oracleは追加しない**。
+これはTAIがSUI APIを修正する要求ではない。Cursor/ETag/ReaderはSUI Product Owner、SC-17のActivity再開証拠はTAI #271、選択のOver/Under-routingは既存YIC-ROUTE/#488、実Handoffの応答形式は§18/既存SK-03が担当する。**新Cursor検証器・Cache・第二判定器は追加しない**。
 
 ### 21.4 実験へ移す際の照合と優先順
 
