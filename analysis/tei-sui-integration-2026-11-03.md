@@ -735,3 +735,16 @@ POST /admin/provision/models/providers（providerKind=local）→ 201
 
 - 登録できるproviderKindは`local`・`large-scale`・`deepseek`
 - 実モデル呼び出しは行っていない
+
+## 上流最新版での再実行（2026-11-06）
+
+EKI上流`66b0c04`で`eki-control`/`eki-agent`を再ビルドし、自前構成の実行を再度通した。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
+
+```text
+binaries: eki-control-66b0c04.exe / eki-agent-66b0c04.exe
+executed true / claimed true / result 409 RESULT_NOT_READY
+```
+
+- 実行系は旧版（8159af1）と同じ手順で通る
+- 結果の受入は`66b0c04`でも未配線（409が継続）
+- receiptの`binaries`欄に使用したバイナリを記録するようにした
