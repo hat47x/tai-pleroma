@@ -907,3 +907,21 @@ exportIdなし → markdownが1件（抑止しない）
 - `exportId`を省いた古いクライアントの記録は落とさない
 - 抑止窓の境界と再起動をまたぐ挙動は未確認
 - `safeMode=true`では`export`が403（fail-safe）になるため、本検証は`safeMode=false`で行った
+
+## ネイティブAction受信の既定無効と多段の門（2026-11-06）
+
+`POST /docs/{id}/action-commit`を、機能フラグを立てた状態で試した。[receipt](../evaluations/records/SUI-TEI-native-action-2026-11-06.json)
+
+```text
+フラグ無効 → 404 action_denied（通常配備では面を公開しない）
+X-TEI-Actionなし → 403 / 別オリジン → 403 request_origin_denied
+古いexpectedRevision → 409 revision_conflict / 未知のcardId → 400 invalid_payload
+X-Read-Only: 1 → 403
+正しい要求 → 200（新しいrevisionを返し、カード座標が x=100, y=50 に変わる）
+同じ要求の再送 → 409 revision_conflict（リプレイを拒否）
+アーカイブ中 → 423 action_denied
+```
+
+- 受信面は既定で無効で、TEI Host接続時に明示的に有効化する前提
+- 認証・版・同一オリジン・読み取り専用・リプレイ・アーカイブの各門が個別に働く
+- 実TEI Hostや認証済みセッションとの接続は未確認
