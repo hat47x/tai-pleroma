@@ -624,7 +624,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **製品方針と実装状態を区別**：TEI Authoringの標準名を`*.tei.md`へ寄せ、`*.tei`を原則段階廃止するのはOwnerが選択した方向。[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)は形式選択・Source Fidelity・段階移行の計画、[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は未接続の`*.tei.md`が存在するとき明示診断`TEI_MD_PARSER_UNBOUND`で止める暫定Guard。**両PRは現時点Draft／未merge**で、後者は新形式をParseできる保証ではない。
 
-**現在の製品にある3つの独立した状態**：
+**比較対象となる4つの独立した状態（V0〜V3）**：
 
 | 段階 | 製品ビルド／入力 | Source・Resultの期待 | 実証資格 |
 | --- | --- | --- | --- |
@@ -639,7 +639,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **試験Ownerと非目標**：旧V0→V1の一時負例だけは既存[TAIのProduct-only S1 Workflow](../../.github/workflows/tai-tei-s1-real-public-cli.yml)へ局所追加し、旧Runnerが誤って`ok=true`を成功扱いすることの**回帰特性**として保存する。V2/V3の正式実装・Go単体試験・非互換診断・Source Index/Studio/SHO/OKF対応はTEIの担当計画へ戻す。TAI SK-02 Checker、実際の4 Trial、Task/Expected、Tool/Host/OS権限に移行特例を追加しない。新形式の試行を開始する前にSource/Skill/Binary/実Tool Profile/Expectedを新規事前登録する。
 
-**現在地**：V0 Product-onlyのCIは既存成功済み。V1は新CIのexact HEADが成功し、結果がログで確認できるまでは実証済みとは書かない。V2/V3についてはTEI側の独立Draft／計画が存在するだけで、外部AI Harness実行や旧新互換・Owner受理・実Source移行が完了したという主張はしない。
+**現在地（2026-11-07再照合）**：V0は固定版Product-only CI成功。V1の単純RenameによるSubject 1→0／validate.ok=trueは[旧版実CLI CI #42239797449](https://github.com/hat47x/tai-pleroma/actions/runs/42239797449)で観測済み。さらに**V1の旧新併存**は[実CLI CI #42256480002](https://github.com/hat47x/tai-pleroma/actions/runs/42256480002)でSourceIndexFP変化・WorldFP不変・検証診断不変を観測した（次節§22.8）。V2はTEI [Draft #3031の専用CI #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)で**未対応Sourceの明示拒否**だけ成功。V3のMarkdown Parser/Loader実読込、旧新意味同等、外部AI Harness H2/H3、Owner意味受理は引き続き**NOT RUN**。Product-only負例やDraft GuardのCIをV3に加算しない。
 
 <!-- harness8-source-index-versus-interpreted-world-20261107 -->
 ### 22.8 旧 `*.tei` と未対応 `*.tei.md` が併存する際のSource Index／意味実消費の差（実CLI負例）
