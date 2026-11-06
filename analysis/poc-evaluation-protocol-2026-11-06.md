@@ -57,3 +57,15 @@ Status: **提案**。生産性の結論ではない。完成後に測るため�
 - 過去の測定例: `evaluations/records/SUI-TEI-workflow-2026-11-02.json`、`evaluations/records/SUI-TEI-compare-2026-11-02.json`
 
 これらを`poc-evaluation`receiptの雛形へ束ねるのは、製品完成後に着手する。
+
+## 初回のベースライン観測（2026-11-06）
+
+評価の比較対象として、現時点の一括検証の所要時間を記録した。[receipt](../evaluations/records/TEI-suite-timing-2026-11-06.json)
+
+```text
+steps 53 / totalSeconds 807.9
+slowest: sui_docs_tests, sui_session_tests, eki_projection, postgres_contention, sui_multi_instance
+```
+
+- これは生産性の測定結果ではなく、環境と評価集合の基準点
+- 製品の版はreceiptの`products`欄に記録する

@@ -206,6 +206,7 @@ REAL_RECORDS = (
     "evaluations/records/SCN-003-save-2026-11-03.json",
     "evaluations/records/TEI-suite-pipeline-2026-11-03.json",
     "evaluations/records/TEI-suite-2026-11-03.json",
+    "evaluations/records/TEI-suite-timing-2026-11-06.json",
     "evaluations/records/SUI-TEI-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json",
@@ -487,6 +488,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
+        if "TEI-suite-timing" in relative:
+            observed = data.get("observed", {})
+            if data.get("schema") != "tai.reference.suite-timing/v0" or observed.get("steps", 0) < 1 or not observed.get("totalSeconds"):
+                errors.append(f"suite timing observation is incomplete: {relative}")
         if "EKI-TEI-multi-worker" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or len(observed.get("workers", [])) != 2 or observed.get("executed", 0) < 1:
