@@ -641,3 +641,15 @@ executed false
 
 - 失効はControl Planeの認証段で止まる（assignmentの取得すら通らない）
 - Agent側は401を受けて実行に進まない
+
+## 複数Workerの登録と割り当て（2026-11-03）
+
+1つのControl PlaneへWorkerを2台登録し、Taskを4件投入した。[receipt](../evaluations/records/EKI-TEI-multi-worker-2026-11-03.json)
+
+```text
+workers 2 / submitted 4 / executed 2 / claimed 2 / distributed false
+```
+
+- 2台の登録自体は成功する
+- この構成ではAttemptが1台に集中し、4件中2件だけが待ち時間内に実行された
+- 割り当ての分散や並列度は、この観測だけでは保証できない（未検証）
