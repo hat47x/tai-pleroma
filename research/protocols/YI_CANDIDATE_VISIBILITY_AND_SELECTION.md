@@ -2,7 +2,7 @@
 
 状態：**Research protocol / Draft。合成traceの構造検査のみ実行対象。比較実験・利用者評価はNOT RUN。**  
 基準：TAI main `6ba54b8423457bf543066b9780dce58296e764ef`（2026-11-05）。  
-対応：[YI 64卦・変爻の探索比較（Draft PR #269）](https://github.com/hat47x/tai-pleroma/pull/269)、[RQ6：生成的探索と証拠制約](../COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)、[Product Value適正化 #422](https://github.com/hat47x/tai-pleroma/issues/422)、[Draft PR #423](https://github.com/hat47x/tai-pleroma/pull/423)、[CSW Draft PR #594](https://github.com/hat47x/cultural-substrate-weaving/pull/594)。各Owner判断・既存研究正本を置換しない。
+対応：[YI 64卦・変爻の探索比較（PR #269、2026-11-06統合済み）](https://github.com/hat47x/tai-pleroma/pull/269)、[RQ6：生成的探索と証拠制約](../COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)、[Product Value適正化 #422](https://github.com/hat47x/tai-pleroma/issues/422)、[Draft PR #423](https://github.com/hat47x/tai-pleroma/pull/423)、[CSW Draft PR #594](https://github.com/hat47x/cultural-substrate-weaving/pull/594)。各Owner判断・既存研究正本を置換しない。
 
 ## 1. 見いだした設計上の盲点
 
@@ -84,6 +84,30 @@ python check_yi_selection_surface.py
 ```
 
 このテストは**候補選択のための汎用プラットフォーム**を作るものではない。異なる意味の「ない」を一つに畳み込む危険を、実験方法の段階で検出するだけである。
+
+## 6. 非線形の再探索と、分母が分かる範囲
+
+この合成Checkerが表すのは、**一つのrunで観測可能な候補集合を段階別に写し、後段の集合が前段の部分集合であるケース**だけである。発想そのものが常に線形な漏斗で進むと主張しない。
+
+- **再発見**：一度提示されなかったH02が、別の問い・Source・Session・AIから再び現れることは正当であり得る。前runの拒否や採用の意味を黙って持ち越さず、新runの同一性、入力、根拠、変化の理由を記録する。単なる同じローカルIDは同一意味の証明にならない。
+- **分岐と合成**：複数のカードから新しい仮説が生まれた場合、旧集合の部分集合では表現できない。由来の辺や新しい生成イベントを元のSUI/CSW Ownerの方法で観測する。**本CheckerをProduct実装の普遍的な状態機械として採用しない**。
+- **内部候補**：`generated`は、この合成runに**出力され観測された生成候補**を指す。モデルの不可視な内部思考、まだ表示されなかった可能性、別文脈で生成し得る案の数を含まない。
+- **閉包の扱い**：`closedForRun=true`はfixture作者による「このrunのこの段階を閉じて記録した」という**宣言**であり、外部ログの独立した網羅証明ではない。閉包の根拠が確認できなければ実研究では`unknown`、報告の対象は「観測できた候補」に限る。
+- **保持率**：両端の段階がこのrunに閉じていると宣言された場合だけ、`retentionFraction={numerator,denominator}`と`droppedObservedIds`を示す。片側でもopenなら**N/A（not_qualified）**とし、0%、100%、全探索の網羅率には置き換えない。分母が0のときもN/A。失敗したtraceから成功らしい統計を出さない。
+
+この節の区別は、TEIの[Workspace sources診断 #2823](https://github.com/hat47x/tei-platform/issues/2823)の「列挙されたファイル」と「validateが実際に読んだ対象」が異なる問題にも対応する。**判定がPASSしたか**と**何を評価したか**は異なる。ただしTEIのSource契約へ本Checkerの段階名を移植しない。
+
+### 既存SUIに接続する場合の観測境界（候補・NOT RUN）
+
+TAI mainには、SUIの`/context/query`と`/context/bundle`を読出し・検査する既存参照ハーネスがある。2026-11-06時点の限定的なreceiptは[query](../../evaluations/records/SUI-TEI-context-2026-11-03.json)と[bundle](../../evaluations/records/SUI-TEI-context-bundle-2026-11-03.json)にある。
+
+- `/context/query`：accept、preview未確認、未知キー、depth範囲の検証を確認。**カード全数の検索、モデルの生成候補の観測、重要な反証の提示率**を確認したものではない。
+- `/context/bundle`：同じクエリ・合成stubでのbundle hash決定性を確認。**実文書の選択品質、元資料の意味受理、社会的合意**を確認したものではない。
+- この二つのreceiptを、そのまま`generated/captured/searched/presented`の分子・分母に**対応付けない**。実験では、固定したSUI Document/Card、許可された読出しとSafeMode、出力された候補IDを独立して照合する必要がある。
+
+最初の試行は、固定した合成カードに**反証候補1件と保留候補1件**を含め、(A)カードを直接読む、(B)既存SUIの許可済み集約・読出しを使う、の2条件で比較する。入力SHA・query・filter・実際に返ったID・preview承認・提示されたIDを残す。公開・書込み・新権限は不要。反証候補が見えなくても、UIの非表示、取得制約、意味的選別、未記録のどれかを確認せず「SUIが排除した」とは判定しない。AIの内部思考記録や非公開原文を取得しない。
+
+**実験のGoldと評価**：候補の重要性は実行した製品と独立した担当者が事前に固定する。方法A/B/CやRQ6の既存比較を上書きせず、まず同じrun内の候補ID一致と閉包の観測可能性だけを扱う。未知の分母を補完して改善率を出さない。
 
 ## 6. 適用規模と次の最小Gate
 
