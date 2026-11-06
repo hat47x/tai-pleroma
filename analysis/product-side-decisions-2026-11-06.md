@@ -1,4 +1,4 @@
-# 製品側の判断が必要な3点（2026-11-06）
+# 製品側の判断が必要な4点（2026-11-06）
 
 Status: **整理**。TAIが接続検証で突き当たった、製品側の設計判断を要する点を並べる。ここで可否を決めない。
 
@@ -29,6 +29,16 @@ TAI側でできること: 修正後の再観測。計測・修正は製品変更
 論点: これは2の延期の副作用であり、分散の設計判断（配置の規則、同時実行の上限）は別途必要。
 
 TAI側でできること: 分散規則が入った後の再観測。規則の設計は製品変更。
+
+## 4. agent資格情報の配線をプロファイル非依存にするか
+
+観測: `SUI_AGENT_CREDENTIAL_HASH_KEY`や`SUI_AGENT_OAUTH_AUDIENCE`を設定しても、local-devプロファイルでは`app.state`へ配線されず、agent要求は503 `agent_credential_unavailable`になる。配線は`settings.runtime_profile == "saas-multitenant"`の分岐内に、guest/saas系の12項目とまとめて置かれている。[receipt](../evaluations/records/SUI-TEI-agent-key-wiring-2026-11-06.json)
+
+当たり: `main.py`のモジュールレベルで、`if settings.runtime_profile == "saas-multitenant":`ブロックの中に`app.state.agent_credential_hash_key`等が入っている。ASTで確認した。
+
+論点: agent資格情報をsaas限定の機能として扱い続けるのか、設定が揃っていれば他プロファイルでも有効にするのか。設定値の有無だけでは有効化を判断できないため、運用時の切り分けが難しい。
+
+TAI側でできること: 配線変更後の再観測（local-devでagent経路が通るか）。配線の変更は製品変更。
 
 ## 共通の注記
 
