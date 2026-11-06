@@ -754,10 +754,10 @@ executed true / claimed true / result 409 RESULT_NOT_READY
 SUIを`09c24046`、EKIを`66b0c04`へ更新して、一括検証53段を再実行した。[suite receipt](../evaluations/records/TEI-suite-2026-11-03.json)
 
 ```text
-result PASS / steps 53 / SUI 09c24046 / EKI 66b0c04
+result PASS / steps 53 / SUI 09c24046 / SEI e8d13e0 / MMI b07ed4a2 / EKI 66b0c04
 ```
 
-- 更新後も保存・TLS・Postgres・監査・管理API・context系・EKI実行系の段が通る
+- 更新後も保存・TLS・Postgres・監査・管理API・context系・EKI実行系の段が通る（SEI/MMIの更新も同時に確認）
 - 端末固有のreceipt（ID・時刻）は再生成されるため、追跡するのはsuite receiptと本節のみ
 
 公開gateは`allowed=false`のまま。
