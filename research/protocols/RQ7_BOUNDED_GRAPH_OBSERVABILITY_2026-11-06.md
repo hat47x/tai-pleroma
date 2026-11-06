@@ -114,3 +114,34 @@ Goldは「真の完全な世界の情報」を仮定せず、**隔離した試�
 **撤回条件**: V1/V3がV0/V2より誤確定を増やす、正当な処理の過剰拒否が増える、検査・図表維持費用が効果を上回る、Source/Scopeの欠落を検出できない、独立評価で再現しない場合は、より単純なテキスト＋既存CLI/receiptへ縮退する。Product受理と研究結果は別に記録する。
 
 **今回の変更資格**: 研究計画のみ。TEIの標準型／ETL／self-build実装・実Target E2E・SUI/CSWの認知効果・人間/AI実験・独立holdout・権限・公開の検証は **NOT RUN**。この研究計画では、TAI/TEI/EKI/SHO/SEI/SUI/CSWの既存Ownerの採否を変更しない。
+
+## 9. 2026-11-06の追補：有界な不存在の保証／開示／最適化の三境界
+
+[公開予備実験プロトコル](RQ7_PILOT_STIMULUS_AND_SCORING_2026-11-06.md)に、10合成ケースとV0〜V3の提示・採点条件を設けた。これは`B-P01/B-N01/B-N02/B-N03/B-D01、F-P01/F-N01/F-N02/F-D01、X-N01`の公開開発セットで、前節の12候補をすべて実行または実装したものではない。合成データの構造点検と、実験・Product実行・独立holdoutの証拠は区別する。
+
+### 9.1 不存在証明は観測境界の閉包を要求する
+
+`Declared`にない、`Observed`にない、`Consumer`が読まない、は同じ事実ではない。`no-event-in-scope`は、対象集合、観測器のcoverage、時点、欠損なしという条件が別に固定された場合に限定して研究上の結論とする。`Scope/Revision/Observer`が不完全なら`unknown`を返し、推論で隠れた工程を消去しない。
+
+### 9.2 表示上の完全性と実行完全性、開示可能性は別
+
+低権限のHuman/AIへ見せる図は、Provider・Source・Pluginの存在、件数、関係、診断やa11yラベルを秘匿する必要がある場合がある。このとき`policy-complete authorized projection`は可能でも、全Sourceの`execution-complete graph`と呼ぶべきではない。観測に必要な権限がないこと自体を事故や全体の欠落と推定せず、資格のあるProduct/Host側の独立検証へ委ねる。
+
+この区別は[TEI三要素Method Draft #2878](https://github.com/hat47x/tei-platform/pull/2878) T06〜T09、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、[TAI事前出力観測 Draft #272](https://github.com/hat47x/tai-pleroma/pull/272)と整合する。**開示禁止の存在を漏らさずに「図の対象範囲」を伝える方法自体が未実証**。公開fixtureでは機密値を使用せず、Provider実制御を再実装しない。
+
+### 9.3 論理Graphと実行Graphは一対一とは限らない
+
+[TEI Plugin実現・最適化 Draft #2933](https://github.com/hat47x/tei-platform/pull/2933)では、Provider差替え、fusion、pushdown、partial evaluation、並列化、キャッシュが検討されている。最適化後の物理実行Eventが論理Node/Edgeの単純な一対一列挙と一致しなくても、**意味・順序・型/NULL・Unknown・Effect/Authorityが保持され、対応付けの証拠がある**なら正当な場合がある。他方、最終Artifactのbyte一致だけでは未宣言の作用や失われた分岐の不在を保証しない。
+
+後続の反証候補（**未追加・NOT RUN**）:
+- **O-P01**: 論理`A→B`を物理`Fused(A,B)`に変換する。事前固定した対応と意味・Effect Oracleが成立する場合、Node数の差だけで誤拒否しない。
+- **O-N01**: 最終byteは同じだが、変換でUnknown/NULL、順序、認可確認などの意味上必須のEffectが欠落する。Graphの見た目やOutput digest一致で受理しない。
+- **O-N02**: 物理Providerが出力できるのは部分Traceのみ。正しい最適化と未観測工程の欠落を区別できなければ、完全性の判定を保留する。
+
+これはTEI側のNormalizer、Optimizer、Conformance、Source/Target OracleをTAIで定義・実装する要望ではない。RQ7が評価するのは、**論理↔物理対応の証拠をConsumerに提示したとき、人間/AIの誤確定・誤拒否・確認負担が改善するか**である。現行V0〜V3にこの追加要因を混ぜず、独立した後続比較とする。
+
+### 9.4 今回の段階
+
+[TAI研究用公開刺激](../fixtures/RQ7_BOUNDED_COMPLETENESS_PILOT.synthetic.json)、[公開Gold](../fixtures/RQ7_BOUNDED_COMPLETENESS_GOLD.public.json)、[読取り専用レンダラー](../tools/rq7_pilot.py)を追加。公開開発セットなので評価用sealed holdoutではない。既存の[TEI self-build #2831](https://github.com/hat47x/tei-platform/issues/2831)のP0-A0/A1/実CLI Artifact、[ETL/MFT Draft #2827](https://github.com/hat47x/tei-platform/pull/2827)のTransport/Data Processing/Business Atomic/Execution Grouping、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness H2/H3は各Ownerへ残す。
+
+**未実証**: 実Go/Node/外部MFT/Model、独立した図表示の認知効果、正式Observer閉包、実Grant/Disclosure、実最適化後の意味同値、TEI全体Self-build G4とProduct Owner受理。研究Goldを製品Gateへ移植しない。
