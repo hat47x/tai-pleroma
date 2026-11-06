@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "host": "Windows with Python 3.12",
   "command": "python integrations/tools/verify_artifact_digests.py",
   "result": "PASS",

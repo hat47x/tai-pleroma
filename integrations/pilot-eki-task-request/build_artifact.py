@@ -22,6 +22,7 @@ def main():
     parser.add_argument("--workspace", default="integrations/pilot-eki-task-request")
     parser.add_argument("--out", required=True)
     parser.add_argument("--receipt-out", required=True)
+    parser.add_argument("--case", default="present")
     args = parser.parse_args()
 
     workspace = Path(args.workspace).resolve()
@@ -30,7 +31,7 @@ def main():
     contract_bytes = contract_path.read_bytes().replace(b"\r\n", b"\n")
     contract = json.loads(contract_path.read_text(encoding="utf-8"))
     fixtures = json.loads(fixtures_path.read_text(encoding="utf-8"))
-    present = next(case for case in fixtures["cases"] if case["id"] == "present")
+    present = next(case for case in fixtures["cases"] if case["id"] == args.case)
 
     with tempfile.TemporaryDirectory(prefix="tei-eki-") as tmp:
         candidate = Path(tmp) / "candidate"

@@ -566,3 +566,198 @@ TAIの投影TaskRequest（平坦なrecord）から、Client APIの封筒（execu
 - 投影値は試験ポリシーの予算（60s/1MiB/1MiB）を超えるため拒否される
 - 丸めた場合、EKIのTEST PROFILEで実行とResultClaimまで到達する
 - 本番のWorker Protocol互換や権限は未検証
+
+## 予算を製品ポリシーに合わせた投影（2026-11-03）
+
+`present-policy-aligned`ケース（wall 60s・output 1MiB・network 1MiB）を契約へ追加し、その投影をEKIへ投入した。[receipt](../evaluations/records/EKI-TEI-policy-execution-2026-11-03.json)
+
+```text
+投影値のまま受理（422なし）→ task=tsk_52632a0a... 実行・claim取得
+cases 5→6
+```
+
+- 予算はTEIの契約側で表現でき、製品ポリシーに合わせた投影は丸めなしで通る
+- 元の`present`ケース（300s/16MiB/128MiB）は製品ポリシーより大きい
+
+## Trust Bundleは必須ではない（2026-11-03 修正）
+
+`internal/agent/trustanchor`の`File`で`control_public_key`と`trust_bundle_versions`は`omitempty`／任意であり、`conformance/signedchain`の`TrustAnchor`は両方を省いてanchorを作っている（`signedchain.go`）。
+
+```go
+doc := trustanchor.File{TrustDomain: ..., PolicyRevision: ..., BundleRevision: ..., ValidatedAt: ...}
+for _, k := range a.PublicKeys { doc.Keys = append(...) }
+```
+
+したがって、assignment実行に必要なのは、Trust Bundleの署名済み履歴ではなく、**Authority公開鍵・trust domain・policy revision・bundle revision・鮮度上限**を持つanchorである。以前の「Trust Bundleの発行手順が先に必要」という記述は誤りだった。発行手段が無いのは`control_public_key`を使う経路（ADR-0036）だけである。
+
+## 自前構成でのEKI実行（2026-11-03）
+
+製品テストに依存せず、Control Planeの設定・Trust Anchor・Agent設定を自前で組み立てて、投影TaskRequestを実行した。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
+
+```text
+submit 202 / task=tsk_2ab3ccd1... / executed true / claimed true
+```
+
+分かったこと:
+
+- 必要なTrust Anchorは`trust_domain`・`policy_revision`（**有効なpolicyのrevision**）・`bundle_revision`・`validated_at`・上限・Authority公開鍵。`control_public_key`と`trust_bundle_versions`は不要
+- `policy_revision`を鍵ポリシー（`kp-*`）にすると`lease_policy_revision_mismatch`で拒否される
+- native runnerはnetwork上限が非0だと実行を拒否する（`native runner does not enforce network limits`）。`NetworkBytesMax`は0にする
+- sandbox profileは`native-fixed-spike`を使う。`NetworkProfile`を付けても`native runner does not implement network profile`になる
+- 稀に`approval is issued in the future`でdispatchが延期されることがあるため、再試行を入れた（今回は1回目で成功）
+
+## 実行結果の受入はControl Planeに配線されていない（2026-11-03）
+
+自前構成で実行したTaskについて、ResultClaimは`result_claim_submitted`（`claim_decision: new`）まで進むが、`GET /v1/tasks/{id}/result`は`409 RESULT_NOT_READY`を返す。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
+
+```text
+executed true / claimed true / result 409 RESULT_NOT_READY
+```
+
+- `internal/control`に`resultacceptance`の組み立てが無く、受入は`conformance/process`の試験が内部で構成している
+- 2026-11-06時点のEKI上流（`origin/main` `f4451df`）でも`internal/control`配下に`resultacceptance`の参照は無く、`internal/control/service/config.go`にも受入の設定キーが無い。したがって旧版固有の欠落ではない
+- 本リポジトリのreceiptは`8159af1`のバイナリで取得している
+- したがって「実行して結果が受け入れられる」縦断は、製品プロセスとしては未配線
+
+## Workerの失効（2026-11-03）
+
+`eki-control worker-state`で登録済みWorkerを`revoked`にし、その後の状態を確認した。[receipt](../evaluations/records/EKI-TEI-worker-revoke-2026-11-03.json)
+
+```text
+revoked への遷移: 成功
+registered へ戻す操作: 拒否（revoked is final）
+```
+
+- 失効は最終状態として扱われ、再登録で戻せない
+- Agent側の拒否は未確認（assignmentを持たないAgentはWorker listenerを呼ばないため）
+
+## 失効したWorkerのAgent拒否（2026-11-03）
+
+Workerを失効させた後、assignment付きのAgentを起動した。[receipt](../evaluations/records/EKI-TEI-revoked-agent-2026-11-03.json)
+
+```text
+control: worker authentication refused reason=worker_not_usable
+agent: assignment poll failed: control plane answered HTTP 401
+executed false
+```
+
+- 失効はControl Planeの認証段で止まる（assignmentの取得すら通らない）
+- Agent側は401を受けて実行に進まない
+
+## 複数Workerの登録と割り当て（2026-11-03）
+
+1つのControl PlaneへWorkerを2台登録し、Taskを4件投入した。[receipt](../evaluations/records/EKI-TEI-multi-worker-2026-11-03.json)
+
+```text
+workers 2 / submitted 4 / executed 2 / claimed 2 / distributed false
+```
+
+- 2台の登録自体は成功する
+- この構成ではAttemptが1台に集中し、4件中2件だけが待ち時間内に実行された
+- 割り当ての分散や並列度は、この観測だけでは保証できない（未検証）
+
+### 分散しなかった理由の切り分け（2026-11-03）
+
+複数Workerの観測で、Control Planeのログは次の順で動いていた。
+
+```text
+dispatch tick considered=2 dispatched=2 deferred=0
+dispatch tick considered=2 dispatched=0 deferred=2
+  reasons="...: reserve lease: NOT_YET_VALID: approval is issued in the future; ..."
+tasks: 2件 verifying / 2件 active
+```
+
+- 同時に4件投入すると、dispatchは2件だけをdispatchedし、残り2件を`NOT_YET_VALID`で延期した
+- 延期された2件は`active`へ進んだまま、待ち時間内に実行が完了しなかった
+- したがって「2台に分散しなかった」のは、Worker選択の偏りではなく、Attemptが2件しか作られなかったため
+- `approval is issued in the future`の原因（署名時刻とControl Planeの時計のずれ）は未特定
+
+### `NOT_YET_VALID`の当たり（2026-11-03・仮説）
+
+- 検証は`internal/core/placementverify/verify.go`の`Revalidate`で`now.Before(a.IssuedAt())`のとき`NOT_YET_VALID`を返す
+- dispatchは`internal/control/dispatch/dispatch.go`で`l.now()`のスナップショットを取り、`place`で署名し、`Reserve`で再検証する
+- 署名時刻がtick開始時のスナップショットより後になると、再検証の`now`が署名時刻より前になり、延期される
+
+この順序に起因する可能性が高いが、Control Planeの時計の取得箇所を計測していないため**未確定**。観測上は次tickで解消し、同時投入時にだけ目立つ。
+
+## SUIのcontext query契約（2026-11-03）
+
+`POST /context/query`の受理と拒否を確認した。[receipt](../evaluations/records/SUI-TEI-context-2026-11-03.json)
+
+```text
+200 accepted + queryCanonicalHash
+422 preview_required（previewConfirmed=false）
+400 unknown_contract_key（未知キー）
+400（depth=9）
+```
+
+- 契約キーは`extra=forbid`で閉じている
+- プレビュー確認が無い問い合わせは受けない
+- bundle構築は未実施
+
+## SUIのcontext bundle（2026-11-03）
+
+`POST /context/bundle`を同じ問い合わせで2回実行した。[receipt](../evaluations/records/SUI-TEI-context-bundle-2026-11-03.json)
+
+```text
+200 / bundleHash c2890a02... / 2回で同一 / queryCanonicalHashあり
+422 preview_required（previewConfirmed=false）
+```
+
+- bundleのハッシュは同一入力で安定する
+- 使用したstub datasetは`A2-minimal-v1`（合成）
+- 実データや実テナントでの構築は未実施
+
+## SUIのCE4 bundle resolve（2026-11-03）
+
+`POST /context/bundles:resolve`をdry-runとapplyで実行した。[receipt](../evaluations/records/SUI-TEI-ce4-2026-11-03.json)
+
+```text
+dryRun=true → 200（bundleHash・equivalenceKey・auditChain・proposalLifecycle・sideEffect）
+dryRun=false → 200
+不正なsourceBundleHash → 400
+未知キー → 400
+```
+
+- 応答は解決結果と監査連鎖の要約を含む
+- 実コンテキスト提供者には接続していない（モック）
+
+## SUIのモデル登録（2026-11-03）
+
+管理APIでモデルレジストリを読み、プロバイダを1件登録した。[receipt](../evaluations/records/SUI-TEI-registry-2026-11-03.json)
+
+```text
+GET  /admin/provision/models → 200（providers/models）
+POST /admin/provision/models/providers（providerKind=local）→ 201
+匿名 → 401
+未対応のproviderKind → 422
+```
+
+- 登録できるproviderKindは`local`・`large-scale`・`deepseek`
+- 実モデル呼び出しは行っていない
+
+## 上流最新版での再実行（2026-11-06）
+
+EKI上流`66b0c04`で`eki-control`/`eki-agent`を再ビルドし、自前構成の実行を再度通した。[receipt](../evaluations/records/EKI-TEI-manual-execution-2026-11-03.json)
+
+```text
+binaries: eki-control-66b0c04.exe / eki-agent-66b0c04.exe
+executed true / claimed true / result 409 RESULT_NOT_READY
+```
+
+- 実行系は旧版（8159af1）と同じ手順で通る
+- 結果の受入は`66b0c04`でも未配線（409が継続）
+- receiptの`binaries`欄に使用したバイナリを記録するようにした
+
+## 更新後のSUI・EKIでの一括検証（2026-11-06）
+
+SUIを`09c24046`、EKIを`66b0c04`へ更新して、一括検証53段を再実行した。[suite receipt](../evaluations/records/TEI-suite-2026-11-03.json)
+
+```text
+result PASS / steps 53 / TEI 2d0b09b13 / SUI 09c24046 / SEI e8d13e0 / MMI b07ed4a2 / EKI 66b0c04
+```
+
+- 更新後も保存・TLS・Postgres・監査・管理API・context系・EKI実行系の段が通る（TEI/SEI/MMIの更新も同時に確認）\n- 5リポジトリすべてを最新の`origin/main`へ揃えた組み合わせで53段PASS
+- 端末固有のreceipt（ID・時刻）は再生成されるため、追跡するのはsuite receiptと本節のみ
+
+公開gateは`allowed=false`のまま。

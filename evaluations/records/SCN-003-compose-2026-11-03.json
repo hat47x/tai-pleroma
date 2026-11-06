@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "host": "Windows with Python 3.12 and the SUI consumer",
   "command": "python integrations/tools/compose_scn_003.py --sui-repo <SUI>",
   "result": "PASS",

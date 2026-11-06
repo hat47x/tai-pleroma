@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "host": "Windows with the EKI checkout, its conformance harness, and a temporary test file",
   "command": "python integrations/tools/eki_projection_execution.py",
   "result": "PASS",
@@ -17,15 +17,15 @@
     "projectedSubmissionRejected": true,
     "firstExitCode": 1,
     "secondExitCode": 0,
-    "taskId": "tsk_a5916e553c22b279120881383e2699e1",
-    "attemptId": "atm_97b8e4426aaa5e47a267f1399b176e05",
+    "taskId": "tsk_6a3e213747fabb9eab099404c3c51c1c",
+    "attemptId": "atm_66a9d76513afca13880094fd1b9cf4ef",
     "claimDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
     "logTail": [
       "=== RUN   TestTAIProjectedTaskExecution",
-      "    zz_tai_projection_e2e_test.go:134: TAI_RESULT task=tsk_a5916e553c22b279120881383e2699e1 attempt=atm_97b8e4426aaa5e47a267f1399b176e05 claim=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
-      "--- PASS: TestTAIProjectedTaskExecution (2.38s)",
+      "    zz_tai_projection_e2e_test.go:134: TAI_RESULT task=tsk_6a3e213747fabb9eab099404c3c51c1c attempt=atm_66a9d76513afca13880094fd1b9cf4ef claim=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+      "--- PASS: TestTAIProjectedTaskExecution (0.86s)",
       "PASS",
-      "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t21.002s"
+      "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t5.241s"
     ]
   },
   "scope": "Submits TAI's projected TaskRequest through EKI's Client API. The projected wall-time budget exceeds the harness policy, so when it is rejected the tool retries with wall_time_seconds, output_bytes_max and network_bytes_max clamped to the harness policy (60 s, 1 MiB, 1 MiB) to show the execution path. This is EKI's TEST PROFILE, not Worker Protocol compatibility."

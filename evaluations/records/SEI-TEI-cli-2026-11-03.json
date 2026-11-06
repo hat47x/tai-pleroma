@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "host": "Windows with a locally built sei CLI and a temporary record store",
   "command": "python integrations/tools/sei_cli_record.py",
   "result": "PASS",
@@ -21,12 +21,12 @@
       "snapshotDigest": true
     },
     "recordId": "decision-1",
-    "snapshotDigest": "sha256:64b525efd15be338c95527fc3ef22cf9d9ae0377d85879036eea97cbbfc587cb",
+    "snapshotDigest": "sha256:c6c9d17e501a2b3a87e64a0c8b5be5a1659fb91d89b132dec7c774c6cbd1b9d7",
     "resume": [
-      "Store sei-store-2026-11-05: 1 records",
+      "Store sei-store-2026-11-06: 1 records",
       "Unresolved scope: recognized Decision.unresolved_refs only; not a case-wide inventory.",
       "0 entries; 0 distinct logical references. Case completeness: not assessed.",
-      "Snapshot SHA-256: sha256:64b525efd15be338c95527fc3ef22cf9d9ae0377d85879036eea97cbbfc587cb",
+      "Snapshot SHA-256: sha256:c6c9d17e501a2b3a87e64a0c8b5be5a1659fb91d89b132dec7c774c6cbd1b9d7",
       ""
     ]
   },

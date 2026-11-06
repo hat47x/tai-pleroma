@@ -156,6 +156,10 @@ REAL_RECORDS = (
     "evaluations/records/MMI-delivery-audit-2026-11-03.json",
     "evaluations/records/SUI-TEI-audit-2026-11-03.json",
     "evaluations/records/SUI-TEI-admin-2026-11-03.json",
+    "evaluations/records/SUI-TEI-context-2026-11-03.json",
+    "evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
+    "evaluations/records/SUI-TEI-ce4-2026-11-03.json",
+    "evaluations/records/SUI-TEI-registry-2026-11-03.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -179,6 +183,12 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-dispatch-running-2026-11-03.json",
     "evaluations/records/EKI-TEI-http-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-projection-execution-2026-11-03.json",
+    "evaluations/records/EKI-TEI-policy-execution-2026-11-03.json",
+    "evaluations/records/EKI-TEI-manual-execution-2026-11-03.json",
+    "evaluations/records/EKI-TEI-worker-revoke-2026-11-03.json",
+    "evaluations/records/EKI-TEI-revoked-agent-2026-11-03.json",
+    "evaluations/records/EKI-TEI-multi-worker-2026-11-03.json",
+    "evaluations/records/EKI-TEI-budget-aligned-artifact-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
     "evaluations/records/TEI-artifact-digests-2026-11-03.json",
     "evaluations/records/SUI-saas-adapter-contract-2026-11-03.json",
@@ -477,6 +487,29 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
+        if "EKI-TEI-multi-worker" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or len(observed.get("workers", [])) != 2 or observed.get("executed", 0) < 1:
+                errors.append(f"EKI multi-worker evidence did not hold: {relative}")
+        if "EKI-TEI-revoked-agent" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("executed") is not False or observed.get("refusedStatus") not in (401, 403):
+                errors.append(f"EKI refused-agent evidence did not hold: {relative}")
+        if "EKI-TEI-worker-revoke" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("eventualState") is not True or observed.get("reregisterRefused") is not True:
+                errors.append(f"EKI worker revocation evidence did not hold: {relative}")
+        if "EKI-TEI-manual-execution" in relative:
+            observed = data.get("observed", {})
+            body = observed.get("resultBody") or {}
+            if data.get("result") != "PASS" or observed.get("executed") is not True or observed.get("claimed") is not True or not observed.get("taskId"):
+                errors.append(f"EKI manual execution evidence did not hold: {relative}")
+            elif observed.get("resultStatus") != 409 or body.get("code") != "RESULT_NOT_READY":
+                errors.append(f"EKI result acceptance changed; update the finding: {relative}")
+        if "EKI-TEI-policy-execution" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("projectedSubmissionRejected") is not False or not observed.get("claimDigest"):
+                errors.append(f"EKI policy-aligned execution evidence did not hold: {relative}")
         if "EKI-TEI-projection-execution" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or not observed.get("taskId") or not observed.get("claimDigest"):
@@ -570,6 +603,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-registry" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("listStatus") != 200 or observed.get("createStatus") != 201:
+                errors.append(f"SUI model registry did not hold: {relative}")
+        if "SUI-TEI-ce4" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("dryStatus") != 200 or observed.get("hasBundleHash") is not True:
+                errors.append(f"SUI CE4 resolve did not hold: {relative}")
+        if "SUI-TEI-context-bundle" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("firstStatus") != 200 or observed.get("deterministic") is not True:
+                errors.append(f"SUI context bundle did not hold: {relative}")
+        if "SUI-TEI-context" in relative and "-bundle" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("acceptedStatus") != 200 or observed.get("previewStatus") != 422:
+                errors.append(f"SUI context query contract did not hold: {relative}")
         if "SUI-TEI-admin" in relative and "admin-path" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
