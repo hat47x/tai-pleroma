@@ -76,6 +76,6 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 
 **PF-MD-01（履歴と現在実装の区別）**：V0＝旧`order.tei`が選択された結果、V1＝同じ定義を単純に`order.tei.md`へ改名してSource数が減る結果、V2＝#3031の診断で拒否される結果、V3＝将来の正式Markdown Readerで実Parse/Meaning照合が成功する結果を**別々の資格**とする。V0からV3へ試験結果を流用しない。独立Expectedは宣言数・実選択Source・解析済みSubject/Role・診断・実Source Indexを個別に固定する。V2の拒否試験が通っても、V3の成功条件は未達。
 
-**Ownerと移行順**：旧新Sourceの全体移行・参照/固定Gate・実Reader互換は[TEI Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)の移行計画と[#1920](https://github.com/hat47x/tei-platform/issues/1920)へ寄せる。[Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)は専門家向けMarkdown Authoringの表層・原文保持比較、[#988](https://github.com/hat47x/tei-platform/issues/988)はK0 Source Kind/Language Pluginの初回選択を所有する。二つの移行正本・新Parser/Registry/HostをTAI側に作らない。
+**Ownerと移行順（2026-11-07訂正）**：[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)の最新追補に従い、**旧新Source移行仕様・検収IDの主担当は#3030（M0〜M6/TM-01〜14）**とする。[Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)のTMDケースは横断経緯・引渡し参照であり、第二の移行Gateではない。#3030内の専門家向けMarkdown可読性/原文保持AU-01〜08も同PRに属するが、形式移行とAuthoring表層の合否は独立採点する。[#1920](https://github.com/hat47x/tei-platform/issues/1920)は版・互換、[#988](https://github.com/hat47x/tei-platform/issues/988)はK0 Source Kind/Language Plugin選択を担当。#3031の管理Source Rootの明示拒否は、許可された**非管理Raw Draft**の保存まで禁止してよい証拠ではない。旧形式＋通常Markdownは継続可能、新形式の必須定義は未対応なら拒否、実Parser成功後だけPromoteという正負対照を先に固定。新Parser/Registry/HostをTAI側に作らない。
 
 **資格状態**：#3031の限定CIは実証済み、旧形式での公開CLI S1も限定実証済み。一方、`*.tei.md`の実Parser、旧新移行の全一改訂E2E、Owner意味受理、TAI外部Harness H2/H3は**NOT RUN**。この差があるため、旧固定SourceでのH2 Tool-only実験は継続できるが、新形式の利用可能性は主張しない。
