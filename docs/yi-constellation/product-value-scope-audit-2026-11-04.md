@@ -359,3 +359,14 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 **VA-H1の次の判断**はSHO Product L0の独立価値（保存・再開・引用Scope／未知保持）と、このG1b実Reader候補のGrammar被覆・実Consumer資格を分けること。TAIのSkillやTEI Host統合をSHO単独の最初の価値試験の先行条件にしない。[SHO #16](https://github.com/hat47x/sho-composer/issues/16)の既存負例・Owner判断を採用し、横断の別Parser/Indexerは作らない。
 
 **現在の証拠上限**：TEI S1/no-Go BinaryとSHO #17は各固定HEADの製品/限定CI証拠。新`*.tei.md`規約に基づく実Parser/Writer/全Repository移行、外部AI Harness H2/H3、ITT/PP価値採点、SHO正式G1b、Owner横断採否は**NOT RUN／NOT ACCEPTED**。本節は既存Ownerの実装を置換しない計画への接続である。
+
+## 19. 11月6日後半の深化：移行の実読込と、利用者Activityの価値
+
+- **TEI Authoringの実装上の段差**：[Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)にM0〜M6/TM-01〜14が設計され、現Loaderの`*.tei`固定名・検索規則、`filepath.Ext`の`.md`判定、DSL Parserの非Markdown対応を既存の制約として特定した。新`*.tei.md`標準はOwner方針だが、Reader/Parser/Workspaceにおける実移行の資格ではない。[#988](https://github.com/hat47x/tei-platform/issues/988)は、初期SeedとLanguage選択が新Source自身に依存する循環を別に検討。まず実Source一覧と現Parserの受入集合を確定し、旧形式の除去・固定Gateの変更は独立検証とOwner判断の後とする。
+- **TAIが本当に増やす価値**：[TAI #271 SC-14/15](https://github.com/hat47x/tai-pleroma/issues/271)のSCN-001では、O-01〜05の矛盾・未決・DraftをO-06で再開する。B0（手動/通常Harness）、B1（必要な単独Product）、B2（TAIの条件付き選択・根拠引渡し）で再開の正しさ・保存後読取・再確認負担と費用を比較する。これはH2/H3 Tool/Skillの**呼出し能力**とは別。J0全面/J1限定/J2未確認再利用も別の比較軸。[VA-01 §6](../../evaluations/VA-01-product-value-necessity.md)で独立Expected・非開示反証・誤資格化を具体化した。
+- **隠れた反証は「存在しない」とも「外部にある」とも断言しない**：[Draft #490](https://github.com/hat47x/tai-pleroma/pull/490)のSUI Context合成stubは、選択された候補と参考のみのEvidence/Relationを分ける局所確認。実User Context全件や外部許可を保証しない。Audienceによっては未選択反証の存在・件数さえ開示できない。[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)のHost/Policy条件を保持する。
+- **SHO Readerの安全性はGrammar被覆と別のClaim**：[Draft #17](https://github.com/hat47x/sho-composer/pull/17)には固定HEADの両OS16件の成功証拠がある一方、[SHO #16](https://github.com/hat47x/sho-composer/issues/16)には特殊ファイルの読取処理で停止し得る未修正の懸念が追加された。通常ファイルの入力サイズ制限が成立しても、あらゆる入力・OSで非停止を保証しない。実Readerの拒否・隔離・ファイル種類の方針はSHO Ownerが保持し、TAIは新Reader/Sandboxを作らない。
+
+**優先順位**：最初の実験は引き続き[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の外部Harness H2実Tool呼出し1 Session。以降H3の実Load、同一Task四Session、別にSCN-001の活動成果B0/B1/B2を検証する。`*.tei.md`移行やSHO実Readerの追加安全性試験は各Productの並行Owner課題であり、初回TEI S1/H2を一律に停止しない。
+
+**状態**：本節はProduct Issue/PRの静的確認とVA-01評価票への計画反映。新`*.tei.md` Loader・Parser実装、外部Harness H2/H3、SHO特殊ファイル拒否の製品実証、SUIの実非公開Data引渡し、SCN-001利用者試行、異モデルVA-X/VA-E、Owner正式受理は**NOT RUN**。
