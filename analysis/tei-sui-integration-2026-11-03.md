@@ -1098,3 +1098,21 @@ alembic_version を読むのは /readyz の1箇所のみ
 - 起動時は**スクリプト側**のheadだけを見て、DBの`alembic_version`は読まない
 - DB照合は`/readyz`が担うが、`alembic_version`が無いDBでは`schema=mismatch`ではなく`database=unreachable`と報告される
 - 実DBへ`alembic upgrade`を適用した状態での照合は未確認
+
+## 信頼済みSaaS実行の事前検査（2026-11-06）
+
+`validate_trusted_saas_runtime_preflight`を、アダプタ束の有無と5プロファイルで試した。[receipt](../evaluations/records/SUI-TEI-preflight-2026-11-06.json)
+
+```text
+アダプタなし: local-dev / evaluation / enterprise-production → 通過
+アダプタなし: saas-multitenant → 拒否（policy is incomplete、7項目の不足を列挙）
+アダプタなし: 未知プロファイル → 拒否（profile is invalid）
+アダプタあり: local-dev → 拒否（single-tenantでは有効化できない）
+アダプタあり: saas-multitenant → 拒否（policy is incomplete）
+不正な束: local-dev → 拒否（bundle is invalid）
+二重初期化 → 拒否 / release後 → 通過
+```
+
+- プロファイルとアダプタ束の組み合わせは**両方向**で検査される（SaaSには束が必須、single-tenantには束があると拒否）
+- saas-multitenantの拒否理由は、PostgreSQLのtenantガード・外部アクセス制御・deny fail-safe・外部ポリシー束縛・外部tenant能力解決・OAuth broker・セッション鍵の7項目
+- 本検証の束はスタブで、実IdP・実DBでの通過は未確認
