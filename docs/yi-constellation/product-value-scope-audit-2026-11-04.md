@@ -375,7 +375,7 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 
 旧`*.tei`を`*.tei.md`へ単純改名すると、従来Loaderが対象Semantic Sourceを読まず、`validate.ok=true`のままSubjectが消え得るという反例に対し、[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は`TEI_MD_PARSER_UNBOUND`の明示診断を追加。固定HEAD `63953ccb`の[限定CI #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)は成功。これは**黙って成功する不具合を防ぐ局所進展**であり、`*.tei.md`を解析・生成できるようになったことでも、mainへ統合済みであることでもない。[VA-04 §7](../../evaluations/VA-04-evidence-readiness-preflight.md)では、旧形式の正常読取・改名後の未読込・明示診断・将来の新形式正常読取を四つの状態として区別する。
 
-Authoringの役割分担も更新する。[TEI Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)が旧新形式のSource移行と互換性試験の既存計画を担い、[#3030](https://github.com/hat47x/tei-platform/pull/3030)は専門家向けのMarkdown記述・可読性・原文保存の比較に集中する。双方のM0〜M6などを「二つの移行Gate」として足し合わせない。全自動Renameや新Parserの存在を前提にしたB1/B2価値試験は保留するが、既にSourceが実読込された旧固定公開TEI基線のH2実験は継続できる。
+**移行Ownerの2026-11-07訂正**：[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)の最新追補により、旧新形式の移行仕様・検収M0〜M6/TM-01〜14の**主担当は#3030**。[Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)のTMDケースは歴史的な横断経緯・引渡しであり、競合する第二Gateではない。専門家向けのMarkdown表層/原文保持AU-01〜08も#3030内の別の評価目的とする。[#3031](https://github.com/hat47x/tei-platform/pull/3031)の管理Root内の新形式を明示拒否するCI成功は、旧Source＋通常Markdown/非管理Raw Draftの継続、選択した必須Sourceの正常Parse、Writer/Meaning受理まで証明しない。正負対照を既存#3030で比較し、全自動Renameや新Parserを前提にしたB1/B2は保留。旧固定公開TEI基線のH2は継続できる。
 
 ### 19.2 活動再開の証拠：正常HTTP応答だけでは再開点・本文・利用資格を証明しない
 
