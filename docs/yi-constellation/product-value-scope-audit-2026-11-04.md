@@ -333,3 +333,29 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 **記録上の訂正**：[TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)のS7〜S11で機械的/推奨一意な文書修正Draftの一部は11月5日にmain統合され、台帳はClosed。59件すべてがOwner受理された意味ではなく、残るADR/分類/ライセンス等は各OwnerのS9最終状態を正とする。[SHO #7の三系列対応表](https://github.com/hat47x/sho-composer/issues/7#issuecomment-6652422013)はOwner受理済みであり、以前の「提案のみ」という説明を現在の状態としない。ただし未確認セルは受理によって自動確定しない。
 
 **実施段階**：まずTEI読取／同Harness H2/H3の最小比較、次にWrite RecoveryとPlugin選択の反例、必要時にCutoverやSHO実Reader/別Harnessへ拡張。上記の新たな横断実行・独立Oracle採点・異モデルVA-X・Owner意味受理は**NOT RUN**。既存Productでの限定実Go/実PGやCIの実績は当該Source/Environmentでのみ認める。
+
+## 18. 11月6日：TEI文書形式の方向転換と、実価値Trialの観測分母を再定義する
+
+### 18.1 Authoring形式のOwner方針：`*.tei.md`へ寄せる（実装済みとはしない）
+
+2026-11-06の別議論で、**`*.tei`は原則廃止し、TEI向け文書は`*.tei.md`へ寄せる**方向が利用者から明示された。この**Authoring配置の方向**を製品価値比較の前提として扱う。ただし、現行[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)の末尾にある「`.md`+OKFタグ／別`.tei`の比較、`.tei.md`を標準化しない」は、旧提案としてこの新方針と**未整合**。同Issueおよび[#988](https://github.com/hat47x/tei-platform/issues/988)のGrammar、[#1440](https://github.com/hat47x/tei-platform/issues/1440)の文章→候補、[#2620](https://github.com/hat47x/tei-platform/issues/2620)のRole/Meaning、SHO [#18](https://github.com/hat47x/sho-composer/issues/18)/[#19](https://github.com/hat47x/sho-composer/issues/19)で**移行・互換性・実装範囲**を決める。TAIがTEIのFilename Selector／Language Plugin／Workspaceを無断変更しない。
+
+- **B0**：通常の`.md`をそのまま保存・再開。OKF `type/tags`や任意の`tei`メタデータは意図・候補発見に利用し得るが、**意味受理／Parser適合／実行許可ではない**。
+- **B1**：`*.tei.md`という認識可能なMarkdownを、元の文章・表・式・図・コードフェンス・シンタックスシュガーを保ったまま編集する。正式意味が未受理でも保存可。**ファイル名がTEI向けであることと、選択した部分が実Parserで解決されAccepted Meaningに束縛されたことを別資格**にする。
+- **B2**：AIが選択箇所をData/Function/Business/Rule・Diagram/Expectedの候補へ展開。原文・曖昧さ・NULL/unknown・業務時点・候補出典を保持して差分Review→既存Acceptanceに接続する。AI自身の生成Expectedを独立Oracleとしない。AI無しでも手動で構造化できることを前提とする。
+
+**互換・拒否条件（TEI Ownerへの照合候補）**：旧`*.tei`参照を含むWorkspaceからの移行は、対象の実Read/Parse/SourceIndex・選択/引用・Build入力・Source Revisionの差を見える化し、RenameだけをMeaning同一や旧Receiptの現在適格にしない。未移行Sourceが黙って飛ばされたら局所`validate ok`でも「移行済み」としない。`*.tei.md`の未受理表・普通の引用・コード例を実行可能定義へ誤昇格しない。No-op Saveで元Markdown byteを維持し、Role付き編集は明示対象への局所Patch→再Read/Parse→Diffで確認。**旧`*.tei`の読取互換・書込可否・自動変換、`*.tei.md`の厳密Grammar／OKF併用規則は未決**であり、この節で実装完了も既存Sourceの一括変換も主張しない。
+
+### 18.2 最初のSkill価値試験は「割付」と「実提供」を分ける
+
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の2026-11-06版では、公開TEI利用者定義Subject `sales.order`について[実S1 CLI CI](https://github.com/hat47x/tai-pleroma/actions/runs/42101157330)が限定成功。さらに[no-Go PATHでのPrebuilt Binary CI](https://github.com/hat47x/tai-pleroma/actions/runs/42182253212)が固定実行ファイルの直接起動を検証した。**前者はSource/CLIのread-only基線、後者は配布実行経路の肯定対照**であり、外部HarnessのTool request、H3 Skill loader、Skillによる改善は未観測。実Goビルド資格と配布済みBinaryの起動資格も別。
+
+既存SK-02の**一つのParticipant Task原byte**と固定Source/CLI/Model/Tool/Grantを使い、H2 Tool-only→H3 Skillあり→H3→H2の4独立Sessionを比較する。試行時は **R＝事前割付**、**D＝実Loader＋実Tool/CLIの提供が実ログで成立**を分離。割付H3でLoaderに失敗してもH2へ再分類せず、失敗を含めたITT型の割付ベース結果と、実提供できた試行だけのPP型適格結果を別表示。Sample `n=4`を一般的な因果効果やp95へ外挿しない。T0/Product単独で目的が達成でき、TAI Skillで上積みが無ければ**TAIを常時介在させない**ことも正当な価値結論。Skill/TEI Plugin/Harness Plugin/Host Grantの責務を混合しない。[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)と[Draft #489](https://github.com/hat47x/tai-pleroma/pull/489)が比較契約を既に所有し、本PRは第二Checker／Runnerを追加しない。
+
+### 18.3 SHO Readerの到達点：候補コードの成功とGrammar完全性を分ける
+
+[SHO Draft #17](https://github.com/hat47x/sho-composer/pull/17)の後続HEAD `113040fb66b72f62f5baaeaf88aedd961b4b6bc`について、[CI #42111682280](https://github.com/hat47x/sho-composer/actions/runs/42111682280)／[CI #42111693753](https://github.com/hat47x/sho-composer/actions/runs/42111693753)でUbuntu/Windowsの**16/16限定試験成功**がIssue #16に報告されている。実ReaderはBOM/UTF-8の明示と最大2MiB+1byte読取でのサイズ拒否を追加。ただし`coverage.unresolvedReferenceCandidatesEvaluated=false`で、未定義参照を実検出できたとはしない。Parserの正式版決定、資源隔離、全OS Egress、独立Reader/Writer保存・UI、Owner受理とmain統合は別。古い14/14は過去HEADの実績として保持する。
+
+**VA-H1の次の判断**はSHO Product L0の独立価値（保存・再開・引用Scope／未知保持）と、このG1b実Reader候補のGrammar被覆・実Consumer資格を分けること。TAIのSkillやTEI Host統合をSHO単独の最初の価値試験の先行条件にしない。[SHO #16](https://github.com/hat47x/sho-composer/issues/16)の既存負例・Owner判断を採用し、横断の別Parser/Indexerは作らない。
+
+**現在の証拠上限**：TEI S1/no-Go BinaryとSHO #17は各固定HEADの製品/限定CI証拠。新`*.tei.md`規約に基づく実Parser/Writer/全Repository移行、外部AI Harness H2/H3、ITT/PP価値採点、SHO正式G1b、Owner横断採否は**NOT RUN／NOT ACCEPTED**。本節は既存Ownerの実装を置換しない計画への接続である。
