@@ -5,6 +5,7 @@
 - 対象: TAI / SUI / SEI / TEI / SHO（現行MMI）/ EKI
 - 起点: [SCN-001](../scenarios/SCN-001-shared-space-guidance.md) と [TAIの現状](../docs/status.md)
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
+- **RQ7（2026-11-06）**: [有界Graph完全性の比較研究](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)と[公開Gold偏り・設計意図/実装特性のClaim境界](protocols/RQ7_DESIGN_CLAIMS_AND_GOLD_BALANCE_2026-11-06.md)。前者の公開合成刺激ツール14/14は研究機材の局所テストであり、認知効果・TEI実製品・Owner受理の検証ではない。
 - **2026-11-02研究追補**: [生成的探索と証拠制約の接続](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)（CSWの認知Method、SUIの仮説、SEI/TEIの意味、EKIの権限・結果を分離して比較する提案。RQ6、実験NOT RUN）
 - 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
 - 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
@@ -94,4 +95,3 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 
 この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。
 
-- **RQ7（2026-11-06）**: [有界Graph完全性の比較研究](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)と[公開Gold偏り・設計意図/実装特性のClaim境界](protocols/RQ7_DESIGN_CLAIMS_AND_GOLD_BALANCE_2026-11-06.md)。前者の公開合成刺激ツール14/14は研究機材の局所テストであり、認知効果・TEI実製品・Owner受理の検証ではない。
