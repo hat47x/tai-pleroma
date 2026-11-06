@@ -311,3 +311,54 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 | **RQ-07 Legitimate continuation** | SUI Agentが当該Profileで使えないが、公開TEI read-only CLI/SHOローカルDraftは許可される | 利用不能なRouteのみ停止し、独立して適格な作業まで全停止しない。TAI Skillの追加が不要なら不採用も許す |
 
 **導入順は変更しない**。[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI CLIでH2実Harness Tool Call 1 Session→H3実Skill root/参照のLoader Read→4独立Session（割付Rと実提供Dを分離）を先行。SUI Profile/AgentとSCN-001旧新目的・SUI→SHO受領は**条件付き後続**。RQ-01〜07の横断二Harness/OS/Network/実Product Source/独立Expected・実利用者価値・Owner採用はNOT RUN。中央Capability Registry／新Host／第二認可器は設けない。
+
+---
+
+<!-- tai-activity-eki-lease-loader-read-evidence-20261107 -->
+## 15. 2026-11-07：EKIのLease回収と入力取得を「安全な再送／実Consumer受領」の保証に昇格しない（SC-19/20との成熟差分）
+
+### 15.1 実装済みの局所証拠と、なお存在する実Effectの不明性
+
+この節は[TAI #271 SC-19](https://github.com/hat47x/tai-pleroma/issues/271)（中断後の旧Attempt/目的変更）とSC-20（受付／本文判定／現在Grant／実効果）を更新する**Product実証の引渡し**。前節IF-01〜08・AT-01〜09に追加の状態機械や独立Runnerを設けない。
+
+- [EKI merged #773](https://github.com/hat47x/eki-fabric/pull/773)で配置ループのLease台帳記録を接続。[merged #776](https://github.com/hat47x/eki-fabric/pull/776)で回収時に①Attempt読取→②Result有無確認→③Claim reconcile判断→④Attempt Close→⑤台帳除去という順を実装。結果あり／猶予30秒内では閉じず台帳へ残す。Close失敗時も台帳を消さない。**WSL上の内部Service試験6件とverify成功**が主な根拠で、別プロセスControl/Agentの期限切れ縦断試験は未実施。
+- **重大な未決**：外部に作用し得るTaskの識別子がTaskモデルにないため、EKIの現行局所実装はこれらも「再試行可能」としてCloseする。これは「外部効果が無かった」証拠ではない。TAIが旧TaskのLease回収・Close/再試行可という内部状態を、次の目的への無条件再Dispatch許可や完了根拠として扱うと重複作用の危険がある。Product Ownerの[EKI #745](https://github.com/hat47x/eki-fabric/issues/745)・[#242](https://github.com/hat47x/eki-fabric/issues/242)で外部作用の分類、実Result Acceptance、実Receipt照会／独立Readerの資格を解消するまで、TAIの横断評価は作用不明を保持する。
+- [EKI merged #777](https://github.com/hat47x/eki-fabric/pull/777)・[#778](https://github.com/hat47x/eki-fabric/pull/778)ではUpload Sessionと本文保存・digest照合を局所実装。202受理・content_identity=verifiedは**保存された本文の同一性**であり、safe_processing=not-requiredは処理安全性を検査していないことを意味する。Upload成功からAgentが実入力を読んだ／業務効果を起こしたとは言えない。
+- [EKI merged #779](https://github.com/hat47x/eki-fabric/pull/779)ではAdmissionで保存済みArtifact参照を解決し、欠落/不正参照を拒否。[#780](https://github.com/hat47x/eki-fabric/pull/780)ではAgent側の入力取得設定の片側だけが存在する場合を**起動時拒否**に変更。配備設定が揃うこと、Controlで受理したこと、Agent実Fetch／WorkOrder実行／Result Acceptanceは別観測。#763/#242の起動経路全体・実プロセス試験は未完了。
+
+### 15.2 既存IF-04/05/06/07・AT-05の実判別を強める独立検証基準（すべて横断NOT RUN）
+
+| 事例 | 設定・観測 | 独立Expected／禁止する推論 |
+| --- | --- | --- |
+| **LR-01 猶予内** | Lease期限を越えたがRecallGrace内。結果未取得 | Product局所試験ではAttemptも台帳も保持。期限だけから「Effectなし」「再送可」を結論しない |
+| **LR-02 結果到着／Close失敗** | ResultClaimあり、またはAttempt Closeが失敗 | 台帳を消して未処理Attemptを見失わない。Claimの存在は受理済Result/独立ConsumerのBody観測と別 |
+| **LR-03 猶予後・Resultなし・外部作用の可能性不明** | Lease回収によりAttemptがCloseされ、再試行可能と示される | **TAI横断では作用不明を維持**。実Provider側のOperation identity/Receipt Lookup/独立Readで安全を確認できないなら別Key自動再送・業務完了宣言をしない。安全が独立に証明されたread-only Taskのみ継続可能 |
+| **LR-04 Control/Agent実プロセス** | Unit試験は成功、しかし配置/WorkOrder/再調停/Result Acceptanceの同一Task縦断は未接続 | 単一ServiceのPASSを実Control Plane + Agentの回復成功へ合算しない。EKI Ownerがprocess試験で実台帳/Attempt/Task/再起動を別々に確認 |
+| **LR-05 入力Upload→実取得** | Upload 202＋digest一致、Admission保存済み参照OK、Agent Config有効 | Content identity／元Principal／保持期限と、実WorkerがどのByteをどのTrust Scopeで取得・消費したかを別証跡にする。到達未確認なら実受領はunknown |
+| **LR-06 半設定と非開示** | artifact_base_urlだけ／inputs_dirだけ／保存されていないArtifact参照 | 正当な起動拒否・入場拒否と実Taskの副作用を分離。本文/機密IDを外部Harnessへ出さず、許可済みの独立調査は全停止しない |
+| **LR-07 目的変更と旧Attempt遅着** | SC-18で公開目的を取消後、旧AttemptのBody/Claim/Closeが到着 | 旧Purpose/Operationへ帰属。新目的の実成果として受理せず、Cancel受付・実停止・Effect不存在を同一視しない |
+
+**開始順／Owner**：EKI #745/#763/#242が実配置・Task/Lease/入力/Result Effect、TEI #1174/#2996がCommand/Provider回復、TAI #271がPurpose/Scope/Audience/歴史証拠の再資格化、TAI #232が開示、SHO #20/SEI #802が保存後独立Reader・Resumeを所有。外部効果を扱う縦断試験は**SCN-001の公開合成Read-only対象とは別Trial Group**で実施。最初のH2/H3 Product Skill比較にEKIを追加しない。TAIに新Agent Host/Lease DB/Result Acceptance/Receipt Registryは作らない。
+
+## 16. 2026-11-07：TEIの「管理対象・実Loader読取・宣言の充足」を実観測で分離する（SC-16/Skill前提の更新）
+
+### 16.1 merged Product実装による現実の差分
+
+- [TEI merged #3078](https://github.com/hat47x/tei-platform/pull/3078) はworkspace-filesに**readByLoader**と**sourceRootFindings**を追加。参照Workspaceでは管理対象54件のうち実Loader読取53件、Readme 1件は未読取。readByLoaderはdomain LoaderがByteを読んだ証拠に限り、Parser成功・Role occurrence・Meaning受理・実Build消費の資格ではない。
+- 重要な**応答互換性**：同PRではworkspace-filesのresultが**単純配列からmanagedFiles/sourceRootFindingsを持つobjectに変更**された。Consumerが旧配列を期待している場合は、新版を読めない可能性がある。CLI schema名(v0)だけでJSON shape互換・Harness Skill適合を推定しない。実Executable/CLI出力の版を固定し、必要なReaderで照合する。
+- [TEI merged #3081](https://github.com/hat47x/tei-platform/pull/3081) は宣言要素0件に**WORKSPACE_DECLARES_NO_MODEL_ELEMENTS** warningを追加。ただしvalidateはok:trueかつexit 0のまま。実Catalog、declarationCounts.total、diagnostics、必要SubjectのInspect/Source Index、独立Source byteを併せて確認し、空Workspaceの「正常終了」を「指定の業務モデルを確認した」に昇格させない。
+- [TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031) のTEI_MD_PARSER_UNBOUNDガードは、管理Root内の未対応*.tei.mdを**読込成功に見せず停止する候補実装**。固定HEAD CIは限定成功だが、実Markdown Grammar対応やmain統合・Owner受理を意味しない。旧*.teiと新*.tei.mdのSource rename/ABA・Role/Meaning/Build/実Sourceの資格は別。
+
+### 16.2 固定実験を汚染しない最小独立検証基準（後続Trial Group、NOT RUN）
+
+| 事例 | 独立Expected／中止条件 |
+| --- | --- |
+| **TL-01 管理対象54件と実Read53件** | managed≠readByLoader。未読取READMEを意味Sourceとして足さない。53件を「54件すべてParser受理」にしない |
+| **TL-02 空Workspace** | validate ok/exit0でもdeclarationCounts.total=0とwarningを読み取り、必要なSubjectなしならTaskへの適格回答として止める。「型が見つからない＝不存在」としない |
+| **TL-03 envelope変更** | Consumerが旧result配列を要求する場合、new objectへの移行が明示されていない限りschema drift/unsupportedを検出。名前やVersion文字列だけで互換を認定しない |
+| **TL-04 新*.tei.md Draft** | 未Bindingを正しく診断し、現行意味モデルとして受理しない。原文Draft保存とParser/Source Index・Role受理を分け、改名・ABAで旧受理を復活させない |
+| **TL-05 純粋な旧形式調査の継続** | 新形式や他Domainが不適格でも、実読取済みの公開reference/workspace・対象Subjectに対する**許可済みRead-only Task**を過剰停止させない |
+
+**既存SK-02資格を改変しない**：TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)と[Runbook](first-real-skill-qualification-runbook-2026-11-02.md)にある最初のH2/H3はTEI **固定pin 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c**・固定CLI/Task/公開Subjectの比較である。後発の#3078/#3081のフィールド、*.tei.md、修正Skillを**Trial途中で片側にだけ投入しない**。新版の適格性・Schema/Warning対応・費用比較は**別Trial Group**に分離する。TAI #488はSkill案内、TEI #2823/#2822/#2605はSource/CLI/Skill、TEI #2621/#988はMarkdown Authoring、TAI #271は用途相対の再資格化を担当し、新共通CLI Parser/Registryは作らない。
+
+**状態**：Productの限定Go試験・元PR記載の実測は確認済み。TL-01〜05のTAI外部Harnessでの実Trial、複数Productの実Consumer、*.tei.md正式Reader/Owner受理はNOT RUN。第1Blocking Exitは今なお**H2 Tool-only実AI Harness 1 Session→H3実Skill Load→H2/H3四独立Session**。
