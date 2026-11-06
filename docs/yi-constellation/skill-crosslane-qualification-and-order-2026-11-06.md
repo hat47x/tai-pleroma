@@ -299,3 +299,26 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 §16の**YIC-FM-01〜10**を独立Expectedとして再利用し、重複するYIC-TMD系番号を導入しない。TEI Product Skillは新Reader/Role/実CLIが存在する場合にのみ`.md`選択部分→構造化Candidate→レビュー可能な`*.tei.md`を支援し、Raw Draft SaveとSemantic Promoteを分ける。SHOは原文・リンク/保存・納品、TAIは必要時のProduct間Handoffに限定する。実Source/Loader/Writerの検証はそれぞれのOwnerへ留める。
 
 初回SK-02の**固定旧TEI公開Source・Skill・Binary・Participant Task・Expectedは変更しない**。新`*.tei.md`対応Skill/Sourceを試す場合は別固定Pin・別Trial Groupとし、H2-01実Harness Tool呼出しの先行Blocking Exitを増やさない。本§17は静的Source確認に基づく計画であり、実移行・Parser/Writer新実装・実Harness/Owner受理はNOT RUN。
+
+## 18. Skill間Handoffで構造化結果・選択外の根拠・保存先を区別する（後続試験・NOT RUN）
+
+### 18.1 既存Productの実出力が非対称であることを踏まえた適合条件
+
+- [SEI #802](https://github.com/hat47x/sei-cognition/issues/802)：実SEI MCP resumeの概要は整形済みtextで、CLI resume --jsonにあるcoverage/not_verified_records/basis_referencesを同じ構造で直接取得する経路が未確認。個別record応答のJSONと概要のtextは異なる。実MCP通信の限定観測であり、AI Harnessが正しく読めた証拠ではない。
+- [TAI Draft #490](https://github.com/hat47x/tai-pleroma/pull/490)／[#271 SC-15](https://github.com/hat47x/tai-pleroma/issues/271)：SUIのselected候補以外のreference-only evidence/relationsに反証が残る合成ケース。selectedに無いことから不存在や完全性を推論しない。選択外情報の存在自体が非公開なら、そのID・件数も外部へ出さない。SUI実HTTPの全面Coverage/Permissionは未検証。
+- [SHO #20](https://github.com/hat47x/sho-composer/issues/20)：disk/dirty buffer/他Editor/Cloud同期/別端末でDocument Revisionが異なる。Writer ACK・同期ACK・保存後独立Readは別資格。実端末間保存・Cloud同期はNOT RUN。
+- [SHO Draft #17](https://github.com/hat47x/sho-composer/pull/17)：HEAD 4113040fb66b72f62f5baaeaf88aedd961b4b6bc のUbuntu/Windows各16/16限定CI。BOM/UTF-8 strict・有界Readを改善したが、未解決referenceのCoverageはunresolvedReferenceCandidatesEvaluated=false。実Writer/Skill Load/Handoffは未証明。
+
+Product側の出力形式をSkill説明で補完しない。SEIのtextから構造化JSONを生成した場合、AIの解釈Candidateであって元Productの厳密JSONと同等ではない。CLI JSONの別呼出しは実Tool Profile/現在のGrantが許す場合にのみ行う。TAIは共通Schemaや新Handoff Storeを設けず、既存TAI #271・SK-03の試験票でTask purpose、Source/Revision/Scope、Selected/Reference-only/Unknown、実Tool Replyの形式・版、現在Audience、Consumer実読取と未完了義務を別列に保つ。
+
+### 18.2 独立Expectedを伴う追加照合（新実行なし）
+
+| ケース | 必要なExpectedと禁止推論 | 既存Owner |
+| --- | --- | --- |
+| YIC-HO-01 SEI MCP概要TextとCLI JSON | 同じRecordを比較してもtextから失われたcoverage/未検証参照を確定できなければinsufficient-evidence。未観測を空にしない | SEI #802/#719、TAI #271 |
+| YIC-HO-02 SUI選択外反証 | selectedのみから全反証なしと断言しない。reference-only/非開示・Reviewを適用先で区別 | SUI Owner、TAI #490/#271 |
+| YIC-HO-03 SHO改版と再開 | Writer ACK後にdisk/Cloud/dirtyの版が変わったら旧Draftの現在資格はunknown。再読取前の無条件Patch/公開なし | SHO #20/#4、TAI #271 |
+| YIC-HO-04 TEI *.tei.md移行と旧Skill | 旧Sourceに対するSkill/CLI/S1成果を新Parser・新Sourceへの適合と判定しない | TEI #2621/Draft #3030、TAI #488 |
+| YIC-HO-05 同一可視Projection・異なる秘密World | 外部の回答・診断・件数から許可外のSource/Capability存在を識別できない。非公開を不存在へ変えない | TAI #232、SUI #3368 |
+
+評価順は変更しない：固定TEI H2-01実AI Harness Tool Request→実CLI argv/exit/stdout → H3 Skill root/reference実Load → H2/H3四独立Session → 必要時だけProduct間Handoff。新Runner/Registry/Oracle/Hostは作らず、初回TEI TrialにSEI/SUI/SHOを加えない。本節の横断実Tool・実保存後Reader・正式Owner受理はNOT RUN。
