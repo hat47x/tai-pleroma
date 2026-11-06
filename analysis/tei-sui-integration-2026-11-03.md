@@ -875,3 +875,20 @@ tieBreakOrderを逆順 → 200 rollback_required / ["tieBreakOrderChanged=true"]
 - 判定は決定的で、違反の種類を`failureReasons`で区別する
 - 成功・失敗いずれも200で返し、状態は本文で表す
 - 実ポリゴン計算との接続は未確認（契約検証のみ）
+
+## 類似候補グループの生成規則（2026-11-06）
+
+`GET /docs/{id}/similar-candidate-groups`を、正規化一致・語の一致・無関係・空文字・統合済み・出典付き・正規ID付きのカードで試した。[receipt](../evaluations/records/SUI-TEI-similar-candidates-2026-11-06.json)
+
+```text
+正規化一致（"Same  Text" と "same text"） → normalized_text + token_signature
+語の一致（"alpha beta" と "beta alpha"） → token_signature
+無関係・空文字 → グループ化されない
+統合済み・出典付き・正規ID付き → 対象外
+snapshotVersion は12桁
+存在しない文書 → 404
+```
+
+- 2つのヒューリスティックが一致した場合、1グループに両方の理由コードが付く
+- 対象外カードの除外は、統合・出典・正規IDのいずれでも効く
+- 実類似モデルとの接続は未確認（規則ベースのみ）

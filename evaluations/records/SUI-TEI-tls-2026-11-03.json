@@ -9,7 +9,7 @@
   "result": "PASS",
   "observed": {
     "serverReady": true,
-    "url": "https://127.0.0.1:65368",
+    "url": "https://127.0.0.1:61432",
     "certificate": "self-signed for localhost/127.0.0.1",
     "authenticatedStatus": 200,
     "anonymousStatus": 401,

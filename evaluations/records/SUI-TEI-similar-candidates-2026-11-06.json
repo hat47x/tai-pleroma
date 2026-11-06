@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.sui-similar-candidate-groups/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-07",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/similar_candidate_groups_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-latest --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-similar-candidates-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "groupsStatus": 200,
+    "totalGroupCount": 2,
+    "groupCount": 2,
+    "textGroupPresent": true,
+    "textGroupReasons": [
+      "normalized_text",
+      "token_signature"
+    ],
+    "tokenGroupPresent": true,
+    "tokenGroupReasons": [
+      "token_signature"
+    ],
+    "mergedCardExcluded": true,
+    "sourcedCardExcluded": true,
+    "canonicalCardExcluded": true,
+    "snapshotVersionLength": 12,
+    "plainDocStatus": 200,
+    "plainDocTotalGroups": 0,
+    "missingDocStatus": 404
+  },
+  "scope": "Writes a document with normalised-equal, token-equal, unrelated, empty, merged, sourced, and canonical cards, then reads the candidate groups. It checks eligibility exclusion and reason codes, not a real similarity model. A group can carry both reason codes when the two heuristics agree."
+}
