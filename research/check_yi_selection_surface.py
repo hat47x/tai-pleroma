@@ -24,6 +24,35 @@ def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def bounded_transitions(observed: dict[str, set[str]], declared_closed: dict[str, bool]) -> list[dict[str, Any]]:
+    """Summarize only this fixture's self-declared closed stages.
+
+    This is not a proof that an exporter actually captured every generated
+    candidate. Open or malformed stages never produce a retention denominator.
+    """
+    result: list[dict[str, Any]] = []
+    for before, after in zip(STAGES, STAGES[1:]):
+        upstream, downstream = observed.get(before), observed.get(after)
+        qualified = (
+            upstream is not None and downstream is not None
+            and declared_closed.get(before) is True
+            and declared_closed.get(after) is True
+        )
+        result.append({
+            "from": before,
+            "to": after,
+            "upstreamObserved": len(upstream) if upstream is not None else None,
+            "downstreamObserved": len(downstream) if downstream is not None else None,
+            "closure": "declared_bounded" if qualified else "not_qualified",
+            "droppedObservedIds": sorted(upstream - downstream) if qualified else None,
+            "retentionFraction": (
+                {"numerator": len(downstream), "denominator": len(upstream)}
+                if qualified and upstream and downstream <= upstream else None
+            ),
+        })
+    return result
+
+
 def check(data: Any) -> dict[str, Any]:
     errors: list[str] = []
     if not isinstance(data, dict):
@@ -115,8 +144,11 @@ def check(data: Any) -> dict[str, Any]:
     if data.get("ownerAccepted") is not False or data.get("realWorldEvaluation") != "not_run":
         errors.append("test fixture must not imply Owner acceptance or real-world evaluation")
     return {"passed": not errors, "errors": errors,
-            "observedCounts": {name: len(observed.get(name, [])) for name in STAGES},
-            "scope": "bounded synthetic trace; no global absence, correctness, or authorization"}
+            "observedCounts": ({name: len(observed.get(name, [])) for name in STAGES}
+                               if not errors else {}),
+            "boundedTransitions": bounded_transitions(observed, closed) if not errors else [],
+            "scope": ("self-declared bounded synthetic trace; no proof of exporter completeness, "
+                      "global absence, correctness, or authorization")}
 
 
 def check_file(path: Path) -> dict[str, Any]:
