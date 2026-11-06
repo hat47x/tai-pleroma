@@ -70,6 +70,12 @@ jobs:
       - name: YI candidate visibility scan (synthetic only)
         working-directory: research
         run: python check_yi_selection_surface.py
+      - name: SUI context visibility synthetic tests
+        working-directory: research
+        run: python -m unittest -v test_sui_context_visibility.py
+      - name: SUI context visibility synthetic scan
+        working-directory: research
+        run: python check_sui_context_visibility.py
       - name: synthetic facility test
         working-directory: tools/reference-synthetic-facility
         run: python -m unittest -v check_test.py
