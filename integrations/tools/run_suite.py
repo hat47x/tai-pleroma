@@ -228,6 +228,7 @@ def main():
         "sui_similar_candidates": run_step("sui_similar_candidates", ["integrations/pilot-sui-document/assembler/similar_candidate_groups_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-similar-candidates-2026-11-06.json"]),
         "sui_export_dedup": run_step("sui_export_dedup", ["integrations/pilot-sui-document/assembler/export_audit_dedup_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-export-dedup-2026-11-06.json"]),
         "sui_native_action": run_step("sui_native_action", ["integrations/pilot-sui-document/assembler/native_action_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-native-action-2026-11-06.json"]),
+        "sui_list_pagination": run_step("sui_list_pagination", ["integrations/pilot-sui-document/assembler/list_pagination_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-list-pagination-2026-11-06.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}

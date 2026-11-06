@@ -15,8 +15,8 @@
     "attempts": [
       {
         "submit": 202,
-        "task": "tsk_3e31ad1f2c3ff54092110357feea979e",
-        "worker": "wrk_bd192a6a259779f5455631a00eb5d32d",
+        "task": "tsk_2baf3b8fe0e080a3543796cbbb16bd59",
+        "worker": "wrk_284461515dfb46dd2ed5fc675514c62a",
         "executed": true,
         "claimed": true,
         "resultStatus": 409,
@@ -26,13 +26,13 @@
           "status": 409,
           "code": "RESULT_NOT_READY",
           "retryable": true,
-          "task_id": "tsk_3e31ad1f2c3ff54092110357feea979e"
+          "task_id": "tsk_2baf3b8fe0e080a3543796cbbb16bd59"
         }
       }
     ],
     "submitStatus": 202,
-    "taskId": "tsk_3e31ad1f2c3ff54092110357feea979e",
-    "workerId": "wrk_bd192a6a259779f5455631a00eb5d32d",
+    "taskId": "tsk_2baf3b8fe0e080a3543796cbbb16bd59",
+    "workerId": "wrk_284461515dfb46dd2ed5fc675514c62a",
     "executed": true,
     "claimed": true,
     "resultStatus": 409,
@@ -42,7 +42,7 @@
       "status": 409,
       "code": "RESULT_NOT_READY",
       "retryable": true,
-      "task_id": "tsk_3e31ad1f2c3ff54092110357feea979e"
+      "task_id": "tsk_2baf3b8fe0e080a3543796cbbb16bd59"
     }
   },
   "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest, lets the Agent execute the fixed command and then reads the Task result endpoint. The claim is submitted but the read answers RESULT_NOT_READY, because result acceptance is not wired into the running Control Plane."
