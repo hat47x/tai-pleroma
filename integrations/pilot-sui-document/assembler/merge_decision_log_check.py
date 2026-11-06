@@ -75,6 +75,8 @@ def main():
         missing = client.get(
             f"/docs/{doc_id}/merge-decision-logs/by-group/group-absent", headers=headers
         )
+        restored = client.get(f"/docs/{doc_id}/merge-decision-logs/restore/snap-1", headers=headers)
+        restored_absent = client.get(f"/docs/{doc_id}/merge-decision-logs/restore/snap-absent", headers=headers)
 
     checks = {
         "createStatus": created.status_code,
@@ -87,6 +89,10 @@ def main():
         else None,
         "absentGroupStatus": missing.status_code,
         "absentGroupCount": len(missing.json()) if missing.status_code == 200 else None,
+        "restoreStatus": restored.status_code,
+        "restoreCount": len(restored.json()) if restored.status_code == 200 else None,
+        "restoreAbsentStatus": restored_absent.status_code,
+        "restoreAbsentCount": len(restored_absent.json()) if restored_absent.status_code == 200 else None,
     }
     passed = (
         checks["createStatus"] == 200
@@ -97,6 +103,10 @@ def main():
         and checks["listedDecisionId"] == "decision-1"
         and checks["absentGroupStatus"] == 200
         and checks["absentGroupCount"] == 0
+        and checks["restoreStatus"] == 200
+        and checks["restoreCount"] == 1
+        and checks["restoreAbsentStatus"] == 200
+        and checks["restoreAbsentCount"] == 0
     )
     receipt = {
         "schema": "tai.reference.sui-merge-decision-log/v0",
@@ -109,7 +119,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Appends one merge decision, replays the same decision, lists the group, and lists a group with no decisions. It does not test concurrent appends or authorisation of other tenants.",
+        "scope": "Appends one merge decision, replays the same decision, lists the group, and lists a group with no decisions. It also reads the snapshot-version restore view. It does not test concurrent appends or authorisation of other tenants.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
