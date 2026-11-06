@@ -67,3 +67,32 @@
 VA-T2のG0に補足。[TEI mainの6-Step Scenario](https://github.com/hat47x/tei-platform/blob/main/reference/driver-scenarios/order-entry-pattern-smoke.json)、[Scenario parser](https://github.com/hat47x/tei-platform/blob/main/internal/scenariotest/scenario.go)、[CLI verify/generate/run/check](https://github.com/hat47x/tei-platform/blob/main/cmd/tei/scenario.go)の実在を2026-11-04にSource-static確認。旧Issueの「保存Scenario未実装」は限定Referenceが追加された現mainにそのまま適用しない。汎用Scenario compiler/Web E2E/実Provider Write/現行Owner受理は別の未実証領域。
 
 生成AIの自由なCase追加は[Draft #2813](https://github.com/hat47x/tei-platform/pull/2813)のPipeline候補JSONと、[Draft #2811](https://github.com/hat47x/tei-platform/pull/2811)のAI-first Coverage設計を区別。テスト専用JSONとAccepted Driver Scenarioを混同しない。詳細な作業・Negative・資格連鎖は[VA-02 §6](VA-02-cross-product-first-run-protocol.md)に集約。独立ExpectedとCoverage分母の実証は **NOT RUN**。
+
+## 6. 2026-11-06：能力の利用と活動の成果を別々に比較する
+
+[TAI #271 SC-14/15](https://github.com/hat47x/tai-pleroma/issues/271) と[TAI #489](https://github.com/hat47x/tai-pleroma/pull/489)の成熟差分を、VA-01の**価値評価の分母**へ反映する。最初の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) TEI公開1 Subject／H2実Tool→H3実Skill Loader→4独立Sessionの能力試験はそのまま先行する。ただし「実Toolを正しく呼べた」「SkillでTokenが減った」は利用者の仕事が進んだことの代用にならない。
+
+### 6.1 SCN-001 Activity価値の独立したB0/B1/B2
+
+[SCN-001](https://github.com/hat47x/tai-pleroma/blob/main/scenarios/SCN-001-shared-space-guidance.md)の予約案内の食い違い・未決事項・非公開Draftを中断後に再開する**同じ仕事**で、以下を比較する。
+
+| 構成 | 比較する価値 | 出力で必ず区別するもの |
+| --- | --- | --- |
+| **B0 手動/通常Markdown・既存Harness** | 外部の追加調整なしで、過去のO-01〜05からO-06の作業を再構成できるか | 原文と版、矛盾・未決、Draft、D-04の実保存後再読取、再確認の手数・時間 |
+| **B1 必要な単独Product** | 目的に必要なTEI/SEI/SUI/SHO等の現存機能だけで仕事を改善できるか | Productが実読込/実出力した範囲、未選択・未取得・非開示、現在資格、余分なTool/データ送出 |
+| **B2 TAIの条件付き選択・Handoff** | B1を超えて、許可済み根拠の引継ぎ、未完了義務、適切な再開と選択的再確認を改善するか | Task/Attempt/Source/Owner/Grantの対応、反証や未決の保持、誤資格化、追加管理/Context/Token費用 |
+
+**J0全面再確認／J1影響限定／J2無確認再利用**はB0/B1/B2と異なる**再資格化戦略の軸**。各B構成内で比較できるが、「B2=J1」等と等置しない。B2の増分効果が無ければ、TAI常時介在を初期構成に採用しない。逆に機密の不正開示や意味の偽確定を削減効果で相殺しない。
+
+### 6.2 選択から漏れた反証と、開示してはならない存在
+
+[TAI #271 SC-15](https://github.com/hat47x/tai-pleroma/issues/271)と[Draft #490](https://github.com/hat47x/tai-pleroma/pull/490)は、SUI Contextの`selected`と参照のみの`evidence/relations`を分ける固定stubの限定試験候補。**SUI実データの完全な引渡しや実Host開示は未証明**。以下の独立Expectedを既存VA-X/VA-Eへ引き渡す。
+
+- **AC-01**：O-02「予約不要」だけがselectedでも、参照にO-03「会議室は予約必要」相当の未レビュー反証があるなら、非選択を反証不存在としない。ただし未レビュー情報を業務の確定答えへ昇格させない。
+- **AC-02**：公開Projectionが同じでも、非公開側に別の反証があり得る。外部Audienceへ反証の存在や件数すら開示禁止なら、その存在を示唆しない。内部Ownerの判断と外部回答の開示範囲は別。判断の状態は現在Grant/Disclosureに従う。
+- **AC-03/04**：件数一致でRelationやContext epochを保証しない。O-06後にA→B→Aで表面文言が戻っても古いReview/Authorityは復活しない。履歴Observationsは保ち、現在用途が必要とする分だけ再確認する。
+
+**最小の結果票**：User Job/時点、割付構成、実利用Product、固定Source/権限、独立Expected、原文・異論・未決の保持、実保存/再読取/Consumer、誤回答・過剰保留・漏洩、操作数/Token/時間/人手Review、再開後の正しい到達点を同一Scopeで記録する。これを新Activity Store/Skill Dispatcher/中央Oracle Schemaとして実装しない。
+
+**実行状態**：TEIの限定Product S1とTAIの固定stub/多Repo CIは既存の局所証拠である。**SCN-001 B0/B1/B2の実Activity試行、外部Harness H2/H3、SUI非公開Scopeの実Host確認、SHO D-04再読取の同一Attempt、異モデルVA-X/VA-Eの独立採点、Owner価値受理はNOT RUN**。初回H2をこれらの完成待ちでブロックしない。
+
