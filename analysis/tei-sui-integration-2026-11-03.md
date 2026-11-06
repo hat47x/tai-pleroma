@@ -1011,3 +1011,19 @@ export/share のSafeMode拒否: access_control に存在
 - どの機能がどのプロファイルで有効かは、プロファイル文字列を条件にした分散したifで決まる
 - 未知のプロファイルは起動時点で拒否される
 - 各プロファイルの実起動は未確認（saas-multitenantは実IdP等が必要）
+
+## 監視用エンドポイントの実際（2026-11-06）
+
+`/healthz`・`/readyz`・`/version`を読み、鍵の要否と管理者面と突き合わせた。[receipt](../evaluations/records/SUI-TEI-probes-2026-11-06.json)
+
+```text
+/healthz → 200 {"status": "ok"}（依存を一切見ない）
+/readyz  → 503 {"status": "not_ready", "checks": {"database": "unreachable"}}
+/version → 200 revision=probe-rev runtimeProfile=local-dev（鍵不要）
+誤った鍵の /docs → 401 / 誤った鍵の /healthz → 200
+管理者面（鍵なし・local-dev） → 200（未設定時の開発用の開放）
+```
+
+- `/healthz`は生存だけを見る。DBが落ちていても`ok`を返す
+- `/readyz`のスキーマ照合はDB照会と同じtry内にあり、`alembic_version`が無いと`database=unreachable`と報告する（`schema=mismatch`とは区別されない）
+- 3つのprobeはAPIキーを要求しない。`/admin/*`は鍵が未設定かつ開発プロファイルのとき開放される
