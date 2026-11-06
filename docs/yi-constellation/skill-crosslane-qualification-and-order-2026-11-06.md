@@ -448,3 +448,45 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 本節の判断表はTAI #271 SC-21のRQ-01〜07と既存#488のYIC-ROUTE-03/05/06/07へ**対応付けるだけ**で、新しい試験ID、Runtime/Policy/Capability Registry、共有Resolver、Host認可器、Go側の第二Canonicalizerは増やさない。後続の同一Taskで比較する場合、(a)実Runtime Profile/Effective Config、(b)実Tool Route+schema/CLI argvと応答、(c)Source/Projection/Scope/Grant、(d)read-only継続が可能だった範囲、(e)不必要な停止/権限昇格・Tool/Token/人手をそれぞれ観測する。実験の分母は先に固定する。
 
 **最初のBlocking Exitは変更しない**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の公開TEI固定H2-01外部Harness実Tool Call→H3実Skill root/reference Loader→H2/H3四独立Sessionを先行。SUIのSaaS Agent認証配線・DB Ready・実IdP・Cross-language hashの全面適合を先行条件にしない。Runtime Profile横断でのRQ実Harness試験、Digestの実異言語互換、実Host Grant/OS送出、Product間Handoff/正式Owner受理は**NOT RUN**。既存Product限定観測や一括検証段数はこの判定のPASSには加算しない。
+
+## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
+
+### 23.1 今回の差分と既存Owner
+
+§20のAction境界、§21のPurpose変更、§22のRuntime実可用性を接続する場合、以下を同一の「再試行安全性」にまとめない。
+
+1. **版付き操作の入場条件**：対象Resourceの現在表現に対するHTTP条件。本人/Hostの現在Grantや業務Owner受理とは別。
+2. **監査送信の一時重複抑止**：DispatcherがどのKeyを送信済みとして扱ったか。永続的冪等性、外部受領、Provider Effectとは別。
+3. **機密応答・Trace**：ResponseのCache/相関ヘッダーが示す限定動作。OS/Proxy/LLM Contextへの実隔離、Effect Receiptとは別。
+
+TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)のSC-19（旧Attemptの取消/unknown）、SC-20（HTTP受付/本文Verdict/Effect）、SC-21（現在Runtime/Grant）、[#488](https://github.com/hat47x/tai-pleroma/issues/488) X04/X05を**評価の既存Owner**とする。YIC用の新SaaS Adapter、共通Retry Engine、Cache、認証正本、独立Checker/Expected IDは作らない。
+
+### 23.2 製品の限定実測から導く条件
+
+| 実測元と範囲 | 観測できた事実 | YICが主張してはいけないこと |
+| --- | --- | --- |
+| [TAI #505](https://github.com/hat47x/tai-pleroma/pull/505)：SUI SaaS書込み前提ヘルパー直接試験9通り | Create/Updateで条件なし→428、`If-Match`と`If-None-Match`両方→400、`If-Match: *`→428、既存Resourceへの`If-None-Match: *`→409。条件が適正なら**ヘルパーを通過** | 実HTTP全経路・実DB書込み・現在のHost Grantまで合格。local-devではこの前提が有効でなく、SaaS実HTTP/同時Writerも未検証 |
+| [TAI #507](https://github.com/hat47x/tai-pleroma/pull/507)：AuditDispatcherの局所時間窓テスト | 窓0は抑止なし。0.2秒設定時の直後はduplicate、0.35秒後は送信。Keyなしは抑止なし。`send_failed`後の再送は`queued_pending` | 短時間重複抑止が永続的な冪等保証・外部受領・業務Effect成功。0.2秒を全Profile既定値とすること。再起動/輸送経路の資格は未検証 |
+| [TAI #511](https://github.com/hat47x/tai-pleroma/pull/511)：SUI Response Header限定テスト | Agent資格応答は`Cache-Control: private, no-store`、Agent二種類を`Vary`に記録。`x-trace-id`は安全な不透明Tokenのみ継承し、危険な値を置換。401本文にも`requestId`。`nosniff`/`X-Frame-Options: DENY`確認 | ヘッダーからProxy/Client/LLM Contextに秘密が残らないこと、認証済みPrincipal、外部Consumer受領、Effect Receipt。実逆Proxy/CSRF/Egressは未実証 |
+| [TAI #499](https://github.com/hat47x/tai-pleroma/pull/499)：SUI Native Actionの局所HTTP試験（既存SC-20 AT-09） | Feature Flag/Origin/Revision/Read-only/Archive等で404/403/409/423、適格な座標更新は200、再送は409 | その局所Actionの拒否・成功から、SaaS全ProfileでのCAS、別Tenant、TEI Provider、正式な公開許可まで成立したこと |
+
+[HTTP Semantics RFC 9110 §13](https://www.rfc-editor.org/rfc/rfc9110#section-13)の`If-Match`/`If-None-Match`は対象表現に関する条件付きRequest。上表の428/400/409は**当該Productヘルパーの観測**であり、HTTP標準があらゆるサーバに同じStatusを要求するという意味ではない。ETagや版付き書込み条件が成立しても、Purpose/Audience/業務意味/Host Grantが自動的に受理されるわけではない。
+
+### 23.3 途中再開の最小判定
+
+| 現在の状況 | 既存Product/Hostへ確認する対象 | Skillが取るべき扱い |
+| --- | --- | --- |
+| 内部Draftの旧ETagを保持したまま目的が対外公開へ変わる | 新Purpose/Audience、Resource版、現在Grant、当該ProfileのToolと条件付きRequest | 旧ETagはPublish/Write許可ではない。公開だけ保留し、適格なPreview/Readは継続。旧AttemptとEffectはSC-19で別調査 |
+| SaaS条件ヘルパー通過後に実HTTP結果がない | Tool実Request/Response、Principal/Grant、対象版、実Provider Receipt/Read | 「条件検査通過」の限定Claim。受理・実書込み・実業務完了と数えない |
+| AuditDispatcherが`duplicate`/`queued_pending`/`send_failed`を返す | Key、Attempt、送信状態、実受領とReceipt、窓/対象Scope | `duplicate`はEffect 0件の証明ではなく、`queued_pending`はDelivery完了でもない。別Keyで業務操作を盲再送しない |
+| 401に`requestId`、Agent Responseに`no-store`がある | 本文の許可Projection、現在Audience、実Host/OS開示、相手側実受領 | Traceは相関子であって認証・承認・Receiptでない。Cache指示は実消去証明でなく、無許可の再開示を止める |
+| SUI Native Actionの200後、TEI/EKI実効果が未観測 | Product別Operation ID、Receipt Lookup/独立Read、現行Scope/Grant | SUI局所更新は確認できても別ProductのEffectや業務完了を推定しない |
+
+必要なら`not-attempted`／`rejected-before-effect`／`sent-but-ack-unknown`／`received-but-consumer-unverified`／`effect-unknown`を**評価用の説明**として区別するが、新しい共通Product Lifecycle/Enumの制定はしない。Cancel ACK/Lease失効/Timeoutだけでは作用なしと確定しない（#271 SC-19）。外部送信や公開はread-only取得と別Scopeで審査する。
+
+### 23.4 実験の優先順とOwnerへの引継ぎ
+
+本節は後続のSCN-001 B0/B1/B2や、実書込み/委任Taskで必要になった範囲だけ使う。比較するのは、誤再送・誤完了、Unknown消去、権限誤昇格、適格read-onlyの過剰停止、Tool/Token/時間/人手である。対象Task・Source/版・現在Grant・独立Expectedを先に固定し、局所HTTP結果を全Profileへ一般化しない。
+
+**最初のBlocking Exitは不変**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Draft #270 Runbook](https://github.com/hat47x/tai-pleroma/pull/270)の固定TEI公開Sourceに対する外部Harness **H2-01実Tool Call一Session→H3実Skill root/reference Load→H2/H3四独立Session**を先行。初回read-only TaskへSaaS Agent Credential、監査Dispatcher、Writeを混入させない。現在のProduct限定試験は実横断Harness、実SaaS/IdP/Proxy、外部Consumer受領、実Provider Effect、Owner正式受理のPASSではない。これらは**NOT RUN**。
+
