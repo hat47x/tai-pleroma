@@ -225,3 +225,44 @@ Change Eventが0件だったとしても、監視対象Scope/時点の**全変�
 構成差 **B0=手動／通常Harness、B1=必要な単独Product、B2=必要時TAI横断選択/再開**（[#271 SC-14](https://github.com/hat47x/tai-pleroma/issues/271)）と、再確認方針差 **J0=全面、J1=影響限定、J2=無検証再利用**（本計画§5）を別軸で比較する。測定は目的誤分類、無権限の昇格、失われた未決、漏出、不要なProduct呼出し、正当な作業の過剰停止、実Consumer再読取、人の訂正、Token・時間・Review費用。Source・Scope・Audience・Current Grantと実Tool/Reader/Effectの観測範囲を固定し、TAIが不要なら介在不要という結論も許す。
 
 **Blocking変更なし**：最初は[#168](https://github.com/hat47x/tai-pleroma/issues/168)の公開TEI一Subject／H2 Tool-only実Harness 1 Session→H3実Skill root+refsロード→4独立Sessionの資格確認。PD-01〜07は後続のSCN-001利用者Activity価値試験へ接続し、実外部Harness・実Authorizing Host・実Consumer・利用者確認・正式Owner採用は**NOT RUN**。
+
+
+<!-- tai-sc19-inflight-intent-fence-20261107 -->
+## 12. 2026-11-07：目的変更と進行中Attemptの競合を分離する（SC-19案／NOT RUN）
+
+### 12.1 SC-18を補強する「旧目的の作用は既に進んでいるかもしれない」
+
+SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利用を分ける。しかし**中断時点で旧目的に基づくAction/委任が進行中**なら、Purposeの撤回、Host Grantの失効、Cancel要求のACK、Lease期限切れ、Task状態の終了は、いずれも**Providerでの作用が無かった／取り消された証拠ではない**。新目的のSessionや新Task identityへ旧Attemptの結果を付け替えたり、旧AttemptのOutcomeがunknownだから新OperationIDで同じ作用を再送したりしない。
+
+**Sourceとして区別する既存Product知見**：
+- [TEI #2996](https://github.com/hat47x/tei-platform/issues/2996)：宣言外Effectを返したExecutorの後段検査でrejectedと記録されても、UnitOfWork非参加などで実適用済みの場合がある。これは固定実装の局所反例であり、すべてのProviderで発生するという一般証明ではない。[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)はCommit直前Grant/Target/Periodのフェンスを所有する。
+- [EKI #745](https://github.com/hat47x/eki-fabric/issues/745)：Lease台帳への記録と期限切れ未申告Attemptの回収/調停が実行系に未配線とのSource調査。WorkerのLease期限切れを無Effect、Task成功、再実行許可へ昇格しない。
+- [SEI #802](https://github.com/hat47x/sei-cognition/issues/802)：MCP resume概要TextとCLI resume --jsonの情報形態は異なる。人向け要約からCoverage/Not verified/Basisが完全に機械受渡しされたと推定しない。
+- [SHO #20](https://github.com/hat47x/sho-composer/issues/20)：disk/dirty buffer/別Editor/Remote保存/独立readは別段階。TAIがACKのみで受取・公開完了としない。
+
+**TAIが照合する三つの軸**（新Canonical Schemaではなく既存試験票の観点）：
+1. **Intent/Authority**：旧依頼と新依頼の原文、目的・Scope・Audience、承認/Grantの現在資格。Purpose改版とHost Grantの取消は別イベント。
+2. **Effect/Attempt**：委任先が付与したTask/Attempt・TEI Operation identity・期限/Cancelの段階、Provider Receipt/unknown・適用の現在証拠。Harness Session ID、MCP Task handle、EKI Task ID、TEI OperationIDを同一視しない。
+3. **Result/Consumer**：ResultClaim ACK、Body受領とdigest、SHO保存と独立Read、実利用者への開示/引渡し。実受信が立証されない状態を「成果物なし」「完了」にしない。
+
+### 12.2 独立Expectedを固定する負例（SC-19／実験未実施）
+
+| Case | 旧目的と新目的の間で起きること | TAIが保持すべき判定／禁止する動作 |
+| --- | --- | --- |
+| **IF-01 未着手での撤回** | 旧目的のread-only準備、Action Dispatchなしが実ログで確認できる | 旧Action開始を止め、許可された歴史Observationは再利用。全活動を一律停止しない |
+| **IF-02 Dispatch後のACK喪失** | 旧目的のAction送信後に応答喪失、Provider照会不可 | Effect=unknown。新しい目的・Keyでの「安全な再送」禁止。lookup/調停待ちを旧Attemptへ束縛 |
+| **IF-03 Cancel ACKと実作用** | Cancel要求は受理されたが、実Providerで既にCommit済みの可能性 | Cancel受付≠停止/rollback。Receipt/実Readbackにより確認し、承認済みの回復手順まで保留 |
+| **IF-04 Lease失効と結果未着** | EKI AttemptのLeaseが期限切れ、ResultClaimなし。回収経路の資格は不明 | expired/no claim≠no effect。旧Taskの結果不明を保持し、別Attemptで自動再実行しない |
+| **IF-05 拒否だが作用あり** | TEI Commandが宣言外Effectのためrejected、Executorには適用があり得る | rejected応答のみで未作用と宣言しない。実Providerの根拠が無ければunknown。Product Ownerへ調停を委譲 |
+| **IF-06 旧結果の遅着** | Purpose改版後、旧AttemptのBody/Receiptが到着 | 旧目的・時点・AudienceのOutcomeとして帰属。新目的の承認済み成果物へ自動変換しない。開示資格を再照合 |
+| **IF-07 保存成功と受領の差** | 旧AttemptでSHO local Save ACK、別Consumer/Remoteで未取得 | 実disk/Remote Receipt/独立Consumer readを別記録。新目的の納品完了としない |
+| **IF-08 正当な独立作業** | 旧目的の公開は取消/unknown、新目的の公開不要な調査は別Sourceでread-only | 現在許可済みの独立Readは継続。旧作用の不明状態を全Productの一律ブロックに使わない |
+
+**正例だけでなく検出力を試す**：IF-02を成功へ、IF-03を未Effectへ、IF-04を完了へ、IF-05を明示的拒否だけの無作用へ誤写像したMutantを独立Expectedで拒否できるか確認。Providerの実作用自体は当該Ownerの実ログ/Receipt/readbackを用い、TAIの試験用Mockが申告したBooleanを実Effectの証明にしない。
+
+### 12.3 既存Ownerへの還流・実施順
+
+- **TAI #271**：Purpose変更後の旧Attempt帰属、受取資格、未完了義務、選択的な継続と保留の比較のみ。既存SC-09/10（Cancel/ACK/期限）とSC-18（目的変更）の交差条件であり、独立の永続Task Store/Policy/Dispatcherを導入しない。
+- **TAI #168／#422**：初回H2 Tool-only 1 Session→H3実ロード→固定4 Sessionを優先。後続SCN-001 O-01〜06のB0手動/B1単独Product/B2 TAI追加価値とJ0全面/J1限定/J2未検証を別軸で比較。SCN-001では公開や業務Effectを実施せず、IF-02〜07は**別の合成/隔離委任ケース**で検査する。
+- **TEI #2996/#1174、EKI #745、SEI #802、SHO #20**：Result/状態・取消・Grant/Provider実作用・構造化出力・保存/同期はそれぞれのProduct Ownerが検証・修正する。TAIが製品内部の不具合を別Runtimeで修正しない。
+- **状態**：IF-01〜08のTAI/二Harness実Session、実Effect取消/回復、Receipt/Consumer受信、OS/Network、Owner受理、実ユーザー価値は**NOT RUN**。参照Issueの局所観測と横断の受入資格を混同しない。
