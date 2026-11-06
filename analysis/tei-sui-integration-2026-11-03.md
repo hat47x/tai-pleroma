@@ -692,3 +692,16 @@ tasks: 2件 verifying / 2件 active
 - 契約キーは`extra=forbid`で閉じている
 - プレビュー確認が無い問い合わせは受けない
 - bundle構築は未実施
+
+## SUIのcontext bundle（2026-11-03）
+
+`POST /context/bundle`を同じ問い合わせで2回実行した。[receipt](../evaluations/records/SUI-TEI-context-bundle-2026-11-03.json)
+
+```text
+200 / bundleHash c2890a02... / 2回で同一 / queryCanonicalHashあり
+422 preview_required（previewConfirmed=false）
+```
+
+- bundleのハッシュは同一入力で安定する
+- 使用したstub datasetは`A2-minimal-v1`（合成）
+- 実データや実テナントでの構築は未実施
