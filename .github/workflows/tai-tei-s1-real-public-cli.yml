@@ -136,6 +136,41 @@ jobs:
               h2SkillPresent:false,h3CandidateFilesPresent:true,
               claimLimit:"not an external Harness; no Skill loaded, no actual OS/network isolation proven"}));
           ' "$RUNNER_TEMP" tai/evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json
+      # Historical compatibility characterization of the *pinned* Product CLI:
+      # changing only a recognized .tei source filename to .tei.md currently
+      # omits that Source silently. This is a migration blocker, not a pass.
+      - name: Characterize legacy .tei.md rename silently losing the named Source
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/sk02-extension-rename-negative"
+          for EXT in tei tei.md; do
+            ROOT="$BASE/$EXT"
+            mkdir -p "$ROOT/semantic"
+            printf '%s\\n' 'workspace: extension_probe' 'formatVersion: 1' 'sources:' '  - semantic' > "$ROOT/tei.workspace.yaml"
+            cp tei/reference/workspace/semantic/sales/order.tei "$ROOT/semantic/order.$EXT"
+            "$RUNNER_TEMP/tei-s1" model catalog -workspace "$ROOT" > "$RUNNER_TEMP/sk02-extension-$EXT-catalog.json"
+          done
+          "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/tei.md" -json > "$RUNNER_TEMP/sk02-extension-renamed-validate.json"
+          node -e '
+            const fs=require("node:fs"),assert=require("node:assert/strict");
+            const load=p=>JSON.parse(fs.readFileSync(p,"utf8"));
+            const legacy=load(process.argv[1]);
+            const renamed=load(process.argv[2]);
+            const validated=load(process.argv[3]);
+            const count=r=>r.result.entries.filter(x=>x.subject?.kind==="semantic-data"&&x.subject?.id==="sales.order").length;
+            assert.equal(legacy.ok,true);
+            assert.equal(renamed.ok,true);
+            assert.equal(count(legacy),1,"legacy .tei must load the expected user Subject");
+            assert.equal(count(renamed),0,"fixed historical Loader does not discover .tei.md");
+            assert.equal(validated.ok,true,"silent missing Source can coexist with validate ok");
+            console.log(JSON.stringify({
+              status:"EXPECTED_NEGATIVE_BEHAVIOR_REPRODUCED", historicalVersionOnly:true,
+              legacySubjectCount:count(legacy),renamedSubjectCount:count(renamed),
+              renamedValidateOK:validated.ok,
+              claimLimit:"Current pinned CLI silently omits .tei.md. This is NOT migration compatibility or acceptable fail-closed behavior."
+            }));
+          ' "$RUNNER_TEMP/sk02-extension-tei-catalog.json" "$RUNNER_TEMP/sk02-extension-tei.md-catalog.json" "$RUNNER_TEMP/sk02-extension-renamed-validate.json"
       - name: Read named Product Source and perform negative control
         env:
           GOTOOLCHAIN: local
