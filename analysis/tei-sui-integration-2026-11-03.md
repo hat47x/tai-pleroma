@@ -615,6 +615,8 @@ executed true / claimed true / result 409 RESULT_NOT_READY
 ```
 
 - `internal/control`に`resultacceptance`の組み立てが無く、受入は`conformance/process`の試験が内部で構成している
+- 2026-11-06時点のEKI上流（`origin/main` `f4451df`）でも`internal/control`配下に`resultacceptance`の参照は無く、`internal/control/service/config.go`にも受入の設定キーが無い。したがって旧版固有の欠落ではない
+- 本リポジトリのreceiptは`8159af1`のバイナリで取得している
 - したがって「実行して結果が受け入れられる」縦断は、製品プロセスとしては未配線
 
 ## Workerの失効（2026-11-03）
