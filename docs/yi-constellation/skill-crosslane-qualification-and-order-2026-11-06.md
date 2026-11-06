@@ -449,6 +449,22 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 **最初のBlocking Exitは変更しない**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の公開TEI固定H2-01外部Harness実Tool Call→H3実Skill root/reference Loader→H2/H3四独立Sessionを先行。SUIのSaaS Agent認証配線・DB Ready・実IdP・Cross-language hashの全面適合を先行条件にしない。Runtime Profile横断でのRQ実Harness試験、Digestの実異言語互換、実Host Grant/OS送出、Product間Handoff/正式Owner受理は**NOT RUN**。既存Product限定観測や一括検証段数はこの判定のPASSには加算しない。
 
+### 22.4 Trusted SaaS Runtime PreflightとSkillの実Availableを混同しない
+
+2026-11-07時点の追加照合：[TAI PR #515](https://github.com/hat47x/tai-pleroma/pull/515)はSUI `validate_trusted_saas_runtime_preflight`の**既存Product側の局所直接試験**として、アダプタ束の有無と5種類のRuntime Profileを比較した。single-tenant系は束なしで検査を通過する一方、不要な束を渡すと拒否される。`saas-multitenant`は束があっても無くても**`policy is incomplete`**として拒否され、PostgreSQL Tenant Guard等7項目が未満たしのまま。未知Profile・不正Bundle・二重初期化も拒否した。報告のアダプタは**スタブ**であり、実IdP/実DBに接続したSaaS実行が受理された証拠ではない。関連するTAI一括検証76段のPASSを実SaaS本番準備・Skill Loader・Host認証の合格に加算しない。
+
+| 異なる観測 | YICのSkill選択に反映する判断 | 禁止する推論 |
+| --- | --- | --- |
+| Product Skill/Schema/設定値が掲載済み | `advertised`の候補。実Runtime/Profile・Tool/Route・Required Adapter・現在Scopeを別確認 | 機能の説明・Profile名・Envの存在＝実Available／現在Granted |
+| single-tenant系のPreflightがスタブ束なしでPASS | **そのProfileの指定された局所検査**だけを通過したと記録。Taskが必要とする実Route、Source/DB/Reader、実Grantと実応答を続けて照合 | single-tenant全Toolが利用可能、外部公開・書込み可能、SaaS ProfileでもPASS |
+| `saas-multitenant`が`policy is incomplete`で拒否 | 対象のTrusted SaaS Routeは**not-qualified / unavailable for this attempt**。欠けた条件を隠してSkill Routeを自動選択しない | 設定値や架空のAdapterを埋めて通過扱い、スタブを実IdP/PG資格へ昇格 |
+| Profile不正/Adapter誤配置/二重初期化 | 失敗理由・実Configuration/Revision・必要項目をProduct側の診断から記録 | 全Product停止、許可されていない別Routeへの自動Fallback |
+| SaaS Routeは不適格だが独立したTEI/SHOのRead-onlyは有効 | 現在Grant/Taskに合致する**別製品単独の読取り**は必要範囲で続行し、不適格なSaaS Actionだけ保留 | 一経路の不可用性＝活動全体の失敗、他Productの権限をSaaSに転用 |
+
+**既存Ownerとの接続**：SUIの実Runtime Profile、Trusted Adapter/IdP/DB配線、Preflight/Route/Resourceを検証・実装する責務はSUI側の製品Owner。TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271) SC-21の**RQ-01/02/04/07**と本Draftの§22.1〜22.3、既存YIC-ROUTE-03/05/06/07に照合し、第二Runtime Policy Registry/Preflight実装/Skill Permission AuthorityをTAIに作らない。現在の機能候補→局所Preflight→実Tool Invocation→実Host Grant/Provider/Consumerという**段階別の証拠**を引き渡すだけとする。
+
+最初のBlocking Exitは変更しない：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI H2 Tool-only **実外部Harness 1 Session→H3 root/reference実Load→4独立Session**を先行する。`saas-multitenant`や実IdPを初回read-only Taskの前提条件へ追加しない。本節のYIC実Skill Routing、実SaaS/IdP/DB/Host Grant、Owner受理は**NOT RUN**。
+
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
 ### 23.1 今回の差分と既存Owner
