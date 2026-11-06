@@ -282,6 +282,9 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 
 [TEI `internal/workspace/loader.go`](https://github.com/hat47x/tei-platform/blob/main/internal/workspace/loader.go) のblob `ddae9bf724b685b1109b015c169da72ea740ada5`を確認した。`loadSemantics`（行494〜496）は`strings.HasSuffix(name, ".tei")`、`loadPlugins`（448〜450）は`plugin.tei`、`loadBundles`（471〜473）は`bundle.tei`、`loadApplications`（567〜568）は`application.tei`を選ぶ。少なくともこの選択条件では `semantic/order.tei.md` は読取り対象にならない。現行 `.tei` DSLを任意のMarkdown/frontmatter/コードフェンスとして解釈する新Parserの実在も確認していない。**単純Rename・管理ファイルの存在・`validate ok`・Source fingerprintだけで新形式対応を主張しない**。[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)と[#2823](https://github.com/hat47x/tei-platform/issues/2823)のSource実消費・TM受入へ接続する。
 
+**新しいProduct側の限定実装候補**：[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は未Bindingの`*.tei.md`を発見したとき、単なる`validate ok`で済ませず`TEI_MD_PARSER_UNBOUND`＋Pathで停止する暫定Guardを追加した。固定Commit `63953ccb5c12ead26ec1268e7c0afdba4eff66ae`の[Actions #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)はcompleted/success（focused Go 4件、workspace package tests、vet）。初回Runのgofmt失敗と修正後PASSを分離する。**これは未対応Sourceの検出能力であって、Markdown AST/TEI Role/Meaning/Build対応の実証ではない**。旧`.tei`処理は維持し、H2/H3の固定TEI Binary/Source資格へこの新Draftの結果を流用しない。
+
+**正式な移行計画のOwner**：[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)はM0〜M6とTM-01〜14の独立Expectedを所有。本節の5段階はYIC側の**連携状態の照合表**であり、TEIに別のMigration Engine/独立Oracleを導入しない。特に管理ディレクトリ`.tei/decisions/`はファイル拡張子の廃止対象ではない。未マージのDraftを現行mainの実Loader適合へ昇格しない。
 ### 17.2 移行の段階と独立Exit（既存Ownerへ委譲）
 
 | 段階 | 最小作業／停止条件 | Owner/確認対象 |
@@ -322,3 +325,42 @@ Product側の出力形式をSkill説明で補完しない。SEIのtextから構�
 | YIC-HO-05 同一可視Projection・異なる秘密World | 外部の回答・診断・件数から許可外のSource/Capability存在を識別できない。非公開を不存在へ変えない | TAI #232、SUI #3368 |
 
 評価順は変更しない：固定TEI H2-01実AI Harness Tool Request→実CLI argv/exit/stdout → H3 Skill root/reference実Load → H2/H3四独立Session → 必要時だけProduct間Handoff。新Runner/Registry/Oracle/Hostは作らず、初回TEI TrialにSEI/SUI/SHOを加えない。本節の横断実Tool・実保存後Reader・正式Owner受理はNOT RUN。
+
+## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
+
+### 19.1 Product-only CIの成功から比較資格を推定しない
+
+TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)には、H2/H3の実際のPathと参照閉包に関する**既存のPV-01〜04**がある。TAIの一時CI Viewは`$RUNNER_TEMP/sk02-staged/h2`と`.../h3`を同Jobの兄弟Directoryへ配置する。H2側のrootに`SKILL.md`が無くても、許可された親Path探索でH3のSkillへ到達できればH2の「非露出」は成立しない。`chmod -R a-w`も読取り・Networkの物理隔離ではない。
+
+現行SK-02 Checkerは`cli_cwd`と`-workspace`の実引数文字列一致を比較条件としている。**同じSource fingerprintでも異なる実Pathのままでは**条件一致を主張できない。実Harnessでは、独立に隔離したSessionに同じ論理位置の固定Binary/Workspaceを配置し、実argv/cwd/Source・Task/Model/Tool/Profile/Grant・実Responseを照合する。選定Harnessがこれを実現できない場合は、事前合意の別Trial Groupで扱う。実ログにないPathの値をTrial JSONへ偽記載しない。
+
+さらに、固定H3候補へ配置したSkill packageはrootと一つのreferenceだけであり、Skillが言及する`../../plan/design/...`、`../../docs/getting-started.md`等の**Package外参照**は到達未確認。Required referenceのLoader実Readが観測されないなら、`Installed/Available`であって`Delivered`ではない。H3だけ不足Documentを後から追加して品質向上分へ計上せず、別Package pinとTreatmentへ分ける。
+
+### 19.2 既存試験を使う比較資格の照合表
+
+| 照合対象 | PP比較を許す一次証拠 | 不足時の結論 |
+| --- | --- | --- |
+| H2非露出 | 実HarnessからSkill、採点票、前Session Log、元Checkoutへ親Directory・Tool・GitHub/Web等の**実許可経路**でアクセスできないことの観測 | 非露出unknown / PP不適格、ITTとして失敗・費用を保持 |
+| H2/H3同条件 | 同じ論理Path、固定Executable/Workspace・Task raw byte・Source/Tool/Profile/Model/Grantと実argv/exit/stdout | path mismatchはineligible。同値性が観測不能ならinsufficient-evidence |
+| H3提供 | 固定Root＋必要Referencesの実Loader Read byteとTool呼出し・回答を別々に観測 | 配置・root SHA・`skill_loaded=true`自己申告だけではD（実提供）成立せず |
+| 回答と増分価値 | 隔離した独立Expected、正答/誤操作/Warning/unknown、Tool回数・Token・時間・人手を実4 Sessionで比較 | 一部PASS・Tool-only CI・他Product CIからSkillの有用性を推定しない |
+
+ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加のOracleは作らない。次のBlocking Exitは実外部Harnessによる**H2-01一SessionのTool Request→実TEI CLI→Harness Reply**で不変。実隔離・Skill実Load・四Session採点は**NOT RUN**。
+
+### 19.3 既存の5製品一括検証が示す範囲
+
+[TAI PR #475](https://github.com/hat47x/tai-pleroma/pull/475)はTEI/SUI/SEI/MMI/EKIの固定組合せで**53段の一括検証PASS**を報告する。ただしProduct間の限定実験であり、外部HarnessがSkillを実ロード・活用して目的を達成した証拠でも、SHO/TAIを含む全製品Release資格でもない。YICの報告ではProduct CI／Cross-product integration CI／Harness Tool Call／Skill Loader／独立Task Outcome／実Host/Consumer資格を別Claimとして表示する。
+
+## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
+
+### 20.1 TEI Product側の実装候補と現行の証明限界
+
+[TEI PR #3032](https://github.com/hat47x/tei-platform/pull/3032)は付与に`issuedBy`を記録し、要求Capability自身が発行したGrantを拒否する局所実装・Windows検査を報告した。[TEI PR #3035](https://github.com/hat47x/tei-platform/pull/3035)は環境が宣言した論理Scope→実パスへの解像→その範囲内のGrant発行を区別し、宣言外パス・能力外Scopeを拒否するWindows上の局所検査を記録した。いずれもSkill/Toolが自分で自分の許可を作る経路を防ぐための参考となる。
+
+ただし`issuedBy`/`resolvedBy`は**署名・実Hostの認証済みIssuerではない**。#3035では宣言を渡さなくても`ungrounded`の診断とともに付与を発行できる経路が残る。宣言によるGround検査成功と真正なGrantの存在、Host/OSの物理強制、Provider Effectは別であり、TAIが過去のGrantやSkill記述をもとに現在権限を作ったことにはしない。#3032の実PostgreSQL判断はCI経路設置の段階であり、当該PR本文では実DB試験未実施とされている。
+
+### 20.2 YIC Action選択への適用
+
+最初のTEI公開Read-only H2/H3には追加しない。後続の書込み/委任Taskを選ぶ場合だけ、(1)Task目的・対象、(2)選択済Contract/Tool/実Source、(3)実行環境の現行Grant／対象Scope／発行主体と検証されたTrust、(4)実Invocation/Effect Fence、(5)Receipt/独立Readを**各Product/Hostの証拠で段階照合**する。Grantの自己申告・Scope解像が未grounded・Issuer真正性未確認なら、必要な危険作用を保留し、許可された独立read-only調査は継続する。
+
+この条件付き受入はTAI #232/#271/#488とTEI #951/#1174、既存EKI Task/Result Ownerへ委譲。新しい中央認証器・署名Store・Grant発行器・Permission RuntimeをYICへ設けない。実YIC Action/Harness/本番Host Grant/Effect・Owner受理は**NOT RUN**。
