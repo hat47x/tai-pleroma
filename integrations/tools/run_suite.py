@@ -219,7 +219,6 @@ def main():
         "sui_registry": run_step("sui_registry", ["integrations/pilot-sui-document/assembler/model_registry_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-registry-2026-11-03.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
-    steps["poc_eval_baseline"] = run_step("poc_eval_baseline", ["integrations/tools/poc_evaluation_baseline.py"])
     eki_env = {}
     if args.eki_control:
         eki_env["EKI_CONTROL"] = args.eki_control
@@ -269,6 +268,13 @@ def main():
     }
     out = ROOT / args.out
     out.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    subprocess.run(
+        [sys.executable, "integrations/tools/poc_evaluation_baseline.py"],
+        cwd=ROOT,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
     print(json.dumps({"result": receipt["result"], "steps": {k: v["returncode"] for k, v in steps.items()}}))
     return 0 if passed else 1
 

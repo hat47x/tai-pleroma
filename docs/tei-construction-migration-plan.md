@@ -184,3 +184,4 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。
 
 
+
