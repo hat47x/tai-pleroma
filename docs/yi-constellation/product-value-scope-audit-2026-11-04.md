@@ -370,3 +370,17 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 **優先順位**：最初の実験は引き続き[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の外部Harness H2実Tool呼出し1 Session。以降H3の実Load、同一Task四Session、別にSCN-001の活動成果B0/B1/B2を検証する。`*.tei.md`移行やSHO実Readerの追加安全性試験は各Productの並行Owner課題であり、初回TEI S1/H2を一律に停止しない。
 
 **状態**：本節はProduct Issue/PRの静的確認とVA-01評価票への計画反映。新`*.tei.md` Loader・Parser実装、外部Harness H2/H3、SHO特殊ファイル拒否の製品実証、SUIの実非公開Data引渡し、SCN-001利用者試行、異モデルVA-X/VA-E、Owner正式受理は**NOT RUN**。
+
+### 19.1 実装進展に合わせて移行試験の合格範囲を更新
+
+旧`*.tei`を`*.tei.md`へ単純改名すると、従来Loaderが対象Semantic Sourceを読まず、`validate.ok=true`のままSubjectが消え得るという反例に対し、[TEI Draft #3031](https://github.com/hat47x/tei-platform/pull/3031)は`TEI_MD_PARSER_UNBOUND`の明示診断を追加。固定HEAD `63953ccb`の[限定CI #42217379093](https://github.com/hat47x/tei-platform/actions/runs/42217379093)は成功。これは**黙って成功する不具合を防ぐ局所進展**であり、`*.tei.md`を解析・生成できるようになったことでも、mainへ統合済みであることでもない。[VA-04 §7](../../evaluations/VA-04-evidence-readiness-preflight.md)では、旧形式の正常読取・改名後の未読込・明示診断・将来の新形式正常読取を四つの状態として区別する。
+
+Authoringの役割分担も更新する。[TEI Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)が旧新形式のSource移行と互換性試験の既存計画を担い、[#3030](https://github.com/hat47x/tei-platform/pull/3030)は専門家向けのMarkdown記述・可読性・原文保存の比較に集中する。双方のM0〜M6などを「二つの移行Gate」として足し合わせない。全自動Renameや新Parserの存在を前提にしたB1/B2価値試験は保留するが、既にSourceが実読込された旧固定公開TEI基線のH2実験は継続できる。
+
+### 19.2 活動再開の証拠：正常HTTP応答だけでは再開点・本文・利用資格を証明しない
+
+[TAI #271 SC-17](https://github.com/hat47x/tai-pleroma/issues/271)の根拠には、[TAI merged #491](https://github.com/hat47x/tai-pleroma/pull/491)でSUI管理監査APIが不正CursorへHTTP 200で先頭ページを返した限定観測、[merged #492](https://github.com/hat47x/tai-pleroma/pull/492)でETagは連続Readに安定・保存後に変化する一方、If-None-Matchを与えても**304ではなく本文付き200**が返る限定観測がある。これは仕様の全体受入ではなく、再開するConsumerにとっての負例である。
+
+SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cursor/観測したページ範囲、実BodyとVariant、ETag/現在のGrant・Audience、必要なConsumer受領**を分離する。不正Cursorの先頭回帰を「新イベント0件」や「監査完了」と解釈せず、ETag一致を「HTTP 304」「ネットワーク費用削減」「現在公開してよい」と推定しない。選択外反証と非公開情報の扱いはSC-15、Readerの形式はSC-16、利用者目的の変更は[VA-01 §6.3](../../evaluations/VA-01-product-value-necessity.md)へ責務を返す。
+
+**投資判断**：これらは用途依存の有効な負例であり、初回H2 Tool-onlyには管理監査API・ETag・全てのCloud Syncを要求しない。後続のActivity再開試行でのみ、誤完了・再取得量・Token/Review/時間・正しく保留した件数を比較する。新共有Cache/Result Storeは作らない。SC-17とSC-18の**実利用者試行・外部Harness・Owner価値採用はNOT RUN**。
