@@ -557,7 +557,7 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 
 **実引数の差を隠さない**：現行[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)は `cli_cwd` と実 `-workspace` 引数の**文字列一致**を比較条件としている。CIビューの `.../h2/workspace` と `.../h3/workspace` の実argvを、そのまま四試行の入力として転用すると、仮にSource Fingerprintが同じでも現行Checkerでは不適格である。したがって**同一見かけパスを個別の隔離された実行環境へマウントする**方式を先に選ぶ。実Harness都合で同一論理パスにできない場合は事前登録の別Groupとして、物理Read・実Binary・Source byte・Tool ProfileとPath同値性の判定規則を**実観測に基づき別途レビュー**し、既存Checkerに異なるpathを偽って記載しない。
 
-**H3側の参照閉包**：今回のStageでコピーするのはrootとreferenceの2ファイルだけ。rootが示す `../../plan/design/...` や `../../docs/getting-started.md` 等の**Package外の相対リンク**は、この2ファイルだけからは解決できない。初回Treat­mentではそのまま「リンク先利用不能／未使用／観測不能」を記録し、追加文書をH3だけに後付けして正答率を改善しない。追加した正式Treatmentは別Group・別byte pinで評価。Required referencesが実Loaderで読めなければH3のDelivered資格を与えない。
+**H3側の参照閉包**：今回のStageでコピーするのはrootとreferenceの2ファイルだけ。rootが示す `../../plan/design/...` や `../../docs/getting-started.md` 等の**Package外の相対リンク**は、この2ファイルだけからは解決できない。初回の実験条件ではそのまま「リンク先利用不能／未使用／観測不能」を記録し、追加文書をH3だけに後付けして正答率を改善しない。追加した正式Treatmentは別Group・別byte pinで評価。Required referencesが実Loaderで読めなければH3のDelivered資格を与えない。
 
 **試験時の反例（実Harnessは未実施）**：PV-01＝H2自身のDirectoryだけ不在だが `../h3` 経由でSkillに到達、PV-02＝別pathを同一 `-workspace` と虚偽報告、PV-03＝同じbyteでもH3のLoaderがroot/refを未読込、PV-04＝H3だけ追加Document/Toolまたは他Session Answerへアクセス。これらは既存Trial CardのObservationとSK-02比較資格へ写し、独立のSandbox/Runner/Permission Registryを新設しない。
 
