@@ -364,3 +364,39 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 最初のTEI公開Read-only H2/H3には追加しない。後続の書込み/委任Taskを選ぶ場合だけ、(1)Task目的・対象、(2)選択済Contract/Tool/実Source、(3)実行環境の現行Grant／対象Scope／発行主体と検証されたTrust、(4)実Invocation/Effect Fence、(5)Receipt/独立Readを**各Product/Hostの証拠で段階照合**する。Grantの自己申告・Scope解像が未grounded・Issuer真正性未確認なら、必要な危険作用を保留し、許可された独立read-only調査は継続する。
 
 この条件付き受入はTAI #232/#271/#488とTEI #951/#1174、既存EKI Task/Result Ownerへ委譲。新しい中央認証器・署名Store・Grant発行器・Permission RuntimeをYICへ設けない。実YIC Action/Harness/本番Host Grant/Effect・Owner受理は**NOT RUN**。
+
+## 21. 再開時の目的変更とSkill再選択の資格を分ける（後続検証・NOT RUN）
+
+### 21.1 既存SC-18との差分：意図の履歴だけでは現行Skillは決まらない
+
+[TAI #271 SC-18](https://github.com/hat47x/tai-pleroma/issues/271)と[TAI Draft #270 Activity計画§11](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/activity-selective-requalification-and-handoff-2026-11-02.md)はPD-01〜07で中断前後のTask Purpose/Scope/Audience変化を、履歴Evidenceの保存と現在用途の再資格化に分けた。YICの追加責務は**その時点でどの既存Product Skill／Toolを選択・継続・非選択・保留するか**の用途適格性であって、利用者の新意図をTAIが決定することでも、SC-18のExpected/Runner/Activity Storeを複製することでもない。
+
+「同じSource bytes／旧Activity ID／旧SkillがLoaded／過去にGrantあり」は再開後のSkill選択を固定しない。一方、目的が同一で参照・実Tool・権限も不変なら**全Productの無条件再Load/全Source再取得を要求しない**。過去Observationは履歴として保持し、現在の資格だけを用途ごとに判定する。選択判断は既存Harness discoveryを使い、共通Routing Engine・Intention Registry・Grant発行機構は増やさない。
+
+### 21.2 目的変更×Skill再利用の圧力ケース（PD／既存YIC-ROUTEへ対応付け）
+
+| Case・先行根拠 | 変更点 | Skill選択の独立Expected／不適格な推論 |
+| --- | --- | --- |
+| SR-01／PD-01 単純再開 | 同じ目的・Audience・Source、実権限も同じか確認 | 必要なProductのみ再利用可能。すべてのSkillを無条件再ロードせず、未観測のGrantは推定しない |
+| SR-02／PD-02 目的昇格 | SCN-001の「案内文の矛盾を整理」→「施設へ公開して」 | 旧read-only/SHO Draftの履歴は維持。ただしPublish/Write/代理Action Skillは**別Task Purpose・Owner承認・現行Grant・対象Audience**を要求。無権限なら安全なDraft/Previewだけ続ける |
+| SR-03／PD-03 対象縮小 | 一施設の予約案内のみになり他施設は除外 | 新Scopeに不要なProduct/SkillとSource取得を減らす。旧広範囲Cacheから不要領域の秘密情報を出さない。Scopedな旧Evidenceの再利用可否は別 |
+| SR-04／PD-04 Audience変更 | 内部報告→外部公開説明 | 内部Readの成功から外部LLM/他利用者へのRaw Disclosureを付与しない。現在許可されたProjectionだけで足りなければ保留。非公開の反証の存在・件数も漏らさない |
+| SR-05／PD-05 中止 | ユーザーが作業を撤回、旧Tool Replyが遅れて到着 | 新しいTool/Delegation/Effectを開始しない。進行中の実AttemptはProduct/Hostで状態照会し、古い成功・未完了/unknownを改竄せず保持。取消が遡及的なEffect取消を意味すると推定しない |
+| SR-06／PD-06 言い換え | 文面だけ変更、目的・対象・Audienceは同じ | 新たなSkillを義務的に追加しない。意味同値はAI自己申告でなく事前固定Task/Scopeと独立Expectedで判断し、必要な依存だけ現在資格確認 |
+| SR-07／PD-07 分岐 | 内部改訂と外部公開審査が並行 | read-onlyの説明/編集は継続可能な範囲で保持。Publishだけ別Grant/Owner/Scopeで保留。Task間の旧Skill Loaded/Tool Permissionを横流ししない |
+
+### 21.3 継続取得の成功と、現在Purposeへの根拠適格性を分ける
+
+[TAI #271 SC-17](https://github.com/hat47x/tai-pleroma/issues/271)のCR-01〜06では、不正Cursorを送ったのにHTTP 200で先頭ページが再来する例、If-None-Match付き再読でも304ではなく本文付き200となる限定SUI Consumer観測が整理されている。**Cursor/ETagの値・HTTP 200だけでは継続位置、網羅性、変更なしを証明しない**。選択Skillが過去のページ群・Cacheを現在Purpose/Audienceに利用するときの適格性は以下を区別する。
+
+- 対象が同一か：Task Purpose、Resource/Document、Principal/Tenant、Scope/Query、Source Revision・実Parser、必要なRequired Set/Completeness。
+- 取得が続いているか：実Cursor系列・各Pageの実Body/Member、重複・欠落・終端/epoch、実ETagと実HTTP Response。200で先頭が戻っても「追加0件」や全件完了としない。
+- Cache再利用が正当か：304が将来使える場合でも同一Resource/Variant/Audience/Authorization Scopeの過去の実Bodyなしではunknown。本文付き200なら実Bodyを読んで再評価する。過去のread-only Scope適格性を現在の外部開示/実Effectに昇格しない。
+
+これはTAIがSUI APIを修正する要求ではない。Cursor/ETag/ReaderはSUI Product Owner、SC-17のActivity再開証拠はTAI #271、選択のOver/Under-routingは既存YIC-ROUTE/#488、実Handoffの応答形式は§18/既存SK-03が担当する。**新Cursor検証器・Cache・第二Oracleは追加しない**。
+
+### 21.4 実験へ移す際の照合と優先順
+
+後続のSCN-001 B0通常Harness/B1単独Product/B2必要時TAI横断比較で、SR-01〜07を既存PD-01〜07の独立Expectedに一対一で対応させ、①必要なSkillの選択、②不必要なSkillの非選択、③有効なread-only継続、④旧Grant/旧Purposeの誤継承を阻止、⑤Unknown/非公開の保持、⑥Tool・Context・Token・人手と再確認量を別採点する。SK-02の4 Session実験へPDを混ぜず、Purposeが試験中に変更されたTrialを固定TaskのSkill差分評価へ無断算入しない。
+
+**現実の順序は変えない**：既存 #168 の固定公開TEIで最初の実外部Harness H2 Tool Request→実CLI→Harness Response、H3 Skill root+refs実Loader、H2→H3→H3→H2比較を先行。その後に用途が必要とするSC-17/18・Skill再選択・横断Handoffを別Trial Groupにする。本節は反証条件の接続であり、新SR試験、実外部Harness、実Purpose変更の利用者検証、Owner意味受理、Publish/Provider Effectは**NOT RUN**。
