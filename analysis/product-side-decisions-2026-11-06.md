@@ -1,4 +1,4 @@
-# 製品側の判断が必要な4点（2026-11-06）
+﻿# 製品側の判断が必要な5点（2026-11-06）
 
 Status: **整理**。TAIが接続検証で突き当たった、製品側の設計判断を要する点を並べる。ここで可否を決めない。
 
@@ -40,8 +40,19 @@ TAI側でできること: 分散規則が入った後の再観測。規則の設
 
 TAI側でできること: 配線変更後の再観測（local-devでagent経路が通るか）。配線の変更は製品変更。
 
+## 5. 未知のアクセス制御adapter名をエラーにするか
+
+観測: `SUI_ACCESS_CONTROL_ADAPTER`に未知の値を設定すると、`build_access_control_adapter`は例外にせず`NoopAccessControlAdapter`へ無言で退避する。[receipt](../evaluations/records/SUI-TEI-builders-2026-11-06.json)
+
+当たり: `access_control.py`の`build_access_control_adapter`が、既知の4名（noop/mock/http/external_http/external）以外を`NoopAccessControlAdapter()`で返す。
+
+論点: 綴り違いや未対応の値を、起動時に拒否するのか、現状どおりnoopへ退避するのか。noopは制御をしないアダプタなので、退避は「統制が効いていない構成」を静かに成立させる。SaaS事前検査は`access_control_adapter == "external_http"`を要求するため、SaaSでは退避が起動時に弾かれるが、single-tenantでは弾かれない。
+
+TAI側でできること: 変更後の再観測（未知値で起動が止まるか）。値の扱いの変更は製品変更。
+
 ## 共通の注記
 
 - いずれもTAIの接続では解消できない。TAIは再観測と記録を担う。
 - 生産性・受入可否の判断には使わない（PoC完了後に評価する前提）。
 - 公開gateは`allowed=false`のまま。
+
