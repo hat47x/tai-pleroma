@@ -1,6 +1,6 @@
 # YI Constellation：最初の実Product Skill資格確認 Runbook（2026-11-02）
 
-状態（**2026-11-06の最新観測**）：**TAIから固定した実TEI CLIを呼んだ公開Source W0/S1は限定達成**。[TAI実S1 #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)で、実Binary・Source Index・指定Subject・固定台帳の照合とJSON重複キー拒否を確認。ただし**外部AI HarnessによるTool実呼出し、Skill実ロード、H2/H3四独立Session、Owner意味受理はNOT RUN**。最新の実験準備・停止線は§17〜21。旧§1〜14の「TAIでCLI未実行」等は当時の記録であり、現在のW0状態を示さない。実OS/Host/Provider資格、正式ReleaseやProduct横断E2Eへ一般化しない。新Harness Runner/統合Registryを設けず既存検査を再利用する。
+**状態（2026-11-07確認）**：固定TEI実CLIの公開Source W0/S1は限定達成。[TAI実S1 #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)のSource Index／台帳照合に加え、[TEI PR #3113](https://github.com/hat47x/tei-platform/pull/3113)の**実DSH外部Harness Tool-only探索Session**で固定TEI実バイナリの呼出し・Tool応答・最終回答が観測された（§24）。ただし**H2の実ファイル／Skill／Reviewer隔離が未証明**のため、4独立Sessionの比較適格Slotには算入しない。H3のSkill実Load・4Session採点・実Egress否定／Owner意味受理は**NOT RUN**。次のBlocking Exitは新たなTool接続の存在確認ではなく**隔離・Source／Tool／Grantが固定された比較適格H2 Session**（§24.2）。旧§1〜14の「TAIでCLI未実行」等は当時の履歴で、現在の事実ではない。新Harness Runner/統合Registryなし。
 
 ## 目的：合成fixture中心の議論から、実際のProductを使用した証拠へ
 
@@ -387,7 +387,7 @@ S1の歴史Evidenceは当時のSource/実バイナリに限定して保持。失
 
 ## 19. 2026-11-06：W0成立後に実施する「最初のH2実Session」実行票
 
-本節は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**次のBlocking Exit**を、準備の議論ではなく**外部AI Harnessが実TEI Toolを起動した一つの実観測**へ収束するための最小運用手順。既存§12 Trial Card／§17 W0→H2/H3／§18 S1 ledgerを使用し、第二Script・独立Runtime・新共通Evidence Schemaを追加しない。実H2は**本節追加時点ではNOT RUN**。
+本節は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の初回H2実行票。制定時は外部HarnessでのTool実起動も未実施だったが、[TEI PR #3113](https://github.com/hat47x/tei-platform/pull/3113)のDSH探索的Tool-only Sessionで**実Tool transport到達**が観測済み（§24）。**比較資格に必要なSkill非露出・実隔離・同条件・独立Expected／Egressは未確認**。§12 Trial Card／§17／§18を再利用し、第二Script・独立Runtime・新共通Evidence Schemaは追加しない。
 
 ### 19.1 固定した公開実験入力（歴史的S1 Witnessと新しい実起動物を混同しない）
 
@@ -422,15 +422,15 @@ CLIで必要となるread-only呼出し例（実際に使ったargvは**Harness�
 "$TEI_BIN" validate -workspace "$TEI_WORKSPACE" -json
 ```
 
-**H2-01のPASS**＝外部Harnessの実Session→実Tool request→Product CLI実起動→CLI responseを同一Taskで突合できたこと（CLI Outputの正答/警告保持は**別採点**）。LLM回答中の「Toolを使った」、TAI CIの直接呼出し、Trial JSON自己申告boolだけでは不足。実Toolログを取得できない場合は `insufficient-evidence`、Tool自体がない場合は`unsupported/unknown`としてそのHarnessのH3へ進まず、既存#168の実接続経路を確認する。新Runner/常駐Agentを追加しない。
+**H2 Tool transportの限定PASS**＝外部Harnessの実Session→実Tool request→Product CLI実起動→CLI responseを同一Taskで突合できたこと。DSH探索Sessionはこの限定条件に達したが、**H2比較適格のPASSとは別**（§24）。CLI Outputの正答/警告保持は**別採点**。LLM回答中の「Toolを使った」、TAI CIの直接呼出し、Trial JSON自己申告boolだけでは不足。実Toolログを取得できない場合は `insufficient-evidence`、Tool自体がない場合は`unsupported/unknown`としてそのHarnessのH3へ進まず、既存#168の実接続経路を確認する。新Runner/常駐Agentを追加しない。
 
 ### 19.4 H2後のH3と四Session比較の条件
 
-H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH3の実Skill root消費と必要reference消費を、Harness/Adapterの実ログまたは参照byteの実Readと照合する。Skill Directoryに置いた/Skill名が宣言された/AIがSkillを引用しただけでは**Loaded**としない。H3でTool権限やRepository全体アクセスまで増えた場合は、Skillの効果と混ぜずPair不適格とする。
+**Skill非露出・実Sandbox／Tool／Task／Source同一性と現在Grantまで確認された比較適格H2 Session**が成立した場合のみ、次の**独立Session**でH3の実Skill root消費と必要reference消費を、Harness/Adapterの実ログまたは参照byteの実Readと照合する。Skill Directoryに置いた/Skill名が宣言された/AIがSkillを引用しただけでは**Loaded**としない。H3でTool権限やRepository全体アクセスまで増えた場合は、Skillの効果と混ぜずPair不適格とする。
 
 最終順序 `H2→H3→H3→H2`、モデル/ハーネス/Profile・固定Source・Task・Tool Set・最大許容費用を同条件に保ち、**各Sessionは会話・結果・Skill状態を引き継がない**。結果判定は①比較適格性（既存SK-02 Checkerと実ログ照合）、②独立Expectedに対する正答・Warning/Unknown保持、③Skill差分の追加価値とToken/時間/人手を別票で扱う。H3が同等または悪化すればTool-onlyを維持。第二Harness・TAI Handoff・write/DB/RunPlan/MFTは**四Sessionの実在性と差分が判定可能になった後の条件付き工程**。
 
-**本節の実施状態**：W0固定公開Source・実CLI・台帳照合のCIだけが限定成功。**外部Harness H2-01の実Tool log、H3のSkill Loader/Reference実読込、H2/H3四Session、比較採点、OS/Network非漏えい・Owner意味受理はNOT RUN**。
+**現在地（§24参照）**：W0/S1のCI限定成功に加え、DSH探索的Tool-only 1 Sessionの実Tool request／実CLI／Harness replyは観測済み。ただし**実作業Dir外へのReadが可能でH2の非露出・隔離は不適格／未確認**。H3 Skill Loader・四Session比較・独立Expected採点・OS/Network非漏えい・Owner意味受理は**NOT RUN**。9探索Attemptを4Slotの先行実績へ算入しない。
 
 
 
@@ -561,7 +561,7 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 
 **試験時の反例（実Harnessは未実施）**：PV-01＝H2自身のDirectoryだけ不在だが `../h3` 経由でSkillに到達、PV-02＝別pathを同一 `-workspace` と虚偽報告、PV-03＝同じbyteでもH3のLoaderがroot/refを未読込、PV-04＝H3だけ追加Document/Toolまたは他Session Answerへアクセス。これらは既存Trial CardのObservationとSK-02比較資格へ写し、独立のSandbox/Runner/Permission Registryを新設しない。
 
-**到達点**：CIでのProduct-only 2-view read は実測済み。ここで定義した実Sandbox隔離、同一論理パスの実Tool呼出し、H2からの拒否点、H3実Loader、外部AI Harness四Session、Oracle/Costは **NOT RUN**。最初のBlocking Exit は引き続き外部HarnessからのH2-01実Tool Request→TEI CLI実行→Harness側応答受信である。
+**到達点（§24更新）**：CIでのProduct-only 2-view readに加え、DSH探索的H2 Tool Request→TEI CLI→Replyは限定観測済み。ただしDSHのread-onlyでは隔離Directory外の読取が可能だった。**現在のBlockingは比較適格H2 Sessionでの実Skill非露出／Tool/OS可視性境界／同条件／実ログ成立**。H3 Loader、4独立Session、独立Expected採点・実費用・Egress否定は未実施／未証明。
 
 
 ---
@@ -577,7 +577,7 @@ H2-01の実呼出しが確認された場合のみ、次の**独立Session**でH
 
 **Claimの上限**：これはLinux CIで**Go実行コマンドをPATHから解決できない環境変数下**の固定Executable動作を示す。Goがホストから完全にアンインストールされていること、別OS/アーキテクチャへの適合、単一Binaryの全依存の封入、Sandboxの隔離、外部HarnessでのTool呼出し・Skill実Loadを実証したものではない。`go version`が採れないことはPrebuilt Toolの不適格理由にならず、**実Binary byte＋Platform＋実CLI呼出し**で資格化する。一方、Source Buildを要求する別Taskには`go.mod`とToolchainの別Gateを使う。
 
-次の`H2-01`は依然、外部Harnessにおける実Tool Request→実Executable→実Tool Replyの同一Session証拠が必要。Product-only CI成功とSkill有益性/業務Owner受理を合算しない。
+DSH探索的H2では実Tool Request→実Executable→実Tool Replyは限定観測済み。次は**適格H2で同じ経路と強制された非露出／隔離を再観測**する（§24）。Product-only CI成功とSkill有益性/業務Owner受理を合算しない。
 
 <!-- sk02-tei-md-migration-versioned-groups-20261107 -->
 ### 22.7 `*.tei.md`全面統一の製品決定を、固定S1/H2/H3の版比較とは分離する（2026-11-07）
@@ -674,7 +674,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 ### 23.4 進める順と実証の現在地
 
-1. **先行P0は変更なし**：#168/SK-02の最初の外部Harness **H2 Tool-only一Sessionの実Tool Request→実CLI argv/exit/stdout観測**。次にH3実Loader、その後固定4 SessionのITT/PP・独立Expected/費用採点。ここへSCN-001の新Toolを混入させない。
+1. **先行P0の出口を具体化**：#168/SK-02では外部DSHの探索H2実Tool Request→実CLI argv/exit/stdoutは限定観測された。次は**実隔離／H2 Skill非露出／同一Tool・Task・Sourceを確認した比較適格H2一Session**、次にH3実Loader、その後固定4 SessionのITT/PP・独立Expected/費用採点。ここへSCN-001の新Toolを混入させない。
 2. **並行準備**：SCN-001の既存O-01〜06・D-04・Reference実装と必要Product CLI/Readerの現物を#271/#422の担当で棚卸し、できること／未実装／Owner未受理を分ける。公開合成資料のみ使う。独立ExpectedをTrial開始前に封印する。
 3. **後続の最小活動試行**：B0→B1→B2を同じTaskで別Session/明示したConsumer Scopeとして実施し、最初は**一度の中断→O-06→Draft再開**を比較する。2 Harness切替、実EKI業務Effect、SHO Publish、全Product構成はこの試行の必須条件ではない。必要性を示す反例が得られたときだけ追加する。
 4. **資格更新**：SourceやHarness、Skill、Product Reader、Grantが変われば、新Attemptと現在用途に対する適用だけ再照合し、履歴の正しいObservationを保存する。比較の成果はProduct側の受理/修正Ownerへ戻し、TAIを第二の正本にしない。
