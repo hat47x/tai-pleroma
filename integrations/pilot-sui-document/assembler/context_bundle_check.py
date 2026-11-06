@@ -22,6 +22,99 @@ def free_port():
         return sock.getsockname()[1]
 
 
+
+def observe_stub_visibility(bundle):
+    """Inspect a real HTTP response against the fixed A2-minimal-v1 stub scope.
+
+    Return counts, not card IDs or text. This is *not* evidence of user-data
+    recall, independent source revision, disclosure authorization, or meaning.
+    """
+    errors = []
+    counts = {}
+    result = {
+        "passed": False,
+        "errors": errors,
+        "counts": counts,
+        "selectionScope": "A2-minimal-v1 fixed synthetic stub only",
+        "sourceRevisionMatched": "not-checked",
+        "disclosureAuthorization": "not-checked",
+        "candidateCompleteness": "not-established",
+    }
+    if not isinstance(bundle, dict) or bundle.get("schemaVersion") != "1.0.0":
+        errors.append("expected ContextBundleResponse v1")
+        return result
+    selected = bundle.get("selected")
+    evidence = bundle.get("evidence")
+    relations = bundle.get("relations")
+    flags = bundle.get("reviewFlags")
+    reasons = bundle.get("excludedReason")
+    meta = bundle.get("truncationMeta")
+    if not isinstance(selected, list) or not isinstance(evidence, list) or not isinstance(relations, list):
+        errors.append("selected/evidence/relations must be arrays")
+        return result
+    if not isinstance(flags, dict) or not isinstance(reasons, list) or not isinstance(meta, dict):
+        errors.append("reviewFlags/excludedReason/truncationMeta malformed")
+        return result
+
+    ids = []
+    for i, item in enumerate(selected):
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not item["id"]:
+            errors.append(f"selected[{i}] has no ID")
+        else:
+            ids.append(item["id"])
+        if not isinstance(item, dict) or item.get("reviewed") is not True:
+            errors.append(f"selected[{i}] is not reviewed")
+    if len(ids) != len(set(ids)):
+        errors.append("selected contains duplicate IDs")
+    selected_ids = set(ids)
+
+    refs = set()
+    unreviewed = set()
+    counter_opinions = set()
+    for i, item in enumerate(evidence):
+        if not isinstance(item, dict) or not isinstance(item.get("cardId"), str) or not item["cardId"]:
+            errors.append(f"evidence[{i}] has no cardId")
+            continue
+        card_id = item["cardId"]
+        refs.add(card_id)
+        if item.get("reviewed") is False:
+            unreviewed.add(card_id)
+        if item.get("kind") == "counter_opinion":
+            counter_opinions.add(card_id)
+    for i, item in enumerate(relations):
+        if not isinstance(item, dict):
+            errors.append(f"relations[{i}] is not an object")
+            continue
+        for field in ("from", "to"):
+            if not isinstance(item.get(field), str) or not item[field]:
+                errors.append(f"relations[{i}].{field} missing")
+            else:
+                refs.add(item[field])
+    reference_only = refs - selected_ids
+    counts.update({
+        "selected": len(selected_ids),
+        "referenceOnly": len(reference_only),
+        "unreviewedReferenceOnly": len(unreviewed & reference_only),
+        "counterOpinionReferenceOnly": len(counter_opinions & reference_only),
+    })
+    if type(flags.get("reviewed")) is not int or type(flags.get("unreviewed")) is not int:
+        errors.append("reviewFlags counts are not integers")
+    elif flags["reviewed"] != len(selected_ids) or flags["unreviewed"] != 0:
+        errors.append("reviewFlags disagree with strict reviewedOnly selected")
+    if not all(isinstance(reason, str) for reason in reasons):
+        errors.append("invalid excludedReason")
+    if meta.get("stubDatasetId") != "A2-minimal-v1" or meta.get("holdState") != "hold:stub_dataset_contract_only":
+        errors.append("not the fixed A2-minimal-v1 stub")
+    if "unreviewed_filtered" not in reasons:
+        errors.append("reviewedOnly exclusion reason not observed")
+    if (len(selected_ids), len(reference_only), len(unreviewed & reference_only),
+            len(counter_opinions & reference_only)) != (1, 1, 1, 1):
+        errors.append("unexpected A2-minimal-v1 selected/reference-only shape")
+    result["passed"] = not errors
+    if errors:
+        counts.clear()  # never emit a success-like count from malformed data
+    return result
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--sui-repo", required=True)
@@ -105,8 +198,11 @@ def main():
         "noPreviewStatus": no_preview.status_code if no_preview else None,
         "noPreviewCode": (no_preview.json().get("detail") or {}).get("code") if no_preview is not None else None,
     }
+    visibility = observe_stub_visibility(first_body)
+    checks["visibility"] = visibility
     passed = (
-        checks["firstStatus"] == 200
+        visibility["passed"]
+        and checks["firstStatus"] == 200
         and isinstance(checks["bundleHash"], str)
         and checks["deterministic"]
         and checks["hasQueryHash"]
@@ -124,7 +220,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Builds SUI's context bundle twice from the same query with the A2-minimal-v1 stub dataset, checks the hash is stable, and checks that a query without preview confirmation is refused. The stub dataset is synthetic.",
+        "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), hash determinism and preview refusal. Does NOT establish candidate completeness, matching external Source revision, disclosure authorization, or human decision.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
