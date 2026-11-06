@@ -1,0 +1,16 @@
+{
+  "schema": "tai.reference.sui-agent-credential-guard/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with SUI in local-dev profile",
+  "command": "python integrations/pilot-sui-document/assembler/agent_credential_guard_check.py",
+  "result": "PASS",
+  "observed": {
+    "agentEnabled": true,
+    "guardRaised": true,
+    "auditExportedClearsGuard": true
+  },
+  "scope": "Calls SUI's agent_audit_is_not_exported rule with agent credentials enabled, once without audit export (expects True) and once with audit export plus SafeMode export (expects False). It reads the rule, not the startup log."
+}

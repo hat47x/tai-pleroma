@@ -1,4 +1,4 @@
-﻿# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
+# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
 
 2026-11-03時点の整理。実装と検証の正本は各リポジトリのGit履歴とreceipt。
 
@@ -762,3 +762,15 @@ result PASS / steps 53 / TEI 2d0b09b13 / SUI 09c24046 / SEI e8d13e0 / MMI b07ed4
 
 公開gateは`allowed=false`のまま。
 
+## Agent資格情報と監査出力の関係（2026-11-06）
+
+`agent_audit_is_not_exported`を直接呼んで確認した。[receipt](../evaluations/records/SUI-TEI-agent-guard-2026-11-06.json)
+
+```text
+agent有効・監査出力なし → guard true
+監査出力あり（SafeMode含む） → guard false
+```
+
+- 実装は起動を止めず、警告ログを出す（fail-openの警告）
+- したがって「監査なしでは起動しない」という前提は誤り。統制は警告と運用に依存する
+- 起動ログ自体の捕捉はしていない（規則の評価のみ）
