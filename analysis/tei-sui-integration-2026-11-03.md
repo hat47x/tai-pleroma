@@ -941,3 +941,23 @@ limit=501 → 422
 - 一覧は本文を含まない行メタデータのみ
 - カーソルは `updated_at:id` の組で、ページ間の重複も取りこぼしもない
 - アーカイブ済みの文書も一覧に載り、`lifecycle_state`で区別できる（一覧からは消えない）\n- `createdBy`に無関係な主体を指定すると0件を返す（作成者での絞り込みが効く）\n- ページング中の並行書き込みは未確認
+
+## agent資格情報の読み取り経路（2026-11-06）
+
+資格情報を作り、許可した文書の読み・書き・一覧・派生ビュー・未付与文書・混在資格情報・不正トークン・監査を順に試した。[receipt](../evaluations/records/SUI-TEI-agent-read-path-2026-11-06.json)
+
+```text
+付与文書の読み → 200（ETagなし、カード2枚、確認済みのみ本文あり、題名は返さない）
+書き → 403 agent_write_not_enabled
+一覧 → 200（付与文書のみ、題名と作成者は伏せる）
+派生ビュー（類似候補） → 403 agent_route_not_enabled
+未付与文書 → 404 agent_document_not_granted
+混在資格情報 → 400 agent_credential_conflict
+不正トークン → 401
+context-audit（channel=mcp） → 200 / channel=api → 403
+```
+
+- agentは文書の本文を「人が確認したカード」に限って読める。未確認カードは本文もidも返さない
+- 派生データ（類似候補など）は経路ごとに閉じており、許可は明示リストで管理する
+- **`SUI_AGENT_CREDENTIAL_HASH_KEY`を設定しても、local-devプロファイルではapp.stateへ配線されない**（配線はsaas-multitenantの分岐内にある）。本検証は検証内で鍵を配線して経路を評価した
+- 本番相当プロファイルでの配線と、実外部agentとの接続は未確認

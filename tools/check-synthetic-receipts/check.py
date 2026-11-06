@@ -172,6 +172,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-export-dedup-2026-11-06.json",
     "evaluations/records/SUI-TEI-native-action-2026-11-06.json",
     "evaluations/records/SUI-TEI-list-pagination-2026-11-06.json",
+    "evaluations/records/SUI-TEI-agent-read-path-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -615,6 +616,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-agent-read-path" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("writeAttemptStatus") != 403:
+                errors.append(f"SUI agent read path did not refuse a write: {relative}")
         if "SUI-TEI-list-pagination" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allSeenOnce") is not True:
