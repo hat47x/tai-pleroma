@@ -138,7 +138,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 
 ## 2026-11-06 時点の追記
 
-実実行receiptは139件、一括検証は53段（`integrations/tools/run_suite.py`、全段PASS）。
+実実行receiptは139件、一括検証は52段＋checker（`integrations/tools/run_suite.py`、全段PASS）。
 
 - EKI: 製品テストと自前構成の両方で、HTTP投入→Agent実行→ResultClaimまで到達。結果の受入は未配線（`409 RESULT_NOT_READY`）。mTLS登録と失効（最終状態・認証段で401）も確認
 - SUI: Postgres・TLS・ローカルCA・TLS終端プロキシ・2インスタンス共有、監査エクスポート、管理APIの認証分離、利用者provision、TEI artifact配信、context query/bundle、CE4 resolve、モデル登録を確認

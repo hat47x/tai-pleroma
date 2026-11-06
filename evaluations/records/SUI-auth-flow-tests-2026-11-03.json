@@ -7,7 +7,7 @@
   "host": "Windows with Python 3.12 and the SUI checkout on PYTHONPATH",
   "command": "python integrations/tools/sui_auth_flow_tests.py --sui-repo <SUI>",
   "result": "PASS",
-  "suiCommit": "21d07f0178818c60aa75384227a08d7da2beef3d",
+  "suiCommit": "09c240460017d0a4ecc6ab55582631d3e1a8b0a9",
   "observed": {
     "files": [
       "tests/test_auth_federation_level2.py",
