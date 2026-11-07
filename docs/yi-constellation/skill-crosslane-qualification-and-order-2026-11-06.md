@@ -394,7 +394,7 @@ YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実�
 
 ### 18.7 Edge端点Kindの一意解決を受理しても、投影Kindを捏造しない（TAI #536追加実測）
 
-前節§18.4〜18.6の**時間差を含む結果を更新**する。[TAI merged #535](https://github.com/hat47x/tai-pleroma/pull/535)の任意Kind契約試作はEdgeそのものを`present`で投影できることを示したが、当該PRでは現行パイロット契約の必須Kind定義を変更していない。[TAI PR #536](https://github.com/hat47x/tai-pleroma/pull/536)は別の未マージ修正として、Assemblerの旧`Kind未指定→card`決め打ちを廃止し、**実際の端点IDがどのKindの集合に一意に属するか**で解決する。PR記録上、局所単体テスト**13件PASS**・製品横断Suite**89段PASS**だが、TAIブランチの限定検証であり、SUI正本の変更や現行パイロット契約の採用を意味しない。
+前節§18.4〜18.6の**時間差を含む結果を更新**する。[TAI merged #535](https://github.com/hat47x/tai-pleroma/pull/535)の任意Kind契約試作はEdgeそのものを`present`で投影できることを示したが、当該PRでは現行パイロット契約の必須Kind定義を変更していない。[TAI PR #536](https://github.com/hat47x/tai-pleroma/pull/536)は既にmainへ統合済みの修正として、Assemblerの旧`Kind未指定→card`決め打ちを廃止し、**実際の端点IDがどのKindの集合に一意に属するか**で解決する。PR記録上、局所単体テスト**13件PASS**・製品横断Suite**89段PASS**だが、TAIブランチの限定検証であり、SUI正本の変更や現行パイロット契約の採用を意味しない。
 
 | 入力Case | #536のAssembler局所結果 | YICが保持する意味の上限 |
 | --- | --- | --- |
@@ -408,7 +408,7 @@ YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実�
 
 **受入の最小観測列**：Product/Contract Version、元Document/Entity・Edge集合の取得Scope、入力Kindの`declared / omitted / null`、実解決ID/Kindと曖昧・拒否（内部Reviewer権限内）、合成OutputのKind/ID/方向/多重性、Consumerの実受領BytesとRequired Shape、現在Audience/Disclosureを、TAI #488 X02/X06・#271 SC-15/16へ接続する。これらは**既存Productの証拠を相互参照する欄**であって新しい共通Graph Resolverや第二のPolicy/Schemaを作らない。失敗したGraph操作だけを止め、独立に実行できるread-only作業は継続可能にする。
 
-**順序／未実施**：#536は現時点Open・未merge。TAI統合テストの局所PASSをSUI→SHO→SEIの一Attempt実Handoff、H2/H3外部Skill実価値、Ownerの意味受理としない。既存§18.6の歴史的「Assembler旧仮定」は**#536で修正を試みた旧状態の観測**であり、正規契約/Consumer同値まで自動更新された記録ではない。固定公開TEI H2/H3比較（現適格0/4）を変更せず、本件は後続の別Trial Groupに残す。
+**順序／未実施**：#536は[TAI mainへmerge済み](https://github.com/hat47x/tai-pleroma/pull/536)（HEAD `ecad9267fbbe32dd65fca5142c4e911a426dd632`）。ただし局所13件・一括89段PASSをSUI→SHO→SEIの一Attempt実Handoff、H2/H3外部Skill実価値、Ownerの意味受理としない。既存§18.6の歴史的「Assembler旧仮定」は**#536で修正を試みた旧状態の観測**であり、正規契約/Consumer同値まで自動更新された記録ではない。固定公開TEI H2/H3比較（現適格0/4）を変更せず、本件は後続の別Trial Groupに残す。
 
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
@@ -525,7 +525,7 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 | **宣言の版** | 実CLI Binary SHA／Source版、`commands`の`effect`・`writeFlags`・受理flag一覧の当該版 | 現行mainの`writeFlags`を旧Pinned DSH TEI Binary（`50ebf801…`）が返したことにする |
 | **実Invocation** | command family＋各実flag・値・output path、`cwd`とWorkspace resolved root／実FS effect、現在Tool/Host Grant | `view`というコマンド名や`read-only`広告だけで記録先書込みなしと推定 |
 | **ファイル出力と業務効果** | 変更対象が出力File、元Workspace、Provider/DB、Consumerのどれか。Path/Byte/Receiptを別々に観測 | 実Logファイル生成を業務Commitと扱う、逆に`-execute`のRuntime Request/権限をFS無変更だけで安全と断定 |
-| **候補実装との差** | [TEI Open PR #3311](https://github.com/hat47x/tei-platform/pull/3311)の`result.workspace`／`writesToNamedOutput`は別の**未マージ候補**として扱い、現在の正式CLIで再照会する | PR提案のWorkspace Manifest/Name/Digestや別名欄をmain実API・旧Pinned Scriptの証拠へ混入 |
+| **候補実装との差** | [TEI closed/unmerged PR #3311](https://github.com/hat47x/tei-platform/pull/3311)の`result.workspace`／`writesToNamedOutput`は**mainには入っていない候補**として扱い、現在の正式CLIで再照会する | PR提案のWorkspace Manifest/Name/Digestや別名欄をmain実API・旧Pinned Scriptの証拠へ混入 |
 
 **初回SK-02の停止条件は維持**：現行許可Command Familyに`view`は含めず、今回のDiscovery改善を理由に実験途中で許可Flagを広げない。[TAI Draft #270 Runbook §24.6/24.12](https://github.com/hat47x/tai-pleroma/pull/270)のG0物理Read拒否、G1各送出経路、G2実argv/Tool Reply完全性を先行し、別の将来Trialで`view`を試すなら開始前に実Binary/CLI Contract/flag/output destination/独立Expected/許可Profileを再Pinする。Tool-only／Product Skill／TAI Activity Skillの選択は、説明文でなく**当該Invocationと実Effectの観測**に基づく。新しいCLI ValidatorやTAI共通Effect Engineを作らず、#3182/#1155/#2499の製品担当へ委譲。正式H2/H3資格は0/4、実Host許可とOwner受理は未実証。
 
