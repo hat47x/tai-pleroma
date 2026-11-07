@@ -707,6 +707,24 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 比較時には declared/supplied-lock/selected/executed/independent-expected-pass/current-qualified を別に記録し、既存[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267) VCB-01〜09、[#3262](https://github.com/hat47x/tei-platform/issues/3262)、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X01/X04、§27.4 B0/B1/B2へ参照する。新Resolver/Runner/BOM Registryなし。初回SK-02に組合せ試験を追加せず、正式BOM資格／TEI要件採番Owner判断は**未成立**。
 
+### 22.8 Product Self-buildの生成Artifact一致と実Invoker同一性を分離する（TEI SB-C1／限定実プロセス）
+
+§22.6〜22.7の「exact Lock/Artifact/独立Expected→Verified BOM」と§27.5〜27.6の「Capability宣言→選択→実Load/Invoke」は、**同じArtifact bytesが存在した事実と、そのArtifactが実際にどのProcessを駆動したか**を混同してはならない。[TEI merged #3360](https://github.com/hat47x/tei-platform/pull/3360)は#2831 SB-C1の小さいGo Referenceで、**stage1成果物をstage2の実Invokerとして起動**させて再Buildし、L3の三条件を独立に照合した。参照に用いたのは自身をBuildできる`reference-go-build-stage-driver`であり、TEI製品`cmd/tei`のSelf-build実証ではない。
+
+| 現物の観測／独立Expected | YICの資格への採用範囲 | 排除する誤昇格 |
+| --- | --- | --- |
+| **stage0**：外部Go seedで最初のdriverをBuildし、stage1の子Process起動を行う | Seed Toolchain/Tool Path・Revision・Byte digestを**外部の前提**として固定 | Seed自体をTEI自身が作った、Trust Chain/署名・配布まで受理した |
+| **stage1→stage2 Invoker**：`stage2 invoker digest = stage1 artifact digest`（`stage1ArtifactIsStage2Invoker`） | stage2を本当に駆動したProcess Image/実Pathを、stage1の**生成物**と照合する | 同じSource/同じ出力SHAだけで「生成物が次のBuildを駆動した」 |
+| **同じBuild Input**：二段のChild Binary・Arguments・Package・供給が一致（`sameChildAndArguments`） | 入力の閉包・実Toolchain/Generator/Arg・環境差分を比較 | Invokerだけ一致、だが異なるRecipeの成果物を同一Buildと宣言 |
+| **成果物比較**：`stage1 artifact digest = stage2 artifact digest`（`artifactsEqual`）。三条件を満たした場合にのみ`l3Claimed=true` | [#3360](https://github.com/hat47x/tei-platform/pull/3360)のWSL2 Go 1.27.3、**1対象／1Toolchain／1Child Recipe**で三条件TRUEの実Process成功と、異Package・非stage1 Invoker・別Child・不一致Artifactの負例を限定Witnessとして保存 | 再現性1件で全OS/全Plugin/全Target合格、実DB/Host/Owner意味/現在Execution Grantを得た |
+| **Invokerの自己申告**：[TEI merged #3362](https://github.com/hat47x/tei-platform/pull/3362)は`-claimed-self`と実行中Process Image digestを比較。不一致の拒否／複数失敗Causeの保持を局所Testで確認 | `invokerClaimChecked`と`invokerClaimMatched`を独立に扱い、受信申告と実Fileの照合を記録する | 自称digest一致だけで`l3Claimed=true`、古いArtifact/別Invokerの履歴を現在の資格へ昇格 |
+
+**YICへの具体的反映（新Builder/Receipt Storeではない）**：TEI #2831の既存L3と#3267のVCB-01〜09を参照し、TAI #488 X01/X03/X04では、(1)現在の要求Functionに必要なPlugin/Targetを**実Bindingで選択**、(2)実Host/Processが**何をInvokeしたか**、(3)同一Attemptで**どのSource/Lock/Artifact/Child/Argを消費**したか、(4)対象Consumerが**実Result bytesを受領**したか、(5)現在Grant/Disclosure/Owner受理、を**別の証拠列**として照合する。Plugin/CapabilityのCatalog照合（§27.6）で未選択/未検査を区別できても、**実InvokerのIdentity検査は代替できない**。逆にL3成功がTool/Skill選択・業務実行可否を決める権限にはならない。
+
+**後続の一因子負例**：A）同じArtifact SHAだがstage2 Invokerは外部seed、B）同じInvokerだがChild/Args/供給が異なる、C）self digestを申告だけして実Process Imageと不一致、D）`cmd/tei`ではBuild入口が未接続、E）Runtimeの実Target/Consumer/Grantが未確認、F）一部Plugin追加が現在の要求Functionに無関係。この六Caseを**TEI側#2831/#3267/#951に既存Conformanceとして委譲**し、YICは各状態の誤推薦・不要な全停止・実Tool/Skill増分効果を後続B0/B1/B2で評価する。TEIの正式Self-build L3（対象`cmd/tei`）、G4資格、全Trusted Checkout、異OS/Toolchain Matrix、実Target/Provider、Owner受理は**NOT RUN／未成立**。
+
+**実施順序**：初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**固定公開TEI SK-02 H2/H3**は、従来どおりG0物理Read拒否→G1送出範囲→G2 Tool Result完全性→事前固定4独立Sessionを先行し、**比較適格0/4**。ここへSelf-build/新Plugin Matrixを初回Blockingとして差し込まず、後続の別Pin/Trial Groupでのみ製品能力の追加価値を測る。TAIが第二Generator、Build Invoker、Trait Resolver、Host/Authorityを作らない。
+
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
 ### 23.1 今回の差分と既存Owner
