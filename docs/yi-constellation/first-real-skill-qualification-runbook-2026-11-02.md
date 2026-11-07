@@ -902,3 +902,13 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 既存の`E01〜E60`に加え、合成`E61〜E72`でG0拒否未実施・実Read成功、56/55、型偽装、同件数でも相関未確認、Catalog切詰め、モデル受領欠落を反証する。テストはあくまで**Trial JSONの申告内容を分類する検査**であり、申告した`true`を実OS非漏えいや実受信Byteの独立証明に変換しない。Checkerの`eligible-to-score`は**実観測ログ・物理Read正負試験・Model受信原文・独立Expectedを照合する作業への入口**に過ぎず、実Sessionの成立や正答・安全性PASSではない。既存の固定Task、TEI Source/Binary、H2→H3→H3→H2とITT/PPの境界は不変。
 
 **実施順**：既存のDSH探索9試行とH3-A/B実Skill受信は履歴Witnessとして保持し、実行票を事後充足させない。新たな事前固定Groupで、①実OS強制の許可Read正例／許可外Read拒否負例、②起動前の暗黙Context/Session再開残留／Grantと公開Audience、③Tool Request↔Resultと**モデル入力全Byte受領**の確認、④初めてH2→H3→H3→H2の独立比較、⑤独立Expected採点と費用記録へ進む。現時点の実H2/H3**比較適格0/4**、OS隔離成功、実外部Egress非漏えい証明、独立正答採点、正式Owner受理はいずれも**NOT RUN/未達**。TEIのSource Loader/Command契約は各Product Owner（#2509/#2515/#2605）、TAIの比較資格は#168、開示は#232、継続資格は#271で扱う。
+
+
+<!-- sk02-trace-kind-fixed-current-main-pinned-historical-20261107 -->
+### 24.13 TEI trace未対応Kindの旧負例と、修正後の現在Mainを混同しない（2026-11-07）
+
+§24.7で引用した[TEI #3180](https://github.com/hat47x/tei-platform/issues/3180)の\`trace=SUBJECT_NOT_FOUND\`誤分類は、**当時の実CLIで生じた歴史的負例**。その後[TEI merged PR #3208](https://github.com/hat47x/tei-platform/pull/3208)で\`supportedTraceKind\`による入口判定が追加され、現在mainの[実コード](https://github.com/hat47x/tei-platform/blob/main/internal/operations/trace_workspace.go)にも存在する。PR HEADの実CLI検証では、\`semantic-candidate-key\`と存在しないkindが\`UNSUPPORTED_SUBJECT_KIND\`／exit 2、対応\`semantic-relation\`は従来通り成功。局所go test・vetもPASS。従って「現在mainでも未対応が一律SUBJECT_NOT_FOUND」とは報告しない。
+
+**ただし歴史証拠／Pinned Binaryを遡って書き換えない**。TAI #168のDSH四Sessionが使用した固定TEI commit \`50ebf801...\`／Binary SHA \`186d06ce...\`は本修正より前の時点。これらのSessionに新Error契約を後付けしない。新比較Groupの実Binaryを変更する場合は、開始前に固定Task/Source/Skill/CLI Contract/独立Expectedとの互換をReviewerが確認し、別Group／Treatment Revisionとして採点する。同じScenario名でも**新Mainの回帰PASSを旧実Harnessに持ち込まない**。
+
+**G2の修正後の判定**：対応Kindで真に未宣言なら\`SUBJECT_NOT_FOUND\`、未対応Kindは\`UNSUPPORTED_SUBJECT_KIND\`と読み分け、Source/Scope/Source Indexの実取得範囲は依然別。対応Kind集合を全モデル・全依存閉包と見なさず、必要な関係の未観測はunknownに留める。新しいRunnerやH2固定Task変更は不要であり、次のBlockingは引き続きG0実Read拒否→G1送出→G2完全なTool結果→新4 Session。実OS隔離、適格H2/H3 0/4、独立Reviewer品質・Owner受理は未達。
