@@ -1,6 +1,6 @@
 # YIC Skill横断適合・実行順序への統合追補（2026-11-06）
 
-> 状態：計画追補・Owner未受理。**2026-11-07の外部DSH→実TEI CLI→Tool Replyは限定的に実観測済み**（TEI PR #3113／TAI #168）。ただし**外部DSHによる探索的なH2→H3→H3→H2四Sessionと、H3-A/H3-BのProduct Skill本文・参照資料の実Tool Readは限定観測済み**（TEI mainの四Session実証拠／TAI Runbook §24.5）。ただし**比較適格なH2/H3四Sessionは0/4、実OS読取り拒否・Egress、独立正答採点、製品間E2E／本番Authority／シリーズReleaseはNOT RUN／未適格**。既存各Product契約、TAI #168、#271、#74、#232、Draft PR #270、SK-01/SK-02/SK-03を正本とし、新Host・中央Registry・共通Evidence Engineは設けない。各節の「最初のH2 Tool Callが次の出口」「実外部HarnessはNOT RUN」は**新Evidenceより前の歴史記述**であり、現行の出口は下記§4・§19を優先する。
+> 状態：計画追補・Owner未受理。**2026-11-07の外部DSH→実TEI CLI→Tool Replyは限定的に実観測済み**（TEI PR #3113／TAI #168）。加えて、**外部DSHによる探索的なH2→H3→H3→H2四Sessionと、H3-A/H3-BのProduct Skill本文・参照資料の実Tool Readは限定観測済み**（TEI mainの四Session実証拠／TAI Runbook §24.5）。ただし**比較適格なH2/H3四Sessionは0/4、実OS読取り拒否・Egress、独立正答採点、製品間E2E／本番Authority／シリーズReleaseはNOT RUN／未適格**。既存各Product契約、TAI #168、#271、#74、#232、Draft PR #270、SK-01/SK-02/SK-03を正本とし、新Host・中央Registry・共通Evidence Engineは設けない。各節の「最初のH2 Tool Callが次の出口」「実外部HarnessはNOT RUN」は**新Evidenceより前の歴史記述**であり、現行の出口は下記§4・§19を優先する。
 
 ## 1. 背景と差分
 
