@@ -328,6 +328,24 @@ Product側の出力形式をSkill説明で補完しない。SEIのtextから構�
 
 評価順は変更しない：固定TEI H2-01実AI Harness Tool Request→実CLI argv/exit/stdout → H3 Skill root/reference実Load → H2/H3四独立Session → 必要時だけProduct間Handoff。新Runner/Registry/判定器/Hostは作らず、初回TEI TrialにSEI/SUI/SHOを加えない。本節の横断実Tool・実保存後Reader・正式Owner受理はNOT RUN。
 
+### 18.3 SUI→SHO→SEIで「Document受領」と「Claimの原典照合」を区別する（2026-11-07追加）
+
+[SUI #3391](https://github.com/hat47x/sui-sensemaking/issues/3391)／[#3392](https://github.com/hat47x/sui-sensemaking/issues/3392)／[Draft #3393 §9〜10](https://github.com/hat47x/sui-sensemaking/pull/3393)、[SEI #820](https://github.com/hat47x/sei-cognition/issues/820)は、OKF v0.2のConcept/Markdownを**任意の交換文書**として扱いつつ、SUI Card/Island/Edge/Review、SHO Writer/Reader、SEI Inquiry/Decisionの正本を置換しない方針で収束した。本節はYICの**Skill選択・Handoff時に消費者が主張できる上限**だけを定義し、SUI Exporter、SHO Writer、SEI Importや共通Schemaは作らない。
+
+**実コード起点の制約**：現SUI `context-projection.v1` の `ProjectedCard` に`Card.meta.source`は含まれず、`bundleHash`はhold状態や島所属・元資料の改版を網羅的に指紋化しない。Document `updatedAt`もサーバー保証の単調版ではない。したがって、可視ProjectionとHashのみから原資料の出典脚注、Card全件性、現在のReview/Island状態、未公開要素の不存在を確定しない。[SUI #3392](https://github.com/hat47x/sui-sensemaking/issues/3392)の便宜的な**L0（実取得した可視Projection）／L1（許可された元Document/`Card.meta.source`手掛かりを実Read）／L2（許可されたOriginal ReaderでClaim別Source/Span/Revisionを実照合）**を説明に用いる。L0/L1/L2はYIC新Status Enumや正式SUI APIではない。L1の自由記述を真正原典や独立根拠として脚注に創作せず、L2でも一原典からの転載Card複数件を独立Source複数件に数えない。
+
+| 実引継ぎ地点 | YICに必要な限定観測と、成立しないClaim |
+| --- | --- |
+| SUI Producer/Projection | Task/Audienceに許されたDocument/SelectionのRevisionとCard/Island/Edge/Holdの取得Scope・partial・Disclosure。Tree枝→島の集中、複数所属、2D位置、異論・保留をMarkdown見出しへ勝手に確定変換しない。可視Countは再配布許可ではない |
+| 原典とOKF Concept候補 | L0/L1/L2とClaimごとのSource ID/occurrence/版、転載の同一起点、非可逆Loss・元SUIへの許可済み参照。L0しか無いなら`OKF sources[]`脚注を作文しない。`verified`/`stable`はSource/Authority保証ではない |
+| SHO受領・保存 | 入力Markdown raw byte、実ReaderのParser/Encoding/BOM/Grammar/Coverage、Writer保存応答、独立再Open、disk/dirty/cloudのDocument版を別証拠にする。[SHO Draft #17](https://github.com/hat47x/sho-composer/pull/17)はUbuntu/Windows各16/16の**限定G1b Reader候補**（未merge）。`coverage.unresolvedReferenceCandidatesEvaluated=false`を保持し、G2 Writerや本Fixtureの受領成功へ加算しない |
+| SEI Consumer/Inquiry | 文書を受領した、SUI Cardを実解決した、Original Sourceを実読取した、問いのRequired Evidence/Unknownが足りる、現在Decision/Grantが有効、を別列にする。元Document R0→R1変化やA→B→Aで旧OKF Markdownのbyte一致だけを現在の意味受理へ転用しない |
+| TAI Activity/Skill選択 | Product単独のread-only閲覧で足りるならTAI経由を省く。実Product間Handoffが必要なときにだけ既存SK-03/#271と#488 X06でSource/Revision・Claim/Disclosure・Loss・実Consumer読取を比較し、AIの自己申告を配送Receiptにしない |
+
+**共通Fixture／既存Caseだけを利用**：SUI #3392の5 Card／2 Island／2 Edge／1 held（元Source 2種、転載と未解決参照あり）を、SU-OKF01/05/08/10、SUI #3391 SU-SH01/03/05/14、SEI #820 KO-01/02/05/10/14/15、SHO #4 FR-09〜11へ**相互参照**する。変更は①Cardのsourceだけ変化、②hold/島所属だけ変化、③座標だけ変化、④公開Projection同一だが秘密Worldが異なる、⑤保存前後にR0→R1、を独立に扱う。座標だけの差分でSource根拠を全再読取するのではなく、幾何仮説だけ再資格化する候補を検証。非開示Card/Count/ID/Source URLをLoss/Index/脚注/診断で漏らさない。
+
+**順序・状態**：SUI公開Projection実Read→L1/L2実原典照合（利用できる場合）→SHO G1b Reader実受領→将来のWriter G2保存・独立再Open→SEI Inquiryの不足根拠・判断適用→必要時のみTAI実Harness、を各Ownerに委譲。現SUI→SHO→SEI横断E2E、正式SUI OKF Export、SHO G2 Writer、SEI Import/Decisionの自動受理、TAI実Skill Loaded/Host Disclosureは**NOT RUN**。初回公開TEI H2/H3を新たなBlocking条件で妨げない。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
@@ -662,3 +680,19 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 実装候補への進行順は (1) Productの標準表現型候補とFunction内Bindingのread-only inspect、(2) 既存FC/FP/VE同一FixtureをCUIと少なくとも一つのRendererへ投影、(3) reversible/ambiguous Action候補・独立ExpectedとTool実受領、(4) 必要なProduct間Handoffが発生した時だけSK-03でSkill選択価値を確認、の順。各段階の採用判断は既存Product Ownerで行う。ここでは新しいYIC Test Suite/Pattern Resolver/UI生成器/実Host/第二権限Engineを追加しない。
 
 **実験順を遡及変更しない**：既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Draft #270 Runbook §24](https://github.com/hat47x/tai-pleroma/pull/270)の固定旧`.tei` `sales.order` read-only H2/H3比較は、隔離/Tool Reply完全性を確認する次のBlocking Exitとして維持。今回の表現型/Function候補は**別Trial Groupの後続**。新しい表現型標準Catalog、Context→GUI/CUI実接続、Actionの適格/実Effect、YIC Skill実ロードと増分価値、Ownerの正式意味受理は**NOT RUN**。
+
+### 26.4 AI向けSkillがRole／表現型の存在を公開能力へ昇格しないための段階照合（TEI #2620・#2823、実SourceとOwner受理を分離）
+
+[TEI #2620](https://github.com/hat47x/tei-platform/issues/2620)は、同じSourceが複数Role/Presentation/Functionを持つ場合にも、**Inventoried／Read-by-Loader／Parsed/Anchored／Claim-Qualified／Disclosable now**を分ける設計候補を整理している。この5段階は既存の観測を説明する便宜であり、YICが新たなCore status、Capability Registryや共通Role Resolverを作る意図ではない。
+
+| Productで観測した事実 | AI/Product Skillで説明できる範囲 | 不適切な昇格 |
+| --- | --- | --- |
+| 管理RootでFile/Plugin/Role候補を列挙 | 宣言・候補・選択状態を版付きで説明 | `未列挙`を不存在とする、候補をParser/Tool実装済みと宣言 |
+| 実Loaderが当該SourceをRead | Read Path/Source byte/Load scopeを説明。[TEI Draft #2935](https://github.com/hat47x/tei-platform/pull/2935)の`readByLoader`はこの局所証拠 | ReadだけでRoleをParse/意味受理/全Required Root取得済みとする |
+| 実ParserがRole/Attribute/OccurrenceをAnchor | Syntax/RoleとSource位置・diagnosticの実取得範囲を説明 | 名前と型の一致だけで必要関係/単位/Null/意味Roleを受理する |
+| Function/PatternがRequired Shapeと実Contextで適格 | [TEI #2506](https://github.com/hat47x/tei-platform/issues/2506)のResult Slice／[#2507](https://github.com/hat47x/tei-platform/issues/2507)のApplicabilityを使い、表示可・操作候補・未対応を分ける | Pattern候補・`validate ok`を実Action Dispatch/Provider Effectにする |
+| 現在Consumerへの開示と実Tool/Rendererが確認済み | [TEI #2516](https://github.com/hat47x/tei-platform/issues/2516)等で許可されたProjectionと現在Audienceを確認し、別途実Tool/Renderer受領を観測 | [TEI Draft #2972](https://github.com/hat47x/tei-platform/pull/2972)の**事前公開済みSliceの投影**を、Private World→公開Sliceの実Policy認可や本番開示の証拠とする |
+
+**採用・再資格の最小規律**：YICのSkill選択はProduct固有の`commands`/Schemaと実Loader/CLIの観測可能範囲でのみ行い、`not observed`を`absent`に変えない。Tool-onlyで必要なread-only説明が成立すれば表現型SkillやTAI Activity Skillを増やさない。Preview/OfferはIntent/Grant/Effectと別。Source/Plugin/Role版、Consumer/Disclosure、FunctionのRequired Setが改版された時は影響部分だけ再確認し、静的Catalogを最新の実能力へ自動昇格させない。非公開Roleの存在/件数/Path/診断差を秘匿Audienceへ開示しない。TEIのRV-01〜05、#2586 HJ-01〜07、TAI #488 X01/02/04/06へ参照し、独立Expectedは各Ownerの既存Caseを使う。
+
+**実証範囲**：#2935は特定Loader readの限定Go検証を持ち、#2972は事前に資格付けされた公開Sliceの局所Referenceであり、実Policy/Host、正式Role Required Shape、総合Function→Presentation実Schema、実AI Skill Loader/Handoff、Owner Meaning Acceptanceは**未実証**。固定の初回H2/H3比較へRole新仕様を挿入しない。
