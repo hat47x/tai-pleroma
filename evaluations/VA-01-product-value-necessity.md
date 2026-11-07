@@ -172,11 +172,11 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 
 | Case（既存Owner） | 事前固定する二世界・独立Expected | 通過時に言えること／次の縮退判断 |
 | --- | --- | --- |
-| **VA-TEI-T1** [TEI #3273](https://github.com/hat47x/tei-platform/pull/3273)、[#1180](https://github.com/hat47x/tei-platform/issues/1180) | A＝行番号が有効な既存Pinned Rule Scenario、B＝同一Business Meaningの行番号0・新規負例。AIがBを既存Caseからの単なる再実行でなくGapから提案し、独立Expected・必要Source閉包・実CLI結果・不合格を見逃すMutantを別保存。生成未実施ならT0として残す | Bの実検出とMutant対照が通れば**対象RuleのT1一件**に限定。局所C0相当10.1%を製品全体C0とせずC1はunknown。専用Runner/重複Scenario Storeを要件にしない |
-| **VA-TEI-PLUGIN** [RQ-008](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)、[#3277](https://github.com/hat47x/tei-platform/pull/3277)、[#3262](https://github.com/hat47x/tei-platform/issues/3262) | A＝選択済みread-only Inspector ProviderがCLIの実Consumer経由で呼ばれ、選択LockとBuild/Invocationを同一Attemptで証明。B＝Contractは見つかるが未選択・未Link・未Load。このBで「利用済み」を拒否する。Queryの必要Source/Replyが切れていればcomplete=false | Plugin-first要求の**最初の一能力**と限定Source Closureを示す。要求自体は任意ではないが、全Surface・全Plugin即時移管をGateにしない。業務GrantはBuildから推定しない |
+| **VA-TEI-T1** [TEI main #3304](https://github.com/hat47x/tei-platform/pull/3304)、[#1180](https://github.com/hat47x/tei-platform/issues/1180) | **T1-Aは限定Observed**：既知の行番号正数Ruleに対して0を与え、既存CLIで拒否を判別。[CI #42378033965](https://github.com/hat47x/tei-platform/actions/runs/42378033965)は偽Expected/Fixture/旧Pin負例も検査。次は独立Required Rule/Relationの部分欠落（TT-56）を既存Context Gateで拒否した後、未知RuleをAIが発見する**盲検T1-B**を別Expectedで採点 | 既知Caseの第7Stepを実行できてもAI新規発見・C1・全製品Coverageとはしない。旧T1-Aを未実施と再掲せず、新Runnerや第二Scenario正本は作らない |
+| **VA-TEI-PLUGIN** [RQ-008](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)、[main #3337](https://github.com/hat47x/tei-platform/pull/3337)、[#1251](https://github.com/hat47x/tei-platform/issues/1251) | A＝一つのInspectorに必要なKind+IDのCapabilityがEnvironmentから選ばれ、実Build→CLI Consumer呼出しを観測。B＝別Environment用Capabilityが未選択でも、このInspectorの実操作は成功。C＝Inspector自体のBinding/Link/Invocationが欠ければ当該操作だけ unavailable/unknown とする。plugin selected と capability bound は違う | #3337の「宣言12・全環境未選択6（DB Provider種別差を含む）」を欠陥件数にしない。全Providerの選択義務も、選択を実利用資格へ昇格させることも禁止。業務Grantは別証拠 |
 | **VA-TEI-BOM** [#3267](https://github.com/hat47x/tei-platform/issues/3267)、[Draft #3269](https://github.com/hat47x/tei-platform/pull/3269) | A＝宣言された候補Pair12、B＝実Lock供給Pair9の差を欠落3として保持。BのReference synthetic PASSだけではqualified=false。実Consumer/Independent Expectedがある選択Pairのみ検証し、同じProviderとConsumerでも別版は未試験として残す | Verified BOMの**組合せ別資格**を最小採用。9/9を12/12へ昇格せず、組合せを利用しない単独読取の前に全Version Matrixを要求しない |
 | **VA-SUI-SHO-FILE** [SUI #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)、[SHO #21](https://github.com/hat47x/sho-composer/pull/21)、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271) | A＝両Repoの別々の354-byte Fixture CI（固定Raw PASS）。B＝SUI実Producerが新規絶対Pathへ1回書き、SHO実CLIが**同じPath・同じBytes**を読む（現CIは1 SKIP）。両者のPath、SHA、mtime、Source/Scope、CLI結果を比較。非公開カードや失われたIsland/Edgeを出典付きとして復元しない | B実行後でも「read-only一File受領」のみ。SHO Writer/公開Scope/Source認可・意味受理は別。新Handoff Serviceを作る根拠にしない |
-| **VA-SHO-L0** [#16](https://github.com/hat47x/sho-composer/issues/16)、[#4](https://github.com/hat47x/sho-composer/issues/4) | A＝既存ReaderがLinkを読んだ既知Fixture。B＝未定義Reference/特殊File/編集競合を含み、未解析ScopeやOpen前拒否が不確かなとき「全検出・安全に処理済み」と報告しない。保存→再開はWriter実Readbackでのみ確認 | Reader限定CIを正式SHO L0全機能の資格にしない。Writerを新DB・外部論文取得・MMI移植に依存させない |
+| **VA-SHO-L0** [#4](https://github.com/hat47x/sho-composer/issues/4)、[#19](https://github.com/hat47x/sho-composer/issues/19)、[#20](https://github.com/hat47x/sho-composer/issues/20)、[TEI #3031](https://github.com/hat47x/tei-platform/pull/3031) | A＝通常notes.mdと管理外の下書きorder.tei.mdを、AI/OKF/TEI Language Plugin/CloudなしでRaw no-op保存・再開。B＝管理済みSource Rootの未対応tei.mdはTEI解釈を拒否するが、SHO Raw Draftの保存まで拒否しない。C＝外部Editor競合・BOM/CRLF/未定義Referenceは原文を勝手に正規化/上書き/網羅断言しない | G1b Readerの限定CIはSHO Writer受入ではない。新DB/Parser/全Vault同期を第一価値の前提にせず、原文Byte/Writer readbackとMeaning/出典資格を分ける |
 | **VA-RQ-IDENTITY** [TEI #3223](https://github.com/hat47x/tei-platform/issues/3223) | A＝同じRQ-035表記でも、main WorkbenchとBOM Draftの意味・Source ref/Blobを別に提示。B＝IDだけでMergeする旧処理なら意味衝突を見逃す。実Ref単位の採用前照合で誤上書きを拒否 | 中央Requirement Registryなしの差分検査で十分か判定。旧Draft #3269 closed/unmergedをRequirement acceptedとして扱わない |
 
 **優先順位**：既存実証の欠落一辺は TEI T0→T1、SUI/SHO 別Fixture→同一File、SHO Reader→Writer readback、TEI Plugin要求→単一実Consumer の4系統。互いに独立に実施でき、TAI #168の現行H2/H3 G0/G1/G2を追加でブロックしない。SEI #758のverify偽成功とEKI #58の「分散しない」選択は§7の独立レーンで保持する。
@@ -200,3 +200,18 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 
 **停止線／優先**：TEIの初回H2/H3固定Trialはそのまま。Edgeの現行パイロット契約を本Draftから変更しない。#535の局所試作/88段Suiteの結果、TEI限定CI、BOM合成参照を横断ActivityのPASSへ昇格しない。**VA-MIN-E1/T1/B1/S1のB0/B1/B2実User試行、未知GapをAIが盲検発見するT1-B、Source/Host/Role受理、Plugin/BOM実Target、Owner意味判断・VA-X/VA-E独立実証はNOT RUN。既知T1-Aのみ局所Observed。**
 
+
+
+## 10. 2026-11-07：用途に無関係な前提による過剰停止を実測する
+
+[横断監査 §22.5](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)を、**過剰停止と誤成功の対称な試験**に落とす。新しい共通データモデルや採点エンジンは作らない。評価者は各Productの独立Expectedを採用前に固定し、Target/Source/Grantの必要Scopeだけ指定する。
+
+| ID | 利用者Job／同一条件の対照 | 正しく通す／正しく止める | 過剰設計の判別 |
+| --- | --- | --- | --- |
+| **VA-NC-01 Plugin未選択は正常** | TEI一つのread-only Inspector。別Environment向けProvider・未使用のmigration能力を残したBundle／それらを全選択させる構成の比較 | 指定Inspectorが実選択・実Consumer利用可能なら通す。Inspector自身のBindingが無い場合だけ当該操作を不可とし、他のModel参照は妨げない。plugin lock名とCapability Kind+IDを混同しない | 追加手動選択数、不要Plugin実Build混入、誤拒否数、選択したが未使用の誤PASS数 |
+| **VA-NC-02 文書保存と意味解釈** | SHO通常Markdown／管理外のtei.md DraftをRawで保存する場合と、TEI管理SourceとしてParserへ渡す場合 | SHOはBOM/CRLF/未知Fenceをno-op保持して保存再開。TEI Loaderの未束縛はTEI解釈だけ拒否。OKF未導入・AI OFF・Cloud OFFを正常正例とする | 保存できない誤拒否、原文Byte破壊、未解析をAccepted Meaningにした誤成功、操作回数 |
+| **VA-NC-03 Build段階を偽装しない** | 通常Go Build／子Process Stage Driver／Stage1生成物が次のBuildを駆動するself-buildを区別 | 子Buildのinvoker/invoked/実Disk SHAが一致してもL3として採点しない。一方L3未達を理由に通常Buildと検証済み単体inspectを拒否しない | L3誤成功、通常Buildへの不要な追加手順、Artifact照合漏れ |
+
+H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunner構文・偽Checkout起動前拒否が限定CI成功（Ubuntu/Windows **20 PASS・1 SKIP**）。実同一File受領はSKIPのままなので、本表のNC-02やSUI→SHO横断のPASSへ合算しない。
+
+**既知のProduct証拠**：[TEI #3337](https://github.com/hat47x/tei-platform/pull/3337)はread-only列挙・Go Reference限定PASS、[#3336](https://github.com/hat47x/tei-platform/pull/3336)は別Process BuildとArtifact digestの限定Observed。[SHO #4](https://github.com/hat47x/sho-composer/issues/4)のWriterと[TEI #3031](https://github.com/hat47x/tei-platform/pull/3031)の実Parser対応は未完成。VA-NC-01〜03の**同条件B0/B1/B2実比較／独立レビューVA-X／VA-E／Owner受理はNOT RUN**。
