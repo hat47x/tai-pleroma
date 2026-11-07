@@ -224,3 +224,18 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 
 **次の最小実施順**：Reviewer専用の合成Canary/実OS拒否の局所確認→固定CLIの正例Read・Source Scope確認→Whitelist/argvの事前固定→**完全なSubject限定Tool ResultとHarness受領**を1Sessionで照合→独立Answer採点→H3実Skill loaderへ。Canaryをそのまま外部AIへ流さず、実Secret・Reviewer Expectedは試験環境から非露出にする。DSH-C01〜05の新Trial実行は**NOT RUN**。元Tool結果の欠落原因・料金・Egressを推測で補完しない。
 
+### 13.2 2026-11-07：実H3読込とH6-E1/E2実否定証拠でG0/G1/G2を組み直す
+
+[TEI mainに収録されたDSH四Session実験](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)では、H2-A→H3-A→H3-B→H2-Bの実Sessionが全て`completed`。**H3-A/Bは各々Product Skill root 5,482 bytes（同SHA）とreference `read-only-model-investigation.md`（7,710 result bytes／同digest）を実Toolで読んだ**。従来の「H3実LoadはNOT RUN」はこの固定root＋1 referenceについて歴史状態。H2両腕のSkill Toolは0。ただしH2-Aは探索時Sessionを再利用し、`reference/workspace`対実`workspace/`のpath差、Worktreeへの越境Read、探索Tool/切詰め、独立Expected採点未実施が残る。したがって**技術的4 completed／H3実Load 2／比較適格0/4**を同時に記録する。4件を事後ITT/PPへ割り付けない。
+
+[TEI main H6-E1](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H6E1_READ_BOUNDARY_2026-11-07)のDSH 0.2.2-rc.1 read-only合成canaryでは、許可されたProjectionに加え、拒否したかった`raw/secret.txt`、`.env`、cwd外`peer.txt`の**4/4読取が完了、拒否0**。内容はMockに送ったモデル入力とSession Logに入った。これは実Secret漏えいではなく、**当該Profileで読取範囲を強制できなかった実負例**。[TEI main H6-E2](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_SESSION_LOG_RETRY_AND_DEFAULT_2026-11-07)では、Local MockのDSH出荷既定で`dsh_session_log`約45.5 KBがHTTP要求に載り、503/空SSE時には送信済み範囲の受理水位が進まず再送される。[先行H6-E2](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_SESSION_LOG_EGRESS_MOCK_2026-11-07)は同一合成Tool markerがモデル入力1箇所＋Session Logの2箇所へ入ることを確認。**Mock受信は実Provider保持・全Network Egressの検証ではない**。
+
+| 既存Gate | 新しい独立Expectedと停止条件 | Owner・未実施 |
+| --- | --- | --- |
+| **G0：実読取範囲** | 同一実Principal/Tool/OS Profileで許可されたpublic Binary/Sourceを正に読み、Reviewer用合成Canary・Skill/旧Session・親Worktreeを**実際に拒否**。cwd/read-only表示やH2でSkillを配置しなかったことは拒否証拠ではない | [TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)／[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。現実DSH read-onlyは負例であり、OSの拒否成功はNOT RUN |
+| **G1：送出面／保存先** | モデル入力、`dsh_session_log`、Tool result、親Session/再開と実Sinkを別に固定し、許可されたProjectionだけが外部へ出ることを対象Scopeで確認。off→on時の滞留分、非受理時の再送も考慮 | Local Mock限定Observed。実Cloud Providerの保持・全Telemetry非漏えいはUnknown |
+| **G2：実Toolと受領** | 初回WhitelistのCommand/argv/出力先・実Binary・Workspace real root/manifest/SourceIndexFPを束縛。stdout/stderrとTool Replyを分け、必要な`inspect/validate`の**欠落なし受領**を確認 | [TEI #3181](https://github.com/hat47x/tei-platform/issues/3181)は現CLIにmanifest Identity欄なし、[#3182](https://github.com/hat47x/tei-platform/issues/3182)はread-only広告の`view -execute`が指定flagで実FS書込みする局所負例。初回Whitelistに`view`を追加しない |
+
+**実験順序の訂正**：G0/G1/G2の入場検査が失敗すれば、*割付前のenvironment-ineligible*として新Groupを開始しない。前段成立後に同一Task/Model/Binary/Whitelist・H3固定Skill bytesで新規独立H2→H3→H3→H2を**事前割付**する。割付後の失敗・未ロード・欠Replyは全SlotをITTへ残す。H2でSkillの実非露出、H3でroot/required referencesの実Loadを観測し、実受信と独立Expectedの回答採点・人手・費用は別。旧探索9件と旧実四Sessionは技術Witnessとして保存し、正式比較へ後付け流用しない。
+
+**状態**：Tool接続／H3 root+1 Reference受信／H6-E1拒否失敗／H6-E2 Local Mockの副次送出はObserved。G0実拒否成功、G1全Egress境界、G2比較用Profile、事前割付のH2/H3、ITT/PP有益性、Owner受理は**NOT RUN／未資格**。
