@@ -392,6 +392,24 @@ YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実�
 
 **優先順位は変更しない**：固定公開TEIの初回H2/H3比較は、G0物理Read拒否とG2実Tool Reply完全受領を先に適格化する。[Runbook §24.5/24.12](https://github.com/hat47x/tai-pleroma/pull/270)にはH3 Product Skill実読取の探索的Witnessがあるが比較適格**0/4**のままであり、今回のSUI契約試作・SHO POSIX修正を初回SK-02の新Blockingへ加えない。契約正式採用、同一File実Handoff、横断Skill増分価値、実Host/Owner受理は**NOT RUN**。
 
+### 18.7 Edge端点Kindの一意解決を受理しても、投影Kindを捏造しない（TAI #536追加実測）
+
+前節§18.4〜18.6の**時間差を含む結果を更新**する。[TAI merged #535](https://github.com/hat47x/tai-pleroma/pull/535)の任意Kind契約試作はEdgeそのものを`present`で投影できることを示したが、当該PRでは現行パイロット契約の必須Kind定義を変更していない。[TAI PR #536](https://github.com/hat47x/tai-pleroma/pull/536)は別の未マージ修正として、Assemblerの旧`Kind未指定→card`決め打ちを廃止し、**実際の端点IDがどのKindの集合に一意に属するか**で解決する。PR記録上、局所単体テスト**13件PASS**・製品横断Suite**89段PASS**だが、TAIブランチの限定検証であり、SUI正本の変更や現行パイロット契約の採用を意味しない。
+
+| 入力Case | #536のAssembler局所結果 | YICが保持する意味の上限 |
+| --- | --- | --- |
+| Kind未指定、Card ID→Card ID | 実Collectionで一意な両端を解決し合成 | **解決成功**を記録。Kindが明示Sourceから与えられたとは言わない |
+| Kind未指定、Card ID→Island ID | 従来の誤った`card`仮定による拒否が解消し合成 | 実解決したSubject/Source集合の版に束縛。Graph/Functionの業務Relation受理は別 |
+| Kind未指定、存在しない端点ID | `no such endpoint`で拒否 | 非存在は**実参照した許可対象集合・Snapshot**の範囲に限定。未取得/非開示を不存在としない |
+| Kind未指定、同IDがCard/Island両方にある | `ambiguous endpoint`で拒否 | 「片方が自然だから」と推測せず、明示Qualified Referenceまたは上流修正を要求。非公開候補の存在を外部診断へ漏らさない |
+| 組立後のEdge | **投影から来たKindをそのまま保持**。Kind欠落時の内部一意解決結果を出力へ勝手に書き戻さない | **内部で解決できた**ことと、**ConsumerがKind入りのGraph Contractを受け取った**ことは別。後者には実Outputと当該ConsumerのRequired Shapeを照合 |
+
+**Skill選択の条件を前進させる点**：入力のOptionalityはSchema/Producerの契約、端点を一意解決できるかは現在の実Collection/Resolver、合成物の情報保持はOutput Contract、型付きGraph/CRUD/編集の適格性はFunction Context・現在のGrant・ConsumerのRequired Setであり、四つを単一の`success`へ畳まない。特に内部ResolverがKindを知っていても、出力へ記録しなければ後段にその事実が届くとは言えない。明示Kindが誤っている場合、同Label別Identity、複数Edge、別Source Revision、部分集合や非開示Subjectがある場合は別の独立Expectedで反証し、現行#536の限定PASSをそれら全ケースの成功へ拡張しない。
+
+**受入の最小観測列**：Product/Contract Version、元Document/Entity・Edge集合の取得Scope、入力Kindの`declared / omitted / null`、実解決ID/Kindと曖昧・拒否（内部Reviewer権限内）、合成OutputのKind/ID/方向/多重性、Consumerの実受領BytesとRequired Shape、現在Audience/Disclosureを、TAI #488 X02/X06・#271 SC-15/16へ接続する。これらは**既存Productの証拠を相互参照する欄**であって新しい共通Graph Resolverや第二のPolicy/Schemaを作らない。失敗したGraph操作だけを止め、独立に実行できるread-only作業は継続可能にする。
+
+**順序／未実施**：#536は現時点Open・未merge。TAI統合テストの局所PASSをSUI→SHO→SEIの一Attempt実Handoff、H2/H3外部Skill実価値、Ownerの意味受理としない。既存§18.6の歴史的「Assembler旧仮定」は**#536で修正を試みた旧状態の観測**であり、正規契約/Consumer同値まで自動更新された記録ではない。固定公開TEI H2/H3比較（現適格0/4）を変更せず、本件は後続の別Trial Groupに残す。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
@@ -497,6 +515,19 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 **既存試験への採用方法**：初回SK-02は許可済み公開合成Taskであり、機密ProfileのH6-E13〜15を**新たな四Session Blocking Gateにはしない**。ただしその**実観測したEvidenceの公開範囲を守る責務**は最初から適用し、保護対象のHoldout/他Lane/Agent instructionsを検証用External Modelへ供給しない。Reviewer側だけが正負のOS拒否・内部版・独立Expectedを照合し、比較票では必要な不適格理由と非機密な証拠参照を記す。外部共有時はその時点のAudience/Policyを再評価し、現Audienceへ秘密の数・digest・存在を説明してよいとは推測しない。将来の機密Task/別Product Handoffには#2515が計画するP0d Observer→ViewerとH6-E14/E15を**別Trial Group**で適用し、実OS/Network拒否の成否・未観測Sinkはunknown。#2515のCaseは**提案／NOT RUN**であり、実DSH E13〜15の合格・実Cloud不漏えい・Owner Policy採用を主張しない。
 
 **H6-E6の局所保存面で実測できた新しい反例**：[TEI PR #3309](https://github.com/hat47x/tei-platform/pull/3309)はDSH 0.2.2-rc.1のWindows/headless/read-onlyで合成canaryのTool Readを行い、headless stdout **2,035 bytesに1件**、ローカル永続`session.v4.jsonl.zstd`の全展開**40,136 bytes/34行に1件**の残留を観測した限定Evidence（本照合時点Open、main未merge）。**9つの連結zstd frame**の先頭だけを展開すると179 bytes/2行・canary **0件**になり、実際に残ったTool本文を見落とす。走査済`storages`84件・`cache`5件・`attachments`73件で一致0という結果も**そのSession・調査Root・解析形式に限定**し、全保存先・過去Session・別Harnessの無残留へ昇格しない。これはHTTP拡張の`dsh_session_log`送出（§19.6）とは別の**ローカル永続化**であり、`session-log.enabled=false`では削除も非永続化も証明しない。初回SK-02のG0物理隔離のpreflightでは、**前Sessionの保存Root全体を実アクセス拒否できるか**をReviewer合成canaryで確認する。全ローカルLog消去は初回の新Hard Gateにはせず、別User/ACLの実拒否と必要な完全展開による観測を明示する。実Secret/Cloud Provider送信、全Storage/Telemetry/Network網羅、正式H6-E6 conformance・Owner受理は**NOT RUN**。
+
+### 19.9 CLI Discoveryの意味的read-onlyと実ファイル書込みを分ける（TEI merged #3333）
+
+§19.7のTEI CLI実負例（`view -execute`＋記録flagでファイル生成）が、**現在main側の機械可読Discovery**へ一段反映された。[TEI merged PR #3333](https://github.com/hat47x/tei-platform/pull/3333)は`tei.cli.discovery/v0`の`view`エントリへ`writeFlags: ["-operation-log","-lifecycle-state"]`を追加し、実CLIで指定Pathに非空記録ファイル/SQLite stateが生成され、flag無しの同じ`-execute`は作業Dirへ新Fileを作らないことを対照試験で確認した。**`effect: "read-only"`の既存値はそのまま**であり、これは「Source/正本の業務意味を変更しない」という説明であって「実ProcessがFSへ書かない」という保証ではない。実Host Policy、Business Effect、全flag組合せに対する非書込みは実証していない。
+
+| 判定面 | Skill/Reviewer側で必要な確認 | 避ける誤判定 |
+| --- | --- | --- |
+| **宣言の版** | 実CLI Binary SHA／Source版、`commands`の`effect`・`writeFlags`・受理flag一覧の当該版 | 現行mainの`writeFlags`を旧Pinned DSH TEI Binary（`50ebf801…`）が返したことにする |
+| **実Invocation** | command family＋各実flag・値・output path、`cwd`とWorkspace resolved root／実FS effect、現在Tool/Host Grant | `view`というコマンド名や`read-only`広告だけで記録先書込みなしと推定 |
+| **ファイル出力と業務効果** | 変更対象が出力File、元Workspace、Provider/DB、Consumerのどれか。Path/Byte/Receiptを別々に観測 | 実Logファイル生成を業務Commitと扱う、逆に`-execute`のRuntime Request/権限をFS無変更だけで安全と断定 |
+| **候補実装との差** | [TEI Open PR #3311](https://github.com/hat47x/tei-platform/pull/3311)の`result.workspace`／`writesToNamedOutput`は別の**未マージ候補**として扱い、現在の正式CLIで再照会する | PR提案のWorkspace Manifest/Name/Digestや別名欄をmain実API・旧Pinned Scriptの証拠へ混入 |
+
+**初回SK-02の停止条件は維持**：現行許可Command Familyに`view`は含めず、今回のDiscovery改善を理由に実験途中で許可Flagを広げない。[TAI Draft #270 Runbook §24.6/24.12](https://github.com/hat47x/tai-pleroma/pull/270)のG0物理Read拒否、G1各送出経路、G2実argv/Tool Reply完全性を先行し、別の将来Trialで`view`を試すなら開始前に実Binary/CLI Contract/flag/output destination/独立Expected/許可Profileを再Pinする。Tool-only／Product Skill／TAI Activity Skillの選択は、説明文でなく**当該Invocationと実Effectの観測**に基づく。新しいCLI ValidatorやTAI共通Effect Engineを作らず、#3182/#1155/#2499の製品担当へ委譲。正式H2/H3資格は0/4、実Host許可とOwner受理は未実証。
 
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
