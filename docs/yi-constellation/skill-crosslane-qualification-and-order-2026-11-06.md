@@ -375,6 +375,23 @@ Product側の出力形式をSkill説明で補完しない。SEIのtextから構�
 
 YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実際に読んだbyteとParser版／TransportのSource・Target・Result／Writer独立再Read／現在Audienceの再配布資格**を別列で保持する。P0/P1の別Repo CI PASSを一つの実SUI→SHO E2E受領Receiptと見なさず、改行・BOM・Encoding差をFile全内容のDigestだけで確認する。SUI #3391/#3392、SHO #4/#16、SEI #820の既存Expectedを再利用し、新Handoff Store/Writer/ParserをTAIに作らない。実SUIプロセス→SHO実CLI輸送、G2保存、SEI Consumer、Original Source、Owner受理は**NOT RUN**。初回固定TEI H2/H3 Gateへ追加しない。
 
+### 18.6 契約Optionalityの修正可能性とReaderの有界入力をSkill引継ぎで区別する（2026-11-07追加）
+
+§18.4の「SUIの`Edge.fromKind/toKind`が欠けると現在の投影契約がEdge自体を落とす」は**現在の契約に関する局所実測**であり、将来も端点Kindをすべて必須にせよという設計判断ではない。[TAI PR #535](https://github.com/hat47x/tai-pleroma/pull/535)ではSUI ModelのOptionalityに合わせた**別の試作契約**で、(a)両Kindあり→そのまま`present`、(b)Kindなし→当該欄を出さずに`present`、(c)片方`null`→もう片方を保持して`present`を確認。これは、既存#533の関係全体の欠落が**契約上の過剰必須制約**に起因する場合、Product CoreやTEI Generatorを新設しなくても投影契約側で縮小可能という反証である。ただし**現行パイロット契約は必須のまま**、実Consumerが受領した証拠もない。既存#534のAssemblerが未指定Kindを`card`と仮定し、合成後のKindを`null`のままにする問題は**別に残る**。
+
+| YIC後続の条件付き受入 | 独立に見分ける負例・非推論 |
+| --- | --- |
+| **契約SyntaxとShape**：Optional欄が無くても当該Edgeの同一性/向き/多重性を維持して**受理できるか**。Producerの元Edge数・投影Edge数と理由は取得できるScope内で照合 | 欄の省略を`card`の確定値や業務Relationの受理と見なさない。隠しEdgeの件数や欠落理由を非許可Audienceへ出さない |
+| **Product合成のMeaning**：明示Kind、未指定、片側null、誤Kind、card→island、同名別Entity/多重辺を別Caseにし、Assemblerが選んだ実Endpointと未解決を表示 | #535の投影`present`だけで#534のAssembler経路合格・Entity解決・Topology全保全を推定しない |
+| **Consumer目的との適合**：read-only Outline表示ならKind不明を明記して許可範囲を継続可能。型付きGraph操作・CRUD・更新対象特定にKindが必須ならFunctionのRequired Setを再確認し、不足時は`unknown/unsupported`に停止 | Optional欄を受けた一般ReaderのPASSから、Target/操作Grantが確定したと推論しない。SUI ModelのOptional性を全Targetへ強制しない |
+| **改訂・責務**：TAIのSUI投影契約/合成層とSUI Product Ownerで選択・契約版固定を行い、既存X02/X06、#271 SC-15/16で消費差分を比較 | PR #535の局所88段の一括検証PASSを、現行契約改訂済み・SUI→SHO→SEI E2E・実Skill Loadedの証拠に使わない |
+
+**read-only Reader入力の安全性は「正しいFileの実読取り」と別資格**。[SHO Draft PR #22](https://github.com/hat47x/sho-composer/pull/22)では、旧G1b CLIがPOSIX FIFOに対しFile種別確認より前の`open`で無期限ブロックし得る負例を検証し、`O_NONBLOCK`を用いて開いた後に`fstat`で通常Fileだけを通す小さい修正案を追加した。[CI #42373230247](https://github.com/hat47x/sho-composer/actions/runs/42373230247)では**Ubuntu Node22の17/17 PASS**（FIFOとFIFO symlink拒否）、Windowsは**16 PASS／1 SKIP**（POSIX専用負例）を確認。これは特定FIFO入力に対する**局所の有界拒否**であり、Windows特殊File・パス置換、実File Path隔離、Markdown参照完全性、G2 Writer、実Harnessや実SUI→SHO同一File輸送の安全性ではない。
+
+後続のSUI→SHO X06では、許可された通常Fileの**実Path→同一raw byte/SHA→SHO Reader結果**と、非通常File/FIFO・参照漏れ・型不適合の**拒否/Unknown/時間上限**を独立に採点する。Pathだけで実受領成功・無限待ちの不存在を主張せず、Readerの局所PASSをOS読取境界や実Network非漏えいへ昇格しない。SHO #16/#21/#22・SUI/TAI側の既存Receiver Caseを利用し、中央Reader/Path認可器や共通Schemaは作らない。
+
+**優先順位は変更しない**：固定公開TEIの初回H2/H3比較は、G0物理Read拒否とG2実Tool Reply完全受領を先に適格化する。[Runbook §24.5/24.12](https://github.com/hat47x/tai-pleroma/pull/270)にはH3 Product Skill実読取の探索的Witnessがあるが比較適格**0/4**のままであり、今回のSUI契約試作・SHO POSIX修正を初回SK-02の新Blockingへ加えない。契約正式採用、同一File実Handoff、横断Skill増分価値、実Host/Owner受理は**NOT RUN**。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
