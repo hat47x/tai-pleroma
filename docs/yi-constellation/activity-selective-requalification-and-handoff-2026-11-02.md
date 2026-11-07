@@ -787,3 +787,19 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 **次の最短出口**は、既存[SHO一ファイルRunbook](https://github.com/hat47x/sho-composer/blob/test/sui-p0-readonly-handoff-20261107/docs/sui-p0-same-file-handoff-trial-2026-11-07.md)で本物の固定SUI HEAD→SUI実Disk Producer→同一File/SHO実CLI Readerを**1件非SKIPでPASS**させ、両実HEAD／時点／Path／Raw digest・354 bytes／Parser版／不明なSource・未評価参照／Cleanupを同じAttemptに束縛すること。元出典の真正性・未知リンク・Publisher権限・Writer Save/Restart・SEI/TEI Meaningは次段階。Product B1だけで成立するならTAI B2連携を追加しない。
 
 **初回のH2/H3比較とは独立**：TAI #168の既存G0/G1/G2と4Session資格0/4を先行し、現在のSUI/SHO Draftにある偽Producer拒否テストを初回H3 Task/Tool/Skillへ移植しない。新共通Transport／Host／Receipt Storeは作らない。
+
+
+<!-- tai-activity-cli-evidence-lineage-scoped-requalification-20261108 -->
+### 23.6 Design Contextの非取得・非解釈を、Activityの現在資格で再利用しない（2026-11-08）
+
+§23.4のTEI T1-AとTT-56、および[Runbook §24.15](first-real-skill-qualification-runbook-2026-11-02.md)を次のRead／Handoff境界へ具体化する。[TEI #3346](https://github.com/hat47x/tei-platform/issues/3346)では`docs/plan`のMarkdown設計文書をWorkspace `sources`に登録できても`managedFiles`止まり・`readByLoader:false`であり、TEI意味モデルのCatalog/Traceへ入らない。**内容の所在が分かることと、意味/関係をProductが読んだことは異なる**。このとき「設計ルールなし」「Functionに関係なし」「現在Requirementは完全」を導くのでなく、個別Sourceは`managed-not-loaded`、該当Meaning/Relation/Requiredは`not-observed`として限定する。
+
+**跨るResultの同一性**：[TEI #3345](https://github.com/hat47x/tei-platform/issues/3345)の`view.semanticFingerprint`はApplication使用namespace範囲の値で、全World/SourceIndex指紋ではない。指紋値・同名Subjectだけで歴史Receiptを新Activityへ適用せず、実Workspace/manifest、Producer/実CLI版、Fingerprint kind/Scope、Required対象、必要なSource Revision、実Viewer/ConsumerへのDeliveryを同じClaimへ束縛する。`view`の現在の出力形式／副次FS書込みはProduct Owner #3345/#3182/#3333の修正・検査に委譲し、ここで共通CLI Schemaを設計しない。
+
+**Read側Consumerの誤解釈**：[TEI #3347](https://github.com/hat47x/tei-platform/issues/3347)の`validate.diagnostics`入れ子、`requirements.result`配列、Catalogの標準定義混入は、JSON正常・Call数一致でも**必要情報が正しく読めた保証にならない**。CLI Command/Mode/JSON Schemaと実Source・Tool byteを照合し、Consumerが予期した契約と違えば当該Claimを`unsupported/unknown`とする。正常な配列・標準定義は欠陥と即断せず、初回SK-02へ`view`等の新Commandを追加しない。
+
+**Product-firstの最小試験**：TEI #3262の既存`context_gate.py`と独立Requiredへ、(1)`.tei` SourceをLoaderが読みRuleを返す正例、(2)`docs/plan` Markdownはmanagedだが未Loadedという対照、(3)Source Index subject/index modeの読み違い、(4)全WorldとApplication使用namespaceの指紋Scope差、(5)配列／入れ子／標準定義のConsumer解釈違いを**実際に参照するCommandだけ**で段階適用する。TT-56 Draft #3324/#3326はOwnerが一本化するまで同じ合格分母に集計しない。各合成テストの合格と、生成AIの未知Rule発見T1-B／外部H3 End-to-end／Owner Accepted Meaningは別資格。
+
+**Activity側の判断**：過去Readの履歴が有効でも、新用途で必要なSource/Ruleが実未取得ならRequiredの不足のみ再取得または保留し、既存の公開read-only調査、非公開草稿作成、独立して適格な旧証拠は維持する。逆に必要Ruleの欠落をLLM補完して`qualifiedTestGeneration`や新Write Grantへ昇格しない。B0既存Tool→B1 Product単独でJobを満たすならB2 TAIを選ばず、後続横断Handoffで実Consumer受領・Audience/Disclosureが変わった部分だけ再資格化する。
+
+**現在値**：既知Rule負例T1-Aは限定実CLI達成。TT-56の完全Required ClosureとMCP/外部H3最終Byte Delivery、T1-B blind discovery、実Product `docs/plan` Parser、現Grant付きMutation/Effect、TAI活動の正式横断E2Eは未達。初回#168のH2/H3比較適格0/4とG0→G1→G2の順を変えない。第二Registry/Reader/Test RunnerをTAIへ作らない。
