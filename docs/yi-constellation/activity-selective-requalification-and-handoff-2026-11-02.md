@@ -665,3 +665,35 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 **H6-E7（§22.3）との連結**：H6-E3は**新Session開始時の暗黙投入**、H6-E7は**旧Session再開時のモデル入力再構成**。別の原因・別Witnessだが、どちらも「直近のTool Readなし」「Session Log新規Eventなし」から`未開示`を推論できない。後続SCN-001では合成Dataだけを使い、現在のAudience/Grantに照らして**送信直前の実モデル入力、Session Log、Tool Contextの対象集合**を独立に確認する。暗黙に付加された指示・Skill descriptionを承認済みPolicy/意味受理・現在Resource資格へ昇格しない。
 
 **事前固定Groupとの整合**：今のH2/H3は「TEI Product Skillを利用可能にした総合効果」の比較候補。Skill descriptionの自動広告と本文Loaderの個別効果を初回結果から切り離して採点しない。別の効果を比較する場合だけ新GroupでTreatmentを事前固定。実OS read-deny、隠された上位Path/Global設定の全探索、実Provider/Egress、SCN-001 Activity実再開はNOT RUN。Owner＝TEI #2515（Harness可視性）／TAI #232（開示）／TAI #168（比較資格）／#271（選択的再資格化）。新Policy Engine・Evidence Store・Connectorを設けない。
+
+---
+
+<!-- tai-activity-product-handoff-single-attempt-20261107 -->
+## 23. 2026-11-07：別Repoの固定Byte試験から、同一Attemptの実Consumer受領へ進める（限定実測を利用）
+
+### 23.1 実証済み範囲と、まだ一度も観測していない境界
+
+[価値研究Draft #532 §13](https://github.com/hat47x/tai-pleroma/pull/532)および[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271#issuecomment-6706626377)へ、既に**製品別CIの成立と、同一AttemptのHandoff未実施**が記録されている。本節は証拠を再集計するのではなく、Activity SCN-001で次に必要な**最短の実受領手順と不適格時の扱い**だけを具体化する。既存のB0（人手）／B1（必要Product単独）／B2（必要時だけTAI）を変更しない。
+
+- [SUI Draft #3396](https://github.com/hat47x/sui-sensemaking/pull/3396)の実`buildContextProjection`では、異なる原出典・Island所属／位置が**同じ公開Projection**になり得る（公開Card本文とIsland名の変更は検出）。したがって`Projection.digest`や出力Markdownの一致を元Source/構造の同一性と見なさない。
+- [SUI Draft #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)では公開・reviewed・非holdのCard2件を、元資料を捏造しない**通常Markdown 354 UTF-8 bytes**へ実生成し、別に手書きしたExpectedのSHA-256 `7fd6fde2fbc4d9beaf9de14e8b8f4f5d70003cd2129f1502cdd7c73f50c171cd`に一致することを限定CIで確認。非公開Card/ID/Edge/Island/元Source/OKF metadataは出力しない。これは**原出典真正性・二次配布許可・正式Exporter採用の証拠ではない**。
+- [SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)では同じ期待原文を独立Fixtureへ保存し、既存G1b `inspectRaw`の限定Reader試験がUbuntu/Windows各18件PASS。初回WindowsはcheckoutでLF→CRLFとなり**354→368 bytes**の不一致を検出し、Fixtureだけに`eol=lf`を指定して修正した。実Readerはリンクとして解釈されるべきでないエスケープ文字列を`link_open=0`、エスケープ解除した正例を`link_open=1`として判別。ただし`allDocumentReferencesEnumerated=false`・未解決候補未評価であり、**すべてのリンク/元出典を検査したわけではない**。
+- ここまでの`SUI Producer CI`と`SHO Reader CI`は**それぞれ異なるプロセス・Repo・実行機会**の結果。同じExpected bytesを読めることは、SUI実Productが書いたファイルをSHO実Processが受け取ったこと、保存して再開できること、現在の公開権限があることを示さない。両Draftと利用者/Ownerの正式受理は未統合・未成立。
+
+### 23.2 追加するのは新製品ではなく、既存Productを使った一往復の受領票
+
+**対象User Job**：SCN-001の矛盾した根拠を整理する目的のもと、**現在開示できるCard本文のみ**を、未受理のSource/Decisionを補完せず、利用者の非公開草稿に渡してから後日再開する。最初は合成公開Fixture・read-only転送に限定し、実配布・Writer/逆Patch・Business Effectは試さない。
+
+| 最小段階 | 同一Attemptで必要な実観測 | 不適格／禁止する推論 |
+| --- | --- | --- |
+| **P0 Producer固定** | 実`buildContextProjection`→実`renderReadOnlyMarkdownDraft`のRaw UTF-8 byte列、digest、SUI Source/投影のPin、公開Subset、SafeMode/hold/review条件を記録 | 既存CIの354 bytesは歴史Witness。実行中のDoc/Source版を確認せず過去Digestを現在値に流用しない |
+| **P1 一つの実ファイルを受け渡す** | 同じTrial内で許可されたProduct/Hostが**P0で得た原byteを加工せず**一時`.md`へ保存。byte長/digest/改行を再読し、既存SHO Reader/CLIがその**同じ実ファイル**を`inspectRaw`で開いた実Path/bytes/resultを照合する | 二RepoのFixture SHA一致、Readerの静的単体テスト、HTTP 200、Writer未呼出しだけでは**実Producer→Consumer Delivery**を宣言しない。原byteが変わればbyte一致はFAIL、受取れなければunknown |
+| **P2 限定Reader判断** | SHOの既存Parser/Grammar版、実`link_open`、Readerが評価した参照範囲、`unresolved/unsupported`、元Source/Island/Decisionの非包含を評価。別名Sourceや同内容A→B→Aも現在のOwner/Scopeで照合 | Markdown構文検査の成功をOriginal Source照合、全参照探索、OKF verified、SEI Accepted Decision、SHO Writer Save/Restartへ昇格させない。公開できない根拠を追加Readして穴埋めしない |
+| **P3 目的変更後の再開** | 新しいPurpose/Audience/DisclosureでP1の履歴Artifactと現在Grant、必要なSUI Source/Revision、独立Expectedを再評価。B0/B1だけで再開可能か比較 | 同じMarkdown byte列でも出所/Island/版・Audienceが違い得る。Readerの歴史的PASSで新Audienceへの再配布や編集Actionを許可しない。必要部分だけ止め、適法なread-only草稿は継続 |
+
+**まず実行する最小Trial**は**P1の同一ファイル受渡し1回＋一因子だけ変更したLF/CRLF負例**。ExpectedはSUI Producerの実bytesから独立に定め、SHO Reader結果・欠落/Parser Scopeを事前固定する。SUI→SHOの物理受け渡しが既存CLI/Hostだけで実行できなければ`unsupported`と報告し、TAI共通Transport/新Serializerを実装して初回合格に見せない。
+
+**TEIテストDogfoodとの接続**：[TEI merged #3264](https://github.com/hat47x/tei-platform/pull/3264)／[#3266](https://github.com/hat47x/tei-platform/pull/3266)／[#3268](https://github.com/hat47x/tei-platform/pull/3268)の限定CIでは、実CLI 9系統、既存Pinned Scenario 6 Step、既知のCLI負例4件＋独立義務負例2件、局所statement C0相当10.1%を検証した。これは**固定設計/既知Expectedを実Runnerが判別できるT0**の証拠であり、SUI/SHOの失われたSource、未宣言のBusiness Rule、未カバーC1、新ScenarioをAIが発見するT1ではない。将来TAIが未カバー根拠を推薦するときは[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)の必要Design Context閉包/unknownを先に取得し、[TEI Draft #3273](https://github.com/hat47x/tei-platform/pull/3273)の別Ownerが独立Expectedで検査する。TAIへ第二Test Engine/Source Registryを作らない。
+
+**Owner／優先度／未実施**：SUI #3392/#3396/#3397はProjection/開示/Markdown Producer、SHO #16/#21はReader/Grammar/実File Read、SEI #820は後続の根拠/Decision、TEI #3262/#2514は設計閉包とテスト資格、TAI #271は用途別の再資格化、#422/#532はB0/B1/B2価値。**P1の同一Attempt実ファイル送達、P2元Source Reader、P3実再開、SHO Writer/SEI交換、外部OS・配布権限、正式Owner受理はNOT RUN**。初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0/G1/G2→新H2/H3四Sessionを先に行い、このHandoffをその固定Task/Skill/Tool Profileへ増築しない。B1で利用者Jobが満たせればB2のTAI仲介を必須にしない。
+
