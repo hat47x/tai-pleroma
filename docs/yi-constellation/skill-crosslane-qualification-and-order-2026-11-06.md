@@ -410,6 +410,18 @@ YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実�
 
 **順序／未実施**：#536は[TAI mainへmerge済み](https://github.com/hat47x/tai-pleroma/pull/536)（HEAD `ecad9267fbbe32dd65fca5142c4e911a426dd632`）。ただし局所13件・一括89段PASSをSUI→SHO→SEIの一Attempt実Handoff、H2/H3外部Skill実価値、Ownerの意味受理としない。既存§18.6の歴史的「Assembler旧仮定」は**#536で修正を試みた旧状態の観測**であり、正規契約/Consumer同値まで自動更新された記録ではない。固定公開TEI H2/H3比較（現適格0/4）を変更せず、本件は後続の別Trial Groupに残す。
 
+### 18.8 EdgeのOptional Kindを現行パイロットv4へ採用した後のSkill資格（TAI merged #537）
+
+§18.4〜18.7にある「現行契約はKind必須」「#536は未統合」は履歴上の記載。[TAI merged #535](https://github.com/hat47x/tai-pleroma/pull/535)のOptionality試作、[merged #536](https://github.com/hat47x/tai-pleroma/pull/536)の端点ID一意解決を受け、[merged #537](https://github.com/hat47x/tai-pleroma/pull/537)が**実パイロット`edge-record` v4で`fromKind/toKind`を任意**にした。fixture 4→7・投影→合成24ケースPASS・一括90段PASSという局所実績を確認。旧v3の必須契約は現在のパイロット契約ではない。ただし実SUI→SHO→SEI同一AttemptやSkillの外部利用は未検証。
+
+| 境界 | YICが肯定できること | 肯定しないこと |
+| --- | --- | --- |
+| v4 Projection | Kind欠落・片側・nullでもEdgeを保持する。**明示nullはOptional欄の省略へ畳まれ、元のnullと欠落はOutputのみで逆判定できない** | `null`を新しい`unresolved`値として伝送できる、元SourceがKindを明示した |
+| Assembler | 端点IDが現在Collection内で一意ならCard→Card/Islandを合成。未知端点=`no such endpoint`、複数Kind=`ambiguous endpoint`で拒否 | 未読/非公開端点の不存在、内部解決KindがOutputへ書き戻された、同Label=同ID |
+| Consumer/Skill | Reader/Outlineには観測できたEdgeを説明できる。型付きGraph編集/CRUDは**そのConsumerのRequired Endpoint Kind/Identity・Source Revision・Current Grant**を改めて要求 | 合成PASSでSHO Writer・SEI Decision・TEI実操作や現在のAuthorityまでPASS |
+
+**再資格化**：v3/v4 Contract bytes・Generator/Assembler版・Scope、`dropped→present`となったEdge、Downstream実受領/Requiredを別に照合し、旧Attemptを遡及書換えしない。[TAI #488 X02/X06](https://github.com/hat47x/tai-pleroma/issues/488)/[#271 SC-15/16](https://github.com/hat47x/tai-pleroma/issues/271)へ既存試験で参照。初回TEI SK-02 H2/H3は0/4、追加Blocking/新Graph Resolverなし。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
@@ -904,6 +916,11 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 **現在の限定Product進捗（2026-11-07基線補正）**：[TEI merged #3284](https://github.com/hat47x/tei-platform/pull/3284)は新APIではなく、既存read-only CLIの実取得9 JSON Replyを使う**test-only `tools/reference-issue-test-ability/context_gate.py`**を実装し、Required/Source/Workspace/受領の欠落時に`partial`／`exploration-only`／`qualifiedTestGeneration=false`を出す。最終PR HEAD `eeb2295a…` の[専用CI #42370519406](https://github.com/hat47x/tei-platform/actions/runs/42370519406)はcompleted/success（既存7 synthetic negative controls）。[merged #3296](https://github.com/hat47x/tei-platform/pull/3296)は**第二Reader案 #3293を取り下げて同Consumerを補強**し、Manifest Root/Inventoryの2件と、**実受領JSONの一時コピー**に欠落・途中切断・JSON member重複・NaN・追加JSON等を注入する7件を追加。[専用CI #42371310577](https://github.com/hat47x/tei-platform/actions/runs/42371310577)は該当exact HEAD `39e68746…`で**既存7＋追加2＋transport改変7＝計16限定Control PASS**。この16は**実DSH wireを切断した検証ではなく、Product Consumerへの合成入力Mutation**である。局所Go statement C0相当10.1%・C1未測定。PR/head限定CIは、別mainの全面Test資格や外部H3配送資格と混同しない。
 
+**Productの実検証を更新**：[TEI merged #3354](https://github.com/hat47x/tei-platform/pull/3354)が重複する#3324/#3326を一つの既存`context_gate.py`へ収束。既存9 CLIに`source-index`全Indexと`inspect semantic-validation`を追加した**11実read-only Reply**で、TT-56の**独立Required Validation Rule 3件**、focused RuleのCanonical kind/attribute、Relation Identity/Parent、Source/Artifactと版の照合を行う。固定HEAD `0ab2b99f…`の[専用CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)はcompleted/success。既存16を含む**32件の合成Consumer判別Control**、旧6 Pinned Step、T1-A第7候補と対照が同一Runで限定PASS。局所Go statement C0相当は**当該HEADで10.0%**（旧10.1%と混同しない）。C1/全要件/NFRは未計測。
+
+これは**必要3 Ruleだけの局所Design Context照合**が進んだ証拠。Function全体のData/Business/Rule/Relation/Scenario/Source、実Provider/外部Harness受領、Owner受理は未充足。Resultも`boundedReference=partial`／`testExecutionAdmission=exploration-only`／`qualifiedTestGeneration=false`のまま。P-1b1はTask単位で独立固定したRequired集合を実Source→Loader→Parser→Consumerまで閉じることをExitとし、3 Rule限定PASSで全Function Completeへ昇格しない。T1-Bの未知Rule盲検発見もNOT RUN。
+
+
 **実施境界・次のExit**：既存固定TEI SK-02の比較適格H2/H3を先行させる（技術H3 Tool Read達成≠正式0/4からの昇格）。本件Product Gateは**T0.5の既存CLI入力を限定評価できる状態**へ進んだが、次のP-1b1＝**一Functionについて独立に定めたRequired Data/Function/Business/Rule/Relation/Scenario/Source閉包**と現実のLoaded/Parsed/実消費を実照合する一件は未完了。P-1cの実外部Tool Reply call/result ID・ordered part digest/end marker・Consumer受領と同Revision/Grant、P-1dのMCP/Skill同値、生成AIによるT1新Scenario、全C0/C1/Requirement/NFR閉包、Owner Meaning Acceptanceは**NOT RUN／未資格**。これらの試験はTEI #3262/#2514/#1180の既存Ownerに委ね、YIC独自Query/Reader/Checkerを追加しない。従来の`*.tei.md` Reader未実装領域をSkillが実装済みと説明しない。Dataset/RuleのProvisional MeaningはOwner受理なしに実DB/Providerへ適用しない。
 
 ### 26.6 既存CLI/Scenarioを実行したT0と、未カバーRuleから新Scenarioを作るT1を区別する
@@ -939,6 +956,11 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 | **応答Schema差**：`validate.diagnostics`入れ子、`requirements.result`配列、Catalogに標準定義が混在 | 実Command/ModeのSchemaとexit、Raw result・Received Byteを照合し、QueryしていないSource/Kindを明示 | 全`result`をobjectと決め打ちし正当配列を拒否／組込stdをUser宣言に計上／空結果をRequired全件なしと断言 |
 
 **検査の最短手順**：同じ公開Workspaceと目的Functionについて、(a) TEI CLIが本当にロードした`.tei` Rule、(b) managedだけのMarkdown、(c)対象Scopeの異なるFingerprint、(d)異形の正常JSONを独立Reviewer Expectedで一因子対照する。YICは**Product SkillなしB0とありB1**について、正当Readの継続率・誤不在Claim・過剰拒否・追加Tool呼出し・ConsumerのBody完全受領を比較する。B1で完結するならB2 TAI Activity Skillを選択しない。あくまで既存X02/X04/X06とTEI #3262のRequiredを再利用し、追加Skill-specific Test Engine／Central Reader／新Gateを作らない。
+
+**実CLIとMCP経路の到達範囲**：[TEI Open PR #3356](https://github.com/hat47x/tei-platform/pull/3356)は現main実バイナリを用いた第2ラウンドDogfoodの文書・生出力記録であり、本照合時点は未merge/全CI未確認。固定main `4fd88c2b1`由来Binaryの観測では、Workspace識別・`view.writeFlags`・help等の既存課題が解消した一方、**D-3指紋のScope差、D-9 `docs/plan` Markdownが`managedFiles`のみで`readByLoader:false`、D-10 `validate.diagnostics`の形の不統一**が残る。`commands`19件と当該GoソースにTEI専用MCP Server入口は見つからず、**MCP Tool/Resource実試行はNOT RUN**。これは当該Source/Tool版についての観測で、将来Adapterを永久に不在と断定しない。
+
+生成AI・人間の既存共通経路は**実CLIのResponse/実受領Scope**を先に利用し、`managed`な設計文書の原文を許可済み別File Readerで調べる場合も、TEIモデルへ意味としてParsed/Bound済みと表示しない。`catalog`にRuleが無くても文書内Ruleの不存在は証明しない。新MCP/Markdown ParserをYICに作らず、[TEI #3346](https://github.com/hat47x/tei-platform/issues/3346)/[#2621](https://github.com/hat47x/tei-platform/issues/2621)/[#3262](https://github.com/hat47x/tei-platform/issues/3262)のOwnerへ委譲する。
+
 
 **実験分離**：初回TAI #168 SK-02のH2/H3では`view`や設計Markdown Readerを許可Listへ追加しない。現行TEI Toolでの限定記録を後続Product Reader適合へ使用する場合は、旧Binary/Tool Contractとの差異を事前に固定する。T1-A既知ValidationのCLI実判別は成立済みでも、TT-56必要Rule閉包・未知Rule発見T1-B・正式Source解釈・外部Harness全Byte・Owner受理は未資格。初回H2/H3比較適格0/4を維持する。
 
@@ -1012,6 +1034,9 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 | [TEI #3350](https://github.com/hat47x/tei-platform/pull/3350)の修正前後では、同じ12宣言の未選択が**6→4**。Postgres/OracleのCapability対応はdev/prod双方でselected。2件の局所Go test・vetがPASSし、**mainの実coverage.goが既存SupportsDatabaseProviderを呼ぶことを再読取済み** | 旧6件は旧集計規則に束縛した歴史値。現mainの選択規則の修正は確認できるが、実Provider実装・Link/Invoke・Target互換・現在Host Grant/Owner資格は依然未実証。PR側の局所Testを新main CIの結果と同一視しない |
 
 **YIC/TEIが次に採用する測定の形**：Productから実際に取得した`Environment ID/Revision`、`Plugin/Capability Kind+ID+Version`、`Provides`の宣言、`Selection Rule/Binding`と解決結果、未選択Reason/Unknown、`actual Plugin/Target Load・Invoke/Artifact`、当該ConsumerのRequired Capability、現在Host Grant/Disclosure、対象Attempt/独立Expectedを**別列で比較**する。解決規則が異なる旧/new ReferenceのCountを、同条件の時系列トレンドに見せかけない。Provider未選択があるときも、それが不要なTask・別Environment/Consumerで可能なRead-only処理は維持する。
+
+**Bindingの母数とProduct Validatorを区別**：[TEI Open #3363](https://github.com/hat47x/tei-platform/pull/3363)のread-only Referenceは、既存`Capability.Supports*`関数を使い6種のBindingを24件照合し、局所観測で**selected 22／missing 2／ambiguous 0**。Missingの2件はdevelopment/productionの`editor.database_workbench`。一方、現在のTEI `internal/validation`は`editor.sql_analysis`だけCapability適合判定を行い、Workbenchでは`Known()`のみを確認している。したがってReferenceの`missing 2`は**製品ValidationのFAILではない**。§27.6の12宣言・未選択4とは母数/問い/判定規則が異なり、`22/24`と`8/12`を比較して能力改善と報告しない。`ambiguous`は黙って一候補へ解決せず、Scope/Version/Required Functionと実Invoke/Current Grantへ別引渡しする。#3363は未merge/局所Go5件の試験のみ、第二YIC Resolverなし。
+
 
 **独立Expectedの後続対照**（既存TAI #488 X01/X03/X04/X06、TEI #951/#3267/#3277/#3279を再利用）：(a) Package選択済み／Capability Binding無し、(b) 同じPackageのA能力だけ選択、(c) 適合技術名とCapability IDの文字列表現が異なる、(d) 同名/Kind一致でもProvider実体無し・未実Load、(e) 実Load済みでもTarget/Host Grant失効、(f) 未選択候補を含むが要求Functionは全充足。単純一致で偽陽性・偽陰性を作る実装を反証し、各Product正本に不足を戻す。正式なVerified Composition BOM、実DB Provider、実Application Target、YIC実Skill効果/Owner受理は**NOT RUN**。初回固定TEI H2/H3は§19のG0→G1→G2を先行して0/4資格を解消し、このPlugin Coverage試験を新Blocking/Trial数へ追加しない。
 
