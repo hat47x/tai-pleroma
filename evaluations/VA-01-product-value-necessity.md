@@ -119,3 +119,12 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 **優先順は変更しない**。まず[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI H2実Tool 1 Session→H3 Skill実Load→4独立Sessionを評価し、その後SCN-001 Activity B0/B1/B2へ。本表のEffect/Export/Hostの負例はSCN-001の公開・実書込みを捏造せず、用途が必要になった段階で隔離した別Caseにする。B1で同等の正確さ・費用ならTAIは任意と判断してよい。
 
 **試験状態**：#493〜#496/#3042の各局所結果は既存Productに帰属する。AT/RQの**横断実Task**、実Host Grant、外部Recipient受領、SCN-001利用者価値比較、異モデル独立評価、Owner正式受理はNOT RUN。
+
+### 6.5 実Tool接続の成立と、Skill／TAI増分価値を分ける
+
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)により、外部DSH経由の**実Tool起動・TEI結果受信**は有限の技術実証を得た。ただし当該9探索試行は参加者の非露出隔離が守られず、Model/Adapter障害が混在し、独立採点も未実施。このため**「製品へ接続できる」価値の一部はObserved、「Product Skillを追加すると正答・費用・確認負荷が改善する」はNOT RUN、「TAIが利用者の活動を改善する」もNOT RUN**と別表示する。
+
+最初の対照は固定した公開TEI一SubjectをTool-only H2で扱い、参加者が見えてよいSource/Tool/Reviewer Expectedの境界を実OS/Harnessで拒否対照化したのちH3へ進む。H2/H3の差がゼロまたは負であればSkillを常時使わない。さらに[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)のOKF Attested Computationは、計算定義の説明/検証情報が通常のCLI+既存Receiptに対して追加価値を持つかを**後続1件のRead-only計算**で判定する。OKF文書のverified/Attester PASSはOwnerの業務意味受理・現在Grant・結果の新鮮さと別。OKF用新共通Attester/Skillを初回H2/H3のHard dependencyにしない。
+
+**現状**：実DSH→TEI CLI接続は限定Observed、正式な隔離済みH2 Trial・Skill実ロード・H2/H3増分価値・TAI Activity B0/B1/B2・OKF実Attester/価値採点・Owner受理はNOT RUN。
+
