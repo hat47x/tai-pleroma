@@ -613,9 +613,9 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 
 <!-- tai-ep-optional-kind-prototype-stage4-20261107 -->
 
-前節EP-02/03の「Kind欠落・nullのEdgeが**現行必須契約の投影で消える**」問題について、[TAI PR #535](https://github.com/hat47x/tai-pleroma/pull/535)は**別のOptional契約を生成器へ通した局所試作**を行った。両Kindがあれば`present`で値を保持し、Kind省略でも`present`として出力Kindを省略、片側nullでも`present`で他方Kindを残した。つまり、**Edgeを投影から脱落させることなく、SUIのOptional型に契約を合わせる経路は技術的に成立し得る**。一方、現行パイロット契約のKind必須設定は**まだ変更されておらず**、本PRも未マージである。
+前節EP-02/03の「Kind欠落・nullのEdgeが**現行必須契約の投影で消える**」問題について、[TAI PR #535](https://github.com/hat47x/tai-pleroma/pull/535)は**別のOptional契約を生成器へ通した局所試作**を行った。両Kindがあれば`present`で値を保持し、Kind省略でも`present`として出力Kindを省略、片側nullでも`present`で他方Kindを残した。つまり、**Edgeを投影から脱落させることなく、SUIのOptional型に契約を合わせる経路は技術的に成立し得る**。一方、この**試作時点**のパイロット契約はKind必須のままだった。PR #535は後にmergedとなり、現行パイロットは後続PR #537でv4 Optionalへ変更された（§21.8）。
 
-この変更で合成層の「Kind省略ならcardと仮定する」挙動や、同じEdge端点IDがCard/Island両方に存在する場合の解決可能性は解決しない。**保存・読取が成功したEdgeと、Direction/Endpoint type/Relation occurrenceまで意味的に同定できたEdgeを分ける**。
+この**試作単独では**合成層の「Kind省略ならcardと仮定する」挙動や、同じEdge端点IDがCard/Island両方に存在する場合の解決可能性は解決しなかった。これらは後続PR #536/#537で段階的に検証・修正された（§21.8）。**保存・読取が成功したEdgeと、Direction/Endpoint type/Relation occurrenceまで意味的に同定できたEdgeを分ける**。
 
 **採否の最小Product試験**：現行必須契約とOptional試作を同じ公開合成Documentで対照し、(a)明示Card→Island、(b)Kind省略だが端点IDが一意、(c)CardとIslandに同じIDがある曖昧端点、(d)片Kindのみnull、(e)合成後再投影、を比較する。Resultの`present`を契約形式の受領に限り、独立Expectedが関係Identity/向き/多重度を確認できないものは`unresolved`、実Actionの対象選択不可として記録。Kind不明のまま提示できる**合法なread-only表示**と、補完せずには対象決定できない編集Intentを区別する。
 
@@ -625,13 +625,31 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 
 <!-- tai-stage4-edge-identity-resolver-20261108 -->
 
-[TAI merged PR #535](https://github.com/hat47x/tai-pleroma/pull/535)でOptional端点Kindを扱う生成器の局所試作がmainへ統合された。ただし**パイロットの正式な必須端点契約をOptionalへ移行した事実ではない**。前節§21.6の「#535未マージ」は執筆時の履歴状態であり、現在はMergedである。
+[TAI merged PR #535](https://github.com/hat47x/tai-pleroma/pull/535)でOptional端点Kindを扱う生成器の局所試作がmainへ統合された。ただし**#535時点ではパイロットの必須端点契約をOptionalへ移行した事実ではなかった**。前節§21.6の未マージという記述は当時の履歴状態であり、現行のパイロットv4は後続#537で変更済み（§21.8）。
 
-後続[TAI open PR #536](https://github.com/hat47x/tai-pleroma/pull/536)は、合成層がKind省略時に常に`card`を仮定する処理を、**端点IDに対応するCard/Islandの実存在から解決する処理**へ変更する候補。公開合成の限定試験では、Kind省略のCard→CardおよびCard→Islandを正しく合成し、存在しないIDは`no such endpoint`、Card/Island双方に一致するIDは`ambiguous endpoint`で拒否する。合成後のEdgeは投影済みKindを保持し、未宣言Kindをcardへ勝手に確定しない。PR本文の単体13件／Suite89段PASSは**当該作業ブランチの報告**であり、PR #536は現在未マージ。正規Productリリース・実Consumer E2E・Owner意味受理を証明しない。
+後続[TAI merged PR #536](https://github.com/hat47x/tai-pleroma/pull/536)は、合成層がKind省略時に常に`card`を仮定する処理を、**端点IDに対応するCard/Islandの実存在から解決する処理**へ変更する候補。公開合成の限定試験では、Kind省略のCard→CardおよびCard→Islandを正しく合成し、存在しないIDは`no such endpoint`、Card/Island双方に一致するIDは`ambiguous endpoint`で拒否する。合成後のEdgeは投影済みKindを保持し、未宣言Kindをcardへ勝手に確定しない。PR本文の単体13件／Suite89段PASSは**当該作業ブランチの報告**であり、PR #536はその後mergedとなった。ただし合成層の修正だけでパイロットOptional契約の適用・実Consumer E2E・Owner意味受理を証明しない（後続#537と§21.8を参照）。
 
 **EP-01〜04の後続独立Expectedを更新**：正例（Kind明示／Kind省略かつ端点ID一意）と、負例（未知ID／同じIDがCardとIslandの双方に存在／Source変更で一意→曖昧／別Functionで同じ見かけのEdge）を同じFixtureと現在Source版で比較。正常なOptional指定を必要以上に`missing`として拒否する誤停止と、曖昧なEndpointを勝手に確定して編集Offerする誤成功を**別々に測る**。端点解決はIdentityの必要条件であり、関係方向・多重度・時間条件・業務Meaning・Actor Grant/対象更新の逆写像まで成立したわけではない。
 
 TAIは既存Stage 4の投影契約／合成試験とActivityの現在用途を参照し、SUI/TEIの元Graph/Function/Renderer/正本を置換しない。最初の固定TEI H2/H3比較へEdge試験を追加せず、後続B0/B1/B2で必要なEdge/編集候補だけ検証する。曖昧IDの実更新負例・SUI→TAI実Consumer・Owner採用はNOT RUN。
+
+### 21.8 実統合済みEdge契約v4の成立条件と、関係の意味・書込み資格の残差（2026-11-08）
+
+<!-- tai-stage4-edge-v4-integrated-vs-meaning-20261108 -->
+
+前節§21.5〜21.7の歴史的な「Optional試作／合成層未修正」は、**[TAI merged #535](https://github.com/hat47x/tai-pleroma/pull/535) → [merged #536](https://github.com/hat47x/tai-pleroma/pull/536) → [merged #537](https://github.com/hat47x/tai-pleroma/pull/537)**で段階を進めた。#536で欠落Kindを一律cardと仮定せず、端点IDからCard/Islandを一意に解決。未知IDは`no such endpoint`、両型に一致する曖昧IDは`ambiguous endpoint`で明示拒否。#537はパイロット実契約`edge-record v4`で端点KindをOptionalに採用し、Fixtureを4→7へ、投影から合成までの結合24ケースをPASS、一括Suite90段を報告。これは**候補ではなくTAI mainへ統合されたProductパイロットの局所機能**である。
+
+| 一因子対照 | v4 Product観測（局所） | ActivityのClaim上限 |
+| --- | --- | --- |
+| Kind省略・Card→Island | Optional投影を通り、端点IDから解決して合成成功 | Edgeの受領・合成経路は成立。外部SUI実Documentとの同一Source／Accepted Relation Meaningではない |
+| Kind省略・Card→Card | 投影後に合成成功 | 一意な端点IDから構造同定できる。別Contextの編集対象や現在Grantは未確認 |
+| 解決不能なID | 投影は`present`でも合成は`no such endpoint` | **投影成功≠Consumerの構造受入**。Relation不存在一般ではなくこの入力範囲の解決失敗 |
+| Card/Island双方に存在するID | 合成で`ambiguous endpoint`拒否（#536） | 勝手にCardを選択しない。正当なread-onlyで確認できる他の情報は過剰停止しない |
+| 明示nullのKind | Optional投影で**未解決として保持せず、省略へ畳む**（#537） | 原入力の「キー欠落」と「明示null」を後から区別できると主張しない。区別が必要な用途はSource側の原記録・現在Scopeを再取得 |
+
+**§21.5のEP-02/03はv3必須契約での歴史的負例**として残し、v4で「Edgeが消えない」が達成された範囲を別Pinで記録する。必要な業務RelationのIdentity・方向・多重度・時点・Source Revision、複数表現の逆写像、Owner Accepted Meaning、現在Actor/Host Grant、実Mutation／Consumer Readは依然別資格。TAIはGraph Resolverを再実装せず、Stage 4のパイロット契約から現在Purposeに必要なClaimだけ再利用する。#537の結合24件とSuite90段を**実SUI→TAI API E2EやOwner受理**に昇格させない。
+
+**次の試験を増やさない**：初回TEI公開H2/H3のG0→G1→G2→独立4 Sessionを先行し、後続のB0/B1/B2でEdge編集が必要になった場合だけ、同IDの二種類端点・原入力nullと欠落・Source版変更後の再解決・実Consumerからの受領を独立Expectedで検証する。新たな共通Host/Graph Schema/Function Action Engineは不要。
 
 ## 22. 2026-11-07：実H3 Skill Loadの到達と、Activityに再利用できる資格を分離する（実測／横断価値NOT RUN）
 
