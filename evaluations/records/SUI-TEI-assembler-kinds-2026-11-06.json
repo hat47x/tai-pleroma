@@ -22,7 +22,7 @@
         }
       ]
     },
-    "absentKindsDefaultToCard": {
+    "absentKindsResolvedFromEndpoint": {
       "outcome": "assembled",
       "edgeCount": 1,
       "kinds": [
@@ -32,11 +32,17 @@
         }
       ]
     },
-    "absentKindsBreakCardToIsland": {
-      "outcome": "refused",
-      "reason": "edge edge-3 references unknown card island-1"
+    "absentKindsResolveCardToIsland": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": null,
+          "to": null
+        }
+      ]
     },
-    "nullKindsDefaultToCard": {
+    "nullKindsResolvedFromEndpoint": {
       "outcome": "assembled",
       "edgeCount": 1,
       "kinds": [
@@ -50,11 +56,15 @@
       "outcome": "refused",
       "reason": "edge edge-5 has unknown fromKind thing"
     },
+    "absentKindUnknownEndpointRefused": {
+      "outcome": "refused",
+      "reason": "edge edge-6 has no toKind and card-9 is no such endpoint"
+    },
+    "assemblerRewritesKinds": true,
     "contractRequiresKinds": {
       "fromKind": true,
       "toKind": true
-    },
-    "assemblerRewritesKinds": true
+    }
   },
-  "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, and an unknown kind. It records that the assembler defaults to card while the contract requires the kinds, so the fallback only ever runs on inputs the contract already refused. The fallback is used for endpoint resolution only: the composed edge keeps its null kinds, so the document can still carry an edge without endpoint kinds. It does not change either side."
+  "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, and an unknown kind. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown or ambiguous endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract still requires the kinds, so this path only runs on inputs the contract already refused."
 }

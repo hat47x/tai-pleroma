@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-08",
   "host": "Windows with a locally built sei CLI and a temporary store",
   "command": "python integrations/tools/sei_doctor_check.py --sei-repo D:\\GIT\\hat47x\\sei-cognition --artifact evaluations/artifacts/sei-decision-projection.json --out evaluations/records/SEI-TEI-doctor-2026-11-06.json",
   "result": "PASS",
@@ -25,7 +25,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -33,7 +33,7 @@
         },
         "data-root": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\store"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\store"
         },
         "mcp": {
           "status": "info",
@@ -57,7 +57,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -65,11 +65,11 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-07-1548d8a4: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-07-35d50295: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "ok",
@@ -98,7 +98,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -106,15 +106,15 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-07-1548d8a4: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-07-35d50295: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
         },
         "gate-log": {
           "status": "ok",
@@ -139,7 +139,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -147,11 +147,11 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-ic4ylumg\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tbh843td\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-07-1548d8a4: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-07-35d50295: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "ok",
