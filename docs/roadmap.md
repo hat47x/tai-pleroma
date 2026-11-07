@@ -55,6 +55,15 @@
 - **大量AI並列開発によるスコープ拡張（2026-11-01）**：[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)／[横断計画§20](harness-capability-lifecycle-2026-10.md)へ、TEI #2493の広範な業務・Plugin・Target Pressure、#2495のデータ構造/数学・単位・トポロジーの多facet分類、SEI組織文脈、SUI開示投影、SHO一体文書、EKI実委任を横断接続する。候補/Issue/製品領域の固定上限を置かず、逐次対並列Agent・共通Contract競合・機密OS隔離・別Harness/料金の4件ベースの独立対照を提案。探索候補と実証済み実能力、CI/Owner・統合負荷を別計測し、低価格トークンを実Owner意味受理や実Host権限に昇格させない。TAI #232で型名/Schema/件数等メタデータの機密性も評価。初回P-A〜P-Eと実利用料金の試験は未実施。従来SW-01 A2/B1の比較は独立に継続し、スコープ縮小のための固定上限は導入しない。
 - **機密下でのClaim十分性とConsumer比較（2026-11-02）**：[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、[横断計画§21](harness-capability-lifecycle-2026-10.md)、[SW-01 C1〜5](../evaluations/SW-01-harness-handoff-qualification.md)。同じ公開Projectionで内部世界が異なり全件Claimが相違する二世界の反例により、外部AIへ隠れた情報を想像で補わせない。Ownerの開示Policyが許す場合に限りSource側で限定Questionを検査して、許可した結果だけ返す候補を評価（**boolean結果自体も秘匿対象**）。TEI #2516 CC-01〜06、SEI #767、TAI #234/TEI #2515のSession Event/Team送出へ参照接続。通常TEI内の組織Dataを機密Profile一律対象にしない。C1/C3をSW-01 A2/B1へ最小追加、反復照会/実OS/Network/異Harnessは別資格。評価案・新規NOT RUN。**TAI PR #169は2026-11-02にMerged**（従前の「Draftでmainと乖離」は過去時点の記録）。残る評価票／情報保護／ポートフォリオの実証は最新mainを基準にレビューし、merge事実だけからOwner価値受理・実Harness適合を宣言しない（[整合性監査 #425](https://github.com/hat47x/tai-pleroma/issues/425) F1-03）。
 
+### 2026-11-07 更新：初回Tool到達は観測済み、次は比較資格の確立
+
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI Evidence Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)で、DSH外部AI Harnessから固定TEI Binaryを実起動した限定Observedが成立。以前の計画中「最初の外部H2 Tool Callが未実施」という記述は**以前の状態**。探索9試行中の完了3（Participant Task1）、実TEI起動32は技術的接続の証拠だが、参加者が許されないWorktreeを読めたため**隔離・比較資格は不合格／未証明**。独立Answer採点・H3 Loader・Egress／費用は未実施。探索9件を固定4Sessionへ流用しない。
+
+**改訂した次の出口**：①実OS/Harness隔離でReviewer Expected/Skill/旧Log/許可外Sourceの到達拒否を確認→②固定Task/Binary/Workspace/Model/Profile/Cost/独立Expectedの新Trial Groupを開始前にPin→③**比較適格なH2を1Session**で実Tool/Answer/独立採点→④H3実Skill Load→⑤固定のH2→H3→H3→H2四Sessionで増分価値/ITT/PPを比較。技術的接続の繰返しより価値比較可能性を優先する。[VA-02 §13](../evaluations/VA-02-cross-product-first-run-protocol.md)と[VA-04 §8](../evaluations/VA-04-evidence-readiness-preflight.md)が実験条件。
+
+**条件付き後続**：[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)のOKF Attested Computation（正規計算定義／型付きBind／実Receipt／独立Attester）は既存Skill試験の後にread-only計算1件で価値を判断し、H2/H3のSkill原文/Tool Profileに途中追加しない。SEI #820のOKF鮮度・交換とTEI #2605のProduct Skill契約を流用。新Attester Runtimeや第二Meaning Storeを最初から標準装備しない。
+
+
 ## 横断要件の適正化・多モデル独立レビュー（2026-11-04：提案）
 
 [TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)および[主要価値からの要件適正化と独立レビュー計画](yi-constellation/product-value-scope-audit-2026-11-04.md)を、Phase 0〜3と並列の**横断レビュー・計画更新レーン**として追加する。
