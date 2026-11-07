@@ -3,9 +3,9 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-08",
   "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
-  "command": "python integrations/pilot-sui-document/assembler/response_headers_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-latest --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-headers-2026-11-06.json",
+  "command": "python integrations/pilot-sui-document/assembler/response_headers_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-recover-20261107 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-headers-2026-11-06.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
@@ -18,24 +18,24 @@
       "frameOptions": "DENY",
       "cacheControl": null,
       "vary": null,
-      "requestId": "6c1f8372255a498f8ef2c8013917964c"
+      "requestId": "1fcd6e2a0a9c4feeb6af70ed95b84f6d"
     },
     "unauthorizedHeaders": {
       "nosniff": "nosniff",
       "frameOptions": "DENY",
       "cacheControl": null,
       "vary": null,
-      "requestId": "5a0b44c6b019469f85f387bd4acb76c9"
+      "requestId": "d2d19c6be7e84cffb855e82ee021361d"
     },
     "unauthorizedBodyHasRequestId": true,
     "traceEchoed": "caller-supplied-id",
-    "unsafeTraceReplaced": "58ef7c80e8b64dc2b1693bed3130c1bd",
+    "unsafeTraceReplaced": "3007f0b7a9124d64aa63873badd81c79",
     "agentHeaders": {
       "nosniff": "nosniff",
       "frameOptions": "DENY",
       "cacheControl": "private, no-store",
       "vary": "Sui-Sensemaking-Agent-Credential, Sui-Sensemaking-Agent-Bearer",
-      "requestId": "6f82054f968941a28ea7abbe07de13c3"
+      "requestId": "3ecd52e0363f4f1e8586fc95569f1058"
     },
     "agentStatus": 503
   },

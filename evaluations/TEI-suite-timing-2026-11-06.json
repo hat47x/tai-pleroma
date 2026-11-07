@@ -3,37 +3,37 @@
   "synthetic": false,
   "evidenceKind": "observation",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-08",
   "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 87,
-    "totalSeconds": 1703.07,
+    "steps": 88,
+    "totalSeconds": 822.96,
     "slowest": [
       {
         "name": "sui_docs_tests",
-        "seconds": 268.64,
+        "seconds": 179.28,
         "attempts": 1
       },
       {
         "name": "sui_session_tests",
-        "seconds": 119.47,
+        "seconds": 82.02,
         "attempts": 1
-      },
-      {
-        "name": "sui_saas_tests",
-        "seconds": 113.87,
-        "attempts": 2
       },
       {
         "name": "postgres_contention",
-        "seconds": 85.61,
+        "seconds": 28.65,
         "attempts": 1
       },
       {
-        "name": "eki_projection",
-        "seconds": 68.17,
+        "name": "postgres_retry",
+        "seconds": 24.84,
+        "attempts": 1
+      },
+      {
+        "name": "postgres_migrate",
+        "seconds": 23.1,
         "attempts": 1
       }
     ],
@@ -41,7 +41,7 @@
   },
   "products": {
     "tei": "",
-    "sui": "09c24046",
+    "sui": "",
     "sei": "6d98ddf",
     "mmi": "09f849bd",
     "eki": "66b0c04"
