@@ -922,6 +922,22 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 **横断の次の試験**：Rule/Scenario/Expectedの正本はTEI #1180/#2514、Patternは[#3223](https://github.com/hat47x/tei-platform/issues/3223)、Design Contextは#3262。T1-Bは実SourceからRole/Ruleを独立に取得し、Reviewer-only独立ExpectedをAIへ露出させない状態で、新しく未カバーの条件を発見する能力を測る。P-1b1が未充足なら必要なRequired部分の閉包不足として**Qualified Test Generationを保留**し、探索的Candidateを正式採用扱いしない。単一Coverage率にC0/C1/機能要件/NFRをまとめない。新Test Generator/Scenario Store/Oracle/Runnerは設けず、**YIC初回固定TEI SK-02の比較適格H2/H3新4 Sessionは独立の先行Gate**として維持する。
 
+<!-- yic-skill-cli-loader-scope-negative-20261108 -->
+### 26.7 Product Skillが「見える」「解析できる」「現在利用できる」を混同しないための負例（2026-11-08）
+
+[TEI実CLI Dogfood #3149](https://github.com/hat47x/tei-platform/issues/3149)からの新Source反例を、§26.5/26.6のP-1/AI Skill適合へ接続する。設計を変更する場所はTEI #3345（指紋のScope）、#3346（設計Markdown Loader）、#3347（CLI応答）、#3262（RequiredのSource閉包）であり、YIC側は**選択した実Product Reader/Skillがどこまで受領したか**だけを判別する。
+
+| 既存X02/X04/X06に接続する対照 | 正しいProduct/Skill応答 | 誤成功・誤停止 |
+| --- | --- | --- |
+| **設計文書がmanagedだが未Loaded**：`docs/plan` Markdownが`managedFiles`に載り`readByLoader:false` | 文書の所在は既知。TEI意味Readerが未解釈な必要Ruleは`not-observed/unsupported`。別の許可された文書Readは可能 | Catalogに無いので「Rule不存在」／全部Loader済みと偽る、または正当なread-only文書調査まで禁止 |
+| **指紋Scope差**：`view.semanticFingerprint`はApplication使用namespace範囲、`worldFingerprint`は全World | fingerprint kind・適用namespace・Workspace/manifest・実Producer/Consumer/Revisionの対応を確認 | 異種ハッシュ不一致をSource Driftとみなす／一致する値だけで意味受理・現在Grantと宣言 |
+| **応答Schema差**：`validate.diagnostics`入れ子、`requirements.result`配列、Catalogに標準定義が混在 | 実Command/ModeのSchemaとexit、Raw result・Received Byteを照合し、QueryしていないSource/Kindを明示 | 全`result`をobjectと決め打ちし正当配列を拒否／組込stdをUser宣言に計上／空結果をRequired全件なしと断言 |
+
+**検査の最短手順**：同じ公開Workspaceと目的Functionについて、(a) TEI CLIが本当にロードした`.tei` Rule、(b) managedだけのMarkdown、(c)対象Scopeの異なるFingerprint、(d)異形の正常JSONを独立Reviewer Expectedで一因子対照する。YICは**Product SkillなしB0とありB1**について、正当Readの継続率・誤不在Claim・過剰拒否・追加Tool呼出し・ConsumerのBody完全受領を比較する。B1で完結するならB2 TAI Activity Skillを選択しない。あくまで既存X02/X04/X06とTEI #3262のRequiredを再利用し、追加Skill-specific Test Engine／Central Reader／新Gateを作らない。
+
+**実験分離**：初回TAI #168 SK-02のH2/H3では`view`や設計Markdown Readerを許可Listへ追加しない。現行TEI Toolでの限定記録を後続Product Reader適合へ使用する場合は、旧Binary/Tool Contractとの差異を事前に固定する。T1-A既知ValidationのCLI実判別は成立済みでも、TT-56必要Rule閉包・未知Rule発見T1-B・正式Source解釈・外部Harness全Byte・Owner受理は未資格。初回H2/H3比較適格0/4を維持する。
+
+
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
 ### 27.1 Oracle Fusion Claw/FSCRから取り込む範囲を限定する
