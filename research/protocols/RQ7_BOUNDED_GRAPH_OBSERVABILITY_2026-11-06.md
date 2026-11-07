@@ -212,4 +212,4 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 - `tei trace`で得たGraph/Edgeは**観測Projection**。これを「独立した宣言Graph」と偽ってV0/V1へ入力すると、RQ7の「表示形式×実行証拠」の介入因子が交絡する。
 - 実Graph/Sourceデータの開示は#2516 Current Policyが許したSliceのみ。現段階では製品のraw CLI Packetを本研究へコピーせず、GitHub exact-head記録を参照するだけとする。
 
-**今回の達成**は、実証済みTEI Readerの限定事実を研究設計へ接続したこと。#1124 M0→M1、#2831 Self-build P0、#2542 ETL/MFT、RQ7の人間/AI認知実験と独立holdoutは別Gateであり**NOT RUN/NOT PROVEN**。第二Source Reader/Provider/Host/Policy/Graph Engineを作らない。
+**今回の達成**は、実CLIと別言語Consumerの限定された応答内整合を研究設計へ接続したこと。独立Source Readerの存在・Source閉包・現在性を実証したものではない。#1124 M0→M1、#2831 Self-build P0、#2542 ETL/MFT、RQ7の人間/AI認知実験と独立holdoutは別Gateであり**NOT RUN/NOT PROVEN**。第二Source Reader/Provider/Host/Policy/Graph Engineを作らない。
