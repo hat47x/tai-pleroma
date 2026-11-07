@@ -1156,3 +1156,26 @@ document_policy_binding_resolver → UnavailableDocumentPolicyBindingResolver
 - 未知のadapter名は**エラーにせずnoopへ退避**する。設定の綴り違いが「制御なし」に化ける
 - endpoint未設定のexternal系は明示的に拒否される
 - tenant/文書ポリシーの解決器は未設定時にUnavailableへ退避し、SaaS事前検査がこれを弾く
+
+## ローカル失効防止の段階（2026-11-06）
+
+`resolve_access_decision`を15通りで評価した。[receipt](../evaluations/records/SUI-TEI-failsafe-2026-11-06.json)
+
+```text
+safeMode + export → 拒否（reason=safe_mode）
+safeMode + read → 許可
+read_only + write → 拒否（reason=read_only、readOnly=true）
+read_only + read → 許可（readOnly=false）
+Restricted + policy_refなし（deny） → 拒否（policy_ref_missing）
+Restricted + policy_refなし（read_only） → 拒否（readOnly=true）
+Restricted + policy_refあり → 許可
+Public + policy_refなし → 許可
+tenant不一致 → 拒否（tenant_mismatch）
+PDP拒否 → 拒否 / PDP到達不能（deny）→ 拒否
+PDP到達不能（read_only）+ read → 許可（readOnly=true）
+PDP不正ポリシー / 戻り値が型違い → read_only方針で許可（readOnly=true）
+```
+
+- 段階は「tenant境界 → safe_mode → read_only → policy_ref → PDP」の順で、前段が決めるとPDPを呼ばない
+- `deny`方針では到達不能・不正ポリシー・型違いのいずれも拒否、`read_only`方針では読み取りだけ許可して書き込みを止める
+- **呼び出し側の`read_only`フラグは、読み取りの決定に伝播しない**（`readOnly=false`で返る）。制約は書き込み系の拒否としてのみ効く
