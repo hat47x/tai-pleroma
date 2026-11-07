@@ -946,3 +946,15 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **既存G2の最小一因子対照**：(A)管理対象Markdownは見えるがLoader未消費、(B)実Loaderが読んだ`.tei`の必要SubjectはCatalog/Inspectへ現れる、(C)Application限定Fingerprintと全World FPが異なる、(D)配列／入れ子／標準定義を誤読するConsumer、を同一公開Fixtureの範囲だけで比較する。個別Claimの`unqueried/unsupported/partial`を報告して安全なReadは続け、**意味未取得なのに存在しない／完全／権限あり**とは言わない。初回G2-C/D（Call/Result対応・モデル受領Byte）の実証に代わる新Checkerや独立受理ゲートは作らない。
 
 **証拠の上限**：今回の3 Issueは実Productによる現行挙動／Gapの根拠であり、DSHのOS read-deny、実送出先全件、Tool Reply全Byte、正式Skill増分比較、Markdown実Parser、CLI修正を観測したものではない。H3の実Tool Skill/Reference Loadは歴史的Witness、正式H2/H3比較適格は0/4のまま。G0→G1→G2→新4独立Sessionの順序は維持する。
+
+<!-- tai-sk02-cli-discovery-current-args-no-native-mcp-20261108 -->
+### 24.16 Productの実Tool Discoveryを使い、MCP未接続とCLI実受理を別扱いする（G2）
+
+[TEI merged #3307](https://github.com/hat47x/tei-platform/pull/3307)では`tei commands`に閉集合の引数について`argumentValues`／`argumentType`／`argumentDefaults`が載り、実CLIの成功／拒否を回帰検証する。実`inspect`と`trace`の`-subject-kind`は集合が異なり、`trace`未対応Kindを「Subject不存在」と読み替えない。これは**適用可能なCommand/Optionの発見**であり、モデル出力をHarnessが完全受領した証拠ではない。
+
+[TEI merged #3333](https://github.com/hat47x/tei-platform/pull/3333)は`view`の`writeFlags`に`-operation-log`／`-lifecycle-state`を載せ、指定時に実FSファイル／SQLite stateを作ることを実CLIで確認した。一方`view`は**現SK-02初回Whitelist外**なので今回の四Sessionには追加せず、次のProduct Taskが要求する場合だけ実argv/出力Path/Grantを検証する。`effect=read-only`だけで任意Pathへの書込みが無いとは認定しない。
+
+[TEI #3149／Draft #3356](https://github.com/hat47x/tei-platform/pull/3356)の実CLI再点検では、この時点のTEI Productに**ネイティブMCP入口は観測されていない**。従って初回H2/H3の実証は**DSH外部Harness→TEI実CLI Tool**であり、`MCP available`や`MCP Tool consumed`を実測列へ書き込まない。別Host/MCP Adapterの実装可否は将来判断とし、CLIを第二のTEIサービスへ置き換える開発はBlockerにしない。
+
+**最小G2-P対照**：同一Pinned CLI Binaryと公開Sourceで、(1) `commands`の対象Command/Option/引数型の広告、(2)当該`argv`実実行、(3)exit/stdout/stderrとTool Reply全Byte、(4)LLM実Context到達、(5)現Source/Workspace/Kind Scope、を別列で確認する。使わないCommandまで網羅する必要はない。CLI広告があってもTool adapterが許さなければ`not-available`、Tool Resultが切れたなら`partial`。発見不能なMCPを勝手に補完しない。正式H2/H3比較は引き続きG0実OS Read拒否→G1 Egress/暗黙Context→G2 Call/Result完全受領→独立4Sessionで、適格0/4。
+
