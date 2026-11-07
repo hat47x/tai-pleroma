@@ -688,7 +688,7 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 ### 24.1 実測証拠を既存Runbookへ取り込む
 
-[TEI #2509／Draft PR #3113](https://github.com/hat47x/tei-platform/pull/3113)に、外部AI HarnessであるDSH 0.2.2-rc.1（Windows、headless、read-only、OpenRouter経由DeepSeek）の実行記録が追加された。[Product側Evidence原本](https://github.com/hat47x/tei-platform/blob/docs/dsh-h2-readonly-evidence-20261107/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07/README.md)を参照し、TAIへTool原文・Model思考・Credentialを複写しない。
+[TEI #2509／merged PR #3113](https://github.com/hat47x/tei-platform/pull/3113)に、外部AI HarnessであるDSH 0.2.2-rc.1（Windows、headless、read-only、OpenRouter経由DeepSeek）の実行記録が追加された。[Product側Evidence原本](https://github.com/hat47x/tei-platform/blob/docs/dsh-h2-readonly-evidence-20261107/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07/README.md)を参照し、TAIへTool原文・Model思考・Credentialを複写しない。
 
 - **実Tool transportの限定成立**：固定TEI commit 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c、同じ公開sales.orderと、参加者用固定Task原byteSHA-256 38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf。h2-08のSessionはcompletedで、Tool call 56件／受領Tool result 55件、うちTEI実行物の起動32件。commands／version／catalog／inspect／source-index／validateの実結果が残る。Workspaceのコピーと固定worktreeでWorld/SourceIndex fingerprint一致。最終回答は存在するが独立Expectedによる正答採点は**未実施**。
 - **9試行の別分母**：[構造化記録](https://github.com/hat47x/tei-platform/blob/docs/dsh-h2-readonly-evidence-20261107/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07/attempts-summary.json)には、Participant Task完了1、短い接続確認Task完了2、MALFORMED_RESPONSE停止5、INVALID_CONFIG停止1がある。複数Tool呼出しを一つの不正なJSONへ連結して返す問題は、maxParallelToolCalls:1でも防げなかった。最初の試行は隔離用cwdでなかった。これらを成功した4Session Trialに遡及編入しない。
@@ -733,3 +733,22 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 5. **Modelの実版を過大認定しない**：今回の`~deepseek/deepseek-flash-latest`はDSHの指定モデル識別子。表記が同じでもProviderが実Weights/Revisionを同じものとして返したかは今回のEvidenceでは未確認。モデル別名／経路／有効設定と、実解決されたモデル版／Provider応答metadataを別欄に保持し、取得不能なら`unknown`。全4試行のモデル同一性を自己申告Aliasだけで確定しない。
 
 **Ownerと上限**：DSH `pwsh` 経路でのTool Result分離／8KiB中断・Windows ConstrainedLanguageの扱いは[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)へ、OS／Filesystem／Networkの実拒否は[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)・[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)へ、四SessionのR/D・資格と独立採点は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)へ帰属。PowerShellの言語保護を弱めることを解決策として前提にせず、実際に使うHarness/Tool Profileの可用性・安全性を別検証する。**ここで実Toolを再実行したわけではなく、保存ファイルを再検査した結果と次の試験契約**。H2/H3比較適格0/4、H3 Loaded 0、Owner意味受理／実送出観測NOT RUNの状態を変えない。
+
+<!-- h8-h6e1-h6e2-real-canary-read-and-session-log-20261107 -->
+### 24.4 DSH H6-E1/H6-E2実測をH2入場前の拒否試験へ結ぶ（2026-11-07）
+
+**新しい実証拠（比較Trialとは別）**：[TEI PR #3173](https://github.com/hat47x/tei-platform/pull/3173)／[H6-E1実記録](https://github.com/hat47x/tei-platform/blob/b8f12dd0326722c3afcdf20bc0e1554dc54f29b1/plan/evidence/DSH_H6E1_READ_BOUNDARY_2026-11-07/README.md)では、DSH 0.2.2-rc.1の`headless / read-only / approval-policy never`を使い、Mockが`read`を順に強制。合成Projection、Raw、`raw/.env`、cwd外の合成Peerを**2回とも全4件実Readでき、拒否0件**。そのcanaryはMock Endpointに到達したモデル入力だけでなく`dsh_session_log`にも現れた。これは**現状のDSH read-onlyを許可されたRead範囲のOS/Tool強制と見なせない直接的な負例**であり、実Secretや外部Providerは使っていない。別ユーザーACL・VM/mount/Networkでの**拒否成立**はNOT RUN。
+
+**Session Logの別経路**：TEI mainへ統合済みの[#3153](https://github.com/hat47x/tei-platform/pull/3153)／[#3161](https://github.com/hat47x/tei-platform/pull/3161)によるローカルMock観測では、`session-log-deepseek`が**出荷既定で有効**、Tool結果は通常の`tool_result`に加えSession Logの`data.message`／`data.meta`にも載る。明示`enabled:false`では同fieldが消えたが、同Sessionで`true`に戻すと未送信Eventを再送し、503やstream切断では水位が進まず後続要求で再送される。**モデル入力、Session Log、他のEgress経路は別**。ここで実Providerへの送出・全Socket/Telemetry/MCP経路の非送出は未観測であり、設定`off`やRequest Body内にfieldが無いことだけで「外向き送出ゼロ」とは認定しない。
+
+**SK-02初回の入口への具体的な適用（既存Trial Cardを使用）**：
+
+| 関門 | 正例／反例を事前に観測 | 未達時の扱い |
+| --- | --- | --- |
+| G0 実可視性 | 同じ実OS identity・Profileで許可された`tei` binary／Public Workspace／Taskのreadが成功し、別Principalで保持した合成Raw・Skill root/references・Reviewer Expected相当・他Sessionと親Checkoutが、直接path／cwd外／他Tool経由で実拒否される | **拒否が実証できなければ未割付 environment-ineligible**。H6-E1の拒否0件を「Skillを置かないから安全」へ読み替えない |
+| G1 送出・残留 | Effective Config、Provider経路、`dsh_session_log`設定／水位、実観測したNetwork/Tool出口を分離し、H2/H3のAudienceと許可データに一致させる。初回は公開Sourceのみを投入し、Holdout/機密canaryの原文を実Modelへ与えない | 未観測出口を`no egress`とは記録しない。Mock到達は**Mock限定の送出観測**で、実Provider/OS拒否資格ではない |
+| G2 Tool/Result | 両腕同一`version/commands/model catalog/inspect/trace/validate` Tool Profile、実argv／cwd／Binary／Source、stdout・stderr・Tool replyの完全性を照合（§24.3） | `source-index`越境、8KiB Catalog断片／混合stderr／未Resultは別列で失敗またはunknown。Trial開始後はITTに保持 |
+
+**採否順**：G0/G1の**実環境としての事前検査**とG2の許可Tool受領経路が整ってから、H2→H3→H3→H2を**新しい事前登録4Slot**で開始する。開始後に露出・出力欠損・Model JSON不正が生じても、そのSlotをH3に付け替えず、ITTへ保持しPPを不適格にする。DSHのH6-E1/E2実測は既存9探索Attemptと**別母数**で、初回H2/H3試行数に算入しない。
+
+**担当**：実読取否定・実Network境界は[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)／[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。DSH ToolとMock Wireは[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)。Harness比較と独立採点は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、現在資格／Model Profile driftは[#271](https://github.com/hat47x/tai-pleroma/issues/271)。P0で新しいHost／共通Permission Registry／Runnerを実装しない。**ここで新規DSH試行を行ったわけではなく、既存の実H6-E1/E2を初回SK-02受入へ反映した**。比較適格H2/H3は0/4、H3実Load／Owner受理はNOT RUN。
