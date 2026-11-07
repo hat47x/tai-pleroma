@@ -6,7 +6,7 @@
   "evidence_level": "synthetic-stipulated-events-not-product-observation",
   "holdout": false,
   "disclosure": "public",
-  "intro": "Public prepilot-v1 response-calibration cases; not independent holdout. Fully declared path/edge claims can be supported or refuted without Product execution. Other claims require stipulated evidence or must remain unknown. The closed observer flag is synthetic and not a Product guarantee.",
+  "intro": "Public prepilot-v1 response-calibration cases; not independent holdout. Fully declared path/edge claims can be supported or refuted without Product execution. Other claims require stipulated evidence or must remain unknown. The closed observer flag is synthetic and not a Product guarantee. The eight declarative cases have an explicit question_selector for a separate structural oracle; no answers are provided in stimulus.",
   "cases": [
     {
       "id": "B-DP01",
@@ -87,7 +87,12 @@
         "read_generation": "artifact-g1"
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "direct-edge",
+        "source": "src",
+        "target": "compile"
+      }
     },
     {
       "id": "B-DP02",
@@ -168,7 +173,12 @@
         "read_generation": "artifact-g1"
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "directed-path",
+        "source": "src",
+        "target": "package"
+      }
     },
     {
       "id": "B-DR01",
@@ -249,7 +259,12 @@
         "read_generation": "artifact-g1"
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "direct-edge",
+        "source": "src",
+        "target": "package"
+      }
     },
     {
       "id": "B-DR02",
@@ -330,7 +345,12 @@
         "read_generation": "artifact-g1"
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "directed-path",
+        "source": "package",
+        "target": "src"
+      }
     },
     {
       "id": "F-DP01",
@@ -441,7 +461,12 @@
         "reads": []
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "direct-edge",
+        "source": "transfer",
+        "target": "read"
+      }
     },
     {
       "id": "F-DP02",
@@ -552,7 +577,12 @@
         "reads": []
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "directed-path",
+        "source": "extract",
+        "target": "read"
+      }
     },
     {
       "id": "F-DR01",
@@ -663,7 +693,12 @@
         "reads": []
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "direct-edge",
+        "source": "extract",
+        "target": "read"
+      }
     },
     {
       "id": "F-DR02",
@@ -774,7 +809,12 @@
         "reads": []
       },
       "disclosure": "public-synthetic",
-      "study_case_stage": "declared-only"
+      "study_case_stage": "declared-only",
+      "question_selector": {
+        "kind": "directed-path",
+        "source": "read",
+        "target": "extract"
+      }
     },
     {
       "id": "B-EP01",
