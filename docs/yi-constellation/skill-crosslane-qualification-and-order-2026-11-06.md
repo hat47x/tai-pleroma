@@ -80,7 +80,7 @@ SK-01/SK-02のFixture・Expected・実験票を複製しない。#488は「未�
 
 ## 8. 次に満たす具体的Exit
 
-1. 固定Participant Taskと実Binary/Source/Tool条件のH2-01実Harnessログを1件確保し、Skill非露出・argv/Source/回答の一次観測を成立させる。
+1. 2026-11-07のDSH `h2-08`は[TEI #3113](https://github.com/hat47x/tei-platform/pull/3113)で**実Tool技術到達を限定達成した探索Witness**として保管する。これを四試行の一部に算入せず、別の事前固定Groupで**OS/Harness実隔離・Skill/独立Expected非露出・固定Command Family・同一論理Pathを成立させた比較適格H2一Session**を実Tool＋最終回答まで観測する（§4 P1b、§19.3、Runbook §24）。
 2. 同HarnessのH3で固定Product Skill root/referenceの実Loader Readを確認し、既知のCLI応答Path不一致を含めて観測する。
 3. H2→H3→H3→H2の全4セッションを独立Expectedと実費用・失敗分類で採点。追加Skillの有益性が観測できなければTool-onlyを維持。
 4. 初回比較の後にのみ、Taskの要求によって第二Harness、TAI横断Skill、TEI→SHO/SEI/EKI引渡し、再資格化を進める。
@@ -474,6 +474,22 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 **既存Ownerとの接続**：SUIの実Runtime Profile、Trusted Adapter/IdP/DB配線、Preflight/Route/Resourceを検証・実装する責務はSUI側の製品Owner。TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271) SC-21の**RQ-01/02/04/07**と本Draftの§22.1〜22.3、既存YIC-ROUTE-03/05/06/07に照合し、第二Runtime Policy Registry/Preflight実装/Skill Permission AuthorityをTAIに作らない。現在の機能候補→局所Preflight→実Tool Invocation→実Host Grant/Provider/Consumerという**段階別の証拠**を引き渡すだけとする。
 
 最初のBlocking Exitは変更しない：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI H2 Tool-only **実外部Harness 1 Session→H3 root/reference実Load→4独立Session**を先行する。`saas-multitenant`や実IdPを初回read-only Taskの前提条件へ追加しない。本節のYIC実Skill Routing、実SaaS/IdP/DB/Host Grant、Owner受理は**NOT RUN**。
+
+### 22.5 実Access Adapter・Read-only要求・Decision属性を別資格で扱う
+
+新たなSUI局所実測：[TAI PR #517](https://github.com/hat47x/tai-pleroma/pull/517)／[#518](https://github.com/hat47x/tai-pleroma/pull/518)では、未知の`SUI_ACCESS_CONTROL_ADAPTER`値がエラーではなく**`NoopAccessControlAdapter`へ無言で退避**した。External系Endpoint未設定は拒否され、Tenant/DocumentのResolver不在はUnavailableになりSaaSのTrusted Preflightが拒否するが、**single-tenantでNoop退避を同じように拒否するとは限らない**。従って`configured`・`started`・`healthz=200`は実Access Control Enforcementの証拠ではない。
+
+[TAI PR #519](https://github.com/hat47x/tai-pleroma/pull/519)の15局所試験ではアクセス判断の順序が`tenant boundary → safe_mode → read_only → policy_ref → PDP`であり、前段の拒否ではPDPへ到達しない。一方、[TAI PR #520](https://github.com/hat47x/tai-pleroma/pull/520)は、`AccessRequest(read_only=True, action="read")`を渡すと`resolve_access_decision`が`allow=True, read_only=False`を返すと報告した。**呼出し側のRead-only制約がDecisionの`read_only`属性へ伝播しない**ため、下流がDecision属性だけで後続Write/Exportを許す実装は要求者の制約を失う。
+
+| 境界 | YIC Skillの選択・継続時の必須照合 | 禁止する主張 |
+| --- | --- | --- |
+| 設定値→実Adapter | 実Profile、認識済Adapterの種別、Noop/Unavailable/実PDP、対象Tenant/Document/Scope | Skillや設定ファイルにAccess Controlが載っている＝実強制済み |
+| `read_only` Request→局所Decision | **元Task/Requestの読取制約**と、Decisionの許可/制限、実Tool操作種別・現在Host Grantを**独立列で保持** | `decision.read_only=false`のため要求者のRead-only制約が解除されたと扱う |
+| Safe mode／Policy fallback | 各Operation（Read/Write/Share/Export）についてのProduct返答と実Host/OS拒否 | Read成功からWrite可、Noopから機密非露出、PDP応答からProvider Effect成功を推論 |
+
+**DSHのH2実Tool結果との接続**：§19.3で実証された`read-only` Sandboxは**実行Directory外のReadを物理的に拒否しなかった**。HarnessのRead-only Mode、SUI Request Read-only、PDP Decision属性、Host Grant、OS/Network Enforcementは互いに別の根拠であり、名称の一致で統合しない。YICは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)のOS/Disclosureと[#271](https://github.com/hat47x/tai-pleroma/issues/271) SC-21 RQ-04/07、本計画のYIC-ROUTE-05/06へ参照を渡す。**Noopを未知設定時に拒否するか、Read-only制約をどこで維持するかはSUI Product Ownerの決定事項**。YICに新PDP/Policy Store/中央Hostを作らない。
+
+初回固定TEI read-only TrialへのSUI Access Adapter・書込み要件の追加は禁止。SUIでの実Host/OS境界・実Product間Skill Routing・Owner受理は**NOT RUN**。§22.4はSaaS事前検査の限定実測、ここでは実Access判断と下流制約伝播の差分だけを扱う。
 
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
