@@ -377,6 +377,30 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 [TAI PR #475](https://github.com/hat47x/tai-pleroma/pull/475)はTEI/SUI/SEI/MMI/EKIの固定組合せで**53段の一括検証PASS**を報告する。ただしProduct間の限定実験であり、外部HarnessがSkillを実ロード・活用して目的を達成した証拠でも、SHO/TAIを含む全製品Release資格でもない。YICの報告ではProduct CI／Cross-product integration CI／Harness Tool Call／Skill Loader／独立Task Outcome／実Host/Consumer資格を別Claimとして表示する。
 
+### 19.6 DSH実Read拒否の不成立とSession Log再送をH2隔離・開示資格へ組み込む（2026-11-07限定実測）
+
+#### 観測済みと未観測の区別
+
+前節§19.3〜19.4と[TAI Draft #270 Runbook §24.3](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)は「実Tool接続」「Tool Replyの完全受領」「比較適格なH2」を分けている。ここではさらに**実際に強制したReadが拒否されなかった証拠**と**Model入力以外の副次送出・再送**を、同じSkillの安全性Claimへ過小評価せず接続する。一次の実行・OS境界のOwnerは[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)、外部開示のOwnerは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、H2/H3比較条件は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)に残す。
+
+| DSH 0.2.2-rc.1での局所観測 | 確認できた範囲 | YICの受入・非受入 |
+| --- | --- | --- |
+| [TEI Draft #3173 H6-E1](https://github.com/hat47x/tei-platform/pull/3173)／合成canaryで同じ`read-only`/`approval-policy never` | Mockが順に要求した許可投影、`raw/secret.txt`、`raw/.env`、cwd外`peer.txt`は**各々completed／拒否0件**。2回の実行でcanaryはモデル要求の`messages`と`dsh_session_log`の両方に到達（Logの`data.message`/`data.meta`の2箇所） | **「read-onlyのToolが安全に拒否する」はこの条件で反証済み**。Skill・Reviewer Expectedが参加者のcwd外にあるだけではH2非露出を証明しない。実OS/ACL/Hostでの拒否は未実施 |
+| [TEI Draft #3153 H6-E2](https://github.com/hat47x/tei-platform/pull/3153)／loopback Mock | Session Log有効時のTool結果はモデル入力だけでなく別の`dsh_session_log`フィールドにも載り、同じ合成markerがLog内2箇所に現れた。`false`中の拡張fieldは消え、再び`true`にすると停止中の区間を後で送出 | モデル入力だけの観測では開示面を網羅しない。`off`を指定した**当該要求**と、再有効化／別Profile・過去履歴の送信可能性は別。実Provider保存・全通信先は未観測 |
+| [TEI Draft #3161 H6-E2](https://github.com/hat47x/tei-platform/pull/3161)／同じくloopback Mock | **overlay無しの既定Profile**でも`dsh_session_log`が45,491 byte（19 events）付与。503応答では水位が進まず次要求で約45,483 byte再送。200＋空Streamでは`STREAM_CLOSED`となり水位不変で約45,475 byte再送 | 一度の受信やHTTP 200、ログの最新水位表示だけで配送確定・重複無しを推測しない。再送のbyte・宛先・Audienceを別観測。実Cloud、再起動後、8 MiB超、他Provider経路は未実施 |
+| 既存[TEI #3113](https://github.com/hat47x/tei-platform/pull/3113)の公開H2探索 | Tool call 56／Result 55、`model catalog`応答の2ファイル各8,192 byte切詰め、stdout JSONとPowerShell stderrが混在 | 実Tool起動/先頭値の一致と、**Tool結果全件がモデルに届いたこと**は別。Runbook §24.3と本書§19.4の既存確認を使い、新Runner/Checkerを追加しない |
+
+上記#3153/#3161/#3173は**合成入力・ダミーCredential・ローカルMockでの限定実測**であり、実顧客RawのCloud送出、Provider側保存、実機密漏えいを確認したものではない。一方、`read-only`で拒否されるべき合成ファイルを読めたという**負例自体は実際のTool挙動**であり、「まだ実証していない安全策」という曖昧な表現へ戻してはならない。
+
+#### 既存Trialへの影響と次のStop条件
+
+- **H2環境の開始前**：実Participantに秘密の値・Reviewer Expected・他Sessionの原文を渡さず、既存OS/Host/Toolの有効Profileで公開許可対象をReadできる**正例**と、親Checkout／Skill／Reviewer Expected／別Session／Raw canaryへアクセスできない**実拒否の負例**をReviewer側で点検する。単に「H2ディレクトリにSkillを置かなかった」は非露出の証拠でない。拒否を実現できなければそのProfileは**environment-ineligible**、四Slot割付を始めない。H3にのみSkill/Referenceを供給し、割付前に両腕の同一論理Path／Command Family／Tool Profileを固定する。
+- **開示面**：Model`messages`／Tool Reply／`dsh_session_log`／再送／題名生成等の別要求を**独立した配送面**として扱い、どのDestination/Requestでどの許可済みProjectionが現れたかを観測する。`session-log-deepseek.enabled=false`の一値だけで「送出ゼロ」を宣言しない。実HostのEgress/ACL拒否やProvider宛全経路の網羅が観測できなければそのClaimを`unknown`として止める。
+- **Scope**：公開合成の初回TEI H2/H3では、Ownerが許した公開Task/Sourceの実Tool利用を比較する。上記DSH負例をもって通常のTEI組織Dataすべてへ強いACLを義務化しない。機密Task／別Audience／実Rawが必要な場合はTAI #232の既存C0〜C5/CS-06とTEI #2515の正負例が成立する**別Profile/別Trial Group**を要求する。
+- **再送・完了の区別**：Session Logの同一body再送はSUI監査Dispatcherの冪等性（本書§23）や実Provider Commit Receiptと別物。通信失敗、Session completed、Dispatcher duplicate、Consumerが必要byteを読んだことを一つの`success`へ畳まない。
+- **合否と所有**：現行DSH`read-only`だけで「Skill非露出・Raw不読取」を担保したH2比較は**不適格**。別の実強制境界で確認した後、既存SK-02／Runbook §24.3に従って比較適格なH2一Session→H3実Loader→残3 Sessionへ進む。実OS/ACL拒否、実Cloud Egress、二Harness、横断Product/Provider Effect、Owner受理は**NOT RUN**。新TAI Policy Engine、独自DSH Patch/Runner、中央監査Storeを提案しない。
+
+
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
 ### 20.1 TEI Product側の実装候補と現行の証明限界
