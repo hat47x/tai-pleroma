@@ -24,7 +24,7 @@ def free_port():
 
 
 
-def observe_stub_visibility(bundle):
+def observe_stub_visibility(bundle, *, expected_exclusion_reason="unreviewed_filtered"):
     """Inspect a real HTTP response against the fixed A2-minimal-v1 stub scope.
 
     Return counts, not card IDs or text. This is *not* evidence of user-data
@@ -101,13 +101,15 @@ def observe_stub_visibility(bundle):
     if type(flags.get("reviewed")) is not int or type(flags.get("unreviewed")) is not int:
         errors.append("reviewFlags counts are not integers")
     elif flags["reviewed"] != len(selected_ids) or flags["unreviewed"] != 0:
-        errors.append("reviewFlags disagree with strict reviewedOnly selected")
+        errors.append("reviewFlags disagree with strict selected")
     if not all(isinstance(reason, str) for reason in reasons):
         errors.append("invalid excludedReason")
     if meta.get("stubDatasetId") != "A2-minimal-v1" or meta.get("holdState") != "hold:stub_dataset_contract_only":
         errors.append("not the fixed A2-minimal-v1 stub")
-    if "unreviewed_filtered" not in reasons:
-        errors.append("reviewedOnly exclusion reason not observed")
+    if expected_exclusion_reason not in ("unreviewed_filtered", "safe_mode_unreviewed_text"):
+        errors.append("unknown strict-filter exclusion expectation")
+    elif expected_exclusion_reason not in reasons:
+        errors.append(f"strict-filter exclusion reason not observed: {expected_exclusion_reason}")
     if (len(selected_ids), len(reference_only), len(unreviewed & reference_only),
             len(counter_opinions & reference_only)) != (1, 1, 1, 1):
         errors.append("unexpected A2-minimal-v1 selected/reference-only shape")
@@ -115,6 +117,48 @@ def observe_stub_visibility(bundle):
     if errors:
         counts.clear()  # never emit a success-like count from malformed data
     return result
+
+def compare_strict_filter_profiles(reviewed_only, include_unreviewed):
+    """Compare two fixed-stub responses, not all possible Source candidates.
+
+    A request to include unreviewed cards under strict SafeMode must not
+    promote their text into selected. Reference-only metadata remains a
+    separate disclosure/authorization question.
+    """
+    primary = observe_stub_visibility(reviewed_only)
+    alternate = observe_stub_visibility(
+        include_unreviewed, expected_exclusion_reason="safe_mode_unreviewed_text"
+    )
+    fields = ("selected", "evidence", "relations", "contradictions")
+    same_projection = (
+        primary["passed"] and alternate["passed"]
+        and all(reviewed_only.get(field) == include_unreviewed.get(field) for field in fields)
+    )
+    query_hashes = (
+        reviewed_only.get("queryCanonicalHash"),
+        include_unreviewed.get("queryCanonicalHash"),
+    )
+    hashes_distinct = (
+        all(isinstance(x, str) and bool(x) for x in query_hashes)
+        and query_hashes[0] != query_hashes[1]
+    )
+    reasons_distinct = (
+        primary["passed"] and alternate["passed"]
+        and reviewed_only.get("excludedReason") != include_unreviewed.get("excludedReason")
+    )
+    passed = primary["passed"] and alternate["passed"] and same_projection and hashes_distinct and reasons_distinct
+    return {
+        "passed": passed,
+        "reviewedOnlyPassed": primary["passed"],
+        "includeUnreviewedStrictPassed": alternate["passed"],
+        "sameSelectedEvidenceRelationsAndConstraints": bool(same_projection),
+        "differentQueryCanonicalHashes": bool(hashes_distinct),
+        "differentExclusionReason": bool(reasons_distinct),
+        "reviewedOnlyCounts": primary["counts"] if passed else {},
+        "includeUnreviewedStrictCounts": alternate["counts"] if passed else {},
+        "scope": "fixed A2 synthetic stub, strict SafeMode; no real source, disclosure, or Owner acceptance",
+    }
+
 
 def identical_context_responses(first, second):
     """Deep equality of two same-attempt HTTP JSON bodies, not digest verification.
@@ -177,7 +221,7 @@ def main():
         "previewConfirmed": True,
     }
     body = {"query": query, "stubDatasetId": "A2-minimal-v1"}
-    first = second = no_preview = None
+    first = second = no_preview = include_unreviewed = None
     try:
         deadline = time.time() + 60
         while time.time() < deadline:
@@ -188,6 +232,12 @@ def main():
                 time.sleep(0.5)
         first = httpx.post(f"{base}/context/bundle", json=body, headers=headers, timeout=60)
         second = httpx.post(f"{base}/context/bundle", json=body, headers=headers, timeout=60)
+        include_unreviewed = httpx.post(
+            f"{base}/context/bundle",
+            json={"query": {**query, "reviewFilter": "includeUnreviewed"},
+                  "stubDatasetId": "A2-minimal-v1"},
+            headers=headers, timeout=60,
+        )
         no_preview = httpx.post(
             f"{base}/context/bundle",
             json={"query": {**query, "previewConfirmed": False}, "stubDatasetId": "A2-minimal-v1"},
@@ -200,9 +250,17 @@ def main():
 
     first_body = first.json() if first is not None and first.status_code == 200 else {}
     second_body = second.json() if second is not None and second.status_code == 200 else {}
+    alternate_body = (
+        include_unreviewed.json()
+        if include_unreviewed is not None and include_unreviewed.status_code == 200
+        else {}
+    )
     checks = {
         "firstStatus": first.status_code if first is not None else None,
         "secondStatus": second.status_code if second is not None else None,
+        "includeUnreviewedStrictStatus": (
+            include_unreviewed.status_code if include_unreviewed is not None else None
+        ),
         "bundleHash": first_body.get("bundleHash"),
         "deterministic": bool(first_body.get("bundleHash")) and first_body.get("bundleHash") == second_body.get("bundleHash"),
         "sameAttemptResponseIdentical": identical_context_responses(first_body, second_body),
@@ -212,8 +270,11 @@ def main():
     }
     visibility = observe_stub_visibility(first_body)
     checks["visibility"] = visibility
+    checks["filterContrast"] = compare_strict_filter_profiles(first_body, alternate_body)
     passed = (
         visibility["passed"]
+        and checks["filterContrast"]["passed"]
+        and checks["includeUnreviewedStrictStatus"] == 200
         and checks["firstStatus"] == 200
         and isinstance(checks["bundleHash"], str)
         and checks["deterministic"]
@@ -238,7 +299,7 @@ def main():
         "consumedInput": {"kind": "synthetic-stub", "stubDatasetId": "A2-minimal-v1",
                           "sourceRevisionMatched": False},
         "observed": checks,
-        "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), same-attempt response content equality and hash stability, plus preview refusal. Does NOT establish cross-runtime digest interoperability, candidate completeness, matching external Source revision, disclosure authorization, or human decision.",
+        "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), same-attempt response content equality, strict reviewedOnly vs includeUnreviewed filter contrast, hash stability, plus preview refusal. Does NOT establish cross-runtime digest interoperability, candidate completeness, matching external Source revision, disclosure authorization, or human decision.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
