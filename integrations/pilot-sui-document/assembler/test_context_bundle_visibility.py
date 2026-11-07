@@ -2,7 +2,7 @@
 import copy
 import unittest
 
-from context_bundle_check import observe_stub_visibility
+from context_bundle_check import observe_stub_visibility, identical_context_responses
 
 
 def stub_response():
@@ -39,6 +39,34 @@ class SuiContextReferenceVisibilityTests(unittest.TestCase):
         self.assertEqual(actual["disclosureAuthorization"], "not-checked")
         self.assertEqual(actual["candidateCompleteness"], "not-established")
         self.assertNotIn("card-unreviewed-01", repr(actual))  # aggregate only, no IDs
+
+    def test_repeat_response_matches_same_payload(self):
+        first = stub_response()
+        first["bundleHash"] = "sha256:" + "a" * 64
+        second = copy.deepcopy(first)
+        self.assertTrue(identical_context_responses(first, second))
+
+    def test_same_hash_cannot_hide_different_evidence(self):
+        first = stub_response()
+        first["bundleHash"] = "sha256:" + "a" * 64
+        second = copy.deepcopy(first)
+        second["evidence"][1]["kind"] = "support"
+        self.assertEqual(first["bundleHash"], second["bundleHash"])
+        self.assertFalse(identical_context_responses(first, second))
+
+    def test_same_hash_cannot_hide_reordered_relation_or_selected(self):
+        first = stub_response()
+        first["bundleHash"] = "sha256:" + "b" * 64
+        second = copy.deepcopy(first)
+        second["selected"][0]["title"] = "Revised title"
+        self.assertFalse(identical_context_responses(first, second))
+        third = copy.deepcopy(first)
+        third["evidence"].reverse()
+        self.assertFalse(identical_context_responses(first, third))
+
+    def test_empty_or_malformed_repeated_response_is_not_equal(self):
+        self.assertFalse(identical_context_responses({}, {}))
+        self.assertFalse(identical_context_responses(stub_response(), []))
 
     def test_unreviewed_selected_is_rejected(self):
         b = stub_response()
