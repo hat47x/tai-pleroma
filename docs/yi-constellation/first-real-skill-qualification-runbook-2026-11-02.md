@@ -789,3 +789,17 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 - **評価上の波及**：同一Subject名・WorldFPだけを根拠にTool Replyを別WorkspaceのOutcomeへ移さない。Commandの静的説明は実権限・効果・Owner受理ではない。許可済みread-only inspectなどを、viewの局所負例を理由に一律停止させることもしない。
 
 **適用順・証拠水準**：§24.4/24.5のG0実隔離→G1実送出範囲→G2固定Tool/Result完全性が最優先であり、上の二点は既存G2のpreflightに組み込む。実TEI dogfoodingはProduct限定で、TAIの新たな外部Harness／OS隔離／実Provider／独立Expected／Skill効果を実行・合格した証拠ではない。Product Owner修正は未確定、正式比較0/4を維持。
+
+
+<!-- sk02-source-subject-physical-root-negative-20261107 -->
+### 24.7 実CLIで確認した「見つからない／許可済み」を過剰解釈しない（2026-11-07、G0/G2の追加判別）
+
+**実Productの二つの負例を、既存G0/G2に接続するだけで新しいSK-02 Case/初回Tool/Fixtureは増やさない**。
+
+**G0：Workspace IDの許可は物理rootの固定を保証しない**。[TEI #3061](https://github.com/hat47x/tei-platform/issues/3061)の固定Studio Host（commit \`4bc437c7\`）用[負例CI](https://github.com/hat47x/tei-platform/pull/3059)では、許可済みWorkspace IDに対応する物理rootを置換すると、従前のallowlistを通過して外部WorkspaceのCatalogが見え、\`TestStudioHostResolvedRootReplacementNeverReadsOutsideWorkspace\`は**SECURITY FAIL**。別のAlias固定ケースはPASS。これは**固定Host/当該テストの限定反例**であり、現在mainの全Host／DSHへ同じ実装欠陥があるという証拠ではない。しかし既存G0で、許可したID/相対Path/CWDが同じことを実OS拒否の根拠とせず、**実Readの瞬間の解決済み物理root・Source対象が許可Scope内に留まること**を観測すべき根拠になる。別Principal/実OS/Tool強制が必要なProfileでは、Reviewer側だけで合成rootの置換・別rootへの到達を負例として確認する。秘密やReviewer Expectedの原文を外部LLMへ与えない。固定Hostの修正・現在main比較はTEI #3061のOwnerへ委譲する。
+
+**G2：\`SUBJECT_NOT_FOUND\`は全種類の「存在しない」を意味しない**。[TEI #3180](https://github.com/hat47x/tei-platform/issues/3180)の実CLIでは、\`model catalog\`と\`inspect\`が公開済み\`semantic-candidate-key\`を返すのに、\`trace\`は型付き参照Graph未投影のため\`SUBJECT_NOT_FOUND\`を返し、存在しないkindに対する結果と区別できない。既存SK-02の許可群に\`trace\`はあるため、**Traceが扱う対象kind／Projection scopeを実観測した範囲**だけを関係不在の根拠にする。同一Source/Scopeで実\`inspect\`やCatalogが対象の存在を示す場合、\`trace\`のエラーのみから関係不存在・依存ゼロ・Source未宣言へ昇格しない。必要なTrace kind自体が未対応なら、回答・独立Expectedの当該Claimは\`unsupported/unknown\`に止め、無関係な許可済み調査は継続。正式エラー語彙の修正はTEI #3180へ委譲。
+
+**後続の可搬性（初回Blocking外）**：[TEI #3183](https://github.com/hat47x/tei-platform/issues/3183)では\`plugin-lock\`のCLI JSON envelopeを後続\`-plugin-lock\`へそのまま渡すと失敗し、内側の\`result\`のみ成功する。これはTool結果の**封筒と受け渡す値のSchema**が異なるという限定実測である。初回H2/H3の許可CommandにPlugin生成を追加しない。将来の複数製品・Plugin選択Runbookでだけ、CLI output envelope／内部payloadの実Schema・変換が正規対応か、変換後のbyteと受信側の実Consumptionを照合する。AIに暗黙のキー剥離やretryで成功を捏造させない。
+
+**現在の証拠水準**：上記はTEI別Productの固定Host負例・実CLI dogfoodingに基づく受入材料。新しいDSH隔離成功、実Current Hostの修正、\`trace\`出力契約修正、Plugin相互運用E2EはNOT RUN。§24.4〜24.6のG0→G1→G2と正式比較0/4、Source／Task／Skill／Tool Profileの固定条件は変更しない。
