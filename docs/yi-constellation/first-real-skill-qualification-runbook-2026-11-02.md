@@ -824,3 +824,27 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **Ownerと状態**：TEI #2515はOS/Tool境界、TAI #232は別Consumerへ渡す情報、#168は比較資格、#271は再開時のCapability再資格、TEI #2509は実DSH原Evidence。現在のworkspace-writeとLane実測は**拒否が不十分だったProduct限定の観測**。別identity/OS Read拒否、実Egress閉塞、比較適格4Session、独立回答採点、Owner承認はNOT RUN。
 
+<!-- h8-session-time-root-reuse-and-skill-parser-provenance-20261107 -->
+### 24.9 H3 Skill実受信のSource束縛と、H2→H3で同じ物理Rootを時系列変更した反例
+
+[TEI mainの4 Session実Evidence](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)の[Tool call台帳](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/session-comparison.json)、`skill-load-h3-a.txt`/`-b.txt`、固定TEI Source commit `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`の`skills/yi-tei-modeling/SKILL.md`を**原文ごとに突合**した。歴史的4 Sessionの正式資格を再採点したものではなく、Loader／Materializationの観測能力を限定して強める反例。
+
+**Skill Source→Loader Tool Resultの区別**：
+- Pinされた`SKILL.md`のGit blob SHA-1は`9cd8475bd6489c6661ae644bf771cfcce04188b1`。H3-A/Bの実`skill` Tool Resultは**同一内容**（ファイル保存のTool Resultが両者一致）。Tool Reply内`<skill_instructions>`の文字列は、当該固定`SKILL.md`の**YAML frontmatter除去後、前後の改行をtrimした本文**と**文字列完全一致**する。よってLoaderが実受信させた本文は固定Product Sourceへ対応づけられる。
+- ただし実Result全体には`<skill_content>`/`<skill_resources>`/Base directory等のLoaderラッパーが加わる。**5,482-byteのSkill Tool Result SHA-256 `cbf3d21f…`を、raw `SKILL.md`のDigestや未解析Frontmatterの実消費証明として流用しない**。ReferenceについてもToolで読んだ事実とRequired References Closureの充足を区別する。
+- Skill本文には当時の`NOT RUN`という歴史的な状態表示が残る。実Load結果の証拠を後からSkill原文へ反映したことにせず、修正版Skillは**別Treatment/Trial Group**とする。
+
+**同一物理Rootの時点差（別セッションIDだけでは不足）**：
+| 実Session | 実cwdの区分 | 観測と限界 |
+| --- | --- | --- |
+| H2-A (`h2-08`再使用) | `…\\Temp\\h2-participant-20261107` | Skill配置前のRootから起動。後に同じRootへSkillを加えたため、後日のRoot一覧をH2-A開始時の非露出証明として再利用できない |
+| H3-A / H3-B | **H2-Aと同じ物理cwd** | そのRootの`.agents/skills/yi-tei-modeling`をLoaderが実使用し、同じ本文を受領。ただしH2-AからRootの実Materializationは変更されている |
+| H2-B | `…\\Temp\\h2-participant-h2only-20261107` | 別RootでSkill Listには対象Skillが無い。しかし同一OS identityの別Root／親Pathへの読取拒否は未実証 |
+
+**新4Slot開始前のG0/G2へ適用**：
+1. **実開始時の観測**：各Sessionの`cwd`・実解決済みRoot・Source tree raw digest／Skill tree raw digestと配置時点／Loaderが実受信した本文・Tool Response digestを**同じSession開始時点**へ束縛する。H2の`skill_loaded=false`だけでなく、Skill/他Lane/原Worktreeへ**実Read拒否**される正負対が必要。
+2. **同じ論理Path、別の強制境界**：Pair Checkerの`cli_cwd`文字列を揃える一方、異なるSessionを単一の可変Host Rootへ逐次重ねて相互不可視を推測しない。OS namespace/VM/別identity等でReaderが見る論理`cwd`/Tool argvは同一にして、H2はSkill/Reviewerへ到達不能、H3は固定Skillだけを追加する。物理Rootの実Path・ACL・Namespace/実Principal・時点は試験者側で記録する。
+3. **時点をまたぐ再利用禁止**：Skillインストール後のRoot状態・Path一覧を過去H2の資格へ遡及適用しない。H2-Aを将来の割付枠へ再利用せず、H2とH3の全4つのSessionを事前登録された独立環境で新規起動する。
+4. **Evidenceの上限**：旧四Sessionは**実Tool／実H3 Skill実Readの正例**。Source rawとReader変換後本文が一致したことは`D=Delivered`の証拠を補強するが、G0物理非露出／同条件比較／独立Expected採点／Owner意味受理／実Egress否定／Skill追加価値の資格を一切拡大しない（正式比較適格**0/4**）。
+
+**責務**：Product Skillの原文・実Loader Root/Referenceの差分＝[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)、実DSH記録＝[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)、Filesystemの実拒否＝[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)、比較資格と独立採点＝[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)。新Runner／新Skill Loader／独立Verifierを作らず既存Trial Cardへ観測列を追加する。
