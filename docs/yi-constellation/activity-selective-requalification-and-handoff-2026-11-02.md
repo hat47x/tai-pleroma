@@ -576,3 +576,19 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 
 **Owner/上限**：契約Decoder・Generator・正規Structure/Functionの受理はTEI、観測と段階4の製品側判断はTAI #525/#526、Activityにどの表示・操作をOfferできるかは本§21。新たなCross-product Representation Engineは設けない。#526はDraftであり、TEIの修正・実UI/Harness/Owner受理は**NOT RUN**。これを初回H2/H3の固定公開Taskへ混入させない。
 
+
+
+---
+
+<!-- tai-activity-h3-skill-real-load-current-20261107 -->
+## 22. 2026-11-07：実H3 Skill Loadの到達と、Activityに再利用できる資格を分離する（実測／横断価値NOT RUN）
+
+[TEI mainのDSH四Session実測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)を、[初回Runbook §24.5](first-real-skill-qualification-runbook-2026-11-02.md)へ接続した。実DSHでH2-A→H3-A→H3-B→H2-Bの**四つのSessionがcompleted**。H3 2件はそれぞれProduct Skill Toolによる**Root本文5,482 byte（同SHA）**受信に加え、referenceのread 7,710 result bytes（同digest）の実Callを記録。従来「H3実Loader NOT RUN」とした歴史的記述は、**この限定Tool/Reference受領については更新**する。ただし「Product SkillのRequired全閉包・現在Tool実行資格・業務正答・TAIのActivity価値」の合格ではない。
+
+**TAI #271が引き継ぐ区別**：
+- **Declared/Discovered → Loaded/Consumed**：Product Skillが配置されたこと、DSH Skill Listに現れること、Toolで本体が実届くこと、referenced resourceが実Readされることを別Witnessとする。今はH3について実Rootと少なくとも一つのReferenceの受信を限定確認できる。見えていない資料・現在Role/Functionに関する閉包を「全部読んだ」と主張しない。
+- **History → Current Eligibility**：四SessionにはTask指定のreference/workspaceと実root workspace/のずれ、H2-Aの過去Session再使用、H2からcwd外元Worktreeへの実Read、初回許可外source-index、8KiB切断やstdout/stderr混在の別問題がある。実Session completedやSkill受信を、非露出・OS/Disclosure・事前割付に適合するH2/H3 Trialや、別の現在Audienceへ利用できる資格として再利用しない。**比較適格0/4／独立Expected未採点**。
+- **Resumeと補助Egress**：[TEI main merged #3153](https://github.com/hat47x/tei-platform/pull/3153)／[#3161](https://github.com/hat47x/tei-platform/pull/3161)のローカルMockは、Session Log拡張の出荷既定ON、OFF→ONで止めた区間の後送、503/stream切断後の再送を観測した。Activityが中断→再開し**新しいProduct Readを行わなくても、以前読んだSourceやTool Resultを再送し得る**。これはProviderの業務Effectや新Task Requestとは異なる**送出側の継続状態**。現在のAudience/Disclosureと実Harness Effective Config/Log水位・実送出経路を、開示が必要な場合にHost/TAI #232/TEI #2515へ再確認する。TAIはSession Log正本や独自Egress Engineを持たない。
+- **成果と必要性**：初回H2/H3はSkill Root/Referenceを実読めるところまで到達したが、独立回答品質・費用と当該User Jobの価値は未判定。後続SCN-001のB0手動／B1単独Product／B2必要時TAIでは、Skill Load実在よりも根拠・未決・Current Audience・実Consumer readの再現と人手負担を測る。B1で足りるならB2を必須にしない。
+
+**次の実験を増やさない**：第一BlockingはRunbook §24.4/24.5のG0実Read拒否→G1副次送出／再送→G2事前許可Toolと完全Resultを確認し、**新しく独立割付したH2→H3→H3→H2**で品質と効果を採点すること。過去の探索9回や今回の技術的四Sessionを事後に適格なITT分母へ組み込まない。ここで再度DSHを起動した、H2/H3の独立採点を行った、実OS隔離・実Providerの全Egressを拒否した、Owner受理を得たとは主張しない。
