@@ -107,3 +107,17 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 - パイロット固有のフィールドは残っていない（`digest`は撤去済み）
 
 この数値は名前の一致だけを数えたもので、型・意味の一致は含まない。
+
+## 型の一致（2026-11-06）
+
+名前の一致だけでなく、SUIの型注釈と契約の`primitive`を突き合わせた。[receipt](../evaluations/records/SUI-TEI-document-types-2026-11-06.json)
+
+```text
+primitiveの不一致: なし（4単位・18フィールド）
+コレクション（many）の不一致: なし
+Optionalの不一致: Edge.fromKind / Edge.toKind
+```
+
+- SUIが`Literal[...]`で表す列挙は`std.code`、数値は`std.decimal`、真偽値は`std.boolean`へ対応する
+- SUIが`str`で持つ`Edge.type`と`Card.claimType`/`holdState`は、契約側で`std.code`へ狭めている。値の集合を契約で持たないため、狭めた分は契約の外で担保する必要がある
+- **SUIは`Edge.fromKind`/`toKind`を`Optional`として許すが、契約は必須にしている。** 端点種別が`None`のEdgeは投影で欠落扱いになり、契約上は失敗する。差分表の「未モデル」とは別種の、必須性の不一致である

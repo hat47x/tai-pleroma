@@ -21,7 +21,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -29,7 +29,7 @@
         },
         "data-root": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\store"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\store"
         },
         "mcp": {
           "status": "info",
@@ -49,7 +49,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -57,7 +57,7 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\store (writable)"
         },
         "store": {
           "status": "ok",
@@ -86,7 +86,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -94,7 +94,7 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\store (writable)"
         },
         "store": {
           "status": "ok",
@@ -102,7 +102,7 @@
         },
         "lock": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
         },
         "gate-log": {
           "status": "ok",
@@ -123,7 +123,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -131,7 +131,7 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-wgtwhv_o\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-tt_vgyla\\store (writable)"
         },
         "store": {
           "status": "ok",

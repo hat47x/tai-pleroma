@@ -8,32 +8,32 @@
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 84,
-    "totalSeconds": 1201.97,
+    "steps": 85,
+    "totalSeconds": 1051.8,
     "slowest": [
       {
         "name": "sui_docs_tests",
-        "seconds": 228.86,
+        "seconds": 305.66,
         "attempts": 1
       },
       {
         "name": "sui_session_tests",
-        "seconds": 102.28,
-        "attempts": 1
-      },
-      {
-        "name": "postgres_contention",
-        "seconds": 64.68,
-        "attempts": 1
-      },
-      {
-        "name": "sui_saas_tests",
-        "seconds": 41.65,
+        "seconds": 93.89,
         "attempts": 1
       },
       {
         "name": "postgres_retry",
-        "seconds": 36.41,
+        "seconds": 80.33,
+        "attempts": 1
+      },
+      {
+        "name": "postgres_migrate",
+        "seconds": 30.04,
+        "attempts": 1
+      },
+      {
+        "name": "pipeline",
+        "seconds": 29.04,
         "attempts": 1
       }
     ],
@@ -42,8 +42,8 @@
   "products": {
     "tei": "",
     "sui": "09c24046",
-    "sei": "e8d13e0",
-    "mmi": "b07ed4a2",
+    "sei": "6d98ddf",
+    "mmi": "09f849bd",
     "eki": "66b0c04"
   },
   "scope": "Reads the committed suite receipt and records per-step timings and the checked-out product revisions. It is a baseline observation for later comparison, not a productivity measurement."
