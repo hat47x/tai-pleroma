@@ -801,17 +801,14 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 
 
 <!-- yic-skill-dcq-verified-bom-qualified-choice-20261107 -->
-### 27.4 設計Contextの充足とVerified Composition BOMをSkill選択へ接続する（2026-11-07、TEI Owner候補／実横断NOT RUN）
+### 27.4 Design Context／Verified Composition BOMの実用価値をB0/B1/B2で判別する（横断実証・NOT RUN）
 
-TEI側で検討が具体化した[設計情報read-only Query #3262](https://github.com/hat47x/tei-platform/issues/3262)と[標準Verified Composition BOM #3267](https://github.com/hat47x/tei-platform/issues/3267)を、**YICが新しいRegistryやResolverを持たずに参照する候補**とする。前者はテストデータ生成・Pattern推薦より前のP-1要件、後者はPlugin/Contract/Provider/Targetの**exactな検証済み組合せを配布する標準機能要求**だが、どちらも現時点では製品正式API/実結合E2E未採用。CLI/MCP/Skillを単一のSource/Authority正本にしない。
+設計の前提・欠落の完全性は**§26.5／[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)**、正確なPlugin組合せの資格は**§22.6／[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267)**に統合した。ここではその実装をYICへ移さず、**どの段階でActivity Skillを選択する価値が生じるか**だけを[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)／[価値研究Draft #532 §12](https://github.com/hat47x/tai-pleroma/pull/532)のB0/B1/B2で判別する。
 
-| 消費する情報 | YICの最小判断 | 避ける誤昇格 |
-| --- | --- | --- |
-| **Design Context Query相当の実Source Read** | User Job・Function/Subject/Scopeに対するRequired集合を先に固定し、declared/discovered/loaded/parsed/bound/returned、版・依存・欠落・Tool Replyを**実取得した列だけ**照合する。未実装の単一Queryを待たず現行TEI CLIを対象限定で使用 | `validate.ok`、Catalog件数、1 Page、8KiB断片だけでRequired全件が揃ったとしない。P-1 Queryが実装済みとしない |
-| **Plugin Candidate → Resolved Lock** | Product Ownerの実ResolverとTarget/OS/Contract/Plugin exact bytes、Build/Targetの互換条件を参照する。単なるVersion rangeや同名Pluginと区別 | 宣言・Discovery・Lockの存在を実Load/Invocation/Provider資格にしない |
-| **Qualified BOMの候補** | TEI #3267の各**exact tuple**について、実使用した同一AttemptのContract Conformance、Test/Fixture/Independent Expected、Artifact、Coverage/Target/Scopeと失敗・unknownを併記。認証/適用は現在のHost/Providerへ戻す | 署名/Publisher情報、SBOM、個別Plugin PASS、pairwise PASS、BOMの「verified」文字だけで未実施の組合せや本番Grantを推定しない |
-| **Skill選択／Activity Resume** | 特定のUser Jobに必要なTool/Projection/Pluginが現実にAvailableで、現在のSource/Audience/Grantに合う範囲だけ候補にする。変更したtupleに依存するClaimだけ再資格化する | 一つの旧BOM PASSから別Runtime/Tenant/版の動作・現在の実行許可や全Activity価値を流用しない |
+| 同一User Job・同じSubject/Source/独立Expected | 選択する入口と検証する成果 |
+| --- | --- |
+| **B0：既存手段** | 実TEI CLIの対象限定Readと既存Lock/Scenario/Test出力だけで、Required/欠落・未資格の組合せを説明できるか |
+| **B1：TEI Product単独** | Design Context Query/Verified BOMがProductとして成立した場合だけ実利用し、操作数、誤ったComplete/Compatibility PASS、同一exact tupleの再確認コストを比較。Product Skillを使う場合も実Loader/Tool・現在Scopeを別観測 |
+| **B2：必要時だけTAI横断Skill** | 別Product/HostへのSource・Evidenced BOM tuple・実Consumer・現在Grantの引継ぎでB1より有意に作業・誤認が減るか判別。単独で足りればTAIは**選択しない** |
 
-**負例の優先順（既存Ownerの試験を再利用）**：(1)同名Subjectでも実Loader未消費→Context incomplete、(2)Plugin A/Bそれぞれ個別PASSだがA+B同一Target/Attemptでは未実行→組合せunverified、(3)Provider 2版×Consumer 2版の**2×2 exact matrix**で1組だけ不適合→該当tupleのみfail、(4)同一Lock/Artifactでも実Host Grant・Source Revisionが変わる→旧検証履歴は保持し現在のAction資格を再照合。詳しいRequired/Schemaと独立ExpectedはTEI #3262/#3267/#1180/#2514、効果/現在性は#1174/#2600、スコープ別Product Skillは#2605に帰属する。**初回SK-02の固定Task/Skill byte/CLI whitelistと比較適格0/4を変更しない**。
-
-**事業価値の判定**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)／[価値研究Draft #532 §12](https://github.com/hat47x/tai-pleroma/pull/532)のB0/B1/B2で、B1 Product単独の対象限定Read＋組合せ提示だけで目的達成ならYIC Activity Skill/BOM共通UIを必須化しない。必要な根拠の見落とし・誤互換／過剰拒否・再確認コスト・実Consumer到達に差がある場合だけB2を採用判断する。新YIC Central BOM Store、実行器、Attester/Owner Registry、Permission Engine、MCP Serverの追加は不要。現YIC→実TEI Query/BOM選択・2×2 Matrix・実Plugin Load・Consumer/Owner受理は**NOT RUN**。
+既存の[TEI #3262 DCQ-01〜10](https://github.com/hat47x/tei-platform/issues/3262)／[#3267 VCB-01〜09](https://github.com/hat47x/tei-platform/issues/3267)から、Loader未消費をCompleteにする誤り、独立Pluginの個別PASS→結合PASS、2×2 exact matrixの1失敗隠蔽、Source/Grant改版による現在資格の誤継承を抽出する。Task/試験の独立Expectedと実Provider/Authorityは各Ownerのまま。**最初のSK-02公開TEIの固定Task/Skill byte/CLI whitelist、比較適格0/4は変更しない**。現YIC→実Design Query/BOM選択・2×2 Matrix・実Plugin Load・横断Consumer/Owner受理は**NOT RUN**。中央BOM Store／追加Runner／MCP必須化／権限Engineは設けない。
