@@ -912,3 +912,21 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **ただし歴史証拠／Pinned Binaryを遡って書き換えない**。TAI #168のDSH四Sessionが使用した固定TEI commit \`50ebf801...\`／Binary SHA \`186d06ce...\`は本修正より前の時点。これらのSessionに新Error契約を後付けしない。新比較Groupの実Binaryを変更する場合は、開始前に固定Task/Source/Skill/CLI Contract/独立Expectedとの互換をReviewerが確認し、別Group／Treatment Revisionとして採点する。同じScenario名でも**新Mainの回帰PASSを旧実Harnessに持ち込まない**。
 
 **G2の修正後の判定**：対応Kindで真に未宣言なら\`SUBJECT_NOT_FOUND\`、未対応Kindは\`UNSUPPORTED_SUBJECT_KIND\`と読み分け、Source/Scope/Source Indexの実取得範囲は依然別。対応Kind集合を全モデル・全依存閉包と見なさず、必要な関係の未観測はunknownに留める。新しいRunnerやH2固定Task変更は不要であり、次のBlockingは引き続きG0実Read拒否→G1送出→G2完全なTool結果→新4 Session。実OS隔離、適格H2/H3 0/4、独立Reviewer品質・Owner受理は未達。
+
+<!-- tai-sk02-dsh-e6-sessionlog-sink-retention-20261107 -->
+### 24.14 DSHの実Read内容は圧縮された永続Session Logにも残る（H6-E6、保存面の限定実測）
+
+[TEI #2515 H6-E6／Draft PR #3309](https://github.com/hat47x/tei-platform/pull/3309)に、DSH `0.2.2-rc.1` Windows/headless/read-onlyで公開合成Canaryを読ませ、**実行中モデルへの入力だけでなく、ローカルのどこに内容が残るか**を確認した新しい証拠がある。主たる[原実測](https://github.com/hat47x/tei-platform/blob/docs/dsh-h6e6-sinks-20261107/plan/evidence/DSH_H6E6_SINK_INVENTORY_2026-11-07/README.md)は、`headless --json` stdout streamにCanary1件（2,035 bytes）、永続`session.v4.jsonl.zstd`を完全展開した40,136 bytes／34行にCanary1件を観測した。Session Logは9つの連結zstd frameであり、**先頭frameだけの展開では2行179 bytes・Canary0件という偽陰性**になった。一方、走査した`storages`84件・`cache`5件・`attachments`73件ではCanary出現0。0という結果は**検査したRoot/形式/単一Sessionに限定**され、すべての保存先・別Session・Telemetry・外部Providerが空という意味ではない。合成Canaryのみを使用し、実秘密・実Provider送信はしていない。
+
+これは§24.4の`dsh_session_log`という**HTTP要求中の追加field**の観測と別。今回はローカルディスクへ保持されたSessionの原文であり、`session-log-deepseek.enabled:false`がHTTP拡張を抑制したとしても、**永続Logへの書込み停止・既存Log消去・別Sessionからの読取不能**までは推論できない。
+
+| 既存G0/G1に足す判別 | Reviewer側での最小一因子試験と判定 |
+| --- | --- |
+| **G0-S Session保存面** | 公開合成Canaryを一度Readし、許可されたstdout/永続Session/Log/一時File/Readerが実際に触れられる範囲を列挙。別Principal/別LaneのH2・H3が相互に**前Session Raw／Skill／Reviewer期待原文をReadできない**実OS強制を確認。ログ存在やCanary0を隔離PASSとしない |
+| **G1-S 全frame監査** | 同じ圧縮Sessionを単一frame展開／全連結frame展開で比較。片方のCanary0という結果を全記録無混入・未受信としない。完全展開できない・復号鍵やScopeが不明な場合は`unknown/insufficient-evidence` |
+| **G1-R 保持・送出の分離** | モデル入力、HTTP Session Log拡張、ローカル永続Log、headless stdout、追加sinkを別々に記録。HTTP拡張OFFでもローカル保持が無いとは認定しない。保持期間・削除/ローテーションと実Network EgressはOwnerの別資格 |
+
+**実験順序への接続**：初回H2/H3新Groupの開始前に、既存§24.12のG0実Read拒否を試す**同じHost/Profile**で、この保存RootがParticipantから実際に見えるかをReviewer合成Canaryで確認する。H2→H3の実Sessionを同じOSユーザー・ディレクトリで使い回し、その結果H2が過去H3のLogやSkillへ届くなら`environment-ineligible`。Session Logが物理的に別のScopeにあり、対象外ReadがOS/Toolで拒否されることを観測できれば、保存の存在自体は不適格とは限らない。全システムのLog消去や外部Transport追加を初回の必須条件にしない。
+
+**責務・上限**：TEI #2515/#2509はDSH保存面のRaw観測、TAI #232は実Audience/機密Profile、TAI #168はH2/H3比較資格、TAI #271は後続ActivityのDisclosure再資格化。TEI Draft #3309は未マージの限定Evidenceであり、H6-E6全sink合格・実OS拒否・実Provider Egress・削除保証は未実証。固定TEI Source/Binary/Skill/Taskと4Slot比較順序は変更しない。独立したTAI Log Store／新Agent Host／新Checkerは追加しない。
+
