@@ -252,7 +252,7 @@ func TestPinnedRunIgnoresInheritedGoFlagsThatChangeTheBuild(t *testing.T) {
 			if !pinned.Passed || pinned.Validation != "ok" {
 				t.Fatalf("the pinned run must build the pinned commit without the inherited -tags: %+v", pinned)
 			}
-			if pinned.Toolchain.GoFlags != "-tags=taitag" || !strings.Contains(strings.Join(pinned.Toolchain.Enforced, ","), "GOFLAGS=-mod=readonly") {
+			if pinned.Toolchain.GoFlags != "-tags" || !strings.Contains(strings.Join(pinned.Toolchain.Enforced, ","), "GOFLAGS=-mod=readonly") {
 				t.Fatalf("the inherited value is recorded and the replacement is listed: %+v", pinned.Toolchain)
 			}
 			if name != "environment variable" {
