@@ -5,6 +5,7 @@
 - 対象: TAI / SUI / SEI / TEI / SHO（現行MMI）/ EKI
 - 起点: [SCN-001](../scenarios/SCN-001-shared-space-guidance.md) と [TAIの現状](../docs/status.md)
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
+- **RQ7（2026-11-08追補）**: [有界Graph完全性の比較研究](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)、[公開Gold偏り・設計意図と観測のClaim境界](protocols/RQ7_DESIGN_CLAIMS_AND_GOLD_BALANCE_2026-11-06.md)、[v0/v1公開刺激・独立構造照合の計画](protocols/RQ7_PILOT_STIMULUS_AND_SCORING_2026-11-06.md)、[公開Goldの決定的Baseline校正・39テスト実行記録](results/RQ7_PUBLIC_GOLD_BASELINE_CALIBRATION_2026-11-08.md)。v1は12ケース・v0（10ケース）は不変。構造だけの特権的校正方式がEvidence付きでも10/12正答するため、Evidence依存4件を別に採点する。認知改善・TEI実Product・独立holdoutは未実証。
 - **2026-11-02研究追補**: [生成的探索と証拠制約の接続](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)（CSWの認知Method、SUIの仮説、SEI/TEIの意味、EKIの権限・結果を分離して比較する提案。RQ6、実験NOT RUN）
 - 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
 - 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
@@ -93,3 +94,4 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 - [TAI Draft #177](https://github.com/hat47x/tai-pleroma/pull/177)（2026-11-02 merged）はHarness間の認知・権限・結果境界のConsumer側評価、[Draft #231](https://github.com/hat47x/tai-pleroma/pull/231)（2026-11-02 merged）は価値・要望・要件の往復と利用者価値の研究。研究PR #129は仮説、反証条件、実験計画と解釈上の限界を担い、他Draftの正本を移さない。
 
 この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。
+
