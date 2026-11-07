@@ -192,6 +192,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-nesting-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-types-2026-11-06.json",
+    "evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -644,6 +645,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-edge-optionality" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("bothKindsPresent") is not True:
+                errors.append(f"SUI Edge optionality behaviour changed: {relative}")
         if "SUI-TEI-document-types" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allPrimitivesMatch") is not True:
