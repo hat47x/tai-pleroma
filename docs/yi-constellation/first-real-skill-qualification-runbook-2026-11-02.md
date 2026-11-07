@@ -803,3 +803,24 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **後続の可搬性（初回Blocking外）**：[TEI #3183](https://github.com/hat47x/tei-platform/issues/3183)では\`plugin-lock\`のCLI JSON envelopeを後続\`-plugin-lock\`へそのまま渡すと失敗し、内側の\`result\`のみ成功する。これはTool結果の**封筒と受け渡す値のSchema**が異なるという限定実測である。初回H2/H3の許可CommandにPlugin生成を追加しない。将来の複数製品・Plugin選択Runbookでだけ、CLI output envelope／内部payloadの実Schema・変換が正規対応か、変換後のbyteと受信側の実Consumptionを照合する。AIに暗黙のキー剥離やretryで成功を捏造させない。
 
 **現在の証拠水準**：上記はTEI別Productの固定Host負例・実CLI dogfoodingに基づく受入材料。新しいDSH隔離成功、実Current Hostの修正、\`trace\`出力契約修正、Plugin相互運用E2EはNOT RUN。§24.4〜24.6のG0→G1→G2と正式比較0/4、Source／Task／Skill／Tool Profileの固定条件は変更しない。
+
+<!-- tai-h6-write-read-crosslane-boundaries-20261107 -->
+### 24.8 DSHの書込み境界と読取り・Lane境界を分けて事前検査する（実測差分）
+
+§24.4〜24.7のG0（実Read拒否）を置き換えず、**実際の同一Profileで防げる操作と防げない操作**を確認するための追加判別。この節は外部DSHの限定実測を参照する。TAI独自Sandbox、Permission Engine、Runner、Evidence Storeは増設しない。
+
+- [TEI merged #3228](https://github.com/hat47x/tei-platform/pull/3228)：Windows 11/DSH 0.2.2-rc.1のworkspace-writeで、宣言Root内への21 byte書込みは成功し、Root外への書込みはUnauthorizedAccessExceptionで拒否（ファイル未生成）。**同じ実Tool・同じSessionでRoot外の既存Canaryは絶対Pathでも ../ 相対Pathでも読取成功**。書込みの実拒否と、秘密Raw/Skill/Reviewerの読取り拒否は**別の強制範囲**。
+- 同試験のworkspace-write起動は、当初RootのWRITE_OWNER不足でWin32 5失敗。実測前にRoot DACLへFullControlを追加してから再試験した記録であり、**ACLの変更自体を一般的な復旧手順・安全な隔離の成立条件としない**。試験環境の事前/事後DACL、実Subject、ACL影響・復元可能性はOS/Hostの所有者が管理する。DSH_PERMISSION_MODE環境変数が空でも、有効な制限が無い/有るとは断言しない。
+- [TEI merged #3216](https://github.com/hat47x/tei-platform/pull/3216)：Lane A/Bを別Session・別cwd・別ディレクトリにしただけでは、双方のread-only Toolが**相手Laneの合成Canaryを実読取**し、モデル入力とSession Logにも届いた。実同時実行・別OS identity・別ACL・共有Credential/Cache/Portの隔離成功は未試験。
+- [TEI #2509の実H3四Session](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)ではH3-A/BのSkill Root＋Reference読込は実観測済み。しかしH2の他Lane/親Root/Skill/Reviewer Holdout到達を実拒否した試験ではなく、比較適格0/4は変わらない。
+
+| 追加Preflight | 一因子の差と独立Expected | 判定 |
+| --- | --- | --- |
+| **G0-W 書込み拒否≠読取り拒否** | 同じRoot/identityのworkspace-writeで、Root内Write、Root外Write、Root外Readの正負を別観測 | Write拒否は書込み範囲だけPASS。Read成功なら非露出要求はFAIL。書込み成功やWrite拒否をRead資格に転用しない |
+| **G0-L Lane非干渉** | 同じTask/Session起動条件でLane Aの公開SourceとLane BのReviewer/Skill模擬Canaryを相互Read試行 | 相手LaneのPath、親Directory、旧Session、共有Tool/Networkの実拒否が必要。cwdやworktree分離だけではFAIL。未観測な共有Cache/credential/portはunknown |
+| **G0-P 実構成束縛** | Profile名、実Tool/OSのwrite/read結果、実Principal、Path解決結果、ACL/Network Scopeが異なる | どの境界が何を拒否したかを記録。ACLを調整した別環境の成功を固定H2/H3 Sessionへ遡及適用しない。比較用Configを変更したら新Group |
+
+**次の最小実行順**：§24.4の許可Read正例＋拒否負例を**別OS identity/ACL・Container/VM等の実強制**で先に成立させる。G0-W/G0-Lの既存失敗を示すために初回H2/H3を増やさず、必要な負例はReviewer側の合成Canaryのみで試す。H2とH3を同じ強制Profileに置き、異なるのは事前割付したSkill露出だけとする。実際の拒否が確認できなければ環境不適格で停止し、探索的な四Session実Load・Tool成功は歴史的Witnessとして残す。H3以降もR/D、ITT/PP、独立Expectedを混同しない。
+
+**Ownerと状態**：TEI #2515はOS/Tool境界、TAI #232は別Consumerへ渡す情報、#168は比較資格、#271は再開時のCapability再資格、TEI #2509は実DSH原Evidence。現在のworkspace-writeとLane実測は**拒否が不十分だったProduct限定の観測**。別identity/OS Read拒否、実Egress閉塞、比較適格4Session、独立回答採点、Owner承認はNOT RUN。
+
