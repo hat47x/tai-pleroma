@@ -496,6 +496,8 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 **既存試験への採用方法**：初回SK-02は許可済み公開合成Taskであり、機密ProfileのH6-E13〜15を**新たな四Session Blocking Gateにはしない**。ただしその**実観測したEvidenceの公開範囲を守る責務**は最初から適用し、保護対象のHoldout/他Lane/Agent instructionsを検証用External Modelへ供給しない。Reviewer側だけが正負のOS拒否・内部版・独立Expectedを照合し、比較票では必要な不適格理由と非機密な証拠参照を記す。外部共有時はその時点のAudience/Policyを再評価し、現Audienceへ秘密の数・digest・存在を説明してよいとは推測しない。将来の機密Task/別Product Handoffには#2515が計画するP0d Observer→ViewerとH6-E14/E15を**別Trial Group**で適用し、実OS/Network拒否の成否・未観測Sinkはunknown。#2515のCaseは**提案／NOT RUN**であり、実DSH E13〜15の合格・実Cloud不漏えい・Owner Policy採用を主張しない。
 
+**H6-E6の局所保存面で実測できた新しい反例**：[TEI PR #3309](https://github.com/hat47x/tei-platform/pull/3309)はDSH 0.2.2-rc.1のWindows/headless/read-onlyで合成canaryのTool Readを行い、headless stdout **2,035 bytesに1件**、ローカル永続`session.v4.jsonl.zstd`の全展開**40,136 bytes/34行に1件**の残留を観測した限定Evidence（本照合時点Open、main未merge）。**9つの連結zstd frame**の先頭だけを展開すると179 bytes/2行・canary **0件**になり、実際に残ったTool本文を見落とす。走査済`storages`84件・`cache`5件・`attachments`73件で一致0という結果も**そのSession・調査Root・解析形式に限定**し、全保存先・過去Session・別Harnessの無残留へ昇格しない。これはHTTP拡張の`dsh_session_log`送出（§19.6）とは別の**ローカル永続化**であり、`session-log.enabled=false`では削除も非永続化も証明しない。初回SK-02のG0物理隔離のpreflightでは、**前Sessionの保存Root全体を実アクセス拒否できるか**をReviewer合成canaryで確認する。全ローカルLog消去は初回の新Hard Gateにはせず、別User/ACLの実拒否と必要な完全展開による観測を明示する。実Secret/Cloud Provider送信、全Storage/Telemetry/Network網羅、正式H6-E6 conformance・Owner受理は**NOT RUN**。
+
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
 ### 20.1 TEI Product側の実装候補と現行の証明限界
@@ -851,10 +853,13 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 | --- | --- | --- |
 | T0 Product-only | Source/CLI実版、9 CLI/6既存Step、negative 4+2の独立判別。Skill静的試験と実Skill Loadedは別 | **上記exact mainの局所PASS** |
 | P-1 Design Context | [TEI #3262](https://github.com/hat47x/tei-platform/issues/3262) Required/Discovered/Loaded/Parsed/Bound/Returnedと現在Scope、元Source、欠落、Consumer Deliveryを閉じる | **T0.5限定成立**：#3284/#3296により既存CLI Replyの試験用`context_gate.py`と16 synthetic/transport-copy負例の専用CI PASS。`partial`／`qualifiedTestGeneration=false`を維持。P-1b1の一Function完全閉包・正式Query／外部Tool受領は**未資格** |
-| T1 AI新Case | [TEI Draft #3273 TG-01〜06](https://github.com/hat47x/tei-platform/pull/3273)で、既存の正数行番号Ruleに対し**ゼロを与える新規負例**を、Issue→未カバーObligation→Pattern候補→新Pinned Scenario→実CLI→**生成物と独立のExpected/Mutant**で判別する | **NOT RUN**。旧6 Step再実行をT1へ算入しない |
+| **T1-A：既知の追加Rule境界を実行** | [TEI merged #3304](https://github.com/hat47x/tei-platform/pull/3304)：#3273で先に指定した「行番号は正数」に対する`line_number=0`を既存6 Stepとは別の**一時第7 Step**として実TEI CLIで判別。正例1、Quantity/Uniqueness維持、偽Expected・偽Fixture・古いPinの3対照を確認 | **限定実施済み**：[専用CI #42378033965](https://github.com/hat47x/tei-platform/actions/runs/42378033965)は旧確定プログラムHEAD `02d4c624…` でsuccess。証拠追補後の最終PR HEAD `2e79d61c…` のexact-head CI/main push資格へ無条件継承しない。Contextは依然`partial`／`qualifiedTestGeneration=false`。Scenario正式採用・AI未知Rule発見ではない |
+| **T1-B：AI盲検新Case発見** | [TEI #3273 TG-01〜06](https://github.com/hat47x/tei-platform/issues/3273)の既存Scenario/Expected Ownerで、Reviewerが未カバーObligation・独立Expected・Known Mutantを事前固定し、**AI/Skillにはその答えを見せず**、与えられた許可Design Contextから新Candidate→Pinned Scenario→実CLI→Expected/Mutant→新Coverage Gapを検証。候補・採点に同じLLMから生成したExpectedを使わない | **NOT RUN**。T1-Aで知っていた`0`の再提出、既存6 Step再実行、回答中に負例の語が出るだけ、公開Holdoutへモデルが到達できる試行を新Case発見成功に数えない |
 | B0/B1/B2 | 同一TaskでTool-only→TEI Product Skill→必要な別Product/TAI Activity Skillの実選択・Tool/Consumer/Cost・誤Coverage推定を比較 | 実AI Skill効果・横断価値は**未採点** |
 
-Rule/Scenario/Expectedの正本はTEI #1180/#2514、Patternは[#3223](https://github.com/hat47x/tei-platform/issues/3223)、Design Contextは#3262に残す。AIが未観測のRule/Sourceを補って「完全」と宣言しない。単一Coverage率にC0/C1/要件/NFRをまとめない。新Test Generator/Scenario Store/Oracle/Runnerは設けず、初回固定TEI SK-02の比較適格 H2 1 Session→H3実Loader→4独立Sessionを優先する。
+**再実行時の版資格も別に限定**：[TEI merged #3299](https://github.com/hat47x/tei-platform/pull/3299)の[専用CI #42373330734](https://github.com/hat47x/tei-platform/actions/runs/42373330734)では、既存6 Stepから生成したPinned Scenarioに対し、実公開合成Sourceの`externalId:std.text→std.code`変更とPlugin Lockの空白byte変更を各Temp Workspaceで試し、`World fingerprint differs`／`Plugin Lock fingerprint differs`による実CLI拒否を限定観測（既存16 Context負例と8 Test Ability判別Controlも同一PR CI内で実施）。元byteのA→B→A再現時に走れても**中間改版の不存在、当時の意味Owner受理、実Plugin Load/Provider適合、現在のHost Grant**は認定しない。YICのSkillは古いScenarioへの単純再実行を推薦せず、Source/Lock/Expected/Consumer版を各Scopeで再資格化する。これは実ProductのPinned実行検査であり、YICの実Skill選択試験ではない。
+
+**横断の次の試験**：Rule/Scenario/Expectedの正本はTEI #1180/#2514、Patternは[#3223](https://github.com/hat47x/tei-platform/issues/3223)、Design Contextは#3262。T1-Bは実SourceからRole/Ruleを独立に取得し、Reviewer-only独立ExpectedをAIへ露出させない状態で、新しく未カバーの条件を発見する能力を測る。P-1b1が未充足なら必要なRequired部分の閉包不足として**Qualified Test Generationを保留**し、探索的Candidateを正式採用扱いしない。単一Coverage率にC0/C1/機能要件/NFRをまとめない。新Test Generator/Scenario Store/Oracle/Runnerは設けず、**YIC初回固定TEI SK-02の比較適格H2/H3新4 Sessionは独立の先行Gate**として維持する。
 
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
