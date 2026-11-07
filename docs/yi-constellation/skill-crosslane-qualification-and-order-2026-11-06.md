@@ -870,3 +870,13 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 | **B2：必要時だけTAI横断Skill** | 別Product/HostへのSource・Evidenced BOM tuple・実Consumer・現在Grantの引継ぎでB1より有意に作業・誤認が減るか判別。単独で足りればTAIは**選択しない** |
 
 既存の[TEI #3262 DCQ-01〜10](https://github.com/hat47x/tei-platform/issues/3262)／[#3267 VCB-01〜09](https://github.com/hat47x/tei-platform/issues/3267)から、Loader未消費をCompleteにする誤り、独立Pluginの個別PASS→結合PASS、2×2 exact matrixの1失敗隠蔽、Source/Grant改版による現在資格の誤継承を抽出する。Task/試験の独立Expectedと実Provider/Authorityは各Ownerのまま。**最初のSK-02公開TEIの固定Task/Skill byte/CLI whitelist、比較適格0/4は変更しない**。現YIC→実Design Query/BOM選択・2×2 Matrix・実Plugin Load・横断Consumer/Owner受理は**NOT RUN**。中央BOM Store／追加Runner／MCP必須化／権限Engineは設けない。
+
+
+<!-- yic-skill-plugin-first-trait-fulfillment-20261107 -->
+### 27.5 Plugin-firstと原子的Trait実装義務の適合：YICは解決結果を選ぶだけ（2026-11-07）
+
+[TEI main設計 #3277](https://github.com/hat47x/tei-platform/pull/3277)／[Plugin-first方式](https://github.com/hat47x/tei-platform/blob/main/plan/design/PLUGIN_FIRST_TOOLING_RUNTIME_DOGFOOD_2026-11.md)は、Core以外のCLI/Studio機能もPlugin化し、生成Applicationと**同じContract/Resolver/Build/Test**をDogfoodする製品要求を確立した。ただし現実のCLI静的dispatch、Studio固定Bridge、一般Providerの実Surface未接続を確認した**設計・静的Fit/Gap段階**であり、現在の全CLIがPluginで動作すると宣言しない。[TEI #3278](https://github.com/hat47x/tei-platform/issues/3278)／[#3279](https://github.com/hat47x/tei-platform/issues/3279)は、原子的Traitを標準生成・実Provider・手動実装義務（manual-required）で履行可能にし、欠落を開発時に検知する設計候補。こちらも正式Core Trait ABI/実Target適合はNOT RUN。
+
+**YICの選択規則**：Skillから見える名称／Trait required宣言／Productの解決済みContract／Fulfillment実装／Pluginの実Link・Load・Invoke／対応するConformance／現在Host Grantを別々に観測する。自動実装が無いmanual-requiredは、Providerが選択されたことだけで能力ありとみなさず、不足診断をProductに戻す。Trait requiredとadvisoryを区別し、同Traitの複合要求と競合／必要依存の未消費はunsupported/unknownとして保持する。YICは#951のResolver、#3267のexact BOM、#2514/#1180のIndependent Expectedを**参照するConsumer**であり、第二Trait Resolver、Plugin Loader、BOM Store、Generic Hostを作らない。
+
+**既存X01/X04/X06へ接続する最小対照**：(a) Skillでは「Inspectorあり」だがPlugin Surfaceが現在CLI未結線→Skill提案は候補止まり、(b) Trait requiredかつmanual-required未実装→そのOperationだけ実Tool選択不可、(c) Provider A/B各PASSだが同一Target/Artifactでの合成未検証→結合資格なし、(d) 実TargetでLoad/Invoke達成しても現在Grantが失効→write不可、無関係なread-only可能範囲は継続。製品の実検査はTEI #3277のD0/D1、#3279のT0/T1、#3267の2×2 Matrixへ委譲する。**Xケースの新分母や初回SK-02のBlockingを増やさず**、B1 Product単独で達成できるときはB2 TAI Skillを選ばない。[TAI連携計画 §10](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/harness-skills-interoperability-and-evidence-2026-11-02.md)を最新の実証限界とする。TEI Plugin-firstの動的接続・Trait履行・YIC実Skill選択の横断試験はNOT RUN。
