@@ -2,6 +2,16 @@
 
 > **Research / Proposed / Owner未受理 / 利用者調査NOT RUN**（2026-11-01）。この文書は [価値・要望・要件の整理](value-needs-requirements-2026-11-01.md) の研究方法と具体的な実証設計を補う。新しいTAI Core／共通Store／権限エンジン／評価Gateの設計決定ではない。
 
+## 現在の実証基線（2026-11-07 15:16 UTC時点、歴史的追補に優先）
+
+- **TEI T0/T0.5**：mainの実CLI9応答、Context16負例、Pinned Scenario6 Step、Source/Plugin Lockの実変更による旧Pin拒否は局所実CI成功。Design Contextはpartial / exploration-only / qualifiedTestGeneration=false。
+- **TEI T1-A**：既知の行番号0 Candidateを一時Scenario第7 Stepで実CLI検収し、統合後main CIが成功。**T1-B**＝生成AIが未見Ruleを独立Holdoutなしで捏造せず新規発見・提案する実験は未実施。
+- **Required Rule Closure**：同Fingerprint・正常JSONでもRule/Relationが静かに欠落するTT-56が残る。Draft #3324/#3326は競合する未検収候補。現mainに追加8負例が統合されたとは主張しない。
+- **SUI→SHO**：354byte固定Producer/Reader CIは限定PASS、一File本体は通常CIでSKIP。真正Producerの偽Checkout拒否は限定PASS、同一Attemptの実File HandoffはNOT RUN。
+- **BOM/外部Harness**：RQ-035=Workbench、RQ-036=BOM（Draft #3297）。Verified BOM/実Trait/実HostとH2/H3比較（適格0/4）は別の未資格。
+
+---
+
 ## 1. 研究で問い直す対象
 
 YI Constellationの目標は、六製品の機能の総和を大きくすることよりも、**主体が実際に選べること、考えられること、実現できること、関係を育てられることを広げる**ことにある。成果の数だけでなく、成果に至る理由、断った選択肢、途中で変えた希望、利用していない人への影響を含めて評価する。
@@ -539,3 +549,56 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 **P2、独立Consumer/Hostの真の実観測**：SUI実Producer→SHO実Readerの同一Attempt File handoff、TEI #2586実Function/Provider、EKI実Result Body、実Host read-deny/送出/Receiptを、必要な個別Claimでだけ接続する。外部Skill H2/H3は既存Task/Tool/Expected固定と比較適格を優先。T2、T3 SelfBuildや全OS/DB対応は最初のT1をブロックしない。
 
 **現時点の非達成**：新しいT1でAIが未見Ruleを生成・独立Holdoutを正答した証拠、Typed設計情報の全Required closure、外部G0 Read deny／G2 Reply実全受領、Verified BOMの実発行、Trait Product Fulfillment、横断E2EとOwnerの意味・価値受理はNOT RUN/NOT PROVEN。mainへの#3296統合と実CIの限定PASSは達成済みとして保持する。
+
+
+---
+
+## 15. 2026-11-07 実証基線：既知T1-A実走とRequired Rule閉包
+
+**位置付け**：他Productの最新実Source/Issue/固定main CIに基づく§13〜14の状態更新。設計提案と実製品成果、局所CIと同一Attempt横断受入を分離。新しいPacket Reader、Scenario SSOT、Test Oracle、Authority、共通Runnerは作らない。
+
+### 15.1 T1-A：予定されていた新規候補を実CLIで実行できた
+
+[TEI merged PR #3304](https://github.com/hat47x/tei-platform/pull/3304) / [統合後main CI #42378271383](https://github.com/hat47x/tei-platform/actions/runs/42378271383) により、既存の固定Scenario6 Stepの原本を変更せず、一時コピーへ行番号0のCandidateを第7 Stepとして追加。実TEI CLIのscenario verify→generate→check→generated-pinned runで、行番号正数だけnot-satisfied、数量・一意性はsatisfiedを独立Expectedに照らし確認。偽Expected・偽Fixture・古いPinの3実CLI負例も拒否した。
+
+これは**T1-A：既知の未実行Rule境界をCandidate化し実行・判別する限定到達**。旧§13〜14の「新行番号0 Caseは未実施」はその記録時点の履歴。現在の実験基線として未実施と書き戻さない。一方**T1-B：Agentが未見Rule/Obligationを独立Holdoutを見ずに発見し、入力差分を提案したか**は未実施。既存[Draft #3273](https://github.com/hat47x/tei-platform/pull/3273)のCaseを読み返しただけなら新規発見の価値として採点しない。Design Contextはpartial / exploration-only / qualifiedTestGeneration=falseであり、正式Scenario正本の追加・Owner受理も未実施。
+
+[merged PR #3299](https://github.com/hat47x/tei-platform/pull/3299) / [main CI #42373611474](https://github.com/hat47x/tei-platform/actions/runs/42373611474) では、実Workspace CopyのSource型変更とPlugin Lock byte変更によって旧Pinned Scenarioを拒否する限定実証も成立した。ただしA→B→Aで元Source byteに戻るとPinは再成功し、中間の変更不存在、Owner再受理、現在Host Grantや実Plugin Loadの証拠にはならない。
+
+### 15.2 TT-56：正しいJSON・同FingerprintでもRequired Ruleは失われ得る
+
+[TEI Draft #3326](https://github.com/hat47x/tei-platform/pull/3326) は現9 CLI ReplyのCatalog/Source Index/Loaderと独立固定の公開Validation3 Ruleを照合する候補。正常Schema/同FingerprintでもRule/Relation/Role/Source Pathが欠落する7負例と、非必須Subject省略で過剰拒否しない正例を提案する。[別Draft #3324](https://github.com/hat47x/tei-platform/pull/3324) はinspect-validationを実CLIに1件追加し、単一RuleのCanonical Operator/Attribute/Source Roleまで照合する候補。**どちらも未統合・新規exact-head CI未確認**であり、説明上の8 Controlsをmainの16件へ足して実証済みとしない。
+
+両Draftとも同じcontext_gate.py・同じWorkflow・同じ横断計画を編集する。これを別Reader/別Required正本の二重実装へ発展させない。#3262/#2514がOwnerとして、(1)独立Requiredの必要集合、(2)実Source/Loader/Definition Relation、(3)正常な非必須欠落の不必要な拒否を避ける正例、(4)追加inspectが本当に必要な意味属性、を比較。まず既存9 CLI応答で検出できるRequired欠測を検証し、それだけで判定できないRule属性に限定して10番目のinspectを採用するか決める。Draftの競合はOwner決定待ちであり、独断でPRを閉じない。
+
+### 15.3 CLI Identity・Surface契約・実作用を一つに畳まない
+
+[TEI Draft #3311](https://github.com/hat47x/tei-platform/pull/3311)等に、Workspace manifest identity、commandsの引数値・型・既定値、viewの名前付き出力効果が実CLIへ結び付く進展がある。ただし**現在の全CLIが同じIdentity列を返した実証ではない**。model catalog/inspect/trace/validate/workspace-filesの候補実装と、source-index/knowledge-*の未対応、別Workspace、実Readerがその列を消費する経路は個別に検査する。
+
+Advertised read-onlyと実際の- execute付きFile書込み、OS Read-deny、実Source名とmanifest fingerprint、Harness Tool Replyの全Byte到達は別の命題。契約の自己説明が豊かになればAIの指示回数は減らせる可能性があるが、現在Grant、Source意味受理、実外部送出・元Result Body完全性は自動確定しない。
+
+### 15.4 SHO一括Runnerは実装済みだが目的の一File HandoffはSKIP
+
+[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)はtest-onlyの一括Runnerを追加し、SUI真正Checkout HEAD、Frontend実Path/Tracked Clean、354byteの固定SHA、SHO CLI Reader/Parser、Private Temp File cleanupを一試行で確かめる入口を用意。[CI #42377986797](https://github.com/hat47x/sho-composer/actions/runs/42377986797) / [Push #42377982763](https://github.com/hat47x/sho-composer/actions/runs/42377982763) ではUbuntu/Windows各**20 PASS / 0 FAIL / 1 SKIP**。偽Checkoutで偽Producerを起動前に拒否する限定負例PASSを認めるが、**1 SKIPは真正SUI実Producer→SHO実CLIの一File本体**。Runnerが存在・CI成功しても実同一Attempt Deliveryにはならない。
+
+[SHO Draft #22](https://github.com/hat47x/sho-composer/pull/22)はPOSIX writerなしFIFOとsymlinkへのOpen前ハングを、限定nonblocking Openとfstatで拒否する修正。Ubuntu実CLI17/17、Windows16/16＋POSIX固有1 SKIP（[CI #42373230247](https://github.com/hat47x/sho-composer/actions/runs/42373230247)）。Windows Named Pipe・Path TOCTOU・実Writer/Editor保存再開/Owner受理まで保証しない。
+
+### 15.5 ORX-35〜40：新しい局所成果を誤って横断Outcomeに昇格しない
+
+| ID | 独立した反例とExpected |
+| --- | --- |
+| **ORX-35 既知候補とAI未知発見** | T1-A第7 Stepの実CLI成功は認める。AIが既知#3273を再掲しただけならT1-Bの新発見・盲検価値は未証明。 |
+| **ORX-36 同FingerprintのRequired Rule欠落** | JSONは妥当でも独立RequiredにあるRule/Relationが実Projectionから抜ければpartial/blocked。Draft #3324/#3326はOwner収束・実CIが必要。非必須Subject欠落の正例を不当に止めない。 |
+| **ORX-37 A→B→AのPin再成功** | byte一致で旧Plan再成功はあり得る。中間変更なし・Source受理/現在Grant・実Build資格とは別。Source/Lock変更時の拒否はmain実証済み。 |
+| **ORX-38 CLI説明だけのRead-only** | commandsのSurface記述とview -executeの名前付きFile効果、別Workspace Manifest、OS読取とTool完全受領は別観測。 |
+| **ORX-39 Runner準備と本体SKIP** | 偽Producer拒否PASSを認めるが、真正SUI→SHO実One-fileの同一AttemptのReader ReceiptはNOT RUN。 |
+| **ORX-40 POSIX FIFO回帰とHost全体** | Linux実CLIの特定FIFOを拒否してもWindows/特殊File/Path交換/実Writerは未実証。 |
+
+### 15.6 次の順序・価値判定
+
+1. **TEIの最短経路**：T0.5/T1-Aを再発明せず、TT-56の並行Draftを一つのRequired/実Consumerへ収束→一RuleのSource/Relation/Operatorの適格観測→Agentが未見Gapを提案するT1-B→既存#1180で独立レビュー・実Pinned CLI。全Function/Providerを前提にして局所read-only試験を不必要に止めない。
+2. **SUI/SHOの独立経路**：偽Checkout拒否・Cross-OS固定Rawを保持し、真正SUI Checkoutからopt-in Runnerでnon-skipの同一File実Reader/独立SHAを1回観測。その後にのみWriter Save/Restartや原出典、SEI/OKF、二次Recipient Grantを別に検証。YICの全Activityへ一律前提化しない。
+3. **Plugin/外部Harnessの独立経路**：BOM RQ-036 Draft #3297、Atomic Trait、CLI metadata、Go外部Module opt-in、HTTP Graphを、必要なConsumer ClaimのWitnessとして限定参照。TAI #168のG0実OS read-deny→G1送出→G2 Tool全Reply→新H2/H3四Slotの比較資格（現0/4）を優先。新共通Host/Registry/Verifierを設けない。
+4. **価値判断**：Userの指示回数、真の未カバーRule判別、正常Caseの過剰拒否、実取得Sourceの増分・開示、修正の手数、CIと実行待ち時間を別指標にする。技術的局所PASSからOwnerが望むOutcomeを直接推論しない。
+
+**状態**：T1-Aの実CLI Case判別と旧Source/Lock Pin拒否は**mainで限定達成**。TT-56は競合するDraft段階、HandoffはRunner防御の限定PASSで本体SKIP、外部H2/H3は比較適格0/4。未知GapのT1-B、Product全Required Closure、真正One-file Reader受領、実BOM/Host、Owner Meaning・利用者価値は**未実証**。
