@@ -424,3 +424,61 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 4. **実行順の非干渉**。TAI #168のH2/H3初回比較のGateは変更しない。最初のProduct実ReadはTEI #2586、Action/Effectは#2598/#1174、独立受入は#2514、認知十分性はSEI #767、投影はSUI/SHO、Artifact配布と実消費はTEI #2589/EKI既存Ownerが担当。
 
 **未達**：この節の二世界をYIC同一Attemptで横断する実Validator/実Consumer/Owner受理はNOT RUN。正しい部分Claimに過剰な制約を足すことも、全件を保証できないのに成立と称することも、共に改善対象にする。
+
+
+---
+
+## 13. 2026-11-07 夕方追補：独立Expectedを「実際に欠陥を見分ける製品動作」へ接続する
+
+**状態**：最新の既存実Product/CIを用途限定で採用した価値研究・受入計画。§8〜12のOracle Outcome/Receipt/Claim判別可能性を、実際に動いたTEIのテストDogfood、SUI→SHOの固定Raw引渡し、TEIのBOM/Design Context候補へ接続する。新しいYI Common Test Engine、Proof Engine、Runner/Registry、横断Host、別の独立Expected正本は作らない。
+
+### 13.1 TEIのT0は初回の製品Dogfoodとして成立。ただしT1は別の実験
+
+[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)と[統合済みPR #3264/#3266/#3268](https://github.com/hat47x/tei-platform/pull/3266)を再照合。[exact main 69a2996187852a036057b7155d6e847527b67346のpush CI #42359610226](https://github.com/hat47x/tei-platform/actions/runs/42359610226)はcompleted/success。単一の実TEIバイナリでread-only CLI **9コマンド**、Product Skillの静的検査**14件**、既存固定Driver Scenario **6 Step**、実CLI負例**4件**と「必須Step欠落／常時satisfied」の独立義務負例**2件**を実行・検出。局所的なGo文カバレッジは限定したcmd/tei単一Test選択の**C0相当10.1%**であり、全製品C0でもC1でもない。CI Artifactは保持7日という期限付き。実観測と保存先/現在アクセス可能性も別の証拠。
+
+これは**既存Pinned Scenarioで既知の誤実装・誤Expected・欠測を拒否できる**というT0の限定資格。AIが未カバーRuleを発見して**新しい**テストを生成できるT1は未実施。[Draft #3273](https://github.com/hat47x/tei-platform/pull/3273)では公開合成Rule「line_number_positive」の0入力を次の未カバーNegativeとし、Required Source/Loader → Coverage Gap → Pattern選択 → Scenario候補 → 既存CLIへのPinned Run → #2514独立Expected/Mutant判定をTG-01〜06として設計。**提案したCaseが実行された/必要Source閉包を満たしたとは書かない**。
+
+[PR #3268](https://github.com/hat47x/tei-platform/pull/3268)のCI path filter拡大は変更時の**実行トリガー**のCoverageであって、Testの枝C1やDomain Rule判別率、実依存閉包とは別。#3262はSubject/Rule/Business/NFRのRequired closureとTool応答の完全性をP-1の対象に持つ。#3264のCLI実読取・SourceIndex一致・required Source Loader Read・stale/欠落負例は限定達成だが、全ScopeのDesign Context QueryやMCP、実Provider・Business意味の全結合ではない。
+
+**価値評価の分母**：実行されたCase数 / 独立に判別したMutation数 / Required Ruleのうち実カバー・未カバー・unknown / CI Triggerの対象依存と未検知 / 実Harness操作回数・回答訂正コストを別々に記録する。C0数値をC1や要件網羅率へ流用しない。最初は単一の業務RuleからT1に進む。既存Scenario SSOT=#1180、Independent Expected=#2514、Design Context=#3262、AI-test技法=#3223、価値費用=#2018。
+
+### 13.2 SUI→SHOは固定原文でProducerとReaderが動作。実転送/出典/保存は別
+
+[SUI Draft #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)は現ProductのbuildContextProjectionから、許可された非保留の公開Card本文だけを**read-onlyの通常Markdown草稿**へ変換し、未信頼Markdown文法をエスケープしてSource/Footnote/OKFのverified等を捏造しない。固定HEADの[CI #42352776477](https://github.com/hat47x/sui-sensemaking/actions/runs/42352776477)は生成原文**354 raw UTF-8 bytes**と独立Expected SHA-256一致を限定実証。
+
+[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)はその**同一固定原文**を独立FixtureとしてSHO G1b実Readerに与える試験を作成。[修正後のUbuntu/Windows CI #42353651398](https://github.com/hat47x/sho-composer/actions/runs/42353651398)では両OSとも**18/18 PASS**。初回WindowsはLF→CRLFの14改行で**354→368 bytes**となりFAILしたため、修正は**当該合成Fixtureだけ**をLF固定とした。著者本文や製品Writerの改行を勝手に正規化する方式は採用していない。エスケープされたLinkはlink_open=0、解除した対照は1となる限定Parser判別も含む。
+
+これで「実SUI Producerが生成した固定Rawと独立のSHO Reader用Fixtureの整合」「各Repo固定HEADのProduct別CI」が**限定成立**。ただしこの2回のCIは**一つの実ファイルをSUIプロセスからSHO CLIへ自動搬送した同一Attemptではない**。原Card Source/Island/Edgeは公開投影から失われ、SHO側は元出典・Occurrenceの真正性、文書Owner Meaning、外部再配布、G2 Writer Save/Restart、SEI Inquiry、OKF Conformanceを保証しない。SHO G1bの未解決参照/特殊FIFO readerの既存未受理も残る。
+
+価値上は、「慎重な文章化で出典を捏造しない」ことに加え、**異OSでもSource Raw byte不変で引き渡せること**が重要。最初のP1は、静的Fixtureの証拠を保持したまま**実SUI生成物のbyteをSHO CLIへ実File/Process Handoffし、独立に再Hash/Parse/受領**を同一Attemptで確認する。元資料を必要とする用途は別の許可されたSource Readerへ戻し、原典無しで脚注・逆編集を行わない。OwnerはSUI #3391/#3392、SHO #16/#19/#21、SEI #820、TAI #232/#271。
+
+### 13.3 Verified Composition BOMは「計画器」が動き始めた段階
+
+[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267)は検証済みPlugin組合せBOMと多版MatrixをTEI基本機能として定義し、[Draft #3269](https://github.com/hat47x/tei-platform/pull/3269)はGoのread-only候補/Version Matrix Referenceへ前進。隔離ローカルGoの**15 Test/race/vetの限定PASS**と、2×2・Pairwise計画の実行記録があるが、**GitHub exact HEAD CIと実TEI Resolver/Scenario/Build/Consumer接続は未認定**。
+
+特に supplied-locks-pairwise の試験では、3軸×2値の宣言全8組のうちexact Lock候補が4行提供された場合、宣言ペア12のうち**観測候補ペア9/12、計画上の被覆9/9、未出現3ペア**となる。これは「提示されたCandidate集合の中のPairwise計画の完全性」であり、実現可能なCandidate Universeの完全性、実Target実行、3-wayの相互作用、Qualified BOM発行を証明しない。Referenceのqualified=false / planning-onlyを維持する。
+
+二つの個別BOMが各々Qualifiedでも、**結合したContract/Effect/Artifactの跨BOM相互作用が未試験なら、UnionをQualifiedと呼ばない**。また、SBOMの依存在庫と実互換検証、Lockの選択と実Consume、Cache hitと最新資格、上流が「open/unpromised」としたAPIへの下流独自依存を混同しない。まず#3262 Design ContextでCandidate/Required closureの範囲を求め、#951/#1016の実Resolver/Lock、#1180/#2514の実Scenario/Expected、#943/#2600の実Artifact/実Memberに接続して初めて評価対象となる。開放的なPlugin公開を一律禁止するのではなく、**下流利用者が自ら適合検証する経路**を残す。
+
+### 13.4 2026-11-07に進んだ周辺Product設計の位置付け
+
+- [TEI #3277](https://github.com/hat47x/tei-platform/pull/3277)：Core外のCLI/StudioをPlugin-firstにする要求と現コード監査はmain統合。静的CLI Dispatch・固定Wails Bridgeが残るので、通常CLI/Studio実行が既存#951/#1016のResolver/Contract/Providerを実際に通ったというClaimはまだ無い。最初は一つのread-only Inspector/Model CatalogのDogfood、全面移行は後。
+- [TEI #3270](https://github.com/hat47x/tei-platform/issues/3270)：汎用Data Source Workbenchの標準職掌はSchema/TableのCREATE/ALTER/DROP等の開発者向けDDLまで含む。サーバ起動/Backup/Replica等のDBA運用は標準外。Schema Previewと実Apply/現在Grant/独立再読取は別。既存#2586のProduct実Row→Data Context未接続を飛び越えない。
+- [TEI #3274](https://github.com/hat47x/tei-platform/issues/3274)：REST例外をHTTP statusだけでなく Server Decision Graph → HTTP/Problem Details → Client Reaction → unknown Effect/Recoveryとして検証する設計は成熟したPressure。HTTP 202/401/403/409/412/422等と業務結果を混同せず、未知Commitの自動再送を避ける。ただし実Graph/HTTP E2EはNOT RUN。
+- [TEI #3250](https://github.com/hat47x/tei-platform/issues/3250)：Subsystemの図・CRUD・論理分割とEffective Effect/Owner/Targetは別資格。仮のdiagram/scoreから本番配置や権限を自動決定しない。
+
+これらをOracle比較の追加Blockingとせず、**各Productの独立実証トラック**として扱う。既存TAI #168 H2/H3四Sessionの比較適格性0/4、TEI #2831 G4 UNQUALIFIED、TEI #2586の一Function実Provider Read未成立は維持する。
+
+### 13.5 ORX-20〜26：実行済みと未実施を同じテスト枠へ混ぜない
+
+| ID | 対照 | 独立ExpectedとClaim ceiling | 担当 |
+| --- | --- | --- | --- |
+| **ORX-20 既知Mutantに強いが未カバーRule** | TEI実Scenario既存6 StepはPASS、line_number=0の新負例は未実行 | T0の既存Negative検出を認め、AI新Case提案/実RunのT1は未達、C0 10.1%は局所のみ | TEI #3262/#2514/#1180、Draft #3273 |
+| **ORX-21 CI Trigger盲点** | Domain/Scenarioを変更したがWorkflowのpath filter対象外 | テスト自体の判別力と実CIが起動する範囲を別判定。#3268のwatch拡張を実依存の完全閉包としない | TEI #3268/#2600 |
+| **ORX-22 OS改行でRaw不一致** | SUI Expected 354 byte、Windows checkoutはCRLFで368 byte | 原Byte不一致を認め、fixture LFで固定した新CIは限定PASS。見かけのMarkdown同一性からRaw Identityを推論しない | SUI #3397、SHO #21 |
+| **ORX-23 固定Fixtureで2Repo PASS** | SUI Producer/SHO Readerが同じ354 byteを別CIで検査 | 両方の限定PASSを認めるが、実Producer→Reader同一Attempt輸送と、元出典・Owner受理は未実証 | SUI #3397、SHO #21 |
+| **ORX-24 Pairwise分母の差** | declared 12 pairs、supplied candidates 9、計画は9/9 | Candidate9/9を全12/12や実互換PASSに昇格させず、未出現3はunknown。pairwiseは高次互換を保証しない | TEI #3267/#3269/#3262 |
+| **ORX-25 BOMの組合せ不干渉** | A+B、B+CがそれぞれPASS、A+B+Cは未試験 | Union資格を発行しない。必要な跨BOM相互作用の独立Scenarioへ | TEI #3267/#1180/#2514 |
+| **ORX-26 HTTP応答の成功過大Claim** | 202 Acceptedの後にcommit unknown/旧Receipt、Retry-Afterあり | ClientはBusiness Completedとせず、実Operation/Receipt/Readbackで再資格化。現在Grantなしに無条件再送しない | TEI #3274/#1174、EKI #407 |
+
+**初回DoD**：TEI T0とSUI→SHO Product別固定Byteの限定PASS、TEI BOM計画器のローカルFixture PASSを別列で認め、必要な横断一往復・新規T1・実Resolver/Target/Provider・正式Owner価値受理を**未実施/未認定**として残す。最初の追加実験はT1の1 RuleとSUI→SHOの1 Raw File handoffで十分。毎段に別のProduct共通Verifierを増やさない。
