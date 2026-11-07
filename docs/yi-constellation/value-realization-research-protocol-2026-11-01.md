@@ -515,7 +515,7 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 
 [TEI #3278](https://github.com/hat47x/tei-platform/issues/3278)／[#3279](https://github.com/hat47x/tei-platform/issues/3279)では、Traitを小さなContract/Required obligationとして設計し、提供・生成・手動必須・外部Hostという実現方式の違いを残す。manual-requiredで実Implが無ければunfulfilled、宣言のみで実Conformanceが無ければprovided-but-unverified。Traitの順序非依存の合成と、実PipelineのEffect順序は異なる。Open/unpromised APIに下流が依存することは許し、Publisherが約束していないStable保証やInternal/SecretをBOMが代弁しない。
 
-**Product境界**：#951の既存Resolver/Conformanceを唯一のOwnerとし、#3267/現在Draft #3297はその成果を使う。Traitの署名/型一致、Build Artifact、Product Functionでの実Invoke、当前Host Grant、業務Owner受理は別資格。Trait追加によって次段T1の新しいHard Gateを一律追加しない。原子的Traitの実装検証は未実施、二つの類似Issueに第二Resolverや共通enumを実装しない。
+**Product境界**：#951の既存Resolver/Conformanceを唯一のOwnerとし、#3267/現在Draft #3297はその成果を使う。Traitの署名/型一致、Build Artifact、Product Functionでの実Invoke、現在のHost Grant、業務Owner受理は別資格。Trait追加によって次段T1の新しいHard Gateを一律追加しない。原子的Traitの実装検証は未実施、二つの類似Issueに第二Resolverや共通enumを実装しない。
 
 ### 14.5 ORX-27〜34：独立Expectedの追加、既存main成功を非実施へ戻さない
 
