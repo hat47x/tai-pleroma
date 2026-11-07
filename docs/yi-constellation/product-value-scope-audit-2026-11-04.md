@@ -503,3 +503,18 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 [TEI #3223](https://github.com/hat47x/tei-platform/issues/3223)に記録された**RQ-035のBranch間意味衝突**（main＝Data Source Workbench、旧BOM Draft＝Verified BOM）は、Issueや設計が増えただけで同一IDの意味が変わりうる具体例。新しい横断Requirement Registryを作るのでなく、**採用前のOwner Issue番号／Source ref＋blob SHA／Requirement ID→Meaning／PR状態**を照合し、不一致なら未受理に止める。閉鎖されたDraftを現行標準の根拠として扱わない。
 
 **今回の資格**：他Productで報告されたCI/実験と現行GitHub Issue・PR・要求本文をSourceとして照合し、**このDraftの要件境界・試験優先順位のみ更新**した。ここでの新CLI/Plugin/SHO writer/同一File転送/新T1/実B0-B2/複数モデル反証/Owner受理は **NOT RUN**。
+
+### 22.4 必須条件を削るべき場所と、削ってはいけない証拠の境界（11月7日夜）
+
+**過剰要件には二種類ある**。①正当なProduct状態を受け付けない、Consumer側で上乗せされた**余計な必須性**。②まだ取得できていないTarget/Source/意味を、見かけのPASSで補完する**必要な証拠の欠落**。前者は最小の契約変更で緩和し、後者は正規のSource/Context/Independent Expectedを確認する。いずれも「常に全機能を実装する」「常に拒否する」の二択にしない。
+
+| 既存Product実観測とOwner | 必要な判断／最小の次試験 | 現時点の上限 |
+| --- | --- | --- |
+| [TAI #533](https://github.com/hat47x/tai-pleroma/issues/533)→[#535](https://github.com/hat47x/tai-pleroma/issues/535)：SUI Edge `fromKind/toKind`は任意なのに現行投影契約は必須。旧契約では両方ありのみ`present`、項目欠落は`missing`、JSON `null`は`unresolved`、Edgeが失われる。任意契約の試作では欠落/片側nullでもEdgeが`present` | Productで任意な種別は**Edge全体の存在条件にしない**。ただしNode Identity・端点の実在・向き・多重辺・種別未確定は別。SUI→TAI生成器→合成層で「未指定」「明示null」「実種別」を区別して投影Loss・曖昧参照を検査。現行パイロット契約はOwner判断まで勝手に置換しない | #535の報告では試作と全体Suite 88段PASS。ただし合成層の意味・本番Profile・正式契約採用は未実証 |
+| [TEI #3284](https://github.com/hat47x/tei-platform/pull/3284)→[main #3299](https://github.com/hat47x/tei-platform/pull/3299)／[#3262](https://github.com/hat47x/tei-platform/issues/3262)：実CLI T0.5の限定Context Gate、Source/Lock更新を入れたT0.6 negative | Sourceが`present`でも`loaded/parsed/eligible/complete`とはしない。Contextがpartial/unknown/unsupportedなら、AIに新Testを無理に作らせず**不足するInput/Rule/実Readerを診断・推薦**。必要なContext成立後のみ[#3273](https://github.com/hat47x/tei-platform/pull/3273)の「行番号0」という未カバーRuleからT1の新負例を選ぶ | [TEI #3223](https://github.com/hat47x/tei-platform/issues/3223)のT0.6局所実CIはCLI9・Context 16 negative・Pinned6 step・実CLI negative6／独立義務negative2、C0相当10.1%、**C1未測定**。AIの新T1・全Required集合・Provider/E2Eは未達 |
+| [TEI #3267](https://github.com/hat47x/tei-platform/issues/3267)／[Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)：Verified Composition BOM（現行要求番号候補RQ-036）、mainのRQ-035はWorkbench | Matrix選択・`candidate lock`・`observed-pass`・`qualified-in-scope`を分け、**実Source/Artifact/Target/Consumer/独立Expected/Checks/Attemptの同一性が揃った行だけ**推奨。候補からの派生Pairwiseは供給された組合せのCoverageであって、未列挙Universeの完全性ではない | Draftはsynthetic/read-only・`qualified:false`。新PRのCI/Resolver×Consumer×実Target×Host Grantは別。旧[#3269](https://github.com/hat47x/tei-platform/pull/3269)はclosed/unmergedであり採用根拠にしない |
+
+**価値判定の共通規則**：構造同一性や型の欠落を理由に利用者の正しい閲覧/操作を止めるならB1の費用として計測する。一方、Loader未読・Rule未取得・候補Lockだけの行から「全件検証済み」と提示するなら誤完了として失敗。最小修正の後に**本当に利用可能な正例**と、意味・Identity・Scope・現在Grantが不明な負例を同じ必要範囲で確認する。Edge種別の任意化は全Graphの自動合成/書戻し許可と異なり、Context診断は所有者受理なしの業務意味認定ではない。
+
+**優先順位**：初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の外部Harness比較G0実拒否→G1送出→G2完全受信→事前割付H2/H3は変更しない。TAI/SUI契約試作、TEI Design Context／T1、BOM Exact Tupleは**それぞれ既存Product Ownerの並行レーン**として進め、全Productへ先行必須化しない。今回本計画が所有するのは価値・過剰必須性の比較であり、実TEI T1・実BOM/Plugin Target・TAI端点種別の正式契約更新・外部Skill/Owner受理はNOT RUN。
+
