@@ -138,3 +138,31 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 
 **資格**：保存済みTEI実CIの範囲は限定Observed。Owner受理、正式Product Design Context API・T1-B・C1／全Required・外部Consumer E2E・実Provider/Hostの一Attempt ClosureはNOT RUN。
 
+
+
+## 10. 2026-11-08：局所の正の証拠と、不在を断定する証拠
+
+**成熟した原則**：あるSource/Scope/Attemptについて実行・受領・Assertionを確認できた局所の正の証拠は保持する。一方、対象が一覧に無いことから「不存在」「未テスト確定」と主張するには、独立Required集合、列挙終端、選択・Loader/Parserの実読込、受領、開示範囲の閉包が必要。部分集合は局所成功の取り消しでも全件成功の証明でもない。この区別は[TEI #3223 §29](https://github.com/hat47x/tei-platform/issues/3223)、[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)、既存Driver Scenario #1180の受入境界を利用し、第二のCoverage Engineを作らない。
+
+### 10.1 直近のSource状態を補正
+- **統合済み**：[TEI #3354](https://github.com/hat47x/tei-platform/pull/3354)は2026-11-07 16:35Zにmerged。旧競合[#3324](https://github.com/hat47x/tei-platform/pull/3324)・[#3326](https://github.com/hat47x/tei-platform/pull/3326)はclosed/unmerged。#3354の[exact PR HEAD CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)は、11実CLI Reply、独立Required3 Rule、32合成Consumer判別、既存6 pinned Stepと既知T1-A第7 Stepを限定PASS。これをmain統合後の別Run合格や全Required/業務意味/C1へ昇格しない。局所Go C0相当10.0%、C1未測。
+- **未統合**：[Draft #3365](https://github.com/hat47x/tei-platform/pull/3365)はTT-105/106で部分目録と局所Receiptを分離。[#3223が報告するCI #42394673357](https://github.com/hat47x/tei-platform/actions/runs/42394673357)はこのDraft HEADの限定成功であり、全Product Coverageはunknown。局所肯定は保持、目録未受領は「未テスト確定」にしない。
+- **合法な異形**：[Draft #3370](https://github.com/hat47x/tei-platform/pull/3370)はrequirementsの正常な空配列result、外側successShape、envelopeの相違を分ける。DraftのresultShapeをmainのDiscovery能力と呼ばない。CLIで正常に返った空配列は、全Subject不存在やTool Reply欠損の証明ではない。
+- **Consumer・物理観測**：[Draft #3371](https://github.com/hat47x/tei-platform/pull/3371)のStudio Inspectorは未選択Factoryでのfallback拒否等を提案するが、CLI/Studio同一選択Provider実呼出は未資格。[Draft #3372](https://github.com/hat47x/tei-platform/pull/3372)のWorkbench FK/UNIQUE/Indexは合成Physical観測で、Accepted Business Relation/実DDL/SHO図面とは別。[TEI #3353 merged](https://github.com/hat47x/tei-platform/pull/3353)は空集合Handoffの確認条件を修正したが、HandoffConfirmedは依然Caller申告で実相手の受領証拠ではない。
+
+### 10.2 三資格を別々に判定する
+| 既存Ownerの資格 | 局所的に肯定できること | 守る負例・止める主張 |
+| --- | --- | --- |
+| **D: Design Input** (#3262) | 独立Requiredの範囲でSource/Role/Rule/Relationが実Loader/Parser/Scopeへ到達 | 正常JSON・FP一致でもRequired一件欠落するTT-56を拒否。合法な空配列、別mode、未選択Plugin、未Loader Markdownを無条件に全体失格にしない |
+| **T: Tool/Consumer Delivery** (TAI #168/TEI #2509) | 同一AttemptのTool Callと全Reply/生byte/end、受領先を照合した範囲 | 56 Call/55 Reply、8,192 byte切詰め、SHO別Fixtureのdigest一致を完全なH2/H3受領や実同一File H1に昇格しない |
+| **G: Test Generation/Oracle** (#1180/#2514/#3273) | 既知の行番号0を検出したT1-Aの局所実CLI結果 | 未提示ObligationをAIが盲検発見するT1-B、C1/全Coverageは別の独立Expectedで評価。既知Caseの繰返しはT1-Bではない |
+
+**対称な判別**：必要なRuleを見逃す＝誤受入、不要Subjectの不在で全作業を止める＝誤拒否、部分目録で既存6 Stepの局所成功を消す＝過剰失効、6 Step実行で全Ruleを網羅したとする＝過剰昇格。False accept／false rejectを別件数で比較し、未確認をどちらにも繰り入れない。
+
+### 10.3 次の実証順序と受け渡し
+1. **D一件**：既存main #3354のContext Consumerに、合法なrequirements空配列・Source Index mode・独立Requiredの一Function不足を加え、Loader/Parser/Rule実到達と提示不足を区別する。Draft #3370の契約を先取りしない。
+2. **T一件**：TAI #168/TEI #2509の既存Harnessで、H2一比較適格Sessionの禁止Read実拒否、Tool全Call/Reply、Session Log/Egress、実Consumer受信を同一Attemptで記録。H3実Loadは既知ObservedだがH2/H3比較は**適格0/4**。
+3. **G一件**：既知T1-Aを基線に、未知Obligation発見T1-Bを未提示Holdoutと独立Oracle/Mutantで検証。正例の必要情報が不足する場合は局所探索のみ継続し、qualified生成とは呼ばない。
+4. **並行して独立**：Inspector A/Bのselectedとactual invokedの一致（TEI #1251/#3371）、WorkbenchのPhysical→Business Meaning受理（#3270/#3372）、SHO Writer原文保存（SHO #4）とSUI→SHO同一実File受領（SHO #21）。互いを全面完成の前提にしない。
+
+**記録水準**：本追補はGitHubの既存Issue/PR/CI報告の照合と文書更新だけ。#3354の局所CI、#3365 Draft CIは各Ownerの履歴証拠であり、本VA-04で新たな実CLI/外部H2/Plugin/SHO/独立T1-B/Owner受理を実行したわけではない。各新実験は **NOT RUN**。新しい共通Gate/Reader/Runner/Registry/Hostは設けない。
