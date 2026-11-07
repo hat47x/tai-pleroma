@@ -1234,3 +1234,4 @@ digest不一致 → exit 1「snapshot digest mismatch」
 
 
 
+

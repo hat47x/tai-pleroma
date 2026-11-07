@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.tei-edge-assembly-chain/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-08",
+  "host": "Windows with the TEI reference generator and the pilot assembler",
+  "command": "python integrations/pilot-sui-document/assembler/edge_assembly_chain_check.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-chain-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "absentKindsProjectionState": "present",
+    "absentKindsProjectionOmitsKinds": true,
+    "cardToIslandComposes": true,
+    "cardToIslandKeepsNoKinds": true,
+    "unknownEndpointRefused": true,
+    "unknownEndpointReason": "edge edge-6 has no toKind and card-9 is no such endpoint",
+    "cardToCardComposes": true
+  },
+  "scope": "Projects kind-less edges with the optional contract, then composes them. It checks that a card-to-island edge without kinds survives projection and assembly, that an unresolvable endpoint is refused, and that the composed edge keeps no kinds. It does not save the document."
+}

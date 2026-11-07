@@ -14,8 +14,8 @@
   "observed": {
     "addExit": 0,
     "resumeExit": 0,
-    "bundleID": "sei-store-2026-11-07-4656120c",
-    "snapshotDigest": "sha256:1897b192369800b2ef7d59c0a9807809531ef5fec83dfbaa36725cfc16342c4b",
+    "bundleID": "sei-store-2026-11-07-f5b6b4ff",
+    "snapshotDigest": "sha256:d3b31ade46d0a12a692e902f0c9f2fa5bc0238c23c0c5e2be7808549208b6a72",
     "recordCount": 1,
     "humanViewEscapesNewline": true,
     "humanViewEscapesBidi": true,

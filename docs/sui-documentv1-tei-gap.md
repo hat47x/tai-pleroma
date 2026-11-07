@@ -146,7 +146,7 @@ Optionalの不一致: Edge.fromKind / Edge.toKind
 - 仮定ではなく端点の同一性で種別を決めるため、**card→islandのEdgeが種別を欠いても失われない**
 - 端点が特定できない場合は推測せず拒否する（fail-closed）
 - 合成後のEdgeは投影された種別をそのまま保つ（解決結果を書き戻さない）
-- 投影契約は種別なしを`missing`/`unresolved`で落とすので、この経路は投影を通った入力では発火しない。契約を任意に寄せる試作（[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)）と組み合わせると、投影から合成まで一貫する
+- 契約を任意に寄せた（`edge-record` v4、[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)）。**投影から合成までの一貫を実測した**（[chain](../evaluations/records/SUI-TEI-edge-chain-2026-11-06.json)）: 種別なしのcard→islandが投影され合成され、端点が解決できなければ拒否される
 - 単体試験13件がPASS（[receipt](../evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json)）
 
 ## 端点種別を任意にした契約の試作（2026-11-06）

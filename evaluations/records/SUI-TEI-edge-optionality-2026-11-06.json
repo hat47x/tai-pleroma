@@ -6,7 +6,7 @@
   "date": "2026-11-08",
   "host": "Windows with the TEI reference generator and a locally compiled candidate",
   "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
-  "result": "PASS",
+  "result": "FAIL",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
@@ -21,28 +21,28 @@
       },
       "nullFromKind": {
         "exit": 0,
-        "state": "unresolved",
+        "state": "present",
         "missing": null,
-        "text": null
+        "text": "{\"fromId\":\"card-1\",\"id\":\"edge-2\",\"toId\":\"island-1\",\"toKind\":\"island\",\"type\":\"contains\"}"
       },
       "nullBothKinds": {
         "exit": 0,
-        "state": "unresolved",
+        "state": "present",
         "missing": null,
-        "text": null
+        "text": "{\"fromId\":\"card-1\",\"id\":\"edge-3\",\"toId\":\"card-2\",\"type\":\"supports\"}"
       },
       "absentBothKinds": {
         "exit": 0,
-        "state": "missing",
+        "state": "present",
         "missing": null,
-        "text": "[\"fromKind\",\"toKind\"]"
+        "text": "{\"fromId\":\"card-1\",\"id\":\"edge-4\",\"toId\":\"card-2\",\"type\":\"supports\"}"
       }
     },
     "bothKindsPresent": true,
-    "nullFromKindIsUnresolved": true,
-    "nullBothKindsIsUnresolved": true,
-    "absentKindsReportedMissing": true,
-    "absentKindsNameTheFields": true
+    "nullFromKindIsUnresolved": false,
+    "nullBothKindsIsUnresolved": false,
+    "absentKindsReportedMissing": false,
+    "absentKindsNameTheFields": false
   },
   "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. It distinguishes the two failure shapes: an absent key is `missing` (and names the fields), a JSON null is `unresolved`. Either way the edge is not projected, so an SUI edge without kinds is lost. It does not change the contract."
 }
