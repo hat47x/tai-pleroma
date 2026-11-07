@@ -123,3 +123,10 @@
 [横断計画 §21](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §7](../evaluations/VA-01-product-value-necessity.md)を既存[#422](https://github.com/hat47x/tai-pleroma/issues/422)の評価列へ追加する。新Product要件は採用せず、6Productごとに「最小利用体験・保持すべき不変条件・任意の高度化・B1不足を証明する反例」を一対で比較する。**探索数の上限は作らないが、他のProductに完成・起動・全件検査を要求する条件は持ち込まない**。
 
 実装/試験の順位は (1) 既存H2/H3のG0実拒否、G1副次送出、G2実Tool受領・Source一致→新規4適格Session、(2) 各Product単独の価値断面（TEI #1127/#1180、SEI #711/#758、SUI ADR-0089/T2、SHO #4/#7、EKI #58）、(3) B1の欠落が独立Expectedで示された用途だけTAI #271、TEI #1223、SEI高度Method、SHO #8、EKI #19/#155/#67等を選択して比較、の順。並行Laneの研究・文書探索を止めるものではない。初回H2/H3に新しい共通Gate/Host/Scenario DBは追加しない。正式比較0/4適格、独立価値比較・異モデル反証・Owner採用は**NOT RUN**。
+
+
+### 2026-11-07 補正：採用済み方針と初回実装量の分離
+
+[横断計画 §22](yi-constellation/product-value-scope-audit-2026-11-04.md)／[VA-01 §8](../evaluations/VA-01-product-value-necessity.md)で、他Productの直近の限定実測を反映。**TEI Plugin-firstはmerged #3277／RQ-008に明記された製品要求**であり、研究だけの任意構想として扱わない。ただし実装はD0現行境界確認→D1 read-only Inspector一つの実Provider/Consumerから始め、全CLI/Studio/生成RuntimeやHot Swap同時完成を初回Exitにしない。Verified BOMは組合せ利用時の標準的な検証要件を保ちつつ、宣言12／候補Lock9、実Build/Load/Run未実証を分ける。Source Context Query #3262はAIのT1生成に必要なScopeで限定し、全Workspace一括取得を先行Gateにしない。
+
+**既存Product実験の次の一歩**は、TEI T0既存Scenario→#3273の新しい行番号0負例T1、SUI #3397＋SHO #21の別Fixture成功→同一実FileのSHO CLI受領、SHO Reader限定CI→#4 Writer保存・再開、TEI文書要求→単一read-only実Plugin利用の4本。各Laneは独立に進行可能。別Fixture CIの18 PASS/1 SKIP、TEI局所C0相当10.1%/C1未測、旧SHO Reader Draft closed/unmerged、BOM Reference-onlyを製品全体の合格としない。RQ-035のBranch間意味衝突は採用前照合で止め、新Requirement Registryは作らない。TAI #168のG0/G1/G2と4 Session適格0/4、SEI #758、SUI実務T2、EKI #58は元の優先順のまま維持。**今回の新実行・独立価値比較・Owner受理はNOT RUN**。
