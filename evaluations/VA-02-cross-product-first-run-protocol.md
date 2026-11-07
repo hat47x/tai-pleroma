@@ -208,3 +208,19 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 
 **現在状態**：外部DSH実CLI呼出しは限定Observed、#3113はEvidence Draft。Q01〜Q05の比較適格試験、独立採点、H3 Skill実Load、実Egress/OS非露出、正式4Session Value、Owner受理は**NOT RUN**。
 
+### 13.1 実Tool応答の完全性と初回Whitelistの一致（追加実測）
+
+[TAI Draft #270 Runbook §24.3](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)が[TEI #3113のmain収録実Byte](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07)を再検査し、外部Tool呼出しの**成功／受領の完全性／JSON解析可否／初回Tool許可**を分離できることが判明した。DSH-Q01〜05の別Gateは増やさず、Q02/Q03/Q05を具体化する。
+
+| 独立反例 | 実証された事実 | 新TrialのExpected／限定Claim |
+| --- | --- | --- |
+| **DSH-C01 受領の途中切詰め** | `cli-model-catalog.txt`と固定Worktree版が各**8,192 bytes**で同文。JSON末尾が途中で切れ、全体は`JSON.parse`不可 | 指紋など**受け取れた先頭部分**のみ照合。Catalog全要素/Required Source全件が返ったとは主張しない。CLI自身の切詰めかTool/ログ側の上限かは未特定。実元CLI stdout byte・Tool result byteを分離して原因を確かめる |
+| **DSH-C02 標準出力と標準エラーの混在** | `inspect/validate/source-index/commands`はstdoutの先頭JSONがParse可能だが、Tool返信にはPowerShellの`CannotCreateTypeConstrainedLanguage`等のstderrが付く | stdout JSON bodyとstderrを別digestで採り、**Tool返信全文をJSONとして扱わない**。ShellエラーをTEIの業務診断へ変換しない。逆にエラー行を黙って消さない |
+| **DSH-C03 CallとResult欠落** | 56 Tool Callsに対して55 Results。Session最終状態はcompleted | Call ID→実argv/cwd→CLI exit/stdout/stderr→Tool Result ID→Harness受信の対応を実行時に記録。Missing Resultの理由不明のまま「全Tool受領完了」扱いしない |
+| **DSH-C04 探索的なTool越境** | 探索中の`source-index`やPowerShell/File調査は、既存SK-02初回Whitelist `version/commands/model catalog/inspect/trace/validate`の外 | 初回治験の許可Profileを事前Pinし、実Toolの入口・実引数で拒否する。過去の探索成功に合わせて事後に許可を広げない。対象Subjectの`inspect/validate`で足りるなら限定出力で進め、全Catalog探索の完全性はunknown |
+| **DSH-C05 Model名と実解決版** | `~deepseek/deepseek-flash-latest`は指定Aliasで、実Weights/Revisionの同一性は未確認 | 指定Alias/Provider/Routeと可能な実Response metadataを区別し、実解決版の証拠が無ければunknown。4 Sessionの同一性をAliasだけから確定しない |
+
+**割付前・割付後の境界**：独立ExpectedやSkill参照がParticipantから読める等の隔離失敗は**割付前に見つけた時点でTrial Groupを開始しない**。開始後の切詰め・MALFORMED_RESPONSE・Skill未ロード・結果欠落は当該SlotのITT失敗／未知として保存し、成功だけPPへ選び直さない。実験途中のOS/Harness/Model修正は新Pinned Groupとし、旧Slotを再利用しない。
+
+**次の最小実施順**：Reviewer専用の合成Canary/実OS拒否の局所確認→固定CLIの正例Read・Source Scope確認→Whitelist/argvの事前固定→**完全なSubject限定Tool ResultとHarness受領**を1Sessionで照合→独立Answer採点→H3実Skill loaderへ。Canaryをそのまま外部AIへ流さず、実Secret・Reviewer Expectedは試験環境から非露出にする。DSH-C01〜05の新Trial実行は**NOT RUN**。元Tool結果の欠落原因・料金・Egressを推測で補完しない。
+
