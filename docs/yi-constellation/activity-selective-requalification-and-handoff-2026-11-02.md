@@ -639,3 +639,14 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 **Source側の対称的な誤結論**：[TEI #3180](https://github.com/hat47x/tei-platform/issues/3180)ではCatalog/Inspectが宣言を示す種類でもTraceの未投影を\`SUBJECT_NOT_FOUND\`と返し得る。これは「必要な関係が存在しない」という否定Claimを成立させない。[Runbook §24.7](first-real-skill-qualification-runbook-2026-11-02.md)へ既存H2 read-onlyの判別を接続。Activity再開では**実Readerが読んだ対象集合／対応Kind／必要依存／用途と、実Effectを検証した範囲**のみを受け継ぐ。未知・未対応・非開示を不在や成功へ補完しない。
 
 **順序と価値**：すでに外部事例[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)のOX-04/10、Activity SC-19/20、TEI Productの#2996/#3180で所有者と独立Expectedの所在があるため、新SC番号／共通Outcome状態Enum／Receipt Storeを作らない。最初の公開TEI H2/H3固定Taskはread-onlyのまま。実Effectに関する後続試験は別Task Groupで実Provider/independent Readが整ったときのみ行う。ここでは新DSH/Provider試験・正式Owner受理・横断Outcome実証はNOT RUN。
+
+<!-- tai-activity-h6e7-session-resume-reconstructed-model-input-20261107 -->
+### 22.3 再開時の「過去に読めた」と「現在送ってよい」を分離する（H6-E7実Mock／横断実証NOT RUN）
+
+[TEI #2515 H6-E7 PR #3237](https://github.com/hat47x/tei-platform/pull/3237)の**DSH実Mock**で、Turn 1に合成RawをTool Read後、同じSessionを再開したTurn 2の最初のモデル入力に**過去Rawが再び入る**ことを実測。一方、`dsh_session_log`は旧区間の受領水位を進めており、そのRawをSession Log側では再送しなかった。[TAI Runbook §24.10](first-real-skill-qualification-runbook-2026-11-02.md)で技術的な出所と数え方の未整合を管理する。これは**実Grant失効後の検証でも、実Provider非送出・ACK/DB Effectの検証でもない**。
+
+**Activity継続で必要な別々の判断**：`(a)`過去の取得原文とそれを読んだ時点のAudience/Source／Version＝**歴史Observation**、`(b)`次Turnの`messages`等に再含有する内容・出力先・**現在Audience/Disclosure Grant**＝新たな送出行為、`(c)`再開後のTool/Provider Effect＝**現在Host Grantと実Receipt/Resource Read**。同じSession Log水位・同じ会話ID／同じSkill / 同じSource byteだけでは`(b)(c)`を再資格化できない。`session-log-deepseek.enabled:false`も、モデル入力側の履歴再構成を停止した証拠ではない。
+
+**選択的再資格化**：資料・Session履歴に現在は許可されないRaw／Skill／独立Expectedが残り得るとき、新規外部Requestを許可済みProjectionだけから**別の新Sessionとして再構成する方式**を後続のSCN-001反証候補とする。必要なSource/Authority/Owner資格を実Readし、前Sessionを引継がないことを**実入力メッセージとTool可視性で独立に検査**する。過去に既送出の内容を削除・撤回できたと宣言しない。別Sessionに変えてもProvider側で既受信の情報が消えるわけではない。
+
+**優先順位・既存Owner**：このActivity再開試験を初回SK-02 H2/H3固定4Slotへ追加しない。先にG0実Read否定・G1通常モデル入力とSession Logを別検査・G2 Tool受領完全性・**新4 Sessionの比較適格性**を確保する。その後SCN-001で「現行Grantは変更されたが旧RawがSession内に残る」を合成Canaryで検査。資格票は既存SC-20/21、#271、#232、TEI #2515を使い、中央Context Store／新Permission Engine／Runnerは増やさない。**TAI横断の実Activity再開・Owner受理・実Providerの全経路監査はNOT RUN**。
