@@ -930,3 +930,19 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **責務・上限**：TEI #2515/#2509はDSH保存面のRaw観測、TAI #232は実Audience/機密Profile、TAI #168はH2/H3比較資格、TAI #271は後続ActivityのDisclosure再資格化。TEI Draft #3309は未マージの限定Evidenceであり、H6-E6全sink合格・実OS拒否・実Provider Egress・削除保証は未実証。固定TEI Source/Binary/Skill/Taskと4Slot比較順序は変更しない。独立したTAI Log Store／新Agent Host／新Checkerは追加しない。
 
+
+
+<!-- sk02-cli-discovery-read-vs-consumed-fp-domain-20261108 -->
+### 24.15 Source管理・Loader実消費・Fingerprintsの適用範囲を区別する（2026-11-08、既存G2）
+
+[TEI #3149](https://github.com/hat47x/tei-platform/issues/3149)の実CLIドッグフーディングで追加された[#3346](https://github.com/hat47x/tei-platform/issues/3346)／[#3345](https://github.com/hat47x/tei-platform/issues/3345)／[#3347](https://github.com/hat47x/tei-platform/issues/3347)を、§24.6〜24.7／§24.12の**G2観測値の解釈**へ接続する。初回H2/H3の固定Task、Tool whitelist、Skill bytes、独立Expectedと4Slotの分母は変更しない。
+
+**管理対象 ≠ 意味を解釈したSource**：現行Workspaceでは`docs/`・`plan/`等のMarkdownを`sources`へ宣言しても、`managedFiles`には現れる一方`readByLoader:false`のままで、`model catalog`／`inspect`／`trace`／`source-index`の**受理済みモデル宣言とはならない**（TEI #3346）。Reviewerは対象Requirementを`managed/discoverable`→`readByLoader`→`parsed/bound`→`actual Tool reply`→`delivered to model`の各地点で、**実際に確かめられた位置だけ**に置く。AIがGitHub/文書を直接読んで知った説明を、TEI Parser/Accepted Meaningがロードしたものと報告しない。`docs/plan`の将来Reader/Markdown AuthoringはTEI #2621/#2619に委譲する。
+
+**Fingerprintは『何に対するハッシュか』を持つ**：TEI #3345の`view -format json`はApplication使用namespaceに限定した`semanticFingerprint`を返し、現時点で`worldFingerprint`／`sourceIndexFingerprint`を共に返すモデル調査系とは照合範囲が異なる。別名・別範囲のDigestの値が違うことをVersion Driftと呼ばず、等しいだけでSource/Workspace/対象に同一性があるとも宣言しない。Reviewerが扱う各指紋にはProducer/実Binary、Fingerprint kind、適用Scope、実Workspace/manifest、Source/Observation時点を対に記録する。`view`は初回SK-02許可群外のため、初回試験に追加せず後続のProduct／Application View試験で確認する。
+
+**CLI応答はコマンド別の実契約として読む**：TEI #3347では`validate -json`の`diagnostics`要素に入れ子があり、`requirements.result`は配列で、`model catalog`には組込標準宣言とユーザー宣言が混在する。`schemaVersion`とCommand/Mode、`ok`／`error`／`result`の実形状、標準定義の混入、CLI exit、stdout/stderr、Tool Resultの終端／完全受領を**実Commandごとに照合**する。`result`は常にobject、空のentriesは宣言ゼロ、全て同じFingerprint field、などの無根拠な統一パーサーを初回Harnessの事前条件にしない。CLI Schemaの正規化・後方互換・正式修正はTEI #3347/#3345のOwnerへ委譲する。
+
+**既存G2の最小一因子対照**：(A)管理対象Markdownは見えるがLoader未消費、(B)実Loaderが読んだ`.tei`の必要SubjectはCatalog/Inspectへ現れる、(C)Application限定Fingerprintと全World FPが異なる、(D)配列／入れ子／標準定義を誤読するConsumer、を同一公開Fixtureの範囲だけで比較する。個別Claimの`unqueried/unsupported/partial`を報告して安全なReadは続け、**意味未取得なのに存在しない／完全／権限あり**とは言わない。初回G2-C/D（Call/Result対応・モデル受領Byte）の実証に代わる新Checkerや独立受理ゲートは作らない。
+
+**証拠の上限**：今回の3 Issueは実Productによる現行挙動／Gapの根拠であり、DSHのOS read-deny、実送出先全件、Tool Reply全Byte、正式Skill増分比較、Markdown実Parser、CLI修正を観測したものではない。H3の実Tool Skill/Reference Loadは歴史的Witness、正式H2/H3比較適格は0/4のまま。G0→G1→G2→新4独立Sessionの順序は維持する。
