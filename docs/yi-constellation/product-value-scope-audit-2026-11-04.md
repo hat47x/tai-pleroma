@@ -425,3 +425,17 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 
 **優先順**：①許可外Source/Skill/Reviewer資料の実到達拒否、②開始前Profile/Tool whitelist/Task/Model/Expected固定、③必要なSubject限定Resultの完全受領、④比較適格H2の1 Session、⑤H3実Loaderと固定4 Sessionの独立採点。OKF Attester・新TEI Markdown Parserなどを最初のHard dependencyへ加えない。受領不足原因・外部Egress・Cost・正式比較・Owner価値受理はNOT RUN。
 
+### 20.5 H3実Skill受信とDSH副次送出の反証に基づく投資順位
+
+前節の「H3実ロードは未実施」は[TEI mainに収録された4実Session](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)以後、**当時の歴史記録**となった。H3-A/H3-Bは固定Product Skill root 5,482 bytes／同digestと参照文書1件を実受信。H2-A/H2-BにSkill Toolの実呼出しは無い。技術的な「実Loader・実Tool起動」を永久に未達と記載しない。ただしH2-Aの探索Session再利用、参加者TaskのWorkspace pathと実Rootの不一致、Skill/Reviewer資料の物理的非露出未証明、Tool whitelist逸脱、独立Expected/費用評価未実施のため、**有効なH2/H3比較＝0/4**。4 completedを4合格と読み替えない。
+
+さらに[TEI mainのH6-E1合成Read](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H6E1_READ_BOUNDARY_2026-11-07)では、DSH read-onlyで許可Projection・合成Raw・合成.env・cwd外Peerの4件がすべてRead成功し、OS拒否0。この合成ファイル本文はモデル入力だけでなくSession Logにも載った。[H6-E2 Local Mock](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_SESSION_LOG_RETRY_AND_DEFAULT_2026-11-07)では`dsh_session_log`が既定で約45.5KB付随し、503・空streamでは受理水位が進まず同一範囲が再送される。**実Providerへの秘密漏えい・全Networkの不在は未測定**だが、`read-only`表示／Session Log offという説明だけで機密境界を認定できないことは実測に基づく。実Egressに加え、監査Evidence自体を公開Issue等へ出す際のSinkも[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)／[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の開示Scopeで確認する。
+
+**G0/G1/G2の最小投資順**：G0＝許可済みRead成功＋許可外Skill/Reviewer/親Sourceの同一実Profileでの強制拒否。G1＝Model MessagesとSession Log等の送出先・再開後の再送を区別し、Scope外送出をOS/Hostで止める。G2＝許可Toolのcommand/flag・実Workspace identity・完全Tool reply/Consumer受領。次に**新規4 Sessionを開始前割付**し、H3の実Loadと回答品質/費用を独立Expectedで比較する。前回探索9件と技術Witness4件は比較分母に遡及編入しない。[VA-02 §13.2](../../evaluations/VA-02-cross-product-first-run-protocol.md)・[VA-04 §8.2](../../evaluations/VA-04-evidence-readiness-preflight.md)が受入票。
+
+**隣接する新しいProduct局所発見**：[TEI #3181](https://github.com/hat47x/tei-platform/issues/3181)でCLI WorldFPはWorkspace manifest identityの完全な代用ではない。[TEI #3182](https://github.com/hat47x/tei-platform/issues/3182)では`view`のread-only広告にもかかわらず指定flagでFSファイル出力が発生した。これらをG2の引数・実効果束縛へ吸収し、新CLI Toolや一律の隠れたWrite許可にしない。許可済み`inspect`のread-only調査は継続する。
+
+**本当に必要な製品価値**：Skill Packageが読めること、Tool Callが成功すること、正確な判断・適切な保留、独立Consumerへの到達、実業務Outcomeの順に別Claimで評価する。[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)／[Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)のOutcome/Skill/Authority分解は[VA-01 §6.6](../../evaluations/VA-01-product-value-necessity.md)へ価値軸だけ取り入れ、Fusion Claw型の統合Runtimeや第二Receipt Storeは導入しない。
+
+**現在の資格**：H3 root+1 referenceの実Load、H6-E1の拒否失敗、H6-E2のLocal Mock送出は局所Observed。隔離済み正式比較0/4、独立採点/費用、実OS/Network強制拒否、本番外部送出範囲、実利用者Outcome・Owner受理は未達。初回固定Skill/Source/Taskを変えず、次の最小出口はG0/G1/G2を満たした新Trial Group。
+
