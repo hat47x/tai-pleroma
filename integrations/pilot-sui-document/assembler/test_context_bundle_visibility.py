@@ -2,7 +2,7 @@
 import copy
 import unittest
 
-from context_bundle_check import observe_stub_visibility, identical_context_responses
+from context_bundle_check import observe_stub_visibility, identical_context_responses, compare_strict_filter_profiles
 
 
 def stub_response():
@@ -67,6 +67,45 @@ class SuiContextReferenceVisibilityTests(unittest.TestCase):
     def test_empty_or_malformed_repeated_response_is_not_equal(self):
         self.assertFalse(identical_context_responses({}, {}))
         self.assertFalse(identical_context_responses(stub_response(), []))
+
+    def _strict_filter_pair(self):
+        first = stub_response()
+        first["queryCanonicalHash"] = "sha256:" + "a" * 64
+        alternate = copy.deepcopy(first)
+        alternate["queryCanonicalHash"] = "sha256:" + "b" * 64
+        alternate["excludedReason"] = ["safe_mode_unreviewed_text"]
+        return first, alternate
+
+    def test_strict_include_unreviewed_does_not_promote_text(self):
+        first, alternate = self._strict_filter_pair()
+        result = compare_strict_filter_profiles(first, alternate)
+        self.assertTrue(result["passed"], result)
+        self.assertTrue(result["sameSelectedEvidenceRelationsAndConstraints"])
+        self.assertTrue(result["differentQueryCanonicalHashes"])
+        self.assertEqual(result["includeUnreviewedStrictCounts"]["referenceOnly"], 1)
+        self.assertNotIn("card-unreviewed-01", repr(result))
+
+    def test_strict_alternate_cannot_promote_unreviewed(self):
+        first, alternate = self._strict_filter_pair()
+        alternate["selected"].append({
+            "id": "card-unreviewed-01", "reviewed": False, "title": "Private counter opinion"
+        })
+        self.assertFalse(compare_strict_filter_profiles(first, alternate)["passed"])
+
+    def test_strict_alternate_cannot_drop_counter_opinion_metadata(self):
+        first, alternate = self._strict_filter_pair()
+        alternate["evidence"] = alternate["evidence"][:1]
+        result = compare_strict_filter_profiles(first, alternate)
+        self.assertFalse(result["passed"])
+        self.assertFalse(result["sameSelectedEvidenceRelationsAndConstraints"])
+
+    def test_strict_filter_hash_or_reason_must_not_be_reused(self):
+        first, alternate = self._strict_filter_pair()
+        alternate["queryCanonicalHash"] = first["queryCanonicalHash"]
+        self.assertFalse(compare_strict_filter_profiles(first, alternate)["passed"])
+        first, alternate = self._strict_filter_pair()
+        alternate["excludedReason"] = ["unreviewed_filtered"]
+        self.assertFalse(compare_strict_filter_profiles(first, alternate)["passed"])
 
     def test_unreviewed_selected_is_rejected(self):
         b = stub_response()
