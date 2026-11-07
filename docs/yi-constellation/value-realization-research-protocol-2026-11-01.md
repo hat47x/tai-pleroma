@@ -482,3 +482,60 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 | **ORX-26 HTTP応答の成功過大Claim** | 202 Acceptedの後にcommit unknown/旧Receipt、Retry-Afterあり | ClientはBusiness Completedとせず、実Operation/Receipt/Readbackで再資格化。現在Grantなしに無条件再送しない | TEI #3274/#1174、EKI #407 |
 
 **初回DoD**：TEI T0とSUI→SHO Product別固定Byteの限定PASS、TEI BOM計画器のローカルFixture PASSを別列で認め、必要な横断一往復・新規T1・実Resolver/Target/Provider・正式Owner価値受理を**未実施/未認定**として残す。最初の追加実験はT1の1 RuleとSUI→SHOの1 Raw File handoffで十分。毎段に別のProduct共通Verifierを増やさない。
+
+---
+
+## 14. 2026-11-07 夜追補：T0.5実失敗拒否・BOM要求ID収束・原子的Traitの実装義務
+
+**状態**：2026-11-07 12:31 UTC時点の既存Product actual code／main CI／Issue／Draftを再照合した価値研究の現在化。以下は製品OwnerからYIC評価への引渡しであり、新共通Kernel/Runner/Proof Engine/認可正本の仕様ではない。先行§13の#3269は当時の実験履歴、現在のBOM採用候補は#3297。
+
+### 14.1 T0からT0.5へ：安全に止められることを実際の本体CLIで確認
+
+[TEI Issue #3262](https://github.com/hat47x/tei-platform/issues/3262)の[merged PR #3284](https://github.com/hat47x/tei-platform/pull/3284)では、既存TEI CLIの9 read-only JSON応答を消費する**テスト用Context Gate**がmainへ統合済み。必須Source/Loader読取、Subject、World/Index Fingerprint、Schema/欠落を突き合わせ、正常な限定Contextでも **partial / exploration-only / qualifiedTestGeneration=false** を返す。Contextが不完全でも仮説・provisional Test Pattern候補の検討はできるが、独立Expected未確認のまま実Scenarioの採用資格は発行しない。
+
+その後[merged PR #3296](https://github.com/hat47x/tei-platform/pull/3296)では、旧Draft [#3293](https://github.com/hat47x/tei-platform/pull/3293)が重複する第二Packet Readerを作りかけた問題を解消。#3293は**closed/unmerged**、既存Consumerを直接拡張した。特にworkspace-files側だけでRoot欠落が観測された場合、validate結果だけで成功とせずblockedへ倒す。実CLI応答の一時コピーで、ファイル欠落、途中切断、改行終端欠落、重複JSON member（Unicode escape等価を含む）、NaN、後続JSON、Required Source二重計上等を拒否。
+
+**mainでの限定実測**：[TEI main d6a452f79023744e7926669c3556d2699f546697 の実Push CI #42371592023](https://github.com/hat47x/tei-platform/actions/runs/42371592023)はcompleted/success。**9実CLI応答、既存7＋Manifest/Source Root2＋Tool Reply Byte変異7＝計16判別Control、Pinned Scenario6 Step、既存Test Ability6 Control**を同じ実バイナリのCIで確認。局所単一テスト選択のGo statement C0相当10.1%、C1未測定。実Binary SHA256 314f1e4f7f558ab5f69163d62f6cdd02b924447c9d1235a184d87021f320b0ef。Artifact ID 13574450699は7日保持の短期証拠で、永久保存の保証ではない。
+
+**保証の上限**：16件は実外部H3 Tool Replyを切断して再送した試験ではなく、実CLI応答を一旦受領した**ローカル一時byteの合成破壊**。Tool受領のG2、OS Read禁止のG0、外部EgressのG1とは独立。対象sales.orderのParser/Accepted Meaning、Function/Business/RuleのRequired全件Closure、C1/NFR、Product実Readも未達。合成NegativeのPASSと『外部Deliveryの全欠落を防いだ』は別Claim。
+
+**次の順序**：mainの既存Gateを維持 → #3262 P-1b1でline_number_positive一RuleのRequired/Observed/Unknown・実Source/Role/Parser/非出力依存をtyped referenceで表現 → [Draft #3273](https://github.com/hat47x/tei-platform/pull/3273)のT1でAIが未カバー line_number=0 を提案 → #1180の既存Scenarioで実Run → #2514独立Expected/Mutant判別。Tool Replyがpartialのときprovisional案は許すが、正式なScenario/Resultへの昇格は停止。新CLI/MCPや完全な万能Context APIをT1より前の必須条件にしない。
+
+### 14.2 SkillのComparator合格と、試験環境の独立性を分離
+
+[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)の[Comparator CI #42370311513](https://github.com/hat47x/tai-pleroma/actions/runs/42370311513)でSK-02合成72/72、SK-03 19/19の限定合格が記録された。これは試験票・反例の判別能力であり、実OSのSkill/Holdout領域へのRead拒否、実Egress全Sink拒否、H2/H3の比較適格4Session、独立Q/V採点の合格ではない。G0実OS Read deny→G1実送出→G2 Tool Call/Reply同一Attempt完全受領→H2/H3割付・独立採点という[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の既存Exitは変更しない。H3 Skill実Loadの過去限定達成も取り消さない。
+
+### 14.3 BOMの要件ID・Draftを最新mainへ正規化
+
+§13の[旧TEI Draft #3269](https://github.com/hat47x/tei-platform/pull/3269)は**closed/unmerged**。並行開発でBOM側に付けたRQ-035が、mainに先に統合された**RQ-035＝異種Data Source Workbench（Schema CRUD、#3270）**と意味衝突したため、現行の統合候補は[**Draft #3297**](https://github.com/hat47x/tei-platform/pull/3297)へ切替えた。BOMは**RQ-036**としてRequirement・PAS・Gap Auditで別追跡する。旧番号を新要件として再利用しない。#3297の新exact-head CIはこの照合時点では未資格、製品要求のmain採用・実BOM発行へ先取りしない。
+
+新Draftは既存Go Referenceの2×2／pairwise／supplied exact Locksに、**same-Attempt witness audit**を追加した。Source/Artifact/Target/Tenant Scope/Scenario/Independent Expected/checks/Attemptが一致したかをsynthetic入力で評価する。コード上の reported-pass は、証拠ID・digestの**申告整合**を確認しただけであり、Receiptの真正性、独立Expectedの作成経路、実Runner実行、Conformanceの外部適格性、現在Grantを証明しない。candidate pair9/9とdeclared pair12/12、Coverage/実行/Trusted Evidencesを別分母で管理。二つのQualified部分BOMをUnionした合成は別の実相互作用試験を要する。
+
+### 14.4 原子的Traitは表示ラベルではなく『履行すべき義務』
+
+[TEI #3278](https://github.com/hat47x/tei-platform/issues/3278)／[#3279](https://github.com/hat47x/tei-platform/issues/3279)では、Traitを小さなContract/Required obligationとして設計し、提供・生成・手動必須・外部Hostという実現方式の違いを残す。manual-requiredで実Implが無ければunfulfilled、宣言のみで実Conformanceが無ければprovided-but-unverified。Traitの順序非依存の合成と、実PipelineのEffect順序は異なる。Open/unpromised APIに下流が依存することは許し、Publisherが約束していないStable保証やInternal/SecretをBOMが代弁しない。
+
+**Product境界**：#951の既存Resolver/Conformanceを唯一のOwnerとし、#3267/現在Draft #3297はその成果を使う。Traitの署名/型一致、Build Artifact、Product Functionでの実Invoke、当前Host Grant、業務Owner受理は別資格。Trait追加によって次段T1の新しいHard Gateを一律追加しない。原子的Traitの実装検証は未実施、二つの類似Issueに第二Resolverや共通enumを実装しない。
+
+### 14.5 ORX-27〜34：独立Expectedの追加、既存main成功を非実施へ戻さない
+
+| ケース | 既存Product入力差分 | 独立Expected・保証上限 |
+| --- | --- | --- |
+| **ORX-27** | mainでCLI9応答を受領、Function/Business/Ruleは未観測 | **T0.5のpartial・exploration-only限定PASS**。全設計読取やAI T1成功には昇格しない（TEI #3262/#3284）。 |
+| **ORX-28** | validateはRoot欠落なし、workspace-filesには未知Root | 現main Gateはblocked。未観測を空集合とみなさない（TEI #3296）。 |
+| **ORX-29** | 受領済JSONの途中切断・重複escaped key・NaN・終端欠落 | 既存LoaderのローカルByte負例で拒否（main実証）。**実DSH Tool delivery自体の攻撃試験ではない**（TEI #3296、TAI #168）。 |
+| **ORX-30** | Context incompleteだがAIがline_number=0の新負例を提案 | 候補提示はprovisionalで可。実Source/Required/独立Expectedと現Targetが揃うまで新Caseのqualified採用は禁止。T1実行はNOT RUN（TEI #3273/#2514）。 |
+| **ORX-31** | 合成Comparator72/72だがOSで別Lane/Holdoutが読める | Comparatorの限定PASSを認めつつ、正式4Session比較は0/4適格を維持。外部G0/G1/G2を既存Runbookで検収（TAI #168/#488）。 |
+| **ORX-32** | 旧DraftがWorkbench/BOM両方をRQ-035と呼ぶ | mainのWorkbench RQ-035を保持しBOM側DraftはRQ-036。旧#3269はclosed/unmerged、現候補#3297の資格を個別検収（TEI #3267/#1119）。 |
+| **ORX-33** | BOMの署名付き自己申告Check PASSを別Attemptから合算 | Source/Artifact/Scope/Expected/Attemptが合わなければ拒否。合ってもsynthetic reported-pass≠実Trusted Run/Qualified BOM（TEI #3297）。 |
+| **ORX-34** | Trait manual-requiredが欠落、またはImpl存在だがTarget Conformance未観測 | 欠落はunfulfilled、実装宣言だけならunverified。BOM/CLI/Studioが現在Host Grantや業務意味を自動認可しない（TEI #3278/#3279）。 |
+
+### 14.6 価値実現計画へ入れる優先度
+
+**P0、既存mainの実測を再利用**：TEIのT0/T0.5局所証拠、TAI合成Comparator、SUI/SHO固定RawのProducer/Readerを別Laneの限定PASSとして表示。次は一Ruleのtyped必要Closure→AI新Candidate→既存Scenario実Run・独立Expected。AIの指示回数/人手の訂正時間/意図しない誤allow/過剰unknown/外部Disclosureを別々に計測する。
+
+**P1、組合せの同一性を次の横断反証へ**：TEI #3297のRead-only witness auditを実#951/#1016 Lockと実#1180 Scenarioへ段階接続。Traitを後付けタグにせずFulfillmentの必須Missing診断へ。現在のContextには観測できないRequired集合が残るため、Product資格・Verified BOMは継続保留。
+
+**P2、独立Consumer/Hostの真の実観測**：SUI実Producer→SHO実Readerの同一Attempt File handoff、TEI #2586実Function/Provider、EKI実Result Body、実Host read-deny/送出/Receiptを、必要な個別Claimでだけ接続する。外部Skill H2/H3は既存Task/Tool/Expected固定と比較適格を優先。T2、T3 SelfBuildや全OS/DB対応は最初のT1をブロックしない。
+
+**現時点の非達成**：新しいT1でAIが未見Ruleを生成・独立Holdoutを正答した証拠、Typed設計情報の全Required closure、外部G0 Read deny／G2 Reply実全受領、Verified BOMの実発行、Trait Product Fulfillment、横断E2EとOwnerの意味・価値受理はNOT RUN/NOT PROVEN。mainへの#3296統合と実CIの限定PASSは達成済みとして保持する。
