@@ -1,6 +1,6 @@
 # YIC Skill横断適合・実行順序への統合追補（2026-11-06）
 
-> 状態：計画追補・Owner未受理。**2026-11-07の外部DSH→実TEI CLI→Tool Replyは限定的に実観測済み**（TEI PR #3113／TAI #168）。ただし**比較適格なH2/H3実4 Session、H3実Skill Load、実OS隔離・Egress、独立正答採点、製品間E2E／本番Authority／シリーズReleaseはNOT RUN／未適格**。既存各Product契約、TAI #168、#271、#74、#232、Draft PR #270、SK-01/SK-02/SK-03を正本とし、新Host・中央Registry・共通Evidence Engineは設けない。各節の「最初のH2 Tool Callが次の出口」「実外部HarnessはNOT RUN」は**新Evidenceより前の歴史記述**であり、現行の出口は下記§4・§19を優先する。
+> 状態：計画追補・Owner未受理。**2026-11-07の外部DSH→実TEI CLI→Tool Replyは限定的に実観測済み**（TEI PR #3113／TAI #168）。ただし**外部DSHによる探索的なH2→H3→H3→H2四Sessionと、H3-A/H3-BのProduct Skill本文・参照資料の実Tool Readは限定観測済み**（TEI mainの四Session実証拠／TAI Runbook §24.5）。ただし**比較適格なH2/H3四Sessionは0/4、実OS読取り拒否・Egress、独立正答採点、製品間E2E／本番Authority／シリーズReleaseはNOT RUN／未適格**。既存各Product契約、TAI #168、#271、#74、#232、Draft PR #270、SK-01/SK-02/SK-03を正本とし、新Host・中央Registry・共通Evidence Engineは設けない。各節の「最初のH2 Tool Callが次の出口」「実外部HarnessはNOT RUN」は**新Evidenceより前の歴史記述**であり、現行の出口は下記§4・§19を優先する。
 
 ## 1. 背景と差分
 
@@ -42,7 +42,7 @@
 | P0 | 固定TEI Binary/Source/Subject・Task byte・Tool/Disclosure/Model pin | TAI W0/S1の実CLI/Source/argv/Source IndexとSkill root/reference pin。H2 Skill非露出の実Tool File View | 不一致=ineligible、直接観測不足=insufficient-evidence |
 | P1a（限定達成） | **外部Harness→実TEI CLI→Tool Replyの技術的縦切り** | DSH実Session/実Tool結果・CLI argv/exit/stdout digestをTEI PR #3113へ束縛。`h2-08`は探索的実Witness | これはH2比較適格・Skill非露出・独立正答採点ではない |
 | P1b（次のExit） | **隔離済み・固定Profileに適合し、Tool結果完全性を確認したH2の一実Session** | H2 Skill/独立Expected/元Checkout/旧Logの実到達拒否、事前固定Task/Model/Binary/論理Path/Tool許可群/Grant、実Tool Call ID→Result ID・stdout/stderr・byte/digest・切詰め有無・回答/Consumer受領。比較4Slot割付と分母を実行前に固定 | 非露出未証明・Profile外Command・Call/Reply欠落・Required JSON途中終了ならineligible/insufficient-evidence。歴史探索試行は算入しない |
-| P2 | **H3：同HarnessでProduct Skillあり** | 同一Task/Source/Tool/モデル/Grant。root/referenceの実Loader Read。固定候補の実手順エラーも保持 | 配置のみ=Available、実Load不明=Unknown |
+| P2（限定Tool Read達成／適格Groupでは要再確認） | **H3：同HarnessでProduct Skillあり** | TEI main実証拠でH3-A/BのSkill本文5,482 bytes＋reference 7,710 Tool result bytesを確認。ただし事前固定・隔離・同一Task Pathを満たす**新Group**で同一Skill root/referenceの実Read・必要閉包・回答を照合する | 旧探索SessionのLoadを適格試行のDに遡及算入しない。`description`の自動注入と本文実Tool Readを分ける |
 | P3 | H2→H3→H3→H2の4独立Session | 割付R、実提供D、ITT全数、条件を満たしたPP、独立Expected、品質・誤操作・費用・経過時間・人手 | 対照不成立=比較不可。4件だけで一般的改善率を主張しない |
 | P4 | 必要になった場合だけ追加Product/TAI横断Skill・別Harness | 既存SK-01/SK-03と #271 によるTask別Handoff・Consumer/Host再資格化 | 単独Skillで十分ならTAI介在を省く |
 | P5 | 実配布・権限・外部作用 | #74・#232と各Product Ownerの現行Grant、実Outcome、独立Consumer読取、Release条件 | 参照CI/合成PASSの横流し禁止 |
@@ -81,7 +81,7 @@ SK-01/SK-02のFixture・Expected・実験票を複製しない。#488は「未�
 ## 8. 次に満たす具体的Exit
 
 1. 2026-11-07のDSH `h2-08`は[TEI #3113](https://github.com/hat47x/tei-platform/pull/3113)で**実Tool技術到達を限定達成した探索Witness**として保管する。これを四試行の一部に算入せず、別の事前固定Groupで**OS/Harness実隔離・Skill/独立Expected非露出・固定Command Family・同一論理Pathを成立させた比較適格H2一Session**を実Tool＋最終回答まで観測する（§4 P1b、§19.3、Runbook §24）。
-2. 同HarnessのH3で固定Product Skill root/referenceの実Loader Readを確認し、既知のCLI応答Path不一致を含めて観測する。
+2. **H3の技術的実Tool Readは探索的に達成済み**（H3-A/B：Skill本文5,482 bytesと参照文書）。ただし新しい**比較適格Group**ではH3のroot/reference実Read、Skill descriptionの自動送出、必要参照閉包、同一論理Pathと実Tool Profileを**改めて**観測する。過去のH3実Loadを新Groupの実提供Dに流用しない。
 3. H2→H3→H3→H2の全4セッションを独立Expectedと実費用・失敗分類で採点。追加Skillの有益性が観測できなければTool-onlyを維持。
 4. 初回比較の後にのみ、Taskの要求によって第二Harness、TAI横断Skill、TEI→SHO/SEI/EKI引渡し、再資格化を進める。
 
@@ -366,7 +366,7 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 | Tool結果の完全性・Consumer受領 | Call ID→Result ID、実CLI stdout/stderr別byte/digest、Tool Reply実body/長さ/切詰め・JSON parse適用範囲、Session最終回答・Consumer受領を独立記録 | Session `completed`だけで全Tool受領・全Catalog読取・stdoutだけのJSONと合成Tool全文の同一性を推論しない |
 | 回答と増分価値 | 隔離した独立Expected、正答/誤操作/Warning/unknown、Tool回数・Token・時間・人手を実4 Sessionで比較 | 一部PASS・Tool-only CI・他Product CIからSkillの有用性を推定しない |
 
-ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加の独立判定器は作らない。**2026-11-07に実外部HarnessのTool Transportだけ限定到達**。次のBlocking Exitは、**実OS/Harness隔離・事前固定Profileに適合するH2の一Sessionを実Tool/回答・Consumer受領まで観測すること**へ更新。実隔離・Skill実Load・四Session独立採点は**NOT RUN／未適格**。
+ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加の独立判定器は作らない。**2026-11-07に実外部HarnessのTool TransportとH3 Skill本文・参照の実Tool Readは限定到達**（[TEI main四Session実証拠](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)）。ただし比較腕には旧H2-A Session再利用・Task実Path不一致・物理Read拒否未成立・Tool Profile越境があるため**E=比較適格0/4**。次のBlocking Exitは**新しい事前固定Groupで実OS/Harness隔離→適格H2一Session→適格H3実Read→残3 Session・独立採点**。過去の技術的Loadを否定せず、独立比較や増分価値へ昇格しない。
 
 ### 19.3 DSH実Tool Witnessを比較試行へ誤算入しない（2026-11-07更新）
 
@@ -418,6 +418,25 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 - **再送・完了の区別**：Session Logの同一body再送はSUI監査Dispatcherの冪等性（本書§23）や実Provider Commit Receiptと別物。通信失敗、Session completed、Dispatcher duplicate、Consumerが必要byteを読んだことを一つの`success`へ畳まない。
 - **合否と所有**：現行DSH`read-only`だけで「Skill非露出・Raw不読取」を担保したH2比較は**不適格**。別の実強制境界で確認した後、既存SK-02／Runbook §24.3に従って比較適格なH2一Session→H3実Loader→残3 Sessionへ進む。実OS/ACL拒否、実Cloud Egress、二Harness、横断Product/Provider Effect、Owner受理は**NOT RUN**。新TAI Policy Engine、独自DSH Patch/Runner、中央監査Storeを提案しない。
 
+
+### 19.7 H3実Tool ReadとDSH暗黙Context・Workspace-write非対称を既存比較Gateへ反映（2026-11-07限定実測）
+
+#### 技術的4 Session完了と比較資格を峻別する
+
+[TEI mainの`DSH_H2_H3_FOUR_SESSION_2026-11-07`実証拠](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)と[TAI Draft #270 Runbook §24.5](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)により、これまでの「H3実Skill Load未実施」という現在状態を訂正する。DSH 0.2.2-rc.1の四Sessionは**H2-A→H3-A→H3-B→H2-B**の順でcompleted。各Tool Callは56/23/22/45、H3-A/B各1件のSkill Tool実呼出しで本文**5,482 bytes**（同一SHA-256 `cbf3d21f…`）を受領し、`refs/read-only-model-investigation.md`を`read`して**各7,710 result bytes**を受領。H2二SessionのSkill Tool呼出しは0。この技術的Witnessは**Product Skillの実Readが初めて確認されたこと**を示す。
+
+ただしH2-Aは既存`h2-08`探索Sessionを流用し、固定Taskが指す`reference/workspace`に対して参加者Rootの実配置は`workspace/`、H2-Aが外側Worktreeを読取り、初回Whitelist外のCommand/flagsと一部Tool Replyの切詰めが残る。Skill必要参照の**全閉包**、新GroupのH2非露出、全Result/最終回答のConsumer受領、Reviewer-only独立Expected採点・料金比較は未成立。モデル指定Aliasも実Provider Weightsの同一証明ではない。回答中に要求語（`sales.order.total`やWarning）が現れた文字列照合を独立正答・Skill効果としない。**比較適格4 Slotは0/4、R/D/ITT/PPの実比較はNOT RUN**。旧Sessionは別の探索Witnessとして保存し、新Trialへ事後選抜しない。
+
+#### 自動投入されるContextとTool実Read、OS強制を分ける
+
+| Product側の新しい実測 | YICが既存G0/G1/G2で確かめるもの | 不適格な推論 |
+| --- | --- | --- |
+| [TEI merged #3191 H6-E3](https://github.com/hat47x/tei-platform/pull/3191)：合成`AGENTS.md`/`CLAUDE.md`は明示Tool Readなしで`agent-instructions`としてモデルへ入り、Skill frontmatterの`description`も本文Loadなしで一覧注入。Session Logにも載る | **Available/listed・暗黙にDelivered・Skill本文Tool Read・実参照Read**を分離。H2ではSkill本文の非Loadだけでなく、frontmatter/list・親ディレクトリAgent instructions・別Sessionからの実到達/送出までG0/G1で点検 | 「Toolでreadしていない」→「モデルへ届いていない」、Skill description可視→`SKILL.md`本文読取済み、Taskを明示しなければAgent instructionsは出ない |
+| [TEI merged #3216 H6-E4](https://github.com/hat47x/tei-platform/pull/3216)：別cwd・別SessionのLane A/Bの相手canaryを双方とも読め、モデル入力・Session Logへ入った | H2とH3を兄弟worktreeや別cwdに置くだけでなく、**実OS Principal/ACL/mount等で必要な拒否**を観測。元Checkout/Skill/Reviewer Expected/他Lane/旧SessionのPath・Tool経路を同一Effective Profileで負例確認 | 別Root、別Session、`read-only`という名前→Read isolation成立 |
+| [TEI merged #3228 P0-a/H6-E1](https://github.com/hat47x/tei-platform/pull/3228)：Windows `workspace-write`で許可Root外**WriteはUnauthorizedAccessException**、しかし外側への絶対/相対`../` **Readは成功** | Write禁止・Read禁止・Network Egress禁止を独立に検査。ACL調整後に機能した観測は限定的Write拒否のみ。現実のHost有効Profileを記録 | workspace-writeの書込み拒否→秘密Raw読取り拒否、Sandbox修復→H2隔離成功、`DSH_PERMISSION_MODE`値だけで真の権限が確定 |
+| [TEI #3181](https://github.com/hat47x/tei-platform/issues/3181)/[#3182](https://github.com/hat47x/tei-platform/issues/3182)：CLI結果はmanifest/workspace identityを返さず、`commands`でread-only扱いの`view -execute`は指定flagで`op.jsonl`215B/`state.db`12,288Bを生成した限定Product負例 | 実`-workspace`引数/解決Path/manifest SHA/WorldFPを試行単位で束縛し、**実argv・flags・出力先・FS作用**をWhitelistに照合。既存`view`はH2/H3初回許可群へ追加しない | 同Subject/WorldFP＝同Workspace、Command広告`read-only`＝あらゆるflag/外部Writerで副作用なし |
+
+**次の比較資格のExit**：既存[Runbook §24.4〜24.6](https://github.com/hat47x/tai-pleroma/pull/270)のG0（公開Read正例＋Holdout/Skill/別Lane/暗黙Contextの実非露出）、G1（モデル入力・Session Log・Tool/Networkの観測可能な送出）、G2（同一Task/Workspace path・Binary/manifest/Tool許可とResult完全性）を**実施前に**成立させて新Groupの4 Slot/独立Expectedを固定。その後、独立したH2一Session→H3実Tool Read→残3Sessionの順。必要な拒否を実証できない設定はenvironment-ineligibleとし、`read-only`や`workspace-write`のモード名で救済しない。合成canary・Mock内の実結果は現物であり、実Secret Cloud流出の証明ではない。別Identity/ACLによる読取り拒否、実Cloud Egress完全性、Skill因果効果、実Provider/Owner受理は**NOT RUN**。実OS境界＝TEI #2515/TAI #232、Tool/Skill＝TEI #2509/#2605、試験判定＝TAI #168/既存SK-02。新Sandbox Runtime/Policy Engine/Runnerを追加せず、初回試験のTask/Skill bytesを事後改訂しない。
 
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
