@@ -439,3 +439,39 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 
 **現在の資格**：H3 root+1 referenceの実Load、H6-E1の拒否失敗、H6-E2のLocal Mock送出は局所Observed。隔離済み正式比較0/4、独立採点/費用、実OS/Network強制拒否、本番外部送出範囲、実利用者Outcome・Owner受理は未達。初回固定Skill/Source/Taskを変えず、次の最小出口はG0/G1/G2を満たした新Trial Group。
 
+
+## 21. 2026-11-07：主要価値に対する「義務化の伝播」を断つ横断照合
+
+> **状態**：2026-11-07に既存の各Product Value/README、代表Issueと本Draftを照合した**Source-staticの判定提案**。全Issue・全ADRの網羅、別モデルのVA-X、実ProductのB0/B1/B2比較、Ownerの正式な要求改定は未実施。IssueがOpenであることは実装必須を意味しない。この節は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)と[VA-01 §7](../../evaluations/VA-01-product-value-necessity.md)の判断材料であり、Product側の正本を置換しない。
+
+### 21.1 論点は「機能が多いか」でなく「他の利用場面へ義務が伝播するか」
+
+各要件・設計を **価値要件（何が成立すべきか）／安全・意味の不変条件／具体的実現方式／採用する配備・用途条件／試験の証拠資格** に分ける。必要な不変条件が重いことと、どの用途でも特定のRuntime・Schema・GUI・Methodを必須とすることは別である。
+
+過剰化を疑うのは、(a) その機構を使わない小さなUser Jobでも事前の設定・ロード・全件取得・Owner承認を強制する、(b) 本来のOwnerでないProductが同じDecision/Meaning/Authority/Executionを再実装する、(c) 完成を証明するための試験環境が利用者の初回体験より先に必須化される、(d) 候補が実消費・結果・利用者価値と無関係に「全製品必須」へ昇格する場合。逆に、条件付き機能に対応する明確な反例が存在すれば「無駄」と断定しない。
+
+| 対象・既存Owner | 価値が最初に成立する断面 | **初回の必須**に伝播させないもの／用途条件 | 省くと壊れる不変条件・局所判断 |
+| --- | --- | --- | --- |
+| **TAI** [#168](https://github.com/hat47x/tai-pleroma/issues/168) / [#271](https://github.com/hat47x/tai-pleroma/issues/271) / [#74](https://github.com/hat47x/tai-pleroma/issues/74) | 既存Harnessで必要なProductを選び、正しい対象・未決・次の作業を再開できる。B1単独Productで十分ならTAI不介在も正しい結果 | 常駐TAI Agent、全製品Bundle/サイト公開、全Skillの一括Load、全Handoffの常時再資格化は用途条件付き。配布と利用者のActivityを別成果にする | 誤った権限継承・秘匿データ外送・旧Attempt成果を現在のOutcomeへ転用しない。H2/H3の技術Witness4件は正式比較**適格0/4**、新TrialのG0/G1/G2を優先 |
+| **TEI** [#1127](https://github.com/hat47x/tei-platform/issues/1127) / [#1180](https://github.com/hat47x/tei-platform/issues/1180) / [#2619](https://github.com/hat47x/tei-platform/issues/2619) / [#1223](https://github.com/hat47x/tei-platform/issues/1223) | 専門家に読みやすいData/Relation/Function/Ruleから一つの保守・保存・再読取と変更後の検証。CLI/Go単一バイナリが基本形、既存Scenarioを再利用 | 全Domain/数学型/組織履歴、全Target/Studioの同時完成、常時Hot Swap、無停止の二世代更新は個別要求時だけ。汎用Core/第二Runnerは追加しない | NULL/欠損、関係の粒度、業務ID、現在Grant、Effect、独立Readbackを保存。 `*.tei.md` は方向性と実Parser/Loader対応を区別し、旧Source一括改名を先行しない |
+| **SEI** [#711](https://github.com/hat47x/sei-cognition/issues/711) / [#758](https://github.com/hat47x/sei-cognition/issues/758) / [#660](https://github.com/hat47x/sei-cognition/issues/660) / [#767](https://github.com/hat47x/sei-cognition/issues/767) | 1件のObservation/Decisionと根拠・Unknownを保持し、別回で根拠・Scope・適用性を再構成する | 毎回全Method・全認知Signalを手入力させること、万能なTruth/Method Engine、全領域連携は条件付き。取得不能な根拠をUI都合で補完しない | `verify`が未検証recordを含んでもexit 0になるとの[#758](https://github.com/hat47x/sei-cognition/issues/758)の報告は簡略化対象でなく**最初の真偽判定を壊す製品Gap**。Unknown・ExactBinding・根拠の欠落を隠さない |
+| **SUI** [ADR-0089](https://github.com/hat47x/sui-sensemaking/blob/main/01_Plans/adr/ADR-0089-product-value-canon.md) / [#3371](https://github.com/hat47x/sui-sensemaking/issues/3371) | 未整理の観測・異論・保留を、レビュー前後の由来を失わず編集・再開・共有できる | 最速自動要約、全文化Method、TEI/TAI向け全Projection経路の常時有効化を初回成立条件にしない。DocumentV1変換が未使用・未接続なら利用範囲を限定してよい | 非レビュー構造の非開示と、Island/Relation等の意味損失を隠さない。Projection一致を原文同一・復元可能・全件確認へ昇格しない。認知増分は実務T2で判定 |
+| **SHO** [#4](https://github.com/hat47x/sho-composer/issues/4) / [#7](https://github.com/hat47x/sho-composer/issues/7) / [#8](https://github.com/hat47x/sho-composer/issues/8) / [#9](https://github.com/hat47x/sho-composer/issues/9) | TEI・論文本文・DOIを取得せずとも一文書とMarkdownリンク階層を編集・保存・再開する。必要時に出典の現在資格を確認 | L1〜L4学術メタ情報、PDF組版、多Target、論文→コード自動化、独立Document Graph DBは初回不要。MMI C-01/T2が未成立でもSHO単独L0を止めない | 著者本文、意図したSource、実読取bytes、表示、Review、固定納品を分ける。同名異内容/未取得/未定義参照/非可逆変換を「引用確認済み」としない |
+| **EKI** [#58](https://github.com/hat47x/eki-fabric/issues/58) / [#19](https://github.com/hat47x/eki-fabric/issues/19) / [#155](https://github.com/hat47x/eki-fabric/issues/155) / [#67](https://github.com/hat47x/eki-fabric/issues/67) | 分散が適するTaskだけを受理し、許されたWorkerへ委任、同一Task/Attemptの実結果・故障回復を確認する。分散**しない**のも正しい成果 | 学習型Scheduler、全組織の公平性、2系統クラスタProvider、Federation/多媒体Stream等は実Workloadと失敗条件が出てから | Client/Worker不信、Local Governor停止、Resource予算、AttemptとClaim/AcceptedResult/Artifactの区別を削らない。Suitabilityを省いて高価な分散を強制しない |
+
+**系列外を不当に製品化しない**：[CSW](https://github.com/hat47x/cultural-substrate-weaving/blob/main/README.md)は2026-11-07取得のREADMEで、本文の三つの執筆Skillを独立に利用でき、CI・ビルド・配布の義務を縮小した例。TAIの全体RegistryやSHOの文書保存義務をCSWへ移植する根拠にはしない。SHO/MMI、TEI Studio、CSWのProduct分類は[#73](https://github.com/hat47x/tai-pleroma/issues/73)の未決に従う。
+
+### 21.2 省略可能性を判別する三種類の反証
+
+- **最小価値の反証（V）**：B0＝既存Harness/テキスト/既存ジョブ、B1＝当該Product単独、B2＝高度な関連機構。入力・Audience・目的・Source版・権限・Independent Expectedを揃え、正答・未決保持・安全性・手戻り・費用を別列で比較。B1が成立しB2の純増価値が無ければ、B2を既定・必須へ昇格しない。
+- **削り過ぎの反証（I）**：SEIの未検証recordを検証成功にする、SUIの非公開カードを漏らす、TEIのCommit不明を成功にする、SHOの未取得論文を読了にする、EKIのClaim ACKを成果物到達とする、TAIの古いGrantを現在のAction許可にする、の各負例。安全・意味の不変条件に必要な小さな修正は、巨大な汎用化を待たず優先する。
+- **依存伝播の反証（D）**：単独TEI read-only調査にTAI/Handoffの全起動、SHO L0にMMI C-01/PDF、SEI resumeにTEIの現在モデル全件、SUIの保留にTEI DocumentV1逆保存、EKI有限TaskにML/Federationを要求する構成は、いずれも「なぜその依存が今のUser Jobに必要か」を反例で説明できるまで任意のまま。価値比較用に新しい中央GateやDBを作らない。
+
+### 21.3 実施順と停止線
+
+1. **先行**：現行Product内の、価値を誤表示する局所Gap（SEI #758、SUI #3371、SHOの原文/参照の誤昇格、TEI/外部HarnessのTool Result欠落、EKI同Attemptの結果未達）はそれぞれのOwner Issueへ戻す。研究候補は保留でも危険な偽成功は保留しない。
+2. **単独利用から**：TAI #168のH2/H3は既存Task/Source/Skillを変えず、G0の許可外Read実拒否→G1のModel/Session Log送出→G2のWorkspace/Tool Reply完全性を通した新Trial Groupで評価。SUI実務T2、SHO L0、SEI一件resume、TEI単一Function、EKI有限Taskは**他製品の一括完成を待たない独立レーン**で並行に実証できる。
+3. **条件付き拡張**：B1の反証が実際に出た用途だけ、TEI高度Plugin/複数Target、EKI高可用性/高速Data Plane、SEI高度Method、SHO Research Index L1以降、TAI配布/多Product統合を局所導入する。選定理由と撤回条件をOwnerへ返す。全Product共通の採用義務を作らない。
+4. **観測**：各段階で `提案→実選択→実読込/実呼出し→Host/Provider実効果→Consumer実受領→利用者のOutcome→Owner受理` の証拠を別資格にする。単なるCI成功・数の多いIssue・モデル間一致は価値の確証ではない。
+
+**この更新で実施したこと**：既存のValue/README、関連IssueをSource-staticで横断照合し、計画上の依存伝播・優先順・反証ケースを具体化した。各製品のRequirement/ADR/コード、既存PRのmerge、実B0/B1/B2、異モデルレビュー、外部Harness隔離の修正と新Group実行、実Provider/実利用者・Owner受理は**NOT RUN**。
