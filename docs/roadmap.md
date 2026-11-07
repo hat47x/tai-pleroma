@@ -146,3 +146,12 @@
 **2026-11-07・用途別の過剰停止を検証する追補**： [横断監査§22.5](yi-constellation/product-value-scope-audit-2026-11-04.md)、[VA-01 §10](../evaluations/VA-01-product-value-necessity.md)へ実反証3ケースを追加。①**TEI #3337 merged**で宣言された12能力中6の未選択を観測したが、未選択は異Environment向け候補やBinding Kind差を含む正常状態になり得るため、Inspector一操作に必要なCapabilityの**実選択・実消費だけ**を求める。②**TEI #3336 merged**は子Process Build/Artifact SHAの限定実測でありself-build L3ではない。通常BuildをL3未達でブロックしない。③[SHO #19/#20](https://github.com/hat47x/sho-composer/issues/20)の通常Markdown/Vault Raw保存は、TEI Markdown Loaderの未束縛、OKF/Cloud/AIの未導入と独立に成立させる。意味解釈・遠隔同期・出典受理は利用する場合だけ現在資格を検査する。
 
 これらを**新しい横断Blocking Gateにはしない**。単独User Jobでの正しい部分継続と、対象Capability/Source/Reader/Artifact不足時の正しい局所拒否を対で測る。SUI→SHO [#21](https://github.com/hat47x/sho-composer/pull/21)の20 PASS・1 SKIPはCheckout Guardの限定成功であり、同一実FileのH1は未実行。TEIの既知Rule T1-Aは実CLI限定Observed、次は盲検T1-Bであり、旧T1-Aの再実行を新Gap発見としない。SHO Writer、Plugin実Consumer、self-build L3、B0/B1/B2実比較、Owner受理は**NOT RUN**。
+
+
+### 2026-11-08：既存CI成果の受理範囲と次の一辺を更新
+
+[横断計画§22.6](yi-constellation/product-value-scope-audit-2026-11-04.md)／[VA-04 §10](../evaluations/VA-04-evidence-readiness-preflight.md)を当面の実証順へ接続。TEIのTT-56を扱った#3324/#3326はclosed/unmerged、一本化した[#3354](https://github.com/hat47x/tei-platform/pull/3354)がmerged。11実CLI Reply・3 Required Rule・32合成Consumer Controlのexact PR HEAD CIは**限定成功**だが、main別Run・全Required・T1-Bを保証しない。部分Scenario目録の局所Receiptと全体unknownを分ける[#3365](https://github.com/hat47x/tei-platform/pull/3365)はDraft。既知の行番号0 T1-Aは局所達成、未知RuleのAI盲検T1-Bは未実行。
+
+**次の不足一辺を三方向で並走**：Dは既存Design Contextで独立Requiredの一Function/Ruleと合法な空配列・異modeを区別、TはTAI #168/TEI #2509で実H2の禁止Read・Tool全Call/Replyと副次Sink受領を確認、Gは#3273/#2514の事前固定HoldoutによるT1-B。Dの限定Readが成立してもTとGを自動PASSにせず、Tの外部比較適格0/4を維持する。Provider選択→実Inspector Invoke、物理Schema→業務Relation、SHO Raw Writer→保存再開・SUI同一実File H1は各Product Ownerで並行検証し、初回H2/H3の新しい必須依存にしない。
+
+**価値の対照**：正常な未選択Capability、未読込のRequired外Subject、SHO未解釈Draftなどは局所利用を誤って止めない。同時に、必要なRule/Provider/Receipt/現在Grantを欠いた操作は誤って完了表示しない。B0/B1/B2で誤拒否と誤受入を別測定。外部Harnessの正式比較、実Target/Consumer同一Attempt、BOM適格、C1・全Coverage、Owner受理は**NOT RUN**。新しい中央Gate/Runner/Registryを設けない。
