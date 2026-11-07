@@ -1,0 +1,60 @@
+{
+  "schema": "tai.reference.tei-assembler-kind-fallback/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-07",
+  "host": "Windows with Python 3.12 importing the pilot assembler module directly",
+  "command": "python integrations/pilot-sui-document/assembler/assembler_kind_fallback_check.py --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "explicitKinds": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": "card",
+          "to": "card"
+        }
+      ]
+    },
+    "absentKindsDefaultToCard": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": null,
+          "to": null
+        }
+      ]
+    },
+    "absentKindsBreakCardToIsland": {
+      "outcome": "refused",
+      "reason": "edge edge-3 references unknown card island-1"
+    },
+    "nullKindsDefaultToCard": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": null,
+          "to": null
+        }
+      ]
+    },
+    "unknownKindRefused": {
+      "outcome": "refused",
+      "reason": "edge edge-5 has unknown fromKind thing"
+    },
+    "contractRequiresKinds": {
+      "fromKind": true,
+      "toKind": true
+    },
+    "assemblerRewritesKinds": true
+  },
+  "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, and an unknown kind. It records that the assembler defaults to card while the contract requires the kinds, so the fallback only ever runs on inputs the contract already refused. The fallback is used for endpoint resolution only: the composed edge keeps its null kinds, so the document can still carry an edge without endpoint kinds. It does not change either side."
+}

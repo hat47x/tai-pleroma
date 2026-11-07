@@ -10,9 +10,9 @@
   "observed": {
     "eventualState": true,
     "reregisterRefused": true,
-    "agentRefused": false,
+    "agentRefused": true,
     "agentSideExercised": false,
-    "workerId": "wrk_01a2d1b0f7482e99337ec88d3c563801"
+    "workerId": "wrk_96a289ce4d8a60c3589dd0e4ef1fb26f"
   },
   "scope": "Enrolls a Worker, revokes it through eki-control worker-state, checks that re-registration is refused and that the Agent's next delivery is refused. The Agent side was not exercised, because an Agent with no assignments never calls the Worker listener; a multi-host deployment was not tested."
 }
