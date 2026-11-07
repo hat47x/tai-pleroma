@@ -752,3 +752,15 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 **Ownerへ引き渡す唯一の判定集合**：TEI #3262／#2514／#1180で対象Function/Validation RuleのRequired stable ID、Source Occurrence/Role、実Loader read、Source Index mode/Revision、World/Index digest、Consumerが実受領したReply/End marker、Disclosure Scopeを独立に固定。①Requiredだけ欠ける正常JSON、②subject/index mode誤指定、③索引版混在、④非Requiredだけ省略、の一因子差で、偽陰性と過剰拒否、追加CLI Call/bytesを比較する。**両Draftを別々の新正本・Runnerとして維持せず、既存`context_gate.py`の最小実装へ収束**させる判断はTEI Ownerに残す。連続した10 Replyは同一原子的Snapshotとは限らず、実Source/Grantの束縛を補足する。
 
 **Claim ceilingと順序**：実CLIはT1-A既知候補、Design Contextはpartial、TT-56は候補検証中。実外部H3 Toolの完全Body受領、T1-B blind discovery、Go C1/未カバーNFR、実Provider／実Owner受理はNOT RUN。TAI初回H2/H3はG0物理Read拒否／G1送出／G2 Tool完全性→新規4独立Sessionが優先、比較適格0/4を維持する。
+
+
+<!-- tai-activity-sho-producer-fake-ci-vs-handoff-20261108 -->
+### 23.5 SUI→SHO真正Producerの偽装拒否は両OSで成立、実一ファイル受渡しは別（2026-11-08）
+
+§23.3の「偽Checkout拒否は新CI未確認」は当時の記録。[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)の修正HEAD `6e44dcb242f57527ca104a7d6b60c13309b3924d`に対する[実PR CI #42377986797](https://github.com/hat47x/sho-composer/actions/runs/42377986797)／[push CI #42377982763](https://github.com/hat47x/sho-composer/actions/runs/42377982763)は両方success、Ubuntu/Windows各**21件中20 PASS、0 FAIL、1 SKIP**と確認済み。偽Git checkout／偽VitestをProducerとして与えた場合に、**実Producer起動前に拒否し成功Receiptを出さない**試験は両OSでPASS。ただしWindows側はPath layout拒否、Ubuntu側はHEAD不一致拒否という異なる拒否経路であり、Windowsの本物のSUI Checkoutからの正常Producer実行にはまだ未接続。PRはDraft、正式Owner受理なし。
+
+**P0とP1の別資格**：(a)固定SUI HEAD／実git root／tracked clean／frontend physical pathが合致したという前検査、(b)実SUI Producer processが起動し公開SubsetをMarkdownとして生成したこと、(c)生成した**その同じFile**が同一AttemptでSHO実CLI Readerへ受け渡されByte/Parser/Scopeを再読したこと、(d)Provider/Source/Disclosure/Ownerの現在資格、を同じ成功値にしない。今回**SKIPだった1件が(c)の実One-file本体**であり、(a)の偽Producer拒否成功を(c)へ昇格しない。SUIの354-byte ExpectedとSHO固定Fixture SHA一致も歴史的互換証拠まで。
+
+**次の最短出口**は、既存[SHO一ファイルRunbook](https://github.com/hat47x/sho-composer/blob/test/sui-p0-readonly-handoff-20261107/docs/sui-p0-same-file-handoff-trial-2026-11-07.md)で本物の固定SUI HEAD→SUI実Disk Producer→同一File/SHO実CLI Readerを**1件非SKIPでPASS**させ、両実HEAD／時点／Path／Raw digest・354 bytes／Parser版／不明なSource・未評価参照／Cleanupを同じAttemptに束縛すること。元出典の真正性・未知リンク・Publisher権限・Writer Save/Restart・SEI/TEI Meaningは次段階。Product B1だけで成立するならTAI B2連携を追加しない。
+
+**初回のH2/H3比較とは独立**：TAI #168の既存G0/G1/G2と4Session資格0/4を先行し、現在のSUI/SHO Draftにある偽Producer拒否テストを初回H3 Task/Tool/Skillへ移植しない。新共通Transport／Host／Receipt Storeは作らない。
