@@ -128,6 +128,8 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 <!-- 20261106-product-reader-before-skill-and-parser-safety -->
 ## 9. 2026-11-06：Product Readerの実在とParserの安全性をSkill配布・再資格化へ接続
 
+**時点注記（2026-11-07）**：以下の本文・表に残る「H2/H3未実施」「SHO mainにReaderなし」「SHO #17 Draft/14件」は**2026-11-06当時の基線**。現在の限定観測と未達は次の§10を優先し、過去時点の証拠を消去・再解釈しない。
+
 **直近Product証拠の非対称性**：[TEI Product Skill #2605](https://github.com/hat47x/tei-platform/issues/2605)はTAI側からも固定公開Source/実Go CLI/SourceIndexを限定実証済み（[TAI実CI #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)）。外部HarnessのH2/H3は依然NOT RUN。対して[SHO #16 G1b](https://github.com/hat47x/sho-composer/issues/16)には実装候補[Draft #17](https://github.com/hat47x/sho-composer/pull/17)が追加され、限定実Reader／Disk CLIとUbuntu/Windows各14/14の[実CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)が成立。**SHO mainへの統合・正式CLI/Parser採用は未了**。従来のDraft #12〜14はFixture/Python test-only CLI／MMI Rendererの別資格として扱う。[SHO #10](https://github.com/hat47x/sho-composer/issues/10)の`yi-sho-compose`を「Product CLI利用可能」「配布受理済み」に昇格させない。
 
 ### 適用に必要な資格を分離する（新共通State Schemaは採用しない）
@@ -151,3 +153,29 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 **導入順**：TEIのH2 Tool-only初回セッションは既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Runbook §19](first-real-skill-qualification-runbook-2026-11-02.md)のまま最優先。SHOは同時並行で[#16 G1b](https://github.com/hat47x/sho-composer/issues/16)の[Draft #17](https://github.com/hat47x/sho-composer/pull/17)実Runner/実Parser/独立Fixture #12をレビューし、未取得のParser14/15比較・脆弱入力資源上限・正式API受理を狭く検証。その後にSHO #10のProduct Skill評価を検討。TAI #74は配布資格の表示だけ、TAI #271は跨ProductのSource/Revision変更時の限定再資格化だけを担当。**この節は既存実装の証拠を正しく配置する設計追補で、新Parser/Reader/Skillや実Harness連携のコードは追加していない。**
 
 **状態**：TEI公開CLI限定S1と、SHO Draft #17のReader候補（exact HEAD `b4176b0df6ac62b02b40108391d024336ed71d7b`／Ubuntu・Windows各14/14）が実観測済。実ロードParser 14.3.3はCVE-2026-111758の該当系列修正版であり、**Parser選定承認・敵対的入力のCPU/Memory保証・OS egressまでの安全性実証ではない**。SHO main統合・正式G1b受理、SHO Skill Install/Load/Tool invocation、TAI外部Harness実H2/H3、Product間文書納品・Owner受理はNOT RUN。
+
+
+---
+
+<!-- tai-sho-sui-plugin-first-qualification-20261107 -->
+## 10. Plugin-firstとSUI→SHO実Markdown受渡しを、Product Skillの実資格へ接続する（2026-11-07）
+
+### 10.1 TEI Plugin-firstは要求・静的Fit/Gapまで。Skill経由の実Provider消費は未達
+
+[TEI main Plugin-first方式設計](https://github.com/hat47x/tei-platform/blob/main/plan/design/PLUGIN_FIRST_TOOLING_RUNTIME_DOGFOOD_2026-11.md)／[merged PR #3277](https://github.com/hat47x/tei-platform/pull/3277)で、Core以外を原則Pluginとし、CLI/StudioでのPlugin開発・利用を生成Application Runtimeのdogfoodingにする製品要求・移行順序が記載された。実ソース監査では、CLIが静的dispatch、Studio Bridgeが少数操作の固定実装、既存Plugin/Compositionが一般Tool Surfaceへ未接続。**Plugin-firstの設計がmainへ入ったことは、Tool実呼出しがPlugin Contract/Resolver/Conformanceで成立した証拠ではない**。
+
+[TEI #3278](https://github.com/hat47x/tei-platform/issues/3278)／[#3279](https://github.com/hat47x/tei-platform/issues/3279)は原子的Traitをrequired（generated／Provider／manual-required等の履行義務）またはadvisoryに分け、Contract→実装Fulfillment→Evidenceへ接続する設計案。**Trait宣言≠履行済み≠実TargetでLoad/Invoke済み≠現Host Grant**をSkill選択時に独立確認する。TraitまたはPluginの全種類をTAI内に再定義せず、既存[TEI #951](https://github.com/hat47x/tei-platform/issues/951)と[#3267](https://github.com/hat47x/tei-platform/issues/3267)のexactなResolved Composition／BOM・Testを参照する。Contract違反や未実装義務が残る場合は、実Tool候補としての不適合理由を表示するだけで代替実行を捏造しない。
+
+**導入順**：TEI #3277のD0棚卸し→D1実read-only Inspector/Model Catalogの一縦切り→Product Skillから当該Toolの実利用／Source・Reply完全性を確認→必要な場合だけStudio/生成Runtimeへ同一Contractの拡張。これは後続Groupであり、TAI #168の初回固定TEI H2/H3のTask/Skill/Tool Profileを変更しない。正式Plugin Surface Conformance、Target実Build、Trait Fulfillment、Owner採用はNOT RUN。
+
+### 10.2 SUI→SHO：同一期待byteのProduct別CIはPASS、実同一File HandoffはSKIP
+
+[SUI Draft #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)の実buildContextProjection→renderReadOnlyMarkdownDraftは、選択された公開・reviewed・非hold Cardから**通常Markdown 354 raw UTF-8 bytes**（SHA-256 7fd6fde2…c171cd）を生成。元CardのSource/ID、Island/Edge、秘匿件数、OKFの出典/検証を含めず、未信頼本文の疑似リンクをEscapeする。[SUI CI #42352776477](https://github.com/hat47x/sui-sensemaking/actions/runs/42352776477)で固定Expectedとの限定一致を確認。
+
+[SHO mainのG1b Reader](https://github.com/hat47x/sho-composer/blob/main/src/g1b-reader.cjs)／[CLI](https://github.com/hat47x/sho-composer/blob/main/bin/sho-inspect.cjs)は実コードとして存在する（旧#17はClosed/Unmerged。**main存在と正式公開API/Owner受理は別**）。[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)の別FixtureとReaderでは同一期待354 byte／Parser markdown-it@14.3.3／link_open=0／unresolved reference未評価を実照合。初回Windows CIはCRLF checkoutで**354→368 byteのRaw不一致**。合成FixtureだけLFを固定し、[SHO CI #42353651398](https://github.com/hat47x/sho-composer/actions/runs/42353651398)の両OS各18/18 PASSへ改善（著者文書全体のLF正規化はしない）。
+
+**次のExitはまだ実施していない**：両製品のopt-in環境変数 SUI_SHO_P0_OUTPUT／SHO_SUI_P0_INPUT で**SUIの実書出し1 File→SHO実sho-inspectの同じFileへのRead**を連続実行し、SUI実生成Raw/実path・SHO実受領Raw・SHA/mtime不変・各HEAD・Parser/結果coverageを**同一Attempt**に結ぶ。[SHO CI #42370393890](https://github.com/hat47x/sho-composer/actions/runs/42370393890)は各OS18 PASS/1 SKIPで、**その1件が実Handoff試験**。CIの全体緑をHandoff成功へ昇格しない。SUI/SHOのProduct Ownerは[SUI #3391](https://github.com/hat47x/sui-sensemaking/issues/3391)／[SHO #16](https://github.com/hat47x/sho-composer/issues/16)、後続のWriter Save/RestartはSHO #4、TAI Activity Handoffは[#271](https://github.com/hat47x/tai-pleroma/issues/271)。
+
+**二次配布・Skill資格の停止線**：Raw digest一致やlink_open=0は元Sourceの不存在、SUI Island/Tree意味同値、OKF/SEI認識十分性、SHO文書の保存済み状態ではない。実Product間1 File ReadがPASSしても、yi-sho-composeのHarness install/load・実Tool invoke、外部LLMへ送るDisclosure/current Recipient Grant、Writerの保存後Reader/再開は**別試験**。SHO単独で必要なことはSHO単独で検証し、TAI常時介在・新Document Core/Parser/Host/Transport/Registryを前提にしない。
+
+**YIC/TAI実証の順序**：初回TEI H2/H3の実OS Read-deny→G1通常モデル入力/暗黙Context/Session Log→G2 Tool Reply完全性→新4独立Session（比較適格0/4）を変更しない。SUI→SHOの1 Fileは**並行する小さいProduct間試験**として実施可能だが、TAI #271のSCN-001 B0/B1/B2の実Task価値・Skillの増分効果・正式Source Meaning受理へ自動昇格しない。
