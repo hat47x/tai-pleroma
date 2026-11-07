@@ -752,3 +752,24 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **採否順**：G0/G1の**実環境としての事前検査**とG2の許可Tool受領経路が整ってから、H2→H3→H3→H2を**新しい事前登録4Slot**で開始する。開始後に露出・出力欠損・Model JSON不正が生じても、そのSlotをH3に付け替えず、ITTへ保持しPPを不適格にする。DSHのH6-E1/E2実測は既存9探索Attemptと**別母数**で、初回H2/H3試行数に算入しない。
 
 **担当**：実読取否定・実Network境界は[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)／[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。DSH ToolとMock Wireは[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)。Harness比較と独立採点は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、現在資格／Model Profile driftは[#271](https://github.com/hat47x/tai-pleroma/issues/271)。P0で新しいHost／共通Permission Registry／Runnerを実装しない。**ここで新規DSH試行を行ったわけではなく、既存の実H6-E1/E2を初回SK-02受入へ反映した**。比較適格H2/H3は0/4、H3実Load／Owner受理はNOT RUN。
+
+<!-- tai-sk02-h6-e1-e2-canary-wire-replay-20261107 -->
+### 24.4 合成canaryとMock Wireの実測でH2の隔離／送出境界を更新（H6-E1/E2）
+
+[TEI #2515 H6-E1 Draft #3173](https://github.com/hat47x/tei-platform/pull/3173)の[実証原本](https://github.com/hat47x/tei-platform/blob/docs/dsh-h6e1-read-boundary-20261107/plan/evidence/DSH_H6E1_READ_BOUNDARY_2026-11-07/README.md)を参照。DSH `0.2.2-rc.1` Windows/headless/`read-only`で、Mockから`read` Toolを順次実行させた**公開合成canary 4種**（許可Projection、`raw/secret.txt`、`raw/.env`、cwd外のpeer file）は、2回の実行で**全てread completed・拒否0**。Toolが読んだ内容はローカルMockの受信した**モデル入力と`dsh_session_log`の両方**へ現れ、後者は1 eventにつき`data.message`/`data.meta`の2箇所。合成canaryであって実秘密の漏えいではないが、**read-only ProfileによるRaw/cwd外の拒否はこの条件では実証に失敗した**。TEIの内部FileSystem Root Guard成功とDSH OS/read Toolの制限は別のGateであり、片方を他方へ転用しない。
+
+[TEI merged #3153](https://github.com/hat47x/tei-platform/pull/3153)／[merged #3161](https://github.com/hat47x/tei-platform/pull/3161)ではローカルMock ProviderでDSHの送出経路を計測した。**既定（overlayなし）でもSession Log拡張はON**、最初の正常要求では`dsh_session_log`が45,491 bytesで19 eventを含んだ。利用者指示・system prompt・sandbox/approval情報・cwd・Tool Resultが含まれ得る。 `enabled:false`の期間はfieldが消えたが、`true`へ戻すと未送出区間のeventが再送された。503応答や200でも不完全なstreamではwatermarkが進まず、次の題名生成要求に同じ区間が再送された。これは**local Mock HTTP Wire**の観測であり、実Providerへの送信・保存・本番Egressの実拒否を測ったものではない。通常のモデル入力だけのbyte数を実外部送出の総量と呼ばない。
+
+**既存§20/§21の比較適格性へ適用する最小反例（前記H2原実行の再評価ではなく、後続の独立Preflight）**：
+
+| Gate | 同じTaskで一因子変更するもの | 独立Expected／停止条件 |
+| --- | --- | --- |
+| **H6-C1 正例と拒否の対** | 許可Public Projectionと、同じ合成秘密Canaryを置く非許可Root／.env／cwd外 | 許可Read成功に加え、**全ての非許可Readが実OS/Toolで拒否**。DSHのread-onlyラベルやPromptへの禁止文だけでは比較適格にしない。拒否0の現在Profileは不適格 |
+| **H6-C2 ModelとLog二経路** | 同じPublic Tool結果をモデル入力だけ／Session Log ON／OFFで比べる | 実Mock受信したModel BodyとLog拡張のfield/水位/重複を別計測。Log OFFでもモデル入力経路は残り得る。Product Skill/Task原文以外のOwner非承認Sourceを送らない |
+| **H6-C3 OFF→ON復旧と受理失敗** | OFF→ON・503・200空SSEを一因子変更 | `disabled`の過去区間が永続的に非送出とは推論しない。Watermark/受理・再送は実受信で確認。503や中途切断を送出不存在／成功ACKとしない |
+| **H6-C4 公開Taskだけの実4Session** | H2／H3の同一論理Worktree・Skill/Reviewer Holdout・実Network Scope | 割付前に隔離＋許可Tool・Raw/Path/Network拒否を実証し、同一固定Task・Source・CLI/Model Profileで4Slotを凍結。実隔離できないProfileは`environment-ineligible`、前回のTool成功は歴史的Witnessのみ |
+
+**実施順**：最初にH6-C1のOS/Tool上の強制点を決め、**Reviewer保持の合成Canaryで正例1＋拒否負例を実行**する。H6-C2/03のMock Wire観測を同じ実Profile/再起動条件で再確認するのは、その結果がTrialの開示資格へ影響するときだけ。合格が確認されて初めて比較適格H2の事前固定Groupを開始し、H3 Loader実Read→四独立Sessionへ進む。既存#168の固定Participant Task・Skill bytes・独立Expected・許可Toolを途中変更しない。
+
+**Owner／実証の上限**：TEI #2515/#2509はDSH OS/Tool/Wire観測、TAI #232は外部Harnessの開示Profile、TAI #168/本RunbookはH2/H3の比較資格。TAIに追加Network Proxy・機密Agent Host・第二Policy Engine・Rawログ正本は設けない。現実のOS分離・実Egress拒否・Egress全経路・実Provider側保存・初回H2/H3比較・Owner受理は**NOT RUN**。公開合成CanaryのLocal Mock Wire PASSを機密構成合格と呼ばない。
+
