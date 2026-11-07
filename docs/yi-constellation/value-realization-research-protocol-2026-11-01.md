@@ -2,16 +2,16 @@
 
 > **Research / Proposed / Owner未受理 / 利用者調査NOT RUN**（2026-11-01）。この文書は [価値・要望・要件の整理](value-needs-requirements-2026-11-01.md) の研究方法と具体的な実証設計を補う。新しいTAI Core／共通Store／権限エンジン／評価Gateの設計決定ではない。
 
-## 現在の実証基線（2026-11-07 15:16 UTC時点、歴史的追補に優先）
+## 現在の実証基線（2026-11-08 02:24 JST照合。後続の正式検収があればそちらを優先）
 
-- **TEI T0/T0.5**：mainの実CLI9応答、Context16負例、Pinned Scenario6 Step、Source/Plugin Lockの実変更による旧Pin拒否は局所実CI成功。Design Contextはpartial / exploration-only / qualifiedTestGeneration=false。
-- **TEI T1-A**：既知の行番号0 Candidateを一時Scenario第7 Stepで実CLI検収し、統合後main CIが成功。**T1-B**＝生成AIが未見Ruleを独立Holdoutなしで捏造せず新規発見・提案する実験は未実施。
-- **Required Rule Closure**：同Fingerprint・正常JSONでもRule/Relationが静かに欠落するTT-56が残る。Draft #3324/#3326は競合する未検収候補。現mainに追加8負例が統合されたとは主張しない。
-- **SUI→SHO**：354byte固定Producer/Reader CIは限定PASS、一File本体は通常CIでSKIP。真正Producerの偽Checkout拒否は限定PASS、同一Attemptの実File HandoffはNOT RUN。
-- **BOM/外部Harness**：RQ-035=Workbench、RQ-036=BOM（Draft #3297）。Verified BOM/実Trait/実HostとH2/H3比較（適格0/4）は別の未資格。
+- **TEI T0/T0.5/P-1b1**：既存9 Reply・16対照から、統合済み#3354の**11実CLI Reply／32局所合成Consumer対照**へ進展。Required3 Rule・Focused Canonical/Relation/Sourceの照合。PR exact-head CI成功、**同一main Push CIは別資格**。Contextはpartial / exploration-only / qualifiedTestGeneration=false。
+- **TEI T1-A**：既知行番号0 Candidate第7 Stepの実CLI検収はmain CI成功。**T1-Bの未見Rule/独立HoldoutのAI盲検発見はNOT RUN**。部分Scenario目録で未観測を未実施にしないTT-105/106はDraft #3365。
+- **TEI Plugin/Self-build**：宣言→Capability選択→Provider実呼出→Host／Consumerを分離。Reference Self-build DriverだけでStage1生成物がStage2を実駆動する局所試験が成立（#3360）。**cmd/tei自身のG4 L3はUNQUALIFIED**。
+- **TAI Edge/SUI**：パイロットedge-record v4は省略可能な端点種別を採用し、IDの一意解決で24ケース／90段限定PASS（#537）。**出力先Consumer／SUI→SHOの実配送は別**。
+- **SUI→SHO**：固定354byteのProducer/Reader別Repo CI、偽Producer起動前拒否は限定PASS。一つの真正Source Fileを同一Attemptで手渡す試験は通常CIでSKIP。
+- **外部Harness/BOM**：正式H2/H3は実Skill Loadを確認済みだが比較適格0/4。BOMはWorkbench RQ-035と別のRQ-036（Draft #3297）、Qualified BOM/Host/Owner価値受理は未成立。
 
 ---
-
 ## 1. 研究で問い直す対象
 
 YI Constellationの目標は、六製品の機能の総和を大きくすることよりも、**主体が実際に選べること、考えられること、実現できること、関係を育てられることを広げる**ことにある。成果の数だけでなく、成果に至る理由、断った選択肢、途中で変えた希望、利用していない人への影響を含めて評価する。
@@ -602,3 +602,73 @@ Advertised read-onlyと実際の- execute付きFile書込み、OS Read-deny、�
 4. **価値判断**：Userの指示回数、真の未カバーRule判別、正常Caseの過剰拒否、実取得Sourceの増分・開示、修正の手数、CIと実行待ち時間を別指標にする。技術的局所PASSからOwnerが望むOutcomeを直接推論しない。
 
 **状態**：T1-Aの実CLI Case判別と旧Source/Lock Pin拒否は**mainで限定達成**。TT-56は競合するDraft段階、HandoffはRunner防御の限定PASSで本体SKIP、外部H2/H3は比較適格0/4。未知GapのT1-B、Product全Required Closure、真正One-file Reader受領、実BOM/Host、Owner Meaning・利用者価値は**未実証**。
+
+---
+
+## 16. 2026-11-08 横断統合：欠落の意味を契約別に判定し、実消費の最短ループへ
+
+**位置付け**：2026-11-08未明のTEI／TAI／SUI／SHOの実Product・限定CI・既存計画を突合した横断価値研究。§15のTT-56『未収束』は履歴として保持するが、現行状態はこの節と冒頭の基線を正とする。新共通Missing enum／Resolver／Proof Engine／Runner／Authorityは設けない。
+
+### 16.1 同じ「欠落」を同じ意味で処理しない
+
+**新しい横断設計原則**：欠落の判定は、対象の**契約上の必須性**と観測の**取得・開示範囲**の二軸で行う。『任意項目が無い』と『必須情報を実際に読めなかった』は逆方向のケース。安全性だけを理由に全てdenyすると正当な利用可能性を失い、便利さだけを理由に全てdefaultすると虚偽の完全性・対象取り違えを起こす。
+
+| 対照 | 正しい局所判定 | 禁止する昇格 |
+| --- | --- | --- |
+| 契約でoptionalな端点種別が省略・null、端点IDは一意解決可能 | 当該Pilot Contractの解決規則でEdgeを受ける | 任意Kind省略をGraph全域のNode Type非存在やnull一般則へ拡張しない |
+| required RuleがCatalog/Source Index/Loaderから抜ける | 独立Requiredとの不足を返す | JSONが正常・Fingerprint一致を『Ruleが無い』や『全件取得した』としない |
+| Scenario一覧がpartial、要求Stepが一覧にない | そのStepはnotObserved、実観測済み別Stepの局所結果は維持 | untestedConfirmed／全体Coverage0や全件Coverage100を作らない |
+| 空集合Targetかつhandoffが未確認 | 独立Empty証拠があっても受領の要件は別、当該PolicyのHoldsを保留 | 空集合を理由に実受領済み・Effect済みとしない |
+| Capabilityがselected、Providerは未呼出 | Selectionの事実だけ保持、実Invoke・Effectはunknown | Selected/宣言されたTraitをFulfilled/Host Grantにしない |
+| requirementsの成功resultが空のJSON配列 | 型に合う成功応答として受領し、その内訳・Required欠落を別比較 | 配列≠objectをTool failureと断定、空配列を完全性へ昇格しない |
+
+この区別は独立の『Global Missing State』を増やさず、各Productの現Contract/Required/Consumer Scope/Receiptに相対化して評価する。Source非公開ならその存在件数を外部Audienceへ漏らして診断しない。
+
+### 16.2 TT-56は既存単一Consumerへ統合済み（Product局所PASS）
+
+[TEI merged #3354](https://github.com/hat47x/tei-platform/pull/3354) が、旧競合Draft #3324/#3326を同じ `context_gate.py` に**一つへ収束**。Source Indexの全件・Focused Inspectを加え、**11実CLI read-only Reply**について独立Required3 Rule、Canonical positive/attribute、Relation Parent、Definition role、SourcePath/Artifact/Fingerprintを照合した。正常JSONかつ同FPでもRequired Rule/Relationだけが省略された場合を拒否し、非必須Subjectの省略は過剰拒否しない。
+
+[PR exact-head CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)はcompleted/success。既存16＋独立Requiredの7拒否・1正常＋Canonical/Relation/Sourceの8拒否＝**32件の局所合成Consumer対照**が成功。既存Pinned ScenarioとT1-A候補も同CIで検証した。局所C0相当10.0%、C1未計測。32を実コードMutant kill数や実Product欠陥数とは呼ばない。旧Draftはclosed/unmerged、別Gate/Readerを実装しない。**統合後main Push CIの個別run**は本照合では別証拠として未確認であり、PR exact-headのsuccessをそこへ転記しない。
+
+この到達は最初の公開Validation Scopeに限定。docs/plan Markdownは[TEI #3346](https://github.com/hat47x/tei-platform/issues/3346)でmanagedFilesにあってもreadByLoader=false、意味読込ではない。[#3345](https://github.com/hat47x/tei-platform/issues/3345)のview局所FPとWorld FPは対象範囲が違い、[#3347](https://github.com/hat47x/tei-platform/issues/3347)のJSON result shapeもCommand依存。これらを『Requiredなし』や『完全』へ推論しない。T1-Bの前に全部のMarkdown Parserを導入するのではなく、対象Task/Ruleに必要なSourceだけを明示し、不足を具体的に返す。
+
+### 16.3 TAIのEdge Pilotは『許される欠落』の実正例
+
+[TAI merged #537](https://github.com/hat47x/tai-pleroma/pull/537)はpilotの `edge-record` v4で端点種別をoptionalにし、欠落・片側null等を含む7 Fixture、投影→合成の24ケース／90段を限定PASS。IDからCard/Islandが一意に解決できる場合はEdgeを合成し、存在しない端点は拒否。曖昧な端点IDでは推測でcardを選ばない。**当該Pilotではoptional Kindの明示nullも省略へ畳まれる**が、一般のDomain NULL/欠損/非開示に同規則を強制しない。
+
+つまり、旧Contractで必須としたKeyを常時要求することは『厳密』でなく、合法なCard→IslandのEdgeを捨てて利用者価値を減らし得る。一方、合法な省略だからといって関係ID・向き・多重性・ScopeのWitnessを省略してよいわけではない。Assemblerの内部分類結果が実Consumerへ同じ意味で配送されたか、元Source Disclosure/Owner Meaningを満たすかは別実証。
+
+### 16.4 Processを駆動した実体と、単なる同Byte生成を分ける
+
+[TEI #3360](https://github.com/hat47x/tei-platform/pull/3360)のSelf-build Referenceでは、外部Go Seedで作った自分自身を再構築可能な**参照Driver**を対象に、Stage1 ArtifactをStage2 Invokerとして実起動し、Stage1/2 Artifactのbyte一致・同Child/同引数をローカル実試験で観測。`l3Claimed=true`は**この参照Driverの一試行に限定**する。これはStage1の実生成物が駆動側Processに使われたという重要な新証拠だが、対象は**cmd/teiではなく**、TEI本体G4 L3資格は依然UNQUALIFIED。自称Invoker digestの検証と実Process image一致も別[TEI #3362](https://github.com/hat47x/tei-platform/pull/3362)で扱う。正しいbyteのArtifactを外部Processで作るだけの収束と実再入場を混同しない。
+
+### 16.5 Plugin-first／Studioは最初の実Consumer選択へ収束させる
+
+[TEI main #3337](https://github.com/hat47x/tei-platform/pull/3337)ではDeclared/Selected Capabilityをread-onlyに列挙できる。途中で選択集計の技術名とCapability IDの比較規則が改まり、historical unselected 6から別revisionの4へ変化したが、元分母・判定規則を無視した改善率として扱わない。**Package選択≠Capability Binding≠実Provider Load≠Invoke≠現在Host Grant**。一つのread-only Inspectorを、既存#951/#1016のSelected Contract/Provider→実CLI呼出→Studio Consumerへ接続する最短縦断を優先する。
+
+[TEI Draft #3371](https://github.com/hat47x/tei-platform/pull/3371)ではStudio Host Factoryが選んだInspectionServiceへ明示的に委譲し、未提供・誤Subject/Schema/Effect/FP/Canonicalや不正JSONでfail closedする実装・試験候補がある。ただしFactoryと#951 Resolver/実Build/CLIの結合、2 Consumer実観測、現Wails/OS Grantは未接続であり、DraftのSourceだけからProduct Plugin-firstを完成扱いしない。
+
+### 16.6 ORX-41〜48：『許された省略』『未取得』『実証済み』の混同を反証
+
+| ID | 二世界／判定条件 | 実証上限・既存Owner |
+| --- | --- | --- |
+| **ORX-41 必須RuleのSilent Loss** | 同一FP/妥当JSONでもRequired3 Ruleの一部だけ欠落→不足。非必須Subject省略は正常 | TEI #3354の局所32合成対照PASS、全Required/意味は不明 |
+| **ORX-42 Optional Kindの過剰拒否** | Pilot EdgeでKind省略/nullだがEndpoint一意→Edge保持、ID曖昧→拒否 | TAI #537投影→合成24/90限定PASS、Downstream Deliveryは別 |
+| **ORX-43 部分ScenarioのFalse Untested** | partial目録にStepが見えないが、局所実Receiptはある | TEI Draft #3365のTT-105/106。新7対照のexact-head CI/正式Owner採用は別 |
+| **ORX-44 空集合と受領未確認** | Targets=[]、EmptyJustified=true、HandoffConfirmed=false | TEI merged #3353はHoldsをUnverifiedへ限定修正。実Host受領はなおCaller申告 |
+| **ORX-45 Selected Traitと実Invoke** | Capability選択だけ成立、Required Trait/Provider実装は無い | TEI #3337/#3368/#3278。Selection局所PASSを実Invocation/BOMへ昇格しない |
+| **ORX-46 Reference L3とTEI G4** | Self DriverのStage1 ArtifactがStage2を駆動して同Byteを出すが、cmd/teiは別対象 | TEI #3360の参照実試行を認めつつ本体G4未資格 |
+| **ORX-47 正常ArrayとContext欠落** | requirements result=[]は正常shape、別SourceのRequired Ruleは不足 | TEI #3347／Draft #3370。未申告shapeをobjectと推測しない |
+| **ORX-48 Host選択と実Consumer不一致** | Studio選択Inspector=B、実呼出はbuilt-in Aへfallback／Result誤Contract | TEI Draft #3371はHost側明示委譲の候補。実CLI↔Studio↔Providerは未実証 |
+
+### 16.7 実行計画の変更（最小依存／最大の判別力）
+
+**P0-A：既存mainの到達を保存**：#3354局所Required Rule/Relation対照、#3304のT1-A候補実走、TAI #537のoptional Kind正例、TEI #3360参照Driver局所再入を別資格で記録。PR CIとmain Push CI、Reference Driverとcmd/tei、内部解決と実Consumerを各々独立に採点する。
+
+**P0-B：二つの不足だけに絞った本当の次の試験**：(1)TEI #3262/#3223/#3273で独立Required・Source読取Scopeを適格な一Functionに閉じ、Unknown Test ObligationのAI盲検提案T1-B→#1180実Pinned→#2514独立Expected・正当例の非過剰拒否、(2)SHO #21で実SUI真正Checkout→一File→SHO実CLI受領をnon-skipで一試行。新Reader/Runner/Gateなし。
+
+**P1：実利用資格を確かめる横断一辺**：Plugin Inspector一件のSelected Capabilityと実Provider Invoked/CLI→Studio 2 Consumer、またはTEI #2586の実Function selected SQL→physical Provider Read→Contextのどちらか**先に実接続できた一辺**を比較。Source/Meaning/Grantを無関係なLaneでHard Blockにせず、実Effect/RecipientへのClaimを増やすときだけ必要条件を要求する。
+
+**価値判定**：欠落を理由に合法なEdge・局所成功Step・許可済み調査を不当に拒否しない度合いと、未取得Rule／未Delivery／未Invokeを誤って完了扱いしない度合いを**両方**測定。必要な追加Source Reader/独立Witnessのコスト、AI指示数、確認負担、情報開示、修正手数も別に記録。TAI #168のH2/H3比較は現0/4適格であり、G0/G1/G2→新4独立Sessionの既存Exitを変更しない。
+
+**未実証**：本節のORX-41〜48のYIC同一Attempt横断実験、T1-B未知Rule盲検発見、TT-105/106の実採用、SUI→SHO一File本体、cmd/tei本体G4、CLI/Studioの同じ実Provider二Consumer、実BOM／本番Host Grant、Owner意味・利用者価値受理はNOT RUN/NOT PROVEN。
