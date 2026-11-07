@@ -13,15 +13,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STIMULI = ROOT / "fixtures" / "RQ7_BOUNDED_COMPLETENESS_PILOT.synthetic.json"
 GOLD = ROOT / "fixtures" / "RQ7_BOUNDED_COMPLETENESS_GOLD.public.json"
+PUBLIC_DATASETS = {
+    "v0": (STIMULI, GOLD),
+    "v1": (
+        ROOT / "fixtures" / "RQ7_BALANCED_PUBLIC_PREPILOT_V1.synthetic.json",
+        ROOT / "fixtures" / "RQ7_BALANCED_PUBLIC_PREPILOT_V1_GOLD.public.json",
+    ),
+}
 ARMS = ("V0", "V1", "V2", "V3")
 VERDICTS = {"supported", "refuted", "undetermined"}
 TICK = chr(96)
 
 
-def load() -> tuple[dict, dict]:
+def load(dataset: str = "v0") -> tuple[dict, dict]:
+    if dataset not in PUBLIC_DATASETS:
+        raise ValueError("unknown public dataset")
+    stimuli, gold = PUBLIC_DATASETS[dataset]
     return (
-        json.loads(STIMULI.read_text(encoding="utf-8")),
-        json.loads(GOLD.read_text(encoding="utf-8")),
+        json.loads(stimuli.read_text(encoding="utf-8")),
+        json.loads(gold.read_text(encoding="utf-8")),
     )
 
 
@@ -139,13 +149,14 @@ def render(case: dict, arm: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dataset", choices=tuple(PUBLIC_DATASETS), default="v0", help="public prepilot dataset")
     parser.add_argument("--check", action="store_true", help="check the public fixtures only")
     parser.add_argument("--case", help="case ID to render")
     parser.add_argument("--arm", choices=ARMS, help="presentation and evidence arm")
     args = parser.parse_args()
     if not args.check and (not args.case or not args.arm):
         parser.error("specify --check or both --case and --arm")
-    stimuli, gold = load()
+    stimuli, gold = load(args.dataset)
     result = validate(stimuli, gold)
     if args.check:
         print(json.dumps(result, ensure_ascii=False, indent=2))
