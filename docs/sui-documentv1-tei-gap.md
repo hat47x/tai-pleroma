@@ -134,9 +134,20 @@ Optionalの不一致: Edge.fromKind / Edge.toKind
 未知の種別 → 拒否
 ```
 
-- 仮定は**端点解決のためだけ**に使われ、合成後のEdgeには種別が入らない。種別を持たないEdgeが文書に残る
-- 投影契約は種別なしを`missing`/`unresolved`で落とすので、仮定の経路は投影を通った入力では発火しない。契約と合成層で同じ入力の扱いが違う
-- card→islandのEdgeが種別を欠くと、誤った種別で解決して拒否される。投影側で落ちる場合より、失敗の理由が分かりにくい
+初回の実測では、欠落時に`card`を仮定していた。これを**端点IDから解決する**よう変更した（[再実測](../evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json)）。
+
+```text
+種別なし（card→card） → 解決して合成（出力の種別は投影どおり）
+種別なし（card→island） → 解決して合成（以前は誤って拒否）
+端点が未知 → 拒否「no such endpoint」
+端点がcardとislandの両方に一致 → 拒否「ambiguous endpoint」
+```
+
+- 仮定ではなく端点の同一性で種別を決めるため、**card→islandのEdgeが種別を欠いても失われない**
+- 端点が特定できない場合は推測せず拒否する（fail-closed）
+- 合成後のEdgeは投影された種別をそのまま保つ（解決結果を書き戻さない）
+- 投影契約は種別なしを`missing`/`unresolved`で落とすので、この経路は投影を通った入力では発火しない。契約を任意に寄せる試作（[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)）と組み合わせると、投影から合成まで一貫する
+- 単体試験13件がPASS（[receipt](../evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json)）
 
 ## 端点種別を任意にした契約の試作（2026-11-06）
 
