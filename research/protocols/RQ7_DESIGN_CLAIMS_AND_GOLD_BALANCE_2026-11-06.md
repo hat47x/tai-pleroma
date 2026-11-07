@@ -128,3 +128,11 @@ v1ではBuildとFile-Relayの両Domainに、**宣言内の直接Edge・推移的
 [TEI研究計画 PR #2966](https://github.com/hat47x/tei-platform/pull/2966)と[ETL/MFT設計 PR #2827](https://github.com/hat47x/tei-platform/pull/2827)は2026-11-07に統合済み。TAI研究PRはその設計正本を複製せず、被験者の判定・根拠再構成・費用の研究票を保持する。
 
 **実験上の状態**: v1は公開合成ケースと研究ツールの開発。TEI実Role意味受理、独立holdout、人間・AIのV0〜V3成績、実Graph UI、実Provider Authority、実配送／自己ビルドG4の認知効果は全て**NOT RUN / NOT PROVEN**。
+
+## 8. 2026-11-08：Roleの静的型資格の進展と実Meaning
+
+[TEI PR #3308](https://github.com/hat47x/tei-platform/pull/3308)はmainへ統合され、標準業務のAttribute Roleが必要とする`date/decimal/integer`プリミティブと宣言Typeの適合性を、AliasのUnderlyingを辿って検査できる。[#3318](https://github.com/hat47x/tei-platform/pull/3318)も統合され、例Workspace上の税・為替・採番・休日の役割付きDataから結合までの限定試験が成立した。**「Role名だけ受理でき型検査は未実装」という旧時点の記述を現行実装状態として使わない**。
+
+一方、型適合がPASSでも、金額・税率の丸め・適用期間、データの実行時Source真正性、実DB/外部Provider受入、Ownerが意図した業務意味、実Consumerの作用は**別のClaim**。強属性の原典に基づく定義と正式実装は引き続き未確認。研究のIntended/Source-static/Inferred/Observed/Acceptedを分ける理由は型チェックの進展後にも残る。
+
+[TEI #3321実CLI evidence資格](RQ7_REAL_CLI_EVIDENCE_TRANSFER_2026-11-08.md)にも同じ区分が必要であり、`World/Manifest fingerprint`からSource/Role全体の意味や完全なRelationを自動推論しない。
