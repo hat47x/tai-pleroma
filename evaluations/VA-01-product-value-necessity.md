@@ -128,3 +128,20 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 
 **現状**：実DSH→TEI CLI接続は限定Observed、正式な隔離済みH2 Trial・Skill実ロード・H2/H3増分価値・TAI Activity B0/B1/B2・OKF実Attester/価値採点・Owner受理はNOT RUN。
 
+### 6.6 H3実読込成立後の価値判定：不必要な実行を避ける成果も測る
+
+[TEI mainの四Session Witness](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)で、H3-A/Bは各Skill root 5,482 bytesと参照文書1件を実受信した。これは**Product Skillの実動作能力の到達**であり、比較用に事前登録した独立H2/H3の4腕は**適格0/4**である。旧H2-AのSession再利用・Worktree越境Read・Task path差・Tool受領欠落を残したまま、H3のTokenやcompletedを改善・悪化の因果結論に使わない。次の価値ClaimはG0/G1/G2を通過した新規Groupだけで問う。
+
+[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)／[価値実現Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)の外部Pressure Caseは、**Goal→実Source/Meaningの消費→Action Intent→現在のHost権限→実Provider効果→実Consumer受領→利用者/組織のOutcome**を分離する必要性を示す。Oracleの一体型Runtimeや50%削減主張をTAIへコピーせず、既存VA-TAI B0/B1/B2の**価値採点条件**にだけ必要な差を取り込む。
+
+| 結果 | 採点する増分価値 | 誤って完了としない条件 |
+| --- | --- | --- |
+| **正しいread-only継続** | 単独ProductやTool-onlyでも必要な出典・不確実性を残し、最小の手間で再開できた | Skill実LoadやToken減少だけで利用者Outcomeへ昇格しない |
+| **適切な不実行・保留** | 未受理の公開・権限不足・旧Research版・作用不明を示し、禁止Actionを行わず正当なReadを継続 | 何もしなかった結果を自動PASSにしない。必要なActionの誤拒否・副作用未観測・部分失敗を区別 |
+| **実Action後の成果** | 現在Purpose/Audience/Grantの下で、Receiptと実Resource readback、Consumer受領、業務の受入を個別に確認 | 旧Receipt、`completed`、HTTP 200、保存ACK、合成AttesterのPASSだけでは成果ではない |
+| **TAI追加介在の費用** | B1単独Productと比べ、説明の質・誤完了・過剰停止・再確認時間・Tool/Token/費用が改善するか | B1で十分ならB2は採用しない。実験していない機能を将来価値として得点化しない |
+
+**初期Trialは変更しない**。まずH2/H3固定公開TEI read-only Jobと実隔離/送出/Tool Result完全性を確認。その後SCN-001のB0/B1/B2でPurpose変更や中断再開の正負対照を行う。Result-first/Outcome-firstの新共有Runbook、Outcome DB、独立Oracle（独立Expectedの別正本）を追加しない。[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)は現在の用途適格、[#168](https://github.com/hat47x/tai-pleroma/issues/168)はTool/Skill試行、各ProductはEffect/意味、[#422](https://github.com/hat47x/tai-pleroma/issues/422)は価値比較を担当する。
+
+**状態**：Tool技術到達とH3実Loadは限定Observed、H2/H3正式比較適格0/4。利用者Outcome、現実の業務Action、Effect/Consumerの一Attempt E2E、異モデル独立採点・Owner意味/価値受理は**NOT RUN**。
+
