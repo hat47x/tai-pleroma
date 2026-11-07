@@ -64,6 +64,9 @@ jobs:
       - name: public boundary scan
         working-directory: .
         run: python tools/check-public-boundary/check.py --root .
+      - name: SUI live-stub visibility observer unit tests
+        working-directory: integrations/pilot-sui-document/assembler
+        run: python -m unittest -v test_context_bundle_visibility.py
       - name: YI 64-hexagram audit regression tests
         working-directory: .
         run: python -m unittest -v evaluations/test_yi_constellation_audit.py
@@ -154,3 +157,44 @@ jobs:
       - name: TEI capability chain scan
         working-directory: .
         run: python tools/check-tei-contracts/check.py --root .
+
+  # Explicitly pinned, public SUI checkout. This runs the local-dev HTTP
+  # API against its fixed synthetic stub; it is NOT a real-user-data test.
+  sui-context-live-stub:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout TAI candidate
+        uses: actions/checkout@v4
+        with:
+          path: tai
+          persist-credentials: false
+      - name: Checkout pinned public SUI source
+        uses: actions/checkout@v4
+        with:
+          repository: hat47x/sui-sensemaking
+          ref: a828a0154db3201322ed27d006c035d9784866a8
+          path: sui
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: sui/03_Implement/backend/requirements-test.lock
+      - name: Check exact SUI source revision
+        run: |
+          test "$(git -C sui rev-parse HEAD)" = "a828a0154db3201322ed27d006c035d9784866a8"
+          test -z "$(git -C sui status --porcelain)"
+      - name: Install pinned SUI backend dependencies
+        run: |
+          python -m pip install -r sui/03_Implement/backend/requirements-test.lock
+          python -m pip install --no-deps -e sui/03_Implement/backend
+      - name: Exercise real local-dev SUI HTTP with synthetic A2 stub
+        run: |
+          python tai/integrations/pilot-sui-document/assembler/context_bundle_check.py \
+            --sui-repo "$GITHUB_WORKSPACE/sui" \
+            --artifact "$GITHUB_WORKSPACE/tai/evaluations/artifacts/scn-003-document.json" \
+            --out "$RUNNER_TEMP/sui-context-live-stub-receipt.json"
+      # Do not upload the receipt automatically. The observer prints aggregate
+      # counts only and never certifies disclosure rights or source identity.
