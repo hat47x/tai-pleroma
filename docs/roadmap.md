@@ -130,3 +130,14 @@
 [横断計画 §22](yi-constellation/product-value-scope-audit-2026-11-04.md)／[VA-01 §8](../evaluations/VA-01-product-value-necessity.md)で、他Productの直近の限定実測を反映。**TEI Plugin-firstはmerged #3277／RQ-008に明記された製品要求**であり、研究だけの任意構想として扱わない。ただし実装はD0現行境界確認→D1 read-only Inspector一つの実Provider/Consumerから始め、全CLI/Studio/生成RuntimeやHot Swap同時完成を初回Exitにしない。Verified BOMは組合せ利用時の標準的な検証要件を保ちつつ、宣言12／候補Lock9、実Build/Load/Run未実証を分ける。Source Context Query #3262はAIのT1生成に必要なScopeで限定し、全Workspace一括取得を先行Gateにしない。
 
 **既存Product実験の次の一歩**は、TEI T0既存Scenario→#3273の新しい行番号0負例T1、SUI #3397＋SHO #21の別Fixture成功→同一実FileのSHO CLI受領、SHO Reader限定CI→#4 Writer保存・再開、TEI文書要求→単一read-only実Plugin利用の4本。各Laneは独立に進行可能。別Fixture CIの18 PASS/1 SKIP、TEI局所C0相当10.1%/C1未測、旧SHO Reader Draft closed/unmerged、BOM Reference-onlyを製品全体の合格としない。RQ-035のBranch間意味衝突は採用前照合で止め、新Requirement Registryは作らない。TAI #168のG0/G1/G2と4 Session適格0/4、SEI #758、SUI実務T2、EKI #58は元の優先順のまま維持。**今回の新実行・独立価値比較・Owner受理はNOT RUN**。
+
+### 2026-11-07夜：余計な必須性の解消と、必要なEvidenceの充足を別投資とする
+
+[横断レビュー§22.4](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §9](../evaluations/VA-01-product-value-necessity.md)に、**Consumer契約の過剰必須性と、テスト/組合せに必要な実根拠の不足は逆方向の不具合**であることを明記。[TAI #533](https://github.com/hat47x/tai-pleroma/issues/533)/[#535](https://github.com/hat47x/tai-pleroma/issues/535)の局所試作では、SUI任意Edge種別をTAI投影側でも任意にすると欠落Edgeを維持できる一方、現行パイロット契約は必須のまま。合成層のIdentity/向き・多重辺・unknownの保持を既存Ownerで別確認し、受理前の一律置換はしない。
+
+**テストは新規Caseを増やす前の不足診断を標準経路に**：TEI main [#3284](https://github.com/hat47x/tei-platform/pull/3284)/[#3299](https://github.com/hat47x/tei-platform/pull/3299)のT0.5/T0.6は実CLI/Source・Plugin Lock更新の負例まで限定CIで観測済みだが、`qualifiedTestGeneration=false`、C0相当10.1%/C1未測定。必要なDesign Context/Meaning/Required Sourceが足りなければ診断・取得を優先し、[#3273](https://github.com/hat47x/tei-platform/pull/3273)の未実行の行番号0の新T1だけを次の独立Expectedへ進める。
+
+**Verified BOMは実組合せを確認できた行だけ利用可能とする**：[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267)/[Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)のRQ-036は、candidate lock/pairwise/synthetic observed-passを実Provider×Consumer×Target×Artifactと同一Attempt/独立Expectedで`qualified`となる行と分離。mainのRQ-035 Workbenchとは同一視しない。検証済みBOMを標準提供する製品価値は維持するが、未資格の組合せの自動推薦は禁止。
+
+**順序**：TAI #168 G0/G1/G2→新規H2/H3四SessionのBlockingは不変。Edge契約、TEI Design Context/T1、Verified BOMは既存各Product Ownerで並行。新Requirement Registry/中央Test Runner/全Product用BOM Serviceを先に追加しない。実User JobでのVA-MIN比較、TAIパイロット契約改定、T1/実Target適格、Owner受理は**NOT RUN**。
+
