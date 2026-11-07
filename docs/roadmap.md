@@ -57,9 +57,11 @@
 
 ### 2026-11-07 更新：初回Tool到達は観測済み、次は比較資格の確立
 
-[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI Evidence Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)で、DSH外部AI Harnessから固定TEI Binaryを実起動した限定Observedが成立。以前の計画中「最初の外部H2 Tool Callが未実施」という記述は**以前の状態**。探索9試行中の完了3（Participant Task1）、実TEI起動32は技術的接続の証拠だが、参加者が許されないWorktreeを読めたため**隔離・比較資格は不合格／未証明**。独立Answer採点・H3 Loader・Egress／費用は未実施。探索9件を固定4Sessionへ流用しない。
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI main収録Evidence #3113](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07)で、DSH外部AI Harnessから固定TEI Binaryを実起動した限定Observedが成立。以前の計画中「最初の外部H2 Tool Callが未実施」という記述は**以前の状態**。探索9試行中の完了3（Participant Task1）、実TEI起動32は技術的接続の証拠だが、参加者が許されないWorktreeを読めたため**隔離・比較資格は不合格／未証明**。独立Answer採点・H3 Loader・Egress／費用は未実施。探索9件を固定4Sessionへ流用しない。
 
 **改訂した次の出口**：①実OS/Harness隔離でReviewer Expected/Skill/旧Log/許可外Sourceの到達拒否を確認→②固定Task/Binary/Workspace/Model/Profile/Cost/独立Expectedの新Trial Groupを開始前にPin→③**比較適格なH2を1Session**で実Tool/Answer/独立採点→④H3実Skill Load→⑤固定のH2→H3→H3→H2四Sessionで増分価値/ITT/PPを比較。技術的接続の繰返しより価値比較可能性を優先する。[VA-02 §13](../evaluations/VA-02-cross-product-first-run-protocol.md)と[VA-04 §8](../evaluations/VA-04-evidence-readiness-preflight.md)が実験条件。
+
+**実行開始前の新たな確認**：[Runbook §24.3](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)の実保存Tool結果ではCatalogが8,192 bytesで途中切断、stdout JSONとPowerShell stderrの混在、56 Call/55 Result、探索Toolと正式Whitelistの差が判明。次のH2は隔離に加え、対象Subjectの限定inspect/validateの実stdoutとHarness受領・Tool IDを突合する。全Catalog完全性を初回Taskの必須条件とはせず、利用できた範囲・未知を明示。[VA-02 §13.1](../evaluations/VA-02-cross-product-first-run-protocol.md)／[VA-04 §8.1](../evaluations/VA-04-evidence-readiness-preflight.md)を参照。実Tool到達の証拠は[TEI main](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07)に収録されているが、正式比較H2はなお0/4。新Tool Proxy/中央Result Storeは不要。
 
 **条件付き後続**：[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)のOKF Attested Computation（正規計算定義／型付きBind／実Receipt／独立Attester）は既存Skill試験の後にread-only計算1件で価値を判断し、H2/H3のSkill原文/Tool Profileに途中追加しない。SEI #820のOKF鮮度・交換とTEI #2605のProduct Skill契約を流用。新Attester Runtimeや第二Meaning Storeを最初から標準装備しない。
 
