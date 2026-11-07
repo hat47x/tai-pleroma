@@ -516,3 +516,43 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 **価値／縮小の判定**：B0既存手段・B1単独Product・B2必要時TAIは、全件JSON取得そのものではなく、根拠と未決を保ち、必要なClaimだけ追加で安全にReadし、実際の再開負担を減らせたかで評価。読めなかった部分は部分集合／unknownとして残し、独立して許可されたread-only作業を過剰停止しない。
 
 **状態**：既存Product実証とRunbookの観測範囲をActivity計画へ反映したのみ。新Tool実行・OS/Network強制・H2/H3比較・SCN-001 B0/B1/B2・実Consumer再読取・Owner意味受理はNOT RUN。新Harness/Runner/Validatorは不要。
+
+
+---
+
+<!-- tai-function-scoped-presentation-qualification-20261107 -->
+## 21. 2026-11-07：標準構造・標準表現型・Functionを分離し、Activityの提示／操作資格を再評価する（設計候補・NOT RUN）
+
+### 21.1 他チャットとの接続とOwner境界
+
+TEIの標準データ構造はDBテーブル、画面・Functionから独立した抽象構造（Relation、Collection、Tree、Graph、時系列・量等）として扱い、標準表現型（単票Panel、Tab、Textbox、Single/Multiple Choice、Toggle、Slider、Table、Tree、File System、Graph等）はその構造の**表示・入力に利用できる部品の種類**としてFunctionから独立に定義可能とする。ただし表現型の**具体的な使用Instance**は、何を閲覧・比較・編集するFunction/Interaction Contextに束縛して初めて意味が定まる、という設計方向を検討する。これは構想段階の責務整理であり、標準表現型一覧・単一の正式Function Binding Schema・全Target共通Widget APIを採用した事実ではない。
+
+既存Owner：TEI [#2495](https://github.com/hat47x/tei-platform/issues/2495)／[#2620](https://github.com/hat47x/tei-platform/issues/2620)は標準構造と意味Role、[#2497](https://github.com/hat47x/tei-platform/issues/2497)はProjection Lossと逆写像、[#1127](https://github.com/hat47x/tei-platform/issues/1127)／[#2506](https://github.com/hat47x/tei-platform/issues/2506)はFunction Data Context、[#2507](https://github.com/hat47x/tei-platform/issues/2507)／[#2500](https://github.com/hat47x/tei-platform/issues/2500)はAction Offer/ViewChange、[#997](https://github.com/hat47x/tei-platform/issues/997)はTarget UI Composition Kit、[#1124](https://github.com/hat47x/tei-platform/issues/1124)はStudioのAuthoring Projection。TAIは製品の表現型やFunction意味を再定義せず、**現在のActivityに選べるSurface／Skill／Toolと、受信した根拠の有効範囲**だけを担当する。
+
+**一つのSuccessへ畳み込まない列**：
+1. **Structure／Role candidate**：抽象構造・Identity・Relation・粒度・意味Role。Sourceが本当にLoaderに解析され、RequiredとAccepted Meaningが十分かは別。
+2. **Function／Context binding**：FunctionのPurpose、対象Subject・必要Data Set・依存・時点・選択Epoch、表示／入力／Changeの意図。表現型のCatalogに存在するだけでFunctionへの適用が成立しない。
+3. **Representation choice／projection**：Panel/Table/Tree/Chart等の候補、Loss/不可逆性、対象Target/実Renderer／Skill／CLIでの実Available・Allowed Projection。表示の成功はSource／意味／Action資格でもない。
+4. **Action Offer／execution eligibility**：操作意図・typed target・受理済Rule・現在Actor/Tenant/Host Grant・Audience・Selection Revision。見えるボタン・Tool description・read-onlyの誤伝播はWrite許可ではない。
+5. **Observed result／requalification**：実Tool／GUI Event→Request→Provider Effect／Receipt→独立Consumer Read。再開時はSource／Function／選択／Renderer／Policyの変更を必要範囲だけ再確認する。
+
+### 21.2 反証可能な最小比較（TAI横断実行は全件NOT RUN）
+
+同じ合成「受注Header＋二つの明細」と計算された総額（既存TEI #2586の明細同一性・JOIN増幅・部分取得反例を参照）で、**閲覧Function**と**明細1件編集Function**を分け、同じFunctionにTableとChartの二つの表示候補を与える。必要なSource/Role・Function/Context・Current Grant・独立Expectedを先に固定し、表示だけ違う対と、Functionだけ違う対を独立採点する。実Actionは別隔離Trialとし初回公開TEI Skill比較へ混入しない。
+
+| Case | 一因子の変更 | Expected／禁止する推論 |
+| --- | --- | --- |
+| **FP-01 同構造・別Function** | 同じ明細をBrowseとEditのContextで表示 | Table表示は両方可能でもBrowseの編集Actionを勝手にOfferしない。FunctionのPurpose・対象とGrantで資格が異なる |
+| **FP-02 同Function・別表現型** | 同じBrowseをTable／Chartに投影 | 同じEntity ID／量・単位／時点／未決・Sourceに対応する。Chartの軸/集計と元行の違い、非表示項目はLossとして扱う |
+| **FP-03 非可逆な集計** | 二行合計の棒を直接ドラッグして更新 | 個々の明細への逆写像が一意でないためTargetを推測して更新しない。Preview/read-onlyか明示入力規則・対象決定が必要 |
+| **FP-04 Partial／NULLとControl表示** | 一部明細未取得／NULL／非公開をToggle・Choice・Tableで表す | 未取得・NULL・false・0件・非開示を表示都合で同じ値へ変換しない。選択肢の数や存在で秘密を漏らさない |
+| **FP-05 旧選択／現在権限** | R10選択後にR11またはGrant撤回、画面側には古いActionが残る | 旧Action OfferからDispatch不可。現在のFunction/Scope/Selection/Hostで再評価。独立した許可Readを過剰停止しない |
+| **FP-06 表現型だけ配布** | UI Kit/SkillにはTree・Graph説明があるが実Renderer／Function Binding未提供 | discoverable≠instantiated≠loaded≠usable。現在の利用者に提示した／編集できるとClaimしない。専用Native UIを万能Formへ強制しない |
+
+### 21.3 TAIに追加する最小接続と価値条件
+
+TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだけを再利用せず、**現在のUser Job → 必要Function/Context → 許可済みProjection → Product実Available → 必要Actionの実Host資格**を既存Productの公開契約から必要な分だけ辿る。Contextに含まれない非公開Source、未受理Rule、未知Graph Edge、未消費Plugin、古いSelectionの詳細をTAIへ集約・推測しない。表現型の提示・Functionへの束縛・実行認可にそれぞれ異なるOwnerがある場合、TAIはOwner参照とunknownを維持する。**TAIが共通Renderer、Action Engine、UI Schema、第二Source Writer、Host/Grant発行器を作ることは求めない**。
+
+後続SCN-001のB0通常Markdown／B1必要Product単独／B2必要時TAIでは、同じ目的・許可Scope・独立Expectedの下で、「表現を多く選べたか」ではなく、必要な根拠・未決の復帰、誤った編集Offer／過剰停止の減少、確認と人手の負担低減で評価する。B1で十分ならTAI常時介在を採らない。SUIのKJ Canvas／Tree／Island、SHO Markdownへの投影では構造Loss/編集逆写像・SafeModeの既存Ownerを維持する。
+
+**順序・上限**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)は既にDSHからTEI実CLIのTool transport限定達成、ただし比較適格H2 0/4、H3 Loader・独立採点・実OS拒否は未達。[SK-02 Runbook §24](first-real-skill-qualification-runbook-2026-11-02.md)の隔離＋実Tool Result完全性を満たすH2一Session→H3実Load→固定4 Sessionを第一Blockingとする。**FP-01〜06を固定Task・Skill byte・Tool profileへ追加しない**。TEI #2586の同一Function read-only一往復とProduct Owner受入が可能な段階に至ってから、必要なFPケースを別Trial Groupで独立Expected比較する。FP全件の実UI/OS/Provider・横断Handoff・正式Owner意味受理はNOT RUN。
