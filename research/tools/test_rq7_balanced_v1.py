@@ -1,6 +1,7 @@
 """Public RQ7 v1 prepilot checks; this is NOT an independent effectiveness evaluation."""
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 import sys
@@ -73,6 +74,59 @@ class BalancedPublicPrepilotV1(unittest.TestCase):
             ("src", "compile"),
             [tuple(edge) for edge in self.by_id["B-DP02"]["declared"]["edges"]],
         )
+
+    @staticmethod
+    def _declared_query_holds(case: dict) -> bool:
+        selector = case["question_selector"]
+        source, target = selector["source"], selector["target"]
+        edges = {tuple(edge) for edge in case["declared"]["edges"]}
+        if selector["kind"] == "direct-edge":
+            return (source, target) in edges
+        if selector["kind"] != "directed-path":
+            raise ValueError("unsupported selector")
+        visited = {source}
+        todo = [source]
+        while todo:
+            node = todo.pop(0)
+            if node == target:
+                return True
+            for start, end in edges:
+                if start == node and end not in visited:
+                    visited.add(end)
+                    todo.append(end)
+        return False
+
+    def test_all_declared_selectors_match_public_gold_via_independent_graph_search(self):
+        for case in self.cases["cases"]:
+            if case["study_case_stage"] != "declared-only":
+                self.assertNotIn("question_selector", case)
+                continue
+            with self.subTest(case=case["id"]):
+                verdict = "supported" if self._declared_query_holds(case) else "refuted"
+                self.assertEqual(self.gold_id[case["id"]]["expected"]["V0"], verdict)
+                self.assertEqual(self.gold_id[case["id"]]["expected"]["V2"], verdict)
+
+    def test_edge_mutations_flip_direct_edge_answers(self):
+        supported = copy.deepcopy(self.by_id["B-DP01"])
+        supported["declared"]["edges"].remove(["src", "compile"])
+        self.assertFalse(self._declared_query_holds(supported))
+        refuted = copy.deepcopy(self.by_id["B-DR01"])
+        refuted["declared"]["edges"].append(["src", "package"])
+        self.assertTrue(self._declared_query_holds(refuted))
+
+    def test_missing_and_unsupported_query_predicate_rejected(self):
+        stimulus = copy.deepcopy(self.cases)
+        stimulus["cases"][0]["question_selector"]["kind"] = "SQL-WHERE"
+        with self.assertRaisesRegex(ValueError, "question selector"):
+            rq7.validate(stimulus, self.gold)
+        stimulus = copy.deepcopy(self.cases)
+        del stimulus["cases"][0]["question_selector"]
+        with self.assertRaisesRegex(ValueError, "missing explicit question selector"):
+            rq7.validate(stimulus, self.gold)
+        stimulus = copy.deepcopy(self.cases)
+        stimulus["cases"][0]["question_selector"]["participantScope"] = "hidden"
+        with self.assertRaisesRegex(ValueError, "question selector"):
+            rq7.validate(stimulus, self.gold)
 
     def test_no_gold_reason_in_any_render(self):
         for case in self.cases["cases"]:
