@@ -24,7 +24,7 @@
 
 | 不足 | 影響 | 現状 |
 | --- | --- | --- |
-| 入れ子投影（配列の配列、構造体の配列） | 契約で複合構造を表現できず、Document全体を1つのrecordで表せない | flat recordの合成で回避中。[gap](../docs/sui-documentv1-tei-gap.md) |
+| 入れ子投影（配列の配列、構造体の配列） | 契約で複合構造を表現できず、Document全体を1つのrecordで表せない。**さらに、入れ子の`fields`を書いた契約は拒否されず、無言で平坦化されて生成される**（[probe](../evaluations/records/TEI-nesting-2026-11-06.json)） | flat recordの合成で回避中。[gap](../docs/sui-documentv1-tei-gap.md) |
 | 統合モデラー・編集環境 | 意味の変更をGUI/対話で行えず、意味の正本を手で編集している | TEI statusで未完成と記載 |
 | Target Profileの種類 | one-shotとrollingの2種のみ確認。実OS・実配備の差分は未確認 | [target](../evaluations/records/SUI-TEI-target-2026-11-01.json) |
 | 証拠の束縛の範囲 | 生成器・成果物・契約のdigestは記録できるが、生成AIの入力文脈は記録していない | [contract-digest](../evaluations/records/SUI-TEI-contract-digest-2026-11-03.json) |

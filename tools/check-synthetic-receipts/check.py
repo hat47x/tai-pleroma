@@ -189,6 +189,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-parsers-2026-11-06.json",
     "evaluations/records/SEI-TEI-doctor-2026-11-06.json",
     "evaluations/records/SEI-TEI-resume-2026-11-06.json",
+    "evaluations/records/TEI-nesting-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
