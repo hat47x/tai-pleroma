@@ -71,6 +71,22 @@ def validate(stimuli: dict, gold: dict) -> dict:
             errors.append(f"{cid}: unsupported observer coverage")
         if case.get("disclosure") != "public-synthetic":
             errors.append(f"{cid}: non-public or unknown disclosure")
+        selector = case.get("question_selector")
+        if selector is not None:
+            if (
+                not isinstance(selector, dict)
+                or set(selector) != {"kind", "source", "target"}
+                or selector.get("kind") not in ("direct-edge", "directed-path")
+                or selector.get("source") not in node_ids
+                or selector.get("target") not in node_ids
+                or case.get("study_case_stage") != "declared-only"
+            ):
+                errors.append(f"{cid}: unsupported or ambiguous question selector")
+        elif (
+            stimuli.get("experiment_set") == "public-prepilot-v1-gold-balance"
+            and case.get("study_case_stage") == "declared-only"
+        ):
+            errors.append(f"{cid}: missing explicit question selector")
         if "gold" in case or "expected" in case:
             errors.append(f"{cid}: Gold leaked into subject stimulus")
     for entry in answers:
