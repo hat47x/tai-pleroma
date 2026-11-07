@@ -796,11 +796,6 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 
 <!-- tai-activity-sho-producer-fake-ci-vs-handoff-20261108 -->
-<!-- tai-activity-tt56-consolidated-gate-current-20261108 -->
-**TT-56の最新資格（下記「並行Draft」は履歴記述）**：[TEI #3354](https://github.com/hat47x/tei-platform/pull/3354)に[#3324](https://github.com/hat47x/tei-platform/pull/3324)／[#3326](https://github.com/hat47x/tei-platform/pull/3326)の二系統を収束し、両旧PRは未統合で閉鎖済み。[CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)は統合候補の**exact HEAD**でcompleted/success。既存`context_gate.py`は**11実read-only CLI Reply**（従前9＋全Source Index＋validation inspect）を受領し、独立Required 3 Validation Rule、focused `line_number_positive`のCanonical/Relation親子・Definition Source/Index対応を照合する。**32件は実CLI Replyのコピーに対するConsumer判別Control**（旧7＋Manifest2＋Byte7＋Required Slice8＋Focused Structure8）で、32 Product Mutant kill、独立AI発見、全Function適合ではない。[TEI mainの当該実コード](https://github.com/hat47x/tei-platform/blob/main/tools/reference-issue-test-ability/context_gate.py)にFocused検査が存在することも再読取済み。ただし**前記CIはPR仮統合Checkoutの証拠**であり、mainの新しいexact Binary/CIと自動で同一視しない。
-
-**再開・Handoffへの成熟差分**：対象のRaw JSON/FPが同じでも、必要Rule/Relationの一つだけ欠ける、Rule Canonicalが異なる、親子Relationが入れ替わる、InspectionとIndexが異版となる世界を、独立Requiredに照らして区別する。Activityは旧Attemptの`boundedReference=partial`と`testExecutionAdmission=exploration-only`、`qualifiedTestGeneration=false`を**維持**し、実際に不足したSource/Rule/Responseだけ再取得・保留する。確認済みの他Claimは不必要に全再実行しない。T1-Aは**既知Rule候補の実CLI判別**、T1-Bは**未知要件の独立盲検発見**であり、この32件をT1-B合格やC1／NFR／実Provider資格に足さない。新しいTAI Rule Registry、Test Engine、共通Checkerを作らず、TEI #3262/#2514/#1180と既存SC-15〜17・SC-21を再利用。初回#168 H2/H3のG0/G1/G2・比較適格0/4は変更しない。
-
 ### 23.5 SUI→SHO真正Producerの偽装拒否は両OSで成立、実一ファイル受渡しは別（2026-11-08）
 
 §23.3の「偽Checkout拒否は新CI未確認」は当時の記録。[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)の修正HEAD `6e44dcb242f57527ca104a7d6b60c13309b3924d`に対する[実PR CI #42377986797](https://github.com/hat47x/sho-composer/actions/runs/42377986797)／[push CI #42377982763](https://github.com/hat47x/sho-composer/actions/runs/42377982763)は両方success、Ubuntu/Windows各**21件中20 PASS、0 FAIL、1 SKIP**と確認済み。偽Git checkout／偽VitestをProducerとして与えた場合に、**実Producer起動前に拒否し成功Receiptを出さない**試験は両OSでPASS。ただしWindows側はPath layout拒否、Ubuntu側はHEAD不一致拒否という異なる拒否経路であり、Windowsの本物のSUI Checkoutからの正常Producer実行にはまだ未接続。PRはDraft、正式Owner受理なし。
