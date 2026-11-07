@@ -606,3 +606,15 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 [TEI #3181](https://github.com/hat47x/tei-platform/issues/3181)のWorkspace identity欠落／[#3182](https://github.com/hat47x/tei-platform/issues/3182)のread-only広告と実FS書込み差は、上記Outcomeを**何のSource/どのInvocationに帰属させるか**の実Product反例として扱う。Workspace名、manifest digest、実argvと出力先、Resource/Receipt読取を区別。既存[Runbook §24.6](first-real-skill-qualification-runbook-2026-11-02.md)へH2/G2限定の対処を記録済み。ここからTEI本体のCLI Schema変更やPermission Engine、TAI共通Receipt形式を定義しない。
 
 **順序**：初回比較適格H2 0/4の実隔離→Tool結果完全性→新4 Session→SCN-001 B0/B1/B2。新規Outcome Trialの実Host/Effect/独立Consumer/Owner価値採点はNOT RUN。外部事例#531のOX群を初回固定Skill比較のBlockingへ追加しない。
+
+
+<!-- tai-activity-rejected-after-executor-and-scope-20261107 -->
+### 22.2 「拒否」「不在」「未観測」を、Activityの再送・Outcome判断で混同しない（2026-11-07／限定実反例）
+
+[TEI #2996](https://github.com/hat47x/tei-platform/issues/2996)は、現在の\`command.Invoker\`が**実Executor呼出しの後**に未宣言のEffect/Outcomeを検査し、\`UNDECLARED_COMMAND_EFFECT\`等を返すが、\`EffectMayBeUnknown=false\`としてLifecycleに\`rejected\`を記録する経路を指摘した。Issueの一時的な局所Go再現では\`Executor\`が1回呼ばれ、\`applied=1\`である一方、記録は\`stage=observed outcome=rejected\`。これは実業務DB Commitを証明しないが、**\`rejected\`が「実行前拒否／副作用なし」の証拠にはならない**という具体的な反例である。\`UnitOfWork\` rollbackが呼ばれてもExecutorが同じTransactionに参加したか未規定の場合があり、無取引では巻戻しの保証がない。Productの正式な修正（unknownへ寄せる、rollback確認後のみrejected等）はTEI #2996 Owner判断に委譲する。
+
+**TAIの既存SC-19/20、OX-04/10への取り込み**：旧Attemptで「拒否」が見えたときは、(a)Host/Guardで**Executor前に拒否**したか、(b)Executor呼出し後の契約検査／応答欠落か、(c)実Providerに適用されたか、(d)Operation ID／Receipt／必要な独立Resource Readが得られたかを、既存Product記録の確認範囲で分ける。(b)で副作用なしを立証できないなら\`effect unknown\`を保持し、**同一または新しいOperation IDの無条件再送を行わない**。ただし\`unknown\`は「Commitした」の証明でもなく、合法なread-only調査や別Scopeの作業を無期限に止める根拠でもない。[TEI #3155](https://github.com/hat47x/tei-platform/pull/3155)の\`receipt-observed\`と\`resource-observed\`は別資格であり、後続Consumer/Owner業務Outcomeも別。
+
+**Source側の対称的な誤結論**：[TEI #3180](https://github.com/hat47x/tei-platform/issues/3180)ではCatalog/Inspectが宣言を示す種類でもTraceの未投影を\`SUBJECT_NOT_FOUND\`と返し得る。これは「必要な関係が存在しない」という否定Claimを成立させない。[Runbook §24.7](first-real-skill-qualification-runbook-2026-11-02.md)へ既存H2 read-onlyの判別を接続。Activity再開では**実Readerが読んだ対象集合／対応Kind／必要依存／用途と、実Effectを検証した範囲**のみを受け継ぐ。未知・未対応・非開示を不在や成功へ補完しない。
+
+**順序と価値**：すでに外部事例[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)のOX-04/10、Activity SC-19/20、TEI Productの#2996/#3180で所有者と独立Expectedの所在があるため、新SC番号／共通Outcome状態Enum／Receipt Storeを作らない。最初の公開TEI H2/H3固定Taskはread-onlyのまま。実Effectに関する後続試験は別Task Groupで実Provider/independent Readが整ったときのみ行う。ここでは新DSH/Provider試験・正式Owner受理・横断Outcome実証はNOT RUN。
