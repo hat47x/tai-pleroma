@@ -650,3 +650,14 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 **選択的再資格化**：資料・Session履歴に現在は許可されないRaw／Skill／独立Expectedが残り得るとき、新規外部Requestを許可済みProjectionだけから**別の新Sessionとして再構成する方式**を後続のSCN-001反証候補とする。必要なSource/Authority/Owner資格を実Readし、前Sessionを引継がないことを**実入力メッセージとTool可視性で独立に検査**する。過去に既送出の内容を削除・撤回できたと宣言しない。別Sessionに変えてもProvider側で既受信の情報が消えるわけではない。
 
 **優先順位・既存Owner**：このActivity再開試験を初回SK-02 H2/H3固定4Slotへ追加しない。先にG0実Read否定・G1通常モデル入力とSession Logを別検査・G2 Tool受領完全性・**新4 Sessionの比較適格性**を確保する。その後SCN-001で「現行Grantは変更されたが旧RawがSession内に残る」を合成Canaryで検査。資格票は既存SC-20/21、#271、#232、TEI #2515を使い、中央Context Store／新Permission Engine／Runnerは増やさない。**TAI横断の実Activity再開・Owner受理・実Providerの全経路監査はNOT RUN**。
+
+<!-- tai-activity-h6e3-implicit-context-provenance-20261107 -->
+### 22.4 明示Readしない暗黙Contextも、実際の開示と将来の再開資格へ反映する（H6-E3実Mock）
+
+[TEI merged #3191 H6-E3](https://github.com/hat47x/tei-platform/pull/3191)は、DSH `0.2.2-rc.1`／read-only／ローカルMockで、**User Taskが参照を求めず、Tool Readにも現れない**`AGENTS.md`と`CLAUDE.md`、Skill frontmatterの`description`が、Harnessの起動時処理でモデル入力へ自動的に入り、Session Logへも出ることを合成canaryで実観測した。Skill本文はこの実測ではロードされない。[Runbook §24.11](first-real-skill-qualification-runbook-2026-11-02.md)へ同じ実現象を比較資格として接続したが、初回SK-02の固定SkillとTaskは改訂しない。
+
+**TAI Activityへの必要最小の接続**：`discovered/accessible`（Harnessに見え得る）、`implicitly-delivered`（起動時に自動送出されたmetadata／指示）、`tool-read`（明示Call/Result）、`instruction-loaded`（Skill本文の受信）、`actually-applied`（実行・回答で使用）、`currently-authorized`（現Audience／Grantで再送してよい）の**観測段階を混同しない**。起動時に自動投入される`AGENTS.md`やSkill descriptionは、Owner受理済みの業務意味やProductの実権限ではないが、**公開対象となったSource**であり、Activityの`Input/Observation`や再開履歴を照合する際にはDisclosureの一部となる。
+
+**H6-E7（§22.3）との連結**：H6-E3は**新Session開始時の暗黙投入**、H6-E7は**旧Session再開時のモデル入力再構成**。別の原因・別Witnessだが、どちらも「直近のTool Readなし」「Session Log新規Eventなし」から`未開示`を推論できない。後続SCN-001では合成Dataだけを使い、現在のAudience/Grantに照らして**送信直前の実モデル入力、Session Log、Tool Contextの対象集合**を独立に確認する。暗黙に付加された指示・Skill descriptionを承認済みPolicy/意味受理・現在Resource資格へ昇格しない。
+
+**事前固定Groupとの整合**：今のH2/H3は「TEI Product Skillを利用可能にした総合効果」の比較候補。Skill descriptionの自動広告と本文Loaderの個別効果を初回結果から切り離して採点しない。別の効果を比較する場合だけ新GroupでTreatmentを事前固定。実OS read-deny、隠された上位Path/Global設定の全探索、実Provider/Egress、SCN-001 Activity実再開はNOT RUN。Owner＝TEI #2515（Harness可視性）／TAI #232（開示）／TAI #168（比較資格）／#271（選択的再資格化）。新Policy Engine・Evidence Store・Connectorを設けない。
