@@ -923,6 +923,11 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **横断の次の試験**：Rule/Scenario/Expectedの正本はTEI #1180/#2514、Patternは[#3223](https://github.com/hat47x/tei-platform/issues/3223)、Design Contextは#3262。T1-Bは実SourceからRole/Ruleを独立に取得し、Reviewer-only独立ExpectedをAIへ露出させない状態で、新しく未カバーの条件を発見する能力を測る。P-1b1が未充足なら必要なRequired部分の閉包不足として**Qualified Test Generationを保留**し、探索的Candidateを正式採用扱いしない。単一Coverage率にC0/C1/機能要件/NFRをまとめない。新Test Generator/Scenario Store/Oracle/Runnerは設けず、**YIC初回固定TEI SK-02の比較適格H2/H3新4 Sessionは独立の先行Gate**として維持する。
 
 <!-- yic-skill-cli-loader-scope-negative-20261108 -->
+<!-- yic-test-tt56-actual-qualified-projection-20261108 -->
+**T0.7／TT-56の確定した局所進展**：[TEI #3354](https://github.com/hat47x/tei-platform/pull/3354)は並行していた#3324/#3326を一つの既存`context_gate.py`へ統合した。PR exact HEADの[専用CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)では**11実read-only CLI Reply＋32件のConsumer判別Control**（7基線／2 Manifest／7 Tool Byte／8 Required Validation Slice／8 Focused Canonical・Relation・Source）、既存6 Pinned Scenarioと既知T1-Aを限定PASS。main上の[同一処理](https://github.com/hat47x/tei-platform/blob/main/tools/reference-issue-test-ability/context_gate.py)も確認済み。従前の9 Reply＋16 Controlは過去の限定基線として保持し、**PR CI＝統合後mainの同Binary/同CI**とは断言しない。32はProduct Mutant Killではなく受領済みCLI Replyコピーの合成改変に対する検出である。
+
+**YICが選ぶべき次の縦断は『発見』より先に『必要な証拠の欠け方の診断』**：別のRequired Rule/Relationだけ欠ける／Canonical kind・attribute／Relation parentをずらす／InspectとSource Indexを別版にする／必要ないRuleだけ省く、の一因子差をProductが閉包・過剰拒否の両方で見分けたことを入力資格として参照する。独立Reviewer-only未知要件をAIに見せず新Scenarioを提案する**T1-Bは依然NOT RUN**。今回の`boundedReference=partial`／`testExecutionAdmission=exploration-only`／`qualifiedTestGeneration=false`を変更せず、C0局所約10%とC1/NFR/Requirement Coverageを別分母に保つ。後続YIC X02/X06とTAI #271へEvidenceを渡す際は、**Source required scope→実CLI Reply→Consumer Gate→候補Scenario→独立Expected**の到達した部分をClaimごとに保持する。初回H2/H3のTool whitelist・Skill byte・4Slotを変更せず、新Test Generator/Rule Storeを追加しない。
+
 ### 26.7 Product Skillが「見える」「解析できる」「現在利用できる」を混同しないための負例（2026-11-08）
 
 [TEI実CLI Dogfood #3149](https://github.com/hat47x/tei-platform/issues/3149)からの新Source反例を、§26.5/26.6のP-1/AI Skill適合へ接続する。設計を変更する場所はTEI #3345（指紋のScope）、#3346（設計Markdown Loader）、#3347（CLI応答）、#3262（RequiredのSource閉包）であり、YIC側は**選択した実Product Reader/Skillがどこまで受領したか**だけを判別する。
@@ -1004,7 +1009,7 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 | `editor-intelligence` PluginがEnvironmentで選択済みでも、当該**能力Bindingが無い**（#3337） | Plugin packageの選択と**個別Capabilityの選択**は別。Plugin一覧やSkill説明文を実Tool availableへ昇格しない |
 | `migration.atlas`が`deployment-executor`として選ばれても`migration-provider`としては未選択。`contract-query-executor`2件も未選択（#3337） | 同一Plugin/別Traitの一部のみ選択される。Capability IDとFunctionのRequired Setごとに適合を照合し、Package単位で全役割を合格にしない |
 | 初回参照実装では`database-instance`が指す`postgres`/`oracle`という**技術名**と、`database.postgres`/`database.oracle`という**Capability ID**を文字列比較できず、DB Provider2件を未選択扱いした | Namespace/Roleの文字列一致は意味適合ではない。実TEIの既存`Capability.SupportsDatabaseProvider(instance.Provider)`により**技術の対応集合**を解決してから評価する必要がある |
-| [TEI Open #3350](https://github.com/hat47x/tei-platform/pull/3350)の局所再計算では、同じ12宣言の未選択が**6→4**。Postgres/Oracleはdev/prod双方でselected。追加2 Test/Go test・vetが限定PASS | **この再計算はPR段階の修正候補**でmain統合・Provider実装存在・実Target/Host資格を示さない。旧6件をその時点の観測として保持し、集計規則/Versionが変わったことを明示 |
+| [TEI #3350](https://github.com/hat47x/tei-platform/pull/3350)の修正前後では、同じ12宣言の未選択が**6→4**。Postgres/OracleのCapability対応はdev/prod双方でselected。2件の局所Go test・vetがPASSし、**mainの実coverage.goが既存SupportsDatabaseProviderを呼ぶことを再読取済み** | 旧6件は旧集計規則に束縛した歴史値。現mainの選択規則の修正は確認できるが、実Provider実装・Link/Invoke・Target互換・現在Host Grant/Owner資格は依然未実証。PR側の局所Testを新main CIの結果と同一視しない |
 
 **YIC/TEIが次に採用する測定の形**：Productから実際に取得した`Environment ID/Revision`、`Plugin/Capability Kind+ID+Version`、`Provides`の宣言、`Selection Rule/Binding`と解決結果、未選択Reason/Unknown、`actual Plugin/Target Load・Invoke/Artifact`、当該ConsumerのRequired Capability、現在Host Grant/Disclosure、対象Attempt/独立Expectedを**別列で比較**する。解決規則が異なる旧/new ReferenceのCountを、同条件の時系列トレンドに見せかけない。Provider未選択があるときも、それが不要なTask・別Environment/Consumerで可能なRead-only処理は維持する。
 
