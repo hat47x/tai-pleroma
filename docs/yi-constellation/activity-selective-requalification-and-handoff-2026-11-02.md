@@ -414,6 +414,9 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 
 ### 次の一つのActivity価値試験
 
+<!-- tai-scn001-sui-sho-real-file-stage-20261107 -->
+**SUI→SHOの現在の実験到達点とSCN-001の分離**：[SUI #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)の実Producerと[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のReaderは**同じ独立合成354-byte Markdownを各Product別のCIで限定PASS**。Windowsでは初回LF→CRLFで14 byte差の失敗を観測し、合成FixtureのみLFを固定して両OS18/18 PASS。ただし**SUIが生成した実ファイルを同一AttemptでSHO実CLIが読んだ試験は通常CIの18 PASS/1 SKIPのSKIP**であり、実際の文書受渡し・保存後Reader・Owner受理はNOT RUN。[連携計画 §10.2](harness-skills-interoperability-and-evidence-2026-11-02.md)の次Exitはopt-inの1 Fileで実Producer出力→SHO実Readのpath/raw SHA/mtime/Parser Scopeを照合すること。これは**SCN-001 B0/B1/B2に前段として利用できるProduct同士の証拠**であり、H2/H3のSkill増分効果、TAI必須化、書込みGrant/外部配布権限とは別。SCN-001の当該User JobがSUIを必要としないなら、この経路を必須条件にしない。
+
 [SCN-001](../../scenarios/SCN-001-shared-space-guidance.md)で、O-01〜05の矛盾と未決H-01〜03を保ち、非公開Draft D-04を作る。中断後にO-06を受け取って同じ目的で再開する。[Runbook §23](first-real-skill-qualification-runbook-2026-11-02.md)のB0通常Markdown/手動、B1必要Product単独、B2必要時TAI連携を**同一Task/Source/権限/独立Expected**で比較。未実装機能はunsupportedで、B2だけ新権限・新Sourceを使わせない。
 
 <!-- tai-activity-minimal-userjob-dcq-bom-20261107 -->
