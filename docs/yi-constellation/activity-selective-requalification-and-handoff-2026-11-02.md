@@ -592,3 +592,17 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 - **成果と必要性**：初回H2/H3はSkill Root/Referenceを実読めるところまで到達したが、独立回答品質・費用と当該User Jobの価値は未判定。後続SCN-001のB0手動／B1単独Product／B2必要時TAIでは、Skill Load実在よりも根拠・未決・Current Audience・実Consumer readの再現と人手負担を測る。B1で足りるならB2を必須にしない。
 
 **次の実験を増やさない**：第一BlockingはRunbook §24.4/24.5のG0実Read拒否→G1副次送出／再送→G2事前許可Toolと完全Resultを確認し、**新しく独立割付したH2→H3→H3→H2**で品質と効果を採点すること。過去の探索9回や今回の技術的四Sessionを事後に適格なITT分母へ組み込まない。ここで再度DSHを起動した、H2/H3の独立採点を行った、実OS隔離・実Providerの全Egressを拒否した、Owner受理を得たとは主張しない。
+
+
+<!-- tai-activity-outcome-hold-current-intent-20261107 -->
+### 22.1 Outcomeの「実施しない」判断と、次Turnの委任は別資格（2026-11-07／設計・NOT RUN）
+
+[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)で調査されたOracle Fusion Clawの[2026-11-06 Outcome Receipt説明](https://blogs.oracle.com/fusioncoe/fusion-claw-03-outcome-receipt)はResearch/no-opやPolicy holdを含む。これは**成功した業務変更だけをOutcomeとする評価の盲点**を示す圧力であり、YICへOracle互換Receipt/署名サービスを作る根拠ではない。[価値研究Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)が独立価値/利用者評価のOwner、本§22はActivityの継続資格だけを担当する。
+
+SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留して非公開Draft D-04を実保存し、根拠が揃うまで公開・外部作用を行わない**ことも、利用者の目的に適合する正当な到達となり得る。ただしTool error、実Effect unknown、Actorが要求した操作の無断中止、意図的なPolicy holdは別結果として説明し、単なる「完了」の一値にしない。Outcome記録は既存のProduct側Task/Attempt/Receiptと歴史Observationを参照するだけで、TAIが第二Outcome Storeを所有しない。
+
+さらにOracleの[Hiring Workspace実操作例](https://blogs.oracle.com/fusioncoe/fusion-claw-lab-hiring-workspace)では、Research→Full Autoに移行した後のfollow-upがFull Auto modeのまま残り得る。**前回のモード表示・Skill内Role・過去の承認は、次のユーザー発話への新たな委任や現在Host Grantにならない**。Source Revisionが変わらない場合も、現在の実依頼主体/目的/対象/許可されたAction集合と副作用直前のHost判断を再照合する（既存SC-18/19/20/22を再利用）。一方、既に許可されたread-only調査と非公開Draft編集を過剰停止しない。
+
+[TEI #3181](https://github.com/hat47x/tei-platform/issues/3181)のWorkspace identity欠落／[#3182](https://github.com/hat47x/tei-platform/issues/3182)のread-only広告と実FS書込み差は、上記Outcomeを**何のSource/どのInvocationに帰属させるか**の実Product反例として扱う。Workspace名、manifest digest、実argvと出力先、Resource/Receipt読取を区別。既存[Runbook §24.6](first-real-skill-qualification-runbook-2026-11-02.md)へH2/G2限定の対処を記録済み。ここからTEI本体のCLI Schema変更やPermission Engine、TAI共通Receipt形式を定義しない。
+
+**順序**：初回比較適格H2 0/4の実隔離→Tool結果完全性→新4 Session→SCN-001 B0/B1/B2。新規Outcome Trialの実Host/Effect/独立Consumer/Owner価値採点はNOT RUN。外部事例#531のOX群を初回固定Skill比較のBlockingへ追加しない。
