@@ -1194,3 +1194,19 @@ actorRefHash: None/空 → None / 16桁 / 同じ入力で安定 / 別入力で�
 - `visibility`は**大文字小文字を区別**し、綺麗に整形したうえで既知の4値だけを受ける。未知はNoneになり、上位で可視性なしとして扱われる
 - `policy_ref`の`null`文字列は未指定へ正規化し、ヘッダーの文字列"null"が実在のポリシーIDに化けない
 - 主体指紋は16桁で、Noneと空文字はNoneを返す（匿名と衝突しない）
+
+## SEI の自己診断（doctor）（2026-11-06）
+
+`sei doctor`を、store未作成・init後・手で置いた`store.lock`あり・削除後の4状態で走らせた。[receipt](../evaluations/records/SEI-TEI-doctor-2026-11-06.json)
+
+```text
+store未作成 → exit 0 / data-root=warn「does not exist yet; create the store with: sei init ...」
+init後 → exit 0 / data-root=ok / store=ok / lock=ok / gate-log=ok
+store.lock を手で置く → lock=warn「remove that file by hand and retry」/ exit 0
+削除後 → すべて ok に戻る
+doctor は一時ファイルを残さない
+```
+
+- doctorは読み取り専用で、**ロックファイルを自分で消さない**（人の判断に残す）
+- `warn`は終了コード0、`fail`のみ非0で終わる。ストア未作成は`warn`なので初期化前でも成功扱い
+- 破損したstoreでの挙動は未確認
