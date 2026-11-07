@@ -189,3 +189,22 @@ VA-Xは一次案に依存せず、各期待値を先に固定する。合成デ�
 **価値への接続**：VA-T2-Rの公開Source CLI read-only価値や[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の初回H2はVA-W-A01/02の実DB対応や全AI Caseの網羅性でブロックしない。VA-T2-Wで業務Effectを価値とする場合には、作用前拒否と作用後unknownを正しく区別し、Host Grant／Providerの実作用／受領側の独立ReadをそのScopeの必須条件とする。通常成功の正例と異常の負例を**同じSource/操作/独立Expected**で比較し、「全部拒否する実装」が合格する試験も避ける。
 
 **状態**：#3042/#3047は限定的なmain統合済み局所Go試験、#2514のM1は合成Fixture・意図的Redの限定実測。それらを今回のVA横断E2EやOwner意味採用に統合したわけではない。新VA-W-A01/A02/E-M01の同一Attempt横断実行、実DB照会、外部Harness、異モデル独立採点、正式Owner受理は**NOT RUN**。
+
+## 13. 2026-11-07：外部DSH実Tool到達後の比較資格と隔離
+
+[TEI #2509／実行Evidence Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)と[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の2026-11-07実測により、旧記録の「外部H2 Tool Call未実施」は**当時の状態**になった。DSH `0.2.2-rc.1` Windows Headless/OpenRouter・TEI binaryの固定Source `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`・参加者Task SHA `38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf`について、外部Harnessが実CLIを起動した局所技術証拠は成立。9探索試行中、完成3（本来のParticipant Taskは1）・異常終了6（連結Tool JSONによる`MALFORMED_RESPONSE`5、無効compat設定`INVALID_CONFIG`1）。完了SessionではTool Call 56、Reply 55、TEI実行起動32。実CLI `commands/version/catalog/inspect/source-index/validate`と実Workspace/コピーのWorld／SourceIndex指紋を照合した。ただし元DSH JSONL全体はPR未収録で、独立Answer採点・送出・隔離は成立していない。
+
+**探索Witnessと価値試験の分母を分離する。** 上の9件はH2/H3比較実験の正式割付より前に設定・実行された探索群であり、事後に完了した1件だけを「比較用H2」に選ばない。従来の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/RunbookのH2→H3→H3→H2、単一参加者Task原byte、R（割付）とD（実Tool／Skill実提供）、ITT全試行・PP適格試行、独立Expectedの原則を維持する。
+
+| ID | 次の比較適格Gate／Negative Control | ExpectedとClaim Ceiling |
+| --- | --- | --- |
+| **DSH-Q01 OS/Harness隔離** | Skill本文・Reviewer Expected・過去Session・許可外Sourceの読取を物理的に拒否し、固定公開TEI対象だけをParticipantへ渡す。読取だけの`read-only`Profileで作業ディレクトリ外も読めた現実の負例を再現・拒否対照化 | `read-only`という設定名・相対cwd・Tool説明だけで非露出を証明しない。実拒否/実OS・Harness境界の証拠が無いTrialは比較資格保留 |
+| **DSH-Q02 同一条件と採点独立性** | 新Trial Groupの開始前にTEI Source/Binary digest、Workspace Copy/実cwd、DSH/Model/Tool Profile、Participant Task原byte、Reviewer Expected、出力/費用・終了分類を固定 | 9探索試行の成功から合格Trialを再構成しない。Modelが誤Tool JSONを出したら障害として残し、試験中にModel/Adapter/Skillを差替えず別Groupへ |
+| **DSH-Q03 実H2の一試行** | Harness/Adapter Tool Request→CLI argv/cwd→実exit/stdout digest→Modelが受信したReply→Participant最終回答を同Attemptで照合 | Toolの起動が事実でも、受信・回答の適合は独立判定。正答/Warning/Unknownの採点と費用測定がないならValue Claimは保留 |
+| **DSH-Q04 H3追加価値** | H3 root+referenced filesの実Loader ReadとH2の非露出を別観測し、H2→H3→H3→H2を4独立Sessionで実行 | `skill_loaded=true`自己申告不可。R=H3のLoader失敗をH2に付替えずITTに残し、PPは実提供条件成立のみにする |
+| **DSH-Q05 Egress/効果の非推論** | DSH `session-log-deepseek.enabled=false`、OS Network/Profile、ログ保存先・観測可能範囲を記録。Rawの外部送出を否定するなら実Egress/OS観測で限定検証 | 設定がoffでもゼロ送出は未証明。Workspace-writeのWin32 5失敗はSandboxの成功でも書込拒否の実証でもない。実Provider/業務Owner資格に拡張しない |
+
+**次のBlocking Exitを更新**：従来の「最初の外部H2 Tool Callそのもの」は技術的に達成済み。次は**有効な隔離・固定Trial条件・独立採点の下で比較資格を満たすH2の1Session**。それを経てH3実Skill Loadと4Session比較へ進む。第二Harness、MCP、`*.tei.md`新Parser、OKF Attester、SUI/SHO全Consumer、実DB Writeは最初のGateへ追加しない。Connector/ProviderのSource未取得・Egress未観測・Cost未取得などは明示的にUnknown/Not Run。
+
+**現在状態**：外部DSH実CLI呼出しは限定Observed、#3113はEvidence Draft。Q01〜Q05の比較適格試験、独立採点、H3 Skill実Load、実Egress/OS非露出、正式4Session Value、Owner受理は**NOT RUN**。
+
