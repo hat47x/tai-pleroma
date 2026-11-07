@@ -491,10 +491,10 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 
 | 対象 | 既存の限定達成（参照証拠） | まだ言えないこと | 次の**1辺**だけを実証する／避ける過剰化 |
 | --- | --- | --- | --- |
-| TEI test dogfood | [#3273](https://github.com/hat47x/tei-platform/pull/3273)が引用する実main [CI #42359610226](https://github.com/hat47x/tei-platform/actions/runs/42359610226)で、9 read-only CLI、14 Skill静的Check、既存6 Scenario Step、CLI負例4＋独立義務負例2を限定PASS。局所C0相当10.1%、C1未計測 | 既存Case再実行T0は、未カバー要件から**新**負例を生成するT1、全機能/非機能カバレッジ、実Target E2Eではない | [#3273](https://github.com/hat47x/tei-platform/pull/3273)の行番号0負例を、既存Driver／Independent Expectedで1ケース検収。新Runner/別Scenario SSOTを先に建てない |
-| SUI→SHO | [SUI Draft #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)の可視範囲Markdown固定354 bytesと[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)のUbuntu/Windows各18 PASS（1 SKIP）は限定の固定Fixture互換。LF→CRLFの初回失敗も観測済み | 同一実FileをSUI実Producer→SHO実CLIが受領したこと、Source真正性、Writer保存・再開、意味受理、非公開情報の不存在証明 | 両Draftの既設opt-inを**同一絶対Path／同一Attempt**で実行し、実bytes/再Read/Scopeを確かめる。新Interop Serviceや共通DBは不要 |
+| TEI test dogfood | [main #3304](https://github.com/hat47x/tei-platform/pull/3304)の専用[CI #42378033965](https://github.com/hat47x/tei-platform/actions/runs/42378033965)は、既知Ruleの行番号0をPinned実CLIで検出し、偽Expected・偽Fixture・旧Pinを限定判別（**T1-A**）。従来の局所C0相当10.1%、C1未計測は別資格 | **AIが未知の未カバーRuleを盲検発見するT1-B**、全設計Closure/実Provider/Target E2Eではない。TT-56は正常JSONでもRequired Rule/Relation欠落を検出する必要がある | [#3262](https://github.com/hat47x/tei-platform/issues/3262)の既存Context GateのRequired照合を一本化し、固定HoldoutのT1-Bへ進む。新Runner/第二Scenario SSOTを建てない |
+| SUI→SHO | [SUI #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)の354-byte固定原文と[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)の別Repo限定互換。SHOのCheckout同一性・偽Producer起動前拒否は[CI #42377986797](https://github.com/hat47x/sho-composer/actions/runs/42377986797)でUbuntu/Windows各**20 PASS・1 SKIP** | SKIP一件こそ**実同一File H1**。既存GuardのPASSは実SUI Checkout→SHO CLIの同一Attempt受領・Source真正性・Writerを証明しない | 既存Runnerで真正SUI固定HEADとSHO実CLIの一Attemptを検証。SHA/実Path/Reader Scopeを独立観測。新Handoff Serviceは不要 |
 | SHO独立L0 | [#16](https://github.com/hat47x/sho-composer/issues/16)／旧[Draft #17](https://github.com/hat47x/sho-composer/pull/17)はread-only Readerの実ディスク/2 OS CIを限定実証。[Fixture #12](https://github.com/hat47x/sho-composer/pull/12)はmerged、#17は**closed・unmerged** | 正式製品Reader採用、未定義参照完全検出、特殊FileのOpen前拒否、Writer G2/保存再開 | Readerの未解決候補を正確に「未評価」と表示しつつ、[#4](https://github.com/hat47x/sho-composer/issues/4)の一文書保存→再開へ繋ぐ。PDF/DOI/MMI完成は待たない |
-| TEI Plugin/BOM横断 | [PR #3277](https://github.com/hat47x/tei-platform/pull/3277)は要求文書merged、[Draft #3269](https://github.com/hat47x/tei-platform/pull/3269)はreference-only・closed/unmerged | Studio実Plugin起動・Resolver相互運用・Verified BOMの資格はない | 単一read-only Inspectorの実Provider/Consumer/Build閉包と選択版だけ照合。全CLI/Studio/生成Runtime一斉移管を初回Gateにしない |
+| TEI Plugin/BOM横断 | [RQ-008 #3277](https://github.com/hat47x/tei-platform/pull/3277)はmerged。[main #3337](https://github.com/hat47x/tei-platform/pull/3337)は2環境・宣言12能力のうち未選択6を列挙（うちdatabase-provider 2はBinding型の照合限界）。[main #3336](https://github.com/hat47x/tei-platform/pull/3336)はBuildの起動主体と子Process・実Disk Artifact digestを別観測 | **未選択は故障とは限らず、選択≠実利用**。Stage Driverはself-build L3や実Runtime資格を証明しない。Studio実Plugin/Verified BOM未達 | Inspector一能力のKind+ID→Environment選択→実Link→実Consumer→必要Grantを別検査。未選択の全能力やself-buildを通常inspect/Buildの先行Gateにしない |
 
 **順序の判断**：局所的に既存CIが通っている経路は、同じ試験の再包装よりも「欠けている一辺」（TEI T1、SUI→SHO同一File、SHO Writer、Plugin実Consumer）を優先する。安全・出典・Scope・現行Grantの不変条件は省略しない。未実施の価値比較を「B2は不要と証明された」と読み替えない。
 
@@ -518,3 +518,16 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 
 **優先順位**：初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の外部Harness比較G0実拒否→G1送出→G2完全受信→事前割付H2/H3は変更しない。TAI/SUI契約試作、TEI Design Context／T1、BOM Exact Tupleは**それぞれ既存Product Ownerの並行レーン**として進め、全Productへ先行必須化しない。今回本計画が所有するのは価値・過剰必須性の比較であり、**既知T1-Aは局所Observed／盲検T1-BはNOT RUN**。実BOM/Plugin Target・TAI端点種別の正式契約更新・外部Skillの価値比較/Owner受理もNOT RUN。
 
+
+
+### 22.5 未選択Capabilityと編集可能性を「全体失格」にしない
+
+[TEI Plugin Capability Coverage #3337](https://github.com/hat47x/tei-platform/pull/3337)は、宣言能力12のうち6がどのEnvironmentからも選ばれない参照Workspaceを実観測した。しかし、別環境向けの未選択候補を含むのは正常であり、database-provider 2件はBinding種別の照合限界もある。**宣言・Plugin選択・Capability Binding・Buildへの採用・実Provider呼出し・現在許可**を分ける。「選ばれない」を全Pluginの修理義務とせず、**要求された操作に必要な能力だけ**を実BindingとConsumerで確認する。最初のInspector一機能は[#1251](https://github.com/hat47x/tei-platform/issues/1251)で証明し、全Provider選択/実利用を強制する別Resolverを建てない。
+
+[TEI Build Stage Driver #3336](https://github.com/hat47x/tei-platform/pull/3336)は子Processの実起動主体・起動先・disk Artifact digestを区別して記録した。ただしStage1自身の生成物による次段Build（L3）ではない。通常のGo buildや単一Inspectorの価値を、self-build L3完了まで停止しない。自称の子Build結果を実Artifact検査なしで信用しない、という不変条件は維持する。
+
+**SHOの独立した文書価値**：[SHO #19](https://github.com/hat47x/sho-composer/issues/19)／[#20](https://github.com/hat47x/sho-composer/issues/20)に従い、普通のMarkdownと管理外の未完成Source Draftを、AI・OKF・TEIの新Parser・Cloud同期なしでRaw編集・no-op保存・再読取できることを第一段に置く。[TEI #3031](https://github.com/hat47x/tei-platform/pull/3031)が示す宣言済Source Root内の新形式未束縛エラーは**TEI意味解釈の拒否**であり、SHOテキスト保存の全面拒否理由ではない。OKFは[SHO #18](https://github.com/hat47x/sho-composer/issues/18)の任意交換契約であり、通常Markdownに出典やAccepted Meaningを自動付与しない。Writer/外部Editor競合/ABA/Byte保持は[SHO #4](https://github.com/hat47x/sho-composer/issues/4)で実証する。
+
+**共通の反証対**：(a) 不要Capabilityは未選択でも指定されたread-only操作は成功、必要Capabilityが未Bindingなら**その操作のみ**不可・理由付き。(b) 未対応TEI Markdownの実Parser処理は拒否するが、SHOで原文をno-op保存・再開できる。(c) 子Process Buildが成功してもself-build資格は主張しないが、通常Buildは止めない。利用可能な部分を不必要に止めた回数と、未資格の結果を誤って成功扱いした回数を別々に測る。統一Status Schemaや中央Gateを増やさない。
+
+**実施状態**：他Productの限定CI/参照実験と現行Issueを確認し、本Draftの優先順位のみ更新。Inspector実Provider呼出し、SHO Writer・通常Editor/TEI Loader E2E、self-build L3、SUI→SHOの実同一File、B0/B1/B2独立比較とOwner受理は**NOT RUN**。
