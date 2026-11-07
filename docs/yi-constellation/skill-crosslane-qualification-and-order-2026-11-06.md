@@ -1,10 +1,11 @@
 # YIC Skill横断適合・実行順序への統合追補（2026-11-06）
 
-> 状態：計画追補・Owner未受理。新しい実AI Harness試行／実Skill Load／製品間E2E／本番Authority／シリーズReleaseは本追補ではNOT RUN。既存の各Product契約、TAI #168、#271、#74、#232、Draft PR #270、SK-01/SK-02/SK-03を正本として尊重する。新Host・中央Registry・共通Evidence Engineは設けない。
+> 状態：計画追補・Owner未受理。**2026-11-07の外部DSH→実TEI CLI→Tool Replyは限定的に実観測済み**（TEI PR #3113／TAI #168）。ただし**比較適格なH2/H3実4 Session、H3実Skill Load、実OS隔離・Egress、独立正答採点、製品間E2E／本番Authority／シリーズReleaseはNOT RUN／未適格**。既存各Product契約、TAI #168、#271、#74、#232、Draft PR #270、SK-01/SK-02/SK-03を正本とし、新Host・中央Registry・共通Evidence Engineは設けない。各節の「最初のH2 Tool Callが次の出口」「実外部HarnessはNOT RUN」は**新Evidenceより前の歴史記述**であり、現行の出口は下記§4・§19を優先する。
 
 ## 1. 背景と差分
 
-- [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) の2026-11-06更新では、固定したTEI実Go Binary/公開Source（TEI pin `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`、`reference/workspace`、`semantic-data:sales.order`）に対するTAI→TEI W0/S1読取りが限定達成。これはAI HarnessがToolを呼んだ証拠でもSkillを実Loadした証拠でもない。
+- [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) の2026-11-06更新では、固定したTEI実Go Binary/公開Source（TEI pin `50ebf8014340fd1906f6b35cfa30173e0ee2fc6c`、`reference/workspace`、`semantic-data:sales.order`）に対するTAI→TEI W0/S1読取りが限定達成。これは**当時は**AI Harnessの実Tool呼出し・Skill実Loadを立証しなかった。
+- **2026-11-07更新（新一次証拠）**：[TEI #2509／PR #3113](https://github.com/hat47x/tei-platform/pull/3113)と[TAI #168／Runbook §24](https://github.com/hat47x/tai-pleroma/issues/168)で、DSH `0.2.2-rc.1` Windows/headless経由の実Tool transport（`h2-08` Session completed、Tool Call 56/Result 55/実TEI Binary起動32、最終回答実byte）は**限定成立**。ただしread-only環境でも範囲外Worktreeを実Readでき、`source-index`は固定SK-02許可コマンド群外、9探索試行にモデルのMALFORMED_RESPONSE 5・INVALID_CONFIG 1が含まれ、比較適格なH2/H3 TrialとSkill実Loaderは**未成立**。旧基線を新たな比較PASSへ昇格させない。
 - [TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270) の計画§39〜41・[実験Runbook §21〜22](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)には、固定Participant Taskのraw digest照合、R（割付）とD（実提供）、ITT/PP、H2 Skill非露出、H3 root/reference pin、一時ファイルビューが既に定義されている。新しいRunner/Checker/Skill Formatを作らず**そこを使用する**。
 - [CI #42112462908](https://github.com/hat47x/tai-pleroma/actions/runs/42112462908) は固定Skill候補のbyte照合、H2/H3各ファイルビューに対する同一実CLIのread-only実行について成功。ただし実HarnessのTool実呼出し、Loader read、公開経路の物理隔離はNOT RUN。
 - [TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)の固定Product SkillにはCLI応答の `entries` と `result.entries` の取り違え、および実比較Tool Profileとは異なる `go run` 記述が残る。初回H3の治験条件を変えず、実行上の影響を記録する。修正版は別Trial Groupとし、元のPackageを黙って差し替えない。
@@ -39,7 +40,8 @@
 | 順 | Gate | 必須の一次証拠 | 不足時の状態 |
 | --- | --- | --- | --- |
 | P0 | 固定TEI Binary/Source/Subject・Task byte・Tool/Disclosure/Model pin | TAI W0/S1の実CLI/Source/argv/Source IndexとSkill root/reference pin。H2 Skill非露出の実Tool File View | 不一致=ineligible、直接観測不足=insufficient-evidence |
-| P1 | **H2-01：外部HarnessのSkillなしTool-only一実セッション** | 実Harness Session ID、実Tool request/response、argv/cwd/exit/stdout、Sourceと回答。Skillや採点票への迂回到達も検査 | 実Tool呼出し不明=NOT RUN/INELIGIBLE |
+| P1a（限定達成） | **外部Harness→実TEI CLI→Tool Replyの技術的縦切り** | DSH実Session/実Tool結果・CLI argv/exit/stdout digestをTEI PR #3113へ束縛。`h2-08`は探索的実Witness | これはH2比較適格・Skill非露出・独立正答採点ではない |
+| P1b（次のExit） | **隔離済み・固定Profileに適合するH2の一実Session** | H2 Skill/独立Expected/元Checkout/旧Logの**実到達拒否**、事前固定Task/Model/Binary/論理Path/Tool許可群/Grant、実Tool＋最終回答/Consumer。比較4Slot割付と分母を実行前に固定 | 非露出未証明・Profile外Command・回答欠落ならineligible/insufficient-evidence。歴史探索試行は算入しない |
 | P2 | **H3：同HarnessでProduct Skillあり** | 同一Task/Source/Tool/モデル/Grant。root/referenceの実Loader Read。固定候補の実手順エラーも保持 | 配置のみ=Available、実Load不明=Unknown |
 | P3 | H2→H3→H3→H2の4独立Session | 割付R、実提供D、ITT全数、条件を満たしたPP、独立Expected、品質・誤操作・費用・経過時間・人手 | 対照不成立=比較不可。4件だけで一般的改善率を主張しない |
 | P4 | 必要になった場合だけ追加Product/TAI横断Skill・別Harness | 既存SK-01/SK-03と #271 によるTask別Handoff・Consumer/Host再資格化 | 単独Skillで十分ならTAI介在を省く |
@@ -345,9 +347,17 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 | H3提供 | 固定Root＋必要Referencesの実Loader Read byteとTool呼出し・回答を別々に観測 | 配置・root SHA・`skill_loaded=true`自己申告だけではD（実提供）成立せず |
 | 回答と増分価値 | 隔離した独立Expected、正答/誤操作/Warning/unknown、Tool回数・Token・時間・人手を実4 Sessionで比較 | 一部PASS・Tool-only CI・他Product CIからSkillの有用性を推定しない |
 
-ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加の独立判定器は作らない。次のBlocking Exitは実外部Harnessによる**H2-01一SessionのTool Request→実TEI CLI→Harness Reply**で不変。実隔離・Skill実Load・四Session採点は**NOT RUN**。
+ここでは[SK-02](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md)とRunbookのPV-01〜04／R・D／ITT・PPを**そのまま再利用**。独自Sandbox、二重Runbook、第二Eligibility Checker、中央実験Store、追加の独立判定器は作らない。**2026-11-07に実外部HarnessのTool Transportだけ限定到達**。次のBlocking Exitは、**実OS/Harness隔離・事前固定Profileに適合するH2の一Sessionを実Tool/回答・Consumer受領まで観測すること**へ更新。実隔離・Skill実Load・四Session独立採点は**NOT RUN／未適格**。
 
-### 19.3 既存の5製品一括検証が示す範囲
+### 19.3 DSH実Tool Witnessを比較試行へ誤算入しない（2026-11-07更新）
+
+[TEI PR #3113](https://github.com/hat47x/tei-platform/pull/3113)は**Product側の限定実行証拠**であり、`h2-08`（DSH 0.2.2-rc.1、Windows/headless、OpenRouter/DeepSeek、公開 `sales.order`）における実CLI起動32件・Tool Call 56/Result 55・最終回答の実byteと、全9試行の要約を保存した。固定TEI Source commit、Binary・Session/Task SHA、Workspace fingerprintを元の証拠へ束縛する。原DSH JSONL全文は保存されておらず、モデル思考・実Egressゼロ・正式な独立回答採点や課金を再構成できるとは主張しない。
+
+今回の歴史的WitnessをSK-02の比較適格なH2へ含められない理由は独立に三つある。①read-only指定でも実行Directory外の元WorktreeをReadでき、Skill・Reviewer Expected・旧Logへの到達不能を物理的に立証していない。Windows `workspace-write` OS Sandbox構築は Win32 5で失敗し、`session-log-deepseek.enabled=false`はネットワーク送出が無かった証拠にならない。②実Toolの`source-index`は[既存SK-02 Checker](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/evaluations/tools/check-sk02-pair-eligibility.cjs)の初回read-only Command familyの**外**であり、後から許可済みとしてTrial JSONやCheckerを変更しない。必要なら許可群・独立Expected・両腕を**事前**に再固定した別Trial Groupとする。③9試行は固定Participant Task完了1／短い接続確認完了2／Tool JSON連結による`MALFORMED_RESPONSE` 5／無効な`compat`設定の`INVALID_CONFIG` 1であり、短い確認や途中Tool成功を4独立Sessionの比較成功へ数えない。`maxParallelToolCalls:1`でもMALFORMED_RESPONSEは残った。
+
+**次の作業を既存Runbook §24に一本化**：まずOS/VM/Container/Harnessの実強制境界でH2のParent Path/元Worktree/Skill/Reviewer Expected/旧ログの到達拒否を実観測し、同一論理Path・Tool Profile・Binary/Source/Task/Model/Grantと4SlotのR割付を開始前に固定する。次に**比較適格なH2一Session**で実Tool/最終回答・Consumer受領を確認。続いてH3のroot＋必要Reference実Loader Read→残り3 Session→ITT全数/PP適格の独立Expected採点を行う。隔離が実現できなければenvironment-ineligible、実Tool/Replyが観測不足ならinsufficient-evidence。Model/Adapter改修は別Pinned Group。二Harness・TAI Activity/OKF Attester・実DB/Provider Effectは後続。
+
+### 19.4 既存の5製品一括検証が示す範囲
 
 [TAI PR #475](https://github.com/hat47x/tai-pleroma/pull/475)はTEI/SUI/SEI/MMI/EKIの固定組合せで**53段の一括検証PASS**を報告する。ただしProduct間の限定実験であり、外部HarnessがSkillを実ロード・活用して目的を達成した証拠でも、SHO/TAIを含む全製品Release資格でもない。YICの報告ではProduct CI／Cross-product integration CI／Harness Tool Call／Skill Loader／独立Task Outcome／実Host/Consumer資格を別Claimとして表示する。
 
