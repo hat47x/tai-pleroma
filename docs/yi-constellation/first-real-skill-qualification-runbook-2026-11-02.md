@@ -712,3 +712,24 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 5. **実Tool→Consumer評価**：実Request→Process argv/cwd/exit/stdout→Harness ReplyとSource/Warning/Unknownを同一Attemptで照合し、§21のITT全割付とPP適格を分ける。適格化した後にH3で固定Product Skill root＋必要referencesの実Loader Readを比較する。Skillなしで十分なら常時TAI/Skill介在を推奨しない。
 
 **Owner／順序**：TEI #2509／PR #3113は外部DSH実Tool実測、TAI #168／SK-02は比較資格と独立Expected、#232はDisclosure/OS境界、#271はActivityの再資格化、#422はB0/B1/B2価値、#514は後続OKF定義/Run Attestation。新Runner、独立Verifier、Agent Host、正本Registryは追加しない。初回固定TEI H2/H3のTask/Skill bytes/Tool profileは、今回の探索的証拠で自動改訂しない。
+
+<!-- h8-dsh-h2-tool-result-completeness-and-isolation-preflight-20261107 -->
+### 24.3 実H2の次の一手：Tool出力の完全性と、隔離された実Profileの証拠を先に揃える
+
+[TEI #2509／PR #3113の保存された実Tool結果](https://github.com/hat47x/tei-platform/tree/375b8a95c9fdd7851e55c8ad49a867a745229c5f/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07)を、ファイル単位で再照合した。これは**外部AI Harnessからの呼出しは成立したが、実結果の全部がTool観測として完全ではない**という独立の負例である。
+
+| Product結果／外部Tool保存ファイル | 実際の保存状態 | Claimの上限 |
+| --- | --- | --- |
+| `cli-model-catalog.txt` と `cli-model-catalog-pinned-worktree.txt` | **各8,192 bytes**で同じ内容。末尾が`"id":"repair_intake.intake`で途切れ、`JSON.parse`不能 | 先頭に含まれるWorld／Source Index FPの一致は観測可能。ただし**Catalog全要素の一致・全Source列挙完了・末尾の欠落なし**は証明できない。元CLIが欠落させたのか、Tool/記録経路の制限かも原ログ無しでは断定不可 |
+| `cli-inspect-sales-order.txt`／`cli-validate-json.txt`／`cli-source-index-sales-order.txt`／`cli-commands.json` | 各ファイルの**先頭のstdout JSON部分は正常にParse可能**。後続`[stderr]`にはPowerShellの`CannotCreateTypeConstrainedLanguage`（`[Console]::OutputEncoding`設定の失敗）がある | **合成されたTool reply全文はJSONではない**。stdout/stderrを分離した上でSource／診断等を照合。Shell初期化に由来するstderrを自動的にTEIの意味診断とは扱わず、かといって失敗を隠さない |
+| 56 Tool Call／55 Result | 1件のRequestにResult未記録。最終Sessionはcompleted | Session completed＝**全Tool Result受信完了**ではない。Call ID／Actual argv／Result ID・bytes・digestで対応する範囲だけClaimsを成立させる |
+
+**比較適格H2の運用前検査（既存§19〜21／SK-02票に記録し、新Runner／独立Verifierは作らない）**：
+
+1. **Reviewer側だけで範囲を点検**：参加者に実Secret／独立Expectedのパスを与えず、同じOS／Harness／Toolの**有効Profile**で、許可対象の`tei`実Binary＋公開Sourceへの正例Read、親Checkout・Skill・別Session・Reviewer用情報の非露出を検証する。拒否は実OS／Toolの制限結果で確かめ、単に`cwd`内にSkillが無いという一覧や`read-only`ラベルを証拠にしない。合成canaryのみを使用。実験用の外部Modelへcanaryや拒否対象の実パスをそのまま渡して検証しない。
+2. **受領結果をSource/Tool/Replyごとに束縛**：実Command family／実argv／cwd／Binary byte／Result Call ID、stdout byte/digest、stderr byte/digest、Harnessへ渡った文字列と欠落・切詰めの有無を照合する。機械可読JSONは**そのJSON bodyだけ**をParseできることと、当該Tool Replyの全文が同じJSONかを区別。許容サイズを超える場合はCommandとTaskを勝手に変更せず、許可済みの**対象Subject `inspect`／`validate`**などで必要な限定Resultを新Callとして実取得し、Catalog全件完全性は`unknown`のまま残す。
+3. **Tool許可を実際に強制**：既存SK-02初回Whitelistの`version/commands/model catalog/inspect/trace/validate`、Workspaceパス／フラグをTool実行前とログで照合する。DSHの探索成功時に使った`source-index`、任意PowerShell／File探索などを遡及的に初回Profileへ許す扱いにしない。Tool Model出力が不正JSONを連結した試行は`MALFORMED_RESPONSE`のまま保持する。
+4. **試行資格の2段階**：割付前の実隔離／Profile検査がNGなら**未割付・環境不適格**として4Slotは開始しない。開始後のSkill漏出、Tool越境、欠けたResponse、未知Grant／EgressはそのSlotに残し、ITTには失敗／未知を記録し、PPのSkill効果には算入しない。実験途中にModel/AdapterやSandboxを差し替えるときは新しいGroup／事前固定条件を作る。
+5. **Modelの実版を過大認定しない**：今回の`~deepseek/deepseek-flash-latest`はDSHの指定モデル識別子。表記が同じでもProviderが実Weights/Revisionを同じものとして返したかは今回のEvidenceでは未確認。モデル別名／経路／有効設定と、実解決されたモデル版／Provider応答metadataを別欄に保持し、取得不能なら`unknown`。全4試行のモデル同一性を自己申告Aliasだけで確定しない。
+
+**Ownerと上限**：DSH `pwsh` 経路でのTool Result分離／8KiB中断・Windows ConstrainedLanguageの扱いは[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)へ、OS／Filesystem／Networkの実拒否は[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)・[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)へ、四SessionのR/D・資格と独立採点は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)へ帰属。PowerShellの言語保護を弱めることを解決策として前提にせず、実際に使うHarness/Tool Profileの可用性・安全性を別検証する。**ここで実Toolを再実行したわけではなく、保存ファイルを再検査した結果と次の試験契約**。H2/H3比較適格0/4、H3 Loaded 0、Owner意味受理／実送出観測NOT RUNの状態を変えない。
