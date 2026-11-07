@@ -695,6 +695,14 @@ SUI側（確認版`09c240460017d0a4ecc6ab55582631d3e1a8b0a9`）の`models_contex
 - `synthetic=false`／`evidenceKind=real-execution`という既存receipt表示は「SUIのHTTPを実際に実行した」ことを示す。**入力stubの合成性は残る**。実資料の真正性、独立したSource revision一致、正式な意味受理、外部効果や利用者の認知増分を保証しない。
 - SUI/TAIの版固定契約は[別Draft #292](https://github.com/hat47x/tai-pleroma/pull/292)の担当であり、本変更では版固定・認可方式を拡張しない。既存の[YI候補可視性研究 Draft #443](https://github.com/hat47x/tai-pleroma/pull/443)とは、**こちらは実SUI HTTPの合成stubに限定した証拠取得**という分担とする。
 
+### 同一Attemptの応答等価性と、消費された入力の出所
+
+SUI #3389（配列順・locale）／#3390（lone surrogate）では、`bundleHash`を他言語で再計算できる条件が未決である。そのため、`context_bundle_check.py`は**同じ固定queryを2回HTTP実行した応答について**、`bundleHash`の文字列一致と**JSON応答全体の構造的等価性**を別のbooleanで確認する。ハッシュが同じでも候補・関係・根拠の応答が異なれば`FAIL`。これは**単一の実行環境内の再現性**であり、他言語互換のdigest検証、Source全数、権限・受理の証明ではない。
+
+特に従来のreceiptの`artifact.path/digest`はTAI側の参照資料を識別する**記録上のメタデータ**で、Context APIのrequest bodyには送っていない。消費したのは`query`とSUIの`A2-minimal-v1`合成stubである。この区別を`artifactUsage`と`consumedInput`に追記し、記録上のdigestから「元資料を検査した」と主張しない。`host`には実行時のOSを記録し、固定のWindowsラベルを用いない。
+
+PR CIには、TAIの単体試験とは独立に、公開SUIリポジトリのコミット`a828a0154db3201322ed27d006c035d9784866a8`を固定チェックアウトし、SUI backendの`requirements-test.lock`で環境構築して**実localhost HTTPを実行する専用job**を追加する。SUI外部API/本番DBへのアクセス、LLM利用、外部公開を行わず、receiptは一時領域へ保存しActions artifactとして自動アップロードしない。CI成功時の上限は「固定合成stubで二応答の等価性とselected/reference-onlyの形を観測した」まで。環境依存や実運用のPolicy・Owner受理は未実証のまま。
+
 ### 試験と受入境界
 
 ```sh
