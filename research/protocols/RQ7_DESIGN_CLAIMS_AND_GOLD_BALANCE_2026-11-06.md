@@ -94,3 +94,37 @@ RQ7は処理Graphの完全性だけでなく、TEIのデータ・業務定義と
 - [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) / [TAI #443 Draft](https://github.com/hat47x/tai-pleroma/pull/443): Harness、生成候補の未提示を区別。モデル内部推論の強制公開はしない。
 
 必要なSource/Meaning/実Recordが揃わなければ`unsupported/unknown`で停止し、強引に仕様へ昇格させない。研究側に新たな汎用Constraint Engine、第二の正本、常駐Host、Plugin Registry、実行Authorityを導入しない。**本追補は研究設計への反映で、TEIの製品実装・alert UI・独立モデル/Human実験・実DBを実行したことではない。**
+
+
+## 7. 2026-11-07：Gold分布を変えた公開prepilot v1
+
+研究で検出したGold偏りの**対応を実際の別データセットとして保存**した。従来v0の10ケース・Goldには変更を加えない。
+
+- [公開刺激12ケース（v1）](../fixtures/RQ7_BALANCED_PUBLIC_PREPILOT_V1.synthetic.json)
+- [公開Gold（v1）](../fixtures/RQ7_BALANCED_PUBLIC_PREPILOT_V1_GOLD.public.json)
+- [選択式Renderer / チェッカー](../tools/rq7_pilot.py) で `--dataset v0` と `--dataset v1` を切り替えられる。旧CLIの既定はv0。
+- [専用回帰テスト](../tools/test_rq7_balanced_v1.py) では新12ケース×4表示の48通り、宣言EdgeとPath、情報量ごとの同一Gold、旧版非変更、Gold漏出禁止を点検する。
+- [研究用の限定CI](../../.github/workflows/rq7-public-prepilot.yml) はTAI製品の正式GateやTEIのSource Reader/Targetを検査しない。
+
+| 評価集合 | V0/V1 Supported / Refuted / Undetermined | V2/V3 Supported / Refuted / Undetermined |
+| --- | --- | --- |
+| 公開v0（10ケース） | 2 / 0 / 8 | 4 / 3 / 3 |
+| **公開v1（12ケース）** | **4 / 4 / 4** | **5 / 5 / 2** |
+
+v1ではBuildとFile-Relayの両Domainに、**宣言内の直接Edge・推移的な有向Pathについて支持／反証できる質問**をそれぞれ4件設定し、実行証拠を要する2件・観測不足の2件を加えた。Graph/テキスト表示で同じ事実を与え、`direct edge`と`directed path`の取り違えを反例化する。
+
+### 実験上の限界と次に固定するもの
+
+**Gold分布が均衡したこと ≠ 認知課題の難度・出題順・言語負担・概念の独立性が均衡したこと**。今回の宣言問いには互いに似た構造が含まれ、旧v0より簡単に解ける可能性がある。v0・v1を混在させた生の正答率を介入効果や製品効果としない。v1の公開Goldは繰り返し閲覧できるため、独立holdoutには使わない。
+
+本番の比較では、同一EvidenceのGraph/テキストを別の評価者が監査し、出題順・提示形式・学習や同じNode名への馴化を記録する。保持すべき独立変数は`presentation medium`（人は**実描画画像**、AIは受け取った形式を明記）と`additional scoped evidence`の二つ。正しい保留と、何を次に確認すべきかの説明を分けて採点する。
+
+### 他チャットのTEI設計・実装進展との接続
+
+[TEI #3248](https://github.com/hat47x/tei-platform/pull/3248)は税・通貨・採番・休日に関連する17のAttribute Role名を検証語彙として受理する変更としてmainに統合された（確認したTEI main `680646b8629ce7af5b9bb0ba7db3529151b63a4c`）。**Role名の辞書受理は、Role↔型適合・業務値域のMECE・Owner Meaning Acceptance・実データの適合を保証しない**。この差を次段のIntended/Source/Observed候補へ引き渡す。
+
+[TEI複合図表Reference Draft #2881](https://github.com/hat47x/tei-platform/pull/2881)は、合成Graph/Tableに加え実`tei trace`から別言語Node Consumerへのread-only直接Edge候補接続を提示し、Caller指定scopeとSource宣言scopeを区別する証拠を追加した。ただし**直接Edge・Caller scopeは完全Relation／有界不存在の製品資格でない**。RQ7の実Source比較はこの既存経路を候補として利用し、第二Reader/Resolverを開発しない。
+
+[TEI研究計画 PR #2966](https://github.com/hat47x/tei-platform/pull/2966)と[ETL/MFT設計 PR #2827](https://github.com/hat47x/tei-platform/pull/2827)は2026-11-07に統合済み。TAI研究PRはその設計正本を複製せず、被験者の判定・根拠再構成・費用の研究票を保持する。
+
+**実験上の状態**: v1は公開合成ケースと研究ツールの開発。TEI実Role意味受理、独立holdout、人間・AIのV0〜V3成績、実Graph UI、実Provider Authority、実配送／自己ビルドG4の認知効果は全て**NOT RUN / NOT PROVEN**。
