@@ -565,3 +565,14 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 後続SCN-001のB0通常Markdown／B1必要Product単独／B2必要時TAIでは、同じ目的・許可Scope・独立Expectedの下で、「表現を多く選べたか」ではなく、必要な根拠・未決の復帰、誤った編集Offer／過剰停止の減少、確認と人手の負担低減で評価する。B1で十分ならTAI常時介在を採らない。SUIのKJ Canvas／Tree／Island、SHO Markdownへの投影では構造Loss/編集逆写像・SafeModeの既存Ownerを維持する。
 
 **順序・上限**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)は既にDSHからTEI実CLIのTool transport限定達成、ただし比較適格H2 0/4、H3 Loader・独立採点・実OS拒否は未達。[SK-02 Runbook §24](first-real-skill-qualification-runbook-2026-11-02.md)の隔離＋実Tool Result完全性を満たすH2一Session→H3実Load→固定4 Sessionを第一Blockingとする。**FP-01〜06を固定Task・Skill byte・Tool profileへ追加しない**。TEI #2586の同一Function read-only一往復とProduct Owner受入が可能な段階に至ってから、必要なFPケースを別Trial Groupで独立Expected比較する。FP全件の実UI/OS/Provider・横断Handoff・正式Owner意味受理はNOT RUN。
+
+### 21.4 TEIの入れ子投影における「静かな欠落」を実反例として追加する（2026-11-07）
+
+<!-- tai-standard-representation-nested-fields-silent-loss-20261107 -->
+
+[TAI merged #525](https://github.com/hat47x/tai-pleroma/pull/525)は段階4の暫定判断として、範囲を広げるより先にTEIの入れ子投影契約の不足を確かめる方針を記録した。その後の[TAI Draft #526](https://github.com/hat47x/tai-pleroma/pull/526)では、未知の`projection.kind="nested"`は生成前に拒否する一方、**既知kindのまま`fields`へ入れ子構造を渡すと、JSON Decoderが未知fieldを黙って捨て、平坦な生成に成功する**局所実測が得られた。これは契約に書かれた形と生成物の形が異なる失敗であり、「入れ子を書けば拒否される」「成功したから要求通りの階層が保存された」のどちらも誤り。
+
+**既存FP-01/02/03の受入を具体化する条件**：同じ単票＋明細のRequired tree/identity/多重度/nullable/編集対象を事前固定し、(a)flatのみ、(b)unknown kind、(c)既知kind＋入れ子`fields`の三条件を同じProduct版で照合する。(b)は明示拒否、(c)は現仕様で意味的な入れ子を保てないなら**unsupported/契約不一致としてTAIの表示／Action候補に昇格させない**。将来のProduct修正では、Schema/Decoderで未サポート字段を拒否するか、実生成物へ必要な入れ子ID・関係を一貫して表現し、独立ExpectedでLoss/逆写像を確認する。単なるexit 0／実生成／見かけのTable表示を契約成立としない。
+
+**Owner/上限**：契約Decoder・Generator・正規Structure/Functionの受理はTEI、観測と段階4の製品側判断はTAI #525/#526、Activityにどの表示・操作をOfferできるかは本§21。新たなCross-product Representation Engineは設けない。#526はDraftであり、TEIの修正・実UI/Harness/Owner受理は**NOT RUN**。これを初回H2/H3の固定公開Taskへ混入させない。
+
