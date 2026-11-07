@@ -531,3 +531,21 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **共通の反証対**：(a) 不要Capabilityは未選択でも指定されたread-only操作は成功、必要Capabilityが未Bindingなら**その操作のみ**不可・理由付き。(b) 未対応TEI Markdownの実Parser処理は拒否するが、SHOで原文をno-op保存・再開できる。(c) 子Process Buildが成功してもself-build資格は主張しないが、通常Buildは止めない。利用可能な部分を不必要に止めた回数と、未資格の結果を誤って成功扱いした回数を別々に測る。統一Status Schemaや中央Gateを増やさない。
 
 **実施状態**：他Productの限定CI/参照実験と現行Issueを確認し、本Draftの優先順位のみ更新。Inspector実Provider呼出し、SHO Writer・通常Editor/TEI Loader E2E、self-build L3、SUI→SHOの実同一File、B0/B1/B2独立比較とOwner受理は**NOT RUN**。
+
+
+### 22.6 11月8日：統合済みContext Gateから、限定された次の実証へ
+
+[VA-04 §10](../../evaluations/VA-04-evidence-readiness-preflight.md)に、**局所正証人は保持／全件不存在の主張には閉包が必要**という、テスト・Plugin・Handoffで共通するClaim判定を接続した。これは全Productで共有する新しい状態機械ではなく、各Productの証拠から何を主張できるかを照合する読取り規則である。
+
+**Source現在地の重要な訂正**：§22.4にあるTEI #3324/#3326の「二つのDraftを一本化待ち」は当時の状態。現在は[#3354 merged](https://github.com/hat47x/tei-platform/pull/3354)（2026-11-07 16:35Z）に統合され、旧二PRはclosed/unmerged。#3354 exact PR HEADの[専用CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)に11実CLI Reply、3 Required Rule、32合成Consumer判別、既存6 pinned＋既知T1-A第7 Stepの限定成功が記録された。これがProductの全Required Rule、AIが未知Ruleを発見するT1-B、C1、実Provider/Studio/外部Harnessを保証するわけではない。
+
+さらに[Draft #3365](https://github.com/hat47x/tei-platform/pull/3365)では6 Stepの局所検証と不完全目録に起因する全体Coverage unknownを同時保持する検証が進み、[TEI #3223 §29](https://github.com/hat47x/tei-platform/issues/3223)にexact HEAD限定CI記録がある。**部分目録から対象不存在や未テスト確定を推論することも、局所Receiptを消去することも誤り**。[Draft #3370](https://github.com/hat47x/tei-platform/pull/3370)の合法な空result配列とTool失敗の区別も、同じ「誤拒否を避ける」側の課題。これらは未マージの機能をmain実装済みとして採点しない。
+
+**用途別の追加確認先**：
+- [Draft #3371](https://github.com/hat47x/tei-platform/pull/3371)：Studio Hostが選んだInspectorと実呼出しProviderを一致させる。Factoryのモック呼出し成功≠CLI/Studio両Consumerの実Plugin資格。
+- [Draft #3372](https://github.com/hat47x/tei-platform/pull/3372)：物理FK/UNIQUE/IndexのSource付き観測→構造候補→人が受理したData/Function/Business→図面/CRUD/SHOの**非可逆な境界**を守る。合成Metadata投影成功≠実PG read/DDL/業務Relation受理。
+- [TEI #3353 merged](https://github.com/hat47x/tei-platform/pull/3353)：空集合のHandoffでも確認なしのHoldsを許さない。ただしCaller申告を実相手方Receiptへ昇格しない。
+
+**実施順序（既存Ownerの最小一辺ずつ）**：D（#3262の独立Required/Loader/Parser）・T（TAI #168の実Tool受領/実隔離）・G（#3273の独立Blind T1-B）を分けて進める。TEI Inspector実消費、Workbench実Source→Meaning、SHO普通のRaw Writerと同一File H1は並走可。これらの完成をTAIの初回H2/H3に一律先行必須化しない。不要なRequiredによる**誤停止**と、欠けたSource/Effectの**誤成功**を同じUser Job、B0/B1/B2、独立Expectedで計数する。新共通Engine/Registry/Hostなし。
+
+**今回の証拠**：既存ProductのIssue/PR/CI報告の再照合と本計画追補まで。main統合後の別実CI、盲検T1-B、実Provider/Studio/Workbench/SHO Writer、比較適格H2/H3、Ownerの正式意味受理・利用者B0/B1/B2は本更新では**NOT RUN**。
