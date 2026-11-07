@@ -5,10 +5,10 @@
   "publicationAllowed": false,
   "date": "2026-11-08",
   "host": "Windows with Python 3.12 importing the pilot assembler module directly",
-  "command": "python integrations/pilot-sui-document/assembler/assembler_kind_fallback_check.py --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json --out evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+  "command": "python integrations/pilot-sui-document/assembler/assembler_kind_fallback_check.py --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json",
+    "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {

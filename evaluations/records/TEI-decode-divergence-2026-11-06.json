@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.tei-contract-decode-divergence/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-08",
+  "host": "Windows with the TEI reference generator selection tool built by go run",
+  "command": "python integrations/tools/tei_contract_decode_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-decode-divergence-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "buildExit": 0,
+    "buildAccepted": true,
+    "buildTail": "]",
+    "selectExit": 1,
+    "selectRefused": true,
+    "selectTail": "exit status 1",
+    "selectSawUnknownField": true,
+    "prefixDistinguishable": true
+  },
+  "scope": "Feeds one nested contract to tei-generator-build and tei-generator-select. The build path accepts it (json.Unmarshal ignores unknown fields) while the select path refuses it with `unknown field \"fields\"` through readJSON. The same contract therefore has two answers depending on the command, and the unknown-field policy is not uniform. It does not change TEI."
+}

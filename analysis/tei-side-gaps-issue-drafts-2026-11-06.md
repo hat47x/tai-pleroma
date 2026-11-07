@@ -1,0 +1,90 @@
+# TEI側の不足3件のIssue草案（2026-11-06）
+
+状態: **草案（未投稿）**。GitHubへのIssue起票はリポジトリ外へ効果を出す操作として扱い、この作業では行っていません。判断の材料と本文をここに揃え、投稿するかどうかは別に決めます。
+
+対象は[段階4の判断](tei-stage4-decision-2026-11-06.md)で「TAIでは解消できない」と確定した3件です。いずれもTAIは再観測と記録のみを担います。
+
+---
+
+## 1. 入れ子の投影フィールドを無言で捨てず、拒否するか受理するか
+
+**提案タイトル**: `reference-generator-selection: 契約の未知フィールドを無言で捨てず、入れ子の投影を明示的に扱う`
+
+**本文**:
+
+`tools/reference-generator-selection`の`renderCandidateBytes`は、契約JSONを`encoding/json`の`Unmarshal`で読んでいます。`encoding/json`は既定で未知のフィールドを無視するため、`projection.fields[]`に宣言していない`fields`キー（入れ子の投影）は**エラーにならず捨てられます**。
+
+結果として、契約には入れ子が書かれているのに、生成物は平坦なフィールドとして出力されます。契約を読んだ人は入れ子だと解釈し、生成物はそうではありません。
+
+再現（TAIのパイロットで実測）:
+
+```text
+projection.kind に未知の値（"nested"）→ 契約検証で拒否され、生成なし
+projection.fields[] に fields キー → 拒否されず、生成成功、平坦な出力
+平坦な対照契約 → 従来どおり生成
+```
+
+`ProjectionField`に`fields`が無いため、`DisallowUnknownFields`を使っていない現状では、この入れ子宣言は書けるように見えて実効しません。
+
+**論点**:
+
+1. 未知フィールドを拒否する（`DisallowUnknownFields`を有効にする）か。既存契約に未知フィールドが混ざっていれば破壊的変更になる。
+2. 入れ子の投影を正式に受理するか（`ProjectionField`に`fields`を追加し、生成テンプレートも入れ子を出力する）。
+3. 拒否も受理もしない中間（現状）を許すか。黙って捨てる挙動は、契約と生成物の食い違いを生むため推奨しない。
+
+**TAI側でできること**: 変更後の再観測（入れ子契約が明示的に拒否されるか、入れ子のまま生成されるか）。
+
+**根拠**: [TEI-nesting receipt](../evaluations/records/TEI-nesting-2026-11-06.json)、[TEI-GAP §6](../integrations/pilot-sui-document/TEI-GAP.md)
+
+---
+
+## 2. `ProjectionField`の`many`が扱えるprimitiveを広げるか
+
+**提案タイトル**: `reference-generator-selection: record投影のmanyフィールドでstd.identifier以外を扱う`
+
+**本文**:
+
+`validateContract`は、`many`なrecordフィールドについて`std.text`と`std.identifier`以外を拒否します（#2585 PFC-06の対応として、record templateがmanyを文字列として描画するための制約です）。
+
+SUIのDocumentV1には、数値の配列（例: 図形の座標列）や真偽値の配列を持つ要素があります。TAIはこれらを投影せず元データを正本としていますが、入れ子投影を受理する場合や、座標列のような数値配列を投影する場合は、`many`と`std.decimal`の組み合わせが要ります。
+
+**論点**: 制約を維持するか、テンプレートをprimitiveごとの要素型に広げるか。広げる場合、生成テンプレートの変更と、既存の`std.text`/`std.identifier`の`many`が壊れないことの確認が要ります。
+
+**TAI側でできること**: 拡張後の再観測（数値配列の契約が生成・実行できるか）。
+
+**根拠**: TAIのパイロットは数値配列を投影対象外として回避中（[写像の実測](../docs/sui-documentv1-tei-gap.md)）。
+
+---
+
+## 3. 生成器の契約デコードを`RenderForWorld`と`Generate`で揃えるか
+
+**提案タイトル**: `reference-generator-selection: 契約のデコード経路を一本化する`
+
+**本文**:
+
+`readJSON`は`DisallowUnknownFields`を有効にしていますが、`renderCandidateBytes`は`json.Unmarshal`を直接使っています。同じ「契約を読む」処理が2つの方針で存在するため、`tei-generator-select`のように`readJSON`を通る経路では未知フィールドが拒否され、`tei-generator-build`のように`renderCandidateBytes`を通る経路では無視されます。
+
+TAIの実測では、**同じ入れ子契約が入口によって逆の答えになりました**（[receipt](../evaluations/records/TEI-decode-divergence-2026-11-06.json)）。
+
+```text
+tei-generator-build → 受理（終了0、候補を生成。入れ子宣言は捨てられる）
+tei-generator-select → 拒否（`json: unknown field "fields"`）
+```
+
+1つの契約に対して「生成できて選抜できない」状態で、どちらの入口を使ったかで未知フィールドの扱いが変わります。
+
+**論点**: デコード方針を1つに揃えるか。揃えるならどちらへ揃えるか（拒否側か無視側か）。現状は`select`が拒否、`build`が無視で、契約の妥当性がコマンドで変わる。
+
+**TAI側でできること**: 一本化後の再観測（同じ入れ子契約が両入口で同じ答えになるか）。
+
+**根拠**: [TEI-decode-divergence receipt](../evaluations/records/TEI-decode-divergence-2026-11-06.json)（両入口を実測）、[TEI-nesting receipt](../evaluations/records/TEI-nesting-2026-11-06.json)
+
+---
+
+## 投稿する場合の手順（未実施）
+
+1. 各草案をTEIリポジトリ（`hat47x/tei-platform`）へ1件ずつIssueとして起票する。
+2. 2と3は、1の判断（拒否か受理か）に従属する。1を先に投稿し、2・3はその決定に合わせて調整する。
+3. TAI側は、判断が下りたら同じパイロットで再観測しreceiptを追加する。
+
+この手順は外部への効果を含むため、実行の可否は人（Owner）の判断に委ねます。
