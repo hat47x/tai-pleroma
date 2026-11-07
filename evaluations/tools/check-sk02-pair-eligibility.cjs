@@ -170,6 +170,34 @@ function evaluate(group, options = {}) {
         row.unauthorized_write_observed === true || row.unauthorized_egress_observed === true) {
       invalid.push(id + "-experimental-boundary-violated");
     }
+    // G0 is an observed negative read probe, not a claimed sandbox mode.
+    // A read-only/write-restricted Harness may still read another lane or holdout.
+    // The checker only classifies recorded observations: it cannot enforce OS ACLs.
+    if (row.out_of_scope_read_succeeded === true)
+      invalid.push(id + "-out-of-scope-read-succeeded");
+    if (row.out_of_scope_read_probe_observed !== true ||
+        row.out_of_scope_read_succeeded !== false)
+      unknown.push(id + "-physical-read-denial-unverified");
+    // G2: Tool Request, Tool Result, and model delivery are different events.
+    // In particular 56 calls / 55 results and a truncated 8192-byte catalog
+    // are not "complete" because a boolean output_observed was set true.
+    // Counts alone do not establish request-to-result correlation.
+    const calls = row.tool_calls_observed_count, results = row.tool_results_received_count;
+    const validCount = n => Number.isSafeInteger(n) && n >= 0;
+    if (!validCount(calls) || !validCount(results) || calls === 0)
+      unknown.push(id + "-tool-result-counts-unverified");
+    else if (calls !== results)
+      invalid.push(id + "-tool-call-result-count-mismatch");
+    if (row.tool_result_pairing_observed !== true)
+      unknown.push(id + "-tool-result-pairing-unverified");
+    if (row.tool_result_truncated_observed === true)
+      invalid.push(id + "-tool-result-truncated");
+    else if (row.tool_result_truncated_observed !== false)
+      unknown.push(id + "-tool-result-truncation-unverified");
+    if (row.tool_result_complete_for_model_observed === false)
+      invalid.push(id + "-tool-result-not-fully-delivered");
+    else if (row.tool_result_complete_for_model_observed !== true)
+      unknown.push(id + "-model-delivery-unverified");
     if (row.independent_session_observed !== true) unknown.push(id + "-session-independence-unverified");
     // JSON strings "false"/"true", 0, objects, etc. are NOT boolean observations.
     // In particular, "false" must not silently count as "no unauthorized effect".
@@ -241,6 +269,10 @@ function seed() {
     oracle_version:"private-oracle-reference-v1"};
   return {trials:["H2","H3","H3","H2"].map((arm, i) => ({...common,arm,
     session_id:"independent-mock-session-" + i,independent_session_observed:true,
+    out_of_scope_read_probe_observed:true,out_of_scope_read_succeeded:false,
+    tool_calls_observed_count:3,tool_results_received_count:3,
+    tool_result_pairing_observed:true,tool_result_truncated_observed:false,
+    tool_result_complete_for_model_observed:true,
     oracle_exposed:false,unauthorized_write_observed:false,
     unauthorized_egress_observed:false,tool_invocation_observed:true,
     actual_cli_output_observed:true,grant_observed_at_invocation:true,
@@ -306,6 +338,18 @@ function syntheticSelfTest() {
     ["E58 workspace flag with option instead of path", x=>{x.trials[1].cli_invocations[2]=["tei","validate","-workspace","-json"];return x;},"insufficient-evidence"],
     ["E59 double dash workspace syntax accepted", x=>{x.trials[2].cli_invocations[2]=["tei","validate","--workspace","reference/workspace","-json"];return x;},"eligible-to-score"],
     ["E60 different workspace across one arm despite same workspace hash", x=>{x.trials[3].cli_invocations=x.trials[3].cli_invocations.map(a=>a.map(t=>t==="reference/workspace"?"alternative/workspace":t));return x;},"ineligible"],
+    ["E61 missing G0 out-of-scope read probe", x=>{delete x.trials[0].out_of_scope_read_probe_observed;return x;},"insufficient-evidence"],
+    ["E62 out-of-scope read succeeded in read-only session", x=>{x.trials[1].out_of_scope_read_succeeded=true;return x;},"ineligible"],
+    ["E63 G0 probe only asserted not actually observed", x=>{x.trials[2].out_of_scope_read_probe_observed=false;return x;},"insufficient-evidence"],
+    ["E64 external 56 calls 55 Tool Results", x=>{x.trials[0].tool_calls_observed_count=56;x.trials[0].tool_results_received_count=55;return x;},"ineligible"],
+    ["E65 Tool Result count missing", x=>{delete x.trials[1].tool_results_received_count;return x;},"insufficient-evidence"],
+    ["E66 string counts cannot witness request-reply parity", x=>{x.trials[2].tool_calls_observed_count="3";return x;},"insufficient-evidence"],
+    ["E67 equal counts without correlation", x=>{x.trials[3].tool_result_pairing_observed=false;return x;},"insufficient-evidence"],
+    ["E68 truncated catalog Tool Result", x=>{x.trials[0].tool_result_truncated_observed=true;return x;},"ineligible"],
+    ["E69 full output was not delivered to model", x=>{x.trials[1].tool_result_complete_for_model_observed=false;return x;},"ineligible"],
+    ["E70 model delivery not observed", x=>{delete x.trials[2].tool_result_complete_for_model_observed;return x;},"insufficient-evidence"],
+    ["E71 full Tool Result/truncation not inspected", x=>{delete x.trials[3].tool_result_truncated_observed;return x;},"insufficient-evidence"],
+    ["E72 declared complete result with observed parity and denial stays synthetic-eligible", x=>x,"eligible-to-score"],
   ];
   const results=[];
   for(const [title,change,expected] of tests){
