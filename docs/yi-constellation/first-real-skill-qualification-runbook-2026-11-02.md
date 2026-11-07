@@ -848,3 +848,24 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 4. **Evidenceの上限**：旧四Sessionは**実Tool／実H3 Skill実Readの正例**。Source rawとReader変換後本文が一致したことは`D=Delivered`の証拠を補強するが、G0物理非露出／同条件比較／独立Expected採点／Owner意味受理／実Egress否定／Skill追加価値の資格を一切拡大しない（正式比較適格**0/4**）。
 
 **責務**：Product Skillの原文・実Loader Root/Referenceの差分＝[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)、実DSH記録＝[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)、Filesystemの実拒否＝[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)、比較資格と独立採点＝[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)。新Runner／新Skill Loader／独立Verifierを作らず既存Trial Cardへ観測列を追加する。
+
+<!-- h8-h6e7-resume-model-input-versus-session-log-watermark-20261107 -->
+### 24.10 再開時のモデル入力再構成とSession Log水位を分離する（H6-E7・初回試行は再利用禁止）
+
+[TEI #2515 H6-E7 Draft PR #3237](https://github.com/hat47x/tei-platform/pull/3237)の[DSH実Mock観測](https://github.com/hat47x/tei-platform/blob/af9898eb112b519d34339ead227b076ea12b45cd/plan/evidence/DSH_H6E7_RESUME_AFTER_DISCLOSURE_2026-11-07/README.md)（Windows 11、DSH 0.2.2-rc.1、`read-only`、合成Raw canaryのみ）をG1の反例に追加。既存§24.4の`session-log-deepseek.enabled`変更試験とは**別現象**である。
+
+**実測範囲**：Turn 1でMockにより`pwsh`が合成Rawを実Readし、モデル入力とSession Logにcanaryが載った。そのSessionを`--session-id`で再開すると、Turn 2の最初のRequestから**過去の会話に含まれるcanaryがモデル入力`messages`に再登場**したが、既送出Session Logは水位`27→41→49`と前進し、再送対象のSession Log field内にcanaryは無かった。Turn 2ではRaw再読取をしていないが、別Toolの実行は成功。つまり**「Session Logの同じEventを再送していない」≠「以前取得したRawが次の外部リクエストへ載らない」**。実Providerへの送出、Grant失効後のresume、Task Packet失効、外部ACK不明の重複副作用、Network拒否はNOT RUN。
+
+**受入条件を3軸で区別**：
+
+| Witness | 独立して求めること | 誤った推論 |
+| --- | --- | --- |
+| G1-L：Session Log | `enabled`・`afterSeq/throughSeq`・Event・HTTP受領状態・再送区間を観測 | 水位が前進／既送出区間なし ⇒ 後続Requestには過去のRawが無い |
+| G1-M：モデル入力 | Turn再開直後の`messages`に含まれる過去Tool Result／旧Audience・旧Task・旧Skill等の原文が、**現在の公開許可範囲**に合うか別検査 | 今TurnでRawを再読取していない／Toolがread-only ⇒ 旧Rawの非送出 |
+| G0-S：Session境界 | 初回H2/H3は**4つの新しい独立Session／別の実際のMaterializationと強制隔離**で開始。前試行のSession ID／会話Context／Skillロード履歴を持ち込まない | 4 Session IDが存在する／RoleやGrantが再表示された ⇒ Session間の過去Context非露出 |
+
+**後続Activity（初回4SlotのBlocking外）**：TAI #271の再開では、(1)過去に許可されたReadという履歴Observation、(2)再開時の新モデル入力送出、(3)実Tool/書込Effectの現在Grantと実Resourceを分離。過去に送出済みの内容を後から消去できたと主張しない。必要なら新Session/許可Projectionによる文脈再構成を別Activity試験で観測するが、**新Sessionへの切替だけでProviderに送られた旧Rawが消滅するわけではない**。Product送出側のOwnerはTEI #2515／TAI #232、適格試行のOwnerはTAI #168。
+
+**保存記録の微差**：PR #3237のREADMEはTurn 1最後のRequestのモデル入力canary数を`1`と表記する一方、同PR `observations.json` の`canaryInModelInput`は`2`。Turn 2の「再登場あり」とSession Log側`0`という本論点は一致するが、厳密な**出現回数は未整合**としてOwner側原Wire/数え方の再確認を要する。Tool/Mock生bodyは未コミットであり、報告用数値を都合よく選択しない。
+
+**状態**：これはDSH実Mockの過去情報再送の限定証拠を既存Runbookへ取り込むもの。新DSH Session・隔離OS Read-deny・実Provider送出・正式H2/H3独立比較・独立Expected採点を**今回実行したとは扱わない**。初回の技術的H3実Loadは成立済み、**比較適格0/4**を維持する。
