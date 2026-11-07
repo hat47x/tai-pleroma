@@ -777,3 +777,15 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 - **Q/V 独立正答と価値**：**NOT RUN**。回答中に要求語が現れた事実を独立Expected合格、Model/Token差をSkill因果効果として採点しない。全Sessionの割付R／提供D／ITT／PPとConsumer受領を別票にする。
 
 **Owner・非目標**：実DSH・Skill/Tool記録＝TEI #2509、実OS／Session Log経路＝TEI #2515／TAI #232、試験割付と採点＝TAI #168、価値＝#422、現在資格＝#271。新Harness Runner／Plugin Loader／Policy Engineや、初回にOKF/SCN-001の機能要件を追加しない。TEI mainへEvidenceが存在することと、TAI Draftの本節がmain統合されたことも区別する。
+
+
+<!-- sk02-tei-dogfood-workspace-command-effects-20261107 -->
+### 24.6 TEI実CLIの自己調査から得た追加の停止線：Workspaceと効果の同一性（2026-11-07）
+
+[TEI #3149](https://github.com/hat47x/tei-platform/issues/3149)の実CLI dogfoodingで判明した[#3181](https://github.com/hat47x/tei-platform/issues/3181)／[#3182](https://github.com/hat47x/tei-platform/issues/3182)を、**既存G2の適格性と後続Product Skill選択**へ接続する。新しいH2/H3初回Task／許可Command／Skill byte／Expectedを変更しない。
+
+- **Workspace identity**：現model catalog／inspect／trace／validate等の応答はWorld Fingerprintを返すが、manifestのworkspace名・version・manifest digestを返さない。実CLIが同名Canonical IDを別Workspaceで処理しても、結果本文だけでどのWorkspaceに属したかは確定できない。最初の4 TrialではReviewerが**実引数の-workspace／解決した実path／その時点のmanifest byte・digest／実Binary／WorldFP／Source Index FP**を同一Attemptに束縛し、論理pathと実rootの差を開始前に解消する。manifest identityをCLIが出したと捏造しない。新CLI項目の仕様・互換判断はTEI #3181のOwnerへ委譲。
+- **宣言effect対実Invocation全体の効果**：現commandsはviewをread-onlyと広告するが、view -execute -operation-logの実呼出しは指定先に215 byteのop.jsonlを、-lifecycle-stateの実呼出しは12,288 byteのstate.dbを書いた限定負例がある（TEI #3182）。これは**DBへの業務Commitの証明ではなく、指定先へのFS書込みの実証**。Tool familyのread-onlyという文字だけでは、実flag／wrapper／output destination／実FS effectを安全な非書込み扱いしない。初回SK-02の許可群にはview自体を含めず、**既存Whitelistを緩めない**。将来viewを採用するなら別Groupで有効flagsと実ファイル効果を先に検査する。
+- **評価上の波及**：同一Subject名・WorldFPだけを根拠にTool Replyを別WorkspaceのOutcomeへ移さない。Commandの静的説明は実権限・効果・Owner受理ではない。許可済みread-only inspectなどを、viewの局所負例を理由に一律停止させることもしない。
+
+**適用順・証拠水準**：§24.4/24.5のG0実隔離→G1実送出範囲→G2固定Tool/Result完全性が最優先であり、上の二点は既存G2のpreflightに組み込む。実TEI dogfoodingはProduct限定で、TAIの新たな外部Harness／OS隔離／実Provider／独立Expected／Skill効果を実行・合格した証拠ではない。Product Owner修正は未確定、正式比較0/4を維持。
