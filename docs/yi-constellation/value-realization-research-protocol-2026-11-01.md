@@ -329,3 +329,57 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 4. **D4/D5の価値判断**：内容を失うが使いやすい投影と、出典・逆編集に必要な原典に戻れる投影を、用途・説明負荷・許可範囲・過剰拒否・本人の選択で比較する。すべてをLosslessにすることや、全出典を外部Harnessへ配布することを要求しない。
 
 **今回の達成と非達成**：TAI/TEIの実Tool＋H3 Skill本文LoadとSUIのProduction Projection非単射（Draft CI）の限定Evidenceを計画へ反映した。新しい4適格Session、独立Q/V採点、OS Read隔離、TEI CXの実Provider、SUI→SHO→SEI投影E2E、OKF実Attester、Owner意味/業務Outcome受理は **NOT RUN／NOT PROVEN**。
+
+
+---
+
+## 11. 2026-11-07 追加：自己証明の遮断、証拠の独立性、実利用先までの同一性
+
+**状態**：既存Productの実コード・局所試験とIssueを再照合した横断価値研究。新共通Evidence Store、証明エンジン、Runtime Status、Gateは提案しない。§8〜10のOutcome/Receipt/Skill/Projectionの比較を、証拠自身の正当化と「実際に消費した対象」まで拡張する。対象の事実・評価上の主張・Owner受理を混同しない。
+
+### 11.1 主張が証拠になるための5つの独立した問い
+
+| 問い | 必要なWitness | 禁止する推論 |
+| --- | --- | --- |
+| 何を主張したか | Claim、対象、Operation/Attempt、Source・実行物・Contractのexact revision | 同じ名前／Digest／版文字列から、違うProcessや時点も同じだと推定 |
+| 何に基づいたか | Claim本文とは独立に用意した原資料、期待値、Issuer・Ownerの資格 | 主張やAI生成文を、同じ主張の独立根拠に転用 |
+| 誰が何を観測したか | 実Reader/Verifierが受け取ったbyte、Scope、完全性、Comparatorと判定結果 | 検証者名・署名の存在から、実取得・全件性・意味受理まで推定 |
+| 今も使えるか | Source・Trust・Grant・Consumer・Purpose・Target・epoch・失効条件 | 過去に正しかった結果を、現在の権限・実Outcomeへ昇格 |
+| 価値は生じたか | 本人/OwnerのChoice・業務Outcome・影響者・追加検証の費用と過剰拒否 | テストPASSやToken差から望まれた成果を直接推定 |
+
+**独立性は一つのboolでない**。別言語のReader、独立に準備したExpected、別DB接続、別Issuer、現在のHost Grant、Ownerの意味受理は別の性質を検証する。
+
+循環参照自体は情報整理上認められ得る。しかし、Aの根拠がA自身、またはA→B→Aだけから独立の真偽判定を成立させてはならない。議論・文書内の循環リンクと、外部根拠に裏付けられたClaimの区別を保持する。未検証は未検証とし、循環を無理に消して過去の記録を改変しない。
+
+### 11.2 2026-11-07現在の既存Product実装証拠
+
+**SEI：直接自己参照の登録拒否は限定修正済み**。[merged #822](https://github.com/hat47x/sei-cognition/pull/822)／[Issue #794](https://github.com/hat47x/sei-cognition/issues/794)で、Decisionのbasis/unresolvedが自身の論理参照を指す新規登録をCLI/MCP入口で拒否。既存Storeはread可能で、歴史を自動改変しない。[#752](https://github.com/hat47x/sei-cognition/issues/752)はRecommendationのresume JSONへbasis_references、responsibility_references、rationaleを追加。**参照を表示できることは参照先の内容・独立性・現在性の検証ではない。** 外部Bundleの間接循環や独立Witnessは未検証。mainのruntime/go/seicli/input.goは、新規書込み時の入力検査と既存Store読取りを明示して区別する。
+
+**EKI：版の自己申告は限定改善済み**。[merged #783](https://github.com/hat47x/eki-fabric/pull/783)／[#248](https://github.com/hat47x/eki-fabric/issues/248)で、eki-control/eki-agentのVersionはvcs.revision、vcs.modified、Go版を返し、VCS不明ならunknownを明示。mainのinternal/buildinfoは、この申告を改ざんされていないことの証明とは**みなさない**と明記。実Process/実Worker Wire/API版、署名・Build来歴、Consumerに到達した結果は別資格。以前の固定dev表示を現在の未解決バグとして扱わない。
+
+**TEI Plugin Registry：別Readerで同じテスト用主張を照合する限定実証**。[Draft #3244](https://github.com/hat47x/tei-platform/pull/3244)／[#2589](https://github.com/hat47x/tei-platform/issues/2589)は、Go/Nodeで実SHA-256・Ed25519を用い、Release・必須Artifact role/bytesとVerifier StatementのSubject/Profile/Targetを照合。専用CIの限定successは既存Issueに記録。両実装の公開鍵は固定された**テスト用信頼起点**、Owner Epoch/Issuer Trust/freshnessはmock、signed passedは実Conformanceを実行した証拠ではない。2言語の実装があっても、同一Fixture・模擬信頼への合意を実外部Issuer/Consumerの独立検証に昇格しない。実GitHub ReleaseのReadback、実Trust、全必須Member取得、Consumer側の実LoadはE1〜E3の未達。
+
+**TEI Self-build：Artifact再現とSource閉包は非同値**。[Issue #2831](https://github.com/hat47x/tei-platform/issues/2831)／[mainの外部Module受入判断資料](https://github.com/hat47x/tei-platform/blob/main/plan/design/EXTERNAL_GO_MODULE_ADMISSION_CONTRACT_2026-11.md)によると、隔離外部Go Module供給でcmd/teiはBuildでき、独立2回の同じArtifact byte、実選択12 Moduleの供給照合と入力Member列挙まで局所実証。他方、現行ResolveSourceClosureは同対象の閉包をrejectedとする。外部Module受入A/B/CはOwner未採用、G4はUNQUALIFIED。Build/同byteという事実をQualified Source closureやRecursive self-buildへ昇格しない。
+
+**TEI Completion：実Reader観測はCallerの完全性申告を正当化しない**。[Draft #3238](https://github.com/hat47x/tei-platform/pull/3238)は隔離PostgreSQLの固定Tenant Aで2件取得とTOP1を対照にし、独立Expected L={3,9}を試験に使用。部分取得R={3}へCallerがCoverageComplete=trueを渡すと、現EvaluateCompletionはholdsを返し得る。実Source/Query選択、物理Provider、Field/Predicate実評価、Scope/Page末端の閉包は[#2586](https://github.com/hat47x/tei-platform/issues/2586)の別責務。部分取得を「実Readerを使ったから全件確認」としない。
+
+### 11.3 ORX-14〜19の追加独立Expected（新横断試験はNOT RUN）
+
+| ID | 対照事例 | 独立Expected／保証範囲 | 既存Owner |
+| --- | --- | --- | --- |
+| **ORX-14 自己参照根拠** | SEI Decision Aのbasis/unresolved=A | mainの**新規直接自己参照拒否は達成済み**。旧Store readは非破壊。自己の記録存在だけで外部根拠が成立しない | SEI #794/#822 |
+| **ORX-15 間接循環と推薦根拠** | Decision A→Recommendation B→A、またはBにbasis文字列だけある | 推薦の根拠参照の表示と実内容照合・独立Witnessを別判定。外部Bundle/間接循環の適格性は未実証 | SEI #752/#767、TAI #271 |
+| **ORX-16 自己申告の版** | EKI実行ファイルがrevision Xを申告してもAPI/Worker実Versionと異なる | Version表示改善は実装済み。実Process/Connection/Worker、独立Artifact digest、Current Grantの一致を別観測。Unknownをdevに丸めない | EKI #248/#198、TAI #271 |
+| **ORX-17 署名付きfixture PASS** | TEIの固定鍵で署名・Digest整合するが実Publisher失効／Consumerが異なるbytesを取得 | 署名検証は限定PASS、実Trust・Member実Readback・実Conformance・実Target Loadは別。検証器の多言語性≠独立Issuer | TEI #2589/#1104/#1105/#1370 |
+| **ORX-18 再現Build／閉包拒否** | 2試行のcmd/tei Artifact byte一致、外部Module閉包はrejected | Artifact再現PASSとG4 UNQUALIFIEDは両立。A/B/C案のOwner決定までSource資格を発行しない | TEI #2831/#1090 |
+| **ORX-19 実Read／虚偽Complete** | PGでL={3,9}、TOP1のR={3}、CallerはCompleteと自己申告 | 独立のL/Scope/ページ末端/実Predicate Witnessなしに全件結論を出さない。局所PG実試験とProduct E2Eを分離 | TEI #3238/#2586/#2514、SEI #767 |
+
+### 11.4 実行計画と価値判断
+
+1. **P0/H2-H3は現行Exitを変更しない**：TAI #168/#270の実OS Read隔離、独立4 Session、独立Expected/回答採点が先行。ORX-14〜19をSkill比較の新Blocking条件にしない。
+2. **既に達成したProductの局所成果は取り消さない**：SEI #822、EKI #783のmain統合と、TEI #3244/#3238のDraft限定試験を分けて記録。コードが統合されたか、Consumerに届いたか、Ownerが意味を受理したかは別。
+3. **次の一業務Functionの実証に必要な分だけ接続**：TEI #2586の選択Query/SQL/実Rowset/Completeness、#2507のForm/Table、#1174の実Effectと独立Read、EKI同AttemptのBody、SEIの必要根拠、TAI Outcomeを、実際に確認できた相関だけで束縛。各局所PASSを足して横断E2E成功にしない。
+4. **CASE-V01〜03のValueへ返す**：Witness/再Readで減る誤Claim・誤作用と、余分な待機・確認負担・非開示・過剰拒否を両方測定。すべての文章・検討過程へ署名や本番Attestationを義務化せず、用途と影響度で必要な観測を選ぶ。
+5. **組織・Subsystem分割は別資格**：[TEI #3250](https://github.com/hat47x/tei-platform/issues/3250)はCRUD更新凝集・越境CUD最小化のread-only設計候補。論理分割のScoreから実Effect/Tx、物理DB配置、Owner責任・現在Grantを自動確定しない。VA/H2の新Hard Dependencyにしない。
+
+**資格の結論**：この追補では現行実Source・Issue/PRと既存実CI/PGの限定証拠を照合して研究計画へ採用候補を記録。ORX-14〜19を同一実Target・独立Consumerで横断再実行した事実、TEI G4、Registryの実Trust、業務Owner受理、実利用者の成果価値は**NOT RUN／NOT PROVEN**。
