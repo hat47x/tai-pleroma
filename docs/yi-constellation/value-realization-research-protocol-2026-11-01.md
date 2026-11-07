@@ -383,3 +383,44 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 5. **組織・Subsystem分割は別資格**：[TEI #3250](https://github.com/hat47x/tei-platform/issues/3250)はCRUD更新凝集・越境CUD最小化のread-only設計候補。論理分割のScoreから実Effect/Tx、物理DB配置、Owner責任・現在Grantを自動確定しない。VA/H2の新Hard Dependencyにしない。
 
 **資格の結論**：この追補では現行実Source・Issue/PRと既存実CI/PGの限定証拠を照合して研究計画へ採用候補を記録。ORX-14〜19を同一実Target・独立Consumerで横断再実行した事実、TEI G4、Registryの実Trust、業務Owner受理、実利用者の成果価値は**NOT RUN／NOT PROVEN**。
+
+---
+
+## 12. 2026-11-07：Claim判別可能性による最小Witness選定（横断評価法）
+
+**状態**：研究・既存試験への適用提案。§9〜11のOutcome/独立性に対する反証を、テスト設計で使いやすい形にする。新Proof Engine、共通データ形式・State、全面監査・全Source取得を追加しない。独立ExpectedのOwnerはTEI #2514、各Productのテスト・実Hostはそれぞれの既存Issue。
+
+### 12.1 観測だけからClaimを判別できるか
+
+同じ用途・Consumerに対する許可済み観測を O、判定したい業務上の問いを Q、実際のWorldを A/B とする。**O(A)=O(B) なのに Q(A)≠Q(B)** の二世界を構成できれば、Oだけを受け取る判定器はAとBの両方について必ず正答することはできない。これはモデルの能力や多重推論の不足ではなく、観測情報の判別力の不足である。
+
+その場合にできることは、(1) QをOから判定できる局所Claimへ狭める、(2) 対象Use-siteで必要な元Product/ProviderのWitnessだけを許可付きで追加取得する、(3) 取得できなければunknown/限定保証を保持する、のいずれか。**非公開Sourceの存在や値を外部Consumerへ漏らして穴埋めしてはならない**。遮断・非取得がある世界でも、当該Consumerへ公開可能な出力は開示Policyを満たす範囲に限る。
+
+正例対照も必須とする。Qに関係する公開値や実Providerの実Readが変化した場合、O/判定が適切に変化することを示す。「すべてunknown」「すべてdeny」による表面的な誤成功防止も合格にしない。
+
+### 12.2 既存二世界Fixtureを新規作成せず、何を判定できるかを照合
+
+| 対照する二世界 | 観測上の同一性 | 異なるQと必要Witness | Owner／現在の資格 |
+| --- | --- | --- | --- |
+| **出典A/B**：SUI Card本文は同じ、元Sourceだけ異なる | SUI公開Projection全体が一致 | 原典帰属・脚注は判定不可。許可された原Source Reader/Occurrenceを別照合 | [SUI Draft #3396](https://github.com/hat47x/sui-sensemaking/pull/3396)の本体テストは限定PASS。SHO #19、SEI #767への実配達は未実施 |
+| **構造A/B**：Island所属/Canvas位置だけ異なる | 同じ公開Projection | 元Graph/Canvasへの逆編集対象は判定不可。元ProductのSubject/Topology・Source/epochが必要 | SUI #3396は限定PASS、[TEI Draft #3236](https://github.com/hat47x/tei-platform/pull/3236)はCX/WXの設計 |
+| **全件/部分**：L={3,9}とTOP1 R={3}、呼出元がどちらもCompleteと自己申告 | ConsumerのCoverageComplete=true表示が同じになり得る | 全件性はReaderのrowset/Query/Scope/Page終端と独立Lが必要 | [TEI Draft #3238](https://github.com/hat47x/tei-platform/pull/3238)隔離PG限定Read到達、Product #2586は未接続 |
+| **同名別Workspace**：同じsales.order識別子だが実Manifest/Contextが違う | Subject名や外形が同じ | 実Function/Row/Action対象の同一性にはSource/Manifest/Context epoch・Tenant/Scopeが必要 | [TEI #2507](https://github.com/hat47x/tei-platform/issues/2507) WX-01/02、CLI #3181。現段階は独立負例の計画 |
+| **署名と現在Trust**：同じRelease Digest/署名、Issuer失効時点だけ違う | 署名検証結果は両方PASSし得る | 現在のPublication/Consumer Use資格は別Trust/Freshness/Release Readbackが必要 | [TEI Draft #3244](https://github.com/hat47x/tei-platform/pull/3244)固定Fixtureの署名PASS、E1〜E3未資格 |
+| **同じ版文字列/別実体**：EKIの--versionが同値、実Process/WorkerまたはBuild入力が違う | 実行物自己申告の文字列が同じ | 実Artifact/Process/Connection・実Consuming Hostの同一性は独立観測 | [EKI merged #783](https://github.com/hat47x/eki-fabric/pull/783)は自己申告改善済み。実Host資格は別 |
+| **組織の図で見えない辺**：同じER/CRUD表示、外部CUD Edgeの未取得/非開示だけが異なる | 可視図・layoutが同じ | 「越境更新が0」は未知。受理Sourceの必要Closure、Scope、実EffectとOwnerが必要 | [TEI #3250](https://github.com/hat47x/tei-platform/issues/3250) SP-02/05・[#2514](https://github.com/hat47x/tei-platform/issues/2514) WX-05は計画 |
+
+### 12.3 Evidenceの『強さ』を全順序にしない
+
+署名済み記録、独立Reader、Product実Read、業務Ownerの受理は同じ軸の点数ではない。あるClaimにはSource byteの同一性が必要でも、別のClaimには現時点の法的権限・業務責任・開示の妥当性が必要。**必要な証拠の種類が異なるため、単一のProof ScoreやReceiptの最大段階で一律判定しない**。
+
+同じWitnessを用途ごとに再利用する場合は、(i) Claimに必要な依存、(ii) 実際に観測したbyte/Member/Query/時点、(iii) 証拠を独立に採点した基準、(iv) 現在のConsumer Disclosure、(v) 改訂・失効の条件を比較する。[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の選択的再資格化、[TEI #2600](https://github.com/hat47x/tei-platform/issues/2600)のBuild再利用を利用し、**履歴の正しさ／再計算省略／現在の実行資格**は別々に扱う。実際に必要な依存が列挙できないならunknownを保つが、無関係な変更で全Claimを再計算する必要もない。
+
+### 12.4 最小実証と価値評価
+
+1. **P0：既存の実証を採用**。SUI #3396の二世界と正例、TEI #3238のwhole/TOP1、TEI #3244の署名/Trust模擬対照、SEI #822の直接自己参照拒否、EKI #783のunknown version出力を、それぞれの限定した資格で比較票へ記入。新たな一式E2EのPASSとは呼ばない。
+2. **P1：1 Claimごとの誤判定耐性**。TEI #2514のIndependent Expected／Mutantを正本として、Oが同じでQが異なる場合に誤allow・誤全件・誤出典が起きないことを検証。Qが本当にOから判別可能な正例では、不要な拒否を減らす。
+3. **P2：追加Witnessの費用対効果**。CASE-V01〜03で、Source/Providerの再ReadやOwner確認が誤Claimを減らす効果、待ち時間、金銭費用、Disclosureリスク、人手介入、適正な非実行、正当なActionの過剰拒否を分けて測る。技術的なテスト成功を利用者の実価値としない。
+4. **実行順の非干渉**。TAI #168のH2/H3初回比較のGateは変更しない。最初のProduct実ReadはTEI #2586、Action/Effectは#2598/#1174、独立受入は#2514、認知十分性はSEI #767、投影はSUI/SHO、Artifact配布と実消費はTEI #2589/EKI既存Ownerが担当。
+
+**未達**：この節の二世界をYIC同一Attemptで横断する実Validator/実Consumer/Owner受理はNOT RUN。正しい部分Claimに過剰な制約を足すことも、全件を保証できないのに成立と称することも、共に改善対象にする。
