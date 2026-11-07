@@ -5,10 +5,10 @@
   "publicationAllowed": false,
   "date": "2026-11-08",
   "host": "Windows with the TEI reference generator and a locally compiled candidate",
-  "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
+  "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json",
+    "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
