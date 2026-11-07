@@ -384,3 +384,32 @@ G0では監査所見・最新Source状態・各Productの実Valueを再取得。
 SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cursor/観測したページ範囲、実BodyとVariant、ETag/現在のGrant・Audience、必要なConsumer受領**を分離する。不正Cursorの先頭回帰を「新イベント0件」や「監査完了」と解釈せず、ETag一致を「HTTP 304」「ネットワーク費用削減」「現在公開してよい」と推定しない。選択外反証と非公開情報の扱いはSC-15、Readerの形式はSC-16、利用者目的の変更は[VA-01 §6.3](../../evaluations/VA-01-product-value-necessity.md)へ責務を返す。
 
 **投資判断**：これらは用途依存の有効な負例であり、初回H2 Tool-onlyには管理監査API・ETag・全てのCloud Syncを要求しない。後続のActivity再開試行でのみ、誤完了・再取得量・Token/Review/時間・正しく保留した件数を比較する。新共有Cache/Result Storeは作らない。SC-17とSC-18の**実利用者試行・外部Harness・Owner価値採用はNOT RUN**。
+
+## 20. 11月7日朝：外部Tool実観測を価値試験の資格へ接続し直す
+
+### 20.1 先行していた「初回H2 Tool未実施」は歴史状態
+
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)と[TEI Evidence Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)が報告するDSH `0.2.2-rc.1`→固定公開TEI実Binaryの実呼出しは、Tool Request/CLI Exit/Reply、SourceIndex Fingerprintを含む技術的縦切りの**限定実測**。9探索試行のうち完了3（Participant Taskは1件）、エラー6（MALFORMED_RESPONSE 5、INVALID_CONFIG 1）、完了Session内のTool call 56／TEI起動32。以前の本計画§18/§19やVA票の「外部Harness H2 Tool呼出しはNOT RUN」「次は最初のH2実Call」は**記載時点の歴史**であり、現状の実施状況を示さない。
+
+**新たな停止線**：DSH read-only Profileから想定するParticipant作業場所外のWorktree Readが実際に可能だった。旧Session・Skill本文・Reviewer Expected・関連Sourceを物理的に隔離した証拠がなく、元DSH JSONLの全byte、独立Answer採点、OS/Network Egress、費用も不十分。従って正式H2/H3比較に必要な**参加者条件の非露出**は未達。探索9件を事後に四Session試験へ流用せず、失敗6件も探索歴として残す。[VA-02 §13](../../evaluations/VA-02-cross-product-first-run-protocol.md)／[VA-04 §8](../../evaluations/VA-04-evidence-readiness-preflight.md)を実験資格の詳細とする。
+
+**最小の次の出口**：既存Harness上で実OS/HostによるSkill/Expected/旧Logの到達拒否を試し、固定Participant Task・Source/CLI binary・Tool schema・Model/Profile・採点基準・費用観測を先にPin。その後に**比較適格なH2の1Session**をTool実呼出し→回答受信→独立採点まで確認し、H3実Loaderと残りのH2/H3試行を同じ事前割付へ接続する。Model/Adapterが不正なTool JSONを生成する現象は実Failureとし、Trial中にModel切替で修復しない。固定Task/Skill本文を事後改変しない。
+
+### 20.2 OKFのAttested Computationは「計算の裏付け」の条件付き拡張
+
+[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)と[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)へ、OKF v0.2の`type: Attested Computation`を、Product Skillが計算定義を発見・型付きParameterをBindし、実Executor/Receipt・独立Attester・再読取を分ける契約候補として引き渡した。**OKF v0.2は共通Attester ABI、実Sandbox、正本/実業務認可を規定しない**。SEIは[SEI #820](https://github.com/hat47x/sei-cognition/issues/820)でSource/verified/stale_after等の交換・鮮度の候補として検討するが、SEIのKnowledge/Accepted DecisionをOKF文字列へ置換しない。
+
+**導入の必要性は用途相対**：最初の公開TEI read-only CLI調査/H2/H3比較をOKF Reader/Attesterで止めない。比較後に、既存TEI/OKF機構を使って*実計算1件*の定義・Result・Receiptと独立Attesterを正負試験し、通常のSource→CLI/Resultへの増分価値を評価する。独立ReadやOwner Accepted Meaning、Host Grantが無い場合はUnsupported/Unknownを保持。OKFを全Product必須Runtime、第二知識正本、全更新Actionの実行資格にしない。提案段階でありOKF Attesterの**実施はNOT RUN**。
+
+### 20.3 Product価値として昇格したもの・していないもの
+
+| Claim | 現時点 | 次に必要な証拠 |
+| --- | --- | --- |
+| TEI公開1 SubjectのCLI読取 | 固定Source／Product S1／DSH外部Tool実呼出しまで限定Observed | 新たな比較Trialの隔離、実Participant Answer／Reviewer独立Expected |
+| Product Skillの追加価値 | **NOT RUN** | H3実root/refs LoadedとH2非露出、事前割付4 Session、正答・Warning/Unknown・費用比較 |
+| TAIのActivity価値 | **NOT RUN** | SCN-001の同一User JobでB0手動/B1必要Product/B2条件付きTAI、正確さと誤停止/費用を測る |
+| OKF計算検証の付加価値 | **NOT RUN** | 既存Ownerによる1件の実Executor/Attester/Result独立再読取 |
+| TEI `*.tei.md`通常解析／実Provider Write・SHO正式Reader | **未成立／用途別並行課題** | 各Product Ownerの別Scope/Artifact・実Effect・独立Consumer |
+
+**投資判断**：DSHの実接続という一段階は確認できた。次は新Kernel/新Harness Bridge/第二Plugin Registryではなく、**実隔離と比較可能な少数試行**へ資源を集中する。実H3、正式4Session、外部送出ゼロ、Owner価値受理は未確認。
+
