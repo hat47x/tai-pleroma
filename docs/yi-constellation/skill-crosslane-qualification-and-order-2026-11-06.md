@@ -346,6 +346,23 @@ Product側の出力形式をSkill説明で補完しない。SEIのtextから構�
 
 **順序・状態**：SUI公開Projection実Read→L1/L2実原典照合（利用できる場合）→SHO G1b Reader実受領→将来のWriter G2保存・独立再Open→SEI Inquiryの不足根拠・判断適用→必要時のみTAI実Harness、を各Ownerに委譲。現SUI→SHO→SEI横断E2E、正式SUI OKF Export、SHO G2 Writer、SEI Import/Decisionの自動受理、TAI実Skill Loaded/Host Disclosureは**NOT RUN**。初回公開TEI H2/H3を新たなBlocking条件で妨げない。
 
+### 18.4 Product投影・合成・ConsumerのSilent LossをSkill Handoff成功と扱わない（限定実測からの受入差分）
+
+他チャットのTEI標準構造／表現型／FunctionとSUI→SHO→SEIのHandoffで、**Productが入力を受理したこと、契約が要求した要素を実際に消費したこと、Consumerが意味を維持して受領したこと**は異なる。[TAI PR #526](https://github.com/hat47x/tai-pleroma/pull/526)／[#529](https://github.com/hat47x/tai-pleroma/pull/529)／[#530](https://github.com/hat47x/tai-pleroma/pull/530)／[#533](https://github.com/hat47x/tai-pleroma/pull/533)／[#534](https://github.com/hat47x/tai-pleroma/pull/534)の**固定対象・局所Characterization**を、既存§18.1〜18.3のLoss/Source/Scope/Unknownと§26のData/Presentation/Function分離の受入条件に結びつける。これらのPRの段階的な一括検証84〜87段を**正式なSUI/TEI Product間E2E**と解釈しない。
+
+| 局所で観測された相違 | Skillが確認する契約とExpected | 禁止する推論 |
+| --- | --- | --- |
+| [TAI #526](https://github.com/hat47x/tai-pleroma/pull/526)：TEI生成契約は未知の`projection.kind=nested`を拒否する一方、既知の投影内へ**未知の入れ子`fields`を追加するとデコード時に無視して平坦な生成物で成功**（Goの未知JSON項目の既定受容） | 供給した**宣言済み構造**と実生成Artifact・実ConsumerのShape/Depth/Relation/Fieldを対照し、必要なNested要素が失われればHandoffの構造契約は未充足。元Contract bytes/Reader版、実Loaderが消費したField集合を区別 | Generatorのexit 0／成果物存在＝全Contract Fieldを消費済み、入れ子/業務意味を実現済み |
+| [TAI #529](https://github.com/hat47x/tai-pleroma/pull/529)／[#530](https://github.com/hat47x/tai-pleroma/pull/530)：SUI Modelと選択的投影契約の名前対応はDocument 3/24、Card 8/16、Island 3/20、Edge 6/6。18 Fieldのprimitive/manyには局所不一致なしでも**Enum値域・Optional条件は別** | 投影が運ぶFieldの**用途別Required Set/Scope**と未写像・非公開・未取得を区別。割合は単なる列数対応であり、Meaning/Review/History/Selection/現在Authorityの資格ではない | Edge 6/6だから全てのGraph relationが投影済み、Document 3/24でも全Documentを交換済み |
+| [TAI #533](https://github.com/hat47x/tai-pleroma/pull/533)：SUI `Edge.fromKind/toKind`はModel側Optionalだが投影Contract側必須。キー欠落は`missing`、明示`null`は`unresolved`、**当該Edgeは投影に出ない** | 元Documentで見えたRelation/EndpointのIdentity/Direction/Multiplictyと、投影で届けた範囲・欠落理由を**Producerの許可した範囲内**で比較。部分Projectionだけを見たConsumerは関係不存在と推定しない | Edgeの非投影＝元Worldに関係無し／missingとnullは同じ確定的意味／hidden Edgeの件数を外部に開示可 |
+| [TAI #534](https://github.com/hat47x/tai-pleroma/pull/534)：SUIの合成層は端点種別未指定を`card`と仮定し、card→cardなら合成できても**出力Edgeの種別はnullのまま**。card→islandは誤解決で拒否。投影Contractの厳密経路では未指定を先に落とす | 合成前入力→投影後Record→実Assembler入力→合成後Documentの**各段階**について、どの経路を実行したかと入出力の種別・Loss・拒否理由を区別。Consumerの目的に必須なら端点Kindの意味的適合が未証明として止める | Assemblerがcard→cardを作成した＝投影Contract合格／Endpoint Kindが確定／SUIが全Relationを維持 |
+
+**YICが参照する最小の観測列（新Schemaではない）**：Producerの実Input bytes/Source Revision・元Collection粒度、宣言Contract/Readerの版とRequired Field、Product投影の実Status（present/missing/unresolved/hidden/unknown）、実Assemblerが受け取った形とOutput、Loss/Warning、Consumerが実Readしたbytes/Schema/必要Claim、Audienceの現在Disclosure、独立Expected。複合Graphで**Endpoint identity・向き・多重辺**をLabel/row positionから補完しない。Source保持側が公開を禁じる関係の存在・欠落件数は、低権限Handoffの診断にも露出しない。`unknown`や`unresolved`をLLMが推測した値で埋めて合格させない。
+
+**既存Ownerと試験**：投影・合成の契約差はSUIとTAIの既存Product/Integration Owner、TEIの入れ子生成契約はTEI生成器/標準構造Owner、SUI→SHO→SEIの実受領は各Consumer Ownerに差分を戻す。TAI [#488](https://github.com/hat47x/tai-pleroma/issues/488) X02/X06、[#271](https://github.com/hat47x/tai-pleroma/issues/271) SC-15/16、§18.3のSUI #3391/#3392・SEI #820・SHO #4、§26のTEI #2506/#2507を**既存Expectedの照合先**とし、第二のSchema/Projection Runtime/共通Loss判定器/Receipt Storeを新設しない。Stepが不合格でも、許可済みで独立したread-only Product作業の継続は妨げない。
+
+**順序と上限**：固定公開TEI `sales.order`のSK-02試験は変更しない。外部Harnessの**比較適格H2 1 Session→H3実Skill root/reference Load→四独立Session**を先行し、これらの投影/合成/多Product試験は別の事前固定Trial Groupへ送る。YICの新しい実Handoff、SUI/TEI Product修正、実Host/Disclosure、正式Owner意味受理はこの追補では**NOT RUN／未採用**。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
