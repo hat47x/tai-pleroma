@@ -684,6 +684,16 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 ---
 
 <!-- tai-activity-product-handoff-single-attempt-20261107 -->
+<!-- tai-activity-h6e6-local-retention-20261108 -->
+### 22.5 再開時の「送出」と「ローカル保持」を、同じ非開示Claimにしない（H6-E6限定実測）
+
+[TEI Draft #3309](https://github.com/hat47x/tei-platform/pull/3309)の合成Canary観測は、DSH headless stdoutだけでなく、圧縮された永続`session.v4.jsonl.zstd`の`tool/result`にもToolが読んだ内容が残ることを示した。展開後40,136 bytes／34行中canary 1件、9連結zstd frameの先頭だけを読むと179 bytes／2行・canary 0件という**不完全スキャンによる偽陰性**になる。一方、走査された`storages`／`cache`／`attachments`ではcanary 0件であり、これは調べた単一Session／Root／形式での不検出に過ぎず、全保存先・全Telemetryの無混入を意味しない。実Providerへの送出・保持期間・削除保証もNOT RUN。
+
+**Activity SC-19/21/22の現在資格**：§22.3/22.4の(1)そのTurnのモデル入力、(2)HTTP `dsh_session_log`の送出と再送、(3)ローカル永続Session Logの保持、(4)resumeによる旧Contextのモデル入力再構成、(5)別Lane・別Principalからの実Read到達、を**独立したObservation**として扱う。`session-log.enabled:false`は(2)の制御だけで(3)/(4)/(5)を消さない。出力にcanaryが無いことを全保存・全開示の不存在としない。変更後Audienceへの再配布を確認する際は、実保存Rootと現在Reader/OS ScopeをReviewer側合成Canaryで確認し、必要に応じて別の許可済みSession文脈を再構成する。過去のProvider送信の取消しや、すべてのLog消去を約束しない。
+
+**Ownerと優先度**：実DSH保存面はTEI #2515／TAI #232、試験入場は#168の[Runbook §24.14](first-real-skill-qualification-runbook-2026-11-02.md)、現在Audience/継続判断は#271。本Sectionは別のLog Store／Egress Checker／新外部Harnessを作らない。まずG0実Read拒否→G1モデル入力/HTTP/保存範囲→G2 Result完全性→初回4独立Session、という既存順を維持。実OS隔離・正式Skill比較4Slot・実Cloud Egress・本Activityの再開採点は未達。
+
+
 ## 23. 2026-11-07：別Repoの固定Byte試験から、同一Attemptの実Consumer受領へ進める（限定実測を利用）
 
 ### 23.1 実証済み範囲と、まだ一度も観測していない境界
