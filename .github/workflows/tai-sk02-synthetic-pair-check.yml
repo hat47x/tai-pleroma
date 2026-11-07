@@ -1,0 +1,150 @@
+name: TAI SK-02 paired-trial synthetic checker (non-product)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'evaluations/tools/check-sk02-pair-eligibility.cjs'
+      - 'evaluations/tools/check-sk03-negative-claim-transport.cjs'
+      - 'docs/yi-constellation/harness-interoperability-and-handoff-pilot-2026-11-03.md'
+      - 'evaluations/SK-02-first-real-product-skill-paired-pilot-2026-11-03.md'
+      - 'evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt'
+      - '.github/workflows/tai-sk02-synthetic-pair-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-sk02-only:
+    name: JavaScript syntax and 72 synthetic cases
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact checkout
+        run: |
+          git rev-parse HEAD
+          git status --porcelain
+      - name: Freeze participant Task bytes before real H2/H3 sessions
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' '38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cf' 'evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt' | sha256sum --check
+      - name: Bind all four mock-session Prompt digests to the real pinned Task file
+        shell: bash
+        run: |
+          set -euo pipefail
+          TASK="evaluations/fixtures/sk02-tei-public-read-participant-task-2026-11-06.txt"
+          node -e '
+            const fs=require("fs"), crypto=require("crypto");
+            const checker=require("./evaluations/tools/check-sk02-pair-eligibility.cjs");
+            const digest="sha256:"+crypto.createHash("sha256").update(fs.readFileSync(process.argv[1])).digest("hex");
+            const mock=checker.syntheticSeed();
+            for(const r of mock.trials) r.prompt_digest=digest;
+            fs.writeFileSync(process.argv[2],JSON.stringify(mock));
+            for(const r of mock.trials) r.prompt_digest="sha256:"+"f".repeat(64);
+            fs.writeFileSync(process.argv[3],JSON.stringify(mock));
+          ' "$TASK" "$RUNNER_TEMP/sk02-bound-mock.json" "$RUNNER_TEMP/sk02-wrong-prompt-mock.json"
+          node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-bound-mock.json" --task-file "$TASK" > "$RUNNER_TEMP/sk02-bound.out"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="eligible-to-score")process.exit(1)' "$RUNNER_TEMP/sk02-bound.out"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-wrong-prompt-mock.json" --task-file "$TASK" > "$RUNNER_TEMP/sk02-wrong-prompt.out"; then
+            echo "Same wrong prompt in all arms incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="ineligible"||!x.invalid.includes("participant-task-digest-mismatch"))process.exit(1)' "$RUNNER_TEMP/sk02-wrong-prompt.out"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-bound-mock.json" > "$RUNNER_TEMP/sk02-unpinned.out"; then
+            echo "Trial comparison without independent Task bytes incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="insufficient-evidence"||!x.unknown.includes("participant-task-raw-not-bound"))process.exit(1)' "$RUNNER_TEMP/sk02-unpinned.out"
+          printf 'A different trial task not approved for this SK-02 group\n' > "$RUNNER_TEMP/sk02-unregistered-task.txt"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-wrong-prompt-mock.json" --task-file "$RUNNER_TEMP/sk02-unregistered-task.txt" > "$RUNNER_TEMP/sk02-unregistered.out"; then
+            echo "An arbitrary alternate Task file was incorrectly accepted as preregistered"
+            exit 1
+          fi
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(x.verdict!=="ineligible"||!x.invalid.includes("participant-task-not-preregistered"))process.exit(1)' "$RUNNER_TEMP/sk02-unregistered.out"
+
+
+      - name: Check JavaScript syntax
+        run: node --check evaluations/tools/check-sk02-pair-eligibility.cjs
+      - name: Verify every required SK-02 synthetic case was reported (not just exit 0)
+        shell: bash
+        run: |
+          node evaluations/tools/check-sk02-pair-eligibility.cjs --self-test > "$RUNNER_TEMP/sk02-evidence.json"
+          node -e '
+            const fs=require("fs");
+            const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            const required=Array.from({length:72},(_,i)=>"E"+String(i+1).padStart(2,"0"));
+            const seen=Array.isArray(v.results)?v.results.map(r=>r?.case):[];
+            const unique=new Set(seen);
+            const missing=required.filter(id=>!unique.has(id));
+            const unexpected=seen.filter(id=>!required.includes(id));
+            const ok=v.passed===72 && v.total===72 && seen.length===72 &&
+              unique.size===72 && missing.length===0 && unexpected.length===0 &&
+              typeof v.scope==="string" && v.scope.includes("NO harness trial");
+            console.log(JSON.stringify({
+              kind:"SK-02 synthetic required-case inventory (not actual Product/Harness)",
+              required:required.length, reported:seen.length, distinct:unique.size,
+              missing,unexpected,passed:v.passed,total:v.total,status:ok?"PASS":"FAIL"
+            }));
+            if(!ok)process.exit(1);
+          ' "$RUNNER_TEMP/sk02-evidence.json"
+
+      - name: Reject ambiguous JSON from the actual SK-02 CLI file argument
+        shell: bash
+        run: |
+          printf '%s\n' '{"trials":[],"trials":[]}' > "$RUNNER_TEMP/sk02-duplicate.json"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-duplicate.json" > "$RUNNER_TEMP/sk02-duplicate.out"; then
+            echo "Duplicate JSON incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs"); const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(v.verdict!=="ineligible" || !v.invalid.includes("DUPLICATE_TRIAL_JSON_MEMBER")) process.exit(1)' "$RUNNER_TEMP/sk02-duplicate.out"
+          printf '%s\n' '{"trials":,}' > "$RUNNER_TEMP/sk02-malformed.json"
+          if node evaluations/tools/check-sk02-pair-eligibility.cjs "$RUNNER_TEMP/sk02-malformed.json" > "$RUNNER_TEMP/sk02-malformed.out"; then
+            echo "Malformed JSON incorrectly accepted"
+            exit 1
+          fi
+          node -e 'const fs=require("fs"); const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(v.verdict!=="ineligible" || !v.invalid.includes("INVALID_TRIAL_JSON")) process.exit(1)' "$RUNNER_TEMP/sk02-malformed.out"
+
+      - name: "SK-03 actual Node child-process test (synthetic JSON only)"
+        shell: bash
+        run: |
+          node --check evaluations/tools/check-sk03-negative-claim-transport.cjs
+          node evaluations/tools/check-sk03-negative-claim-transport.cjs --self-test > "$RUNNER_TEMP/sk03-negative-claim.json"
+          node -e '
+            const fs=require("fs");
+            const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            const required=Array.from({length:19},(_,i)=>"NC"+String(i+1).padStart(2,"0"));
+            const seen=Array.isArray(v.results)?v.results.map(x=>x?.id):[];
+            const distinct=new Set(seen);
+            const missing=required.filter(id=>!distinct.has(id));
+            const unexpected=seen.filter(id=>!required.includes(id));
+            const byId=Object.fromEntries((v.results||[]).map(x=>[x.id,x.result]));
+            const expected={
+              NC01:"evidence-preserved-for-scoring",
+              NC02:"insufficient-evidence",NC03:"insufficient-evidence",
+              NC04:"insufficient-evidence",NC05:"insufficient-evidence",
+              NC06:"evidence-mismatch",NC07:"evidence-mismatch",NC08:"evidence-mismatch",
+              NC09:"claim-contradicted",NC10:"producer-failed",
+              NC11:"producer-unparseable",NC12:"insufficient-evidence",
+              NC13:"stale-or-different-binding",NC14:"stale-or-different-binding",
+              NC15:"producer-unparseable",NC16:"insufficient-evidence",
+              NC17:"producer-unparseable",NC18:"producer-unparseable",NC19:"producer-unparseable"
+            };
+            const resultsDiffer=required.filter(id=>byId[id]!==expected[id]);
+            const ok=v.total===19 && v.passed===19 && seen.length===19 &&
+              distinct.size===19 && missing.length===0 && unexpected.length===0 &&
+              resultsDiffer.length===0 && typeof v.scope==="string" &&
+              v.scope.includes("no real TEI/Harness");
+            console.log(JSON.stringify({
+              check:"SK-03 synthetic required-case inventory, not multi-Harness",
+              required:required.length, reported:seen.length, distinct:distinct.size,
+              missing,unexpected,resultsDiffer,passed:v.passed,total:v.total,
+              status:ok?"PASS":"FAIL"
+            }));
+            if(!ok) process.exit(1);
+          ' "$RUNNER_TEMP/sk03-negative-claim.json"

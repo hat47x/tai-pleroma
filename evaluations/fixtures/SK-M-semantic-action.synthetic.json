@@ -1,0 +1,174 @@
+{
+  "fixture_id": "SK-M-2026-11-02",
+  "status": "public-synthetic-fixture-not-a-product-or-harness-test",
+  "boundary": "The example assesses how a harness Skill should avoid overclaiming from a proposed TEI Action offer. It does not implement TEI contract/applicability logic.",
+  "context": {
+    "source_revision": "S1",
+    "semantic_revision": "M1",
+    "epoch": 7,
+    "cohorts": {
+      "D1": {
+        "known": [
+          "L1",
+          "L2"
+        ],
+        "complete": true
+      },
+      "D2": {
+        "known": [
+          "R1"
+        ],
+        "complete": false,
+        "expected_total_in_fixture": 3
+      }
+    },
+    "join": {
+      "raw_rows": 6,
+      "entity_ids": [
+        "L1",
+        "L2"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "SK-M01",
+      "purpose": "read L1 from Table/Form/CUI",
+      "operation": "read",
+      "subject_kind": "entity",
+      "subject": "L1",
+      "epoch": 7,
+      "presentations": [
+        "table",
+        "form",
+        "cui"
+      ],
+      "expected": {
+        "status": "read_offer_only",
+        "subject": "L1",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M02",
+      "purpose": "edit L1 amount with no current authority",
+      "operation": "edit",
+      "subject_kind": "entity",
+      "subject": "L1",
+      "epoch": 7,
+      "authorization_observed": false,
+      "expected": {
+        "status": "intent_candidate_authority_unverified",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M03",
+      "purpose": "edit a sum chart without inverse mapping",
+      "operation": "edit",
+      "subject_kind": "aggregate",
+      "subject": "SUM(D1.amount)",
+      "epoch": 7,
+      "known_inverse_targets": [],
+      "expected": {
+        "status": "ambiguous_inverse",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M04",
+      "purpose": "delete all deliveries from partial D2",
+      "operation": "bulk_delete",
+      "subject_kind": "cohort",
+      "subject": "D2",
+      "epoch": 7,
+      "requires_complete": true,
+      "expected": {
+        "status": "requires_complete_scope",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M05",
+      "purpose": "unlink graph edge E1",
+      "operation": "unlink",
+      "subject_kind": "edge",
+      "subject": "E1",
+      "epoch": 7,
+      "expected": {
+        "status": "edge_intent_candidate",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M06",
+      "purpose": "count unique business entities despite joined rows",
+      "operation": "count_entities",
+      "subject_kind": "joined_result",
+      "subject": "D1xD2",
+      "epoch": 7,
+      "expected": {
+        "status": "read_result_only",
+        "entity_count": 2,
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M07",
+      "purpose": "old selection epoch may not drive action",
+      "operation": "read",
+      "subject_kind": "entity",
+      "subject": "L1",
+      "epoch": 6,
+      "expected": {
+        "status": "stale_context",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M08",
+      "purpose": "private discovery may not expose hidden action name",
+      "operation": "discover",
+      "subject_kind": "capability",
+      "subject": "secret_action",
+      "epoch": 7,
+      "visibility": "hidden",
+      "expected": {
+        "status": "withheld_discovery",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M09",
+      "purpose": "provider acknowledgement without observed business effect",
+      "operation": "confirm_effect",
+      "subject_kind": "task",
+      "subject": "T1",
+      "epoch": 7,
+      "provider_ack": true,
+      "effect_observed": false,
+      "expected": {
+        "status": "receipt_only",
+        "effect_confirmed": false
+      }
+    },
+    {
+      "id": "SK-M10",
+      "purpose": "event stream requires specialist operation contract",
+      "operation": "edit",
+      "subject_kind": "stream",
+      "subject": "EventStream",
+      "epoch": 7,
+      "expected": {
+        "status": "requires_specialist_contract",
+        "effect_confirmed": false
+      }
+    }
+  ],
+  "notes": [
+    "All names, identities and numbers are synthetic.",
+    "Public expected outcomes are for deterministic fixture integrity, not an independent sealed oracle.",
+    "A future Harness/TEI/SUI/SEI/SHO/EKI test must use its own actually available tools, exact versions, independent expected results and OS/Host evidence.",
+    "Statuses are labels for this fixture only and are not a new runtime enum or normalized cross-Product schema."
+  ]
+}

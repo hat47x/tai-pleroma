@@ -1,0 +1,61 @@
+{
+  "kind": "TAI cross-owner observation pointer (not canonical evidence store or API)",
+  "observed_at_utc": "2026-11-02T19:21:50Z",
+  "evidence_owner": "TEI #2649",
+  "fixed_teiplatform_pr_head": "30a486324c6ca1fe0b5cd16d6e358dc7fa5a8fa0",
+  "owner_run": {
+    "run_id": 41503235605,
+    "job_id": 125475831812,
+    "name": "TEI one-revision CLI and artifact real-reader witness",
+    "workflow_result": "success",
+    "job_result": "success",
+    "url": "https://github.com/hat47x/tei-platform/actions/runs/41503235605"
+  },
+  "read_scope": "actual TEI Go CLI, copied public reference/standard-crud workspace, separate commands, independent local file reader",
+  "executable": {
+    "schema_version": "tei.cli.version/v0",
+    "go": "go1.26.10",
+    "platform": "linux/amd64",
+    "revision": "30a486324c6ca1fe0b5cd16d6e358dc7fa5a8fa0",
+    "commands_discovery_scope": "selected-read-only-commands"
+  },
+  "before": {
+    "source_tree_sha256": "e458d7dd741a757a647d6df618a8af5d5b68072323ccbab9db3b051d01ef4f45",
+    "world_fingerprint": "sha256:bd53dbaca0ac2c20bc911e0b69083467f2ad38273911269d525db666e681817f",
+    "model_revision": "sha256:c60ed68c7c85ab218883b18970df85db1ebcae7d9090336452766d7a95d2b04d",
+    "manifest_digest": "sha256:0c19c5814e3526a18531b7faf8dee3184126ca7d02b6ab335021bd8a7be8dd7a",
+    "manifest_complete": false,
+    "operation_gaps": 4,
+    "findings": 0
+  },
+  "after_source_relocation": {
+    "source_tree_sha256": "fb751964c1b2d5ead1f50a0139fa05543c4dca3b5e5ef848d9afb56d753d76cf",
+    "world_fingerprint": "sha256:bd53dbaca0ac2c20bc911e0b69083467f2ad38273911269d525db666e681817f",
+    "model_revision": "sha256:b596f00201f39ac542b305dd284a9cc4d3daf59d31f41340c91c390a94f89240",
+    "manifest_digest": "sha256:087d00613e558ecea66c062534179d434a452043850d2ae873aabc2cc84812c3",
+    "manifest_complete": false,
+    "operation_gaps": 4,
+    "findings": 0
+  },
+  "local_publication": {
+    "actual_member_files": 5,
+    "independent_reader_bytes_match": true,
+    "manifest_file_sha256": "9d4221daf4cbab07f4d7fc2ad8a730846e9743dd2aa2850fffd0ac6db4c2028f"
+  },
+  "old_operation_new_artifact_same_revision": false,
+  "evidence_limits": [
+    "Manifest complete=false and four operation gaps are present both before and after relocation; five matching files are not Consumer relative Required coverage.",
+    "Same World fingerprint, but changed Source path/tree, model revision and Manifest digest; Source reference/Review not automatically current.",
+    "Each real CLI call and file reread proves a bounded observation, not an atomic multi-command snapshot or no ABA.",
+    "The local -out fixture had an output file side effect. The read-only H2/H3 Product Skill trial has a smaller command profile and has NOT RUN.",
+    "No real database/provider, external Harness, recipient, OS egress, SHO consumer read, accepted business meaning or Owner acceptance."
+  ],
+  "comparison_context": [
+    "MMI #756 observed hidden and veryHidden source content in inspect/select/render without a visibility field, not a secrecy determination.",
+    "MMI #758 observed CP932 decoded text without an exposed decoder profile; raw source digest does not prove decoded value provenance.",
+    "SHO Draft #13 Python spike reproduced identical bytes in distinct paths, A->B->A ABA and partial write results; not SHO product acceptance."
+  ],
+  "tai_product_skill_loaded": "NOT RUN",
+  "tai_h2_h3_trials": "NOT RUN",
+  "consumer_business_acceptance": "NOT RUN"
+}

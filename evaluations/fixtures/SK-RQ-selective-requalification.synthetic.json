@@ -1,0 +1,247 @@
+{
+  "id": "SK-RQ-v1-2026-11-02",
+  "classification": "public-synthetic-unsealed-reference",
+  "status": "reference-fixture-design-not-product-integration",
+  "description": "Cross-product selective requalification reference cases. Outputs are impact classifications, not an authority or policy decision.",
+  "cases": [
+    {
+      "id": "SK-RQ01",
+      "scenario": "Unrelated source change with complete observed dependency",
+      "changed": [
+        "source:shipments"
+      ],
+      "checks": [
+        {
+          "claim": "D1-only historical sum",
+          "dependencies": [
+            "source:orders",
+            "rule:sum-v1"
+          ],
+          "dependenciesComplete": true,
+          "expected": "retain-bounded-evidence"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ02",
+      "scenario": "Dependent rule changes while displayed number stays same",
+      "changed": [
+        "rule:credit"
+      ],
+      "checks": [
+        {
+          "claim": "credit-rule evaluation",
+          "dependencies": [
+            "rule:credit",
+            "source:order"
+          ],
+          "dependenciesComplete": true,
+          "expected": "requalify-dependency"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ03",
+      "scenario": "Opaque dependency path not observed",
+      "changed": [
+        "source:related"
+      ],
+      "checks": [
+        {
+          "claim": "opaque joint predicate",
+          "dependencies": [
+            "source:orders"
+          ],
+          "dependenciesComplete": false,
+          "expected": "unknown-impact"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ04",
+      "scenario": "Skill root unchanged but referenced script changed",
+      "changed": [
+        "skill-ref:diagnostic-script"
+      ],
+      "checks": [
+        {
+          "claim": "Skill executed instruction qualification",
+          "dependencies": [
+            "skill-root:shaA",
+            "skill-ref:diagnostic-script"
+          ],
+          "dependenciesComplete": true,
+          "expected": "requalify-dependency"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ05",
+      "scenario": "Disclosure permission narrows for external Consumer",
+      "changed": [
+        "policy:external"
+      ],
+      "checks": [
+        {
+          "claim": "external summary at current audience",
+          "guard": "disclosure-change",
+          "dependencies": [
+            "source:orders"
+          ],
+          "dependenciesComplete": true,
+          "expected": "recheck-disclosure"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ06",
+      "scenario": "Trust Bundle cannot be read during effect",
+      "changed": [
+        "trust:bundle-read"
+      ],
+      "checks": [
+        {
+          "claim": "delegated effect readiness",
+          "guard": "trust-unverified-effect",
+          "dependencies": [
+            "source:orders"
+          ],
+          "dependenciesComplete": true,
+          "expected": "suspend-effect"
+        },
+        {
+          "claim": "unrelated public read-only preparation",
+          "dependencies": [
+            "public:research"
+          ],
+          "dependenciesComplete": true,
+          "expected": "retain-bounded-evidence"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ07",
+      "scenario": "Locally passing reads are from incompatible epochs",
+      "changed": [
+        "snapshot:epoch"
+      ],
+      "checks": [
+        {
+          "claim": "joint read across two Products",
+          "guard": "joint-epoch-mismatch",
+          "dependencies": [
+            "source:orders",
+            "source:payments"
+          ],
+          "dependenciesComplete": true,
+          "expected": "joint-unknown"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ08",
+      "scenario": "Manifest generation differs from actual artifact bytes",
+      "changed": [
+        "publication:bundle"
+      ],
+      "checks": [
+        {
+          "claim": "delivered document generation",
+          "guard": "mixed-publication",
+          "dependencies": [
+            "source:orders"
+          ],
+          "dependenciesComplete": true,
+          "expected": "recheck-publication"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ09",
+      "scenario": "EKI body arrives after claim ACK",
+      "changed": [
+        "eki:body"
+      ],
+      "checks": [
+        {
+          "claim": "same attempt artifact delivered",
+          "guard": "body-delivery-observed",
+          "dependencies": [
+            "eki:claim-ack"
+          ],
+          "dependenciesComplete": true,
+          "expected": "recheck-delivery"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ10",
+      "scenario": "SHO template change should not invalidate TEI Meaning",
+      "changed": [
+        "template:sho"
+      ],
+      "checks": [
+        {
+          "claim": "SHO fixed document review",
+          "dependencies": [
+            "template:sho",
+            "source:docs"
+          ],
+          "dependenciesComplete": true,
+          "expected": "requalify-dependency"
+        },
+        {
+          "claim": "TEI Library accepted Meaning (historical)",
+          "dependencies": [
+            "source:model",
+            "meaning:business"
+          ],
+          "dependenciesComplete": true,
+          "expected": "retain-bounded-evidence"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ11",
+      "scenario": "Independent Oracle expectation changes while Source stays fixed",
+      "changed": [
+        "oracle:expected"
+      ],
+      "checks": [
+        {
+          "claim": "validation using updated expected",
+          "dependencies": [
+            "oracle:expected",
+            "source:model"
+          ],
+          "dependenciesComplete": true,
+          "expected": "requalify-dependency"
+        }
+      ]
+    },
+    {
+      "id": "SK-RQ12",
+      "scenario": "Same source bytes used for a new purpose",
+      "changed": [
+        "purpose:task"
+      ],
+      "checks": [
+        {
+          "claim": "claim for new decision purpose",
+          "guard": "purpose-changed",
+          "dependencies": [
+            "source:model"
+          ],
+          "dependenciesComplete": true,
+          "expected": "requalify-purpose"
+        }
+      ]
+    }
+  ],
+  "caveats": [
+    "This publicly visible fixture contains expected outcomes; it is not a sealed holdout.",
+    "No real Product, Rule, Provider, DB, OS permission, Harness, or independent Owner acceptance is tested.",
+    "The classification records a candidate need for review; it is not an implementation of a common Policy, Trust, or Qualification engine.",
+    "Retain-bounded-evidence refers to historical scoped evidence only; current Host authorization and disclosure are separate checks."
+  ]
+}
