@@ -202,3 +202,14 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 **追加のGate**：以後の比較では(1)宣言構造の判定、(2)追加Evidenceで決定可能になった2問、(3)追加Evidence後も正しく未定とする2問を分層集計し、(2)+(3)のEvidence層を総正答率から独立に報告する。誤確定／過剰保留／反対向きの解釈を別々に測る。研究者がGoldを見た公開v1でのモデル回答を独立holdoutの成績としない。
 
 [TAI #443](https://github.com/hat47x/tai-pleroma/pull/443)の候補生成/選択/参照と、[SUI Runtime実Context限定照合 #490](https://github.com/hat47x/tai-pleroma/pull/490)のBundle選択/反証参照の区別にも、「存在する/選ばれた/実Consumerで使われた/許可された」を単一Stageに潰さない原理が通じる。しかし本PRはそれらの製品Contract/正本を再実装しない。TEI #2881のCaller-supplied direct-edge Traceを実Relation宣言scopeの証明として扱わない。現行研究機材は公開合成Graphであり、実Source/独立Holdoutと人間・AI認知効果は**NOT RUN**。
+
+## 13. 2026-11-08：実CLI観測からRQ7へ移す前の独立資格
+
+[TEI実CLIの限定証拠と研究移管の停止条件](RQ7_REAL_CLI_EVIDENCE_TRANSFER_2026-11-08.md)を追加し、**E-trace（実Sourceの直接参照候補を説明する比較）**と**E-pipeline（独立宣言Graphと同一Attemptの実消費を比較）**を別実験として切り分けた。
+
+- [TEI #3321](https://github.com/hat47x/tei-platform/pull/3321) exact head `4dfdaf75145059859593d5f320ce43025e9736b0` の[専用Actions #42385227799](https://github.com/hat47x/tei-platform/actions/runs/42385227799)は、実`tei trace`2 scope→Node Consumerと合成14/14のread-only検査に成功。**Source/Relationの閉包、Owner Meaning、Current Policy、Studio UI、実Build/ETLの資格ではない**。
+- CLIの`trace.subject/source.key`やSource Index Referenceを同一Packetで検証することと、独立Source Readerによる真正性証明は異なる。Callerが与えたScopeをSource-declared Scopeへ変換しない。
+- `tei trace`で得たGraph/Edgeは**観測Projection**。これを「独立した宣言Graph」と偽ってV0/V1へ入力すると、RQ7の「表示形式×実行証拠」の介入因子が交絡する。
+- 実Graph/Sourceデータの開示は#2516 Current Policyが許したSliceのみ。現段階では製品のraw CLI Packetを本研究へコピーせず、GitHub exact-head記録を参照するだけとする。
+
+**今回の達成**は、実証済みTEI Readerの限定事実を研究設計へ接続したこと。#1124 M0→M1、#2831 Self-build P0、#2542 ETL/MFT、RQ7の人間/AI認知実験と独立holdoutは別Gateであり**NOT RUN/NOT PROVEN**。第二Source Reader/Provider/Host/Policy/Graph Engineを作らない。
