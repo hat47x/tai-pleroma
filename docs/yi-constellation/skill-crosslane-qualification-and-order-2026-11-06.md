@@ -529,6 +529,18 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 **初回SK-02の停止条件は維持**：現行許可Command Familyに`view`は含めず、今回のDiscovery改善を理由に実験途中で許可Flagを広げない。[TAI Draft #270 Runbook §24.6/24.12](https://github.com/hat47x/tai-pleroma/pull/270)のG0物理Read拒否、G1各送出経路、G2実argv/Tool Reply完全性を先行し、別の将来Trialで`view`を試すなら開始前に実Binary/CLI Contract/flag/output destination/独立Expected/許可Profileを再Pinする。Tool-only／Product Skill／TAI Activity Skillの選択は、説明文でなく**当該Invocationと実Effectの観測**に基づく。新しいCLI ValidatorやTAI共通Effect Engineを作らず、#3182/#1155/#2499の製品担当へ委譲。正式H2/H3資格は0/4、実Host許可とOwner受理は未実証。
 
+### 19.10 CLIの発見可能性・実Binary識別・試験完全性を外部Harnessの資格へ読み替えない（2026-11-08）
+
+他チャットのCLI/MCPファーストDogfoodingと独立Evidence検査から、**発見した命令契約・実行したBinary・本当に実施されたTest集合・モデルが受け取ったTool Result**を分ける。これは§19.4/G2の資格を説明する既存の測定方法であり、新しいSK-02判定器/試験分母は作らない。
+
+| 最新Productの限定実測 | 初回H2/H3と後続Skillでの利用上限 |
+| --- | --- |
+| [TEI merged #3340](https://github.com/hat47x/tei-platform/pull/3340)：`inspect`・`trace`・`view`・`knowledge-context`の`-h`に、`tei commands` Discoveryと**同じ実装上の値集合・既定値**を表示。実BinaryテストはPASS。`model catalog`の特殊`-h`、JSON Help APIは対象外 | **実CLIの同一版**で、引数の許容Kind/方向/Modeと既定値を確認してToolを構成可能。Helpが表示したから、外部HarnessがそのContractを認識・消費したと推定しない。旧Pinned DSHのTEI Binaryにも新しいDiscovery/Helpを遡及適用しない |
+| [EKI merged #783](https://github.com/hat47x/eki-fabric/pull/783)：`eki-control`/`eki-agent --version`は`vcs.revision`/`vcs.modified`/Go版を実BuildInfoから出力。VCS情報が無ければ`unknown`を保持 | 外部Consumerが**実行されたバイナリの申告版**を照会できるが、出力TextのみでそのファイルのSHA/実起動Path・現在Control Plane/Worker Protocolのバインド・Host許可は確定しない。Product/Trialを同一視せず、必要なら実Path/Byte Digestを別取得 |
+| [SEI merged #823](https://github.com/hat47x/sei-cognition/pull/823)：H2共有Runnerの回帰Captureで**期待20個のTest ID**と実行ID/summary/skipを突合。exit 0でも欠落・ID置換・skipは不合格。再実行の失敗/Preflight Blockが旧Evidenceを消さないことを局所試験 | **テスト実施の網羅/結果と旧証拠保全**の参考手法として既存§19.5/G2へ照合。SEIの「H2」は**TAI #168の外部Harness H2セッションとは別**。SEI局所20テストPASSをTAI H2/H3四Sessionの得点・隔離・正答/Skill効果として算入しない |
+
+YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`、(2) `discovery/helpの実契約と現在Tool Profile`、(3) `actual argv/allowed effects/FS paths`、(4) `Tool Call↔Result実Count/IDとモデル完全受領`、(5) `実際に走ったTest ID/Skip/Preflightと独立Expected`の順。製品CLIで失敗・未取得が分かる場合、独立した許可済みread-only操作は継続してよいが、対象Claimは`unknown/ineligible`を保持する。実Harnessの新G0物理Read拒否とG1送出、固定4 Slot/ITT/PPは**未実施／0/4比較資格**のままであり、今回のCI合格を代替しない。
+
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
 ### 20.1 TEI Product側の実装候補と現行の証明限界
@@ -965,3 +977,21 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 **YICの選択規則**：Skillから見える名称／Trait required宣言／Productの解決済みContract／Fulfillment実装／Pluginの実Link・Load・Invoke／対応するConformance／現在Host Grantを別々に観測する。自動実装が無いmanual-requiredは、Providerが選択されたことだけで能力ありとみなさず、不足診断をProductに戻す。Trait requiredとadvisoryを区別し、同Traitの複合要求と競合／必要依存の未消費はunsupported/unknownとして保持する。YICは#951のResolver、#3267のexact BOM、#2514/#1180のIndependent Expectedを**参照するConsumer**であり、第二Trait Resolver、Plugin Loader、BOM Store、Generic Hostを作らない。
 
 **既存X01/X04/X06へ接続する最小対照**：(a) Skillでは「Inspectorあり」だがPlugin Surfaceが現在CLI未結線→Skill提案は候補止まり、(b) Trait requiredかつmanual-required未実装→そのOperationだけ実Tool選択不可、(c) Provider A/B各PASSだが同一Target/Artifactでの合成未検証→結合資格なし、(d) 実TargetでLoad/Invoke達成しても現在Grantが失効→write不可、無関係なread-only可能範囲は継続。製品の実検査はTEI #3277のD0/D1、#3279のT0/T1、#3267の2×2 Matrixへ委譲する。**Xケースの新分母や初回SK-02のBlockingを増やさず**、B1 Product単独で達成できるときはB2 TAI Skillを選ばない。[TAI連携計画 §10](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/harness-skills-interoperability-and-evidence-2026-11-02.md)を最新の実証限界とする。TEI Plugin-firstの動的接続・Trait履行・YIC実Skill選択の横断試験はNOT RUN。
+
+### 27.6 Capability宣言とEnvironment選択を区別し、選択の集計方法も契約に束縛する（TEI局所実測）
+
+§27.5のPlugin-first／Atomic TraitはCapabilityが**宣言された→EnvironmentがそのCapabilityを選択した→Providerが必要な実装を提供した→TargetがLoad/Invokeした→現在Grantで実利用可能**という段階別の資格を要求する。新たに[TEI merged #3337](https://github.com/hat47x/tei-platform/pull/3337)の**read-only Capability Coverage Reference**が、最初の2段階の取り違えを具体的に反証した。これはTEI Product自身の既存`World.Plugins[*].Provides`／`Environment Binding`を読む限定実装であり、YICの第二Registry/Resolverではない。
+
+| 実Sourceで確認された観測 | Skill選択における必要な区別 |
+| --- | --- |
+| Reference WorkspaceのEnvironmentはdevelopment/productionの2つ、`provides`宣言Capabilityは12件。[#3337](https://github.com/hat47x/tei-platform/pull/3337)の**初回参照集計**では未選択6件 | `declared=12`は対応機能が稼働する件数ではない。未選択は候補・他環境用の同梱という正常ケースもあり、それ自体を欠陥としない |
+| `editor-intelligence` PluginがEnvironmentで選択済みでも、当該**能力Bindingが無い**（#3337） | Plugin packageの選択と**個別Capabilityの選択**は別。Plugin一覧やSkill説明文を実Tool availableへ昇格しない |
+| `migration.atlas`が`deployment-executor`として選ばれても`migration-provider`としては未選択。`contract-query-executor`2件も未選択（#3337） | 同一Plugin/別Traitの一部のみ選択される。Capability IDとFunctionのRequired Setごとに適合を照合し、Package単位で全役割を合格にしない |
+| 初回参照実装では`database-instance`が指す`postgres`/`oracle`という**技術名**と、`database.postgres`/`database.oracle`という**Capability ID**を文字列比較できず、DB Provider2件を未選択扱いした | Namespace/Roleの文字列一致は意味適合ではない。実TEIの既存`Capability.SupportsDatabaseProvider(instance.Provider)`により**技術の対応集合**を解決してから評価する必要がある |
+| [TEI Open #3350](https://github.com/hat47x/tei-platform/pull/3350)の局所再計算では、同じ12宣言の未選択が**6→4**。Postgres/Oracleはdev/prod双方でselected。追加2 Test/Go test・vetが限定PASS | **この再計算はPR段階の修正候補**でmain統合・Provider実装存在・実Target/Host資格を示さない。旧6件をその時点の観測として保持し、集計規則/Versionが変わったことを明示 |
+
+**YIC/TEIが次に採用する測定の形**：Productから実際に取得した`Environment ID/Revision`、`Plugin/Capability Kind+ID+Version`、`Provides`の宣言、`Selection Rule/Binding`と解決結果、未選択Reason/Unknown、`actual Plugin/Target Load・Invoke/Artifact`、当該ConsumerのRequired Capability、現在Host Grant/Disclosure、対象Attempt/独立Expectedを**別列で比較**する。解決規則が異なる旧/new ReferenceのCountを、同条件の時系列トレンドに見せかけない。Provider未選択があるときも、それが不要なTask・別Environment/Consumerで可能なRead-only処理は維持する。
+
+**独立Expectedの後続対照**（既存TAI #488 X01/X03/X04/X06、TEI #951/#3267/#3277/#3279を再利用）：(a) Package選択済み／Capability Binding無し、(b) 同じPackageのA能力だけ選択、(c) 適合技術名とCapability IDの文字列表現が異なる、(d) 同名/Kind一致でもProvider実体無し・未実Load、(e) 実Load済みでもTarget/Host Grant失効、(f) 未選択候補を含むが要求Functionは全充足。単純一致で偽陽性・偽陰性を作る実装を反証し、各Product正本に不足を戻す。正式なVerified Composition BOM、実DB Provider、実Application Target、YIC実Skill効果/Owner受理は**NOT RUN**。初回固定TEI H2/H3は§19のG0→G1→G2を先行して0/4資格を解消し、このPlugin Coverage試験を新Blocking/Trial数へ追加しない。
+
+
