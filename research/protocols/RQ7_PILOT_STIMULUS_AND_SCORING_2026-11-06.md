@@ -122,3 +122,14 @@ Gold数の均衡は、**タスク難度、言語的な負荷、分岐数、Graph
 4. 独立holdout/参加者割付/費用/精度を予め固定し、未実施条件の分母はN/A。実使用や人間の受理・権限・外部作用の効果は推測しない。
 
 **状態**: 公開v1の追加はprepilotを比較可能にする準備。研究結果・有意な認知改善・TEI製品受入・学術的新規性は未確定。Goldを知ったモデルの試験を未知の一般化として扱わない。
+
+
+## 7. 2026-11-08：Goldの判別力校正を受けた事前評価条件
+
+[公開GoldのBaseline校正実測](../results/RQ7_PUBLIC_GOLD_BASELINE_CALIBRATION_2026-11-08.md)で、同じ公開v1のEvidence付き条件（V2/V3）に対し、**宣言だけの型付きqueryを解き、残りは未定にする**研究用方式が**10/12**正答することが確認された。この方式は被験者には表示されない`question_selector`を使う特権的な校正基準であり、人間・LLMの公平な対照モデルではない。
+
+この結果を受け、後続Human/AI試験は**合計Verdict正答率を単独の成功指標としない**。少なくとも (a) Declared-only 8件の構造判断、(b) Evidence-dependent 4件の根拠判断、(c) 根拠が増えた結果`undetermined→supported/refuted`へ変わる2件、(d) 増やしても`undetermined`を維持すべき2件、を別集計する。
+
+評価者は次を同時に採点する：正答、誤確定（不足Evidenceから断定）、過剰保留（証拠ありなのに判断不能）、反対方向の判断、Source/Scope/Attempt・次に許された確認対象、費用/時間。`withheld`は真理値と混ぜず、公開用Policyに従う。**Goldを知っているモデル・研究者による再回答を独立holdoutとは扱わない**。
+
+この追補は公開研究機材の**校正**を完了したもので、RQ7の認知効果、TEI実CLI Source閉包、実MFT/Self-build、実Graphのアクセシビリティ、Owner意味受理、AI/人間評価はNOT RUN。特権的なメタデータ基準をProductのOracleや推薦Agentへ移植しない。
