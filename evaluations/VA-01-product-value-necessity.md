@@ -145,3 +145,22 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 
 **状態**：Tool技術到達とH3実Loadは限定Observed、H2/H3正式比較適格0/4。利用者Outcome、現実の業務Action、Effect/Consumerの一Attempt E2E、異モデル独立採点・Owner意味/価値受理は**NOT RUN**。
 
+
+## 7. 2026-11-07：Issue単位の義務化判定票と独立反証の最小入力
+
+本節は[横断計画§21](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)からの評価用抜粋。**静的な提案であり、各IssueのClose/要求変更の提案ではない**。不変条件（I）と導入方式（R）を別欄に持ち、`conditional`は「用途条件が成立したとき必要」、`research-only`は「検証を止める」の意味ではない。
+
+| Case | 代表Issue・仮の処遇 | B1だけで満たすべき対象／守るI | B2を義務化できる反証条件・独立Expected |
+| --- | --- | --- | --- |
+| **VA-TAI-01** | [TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)は配布`conditional`、[#168](https://github.com/hat47x/tai-pleroma/issues/168)は外部Harness接続`core`の受入実験、[#271](https://github.com/hat47x/tai-pleroma/issues/271)は用途相対の再開 | 必要な一製品のSource/Unknownを正しい範囲で読める。許可外Sourceは物理的に拒否、遅着Receipt/旧Grantは結果にしない | 複数Productの改版・別Harness引継ぎでB1が失敗し、TAI追加で誤継承/再確認負担が独立に改善。初回H2/H3は**現在0/4適格**であり、新しいG0/G1/G2を省かない |
+| **VA-TEI-01** | [#1127](https://github.com/hat47x/tei-platform/issues/1127)／[#1180](https://github.com/hat47x/tei-platform/issues/1180)は最小機能の`core`候補。[#2619](https://github.com/hat47x/tei-platform/issues/2619)は抽象化`conditional`、[#1223](https://github.com/hat47x/tei-platform/issues/1223)の無停止更新は配備条件付き | 1 FunctionのData/Relation/Rule→操作→保存→再読込と独立Expected。NULL/粒度/同時更新/現行Grantを保持。別CLI/Web入口の違いを観測 | Target交代・複数配備・業務無停止を必要とする具体的SLOで、B1にない欠陥を示す。最初の一件に全Plugin/全Domain/全Targetを必須化しない |
+| **VA-SEI-01** | [#711](https://github.com/hat47x/sei-cognition/issues/711)の根拠入力と[#758](https://github.com/hat47x/sei-cognition/issues/758)のverify判定は`core gap`候補。[#660](https://github.com/hat47x/sei-cognition/issues/660)/[#767](https://github.com/hat47x/sei-cognition/issues/767)の全面Method化は用途条件付き | 一件のDecisionをResumeし、根拠/Scope/Unknown/ExactBinding/未検証件数を消さない。未検証recordを含む`verify exit=0`を偽成功と採点する | 実務再開で汎用Methodなしでは誤再構成が残る時のみ、必要なCognitive Methodを導入。全項目必須フォームと第二Truth Engineは比較しないまま採用しない |
+| **VA-SUI-01** | [ADR-0089](https://github.com/hat47x/sui-sensemaking/blob/main/01_Plans/adr/ADR-0089-product-value-canon.md)の保留/根拠復帰は`core`、[#3371](https://github.com/hat47x/sui-sensemaking/issues/3371)のDocumentV1投影は接続条件付き | 実務T2の一Documentで異論/保留を保存→再表示し、非公開Card/Relationの存在や件数を漏らさない | 外部Consumerが必要とする内容・loss予算を示してProjection採用を判定。型検証だけでSUI原本へ逆保存したとしない。文化MethodはT2比較後 |
+| **VA-SHO-01** | [#4](https://github.com/hat47x/sho-composer/issues/4)/[#7](https://github.com/hat47x/sho-composer/issues/7)のS0/L0は`core`、[#8](https://github.com/hat47x/sho-composer/issues/8)の論文→実装は`conditional`、[#9](https://github.com/hat47x/sho-composer/issues/9)が価値比較 | 取得していない3つの架空URLでもリンク階層とメモを保存・再開し、未取得と出典未確認を明示。MMIを利用しない構成で成立する | DOI/PDF/複数論文関係・実装/数式の用途で通常Markdownに比べて意味誤読・手戻りが減ることを示す。出典確認をしないまま論文主張へ昇格しない |
+| **VA-EKI-01** | [#58](https://github.com/hat47x/eki-fabric/issues/58) Suitability＋MVP結果経路は`core`、[#19](https://github.com/hat47x/eki-fabric/issues/19) MLは`research-only`、[#155](https://github.com/hat47x/eki-fabric/issues/155) Fairness・[#67](https://github.com/hat47x/eki-fabric/issues/67)複数管理Providerは`conditional` | 小CPU Taskを分散しない、分散適合Taskは許可Workerへ配置・同一AttemptのBody/Resultを確認、途中停止/期限切れ・回復予算を守る | 飢餓や高負荷/多組織、可用性・通信の実条件でB1が不足する場合にだけFairness/ML/複数Providerを比較。到達ACKや平均遅延の改善だけでは採用しない |
+
+**二方向の独立Expected（最小6対）**：各行で「高度化なしでも正しく完了・保留できる」正例と、「意味・安全を削ると誤成功または過剰停止する」負例を一つずつ、提案Agentと独立に固定する。B2優位を示せない場合は`not-justified-for-this-job`、測定不能なら`unknown`と明記し、研究自体の停止やCoreからの一律削除にはしない。手戻り、人の確認回数、Tool/Token/CPU/通信、外部送出と導入・運用コストは分離して記録する。
+
+**優先度の扱い**：初回の正式H2/H3に新たなBlocking Conditionを追加しない。既知の隔離・送出・Tool Reply完全性（G0/G1/G2）を最優先し、並行してSEI #758の誤成功、SHO L0の単独保存、SUI T2、TEI #1127/1180とEKI #58の一往復を各Ownerの現行試験へ接続する。TEI Studio全画面、全Target、EKI高度Data Plane、SHO Paper-to-Program、SEI全Methodの完成は同一の前提にしない。
+
+**今回の証拠の資格**：Source-staticの要件・Issue照合と比較票の追加のみ。6対の独立Expected確定／別モデルVA-X／VA-E実行／B0/B1/B2実測／人の利用価値／各Owner受理は**NOT RUN**。
