@@ -15,8 +15,24 @@
     "attempts": [
       {
         "submit": 202,
-        "task": "tsk_6a219427d910dc8e3d9d1e25cf50d39f",
-        "worker": "wrk_6d63c5e13fca92af91728663bac0a3d9",
+        "task": "tsk_85638b291485dac4ff5332418f3320cc",
+        "worker": "wrk_5adbc1331e952c820f4c84105aae83be",
+        "executed": false,
+        "claimed": false,
+        "resultStatus": 409,
+        "resultBody": {
+          "type": "urn:eki:problem:result-not-ready",
+          "title": "The task has not produced an accepted result yet",
+          "status": 409,
+          "code": "RESULT_NOT_READY",
+          "retryable": true,
+          "task_id": "tsk_85638b291485dac4ff5332418f3320cc"
+        }
+      },
+      {
+        "submit": 202,
+        "task": "tsk_9e60da3581d239b0a2bca32377b0fe1b",
+        "worker": "wrk_4fa2e181c0fed51c6e4b9398d2015021",
         "executed": true,
         "claimed": true,
         "resultStatus": 409,
@@ -26,13 +42,13 @@
           "status": 409,
           "code": "RESULT_NOT_READY",
           "retryable": true,
-          "task_id": "tsk_6a219427d910dc8e3d9d1e25cf50d39f"
+          "task_id": "tsk_9e60da3581d239b0a2bca32377b0fe1b"
         }
       }
     ],
     "submitStatus": 202,
-    "taskId": "tsk_6a219427d910dc8e3d9d1e25cf50d39f",
-    "workerId": "wrk_6d63c5e13fca92af91728663bac0a3d9",
+    "taskId": "tsk_9e60da3581d239b0a2bca32377b0fe1b",
+    "workerId": "wrk_4fa2e181c0fed51c6e4b9398d2015021",
     "executed": true,
     "claimed": true,
     "resultStatus": 409,
@@ -42,7 +58,7 @@
       "status": 409,
       "code": "RESULT_NOT_READY",
       "retryable": true,
-      "task_id": "tsk_6a219427d910dc8e3d9d1e25cf50d39f"
+      "task_id": "tsk_9e60da3581d239b0a2bca32377b0fe1b"
     }
   },
   "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest, lets the Agent execute the fixed command and then reads the Task result endpoint. The claim is submitted but the read answers RESULT_NOT_READY, because result acceptance is not wired into the running Control Plane."

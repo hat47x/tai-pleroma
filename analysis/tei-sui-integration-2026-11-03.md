@@ -1,4 +1,4 @@
-# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
+﻿# TEI投影からSUI DocumentV1への接続 — 到達点と残課題
 
 2026-11-03時点の整理。実装と検証の正本は各リポジトリのGit履歴とreceipt。
 
