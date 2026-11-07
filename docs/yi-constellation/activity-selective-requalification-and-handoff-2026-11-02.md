@@ -410,7 +410,7 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 
 **決定対象**：SC-18〜22、SEI #820、OKF/TAI #514、EKI #745、TEI #2605の反証は用途別ライブラリ。全件を初回Skill・一つのActivityの必須条件にしない。Product試験件数・Owner受理・実際の利用者価値を加算しない。新しい中央Task DB、Evidence Schema、Host、Checkerは作らない。
 
-[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の最初の外部Harness H2実Tool一Session→H3実Loader→固定4 Sessionは不変。Product-only CLI CIや固定Skill配置と実Harness成功は別。
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)では、外部DSH Harnessから固定TEI実Binaryを起動しTool返却を受ける**技術的接続が限定実証済み**となった。一方、参加者の実隔離・Skill非露出・許可コマンドだけの実利用・固定比較条件を満たすH2は**未達**。次のBlocking Exitは比較適格なH2 1 Sessionであり、そこからH3実Loaderと固定4 Sessionへ進む。Product-only CI・DSH探索Session・固定Skill配置を比較成立へ合算しない。
 
 ### 次の一つのActivity価値試験
 
@@ -426,10 +426,27 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 
 ### 段階と停止条件
 
-- **P0**：#168の固定TEI H2実Tool request→実argv/cwd→exit/stdout・Harness受信を同一Sessionで確認。SCN-001やOKFを投入しない。
-- **P1**：H3実Skill root/reference Loader Read→固定4 Session、割付R/提供Dと正答・費用を別採点。
+- **P0（技術的接続：限定達成）**：TEI #2509／Draft #3113のDSH h2-08で、固定Task/CLI実Tool request→argv/cwd→exit/output→Harness受信を同一Sessionで観測済み。ただし参加者隔離/実Tool許可群/独立回答採点が未充足のため、比較用H2 Slotとしては不適格。9探索試行を事後に4 Trialへ編入しない。
+- **P1（比較適格性：次のBlocking）**：固定公開TEI一Subjectについて既存OS/Harnessの実効隔離を先に観測し、H2からSkill・採点票・原Worktree/過去Logへ届かないこと、実Tool family/argv/Source scopeが事前許可どおりであることを確認。固定Task・Profile・実Binary・Source/論理Pathを事前登録し、**新Groupの比較適格なH2一Session**から開始する。次にH3実Skill root/reference Loader ReadとH2→H3→H3→H2の4独立Sessionを実行し、割付R／実提供D、ITT／PP、独立回答品質・費用を分離。
 - **P2**：上記SCN-001一回中断→O-06→再開をB0/B1/B2で実比較。公開・施設予約・DB書込みは実施しない。
 - **P3**：特定の観測不能・失敗で必要になった場合だけ他Product/HandoffやEffect試行を追加。SC-19 IF-02〜07/ EKI Lease/TEI Commit unknownの作用付き負例は**隔離した別Task Group**でProvider Receipt・独立Readを用意する。
 - **停止**：出所/Source/実Receipt/Consumer Readが観測不能なら該当Claimはinsufficient-evidence。事前Expected未固定なら比較しない。B1で十分ならB2を追加しない。
 
 **状態**：本節は既存計画の優先順位・範囲整理のみ。実H2/H3、SCN-001 B0/B1/B2、OKF/SEI交換・業務Provider/Owner受理はNOT RUN。
+
+
+<!-- tai-dsh-h2-observation-activity-revision-20261107 -->
+### 実DSH証拠により更新した、Activityへの接続資格（2026-11-07）
+
+[TEI実測原本 Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)と[TAI #168／SK-02 Runbook §24](first-real-skill-qualification-runbook-2026-11-02.md)を確認した。Windows DSH 0.2.2-rc.1で固定TEI pin 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c、固定公開sales.order、固定Participant Task SHA-256 38a0b238018e050f2116f10f1ca2cb3a54319c2743e2fb9bbe128d4be96a84cfを使用し、h2-08はcompleted、Tool Call 56、Tool Result 55、実TEI起動32。9探索試行のうち同Participant Task完了は1、短いTool接続試験完了2、MALFORMED_RESPONSE停止5、INVALID_CONFIG停止1。**探索時の分母であって、比較用四試行のITT分母ではない**。
+
+| Claim | 実証可能な上限 | TAIが禁止する誤昇格 |
+| --- | --- | --- |
+| **T：外部Harness Tool transport** | 同一実Sessionで実CLI argv/exit/結果とHarness受信を限定観測 | CLI実行の実在を否定し続けない。しかし起動回数を独立Task数に加算しない |
+| **E：比較適格なH2** | 未達。read-onlyでもDirectory外の固定Worktreeを実読取し、初回許可群外のsource-indexも実行。Skill/Expected/旧Logの非露出・ネットワーク送出は未確認 | 単なる作業Dir移動、Skillファイル未配置、read-only設定、Reviewerの自己申告だけで隔離/許可済みとしない |
+| **Q：独立Expectedに対する回答品質** | final-answer.mdは保存済みだが、Reviewerの独立採点は未実施。一部記述の実Source由来も未特定 | completed＝Task正答、warning全部保持、出所一致としない |
+| **V：Skill/TAIの追加価値** | H3の実Loader、4独立Session、B0/B1/B2のActivity試行は未実施 | DSHの探索Token使用量・9試行中の成功だけをSkill効果、実費用改善、Activity再開価値としない |
+
+**次の最小修正点**：①参加者から原Worktree／Skill／Reviewer-only Expected／旧Session Logを実Hostで隔離し、他Tool・親Path・Network経由の到達を実際に拒否できることを確認、②Toolが初回許可コマンド（version／commands／model catalog／inspect／trace／validate）と対象公開Workspace以外を呼べないことを実Tool/Host側で担保。source-indexを必要とするなら後付けの自己正当化ではなく、両腕のTool Profile・Expectedを実行前に改訂した**別Group**を固定する、③同じSource/Task/Model/論理Path/Cost上限の新GroupでH2一Sessionを再試行。MALFORMED_RESPONSEとINVALID_CONFIGはAgent/Adapterの別原因として失敗を保持し、成功Groupへ選抜しない。
+
+**製品・横断の境界**：この限定DSH実験は「TAIが目的/根拠/未決を保持して活動再開に成功した」証拠ではない。SCN-001のB0/B1/B2最小価値試験は引き続き後続。実Tool transportは達成、比較適格H2、実H3、ITT/PP品質、Egress/OS強制拒否、実Provider Effect、Owner意味受理は未達・未確認。TAI #232は実機密境界、TEI #2509は原DSH実行Evidence、TAI #168は比較試験、#271は用途相対の再資格化を担当。新Runner/Host/中央Evidence Store/第二Verifierは増やさない。
