@@ -234,6 +234,9 @@ def main():
         "command": "python integrations/pilot-sui-document/assembler/context_bundle_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
+        "artifactUsage": "reference-metadata-only; artifact bytes NOT consumed by SUI /context/bundle",
+        "consumedInput": {"kind": "synthetic-stub", "stubDatasetId": "A2-minimal-v1",
+                          "sourceRevisionMatched": False},
         "observed": checks,
         "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), same-attempt response content equality and hash stability, plus preview refusal. Does NOT establish cross-runtime digest interoperability, candidate completeness, matching external Source revision, disclosure authorization, or human decision.",
     }
