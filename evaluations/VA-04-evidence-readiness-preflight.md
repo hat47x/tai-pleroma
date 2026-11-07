@@ -120,3 +120,21 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 **今の必須資格**：対象public Sourceの許可Read成功と、同一実Profileの許可外Read拒否を正負対で観測→副次Sinkを観測した範囲で開示判断→固定Whitelist/実argv/real root/Result欠落なし→新Trial Group割付。OSやGatewayの実拒否が未取得なら「外部に出なかった」と回答しない。物理root変更、Toolの名前だけread-onlyでもFS出力flagで書ける反例はG0/G2に吸収し、新ACL Engineは建てない。初回治験はread-onlyであり、新書込/OKF/Cloud等を要求しない。
 
 **状態**：新しいDSH/Host/Network実試行を本評価票では実施していない。H6-E1/E2とH3は既存Product側の実測を引き継いだ限定証拠であり、正式G0/G1/G2適格・四Session独立評価・本番秘密運用・Owner受理はNOT RUN。
+
+## 9. 2026-11-08：Design ContextのRequired閉包と受領モードを別資格にする
+
+[TEI #3304](https://github.com/hat47x/tei-platform/pull/3304)の公開Validation・行番号0候補は生成済Pinned CLIで実判別（**既知T1-Aのみ**）。一方、[P-1b1 #3326](https://github.com/hat47x/tei-platform/pull/3326)の最初の実CI [#42385502023](https://github.com/hat47x/tei-platform/actions/runs/42385502023)は、**試験Consumerが`source-index`のsubjectモードを全件indexモードと誤認**して全3 RuleのDefinition参照を欠落と判定し失敗した。必要RuleがProductに実在しないという証拠ではない。既存CLIのindexモードを10番目のReadとして追加した[修正Run #42385726717](https://github.com/hat47x/tei-platform/actions/runs/42385726717)は`bounded-design-context` job **completed/success**。同一PRの新旧Runと[並行Draft #3324](https://github.com/hat47x/tei-platform/pull/3324)の別方式を一体実証として合算しない。
+
+**VA-04の観測欄にRequired-Set Witnessを追加**（新Context Packet/検査器を作らず既存TEI #3262 Consumerを参照）：
+
+| 入力／観測 | 採点できるClaimと反証 |
+| --- | --- |
+| Independent Required（用途・Subject・Rule/Relation・Source Role/Anchor・版） | 必要3 Ruleまたは狭い1 Rule＋Relationを**事前独立固定**。Consumerが返した件数からRequiredを後付け推定しない |
+| Actual Discovered→Loader Read→Parser/Binding→Source Index | JSON構文成功・World/Index FP一致・`source-index`の**subject/indexモード**は別。DefinitionのRole/Path/ArtifactとSource実Read、Canonical属性を必要Scopeだけ突合 |
+| Actual Tool Reply→Consumer Received | 連続10 CLI Readの一致は原子的な同一時点Snapshotではない。外部H2/H3のTool Response欠落・8KiB切断・Network/OS非露出はG0/G1/G2の別Witness |
+| Independent Expectedと適切な保留 | Required Rule省略・重複/曖昧・Wrong Role・未Readは`partial/unknown`で拒否し、非Required Subject省略は正当に通す。既知T1-Aと未知T1-Bを分け、過剰停止と誤完了を同じ分母で扱う |
+
+**採用順**：既存[#3262](https://github.com/hat47x/tei-platform/issues/3262)と[#3223](https://github.com/hat47x/tei-platform/issues/3223)のOwnerが#3326の独立3 Rule照合と#3324のRule+Relation/Canonical照合を整理し、一本化したexact HEADで正負対・Source/Lock変更・Result digestを確認。次にLoader→Parser→Evaluatorの実到達を1件、最後に未知Ruleを隠したT1-Bの盲検試験へ。**初回TAI #168のH2/H3のG0/G1/G2を追加で止めない**。
+
+**資格**：保存済みTEI実CIの範囲は限定Observed。Owner受理、正式Product Design Context API・T1-B・C1／全Required・外部Consumer E2E・実Provider/Hostの一Attempt ClosureはNOT RUN。
+
