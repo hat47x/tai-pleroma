@@ -68,8 +68,23 @@
 - 公開可否。公開gateは`allowed=false`のまま。
 - 意味の正しさ、業務上の受入。いずれも人と製品の判断。
 
-## 6. 次の作業
+## 6. 次の作業と結果（2026-11-06）
 
-1. 入れ子投影の契約表現を試作し、Document全体を1つのrecordで表せるかを確かめる（失敗したらTEI側へ戻す）。
-2. 製品側の6判断を、Issueへ渡せる粒度の要約にする。
-3. 上記いずれも、小さなPRとreceiptで記録する。
+判断の後に実行し、結果が判断を変えるかを確かめた。
+
+| 作業 | 結果 | 判断への影響 |
+| --- | --- | --- |
+| 入れ子投影の契約表現を試作 | **入れ子の`fields`は拒否されず、無言で平坦化されて生成された**（[probe](../evaluations/records/TEI-nesting-2026-11-06.json)） | 入れ子はTAIでは解消できない。TEI側へ戻す条件に当たる |
+| 製品側6判断をIssue粒度に要約 | 6件の草案を作成（[草案](product-side-decisions-issue-drafts-2026-11-06.md)） | 起票は外部作用のため未実施。判断待ちのまま |
+| 写像率の実測（名前） | DocumentV1 0.125 / Card 0.5 / Island 0.15 / Edge 1.0（[coverage](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)） | 段階2の未達が入れ子だけであることを裏づけ |
+| 型・必須性の一致 | primitiveの不一致なし。`Edge.fromKind`/`toKind`はSUIが任意・契約が必須（[types](../evaluations/records/SUI-TEI-document-types-2026-11-06.json)） | 新たな不足を1件追加 |
+| 端点種別を持たないEdgeの投影 | `missing`/`unresolved`で落ち、投影されない（[edge](../evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json)） | 上記の不足の影響を確定 |
+| 合成層の端点種別の仮定 | 欠落時に`card`を仮定して解決し、出力には種別が残らない（[assembler](../evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json)） | 契約と合成層の不一致を追加 |
+
+### 結果を踏まえた判断の修正
+
+1. **入れ子投影はTAIで解消できないことを確定する。** 契約のデコードが未知フィールドを無視するため、TAI側からは「拒否させる」ことも「受理させる」こともできない。TEI側の変更が要る。
+2. **TEI側の不足は3件になった**: 入れ子投影の受理（または明示的な拒否）、`Edge.fromKind`/`toKind`の任意性の扱い、端点種別の必須性を契約と合成層で揃えること。
+3. 段階4の作業は、これ以上TEI側へ踏み込まず、次の2つに絞る: (a) TEI側3件の判断材料を整える、(b) 製品側6判断の材料を整える。いずれも起票は外部作用のため行わない。
+
+`Edge.fromKind`/`toKind`の任意性と合成層の仮定は、**TEIの契約表現ではなくTAIのパイロット側の設計**でもある。製品のDocumentV1が端点種別を任意にしている以上、契約側を任意に寄せる選択肢があり、それはTAI側で試せる。**試作の結果、任意にした契約は受理され、種別なしのEdgeを省略付きで投影できた**（[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)）。端点種別の欠落はTEI側ではなく契約側で解ける。残る論点は合成層が種別なしをどう扱うかだけである。
