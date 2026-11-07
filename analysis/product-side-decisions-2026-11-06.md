@@ -1,4 +1,4 @@
-﻿# 製品側の判断が必要な5点（2026-11-06）
+﻿# 製品側の判断が必要な6点（2026-11-06）
 
 Status: **整理**。TAIが接続検証で突き当たった、製品側の設計判断を要する点を並べる。ここで可否を決めない。
 
@@ -50,9 +50,20 @@ TAI側でできること: 配線変更後の再観測（local-devでagent経路�
 
 TAI側でできること: 変更後の再観測（未知値で起動が止まるか）。値の扱いの変更は製品変更。
 
+## 6. 呼び出し側の`read_only`を読み取りの決定へ伝播させるか
+
+観測: `AccessRequest(read_only=True, action="read")`を渡すと、`resolve_access_decision`は`allow=True, read_only=False`を返す。ローカル失効防止の`read_only`段は`write/export/share`のときだけ発火し、`read`では素通りしてPDPの決定がそのまま返る。[receipt](../evaluations/records/SUI-TEI-failsafe-2026-11-06.json)
+
+当たり: `access_control.py`の`apply_local_failsafe`が`request.read_only and request.action in {"write", "export", "share"}`でのみ拒否を作る。`_read_only_fallback`が使われるのはpolicy_ref欠落・PDP失敗の経路だけ。
+
+論点: `read_only`を「書き込み禁止」の合図としてのみ扱うのか、読み取りの決定にも`read_only=True`として伝播させるのか。現状は呼び出し側が読み取り専用モードを宣言しても、決定の`read_only`欄には現れないため、下流が`decision.read_only`だけを見て判断すると宣言を見落とす。
+
+TAI側でできること: 変更後の再観測（読み取りの決定に`read_only`が載るか）。伝播の変更は製品変更。
+
 ## 共通の注記
 
 - いずれもTAIの接続では解消できない。TAIは再観測と記録を担う。
 - 生産性・受入可否の判断には使わない（PoC完了後に評価する前提）。
 - 公開gateは`allowed=false`のまま。
+
 
