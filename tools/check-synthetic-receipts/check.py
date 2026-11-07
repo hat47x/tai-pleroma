@@ -185,6 +185,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-preflight-2026-11-06.json",
     "evaluations/records/SUI-TEI-policy-requirements-2026-11-06.json",
     "evaluations/records/SUI-TEI-builders-2026-11-06.json",
+    "evaluations/records/SUI-TEI-failsafe-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -628,6 +629,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-failsafe" in relative:
+            cases = data.get("observed", {}).get("cases", {})
+            if data.get("result") != "PASS" or cases.get("safeModeExport", {}).get("reason") != "safe_mode":
+                errors.append(f"SUI local fail-safe ladder changed: {relative}")
         if "SUI-TEI-builders" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("unknownAdapterFallsBackToNoop") is not True:
