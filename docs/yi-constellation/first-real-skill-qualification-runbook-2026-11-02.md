@@ -752,3 +752,28 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **採否順**：G0/G1の**実環境としての事前検査**とG2の許可Tool受領経路が整ってから、H2→H3→H3→H2を**新しい事前登録4Slot**で開始する。開始後に露出・出力欠損・Model JSON不正が生じても、そのSlotをH3に付け替えず、ITTへ保持しPPを不適格にする。DSHのH6-E1/E2実測は既存9探索Attemptと**別母数**で、初回H2/H3試行数に算入しない。
 
 **担当**：実読取否定・実Network境界は[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)／[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。DSH ToolとMock Wireは[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)。Harness比較と独立採点は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、現在資格／Model Profile driftは[#271](https://github.com/hat47x/tai-pleroma/issues/271)。P0で新しいHost／共通Permission Registry／Runnerを実装しない。**ここで新規DSH試行を行ったわけではなく、既存の実H6-E1/E2を初回SK-02受入へ反映した**。比較適格H2/H3は0/4、H3実Load／Owner受理はNOT RUN。
+
+
+<!-- sk02-h3-real-skill-reference-read-not-qualified-20261107 -->
+### 24.5 新しい実証拠：H3のProduct Skill本文と参照ファイルは実読取済み、比較適格性は別（2026-11-07）
+
+**本節が§24.1〜24.4の「H3 Load NOT RUN」という歴史的記述の現在状態を更新する**。[TEI mainへ収録されたDSH四Session実測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)、[構造化Call記録](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/session-comparison.json)、[TAI #168へのProduct側報告](https://github.com/hat47x/tai-pleroma/issues/168#issuecomment-6700048131)を照合した。以下は**実行証拠の読取であり、今回DSHを新規起動していない**。
+
+| 実Session（順） | Tool Call | Skill Tool | Skill本文実受信 | refs実受信 | 評価 |
+| --- | ---: | ---: | --- | --- | --- |
+| **H2-A** | 56 | 0 | なし | なし | 過去のh2-08 Sessionを再使用、cwd外Sourceを実Read、初回Tool許可集合外のCommandあり |
+| **H3-A** | 23 | 1 | 5,482 bytes、SHA-256 cbf3d21f… | refs/read-only-model-investigation.md をread、7,710 result bytes | Tool実Load限定達成。ただし物理非露出条件・事前割付の独立性不足 |
+| **H3-B** | 22 | 1 | 同5,482 bytes、同SHA | 同参照ファイルをread、7,710 result bytes（同digest） | 同上。本文の実Loadと参照の実消費を自己申告に依存せず確認 |
+| **H2-B** | 45 | 0 | なし | なし | H2 RootのSkill Listに当該Skillなし。ただし他Rootへ物理アクセス不能の証拠ではない |
+
+両H3のSkill Root内容が同一byteで実提供された事実は**限定的なD=Delivered**の証拠。両H3が同じReferenceをToolで読んだことはReference取得の証拠。これらだけでは必要資料の**全閉包**を取得した、実Skillの指示を正しく適用した、業務Taskが正答だったとはいえない。Skill本文には当時の「CLI実行NOT RUN」という旧説明も残り、Product Skillの記述品質は別評価。初回固定Treatment byteを後付け改変せず、修正版は次のGroup。
+
+**比較不適格の具体的な理由**：①Task中の reference/workspace と実Rootの workspace/ が一致せず、Task解釈・経路探索が腕間で異なる、②H2-Aは既存探索Sessionを事後に比較4件へ組み込んでいる、③DSH read-onlyではH2がcwd外の元WorktreeへRead可能、④実Toolの許可Command/flagsと結果受信の完全性が揃っていない、⑤Reviewer-only Expectedに対する独立採点、実Provider送出/Network強制、実Costの比較が未成立。[§24.4](#244-dsh-h6-e1h6-e2実測をh2入場前の拒否試験へ結ぶ2026-11-07)のH6-E1/E2でも合成Raw/.env/Peerを拒否できなかったため、**技術的な4 Sessionの完了を比較試験の適格4/4へ読み替えない**。
+
+**最新の資格と次のExit**：
+- **T 実Harness→CLI**：限定成立、再証明だけを目的とした初回入口は終了。
+- **L H3 Product Skill root/reference Tool Read**：限定成立（H3-A/H3-B）。従来の「H3 Load 0件／NOT RUN」は現在記録と不一致として訂正。ただしH2非露出の実強制・Required Skill Closure・正確な適用は未検証。
+- **E 比較適格H2/H3**：**0/4**。新しい事前登録GroupでG0実Read拒否→G1モデル/Session Log等の送出確認→G2許可Tool/argv・完整なResult受領を先に確認する。H2-Aの再利用を禁じ、新しい4独立Sessionを開始する。既存の四Sessionや9探索をITTに遡及選抜しない。
+- **Q/V 独立正答と価値**：**NOT RUN**。回答中に要求語が現れた事実を独立Expected合格、Model/Token差をSkill因果効果として採点しない。全Sessionの割付R／提供D／ITT／PPとConsumer受領を別票にする。
+
+**Owner・非目標**：実DSH・Skill/Tool記録＝TEI #2509、実OS／Session Log経路＝TEI #2515／TAI #232、試験割付と採点＝TAI #168、価値＝#422、現在資格＝#271。新Harness Runner／Plugin Loader／Policy Engineや、初回にOKF/SCN-001の機能要件を追加しない。TEI mainへEvidenceが存在することと、TAI Draftの本節がmain統合されたことも区別する。
