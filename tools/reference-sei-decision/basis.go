@@ -34,6 +34,7 @@ type BasisInspection struct {
 	HumanReviewed          bool            `json:"humanReviewed"`
 	AuthorityVerified      bool            `json:"authorityVerified"`
 	PublicationApproved    bool            `json:"publicationApproved"`
+	*PinReport
 }
 
 func inspectBasis(ctx context.Context, seiRoot, path string) (BasisInspection, error) {
