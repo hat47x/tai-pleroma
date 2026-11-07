@@ -66,6 +66,16 @@
 **条件付き後続**：[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)のOKF Attested Computation（正規計算定義／型付きBind／実Receipt／独立Attester）は既存Skill試験の後にread-only計算1件で価値を判断し、H2/H3のSkill原文/Tool Profileに途中追加しない。SEI #820のOKF鮮度・交換とTEI #2605のProduct Skill契約を流用。新Attester Runtimeや第二Meaning Storeを最初から標準装備しない。
 
 
+### 2026-11-07 最新Gate：H3実Load成立、比較入場G0/G1/G2は未達
+
+[TEI mainの実DSH四Session](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)により、H3-A/Bで**固定Product Skill root 5,482 bytesと参照文書1件の実Tool読込を確認**。H2側Skill Toolは0。外部Tool接続とH3 Loaderは限定実証済みで、以前の「H3 Loader NOT RUN」は履歴状態。ただし過去Session再利用・Workspace path差・読取非隔離・Whitelist逸脱・独立採点不足により、**比較適格H2/H3は0/4**。
+
+次のBlocking Exitは新機構実装ではなく既存[Runbook §24.4〜24.7](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)の3段階：**G0**同一OS/Tool Profileでpublic Read成功とReviewer/Skill/Raw/親Workspaceの実Read拒否、**G1**Model入力とSession Log等の副次送出・再送・適用Audienceの確認、**G2**許可Command/flags/実Workspace・完全Tool Reply／最終回答の受領。その後、固定Task・Binary・Source・Skill version・モデル条件・独立Expectedで**新4Sessionの事前割付**を行い、正答・Unknown/Warning・費用・手直しを比較する。[VA-02 §13.2](../evaluations/VA-02-cross-product-first-run-protocol.md)／[VA-04 §8.2](../evaluations/VA-04-evidence-readiness-preflight.md)に根拠と負例を集約。
+
+**新たな実リスク**：[TEI H6-E1実測](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H6E1_READ_BOUNDARY_2026-11-07)ではread-onlyで合成Raw/.env/cwd外ファイルの拒否0、Model入力＋Session Logへ複製。[H6-E2 Local Mock](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_SESSION_LOG_RETRY_AND_DEFAULT_2026-11-07)ではSession Log既定ON、503/不完全streamで未受理区間が再送。実Providerへの機密送出や全Network経路の検証ではないが、設定名をOS隔離・送出ゼロの証拠にしない。
+
+**後続の限定採用**：[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)／[Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)から、Tool完了と利用者Outcome、適切な非実行と誤拒否、Receiptと独立Readを分離した価値採点を[VA-01 §6.6](../evaluations/VA-01-product-value-necessity.md)へ接続。[TAI #489](https://github.com/hat47x/tai-pleroma/pull/489)の表現型/Role/SHO/SUI/SEI Skill連携、OKFの実Attesterは必要なProduct先行実証の後。初回H2/H3固定Task/Profile/Skillに新機能を挿入せず、新中央Host/Policy/Registryを作らない。
+
 ## 横断要件の適正化・多モデル独立レビュー（2026-11-04：提案）
 
 [TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)および[主要価値からの要件適正化と独立レビュー計画](yi-constellation/product-value-scope-audit-2026-11-04.md)を、Phase 0〜3と並列の**横断レビュー・計画更新レーン**として追加する。
