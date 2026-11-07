@@ -490,7 +490,16 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 
 **Ownerと未実施**：SUI Adapter/PolicyはSUI Owner・TAI [#394](https://github.com/hat47x/tai-pleroma/issues/394)の製品実測、DSH開示/Host境界はTAI [#232](https://github.com/hat47x/tai-pleroma/issues/232)、TEI Command/ReceiptはTEI #2998/#3124/#3127、再開/目的帰属はTAI #271、Tool/Skill比較は#168/#488。局所テストを跨ぐQL横断試験、実Providerの資源現在値の独立Read、実PostgreSQLでのReceipt Lookup、実OS/Egress強制、Owner受理は**NOT RUN**。
 
+### 19.4 TEIの資源現在値照合を追加しても、Receipt・現在Grant・他Consumer受領は別資格（2026-11-07実装更新）
 
+<!-- tai-ql-20261107-resource-observation-v2 -->
+
+前節の[TEI merged #3124](https://github.com/hat47x/tei-platform/pull/3124)／[#3127](https://github.com/hat47x/tei-platform/pull/3127)時点では、Receipt Lookupを`observed`と表示したが資源を読んでいなかった。**現行mainの[TEI merged #3155](https://github.com/hat47x/tei-platform/pull/3155)はこの区別を実装へ反映済み**。`PersistenceState`は`not-applicable / not-observed / receipt-observed / resource-observed`を区別し、`persisted:true`は`resource-observed`のときだけ。`effectcommit`の`ResourceRead=true`かつProviderが対応する場合に、別Poolの`postgres.Provider.ReadResource`で`objects`のversion/valueを読み、Commit payloadと照合できる。非対応Providerは`ErrResourceObservationUnavailable`（不存在とは異なる）。これらはWindowsでの単体試験とGo buildの範囲で確認されており、**実PostgreSQLの結合試験はDSN未設定で当該ローカル環境ではskip**。既定compositionへの`ResourceRead`配線、別Connectionの読取一貫性、権限と費用は未決。
+
+- **QL-05補正**：`not-observed`は「Commit未実行」ではなく、Commit後の独立読取が無い／失敗した場合を含む。旧Attemptの再試行・補償を自動決定しない。
+- **QL-06補正**：古い`observed`という用語を持つReceipt観測記録は、その時点のProduct版に束縛して解釈する。新版の`receipt-observed`と`resource-observed`を明確に分け、Receiptだけでは資源現在値一致としない。
+- **QL-07深化**：`resource-observed`で一時点の資源値が一致しても、その後の他Writer変更、Replica可視性、別Consumerの実Read、業務Owner Meaning、現在Audience/Disclosure、将来の再送権限は保証しない。対象Operation/Source/Grant/観測時点を用途に応じて再束縛する。
+- **実施判断**：B1のTEI単独実Provider/Resource Readで必要な答えを確認できる場合、B2のTAI横断再読取や新Receipt Storeを要求しない。並列Writer・後続Consumerが必要な用途だけ既存TEI/Hostの別試験へ進む。QL横断Actual Effect/Owner受理は引き続きNOT RUN。
 
 ---
 
