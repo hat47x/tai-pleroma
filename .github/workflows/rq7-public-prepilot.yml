@@ -4,14 +4,14 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "research/tools/rq7_pilot.py"
+      - "research/tools/rq7_*.py"
       - "research/tools/test_rq7_*.py"
       - "research/fixtures/RQ7_*.json"
       - ".github/workflows/rq7-public-prepilot.yml"
   push:
     branches: [main]
     paths:
-      - "research/tools/rq7_pilot.py"
+      - "research/tools/rq7_*.py"
       - "research/tools/test_rq7_*.py"
       - "research/fixtures/RQ7_*.json"
       - ".github/workflows/rq7-public-prepilot.yml"
@@ -32,5 +32,9 @@ jobs:
         run: |
           python research/tools/rq7_pilot.py --dataset v0 --check
           python research/tools/rq7_pilot.py --dataset v1 --check
+      - name: Calibrate public fixture Gold only (no participant or Product evaluation)
+        run: |
+          python research/tools/rq7_calibrate.py --dataset v0 > /dev/null
+          python research/tools/rq7_calibrate.py --dataset v1 > /dev/null
       - name: Verify all public render paths and Gold separation
         run: python -m unittest discover -s research/tools -p 'test_rq7_*.py' -v
