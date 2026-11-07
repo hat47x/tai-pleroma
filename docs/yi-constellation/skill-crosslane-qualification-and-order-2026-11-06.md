@@ -798,3 +798,20 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 | **OX-09/10** Owner移譲・複数System部分作用（後続） | 新OwnerへのData Grant暗黙付与、A成功/B失敗で全Outcome完了と報告する誤りを阻止 | TEI #2020/#2390、EKI/各Host Owner、Task要件が実在するときのみ |
 
 **検証の優先順**：①既存公開TEI read-onlyの比較適格H2一Session→②固定H3 Skill root/reference実Loader→③H2→H3→H3→H2四Sessionの独立Expected評価、を維持する。**その後**、TAI #531のOX-01/02/04/07を別の事前固定Pressure Groupで、一因子変更・Product単独B0と必要なSkill B1/B2・本当に観測したHost/Provider資格に照らす。Source-static／synthetic／実CLI／実Harness／実Provider／Owner受理を混ぜない。Runbookの共通Manifest仕様、App配備所有/廃止、Heartbeat、Cost最適化は**採用保留の比較候補**であり、初回SK-02 Gateへ持ち込まない。実外部Oracle動作、これらのYIC用OX試行、実Cross-product Outcome/Owner受理は**NOT RUN**。
+
+
+<!-- yic-skill-dcq-verified-bom-qualified-choice-20261107 -->
+### 27.4 設計Contextの充足とVerified Composition BOMをSkill選択へ接続する（2026-11-07、TEI Owner候補／実横断NOT RUN）
+
+TEI側で検討が具体化した[設計情報read-only Query #3262](https://github.com/hat47x/tei-platform/issues/3262)と[標準Verified Composition BOM #3267](https://github.com/hat47x/tei-platform/issues/3267)を、**YICが新しいRegistryやResolverを持たずに参照する候補**とする。前者はテストデータ生成・Pattern推薦より前のP-1要件、後者はPlugin/Contract/Provider/Targetの**exactな検証済み組合せを配布する標準機能要求**だが、どちらも現時点では製品正式API/実結合E2E未採用。CLI/MCP/Skillを単一のSource/Authority正本にしない。
+
+| 消費する情報 | YICの最小判断 | 避ける誤昇格 |
+| --- | --- | --- |
+| **Design Context Query相当の実Source Read** | User Job・Function/Subject/Scopeに対するRequired集合を先に固定し、declared/discovered/loaded/parsed/bound/returned、版・依存・欠落・Tool Replyを**実取得した列だけ**照合する。未実装の単一Queryを待たず現行TEI CLIを対象限定で使用 | `validate.ok`、Catalog件数、1 Page、8KiB断片だけでRequired全件が揃ったとしない。P-1 Queryが実装済みとしない |
+| **Plugin Candidate → Resolved Lock** | Product Ownerの実ResolverとTarget/OS/Contract/Plugin exact bytes、Build/Targetの互換条件を参照する。単なるVersion rangeや同名Pluginと区別 | 宣言・Discovery・Lockの存在を実Load/Invocation/Provider資格にしない |
+| **Qualified BOMの候補** | TEI #3267の各**exact tuple**について、実使用した同一AttemptのContract Conformance、Test/Fixture/Independent Expected、Artifact、Coverage/Target/Scopeと失敗・unknownを併記。認証/適用は現在のHost/Providerへ戻す | 署名/Publisher情報、SBOM、個別Plugin PASS、pairwise PASS、BOMの「verified」文字だけで未実施の組合せや本番Grantを推定しない |
+| **Skill選択／Activity Resume** | 特定のUser Jobに必要なTool/Projection/Pluginが現実にAvailableで、現在のSource/Audience/Grantに合う範囲だけ候補にする。変更したtupleに依存するClaimだけ再資格化する | 一つの旧BOM PASSから別Runtime/Tenant/版の動作・現在の実行許可や全Activity価値を流用しない |
+
+**負例の優先順（既存Ownerの試験を再利用）**：(1)同名Subjectでも実Loader未消費→Context incomplete、(2)Plugin A/Bそれぞれ個別PASSだがA+B同一Target/Attemptでは未実行→組合せunverified、(3)Provider 2版×Consumer 2版の**2×2 exact matrix**で1組だけ不適合→該当tupleのみfail、(4)同一Lock/Artifactでも実Host Grant・Source Revisionが変わる→旧検証履歴は保持し現在のAction資格を再照合。詳しいRequired/Schemaと独立ExpectedはTEI #3262/#3267/#1180/#2514、効果/現在性は#1174/#2600、スコープ別Product Skillは#2605に帰属する。**初回SK-02の固定Task/Skill byte/CLI whitelistと比較適格0/4を変更しない**。
+
+**事業価値の判定**：[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)／[価値研究Draft #532 §12](https://github.com/hat47x/tai-pleroma/pull/532)のB0/B1/B2で、B1 Product単独の対象限定Read＋組合せ提示だけで目的達成ならYIC Activity Skill/BOM共通UIを必須化しない。必要な根拠の見落とし・誤互換／過剰拒否・再確認コスト・実Consumer到達に差がある場合だけB2を採用判断する。新YIC Central BOM Store、実行器、Attester/Owner Registry、Permission Engine、MCP Serverの追加は不要。現YIC→実TEI Query/BOM選択・2×2 Matrix・実Plugin Load・Consumer/Owner受理は**NOT RUN**。
