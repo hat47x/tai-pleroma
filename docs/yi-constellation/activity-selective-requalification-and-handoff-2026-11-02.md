@@ -821,8 +821,20 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **Read側Consumerの誤解釈**：[TEI #3347](https://github.com/hat47x/tei-platform/issues/3347)の`validate.diagnostics`入れ子、`requirements.result`配列、Catalogの標準定義混入は、JSON正常・Call数一致でも**必要情報が正しく読めた保証にならない**。CLI Command/Mode/JSON Schemaと実Source・Tool byteを照合し、Consumerが予期した契約と違えば当該Claimを`unsupported/unknown`とする。正常な配列・標準定義は欠陥と即断せず、初回SK-02へ`view`等の新Commandを追加しない。
 
-**Product-firstの最小試験**：TEI #3262の既存`context_gate.py`と独立Requiredへ、(1)`.tei` SourceをLoaderが読みRuleを返す正例、(2)`docs/plan` Markdownはmanagedだが未Loadedという対照、(3)Source Index subject/index modeの読み違い、(4)全WorldとApplication使用namespaceの指紋Scope差、(5)配列／入れ子／標準定義のConsumer解釈違いを**実際に参照するCommandだけ**で段階適用する。TT-56 Draft #3324/#3326はOwnerが一本化するまで同じ合格分母に集計しない。各合成テストの合格と、生成AIの未知Rule発見T1-B／外部H3 End-to-end／Owner Accepted Meaningは別資格。
+**Product-firstの最小試験**：TEI #3262の既存`context_gate.py`と独立Requiredへ、(1)`.tei` SourceをLoaderが読みRuleを返す正例、(2)`docs/plan` Markdownはmanagedだが未Loadedという対照、(3)Source Index subject/index modeの読み違い、(4)全WorldとApplication使用namespaceの指紋Scope差、(5)配列／入れ子／標準定義のConsumer解釈違いを**実際に参照するCommandだけ**で段階適用する。TT-56の旧並行Draft #3324/#3326は重複するため合格分母を合算しない。後続の統合済み[TEI #3354](https://github.com/hat47x/tei-platform/pull/3354)だけを、単一実CLI Context Gateの現在証拠として扱う（§23.7）。各合成テストの合格と、生成AIの未知Rule発見T1-B／外部H3 End-to-end／Owner Accepted Meaningは別資格。
 
 **Activity側の判断**：過去Readの履歴が有効でも、新用途で必要なSource/Ruleが実未取得ならRequiredの不足のみ再取得または保留し、既存の公開read-only調査、非公開草稿作成、独立して適格な旧証拠は維持する。逆に必要Ruleの欠落をLLM補完して`qualifiedTestGeneration`や新Write Grantへ昇格しない。B0既存Tool→B1 Product単独でJobを満たすならB2 TAIを選ばず、後続横断Handoffで実Consumer受領・Audience/Disclosureが変わった部分だけ再資格化する。
 
 **現在値**：既知Rule負例T1-Aは限定実CLI達成。TT-56の完全Required ClosureとMCP/外部H3最終Byte Delivery、T1-B blind discovery、実Product `docs/plan` Parser、現Grant付きMutation/Effect、TAI活動の正式横断E2Eは未達。初回#168のH2/H3比較適格0/4とG0→G1→G2の順を変えない。第二Registry/Reader/Test RunnerをTAIへ作らない。
+
+<!-- tai-activity-tt56-converged-context-20261108 -->
+### 23.7 TT-56の単一Context Gateへ証拠を収束し、Tool広告と実解釈の差を残す（2026-11-08）
+
+[TEI merged #3354](https://github.com/hat47x/tei-platform/pull/3354)は、従来のTT-56並行Draft #3324/#3326のうち、3独立Required Rule、Canonical、Relation ID/Parent、Definition Source、実Loader/Source Indexの照合を**一つの`context_gate.py`**に集約した。PR exact HEADの[専用CI #42391707962](https://github.com/hat47x/tei-platform/actions/runs/42391707962)では、**11件の実read-only CLI Reply＋32件の局所Consumer対照**を判別し、既存6 Pinned Scenario・T1-A既知負例も実行した。32件はReplyの一時改変や既知対照であり、**32種類の実Product障害、AIの未知Rule発見、全業務Ruleの閉包証明ではない**。返答は`boundedReference=partial`／`testExecutionAdmission=exploration-only`／`qualifiedTestGeneration=false`のままである。ローカルC0相当10.0%を全体C1/NFR保証にしない。
+
+[TEI merged #3307](https://github.com/hat47x/tei-platform/pull/3307)は`tei commands`の閉じた引数値集合・型・既定値を実検証器へ結び付けた。特に**`inspect`と`trace`で対応`subject-kind`集合は異なる**ため、Command Discoveryの一覧から全KindをどのToolでも扱えるとは言えない。[TEI merged #3333](https://github.com/hat47x/tei-platform/pull/3333)では`view`の名前付き出力Flagを広告し、`effect=read-only`であっても指定Flagでファイルを書き得ることを実測済み。これらはTAIの**Tool選択候補・実argv・Reply解釈・実FS効果**を区別するために使い、TAIが第二CLI契約やフラグ表を保有しない。
+
+[TEI #3149／Draft #3356](https://github.com/hat47x/tei-platform/pull/3356)の第2ラウンド実測では、調査した実`tei commands`とGoソースに**TEIネイティブMCPサーバー入口は見つからず**、現行の実証経路はCLI。これは全世界にMCP Bridgeが存在しないという断定ではなく、**当該TEI Product/RevisionのMCPを実Consumerで試験済みにしない**という限定。最初のTAI #168 H2/H3はDSH→既存TEI実BinaryのTool transportで行い、MCP導入をBlockingにも新実装責務にも加えない。
+
+**TAIで再利用する資格の最小単位**：実CLIの`Command+argumentValues/flags+workspace manifest+Binary/Source Revision+対象Kind+実Reply bytes/diagnostics+Required Rule/Relation Scope`を、必要なClaimごとに既存Activity票で束縛する。新Purposeで必須Ruleがこの閉包外なら`unknown/partial`で保持し、該当する探索だけ追加。公開ReadやB1 Product単独で達成できるJobは止めない。T1-B盲検生成、実外部H3最終Byte Delivery、MCP実動作、OS Read-deny/Current Grant、業務Owner意味受理はNOT RUN。既存G0→G1→G2→比較適格4 Sessionを優先する。
+
