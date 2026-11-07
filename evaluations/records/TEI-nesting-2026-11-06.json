@@ -1,0 +1,52 @@
+{
+  "schema": "tai.reference.tei-nesting-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-07",
+  "host": "Windows with the TEI reference generator selection tool built by go run",
+  "command": "python integrations/tools/tei_nesting_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-nesting-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "variants": {
+      "fieldWithFields": {
+        "exit": 0,
+        "generated": true,
+        "stderrTail": "]",
+        "emitsNestedObject": true,
+        "sourceHasNestedFieldNames": true
+      },
+      "arrayOfRecord": {
+        "exit": 0,
+        "generated": true,
+        "stderrTail": "]",
+        "emitsNestedObject": true,
+        "sourceHasNestedFieldNames": true
+      },
+      "newKind": {
+        "exit": 1,
+        "generated": false,
+        "stderrTail": "exit status 1",
+        "emitsNestedObject": false,
+        "sourceHasNestedFieldNames": false
+      },
+      "flatControl": {
+        "exit": 0,
+        "generated": true,
+        "stderrTail": "]",
+        "emitsNestedObject": true,
+        "sourceHasNestedFieldNames": true
+      }
+    },
+    "unknownKindRefused": true,
+    "unknownKindNotGenerated": true,
+    "nestedFieldsSilentlyDropped": true,
+    "flatControlAccepted": true,
+    "flatControlGenerated": true
+  },
+  "scope": "Feeds three projection shapes and one flat control to tei-generator-build. An unknown kind is refused, but a nested `fields` key inside a projection field is silently dropped because the contract is decoded with encoding/json without DisallowUnknownFields: the generator is built and emits a flat field instead. That is worse than a refusal, because the contract looks nested while the output is not. It does not try to change TEI."
+}

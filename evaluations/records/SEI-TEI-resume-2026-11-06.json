@@ -1,0 +1,35 @@
+{
+  "schema": "tai.reference.sei-resume/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-07",
+  "host": "Windows with a locally built sei CLI and a temporary store",
+  "command": "python integrations/tools/sei_resume_check.py --sei-repo D:\\GIT\\hat47x\\sei-cognition --artifact evaluations/artifacts/sei-decision-projection.json --out evaluations/records/SEI-TEI-resume-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/sei-decision-projection.json",
+    "digest": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+  },
+  "observed": {
+    "addExit": 0,
+    "resumeExit": 0,
+    "bundleID": "sei-store-2026-11-07-5cfbc735",
+    "snapshotDigest": "sha256:0b118e83b76d8b4c82fc7b7caf6ff052042c9cc49c84a7b982bd4d41d18bd9f5",
+    "recordCount": 1,
+    "humanViewEscapesNewline": true,
+    "humanViewEscapesBidi": true,
+    "humanViewHasNoRawBidi": true,
+    "humanViewKeepsFirstLine": true,
+    "noStoreExit": 1,
+    "noStoreMessage": true,
+    "badDigestExit": 1,
+    "badDigestMessage": true,
+    "missingRecordExit": 1,
+    "missingRecordMessage": true,
+    "partialFlagsExit": 1,
+    "goodRecordExit": 0,
+    "goodRecordPointer": "/records/0"
+  },
+  "scope": "Adds a decision whose statement carries a newline and a bidi override, then reads resume as JSON and as text, and probes a missing store, a wrong digest, an unknown record, and partial flags. It does not test a store corrupted after resume."
+}

@@ -77,7 +77,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
 | 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行とrollingの配備・rollbackまで到達。属性単位（text/document_id）とCard record（text+documentId）とIsland/Edge recordを選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[island-edge](../evaluations/records/SUI-TEI-island-edge-2026-11-02.json)、[document](../evaluations/records/SUI-TEI-document-record-2026-11-02.json)）。Documentはflat recordの合成で表し、合成層のテスト6件と、生成候補を実行して合成する結合経路17ケースもPASS（[assembler](../evaluations/records/SUI-TEI-assembler-2026-11-02.json)、[flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[affiliation](../evaluations/records/SUI-TEI-affiliation-2026-11-02.json)）。入れ子投影は未達 |
 | 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。生産性は完成後に評価する（仮決定）。人の作業時間・長期保守はPoC中には測らない |
-| 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
+| 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録（[段階4の判断](../analysis/tei-stage4-decision-2026-11-06.md)、2026-11-06）|
 
 各段階は小さなPRとreceiptで記録します。段階2で生成できない場合は、TEI側の不足としてIssueへ戻し、下流のプロダクトへ回避実装を足しません。
 
@@ -182,6 +182,39 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 2. SUIのどの範囲を最初の意味の単位とするか（DocumentV1全体か、投影だけか）。
 3. 比較測定の基準となる現行実装の版と、変更課題の選び方。
 4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

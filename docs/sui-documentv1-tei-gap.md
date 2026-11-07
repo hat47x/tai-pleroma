@@ -89,3 +89,51 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 
 - `DocumentV1`は、`Island.cardIds`の包含と`Affiliation`が同じ`(cardId, islandId)`を指すと拒否する。合成層とfixtureを、重複しない形へ変更した。
 - 合成結果は、`transform`と時刻を供給すれば`DocumentV1.model_validate`を通る。
+
+## 写像の実測（2026-11-06）
+
+差分表を、実装のモデル定義と契約ファイルから機械的に数え直した。[receipt](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)
+
+| 意味の単位 | モデルのフィールド数 | 契約のフィールド数 | 覆われた割合 | 覆われた項目 |
+| --- | --- | --- | --- | --- |
+| DocumentV1 | 24 | 3 | 0.125 | id / title / readingOrder |
+| Card | 16 | 8 | 0.5 | id / text / x / y / claimType / holdState / textReviewed / sources |
+| Island | 20 | 3 | 0.15 | id / title / cardIds |
+| Edge | 6 | 6 | 1.0 | すべて |
+
+- Edgeは端点種別まで含めて完全に写せている
+- DocumentV1の未写像21項目は、カード・島・関係の集合（`cards`/`edges`/`islands`/`affiliations`/`voids`/`narratives`/`evidenceLinks`/`shelf`）、決定と履歴（`reviewAttribution`/`structureDecisions`/`mergeSuggestionDecisions`/`contradictionSignalDecisions`/`critiqueInputs`/`reproposalDiffs`/`patchApplyLog`/`relationSummaries`/`deterministicTieBreak`）、時刻と変換（`createdAt`/`updatedAt`/`transform`）、版（`version`）に分かれる
+- 集合と決定の集合は合成層が担う設計だが、**それらを1つのrecordで表すには入れ子投影が要る**（[入れ子の実測](tei-sui-integration-2026-11-03.md)）
+- パイロット固有のフィールドは残っていない（`digest`は撤去済み）
+
+この数値は名前の一致だけを数えたもので、型・意味の一致は含まない。
+
+## 型の一致（2026-11-06）
+
+名前の一致だけでなく、SUIの型注釈と契約の`primitive`を突き合わせた。[receipt](../evaluations/records/SUI-TEI-document-types-2026-11-06.json)
+
+```text
+primitiveの不一致: なし（4単位・18フィールド）
+コレクション（many）の不一致: なし
+Optionalの不一致: Edge.fromKind / Edge.toKind
+```
+
+- SUIが`Literal[...]`で表す列挙は`std.code`、数値は`std.decimal`、真偽値は`std.boolean`へ対応する
+- SUIが`str`で持つ`Edge.type`と`Card.claimType`/`holdState`は、契約側で`std.code`へ狭めている。値の集合を契約で持たないため、狭めた分は契約の外で担保する必要がある
+- **SUIは`Edge.fromKind`/`toKind`を`Optional`として許すが、契約は必須にしている。** 実測すると、キーが無い場合は`missing`（欠けた項目名を返す）、JSONの`null`は`unresolved`になり、いずれも投影されない（[receipt](../evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json)）。端点種別を持たないSUIのEdgeは、この契約では失われる。差分表の「未モデル」とは別種の、必須性の不一致である
+
+## 合成層の端点種別の扱い（2026-11-06）
+
+投影契約が端点種別を必須にしている一方、合成層（`document_assembler.py`）は欠落時に`card`を仮定する。[receipt](../evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json)
+
+```text
+明示的な種別 → その種別で解決
+種別なし（card→card） → 合成される（出力の種別は null のまま）
+種別なし（card→island） → 拒否（island を card として解決するため）
+明示的な null → 種別なしと同じ扱い
+未知の種別 → 拒否
+```
+
+- 仮定は**端点解決のためだけ**に使われ、合成後のEdgeには種別が入らない。種別を持たないEdgeが文書に残る
+- 投影契約は種別なしを`missing`/`unresolved`で落とすので、仮定の経路は投影を通った入力では発火しない。契約と合成層で同じ入力の扱いが違う
+- card→islandのEdgeが種別を欠くと、誤った種別で解決して拒否される。投影側で落ちる場合より、失敗の理由が分かりにくい

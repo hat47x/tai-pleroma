@@ -1,0 +1,48 @@
+{
+  "schema": "tai.reference.tei-edge-optionality/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-07",
+  "host": "Windows with the TEI reference generator and a locally compiled candidate",
+  "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "cases": {
+      "bothKinds": {
+        "exit": 0,
+        "state": "present",
+        "missing": null,
+        "text": "{\"fromId\":\"card-1\",\"fromKind\":\"card\",\"id\":\"edge-1\",\"toId\":\"card-2\",\"toKind\":\"card\",\"type\":\"supports\"}"
+      },
+      "nullFromKind": {
+        "exit": 0,
+        "state": "unresolved",
+        "missing": null,
+        "text": null
+      },
+      "nullBothKinds": {
+        "exit": 0,
+        "state": "unresolved",
+        "missing": null,
+        "text": null
+      },
+      "absentBothKinds": {
+        "exit": 0,
+        "state": "missing",
+        "missing": null,
+        "text": "[\"fromKind\",\"toKind\"]"
+      }
+    },
+    "bothKindsPresent": true,
+    "nullFromKindIsUnresolved": true,
+    "nullBothKindsIsUnresolved": true,
+    "absentKindsReportedMissing": true,
+    "absentKindsNameTheFields": true
+  },
+  "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. It distinguishes the two failure shapes: an absent key is `missing` (and names the fields), a JSON null is `unresolved`. Either way the edge is not projected, so an SUI edge without kinds is lost. It does not change the contract."
+}
