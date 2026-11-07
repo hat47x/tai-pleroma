@@ -585,6 +585,22 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 初回固定TEI read-only TrialへのSUI Access Adapter・書込み要件の追加は禁止。SUIでの実Host/OS境界・実Product間Skill Routing・Owner受理は**NOT RUN**。§22.4はSaaS事前検査の限定実測、ここでは実Access判断と下流制約伝播の差分だけを扱う。
 
+### 22.6 構成候補と検証済みComposition BOMをSkill選択で混同しない（TEI #3267・後続）
+
+[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267)では、Plugin/Contract/Provider/Targetの**再利用可能な構成Pattern**、#951/#1016の**exact resolved composition/Lock**、#1180/#2514の**組合せMatrixと独立Expected**、同一Attemptの**実Build/Load/Invoke Evidence**、そしてCoverage/Target/Scopeを限定した**Qualified Composition BOM**を分離する。YIC Skillにとっては『機能を発見した』から『その組合せで実際に使用してよい』へ進むための**参照資格**であり、新たなPlugin Resolver/Lock/Runner/RegistryやBOM発行Authorityを持つことではない。SBOM（構成・依存在庫）に列挙されている事実と組合せCompatibility Verifiedは別。
+
+| User TaskとSkill選択時の観測 | YICが推薦・説明できる上限 | 避けるべき誤判定 |
+| --- | --- | --- |
+| Contract・ProviderのPattern候補／Version rangeだけ | 候補・制約/未解決を説明し、実選択は既存#951/#1016に照会 | `latest`／高いVersion／同Bundleで同梱＝選択・互換確定 |
+| exact Provider＋Consumer＋Target＋OS/Runtime＋Source/Contract fingerprintを解決 | 版固定した**実験対象のtuple**と必要なTest/Expectedを説明 | Resolution/Build成功＝Run/Consumer実使用、資格あるBOMの存在＝現在Host Grant |
+| 一部tupleにTest PASS、他はSKIP／Tool切断／未実施 | 観測できたtupleだけCoverage/証拠版とともに限定推薦。Matrix未完了とUnknownを保持 | 個別Plugin 2本PASS→全組合せPASS、3/4 PASS→4/4 qualified、pairwise PASS→3-way/4-way全条件適合 |
+| 旧BOMを新Plugin/Host/Consumerで再利用 | exact Artifact/Contract/Toolchain/Target/Scope/Expectedを比較し変更影響に限って再資格化 | 同version異digest、A→B→A、古いRuntime Receipt、未使用Plugin追加だけで全件stale、未検証組合せをVerified |
+| 機密・認可・副作用がある利用 | BOMのCompatibility Evidenceと現在のPrincipal/Tenant/Host Grant、許可済み開示、Provider Effect、Consumer実受領を別列 | 検証済みPlugin組合せ＝本番公開・書込み許可・Owner Accepted Meaning |
+
+**後続の最小実証**は[TEI #3267 VCB-01〜09](https://github.com/hat47x/tei-platform/issues/3267)を既存[TAI #488 X01/X03/X04](https://github.com/hat47x/tai-pleroma/issues/488)へ参照対応し、`Provider A1/A2 × Consumer B1/B2` の4 exact tupleをProduct側で確定、同じ#1180 Scenario/#2514 independent Expectedを適用する。とくに**3 PASS＋1 Tool-TRUNCATED→Verifiedは3件だけ、Matrix-complete=false**、未使用Plugin C追加→本来不要な全失効なし、同version異digest→旧Verifiedの無条件再利用なし、を先に反証する。YICが数え直すのは『Product Tool-onlyで構成/不足を説明できたか』『Product Skillが必要な版選択・誤推薦を減らしたか』『別Product/Hostへの実Handoff時だけTAI Activity Skillが追加価値を示したか』であり、BOM自体のConformance判定や署名を独自実装しない。
+
+**順序・現状**：BOM-0のread-only Materializationは後述§26.5のDesign Context Queryと同じ実Sourceの到達性を先に確認し、BOM-1の2×2独立Expected、BOM-2のGo静的Target実Build/Invoke、BOM-3以降のMatrix最適化/外部配布の順。#3267は**製品基本要件の提案であって実BOM/Matrix実行はNOT RUN**。既存固定公開TEIの比較適格H2/H3を先行し、そのTask/Skill/Tool/Sourceへ新BOM機能を途中追加しない。YICは既存#271 SC-21と§22の適合表示からのみ参照し、正規のBOM/Build/Provider OwnerはTEI #3267/#951/#1016/#943/#1180/#2514に残す。
+
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
 ### 23.1 今回の差分と既存Owner
@@ -732,6 +748,24 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **採用・再資格の最小規律**：YICのSkill選択はProduct固有の`commands`/Schemaと実Loader/CLIの観測可能範囲でのみ行い、`not observed`を`absent`に変えない。Tool-onlyで必要なread-only説明が成立すれば表現型SkillやTAI Activity Skillを増やさない。Preview/OfferはIntent/Grant/Effectと別。Source/Plugin/Role版、Consumer/Disclosure、FunctionのRequired Setが改版された時は影響部分だけ再確認し、静的Catalogを最新の実能力へ自動昇格させない。非公開Roleの存在/件数/Path/診断差を秘匿Audienceへ開示しない。TEIのRV-01〜05、#2586 HJ-01〜07、TAI #488 X01/02/04/06へ参照し、独立Expectedは各Ownerの既存Caseを使う。
 
 **実証範囲**：#2935は特定Loader readの限定Go検証を持ち、#2972は事前に資格付けされた公開Sliceの局所Referenceであり、実Policy/Host、正式Role Required Shape、総合Function→Presentation実Schema、実AI Skill Loader/Handoff、Owner Meaning Acceptanceは**未実証**。固定の初回H2/H3比較へRole新仕様を挿入しない。
+
+### 26.5 テストPattern推薦の前にDesign Contextの受領完全性を要求する（TEI #3262・後続）
+
+[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)と[テスト計画 #3223](https://github.com/hat47x/tei-platform/issues/3223)は、『生成AIへ最小の指示で正確なテストデータを生成させる』より**一段前**に、対象Domain/FunctionのDesign Contextをread-onlyで取得し、必要情報の完全性と開示範囲を確かめる**P-1要件**を置いた。これは§26.2(A)〜(C)の実入力を具体化するもので、YIC独自の設計正本・Design Query API/Parser、テストPattern Engineを追加する意味ではない。『全件』はWorkspace全体ではなく**Task/Subject/目的に対して独立に定めたRequired Setの閉包**。TEIのData/Function/Business/Rule/Procedure/Organization/Relation、要求・Scenario・Coverageを、同一の実Read/Source/Meaning/Versionへ束縛する。
+
+| 段階 | 最初に問う最小Input／実観測とClaim上限 | 禁止する飛躍 |
+| --- | --- | --- |
+| Design Context要求 | Subject kind+stable ID、Workspace/目的（例：test-design）、Required Domain View/Scope、必要なVersion・Consumer/Audience・取得Budget。**新コマンドではなく既存TEI CLI Readerへの段階的照会**から開始 | 対象IDしか指定しなくても存在しない業務Rule/Key/Functionを生成AIが補って正本化 |
+| Source/Parser/Meaningの閉包 | `required / declared / discovered / loaded / parsed / bound / returned`の実対応と欠落理由。Source span/raw revision、未受理Role、否定依存、partial/empty/unavailableを区別 | `validate.ok=true`／builtin Catalogのみ／inventory掲載／見た目のRelationから全Required解決・意味受理・完全性を認定 |
+| CLI/将来MCP/人間向け同一結果の投影 | 機械向けの型付きID/Relationship/Unknownと、人間向けの概要→出典→関係→未決を同じ基礎Queryに対応させる。Parser・schemaVersion・mode、stdout/stderrを実観測 | JSONという語だけでCLI結果を同一Envelopeと推定、Markdownで省略された情報を不存在とみなす |
+| 大量・分割取得 | 固定Snapshot/Scope付きのpart ID/digest/順序・end marker・受領byte/continuation、同時点のGrant/Source。未取得/未受領はmissing/unknown | DSHの8,192 bytes途中切断／56 Call対55 Result、1ページで`complete`、別版または別GrantのPageを黙って結合 |
+| Test Pattern推薦・生成 | **十分に観測/受理されたRequired Scopeだけ**からCoverage GapとMeaning/Rule/Sourceに適したPattern候補と理由を提示。#1180 Scenario／#2514 independent Expectedへ参照渡し | 要求Coverage・機能/NFR・C0・C1を一つの率に畳む。C0 100%→C1/要件完了。LLM生成CaseとExpectedの自己採点 |
+
+**最小実例**：`sales.order`のData/Function/Business/Rule/Scenarioを要求した場合、(a)実LoaderにないRule、(b)表には見えない否定依存、(c)最終Catalog後半が切断、(d)別Tenantへの非公開Subject、(e)ページ取得中のSource/Grant改版、を意図的に含め、必要なScope/開示を満たさなければPattern推薦を**保留・不十分・追加取得候補**として返す。外部Consumerには隠れたSubjectの存在・ID・件数・digestを診断として漏らさない。独立Expectedは[TEI #3262 DCQ-01〜10](https://github.com/hat47x/tei-platform/issues/3262)、[TEI #3223](https://github.com/hat47x/tei-platform/issues/3223)のTTと#1180 Driver Scenarioを**Ownerの正本で共有**し、YIC #488 X02/X04/X06、SK-03のProduct→Skill結果比較に利用する。新Case-IDの第二正本を作らない。
+
+**Product→Skillの受入順**：(P-1a) `commands`/`workspace-files`/`model catalog`/`inspect`/`trace`/`requirements`/`validate`など**実CLIがサポートするものだけ**で1 SubjectのRequired vs ActualをReviewerが独立照合 → (P-1b) 既存Reader/型付きApplication Serviceから短い概要・Source/Gap・continuationの最小投影が必要か判別 → (P-1c) **同じResult**をTEI Product Skillあり/なしで比較し、Tool選択、受領・欠落判別、追加質問数、Token/時間/人の修正、誤ったCoverage PASSを別計測 → (P-1d) MCPは**任意の薄いAdapter**として必要時のみ同値性試験。Data Context未充足ならテスト生成を強行せず、正当に観測できるread-only作業は継続する。
+
+**実施境界**：既存固定TEI SK-02の比較適格H2/H3を先行させる（技術H3 Tool Read達成≠正式0/4からの昇格）。#3262はDesign/Scope/Outputの**提案段階**で、新CLI/MCP/Skill Query/GUI、DCQ-01〜10実Runner、実Coverage判定、正式Schema/Owner Meaning Acceptanceは**NOT RUN**。従来の`*.tei.md` Reader未実装領域をSkillが実装済みと説明しない。Dataset/RuleのProvisional MeaningはOwner受理なしに実DB/Providerへ適用しない。
 
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
