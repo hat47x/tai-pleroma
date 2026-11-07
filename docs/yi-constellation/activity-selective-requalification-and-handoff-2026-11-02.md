@@ -700,3 +700,17 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **Owner／優先度／未実施**：SUI #3392/#3396/#3397はProjection/開示/Markdown Producer、SHO #16/#21はReader/Grammar/実File Read、SEI #820は後続の根拠/Decision、TEI #3262/#2514は設計閉包とテスト資格、TAI #271は用途別の再資格化、#422/#532はB0/B1/B2価値。**P1の同一Attempt実ファイル送達、P2元Source Reader、P3実再開、SHO Writer/SEI交換、外部OS・配布権限、正式Owner受理はNOT RUN**。初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0/G1/G2→新H2/H3四Sessionを先に行い、このHandoffをその固定Task/Skill/Tool Profileへ増築しない。B1で利用者Jobが満たせればB2のTAI仲介を必須にしない。
 
+
+
+<!-- tai-activity-t05-and-producer-authenticity-admission-20261107 -->
+### 23.3 入口の検証器PASSを実Product受領・テスト生成資格と分離する（2026-11-07）
+
+前節P0→P3に対し、他チャットの二つの**限定実装進展**を現在の試験条件として追加する。新Source Registry／横断Runner／Owner/Authorizationは設けない。
+
+**A. TEI Design ContextのT0.5（受領前の偽陽性拒否）**：[TEI main統合PR #3296](https://github.com/hat47x/tei-platform/pull/3296)は[既存\`context_gate.py\`](https://github.com/hat47x/tei-platform/blob/main/tools/reference-issue-test-ability/context_gate.py)を再利用し、Source Root片側欠落・Inventory重複と、**実CLIで一度受領したJSONの一時コピー**に対する欠落・途中切断・終端改行欠落・重複Member/Unicode escape同値重複・NaN・後続JSONを明示拒否する。実[GitHub Actions #42371310577](https://github.com/hat47x/tei-platform/actions/runs/42371310577)で既存7＋Manifest 2＋Byte改変7＝**16の限定ControlがPASS**、同じCIで既存Scenario 6 Step＋6 ControlもPASS。ただし現Design Contextの\`partial\`／\`exploration-only\`／\`qualifiedTestGeneration=false\`は維持され、実Provider/全Function Required閉包/C1/新Rule自動発見/外部H3 Tool Reply完全配送には未昇格。Byte改変はConsumer内合成であり、DSHの原Wire欠落・56 Call/55 Resultを修復した証拠でもない。
+
+**B. SUI→SHO P1のProducer実同一性**：[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)の[実同一ファイル試験Runbook](https://github.com/hat47x/sho-composer/blob/test/sui-p0-readonly-handoff-20261107/docs/sui-p0-same-file-handoff-trial-2026-11-07.md)には、SUI実ProducerのGit root全体のclean、予定HEAD \`0bc63b944c6f18e0fc8693bd05092ad031997c11\`、frontendの実解決先を**Producer実行前**に確認する負例を追加。偽Git Checkout／偽Vitestでも同じ354-byte Markdownを生成できるため、Raw byte/Expected SHA一致、外から渡されたPath名、疑似Receiptだけでは「実Productが生成した」とは言えない。[SHO CI #42374198180](https://github.com/hat47x/sho-composer/actions/runs/42374198180)の両OS各**19 PASS／1 SKIP**はRunner起動/固定Fixture等の限定成功で、SKIPこそが実SUI→SHO一ファイル同一Attemptの試験。Runbookに追加した偽Producer拒否の新試験も**そのCI実行時点のPASSとは無条件に言わない**。実Producerへの同一File Path/Raw bytes/SHO CLI Parser/HEAD/read-only Scope/cleanupを結んだ非SKIP 1件は未観測。
+
+**最短の追加判別**：B0/B1でP0のSUI実Producer IDと原Byteを固定→P1の**同一Attempt・同一File**に本物のSUIとSHO実CLIだけを通し、同じ本文を返す偽Producer/別HEADだけを一因子変更して明確に拒否→P2でReaderが実評価した範囲/未解決を示す。LF→CRLFは既存独立Expectedで異なるByteとして判別する。ここまででProduct B1だけでJobが満たされるならTAI Skill B2を選択しない。P3のAudience/Current Grant/Source/Host変更時のみActivityの選択的再資格化を評価し、古いRawや\`verified\`を現配布権としない。
+
+**Claimの上限**：TEIのT0.5は実CLI Reader/合成受領不正検知まで。SUI/SHOのCIは別Product固定Fixtureとtest-only Runnerの準備まで。実Producer→SHO Reader delivery、SHO Writer Save→Restart、Owner Accepted Meaning、外部OS/Harness隔離、実Permission/ProviderはNOT RUN。既存#168の固定H2/H3初回試験Profileを変更せず、OS拒否/Model入力・Tool完全性→比較適格H2/H3 0/4の解消を先行する。
