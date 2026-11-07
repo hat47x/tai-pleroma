@@ -703,6 +703,25 @@ SUI #3389（配列順・locale）／#3390（lone surrogate）では、`bundleHas
 
 PR CIには、TAIの単体試験とは独立に、公開SUIリポジトリのコミット`a828a0154db3201322ed27d006c035d9784866a8`を固定チェックアウトし、SUI backendの`requirements-test.lock`で環境構築して**実localhost HTTPを実行する専用job**を追加する。SUI外部API/本番DBへのアクセス、LLM利用、外部公開を行わず、receiptは一時領域へ保存しActions artifactとして自動アップロードしない。CI成功時の上限は「固定合成stubで二応答の等価性とselected/reference-onlyの形を観測した」まで。環境依存や実運用のPolicy・Owner受理は未実証のまま。
 
+### 追加対照：集約条件を変えても、未レビューの反証を自動採用しない
+
+既存SUIの`ContextQuery.reviewFilter`は`reviewedOnly`と`includeUnreviewed`を許す一方、`safeModePolicy`は`strict`で固定する。この組合せは、**「候補も含めて検討したい」という要求と「未レビュー本文を自動選択しない」という制約を別々に実証できる**最小の例である。
+
+`A2-minimal-v1`固定stubについて同一local-devサーバーで以下の二条件を実HTTP実行する。
+
+| 検査対象 | reviewedOnly＋strict | includeUnreviewed＋strict |
+| --- | --- | --- |
+| `selected` | レビュー済みカード1件のみ | SafeModeによりレビュー済みカード1件のみ |
+| `evidence`／`relations` | 未レビューの反証カードへの参照を残す | 同じ参照を残す |
+| `excludedReason` | `unreviewed_filtered` | `safe_mode_unreviewed_text` |
+| `queryCanonicalHash` | 条件Aの値 | **条件Bの異なる値**（同じ版／Runtimeで確認） |
+
+TAIの`compare_strict_filter_profiles`は、両方の固定stub応答を個別検査した後、`selected/evidence/relations/contradictions`が等しいこと、異なるクエリハッシュと除外理由が返ったことを**本文やcardIdを出力せず**確認する。未レビュー候補の選択、反証メタデータの脱落、異なるクエリへのハッシュ流用があれば`FAIL`。これらは固定stub用の期待値であり、全Documentでの同一性を要求する汎用API契約ではない。
+
+この対照から**未レビュー本文の自動選択が観測されない**ことは分かっても、`evidence.cardId`等の存在メタデータを、どのAudienceに開示してよいかは分からない。Source保持側の現在の権限と利用目的による開示判断は、SUI Ownerと既存TAI #232の別Gateに保つ。`reviewFilter=includeUnreviewed`自体を「利用者の正式な承認」と誤認しない。
+
+最初の一回は固定合成stubの**操作条件を変えた対照**として扱う。成果が確認できた後、初めて対象Sourceの同一Revisionと許可範囲を固定した実Document研究へ進む。CSW／64卦の発見力や実利用者の認知負担改善をこの差分で実証したことにはしない。
+
 ### 試験と受入境界
 
 ```sh
