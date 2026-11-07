@@ -602,3 +602,39 @@ YICはまずTaskの必要Claim/現在Audienceに合わせ、**SEI Product単独�
 後続の評価はSEI #820 **KO-01〜15**の既存独立Expectedに接続。とくにKO-01/02（Source ID/引用起点）、KO-03/04/05（Actor/状態/鮮度）、KO-10/11（文書粒度/隠れConcept）、KO-14/15（Store Import/Resumeの不明）を、TAI #488のYIC-ROUTEと#271のB0/B1/B2に**参照対応**させる。新Fixture/SEI Converter/Registry/共通Trust Score/自動Import/Attesterは作らない。作業負担、誤った受理・根拠喪失、過剰なProduct呼出し、正当に継続できるread-only作業を独立に測る。
 
 先行Blocking Exitは変更しない：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定TEI公開SourceによるH2外部Harness実Tool一Session→H3実Skill root/reference Load→固定四Session比較を先行。SEIのOKF Import/Export・SHO Writer・SK-03横断実Handoff、KO-01〜15の実Runner/Consumer、正式Owner受理と現在Disclosureは**NOT RUN**。文書形式適合、Claimの知識適格性、実Toolと現在の利用権限を混同しない。
+
+## 26. TEI標準データ構造・標準表現型・FunctionをSkill選択で取り違えない（既存Product Ownerへ委譲／後続検証・NOT RUN）
+
+### 26.1 型の独立性と利用Instanceの従属性を分ける
+
+X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結びつける発想を継承しつつ、TEIでは**標準データ構造（テーブル非依存のshape/identity/relation/topology/facet）**、**標準表現型（Functionと独立に再利用可能なPresentation Role/Interaction family）**、**Function（Data Context・用途・操作契約を持つ利用文脈）**、**Target実Renderer/Host**を区別する。標準表現型の**定義**はFunctionと独立だが、業務データを表示・操作する**表現Instance**はどのFunction/Context/Consumerに属するかを明示し、単独で業務意味・業務権限を持たせない。
+
+例示する表現ファミリは、Panel/単票、Tab、テキスト表示・入力、単一選択・複数選択、ON/OFF、Slider、Table、Tree、File-system形状、Chart/Timeline/Graph/Mapなど。これは**正規Catalog確定の宣言ではなく検証用の候補集合**。形状・構成と、対象同一性/値域/単位・時点、Relation Path、取得完全性、Selection/Action、Host Effectの意味を別にする。Treeが表現可能でもEntity階層が自動受理されたわけでなく、ファイルシステム形状を表示しても実OSファイルへのRead/Writeが許可されるわけではない。
+
+既存TEIの担当を変更しない：[#2495](https://github.com/hat47x/tei-platform/issues/2495)はデータ構造の軸/facet、[#2620](https://github.com/hat47x/tei-platform/issues/2620)はEverything is DataとRole解釈、[#2506](https://github.com/hat47x/tei-platform/issues/2506)はFunction Data Context/Result Slice、[#2507](https://github.com/hat47x/tei-platform/issues/2507)はPattern適合・Presentation Binding、[#2500](https://github.com/hat47x/tei-platform/issues/2500)はViewChange→Operation Intent候補、[#997](https://github.com/hat47x/tei-platform/issues/997)はUI Composition Kit/Target Renderer、[#2586](https://github.com/hat47x/tei-platform/issues/2586)はread-onlyな統合縦切りを所有する。TEIのCore Presentation Schemaや確定Catalog、正本UI Rendererを本YIC計画で制定しない。
+
+### 26.2 YIC Skillの発見・適合・実利用を階層に分ける
+
+| 照合段階 | 必要な実観測・入力 | 禁止する短絡 |
+| --- | --- | --- |
+| (A) TaskとFunction | 利用者の目的・対象・Grain、対象Function/Operation/必要Consumerの参照、現在のデータ・意味Source/Role version | テーブル名/表示型名から業務FunctionやOwner受理を自動生成する |
+| (B) Data ContextとResult Slice | Context Definition/Instance ID、Relation Pathと複数集合、Entity/Edge/Path occurrence、取得Scope/時点、partial/empty/unfetched、selection epoch | JOINの行増幅を実体件数にする。途中ページを全件とする |
+| (C) Presentation Binding | Functionの用途に照らした対象Attribute/Role、単一・複数のcardinality、単位・値域/丸め、表現Instance/配置と必要操作、Targetでの対応範囲 | 単一選択→実値域確定、Slider→連続値・無制約更新、Tab切替→Data Context再取得済みを推測する |
+| (D) Capability/Skill適合 | 既存Product CLI/Service Contract/Plugin版と実Loader/Tool公開面。読取だけならTool/TEI Product Skill単独を優先し、別Product Handoff時だけTAI Activity Skillを候補にする | Table・Tree・Slider等の**UI部品1個につき1 Skill**を強制する。Skill文書だけでTool/Renderer実装済みとする |
+| (E) Action候補・実行結果 | ViewChange→型付きOperation Intentの逆対応可否、Target ID/Relation occurrence、現行Grant、Host/Provider Receipt、独立Read | 画面上のrow index・集計1行・Graph node labelを実更新Targetとし、候補表示をCommit/業務完了に昇格する |
+
+**Skillの粒度**はProductの実Capability、Task/Function、適用条件・操作リスクで決める。表現ファミリはProduct Skill内の任意Reference/Capability説明として必要時に発見する。特定GUIが不要なCUI/headless TaskではRendererを先行必須化しない。同一FunctionからPanel/Tab/Table/Chart/Treeを複数投影してもFunction/Meaningの正本は増やさず、UI Kit固有のLayout/a11y/Native操作はRenderer側へ残す。
+
+### 26.3 既存Fixtureを用いた反証可能な適合例
+
+| 既存Productケースの参照 | YICで比較する2つの状況と独立Expected |
+| --- | --- |
+| [TEI #2506 FC-01/06/11](https://github.com/hat47x/tei-platform/issues/2506) | 親HにD1=2行、D2=3行、JOIN表示は6行。Table/Panel/Tabに入れても実Entity=2+3を6に変換しない。D2が先頭1ページなら「全3件を取得済み」とClaimしない。選択A→B後のA旧応答をBのContextに混ぜない |
+| [TEI #2507 FP-01/02](https://github.com/hat47x/tei-platform/issues/2507)＋[#2500 VE-01/03/04](https://github.com/hat47x/tei-platform/issues/2500) | 同一D1をTable/Chart/Tree/Graphへ投影。Chart SUMの1行を行ID扱いして無断配賦更新しない。同Nodeへの二Path、関係edgeは同一のEntity削除ではない。可逆な明示Field変更だけを候補とし、曖昧な逆写像はread-only/候補表示に止める |
+| Typed Control/配置の候補（既存#2495/#2507/#997へ委譲） | `single-select`と`multi-select`で同じ属性名でも許容Cardinality/Option Sourceが違えば互換認定しない。Sliderの値域/step/単位が未定なら操作不適格。ON/OFFの`false`とNULL/未取得を畳まない。Tabの切替えで参照されるFunction Contextが変わる場合は旧Selection Epochを再利用しない |
+| File-system/Native presentation候補（既存#997/#2390へ委譲） | File Tree Viewが許可された論理Graphを描写しても、実File SystemへのRead・Delete・OS権限を要求するものではない。Native Canvas固有Gesture/Undo/Hit testを標準Actionに強制変換せず、Hostで認可したActionだけを別Dispatch |
+| [TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)＋TAI #488 X01/X06 | 同一固定Source/FunctionをCUIとGUI投影で説明し、Product Tool-only／Product Skill／必要なTAI横断Skillの**有用性・誤判断・Unknown保持・費用**を比較。Product局所Fixture PASSを実Harness Loader/Tool/Host効果へ流用しない |
+
+実装候補への進行順は (1) Productの標準表現型候補とFunction内Bindingのread-only inspect、(2) 既存FC/FP/VE同一FixtureをCUIと少なくとも一つのRendererへ投影、(3) reversible/ambiguous Action候補・独立ExpectedとTool実受領、(4) 必要なProduct間Handoffが発生した時だけSK-03でSkill選択価値を確認、の順。各段階の採用判断は既存Product Ownerで行う。ここでは新しいYIC Test Suite/Pattern Resolver/UI生成器/実Host/第二権限Engineを追加しない。
+
+**実験順を遡及変更しない**：既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Draft #270 Runbook §24](https://github.com/hat47x/tai-pleroma/pull/270)の固定旧`.tei` `sales.order` read-only H2/H3比較は、隔離/Tool Reply完全性を確認する次のBlocking Exitとして維持。今回の表現型/Function候補は**別Trial Groupの後続**。新しい表現型標準Catalog、Context→GUI/CUI実接続、Actionの適格/実Effect、YIC Skill実ロードと増分価値、Ownerの正式意味受理は**NOT RUN**。
