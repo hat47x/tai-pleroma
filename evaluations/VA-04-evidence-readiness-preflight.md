@@ -79,3 +79,19 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 **Ownerと移行順（2026-11-07訂正）**：[TEI Draft #3030](https://github.com/hat47x/tei-platform/pull/3030)の最新追補に従い、**旧新Source移行仕様・検収IDの主担当は#3030（M0〜M6/TM-01〜14）**とする。[Draft #2667](https://github.com/hat47x/tei-platform/pull/2667)のTMDケースは横断経緯・引渡し参照であり、第二の移行Gateではない。#3030内の専門家向けMarkdown可読性/原文保持AU-01〜08も同PRに属するが、形式移行とAuthoring表層の合否は独立採点する。[#1920](https://github.com/hat47x/tei-platform/issues/1920)は版・互換、[#988](https://github.com/hat47x/tei-platform/issues/988)はK0 Source Kind/Language Plugin選択を担当。#3031の管理Source Rootの明示拒否は、許可された**非管理Raw Draft**の保存まで禁止してよい証拠ではない。旧形式＋通常Markdownは継続可能、新形式の必須定義は未対応なら拒否、実Parser成功後だけPromoteという正負対照を先に固定。新Parser/Registry/HostをTAI側に作らない。
 
 **資格状態**：#3031の限定CIは実証済み、旧形式での公開CLI S1も限定実証済み。一方、`*.tei.md`の実Parser、旧新移行の全一改訂E2E、Owner意味受理、TAI外部Harness H2/H3は**NOT RUN**。この差があるため、旧固定SourceでのH2 Tool-only実験は継続できるが、新形式の利用可能性は主張しない。
+
+## 8. 2026-11-07：実Tool到達と参加者隔離は別のClosure
+
+[外部DSH実行記録 #3113](https://github.com/hat47x/tei-platform/pull/3113)により、[VA-02 §13](VA-02-cross-product-first-run-protocol.md)の外部Tool callは限定Observedになった。しかしH2の**Source実到達**と、必要なParticipant入力集合だけを読める**非露出の保証**は別。固定TEI Binary＋public `sales.order`のSource Fingerprint一致は前者を裏付けるが、DSHのread-only Profileから作業範囲外のWorktree Readが通ったことは後者の未達を示す。
+
+| 対象 | 必要な観測 | 現在の判定 |
+| --- | --- | --- |
+| CLI起動・実Read | Tool Request、argv/cwd、実Binary/Source digest、exit/Reply、Source IndexとWorldFP、同Attemptの出力 | **局所Observed**：#3113は実起動32件・完成Task1件。全Tool traceの元DSH JSONL原文保存は未完 |
+| 参加者への非露出 | Reviewer Expected・Skill参照・旧Log・許可外Sourceに対するOS/Harnessの**実拒否**、開始前File/Task/Tool/Profile固定 | **NOT QUALIFIED**：read-only Profileでは作業範囲外のReadが可能だった |
+| Model/Adapter/Tool障害 | 失敗前のTool SuccessとTrial Completionを分離し、MALFORMED_RESPONSE 5、INVALID_CONFIG 1、完了3を全9探索の同じ分母で報告 | **探索実測**：失敗したTrialを成功H2として再分類不可 |
+| Cost/通信・現在Grant | Model token/料金、Log拡張の実送出・観測可能な範囲、Host/OS隔離、現在の適用資格 | **Unknown/NOT RUN**：`session-log-deepseek.enabled=false`だけで送出ゼロとは言えない |
+
+**局所的な工学的教訓**：検査済みSourceと、Modelが実際に読んだかもしれないSourceは別集合である。入力閉包をSource側（発見→実読取）とParticipant開示側（許可→物理的拒否・実観測）の両側から評価する。OS隔離の手段を共通Harness Runtimeとして先行実装せず、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)と[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実User Jobに必要な範囲で現Harness/Hostの能力を選ぶ。
+
+**OKFを次段階に接続する場合**：[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)は、宣言された計算定義／Typed Bind／実Executor Receipt／AIとは別の決定的Attesterを分ける提案。Definitionの`verified`やAttester verdictは実Source/Consumer/現在GrantのClosureを置換しない。最初の比較H2/H3が未資格の間にSkill本文・Tool ABI・Expectedを差替えない。Attested Computationの実CLI/Attester PoCは**NOT RUN**。
+
