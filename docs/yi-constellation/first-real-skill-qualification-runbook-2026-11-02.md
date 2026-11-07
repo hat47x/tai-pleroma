@@ -869,3 +869,20 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **保存記録の微差**：PR #3237のREADMEはTurn 1最後のRequestのモデル入力canary数を`1`と表記する一方、同PR `observations.json` の`canaryInModelInput`は`2`。Turn 2の「再登場あり」とSession Log側`0`という本論点は一致するが、厳密な**出現回数は未整合**としてOwner側原Wire/数え方の再確認を要する。Tool/Mock生bodyは未コミットであり、報告用数値を都合よく選択しない。
 
 **状態**：これはDSH実Mockの過去情報再送の限定証拠を既存Runbookへ取り込むもの。新DSH Session・隔離OS Read-deny・実Provider送出・正式H2/H3独立比較・独立Expected採点を**今回実行したとは扱わない**。初回の技術的H3実Loadは成立済み、**比較適格0/4**を維持する。
+
+<!-- h8-h6e3-implicit-context-skill-description-delivery-20261107 -->
+### 24.11 H3の実Skill Loadだけでは測れない、Loader以前の暗黙Context送出（H6-E3）
+
+[TEI merged PR #3191](https://github.com/hat47x/tei-platform/pull/3191)の[実DSH Mock観測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H6E3_IMPLICIT_CONTEXT_2026-11-07/README.md)（DSH 0.2.2-rc.1／read-only／合成canary）では、Toolで**明示的にReadしていない**`AGENTS.md`、`CLAUDE.md`、Skill `SKILL.md` の**frontmatter `description`**がモデル入力へ自動挿入され、Session Logにも載った。Skill本文canaryはこの実験では載らなかった。明示的にReadした公開ProjectionだけがTool Resultとして別に届いた。これは**Tool実呼出し0件でも、Harnessにより指示やSkillのメタ情報が`Delivered`となり得る**直接的な反例である。
+
+**初回H2/H3の実験変数を正確に扱う**：
+- `Skill accessible`：Tool／OS／Loader候補に見えるか。
+- `Skill description advertised`：Skill一覧・初期Prompt／Session Log等へFrontmatter説明文が**実送出**されたか（明示Skill Tool呼出し前でも）。
+- `Skill instructions loaded`：実Skill Tool Resultとして本文を受信したか（§24.5／§24.9のH3-A/Bは限定成立）。
+- `Skill applied`：実回答／行動に記述がどこまで影響したか。単語出現やTool数・Token数から直接因果推論しない。
+
+従って**H2側の`skillToolCalls=0`・Skill List非掲載は、他Sourceの`AGENTS.md`／`CLAUDE.md`／グローバルSkill等の暗黙投入を否定しない**。またH3の`description`広告はSkill本体をLoadする前からTreatmentの一部になり得る。初回比較で測れるのは**Product Skillを利用可能にした総合効果**であり、`description`のみと本文Loadのみの個別の増分効果ではない。個別効果を測るなら後続の別Trial Groupが必要で、最初の固定Treatment byteは改変しない。
+
+**G0/G1の具体的なpreflight**：同じ実Profile／Session開始直後に、参加者が明示したTask/公開Source以外にどの`AGENTS.md`／`CLAUDE.md`／Skill候補／上位Root／Global設定が探索・読み込まれるか、各種の合成canaryをReviewer側だけで正負確認する。保護すべきファイルを単にToolの一覧から隠すだけでなく、**初回モデル入力`messages`とSession Log／Tool Sourceの出所区分を照合する**。未許可原文が含まれたら、H2/H3の4Slotは**割付前 environment-ineligible**。親Root検索範囲・他Harness・実Provider実Egressは本実験未確認として`unknown`、全探索済みとみなさない。
+
+**必要十分性**：既存§24.10のresume履歴再構成は**過去情報の新Request再送**、本H6-E3は**開始時点の暗黙指示／説明文投入**であり、同じ現象としてまとめない。両方とも「Skill未Load／今TurnでReadなし／session-log無効」のラベルでは非開示を保証できない。Owner＝TEI #2515／TAI #232が可視性と送出、TEI #2605がSkill Source、TAI #168が初回4Slotと独立採点。新Checker／Runnerは増やさない。**実OS Read-deny・比較適格4Slot・実Provider全Egress否定は未達**。
