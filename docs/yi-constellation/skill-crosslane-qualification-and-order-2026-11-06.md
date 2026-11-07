@@ -363,6 +363,18 @@ Product側の出力形式をSkill説明で補完しない。SEIのtextから構�
 
 **順序と上限**：固定公開TEI `sales.order`のSK-02試験は変更しない。外部Harnessの**比較適格H2 1 Session→H3実Skill root/reference Load→四独立Session**を先行し、これらの投影/合成/多Product試験は別の事前固定Trial Groupへ送る。YICの新しい実Handoff、SUI/TEI Product修正、実Host/Disclosure、正式Owner意味受理はこの追補では**NOT RUN／未採用**。
 
+### 18.5 SUI→SHO固定Raw原文の限定互換と実Handoffの未達（2026-11-07）
+
+§18.3/18.4の非可逆Projection/Source Lossに対し、[SUI Draft #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)と[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)が、**SUI実Producerの生成byteとSHO実Readerの独立固定Fixture**を同じ合成原文で照合した。SUIは公開・review済み・非HoldのCard本文2件だけから通常Markdownを生成し、隠し/保留3件、出典、島/Edge、ID、脚注を捏造しない。元本文の疑似リンク/脚注/Headingはescapeする。外部再配布Grant・元Source真正性は別である。
+
+| 局所観測 | 成立するClaimと残る上限 |
+| --- | --- |
+| [SUI実CI #42352776477](https://github.com/hat47x/sui-sensemaking/actions/runs/42352776477) | Producer実出力は **UTF-8 354 byte／SHA256 7fd6fde2fbc4d9beaf9de14e8b8f4f5d70003cd2129f1502cdd7c73f50c171cd**。手書き独立Expectedと一致、全1870 tests PASS。SHOへ実ファイルを輸送した証拠ではない |
+| [SHO初回CI #42353536878](https://github.com/hat47x/sho-composer/actions/runs/42353536878) | Ubuntu18/18、Windows17/18。Checkout時のLF→CRLF変換で **354→368 byte**、Raw同一性負例として検出。Readerの意味解析失敗とは区別 |
+| [SHO修正CI #42353651398](https://github.com/hat47x/sho-composer/actions/runs/42353651398) | 当該合成FixtureのみLF維持しUbuntu/Windowsとも18/18 PASS。Readerで同Raw SHA、escape済み本文はlink_open=0、escapeを解除した反例はlink_open=1。Parserの全未解決参照列挙、保存Writer、原典意味同一性は証明していない |
+
+YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実際に読んだbyteとParser版／TransportのSource・Target・Result／Writer独立再Read／現在Audienceの再配布資格**を別列で保持する。P0/P1の別Repo CI PASSを一つの実SUI→SHO E2E受領Receiptと見なさず、改行・BOM・Encoding差をFile全内容のDigestだけで確認する。SUI #3391/#3392、SHO #4/#16、SEI #820の既存Expectedを再利用し、新Handoff Store/Writer/ParserをTAIに作らない。実SUIプロセス→SHO実CLI輸送、G2保存、SEI Consumer、Original Source、Owner受理は**NOT RUN**。初回固定TEI H2/H3 Gateへ追加しない。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
@@ -601,6 +613,14 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 **順序・現状**：BOM-0のread-only Materializationは後述§26.5のDesign Context Queryと同じ実Sourceの到達性を先に確認し、BOM-1の2×2独立Expected、BOM-2のGo静的Target実Build/Invoke、BOM-3以降のMatrix最適化/外部配布の順。#3267は**製品基本要件の提案であって実BOM/Matrix実行はNOT RUN**。既存固定公開TEIの比較適格H2/H3を先行し、そのTask/Skill/Tool/Sourceへ新BOM機能を途中追加しない。YICは既存#271 SC-21と§22の適合表示からのみ参照し、正規のBOM/Build/Provider OwnerはTEI #3267/#951/#1016/#943/#1180/#2514に残す。
 
+### 22.7 Pairwise被覆・現在のexact Lock・Qualified BOMとRequirement IDを分離する（TEI局所実測）
+
+[TEI Draft #3269](https://github.com/hat47x/tei-platform/pull/3269)は§22.6のVersion Matrix候補に対し、**供給済みexact Lockだけを母集団にして2項間の候補を選ぶ**Go Referenceを追加した。隔離Go 1.23.2の15テスト/race/vetは限定PASS（PR記録）。3軸各2値で宣言上12ペアのうち供給Lockに存在するのは**9ペア**。9/9を計画しても宣言12中の未出現3ペアは不可能とも検証済みとも証明できない。出力の candidateUniverseCompleteness=unknown／qualified=false が妥当なClaim上限であり、各BOMの局所PASSを合算してUnionを合格扱いしない。実Resolver・Provider/Host/Build・独立Expected・Verified BOM発行は未実施。
+
+**新しい統合前の衝突**：[TEI main製品要件](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)の現行 RQ-035 は**異種データソースWorkbench・Schema CRUD（DBAは非標準）**を意味する。しかしDraft #3269側も **Verified Composition BOM/Version Matrix** に RQ-035 を割り当てている。現在のmain原文を再Readして内容の相違を確認した。Requirement IDの同一性はMeaningの同一性を示さず、YIC Skillの設計情報探索・Coverage Gap・BOM選択で一方のRQ-035だけを取得し他方が満たされたと推論しない。**TEI Ownerへ要求採番/参照修正を委譲**し、ここからどちらの要求も改名・上書きしない。
+
+比較時には declared/supplied-lock/selected/executed/independent-expected-pass/current-qualified を別に記録し、既存[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267) VCB-01〜09、[#3262](https://github.com/hat47x/tei-platform/issues/3262)、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X01/X04、§27.4 B0/B1/B2へ参照する。新Resolver/Runner/BOM Registryなし。初回SK-02に組合せ試験を追加せず、正式BOM資格／TEI要件採番Owner判断は**未成立**。
+
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
 ### 23.1 今回の差分と既存Owner
@@ -766,6 +786,19 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **Product→Skillの受入順**：(P-1a) `commands`/`workspace-files`/`model catalog`/`inspect`/`trace`/`requirements`/`validate`など**実CLIがサポートするものだけ**で1 SubjectのRequired vs ActualをReviewerが独立照合 → (P-1b) 既存Reader/型付きApplication Serviceから短い概要・Source/Gap・continuationの最小投影が必要か判別 → (P-1c) **同じResult**をTEI Product Skillあり/なしで比較し、Tool選択、受領・欠落判別、追加質問数、Token/時間/人の修正、誤ったCoverage PASSを別計測 → (P-1d) MCPは**任意の薄いAdapter**として必要時のみ同値性試験。Data Context未充足ならテスト生成を強行せず、正当に観測できるread-only作業は継続する。
 
 **実施境界**：既存固定TEI SK-02の比較適格H2/H3を先行させる（技術H3 Tool Read達成≠正式0/4からの昇格）。#3262はDesign/Scope/Outputの**提案段階**で、新CLI/MCP/Skill Query/GUI、DCQ-01〜10実Runner、実Coverage判定、正式Schema/Owner Meaning Acceptanceは**NOT RUN**。従来の`*.tei.md` Reader未実装領域をSkillが実装済みと説明しない。Dataset/RuleのProvisional MeaningはOwner受理なしに実DB/Providerへ適用しない。
+
+### 26.6 既存CLI/Scenarioを実行したT0と、未カバーRuleから新Scenarioを作るT1を区別する
+
+[TEI mainの実CI #42359610226](https://github.com/hat47x/tei-platform/actions/runs/42359610226)（固定main 69a2996187852a036057b7155d6e847527b67346）は **9種類read-only CLI、Skill静的14件、既存Pinned Scenario 6 Step、実CLI負例4＋独立義務負例2**を限定PASSした。これはテスト向けAI/CUI入口の **T0（既存モデルとテスト資産の実読取・既存負例判別）** であり、生成AIがIssueから未知の要件を見つけて新Caseを作った証拠ではない。選択したGoテストのStatement Coverage C0相当は**10.1%のみ**、C1未計測、機能要件・非機能要件のCoverage分母は別。
+
+| Gate | 実際に必要な独立観測 | 現状態 |
+| --- | --- | --- |
+| T0 Product-only | Source/CLI実版、9 CLI/6既存Step、negative 4+2の独立判別。Skill静的試験と実Skill Loadedは別 | **上記exact mainの局所PASS** |
+| P-1 Design Context | [TEI #3262](https://github.com/hat47x/tei-platform/issues/3262) Required/Discovered/Loaded/Parsed/Bound/Returnedと現在Scope、元Source、欠落、Consumer Deliveryを閉じる | 新Design Context Query／共通Typed Projection実装は**NOT RUN** |
+| T1 AI新Case | [TEI Draft #3273 TG-01〜06](https://github.com/hat47x/tei-platform/pull/3273)で、既存の正数行番号Ruleに対し**ゼロを与える新規負例**を、Issue→未カバーObligation→Pattern候補→新Pinned Scenario→実CLI→**生成物と独立のExpected/Mutant**で判別する | **NOT RUN**。旧6 Step再実行をT1へ算入しない |
+| B0/B1/B2 | 同一TaskでTool-only→TEI Product Skill→必要な別Product/TAI Activity Skillの実選択・Tool/Consumer/Cost・誤Coverage推定を比較 | 実AI Skill効果・横断価値は**未採点** |
+
+Rule/Scenario/Expectedの正本はTEI #1180/#2514、Patternは[#3223](https://github.com/hat47x/tei-platform/issues/3223)、Design Contextは#3262に残す。AIが未観測のRule/Sourceを補って「完全」と宣言しない。単一Coverage率にC0/C1/要件/NFRをまとめない。新Test Generator/Scenario Store/Oracle/Runnerは設けず、初回固定TEI SK-02の比較適格 H2 1 Session→H3実Loader→4独立Sessionを優先する。
 
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
