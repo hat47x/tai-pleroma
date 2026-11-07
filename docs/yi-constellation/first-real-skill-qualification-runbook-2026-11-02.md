@@ -886,3 +886,19 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **G0/G1の具体的なpreflight**：同じ実Profile／Session開始直後に、参加者が明示したTask/公開Source以外にどの`AGENTS.md`／`CLAUDE.md`／Skill候補／上位Root／Global設定が探索・読み込まれるか、各種の合成canaryをReviewer側だけで正負確認する。保護すべきファイルを単にToolの一覧から隠すだけでなく、**初回モデル入力`messages`とSession Log／Tool Sourceの出所区分を照合する**。未許可原文が含まれたら、H2/H3の4Slotは**割付前 environment-ineligible**。親Root検索範囲・他Harness・実Provider実Egressは本実験未確認として`unknown`、全探索済みとみなさない。
 
 **必要十分性**：既存§24.10のresume履歴再構成は**過去情報の新Request再送**、本H6-E3は**開始時点の暗黙指示／説明文投入**であり、同じ現象としてまとめない。両方とも「Skill未Load／今TurnでReadなし／session-log無効」のラベルでは非開示を保証できない。Owner＝TEI #2515／TAI #232が可視性と送出、TEI #2605がSkill Source、TAI #168が初回4Slotと独立採点。新Checker／Runnerは増やさない。**実OS Read-deny・比較適格4Slot・実Provider全Egress否定は未達**。
+
+
+<!-- sk02-h8-g0-g2-classifier-regression-20261107 -->
+### 24.12 G0物理Read拒否とG2 Tool結果完全受領を、既存SK-02比較判定へ追加（2026-11-07）
+
+§24.3〜24.11を横断して、**実HarnessがCLIに到達したことと、四Sessionの比較に入場できることの間**にある二つの欠落を、既存の[SK-02 test-only比較判定器](../../evaluations/tools/check-sk02-pair-eligibility.cjs)へ反映する。新しいRunner/Verifier/中央権限器や実Product APIは追加しない。
+
+| 境界 | 記録する値（Trial単位） | 期待・不一致の扱い |
+| --- | --- | --- |
+| **G0-R** 許可外Readの実負例 | `out_of_scope_read_probe_observed`、`out_of_scope_read_succeeded` | 合成Canaryを**実OS/Tool境界で拒否**した観測を要する。Read成功は`ineligible`、負例未実施／不明は`insufficient-evidence`。単なるread-only設定、別cwd、書込み拒否、Skill非掲載を流用しない |
+| **G2-C** Tool Call/Result対応 | `tool_calls_observed_count`、`tool_results_received_count`、`tool_result_pairing_observed` | 安全な非負整数で実CountとCall-ID/Result-IDを照合。56件/55件のような不一致は`ineligible`、件数・対応の未観測は`insufficient-evidence`。単一の`tool_invocation_observed=true`で代替しない |
+| **G2-D** 完全なモデル入力受領 | `tool_result_truncated_observed`、`tool_result_complete_for_model_observed` | 実受信stdout/stderr/Tool Payloadとモデルへ渡った情報を突合。切詰め・非完全受領は`ineligible`、未確認は`insufficient-evidence`。Tool Replyをファイル保存したこととモデル受領は別 |
+
+既存の`E01〜E60`に加え、合成`E61〜E72`でG0拒否未実施・実Read成功、56/55、型偽装、同件数でも相関未確認、Catalog切詰め、モデル受領欠落を反証する。テストはあくまで**Trial JSONの申告内容を分類する検査**であり、申告した`true`を実OS非漏えいや実受信Byteの独立証明に変換しない。Checkerの`eligible-to-score`は**実観測ログ・物理Read正負試験・Model受信原文・独立Expectedを照合する作業への入口**に過ぎず、実Sessionの成立や正答・安全性PASSではない。既存の固定Task、TEI Source/Binary、H2→H3→H3→H2とITT/PPの境界は不変。
+
+**実施順**：既存のDSH探索9試行とH3-A/B実Skill受信は履歴Witnessとして保持し、実行票を事後充足させない。新たな事前固定Groupで、①実OS強制の許可Read正例／許可外Read拒否負例、②起動前の暗黙Context/Session再開残留／Grantと公開Audience、③Tool Request↔Resultと**モデル入力全Byte受領**の確認、④初めてH2→H3→H3→H2の独立比較、⑤独立Expected採点と費用記録へ進む。現時点の実H2/H3**比較適格0/4**、OS隔離成功、実外部Egress非漏えい証明、独立正答採点、正式Owner受理はいずれも**NOT RUN/未達**。TEIのSource Loader/Command契約は各Product Owner（#2509/#2515/#2605）、TAIの比較資格は#168、開示は#232、継続資格は#271で扱う。
