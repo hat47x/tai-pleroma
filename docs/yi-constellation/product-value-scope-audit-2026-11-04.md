@@ -453,7 +453,7 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 | 対象・既存Owner | 価値が最初に成立する断面 | **初回の必須**に伝播させないもの／用途条件 | 省くと壊れる不変条件・局所判断 |
 | --- | --- | --- | --- |
 | **TAI** [#168](https://github.com/hat47x/tai-pleroma/issues/168) / [#271](https://github.com/hat47x/tai-pleroma/issues/271) / [#74](https://github.com/hat47x/tai-pleroma/issues/74) | 既存Harnessで必要なProductを選び、正しい対象・未決・次の作業を再開できる。B1単独Productで十分ならTAI不介在も正しい結果 | 常駐TAI Agent、全製品Bundle/サイト公開、全Skillの一括Load、全Handoffの常時再資格化は用途条件付き。配布と利用者のActivityを別成果にする | 誤った権限継承・秘匿データ外送・旧Attempt成果を現在のOutcomeへ転用しない。H2/H3の技術Witness4件は正式比較**適格0/4**、新TrialのG0/G1/G2を優先 |
-| **TEI** [#1127](https://github.com/hat47x/tei-platform/issues/1127) / [#1180](https://github.com/hat47x/tei-platform/issues/1180) / [#2619](https://github.com/hat47x/tei-platform/issues/2619) / [#1223](https://github.com/hat47x/tei-platform/issues/1223) | 専門家に読みやすいData/Relation/Function/Ruleから一つの保守・保存・再読取と変更後の検証。CLI/Go単一バイナリが基本形、既存Scenarioを再利用 | 全Domain/数学型/組織履歴、全Target/Studioの同時完成、常時Hot Swap、無停止の二世代更新は個別要求時だけ。汎用Core/第二Runnerは追加しない | NULL/欠損、関係の粒度、業務ID、現在Grant、Effect、独立Readbackを保存。 `*.tei.md` は方向性と実Parser/Loader対応を区別し、旧Source一括改名を先行しない |
+| **TEI** [#1127](https://github.com/hat47x/tei-platform/issues/1127) / [#1180](https://github.com/hat47x/tei-platform/issues/1180) / [#2619](https://github.com/hat47x/tei-platform/issues/2619) / [#1223](https://github.com/hat47x/tei-platform/issues/1223) | 専門家に読みやすいData/Relation/Function/Ruleから一つの保守・保存・再読取と変更後の検証。CLI/Go単一バイナリが基本形、既存Scenarioを再利用 | 全Domain/数学型/組織履歴、全Target/Studioの**同時完成**、常時Hot Swap、無停止の二世代更新は初期受入の条件にしない。ただしPlugin-firstは正式な製品要求RQ-008であり、無条件の任意機能には格下げしない。D0→D1の単一Inspector縦切りから段階実現し、別Core/Runner/Resolverは追加しない | NULL/欠損、関係の粒度、業務ID、現在Grant、Effect、独立Readbackを保存。 `*.tei.md` は方向性と実Parser/Loader対応を区別し、旧Source一括改名を先行しない |
 | **SEI** [#711](https://github.com/hat47x/sei-cognition/issues/711) / [#758](https://github.com/hat47x/sei-cognition/issues/758) / [#660](https://github.com/hat47x/sei-cognition/issues/660) / [#767](https://github.com/hat47x/sei-cognition/issues/767) | 1件のObservation/Decisionと根拠・Unknownを保持し、別回で根拠・Scope・適用性を再構成する | 毎回全Method・全認知Signalを手入力させること、万能なTruth/Method Engine、全領域連携は条件付き。取得不能な根拠をUI都合で補完しない | `verify`が未検証recordを含んでもexit 0になるとの[#758](https://github.com/hat47x/sei-cognition/issues/758)の報告は簡略化対象でなく**最初の真偽判定を壊す製品Gap**。Unknown・ExactBinding・根拠の欠落を隠さない |
 | **SUI** [ADR-0089](https://github.com/hat47x/sui-sensemaking/blob/main/01_Plans/adr/ADR-0089-product-value-canon.md) / [#3371](https://github.com/hat47x/sui-sensemaking/issues/3371) | 未整理の観測・異論・保留を、レビュー前後の由来を失わず編集・再開・共有できる | 最速自動要約、全文化Method、TEI/TAI向け全Projection経路の常時有効化を初回成立条件にしない。DocumentV1変換が未使用・未接続なら利用範囲を限定してよい | 非レビュー構造の非開示と、Island/Relation等の意味損失を隠さない。Projection一致を原文同一・復元可能・全件確認へ昇格しない。認知増分は実務T2で判定 |
 | **SHO** [#4](https://github.com/hat47x/sho-composer/issues/4) / [#7](https://github.com/hat47x/sho-composer/issues/7) / [#8](https://github.com/hat47x/sho-composer/issues/8) / [#9](https://github.com/hat47x/sho-composer/issues/9) | TEI・論文本文・DOIを取得せずとも一文書とMarkdownリンク階層を編集・保存・再開する。必要時に出典の現在資格を確認 | L1〜L4学術メタ情報、PDF組版、多Target、論文→コード自動化、独立Document Graph DBは初回不要。MMI C-01/T2が未成立でもSHO単独L0を止めない | 著者本文、意図したSource、実読取bytes、表示、Review、固定納品を分ける。同名異内容/未取得/未定義参照/非可逆変換を「引用確認済み」としない |
@@ -471,7 +471,35 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 
 1. **先行**：現行Product内の、価値を誤表示する局所Gap（SEI #758、SUI #3371、SHOの原文/参照の誤昇格、TEI/外部HarnessのTool Result欠落、EKI同Attemptの結果未達）はそれぞれのOwner Issueへ戻す。研究候補は保留でも危険な偽成功は保留しない。
 2. **単独利用から**：TAI #168のH2/H3は既存Task/Source/Skillを変えず、G0の許可外Read実拒否→G1のModel/Session Log送出→G2のWorkspace/Tool Reply完全性を通した新Trial Groupで評価。SUI実務T2、SHO L0、SEI一件resume、TEI単一Function、EKI有限Taskは**他製品の一括完成を待たない独立レーン**で並行に実証できる。
-3. **条件付き拡張**：B1の反証が実際に出た用途だけ、TEI高度Plugin/複数Target、EKI高可用性/高速Data Plane、SEI高度Method、SHO Research Index L1以降、TAI配布/多Product統合を局所導入する。選定理由と撤回条件をOwnerへ返す。全Product共通の採用義務を作らない。
+3. **条件付き拡張**：B1の反証が実際に出た用途だけ、TEIの全Capability一括Plugin化・無停止Hot Swap・全Target同時実装、EKI高可用性/高速Data Plane、SEI高度Method、SHO Research Index L1以降、TAI配布/多Product統合を局所導入する。選定理由と撤回条件をOwnerへ返す。全Product共通の採用義務を作らない。
 4. **観測**：各段階で `提案→実選択→実読込/実呼出し→Host/Provider実効果→Consumer実受領→利用者のOutcome→Owner受理` の証拠を別資格にする。単なるCI成功・数の多いIssue・モデル間一致は価値の確証ではない。
 
 **この更新で実施したこと**：既存のValue/README、関連IssueをSource-staticで横断照合し、計画上の依存伝播・優先順・反証ケースを具体化した。各製品のRequirement/ADR/コード、既存PRのmerge、実B0/B1/B2、異モデルレビュー、外部Harness隔離の修正と新Group実行、実Provider/実利用者・Owner受理は**NOT RUN**。
+
+
+## 22. 2026-11-07：実証に応じて義務を縮退する――単独価値の次の最小一歩
+
+本節は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の**価値適正化**のみを扱う。すでに実測があるProductの「まだ動いていない」扱いを修正すると同時に、CI成功を本来のUser Job完了へ広げない。各Ownerの実装計画・受理を上書きせず、[VA-01 §8](../../evaluations/VA-01-product-value-necessity.md)を次の反証入力とする。
+
+### 22.1 設計方針の採用と、初回に必要な実装量は別
+
+- **TEIのPlugin-firstは任意ではない。** [TEI RQ-008](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)に、Coreを除くCLI/StudioのPlugin化・生成RuntimeとのContract/Resolver/Build/Test共用が明文化され、[PR #3277](https://github.com/hat47x/tei-platform/pull/3277)は**merged**。これは**製品要求と設計文書の採用**であって、実CLI/StudioがPlugin経由で動作した証拠ではない。実装の最小経路は同PRのD0（現在の静的CLI・Studio差分）→D1（read-only Inspector一機能の実Plugin/Consumer）で、全機能の同時移管や別Host/Resolverの新設を初回条件にしない。
+- **Verified Composition BOMは、組合せを利用する場合の基本的な適合証拠であって、一律に全組合せを実行する義務ではない。** [TEI Draft #3269](https://github.com/hat47x/tei-platform/pull/3269)のGo Referenceは合成2×2等の限定テストを実行したが、宣言候補12組とLock供給候補9組は一致せず、実Resolver/Target/Host/独立Expectedへの適合は未実証。候補列挙、選択Lock、実Build/Load、独立試験、利用資格を分ける。Pairwise合格を全候補の保証にしない。
+- **TEI Design Context Queryは、AIが新たにScenario/Ruleを作るときの必要SourceのScope閉包である。** [#3262](https://github.com/hat47x/tei-platform/issues/3262)のP-1aは現CLIのread-only照合、P-1bは限定Query、MCPは後続Adapter。あらゆるTEI起動・一件の手動CRUDに、全Workspace/全Sourceの完了Queryを強制しない。取得不能・未解析・Reply切詰めを「complete」にはしない。
+
+### 22.2 実測から選ぶ「次の最小実験」
+
+| 対象 | 既存の限定達成（参照証拠） | まだ言えないこと | 次の**1辺**だけを実証する／避ける過剰化 |
+| --- | --- | --- | --- |
+| TEI test dogfood | [#3273](https://github.com/hat47x/tei-platform/pull/3273)が引用する実main [CI #42359610226](https://github.com/hat47x/tei-platform/actions/runs/42359610226)で、9 read-only CLI、14 Skill静的Check、既存6 Scenario Step、CLI負例4＋独立義務負例2を限定PASS。局所C0相当10.1%、C1未計測 | 既存Case再実行T0は、未カバー要件から**新**負例を生成するT1、全機能/非機能カバレッジ、実Target E2Eではない | [#3273](https://github.com/hat47x/tei-platform/pull/3273)の行番号0負例を、既存Driver／Independent Expectedで1ケース検収。新Runner/別Scenario SSOTを先に建てない |
+| SUI→SHO | [SUI Draft #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)の可視範囲Markdown固定354 bytesと[SHO Draft #21](https://github.com/hat47x/sho-composer/pull/21)のUbuntu/Windows各18 PASS（1 SKIP）は限定の固定Fixture互換。LF→CRLFの初回失敗も観測済み | 同一実FileをSUI実Producer→SHO実CLIが受領したこと、Source真正性、Writer保存・再開、意味受理、非公開情報の不存在証明 | 両Draftの既設opt-inを**同一絶対Path／同一Attempt**で実行し、実bytes/再Read/Scopeを確かめる。新Interop Serviceや共通DBは不要 |
+| SHO独立L0 | [#16](https://github.com/hat47x/sho-composer/issues/16)／旧[Draft #17](https://github.com/hat47x/sho-composer/pull/17)はread-only Readerの実ディスク/2 OS CIを限定実証。[Fixture #12](https://github.com/hat47x/sho-composer/pull/12)はmerged、#17は**closed・unmerged** | 正式製品Reader採用、未定義参照完全検出、特殊FileのOpen前拒否、Writer G2/保存再開 | Readerの未解決候補を正確に「未評価」と表示しつつ、[#4](https://github.com/hat47x/sho-composer/issues/4)の一文書保存→再開へ繋ぐ。PDF/DOI/MMI完成は待たない |
+| TEI Plugin/BOM横断 | [PR #3277](https://github.com/hat47x/tei-platform/pull/3277)は要求文書merged、[Draft #3269](https://github.com/hat47x/tei-platform/pull/3269)はreference-only・closed/unmerged | Studio実Plugin起動・Resolver相互運用・Verified BOMの資格はない | 単一read-only Inspectorの実Provider/Consumer/Build閉包と選択版だけ照合。全CLI/Studio/生成Runtime一斉移管を初回Gateにしない |
+
+**順序の判断**：局所的に既存CIが通っている経路は、同じ試験の再包装よりも「欠けている一辺」（TEI T1、SUI→SHO同一File、SHO Writer、Plugin実Consumer）を優先する。安全・出典・Scope・現行Grantの不変条件は省略しない。未実施の価値比較を「B2は不要と証明された」と読み替えない。
+
+### 22.3 証拠と要求IDの伝播事故を、既存手順で防ぐ
+
+[TEI #3223](https://github.com/hat47x/tei-platform/issues/3223)に記録された**RQ-035のBranch間意味衝突**（main＝Data Source Workbench、旧BOM Draft＝Verified BOM）は、Issueや設計が増えただけで同一IDの意味が変わりうる具体例。新しい横断Requirement Registryを作るのでなく、**採用前のOwner Issue番号／Source ref＋blob SHA／Requirement ID→Meaning／PR状態**を照合し、不一致なら未受理に止める。閉鎖されたDraftを現行標準の根拠として扱わない。
+
+**今回の資格**：他Productで報告されたCI/実験と現行GitHub Issue・PR・要求本文をSourceとして照合し、**このDraftの要件境界・試験優先順位のみ更新**した。ここでの新CLI/Plugin/SHO writer/同一File転送/新T1/実B0-B2/複数モデル反証/Owner受理は **NOT RUN**。
