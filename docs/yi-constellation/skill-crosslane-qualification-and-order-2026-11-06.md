@@ -662,6 +662,31 @@ TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)のSC-19（旧Attemp
 
 **最初のBlocking Exitは不変**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[Draft #270 Runbook](https://github.com/hat47x/tai-pleroma/pull/270)の固定TEI公開Sourceに対する外部Harness **H2-01実Tool Call一Session→H3実Skill root/reference Load→H2/H3四独立Session**を先行。初回read-only TaskへSaaS Agent Credential、監査Dispatcher、Writeを混入させない。現在のProduct限定試験は実横断Harness、実SaaS/IdP/Proxy、外部Consumer受領、実Provider Effect、Owner正式受理のPASSではない。これらは**NOT RUN**。
 
+### 23.5 HTTP Decision GraphとClient Reactionの実契約をSkillの安全な継続・再試行へ接続する（TEI #3274）
+
+**新しいProduct側の一次証拠とYICの差分**：[TEI #3274](https://github.com/hat47x/tei-platform/issues/3274)／[mainに統合されたPR #3289](https://github.com/hat47x/tei-platform/pull/3289)は、REST APIの例外系をApplication Outcome→実Effectの確定性→HTTP/IPCへの投影→Client Reaction→独立Observation/Recoveryに分け、Graph/Table/Traceを**既存TEI標準構造から導出する候補**として整理した。実`plan-check.mjs` (`cadfe949…`) と追加`plan-check.terminal-gap.test.mjs` (`e2fd7f57…`) のJavaScriptを**隔離V8上で評価した2/2 Characterization PASS**は、`requires`の構成DAGと`onTerminal`の宣言集合が成立しても、実HTTP分岐上で各Terminal Auditが通ると証明できないことを示す。**実Node test runner、実Host、Client、Provider、Owner受理までPASSした証拠ではない**。この限定的Gapを本番の監査迂回脆弱性と断定しない。
+
+YICでは§23.1〜23.4の条件付き書込み・中断/再開に、**Serviceが返したHTTP StatusをAIが人間のように判断して次Toolを選ぶ場合の誤昇格**を加える。#1043 Web Host Graph、#1656 HTTP Adapter、#1158 Typed Result/Client、#1174 Operation Effect、#2620/#2497 Graph/ProjectionはTEIのOwnerが維持。TAI [#271 SC-19/20/21](https://github.com/hat47x/tai-pleroma/issues/271)と[#488 X04/X05/X06](https://github.com/hat47x/tai-pleroma/issues/488)は**選択・履歴引継ぎ・誤再試行の既存評価票**だけを持つ。YICへ新Response Mapper/Retry Engine/HTTP専用Workflow Engine/Graph Validatorを作らない。
+
+| Skillが観測する独立軸 | 観測・判定に必要な現物 | 禁止するショートカット |
+| --- | --- | --- |
+| **Effectの確定性** | 同一Operation ID、実Provider/Host attempt、rejected-before-effect／known applied／partial／unknown、Receiptと独立Resource再Read（別版・別対象は別証拠） | `202 Accepted`・`200`・`committed`文字列・Receipt単独から業務完了／全Entity更新を認定 |
+| **Transportの受領性** | Serverが実生成したstatus/header/body、HTTP/IPC/Proxy/Service Worker、Clientが全bytesを受け取ったか、破損/途中切断/Response Body無しの契約 | Server書込成功＝Client受領成功。HTTP 204/304/HEADのbody無しを機械的にエラー扱いする |
+| **Clientの現在資格** | Task Purpose、Scope、selection epoch、dirty set、base Revision、現在Audience/Grant、Operationのread/write/冪等性、同じClient Reaction Providerの実版 | 過去Client Decisionや`Retry-After`、`Idempotency-Key`の見た目でWriteを自動再送／Grantを再利用 |
+| **Graphと実Path** | Stable Node/Edge ID、方向・多重辺・Guardの因果依存、Terminal/Audit到達の**実Trace**、Source/Graph/Build/Plugin版、Observerのscope | `onTerminal`宣言集合・Graph表示・構成DAGの静的PASSを実Runtimeの全Path Audit Coverage／Effectの証明にする |
+| **Response契約の互換** | RFC 9457の`type`（省略時`about:blank`）、actual HTTP statusとProblem `status`、既知extensionの型・未知extension、Response映射PluginとClient Reaction Pluginのexact tuple | `detail`の文章分類で業務拒否を確定、未知extensionだけで失敗扱い、未知type／status不一致から安全な自動再送を推定 |
+
+**同一Taskからの反証経路（既存HDG番号を利用）**：
+
+1. **HDG-13/14/16**：未知Problem Typeは安全な一般対応とし、未知extensionは規格どおり無視。既知extensionの型違い・HTTP statusとProblem `status`の差は独立に診断する。`204`／`304`／`HEAD`の正常なbody無しは契約に応じ処理し、HTTPの表現鮮度を業務Effect最新性へ転用しない。
+2. **HDG-17/18**：POST送信後のTimeout・切断・Proxy再試行・Service Worker再試行を、送信前拒否と区別。実Commitが`unknown`なら新Operation IDで盲再送せず、同一Operationの状態照会・保留と現在Grant検査を優先。HTTP `Retry-After`は遅延ヒントであり実行許可ではない。
+3. **HDG-19/21**：別Private Worldでも同じPublic Projectionの低権限Clientには秘密のResource ID・Guard分岐数・ETag・Graph Trace・拒否理由を漏らさない。`onTerminal`が構成にあるだけでは実Terminal→Auditに到達した証拠にならず、別の実Host実験で全分岐の到達範囲を観測する。
+4. **HDG-22**：Client Reaction Provider A1/A2 × HTTP/Host Provider B1/B2の2×2 exact tupleを[TEI #3267 VCB](https://github.com/hat47x/tei-platform/issues/3267)の既存BOM/Scenario/独立Expectedへ束縛。型・Schemaだけ一致しても未知Problem typeや旧Clientの再試行安全性の互換PASSではない。未検証tupleと未選択ProviderをBOMのVerifiedへ自動昇格させない。
+
+**Traitとの接続（新仕様ではない）**：[TEI Draft #3027](https://github.com/hat47x/tei-platform/pull/3027)が担当する原子的な実装/検証義務の候補として`GuardEvidence`、`TerminalCoverage`、`TypedResponseProjection`、`ClientReactionPolicy`、`EffectReconciliation`を**例示**する。各TraitはDefinition→Binding→Fulfillment（生成/提供/手動/外部）→Conformance Evidenceを区別。Productが手動実装を要求した場合も対応実装と試験を省略しない。Trait名・標準BOMの存在は実選択・全分岐実行・現行Grantの証明ではなく、正式DefinitionはProduct Ownerに残す。
+
+**YICが評価する付加価値と導入順**：最初の[TAI #168 SK-02](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI read-only H2/H3を変更しない（限定H3 Tool Read達成、比較適格**0/4**）。その後、TEI #3274の(a)実Node限定Characterization→(b)Graph/TraceのLoader・実Guard/Terminal実Path→(c)Typed Application Result→HTTPまたはDesktop IPC→Clientの正負対照が各Ownerで成立する**必要な範囲**で、B0既存Tool／B1 Product Skill／B2横断Activity Skillを比較する。B1が`unknown commit`を保留し、適法なread-only Status照会へ案内できればB2を必須にしない。実Targetでの誤再試行、不要な全停止、未知の保全、Tool/Token/人手を同じ独立Expectedに基づいて測る。HTTP Graph実Loader、実Client/Provider効果、Skillによる実Reaction、Trait/BOM exact E2E、Owner受理は**NOT RUN**。
+
 ## 24. OKF Attested ComputationをYICのSkill選択とClaim表示へ接続する（TAI #514・各Productの既存受入に委譲／後続・NOT RUN）
 
 ### 24.1 原典の採用範囲とOwner
