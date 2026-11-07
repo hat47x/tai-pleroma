@@ -581,6 +581,27 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 ---
 
 <!-- tai-activity-h3-skill-real-load-current-20261107 -->
+
+### 21.5 Edge端点種別と投影の欠落を、Relation不存在・編集可否へ昇格させない（2026-11-07実測）
+
+<!-- tai-typed-edge-projection-loss-and-activity-20261107 -->
+
+§21.1〜21.4の**標準構造→Function/Context→表現Instance→Action Offer**の区別を、SUIの具体的なEdge投影で裏付ける。TAIがDocument/Graphの第二パーサや第二Rendererを持つことは求めない。
+
+- [TAI merged #529](https://github.com/hat47x/tai-pleroma/pull/529)では、SUI DocumentV1の項目名と投影契約の写像率はDocumentV1 **3/24**、Card **8/16**、Island **3/20**、Edge **6/6**。これは**フィールド名の被覆**であり、型・意味・Lossのない完全投影ではない。Document単位の未写像項目には集合、決定、履歴、時点、版などが含まれる。
+- [TAI merged #530](https://github.com/hat47x/tai-pleroma/pull/530)／[#533](https://github.com/hat47x/tai-pleroma/pull/533)：SUI側でEdge.fromKind/toKindは**Optional**、投影契約では**必須**。両方あればpresent、キー欠落はmissing（欠落名あり）、明示nullはunresolvedとなり、後二者のEdgeは投影に載らない。**投影内の0本と、元DocumentのEdgeが0本は同値でない**。Card/Edgeのコード値をstd.codeに写しても、許可値の意味受理は契約外に残る。
+- [TAI merged #534](https://github.com/hat47x/tai-pleroma/pull/534)：文書合成層は端点種別が欠けた場合にcardを仮定。card→cardは合成できても、出力Edgeの種別はnullのまま。card→islandはcardとして誤解して拒否。未知種別は拒否。**同一の元入力が合成層で仮定により通っても、投影でmissing/unresolvedになる**。この差はGraph/Tree表示やユーザーの編集対象同定に直結する。
+- [TEI Draft #3222](https://github.com/hat47x/tei-platform/pull/3222)は複数表現の選択同期を検討中。Subject/Relation occurrence、Result grain、Context epoch、表示上のSelection、Source span/Media時点を分ける候補であり、**表示上のEdge/Selectionを実Domain ID/Mutationへ昇格しない**。正式なTEI共通Binding採用や実Renderer成功を示さない。
+
+| Case | 同一条件で変える因子 | TAI Activityに必要な独立Expected |
+| --- | --- | --- |
+| **EP-01 Edge種別が両方ある** | 明示的card/card、card/island等の合法kind | 投影したEdge ID・端点kind・方向・多重性を元Documentと照合。存在・意味と書込み許可は別 |
+| **EP-02 欠落とnull** | 同じEdgeのkindを欠落／明示nullへ変更 | 投影から落ちたEdgeの原因をmissing/unresolvedとして保持。公開資格のないEdge IDを漏らさず、空投影を「関係なし」と報告しない |
+| **EP-03 合成と投影の非同値** | 入力kindなしのcard→card／card→island | 合成成功でも出力kind=nullの状態を取得し、投影資格なしを検出。自動でcardと確定させてGraph/編集Actionへ昇格しない |
+| **EP-04 同一見た目・異構造** | Tree/Canvasで同じ表示を与えるEdge端点／関係・Parent変更 | Graph node identity、元Relation occurrence、Selection epochを別に照合。逆写像が一意でなければ編集はOfferしない。正当に許可されたread-only表示は継続 |
+
+**価値比較と所有**：SUIはDocumentV1/Edgeモデル・合成/投影Loss/開示、TEIは標準Relationと表現・Function Binding、TAIは再開したActivityで必要な**見えるSubset／未知／Action資格**の提示、SEI/SHOは読まれた出典と編集後の記録を担当。最初の固定TEI H2/H3 Tool/Skill Trialは変更しない。後続SCN-001のB0/B1/B2で、Relationを「無い」と誤判定する回数、誤った編集Offer、正当Readの過剰停止、根拠再確認・手戻りを比較する。**EP-01〜04のSUI→TAI実Consumer E2EとOwner受理はNOT RUN**。#529〜534はTAI側の限定テストであり、SUI自身のProduct Release/契約採用を意味しない。
+
 ## 22. 2026-11-07：実H3 Skill Loadの到達と、Activityに再利用できる資格を分離する（実測／横断価値NOT RUN）
 
 [TEI mainのDSH四Session実測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)を、[初回Runbook §24.5](first-real-skill-qualification-runbook-2026-11-02.md)へ接続した。実DSHでH2-A→H3-A→H3-B→H2-Bの**四つのSessionがcompleted**。H3 2件はそれぞれProduct Skill Toolによる**Root本文5,482 byte（同SHA）**受信に加え、referenceのread 7,710 result bytes（同digest）の実Callを記録。従来「H3実Loader NOT RUN」とした歴史的記述は、**この限定Tool/Reference受領については更新**する。ただし「Product SkillのRequired全閉包・現在Tool実行資格・業務正答・TAIのActivity価値」の合格ではない。
