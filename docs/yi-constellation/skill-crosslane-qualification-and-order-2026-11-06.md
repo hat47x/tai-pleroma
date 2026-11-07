@@ -467,6 +467,18 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 **次の比較資格のExit**：既存[Runbook §24.4〜24.6](https://github.com/hat47x/tai-pleroma/pull/270)のG0（公開Read正例＋Holdout/Skill/別Lane/暗黙Contextの実非露出）、G1（モデル入力・Session Log・Tool/Networkの観測可能な送出）、G2（同一Task/Workspace path・Binary/manifest/Tool許可とResult完全性）を**実施前に**成立させて新Groupの4 Slot/独立Expectedを固定。その後、独立したH2一Session→H3実Tool Read→残3Sessionの順。必要な拒否を実証できない設定はenvironment-ineligibleとし、`read-only`や`workspace-write`のモード名で救済しない。合成canary・Mock内の実結果は現物であり、実Secret Cloud流出の証明ではない。別Identity/ACLによる読取り拒否、実Cloud Egress完全性、Skill因果効果、実Provider/Owner受理は**NOT RUN**。実OS境界＝TEI #2515/TAI #232、Tool/Skill＝TEI #2509/#2605、試験判定＝TAI #168/既存SK-02。新Sandbox Runtime/Policy Engine/Runnerを追加せず、初回試験のTask/Skill bytesを事後改訂しない。
 
+### 19.8 機密監査のRaw Witnessと外部へ共有するEvidence Projectionを同一視しない（TEI #2515 H6-E13〜15、計画）
+
+[TEI #2515のH6-E13〜15](https://github.com/hat47x/tei-platform/issues/2515)は、外部Harnessの安全性を検証する**監査・Mock・CI自体が追加の情報流出経路になる**という横断的な負例を整理した。§19.6〜19.7はTool・Model・Session Logへ送られる情報を扱うが、ここでは監査の**内部Observerが見たRaw**と、Issue/PR/CI Artifact/SHO文書/別Harnessなどの**外部Viewerが受け取ってよい証拠**を分ける。これは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の現在のDisclosure/Host境界に従うConsumer条件であり、YIC独自のDLP、Evidence Registry、第二Policy/Attesterを導入しない。
+
+| 既存OwnerのCase | YICのTrial/Skill Handoffに再利用する判別点 | 非適格な短絡 |
+| --- | --- | --- |
+| **H6-E13** Observer→Evidence Viewer | 信頼境界内ではMock wire/Tool result/OS拒否点を実byte・Request/Attempt・版で保全し、外部へは許可された合成Case ID・検証範囲・成功/拒否/Unknown・限定Receiptのみを投影。PR/Issue/Actions/Tool Reply/Markdown/追加LLM requestを**別の送出先**として扱う | 「Raw証拠が内部にある」→「そのHTTP bodyや実Path、stdin、Credential、診断を外部Issueにも掲載してよい」。少数候補の固定hash/digestを匿名化済みとみなす |
+| **H6-E14** 不在・拒否・秘匿 | 許可済み可視値が等しい二つの秘密Worldでも、外部への`forbidden`/`absent`/`hidden`/unknown、件数/エラー長/Path/診断が秘密の有無を識別させないか、現在Audience/Policyに照らして比較 | 内部Observerの詳細な拒否理由をすべて低権限Consumerの説明・採点票に渡す。`not found`と`forbidden`を一律同義と決めつける（開示可能な内部監査情報は残す） |
+| **H6-E15** 計測Sinkの範囲 | Mock/Proxyが捕捉したRequestと、Child Process/別Socket/DNS/Telemetry/CI・Session Log/題名生成を観測できた範囲ごとに一覧化。許可Projection取得正例と、実OS/Hostでの非許可Read/Egress拒否を別試験 | 単一Proxyで見えない→全経路未送出。後段のMaskだけでRawが最初のモデル/Tool requestに乗らなかったことを証明 |
+
+**既存試験への採用方法**：初回SK-02は許可済み公開合成Taskであり、機密ProfileのH6-E13〜15を**新たな四Session Blocking Gateにはしない**。ただしその**実観測したEvidenceの公開範囲を守る責務**は最初から適用し、保護対象のHoldout/他Lane/Agent instructionsを検証用External Modelへ供給しない。Reviewer側だけが正負のOS拒否・内部版・独立Expectedを照合し、比較票では必要な不適格理由と非機密な証拠参照を記す。外部共有時はその時点のAudience/Policyを再評価し、現Audienceへ秘密の数・digest・存在を説明してよいとは推測しない。将来の機密Task/別Product Handoffには#2515が計画するP0d Observer→ViewerとH6-E14/E15を**別Trial Group**で適用し、実OS/Network拒否の成否・未観測Sinkはunknown。#2515のCaseは**提案／NOT RUN**であり、実DSH E13〜15の合格・実Cloud不漏えい・Owner Policy採用を主張しない。
+
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
 ### 20.1 TEI Product側の実装候補と現行の証明限界
@@ -810,7 +822,9 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 **Product→Skillの受入順**：(P-1a) `commands`/`workspace-files`/`model catalog`/`inspect`/`trace`/`requirements`/`validate`など**実CLIがサポートするものだけ**で1 SubjectのRequired vs ActualをReviewerが独立照合 → (P-1b) 既存Reader/型付きApplication Serviceから短い概要・Source/Gap・continuationの最小投影が必要か判別 → (P-1c) **同じResult**をTEI Product Skillあり/なしで比較し、Tool選択、受領・欠落判別、追加質問数、Token/時間/人の修正、誤ったCoverage PASSを別計測 → (P-1d) MCPは**任意の薄いAdapter**として必要時のみ同値性試験。Data Context未充足ならテスト生成を強行せず、正当に観測できるread-only作業は継続する。
 
-**実施境界**：既存固定TEI SK-02の比較適格H2/H3を先行させる（技術H3 Tool Read達成≠正式0/4からの昇格）。#3262はDesign/Scope/Outputの**提案段階**で、新CLI/MCP/Skill Query/GUI、DCQ-01〜10実Runner、実Coverage判定、正式Schema/Owner Meaning Acceptanceは**NOT RUN**。従来の`*.tei.md` Reader未実装領域をSkillが実装済みと説明しない。Dataset/RuleのProvisional MeaningはOwner受理なしに実DB/Providerへ適用しない。
+**現在の限定Product進捗（2026-11-07基線補正）**：[TEI merged #3284](https://github.com/hat47x/tei-platform/pull/3284)は新APIではなく、既存read-only CLIの実取得9 JSON Replyを使う**test-only `tools/reference-issue-test-ability/context_gate.py`**を実装し、Required/Source/Workspace/受領の欠落時に`partial`／`exploration-only`／`qualifiedTestGeneration=false`を出す。最終PR HEAD `eeb2295a…` の[専用CI #42370519406](https://github.com/hat47x/tei-platform/actions/runs/42370519406)はcompleted/success（既存7 synthetic negative controls）。[merged #3296](https://github.com/hat47x/tei-platform/pull/3296)は**第二Reader案 #3293を取り下げて同Consumerを補強**し、Manifest Root/Inventoryの2件と、**実受領JSONの一時コピー**に欠落・途中切断・JSON member重複・NaN・追加JSON等を注入する7件を追加。[専用CI #42371310577](https://github.com/hat47x/tei-platform/actions/runs/42371310577)は該当exact HEAD `39e68746…`で**既存7＋追加2＋transport改変7＝計16限定Control PASS**。この16は**実DSH wireを切断した検証ではなく、Product Consumerへの合成入力Mutation**である。局所Go statement C0相当10.1%・C1未測定。PR/head限定CIは、別mainの全面Test資格や外部H3配送資格と混同しない。
+
+**実施境界・次のExit**：既存固定TEI SK-02の比較適格H2/H3を先行させる（技術H3 Tool Read達成≠正式0/4からの昇格）。本件Product Gateは**T0.5の既存CLI入力を限定評価できる状態**へ進んだが、次のP-1b1＝**一Functionについて独立に定めたRequired Data/Function/Business/Rule/Relation/Scenario/Source閉包**と現実のLoaded/Parsed/実消費を実照合する一件は未完了。P-1cの実外部Tool Reply call/result ID・ordered part digest/end marker・Consumer受領と同Revision/Grant、P-1dのMCP/Skill同値、生成AIによるT1新Scenario、全C0/C1/Requirement/NFR閉包、Owner Meaning Acceptanceは**NOT RUN／未資格**。これらの試験はTEI #3262/#2514/#1180の既存Ownerに委ね、YIC独自Query/Reader/Checkerを追加しない。従来の`*.tei.md` Reader未実装領域をSkillが実装済みと説明しない。Dataset/RuleのProvisional MeaningはOwner受理なしに実DB/Providerへ適用しない。
 
 ### 26.6 既存CLI/Scenarioを実行したT0と、未カバーRuleから新Scenarioを作るT1を区別する
 
@@ -819,7 +833,7 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 | Gate | 実際に必要な独立観測 | 現状態 |
 | --- | --- | --- |
 | T0 Product-only | Source/CLI実版、9 CLI/6既存Step、negative 4+2の独立判別。Skill静的試験と実Skill Loadedは別 | **上記exact mainの局所PASS** |
-| P-1 Design Context | [TEI #3262](https://github.com/hat47x/tei-platform/issues/3262) Required/Discovered/Loaded/Parsed/Bound/Returnedと現在Scope、元Source、欠落、Consumer Deliveryを閉じる | 新Design Context Query／共通Typed Projection実装は**NOT RUN** |
+| P-1 Design Context | [TEI #3262](https://github.com/hat47x/tei-platform/issues/3262) Required/Discovered/Loaded/Parsed/Bound/Returnedと現在Scope、元Source、欠落、Consumer Deliveryを閉じる | **T0.5限定成立**：#3284/#3296により既存CLI Replyの試験用`context_gate.py`と16 synthetic/transport-copy負例の専用CI PASS。`partial`／`qualifiedTestGeneration=false`を維持。P-1b1の一Function完全閉包・正式Query／外部Tool受領は**未資格** |
 | T1 AI新Case | [TEI Draft #3273 TG-01〜06](https://github.com/hat47x/tei-platform/pull/3273)で、既存の正数行番号Ruleに対し**ゼロを与える新規負例**を、Issue→未カバーObligation→Pattern候補→新Pinned Scenario→実CLI→**生成物と独立のExpected/Mutant**で判別する | **NOT RUN**。旧6 Step再実行をT1へ算入しない |
 | B0/B1/B2 | 同一TaskでTool-only→TEI Product Skill→必要な別Product/TAI Activity Skillの実選択・Tool/Consumer/Cost・誤Coverage推定を比較 | 実AI Skill効果・横断価値は**未採点** |
 
