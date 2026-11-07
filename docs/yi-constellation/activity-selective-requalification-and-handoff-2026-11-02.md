@@ -726,3 +726,19 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 **最短の追加判別**：B0/B1でP0のSUI実Producer IDと原Byteを固定→P1の**同一Attempt・同一File**に本物のSUIとSHO実CLIだけを通し、同じ本文を返す偽Producer/別HEADだけを一因子変更して明確に拒否→P2でReaderが実評価した範囲/未解決を示す。LF→CRLFは既存独立Expectedで異なるByteとして判別する。ここまででProduct B1だけでJobが満たされるならTAI Skill B2を選択しない。P3のAudience/Current Grant/Source/Host変更時のみActivityの選択的再資格化を評価し、古いRawや\`verified\`を現配布権としない。
 
 **Claimの上限**：TEIのT0.5は実CLI Reader/合成受領不正検知まで。SUI/SHOのCIは別Product固定Fixtureとtest-only Runnerの準備まで。実Producer→SHO Reader delivery、SHO Writer Save→Restart、Owner Accepted Meaning、外部OS/Harness隔離、実Permission/ProviderはNOT RUN。既存#168の固定H2/H3初回試験Profileを変更せず、OS拒否/Model入力・Tool完全性→比較適格H2/H3 0/4の解消を先行する。
+
+
+<!-- tai-activity-t1a-required-scope-tt56-20261108 -->
+### 23.4 T1-Aの実CLI判別を採用し、TT-56の必要Rule欠落を次の制約とする（2026-11-08）
+
+前節§23.3のT0.5までという記述は**当時の到達記録**として維持し、現在の次段を本節に置く。既存のScenario SSOT／TEI Product Gate／独立Expectedを流用し、TAIにTest Generator・Rule Registryを新設しない。
+
+**実証済みT1-Aの範囲**：[TEI main統合 #3304](https://github.com/hat47x/tei-platform/pull/3304)では、事前に与えられた「行番号は正数」Ruleに対する`line_number=0`を**一時的なCandidate第7Step**として生成し、実ビルドTEI CLIの`scenario verify/generate/check/run`へ渡した。[PR Head限定CI #42378033965](https://github.com/hat47x/tei-platform/actions/runs/42378033965)はsuccess。既存6 Stepと16のContext合成Controlを保持し、行番号1の正例に対し0だけ`line_number_positive: not-satisfied`、Quantity/Uniquenessはsatisfied、偽Expected／偽Fixture／旧Pinの3負例は拒否。**Productによる既知候補の実実行は成立**したが、Canonical Scenarioに新Caseを正式採用したわけではない。プログラム検査HEADと後から文書更新したPR最終HEAD／main CIを無条件に同一視しない。
+
+**次は未知のRule発見を先に宣言しない**：このRule候補はTEI Draft #3273で既知。T1-Bの必要条件は、(1)目的Functionと公開されたDesign ContextのみをAIへ渡す、(2)Reviewerが独立に選んだ隠れたRequired/Expected／MutantをParticipantから物理的に隔離する、(3)候補が本当に未知のRequiredを特定したかを独立採点する、(4)正負両例・過剰拒否・Source再Read/Disclosure・人手修正・同Attemptを測る。既存Contextは`partial`／`testExecutionAdmission=exploration-only`／`qualifiedTestGeneration=false`のため、**T1-A成功だけでT1-BやQualified Test Generationへ昇格しない**。初回#168のH2/H3試験へT1-Bを混ぜず、次の別Task Groupとする。
+
+**TT-56：「整った応答の部分欠落」対照**：[TEI #3324](https://github.com/hat47x/tei-platform/pull/3324)は`inspect-validation`追加、[#3326](https://github.com/hat47x/tei-platform/pull/3326)は`source-index`のsubjectモードに加えて**indexモード**を追加する別案。両者は同じWorld/Source Index fingerprint・正常JSONでも必要Rule/Relationだけが抜ける誤成功を対象とし、現在は並行Draft。#3326初回[CI #42385502023](https://github.com/hat47x/tei-platform/actions/runs/42385502023)の`wrong-mode`はConsumerがsubjectモードを全件Indexと誤解した**試験側の失敗**で、ProductがRuleを消したという実証ではない。修正HEADのCIは照合時点で未合格／未確認。
+
+**Ownerへ引き渡す唯一の判定集合**：TEI #3262／#2514／#1180で対象Function/Validation RuleのRequired stable ID、Source Occurrence/Role、実Loader read、Source Index mode/Revision、World/Index digest、Consumerが実受領したReply/End marker、Disclosure Scopeを独立に固定。①Requiredだけ欠ける正常JSON、②subject/index mode誤指定、③索引版混在、④非Requiredだけ省略、の一因子差で、偽陰性と過剰拒否、追加CLI Call/bytesを比較する。**両Draftを別々の新正本・Runnerとして維持せず、既存`context_gate.py`の最小実装へ収束**させる判断はTEI Ownerに残す。連続した10 Replyは同一原子的Snapshotとは限らず、実Source/Grantの束縛を補足する。
+
+**Claim ceilingと順序**：実CLIはT1-A既知候補、Design Contextはpartial、TT-56は候補検証中。実外部H3 Toolの完全Body受領、T1-B blind discovery、Go C1/未カバーNFR、実Provider／実Owner受理はNOT RUN。TAI初回H2/H3はG0物理Read拒否／G1送出／G2 Tool完全性→新規4独立Sessionが優先、比較適格0/4を維持する。
