@@ -215,3 +215,14 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunner構文・偽Checkout起動前拒否が限定CI成功（Ubuntu/Windows **20 PASS・1 SKIP**）。実同一File受領はSKIPのままなので、本表のNC-02やSUI→SHO横断のPASSへ合算しない。
 
 **既知のProduct証拠**：[TEI #3337](https://github.com/hat47x/tei-platform/pull/3337)はread-only列挙・Go Reference限定PASS、[#3336](https://github.com/hat47x/tei-platform/pull/3336)は別Process BuildとArtifact digestの限定Observed。[SHO #4](https://github.com/hat47x/sho-composer/issues/4)のWriterと[TEI #3031](https://github.com/hat47x/tei-platform/pull/3031)の実Parser対応は未完成。VA-NC-01〜03の**同条件B0/B1/B2実比較／独立レビューVA-X／VA-E／Owner受理はNOT RUN**。
+
+
+## 11. 2026-11-08：価値の誤停止と、証拠の誤昇格を同じ母数で比較
+
+[VA-04 §10](VA-04-evidence-readiness-preflight.md)の限定正証人・不存在主張の閉包を、§9〜10で定義済みの**同一User Job・B0/B1/B2**に接続する。新しいテストCase正本・共通採点Engineは作らない。既存Expectedを固定し、各構成で「正しく継続」「正しく拒否」「誤って拒否」「誤って成功表示」「証拠不足で保留」を別件数と手動操作数・待ち時間で測る。保留を無根拠の成功/失敗へ繰り入れない。
+
+- **TEI**：[#3354 merged](https://github.com/hat47x/tei-platform/pull/3354)でTT-56の二Draftを一本化。11実CLI/32合成Consumer対照は限定Source資格であり、独立Required全件・未知RuleのAI盲検T1-BのPASSではない。[#3365 Draft](https://github.com/hat47x/tei-platform/pull/3365)の局所Step Receiptは残しつつ、未受領目録から全体未テスト確定を推論しない。空配列・別モード・必要外未読込の不当拒否も数える。
+- **Plugin/Workbench**：未選択の別環境用Capabilityを含んでいても必要Inspectorは実選択→実Provider Invokeで評価。物理FKが観測されたことだけでBusiness Relation/CRUD生成を業務受理せず、逆にFKが無いだけで手動Relation定義の正当性を否定しない（TEI #3270、Draft #3371/#3372）。
+- **SHO/TAI/EKI**：未解釈Markdownの安全な保存、実同一File受領未達の明示、空対象集合でもHandoff確認が必要な区別（TEI #3353）を各Productの独立試験に委譲。SHO WriterやSUI→SHO実H1はTAI H2/H3比較の先行必須にしない。
+
+**更新時の境界**：§9に記した#3324/#3326並行Draftは当時の記録。現在はclosed/unmerged、統合#3354がmerged。今回のVA-01自体での新しいB0/B1/B2利用者比較・未知T1-B・実Provider/Studio・SHO Writer/H1・適格H2/H3、Owner採否は**NOT RUN**。既存局所CIを総合価値PASSへ足し合わせない。
