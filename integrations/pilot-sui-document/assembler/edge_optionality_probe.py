@@ -85,21 +85,20 @@ def main():
     checks = {
         "cases": observed,
         "bothKindsPresent": observed["bothKinds"]["state"] == "present",
-        # A None kind is treated as an absent required field: the record is reported
-        # missing rather than projected with an empty kind.
-        # A JSON null is "unresolved" (present but not a usable value), while an
-        # absent key is "missing" and names the fields. Both are unprojectable.
-        "nullFromKindIsUnresolved": observed["nullFromKind"]["state"] == "unresolved",
-        "nullBothKindsIsUnresolved": observed["nullBothKinds"]["state"] == "unresolved",
-        "absentKindsReportedMissing": observed["absentBothKinds"]["state"] == "missing",
-        "absentKindsNameTheFields": "fromKind" in (observed["absentBothKinds"]["text"] or ""),
+        # Since the contract made the kinds optional (v4), a null kind is omitted
+        # just like an absent key, so the edge is still projected. Before v4 the
+        # same inputs were missing/unresolved and the edge was lost.
+        "nullFromKindOmitted": observed["nullFromKind"]["state"] == "present",
+        "nullBothKindsOmitted": observed["nullBothKinds"]["state"] == "present",
+        "absentKindsProjected": observed["absentBothKinds"]["state"] == "present",
+        "absentKindsOmittedFromText": "fromKind" not in (observed["absentBothKinds"]["text"] or ""),
     }
     passed = (
         checks["bothKindsPresent"]
-        and checks["nullFromKindIsUnresolved"]
-        and checks["nullBothKindsIsUnresolved"]
-        and checks["absentKindsReportedMissing"]
-        and checks["absentKindsNameTheFields"]
+        and checks["nullFromKindOmitted"]
+        and checks["nullBothKindsOmitted"]
+        and checks["absentKindsProjected"]
+        and checks["absentKindsOmittedFromText"]
     )
     receipt = {
         "schema": "tai.reference.tei-edge-optionality/v0",
@@ -112,7 +111,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. It distinguishes the two failure shapes: an absent key is `missing` (and names the fields), a JSON null is `unresolved`. Either way the edge is not projected, so an SUI edge without kinds is lost. It does not change the contract.",
+        "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. Since the contract made the kinds optional (v4), a null or absent kind is omitted and the edge is still projected; before v4 those inputs were reported missing or unresolved and the edge was lost.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))

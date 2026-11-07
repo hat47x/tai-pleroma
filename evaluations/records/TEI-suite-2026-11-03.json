@@ -12,7 +12,7 @@
     "artifacts": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.55,
+      "seconds": 1.01,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -21,7 +21,7 @@
     "digests": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.16,
+      "seconds": 0.67,
       "stdoutTail": [
         "{\"allMatch\": true, \"count\": 4}"
       ],
@@ -30,7 +30,7 @@
     "mmi_profile": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.5,
+      "seconds": 1.07,
       "stdoutTail": [
         "{\"accepted\": true, \"returncode\": 0}"
       ],
@@ -39,7 +39,7 @@
     "mmi_consumer": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.71,
+      "seconds": 0.75,
       "stdoutTail": [
         "{\"passed\": 5, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -48,7 +48,7 @@
     "mmi_inspect": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.11,
+      "seconds": 3.71,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"exitOk\": true, \"contract\": true, \"hasCandidates\": true, \"digestsPresent\": true, \"hasTableRange\": true}, \"candidates\": 3}"
       ],
@@ -57,7 +57,7 @@
     "mmi_inventory": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.42,
+      "seconds": 2.45,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"exitOk\": true, \"contract\": true, \"complete\": true, \"hasEntries\": true, \"anyDigest\": true, \"digestsWellFormed\": true}, \"entries\": 16}"
       ],
@@ -66,7 +66,7 @@
     "mmi_delivery": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 1.99,
+      "seconds": 2.79,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"schema\": true, \"fileScope\": true, \"emptyCompleteness\": true, \"zeroReferences\": true, \"exitIndeterminate\": true}, \"exit\": 1}"
       ],
@@ -75,7 +75,7 @@
     "sei_gate_variants": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 5.01,
+      "seconds": 7.02,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"allowWithoutPolicy\": true, \"denyUnresolved\": true, \"denyMissingRecommendation\": true, \"unresolvedReason\": true, \"recommendationReason\": true}}"
       ],
@@ -84,25 +84,25 @@
     "sei_doctor": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 6.39,
+      "seconds": 6.0,
       "stdoutTail": [
-        "{\"missing\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"warn\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\store does not exist yet; create the store with: sei init --data-root D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\store\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"init\": {\"exit\": 0}, \"afterInit\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"ok\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\store (writable)\"}, \"store\": {\"status\": \"ok\", \"detail\": \"sei-store-2026-11-07-35d50295: 0 records, 0 validated, 0 not verified\"}, \"lock\": {\"status\": \"ok\", \"detail\": \"no lock held\"}, \"gate-log\": {\"status\": \"ok\", \"detail\": \"will be created on the first gate check\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"withStaleLock\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"ok\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\store (writable)\"}, \"store\": {\"status\": \"ok\", \"detail\": \"sei-store-2026-11-07-35d50295: 0 records, 0 validated, 0 not verified\"}, \"lock\": {\"status\": \"warn\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\store\\\\store.lock is present. If no sei process is running, remove that file by hand and retry.\"}, \"gate-log\": {\"status\": \"ok\", \"detail\": \"will be created on the first gate check\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"afterUnlock\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"ok\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-tbh843td\\\\store (writable)\"}, \"store\": {\"status\": \"ok\", \"detail\": \"sei-store-2026-11-07-35d50295: 0 records, 0 validated, 0 not verified\"}, \"lock\": {\"status\": \"ok\", \"detail\": \"no lock held\"}, \"gate-log\": {\"status\": \"ok\", \"detail\": \"will be created on the first gate check\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"doctorLeftNoTempFiles\": true, \"initOutputPresent\": true}"
+        "{\"missing\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"warn\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\store does not exist yet; create the store with: sei init --data-root D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\store\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"init\": {\"exit\": 0}, \"afterInit\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"ok\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\store (writable)\"}, \"store\": {\"status\": \"ok\", \"detail\": \"sei-store-2026-11-07-f707087a: 0 records, 0 validated, 0 not verified\"}, \"lock\": {\"status\": \"ok\", \"detail\": \"no lock held\"}, \"gate-log\": {\"status\": \"ok\", \"detail\": \"will be created on the first gate check\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"withStaleLock\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"ok\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\store (writable)\"}, \"store\": {\"status\": \"ok\", \"detail\": \"sei-store-2026-11-07-f707087a: 0 records, 0 validated, 0 not verified\"}, \"lock\": {\"status\": \"warn\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\store\\\\store.lock is present. If no sei process is running, remove that file by hand and retry.\"}, \"gate-log\": {\"status\": \"ok\", \"detail\": \"will be created on the first gate check\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"afterUnlock\": {\"exit\": 0, \"lines\": {\"binary\": {\"status\": \"ok\", \"detail\": \"sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown\"}, \"contracts\": {\"status\": \"info\", \"detail\": \"sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1\"}, \"binary-path\": {\"status\": \"info\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\sei.exe\"}, \"binary-hash\": {\"status\": \"info\", \"detail\": \"sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)\"}, \"data-root\": {\"status\": \"ok\", \"detail\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-sei-doctor-ryajbr3i\\\\store (writable)\"}, \"store\": {\"status\": \"ok\", \"detail\": \"sei-store-2026-11-07-f707087a: 0 records, 0 validated, 0 not verified\"}, \"lock\": {\"status\": \"ok\", \"detail\": \"no lock held\"}, \"gate-log\": {\"status\": \"ok\", \"detail\": \"will be created on the first gate check\"}, \"mcp\": {\"status\": \"info\", \"detail\": \"to connect an AI tool, use this server definition in its MCP settings:\"}}}, \"doctorLeftNoTempFiles\": true, \"initOutputPresent\": true}"
       ],
       "stderrTail": []
     },
     "sei_resume": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 5.41,
+      "seconds": 6.78,
       "stdoutTail": [
-        "{\"addExit\": 0, \"resumeExit\": 0, \"bundleID\": \"sei-store-2026-11-07-4656120c\", \"snapshotDigest\": \"sha256:1897b192369800b2ef7d59c0a9807809531ef5fec83dfbaa36725cfc16342c4b\", \"recordCount\": 1, \"humanViewEscapesNewline\": true, \"humanViewEscapesBidi\": true, \"humanViewHasNoRawBidi\": true, \"humanViewKeepsFirstLine\": true, \"noStoreExit\": 1, \"noStoreMessage\": true, \"badDigestExit\": 1, \"badDigestMessage\": true, \"missingRecordExit\": 1, \"missingRecordMessage\": true, \"partialFlagsExit\": 1, \"goodRecordExit\": 0, \"goodRecordPointer\": \"/records/0\"}"
+        "{\"addExit\": 0, \"resumeExit\": 0, \"bundleID\": \"sei-store-2026-11-07-f5b6b4ff\", \"snapshotDigest\": \"sha256:d3b31ade46d0a12a692e902f0c9f2fa5bc0238c23c0c5e2be7808549208b6a72\", \"recordCount\": 1, \"humanViewEscapesNewline\": true, \"humanViewEscapesBidi\": true, \"humanViewHasNoRawBidi\": true, \"humanViewKeepsFirstLine\": true, \"noStoreExit\": 1, \"noStoreMessage\": true, \"badDigestExit\": 1, \"badDigestMessage\": true, \"missingRecordExit\": 1, \"missingRecordMessage\": true, \"partialFlagsExit\": 1, \"goodRecordExit\": 0, \"goodRecordPointer\": \"/records/0\"}"
       ],
       "stderrTail": []
     },
     "tei_nesting": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.44,
+      "seconds": 4.83,
       "stdoutTail": [
         "{\"variants\": {\"fieldWithFields\": {\"exit\": 0, \"generated\": true, \"stderrTail\": \"]\", \"emitsNestedObject\": true, \"sourceHasNestedFieldNames\": true}, \"arrayOfRecord\": {\"exit\": 0, \"generated\": true, \"stderrTail\": \"]\", \"emitsNestedObject\": true, \"sourceHasNestedFieldNames\": true}, \"newKind\": {\"exit\": 1, \"generated\": false, \"stderrTail\": \"exit status 1\", \"emitsNestedObject\": false, \"sourceHasNestedFieldNames\": false}, \"flatControl\": {\"exit\": 0, \"generated\": true, \"stderrTail\": \"]\", \"emitsNestedObject\": true, \"sourceHasNestedFieldNames\": true}}, \"unknownKindRefused\": true, \"unknownKindNotGenerated\": true, \"nestedFieldsSilentlyDropped\": true, \"flatControlAccepted\": true, \"flatControlGenerated\": true}"
       ],
@@ -111,7 +111,7 @@
     "sui_tei_multi": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.81,
+      "seconds": 11.28,
       "stdoutTail": [
         "{\"createStatus\": 200, \"firstStatus\": 200, \"secondStatus\": 200, \"firstHasDocumentSchema\": true, \"secondHasSeiSchema\": true, \"firstNotSei\": true, \"secondNotDocument\": true, \"unboundStatus\": 404}"
       ],
@@ -120,7 +120,7 @@
     "saas_adapters": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.43,
+      "seconds": 4.99,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"accessAllow\": true, \"accessPayloadAction\": true, \"accessPayloadAuth\": true, \"accessPayloadResource\": true, \"accessPayloadTenant\": true, \"accessBearer\": true, \"bindingPayload\": true, \"bindingPolicyRef\": true, \"capabilityPayload\": true, \"capabilityValues\": true}}"
       ],
@@ -129,7 +129,7 @@
     "saas_oauth": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 1.12,
+      "seconds": 1.31,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"grantType\": true, \"code\": true, \"redirectUri\": true, \"clientId\": true, \"clientSecret\": true, \"codeVerifier\": true, \"formContentType\": true, \"accessToken\": true, \"tokenType\": true, \"expiresIn\": true, \"idToken\": true, \"rejectsHttpError\": true, \"rejectsUnexpectedField\": true}}"
       ],
@@ -138,7 +138,7 @@
     "saas_login": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.72,
+      "seconds": 4.04,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"status\": true, \"authorizeEndpoint\": true, \"responseType\": true, \"clientId\": true, \"redirectUri\": true, \"scope\": true, \"statePresent\": true, \"pkceMethod\": true, \"pkceChallenge\": true, \"pendingCookie\": true, \"pendingHttpOnly\": true, \"pendingSecure\": true}}"
       ],
@@ -147,7 +147,7 @@
     "saas_callback": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.82,
+      "seconds": 5.1,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"missingPending\": true, \"brokerDenied\": true, \"stateMismatch\": true, \"missingCode\": true, \"brokerNotConfigured\": true, \"brokerRejects\": true, \"brokerUnavailable\": true}}"
       ],
@@ -156,7 +156,7 @@
     "saas_identity": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 6.36,
+      "seconds": 6.65,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"userResolved\": true, \"tenantResolved\": true, \"providerResolved\": true, \"subjectResolved\": true, \"callbackStatus\": true, \"sessionCookie\": true, \"sessionPersisted\": true, \"sessionPrincipal\": true, \"sessionTenant\": true}}"
       ],
@@ -165,7 +165,7 @@
     "sui_saas_tests": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 34.48,
+      "seconds": 35.84,
       "stdoutTail": [
         "{\"files\": [\"tests/test_saas_session_csrf.py\", \"tests/test_trusted_saas_runtime.py\", \"tests/test_saas_document_read_pdp_outage.py\", \"tests/test_tenant_session_precondition.py\"], \"passed\": 56, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -174,7 +174,7 @@
     "sui_docs_tests": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 230.08,
+      "seconds": 277.16,
       "stdoutTail": [
         "{\"files\": [\"tests/test_docs_roundtrip.py\", \"tests/test_docs_bounds.py\", \"tests/test_docs_tenant_isolation.py\", \"tests/test_docs_tenant_isolation_surfaces.py\", \"tests/test_docs_access_control_integration.py\", \"tests/test_docs_audit_integration.py\", \"tests/test_docs_a1_error_contract.py\"], \"passed\": 122, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -183,7 +183,7 @@
     "sui_auth_flow_tests": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 15.16,
+      "seconds": 49.78,
       "stdoutTail": [
         "{\"files\": [\"tests/test_auth_federation_level2.py\", \"tests/test_oauth_bff_login_flow.py\", \"tests/test_oauth_bff_callback_retry_safety.py\"], \"passed\": 41, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -192,7 +192,7 @@
     "sui_session_tests": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 122.73,
+      "seconds": 126.12,
       "stdoutTail": [
         "{\"files\": [\"tests/test_session_context_routes.py\", \"tests/test_active_tenant_session_keyed.py\", \"tests/test_saas_auth_session_store.py\", \"tests/test_saas_auth_sessions_migration.py\"], \"passed\": 65, \"failed\": 0, \"returncode\": 0}"
       ],
@@ -201,7 +201,7 @@
     "sei_cli": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.67,
+      "seconds": 5.33,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"init\": true, \"add\": true, \"resume\": true, \"export\": true, \"verify\": true, \"snapshotDigest\": true}}"
       ],
@@ -210,7 +210,7 @@
     "sei_gate": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 15.23,
+      "seconds": 6.29,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"allowVerdict\": true, \"allowExit\": true, \"allowBinding\": true, \"denyVerdict\": true, \"denyExit\": true, \"denyReason\": true, \"notVerifiedListed\": true}}"
       ],
@@ -219,7 +219,7 @@
     "sei_mcp": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 10.75,
+      "seconds": 5.97,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"initialize\": true, \"toolsListed\": true, \"resumeTool\": true, \"callOk\": true, \"callMentionsRecord\": true}, \"tools\": [\"resume\", \"add_recommendation\", \"check_decision\"]}"
       ],
@@ -228,7 +228,7 @@
     "sei_mcp_check": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 14.62,
+      "seconds": 5.2,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"allowVerdict\": true, \"denyVerdict\": true, \"allowHasBinding\": true, \"denyHasReasons\": true}}"
       ],
@@ -237,7 +237,7 @@
     "scenario": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.34,
+      "seconds": 0.18,
       "stdoutTail": [
         "{\"allFound\": true, \"count\": 4}"
       ],
@@ -246,16 +246,16 @@
     "pipeline": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 42.02,
+      "seconds": 33.78,
       "stdoutTail": [
-        "{\"result\": \"PASS\", \"steps\": {\"flow\": {\"returncode\": 0, \"casesPassed\": 21}, \"schema\": {\"returncode\": 0, \"valid\": true}, \"documentV1\": {\"returncode\": 0, \"valid\": true}, \"contractDigests\": {\"returncode\": 0, \"allMatch\": true}}}"
+        "{\"result\": \"PASS\", \"steps\": {\"flow\": {\"returncode\": 0, \"casesPassed\": 24}, \"schema\": {\"returncode\": 0, \"valid\": true}, \"documentV1\": {\"returncode\": 0, \"valid\": true}, \"contractDigests\": {\"returncode\": 0, \"allMatch\": true}}}"
       ],
       "stderrTail": []
     },
     "compose": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.65,
+      "seconds": 2.81,
       "stdoutTail": [
         "{\"valid\": true, \"cards\": 5, \"decisionRef\": \"decision-1\", \"taskExecutor\": \"dev.example.transform\", \"profileId\": \"profile-a\", \"cardIds\": [\"card-decision-1\", \"card-task-1\", \"card-profile-1\"]}"
       ],
@@ -264,16 +264,16 @@
     "tls": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.49,
+      "seconds": 10.66,
       "stdoutTail": [
-        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:54357\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
+        "{\"serverReady\": true, \"url\": \"https://127.0.0.1:60549\", \"certificate\": \"self-signed for localhost/127.0.0.1\", \"authenticatedStatus\": 200, \"anonymousStatus\": 401, \"tls\": true, \"database\": \"temporary SQLite\", \"runtimeProfile\": \"local-dev\"}"
       ],
       "stderrTail": []
     },
     "postgres": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 69.49,
+      "seconds": 33.64,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -282,7 +282,7 @@
     "postgres_migrate": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 77.71,
+      "seconds": 38.03,
       "stdoutTail": [
         "{\"serverReady\": true, \"createStatus\": 200, \"createBody\": \"{\\\"version\\\":1,\\\"id\\\":\\\"doc-1\\\",\\\"title\\\":\\\"Notes\\\",\\\"createdAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"updatedAt\\\":\\\"2026-11-03T00:00:00Z\\\",\\\"transform\\\":{\\\"panX\\\":0.0,\\\"panY\\\":0.0,\\\"zoom\\\":1.0},\\\"cards\\\":[{\\\"id\\\":\\\"card-1\\\",\\\"text\\\":\\\" hello \\\",\\\"x\\\":10.0,\\\"y\\\":20.5,\\\"critique\\\":null},{\\\"id\\\":\\\"card-2\\\",\\\"text\\\":\\\"world\\\",\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"claimType\\\":\\\"claim\\\"\", \"readStatus\": 200, \"anonymousStatus\": 401, \"documentId\": \"doc-1\", \"cards\": 5, \"roundTrip\": true, \"database\": \"embedded PostgreSQL 16.2\", \"documentRows\": 1, \"revisionRows\": 1, \"runtimeProfile\": \"local-dev\", \"migration\": \"alembic upgrade head\"}"
       ],
@@ -291,7 +291,7 @@
     "postgres_etag": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 39.46,
+      "seconds": 28.04,
       "stdoutTail": [
         "{\"createStatus\": 200, \"etagPresent\": true, \"staleStatus\": 409, \"matchingStatus\": 200, \"database\": \"embedded PostgreSQL 16.2\", \"runtimeProfile\": \"local-dev\"}"
       ],
@@ -303,7 +303,7 @@
     "postgres_concurrency": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 54.08,
+      "seconds": 28.55,
       "stdoutTail": [
         "{\"createStatus\": 200, \"statuses\": [409, 200], \"winners\": 1, \"conflicts\": 1, \"documentRows\": 1, \"headRows\": 1, \"database\": \"embedded PostgreSQL 16.2\"}"
       ],
@@ -312,25 +312,25 @@
     "postgres_contention": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 44.44,
+      "seconds": 39.18,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}]}"
       ],
       "stderrTail": []
     },
     "postgres_retry": {
       "returncode": 0,
-      "attempts": 2,
-      "seconds": 135.12,
+      "attempts": 1,
+      "seconds": 42.58,
       "stdoutTail": [
-        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}]}"
+        "{\"settled\": true, \"rounds\": [{\"round\": 1, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 2, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}, {\"round\": 3, \"statuses\": [409, 200, 409], \"retries\": [0, 0, 0]}, {\"round\": 4, \"statuses\": [409, 409, 200], \"retries\": [0, 0, 0]}, {\"round\": 5, \"statuses\": [200, 409, 409], \"retries\": [0, 0, 0]}]}"
       ],
       "stderrTail": []
     },
     "postgres_multidoc": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 27.8,
+      "seconds": 29.62,
       "stdoutTail": [
         "{\"created\": true, \"read\": true, \"rows\": 10, \"titlesMatch\": true}"
       ],
@@ -342,7 +342,7 @@
     "records": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 4.49,
+      "seconds": 4.42,
       "stdoutTail": [
         "{\"allValid\": true, \"count\": 4}"
       ],
@@ -351,7 +351,7 @@
     "gate": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 13.94,
+      "seconds": 1.07,
       "stdoutTail": [
         "{\"allowed\": false, \"blockers\": 7}"
       ],
@@ -360,7 +360,7 @@
     "sui_pg_tls": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 29.2,
+      "seconds": 26.23,
       "stdoutTail": [
         "{\"httpsReady\": true, \"createStatus\": 200, \"fetchStatus\": 200, \"roundTrip\": true, \"anonymousStatus\": 401}"
       ],
@@ -369,7 +369,7 @@
     "sui_ca_chain": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 8.98,
+      "seconds": 8.83,
       "stdoutTail": [
         "{\"chainTrusted\": true, \"createStatus\": 200, \"fetchStatus\": 200, \"roundTrip\": true, \"untrustedRefused\": true}"
       ],
@@ -378,7 +378,7 @@
     "sui_proxy": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.09,
+      "seconds": 7.95,
       "stdoutTail": [
         "{\"proxyReady\": true, \"createStatus\": 200, \"fetchStatus\": 200, \"roundTrip\": true, \"anonymousStatus\": 401}"
       ],
@@ -387,7 +387,7 @@
     "sui_multi_instance": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 38.23,
+      "seconds": 34.07,
       "stdoutTail": [
         "{\"instancesReady\": true, \"createStatus\": 200, \"crossReadStatus\": 200, \"crossUpdateStatus\": 200, \"staleUpdateStatus\": 409}"
       ],
@@ -396,7 +396,7 @@
     "sui_audit": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 11.4,
+      "seconds": 12.05,
       "stdoutTail": [
         "{\"createStatus\": 200, \"viewStatus\": 200, \"eventCount\": 1, \"eventHasDoc\": true, \"eventHasAction\": true, \"authorizationHeader\": true}"
       ],
@@ -405,7 +405,7 @@
     "sui_admin": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 12.47,
+      "seconds": 13.47,
       "stdoutTail": [
         "{\"anonymousStatus\": 401, \"businessKeyStatus\": 401, \"adminStatus\": 200, \"adminBodyShape\": true}"
       ],
@@ -414,7 +414,7 @@
     "sui_provision": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 11.97,
+      "seconds": 13.24,
       "stdoutTail": [
         "{\"createStatus\": 201, \"provisioned\": true, \"refs\": true, \"repeatSameUser\": true, \"anonymousStatus\": 401, \"auditEvents\": 3}"
       ],
@@ -423,7 +423,7 @@
     "sui_tei_reference": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 10.09,
+      "seconds": 13.71,
       "stdoutTail": [
         "{\"createStatus\": 200, \"projectionStatus\": 200, \"artifactEchoed\": true, \"unknownBindingStatus\": 404, \"unknownBindingCode\": \"epistemic_binding_not_found\"}"
       ],
@@ -432,7 +432,7 @@
     "sui_context": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 12.21,
+      "seconds": 13.42,
       "stdoutTail": [
         "{\"acceptedStatus\": 200, \"accepted\": true, \"hashPresent\": true, \"previewStatus\": 422, \"previewCode\": \"preview_required\", \"unknownKeyStatus\": 400, \"unknownKeyCode\": \"unknown_contract_key\", \"outOfRangeStatus\": 400}"
       ],
@@ -441,7 +441,7 @@
     "sui_context_bundle": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.81,
+      "seconds": 11.51,
       "stdoutTail": [
         "{\"firstStatus\": 200, \"bundleHash\": \"c2890a02b4bf0cf6167c2c6f1ea5cbc3973ef17bb08cb7fe509d99c6ba6bc8ca\", \"deterministic\": true, \"hasQueryHash\": true, \"noPreviewStatus\": 422, \"noPreviewCode\": \"preview_required\"}"
       ],
@@ -450,7 +450,7 @@
     "sui_ce4": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 10.61,
+      "seconds": 11.69,
       "stdoutTail": [
         "{\"dryStatus\": 200, \"dryBodyKeys\": [\"auditChain\", \"bundleHash\", \"equivalenceKey\", \"proposalLifecycle\", \"queryCanonicalHash\", \"schemaVersion\", \"sideEffect\"], \"hasBundleHash\": true, \"hasEquivalenceKey\": true, \"applyStatus\": 200, \"applyStatusOk\": true, \"badHashStatus\": 400, \"unknownKeyStatus\": 400}"
       ],
@@ -459,7 +459,7 @@
     "sui_registry": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 11.85,
+      "seconds": 10.82,
       "stdoutTail": [
         "{\"listStatus\": 200, \"listShape\": true, \"createStatus\": 201, \"anonymousStatus\": 401, \"unsupportedStatus\": 422}"
       ],
@@ -468,7 +468,7 @@
     "sui_agent_guard": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 8.56,
+      "seconds": 7.38,
       "stdoutTail": [
         "{\"passed\": true, \"checks\": {\"agentEnabled\": true, \"guardRaised\": true, \"auditExportedClearsGuard\": true}}"
       ],
@@ -477,7 +477,7 @@
     "sui_agent_admin": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 10.09,
+      "seconds": 10.04,
       "stdoutTail": [
         "{\"anonymousStatus\": 401, \"businessKeyStatus\": 503}"
       ],
@@ -486,7 +486,7 @@
     "sui_audit_pagination": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 13.95,
+      "seconds": 12.13,
       "stdoutTail": [
         "{\"firstStatus\": 200, \"page1Size\": 1, \"hasCursor\": true, \"secondStatus\": 200, \"page2Size\": 1, \"noOverlap\": true, \"invalidCursorStatus\": 200, \"invalidCursorRestarts\": true}"
       ],
@@ -495,7 +495,7 @@
     "sui_etag_stability": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.92,
+      "seconds": 7.68,
       "stdoutTail": [
         "{\"createStatus\": 200, \"firstEtagPresent\": true, \"etagStableAcrossReads\": true, \"conditionalGetStatus\": 200, \"conditionalGetBodyMatches\": true, \"saveStatus\": 200, \"etagChangedAfterSave\": true}"
       ],
@@ -507,7 +507,7 @@
     "sui_archive_lifecycle": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.71,
+      "seconds": 6.92,
       "stdoutTail": [
         "{\"createStatus\": 200, \"archiveStatus\": 204, \"readArchivedStatus\": 200, \"writeArchivedStatus\": 423, \"writeArchivedCode\": \"document_archived\", \"unarchiveStatus\": 204, \"writeAfterUnarchiveStatus\": 200}"
       ],
@@ -519,7 +519,7 @@
     "sui_merge_decision_log": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.7,
+      "seconds": 14.95,
       "stdoutTail": [
         "{\"createStatus\": 200, \"appendStatus\": 201, \"duplicateStatus\": 409, \"listStatus\": 200, \"listCount\": 1, \"listedDecisionId\": \"decision-1\", \"absentGroupStatus\": 200, \"absentGroupCount\": 0, \"restoreStatus\": 200, \"restoreCount\": 1, \"restoreAbsentStatus\": 200, \"restoreAbsentCount\": 0}"
       ],
@@ -531,7 +531,7 @@
     "sui_ce4_audit_order": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.92,
+      "seconds": 25.66,
       "stdoutTail": [
         "{\"createStatus\": 200, \"applyBeforeAnyEventStatus\": 409, \"applyBeforeAnyEventCode\": \"missing_event\", \"applyBeforeAnyEventMissing\": [\"bundle\", \"proposal\", \"query\"], \"queryStatus\": 200, \"bundleStatus\": 200, \"proposalStatus\": 200, \"applyAfterFullSetStatus\": 200, \"sourceBundleMismatchStatus\": 409, \"sourceBundleMismatchCode\": \"equivalence_mismatch\", \"operationCommandMismatchStatus\": 422, \"operationCommandMismatchCode\": \"operation_command_mismatch\"}"
       ],
@@ -543,7 +543,7 @@
     "sui_polygon_handoff": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.83,
+      "seconds": 30.16,
       "stdoutTail": [
         "{\"createStatus\": 200, \"okStatus\": 200, \"okDecision\": \"ok\", \"okRollback\": false, \"okVerificationKeyLength\": 64, \"paddingStatus\": 200, \"paddingDecision\": \"rollback_required\", \"paddingReasons\": [\"paddingViolationCount>0\"], \"reorderedStatus\": 200, \"reorderedReasons\": [\"tieBreakOrderChanged=true\"], \"explicitOrderStatus\": 200, \"explicitOrderDecision\": \"ok\", \"missingDocStatus\": 404, \"badHashStatus\": 422}"
       ],
@@ -555,7 +555,7 @@
     "sui_similar_candidates": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.34,
+      "seconds": 10.43,
       "stdoutTail": [
         "{\"createStatus\": 200, \"groupsStatus\": 200, \"totalGroupCount\": 2, \"groupCount\": 2, \"textGroupPresent\": true, \"textGroupReasons\": [\"normalized_text\", \"token_signature\"], \"tokenGroupPresent\": true, \"tokenGroupReasons\": [\"token_signature\"], \"mergedCardExcluded\": true, \"sourcedCardExcluded\": true, \"canonicalCardExcluded\": true, \"snapshotVersionLength\": 12, \"plainDocStatus\": 200, \"plainDocTotalGroups\": 0, \"missingDocStatus\": 404}"
       ],
@@ -567,7 +567,7 @@
     "sui_export_dedup": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 14.58,
+      "seconds": 13.98,
       "stdoutTail": [
         "{\"createStatus\": 200, \"firstExportStatus\": 200, \"repeatExportStatus\": 200, \"thirdExportStatus\": 200, \"noIdExportStatus\": 200, \"deliveredExportKinds\": [\"bundle\", \"bundle\", \"markdown\"], \"eventCounts\": {\"markdown\": 1, \"bundle\": 2}, \"deliveredCount\": 3, \"repeatSuppressed\": true, \"distinctKept\": true, \"noIdDelivered\": true}"
       ],
@@ -576,9 +576,9 @@
     "sui_native_action": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.95,
+      "seconds": 8.37,
       "stdoutTail": [
-        "{\"createStatus\": 200, \"disabledStatus\": 404, \"disabledCode\": \"action_denied\", \"missingHeaderStatus\": 403, \"badOriginStatus\": 403, \"badOriginCode\": \"request_origin_denied\", \"staleRevisionStatus\": 409, \"staleRevisionCode\": \"revision_conflict\", \"unknownCardStatus\": 400, \"unknownCardCode\": \"invalid_payload\", \"readOnlyStatus\": 403, \"commitStatus\": 200, \"commitBody\": {\"protocolVersion\": \"1\", \"revision\": \"0f29fdd718539fdecb12eaaf53d7f98b4d1a982faea54863f37d31a552dd232c\"}, \"movedPosition\": {\"x\": 100.0, \"y\": 50.0}, \"readAfterStatus\": 200, \"replayStatus\": 409, \"replayCode\": \"revision_conflict\", \"archiveStatus\": 204, \"archivedCommitStatus\": 423, \"archivedCommitCode\": \"action_denied\"}"
+        "{\"createStatus\": 200, \"disabledStatus\": 404, \"disabledCode\": \"action_denied\", \"missingHeaderStatus\": 403, \"badOriginStatus\": 403, \"badOriginCode\": \"request_origin_denied\", \"staleRevisionStatus\": 409, \"staleRevisionCode\": \"revision_conflict\", \"unknownCardStatus\": 400, \"unknownCardCode\": \"invalid_payload\", \"readOnlyStatus\": 403, \"commitStatus\": 200, \"commitBody\": {\"protocolVersion\": \"1\", \"revision\": \"689811669db6a1ea719bc409d7626143497f509c1565146676cc2dca3bde3b87\"}, \"movedPosition\": {\"x\": 100.0, \"y\": 50.0}, \"readAfterStatus\": 200, \"replayStatus\": 409, \"replayCode\": \"revision_conflict\", \"archiveStatus\": 204, \"archivedCommitStatus\": 423, \"archivedCommitCode\": \"action_denied\"}"
       ],
       "stderrTail": [
         "C:\\Users\\yhata\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
@@ -588,7 +588,7 @@
     "sui_list_pagination": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 10.39,
+      "seconds": 8.32,
       "stdoutTail": [
         "{\"createStatuses\": [200, 200, 200, 200], \"firstStatus\": 200, \"firstPageSize\": 2, \"firstHasCursor\": true, \"secondStatus\": 200, \"secondPageSize\": 2, \"noOverlap12\": true, \"allSeenOnce\": true, \"thirdHasCursor\": false, \"overLimitStatus\": 422, \"archiveStatus\": 204, \"archivedStillListed\": true, \"archivedState\": \"archived\", \"otherCreatorStatus\": 200, \"otherCreatorCount\": 0, \"payloadHasNoText\": true}"
       ],
@@ -600,7 +600,7 @@
     "sui_agent_read_path": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.49,
+      "seconds": 9.12,
       "stdoutTail": [
         "{\"createStatus\": 200, \"allowedStatus\": 200, \"allowedHasEtag\": false, \"cardCount\": 2, \"reviewedCardHasText\": true, \"unreviewedCardsWithheld\": true, \"viewKeys\": [\"cards\", \"createdAt\", \"edges\", \"id\", \"islands\", \"title\", \"transform\", \"updatedAt\", \"version\"], \"titleWithheld\": true, \"writeAttemptStatus\": 403, \"writeAttemptCode\": \"agent_write_not_enabled\", \"listStatus\": 200, \"listIds\": [\"doc-1\"], \"listTitlesWithheld\": true, \"listCreatorWithheld\": true, \"hashKeyWiredByProfile\": false, \"derivedStatus\": 403, \"derivedCode\": \"agent_route_not_enabled\", \"ungrantedStatus\": 404, \"ungrantedCode\": \"agent_document_not_granted\", \"mixedStatus\": 400, \"mixedCode\": \"agent_credential_conflict\", \"badTokenStatus\": 401, \"auditStatus\": 200, \"auditWrongChannelStatus\": 403}"
       ],
@@ -612,7 +612,7 @@
     "sui_agent_key_wiring": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.9,
+      "seconds": 11.14,
       "stdoutTail": [
         "{\"wiringGuards\": [\"settings.runtime_profile == 'saas-multitenant'\"], \"wiredState\": [\"agent_credential_hash_key\", \"agent_jwks_store\", \"agent_oauth_audience\", \"guest_auth_session_hash_key\", \"guest_auth_session_store\", \"guest_identity_verifier\", \"guest_redeem_state_hash_key\", \"guest_redeem_state_store\", \"saas_auth_session_hash_key\", \"saas_auth_session_store\", \"saas_auth_state_store\", \"saas_oauth_broker_config\"], \"wiringConditionalOnSaas\": true, \"localDevStateKeyPresent\": false, \"createStatus\": 200, \"agentRequestStatus\": 503, \"agentRequestCode\": \"agent_credential_unavailable\"}"
       ],
@@ -624,7 +624,7 @@
     "sui_saas_precondition": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 4.51,
+      "seconds": 4.9,
       "stdoutTail": [
         "{\"updateMissing\": [428, \"document_precondition_required\"], \"createMissing\": [428, \"document_precondition_required\"], \"bothGiven\": [400, \"document_precondition_conflict\"], \"wildcardUpdate\": [428, \"document_precondition_required\"], \"wildcardInList\": [428, \"document_precondition_required\"], \"createBadValue\": [400, \"document_precondition_invalid\"], \"createExisting\": [409, \"document_already_exists\"], \"updateAccepted\": [null, null], \"createAccepted\": [null, null]}"
       ],
@@ -633,7 +633,7 @@
     "sui_dedup_window": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.41,
+      "seconds": 2.24,
       "stdoutTail": [
         "{\"zeroWindowSentCount\": 3, \"zeroWindowReasons\": [null, null, null], \"firstReason\": null, \"firstSent\": true, \"immediateReason\": \"duplicate\", \"immediateSent\": false, \"windowSentCount\": 2, \"afterWindowReason\": null, \"afterWindowSent\": true, \"plainSentCount\": 2, \"plainReasons\": [null, null], \"failedReason\": \"send_failed\", \"failedAgainReason\": \"queued_pending\", \"failedSentCount\": 0}"
       ],
@@ -654,7 +654,7 @@
     "sui_probes": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 8.27,
+      "seconds": 7.45,
       "stdoutTail": [
         "{\"healthzStatus\": 200, \"healthzBody\": {\"status\": \"ok\"}, \"readyzStatus\": 503, \"readyzBody\": {\"status\": \"not_ready\", \"checks\": {\"database\": \"unreachable\"}}, \"readyzChecks\": [\"database\"], \"versionStatus\": 200, \"versionRevision\": \"probe-rev\", \"versionProfile\": \"local-dev\", \"versionNeedsNoKey\": true, \"withKeyStatus\": 200, \"wrongKeyDocsStatus\": 401, \"wrongKeyHealthStatus\": 200, \"adminWithoutKeyStatus\": 200, \"readyImpliesDatabaseOk\": false, \"alembicVersionTablePresent\": false, \"readyImpliesSchemaOk\": false}"
       ],
@@ -666,7 +666,7 @@
     "sui_auth_assurance": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.13,
+      "seconds": 3.0,
       "stdoutTail": [
         "{\"cases\": {\"noAmr\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"singleFactor\": {\"hasStepUp\": false, \"amrClass\": \"single_factor\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"twoTokens\": {\"hasStepUp\": true, \"amrClass\": \"multi_factor\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"mfaOnly\": {\"hasStepUp\": true, \"amrClass\": \"multi_factor\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"webauthnOnly\": {\"hasStepUp\": true, \"amrClass\": \"multi_factor\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"upperCase\": {\"hasStepUp\": true, \"amrClass\": \"multi_factor\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"aal3\": {\"hasStepUp\": false, \"amrClass\": \"single_factor\", \"assuranceLevel\": \"high\", \"authAgeBucket\": \"unknown\"}, \"aalUnknownAcrHigh\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"high\", \"authAgeBucket\": \"unknown\"}, \"aalLowWinsOverAcrHigh\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"low\", \"authAgeBucket\": \"unknown\"}, \"freshAuth\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"fresh\"}, \"staleAuth\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"stale\"}, \"exactly15min\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"fresh\"}, \"futureAuth\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}, \"zuluAuth\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"fresh\"}, \"naiveAuth\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"fresh\"}, \"garbageAuth\": {\"hasStepUp\": false, \"amrClass\": \"unknown\", \"assuranceLevel\": \"unknown\", \"authAgeBucket\": \"unknown\"}}}"
       ],
@@ -675,9 +675,9 @@
     "sui_headers": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 7.45,
+      "seconds": 7.48,
       "stdoutTail": [
-        "{\"createStatus\": 200, \"readHeaders\": {\"nosniff\": \"nosniff\", \"frameOptions\": \"DENY\", \"cacheControl\": null, \"vary\": null, \"requestId\": \"bfc7f7be921a48edbe5e38fd94dfb65b\"}, \"unauthorizedHeaders\": {\"nosniff\": \"nosniff\", \"frameOptions\": \"DENY\", \"cacheControl\": null, \"vary\": null, \"requestId\": \"3c7e2c6ee20f497784533c3e10f0e074\"}, \"unauthorizedBodyHasRequestId\": true, \"traceEchoed\": \"caller-supplied-id\", \"unsafeTraceReplaced\": \"3393c9d0c92c4269bc6e0498fa49a147\", \"agentHeaders\": {\"nosniff\": \"nosniff\", \"frameOptions\": \"DENY\", \"cacheControl\": \"private, no-store\", \"vary\": \"Sui-Sensemaking-Agent-Credential, Sui-Sensemaking-Agent-Bearer\", \"requestId\": \"4bae3aecaee14f928235da9d3aab2b58\"}, \"agentStatus\": 503}"
+        "{\"createStatus\": 200, \"readHeaders\": {\"nosniff\": \"nosniff\", \"frameOptions\": \"DENY\", \"cacheControl\": null, \"vary\": null, \"requestId\": \"1dc03d33656c4f6fb727b4ef0fce0d05\"}, \"unauthorizedHeaders\": {\"nosniff\": \"nosniff\", \"frameOptions\": \"DENY\", \"cacheControl\": null, \"vary\": null, \"requestId\": \"8f625e3d951b43ad835022a65a21fec6\"}, \"unauthorizedBodyHasRequestId\": true, \"traceEchoed\": \"caller-supplied-id\", \"unsafeTraceReplaced\": \"3e6e0ea0387340bda92e326b29b69739\", \"agentHeaders\": {\"nosniff\": \"nosniff\", \"frameOptions\": \"DENY\", \"cacheControl\": \"private, no-store\", \"vary\": \"Sui-Sensemaking-Agent-Credential, Sui-Sensemaking-Agent-Bearer\", \"requestId\": \"642538d8fb034682ac0385fa4bc29c2e\"}, \"agentStatus\": 503}"
       ],
       "stderrTail": [
         "C:\\Users\\yhata\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
@@ -687,7 +687,7 @@
     "sui_card_move": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.37,
+      "seconds": 2.13,
       "stdoutTail": [
         "{\"cardIds\": [\"card-1\", \"card-2\", \"card-decision-1\", \"card-task-1\", \"card-profile-1\"], \"noOp\": {\"outcome\": \"refused\", \"reason\": \"no-op move must not advance revision\"}, \"unknownCard\": {\"outcome\": \"refused\", \"reason\": \"card identity missing or ambiguous\"}, \"nonFiniteX\": {\"outcome\": \"refused\", \"reason\": \"invalid move input\"}, \"emptyCardId\": {\"outcome\": \"refused\", \"reason\": \"invalid move input\"}, \"successfulMove\": {\"outcome\": \"applied\", \"x\": 300.0, \"y\": 400.0, \"updatedAtChanged\": true}, \"duplicateCardId\": {\"outcome\": \"refused\", \"reason\": \"card identity missing or ambiguous\"}, \"duplicateIslandId\": {\"outcome\": \"refused\", \"reason\": \"ambiguous island identity\"}, \"containmentMove\": {\"outcome\": \"applied\", \"x\": 900.0, \"y\": 900.0, \"updatedAtChanged\": true}}"
       ],
@@ -696,7 +696,7 @@
     "sui_migrations": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 9.26,
+      "seconds": 7.35,
       "stdoutTail": [
         "{\"scriptHeads\": [\"20261012_0038\"], \"singleHead\": true, \"revisionCount\": 39, \"alembicVersionTableCreatedByCreateAll\": false, \"readyzStatus\": 503, \"readyzDatabase\": \"unreachable\", \"readyzSchema\": null, \"healthzStatus\": 200, \"startupAssertsSingleHead\": true, \"readyzQueriesAlembicVersion\": true, \"alembicVersionMentionedOnlyForReadiness\": true, \"startupReadsAlembicVersion\": false}"
       ],
@@ -708,7 +708,7 @@
     "sui_preflight": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 6.62,
+      "seconds": 4.73,
       "stdoutTail": [
         "{\"results\": {\"withoutAdapters:local-dev\": {\"outcome\": \"accepted\"}, \"withoutAdapters:evaluation\": {\"outcome\": \"accepted\"}, \"withoutAdapters:enterprise-production\": {\"outcome\": \"accepted\"}, \"withoutAdapters:saas-multitenant\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: PostgreSQL tenant DB guard, external access control, deny fail-safe mode, external document policy binding, external tenant capability resolution, SaaS OAuth broker authorize endpoint configured, SaaS auth-session hash key configured\"}, \"withoutAdapters:unknown-profile\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime profile is invalid\"}, \"withAdapters:local-dev\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime adapters cannot be enabled by a single-tenant profile\"}, \"withAdapters:saas-multitenant\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: PostgreSQL tenant DB guard, external access control, deny fail-safe mode, external document policy binding, external tenant capability resolution, SaaS OAuth broker authorize endpoint configured, SaaS auth-session hash key configured\"}, \"withBogusBundle:local-dev\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime adapter bundle is invalid\"}, \"initializeTwice\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime adapters are already initialized\"}, \"afterRelease\": {\"outcome\": \"accepted\"}}, \"initializeReturnedBundle\": false}"
       ],
@@ -717,7 +717,7 @@
     "sui_policy_requirements": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 4.2,
+      "seconds": 2.77,
       "stdoutTail": [
         "{\"cases\": {\"allRequirementsMet\": {\"outcome\": \"accepted\"}, \"databaseBackend\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: PostgreSQL tenant DB guard\"}, \"allowJitProvisioning\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: disabled JIT provisioning\"}, \"accessControlAdapter\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: external access control\"}, \"failSafeMode\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: deny fail-safe mode\"}, \"documentPolicyBinding\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: external document policy binding\"}, \"tenantCapability\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: external tenant capability resolution\"}, \"jwtAlgorithms\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: JWT algorithm allowlist set\"}, \"tenantClaimName\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: tenant claim name set\"}, \"oauthAuthorizeEndpoint\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: SaaS OAuth broker authorize endpoint configured\"}, \"authSessionHashKey\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: SaaS auth-session hash key configured\"}, \"allTenBroken\": {\"outcome\": \"refused\", \"reason\": \"trusted SaaS runtime policy is incomplete: PostgreSQL tenant DB guard, disabled JIT provisioning, external access control, deny fail-safe mode, external document policy binding, external tenant capability resolution, JWT algorithm allowlist set, tenant claim name set, SaaS OAuth broker authorize endpoint configured, SaaS auth-session hash key configured\"}}, \"mutationNames\": [\"databaseBackend\", \"allowJitProvisioning\", \"accessControlAdapter\", \"failSafeMode\", \"documentPolicyBinding\", \"tenantCapability\", \"jwtAlgorithms\", \"tenantClaimName\", \"oauthAuthorizeEndpoint\", \"authSessionHashKey\"]}"
       ],
@@ -726,7 +726,7 @@
     "sui_builders": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.46,
+      "seconds": 2.9,
       "stdoutTail": [
         "{\"accessControl\": {\"noop\": {\"built\": \"NoopAccessControlAdapter\"}, \"mock\": {\"built\": \"MockAccessControlAdapter\"}, \"unknown-value\": {\"built\": \"NoopAccessControlAdapter\"}, \"external_http\": {\"refused\": \"SUI_ACCESS_CONTROL_EXTERNAL_HTTP_ENDPOINT is required for the external HTTP access-control adapter\"}, \"http\": {\"refused\": \"SUI_ACCESS_CONTROL_EXTERNAL_HTTP_ENDPOINT is required for the external HTTP access-control adapter\"}, \"external\": {\"refused\": \"SUI_ACCESS_CONTROL_EXTERNAL_HTTP_ENDPOINT is required for the external HTTP access-control adapter\"}, \"mock_deny\": {\"built\": \"MockAccessControlAdapter\"}}, \"unknownAdapterFallsBackToNoop\": true, \"mockAdapterBuilt\": true, \"externalWithoutEndpointRefused\": true, \"tenantResolver\": \"UnavailableTenantCapabilityResolver\", \"tenantResolverUnavailableWithoutEndpoint\": true, \"documentBindingResolver\": \"UnavailableDocumentPolicyBindingResolver\", \"isExternalTypes\": {\"accessControl\": true, \"tenant\": true}, \"externalAdapterClassExists\": true, \"externalTenantClassExists\": true, \"mockClassExists\": true}"
       ],
@@ -735,7 +735,7 @@
     "sui_failsafe": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.36,
+      "seconds": 2.57,
       "stdoutTail": [
         "{\"cases\": {\"baselineAllow\": {\"allow\": true, \"readOnly\": false, \"reason\": null}, \"safeModeExport\": {\"allow\": false, \"readOnly\": false, \"reason\": \"safe_mode\"}, \"safeModeRead\": {\"allow\": true, \"readOnly\": false, \"reason\": null}, \"readOnlyWrite\": {\"allow\": false, \"readOnly\": true, \"reason\": \"read_only\"}, \"readOnlyRead\": {\"allow\": true, \"readOnly\": false, \"reason\": null}, \"restrictedNoPolicyDeny\": {\"allow\": false, \"readOnly\": false, \"reason\": \"policy_ref_missing\"}, \"restrictedNoPolicyReadOnly\": {\"allow\": false, \"readOnly\": true, \"reason\": \"policy_ref_missing\"}, \"restrictedWithPolicy\": {\"allow\": true, \"readOnly\": false, \"reason\": null}, \"publicNoPolicy\": {\"allow\": true, \"readOnly\": false, \"reason\": null}, \"tenantMismatch\": {\"allow\": false, \"readOnly\": false, \"reason\": \"tenant_mismatch\"}, \"adapterDeny\": {\"allow\": false, \"readOnly\": false, \"reason\": \"policy\"}, \"adapterUnreachableDeny\": {\"allow\": false, \"readOnly\": false, \"reason\": \"policy_ref_unreachable\"}, \"adapterUnreachableReadOnly\": {\"allow\": true, \"readOnly\": true, \"reason\": \"policy_ref_unreachable\"}, \"adapterInvalidPolicy\": {\"allow\": true, \"readOnly\": true, \"reason\": \"policy_ref_invalid\"}, \"adapterReturnsString\": {\"allow\": true, \"readOnly\": true, \"reason\": \"adapter_error\"}}}"
       ],
@@ -744,7 +744,7 @@
     "sui_parsers": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 3.48,
+      "seconds": 3.36,
       "stdoutTail": [
         "{\"csv\": {\"none\": [], \"empty\": [], \"plain\": [\"a\", \"b\"], \"spaces\": [\"a\", \"b\"], \"nullToken\": [\"a\", \"b\"], \"emptyItems\": [\"a\", \"b\"], \"upperNull\": [\"a\"]}, \"policyRef\": {\"none\": null, \"spaces\": \"p1\", \"empty\": null, \"nullLiteral\": null, \"upperNull\": null}, \"visibility\": {\"none\": null, \"public\": \"Public\", \"restricted\": \"Restricted\", \"spaces\": \"Public\", \"caseMismatch\": null, \"unknown\": null}, \"actorRefHash\": {\"none\": null, \"empty\": null, \"user\": \"c6c289e49e9c05b2\", \"length\": 16, \"stable\": true, \"differs\": true}}"
       ],
@@ -753,7 +753,7 @@
     "sui_document_coverage": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.71,
+      "seconds": 0.46,
       "stdoutTail": [
         "{\"DocumentV1\": {\"ratio\": 0.125, \"missing\": [\"affiliations\", \"cards\", \"contradictionSignalDecisions\", \"createdAt\", \"critiqueInputs\", \"deterministicTieBreak\", \"edges\", \"evidenceLinks\", \"islands\", \"mergeSuggestionDecisions\", \"narratives\", \"patchApplyLog\", \"relationSummaries\", \"reproposalDiffs\", \"reviewAttribution\", \"shelf\", \"structureDecisions\", \"transform\", \"updatedAt\", \"version\", \"voids\"]}, \"Card\": {\"ratio\": 0.5, \"missing\": [\"canonicalId\", \"critique\", \"critiqueHistory\", \"critiqueTags\", \"ka\", \"mergedIntoCardId\", \"meta\", \"repOf\"]}, \"Island\": {\"ratio\": 0.15, \"missing\": [\"collapsed\", \"critique\", \"critiqueHistory\", \"critiqueTags\", \"geometry\", \"imageReviewed\", \"imageUrl\", \"parentIslandId\", \"placardCardId\", \"representativeCue\", \"shape\", \"shapeStale\", \"summaryGrounding\", \"summaryHistory\", \"summaryReviewed\", \"summaryText\", \"titleReviewed\"]}, \"Edge\": {\"ratio\": 1.0, \"missing\": []}}"
       ],
@@ -762,43 +762,52 @@
     "sui_document_types": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.46,
+      "seconds": 0.37,
       "stdoutTail": [
-        "{\"primitiveMismatches\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}, \"optionalMismatches\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": [\"fromKind\", \"toKind\"]}, \"collectionMismatches\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}, \"unexpectedAnnotations\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}}"
+        "{\"primitiveMismatches\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}, \"optionalMismatches\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}, \"collectionMismatches\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}, \"unexpectedAnnotations\": {\"DocumentV1\": [], \"Card\": [], \"Island\": [], \"Edge\": []}}"
       ],
       "stderrTail": []
     },
     "sui_edge_optionality": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 11.79,
+      "seconds": 6.02,
       "stdoutTail": [
-        "{\"cases\": {\"bothKinds\": {\"exit\": 0, \"state\": \"present\", \"missing\": null, \"text\": \"{\\\"fromId\\\":\\\"card-1\\\",\\\"fromKind\\\":\\\"card\\\",\\\"id\\\":\\\"edge-1\\\",\\\"toId\\\":\\\"card-2\\\",\\\"toKind\\\":\\\"card\\\",\\\"type\\\":\\\"supports\\\"}\"}, \"nullFromKind\": {\"exit\": 0, \"state\": \"unresolved\", \"missing\": null, \"text\": null}, \"nullBothKinds\": {\"exit\": 0, \"state\": \"unresolved\", \"missing\": null, \"text\": null}, \"absentBothKinds\": {\"exit\": 0, \"state\": \"missing\", \"missing\": null, \"text\": \"[\\\"fromKind\\\",\\\"toKind\\\"]\"}}, \"bothKindsPresent\": true, \"nullFromKindIsUnresolved\": true, \"nullBothKindsIsUnresolved\": true, \"absentKindsReportedMissing\": true, \"absentKindsNameTheFields\": true}"
+        "{\"cases\": {\"bothKinds\": {\"exit\": 0, \"state\": \"present\", \"missing\": null, \"text\": \"{\\\"fromId\\\":\\\"card-1\\\",\\\"fromKind\\\":\\\"card\\\",\\\"id\\\":\\\"edge-1\\\",\\\"toId\\\":\\\"card-2\\\",\\\"toKind\\\":\\\"card\\\",\\\"type\\\":\\\"supports\\\"}\"}, \"nullFromKind\": {\"exit\": 0, \"state\": \"present\", \"missing\": null, \"text\": \"{\\\"fromId\\\":\\\"card-1\\\",\\\"id\\\":\\\"edge-2\\\",\\\"toId\\\":\\\"island-1\\\",\\\"toKind\\\":\\\"island\\\",\\\"type\\\":\\\"contains\\\"}\"}, \"nullBothKinds\": {\"exit\": 0, \"state\": \"present\", \"missing\": null, \"text\": \"{\\\"fromId\\\":\\\"card-1\\\",\\\"id\\\":\\\"edge-3\\\",\\\"toId\\\":\\\"card-2\\\",\\\"type\\\":\\\"supports\\\"}\"}, \"absentBothKinds\": {\"exit\": 0, \"state\": \"present\", \"missing\": null, \"text\": \"{\\\"fromId\\\":\\\"card-1\\\",\\\"id\\\":\\\"edge-4\\\",\\\"toId\\\":\\\"card-2\\\",\\\"type\\\":\\\"supports\\\"}\"}}, \"bothKindsPresent\": true, \"nullFromKindIsUnresolved\": false, \"nullBothKindsIsUnresolved\": false, \"absentKindsReportedMissing\": false, \"absentKindsNameTheFields\": false}"
       ],
       "stderrTail": []
     },
     "sui_assembler_kinds": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.39,
+      "seconds": 0.48,
       "stdoutTail": [
-        "{\"explicitKinds\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": \"card\", \"to\": \"card\"}]}, \"absentKindsResolvedFromEndpoint\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": null, \"to\": null}]}, \"absentKindsResolveCardToIsland\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": null, \"to\": null}]}, \"nullKindsResolvedFromEndpoint\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": null, \"to\": null}]}, \"unknownKindRefused\": {\"outcome\": \"refused\", \"reason\": \"edge edge-5 has unknown fromKind thing\"}, \"absentKindUnknownEndpointRefused\": {\"outcome\": \"refused\", \"reason\": \"edge edge-6 has no toKind and card-9 is no such endpoint\"}, \"assemblerRewritesKinds\": true, \"contractRequiresKinds\": {\"fromKind\": true, \"toKind\": true}}"
+        "{\"explicitKinds\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": \"card\", \"to\": \"card\"}]}, \"absentKindsResolvedFromEndpoint\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": null, \"to\": null}]}, \"absentKindsResolveCardToIsland\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": null, \"to\": null}]}, \"nullKindsResolvedFromEndpoint\": {\"outcome\": \"assembled\", \"edgeCount\": 1, \"kinds\": [{\"from\": null, \"to\": null}]}, \"unknownKindRefused\": {\"outcome\": \"refused\", \"reason\": \"edge edge-5 has unknown fromKind thing\"}, \"absentKindUnknownEndpointRefused\": {\"outcome\": \"refused\", \"reason\": \"edge edge-6 has no toKind and card-9 is no such endpoint\"}, \"assemblerRewritesKinds\": true, \"contractRequiresKinds\": {\"fromKind\": false, \"toKind\": false}}"
       ],
       "stderrTail": []
     },
     "sui_assembler_tests": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 0.69,
+      "seconds": 0.8,
       "stdoutTail": [
         "{\"exit\": 0, \"testsRun\": 13, \"summary\": \"OK\", \"failed\": false}"
+      ],
+      "stderrTail": []
+    },
+    "sui_edge_chain": {
+      "returncode": 0,
+      "attempts": 1,
+      "seconds": 5.98,
+      "stdoutTail": [
+        "{\"absentKindsProjectionState\": \"present\", \"absentKindsProjectionOmitsKinds\": true, \"cardToIslandComposes\": true, \"cardToIslandKeepsNoKinds\": true, \"unknownEndpointRefused\": true, \"unknownEndpointReason\": \"edge edge-6 has no toKind and card-9 is no such endpoint\", \"cardToCardComposes\": true}"
       ],
       "stderrTail": []
     },
     "sui_edge_optional_contract": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 5.37,
+      "seconds": 5.81,
       "stdoutTail": [
         "{\"cases\": {\"bothKinds\": {\"exit\": 0, \"state\": \"present\", \"omitsKinds\": false, \"kinds\": {\"fromKind\": \"card\", \"toKind\": \"card\"}}, \"absentKinds\": {\"exit\": 0, \"state\": \"present\", \"omitsKinds\": true, \"kinds\": {\"fromKind\": null, \"toKind\": null}}, \"nullKinds\": {\"exit\": 0, \"state\": \"present\", \"omitsKinds\": false, \"kinds\": {\"fromKind\": null, \"toKind\": \"island\"}}}, \"contractAccepted\": true, \"bothKindsProjected\": true, \"absentKindsProjectedWithoutThem\": true, \"partialKindsKeepThePresentOne\": true}"
       ],
@@ -816,43 +825,43 @@
     "eki_submit": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 2.72,
+      "seconds": 1.1,
       "stdoutTail": [
-        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_8725f67faaf2cb29800713495c16a12a\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
+        "{\"submitStatus\": 202, \"repeatStatus\": 202, \"taskId\": \"tsk_467b0f8fccaa81b6c2aa5a761a5db8be\", \"statusReadStatus\": 200, \"taskStatus\": \"queued\", \"idempotent\": true, \"taskExecuted\": false, \"workerResult\": false}"
       ],
       "stderrTail": []
     },
     "eki_projection": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 38.39,
+      "seconds": 28.9,
       "stdoutTail": [
-        "{\"passed\": true, \"rejected\": false, \"task\": \"tsk_aff3d7182517ceeb6df8cd5ba1fb51c9\"}"
+        "{\"passed\": true, \"rejected\": false, \"task\": \"tsk_f61ce8356ddb228bdf297fabb6394de6\"}"
       ],
       "stderrTail": []
     },
     "eki_manual": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 6.55,
+      "seconds": 5.4,
       "stdoutTail": [
-        "{\"passed\": true, \"task\": \"tsk_20e88a97e5559c7eb967793afb6a61bd\", \"attempts\": 1}"
+        "{\"passed\": true, \"task\": \"tsk_e0fd98f16ef2c231d6aaf57d6bef97bc\", \"attempts\": 1}"
       ],
       "stderrTail": []
     },
     "eki_revoke": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 8.01,
+      "seconds": 8.44,
       "stdoutTail": [
-        "{\"eventualState\": true, \"reregisterRefused\": true, \"agentRefused\": false, \"agentSideExercised\": false, \"workerId\": \"wrk_bc0c89bc490e72387753cc1015bc78be\"}"
+        "{\"eventualState\": true, \"reregisterRefused\": true, \"agentRefused\": false, \"agentSideExercised\": false, \"workerId\": \"wrk_f7ddd1b2e40dadf915a90423837db524\"}"
       ],
       "stderrTail": []
     },
     "eki_revoke_agent": {
       "returncode": 0,
       "attempts": 1,
-      "seconds": 10.49,
+      "seconds": 10.27,
       "stdoutTail": [
         "{\"passed\": true, \"task\": null, \"attempts\": 1}"
       ],

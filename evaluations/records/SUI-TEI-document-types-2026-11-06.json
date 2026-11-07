@@ -242,7 +242,7 @@
           "expected": "std.code",
           "declared": "std.code",
           "matches": true,
-          "optional": false,
+          "optional": true,
           "annotationOptional": true,
           "many": false,
           "annotationCollection": false,
@@ -254,7 +254,7 @@
           "expected": "std.code",
           "declared": "std.code",
           "matches": true,
-          "optional": false,
+          "optional": true,
           "annotationOptional": true,
           "many": false,
           "annotationCollection": false,
@@ -272,10 +272,7 @@
       "DocumentV1": [],
       "Card": [],
       "Island": [],
-      "Edge": [
-        "fromKind",
-        "toKind"
-      ]
+      "Edge": []
     },
     "collectionMismatches": {
       "DocumentV1": [],
@@ -296,10 +293,7 @@
       "DocumentV1": [],
       "Card": [],
       "Island": [],
-      "Edge": [
-        "fromKind",
-        "toKind"
-      ]
+      "Edge": []
     }
   },
   "scope": "For every name the contract covers, reads the SUI annotation, reduces it to its inner type, and compares the expected primitive, cardinality and optionality with the declared ones. It does not check value ranges or semantics. Edge.fromKind/toKind are Optional in SUI but required in the contract, which the probe records as a known gap rather than a defect."

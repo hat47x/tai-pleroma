@@ -125,7 +125,7 @@
       },
       "Edge": {
         "modelFieldCount": 6,
-        "contractVersion": "3",
+        "contractVersion": "4",
         "contractFields": [
           "id",
           "fromId",
