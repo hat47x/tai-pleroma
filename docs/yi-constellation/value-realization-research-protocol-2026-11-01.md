@@ -264,7 +264,7 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 
 ### 9.4 優先実行順と適格性ゲート
 
-**先行現状の訂正**：TAI #168のDSH h2-08では外部Harness→実TEI CLI Tool invocation→Result受領の限定縦切りが達成済み。しかしOS隔離・Skill/Holdout非露出が証明されず、H2/H3 4独立Sessionは**0/4適格**。これを「Tool実行自体がNOT RUN」と書き直さない。現行H2/H3実験にORXを新規Blockingとして混入しない。
+**先行現状の訂正（2026-11-07、後続実証を反映）**：[TEIの4 Session実証](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)により、DSH→実TEI CLI起動に加え、H3-A/BでSkill本文5,482byteと参照資料の**実Tool Load**も限定達成。旧h2-08をH2-Aに再利用、Task Path不一致、OS Read隔離とHoldout非露出が未成立、独立採点未実施のため**比較適格は0/4**。Tool実行・Skill実LoadをNOT RUNへ戻さず、同時にSession完了からSkill効果/業務Outcomeを主張しない。現行H2/H3のBlocking ExitにORXを混入しない。
 
 1. **P0-A（今使える製品証拠）**：既存#3155のresource-observedとReference not-applicable、#1174のPG Unknown/CAS/ABA、#3182のnamed output、EKI #465のSource gapを異なる資格のまま比較票へ記入。既にある実Go/PG試験を再実装しない。
 2. **P0-B（独立検証設計）**：ORX-02/03/04/05のSource・Operation・Provider・Observer・Consumerのうち、実観測可能なところをOwnerの既存Fixtureで特定。未観測列をUnknownへ残す。機密Rawや独立Expectedを外部Harnessへ公開しない。
@@ -274,3 +274,58 @@ YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / Provid
 **利用条件**：Oracleが称するOutcome Receiptの設計そのもの、FSCR Runbookの形式、署名方式、中央Policy/Agent RuntimeをYICの必須共通基盤にしない。TEI #2845は監査用Receiptの本番保存/署名・保持期間（未決）を所有し、ローカルdigest-onlyのReferenceを本番署名済み証拠とみなさない。業務Ownerの意味・成果受理は最後まで別列とする。
 
 **資格の結論**：Oracle公開資料の確認／既存YIC Source・実Go/PGの限定実証の評価まで。今回この追補の新しいORX-01〜08を同一YIC実Harness・実Provider・独立Consumerで実行した証拠は **NOT RUN**。
+
+
+---
+
+## 10. 2026-11-07 追加接合：実Skill配達・投影情報損失とOutcome判定資格の分離
+
+**状態**：現行他Productの実験記録・実コードテストを読んだ、価値研究用の限定比較と独立Expected。外部Pressureの一次資料索引は[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)、同Harnessの正式試験は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、Skillマトリクスは[#488](https://github.com/hat47x/tai-pleroma/issues/488)。本節でTAIの新しいExecution Host、横断Semantic Registry、共通Proof/Policy Engine、強制的なSkill Manifest、別Trial Gateを作らない。
+
+### 10.1 Tool・Skillが実際に届くことと、比較適格・実質的価値は違う
+
+[TEIの実4-Session Evidence](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)を、前の「H3 Tool Loadは未実施」という歴史的表記より優先する：
+
+- **実Tool Transport**：DSH 0.2.2-rc.1から固定TEI実BinaryへTool request→Resultが往復した（限定達成）。
+- **実Skill Delivery**：H3-A/BはProduct Skill本文**各5,482bytes**＋参照文書を実Toolから受領。同一のSkill本文byteである。H2-A/BはSkill Tool呼出しなし。Skill一覧が出たことと、実本文を読んだことは分離できた。
+- **Comparison Eligibility（比較採用資格）**：**0/4適格**。H2-Aは旧探索Session h2-08再利用、Taskの \`reference/workspace\` と隔離Rootの \`workspace/\` が不一致、H2が元Worktreeへread可能、同Hostの別Lane・独立Expectedへの非到達が実証できない。Tool初回の許可範囲と8,192byte等の部分返答も比較条件として未解決。4 Session IDの存在だけでは事前独立割付を意味しない。
+- **Quality / Value**：回答へ必要語が登場することは独立Expectedによる正答採点ではない。Skillの効果・誤操作抑止・費用節減・利用者成果のいずれも**未証明**。DSH Usage Tokenの数字は課金額や差分効果ではない。
+
+比較票は当面 \`Transport T / Skill body delivery L / Trial eligibility E / Independent answer quality Q / Incremental user value V\` の5列を区別する**論理評価軸**とする（新しいProductステータスenumではない）。特にL=observed と E=unqualified、Q=not scored、V=not demonstrated は同時に成立する。
+
+**次の実行**：既存TAI [Draft #270のRunbook](https://github.com/hat47x/tai-pleroma/pull/270)と[#488](https://github.com/hat47x/tai-pleroma/issues/488)が所有する。参加者に見せるTask/実Workspace論理path・固定binary・Source・Model・Tool Profile、独立ExpectedのReviewer-only非露出、実OS/Hostの別Lane Read拒否をまず確認。新しいTrial Groupを事前割付して4つの独立Sessionで比較する。**本計画は手順/採点の第二正本を作らない**。
+
+### 10.2 同じ公開Projectionから、同じ原世界を導けない
+
+[SUI Draft PR #3396](https://github.com/hat47x/sui-sensemaking/pull/3396)の実製品関数 \`buildContextProjection\` を使った固定HEAD \`a7893f9c...\` の3テストで、次を限定実証した（[7ジョブのCI確認](https://github.com/hat47x/sui-sensemaking/actions/runs/42345897113)）。
+
+- World A/Bで同一Cardの**原出典Source参照だけ**変えると、公開Projectionの**オブジェクト全体が一致**する。Card textやDigestだけを比較したわけではない。
+- 別のA/Bで**Island所属のCard集合とCanvas座標だけ**を変更しても、公開Projection全体が一致する。Island titleは残るが、\`cardIds\`や原座標から元関係を復元できない。
+- 正例として、公開Card本文・レビュー済みIsland題名を変更するとProjectionと対応Digestが変化する。常時同一の偽陽性ではない。
+
+したがって、\`Projection(A)=Projection(B)\` なのに評価したい出典・構造Claimが異なる場合、**そのProjectionだけを入力とするConsumerは両者を識別できない**。文書を再構成しても、AIを高性能化しても、失われたSource/Edge/Occurrenceを原本から読まずに復元・帰属する保証は得られない。これは用途相対の**情報不足**であり、現在の公開Projection自体の欠陥と決めつけない（機密保護のための意図的なLossもある）。
+
+[TEIの合成写像設計 Draft #3236](https://github.com/hat47x/tei-platform/pull/3236)では、\`D → V → W\` の部分写像・非単射・必要な否定依存・開示を区別。TEI側CX-01〜10は**設計／NOT RUN**。SUIの限定実試験をTEIの実Renderer/実Provider/SHO Writer/SEI Consumer横断E2Eへ読み替えない。
+
+**価値上の帰結**：公開された本文が正しい・形式がOKF適合というだけで、原典の引用、Graphの構造、島の所属、逆編集対象、業務Outcomeの説明が正しいとは判定しない。必要なら許可されたProduct原資料Readerへ用途限定で照会し、十分性・出典一致を再評価する。外部AIへ非公開Sourceを渡して穴埋めしない。取得不能ならunknown/unsupportedを明示する。OwnerはSUI [#3392](https://github.com/hat47x/sui-sensemaking/issues/3392)／[Draft #3396](https://github.com/hat47x/sui-sensemaking/pull/3396)、TEI #2497/#2507、SHO #19、SEI #767、TAI #232。
+
+### 10.3 ORX-09〜13：独立Expectedによる追加Pressure（新規の同一横断実験は未実施）
+
+| Case | 独立して操作する条件 | Expected と拒否する過大Claim | 既存Owner |
+| --- | --- | --- | --- |
+| **ORX-09（OX-07）** | H3 Toolから実Skill 5,482bytes受領、4Session completed。ただしH2旧Session流用・Holdout非隔離・採点未実施 | T/Lは限定observed、Eは0/4 qualified、Q/Vはunverified。Skill実LoadをNOT RUNへ戻さず、Token/Tool差から価値の因果効果を推論しない | TAI #168/#488、TEI #2509 |
+| **ORX-10（OX-01/11）** | \`--permission-mode read-only\`下で隔離Root外の元WorktreeをRead。内容はbyte一致だが論理pathと許可rootは異なる | 同一bytesでも許可されたSource Identity/現在Scope/Host Read隔離の成立は別。Output/Egress、OS read拒否とwrite拒否を別観測。許可外Readを継続可能なSkillの資格としない | TAI #168/#232、TEI #2509/#2515/#3181 |
+| **ORX-11（OX-08）** | SUIのSource \`example:A\`→\`example:C\` のみ変更、公開Projection全体が一致 | Consumerは原Source・脚注・Review出典を公開Projectionから捏造しない。許可された原Readerが無ければ帰属unknown、SHOの文書出典受理も不可 | SUI #3392/#3396、SHO #18/#19、SEI #767 |
+| **ORX-12（OX-01/08）** | SUI CardのIsland所属・Canvas位置だけ変更、同じ公開Projection。公開Card本文変更を正例対照にする | 公開表現が等しくても元Topologyは一意でなく、Markdown/OKF見出しから元Graph/Canvasへ自動逆Patchしない。可視本文の更新候補と明示元Subject Editを分離 | SUI #3391/#3396、TEI #2497/#2500/#3236 |
+| **ORX-13（OX-06）** | Product SkillはLoadされたが、ToolのCatalogが上限で途中切断、指定されなかったRoot/必要Ruleがある | 「回答に必要語があった」「部分Catalogで対象が見えない」「validate ok」を対象全件・Rule消費・不存在の証拠としない。Result Completeness、必要Source/negative dependencies、実対象scopeを元Product Readerと独立Expectedで検査 | TAI #168、TEI #2586/#2823、SEI #767 |
+
+**保持する区別**：Product自身のReadが成功したことと外部Harnessが安全に受領できること、Deliveryの成功と実Consumerでの意味適合、Stageの過去の実証と現在の同版利用資格。前回§9のEffect/Receipt/Bodyを重複して実装せず、追加5反例は**情報の取得・投影・比較試験の資格**だけを対象とする。
+
+### 10.4 実証への順序：現行価値・Product計画を侵食しない
+
+1. **P0、既存Skill初回試験**：TAI #168/#270に隔離・Task Path・独立Session/Expected・実Skill Load/独立採点を委譲。既にある4Sessionの実Load証拠を認めつつ、比較採用0/4を維持。ORX-09/10/13を新しいBlocking Exitとして**追加しない**。
+2. **P1、投影の用途別十分性**：SUIのSource/Island非単射の実試験を横断Pressureとして読み、TEI #3236のCX-01/04/08、SHO #19、SEI #767の既存Fixtureと対応付ける。原典Sourceと公開投影を無理に同一可視化しない。
+3. **P2、最小業務縦切り**：#2586のRead／Context、#2507のAction Offer、#1174の実Effect＋資源観測、EKIのResult Body、TAIのOutcomeを同じ意味・Attempt／Scopeで説明できるかを比較。実E2Eが無い間は局所PASSの合算をしない。
+4. **D4/D5の価値判断**：内容を失うが使いやすい投影と、出典・逆編集に必要な原典に戻れる投影を、用途・説明負荷・許可範囲・過剰拒否・本人の選択で比較する。すべてをLosslessにすることや、全出典を外部Harnessへ配布することを要求しない。
+
+**今回の達成と非達成**：TAI/TEIの実Tool＋H3 Skill本文LoadとSUIのProduction Projection非単射（Draft CI）の限定Evidenceを計画へ反映した。新しい4適格Session、独立Q/V採点、OS Read隔離、TEI CXの実Provider、SUI→SHO→SEI投影E2E、OKF実Attester、Owner意味/業務Outcome受理は **NOT RUN／NOT PROVEN**。
