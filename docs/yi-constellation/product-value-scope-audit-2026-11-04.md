@@ -413,3 +413,15 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 
 **投資判断**：DSHの実接続という一段階は確認できた。次は新Kernel/新Harness Bridge/第二Plugin Registryではなく、**実隔離と比較可能な少数試行**へ資源を集中する。実H3、正式4Session、外部送出ゼロ、Owner価値受理は未確認。
 
+### 20.4 初回Harness実証から追加された価値判断：Toolの到達と結果の完全性を分ける
+
+[TEI #3113のEvidenceはmainへ収録](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07)。[TAI #270 Runbook §24.3](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)はその保存Byteを再読し、外部Toolの呼出し成功と受領の不完全性を別に確認した。Catalog Resultの2ファイルが各8,192 bytesで切れてJSON全体を解析できない一方、inspectやvalidateはstdout先頭JSONとShell stderrを分ければ実値を照合できる。56 Tool Callと55 Resultの差は残り、Session completedは全Result受領を意味しない。
+
+**利用者価値の限定**：初回User Jobは明示済みsales.orderの属性・Source・Warningを調べることである。全Catalog・全Indexを完備する新Toolや全Product共通Adapterより、**必要な対象Subjectの限定inspect/validate stdoutが欠落なくModelへ届いたか**を先に判定する。全Catalogが不完全なら全Source確認済みとは言わない。必要な対象の実情報が不十分なら許可された追加ReadまたはUnknownで停止する。
+
+**増やさない要求**：DSH専用の新TEI Tool Proxy、共通Result Store、第二JSON Parser、MCP全面移行、新Harness/中央Validatorを初期価値試験の先行条件にしない。既存のTool request→実CLI stdout/stderr→Tool reply→Harness/Model受信→Participant回答を固定Task/Source/Permissionに束縛すればよい。出力断絶は[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)、実隔離は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、H2/H3比較資格は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)へ戻す。
+
+**独立Expected**：[VA-02 §13.1](../../evaluations/VA-02-cross-product-first-run-protocol.md)のDSH-C01〜05に、Catalog一部受領を全件確認と誤認する、stdout/stderr混在の返信を単一JSONとして扱う、Result欠落でも完了扱い、探索時だけのsource-indexを正式Whitelistへ事後追加、指定Model Aliasを実Weights同一と断言する負例を集約する。
+
+**優先順**：①許可外Source/Skill/Reviewer資料の実到達拒否、②開始前Profile/Tool whitelist/Task/Model/Expected固定、③必要なSubject限定Resultの完全受領、④比較適格H2の1 Session、⑤H3実Loaderと固定4 Sessionの独立採点。OKF Attester・新TEI Markdown Parserなどを最初のHard dependencyへ加えない。受領不足原因・外部Egress・Cost・正式比較・Owner価値受理はNOT RUN。
+
