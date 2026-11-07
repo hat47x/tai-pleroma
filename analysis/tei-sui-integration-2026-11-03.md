@@ -1210,3 +1210,21 @@ doctor は一時ファイルを残さない
 - doctorは読み取り専用で、**ロックファイルを自分で消さない**（人の判断に残す）
 - `warn`は終了コード0、`fail`のみ非0で終わる。ストア未作成は`warn`なので初期化前でも成功扱い
 - 破損したstoreでの挙動は未確認
+
+## SEI のresumeと表示の安全化（2026-11-06）
+
+改行と双方向制御文字を含むstatementを保存し、`sei resume`をJSONと人間向け表示で読んだ。[receipt](../evaluations/records/SEI-TEI-resume-2026-11-06.json)
+
+```text
+resume --json → bundle_id / snapshot_digest / record_count=1
+人間向け表示 → 改行は \n、双方向制御は \u202e として可視化（生の制御文字は出さない）
+store未作成 → exit 1「run `sei init` first」
+digest不一致 → exit 1「snapshot digest mismatch」
+未知のレコード → exit 1「not found in the expected snapshot」
+フラグ不足（--json/--record-id/--snapshot-digest） → exit 1
+正しい指定 → exit 0 / json_pointer=/records/0
+```
+
+- resumeはスナップショットのdigestに縛られ、digestが変わるとレコードを探さない（読み取り中の変化を検出できる）
+- 人間向け表示は保存値を1行に安全化する（改行・双方向制御・ゼロ幅を可視エスケープへ）
+- JSON出力は生の値を保つ（表示と機械可読の役割を分けている）

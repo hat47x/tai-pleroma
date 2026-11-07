@@ -188,6 +188,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-failsafe-2026-11-06.json",
     "evaluations/records/SUI-TEI-parsers-2026-11-06.json",
     "evaluations/records/SEI-TEI-doctor-2026-11-06.json",
+    "evaluations/records/SEI-TEI-resume-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -563,6 +564,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
                 errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
+        if "SEI-TEI-resume" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("humanViewHasNoRawBidi") is not True:
+                errors.append(f"SEI resume view leaked a raw bidi control: {relative}")
         if "SEI-TEI-doctor" in relative:
             observed = data.get("observed", {})
             lock = observed.get("withStaleLock", {}).get("lines", {}).get("lock", {})
