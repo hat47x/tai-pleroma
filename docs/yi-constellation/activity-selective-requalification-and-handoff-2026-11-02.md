@@ -416,6 +416,10 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 
 [SCN-001](../../scenarios/SCN-001-shared-space-guidance.md)で、O-01〜05の矛盾と未決H-01〜03を保ち、非公開Draft D-04を作る。中断後にO-06を受け取って同じ目的で再開する。[Runbook §23](first-real-skill-qualification-runbook-2026-11-02.md)のB0通常Markdown/手動、B1必要Product単独、B2必要時TAI連携を**同一Task/Source/権限/独立Expected**で比較。未実装機能はunsupportedで、B2だけ新権限・新Sourceを使わせない。
 
+<!-- tai-activity-minimal-userjob-dcq-bom-20261107 -->
+**P2への必要十分な準備**：[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)のDesign Context Queryはまだ設計段階であり、最初は既存のTEI read-only CLIでSCN-001の**目的に必要なSource／Function／未決だけ**を対象限定して照合し、未Loaded・未解析・部分受領をunknownのまま示す。将来の[Verified Composition BOM #3267](https://github.com/hat47x/tei-platform/issues/3267)も、実Testが通った**exact Plugin tuple/Target/Scope**の証拠候補であって現在Grant/Owner業務意味を与えない。B1が既存Productだけで根拠・非公開Draft・再読取まで完結するなら、B2のTAI連携やBOM照会を必須にしない。[YIC Skill計画 §27.4](https://github.com/hat47x/tai-pleroma/blob/docs/yic-skill-crosslane-qualification-20261106/docs/yi-constellation/skill-crosslane-qualification-and-order-2026-11-06.md)に選択条件を置き、本節に新Query/Registry/Checkerを作らない。**初回H2/H3の固定TrialやOS隔離条件には混入させない**。横断実装・価値比較はNOT RUN。
+
+
 | 最小判定 | 実証したいこと | 対応する既存検証 |
 | --- | --- | --- |
 | **A 根拠と未決の回復** | O-02/O-03とO-05の探索限界、未採用H-01〜03、D-04の非公開・実保存後Readerを保持。OKF Concept一件をSEI受理済Decision一件にしない | SC-14〜17、SEI #820、SHO #20 |
@@ -445,7 +449,7 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 | **T：外部Harness Tool transport** | 同一実Sessionで実CLI argv/exit/結果とHarness受信を限定観測 | CLI実行の実在を否定し続けない。しかし起動回数を独立Task数に加算しない |
 | **E：比較適格なH2** | 未達。read-onlyでもDirectory外の固定Worktreeを実読取し、初回許可群外のsource-indexも実行。Skill/Expected/旧Logの非露出・ネットワーク送出は未確認 | 単なる作業Dir移動、Skillファイル未配置、read-only設定、Reviewerの自己申告だけで隔離/許可済みとしない |
 | **Q：独立Expectedに対する回答品質** | final-answer.mdは保存済みだが、Reviewerの独立採点は未実施。一部記述の実Source由来も未特定 | completed＝Task正答、warning全部保持、出所一致としない |
-| **V：Skill/TAIの追加価値** | H3の実Loader、4独立Session、B0/B1/B2のActivity試行は未実施 | DSHの探索Token使用量・9試行中の成功だけをSkill効果、実費用改善、Activity再開価値としない |
+| **V：Skill/TAIの追加価値** | H3-A/BでSkill本文と参照の実Tool Loadは限定Observed。ただし比較適格な4独立Sessionは0/4、独立採点・B0/B1/B2のActivity試行は未実施（詳細は§22／Runbook §24.5） | 技術的4 SessionやDSHの探索TokenをSkill因果効果、実費用改善、Activity再開価値としない |
 
 **次の最小修正点**：①参加者から原Worktree／Skill／Reviewer-only Expected／旧Session Logを実Hostで隔離し、他Tool・親Path・Network経由の到達を実際に拒否できることを確認、②Toolが初回許可コマンド（version／commands／model catalog／inspect／trace／validate）と対象公開Workspace以外を呼べないことを実Tool/Host側で担保。source-indexを必要とするなら後付けの自己正当化ではなく、両腕のTool Profile・Expectedを実行前に改訂した**別Group**を固定する、③同じSource/Task/Model/論理Path/Cost上限の新GroupでH2一Sessionを再試行。MALFORMED_RESPONSEとINVALID_CONFIGはAgent/Adapterの別原因として失敗を保持し、成功Groupへ選抜しない。
 
