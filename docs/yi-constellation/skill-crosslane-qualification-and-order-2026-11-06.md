@@ -297,7 +297,7 @@ Product Skill文面の修正Ownerは[TEI #2605](https://github.com/hat47x/tei-pl
 | Cutover | Source選択を新形式へ明示切替、参照再解決・Review/必要再受理・実Build/Consumer読取を別証拠化。部分結果、unparsed、Validate empty-okを誤成功にしない | TEI #1124/#2822、SHO #19 |
 | Contract | 対象範囲ごとに新規`*.tei`生成抑止・legacy参照例外・Lint/Docs/Skill更新を固定。全Repo移行完了を未観測で宣言しない | TEI #2621/#2605、TAI #74 |
 
-**OKF互換の注意**：[OKF v0.2公式仕様](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)では非予約`.md` ConceptにYAML frontmatterと非空`type`が必要だが、`tags`や未知拡張キーは任意。`*.tei.md`は名前のみではOKF適合しない。一方OKF非適合でもTEI Raw Draftの原文保全・候補提示そのものを拒否する理由にはならない。OKF `verified`はTEI意味Owner受理やHost Grantではない。`index.md`/`log.md`の予約名をTEI Sourceに読み替えない（SHO #18、TEI #2621）。
+**OKF互換の注意**：[OKF v0.2公式仕様](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md)では非予約`.md` ConceptにYAML frontmatterと非空`type`が必要だが、`tags`や未知拡張キーは任意。`*.tei.md`は名前のみではOKF適合しない。一方OKF非適合でもTEI Raw Draftの原文保全・候補提示そのものを拒否する理由にはならない。OKF `verified`はTEI意味Owner受理やHost Grantではない。`index.md`/`log.md`の予約名をTEI Sourceに読み替えない（SHO #18、TEI #2621）。
 
 ### 17.3 Skillの受入に還元する範囲
 
@@ -753,7 +753,9 @@ YICでは§23.1〜23.4の条件付き書込み・中断/再開に、**Serviceが
 
 ### 24.1 原典の採用範囲とOwner
 
-[OKF v0.2 §10](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)は `type: Attested Computation` のConceptに正規計算、`runtime`、型付き `parameters`、`executor.resource/receipt`、決定的（no-LLM）`attester.resource` を持たせる。ただし**OKFは計算を実行しない**。§12はReceipt/Verdictのwire protocol、Attester ABI、sandbox、cacheを未規定とする。OKF §10.5の利用手順はinformativeであり、TEI/TAIに自動的な実行権限を与える規格ではない。
+**仕様の参照先**：OKF v0.2の規範Sourceは現在、独立した[GoogleCloudPlatform/open-knowledge-format](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md)。旧`knowledge-catalog/okf`は凍結された履歴Snapshotである。初回実験のReader/Validatorは公式`SPEC.md`の版と検査byte/blob/取得時点を固定し、以降の仕様改版で過去Runの結果を遡及変更しない。仕様への可搬な準拠（F0）とTEI/SEI等への利用Admission（F1/F2）は別々に検証する。
+
+[OKF v0.2 §10](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md)は `type: Attested Computation` のConceptに正規計算、`runtime`、型付き `parameters`、`executor.resource/receipt`、決定的（no-LLM）`attester.resource` を持たせる。ただし**OKFは計算を実行しない**。§12はReceipt/Verdictのwire protocol、Attester ABI、sandbox、cacheを未規定とする。OKF §10.5の利用手順はinformativeであり、TEI/TAIに自動的な実行権限を与える規格ではない。
 
 詳細と独立Expected（AC-01〜12）の**単一Ownerは[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)**。実Product Skill/CLIのOwnerは開いている[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)、独立Expected/Attesterの判別力は[TEI #2514](https://github.com/hat47x/tei-platform/issues/2514)。[TEI #2614](https://github.com/hat47x/tei-platform/issues/2614)はclosed/duplicate（履歴参照）なので再開・併記して二重Ownerにしない。SHOは[#18](https://github.com/hat47x/sho-composer/issues/18)でConcept閲覧・原文/引用・実Runへの許可済みリンクだけを扱う。再開・用途別現在資格は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)、実Harness利用は[#168](https://github.com/hat47x/tai-pleroma/issues/168)、Scope/開示は[#232](https://github.com/hat47x/tai-pleroma/issues/232)、Host/Provider Effectは各既存Ownerに残す。
 
@@ -803,6 +805,22 @@ YICはまずTaskの必要Claim/現在Audienceに合わせ、**SEI Product単独�
 後続の評価はSEI #820 **KO-01〜15**の既存独立Expectedに接続。とくにKO-01/02（Source ID/引用起点）、KO-03/04/05（Actor/状態/鮮度）、KO-10/11（文書粒度/隠れConcept）、KO-14/15（Store Import/Resumeの不明）を、TAI #488のYIC-ROUTEと#271のB0/B1/B2に**参照対応**させる。新Fixture/SEI Converter/Registry/共通Trust Score/自動Import/Attesterは作らない。作業負担、誤った受理・根拠喪失、過剰なProduct呼出し、正当に継続できるread-only作業を独立に測る。
 
 先行Blocking Exitは変更しない：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定TEI公開SourceによるH2外部Harness実Tool一Session→H3実Skill root/reference Load→固定四Session比較を先行。SEIのOKF Import/Export・SHO Writer・SK-03横断実Handoff、KO-01〜15の実Runner/Consumer、正式Owner受理と現在Disclosureは**NOT RUN**。文書形式適合、Claimの知識適格性、実Toolと現在の利用権限を混同しない。
+
+### 25.4 未整理Item・複数Canvas・OKF寛容読取を、Skillによる意味昇格から守る（TEI/SUI/SHOの既存検証へ委譲）
+
+[TEI Draft #3329](https://github.com/hat47x/tei-platform/pull/3329)のOKF段階導入§10〜11は、未整理Itemを保存するNative経路と、明示的なOKF Concept化を分ける。SUIのCanvas/Tree/Islandも情報の配置・認知上の表現であり、元Item/SourceのIdentityや出典取得とは別。[SUI #3396](https://github.com/hat47x/sui-sensemaking/issues/3396)は、元CardのSource cueまたはIsland所属・座標を変えても、現`buildContextProjection`の出力が同じになる**非単射の3局所反例**を実コード・CIで確認した。これらはYICの**適切なProduct Skillの選択と、変換による意味喪失を宣言すること**の要件であり、共通Item ABI／汎用Canvas Store／OKF Writerや独立Meaning AuthorityをYICへ導入する理由ではない。
+
+| User Job・Product能力の区別 | YICで許される処理・選択 | 昇格しないClaim／独立反例 |
+| --- | --- | --- |
+| **未整理Itemの保持・あとで読む** | Native Productの原文Raw/Referenceをread-onlyで取得し、未分類・未読・候補Typeをそのまま保つ。Card化／Task化／Concept化は後続の**明示操作** | 「Itemが存在する」→`Task`や`Event`等の確定分類、未対応の`Unclassified Item`を標準OKF typeと宣言、AIの分類候補→Owner受理 |
+| **複数Canvas・Tree/Islandで同じItemを提示** | 元Itemの同一性、表示Occurrence・所属/座標・Snapshot/Selectionを分離する。必要な場合にProduct側で同一元ItemへのReferenceと使用位置を追う | 同じItemの複数Occurrenceを複数独立Source・Card・Claim・履歴Eventと計数、同じLabel/内容＝同一Identity、表現上の親子関係＝元Data Relation |
+| **OKF形式F0のbest-effort Reader** | 公式OKF v0.2の規範Floor（非予約Conceptはparse可能なFrontmatter＋非空`type`）を適用し、未知type/拡張field/欠損Index/壊れたLink/Optional欄を**必要な用途では容認**。実際に読んだRaw byte・Parser Diagnostic・Unresolvedを保持 | `type`だけの適合→F1必要根拠充足／TEI Role Binder/Plugin履行済み、broken link→参照不存在、`human:`文字列→本人認証。必須Frontmatter破損はF0非適合でも通常Markdownとしてのraw閲覧まで禁止しない |
+| **用途別F1／実行・開示F2のAdmission** | F1＝Claim/Function/Questionの独立Required Source/Role/Relation/Source Revision・受領閉包と現在Consumer目的、F2＝Source/OwnerのMeaning・Host Grant/Disclosure・実Plugin/Provider/Operation Variant・実Effect/独立Expectedを**別既存Product**で判別。Unsupportedは局所停止 | 寛容な形式Reader PASS→`*.tei.md`実Loader／標準Trait強制／正規Attested Computation Run／SHO G2 Writer／SEI Decision／External Publisherの許可 |
+| **SUI可視情報から通常Markdown草稿を生成** | [SUI #3397](https://github.com/hat47x/sui-sensemaking/issues/3397)の実テストは、許可された可視Card本文を安全にエスケープした**通常Markdown**の生成・固定byteを限定検証。SHOのReaderが同Rawを読めた範囲だけSource/Parser資格を説明 | SUI公開Projectionだけで元`Card.meta.source`/島所属/Edge/非公開件数やOKF `sources`/`verified`を補完、Markdown本文に含まれた疑似脚注を真正Source扱い、2Repo別fixture CI PASSを実一ファイルProducer→Reader受領と認定 |
+
+**既存Fixture/資格票へ再利用する最小対照**：①分類なしRaw Itemの保存/再Readと、後から明示的に分類した版を分ける、②同一Itemを二Canvasに表示してもSource起点は一件、同名別IDでは二件、③Canvas座標のみの変更で本文/Sourceの資格を無意味に全失効させず、その位置を必要とするClaim/Presentationだけを再資格化、④同じ可視Projectionでも元Source cueとIsland所属が異なる二世界でSource脚注・逆Patchを自作しない、⑤未知OKF type/拡張field/リンク切れのF0容認と、F1 Required Source不足・F2 Grant不足を別判定、⑥`type: Attested Computation`と未信頼リンクからTool/SQL/外部Fetch/保存を自動起動しない。**正式な共通Case番号を増やさず**、[SUI #3392 SU-OKF](https://github.com/hat47x/sui-sensemaking/issues/3392)、[#3396](https://github.com/hat47x/sui-sensemaking/issues/3396)、[#3397](https://github.com/hat47x/sui-sensemaking/issues/3397)、[SHO #18](https://github.com/hat47x/sho-composer/issues/18)／[#21](https://github.com/hat47x/sho-composer/issues/21)、[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)のDCQ、[#2621](https://github.com/hat47x/tei-platform/issues/2621)、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X02/X06・[#271](https://github.com/hat47x/tai-pleroma/issues/271)へ相互参照する。
+
+**Ownerと実証限界**：SUI #3396は3件の元World→公開Projection非単射を実CIで確認、#3397は通常Markdownの局所Producer/固定Rawを実CIで確認。SHO #21の固定合成Readerは2OSで限定PASSだが、**真正SUI Producer→同一File→実SHO Reader**の対象はCI SKIP/NOT RUN。TEI #3329は**Docs-only・Draft**で、正式OKF v0.2 Reader/Exporter/Toolとしての受理は未実装。Item/Canvasの共通Identityモデル、F1/F2の横断E2E、Source/Grant現在性、Owner Meaning AcceptanceはNOT RUN。初回公開TEI SK-02のTask/Skill原byte・CLI許可と比較適格**0/4**を変更せず、必要なProduct間引継ぎが発生したときにだけTAI Activity Skillを選ぶ。未整理Itemの通常閲覧はOKF Plugin不在でも継続可能とする。
 
 ## 26. TEI標準データ構造・標準表現型・FunctionをSkill選択で取り違えない（既存Product Ownerへ委譲／後続検証・NOT RUN）
 
