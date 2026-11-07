@@ -705,7 +705,7 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **Ownerと優先度**：実DSH保存面はTEI #2515／TAI #232、試験入場は#168の[Runbook §24.14](first-real-skill-qualification-runbook-2026-11-02.md)、現在Audience/継続判断は#271。本Sectionは別のLog Store／Egress Checker／新外部Harnessを作らない。まずG0実Read拒否→G1モデル入力/HTTP/保存範囲→G2 Result完全性→初回4独立Session、という既存順を維持。実OS隔離・正式Skill比較4Slot・実Cloud Egress・本Activityの再開採点は未達。
 
-### 22.5 コマンドの「read-only」と副次書込み、実行後の記録失敗を分ける（SC-20実装修正候補）
+### 22.6 コマンドの「read-only」と副次書込み、実行後の記録失敗を分ける（SC-20実装修正候補）
 
 <!-- tai-sc20-postexec-recording-and-named-output-20261108 -->
 
