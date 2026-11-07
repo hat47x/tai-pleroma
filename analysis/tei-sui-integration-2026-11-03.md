@@ -1179,3 +1179,18 @@ PDP不正ポリシー / 戻り値が型違い → read_only方針で許可（rea
 - 段階は「tenant境界 → safe_mode → read_only → policy_ref → PDP」の順で、前段が決めるとPDPを呼ばない
 - `deny`方針では到達不能・不正ポリシー・型違いのいずれも拒否、`read_only`方針では読み取りだけ許可して書き込みを止める
 - **呼び出し側の`read_only`フラグは、読み取りの決定に伝播しない**（`readOnly=false`で返る）。制約は書き込み系の拒否としてのみ効く
+
+## ヘッダー解析と主体指紋（2026-11-06）
+
+`parse_csv_header`・`normalize_policy_ref`・`parse_visibility`・`compute_actor_ref_hash`を直接呼んだ。[receipt](../evaluations/records/SUI-TEI-parsers-2026-11-06.json)
+
+```text
+CSV: null/空 → 空 / " a , b " → [a, b] / "null"・"NULL"・空要素は落とす
+policy_ref: 前後空白は整形 / 空・"null"・"NULL" → None
+visibility: " Public " → Public / "public" → None（大文字小文字を区別）/ 未知 → None
+actorRefHash: None/空 → None / 16桁 / 同じ入力で安定 / 別入力で異なる
+```
+
+- `visibility`は**大文字小文字を区別**し、綺麗に整形したうえで既知の4値だけを受ける。未知はNoneになり、上位で可視性なしとして扱われる
+- `policy_ref`の`null`文字列は未指定へ正規化し、ヘッダーの文字列"null"が実在のポリシーIDに化けない
+- 主体指紋は16桁で、Noneと空文字はNoneを返す（匿名と衝突しない）
