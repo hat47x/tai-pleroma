@@ -490,3 +490,29 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 
 **Ownerと未実施**：SUI Adapter/PolicyはSUI Owner・TAI [#394](https://github.com/hat47x/tai-pleroma/issues/394)の製品実測、DSH開示/Host境界はTAI [#232](https://github.com/hat47x/tai-pleroma/issues/232)、TEI Command/ReceiptはTEI #2998/#3124/#3127、再開/目的帰属はTAI #271、Tool/Skill比較は#168/#488。局所テストを跨ぐQL横断試験、実Providerの資源現在値の独立Read、実PostgreSQLでのReceipt Lookup、実OS/Egress強制、Owner受理は**NOT RUN**。
 
+
+
+---
+
+<!-- tai-activity-tool-receipt-completeness-20261107 -->
+## 20. 2026-11-07：外部Toolの部分受領を活動根拠の全件取得と取り違えない（実測接続／横断試験NOT RUN）
+
+[TAI #168／SK-02 Runbook §24.3](first-real-skill-qualification-runbook-2026-11-02.md)、[TEI #2509／DSH実測 Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)の実保存結果に基づく**既存SC-16/17/20/21の引渡し条件の具体化**。新たなSC番号・Tool・共通Checker・Receipt Storeは作らない。
+
+**実観測と上限**：DSH h2-08の外部Harness→TEI実CLIはTool Call 56／Result 55／実TEI起動32で限定成立。ただしCatalogの二つの保存結果はそれぞれ8,192 byteの途中切断で、JSON全文Parse不能。先頭に見えるWorld/Source Index Fingerprintが同じでも、Catalog全件一致・Universeの完全取得を証明しない。Inspect・Validate・Source Indexなどは先頭のstdout JSONがParse可能でも、後続にPowerShell由来stderrがあるため、Tool reply全体が単一JSONではない。結果未対応のCallが1件あり、Session completedも全Tool結果受信の証拠にならない。切断原因が元CLIかHarness/Tool/保存処理かは未確定。
+
+### SCN-001再開で使う、実受領Claimの最小判断
+
+| 引渡し元の観測 | 保持する範囲 | 禁止する昇格／次に必要な独立確認 |
+| --- | --- | --- |
+| 実Tool Request＋実起動 | Session・実argv／Binary・Tool返信のうち観測できた部分 | Exit成功だけで全Call／全Required Sourceが揃ったとしない。Call ID→Result ID・受信byteの対応を確認（TEI #2509） |
+| 8KiB途中切断のCatalog | 断片に実在する対象限定のFP／Subject観測 | 全件・最終要素・0件・欠損なしを断定しない。必要なSubjectを許可済みInspect等で別Readし、残りをunknownとする（TAI #168 §24.3） |
+| JSON stdout＋Shell stderr | 実Parse可能なJSON bodyとstderrを別の証拠として保持 | Shell警告を業務意味の診断へ勝手に変換しない。stderrを隠して「Tool完全成功」ともしない |
+| 未受領Callと最終回答 | 実受領した部分観測・Attemptと回答の存在 | 未受領結果を「存在しない」「成功」と補完せず、独立Expectedによる回答品質／Warning／Unknownの採点を別に行う |
+| Activityの別時点で再利用 | 原文・Source Revision・Reader実受信・未決・非公開Draftの確認済み集合 | 旧Harness要約や同じDigestから新Purpose／Audience／実保存後Consumer／Owner受理を自動復権しない（SC-18〜22、SHO #20、SEI #820） |
+
+**次のBlockingは変えない**：外部Tool transportは既に実観測済み。比較適格H2の1 Sessionには、(1)既存Host／OS／Toolの実強制でSkill・Reviewer-only Expected・元Worktree等を実際に読取拒否、(2)固定Source／Binary／Task／Model／論理Path・初回許可Commandとargs、(3)実Tool Callから受信Resultまでの対応と切断／stdout／stderrの区別、(4)独立Expected隔離が必要。過去の探索9試行を事後に比較四試行へ選抜しない。OS拒否試験で未許可の生資料やcanaryを外部Modelへ送信しない。
+
+**価値／縮小の判定**：B0既存手段・B1単独Product・B2必要時TAIは、全件JSON取得そのものではなく、根拠と未決を保ち、必要なClaimだけ追加で安全にReadし、実際の再開負担を減らせたかで評価。読めなかった部分は部分集合／unknownとして残し、独立して許可されたread-only作業を過剰停止しない。
+
+**状態**：既存Product実証とRunbookの観測範囲をActivity計画へ反映したのみ。新Tool実行・OS/Network強制・H2/H3比較・SCN-001 B0/B1/B2・実Consumer再読取・Owner意味受理はNOT RUN。新Harness/Runner/Validatorは不要。
