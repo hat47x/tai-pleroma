@@ -249,6 +249,7 @@ def main():
         "sui_parsers": run_step("sui_parsers", ["integrations/pilot-sui-document/assembler/header_parsers_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-parsers-2026-11-06.json"]),
         "sui_document_coverage": run_step("sui_document_coverage", ["integrations/pilot-sui-document/assembler/document_coverage_check.py", "--sui-repo", args.sui_repo, "--workspace", str(ROOT / "integrations/pilot-sui-document"), "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json"]),
         "sui_document_types": run_step("sui_document_types", ["integrations/pilot-sui-document/assembler/document_type_coverage_check.py", "--sui-repo", args.sui_repo, "--workspace", str(ROOT / "integrations/pilot-sui-document"), "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-document-types-2026-11-06.json"]),
+        "sui_edge_optionality": run_step("sui_edge_optionality", ["integrations/pilot-sui-document/assembler/edge_optionality_probe.py", "--tei-repo", args.tei_repo, "--workspace", str(ROOT / "integrations/pilot-sui-document"), "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json"], timeout=600),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}

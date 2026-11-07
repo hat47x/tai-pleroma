@@ -120,4 +120,4 @@ Optionalの不一致: Edge.fromKind / Edge.toKind
 
 - SUIが`Literal[...]`で表す列挙は`std.code`、数値は`std.decimal`、真偽値は`std.boolean`へ対応する
 - SUIが`str`で持つ`Edge.type`と`Card.claimType`/`holdState`は、契約側で`std.code`へ狭めている。値の集合を契約で持たないため、狭めた分は契約の外で担保する必要がある
-- **SUIは`Edge.fromKind`/`toKind`を`Optional`として許すが、契約は必須にしている。** 端点種別が`None`のEdgeは投影で欠落扱いになり、契約上は失敗する。差分表の「未モデル」とは別種の、必須性の不一致である
+- **SUIは`Edge.fromKind`/`toKind`を`Optional`として許すが、契約は必須にしている。** 実測すると、キーが無い場合は`missing`（欠けた項目名を返す）、JSONの`null`は`unresolved`になり、いずれも投影されない（[receipt](../evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json)）。端点種別を持たないSUIのEdgeは、この契約では失われる。差分表の「未モデル」とは別種の、必須性の不一致である

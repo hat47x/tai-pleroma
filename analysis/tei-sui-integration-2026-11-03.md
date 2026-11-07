@@ -1230,3 +1230,4 @@ digest不一致 → exit 1「snapshot digest mismatch」
 - JSON出力は生の値を保つ（表示と機械可読の役割を分けている）
 
 
+
