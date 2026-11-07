@@ -621,6 +621,18 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 
 **Owner／順序**：SUIの元Edge schemaと合成はSUI、契約Optional試作・Stage 4の受入はTAI #535／既存製品側判断、TEIのGraph/Function BindingはTEI、現在のActivityへの提示／再資格化のみ本§21。新しいGraph Resolver/RendererをTAIに足さない。#535の88段の一括Suiteは局所実装と試作の証拠であり、実SUI API→TAI Consumer、曖昧Edge負例の完備、Owner意味受理はNOT RUN。初回H2/H3公開TEI固定Taskを変えず、B0/B1/B2の後続必要時に限定する。
 
+### 21.7 Optional端点契約の統合後に、端点IDの曖昧性を明示拒否する（2026-11-08、Product候補）
+
+<!-- tai-stage4-edge-identity-resolver-20261108 -->
+
+[TAI merged PR #535](https://github.com/hat47x/tai-pleroma/pull/535)でOptional端点Kindを扱う生成器の局所試作がmainへ統合された。ただし**パイロットの正式な必須端点契約をOptionalへ移行した事実ではない**。前節§21.6の「#535未マージ」は執筆時の履歴状態であり、現在はMergedである。
+
+後続[TAI open PR #536](https://github.com/hat47x/tai-pleroma/pull/536)は、合成層がKind省略時に常に`card`を仮定する処理を、**端点IDに対応するCard/Islandの実存在から解決する処理**へ変更する候補。公開合成の限定試験では、Kind省略のCard→CardおよびCard→Islandを正しく合成し、存在しないIDは`no such endpoint`、Card/Island双方に一致するIDは`ambiguous endpoint`で拒否する。合成後のEdgeは投影済みKindを保持し、未宣言Kindをcardへ勝手に確定しない。PR本文の単体13件／Suite89段PASSは**当該作業ブランチの報告**であり、PR #536は現在未マージ。正規Productリリース・実Consumer E2E・Owner意味受理を証明しない。
+
+**EP-01〜04の後続独立Expectedを更新**：正例（Kind明示／Kind省略かつ端点ID一意）と、負例（未知ID／同じIDがCardとIslandの双方に存在／Source変更で一意→曖昧／別Functionで同じ見かけのEdge）を同じFixtureと現在Source版で比較。正常なOptional指定を必要以上に`missing`として拒否する誤停止と、曖昧なEndpointを勝手に確定して編集Offerする誤成功を**別々に測る**。端点解決はIdentityの必要条件であり、関係方向・多重度・時間条件・業務Meaning・Actor Grant/対象更新の逆写像まで成立したわけではない。
+
+TAIは既存Stage 4の投影契約／合成試験とActivityの現在用途を参照し、SUI/TEIの元Graph/Function/Renderer/正本を置換しない。最初の固定TEI H2/H3比較へEdge試験を追加せず、後続B0/B1/B2で必要なEdge/編集候補だけ検証する。曖昧IDの実更新負例・SUI→TAI実Consumer・Owner採用はNOT RUN。
+
 ## 22. 2026-11-07：実H3 Skill Loadの到達と、Activityに再利用できる資格を分離する（実測／横断価値NOT RUN）
 
 [TEI mainのDSH四Session実測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)を、[初回Runbook §24.5](first-real-skill-qualification-runbook-2026-11-02.md)へ接続した。実DSHでH2-A→H3-A→H3-B→H2-Bの**四つのSessionがcompleted**。H3 2件はそれぞれProduct Skill Toolによる**Root本文5,482 byte（同SHA）**受信に加え、referenceのread 7,710 result bytes（同digest）の実Callを記録。従来「H3実Loader NOT RUN」とした歴史的記述は、**この限定Tool/Reference受領については更新**する。ただし「Product SkillのRequired全閉包・現在Tool実行資格・業務正答・TAIのActivity価値」の合格ではない。
@@ -693,6 +705,17 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **Ownerと優先度**：実DSH保存面はTEI #2515／TAI #232、試験入場は#168の[Runbook §24.14](first-real-skill-qualification-runbook-2026-11-02.md)、現在Audience/継続判断は#271。本Sectionは別のLog Store／Egress Checker／新外部Harnessを作らない。まずG0実Read拒否→G1モデル入力/HTTP/保存範囲→G2 Result完全性→初回4独立Session、という既存順を維持。実OS隔離・正式Skill比較4Slot・実Cloud Egress・本Activityの再開採点は未達。
 
+### 22.5 コマンドの「read-only」と副次書込み、実行後の記録失敗を分ける（SC-20実装修正候補）
+
+<!-- tai-sc20-postexec-recording-and-named-output-20261108 -->
+
+[TEI merged PR #3333](https://github.com/hat47x/tei-platform/pull/3333)は、`tei commands`の`view`に`writeFlags: [-operation-log, -lifecycle-state]`を追加し、各Flagを付けた実CLIで名前付きファイル／SQLite記録が生成され、Flagなしなら生成しないことを局所回帰テストで照合した。従来の`effect: read-only`という広告語彙は**正本Sourceの意味を変更しない**範囲の表現として残り、**ファイルシステムの全出力が無い**という意味ではない。TAIが後続のActivityでToolを選択する際は、Command名・`effect`のみで安全とせず、**実argv／有効Flag／書込み先／現在Host Grant／事後Artifact**を分ける。初回H2/H3の許可Tool群に`view`を追加する意味ではない。
+
+[TEI Draft PR #3328](https://github.com/hat47x/tei-platform/pull/3328)は、**Executor呼出し後にRecorder.RecordやLifecycle Stage記録が失敗しても、クリーンな事前拒否と誤表示し得る**問題へのProduct修正候補。 `COMMAND_RECORD_FAILED`／`COMMAND_LIFECYCLE_RECORD_FAILED`に`EffectUnknown=true`を付し、Stageが`dispatched`のままなら`MayReplay`の表示と実Dispatch拒否を一致させる意図。ExecutorがそのUnitOfWork/DB Transactionに参加した保証がないため、rollback呼出しやStage書込み失敗から`Effect=0`を推論できない。**PR #3328は未マージ・exact-head CI/実PostgreSQL/Process crash未確認**であり、修正完了とは記録しない。
+
+**既存SC-19/20、QL-05〜07に足す独立判別**：①実行前認可拒否でExecutor呼出し0、②Executor動作後Recorder失敗、③成功後Stage Observe失敗、④旧UnknownとMarkUnknown失敗、⑤`dispatched`残留時のMayReplay/実Dispatch、⑥明示出力Flag有無、を別々に観測する。Productが返した`rejected`や記録欠落は副作用0の証拠ではなく、`EffectUnknown`もCommit済みの証拠ではない。歴史Attempt/OperationID/Receipt/Resource Read/現在Grantの差を維持し、結果不明中の無条件再送を避ける一方、独立した許可済みReadや別Scopeの作業は継続する。
+
+**責務と優先**：TEI #1174/#2996/#3328はProduct Command/Recorder/Stageの正式修正と実DB検証、#3182/#3333はCLI discoveryとFS効果、TAI #271は用途変更・再開時の資格、#422/#532は実Outcome価値。TAIへ第二Transaction Coordinator/Receipt Store/中央認可器を作らない。SC-20/QL追加試験、実Provider Effect、Owner受理はNOT RUN。まず既存#168のG0/G1/G2と比較適格4Sessionを優先し、Effect系は別の限定Trialで扱う。
 
 ## 23. 2026-11-07：別Repoの固定Byte試験から、同一Attemptの実Consumer受領へ進める（限定実測を利用）
 
