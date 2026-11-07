@@ -450,3 +450,43 @@ SC-18は利用者が変えた目的・Scope・Audienceと歴史Evidenceの再利
 **次の最小修正点**：①参加者から原Worktree／Skill／Reviewer-only Expected／旧Session Logを実Hostで隔離し、他Tool・親Path・Network経由の到達を実際に拒否できることを確認、②Toolが初回許可コマンド（version／commands／model catalog／inspect／trace／validate）と対象公開Workspace以外を呼べないことを実Tool/Host側で担保。source-indexを必要とするなら後付けの自己正当化ではなく、両腕のTool Profile・Expectedを実行前に改訂した**別Group**を固定する、③同じSource/Task/Model/論理Path/Cost上限の新GroupでH2一Sessionを再試行。MALFORMED_RESPONSEとINVALID_CONFIGはAgent/Adapterの別原因として失敗を保持し、成功Groupへ選抜しない。
 
 **製品・横断の境界**：この限定DSH実験は「TAIが目的/根拠/未決を保持して活動再開に成功した」証拠ではない。SCN-001のB0/B1/B2最小価値試験は引き続き後続。実Tool transportは達成、比較適格H2、実H3、ITT/PP品質、Egress/OS強制拒否、実Provider Effect、Owner意味受理は未達・未確認。TAI #232は実機密境界、TEI #2509は原DSH実行Evidence、TAI #168は比較試験、#271は用途相対の再資格化を担当。新Runner/Host/中央Evidence Store/第二Verifierは増やさない。
+
+---
+
+<!-- tai-activity-enforcement-observation-qualification-20261107 -->
+## 19. 2026-11-07：設定された制限・実際の強制・Receipt観測を独立の資格として扱う（SC-20/21深化、後続試験NOT RUN）
+
+### 19.1 最新のProduct実測と区別する契約
+
+[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のSC-19/20は旧Attempt・Transport/Verdict/Effect、SC-21は現在Runtime Profile資格を担当する。これらを接続するうえで、**宣言されたポリシー、実行時の有効な制御、Providerへ送ったCommand、Commit、Receiptの再読、資源の現在値の再読**を同一の成功欄にしない。各Productの既存Controller/Observer/Receiptを使い、新しい全製品共通Policy Engine、Run Host、Receipt Store、Attesterを設けない。
+
+**一次実測（別Product/別Fixture、TAI横断E2Eではない）**：
+
+- [TAI merged #517](https://github.com/hat47x/tai-pleroma/pull/517)：SUIのアクセス制御adapter名を未知値にした場合、エラーでなく `NoopAccessControlAdapter` へ黙って退避する局所挙動を確認。external endpoint欠落は拒否。Tenant/Document resolverのUnavailable退避とSaaS事前検査での拒否は**別のGate**。設定名の存在から適切なPDPの実接続を推論できない。
+- [TAI merged #519](https://github.com/hat47x/tai-pleroma/pull/519)／[#520](https://github.com/hat47x/tai-pleroma/pull/520)：SUIはローカルのtenant→safe_mode→read_only→policy_ref→PDPの順に拒否判定を行う。実例 `AccessRequest(read_only=True, action="read")` は `allow=True, read_only=False` を返す。**読み取りで通った決定へ、呼出し元が指定したread_only制約が保持されたと仮定できない**。後続write/export/shareは現在のAction/Contextで再評価する。
+- [TEI merged #3124](https://github.com/hat47x/tei-platform/pull/3124)：`PersistenceState = not-applicable / not-observed / observed` をCommand応答へ追加。durable Commit後であってもObserver未構成・Lookup失敗では `not-observed`。参照Executionは `not-applicable` で、`persisted:false`を「Commit失敗」と読み替えない。
+- [TEI merged #3127](https://github.com/hat47x/tei-platform/pull/3127)：effectcommitで `Lookup=true` の際に同じRequest/Grant/OperationIDのReceiptを `Runner.Lookup` し、replayedを `observed` と判定。**同じDB境界のReceipt記録の独立読取であり、objects等の資源の現在値を読んだ証拠ではない**。実PostgreSQL結合試験はDSN未設定で未実施。
+- [TEI merged #3123](https://github.com/hat47x/tei-platform/pull/3123)：TEI FileSystem Root外の試行を実拒否し、拒否記録を追加。ただしJournalが壊れても拒否自体を優先して返すため、**拒否の実成立と監査記録の完全性は別**。これはTEI FileSystemの局所実装であり、外部DSHのOS読取範囲を狭めた証拠ではない。
+- [TEI #2509／Draft #3113](https://github.com/hat47x/tei-platform/pull/3113)：DSHはread-only設定のまま参加者用Directory外の固定TEI Sourceを読めた。実Tool transportは限定達成したが、参加者Skill/Reviewer Expectedの非露出・Egressゼロは未実証（[SK-02 Runbook §24](first-real-skill-qualification-runbook-2026-11-02.md)）。
+
+### 19.2 後続の最小独立Expected（QL-01〜08、TAI横断はNOT RUN）
+
+| Case | 一因子変更／観測 | 合格条件・禁止推論 |
+| --- | --- | --- |
+| **QL-01 無効adapter設定** | SUI Access Control adapterの綴り違いでNoopへ退避 | `configured`を`effective-enforced`とせず、必要な制御がないProfileは当該機密Read/Effectの資格を保留。無制御の許可を正当なGrantとみなさない |
+| **QL-02 read_only非伝播** | read_only付きのReadがallow=true／decision.read_only=false | 「読み取り成立」と「その後のWrite不可」を別判定。後続Actionは必ず現在Principal/Tenant/Document/Audience/Operationで実Hostに問い合わせる。read_only=falseを自動のWrite許可ともしない |
+| **QL-03 別Harnessのread-only** | DSH側Profileはread-onlyだが親Pathを実Read可 | ProductのAccessDecision／Tool案内／Promptのread-onlyはOS/Process隔離・送出制御の代替でない。禁止するPath/Tool/Networkへ実到達できたら比較Trialは不適格。公開Sourceの歴史的Tool成功は保持 |
+| **QL-04 Root外拒否とログ欠落** | TEI FileSystemはRoot外を拒否、監査Journal書込みは失敗 | 拒否結果と拒否Recordの保全を分けて報告。Record欠落を「アクセス試行なし」としない。TEIの局所拒否をDSH OS拒否へ横流ししない |
+| **QL-05 not-applicable／not-observed** | 参照Executionは永続Storeなし、またはdurable Commit後Observer未構成 | `not-applicable`は観測対象なし、`not-observed`はCommitと独立確認の間にギャップあり。後者ではCommit済み可能性を保持し、単なるフラグfalseから無条件再送しない |
+| **QL-06 Receipt Lookup observed** | 正しいOperationID/Request/GrantでReceiptを独立照会しreplayed | **Receipt存在の限定観測は成立**。同一DBのRecordだけで対象Resourceの現在値や他Consumerの反映・Owner業務意味受理を「observed」と呼ばない |
+| **QL-07 Response/Receiptの時点と用途** | 旧Purpose/旧TenantでのReceipt observed後、Audience/Grant/Source Revが変化 | 歴史的Receiptを保持。新Purposeへの引用適格、現在Disclosure、Action/再送資格を再照合。SourceがA→B→Aでも旧Grant自動復権なし |
+| **QL-08 正当な作業の継続** | SUIで特定Adapter/Profileの書込資格なし、許可されたTEI公開read-onlyは独立に成立 | 不適格なCapabilityだけ停止し、別Ownerの許可済みReadやDraft編集を一律停止させない。個々のProduct Gateを適用し、TAIに第二の横断許可器を新設しない |
+
+### 19.3 導入と価値評価の決め方
+
+**Trial列の読み方**：`requested constraint / effective enforcement evidence / actual command+audience / transport+body verdict / attempted effect / receipt observation / resource readback / current qualified claim` の差は既存#271/Runbookの証拠欄に対応付ける**試験項目**であり、新しい共通API/状態Enumではない。Productが未取得の列は`unknown/not-observed`のまま。単一のHTTP 200、PDP allow、`observed`、Receipt digestを複数の資格に展開しない。
+
+**最初の実H2試験は増やさない**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定TEI公開read-onlyは、外部Harness側の実OS/Process隔離と固定Tool/Sourceから比較適格なH2一件を成立させることが最優先。SUI/PDPやTEI永続化をH2へ組み込まない。QL-01〜08は後続の必要Productを使う限定Profile／SCN-001 Activity B0/B1/B2で実測し、**誤成功**（Noop許可、Receiptのみで完了、外部再送）と**過剰停止**（許可済みread-onlyまで止める）を別採点する。B1単独Productで十分ならTAI追加Runtime/Skillは不要。
+
+**Ownerと未実施**：SUI Adapter/PolicyはSUI Owner・TAI [#394](https://github.com/hat47x/tai-pleroma/issues/394)の製品実測、DSH開示/Host境界はTAI [#232](https://github.com/hat47x/tai-pleroma/issues/232)、TEI Command/ReceiptはTEI #2998/#3124/#3127、再開/目的帰属はTAI #271、Tool/Skill比較は#168/#488。局所テストを跨ぐQL横断試験、実Providerの資源現在値の独立Read、実PostgreSQLでのReceipt Lookup、実OS/Egress強制、Owner受理は**NOT RUN**。
+
