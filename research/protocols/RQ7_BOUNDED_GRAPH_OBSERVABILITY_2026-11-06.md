@@ -193,3 +193,12 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 併せて、TEIのEnum的な閉値域・Key/FD・Relation scope/Role・必須値・Pipeline閉包を**Intended / Source-static / Inferred / Observed / Accepted**のClaimへ分離。設計者のClosed-world宣言とSource上の列挙・DB観測の同一視を止める。`strong attribute`の一次定義は未確認であり、TEI Coreや正式判定を追加しない。検証結果のsupported/refuted/undeterminedと、Policyによるwithheldを同一の真理値Enumへ混合しない。
 
 研究では確認済み齟齬と情報不足と低権限非開示を別に数え、誤警告・過剰拒否・確認負担を評価する。独立Oracle・現在のHost/Provider Authority・Owner意味受理は既存TEI側の責務。研究対象の設計補完であって、実Constraint Runnerや人間/AIの改善実験の成果ではない。
+
+
+## 12. 2026-11-08：公開Goldの判別力校正と実行証拠の理解を分離
+
+[実行記録と再計算可能なBaseline校正](../results/RQ7_PUBLIC_GOLD_BASELINE_CALIBRATION_2026-11-08.md)で、公開v1（12問）のV2/V3は宣言Graphのみを構造的に解く校正器でも**10/12**を得ることが分かった。ただしこの校正器は被験者に見せない`question_selector`にアクセスできるため、LLM・Humanの競争相手ではなく**出題・採点設計の診断**。固定head `232bd7122997062d60e333a27669c684d4d58929`の[限定Actions #42384655226](https://github.com/hat47x/tai-pleroma/actions/runs/42384655226)で研究用Python **39/39 PASS**、Product受入・研究効果は未実証。
+
+**追加のGate**：以後の比較では(1)宣言構造の判定、(2)追加Evidenceで決定可能になった2問、(3)追加Evidence後も正しく未定とする2問を分層集計し、(2)+(3)のEvidence層を総正答率から独立に報告する。誤確定／過剰保留／反対向きの解釈を別々に測る。研究者がGoldを見た公開v1でのモデル回答を独立holdoutの成績としない。
+
+[TAI #443](https://github.com/hat47x/tai-pleroma/pull/443)の候補生成/選択/参照と、[SUI Runtime実Context限定照合 #490](https://github.com/hat47x/tai-pleroma/pull/490)のBundle選択/反証参照の区別にも、「存在する/選ばれた/実Consumerで使われた/許可された」を単一Stageに潰さない原理が通じる。しかし本PRはそれらの製品Contract/正本を再実装しない。TEI #2881のCaller-supplied direct-edge Traceを実Relation宣言scopeの証明として扱わない。現行研究機材は公開合成Graphであり、実Source/独立Holdoutと人間・AI認知効果は**NOT RUN**。
