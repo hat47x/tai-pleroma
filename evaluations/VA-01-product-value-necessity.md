@@ -164,3 +164,21 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 **優先度の扱い**：初回の正式H2/H3に新たなBlocking Conditionを追加しない。既知の隔離・送出・Tool Reply完全性（G0/G1/G2）を最優先し、並行してSEI #758の誤成功、SHO L0の単独保存、SUI T2、TEI #1127/1180とEKI #58の一往復を各Ownerの現行試験へ接続する。TEI Studio全画面、全Target、EKI高度Data Plane、SHO Paper-to-Program、SEI全Methodの完成は同一の前提にしない。
 
 **今回の証拠の資格**：Source-staticの要件・Issue照合と比較票の追加のみ。6対の独立Expected確定／別モデルVA-X／VA-E実行／B0/B1/B2実測／人の利用価値／各Owner受理は**NOT RUN**。
+
+
+## 8. 2026-11-07：既存実証に接続した最小差分の独立Expected
+
+[横断計画 §22](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)からの**実行可能な反証指定**。当表は現行Productの新しいAcceptance Gateを発行しない。「機能が存在する」「設計が製品要求に載った」「利用者価値が証明された」は別判定である。実行者はSource/Tool/HEAD/Scopeを固定し、Expectedを生成候補の出力に合わせて後修正しない。
+
+| Case（既存Owner） | 事前固定する二世界・独立Expected | 通過時に言えること／次の縮退判断 |
+| --- | --- | --- |
+| **VA-TEI-T1** [TEI #3273](https://github.com/hat47x/tei-platform/pull/3273)、[#1180](https://github.com/hat47x/tei-platform/issues/1180) | A＝行番号が有効な既存Pinned Rule Scenario、B＝同一Business Meaningの行番号0・新規負例。AIがBを既存Caseからの単なる再実行でなくGapから提案し、独立Expected・必要Source閉包・実CLI結果・不合格を見逃すMutantを別保存。生成未実施ならT0として残す | Bの実検出とMutant対照が通れば**対象RuleのT1一件**に限定。局所C0相当10.1%を製品全体C0とせずC1はunknown。専用Runner/重複Scenario Storeを要件にしない |
+| **VA-TEI-PLUGIN** [RQ-008](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)、[#3277](https://github.com/hat47x/tei-platform/pull/3277)、[#3262](https://github.com/hat47x/tei-platform/issues/3262) | A＝選択済みread-only Inspector ProviderがCLIの実Consumer経由で呼ばれ、選択LockとBuild/Invocationを同一Attemptで証明。B＝Contractは見つかるが未選択・未Link・未Load。このBで「利用済み」を拒否する。Queryの必要Source/Replyが切れていればcomplete=false | Plugin-first要求の**最初の一能力**と限定Source Closureを示す。要求自体は任意ではないが、全Surface・全Plugin即時移管をGateにしない。業務GrantはBuildから推定しない |
+| **VA-TEI-BOM** [#3267](https://github.com/hat47x/tei-platform/issues/3267)、[Draft #3269](https://github.com/hat47x/tei-platform/pull/3269) | A＝宣言された候補Pair12、B＝実Lock供給Pair9の差を欠落3として保持。BのReference synthetic PASSだけではqualified=false。実Consumer/Independent Expectedがある選択Pairのみ検証し、同じProviderとConsumerでも別版は未試験として残す | Verified BOMの**組合せ別資格**を最小採用。9/9を12/12へ昇格せず、組合せを利用しない単独読取の前に全Version Matrixを要求しない |
+| **VA-SUI-SHO-FILE** [SUI #3397](https://github.com/hat47x/sui-sensemaking/pull/3397)、[SHO #21](https://github.com/hat47x/sho-composer/pull/21)、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271) | A＝両Repoの別々の354-byte Fixture CI（固定Raw PASS）。B＝SUI実Producerが新規絶対Pathへ1回書き、SHO実CLIが**同じPath・同じBytes**を読む（現CIは1 SKIP）。両者のPath、SHA、mtime、Source/Scope、CLI結果を比較。非公開カードや失われたIsland/Edgeを出典付きとして復元しない | B実行後でも「read-only一File受領」のみ。SHO Writer/公開Scope/Source認可・意味受理は別。新Handoff Serviceを作る根拠にしない |
+| **VA-SHO-L0** [#16](https://github.com/hat47x/sho-composer/issues/16)、[#4](https://github.com/hat47x/sho-composer/issues/4) | A＝既存ReaderがLinkを読んだ既知Fixture。B＝未定義Reference/特殊File/編集競合を含み、未解析ScopeやOpen前拒否が不確かなとき「全検出・安全に処理済み」と報告しない。保存→再開はWriter実Readbackでのみ確認 | Reader限定CIを正式SHO L0全機能の資格にしない。Writerを新DB・外部論文取得・MMI移植に依存させない |
+| **VA-RQ-IDENTITY** [TEI #3223](https://github.com/hat47x/tei-platform/issues/3223) | A＝同じRQ-035表記でも、main WorkbenchとBOM Draftの意味・Source ref/Blobを別に提示。B＝IDだけでMergeする旧処理なら意味衝突を見逃す。実Ref単位の採用前照合で誤上書きを拒否 | 中央Requirement Registryなしの差分検査で十分か判定。旧Draft #3269 closed/unmergedをRequirement acceptedとして扱わない |
+
+**優先順位**：既存実証の欠落一辺は TEI T0→T1、SUI/SHO 別Fixture→同一File、SHO Reader→Writer readback、TEI Plugin要求→単一実Consumer の4系統。互いに独立に実施でき、TAI #168の現行H2/H3 G0/G1/G2を追加でブロックしない。SEI #758のverify偽成功とEKI #58の「分散しない」選択は§7の独立レーンで保持する。
+
+**判定状態**：Product側に既存の限定CI・Go Reference・Fixture実測はあるが、**本VA-01としての6ケース独立ExpectedのOwner固定、今回の新CLI/同一File/Writer/Target比較、別モデルVA-X/VA-E、人間のUser Job比較はNOT RUN**。これは実証の引用範囲を精密化する更新であり、検査を実施した報告ではない。
