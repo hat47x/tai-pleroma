@@ -215,3 +215,62 @@ Oracleの公開実操作例には、調査結果のActionカードからFull Aut
 測定軸は、目的達成、本人の主体性、誤副作用、適切な保留、過剰拒否、再開損失、追跡可能性、実測時間/費用、影響者別受益・負担。Oracle側の推論短縮率を独立検証なしに目標値へ流用しない。これらの比較票は技術システム共通Ledgerや新しい統一Policy Engineを必要としない。
 
 **2026-11-07時点の資格**：一次資料と既存設計の比較、具体的Expectedの設計のみ。新たなYIC実E2E、H2/H3正式比較、実Host強制、本番DB／SaaS Effect、Owner意味受理、実利用者調査は **NOT RUN**。
+
+
+---
+
+## 9. 2026-11-07 再照合：Outcome Claimを「Receiptの存在」から「限定された実観測」へ下ろす
+
+**状態**：外部事例の評価設計／既存Productの局所実証の再分類。新たなYIC統合実行・業務Owner受理は未実施。横断索引 [TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)、Value/Owner [#422](https://github.com/hat47x/tai-pleroma/issues/422)。既存§8のReceipt-firstを**証拠の強さを分ける検査方法**へ精緻化する。本節は各ProductのRuntimeや正式Outcome schemaを再定義しない。
+
+### 9.1 OracleのReceiptの強みと、YICが追加で証明すべき範囲
+
+[OracleのOutcome Receipt解説（2026-11-06）](https://blogs.oracle.com/fusioncoe/fusion-claw-03-outcome-receipt)はRequester/Owner/Approver、SOP version、Source、Workflow/Service、Correlation ID、Linked transactions、署名、Policy hold、read-only runを挙げる。[Hiring Workspace実操作例](https://blogs.oracle.com/fusioncoe/fusion-claw-lab-hiring-workspace)はFull Auto前の再Readと許容Action照合、変更後のreadback、次の追問にFull Auto modeが残ることを説明する。**これらはOracleの公開デモである**。Oracle Receiptの署名/Verified表示が外部Provider全件の現在状態やOwner Outcomeを独立に証明したという評価は行わない。
+
+YICは**保存した証拠の存在 / 改ざん検出 / 計算の適合 / ProviderのReceipt / Provider資源の現在観測 / Consumerへ到達した結果 / OwnerのOutcome受理**を独立に検査する。証拠の欠落・期限・部分取得・非開示を、単一successフラグへ畳まない。
+
+**実製品で進展した事実**：[TEI merged PR #3155](https://github.com/hat47x/tei-platform/pull/3155)後のPersistenceStateは not-applicable / not-observed / receipt-observed / resource-observed の4種。実参照実行は committed=true でも persisted=false / not-applicable / durability=none。persisted=true は resource-observed に限定される。実PostgreSQL別poolの資源値readback等は限定試験で観測済み（[TEI #2998の更新](https://github.com/hat47x/tei-platform/issues/2998#issuecomment-6701739581)）。**旧mainでの「Receiptしか無いのにpersisted=true」は現時点の未修正バグとして繰返さない。**
+
+他方、別Writerの同値ABA、実ReadのVersionとCommit時Version、複数行・明細集合の完全性、別Tenant/現Grant、実compositionでResourceReadを使えるか、Replica遅延、Consumer Disclosure/Owner受理は別検証。Resource bytes一致だけで「業務対象全件が確定した」とは扱わない。[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)、[#2564](https://github.com/hat47x/tei-platform/issues/2564)、[#2586](https://github.com/hat47x/tei-platform/issues/2586)の既存Ownerが受け持つ。
+
+### 9.2 Outcome Evidence の必要閉包（比較用の評価列。共通Schemaではない）
+
+以下を同じTask / Attemptで**本当に結べる場合だけ**各主張を採用可能とする。
+
+| 段階 | 比較する証拠 | 証拠が無ければ導かない主張 |
+| --- | --- | --- |
+| GoalとContext | 明示された目的／非目的、Scope、本人の変更・撤回、関係する第三者 | AIの要約から本人の現在の同意・業務決裁 |
+| MeaningとSource | 必要Semantic/Ruleが選択・実Loader Read・Parserで消費され、Accepted Meaning/Source revision/Provider bindingが対応 | validate okやCatalog件数から、実行した業務意味の充足 |
+| OfferとIntent | Purpose、対象集合/Occurrence、粒度、時点、現在のAction適合候補、Request payload | UIで選べることから、Targetで変更してよいこと |
+| Execution Authority | Trusted issuer、現在Host Grant/Scope、実Target、実Artifact、Commit境界の版条件 | 過去の承認、Full Auto表示、Skill説明からの実権限 |
+| Effectと回復 | Operation/Attempt identity、実Provider Receipt、現在のresource read、別Operation混入・ABA・Unknown、適用可能な補償 | Receipt存在やCommand committed=trueから実保存・exactly-once |
+| Delivery/Use | ResultClaim、実Body bytes/digest、Consumer受領、現在Disclosure、業務Owner review | ACK/JSON返却から納品物到達・経営成果 |
+| Negative Outcome | 必要なEffect surfaceの範囲、未実行の根拠、保留のPolicy、既に起きた部分Effect、停止後残存作用 | 「blocked」や「read-only」という表示から全作用0 |
+
+必要なSource全件と、何が使われていないかの**負の依存閉包**を確認できなければ「全業務ルールを満たした」「対象が存在しない」「他作用なし」を保証しない。SEI #767は問い相対の十分性、TEI #2506/#2586は取得Scope/Grainと実Read、TAI #271は現在資格を所有。非公開情報の存在そのものが漏れ得るため、外部Consumerには現在の許可済みProjectionのみ渡す（TAI #232、TEI #2516）。
+
+### 9.3 独立Expectedで判別する追加反例
+
+| ケース（既存OXへ付加） | 注入 | 独立Expected／過大Claimを拒否する条件 |
+| --- | --- | --- |
+| **ORX-01（OX-04）** | 参照実行は committed=true、Persistenceは not-applicable | UI・Harnessとも **保存済み／業務完了と表示しない**。merged #3155の現行契約を基準にし、古い欠陥を再起票しない |
+| **ORX-02（OX-04/10）** | PostgreSQLの対象値は同じだが、別Operationで Versionを変えてA→B→A。同じ資源値へ戻る | bytes一致単独で「同じCommit/Attemptのpost-imageを検証」とはしない。版・Operation・時点の識別不能性を報告 |
+| **ORX-03（OX-10）** | Header保存成功、明細D1は全2行、D2は3行中1行のみ取得。全体のReceiptには成功表示 | Header/一部Effectの観測を、複合業務の全件成立へ昇格させない。Grain/Scope/Completeness/必要Rule/Receiptを局所照合 |
+| **ORX-04（OX-04/07）** | EKIのResultClaimはACK、Bodyは未着／別InstanceのRunnerから空Body（[EKI #465](https://github.com/hat47x/eki-fabric/issues/465)の実Source由来圧力） | Claim ACK、Body受領/digest、AcceptedResult、Business Outcomeを別判定。同一AttemptのBodyだけ再送、同じ業務Effectを新Attemptで無条件再実行しない |
+| **ORX-05（OX-01/11）** | TEI commandsのread-only広告でも、-execute と記録用オプションで指定Pathにファイル出力（[TEI #3182](https://github.com/hat47x/tei-platform/issues/3182)） | 読取り専用の**正本データ効果**と、Workspace/記録ファイルへの効果を分ける。外部HarnessのOS隔離/出力先と開示を実確認。read-only名称だけから書込ゼロを主張しない |
+| **ORX-06（OX-06/08）** | 空のWorkspace/未ロードSourceでもvalidate ok、OKF index/verifiedは整合だが実Claimに必要な非出力Predicate・非開示情報が欠ける | 形式PASS、Tool invocation、意味上の十分性、開示資格は独立。未取得・partial・permission denied・not found・0件を使い分け、実Source/独立Expectedを確認 |
+| **ORX-07（OX-01/12）** | Full Auto実行後の曖昧な追問で前回モードが残存。目的/本人の意図は変化 | Mode表示を新しいGrant/明示Intentと同一視せず、正当な操作の過剰停止も測る |
+| **ORX-08（OX-05/07）** | 過去Receiptは改ざんなし、現在のGrantは失効。Skill/Runbookも改版 | 履歴Receiptの正当性と現在の実行可能性を分離し、必要依存のみ再資格化。Approval/Ownerの再受理を自動発行しない |
+
+### 9.4 優先実行順と適格性ゲート
+
+**先行現状の訂正**：TAI #168のDSH h2-08では外部Harness→実TEI CLI Tool invocation→Result受領の限定縦切りが達成済み。しかしOS隔離・Skill/Holdout非露出が証明されず、H2/H3 4独立Sessionは**0/4適格**。これを「Tool実行自体がNOT RUN」と書き直さない。現行H2/H3実験にORXを新規Blockingとして混入しない。
+
+1. **P0-A（今使える製品証拠）**：既存#3155のresource-observedとReference not-applicable、#1174のPG Unknown/CAS/ABA、#3182のnamed output、EKI #465のSource gapを異なる資格のまま比較票へ記入。既にある実Go/PG試験を再実装しない。
+2. **P0-B（独立検証設計）**：ORX-02/03/04/05のSource・Operation・Provider・Observer・Consumerのうち、実観測可能なところをOwnerの既存Fixtureで特定。未観測列をUnknownへ残す。機密Rawや独立Expectedを外部Harnessへ公開しない。
+3. **P1（業務縦切り）**：受注1件の意味からWeb/CUI/外部ConsumerのAction Offer→現在Grant→実Provider→Receipt/独立Read→業務Outcomeを **同一Attempt** で追う。実行前拒否と既に一部Effectが起きた停止は別。既存TEI #1119/#1174/#2598、EKI #407、TAI #271がOwner。
+4. **P2（価値と多対象）**：既存CASE-V01〜03で本人の選択・過剰通知、第三者の受益/負担、業務の一部だけが達成された結果を比較。形式・実装成熟度・人の受理を分離し、外部の独立利用者評価がない限り実価値改善と断定しない。
+
+**利用条件**：Oracleが称するOutcome Receiptの設計そのもの、FSCR Runbookの形式、署名方式、中央Policy/Agent RuntimeをYICの必須共通基盤にしない。TEI #2845は監査用Receiptの本番保存/署名・保持期間（未決）を所有し、ローカルdigest-onlyのReferenceを本番署名済み証拠とみなさない。業務Ownerの意味・成果受理は最後まで別列とする。
+
+**資格の結論**：Oracle公開資料の確認／既存YIC Source・実Go/PGの限定実証の評価まで。今回この追補の新しいORX-01〜08を同一YIC実Harness・実Provider・独立Consumerで実行した証拠は **NOT RUN**。
