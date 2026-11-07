@@ -190,11 +190,13 @@ B0手動／B1単独Product／B2 TAI条件付きHandoffの**利用者価値比較
 | 価値対照の独立Expected（提案） | B0既存方式／B1最小Product／B2追加TAIの評価 | 判別すべき反例 |
 | --- | --- | --- |
 | **VA-MIN-E1 正当な任意Edge** | 同一公開SUI Graph（明示種別、種別省略、片側null、複数有向辺）を表示/選択/関連参照し、*消えた正当Edge・不要な手動補完・誤った結線*を測る。B1で任意契約が足りる場合、TAI追加Resolverを価値として計上しない | 種別が未定だからEdgeが存在しないと消す／欠けた種別を勝手に復元／non-publicなEdgeのID・件数を開示する |
-| **VA-MIN-T1 不完全ContextでのAI Test提案** | 同一RuleとSource/Lockを用い、必要Contextが揃った場合のみ#3273の新行番号0負例の採否を記録。欠けた場合は**不足した実Reader/Rule/Sourceの診断精度と修復手数**を測る。T0.6の再実行だけでT1を成功扱いしない | `partial`なのに`qualifiedTestGeneration=true`／既存Scenarioの再命名を新規C1と誤計上／確証なしの「0件」を受理 |
+| **VA-MIN-T1 Context／新Testの資格** | [#3304](https://github.com/hat47x/tei-platform/pull/3304)で既知Ruleの行番号0を**実CLIで判別したT1-A**を基線とする。同じ公開Subjectに対し（a）Rule/Relationが正常JSONのまま欠落するTT-56、（b）Required外のSubjectだけ省略する正例を区別し、**必要情報不足の診断精度・誤拒否・修復手数**を測る。Required閉包後に未知Obligationを見つける盲検T1-Bを独立Expectedで採点する | 実CLI T1-AからAIの自律発見へ昇格／subjectモードのIndexで全件定義済みと誤判定／正常FPでもRequired Rule欠落を見逃す／非必須欠落まで全部拒否／C0相当10.1%をC1や全要件網羅と宣言 |
 | **VA-MIN-B1 候補BOMと適格BOM** | 同一Provider×Consumerの版・Target/Artifactを指定し、実Checker/独立Expectedが到達した組合せだけ薦める。候補を誤って除外した件数、検証不足を根拠に薦めた件数、手動ロック指定の手間を別採点 | `observed-pass`合成Reference／未提供UniverseのPairwise／別Scopeの旧Receiptを`qualified-in-scope`とする |
 | **VA-MIN-S1 移行・再開時の部分継続** | 任意Edgeの合成意味やText/G1b Readerの未対応を理由に、独立したread-only検索・未完成Draftの保存まで止めないか。必要な実Actionだけ現Grant/Owner確定を待つ | 部分的なSource不足を全Activity停止へ拡大／逆にReader未読を完全な編集・公開資格とする |
 
 **最低限の観測票**：同一User Task・Source/版/意味/現在Audience、Tool/Builder経路、Required Input、実Provider/Result、判定`success/partial/unknown/denied`、追加手動操作、誤停止・誤完了・正しく保留した件数をB0/B1/B2の**各々で独立に**記録する。非開示対象の件数や暗黙のGraph意味を外へ露出する採点器を作らず、既存[#422](https://github.com/hat47x/tai-pleroma/issues/422)と[#271](https://github.com/hat47x/tai-pleroma/issues/271)、TEI #1180/#2514とSUIの独立Expectedを参照する。
 
-**停止線／優先**：TEIの初回H2/H3固定Trialはそのまま。Edgeの現行パイロット契約を本Draftから変更しない。#535の局所試作/88段Suiteの結果、TEI限定CI、BOM合成参照を横断ActivityのPASSへ昇格しない。**VA-MIN-E1/T1/B1/S1のB0/B1/B2実User試行、Source/Host/Role受理、Plugin/BOM実Target、Owner意味判断・VA-X/VA-E独立実証はNOT RUN。**
+**最新の証拠境界（11月7日夜）**：[TEI #3304 CI #42378033965](https://github.com/hat47x/tei-platform/actions/runs/42378033965)は一時Scenario第7Stepと偽Expected/Fixture/旧Pinの限定実CLI判別。TT-56用[Draft #3326](https://github.com/hat47x/tei-platform/pull/3326)はsubjectモードのSource Indexで全Definitionを期待した初回CIが失敗し、**試験Consumerのモード誤り**を特定。既存の全件indexモードを追加した後の[専用CI #42385726717](https://github.com/hat47x/tei-platform/actions/runs/42385726717)は`bounded-design-context`ジョブ成功。一方、並行[Draft #3324](https://github.com/hat47x/tei-platform/pull/3324)は同じContext Gateへの1 Rule＋Relation/Canonical照合案であり、**両DraftのCIを合成実装のPASSとしない**。#3262/#3223のOwnerが実Requirement集合・関係の追加必要性を決め、一本化した正確なHEADと実CLI→Context Consumerで再確認する。`qualifiedTestGeneration=false`、独立Holdoutを隠したT1-B、C1、正式User価値は未達。
+
+**停止線／優先**：TEIの初回H2/H3固定Trialはそのまま。Edgeの現行パイロット契約を本Draftから変更しない。#535の局所試作/88段Suiteの結果、TEI限定CI、BOM合成参照を横断ActivityのPASSへ昇格しない。**VA-MIN-E1/T1/B1/S1のB0/B1/B2実User試行、未知GapをAIが盲検発見するT1-B、Source/Host/Role受理、Plugin/BOM実Target、Owner意味判断・VA-X/VA-E独立実証はNOT RUN。既知T1-Aのみ局所Observed。**
 
