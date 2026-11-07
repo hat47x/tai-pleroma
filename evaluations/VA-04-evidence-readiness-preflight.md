@@ -95,3 +95,17 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 
 **OKFを次段階に接続する場合**：[TAI #514](https://github.com/hat47x/tai-pleroma/issues/514)は、宣言された計算定義／Typed Bind／実Executor Receipt／AIとは別の決定的Attesterを分ける提案。Definitionの`verified`やAttester verdictは実Source/Consumer/現在GrantのClosureを置換しない。最初の比較H2/H3が未資格の間にSkill本文・Tool ABI・Expectedを差替えない。Attested Computationの実CLI/Attester PoCは**NOT RUN**。
 
+### 8.1 完全なSource出力と、Tool返信に含まれた実情報を同一視しない
+
+[TEI mainに収録されたDSH実証の保存Byte](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H2_TOOL_ONLY_READ_ONLY_2026-11-07)と[TAI Runbook §24.3](https://github.com/hat47x/tai-pleroma/blob/docs/yi-harness-skills-20261102/docs/yi-constellation/first-real-skill-qualification-runbook-2026-11-02.md)から、VA-04のC3「実消費」とC4「主張」の間に**受信完全性・伝達変換**を明示して確認する。既存Closureに検査項目を増やすだけで、新Pipe/中央Validatorを追加しない。
+
+- **実Producer Source**：実TEI argv/Workspace・Binary・stdout/stderrのbyte長とdigest、終了状態、JSON bodyの構文可否を別観測。指定されたCLI以外のShell挙動を意味解析へ混ぜない。
+- **実Tool経路**：CLI出力→PowerShell/Adapter→Harness Replyの実byte・切詰め閾値・最大出力設定とCall IDを照合。8,192 bytesのCatalogの先頭値だけを「全件実取得」や「Complete Source Index」にしない。原因未特定なら保持する。
+- **実Model/Consumer**：受信済みResult（56 Call中55 Replyという不完全集合）、出所・未観測の明記、最終回答の独立Expected。Session completedで受信済み件数・回答正答・未取得不在を推定しない。
+- **実Tool/Exposure Profile**：初回SKUのWhitelist（`version/commands/model catalog/inspect/trace/validate`）で固定Sourceの限定Readを確認。探索試行に使った`source-index`や任意PowerShellの成功を、そのままH2参加者の許可へ移送しない。read-onlyの設定名で親Checkoutの実読取拒否を保証しない。
+- **実Model版と費用**：`~deepseek/deepseek-flash-latest`指定Aliasと実解決版を分離。Provider metadataとModel/Adapter失敗分類、実Costが揃わなければ一致/費用改善はunknown。
+
+**Stop/Continue**：比較開始前にReviewer ExpectedやH3 Skill本文がH2から読めるならTrialを始めず、公開SourceのCLI/S1調査は独立に継続可能。開始後のTool truncation・欠ResponseはITT内失敗/unknownとして記録。正しく必要なSubject限定`inspect/validate`が受領できるなら、全Catalogの完全性が未確定でも当該Taskに必要な範囲だけ価値採点候補とする。必要Sourceの範囲すら証明できなければ適格とはしない。
+
+**実施状態**：mainにEvidence Byte収録は確認したが、本更新でDSHを再実行したわけではない。受信切詰めの原因、OS/Network Egress、隔離済みH2、H3 Loader、4 Sessionの独立評価はNOT RUN。
+
