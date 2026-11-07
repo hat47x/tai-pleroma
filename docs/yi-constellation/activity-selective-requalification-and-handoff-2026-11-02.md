@@ -609,6 +609,18 @@ TAIのActivity再開・Capability選択は、前回のScreen/Button/Tool Listだ
 
 **価値比較と所有**：SUIはDocumentV1/Edgeモデル・合成/投影Loss/開示、TEIは標準Relationと表現・Function Binding、TAIは再開したActivityで必要な**見えるSubset／未知／Action資格**の提示、SEI/SHOは読まれた出典と編集後の記録を担当。最初の固定TEI H2/H3 Tool/Skill Trialは変更しない。後続SCN-001のB0/B1/B2で、Relationを「無い」と誤判定する回数、誤った編集Offer、正当Readの過剰停止、根拠再確認・手戻りを比較する。**EP-01〜04のSUI→TAI実Consumer E2EとOwner受理はNOT RUN**。#529〜534はTAI側の限定テストであり、SUI自身のProduct Release/契約採用を意味しない。
 
+### 21.6 端点KindをOptionalとする契約試作は、関係の消失を回避しても意味を確定しない（Stage 4）
+
+<!-- tai-ep-optional-kind-prototype-stage4-20261107 -->
+
+前節EP-02/03の「Kind欠落・nullのEdgeが**現行必須契約の投影で消える**」問題について、[TAI PR #535](https://github.com/hat47x/tai-pleroma/pull/535)は**別のOptional契約を生成器へ通した局所試作**を行った。両Kindがあれば`present`で値を保持し、Kind省略でも`present`として出力Kindを省略、片側nullでも`present`で他方Kindを残した。つまり、**Edgeを投影から脱落させることなく、SUIのOptional型に契約を合わせる経路は技術的に成立し得る**。一方、現行パイロット契約のKind必須設定は**まだ変更されておらず**、本PRも未マージである。
+
+この変更で合成層の「Kind省略ならcardと仮定する」挙動や、同じEdge端点IDがCard/Island両方に存在する場合の解決可能性は解決しない。**保存・読取が成功したEdgeと、Direction/Endpoint type/Relation occurrenceまで意味的に同定できたEdgeを分ける**。
+
+**採否の最小Product試験**：現行必須契約とOptional試作を同じ公開合成Documentで対照し、(a)明示Card→Island、(b)Kind省略だが端点IDが一意、(c)CardとIslandに同じIDがある曖昧端点、(d)片Kindのみnull、(e)合成後再投影、を比較する。Resultの`present`を契約形式の受領に限り、独立Expectedが関係Identity/向き/多重度を確認できないものは`unresolved`、実Actionの対象選択不可として記録。Kind不明のまま提示できる**合法なread-only表示**と、補完せずには対象決定できない編集Intentを区別する。
+
+**Owner／順序**：SUIの元Edge schemaと合成はSUI、契約Optional試作・Stage 4の受入はTAI #535／既存製品側判断、TEIのGraph/Function BindingはTEI、現在のActivityへの提示／再資格化のみ本§21。新しいGraph Resolver/RendererをTAIに足さない。#535の88段の一括Suiteは局所実装と試作の証拠であり、実SUI API→TAI Consumer、曖昧Edge負例の完備、Owner意味受理はNOT RUN。初回H2/H3公開TEI固定Taskを変えず、B0/B1/B2の後続必要時に限定する。
+
 ## 22. 2026-11-07：実H3 Skill Loadの到達と、Activityに再利用できる資格を分離する（実測／横断価値NOT RUN）
 
 [TEI mainのDSH四Session実測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)を、[初回Runbook §24.5](first-real-skill-qualification-runbook-2026-11-02.md)へ接続した。実DSHでH2-A→H3-A→H3-B→H2-Bの**四つのSessionがcompleted**。H3 2件はそれぞれProduct Skill Toolによる**Root本文5,482 byte（同SHA）**受信に加え、referenceのread 7,710 result bytes（同digest）の実Callを記録。従来「H3実Loader NOT RUN」とした歴史的記述は、**この限定Tool/Reference受領については更新**する。ただし「Product SkillのRequired全閉包・現在Tool実行資格・業務正答・TAIのActivity価値」の合格ではない。
