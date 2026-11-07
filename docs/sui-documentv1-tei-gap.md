@@ -89,3 +89,21 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 
 - `DocumentV1`は、`Island.cardIds`の包含と`Affiliation`が同じ`(cardId, islandId)`を指すと拒否する。合成層とfixtureを、重複しない形へ変更した。
 - 合成結果は、`transform`と時刻を供給すれば`DocumentV1.model_validate`を通る。
+
+## 写像の実測（2026-11-06）
+
+差分表を、実装のモデル定義と契約ファイルから機械的に数え直した。[receipt](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)
+
+| 意味の単位 | モデルのフィールド数 | 契約のフィールド数 | 覆われた割合 | 覆われた項目 |
+| --- | --- | --- | --- | --- |
+| DocumentV1 | 24 | 3 | 0.125 | id / title / readingOrder |
+| Card | 16 | 8 | 0.5 | id / text / x / y / claimType / holdState / textReviewed / sources |
+| Island | 20 | 3 | 0.15 | id / title / cardIds |
+| Edge | 6 | 6 | 1.0 | すべて |
+
+- Edgeは端点種別まで含めて完全に写せている
+- DocumentV1の未写像21項目は、カード・島・関係の集合（`cards`/`edges`/`islands`/`affiliations`/`voids`/`narratives`/`evidenceLinks`/`shelf`）、決定と履歴（`reviewAttribution`/`structureDecisions`/`mergeSuggestionDecisions`/`contradictionSignalDecisions`/`critiqueInputs`/`reproposalDiffs`/`patchApplyLog`/`relationSummaries`/`deterministicTieBreak`）、時刻と変換（`createdAt`/`updatedAt`/`transform`）、版（`version`）に分かれる
+- 集合と決定の集合は合成層が担う設計だが、**それらを1つのrecordで表すには入れ子投影が要る**（[入れ子の実測](tei-sui-integration-2026-11-03.md)）
+- パイロット固有のフィールドは残っていない（`digest`は撤去済み）
+
+この数値は名前の一致だけを数えたもので、型・意味の一致は含まない。
