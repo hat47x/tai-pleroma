@@ -24,14 +24,14 @@
     },
     "authorizeParams": {
       "client_id": "sui-client",
-      "code_challenge": "U1Cb19WQm9aGuqA9P6ieU2fll37L-BBm0RFAsXLUEjc",
+      "code_challenge": "krWeMn3ZVLN6H-FIvRfXtJAP3C_KEdaKvs7fCMd4-mI",
       "code_challenge_method": "S256",
       "redirect_uri": "https://sui.example/session/callback",
       "response_type": "code",
       "scope": "openid",
-      "state": "2CKA4ZW-ZZzm_Si-mfGVYOE3gwNKWW6ayR34NqtOof0"
+      "state": "15j9yYE2w6N2qudLGNJ3X9iWbPo5cdef30ORJ-1nUmI"
     },
-    "redirectDigest": "sha256:4f15abe1aae1d7b2dc5ebdb2e85a978649d06c42daa95f6ff5f31bb5c0413e61"
+    "redirectDigest": "sha256:172f3a3c3a7645f91f6af34214190e587f56b7a16de977d8678832eedf0d2477"
   },
   "scope": "Calls SUI's login initiation with test settings and checks the redirect parameters and pending cookie. No broker, callback, token exchange, or session issuance is exercised."
 }

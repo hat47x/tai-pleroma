@@ -247,6 +247,7 @@ def main():
         "sui_builders": run_step("sui_builders", ["integrations/pilot-sui-document/assembler/policy_component_builders_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-builders-2026-11-06.json"]),
         "sui_failsafe": run_step("sui_failsafe", ["integrations/pilot-sui-document/assembler/local_failsafe_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-failsafe-2026-11-06.json"]),
         "sui_parsers": run_step("sui_parsers", ["integrations/pilot-sui-document/assembler/header_parsers_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-parsers-2026-11-06.json"]),
+        "sui_document_coverage": run_step("sui_document_coverage", ["integrations/pilot-sui-document/assembler/document_coverage_check.py", "--sui-repo", args.sui_repo, "--workspace", str(ROOT / "integrations/pilot-sui-document"), "--artifact", "evaluations/artifacts/scn-003-document.json", "--out", "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json"]),
     }
     steps["poc_eval_template"] = run_step("poc_eval_template", ["integrations/tools/poc_evaluation_template_check.py"])
     eki_env = {}
