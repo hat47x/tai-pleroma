@@ -109,3 +109,14 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 
 **実施状態**：mainにEvidence Byte収録は確認したが、本更新でDSHを再実行したわけではない。受信切詰めの原因、OS/Network Egress、隔離済みH2、H3 Loader、4 Sessionの独立評価はNOT RUN。
 
+### 8.2 Participant隔離と副次送出の実観測（2026-11-07）
+
+[TEIのH6-E1実測](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_H6E1_READ_BOUNDARY_2026-11-07)により、DSH read-onlyから合成Raw/.env/作業root外の読取が**止まらず**、実Tool結果がモデル入力とSession Logの二系統に入ることが局所Observedとなった。[H6-E2のLocal Mock実測](https://github.com/hat47x/tei-platform/tree/main/plan/evidence/DSH_SESSION_LOG_RETRY_AND_DEFAULT_2026-11-07)では`dsh_session_log`既定ON、未受理（503や空SSE）時の同水位再送が確認された。従来の「実Egressは全てNOT RUN」を、**Local Mock宛の副次送出はObserved／実Provider・全出口は未観測**に更新する。秘密や私的パスの実流出を意味しない。
+
+**Evidenceを評価する5つの質問**：（a）何がOS/Hostで実読取可能だったか、（b）CLI/Toolが何を実消費したか、（c）どのSink（Model Messages／Session Log／Tool Reply／公開Issue/CI）へ実載ったか、（d）失敗/再開で何が重複送出されたか、（e）どのAudience向けに、そのObservationを公開してよいか。実検査のraw request bodyと公開可能なEvidence要約は分離し、合成Canaryの原文や実Reviewer Expectedを外部LLMにそのまま渡さない。[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)のH6-E13はEvidence自身の二次開示を既存Ownerが検証する。
+
+[TEI mainのH3実Load記録](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)により、H3の固定root本文5,482 byteと1 Referenceの実受信は**Observed**。一方、H2のSkill非露出を物理的に強制できたか、実ReaderがSkill全Requiredを消費したか、実Consumer回答のIndependent Expected、現Grant、H3の付加価値は別のClosure。4実Session completed≠4比較適格で、適格**0/4**。旧§8のH3 Loaded「NOT RUN」は**当時の状態**として扱う。
+
+**今の必須資格**：対象public Sourceの許可Read成功と、同一実Profileの許可外Read拒否を正負対で観測→副次Sinkを観測した範囲で開示判断→固定Whitelist/実argv/real root/Result欠落なし→新Trial Group割付。OSやGatewayの実拒否が未取得なら「外部に出なかった」と回答しない。物理root変更、Toolの名前だけread-onlyでもFS出力flagで書ける反例はG0/G2に吸収し、新ACL Engineは建てない。初回治験はread-onlyであり、新書込/OKF/Cloud等を要求しない。
+
+**状態**：新しいDSH/Host/Network実試行を本評価票では実施していない。H6-E1/E2とH3は既存Product側の実測を引き継いだ限定証拠であり、正式G0/G1/G2適格・四Session独立評価・本番秘密運用・Owner受理はNOT RUN。
