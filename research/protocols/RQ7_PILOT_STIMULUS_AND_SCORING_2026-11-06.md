@@ -95,3 +95,30 @@ Gold判定者と表示を作る者を可能なら分ける。少なくとも最�
 | [TAI RQ6](../COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md) | 候補探索と検証の分離へ「何が見えているか」の追加共変量 | CSW Methodや人的価値の採用済み宣言 |
 
 最初に可視化・回答タスクの負例が安定しない場合は、Graphツールを作らずテキストと既存receiptを用いる。研究上の「完全性」は開示・観測・対象scopeを欠かした一般的な不存在証明ではない。**RQ7の実被験者・実モデル・実Product・独立Holdoutの結果はすべてNOT RUN**。
+
+
+## 6. 2026-11-07: 独立した公開v1の構造Gold校正
+
+旧公開10ケース・Goldは変更せず、[別の公開v1刺激](../fixtures/RQ7_BALANCED_PUBLIC_PREPILOT_V1.synthetic.json)12件と[公開v1 Gold](../fixtures/RQ7_BALANCED_PUBLIC_PREPILOT_V1_GOLD.public.json)を追加した。
+
+- v1のV0/V1は支持4・反証4・未定4、V2/V3は支持5・反証5・未定2。これは**Gold分布**であって、人やAIの成績ではない。
+- 8件は宣言Graphの**直接Edge**または**有向Path**に関する問い。`question_selector`を`kind=direct-edge|directed-path`、`source`、`target`へ限定し、質問文からの曖昧な推論ではなくGraph別経路探索でGoldの構造的整合を検査する。
+- 4件は実行/Consumer観測を要する問い。V0/V1では未定、V2/V3では支持1・反証1・未定2。合成Observationは**製品の独立Oracleではない**。
+- v1の`question_selector`は**被験者へのAnswerやGoldを含まず**、宣言に関する実験クエリの限定表現。未対応predicate、余分な条件、非宣言端点は構造チェックで拒否する。TEIのQuery/Role/SQL DSLや製品Graph APIとして採用しない。
+- [共通Renderer](../tools/rq7_pilot.py)は`--dataset v0|v1`を明示指定。無指定は従来v0を保持する。`--check`は公開JSONの構造判定であり、独立意味判定ではない。
+- [v1専用テスト](../tools/test_rq7_balanced_v1.py)で48表示経路、同情報量のGold同一性、Gold非露出、8件の別Graph探索、質問selectorの不正入力やEdgeの変異を検査する。[研究用限定GitHub Actions](../../.github/workflows/rq7-public-prepilot.yml)は変更された研究資料だけに反応し、Product CIの正式な受入条件へ上げない。
+
+### 6.1 図の優越性に関する結論を先取りしない
+
+Gold数の均衡は、**タスク難度、言語的な負荷、分岐数、Graphの視覚的複雑さ、正しい次の確認手順**の均衡を保証しない。v1はGraph表現とText表現の「問いの層」を揃えた公開開発セットである。V0とV1の差・V2とV3の差に関する実際の認知結果は、同じ被験者/モデルが繰り返し出題を見ないよう割付し、Mermaid本文と実描画画像の違いを明示した別実験で測る。
+
+`question_selector`の検査により、公開Goldのうち**宣言Graphの構造的主張を誤記した場合**は検出可能になる。一方、業務意味、観測器の閉包、Current Authority、Relation帰属scope、Consumer実Readの正しさはこの構造検査の対象外。
+
+### 6.2 今回の範囲と次Gate
+
+1. 公開v0/v1の構造・Gold・描画ソース生成を、固定SHAのPython CLIと限定CIで検証する。
+2. 同じSynthetic Sourceに対して、Graph/Textが実際に同じ範囲・制約を見せるかを独立レビューする。Graph画像/a11y/AI画像取込みは未確認。
+3. TEI側[#2881](https://github.com/hat47x/tei-platform/pull/2881)の実CLI→Node直接Edge候補・[#2831](https://github.com/hat47x/tei-platform/issues/2831)のSB-L1/L2/L3・[#2542](https://github.com/hat47x/tei-platform/issues/2542)の実MFT/Consumer Readへ接続できる**限定された別Domain**を選ぶ。旧公開Goldの正しさを製品の品質へ転用しない。
+4. 独立holdout/参加者割付/費用/精度を予め固定し、未実施条件の分母はN/A。実使用や人間の受理・権限・外部作用の効果は推測しない。
+
+**状態**: 公開v1の追加はprepilotを比較可能にする準備。研究結果・有意な認知改善・TEI製品受入・学術的新規性は未確定。Goldを知ったモデルの試験を未知の一般化として扱わない。
