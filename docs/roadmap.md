@@ -141,3 +141,8 @@
 
 **順序**：TAI #168 G0/G1/G2→新規H2/H3四SessionのBlockingは不変。Edge契約、TEI Design Context/T1、Verified BOMは既存各Product Ownerで並行。新Requirement Registry/中央Test Runner/全Product用BOM Serviceを先に追加しない。実User JobでのVA-MIN比較、TAIパイロット契約改定、盲検T1-B/実Target適格、Owner受理は**NOT RUN**（既知T1-Aの実CLIのみ限定Observed）。
 
+
+
+**2026-11-07・用途別の過剰停止を検証する追補**： [横断監査§22.5](yi-constellation/product-value-scope-audit-2026-11-04.md)、[VA-01 §10](../evaluations/VA-01-product-value-necessity.md)へ実反証3ケースを追加。①**TEI #3337 merged**で宣言された12能力中6の未選択を観測したが、未選択は異Environment向け候補やBinding Kind差を含む正常状態になり得るため、Inspector一操作に必要なCapabilityの**実選択・実消費だけ**を求める。②**TEI #3336 merged**は子Process Build/Artifact SHAの限定実測でありself-build L3ではない。通常BuildをL3未達でブロックしない。③[SHO #19/#20](https://github.com/hat47x/sho-composer/issues/20)の通常Markdown/Vault Raw保存は、TEI Markdown Loaderの未束縛、OKF/Cloud/AIの未導入と独立に成立させる。意味解釈・遠隔同期・出典受理は利用する場合だけ現在資格を検査する。
+
+これらを**新しい横断Blocking Gateにはしない**。単独User Jobでの正しい部分継続と、対象Capability/Source/Reader/Artifact不足時の正しい局所拒否を対で測る。SUI→SHO [#21](https://github.com/hat47x/sho-composer/pull/21)の20 PASS・1 SKIPはCheckout Guardの限定成功であり、同一実FileのH1は未実行。TEIの既知Rule T1-Aは実CLI限定Observed、次は盲検T1-Bであり、旧T1-Aの再実行を新Gap発見としない。SHO Writer、Plugin実Consumer、self-build L3、B0/B1/B2実比較、Owner受理は**NOT RUN**。
