@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import socket
 import sys
 import tempfile
@@ -115,6 +116,15 @@ def observe_stub_visibility(bundle):
         counts.clear()  # never emit a success-like count from malformed data
     return result
 
+def identical_context_responses(first, second):
+    """Deep equality of two same-attempt HTTP JSON bodies, not digest verification.
+
+    This compares in memory and reports only a boolean, never a card ID/text.
+    It is NOT proof of cross-runtime canonicalization or source revision.
+    """
+    return isinstance(first, dict) and bool(first) and isinstance(second, dict) and first == second
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--sui-repo", required=True)
@@ -192,8 +202,10 @@ def main():
     second_body = second.json() if second is not None and second.status_code == 200 else {}
     checks = {
         "firstStatus": first.status_code if first is not None else None,
+        "secondStatus": second.status_code if second is not None else None,
         "bundleHash": first_body.get("bundleHash"),
         "deterministic": bool(first_body.get("bundleHash")) and first_body.get("bundleHash") == second_body.get("bundleHash"),
+        "sameAttemptResponseIdentical": identical_context_responses(first_body, second_body),
         "hasQueryHash": isinstance(first_body.get("queryCanonicalHash"), str),
         "noPreviewStatus": no_preview.status_code if no_preview is not None else None,
         "noPreviewCode": (no_preview.json().get("detail") or {}).get("code") if no_preview is not None else None,
@@ -205,6 +217,8 @@ def main():
         and checks["firstStatus"] == 200
         and isinstance(checks["bundleHash"], str)
         and checks["deterministic"]
+        and checks["sameAttemptResponseIdentical"]
+        and checks["secondStatus"] == 200
         and checks["hasQueryHash"]
         and checks["noPreviewStatus"] == 422
         and checks["noPreviewCode"] == "preview_required"
@@ -215,12 +229,13 @@ def main():
         "evidenceKind": "real-execution",
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
-        "host": "Windows with SUI in local-dev profile",
+        "host": f"{platform.system()} / loopback SUI local-dev profile",
+        "inputDataKind": "synthetic-A2-minimal-v1-stub",
         "command": "python integrations/pilot-sui-document/assembler/context_bundle_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), hash determinism and preview refusal. Does NOT establish candidate completeness, matching external Source revision, disclosure authorization, or human decision.",
+        "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), same-attempt response content equality and hash stability, plus preview refusal. Does NOT establish cross-runtime digest interoperability, candidate completeness, matching external Source revision, disclosure authorization, or human decision.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
