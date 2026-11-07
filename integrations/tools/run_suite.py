@@ -64,6 +64,7 @@ def main():
         "mmi_inventory": run_step("mmi_inventory", ["integrations/tools/mmi_inventory_check.py"]),
         "mmi_delivery": run_step("mmi_delivery", ["integrations/tools/mmi_delivery_audit_check.py"]),
         "sei_gate_variants": run_step("sei_gate_variants", ["integrations/tools/sei_gate_variants.py"]),
+        "sei_doctor": run_step("sei_doctor", ["integrations/tools/sei_doctor_check.py", "--sei-repo", args.sei_repo, "--artifact", "evaluations/artifacts/sei-decision-projection.json", "--out", "evaluations/records/SEI-TEI-doctor-2026-11-06.json"], timeout=600),
         "sui_tei_multi": run_step("sui_tei_multi", ["integrations/pilot-sui-document/assembler/tei_reference_multi_check.py", "--sui-repo", args.sui_repo, "--artifact", "evaluations/artifacts/scn-003-document.json", "--sei-artifact", "evaluations/artifacts/sei-decision-projection.json", "--out", "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json"]),
         "saas_adapters": run_step("saas_adapters", ["integrations/tools/sui_saas_adapter_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),
         "saas_oauth": run_step("saas_oauth", ["integrations/tools/sui_saas_oauth_contract.py", "--sui-src", f"{args.sui_repo}/03_Implement/backend/src"]),

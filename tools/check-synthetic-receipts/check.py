@@ -187,6 +187,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-TEI-builders-2026-11-06.json",
     "evaluations/records/SUI-TEI-failsafe-2026-11-06.json",
     "evaluations/records/SUI-TEI-parsers-2026-11-06.json",
+    "evaluations/records/SEI-TEI-doctor-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -562,6 +563,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
                 errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
+        if "SEI-TEI-doctor" in relative:
+            observed = data.get("observed", {})
+            lock = observed.get("withStaleLock", {}).get("lines", {}).get("lock", {})
+            if data.get("result") != "PASS" or lock.get("status") != "warn":
+                errors.append(f"SEI doctor lock handling changed: {relative}")
         if "SEI-TEI-gate-variants" in relative:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
