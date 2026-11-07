@@ -89,12 +89,14 @@ def main():
     contract = json.loads(
         (Path(args.workspace) / "candidates/edge-record/contract.json").read_text(encoding="utf-8")
     )
-    kinds_required = {
-        field["name"]: not bool(field.get("optional"))
+    kinds_optional = {
+        field["name"]: bool(field.get("optional"))
         for field in contract["projection"]["fields"]
         if field["name"] in ("fromKind", "toKind")
     }
-    checks["contractRequiresKinds"] = kinds_required
+    # The contract now allows the kinds to be absent (v4), matching SUI, so the
+    # assembler's resolution path is reachable from a projected edge.
+    checks["contractKindsOptional"] = kinds_optional
     passed = (
         checks["explicitKinds"]["outcome"] == "assembled"
         and checks["absentKindsResolvedFromEndpoint"]["outcome"] == "assembled"
@@ -103,7 +105,7 @@ def main():
         and checks["unknownKindRefused"]["outcome"] == "refused"
         and checks["absentKindUnknownEndpointRefused"]["outcome"] == "refused"
         and checks["assemblerRewritesKinds"] is True
-        and all(kinds_required.values())
+        and all(kinds_optional.values())
     )
     receipt = {
         "schema": "tai.reference.tei-assembler-kind-fallback/v0",
@@ -116,7 +118,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, and an unknown kind. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown or ambiguous endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract still requires the kinds, so this path only runs on inputs the contract already refused.",
+        "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, an unknown kind, and an unknown endpoint. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract now makes the kinds optional (v4), so this path is reachable from a projected edge.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))

@@ -5,10 +5,10 @@
   "publicationAllowed": false,
   "date": "2026-11-08",
   "host": "Windows with the TEI reference generator and a locally compiled candidate",
-  "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
-  "result": "FAIL",
+  "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
+  "result": "PASS",
   "artifact": {
-    "path": "evaluations/artifacts/scn-003-document.json",
+    "path": "D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
@@ -39,10 +39,10 @@
       }
     },
     "bothKindsPresent": true,
-    "nullFromKindIsUnresolved": false,
-    "nullBothKindsIsUnresolved": false,
-    "absentKindsReportedMissing": false,
-    "absentKindsNameTheFields": false
+    "nullFromKindOmitted": true,
+    "nullBothKindsOmitted": true,
+    "absentKindsProjected": true,
+    "absentKindsOmittedFromText": true
   },
-  "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. It distinguishes the two failure shapes: an absent key is `missing` (and names the fields), a JSON null is `unresolved`. Either way the edge is not projected, so an SUI edge without kinds is lost. It does not change the contract."
+  "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. Since the contract made the kinds optional (v4), a null or absent kind is omitted and the edge is still projected; before v4 those inputs were reported missing or unresolved and the edge was lost."
 }
