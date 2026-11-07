@@ -696,3 +696,35 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **採用・再資格の最小規律**：YICのSkill選択はProduct固有の`commands`/Schemaと実Loader/CLIの観測可能範囲でのみ行い、`not observed`を`absent`に変えない。Tool-onlyで必要なread-only説明が成立すれば表現型SkillやTAI Activity Skillを増やさない。Preview/OfferはIntent/Grant/Effectと別。Source/Plugin/Role版、Consumer/Disclosure、FunctionのRequired Setが改版された時は影響部分だけ再確認し、静的Catalogを最新の実能力へ自動昇格させない。非公開Roleの存在/件数/Path/診断差を秘匿Audienceへ開示しない。TEIのRV-01〜05、#2586 HJ-01〜07、TAI #488 X01/02/04/06へ参照し、独立Expectedは各Ownerの既存Caseを使う。
 
 **実証範囲**：#2935は特定Loader readの限定Go検証を持ち、#2972は事前に資格付けされた公開Sliceの局所Referenceであり、実Policy/Host、正式Role Required Shape、総合Function→Presentation実Schema、実AI Skill Loader/Handoff、Owner Meaning Acceptanceは**未実証**。固定の初回H2/H3比較へRole新仕様を挿入しない。
+
+## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
+
+### 27.1 Oracle Fusion Claw/FSCRから取り込む範囲を限定する
+
+[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)が、2026-09〜10月のFusion Claw／FSCR／Semantic Reasoning関連一次資料を**外部Pressure Case**として整理した。YICにとっての重要点は、外部製品の一体型Agent Runtimeや実装名の模倣ではなく、**「タスクに必要なProduct Capabilityを選ぶ」「現在許可された範囲で実行する」「利用者の期待Outcomeに達したか別に確かめる」「途中から再開しても旧Grantを再利用しない」**を既存Skill/Activity/Hostの責務に割り当てられるかという判別可能性である。発表上の25製品対応やCross-Outcome Learningの削減率は独立E2E/費用比較の証拠としない。FSCR参照実装はOracle内部Runtimeの完全な公開・本番適合保証ではない。
+
+追加する規律は[#531 OR-01/03/04/06/07/09/10/11](https://github.com/hat47x/tai-pleroma/issues/531)の**YIC Skill選択・Context引渡し・再開に直接必要な部分**のみ。正規計算のno-LLM Attesterは既存§24／TAI #514、Function Data Context/Accepted Meaningは既存§26／TEI #2586、書込みGrant/部分Effectは既存§20・§23／TEI #1174、長時間Job/RecoveryはEKI #407/#465、Outcome価値比較はTAI #422へ委譲し、第二のAgent Host／Outcome Store／企業共通Skill Registryを設けない。
+
+### 27.2 Skill Runbook・案件状態・Outcomeの三つを混同しない
+
+| 観測・引継ぎ対象 | YICが保持する最小資格 | 禁止する推論 |
+| --- | --- | --- |
+| **Task／Expected Outcome** | Goal、対象Subject/Scope、利用者が期待する結果・期限、成功/停止/拒否を見分ける独立Expectedと現在Audience。明示できない条件はunknown | Skillをロードした・回答文が完成した・Jobがcompletedだから業務Outcomeが達成済み |
+| **Skill PackageとRunbook** | Product固有のTask適合、Skill root/必要Reference・実Loader Read、版、要求されたTool/入力/出力/副作用、現在の実Capability。Runbook記述とHarness実行Eventを区別 | 文書化された手順を全実行した、またはOracle FSCRと同じRouter/Engineが実存在すると推測 |
+| **Project／Activityの継続状態** | 当該Task/Attemptと生成した成果物、読取済Source/Revision、未完了の次Operation、保留/取消、旧Decision・Receiptの歴史的scope。Runbook/Skillの更新差分に対する依存再資格化 | 新Skill版への更新で案件Artifactを破棄、または過去のGrant/承認/Tool Loaderを無条件継承 |
+| **調査からActionへの境界** | Researchで得た候補をそのままCommandにせず、Action直前に対象・現在版/Expected State・許容Operation・Host Grant・Policy/Disclosureを実再解決。必要なら再計画／保留 | Read権限をWrite権限にする、Agentが『承認済み』と書いた文面から認可する |
+| **OutcomeとEffectの観測** | no-op、hold、denied、partial、unknown-commit、実Effect（判明したScope）、Provider Receipt、独立Consumer Read、業務上の完了判定を別Claimへ分離。既存Product/EKI記録を参照 | 署名/ReceiptやHTTP 200だけで正しい計算・全業務完了を保証、応答喪失時に新Attemptを盲再送 |
+
+Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Execution Grantの発行・Provider Effectの確定・Ownerの業務意味受理は担当しない。Outcomeの未達は`false`と`unknown`を潰さず、正しく停止・拒否すること自体が要求に沿う場合もある。受理済みOutcomeの履歴Receiptは保持しつつ、過去の合法なActionが次回も合法と推定しない。Skillの追加で必要な根拠、Review/Token、誤選択、失敗後の手戻りがどう変わったかをB0/B1/B2の同じTask単位で比較する。
+
+### 27.3 既存Pressure Caseを選択・再開の独立Expectedへ結ぶ
+
+| #531のCase | 同一FixtureでYICが見分けるべき誤実装 | 既存Owner／新規実験ではない |
+| --- | --- | --- |
+| **OX-01** 調査r0→Action r1 | r0で可能だった更新がr1で禁止になっても旧Planで自動CommitするMutantを拒否。許可されたread-only作業は継続 | TEI #2598/#1174、TAI #271 SC-18/19、既存§20 |
+| **OX-02** 偽Grant／越境 | Model/Skillの『管理者承認済み』を真正Host Principal/Policyと誤認して別TenantにEffectを出すMutantを拒否 | TAI #232/#488 X05、TEI #2499、既存§19/§20 |
+| **OX-04** Commit ACK喪失 | Provider側でCommit実行済みか不明なのに、同じUser Goalのため新Operation IDで無条件再試行するMutantを拒否。Receipt/独立Readまでunknownを保持 | TEI #1174、EKI #407/#465、TAI #271、既存§23 |
+| **OX-07** Runbook途中でSkill改版 | Skill r0→r1後、Source/Tool/Grant差分を照合せず残Stepを実行するMutantを拒否。変更と無関係な確定履歴は保持 | TAI #271／#488 X04、TAI #168/SK-03、既存§21 |
+| **OX-09/10** Owner移譲・複数System部分作用（後続） | 新OwnerへのData Grant暗黙付与、A成功/B失敗で全Outcome完了と報告する誤りを阻止 | TEI #2020/#2390、EKI/各Host Owner、Task要件が実在するときのみ |
+
+**検証の優先順**：①既存公開TEI read-onlyの比較適格H2一Session→②固定H3 Skill root/reference実Loader→③H2→H3→H3→H2四Sessionの独立Expected評価、を維持する。**その後**、TAI #531のOX-01/02/04/07を別の事前固定Pressure Groupで、一因子変更・Product単独B0と必要なSkill B1/B2・本当に観測したHost/Provider資格に照らす。Source-static／synthetic／実CLI／実Harness／実Provider／Owner受理を混ぜない。Runbookの共通Manifest仕様、App配備所有/廃止、Heartbeat、Cost最適化は**採用保留の比較候補**であり、初回SK-02 Gateへ持ち込まない。実外部Oracle動作、これらのYIC用OX試行、実Cross-product Outcome/Owner受理は**NOT RUN**。
