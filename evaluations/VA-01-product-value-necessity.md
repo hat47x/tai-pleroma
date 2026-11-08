@@ -306,3 +306,8 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 ## 16. 2026-11-08：Hook合成とVUI再開の媒体横断適合
 
 [横断監査 §26](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-HOOK-01** を追加。同一Operationの標準／Transform／Replace／順序競合／VUI Resume中Provider更新／Selected≠Invokedを独立Expectedで比較。各TargetのGenerated Binding fingerprint、実Provider Call、Consumer受領、現在Grant、結果不明の停止・独立Readを別々に採点する。既存VA-RC-01と同じACK喪失は再利用し二重計上しない。初手はCLI/Studio read-only Inspectorの実Provider一件、次段階で曖昧な音声候補→明示確認→中断→再開。全Target・実VUI・Owner受理は **NOT RUN**。
+
+
+## 17. 2026-11-08：三Flow・図表駆動生成と専門B2Cの価値比較
+
+[横断監査 §27](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-FLOW-01** を追加。Adaptive Activity / Interaction / Business Operationの境界を、同一User Jobの標準UI、専門Web UI、Chat/VUI Adapterで比較する。図表の標準固定部・拡張Slotを編集し、生成Manifestと実Bindingの一致を独立Expectedで判定。認可・Owner・意味受理を省略しない一方、B2C専門UXに標準UI/AI Harnessを強制しない。完了率・離脱・P50/P95・Cache/Provider統計・変更リードタイム・費用を分離計測。実Provider・Generator・負荷/利用者試験・Owner受理は **NOT RUN**。
