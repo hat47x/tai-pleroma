@@ -1026,6 +1026,23 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 **横断試験順序**：既存#3262/#3273/#1180/#2514のOwnerが、現在の必要Sliceと取得範囲をFixed Expectedにし、Product Tool-only→Product Skillの**不足診断・誤不存在・過剰拒否・Tool回数**を比較する。Context資格が揃った部分でのみ、AIが未知の未カバー条件を提案できるかをReviewer-only独立Expectedで盲検T1-B判定する。実H3全Reply配送、Provider/Host、T1-B、YIC Skill増分効果は**NOT RUN**。初回公開TEI H2/H3固定Task/Tool/4 Slotには変更を加えない。
 
+
+<!-- yic-skill-operation-parity-function-boundary-20261108 -->
+### 26.8 Functionの実読取範囲と、CLI／MCPでの同一操作資格を別に判定する（2026-11-08）
+
+[TEI merged #3482](https://github.com/hat47x/tei-platform/pull/3482)の**main push専用CI #42462861657**は、一Functionの独立Required Sliceについて、**13件の実read-only CLI Reply**と**42件のConsumer合成判別Control**を限定PASS。必要Capability宣言・Application参照・Required Rule3件・Source Index上のDefinition/Roleと、実Loader/Inspectの照合を追加した。これは§26.6の11 CLI/32対照からの**同じ製品Gateの限定拡張**であり、二つの異なるProduct Control集合を合算しない。ResultはFunctionのdeclarationStatus=bounded-presentを示し得るが、**Functionの実Query実行／Provider Read／Business/Host権限／Qualified Test Generationではない**。既知T1-Aと、未実施のAI盲検T1-Bも別。
+
+一方、[TEI採用ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)はCLI/MCP/Web/Desktopの共通**操作契約**を製品側に置き、[merged #3403](https://github.com/hat47x/tei-platform/pull/3403)はmainに4 read-only MCP参照Adapterを導入した。ただし参照の主要値一致だけで全異常系同値とはいえず、[TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)にはvalidateのok／isError、未知欄の黙認／既定値化、数値Protocol Errorと文字列の意味Failureの差が残る。**MCPのToolが見える／部分値が一致する＝同一Product操作のSkill利用適格PASS**ではない。
+
+| 既存X02/X03/X06で一因子変更する軸 | 適格なSkill／Consumerの反応 |
+| --- | --- |
+| 同Function宣言・必要Rule/Sourceだけ欠落 | Productの実Required Slice分母に照らしpartial/unknownとし、他の合法Readを継続。見た目の13 Reply完了で全業務Context Completeと推論しない |
+| CLIはvalidation不合格、MCPはok:true/isError:false | 同じ実Source、対象、版で意味上の検証不合格を比較する。Transport成功を検証PASSに数えず、差をTEI #3420へ報告 |
+| 同じ操作だがCLI argv/JSONとMCP tool入力、Workspace束縛が異なる | Contract version／実Binary/Adapter digest／Actual Source・Reply Bytes／Allowed Scopeを別観測。固定WorkspaceのReference宣言だけでOSの外側Read denyや外部Disclosureを証明しない |
+| 使用者の現在Grantが変化／Provider Sourceのみ改訂 | 同じSchema/Result hashでも、別Ownerの現在Source Occurrence・Provider Raw/Manifest・Grantを必要Claimだけ再資格化。旧Artifactの有効履歴は保持し、盲再送はしない |
+
+**採用判断**：同一Taskを(1)既存CLI Toolだけ、(2)Product SkillでCLIを案内、(3)必要であればMCPの同じOperationを使う別Group、(4)Productを跨ぐときのみTAI Skillで比較する。MCP経路を初回TAI #168の固定H2/H3 Trialに**後付け追加しない**。Skill選択/再開に必要な証拠は、TEI #3262/#2586/#1158と既存Ownerの実Consumer結果を参照する。新しいYIC Common API／MCP Host／第二Scenario/Oracle/Resolverを作らない。TEIの実Provider Function E2E、CLI/MCP全型・全失敗同値、YIC実Skill選択、外部Harness H2/H3適格4/4、Owner業務受理は**NOT RUN**。
+
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
 ### 27.1 Oracle Fusion Claw/FSCRから取り込む範囲を限定する
