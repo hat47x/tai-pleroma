@@ -198,7 +198,7 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 | --- | --- | --- |
 | 採用ADR-0048＋4 read-only Operation | 同じ目的のRequest/Result/Failureの正本は**TEI操作契約**とし、CLI/MCP tool名・JSON-RPC numeric code・CLI exitをAdapter投影として扱う | CLI/MCP/HTTP/IPCを含む実Full Parity、実Toolを使った同一Harness Trial |
 | 参照MCP／部分値一致 | **存在確認済み、限定Tool呼出しのProduct候補**。実Tool Result Bytes・Protocol/Schema版・Workspace固定・Source Index/World Fingerprint・diagnosticsを、Task/Attemptで別に照合 | 書込み可能／Host認可済み／全Sourceがモデルに届いた／同じエラーを全入口が等しく判定 |
-| [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)の静的Gap | validateの意味不合格をMCP isError:false/ok:trueへ誤昇格させない。未知欄・型違い・NULLをdefaultへ落とさず、実CLIと実stdio MCPの両方でT01〜T07を検証 | 現行参照MCPの全Case合格、CAPI-1/2/3/4完成 |
+| [TEI merged #3458](https://github.com/hat47x/tei-platform/pull/3458)のvalidate限定修正／[#3420](https://github.com/hat47x/tei-platform/issues/3420)の残余 | 実CLIと実参照MCPを直接起動し、正常／Source Load失敗／重複宣言の3系列で共通WorkspaceValidationReport・ok・isError・文字列failure.code／CLI exitを限定確認。旧MCPのisError:false偽成功は**修正済み負例**として保持 | 未知欄・型違い・NULL・上限・全Protocol、catalog/inspect/trace全失敗、全CLI/MCP parity、CAPI-1/2/3/4完成 |
 | [TEI #3422](https://github.com/hat47x/tei-platform/issues/3422)の後続Effect | read-only成功、正常Result、試験用allow-allを現在のwrite Grant/Owner Accepted Meaningへ移さない。期限切れ/通信断はRollback確証でない | 異入口からの実Mutation同値、未知Effectの安全Retry、本番Host資格 |
 
 **実行順序**：TEI #1158／#3419が共通4操作の型を固定→#3420が実CLI/stdio MCPで成功・失敗・NULL・未知欄／Workspace拒否を同条件比較→必要なTaskのみに#3421のHTTP/IPC、#3422の作用を追加。YICは既存X01/X03/X05/X06を用い、実Productが返した操作資格を消費するだけで、第二API仕様・Schema変換器・Runner・認証Policy正本を持たない。[YIC適合計画 §26](https://github.com/hat47x/tai-pleroma/blob/docs/yic-skill-crosslane-qualification-20261106/docs/yi-constellation/skill-crosslane-qualification-and-order-2026-11-06.md)とTAI #271の現在Grant/受領資格へ参照で渡す。
