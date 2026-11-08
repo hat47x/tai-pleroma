@@ -643,3 +643,18 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 各Producer→Consumerの一辺は、**Source観測 → 意味候補/Owner受理 → Provider実Read/Writer実Save → 実Consumer受領 → 現Grant/実Effect**を別列にする。TEIの13 CLI応答/42判別、SHO公開TEI Markdown 4件Reader、EKIの同プロセスUnix socket 6イベントはそれぞれ限定された実観測として尊重するが、別Repo/別Attemptの局所PASSを同一User JobのEnd-to-Endへ加算しない。TAI H2/H3の適格性や独自HarnessのHV-0〜4比較にも新しいBlockingを足さない。
 
 **現況**：Source-staticと既存Issue/PRに基づく責務・比較設計。VA-KON-01の実SUI→SHO Consumer、KON実Service/Store、現Grant・二Client・実Provider・Owner受理・独立モデル評価は **NOT RUN**。
+
+
+## 26. 2026-11-08：Plugin HookとInteraction Flowを一つのOperation契約に結び付ける
+
+**成熟した設計差分**：TEIのAPI/Web/Desktop/CLI/MCP/VUIは媒体ごとの独立Engineではなく、同じ型付きOperationを実行・観測するAdapterとする。Plugin-firstを徹底する場合でも、選択・ロード・呼出し・結果受領・実Effectを混同しない。§24の結果不明と§25のSource/Meaning分離を継承する。
+
+**Operation Lifecycle（設計上の論理順序）**：`Intent → Prepare → Validate → Authorize → Execute → Observe → Result`。各段階の前後に配置するExtension Bindingは、`Add / Replace / Transform / Compose` の四つの合成意図を持つ。ただし「Replace」は元実装の暗黙迂回ではなく、対象Slot・入力/出力型・前提・失敗/部分結果・権限・副作用境界・優先順位・版を明示し、合成不能なら診断して生成停止する。**Hook定義とBindingはモデル正本**とし、生成後コードの手修正を標準カスタマイズ経路にしない。Plugin自体もTEIモデル→コード生成で実装可能にする。
+
+**VUIの特異性を失わない**：VUIは音声Input/Outputの別UI部品ではなく、`Receive → Interpret → Decide → Advance → Present → Resume` の**状態付きInteraction Flow**を第一級に扱う。音声認識の非決定的結果は、出典・信頼度・解釈版付きの型付きEvent候補で止める。Interaction State（対話進行）、Business State（業務確定）、Execution State（実行・再試行・配送）は別のOwnerと版を持ち、会話上の「はい」を業務GrantやCommitへ自動変換しない。CLI/Web/MCPの対話型処理にも同じFlowモデルを使えるが、媒体特有の認識/提示Adapterは残す。
+
+**生成器への要求**：同じモデルからWeb/Desktop/CLI/MCP/VUI Adapterを生成する場合、Hook BindingとOperation意味契約の互換性を検証する。生成ManifestはSlot、選択Plugin、実装Provider、Generator/Template版、Binding fingerprint、対象Targetを束縛。実行Traceでは`selected → loaded → invoked → received`とEffect/Delivery/Outcomeを別列にし、選択A・実呼出しB、Load成功・未呼出し、ACK喪失を検出する。ProviderのSource/Versionが変われば、影響するBinding/Targetだけ再資格化し、同一byteやWorld FP一致だけで権限・意味受理を継承しない。
+
+**VA-HOOK-01（計画・未実施）**：同一型付きOperationに、(a)標準のみ、(b)TEI生成のTransform Hook、(c)Replace Hook、(d)複数Hook順序競合、(e)VUI Resume中のProvider更新、(f)選択Pluginと実呼出し不一致を与える。独立Expectedで意味・権限・失敗・Resume/冪等性・Consumer受領を比較。まずCLI/Studioのread-only Inspector一件で実Providerまで追跡し、次にVUIの「曖昧入力→確認→中断→再開」を同じOperationに接続する。実音声認識、実Provider、各Target実行、Cross-target Conformance、Owner受理は **NOT RUN**。
+
+**初期非目標**：全Pluginの静的/動的/外部Process方式を一括決定しない。全Hookを動的Hot Swapしない。新中央Host/Resolver/認可Engineを作らない。KON独立Service化の必要性も本節からは導かない。実装IssueはTEI Owner側で起票・受理し、横断文書を業務意味の受理票へ昇格させない。
