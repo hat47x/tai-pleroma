@@ -209,3 +209,39 @@ S2では逆に、事前に全遷移が固定できないCaseにおけるAgentの
 **投資判断票**には、Task分布・対照系と独立Expected、実Harness/Model/Tool/Skill byte、Source/Grant/Recipient、事前割付ITTと適格PP、重大事故/不要停止/保留、実Outcomeの配送、遅延と総費用、複数年のAPI追従/隔離/保守、縮退・撤退条件を揃える。閾値は業務用途別に事前設定し、結果を見て変更しない。安いToken・Plugin実ロード・AIの完了発言を成果認定の代わりにしない。
 
 **現時点の停止線**：#3503のFlow Schema/実媒体・#3278のTrait実Fulfillment・#3509のB2C Conversion Plugin/CVR・#165の非定型CaseとHV-3/HV-4比較はいずれも提案・未実証。TAI #168の比較適格0/4と既存G0/G1/G2→新しい独立4 Slotを変更しない。新しい中央Host/Runtime、第二Operation/Workflow Engine、Trait専用Resolverの導入を決定しない。
+
+## 16. 実証済み部品を独自Harnessの必要条件へ誤昇格しない：2026-11-08のEvidence照合
+
+11月8日の他Productの実装状況を再確認した。YIが本当に新しいHarnessで埋めるべき隙間は、**局所で成立した能力を、同一Target／同一Attemptで、正しいScope・開示・配送を保ちながら組み合わせた後に残る隙間**である。以下の実績を足し算して横断E2E成立としない。
+
+| Product / 出典 | 実績として主張できる範囲（確認時点） | Harness投資の根拠として不足するもの |
+| --- | --- | --- |
+| TEI [#3482](https://github.com/hat47x/tei-platform/issues/3482)／main `8ed583790e63b63527c1dd8f8aecc1d6ce6e3260` | 固定`sales.order.submit`の **13実CLI Reply、42件の限定Consumer負例**をmain push専用[CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657)でPASS。独立RequiredのCapability/Application/Source束縛を限定観測 | Function実Invoke/Provider/Grant、全設計閉包、外部H3 Tool Reply全byte、Owner意味受理は**別**。適格H2/H3の根拠には未使用 |
+| TAI [#537](https://github.com/hat47x/tai-pleroma/issues/537) | Edge `edge-record` v4の端点種別optionalで投影→合成24件PASS、全体90段。省略/nullは型欠落として正規化、実端点未解決は合成で拒否 | Data Contractの成功≠実外部Harness受領・認可・意味受理。**NULLを未解決と断定する汎用Harnessルールは誤る** |
+| EKI [#753](https://github.com/hat47x/eki-fabric/issues/753)／[PR #787](https://github.com/hat47x/eki-fabric/pull/787) | 同一試験プロセスで実Unixソケットを通して固定6 JSON Eventのバイト・順序と4種改変を検査。race付き5回の限定PASS | 別プロセス実Adapter/実Lease失効・Disposition/Connect/Provider Effect/受信Agentの活用は未資格 |
+| SEI [#752](https://github.com/hat47x/sei-cognition/issues/752)／[#802](https://github.com/hat47x/sei-cognition/issues/802) | `sei resume --json`を構造化した既存CLI経路と、現MCP `resume`概要が原則人向けtextである差をSource・実例で指摘。#752はclosed、#802はopen | 現最新版の詳細表示差の再確認、**MCP概要の型付き同値**、実Harnessがbasis/rationale/unknownを受領して使えたことは未確認 |
+| TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)／TEI [#2509](https://github.com/hat47x/tei-platform/issues/2509) | DSH実Tool呼出・Skill実Loadの局所技術Witness | 事前に隔離した新しいH2→H3→H3→H2の比較資格は**0/4**。OS G0実Read-deny、G1/G2完全配送、独立Expected/Grant等の再確認が必要 |
+
+**型付きOperationだけでは「情報を十分に受け取れた」と言えない**。TEIのbounded-presentと完全なFunction定義、TAIのoptionalにおけるnull省略と未解決、SEIのCLI構造化再開とMCP自由文、EKIのOSソケット成功と実Worker Dispositionは、それぞれ**範囲の異なる観測**である。Harnessに不足データを推測で埋めさせるより、Productが開示可能な具体的な状態（present/partial/unknown、unsupported、effect unknown等）を既存APIで返し、Harnessは根拠・欠落・保留をそのままConsumerへ届ける設計を優先する。
+
+### 16.1 四つの資格を一件のAttemptで分離する
+
+比較票では以下の観測を同じタスクへ束縛する。ただし新しい横断公開Schema／Proof Store／Oracle Engineではなく、TAI #168/#488/#271の**試験記録の列**である。
+
+| 確認内容 | 証拠と失格例 | 保持するOwner |
+| --- | --- | --- |
+| **D：必要情報の取得範囲** | Product/Source/Revision/Required集合と実Sourceを照合。単なる`validate.ok`、catalog件数、空配列を「必要条件が全件存在」と誤断定したら失格 | TEI #3262/#3482、SEI #767 |
+| **T：実Tool情報の完全配送** | raw request→実CLI/MCP output→ordered reply/end→Harness/Consumerで受領したbyte。途中切断、request≠reply、stderr混入、schema差は失格・未知扱い | TAI #168、TEI #2509 |
+| **Q：Claimに必要な認識・説明** | 独立Expected/Scope、Meaning未受理/保留、SEI basis/未知と選択根拠。推薦を判断や現在許可へ昇格したら失格 | SEI #767/#677、TAI #488 |
+| **E：実行・配送・Outcome** | 現在Host Grant、Operation id、Provider Receipt、Readback、受け手の受領、Goal Outcomeを分離。Socket送受信やTool成功を業務Effectへ昇格したら失格 | EKI #753/#407、TEI #1174、TAI #271 |
+
+D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外部Agentへの成果配送を主張しない**。TがPASSでもQが不十分なら適切に保留できたかを評価する。Eが未実施のread-only仕事では、Eを無理にPASSへ塗り替えず適用外と記録する。結果の類似やすべてのTool exit 0を横断の同等性としない。
+
+### 16.2 次の最小実装・評価変更（初回SK-02の後段）
+
+1. **まず既存TAI #168のP0のみ**：物理的なG0許可Read／拒否Readの正負対、G1/G2完全なTool/Replyと実送出の記録、新規4 Slotと独立Expected。TEI 13/42やEKI socketの局所PASSはP0の代用ではない。
+2. **P0成立後の限定H3分析**：TEI `sales.order.submit`の一つの公開・合成モデル調査で、ProductのD列と外部HarnessのT列、独立採点Qを一Attemptで照合する。Tool schemaとSkill有無以外は固定し、H2/H3の回答に「該当Function宣言はboundedに存在する／InvokeやDB更新は実証していない」という適切な限界が残るかを比較する。TEI #3482の旧CIを同時実行の証拠にしない。
+3. **後段の対照（別Trial Group）**：SEIのRecommendationを実CLI保存→`resume --json`で独立再Readしてbasisと未決を点検し、MCPは別Transportとして比較する。EKIは同一Task/Attemptの実Result BodyとConsumer受領が取れる時点で追加。既存SEI/ EKIの部分PASSを足して同一Activity成功にはしない。
+4. **独自Loop判断はさらに後**：H3改善があればProduct Skill・専門Pluginを先に採用候補とし、同じ重大な未解決問題が二つ以上の外部Harnessで再現するまでHV-4を開始しない。
+
+**優先順位・停止線**：この節は11月8日時点の既存実験の**適用範囲照合と、次の順序の具体化**であり、新しい4 SlotのBlocking要件／新しい実行Tool・Schema／追加Product実装の採用ではない。TEI実Provider／SEI→TAI実Harness Handoff／EKI実別プロセスConsumer／HV-3専門Pluginの増分／臨床利用／独自Loopは**NOT RUN**。最優先は環境実格差を解消してTAI #168の比較可能な試行を成立させることである。
