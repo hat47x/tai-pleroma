@@ -5,10 +5,10 @@
 ## 現在の実証基線（2026-11-08 夕方照合。各Productの後続受入を優先）
 
 - **TEI Design Context/T1**：merged #3354の11実CLI Reply／32局所Consumer対照、既知T1-Aの第7 Stepを限定実行済み。merged #3477のmain実CIでWorld同一・Source Index改版による旧Context拒否と、Context→Scenario前後再照合を確認。**AIによる未見Rule発見T1-BはNOT RUN**。Required Scope外はpartial / exploration-only / qualifiedTestGeneration=false。
-- **外部Provider Source**：import先原文のみ変わってもConsumer World/Source Indexが不変となる盲点はDraft #3479の検証課題。外部Source/原本の現在資格・Provider実Read/Host権限は未認定。
+- **外部Provider Source**：#3479はmain統合済みで、import先Sourceのみ改版しConsumer World/Source Indexが不変となる反例を限定確認。初回同一LoadのProvider実Parser byte/Manifest private witnessはDraft #3524で移植検証中。外部Source全Closure・Product実Read/現在Host Grantは未認定。
 - **TEI Self-build**：Reference Driverだけでなく、cmd/tei自身のStage1生成物がStage2 Invokerとなる**L3形状の局所実測**が#3440/#3447にある。Build Intent解決の**L2は未成立**、G4全体UNQUALIFIED。#3476のSupply Verifier/Intent前提はDraftの限定実験、resolved=false。
 - **SHO Document**：公開SUI→SHO固定354byte相互運用は別Repo CI限定PASS、真正一File HandoffはSKIP。SHO #25のtest-only Working Copy保存→別Open readbackと元/出力FD同一性・ABAの限定CIはPASS。正式Editor Writer、永続Store CAS、Source真正性とOwner受理は別。
-- **YIC Skill/BOM/未来構想**：H2/H3はSkill実Loadを限定観測済みだが比較適格0/4。BOMはWorkbench RQ-035と別のRQ-036、実組合せ資格未成立。SUIの一次意味形成と高度情報統合を別評価し、Ontology/Decision TwinはTEI全体Self-buildとSUI基本機能の後続段階。
+- **YIC Skill/BOM/未来構想**：H2/H3はSkill実Loadを限定観測済みだが比較適格0/4。現mainのRQ-035はWorkbench、**RQ-036は全容Model Map**。BOM Draft #3297のRQ-036は意味衝突しており、Ownerの採番・PAS/Gap Audit整合前にマージできない。SUIの一次価値／高度統合を分離し、Ontology/Decision Twinは後続段階。
 
 
 - **TEI 1 Function宣言Required**：merged #3482／main push CI #42462861657のbounded Contextは13実CLI Reply、42局所Consumer Controlsを限定PASS。Capability定義・Application uses・Validation/Sourceの独立照合であり、実Call Binding/Provider/Grantはnot-observed。
@@ -18,6 +18,10 @@
 - **TEI共通API／SEI記録**：TEI main #3458はvalidate一操作のCLI/MCP共通Reportを実装済み、他3 Toolの意味同値や外部Harness受領は未資格。SEI CLIはRecommendation/DecisionのAddとResumeのみを正式な保存入口とし、Question未決やMethod Applicationの書込・TEI Source真正性は未証明。
 
 - **最新Requirement衝突（要対応）**：mainのRQ-036は全容Model Map／Diagram（merged #3505）。未マージBOM Draft #3297もRQ-036を別意味に再利用している。BOM IDはOwnerが再採番するまで現行採用IDとして扱わず、当該Draftをそのまま統合しない。実Host #3516の7合成Adapter Cases、SQL #3500合成Connector、AI Tuning #3520の19合成対照は各局所限定であり、実Provider/Client/本番Outcomeではない。
+
+- **Plugin-first Inspector**：TEI #3381はmain統合済み。既存Compositionでselected BをHost登録Go実装へ束縛し、CLI注入HelperとStudio Host APIの6対象×2経路を限定Go試験。通常CLI dispatchと実Wails StudioBridgeの製品S2配線は未実装。#3531はstatus/master planへ差分を反映。
+- **実Provider／性能統計**：TEI #3500 DraftはNative Browse Pattern→Postgres Executor→instrumented SQL Connector→MapperのGo試験成功、実Postgres opt-inはSKIP。main #3520はAI Tuning合成19対照成功、実Provider計測・Latency/Cost/CVR改善は未実施。main #3516のHTTP合成Adapter7ケースも実DB Effectではない。
+- **配信・KONの非強制性**：完全Headless/B2C独自Frontend、静的Site、SHO、KON Dataspaceは任意に採用する別Consumer/Provider。#3528/#3512は設計Draft、実公開・KON API・CVR改善・第三者の受領は未実証。
 
 ---
 ## 1. 研究で問い直す対象
@@ -930,3 +934,69 @@ YICの最初の価値測定は、**局所read-only Mapから理解が改善し�
 **次のP0**：①#3297のRQ-036衝突をOwnerが解消して現main Requirementを壊さない。②#2586 HJ-09でorder_entry.recent_ordersの実Provider ReadからFunction Contextに至る一辺を同一Attempt検証する。③#1251のCLI/Studio正規入口でSelected→Actual Invokedを一件検収する。これらは**並行**実施可能。既存TAI #168 H2/H3比較適格0/4を別の最優先実験として維持し、Map/Plugin/B2C/性能機能を追加Hard Gateにしない。
 
 **後続P1**：#3518のM0 Mapを実Source/RequiredとCurrent Disclosureへ接続し、Source/Diagram/Effective Graph/Target Codeの差を正負1件ずつ判別する。#3520のTuning Referenceは実Provider Readが出てから独立Benchmarkへ接続する。SEI Method、Adaptive Flow、Chat/VUI/B2Cの追加効果は、既存Toolと比較して効果が出た場合のみ次段採用する。**本節で新しい実Provider／PG／Map Generator／Chat／VUI／本番性能／実横断Outcome／Owner受理試験は実行していない**。
+
+
+---
+
+## 21. 2026-11-08 夜：選択した実装を実Consumerまで接続する
+
+**位置付け**：§19〜20で整理した世界の同一性・部分取得・Outcomeと、11月8日mainに反映されたTEI Plugin-first実装・Source鮮度／性能観測の差分を接続する。現存するProduct Owner/CLI/Source/Scenarioを使い、新しい共有Host、Repository、Optimizer、Runner、認可・Proof Engineを作らない。未実証の領域を一律ブロックせず、用途に必要な観測だけ追加する。
+
+### 21.1 Inspector：Goの二Consumer呼出しはmain達成、通常CLI・Wails配線は残務
+
+[TEI mainに統合された #3381](https://github.com/hat47x/tei-platform/pull/3381) は、既存Compositionのexact Scope/Selection/Contract/Epochを選択済みInspectorのHost登録実装に結ぶtyped adapterを追加した。現mainの internal/inspectoradapter/selected.go と docs/status.md を再取得して確認した。実Reference WorkspaceのData、Validation、Relation、Capability、Application、Patternという6対象を、CLI側の**注入Helper**とStudio Host ReadOnly APIの**二つのGo call site**でそれぞれ呼び、合計12回のHost CallbackとResult投影を局所テストする構成。B選択／A登録、失効Epoch、Host Guard拒否、Schemaや秘密Errorを含む拒否が別対照。
+
+[統合済み #3531](https://github.com/hat47x/tei-platform/pull/3531) は製品状態とMaster Planで、**S0/S1＝Go局所経路、S2＝通常Product配線**を明記。通常のtei CLI main dispatchはBuiltinを呼び、実Wails StudioBridgeから同じselected Bが呼ばれた事実はまだない。合成Artifact digestは実Linked Binaryやcurrent Grantの証拠ではない。先行Go testは部分成功したが、Repository Healthが設計README索引欠落でFAILしたHEADも存在。新HEAD全Healthと通常CLI E2Eは別証拠として残す。
+
+**最小S2**：通常tei inspect実Processと実Studio Bridgeの各一操作について、同一Source/Target/Selection/Host EpochでBの実Callbackを観測し、B→A誤経路／Guard失効／不正Resultを双方で拒否。対象は最初は一Subjectでよく、全6件やBOMの2×2資格を同時に要求しない。#1251/#951/#1016/#1824/#1158をOwnerとして第二Inspector Runtimeを作らない。
+
+### 21.2 Provider Source、Rule、Buildの失効は実消費Dependencyで決める
+
+[main #3479](https://github.com/hat47x/tei-platform/pull/3479)の限定反例は、外部import先の原SourceやManifestが改版してもConsumer World/Source Indexの両Fingerprintが変わらない世界を示す。[main #3490](https://github.com/hat47x/tei-platform/pull/3490)はPluginを選択するRule/Policy側の鮮度も合成観測へ接続した。[Draft #3524](https://github.com/hat47x/tei-platform/pull/3524)は、同一LoadでParserに渡ったprivate Provider Source/Manifest byteのWitnessを現mainへ前方移植する候補。ただし新HEAD CIは照合時にqueuedで、同時点の全Source Closureや外部AudienceへのDisclosureは認定しない。
+
+比較の列を **Consumer World/Source Index、Provider Raw/Manifest、Rule Revision/Selection、実Source Occurrence/Loader、Build Artifact、actual invoked Provider、Target/Scope/Grant** に分ける。Sourceが更新されたという理由だけで実消費していない全Artifactと歴史Receiptを失効させない。一方、原Sourceに依存する現在の引用やBOM資格はConsumer FPの一致だけで再利用しない。same-Loadと複数Fileのatomic snapshot、A→B→Aの更新履歴も異なるClaim。
+
+### 21.3 次のProduct Valueはrecent_ordersの実Rowsetと二つの実Consumerから
+
+[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)のP0-Rは **order_entry.recent_orders** の一件を正本とする。必要な実観測は、Function/Pattern→実Query/SQL raw・bind args→選択Provider/実DB Executor→Rowset/明示Mapping→Function Data Context（grain/NULL/completeness）→実Consumer受領→独立Expectedを**一Attempt**で連結すること。別Operation・別SessionのPASSを継ぎ足さない。
+
+[Draft #3500](https://github.com/hat47x/tei-platform/pull/3500)は別SubjectのOrganization Caseで、実Native Browse Pattern→Resolver→Postgres Executor→instrumented Connector→explicit Mapperの局所Go専用CIに成功した。物理Postgres opt-inはSKIP。これは実既存Contractへの接続前例だが、recent_ordersの実Rowsetでも現在Host Scopeでもない。[main #3516](https://github.com/hat47x/tei-platform/pull/3516)の7ケースはSubmit Command系の実Go HTTP Host/認可/Driverから**合成Adapter**に到達した試験。202やHost Auditは業務DB Commit・Client再受領の証拠ではなく、#3500と合算してProduct Function Readを完成扱いしない。
+
+### 21.4 AI性能のReferenceとB2C・KONの任意性は、測れたOutcomeに従う
+
+[main #3520](https://github.com/hat47x/tei-platform/pull/3520)はDesign Hint、合成Call/Statistics、Provider選択/Invoke申告、Scope/Grant、Window、Reply part/end、欠測をread-onlyで突合するReference。固定[専用CI #42476197836](https://github.com/hat47x/tei-platform/actions/runs/42476197836)の合成19件PASSは維持する。しかし実Provider Telemetry、実p95/Cost/CPU、Sourceに対する実Query plan、実B2C CVR改善を観測していない。[main #3530](https://github.com/hat47x/tei-platform/pull/3530)の計画は既存T0〜T4にCache/Query/Lifecycle/Trait/Headlessの検証方法を統合したもので、新Optimizerを実装した成果ではない。
+
+**性能改善の必要証拠**は、同じSubject/Workload/ScopeにおけるBefore→変更差分・実行されたProvider/Query→After→正しい結果/副作用/開示/負荷の独立Guardrail。キャッシュがHitした、Synthetic Packetが一致した、AIが速いと評価しただけでは改善としない。公開WorkflowのHealth失敗は設計索引/Checkout pin/CI timeoutなど固有原因を含み、局所19合成PASSと、Repository Gate全合格と、脆弱性検査のネットワーク障害を別々に扱う。
+
+[TEI B2C Draft #3512](https://github.com/hat47x/tei-platform/pull/3512)と[TEI/KON/SHO非強制計画Draft #3528](https://github.com/hat47x/tei-platform/pull/3528)は、TEIの標準Renderer/UXを使わず独自Frontendだけで完結する完全Headlessを許す方針。KON Dataspaceは必要な場合の保存・版付き公開の足場、SHOは文書Consumerであり、最初のTEI Function Read、CLI配布、B2Cサイト自体に常駐を強制しない。Assignment/Exposure/Intent/Effect/Conversion/利益を別観測として、Publish Artifact→Storage Revision→Publish ACK→外部Readerの実受領Byteを分離。B2CブラウザE2E/因果CVR改善やKON実サービスAPIは未実施。
+
+### 21.5 採用済みRQ-036は全容Model Map。BOM DraftはOwner再採番待ち
+
+現mainの正式Requirementsを再Readした結果、**RQ-035＝Data Source Workbench、RQ-036＝全容Model Map/Diagram**。旧§14〜19にある「RQ-036＝Verified BOM」は当時の旧Draftの歴史であり、最新の採用済み要求ではない。現在の[BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)にRQ-036の別Meaningが残っているため、**無修正でmainへマージ不可**。[TEI #3267](https://github.com/hat47x/tei-platform/issues/3267)／[#1119](https://github.com/hat47x/tei-platform/issues/1119)には既に衝突とOwnerによる採番・PAS/Gap Audit整合が引き渡されている。YIC側で未使用IDを自動確定させず、既存RQ-036を上書きしない。BOM synthetic Pairwise/Witness研究は並行継続可能。
+
+### 21.6 ORX-83〜92：新しい実証成果の判別ケース
+
+| ID | 独立Expectedと禁止する飛躍 |
+| --- | --- |
+| **ORX-83 Go二Consumerと実製品入口** | BのGo Helper／Studio Host API計12CallbackがPASSしても通常CLI dispatch／Wails実BridgeでBが呼ばれた証拠ではない（#3381/#3531） |
+| **ORX-84 Selected誤結線と失効** | 選択B・実登録A、Host Guard撤回、Epoch失効、型違いなら対象Readを拒否。全Product/Grantに拡張しない |
+| **ORX-85 外部Source改版・二FP同値** | Provider Raw/Manifestだけ変われば必要な実Source Witnessを再確認。影響がないArtifact全件を強制失効しない（main #3479／Draft #3524） |
+| **ORX-86 Ruleの資格現在性** | 旧Policyで選択可でも新Ruleで適合かは別。Rule Fingerprint/Selectionと実Invocation／Host Grantを切り離す（main #3490） |
+| **ORX-87 異Subjectの成功合算** | Org Case SQL Instrumented GoとSubmit Command Host合成7ケースはrecent_orders実Provider Read/Function Contextの同一Attemptではない（#3500/#3516） |
+| **ORX-88 HTTP Adapterと業務Commit** | 合成Adapter実Invokeと202があっても外部DB post-image・Client受領・再送の安全を肯定しない |
+| **ORX-89 Synthetic統計と実改善** | 19合成ControlがPASSしても実Latency/Cost/DB負荷改善ではない。Before/Afterと独立Guardrailが必要（#3520） |
+| **ORX-90 Headless自由度の実証** | 独自UIのみでTEI標準Renderer JS等を必須にせず動くことを実Bundle/Network/操作で確認する。設計文書だけでは製品保証としない（#3512） |
+| **ORX-91 公開ACKと外部受領** | Site生成・Git/KON StoreのACK後も第三者が古いByteを読む場合はPublish Outcome未確認。外部ReaderのRevision/Scope/Byteが必要（#3528） |
+| **ORX-92 CI局所PASSと全体Gate** | AI Tuning合成19PASS、全Repository Healthの索引失敗、脆弱性チェックの外部通信失敗は異なる観測。古いFAILを後からPASSに書き換えない |
+
+### 21.7 次の最短P0と並列P1
+
+**P0-a：一Functionの実Readを優先**。#2586/HJ-09 recent_ordersで一Attemptの実SQL・Provider・Rowset・Function Data Contextの**最初の未接続一辺**を実観測。Provider/Source/Scope/NULL/Grainが不明ならそのClaimだけunknownにし、既存read-only探索は継続。
+
+**P0-b：Plugin S2の実選択先を使う**。通常CLIと実StudioBridgeの一Subjectずつでselected Bの実Callback、B→A誤配線・Epoch失効・独立Expectedを検収。既存Go 6×2を再実装しない。
+
+**P0-c：BOM要件ID衝突の解消**。Ownerが採用済みRQ-036を保護し、BOMのReq/PAS/Gap Auditを一括整合するまで#3297をそのままmergeしない。計測・Reference開発と並行可。
+
+**P1：必要なConsumerに限って拡張**。#3518 Model Mapはpartial M0からSource/Diagram／標準Custom／実効Graph/実Targetを比較。AI Tuningは実Provider一Readと実統計を束縛してから改善を測る。静的公開・KON・SHO・B2Cは各User Jobに必要なときだけ別Consumerとして評価。TEST-T1B未知Gap／外部H2/H3（正式比較適格0/4）も既存Ownerの独立Gateを維持。
+
+**未資格**：recent_ordersの実物理Rowset／正式Function Data Context、D1通常CLI/Wails Bridgeのselected B実Provider、BOMの2×2実組合せ、性能Before/After実改善、B2C転換率・KON配信実Consumer、T1-B、外部H2/H3正式比較、OwnerによるMeaningと利用者Outcomeの受理。新中央基盤を追加するより、動いているProductの次の一辺を接続する。
