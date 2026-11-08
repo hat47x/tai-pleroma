@@ -256,3 +256,22 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 **新しい独立Negative案**：HV-N1=Skillに手順があるだけで実Tool未実装、HV-N2=Plugin selectedだがactual invokedは別Provider、HV-N3=正常な空Resultから全業務Source不存在を断定、HV-N4=H2/Skill独立Expectedや非公開Rawへ越境Read、HV-N5=SEI Method回答は良いが現在のGrant/受領なし、HV-N6=独自ループの費用が継続的に増えるのに独立ExpectedでHV-3を超えない。全て**新規実行NOT RUN**。
 
 **採否の停止線**：初回外部Harness H2/H3の資格確認を最優先、既存TEI/SEIのMethod/Pluginを接続して成果を測る。HV-4は、既存HarnessとPluginでは再現・隔離・再開・意思決定の必要条件を満たせない**具体的反例**と、専用実装で改善できる見込みが独立評価で示された場合だけ設計レビューする。独自Harnessの新Runtime/Plugin Manager/Memory/Tool Routerの先行製品化を承認しない。
+
+
+## 13. 2026-11-08：SUIの認知価値と情報統合価値を混同しない対照実験
+
+[監査 §23](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の具体的比較票。現行一次価値は[SUI ADR-0089](https://github.com/hat47x/sui-sensemaking/blob/main/01_Plans/adr/ADR-0089-product-value-canon.md)。[#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)のSensemaking体験と[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)の異種Source統合は**両方重要な検証仮説**であるが、後者のProvider/DB/統合Viewを前者の成功条件にしない。以下は各ProductのSV/II/CUケースの第二正本ではなく、**何に投資するかを判断するための比較設計**。
+
+| YIC比較Case | 同じ利用者課題に与えるB0/B1/B2 | 観測する独立Expectedと失敗 | 次の投資判断 |
+| --- | --- | --- | --- |
+| **VA-SUI-V01 理由にならない違和感** | B0＝紙/Markdownで原資料を読む、B1＝AIなしSUIのRaw/配置/保留/翌日再開、B2＝同じSourceをAI候補・別配置を見た後に再開 | 初回の自力の見立てをAI提示前に記録。理由を説明できない保留・異論を保持、後付け理由を元の日時へ偽装しない。AIによる気付きと誘導/混乱を別列。カード枚数・整理速度のみで成功にしない。[SV-03/05/08](https://github.com/hat47x/sui-sensemaking/issues/3400) | B1で最初の価値を測り、B2は認知上の純増・損失・介入費用を評価。録音・全資料OCR/LLM必須化はしない |
+| **VA-SUI-V02 意味の単位と複数の見方** | 同じ原文1件と2 Canvasの複数Occurrence。B0＝原文/手動マップ、B1＝単一CanvasでCard/Island/Tree別投影、B2＝必要時だけ複数Canvas/別Viewer | 意味として一体の経験を文単位に強制分割しない。Node同一・Canvas座標差・Tree親子/Island所属を合一しない。読み返せる原文・非公開Scopeを保つ。[SV-01/06/09](https://github.com/hat47x/sui-sensemaking/issues/3400) | 全Graph Schemaや複数Canvas Editorの**同時実装は不要**。一Canvasの意味保持不足・実務分割需要が出た機能だけ評価 |
+| **VA-SUI-I01 3異種Sourceと同定の仮説** | B0＝既存DB/表計算/文書の手動参照、B1＝SUI Cardへ手動投入、B2＝RDBまたはCSV・文書・時系列Eventの限定SourceRefを読取って2 Viewで照合 | Source/Revision/有効時刻/粒度が別でも同一人物/案件と自動確定しない。転載2件を独立証拠2件に数えない。非公開SubjectのID/件数を出さない。[II-01/02/03/07](https://github.com/hat47x/sui-sensemaking/issues/3401) | B2で**新しい重要な関係が発見できたか**と誤同定/コストを測る。高価な万能Query/中央DB/全ViewやVector/RAGはB2入口にしない |
+| **VA-SUI-I02 Partialと誤結論** | 一つのSourceだけ最新、もう一つは遅延・一部未取得。B1/B2の同じ問いの説明を比較 | 一件の観測は限定存在証人、見つからなかった対象は全件不在と断言しない。古いIndexに「現在」と付けない。Scenarioは実Effectでない。[II-04/08/10/11](https://github.com/hat47x/sui-sensemaking/issues/3401) | B2の速度/回答数改善を完全性/業務成果として合算しない。実ProviderやAuthority不足は対象Claimだけunknown |
+| **VA-SUI-C01 二人の保存と判断** | 同じ文書Revision r0からA/Bが別Cardと保留を編集。単独Browser Undoと2 Client CAS保存を対照 | Bが先着保存した後、Aの古い保存は409でdirty buffer維持。AのローカルUndoはBの確定値・意味判断履歴を巻戻さない。保存ACK喪失時はEffect unknown。[CU-01〜04/09](https://github.com/hat47x/sui-sensemaking/issues/3399) | まずDocument CAS/保存時同期。CRDT/常時同期/Event Sourcingは2 Client実証の不足が出たときだけ |
+
+**測定欄**：Sourceの出典と現Audience、資料への復帰、理解の変化・新発見・残る異論、誤同定・誤要約・秘密露出、正しい部分継続/過剰停止、次に必要な外部Source・人の判断、介入操作数/時間・Tool/Token費用を別列。異質な認知成果を単一Total Scoreへ合算しない。SUI製品自身の内部dogfoodは実務T2に数えず、SUI外の実務資料でAI OFF→必要時AI ONの順を記録する。実第三者T1は得られた場合の別証拠であり、T3模擬試験の多数決で代替しない。
+
+**採否の順序**：まず[#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)のV0/V1で一仕事の理解変化と再開を確認する。別レーンで[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)のI0→I1→I2をread-onlyで実証。共同編集は[#3399](https://github.com/hat47x/sui-sensemaking/issues/3399)の最小2 Clientだけ。SUIのActionIntentは外部Effect/Hostの承認と別資格であり、YIC新Runtime/中央Data Serviceを作らない。TAI #168のH2/H3比較Blockingへ新しい要件を加えない。
+
+**証拠の状態**：上記5ケースの比較は設計提案・Product Source-staticの対照まで。実B0/B1/B2、独立ExpectedのProduct Owner固定、SUI実務T2／第三者T1、異種Source 3系統のProvider実Read、2 Client保存E2E、AI効果測定、Owner正式受理は**NOT RUN**。
