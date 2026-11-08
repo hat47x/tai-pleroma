@@ -311,3 +311,8 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 ## 17. 2026-11-08：三Flow・図表駆動生成と専門B2Cの価値比較
 
 [横断監査 §27](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-FLOW-01** を追加。Adaptive Activity / Interaction / Business Operationの境界を、同一User Jobの標準UI、専門Web UI、Chat/VUI Adapterで比較する。図表の標準固定部・拡張Slotを編集し、生成Manifestと実Bindingの一致を独立Expectedで判定。認可・Owner・意味受理を省略しない一方、B2C専門UXに標準UI/AI Harnessを強制しない。完了率・離脱・P50/P95・Cache/Provider統計・変更リードタイム・費用を分離計測。実Provider・Generator・負荷/利用者試験・Owner受理は **NOT RUN**。
+
+
+## 18. 2026-11-08：AIチューニングとEvidence再利用の独立比較
+
+[横断監査 §28](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-TUNE-01** を追加。Baseline／Query・Index／Cache／Plugin置換を、同一Operation・同一Owner/Grant・独立Expectedで比較する。ウォーム/コールド、入力分布、P50/P95、DB回数、CPU、Cache hit/miss、Source/Plugin/Toolchain変更後の失効、旧Artifact保全を記録。速くても意味・認可・Nullability・部分受領・結果不明の判定を破る案は不採用。Artifact再利用・Build省略・Evidence再利用は別々に採点する。実Provider Plan、実負荷、AI適用、Owner受理は **NOT RUN**。
