@@ -239,3 +239,14 @@ TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**
 ### 2026-11-08：段階的なEvidence資格（F0〜F5）を実証計画へ
 
 [横断監査 §30](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §20](../evaluations/VA-01-product-value-necessity.md)に **VA-EVID-01** を追加。Source→API→Representation→Provider→Effect→Deliveryを同一Attemptで追跡し、局所成功を実E2Eへ加算しない。最初は一Functionの実Provider Rowset、次に正式Writer Readbackと実Consumer受領。既存の限定的なCLI/Reader/IPC PASSは維持し、Owner受理や本番Effectへ昇格しない。**実注入・Owner受理はNOT RUN**。
+
+
+### 2026-11-08：初回Product実Readをrecent_ordersへ固定（横断証拠の訂正）
+
+[VA-04 §13](../evaluations/VA-04-evidence-readiness-preflight.md)に**初回一Functionの実行票**を固定。[TEI Master Plan](https://github.com/hat47x/tei-platform/blob/main/plan/MASTER_PLAN.md)のP0-R初回対象は **`order_entry.recent_orders`** であり、[main #3482](https://github.com/hat47x/tei-platform/pull/3482)の13実CLI Reply・42限定Controlは別の **`sales.order.submit`宣言照合**。両者を同一FunctionのF0→F3と数えない。
+
+**次の最短経路（既存#2586/#2506/#2514がOwner）**：`recent_orders`に対し、実Source/Query raw→実選択DataSource/Provider→actual SQL＋typed args→実Rowset＋Mapper→Function Data Contextを**同一Attempt・同一Scope・独立Expected**で照合する。その後に限ってForm/Tableの二read-only Consumer、三視点Graph/CRUD、性能統計の実Consumerを追加する。実PG SKIP／別Domainの合成Connector／HTTP合成Adapter／AI Synthetic PacketのPASSを実Function Rowsetへ合算しない。
+
+**訂正済み現況**：[TEI #3479](https://github.com/hat47x/tei-platform/pull/3479)のImported Provider raw/Manifest失効反例、および[#3381](https://github.com/hat47x/tei-platform/pull/3381)のSelected Inspector二Go call-siteはmain統合済み。ただし後者の通常CLI/Wails Product WiringはS2未達。[#3516](https://github.com/hat47x/tei-platform/pull/3516)のHTTP合成Adapter7経路と[#3520](https://github.com/hat47x/tei-platform/pull/3520)のAI性能合成19件は限定成功。実Provider/性能改善/本番Effectは未資格。RQ-036は[main #3505](https://github.com/hat47x/tei-platform/pull/3505)の全容Model Mapを維持し、同番号を使う[BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)はOwner再採番まで無修正統合禁止。衝突の追跡は[TAI Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)を再利用。
+
+**判定**：P0-RのR0〜R2実ReadとR-QUAL-01〜06は本更新ではNOT RUN。現TAI H2/H3適格0/4、未知AIテストT1-B、Owner意味受理を変えない。不要なPlugin/Graph/AI/SHO/外部Harnessの全完成を実Readの先行必須にせず、Source取得/権限/実受領の必要な一辺だけを正しく停止・再資格化する。
