@@ -183,3 +183,12 @@
 **重要な停止線**：Sourceの現在性はConsumer World FPだけで保証しない。[TEI Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)のImported Provider Source-only driftなど、入力原文の版を別照合する。Repo/PRの統合は合成ケースの実Target/Provider/Current Grant/Consumer受領の証明ではない。必要範囲のSource/Grantが未資格ならそのActionのみ保留し、合法なローカル探索・通常Markdown読取・既存Product単独作業を止めない。
 
 **この追補で実行したこと**：GitHubのIssue/PR/記録済み限定CIの読取り、VA-01/VA-04/本ロードマップ更新。新TEI実Read、SEI Method、EKI二実Adapter、SHO Editor、本番外部Harness/独立価値比較・Owner受理は**NOT RUN**。新たな共通Runner/Authority/Registryを作らない。
+
+
+### 2026-11-08：SUIの認知増分と情報統合を別レーンで実証する
+
+[監査 §23](yi-constellation/product-value-scope-audit-2026-11-04.md)／[VA-01 §13](../evaluations/VA-01-product-value-necessity.md)に、現行[SUI ADR-0089](https://github.com/hat47x/sui-sensemaking/blob/main/01_Plans/adr/ADR-0089-product-value-canon.md)と2026-11-08の[#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)／[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)の2つの価値軸を結び付けた。**意味形成SUI-V**は理由未分化の資料→配置・別見立て→保留→後日再開で、AIなしB0/B1・必要ならAI B2と比較。**異種Source統合SUI-I**は、B0手動／B1カード手動取込／B2限定3系統read-only参照＋2 Viewを別レーンで比較。#3401は戦略的主題の提案であり、ADR採用済みやSUI-Vの初期必須機能とはしない。
+
+**次の実行優先**：SUI #3400 V0の現実装Fit/Gap→SUI外の実務資料でV1（初回10分/翌日再開・AI提案前の本人見立て・違和感/異論と新気付きを観測）。同時に#3401 I0のSource/Scope/Identity棚卸しをread-onlyで行い、実3系統Sourceを必要とする場面のI1/I2を後続。共同編集#3399は二Client CAS/409とdirty buffer保持から始め、全操作Event/CRDTや共通認可Hostを先行しない。Canvas複数表示・Item未分類・ActionIntentは自動Business Event/実Effectへ昇格しない。本文保存、業務意味、人の採否、外部Provider/Grant/Receiptを別正本・別資格として扱う。
+
+TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**。SUI内部dogfoodやT3モデル候補をT2の実ユーザー効果へ換算しない。5件のVA-SUI対照・実T2/T1/3実Source/2 Client E2E、Owner採否は**NOT RUN**。追加の全Product共通Engine/Registry/DB/Runnerを作らない。
