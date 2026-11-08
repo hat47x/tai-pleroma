@@ -851,7 +851,27 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **作業順序**：
 1. **不変のP0**：#168／[初回Runbook §20〜24](first-real-skill-qualification-runbook-2026-11-02.md)を実行。先にG0 OS Read-deny、G1/G2、独立H2→H3→H3→H2（ITT/PPと固定Expected）。別Productの準備完了を初回試験の前提にしない。
 2. **限定Product Skill増分（P0後）**：同Source/TEI CLI/Model/Tool公開面でH2とH3を比較。DをTEI #3482の限定Requiredで検査し、Tは実Harness Tool Reply完備、Qは独立Expectedで「宣言確認と実Invoke未実証」を識別。古いCI 13/42を新Session同一Attemptの証拠にしない。
-3. **別Trial Group（後段）**：SEI実CLIにRecommendationを保存→再開・Source/basis/未決を実Readし、MCP接続は同一Tool Profileを変更しない**別比較**とする。EKI配送を加えるのは実別Process/Result Body/ConsumerのOwner Evidence成立後。
+3. **別Trial Group（後段）**：[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)の**H3-A0**は固定TEI→SEI実CLIで推薦のローカル保存・別Resumeを限定実証済み（実Method/未決Question保存/外部Harnessではない）。次にA1でD0/D1/M1の問相対・盲検Expected比較、A2の未決保存方式はSEI #711/#678へ。MCPは同一Tool Profileを変更しない別Transport比較。EKI配送は実別Process/Result Body/ConsumerのOwner Evidenceが揃った場合のみ追加。
 4. **独自Loopの投資判断（最終）**：二つ以上の外部Harnessで実重大残差を確認し、既存Product/Skill/専門Plugin/Hostで解けない場合のみ。意思決定と費用のOwnerは#422、Provider/Meaning受理は各Product。
 
 **NOT RUN**：新独立H2/H3、SEI実Harness受領、EKI実Worker、TEI実Provider、HV-3/HV-4、Owner正式採用。本節は追補であり既存TAI #168/#271/#488やTEI #3262/#1251に第二のOwnerを作らない。
+
+## 45. 2026-11-08：CSW探索Methodの任意導入とTEI→SEI実ローカル往復
+
+**判断の正本**：[Build-vs-Buy §17〜18](harness-build-vs-buy-decision-2026-11-08.md)。本節は「CSWを新しいAgent Harnessにしない」「必要なときだけ既存3執筆Skillから探索的手法を借りる」「実TEI→SEIローカル到達と外部DSH資格0/4を同じPASSにしない」ための実施計画。新API/Kernel/Agent Loop/Session Storeは作らない。
+
+**実績更新（2026-11-08）**：[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)のH3-A0で、固定TEI `source-index`のindex/subject両Modeと独立Required、SEIのRecommendation保存→別`resume --json`読戻し、Decision専用`--unresolved`拒否後のStore不変を**実Go CLIのローカル二製品経路で限定確認**。次はA1 D0（無介入）/D1（決定論的追加Read）/M1（認知Method支援）を同じQ/予算/盲検Expectedと陰性対照で比較。方法の価値がなくてもPASSとする。これはTAI #168のH2/H3試行でなく、外部Harness実受領・SEI UnknownのNative保存・Meaning受理は未資格。
+
+**CSWの境界**：[CSW main](https://github.com/hat47x/cultural-substrate-weaving/blob/main/README.md)は文化的体系・親和図法・思考執筆フローの**執筆用3 Skill**。そのCoreに工学向けAI Router、Runtime、Provider、認可、Mandatory Lifecycle、試験制度を加えない。TEI Plugin Lifecycleに転用する場合は、TEI #3503/#3278/#2090を題材とした**別の探索有効性実験**。現行CSWが工学要件発見に効果を持つことは未検証であり、CSWのProduct分類はTAI #73のまま未決。
+
+| 独立実験群 | 比較Arm | 先に固定すべき観測 | 合格と誤認しないもの |
+| --- | --- | --- | --- |
+| SK-02／TAI #168 **最優先** | 既存B0 CLI直接／B1 H2 Tool-only／B2 H3 Skill | G0 Read許可・拒否、G1/G2完全Tool Byte、H2→H3→H3→H2新規4 Slot、盲検Expected/ITT/PP | 古い4 SessionやH3 Skillの実Loadだけの「比較PASS」 |
+| SEI #824／#767 **別レーン** | H3-A0局所実CLI **限定PASS** → A1 D0/D1/M1 → A2未決 | どのSourceを実Readしたか、推薦のbasis、未決保持の資格、盲検Oracle | M1がD1と同じProbeを選んだだけで効果、推薦保存＝Method適用 |
+| **CSW探索（提案、後段）** | CX-0通常AI設計、CX-1一般発散/批評、CX-2元のCSW Skillの必要部分をRead | 同じTEI Source/Task/Model/予算、既知Issue/反証のBlind Review、独立した有効な新差分と検証費 | アイデアの量、象徴からの類推、書き手の主観、原典の解釈＝TEI契約の自動受理 |
+
+**CSW→DSHの比較順序**：①スキル本文直接Readを対照（DSH不要）→②必要な場合だけDSH既存Skill/Profileの読み込み→③Tool/Session/イベント接続の**測定された不足**がある場合に限り薄いAdapter/Pluginを検討。初回P0にCSWをロードせず、原文Skillの必要範囲・CSW CommitをPinする。探索結果はProposed Design CandidateとしてSource位置/既存Contractとの差分/反例とともにTEIに渡し、Owner受理/実Provider/Host GrantをCSW側から付与しない。
+
+**成果測定**：独立した具体的欠落・誤類推、差分の実装可能性、検証負担、総実費と人手、追加修正の不必要さを区別。「全部のAgentが賛成した」は独立Expectedではない。既存[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の独立VA-X/VA-E、[TEI #1445](https://github.com/hat47x/tei-platform/issues/1445)の工程比較、[#2514](https://github.com/hat47x/tei-platform/issues/2514)の判別力を再利用し、新しいOracle Engineを作らない。
+
+**現状**：H3-A0は限定ローカルPASS、CSW-CX比較／実DSH-CSW-Plugin／A1認知Method改善／4適格H2/H3／Owner正式採用は**NOT RUN**。Productの正本は各Repo、TAIに第二正本・テスト基盤は作らない。
