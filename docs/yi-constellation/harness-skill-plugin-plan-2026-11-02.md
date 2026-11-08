@@ -833,3 +833,25 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **収束を保つ実施順**：P0は変えず、まずTAI #168のG0実Read-deny／G1-G2完全Tool/Reply／新規H2→H3→H3→H2の独立4 Slot（**現在の比較適格0/4**）を満たす。TEI側F0〜F4とB2C B0〜B3はそれぞれのProduct実証として**並列に探索してよいが、初回H2/H3を新Hard Gateで止めない**。続くP2では「決定論的Flow、Tool-only、＋Product Skill、＋専門Plugin」を同Source/Model/Hostの小Taskで分離し、必要時だけVUI/異Harness/非定型Caseへ拡張。B2Cの成功は収益実験のConsumer/Exposure/Commerce Outcomeで別採点し、Harnessの自動化効果へ流用しない。自前Loopは複数Harnessに共通する重大な未解決差があり、API/Plugin/Host改善で解けず複数年TCOとOwner受理が成立した場合のみ検討する。
 
 **資格の区別**：TEI #3503/#3509/#3278/#3279のFlow/Conversion Plugin/Trait Fulfillmentは設計・受入提案であり、実媒体・実Provider・本番収益改善・Owner採用はNOT RUN／NOT ACCEPTED。今回の更新はMarkdown計画・責務接続のみ。TAI横断Skill／Product Skill／実Harness Tool呼出し／外部受信・現在Grant・業務Outcomeの既存Evidenceを上書きしない。第二Harness Runtime/Operation Engine/Workflow Host/Validator/Registry/Authorityを新設しない。
+
+## 44. 2026-11-08：実Productの限定PASSとH2/H3比較資格を分離した実行計画
+
+**判断の詳説**：[Build-vs-Buy文書 §16](harness-build-vs-buy-decision-2026-11-08.md)。今回追加したものはProduct横断の実施順と証拠資格の照合であり、TAI側に新しいHarness Runtime／統一Proof Store／Schema／Verifierを作らない。
+
+| 既存能力の実証 | 実際に成立したこと | 横断Harness Trialに必要で未成立のこと |
+| --- | --- | --- |
+| [TEI #3482](https://github.com/hat47x/tei-platform/issues/3482) main `8ed5837` | `sales.order.submit`の限定Requiredに対し**13実CLI Reply／42 Consumer判別**がmain専用CIでPASS | 実Toolの完全配送、Function Invoke/Provider、全意味受理 |
+| [TAI #537](https://github.com/hat47x/tai-pleroma/issues/537) | optional Edge型v4：投影→合成**24ケースPASS**（90段suite）。null/省略は契約上同じ投影だが参照先未解決は失敗 | Harnessの「null＝未解決」という一般的推測を禁止。異なる契約の意味を転用しない |
+| [SEI #802](https://github.com/hat47x/sei-cognition/issues/802) | CLI `resume --json`とMCP `resume`概要textの現行差・実例がIssue化 | MCP実Consumerの構造化同値、basis/未決を受け取った後の利用確認 |
+| [EKI #753](https://github.com/hat47x/eki-fabric/issues/753) | 実Unixソケットで**6イベント順序/内容＋4改変負例**を同一試験プロセス内で限定PASS | 別プロセス実Worker、Lease Fence、Result Body/独立DeliveryとEffect |
+| [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | DSH Tool Call／H3 Skill実ロードの限定技術証拠 | OS G0の許可/拒否正負対→G1/G2完全受信→独立4 Slot。比較適格**0/4** |
+
+**判定規則を4列へ整理**：D=必要なSourceとScopeの充足、T=実Tool ByteのConsumer完全受領、Q=Claimに必要な根拠と適切な保留、E=実Host Effect/Receipt/Delivery/Outcome。D/T/Q/Eは同一Attemptでも別資格であり、read-only作業のEは適用外と明記できる。Sourceの限定PASSを外部Agentにそのまま伝えただけでQやEを合格にしない。新しい公開enumではなく既存[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)比較票の記録列。
+
+**作業順序**：
+1. **不変のP0**：#168／[初回Runbook §20〜24](first-real-skill-qualification-runbook-2026-11-02.md)を実行。先にG0 OS Read-deny、G1/G2、独立H2→H3→H3→H2（ITT/PPと固定Expected）。別Productの準備完了を初回試験の前提にしない。
+2. **限定Product Skill増分（P0後）**：同Source/TEI CLI/Model/Tool公開面でH2とH3を比較。DをTEI #3482の限定Requiredで検査し、Tは実Harness Tool Reply完備、Qは独立Expectedで「宣言確認と実Invoke未実証」を識別。古いCI 13/42を新Session同一Attemptの証拠にしない。
+3. **別Trial Group（後段）**：SEI実CLIにRecommendationを保存→再開・Source/basis/未決を実Readし、MCP接続は同一Tool Profileを変更しない**別比較**とする。EKI配送を加えるのは実別Process/Result Body/ConsumerのOwner Evidence成立後。
+4. **独自Loopの投資判断（最終）**：二つ以上の外部Harnessで実重大残差を確認し、既存Product/Skill/専門Plugin/Hostで解けない場合のみ。意思決定と費用のOwnerは#422、Provider/Meaning受理は各Product。
+
+**NOT RUN**：新独立H2/H3、SEI実Harness受領、EKI実Worker、TEI実Provider、HV-3/HV-4、Owner正式採用。本節は追補であり既存TAI #168/#271/#488やTEI #3262/#1251に第二のOwnerを作らない。
