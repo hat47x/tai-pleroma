@@ -234,3 +234,8 @@ TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**
 ### 2026-11-08：CSWの選択的実践
 
 [横断監査 §29](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §19](../evaluations/VA-01-product-value-necessity.md)へ **VA-CSW-01** を反映。CSWは選択的Skill/Pluginと独立検証の開発ループであり必須Runtimeではない。既存HarnessのOS隔離・送出範囲・完全Replyを先に実測し、独自Loopは比較で不可欠性が示されるまで保留。**実比較・Owner受理はNOT RUN**。
+
+
+### 2026-11-08：段階的なEvidence資格（F0〜F5）を実証計画へ
+
+[横断監査 §30](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §20](../evaluations/VA-01-product-value-necessity.md)に **VA-EVID-01** を追加。Source→API→Representation→Provider→Effect→Deliveryを同一Attemptで追跡し、局所成功を実E2Eへ加算しない。最初は一Functionの実Provider Rowset、次に正式Writer Readbackと実Consumer受領。既存の限定的なCLI/Reader/IPC PASSは維持し、Owner受理や本番Effectへ昇格しない。**実注入・Owner受理はNOT RUN**。
