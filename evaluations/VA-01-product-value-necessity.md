@@ -316,3 +316,10 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 ## 18. 2026-11-08：AIチューニングとEvidence再利用の独立比較
 
 [横断監査 §28](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-TUNE-01** を追加。Baseline／Query・Index／Cache／Plugin置換を、同一Operation・同一Owner/Grant・独立Expectedで比較する。ウォーム/コールド、入力分布、P50/P95、DB回数、CPU、Cache hit/miss、Source/Plugin/Toolchain変更後の失効、旧Artifact保全を記録。速くても意味・認可・Nullability・部分受領・結果不明の判定を破る案は不採用。Artifact再利用・Build省略・Evidence再利用は別々に採点する。実Provider Plan、実負荷、AI適用、Owner受理は **NOT RUN**。
+
+
+## 19. 2026-11-08：KON API境界とCSW選択導入の反証
+
+[横断監査 §29](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)を反映。VA-KON-01のB0/B1/B2を、現存保存経路／文書管理API Adapter／将来のKON API契約として読み替える。**SUIはDB直接アクセスをしない**。KONのオンプレミスPostgreSQL＋NAS、Go単一バイナリ、TEI完成後実装は将来の実装制約であり、現在の試験成功ではない。
+
+**VA-CSW-01**：LLM＋既存Tool／既存Harness／横断Skill／専門Plugin／独自Loopを、同一TEI read-only Inspector作業と独立Expectedで比較。未選択時の通常Build、実OS隔離・読取拒否・送出制限・Tool Reply完全受領、実Provider/Consumer受領、誤修正・介入・時間/費用を別列にする。既存Harnessが要件を満たす限り独自Loopを採用しない。実比較、KON Provider、Owner受理は **NOT RUN**。
