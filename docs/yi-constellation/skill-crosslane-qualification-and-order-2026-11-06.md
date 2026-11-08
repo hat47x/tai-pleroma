@@ -1136,13 +1136,3 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 | **独自Harnessの再検討** | 上記でも残るD（Design Input）／T（Tool Delivery）／G（未知Rule生成）の独立再現失敗を複数Task/Domainで測定し、重大誤判断・追跡・再現性・隔離・費用/人手の確実な増分がある場合のみ別Owner判断 | 未検証のうちから中央Agent/Runner/Registry/Memory/Hostを実装 |
 
 **略号の衝突に注意**：既存§27.4の`B0=Tool-only / B1=TEI Product機能 / B2=必要時TAI横断Skill`はProduct選択の比較。一方[TEI #3487](https://github.com/hat47x/tei-platform/pull/3487)が使う`B0=決定的CLI/API / B1=既存Harness＋Skill有無 / B2=薄いAdapter`はHarness方式の比較であり、**同じB2でも別の処置**。YIC採点票は系列名・Armの実Tool/Skill/Adapterを明記し、両者を同じ分母に合算しない。初回TAI #168 H2→H3→H3→H2は旧Pinned公開TEIの独立Trial Groupで、G0物理Read拒否→G1送出→G2 Tool Result完全受領を先行。**比較適格0/4**、新MCP/共通APIを旧試行へ事後混入しない。第二のYIC共通API/Policy/Host/Agent Loopなし。
-
-### 27.8 KON Dataspaceを共通データ基盤の別Productとして受け渡す（設計採用・実接続未検証）
-
-2026-11-08採用の正式名称**KON Dataspace**（リポジトリ名`kon-dataspace`）は、YI Constellationの**独立したマルチモーダル・マルチTenant/Serviceの共通データ基盤**である。TAIの横断Skill、TEIの意味/Function、SUIの探索、SEIの意思決定、SHOの文書、EKIのData/Delivery/Transportと役割を取り違えない。共通データ基盤を新しい中央Meaning SSOT/Agent Host/Grant Issuerとしない。
-
-**YIC側の候補受入条件**：TEIによる柔軟なData定義、KONが選ぶ物理DB分離、現在Tenant/Service/Principal/Namespace/Resource Grant、外部IdP/Broker属性の解釈、別Transactionで更新される共有Projectionを**それぞれ独立のProduct資格**として受け取る。Skillがあるから当該Tenantの情報を閲覧・再配布してよいとは扱わない。跨DB/跨Service ProjectionはSource時点/水位/Effect Receiptを区別し、Readに成功しても最新性・Meaning/Business Outcome・Write許可を推測しない。KONへの業務ロジック全面移動は決めず、TEI側のDomain/Operation Ownerを維持する。
-
-**検証順序**：既存の許可済み合成read-only Source→KON型付きProjection（実Provider接続がある場合のみ）→同一AttemptのConsumer実受領→そのAudienceのGrant/Disclosure→必要な場合だけHost Effectの別観測。Productだけで完結するMarkdown編集やTEIローカルReaderはKON未接続でも継続。現在、KON実API・実DB/IdP・SHO/TEI/SEI/EKI実接続・外部Owner受理は**NOT RUN**。新YIC Registry/認可層/Runtime/Schemaを作らず、各Productの責務に委譲する。
-
-
