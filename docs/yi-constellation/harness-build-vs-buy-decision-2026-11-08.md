@@ -248,6 +248,8 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 
 ## 17. CSWを独自Harnessではなく探索Methodの選択肢として接続する（2026-11-08）
 
+**実験の参加者条件・評価票・現行Skill原文の固定参照**：[CX-01 独立探索比較プロトコル](../../evaluations/CX-01-csw-exploration-method-transfer-2026-11-08.md)（提案・未実行）。
+
 [CSWの現行README](https://github.com/hat47x/cultural-substrate-weaving/blob/main/README.md)と実Skillを再確認した。mainは**執筆用の3つの軽量Skill**から成る： [cultural-substrate-weaving](https://github.com/hat47x/cultural-substrate-weaving/blob/main/skills/cultural-substrate-weaving/SKILL.md)、[affinity-synthesis](https://github.com/hat47x/cultural-substrate-weaving/blob/main/skills/affinity-synthesis/SKILL.md)、[writing-flow](https://github.com/hat47x/cultural-substrate-weaving/blob/main/skills/writing-flow/SKILL.md)。利用にRunnerやPlugin登録は必要なく、本文をAIへ読ませればよい。**元々の対象は執筆であり、工学上の要件発見・安全性・Product実装への有効性は未検証**。将来の認知MethodやCSW-MAGIは研究案であって、現状3 Skillに固定した全員必須フローや複数Agentの儀式を増やさない。
 
 **YICへの転用仮説**：CSWが価値を持ち得るのは、既存のHarnessに代わるTool/Loop/Authorityではなく、(a)構造の見落としに気づく、(b)異質な枠組みから設計仮説を増やす、(c)表面的に似ているが実際には異なる関係・ライフサイクル・時間軸を発見する、という**探索Methodの限定的活用**である。AIによる探索、Sourceに支えられたDesign Candidate、独立Expectedで検証された案、Ownerが採用したMeaning、生成Targetの実動、Consumerに届いたOutcomeは同一視しない。
