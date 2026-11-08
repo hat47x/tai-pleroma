@@ -230,7 +230,7 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 
 ### 11.3 Transport実装の現在地とPluginの実効果を分ける
 
-[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)のread-only参照MCP Adapterは**mainに実在**し、同じWorkspaceで4 ToolとCLIの主要値が限定一致。[merged #3458](https://github.com/hat47x/tei-platform/pull/3458)は`validate`のCLI/MCP間で`ok/isError`と診断文書を共通化。**「MCP入口がない」は旧#3356調査時点の履歴**であり、現在は参照入口がある。ただし正式公開MCP ABI/DSHからの実Connect・Consent/Grant・外部送出・同一モデル受領は未確認。[SK-02 Runbook §24.17](first-real-skill-qualification-runbook-2026-11-02.md)で、初回は引き続き固定CLI Tool、後続だけMCP Transportを対照とする。
+**MCPの実装状態とCLIとの限定一致は前節§10.3を正本**とする。ここではその[TEI参照Adapter](https://github.com/hat47x/tei-platform/pull/3403)を、既存外部HarnessでCLIよりどれだけ負担・誤解釈を減らせるかという**増分価値候補**としてのみ扱う。正式公開MCP ABI/DSH実接続・Consent/Grant・モデル全byte受領は未確認。[SK-02 Runbook §24.17](first-real-skill-qualification-runbook-2026-11-02.md)のとおり初回は固定CLI、MCPは後続の別Transport比較とする。
 
 [TEI merged #3363](https://github.com/hat47x/tei-platform/pull/3363)の参照能力表では、公開Workspaceの24 Binding中22 selected、2 missing。ただしこれは**宣言の解決**であり、実Plugin Artifact/Load/Invoke/Client Deliveryではない。[TEI merged #3474](https://github.com/hat47x/tei-platform/pull/3474)の読取調査では、部署・環境Bindingが計画に反映されても、参照実行は固定Capabilityを直接呼ぶ経路が残り、`routing.Router`も非試験実行で構築されていなかった。断絶はPoC段階の意図的分離かもしれず、即「不具合」とは呼ばない。
 
