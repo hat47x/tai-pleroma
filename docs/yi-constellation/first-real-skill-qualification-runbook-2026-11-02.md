@@ -6,7 +6,7 @@
 
 ## 目的：合成fixture中心の議論から、実際のProductを使用した証拠へ
 
-[TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)にはSK-01の合成Corpus（SK-J、L、M、TB、F、RQ、C等）と限定セルフチェックが存在する。一方、実Product Tool・Skillのロード・外部Harness・OS隔離・Owner意味受理の横断試験は未実行。**次に優先すべき成熟は新しい合成分類の追加ではなく、実際に使ったSource・Tool・Skill・Output・現在資格を区別できる一件の再現可能な縦切り**である。大量の低価格Tokenで探索や新Issueを並列増加させる方針と、最初の**品質主張**を小さな実証単位に固定することを両立する。
+[TAI Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)にはSK-01の合成Corpus（SK-J、L、M、TB、F、RQ、C等）と限定セルフチェックが存在する。一方、実外部HarnessでのTool呼出しとH3 Product Skill Loadは限定観測済みだが、OS隔離の実拒否、同条件の独立H2/H3比較、Owner意味受理を一つに結ぶ横断試験は未実行。**次に優先すべき成熟は新しい合成分類の追加ではなく、実際に使ったSource・Tool・Skill・Output・現在資格を区別できる一件の再現可能な縦切り**である。大量の低価格Tokenで探索や新Issueを並列増加させる方針と、最初の**品質主張**を小さな実証単位に固定することを両立する。
 
 本Runbookの所有はTAI（比較・記録）。TEI固有のSkill/CLIは[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)／[Draft #2607](https://github.com/hat47x/tei-platform/pull/2607)。シリーズ配布は[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)。Activity再開・条件付き再資格化は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)。SEIの限定Claimは[#767](https://github.com/hat47x/sei-cognition/issues/767)、SHOの編集は[#10](https://github.com/hat47x/sho-composer/issues/10)、EKIの実Bodyは[#465](https://github.com/hat47x/eki-fabric/issues/465)が担当。TAIに第二のProduct実装・SSOT/Host/Authorityを設けない。
 
