@@ -672,3 +672,76 @@ Advertised read-onlyと実際の- execute付きFile書込み、OS Read-deny、�
 **価値判定**：欠落を理由に合法なEdge・局所成功Step・許可済み調査を不当に拒否しない度合いと、未取得Rule／未Delivery／未Invokeを誤って完了扱いしない度合いを**両方**測定。必要な追加Source Reader/独立Witnessのコスト、AI指示数、確認負担、情報開示、修正手数も別に記録。TAI #168のH2/H3比較は現0/4適格であり、G0/G1/G2→新4独立Sessionの既存Exitを変更しない。
 
 **未実証**：本節のORX-41〜48のYIC同一Attempt横断実験、T1-B未知Rule盲検発見、TT-105/106の実採用、SUI→SHO一File本体、cmd/tei本体G4、CLI/Studioの同じ実Provider二Consumer、実BOM／本番Host Grant、Owner意味・利用者価値受理はNOT RUN/NOT PROVEN。
+
+---
+
+## 17. 2026-11-08：同一性の分離と実際に使える成果への接続
+
+**位置付け**：§16の実証更新後に確認したmain実CLI、cmd/teiのセルフビルド、SHOの実File試験、外部Providerの負例候補、CLI/MCPの契約差を統合する。相互に独立したProductの限定証拠を横断E2Eへ合算しない。Core/Authority/Registry/Runner/Tester/Canonicalを新設する設計判断ではない。
+
+### 17.1 「同じ」の対象を取り違えない最小証拠
+
+モデルの内容が同じ、Sourceの原byteが同じ、実Fileが同じ、Processが同じ、権限を持つConsumerが実受領した、業務上の意味や価値が同じ、はそれぞれ異なる命題。用途別のClaimに対し、必要なWitnessのみを参照する。YICへ新しい全製品共通IDを導入するのではなく、各Ownerの既存World FP、Source Index/Provider Source occurrence、実FD/path、実Artifact/Invoker、Grant、Outcome/Owner受理を**比較時の列**として並べる。
+
+| Claim | 主な必要観測 | 認めないショートカット |
+| --- | --- | --- |
+| Meaning/Modelが同じ | 同じScopeでのWorld/Rule/Version、Accepted Meaningの適用範囲 | 同じlabel/pathを同じ業務対象とする |
+| 出典が現在も正しい | 原Source（外部Providerを含む）の実Byte/Revision、Readerの実受領、必要Source closure | World/Consumer Source Indexの一致だけで外部原文の不変を断定 |
+| 実際に保存・再読取した | 元Source FD・実出力FD・実Path・byte、部分作用、必要に応じ現在CAS/fence | SHA同一＝同File、同File＝更新履歴なし、readback＝durable publish |
+| 生成したプログラムが駆動した | 実Stage1 ArtifactとStage2 invoker image/argv、Child、BuildPlan/Intent解決 | Artifact byte一致＝セルフビルド全成立 |
+| Consumerが利用できる | 実Provider/Tool Adapterの選択→Load/Invoke/Result、現Audience/Grant | 説明・宣言・ReaderローカルCI・送信ACK＝現在資格 |
+
+証拠は全てのClaimで一律必要ではない。例えばSourceだけのLF変更は、バイト同一性を壊しても特定のSemantic Worldを変えないことがある。歴史的な実行Receiptを保存したまま、現在の引用・再配送資格だけを必要範囲で再照合できるようにする。Source fingerprintとmeaning fingerprintを単一Hashへ畳まない。
+
+### 17.2 TEI：Source-only変更を本当に見分けられる範囲
+
+[TEI merged #3477](https://github.com/hat47x/tei-platform/pull/3477)の[exact main push CI #42461058083](https://github.com/hat47x/tei-platform/actions/runs/42461058083)はcompleted/success。既存**11 read-only CLI Reply／32 Context判別Control／Design Context Packet9負例／6 Pinned Scenario／既知T1-A Candidate**を保持し、Context取得時のWorld/Source Index FPをScenarioの候補生成前と実Pinned Run後の実CLI `model catalog`と再比較。`validation.tei`末尾LFのみ変更した合成実Workspaceでは**World不変、Source Indexのみ改版**となる。WorldのみPinした旧Scenarioが通っても、Context Consumerが旧Source Indexの継続使用を拒否することを実観測。この一Workspace・一Callerの限定した時点差検出は実装済みであり、§16の『Source-only drift検査未実施』へ巻き戻さない。
+
+ただし[新Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)は、**importした外部Providerの原Source**について別の観測盲点を指摘する。ConsumerのWorld/Source Indexの両FPが同じでも、Provider raw Byte/`LocateImportedSource` occurrenceが改版している反例のGo試験候補を置いた。現在の外部Source Snapshot/Provider Reader・インポート時点の閉包は未実証で、このDraftの新focused Go test/CI完了も未確認。**同一Workspaceでの#3477のPASS**を他Providerや複数File原子的Snapshotへ外挿しない。
+
+最小修正案：Consumer Contextへ巨大な第二Source Indexを複写せず、用途に必要な外部Provider Source occurrenceのRef/Revisionを、既存#2743/#3262/#951/#1163へ関連付ける。独立Expectedは(1)World同じ・Provider Source異なる、(2)World/Sourceとも同じ正常対照、(3)Providerがpermission denied/partial、(4)A→B→Aで現Byte復帰でも過去履歴を再構築しない、を区別する。取得していない秘密SourceのID/件数は未許可Recipientへ漏らさない。
+
+### 17.3 TEI自身のL3を現在値に更新：実Process再入とL2意味解決を分離
+
+§16は参照DriverでのL3限定成立までを記録したが、その後[TEI #3440](https://github.com/hat47x/tei-platform/pull/3440)で対象を**実cmd/tei自身**に変えた再入をWSL2 Ubuntu/Go1.27.3の限定実験で観測し、[台帳更新 #3447](https://github.com/hat47x/tei-platform/pull/3447)に記録した。Stage1で生成したTEI実行ファイルがStage2 invokerとなり、Child・引数・Artifactを別列で照合した。入口の `l3Claimed` は常にfalseで、検証値の照合から限定的に再入場を判断する。**cmd/tei自身のL3形状の局所実証は達成、L2（TEI標準Build Intent/Graphから実Buildを解決）は未成立、G4全体はUNQUALIFIED**。旧『cmd/tei L3一切NOT RUN』は現在値ではない。
+
+[TEI #3463](https://github.com/hat47x/tei-platform/pull/3463)では自己Build CLIの前提/出力no-clobber/実Child Invocationを検査。[新Draft #3476](https://github.com/hat47x/tei-platform/pull/3476)ではIntent宣言JSONと、明示Supply Verifierの結果がfalseならChild起動前拒否する限定Go/WSL実験を実施。**Intentはresolved=false**であり、Supply VerifierのSchemaと実行を確認することは、供給PublisherのTrustや標準BuildGraphの実導出ではない。`qualified=false`維持。L3とL2を便宜的な大小順ではなく、再入場の実観測／意味からBuildへ導く資格という**別の受入軸**として報告する。
+
+### 17.4 SHO：Raw Byte一致に加え、元File・出力File・保存履歴を区別
+
+[SHO Draft #25](https://github.com/hat47x/sho-composer/pull/25)は、test-only Working Copyを`wx`で新規作成→close→別FDで再Open→実G1b CLIでReadbackする限定のG2-W1を実装。特定のtested HEAD `eb12e0cc2eff01ef0be9270c3a0a6adb77b3a09a` に対する[Ubuntu/Windows CI #42461729731](https://github.com/hat47x/sho-composer/actions/runs/42461729731)はUbuntu20/20、Windows19 PASS＋POSIX専用1 SKIPの限定成功。現Draft最終HEADへ成功を無断継承しない。
+
+独立反例W15〜20は、**同じ原byteだが元Sourceが別File、Source A→B→A、OutputがReadback前に別Fileへ差替えられる（同byteでも）、Output A→B→A、File Identity未観測**を分離した。比較可能なFD dev/inoで差を検知できても、OS間・FileSystem間・inode再利用・Path raceでは現在の同一性を確定できない。Byte Readbackの局所成功を正式Editor Save、no-op write0、atomic publish/fsync、衝突CAS、Owner受理、SUI→SHO実Handoffへ拡大しない。効果が一部起きた場合は`needs-reconciliation`を保持し、無条件削除・再試行を行わない。
+
+また、[SHO Draft #27](https://github.com/hat47x/sho-composer/pull/27)の前提となる公開TEI側[Actions #42461670105](https://github.com/hat47x/tei-platform/actions/runs/42461670105)では、公開TEIのCI tokenから非公開SHOをcheckoutできず**Reader起動前に拒否**された。これはSource Grammar FAILでなくRepository Grantの境界。非公開SHO側から許可済み公開TEI Fixtureを固定版で読取る逆向きCIを提案し、公開TEIにprivate repo権限や秘密PATを配布しない。#27実Readerの同一File CIは新たな別資格。SHO単独編集/保存をTEI/OKF/KON依存にはしない。
+
+### 17.5 CLI/MCP・SUI/SEI/KON：有用な後続構想は現P0へ割り込ませない
+
+[TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)/[#3458](https://github.com/hat47x/tei-platform/pull/3458)はCLIと参照MCP Adapterの`validate`で、同じ意味エラーがCLI側failureなのにMCP側`isError=false`となり得る差を実コードで特定し、共通Validation Reportと限定Go/Windows回帰を追加。**共通構造/実Adapterの局所PASS**と実stdio/外部Harness受領、実Host Grant・Client Reactionは別。Transportを越えた最小APIの必要性は認めるが、WebServerや新共通認可を最初から導入しない。
+
+[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)の違和感→関係発見→理解の変化という一次価値と、[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)の異種Source/対象/時系列/状況理解という長期的価値を**別の評価軸として併存**させる。AIが関係候補を得たことと、Ownerが意味を受理したことを混同しない。[TEI Ontology/Decision Twin #3475](https://github.com/hat47x/tei-platform/issues/3475)はO0の比較・独立Expected設計のみ現在可能で、本格Twin/外部Sim/SEI判断移譲の実装は**TEI全体Self-buildとSUI基本機能の完成後**へ保持。KON Dataspaceは独立したマルチモーダル基盤の製品境界であり、現TEI/SHO/SUIへ必須の新中央Store・Host・共通認可を追加する前提としない。こうした構想は利用者価値で再評価し、今は既存製品のRead/Save/CLI/Scenarioの縦断実証を優先する。
+
+### 17.6 ORX-49〜56：実成果・未観測・必要な追加Witness
+
+| ID | 相反する世界／判定 | 受入と状態 |
+| --- | --- | --- |
+| **ORX-49 同World・Source-only差** | `validation.tei` LF変更でWorld同一・Source Index異版 | #3477 main実CLIは旧Context拒否を限定達成。古いScenario Run成功をSource現在性へ昇格しない |
+| **ORX-50 同Consumer FP・別Provider原文** | 外部Imported Sourceだけ改版しConsumer World/Indexは同じ | #3479 DraftのFocused反例は実CI未確認。Provider Occurrenceを別Witnessとして要求、全Consumer失効を無条件に起こさない |
+| **ORX-51 実cmd/tei L3だがL2なし** | Stage1 TEI自体がStage2を駆動、Intent解決は未成立 | #3440局所L3再入を認め、G4 UNQUALIFIED・L2未成立を別列で報告 |
+| **ORX-52 Intent宣言/供給Verifierと実資格** | JSON digestは取得できるがBuildPlan未解決、Verifier指定なし／未承認 | #3476 Draftの局所実拒否を限定認め、resolved=false・qualified=false。Trust/Pub/Targetは未認定 |
+| **ORX-53 Source同byte/別FileとOutput交換** | Working Copy再読取はbytes一致、元/出力パスは別実File | SHO #25実CI W15/W18はFD identity差を限定検出。FD identity不明ならunknown。Editor Save/Publishの受理なし |
+| **ORX-54 Source/Output ABA盲点** | A→B→Aで同Byte・同FD Identityに戻る | SHO #25 W16/W19は変化履歴を判定できない。CAS/fence/actual historyがなければ未証明 |
+| **ORX-55 Public→Private権限拒否** | 公開TEI CIが非公開SHOをcheckoutしようとしてFAIL | Repository Grant不足として分類。Private側CIに公開Fixtureを取り込む案は別Draft #27で未検証 |
+| **ORX-56 CLI/MCP意味失敗の齟齬** | CLIが意味Validation失敗、MCP Adapterが成功扱い | #3458の共通Report局所試験を評価し、実外部MCP/Clientの同版E2Eは別検収 |
+
+### 17.7 計画への反映と停止線
+
+**P0（今回すでに動いた成果を保持）**：#3477の同Workspace Source-only Context→Scenario版失効、#3440のcmd/tei実L3形状、SHO #25のG2-W1バイト/FD両系統の局所テストを、同一Attempt・対象・Revisionを明記して評価。計画上の旧NOT RUNを歴史として残しつつ、次のOwner表はこの現在実証を基線とする。ただしPR exact-head／main／ローカルと、初回失敗→修正後PASSを混合しない。
+
+**P1（最短の価値ループ）**：TEIではT1-Bの未見Gap/独立Expectedを一件、並行して#2586のFunction selected Query→SQL byte→Bind→実Provider Rowset/Consumerを一件。SUI/SHOでは真正SUI Producer→一File→SHO Reader non-skipと、SHOの正式G2 Writer Save/Restartを別ゲートで各一件。Sourceが足りなければ局所的にpartialと返し、許可された正常操作まで不必要に停止しない。
+
+**P2（資格の範囲だけ拡張）**：TEI #3479の外部Provider Source-only反例を現main固定で独立試験し、CLI/MCP validateの失敗契約、PluginのSelection→実Invoke→Studio/CLI同一Consumer、BOM exact tuple、cmd/tei self-buildのL2意味解決を、独立Owner・既存Product入口で検証。SUIの高度統合とTEI Ontology/Decision Twinは長期研究のO0に留め、現在の業務P0/SUI一次価値をブロックしない。
+
+**価値の分母**：同じ内容が何回見えたかではなく、必要な一次Sourceへ戻れて誤判断を防げた件数、原本/Working Copyを失わず保存再開できた件数、AIが未知の不足を適切に発見した件数、合法な省略・部分成功の過剰拒否、追加Reader/確認時間・情報開示費用を独立に測る。未実施試験の成績を0点とせずunknown/NOT RUN、必要ない機能を必須化した失敗も測る。
+
+**未実証**：YIC一つの実横断Outcome、外部Imported Provider Snapshot閉包、TEI L2/G4全資格、正式SHO Writer/Store CAS、SUI→SHO真正One-file、T1-B、実Function Provider Read、外部Harness比較適格（現0/4）、KON物理統合、実SEI Decision/Twin/Simulation、Ownerの意味・価値受理。研究計画と各Draftは実運用認定ではない。
