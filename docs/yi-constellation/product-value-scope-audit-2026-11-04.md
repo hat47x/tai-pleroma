@@ -616,3 +616,30 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **導入順**：①各Ownerの既存Case（SUI CU-02/09、SHO PV-03/07、TEI Migration unknown、EKI Attempt/Lease、TAI H2/H3 Reply）から一つずつ取り、独立Expectedだけ固定、②実Ownerの確定境界と独立Readを先に検証、③二製品受渡しは実Producer→実Consumerの同一Attemptを別に測る。②未達でも各Productの独立したread-only/保存可能領域は妨げない。各Product契約の変更はOwnerのIssueへ返し、本横断票を新しい製品要求・実行許可・Owner受理にしない。
 
 **現況**：既存Issue・ADRと局所CIへの設計照合のみ。RC-01〜05をこの変更で実注入したわけではない。外部Provider/二Client/本番Worker/正式Writer/完全H2-H3、B0/B1/B2比較、Owner受理は **NOT RUN**。
+
+
+## 25. 2026-11-08：KON独立化を先取りせず、境界を横断検証する
+
+**前節§24の回復資格と別の問い**：保存・検索・提示・業務判断・外部作用をどの製品が所有するか。KON Dataspace（`kon-dataspace`）は正式名称・将来の汎用マルチテナント／マルチサービスDataspace候補だが、**現時点で独立常駐Serviceや中央DBを初期必須条件にしない**。SUIの既存保存・参照を比較基準にし、同じUser Jobで分離が本当に必要になったときに限定抽出する。
+
+| 領域 | 最初のOwner／責務 | KONへ早期移管しないもの |
+| --- | --- | --- |
+| **SUI** [#3400](https://github.com/hat47x/sui-sensemaking/issues/3400) [#3401](https://github.com/hat47x/sui-sensemaking/issues/3401) [#3399](https://github.com/hat47x/sui-sensemaking/issues/3399) | 未整理Raw/Observation、Canvasの複数投影、候補関係、保留・異論、利用者の意味形成。まず内部Store/Reader/二Client CASを実証 | Canvas座標を資料の永続Identityにすること、AI候補を業務意味・外部Actionへ自動昇格すること |
+| **SHO** [#20](https://github.com/hat47x/sho-composer/issues/20) | Markdown編集、作業コピー、保存後再Read、Source/Provenanceを保持した文書生成。単独Reader/Writerの利用を継続 | TEIモデル意味正本、SUI Canvas、全Sourceの中央保存義務 |
+| **TEI** [#2586](https://github.com/hat47x/tei-platform/issues/2586) [#3419](https://github.com/hat47x/tei-platform/issues/3419) | 型付き意味・Rule・Query/Provider・Target・業務Owner受理・実Operation契約 | KONがQuery/DB TransactionやAccepted Meaningを再定義すること |
+| **KON（候補）** | 複数Consumerで実需が生じた永続Object/Revision、アクセス境界、Source参照、監査・必要最小限の保存API。認可はTEIの境界を参照し、外部IdP/認可ブローカーの結果を現在ScopeへMapping | 新中央Authorization/Workflow/AI判断Engine、すべての情報の強制取込、各製品の既存保存を一括置換 |
+| **EKI/TAI** | EKIはDelivery/Transport/Attempt/Lease、TAIはTool/Skill/Harnessと実Consumer受領。外部Effectは実Host Ownerが確定 | Dataspaceへの書込成功を実配送・実業務完了・Harnessの完全受領とみなすこと |
+
+### 25.1 分離判断は「同じ資料の二つの正当なConsumer」で行う
+
+**VA-KON-01（設計・未実施）**：SUIのRaw一件を、同一のSource identity/revision・現在Audienceの下でCanvas A/Bに異なる位置と仮説で表示し、SHOでは原資料への引用をread-onlyで取得する。B0＝SUI既存Storeと手動SHO参照、B1＝薄いSource/Revision Adapter、B2＝KON独立Store/Service候補。実現していないB2を成功と採点しない。
+
+**独立Expected**：①Raw byte/SourceとCanvas配置・AI仮説が別Identity、②同名別資料・同byte別所在・A→B→Aで現在版とAuthorityを混同しない、③ConsumerごとのAudience/Disclosureが異なっても存在・件数の漏洩なし、④SUI側の保留やSHO側の引用をTEI Accepted Meaningへ自動昇格しない、⑤保存ACK喪失とReader部分受領は§24 RC-02/03を再利用し二重試験正本を作らない。
+
+**独立化ゲート**：B0/B1で解消できない実際の複数Consumer要求（共有Identity・現Audience・版の照合・監査・保存競合）が観測され、B2が誤同定/漏洩/復旧時間/運用費のいずれかで測定可能な改善を示した場合に限り、KON側Ownerへ独立Service化を提案。KONは長期の汎用基盤を志向しても、初回TEI/SHO/SUI/TAIの必須配備依存にはしない。
+
+### 25.2 実証資格を縦方向に足し算しない
+
+各Producer→Consumerの一辺は、**Source観測 → 意味候補/Owner受理 → Provider実Read/Writer実Save → 実Consumer受領 → 現Grant/実Effect**を別列にする。TEIの13 CLI応答/42判別、SHO公開TEI Markdown 4件Reader、EKIの同プロセスUnix socket 6イベントはそれぞれ限定された実観測として尊重するが、別Repo/別Attemptの局所PASSを同一User JobのEnd-to-Endへ加算しない。TAI H2/H3の適格性や独自HarnessのHV-0〜4比較にも新しいBlockingを足さない。
+
+**現況**：Source-staticと既存Issue/PRに基づく責務・比較設計。VA-KON-01の実SUI→SHO Consumer、KON実Service/Store、現Grant・二Client・実Provider・Owner受理・独立モデル評価は **NOT RUN**。
