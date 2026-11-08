@@ -948,13 +948,29 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 **証拠の上限**：今回の3 Issueは実Productによる現行挙動／Gapの根拠であり、DSHのOS read-deny、実送出先全件、Tool Reply全Byte、正式Skill増分比較、Markdown実Parser、CLI修正を観測したものではない。H3の実Tool Skill/Reference Loadは歴史的Witness、正式H2/H3比較適格は0/4のまま。G0→G1→G2→新4独立Sessionの順序は維持する。
 
 <!-- tai-sk02-cli-discovery-current-args-no-native-mcp-20261108 -->
-### 24.16 Productの実Tool Discoveryを使い、MCP未接続とCLI実受理を別扱いする（G2）
+### 24.16 Productの実Tool Discoveryを使い、当時未接続だったMCPとCLI実受理を別扱いする（G2）
 
 [TEI merged #3307](https://github.com/hat47x/tei-platform/pull/3307)では`tei commands`に閉集合の引数について`argumentValues`／`argumentType`／`argumentDefaults`が載り、実CLIの成功／拒否を回帰検証する。実`inspect`と`trace`の`-subject-kind`は集合が異なり、`trace`未対応Kindを「Subject不存在」と読み替えない。これは**適用可能なCommand/Optionの発見**であり、モデル出力をHarnessが完全受領した証拠ではない。
 
 [TEI merged #3333](https://github.com/hat47x/tei-platform/pull/3333)は`view`の`writeFlags`に`-operation-log`／`-lifecycle-state`を載せ、指定時に実FSファイル／SQLite stateを作ることを実CLIで確認した。一方`view`は**現SK-02初回Whitelist外**なので今回の四Sessionには追加せず、次のProduct Taskが要求する場合だけ実argv/出力Path/Grantを検証する。`effect=read-only`だけで任意Pathへの書込みが無いとは認定しない。
 
-[TEI #3149／Draft #3356](https://github.com/hat47x/tei-platform/pull/3356)の実CLI再点検では、この時点のTEI Productに**ネイティブMCP入口は観測されていない**。従って初回H2/H3の実証は**DSH外部Harness→TEI実CLI Tool**であり、`MCP available`や`MCP Tool consumed`を実測列へ書き込まない。別Host/MCP Adapterの実装可否は将来判断とし、CLIを第二のTEIサービスへ置き換える開発はBlockerにしない。
+[TEI #3149／Draft #3356](https://github.com/hat47x/tei-platform/pull/3356)の**当時の**実CLI再点検ではTEIネイティブMCP入口は未観測だった。後続[TEI main merged #3403](https://github.com/hat47x/tei-platform/pull/3403)の読み取り専用**参照MCP Adapter**は今は存在するため、「MCP入口が現在も一切ない」という断定には使わない（§24.17）。初回H2/H3の実証経路は引き続き**DSH外部Harness→固定TEI実CLI Tool**であり、参照Adapterの存在を`MCP Tool consumed`へ遡及適用しない。MCPを初回の実装Blockerとしない。
 
 **最小G2-P対照**：同一Pinned CLI Binaryと公開Sourceで、(1) `commands`の対象Command/Option/引数型の広告、(2)当該`argv`実実行、(3)exit/stdout/stderrとTool Reply全Byte、(4)LLM実Context到達、(5)現Source/Workspace/Kind Scope、を別列で確認する。使わないCommandまで網羅する必要はない。CLI広告があってもTool adapterが許さなければ`not-available`、Tool Resultが切れたなら`partial`。発見不能なMCPを勝手に補完しない。正式H2/H3比較は引き続きG0実OS Read拒否→G1 Egress/暗黙Context→G2 Call/Result完全受領→独立4Sessionで、適格0/4。
+
+<!-- tai-sk02-reference-mcp-parity-current-20261108 -->
+### 24.17 参照MCP Adapterの実存在とCLI/Transport同値を分ける（G2、2026-11-08）
+
+[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)で、`tools/reference-mcp-readonly-adapter`という**実装済みのread-only参照Adapter**がmainに存在する。単一Workspaceへ起動時に束縛するstdio JSON-RPCで`tei_model_catalog`／`tei_inspect`／`tei_trace`／`tei_validate`の4操作だけを`internal/operations`へ接続し、原Model／Sourceの第二の解釈器・保存先・Auth Engineを持たない。同じWorkspaceでCLIとMCPの主要値を照合し、比較した4操作の不一致0件をProduct局所試験で観測した。ただし**製品正式MCP ABI／DSHに実装されたMCP Bridge／実Host Grantを意味しない**。
+
+後続[TEI merged #3458](https://github.com/hat47x/tei-platform/pull/3458)は`validate`のCLIと参照MCPの応答の形を統一した。もともとCLIは最上位`diagnostics`、MCPは`result`包みで、診断による業務的な不合格でもMCPの`isError=false`だった。現在は共通`WorkspaceValidationReport`を使い、正常／Source Load失敗／重複宣言の3系統で`ok`・`isError`・文字列`error.code`・exit codeを検査する。**CLIの実応答byte不変と局所MCP値一致**を主張できるが、外部LLMが全byte受領したか、MCPの初期化・通知・同時接続/全版を網羅したかは別である。
+
+| 輸送ごとの資格 | 今回の既存証拠 | SK-02の扱い |
+| --- | --- | --- |
+| **CLI Product実行** | 既存固定Source/実Binaryの成功と負例。Source/World/Tool Resultは実Version別 | 初回H2/H3の現行Primary、G2-C/Dの実Call↔Reply↔モデル受領がなお必要 |
+| **TEI参照MCP実動** | Product testで4 read-only ToolとCLI主要値の一致。validate差を修正 | **後続Transport比較の候補**。初回の固定Tool Profileに混入しない |
+| **DSH→MCP実Consumer** | 同じHarness Profile/OS GrantでのAdapter実Load・Source/Reply全byte・モデル受領 | **NOT RUN**。参照AdapterがあるだけでH2/H3のMCP成功ではない |
+| **将来の正式MCP/API** | 採用ADR/公開ABI/Host/多Consumer互換など | Product Ownerの別受入。TAIにMCPサーバーを再実装しない |
+
+後続にCLIとMCPを比較する場合は**同じ実Workspace/manifest raw、Binary/Adapter commit、Tool引数、主Claim、診断/失敗、stdoutとMCP content text、Target Consumer実受信**を一AttemptごとにPinし、実Protocolの違いによる失敗を業務意味の違いと混同しない。異なるTransportを同じ四Slotへ混ぜた試行は、事前登録したTreatmentの比較としては不適格。現在の初回BlockingはG0実Read拒否→G1暗黙Context/Send/Sink→G2 CLI Result完全性→新独立4 Session、比較適格0/4を維持する。
 
