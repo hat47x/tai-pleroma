@@ -814,3 +814,20 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **実行順（Hard Gateを増やさない）**：P0は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)既存G0 Read-deny→G1/G2 Tool/送出/Reply→独立H2→H3→H3→H2 4 Slot（現状0/4比較適格）。P1はTEI ADR-0048の限定Production入口と実Provider選択のOwner試験。P2は**合成**の状態付き高影響FlowをTool-only/Skill/専門Plugin/決定論的Flowで比較し、必要ならVUIを異媒体の追加対照とする。P3は複数の外部Harnessで同じ重大欠落が再現し、専門Pluginでは解消できず、複数年TCOとOwnerが受理可能な場合に限り**局所独自Loop**を評価する。
 
 **現状の限界**：採用済みなのはTEIの設計ADRであり、全入口の同値・実Provider選択の全操作、専門PluginのHV-3有効性、VUI Flow、H2/H3の独立適格比較、独自Loopの必要性は未実証。医療分野の研究結果は医療以外へそのまま外挿しない。Owner正式採用／本番運用はNOT RUN。
+
+## 43. 2026-11-08：Interaction／Business／Adaptive FlowとHarness投資の接続（既存Ownerへの引渡し）
+
+**今回の正本**：[Build-vs-Buy判断§12〜15](harness-build-vs-buy-decision-2026-11-08.md)。[TEI #3503](https://github.com/hat47x/tei-platform/issues/3503)で新たに具体化されたInteraction Flow、[TEI #3509](https://github.com/hat47x/tei-platform/issues/3509)のB2C完全Headless/Conversion Engineering Plugin、[TEI #3278/#3279](https://github.com/hat47x/tei-platform/issues/3278)の原子的Trait実装義務、[TAI #165](https://github.com/hat47x/tai-pleroma/issues/165)の非定型Case活動を、既存TAI #168/#271/#488の後続試験に**別の領域圧力ケース**として配置する。外部Harnessで動くことと、TEI自身が生成する業務アプリ／Flowで動くことを一つの合格にしない。
+
+| 領域 | Harnessが担うところ | Productが強制するところ | 最初の反証（既存OwnerがExpectedを管理） |
+| --- | --- | --- | --- |
+| Activity/Adaptive Case | Goalに沿う探索と再計画・道具選択 | TAI/SEIのSource/未決/期限・現在資格。Effectは実Host | 未知事象→矛盾観測→低リスク作業は継続、高リスクAction停止（TAI #165） |
+| Interaction Flow | 入力候補・質問・応答・説明 | TEIの確定Event/State/Revision/Operation binding | ASR曖昧、確認後の価格変更、旧Grant、timeout/resumeでEffect 0またはunknown（TEI #3503 IF-02〜06） |
+| Business Operation | Tool/MCP/CLIを通じた型付きOperationの呼出候補 | TEI ADR-0048、実Provider/HostのGrant・Operation ID・Receipt | 選択B→実A呼出し、古いRevisionのCommit、ACKだけで成功判定（TEI #1251/#3503） |
+| 高度B2C | 必要なときだけ開発・分析支援Skill | Headless Contractと独自Frontend、Analytics/Commerceの各Owner | TEI UI/AgentなしでもUX/売上導線を妨げず、Experiment/Actionの契約差分が有益（TEI #3509） |
+
+**図表とPluginの再利用条件**：FlowはSourceのGraph/Roleまたは正本への編集ProjectionからGenerator入力へ接続する候補。固定するのはEvent/Operation/Effect/RevisionとHost強制境界であり、媒体別の文言・図面・表示・状態付き質問は選択Targetの差として扱う。Extension/HookはOperation/Interaction/Generation/ObservationのTyped Bindingとし、Traitのrequired/manual/provider/generated履行はTEI #951/#3278/#3279の既存Resolverで検査する。単なるPlugin/Skillの存在、表示成功、DecoratorをGuardの強制や実Provider呼出しの証拠にしない。
+
+**収束を保つ実施順**：P0は変えず、まずTAI #168のG0実Read-deny／G1-G2完全Tool/Reply／新規H2→H3→H3→H2の独立4 Slot（**現在の比較適格0/4**）を満たす。TEI側F0〜F4とB2C B0〜B3はそれぞれのProduct実証として**並列に探索してよいが、初回H2/H3を新Hard Gateで止めない**。続くP2では「決定論的Flow、Tool-only、＋Product Skill、＋専門Plugin」を同Source/Model/Hostの小Taskで分離し、必要時だけVUI/異Harness/非定型Caseへ拡張。B2Cの成功は収益実験のConsumer/Exposure/Commerce Outcomeで別採点し、Harnessの自動化効果へ流用しない。自前Loopは複数Harnessに共通する重大な未解決差があり、API/Plugin/Host改善で解けず複数年TCOとOwner受理が成立した場合のみ検討する。
+
+**資格の区別**：TEI #3503/#3509/#3278/#3279のFlow/Conversion Plugin/Trait Fulfillmentは設計・受入提案であり、実媒体・実Provider・本番収益改善・Owner採用はNOT RUN／NOT ACCEPTED。今回の更新はMarkdown計画・責務接続のみ。TAI横断Skill／Product Skill／実Harness Tool呼出し／外部受信・現在Grant・業務Outcomeの既存Evidenceを上書きしない。第二Harness Runtime/Operation Engine/Workflow Host/Validator/Registry/Authorityを新設しない。
