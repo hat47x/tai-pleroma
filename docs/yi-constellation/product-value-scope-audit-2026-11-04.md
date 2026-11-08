@@ -671,3 +671,16 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **VA-FLOW-01（設計・未実施）**：同じ「申請を調べる→曖昧な質問を確認→業務更新を明示承認」のUser Jobを三Flowで表し、(A)標準UI/Flow、(B)専門Web B2C UI、(C)Chat/VUI Adapterで実行する。独立Expectedは、Flow境界、Owner/Grant、Sourceと意味候補の非同一、図表Diff→生成Manifest/実Binding一致、途中停止とResume、同一Operationの結果一致。UX評価は完了率・離脱・応答時間・変更リードタイム・運用コストを別軸で計測し、標準UIに有利な指標だけを採用しない。性能計測ではBaseline、データ量、P50/P95、Cache hit/miss、Provider SQL/Query Plan、Plugin version、計測環境を記録し、改善の原因を特定できない数字を採用しない。
 
 **実装順序**：①既存TEI CLI/Studio read-only Inspectorの実Provider一件と型付きOperation Trace、②三Flowの最小図表モデル・固定/可変Slot・Generator Manifest照合、③専門Web UIとChat/VUIの二Consumer差分、④実B2C負荷・UX比較。**初期段階で標準UIの強制、中央Workflow Host、中央認可、全Flowの同一State Storeは導入しない**。実Provider・図表駆動生成・専門B2C負荷・ユーザー比較・Owner受理は **NOT RUN**。
+
+
+## 28. 2026-11-08：Evidence資格と性能チューニングを一つの変更閉路にする
+
+**§24〜27を実装可能な閉路へ**：生成AIが診断→修正候補→局所変更→独立検証→Owner受理を反復できるよう、モデル・生成物・実行のEvidenceを別々に持つ。観測は意味の受理や実行許可そのものではない。最小の閉路は `Observe → Diagnose → Propose → Preview → Verify → Accept → Apply → Re-observe` とし、失敗時は旧Artifact/Bindingへ安全に戻す。読み取り専用の観測・比較は、書込み資格が不明でも継続できる。
+
+**Evidenceの階層**：①Source Observation（URI/realpath、byte digest、Revision、取得時刻、Freshness）、②Structural Candidate（出典位置、Parser/Plugin版、未取得/NULL/空/非開示）、③Accepted Meaning（Owner、範囲、単位/粒度/時間条件、受理版）、④Build Artifact（World FP、Model Revision、Artifact Revision、Generator/Binding BOM）、⑤Execution Receipt（実Provider、Attempt、Grant、Effect、Consumer受領）。上位の成功を下位から推測せず、A→B→Aや同byte別SourceでもAuthorityを再使用しない。失効はSource変更、Dependency/Plugin版更新、権限変更、Offline/Partial、生成器差異ごとに影響する層へ限定する。
+
+**性能観測の最小契約**：`Operation/Flow/Hook Slot → Provider Query/Target → Plan/Index → Cache → Consumer` をTraceで結び、計測環境、入力規模、P50/P95、DB round-trip、CPU/メモリ、Cache hit/miss、Invalidation、Provider/Plugin/Generator版、比較対象Baselineを残す。高速化は性能指標だけでなく意味・認可・Nullability・金額精度・並行更新・再試行・Source鮮度の回帰を通す。Cacheの `artifact再利用`、`build省略`、`Evidence再利用` は独立判定とし、同一World FPでもSourceIndexやToolchainが変わったときは資格を再確認する。
+
+**VA-TUNE-01（計画・未実施）**：同一Operationに対して(A)Baseline、(B)Query/Index変更、(C)Cache導入、(D)Plugin実装置換を比較する。独立Expectedは同一業務結果・同一Grant/Owner、NULL/未取得/部分受領、二Client競合、Source/Plugin更新後の失効、失敗後の旧Artifact保全。性能はウォーム/コールドとデータ分布を分け、P50/P95・DB回数・CPU・キャッシュヒット・変更費用を測定する。速度が改善してもEvidence資格や意味が崩れた案は不採用とする。
+
+**最小実装順**：①CLI/Studioのread-only Traceから実Provider/Query Planを一件採取、②Source/Model/Artifact/Executionの資格を同じAttemptで表示、③生成AIが提案した一つの局所チューニングをPreviewし独立Expectedで比較、④Ownerが受理した場合のみ適用、⑤Web/Desktop/B2C/Chat/VUIへ観測を拡張。新たな中央Evidence Storeや全プラグイン共通実行Engineを要求しない。実Plan取得・負荷測定・AI変更適用・Owner受理は **NOT RUN**。
