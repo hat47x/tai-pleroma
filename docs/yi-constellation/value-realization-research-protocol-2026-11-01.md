@@ -2,14 +2,13 @@
 
 > **Research / Proposed / Owner未受理 / 利用者調査NOT RUN**（2026-11-01）。この文書は [価値・要望・要件の整理](value-needs-requirements-2026-11-01.md) の研究方法と具体的な実証設計を補う。新しいTAI Core／共通Store／権限エンジン／評価Gateの設計決定ではない。
 
-## 現在の実証基線（2026-11-08 02:24 JST照合。後続の正式検収があればそちらを優先）
+## 現在の実証基線（2026-11-08 夕方照合。各Productの後続受入を優先）
 
-- **TEI T0/T0.5/P-1b1**：既存9 Reply・16対照から、統合済み#3354の**11実CLI Reply／32局所合成Consumer対照**へ進展。Required3 Rule・Focused Canonical/Relation/Sourceの照合。PR exact-head CI成功、**同一main Push CIは別資格**。Contextはpartial / exploration-only / qualifiedTestGeneration=false。
-- **TEI T1-A**：既知行番号0 Candidate第7 Stepの実CLI検収はmain CI成功。**T1-Bの未見Rule/独立HoldoutのAI盲検発見はNOT RUN**。部分Scenario目録で未観測を未実施にしないTT-105/106はDraft #3365。
-- **TEI Plugin/Self-build**：宣言→Capability選択→Provider実呼出→Host／Consumerを分離。Reference Self-build DriverだけでStage1生成物がStage2を実駆動する局所試験が成立（#3360）。**cmd/tei自身のG4 L3はUNQUALIFIED**。
-- **TAI Edge/SUI**：パイロットedge-record v4は省略可能な端点種別を採用し、IDの一意解決で24ケース／90段限定PASS（#537）。**出力先Consumer／SUI→SHOの実配送は別**。
-- **SUI→SHO**：固定354byteのProducer/Reader別Repo CI、偽Producer起動前拒否は限定PASS。一つの真正Source Fileを同一Attemptで手渡す試験は通常CIでSKIP。
-- **外部Harness/BOM**：正式H2/H3は実Skill Loadを確認済みだが比較適格0/4。BOMはWorkbench RQ-035と別のRQ-036（Draft #3297）、Qualified BOM/Host/Owner価値受理は未成立。
+- **TEI Design Context/T1**：merged #3354の11実CLI Reply／32局所Consumer対照、既知T1-Aの第7 Stepを限定実行済み。merged #3477のmain実CIでWorld同一・Source Index改版による旧Context拒否と、Context→Scenario前後再照合を確認。**AIによる未見Rule発見T1-BはNOT RUN**。Required Scope外はpartial / exploration-only / qualifiedTestGeneration=false。
+- **外部Provider Source**：import先原文のみ変わってもConsumer World/Source Indexが不変となる盲点はDraft #3479の検証課題。外部Source/原本の現在資格・Provider実Read/Host権限は未認定。
+- **TEI Self-build**：Reference Driverだけでなく、cmd/tei自身のStage1生成物がStage2 Invokerとなる**L3形状の局所実測**が#3440/#3447にある。Build Intent解決の**L2は未成立**、G4全体UNQUALIFIED。#3476のSupply Verifier/Intent前提はDraftの限定実験、resolved=false。
+- **SHO Document**：公開SUI→SHO固定354byte相互運用は別Repo CI限定PASS、真正一File HandoffはSKIP。SHO #25のtest-only Working Copy保存→別Open readbackと元/出力FD同一性・ABAの限定CIはPASS。正式Editor Writer、永続Store CAS、Source真正性とOwner受理は別。
+- **YIC Skill/BOM/未来構想**：H2/H3はSkill実Loadを限定観測済みだが比較適格0/4。BOMはWorkbench RQ-035と別のRQ-036、実組合せ資格未成立。SUIの一次意味形成と高度情報統合を別評価し、Ontology/Decision TwinはTEI全体Self-buildとSUI基本機能の後続段階。
 
 ---
 ## 1. 研究で問い直す対象
