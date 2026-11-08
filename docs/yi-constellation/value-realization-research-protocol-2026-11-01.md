@@ -10,6 +10,10 @@
 - **SHO Document**：公開SUI→SHO固定354byte相互運用は別Repo CI限定PASS、真正一File HandoffはSKIP。SHO #25のtest-only Working Copy保存→別Open readbackと元/出力FD同一性・ABAの限定CIはPASS。正式Editor Writer、永続Store CAS、Source真正性とOwner受理は別。
 - **YIC Skill/BOM/未来構想**：H2/H3はSkill実Loadを限定観測済みだが比較適格0/4。BOMはWorkbench RQ-035と別のRQ-036、実組合せ資格未成立。SUIの一次意味形成と高度情報統合を別評価し、Ontology/Decision TwinはTEI全体Self-buildとSUI基本機能の後続段階。
 
+
+- **TEI 1 Function宣言Required**：merged #3482／main push CI #42462861657のbounded Contextは13実CLI Reply、42局所Consumer Controlsを限定PASS。Capability定義・Application uses・Validation/Sourceの独立照合であり、実Call Binding/Provider/Grantはnot-observed。
+- **SHO実Cross-Repo Reader**：Draft #27のprivate-owned CI #42462172893で公開TEIのPin済み4 Markdown Fileを実G1b ReaderがRaw byte/限定Linkとして受領。Frontmatter F0/同一Provider二Consumer K2/SUI Producer H1/G2 Writerは未検証。
+
 ---
 ## 1. 研究で問い直す対象
 
@@ -712,13 +716,13 @@ Advertised read-onlyと実際の- execute付きFile書込み、OS Read-deny、�
 
 独立反例W15〜20は、**同じ原byteだが元Sourceが別File、Source A→B→A、OutputがReadback前に別Fileへ差替えられる（同byteでも）、Output A→B→A、File Identity未観測**を分離した。比較可能なFD dev/inoで差を検知できても、OS間・FileSystem間・inode再利用・Path raceでは現在の同一性を確定できない。Byte Readbackの局所成功を正式Editor Save、no-op write0、atomic publish/fsync、衝突CAS、Owner受理、SUI→SHO実Handoffへ拡大しない。効果が一部起きた場合は`needs-reconciliation`を保持し、無条件削除・再試行を行わない。
 
-また、[SHO Draft #27](https://github.com/hat47x/sho-composer/pull/27)の前提となる公開TEI側[Actions #42461670105](https://github.com/hat47x/tei-platform/actions/runs/42461670105)では、公開TEIのCI tokenから非公開SHOをcheckoutできず**Reader起動前に拒否**された。これはSource Grammar FAILでなくRepository Grantの境界。非公開SHO側から許可済み公開TEI Fixtureを固定版で読取る逆向きCIを提案し、公開TEIにprivate repo権限や秘密PATを配布しない。#27実Readerの同一File CIは新たな別資格。SHO単独編集/保存をTEI/OKF/KON依存にはしない。
+また、[SHO Draft #27](https://github.com/hat47x/sho-composer/pull/27)の前提となる公開TEI側[Actions #42461670105](https://github.com/hat47x/tei-platform/actions/runs/42461670105)では、公開TEIのCI tokenから非公開SHOをcheckoutできず**Reader起動前に拒否**された。これはSource Grammar FAILでなくRepository Grantの境界。非公開SHO側から許可済み公開TEI Fixtureを固定版で読取る逆向きCIを提案し、公開TEIにprivate repo権限や秘密PATを配布しない。#27実Readerの同一File CIは新たな別資格。SHOの単独編集・保存を別製品の実装完了へ依存させない。
 
-### 17.5 CLI/MCP・SUI/SEI/KON：有用な後続構想は現P0へ割り込ませない
+### 17.5 CLI/MCP・SUI/SEI：有用な後続構想は現P0へ割り込ませない
 
 [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)/[#3458](https://github.com/hat47x/tei-platform/pull/3458)はCLIと参照MCP Adapterの`validate`で、同じ意味エラーがCLI側failureなのにMCP側`isError=false`となり得る差を実コードで特定し、共通Validation Reportと限定Go/Windows回帰を追加。**共通構造/実Adapterの局所PASS**と実stdio/外部Harness受領、実Host Grant・Client Reactionは別。Transportを越えた最小APIの必要性は認めるが、WebServerや新共通認可を最初から導入しない。
 
-[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)の違和感→関係発見→理解の変化という一次価値と、[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)の異種Source/対象/時系列/状況理解という長期的価値を**別の評価軸として併存**させる。AIが関係候補を得たことと、Ownerが意味を受理したことを混同しない。[TEI Ontology/Decision Twin #3475](https://github.com/hat47x/tei-platform/issues/3475)はO0の比較・独立Expected設計のみ現在可能で、本格Twin/外部Sim/SEI判断移譲の実装は**TEI全体Self-buildとSUI基本機能の完成後**へ保持。KON Dataspaceは独立したマルチモーダル基盤の製品境界であり、現TEI/SHO/SUIへ必須の新中央Store・Host・共通認可を追加する前提としない。こうした構想は利用者価値で再評価し、今は既存製品のRead/Save/CLI/Scenarioの縦断実証を優先する。
+[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)の違和感→関係発見→理解の変化という一次価値と、[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)の異種Source/対象/時系列/状況理解という長期的価値を**別の評価軸として併存**させる。AIが関係候補を得たことと、Ownerが意味を受理したことを混同しない。[TEI Ontology/Decision Twin #3475](https://github.com/hat47x/tei-platform/issues/3475)はO0の比較・独立Expected設計のみ現在可能で、本格Twin/外部Sim/SEI判断移譲の実装は**TEI全体Self-buildとSUI基本機能の完成後**へ保持。こうした構想は利用者価値で再評価し、今は既存製品のRead/Save/CLI/Scenarioの縦断実証を優先する。
 
 ### 17.6 ORX-49〜56：実成果・未観測・必要な追加Witness
 
@@ -743,4 +747,65 @@ Advertised read-onlyと実際の- execute付きFile書込み、OS Read-deny、�
 
 **価値の分母**：同じ内容が何回見えたかではなく、必要な一次Sourceへ戻れて誤判断を防げた件数、原本/Working Copyを失わず保存再開できた件数、AIが未知の不足を適切に発見した件数、合法な省略・部分成功の過剰拒否、追加Reader/確認時間・情報開示費用を独立に測る。未実施試験の成績を0点とせずunknown/NOT RUN、必要ない機能を必須化した失敗も測る。
 
-**未実証**：YIC一つの実横断Outcome、外部Imported Provider Snapshot閉包、TEI L2/G4全資格、正式SHO Writer/Store CAS、SUI→SHO真正One-file、T1-B、実Function Provider Read、外部Harness比較適格（現0/4）、KON物理統合、実SEI Decision/Twin/Simulation、Ownerの意味・価値受理。研究計画と各Draftは実運用認定ではない。
+**未実証**：YIC一つの実横断Outcome、外部Imported Provider Snapshot閉包、TEI L2/G4全資格、正式SHO Writer/Store CAS、SUI→SHO真正One-file、T1-B、実Function Provider Read、外部Harness比較適格（現0/4）、横断ストレージ物理統合、実SEI Decision/Twin/Simulation、Ownerの意味・価値受理。研究計画と各Draftは実運用認定ではない。
+
+
+---
+
+## 18. 2026-11-08：宣言を使える成果へ接続する一辺と、実Reader受領の範囲
+
+**位置付け**：§16〜17で分けたSource Identity/Byte/Process/Consumer Receiptを、実際の業務Function一件の必要条件と、異なる公開範囲にある二製品の実Readへ接続する。新Central Function Registry、万能Predicate、Proof Engine、Host、Transport、Test Runner、Owner Meaning正本は追加しない。検証結果を利用者のOutcomeと呼ぶには、利用先ごとの独立根拠が必要。
+
+### 18.1 TEI #3482は13実CLI・42局所対照をmainへ統合した
+
+[TEI merged PR #3482](https://github.com/hat47x/tei-platform/pull/3482) は既存のContext Gateを再利用し、独立Requiredによって一つのFunction **sales.order.submit** の宣言上の必要情報を検査する。Targetはsemantic-capabilityのinput/output型、application:order_entryのsales namespace利用、3 Validation、sales_core DB requirement、Source IndexのDefinition Role・実Loader Read・実Catalog/typed Inspectを含む。前節の11応答にCapability/Applicationの2つの既存typed Inspectを足して、**13実CLI Reply**を使用する。
+
+[専用CI #42462672188](https://github.com/hat47x/tei-platform/actions/runs/42462672188) はcompleted/success。**従来32＋新しい不足・不正拒否9＋正常の過剰拒否防止1＝42個のtest-only Consumer判別対照**を同じ実TEI Binaryで実行した。既存Context Packet9対照、Pinned Scenario6 Step、T1-A既知候補、World同一/SourceIndex改版の拒否も回帰。[main merge 8ed583790e63b63527c1dd8f8aecc1d6ce6e3260](https://github.com/hat47x/tei-platform/commit/8ed583790e63b63527c1dd8f8aecc1d6ce6e3260)後の[main push CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657)についても、bounded-design-context Jobの**completed/successを直接再確認**した。Go局所statement C0相当9.4%は限定選択のみ、C1/全要件/NFRではない。合成対照を実Go Product Mutant kill数や実DB件数へ読み替えない。
+
+ここまでに成立したのは **Function/Capability/Applicationの宣言Sourceと依存を、現在の対象Scopeで限定照合できた**こと。とくにApplicationのuses semantic salesは**Namespace依存**であって、そのApplicationから具体Capabilityの**Call/Invocation Binding**が存在・選択・起動する証拠ではない。sales_core DB requirementは接続要求であって、実Provider Instance/Rowset、Runtime Grant、Write Commitではない。Function execution / query-or-provider-read / host-grant-and-effectは**not-observed**のまま、bounded Function SliceがpresentでもqualifiedTestGeneration=falseを維持する。
+
+### 18.2 最初の欠落一辺をCall Bindingに固定し、Source→Outcomeを小さく実証
+
+次の#2586実Provider Readと#951/#1016 Plugin実Consumerへ進むための、重複しない最小対照：
+
+| Case | 観測対象 | 独立Expected／禁止する昇格 |
+| --- | --- | --- |
+| **ORX-57 実Invocation不在** | Capability定義・Application uses・Sourceが一致するが、Function Entry/Call bindingは未存在 | Design Sliceはbounded-present、実Invocationはnot-observed。ビルド成果物やDB要求宣言から実Callを推測しない |
+| **ORX-58 同宣言別Provider** | 同一Source定義でProviderがunbound／別Instanceを選択 | Declaration資格を保持し、actual Provider load/SQL bind/Rowset/current Grantがない場合、Read/Effectはunknown |
+| **ORX-59 追加された正常Refの非過剰拒否** | 必須3 Rule/Sourceは同じで非必須Subjectだけ増減 | Independent Required充足の局所資格は維持。追加Sourceを無条件に全失効させず、新たな実依存があれば選択再評価 |
+| **ORX-60 Workbench物理Graphだけの成功** | Provider.IntrospectのFake Catalogから物理FK/Indexは投影可能、業務Relation/Function CRUDは未受理 | 物理観測/現在Grant/実DB Reader/三視点意味受理・Schema Applyを別Claimへ分離。旧#3372はclosed/superseded、現Draft #3486はexact HEAD CI未認定 |
+
+[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)で重要な「一辺」は、宣言上のCapabilityが見えることから、**実際に選択・呼び出されたFunction／SQL byte・bind → 実Provider Read/Result Grain・Completeness → Consumerへ返ったFunction Data Context**への接続である。まずread-only Browseの現SQLのstatus eq bindと2列Rowsetを実証し、ne・sort/pageの宣言と実効果の差は別負例で検証する。実Writeはその後にAction/Host/Receipt/独立Readbackの資格を追加する。先に新しいQuery/Provider/Authority Hostを作らない。
+
+### 18.3 宣言の二視点がそれぞれPASSでも、実Bindingは別
+
+[TEI merged PR #3485](https://github.com/hat47x/tei-platform/pull/3485) は、E1 Web PlanのRoute/ActionとGo Hostのmethod/path/actionIdという**二つの宣言を、合成Fixtureで別々に変異させて照合する実Testコード**をmainへ追加した。片側のNode/Goローカル適格が他方のRuntime Bindingを保証しない、というPressure。旧[CI #42461546535](https://github.com/hat47x/tei-platform/actions/runs/42461546535)での旧Node/Go構成のPASSは確認済みだが、今回新規のE1-Go相互差を検出するテストの同版CI結果は**本照合では未取得**。Product E1 Source→Go Hostの実選択・実Invoke、Auth Guard、Client Reaction、Commit/202/ReceiptはNOT PROVEN。
+
+これは18.2のFunction/Provider未Bindingと同じ**証拠の形の不足**であり、TEIに共通の巨大Binding Engineを新設する理由ではない。既存Application API ADR-0048、#3274 Server/Client Decision Graph、#1174 Host/Effect、#2514独立Expectedの各Ownerで、**declared pair → selected pair → actual invoked pair → externally observable result**の列を見せる。各Ownerの意味・作用・資格を別々に検収する。
+
+### 18.4 private側のSHO実Readerは公開TEI原文4件を本当に受領済み
+
+前節の「[SHO #27](https://github.com/hat47x/sho-composer/pull/27)実Reader成功未確認」は履歴の状態に限る。**private SHO-owned Draft #27**の初回[CI #42461984903](https://github.com/hat47x/sho-composer/actions/runs/42461984903)は、Readerが四Fileを読んだ後にnode_modules untrackedのclean判定でRed。修正HEAD ec169bf63f5010c3dc5d3389ee4efe2522419775 の[CI #42462172893](https://github.com/hat47x/sho-composer/actions/runs/42462172893)は実Job **completed/success**を直接確認した。公開TEIのPin済み合成K1 Markdown **index/data/functions/business の4実File**をPrivate側の実G1b CLI Readerが読取り、原byte・SHA/限定Link、missing fileと正常0 Linkの区別、Parser版14.3.3を検収した。
+
+この成果は二Repoの**権限を越えてSecretを渡さずに実Fileを読む**限定したK1Rであり、前回§17の「Public TEI→Private SHO Checkout失敗」は権限境界の歴史的Redとして残す。公開TEI CIにPrivate Repo token/PATを付ける必要はない。ただし**OKF YAML Frontmatter正式F0、同一Providerが選択されたK2二Consumer、SUI真正Producer→SHO同一File H1（別Fixture・通常CI SKIP）、SHO Writer Save/Restart、Source/Disclosure/Owner受理**は未成立。K1Rの成功をH1に横流ししない。
+
+### 18.5 ORX-61〜64：実Reader・Transport・Sourceの到達と事業価値を切り離す
+
+| ID | 二世界／判定 | 結果と次のOwner |
+| --- | --- | --- |
+| **ORX-61 正規Readと意味Parser** | SHO G1bが公開TEI Markdown4 FileのRawを読めてもOKF Frontmatter意味は未解析 | K1R限定PASS。OKF F0/K2/Owner/現在Grantへ昇格しない（SHO #18/#27） |
+| **ORX-62 Handoff誤昇格** | SHOが公開TEIの4 FileをReadできたがSUI実Producer H1はSKIP | H1は別の同一Attempt非Skip Readerを要求。両Repo・Fixture・目的の異同を追跡（SHO #21/#27） |
+| **ORX-63 Transport Comparatorと実配送** | EKI #786 test-only Comparatorで8負例PASSだが実Adapter Trace未入力 | 実Local IPC/Connect配送・受領/Grant/EffectはSKIP・未実行。Test報告の型一致を配送Receiptにしない（EKI #753/#786） |
+| **ORX-64 予定表とOwnerの成果** | TEI 13 CLI/42対照・SHO K1R成功でも利用者のTaskが実完了したか未観測 | 必要なFunction実Read/SHO原稿保存・利用先の受領がない限りOutcome未証明。各Product局所成果を独立に評価 |
+
+### 18.6 改訂した最短の価値実証順と停止線
+
+**現在実証済みとして表示**：TEI #3482 bounded Function declarationの13実CLI・42 Controls（main CI含む）、TEI #3477同Workspace Source-only失効、SHO #27 Private-owned Public Fixture4実File Reader K1R、TEI #3440の自己Stage1→Stage2 invoker局所観測。従来Source-static/Fixture-onlyと混ぜず、対象・Test Commit・利用先と制限を添える。
+
+**次の必要一辺は二つ**：(a) TEIのFunction Call/Provider Read一件と、そのResultが本当にFunction Data Context/Consumerに届くこと。(b) SHOの普通の文書Working Copyから実Writer Save/別Open、SUI起点の必要時に限る非Skip実One-File H1。実Data Source/Consumerを明示し、Source/Meaning/現在Grantは要求された用途に限って追加確認する。AIの未知Gapを盲検で選ぶT1-Bも既存#3262/#2514/#1180で並走。
+
+**長期構想は別**：Ontology/Decision Twinの実装や異種Data Storeの共通サービス化を、最初のFunction Read・Studio Inspector・SHO Raw Saveの前提としない。将来のシミュレーションによるOutputと、実際のHost Effect/SEI Decisionを混同しない。必要なConsumer二件と再利用価値の独立測定なしに中央機構を増設しない。
+
+**価値の分母**：実Consumer成功数、原文/Source取得の追加労力、false completed／false stopped、実Provider呼出の必要回数、正しいSource/Meaning/Scopeへ到達できた件数、保存・読取・再開の修復手数、ユーザーが実際に得た選択肢を分けて記録する。技術的Go/CI/Reference PASSからOwnerの実価値受理は自動発行しない。
+
+**引き続き未実証**：1 Functionの実Invocation/Provider Read、TEI↔Studio二実Consumer、外部H2/H3比較適格（0/4）、SHO Writer正式保存、SUI→SHO真正H1、OKF F0/K2、実EKI Connect/Local IPC配送、独立AI T1-B、Verified BOM、本番Host Grant、OwnerのMeaning・利用者Outcome。局所達成を取り消さず、未成立のClaimだけを保留する。
