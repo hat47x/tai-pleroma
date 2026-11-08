@@ -65,3 +65,23 @@
 - **VA-F4（監査の負担）**：VA-00からOwnerが本当に判断すべきF2だけを抽出。F1を再発見するAgent工数を減らし、異モデル反証は「最も重い価値判断」に優先投入する。
 
 **採否未決**：何をEKI低遅延Profileとして受け入れるか、具体的なTransport/Codec、SLA/SLO、独立Expected、F2の正式判断順序。Data Planeの高速化は必要性を確認するまでProduction Contractへ昇格しない。
+
+
+## 6. 2026-11-08：逆解析・通信・Decision Twinを用途と実証時点で切り分ける
+
+**横断価値の新しい切り分け**：機能を「存在してもよい研究候補」「既存製品で限定実証できる能力」「初期製品価値として必要な能力」「後段の統合用途」という4つの時点で扱う。将来の全体像を現在の単独ProductやTAI最初のH2/H3試験の新しい必須依存にしない。既存Owner Issueの正本と相反する新しいRequirement・Gate・Hostは作らない。
+
+| 価値・条件付き機能 | 現在の限定根拠 | 最小の次の判断／今は主張しないこと |
+| --- | --- | --- |
+| **TEI/SHO：レガシー一機能の逆解析→設計→移行** | [TEI #3394](https://github.com/hat47x/tei-platform/issues/3394)のREA連携は**External Observationのread-only入場（T1-A）**と、明示採用するTEI Authoring提案（T1-B）の二経路を採用候補として設計。REA Raw JSONやファイル改名をTEI受理済Sourceとしない。T0実REA解析・T1-A/B・T2は未実証 | A=既存手動/TEI Source解析、B=REA外部解析を追加、C=SHO文書＋TEI Targetの同一一機能比較を、Source/Business Meaning/独立Expected/Writer実Readごとに採点。最初は合法なread-only候補取得を検証し、旧Runtimeとの同値は実観測なしではunknown。REAなしのTEI/SHO通常利用は継続 |
+| **EKI：データ様式別Delivery** | [EKI #753](https://github.com/hat47x/eki-fabric/issues/753)で6イベントの固定Independent Expected/Go形式Fixtureがmainへ。[#785 merged](https://github.com/hat47x/eki-fabric/pull/785)に参照意味一致1・改変負例6件のローカルGo試験記録。ただし本物のLocal IPC/Connect AdapterのD0-B/CはNOT RUN | 同一Contract/Expectedで実Adapter 2方式を比較し、順序・再接続・Lease/Fence・受領を分離してからp50/p95/p99・CPU/帯域を測る。Data Contract、Delivery Contract、Transport Profileは異なる。通信Fixture成功≠実配送/ローカル即応の保証。[#754](https://github.com/hat47x/eki-fabric/issues/754)の方式選定は後段 |
+| **TEI：Ontology DSL／Decision TwinとSEI判断委任** | [TEI #3475](https://github.com/hat47x/tei-platform/issues/3475)にO0〜O4とOD-01〜14を**設計・NOT RUN**で整理。専門家可読DSL、標準Graph/Time/Rule、型付きSDKとSEI Decision Inquiryを既存の意味/許可契約に結び付けるが、Ontology=現実Twinではない | O0の先行SDK Fit/Gap・可読性比較・Owner未受理Candidate研究は現在可能。実Twin/Sim（O2/O3）はTEI全体セルフビルド受理とSUIの基本機能完成**後**に限定。SEI意思決定・予測と実観測・Host Grant/Effectを混同しない。現在のTEI/SHO/SEI初期縦切りにO2/O3を義務化しない |
+| **TEI：REST例外→Client反応** | [TEI #3274](https://github.com/hat47x/tei-platform/issues/3274)のHTTP Decision Graphは限定Node CIが成功。[PR #3478](https://github.com/hat47x/tei-platform/pull/3478)は実Go Host Handlerで10経路とAudit順序を試す変更だが、PR作成時に**新Go CI未検証・未merge** | Typed Application Result、HTTP Status/Problem Details、Effectの確定/不明、Client Reactionの資格を別に確認。HTTP 202＋Audit完了を業務完了としない。最初の実Go Host有限Traceと独立Expectedの確認をOwnerへ返し、新しい共通Response Engineを追加しない |
+
+### 6.1 共通の受入停止線（各Productの既存試験を再利用）
+- **実装証拠の種類を揃えない**：設計/Fixture/Reference Go Test/PR exact-head CI/main merge/実Provider/同一Attempt Consumer/Owner意味受理を別列にし、異なるHEADや実行環境のPASSを合算しない。
+- **正当な部分継続**：REA未接続でもTEIで通常Model編集、TEI未解釈でもSHOのRaw保存、EKIストリームAdapter未実装でも既存Job/Local Governor、Twin未構築でもTEI既存Query・SEI判断を止めない。
+- **誤った確定を禁止**：REAの構造候補＝Accepted Meaning、Go Fixture＝通信遅延保証、SDK生成＝現在操作権限、HTTP 202＝Commit Receipt、空集合＝実Recipient受領、とみなさない。
+- **実証の次の最小単位**：REAは一Read-only Source-backed Function、EKIは既存6イベントを二実Adapterで配送、Ontologyは1 Object/Relation/Ruleの表記比較、HTTPはHost Handlerの一Terminal Short-circuit。広域/全Version対応は、最初の限定不足を独立Expectedで示した場合だけ先へ進む。
+
+**現況**：本追補は既存各ProductのIssue・PR・報告済み試験のSource-static照合と価値比較の設計だけ。REA実Process、EKI実Adapter/性能、Ontology Twin/SEI運用、HTTP新Go Host CI、これらの横断B0/B1/B2・Owner正式受理は本VA-COND-01では**NOT RUN**。Product側の計画・コード・Owner判断は変更しない。
