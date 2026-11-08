@@ -42,7 +42,7 @@ CX-2のSkillは**執筆用原文**であり、内容を工学的な業務規則�
 | 意味・権限の過大推論 | Source/Revision、Owner Acceptance、現在Host Grant、実Effectを分離しているか | 候補の多様性を受理・認可・安全証明へ昇格させた案は採用不能 |
 | 失効と継続の判別 | 無関係Source変更・A→B→A・Plugin removal・未知Effectの違いを説明 | すべて再実行／古い証拠の自動復活／通信切断後の二重Effect |
 | 成果の運用費 | モデル料金、Token、Latency、人の確認・修正、参照実Read/評価時間 | 安いが独立Expectedを満たさない案を優先しない |
-| 比較の資格 | Assigned Arm全数（ITT）、実処置/適格（PP）、Skill実LoadとModel受領、C0/C1/C2汚染 | Skill未読のCX-2、CX-0へのCSW説明漏れ、途中条件変更を成功例だけ除外 |
+| 比較の資格 | Assigned Arm全数（ITT）、実処置/適格（PP）、Skill実LoadとModel受領、CX-0/CX-1/CX-2間の処置混入 | Skill未読のCX-2、CX-0へのCSW説明漏れ、途中条件変更を成功例だけ除外 |
 
 **評価の段階**：(a)Source/Output/Costの実観測と露出の確認、(b)根拠・検証可能性・非重複・危険性のBlind Review、(c)有望な案だけTEI/CSWの各Ownerが採否を判断。見つけた発想を機械的に適用する実験ではない。統計的な普遍改善率を小規模試行で主張しない。
 
