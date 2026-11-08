@@ -292,3 +292,12 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 **実施単位**：TEI [#2892](https://github.com/hat47x/tei-platform/issues/2892)のMigration、SUI [#3399](https://github.com/hat47x/sui-sensemaking/issues/3399)の2 Client、SHO [#20](https://github.com/hat47x/sho-composer/issues/20)のVault、EKI [#77](https://github.com/hat47x/eki-fabric/issues/77)のLease、TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のTool Replyのうち、実入口が存在するものから選ぶ。各Caseの実Expectedと原Observedは別担当で記録。旧PR局所CI・模擬結果を本CaseのPASSに算入しない。全Caseの同時実装も求めない。
 
 **状態**：試験計画のみ。RC-01〜05の実注入、B0/B1/B2の費用・品質計測、実Provider/OS/外部Harness再実行、Owner受理は **NOT RUN**。
+
+
+## 15. 2026-11-08：KON独立化の必要性を二Consumerで反証する
+
+[横断監査 §25](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-KON-01** を既存B0/B1/B2評価へ接続。B0＝SUI既存Store＋手動SHO参照、B1＝薄いSource/Revision Adapter、B2＝KON独立Store/Service候補。**B2は現行実装・配備を意味しない**。
+
+同一Raw一件のCanvas A/Bで異なる仮説と位置を許し、SHO Readerが原Sourceを引用できるかを試す。独立ExpectedはRaw identityとView identityの非同一、同名別Source／同byte別所在／A→B→A、現在Audienceによる存在非開示、SUI仮説とTEI Accepted Meaningの非同一、ACK喪失・Partialの正しい判定（§14 RC-02/03を再利用）。測定は共有Identity/Revisionの不一致、誤同定・秘密露出、Consumer復帰、手作業・運用コストを別列にする。
+
+**採用停止線**：B0/B1の実User Jobで満たせない複数Consumer需要とB2の測定可能な改善が示されるまで、KON独立Service/中央DB/独自認可Engineを初回必須にしない。KONの長期汎用マルチテナント構想は維持する。SUI #3399/#3400/#3401、SHO #20、TEI #2586/#3419のOwnerと正本を変更しない。実SUI→SHO連携、B0/B1/B2比較、KON Store/Service、Owner受理は **NOT RUN**。
