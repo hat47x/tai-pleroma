@@ -184,15 +184,15 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 ---
 
 <!-- tai-interoperability-tei-shared-app-api-mcp-reference-20261108 -->
-## 11. TEI共通アプリケーションAPIとMCP参照Adapterを、Skillの実Tool資格に接続する（2026-11-08）
+## 10.3 TEI共通アプリケーションAPIとMCP参照Adapterを、Skillの実Tool資格に接続する（2026-11-08）
 
 [TEI採用ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)は、CLI／MCP／HTTP／Web／Desktopを**同じ型付きアプリケーション操作のAdapter**とし、操作ID・Request/Result/Failure/Source Scope・効果・版を既存Ownerから取得する方針。HTTPサーバーや一つの認証方式を全入口の必須Hostにしない。既存のCLI-firstとGo単一バイナリ・外部Hostへの導出を維持する。これは**採用済み設計**だが、全入口実装・同値試験の完了ではない。
 
-### 11.1 先行MCPの実在と、何を実測したか
+### 10.3.1 先行MCPの実在と、何を実測したか
 
-[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)で、mainの[read-only MCP参照Adapter](https://github.com/hat47x/tei-platform/blob/main/tools/reference-mcp-readonly-adapter/main.go)が実在する。起動時に固定Workspaceを指定するstdio JSON-RPC Adapterで、model catalog／inspect／trace／validateの**4 Toolだけ**を既存internal/operationsへ渡す。モデルからpath/rootを書き換えるSchemaではなく、受理・書込み・Grantの操作は公開しない。PRの限定実測では、同じ公開Workspaceの各操作から抜き出したFingerprint・主要値・schemaVersionの対照で不一致0を報告。**その部分集合一致を、全JSON・失敗分類・Source/Host隔離・外部Harness全受領の完全同値へ昇格しない**。旧[TEI #3400](https://github.com/hat47x/tei-platform/issues/3400)の「当時MCP入口なし」は歴史的Source版の観測であり、現在mainに薄いReferenceが存在することと矛盾しない。
+[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)で、mainの[read-only MCP参照Adapter](https://github.com/hat47x/tei-platform/blob/main/tools/reference-mcp-readonly-adapter/main.go)が実在する。起動時に固定Workspaceを指定するstdio JSON-RPC Adapterで、model catalog／inspect／trace／validateの**4 Toolだけ**を既存internal/operationsへ渡す。モデルからpath/rootを書き換えるSchemaではなく、受理・書込み・Grantの操作は公開しない。PRの限定実測では、同じ公開Workspaceの各操作から抜き出したFingerprint・主要値・schemaVersionの対照で不一致0を報告。**その部分集合一致を、全JSON・失敗分類・Source/Host隔離・外部Harness全受領の完全同値へ昇格しない**。その後[TEI merged #3458](https://github.com/hat47x/tei-platform/pull/3458)でvalidateの意味失敗・Load失敗とCLI/MCP診断の限定パリティは進んだが、全Toolの完全同値は依然未実証。旧[TEI #3400](https://github.com/hat47x/tei-platform/issues/3400)の「当時MCP入口なし」は歴史的Source版の観測であり、現在mainに薄いReferenceが存在することと矛盾しない。
 
-### 11.2 TAI/YICが参照する適合条件と次の最小差分
+### 10.3.2 TAI/YICが参照する適合条件と次の最小差分
 
 | 現行Evidence | Skill選択・Handoffへの利用 | 未成立の主張 |
 | --- | --- | --- |
