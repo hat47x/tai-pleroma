@@ -262,3 +262,20 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 **R-QUAL-06**：Model Map RQ-036のmain要求と、BOM Draftの同一IDが衝突。Expected＝現行正本を維持し未修正統合を拒否、BOM Owner判断待ち。
 
 **実行結果の分類**：#3482 main専用CI等は各Productの歴史的な限定実測。R-QUAL-01〜06とP0-Rの一Attempt実Provider/実Rowset/実Consumer、正規S2、Owner Meaning・横断H2/H3適格は、本VA-04では**NOT RUN**。
+
+
+## 13. 2026-11-08：用途別F段階・現在の実証と要求ID競合を実行前に照合
+
+[横断監査 §30.1〜30.2](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)および[VA-01 §20.1](VA-01-product-value-necessity.md)に基づき、§12の一Function受入票の**表現上の誤り**を防ぐ。F0〜F5を直列Stageと読み、非更新のread-only作業にF4 Commitを要求したり、F5受領からF3実ProviderやF4更新を遡及的に合格扱いしたりしない。各Caseで「必要／不要（not-applicable）／未観測（unknown）／確認済み（observed-in-scope）」を**先に**固定し、後から結果に合わせてExpectedを変えない。これは既存Issueへの確認項目であり、新しい共通Schema/Runner/Gateではない。
+
+| 現行Sourceの実測 | 通る資格とScope | この票では通さない・最小の後続Evidence |
+| --- | --- | --- |
+| [TEI main #3482](https://github.com/hat47x/tei-platform/pull/3482) と[CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657) | 13実CLI Reply、42 Consumer Controls、3 Required Rule、6旧Step＋T1-Aの限定設計診断 | Function→実Query/Provider Rowset／Client受領。対象のactual provider ID・実SQL・Source/Grant revision・Rowset byte/Grain・同Attempt/Expectedを照合する（[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)） |
+| [SEI #824](https://github.com/hat47x/sei-cognition/pull/824)に記録した[TEI→SEI A0実CI #42474971439](https://github.com/hat47x/tei-platform/actions/runs/42474971439) | TEI実Source Index→独立Required照合→**評価者作成Recommendation**のSEI Store保存→別ResumeでRaw再Readの限定受領 | 生成AI/SEI Methodの独立義務発見、実Tool呼出し、未解決Question native継続、Owner受理。A1-N/D/UのD0/D1/M1比較はNOT RUN |
+| [SHO #25 Draft](https://github.com/hat47x/sho-composer/pull/25) の[G2-W1 CI #42461901303](https://github.com/hat47x/sho-composer/actions/runs/42461901303) | test-onlyの新規Working Copy実書込→別Open/Raw byte一致、2 OSで限定PASS（Windows POSIX FIFO skip） | 正式Editor Save／No-op／Source Originの版／CAS／fsync／別Client受領。Test-only Write/Readbackがあることは事実だが、製品Writer全体合格ではない |
+| [EKI #785 merged](https://github.com/hat47x/eki-fabric/pull/785)／[#753](https://github.com/hat47x/eki-fabric/issues/753) | 固定6 Event/Reference Negative 6件の局所Go意味確認 | 本物のLocal IPC・Connect Adapterによる同じ6 Event、Lease/FC Epoch・再接続とConsumer実受領。標準配送方式選定を実Adapter以前に確定しない |
+| [TEI main RQ-036](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)／[BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297) | **現在のmain RQ-036はドメイン全体を図表・ナビゲーションで理解するModel Map要求** | DraftのRQ-036はBOM要件と**番号競合**。Owner採番と引用先更新が済むまで、そのRequirement IDでの正式受理・Mergeは保留（BOM研究/Fixture実験は続行可）。旧RQ-035衝突からの単純改番を十分としない |
+
+**最初の実証順**：TEI一Function・一Source cohortの**実Provider Rowset**、SHO一文書の正式Editor保存→独立Readbackを、対象Job別に並行。SEI Method・EKI実Transport、TAI G0/G1/G2・H2/H3適格試験はOwner既存レーンで別評価。Producer側のCIログ、Provider実呼出し、Consumer受領、現在開示、Owner採否を**異なるAttemptから合成して一つのPASSにしない**。
+
+**実施状態**：Product Issue/PR/main要求文書の再取得と、この評価票の追補だけ。新しいProvider／SHO正式Writer／SEI Method／EKI Adapter／TAI適格Trial、Owner要求採番・承認、異モデル反証、利用者Jobの価値比較は**NOT RUN**。
