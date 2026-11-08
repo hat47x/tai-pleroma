@@ -900,6 +900,9 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **Model Mapの位置付け**：[TEI merged #3505](https://github.com/hat47x/tei-platform/pull/3505)のRQ-036はEvent/State/Operation/Pattern/Data/Function/Provider/Targetを俯瞰・辿れる**製品要求**として採用済みだが、[read-only Model Map M0 Draft #3518](https://github.com/hat47x/tei-platform/pull/3518)は未統合の部分投影。M0の`resolved`はCatalogで宣言先を特定しただけであり、全Business graphの閉包・実Provider/Grant/Effectの実証ではない。TAI Activityに取り込むのは対象User Jobに必要なLink/Source/Gapだけとし、全体Mapがまだ部分的なことを全Actorの停止理由にしない。
 
+<!-- tai-rq036-modelmap-not-bom-20261108 -->
+**Requirement IDの版衝突を避ける**：現行mainの`RQ-036`は[TEI merged #3505](https://github.com/hat47x/tei-platform/pull/3505)の**Model Map／図表・ナビゲーション要求**。未統合[Verified BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)の旧`RQ-036=BOM`は同番号の別意味であり、そのまま共通Required/Owner受入へ混ぜない。BOMの番号はTEI #3267 Ownerの再採番待ち。これは**設計Sourceの識別子衝突**であり、Graphの値同一性やSkill/Harness欠陥の証明ではない。
+
 **先に実証する三つの反例**（TEI #3503/#3507／#3278／#1180/#2514の既存Ownerへ引渡し）：
 - **AF-01：表示だけの変更 vs 業務State変更**。同じOperation ID/SourceでCanvas配置・Web UI遷移だけを変更しても古い業務Resultを再実行しない。Guard/Target Action変更では必要なExecutable/Grant・Receipt資格だけ再検証。
 - **AF-02：Chat/VUIの部分入力 vs 実Commit**。未確定delta・音声候補・一時Previewは表示できても実OperationへDispatchしない。Confirm後に実Hostが拒否／Commit unknownとなったときは、UIとTAIの成功表示を止め、独立の許可ReadとEffect照合を継続。
