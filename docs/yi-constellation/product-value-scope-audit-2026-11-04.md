@@ -684,3 +684,24 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **VA-TUNE-01（計画・未実施）**：同一Operationに対して(A)Baseline、(B)Query/Index変更、(C)Cache導入、(D)Plugin実装置換を比較する。独立Expectedは同一業務結果・同一Grant/Owner、NULL/未取得/部分受領、二Client競合、Source/Plugin更新後の失効、失敗後の旧Artifact保全。性能はウォーム/コールドとデータ分布を分け、P50/P95・DB回数・CPU・キャッシュヒット・変更費用を測定する。速度が改善してもEvidence資格や意味が崩れた案は不採用とする。
 
 **最小実装順**：①CLI/Studioのread-only Traceから実Provider/Query Planを一件採取、②Source/Model/Artifact/Executionの資格を同じAttemptで表示、③生成AIが提案した一つの局所チューニングをPreviewし独立Expectedで比較、④Ownerが受理した場合のみ適用、⑤Web/Desktop/B2C/Chat/VUIへ観測を拡張。新たな中央Evidence Storeや全プラグイン共通実行Engineを要求しない。実Plan取得・負荷測定・AI変更適用・Owner受理は **NOT RUN**。
+
+
+## 29. 2026-11-08：KONの所有境界を訂正し、CSWを選択的な開発検証に組み込む
+
+### 29.1 KON/SUI境界の明確化（§25の補正）
+
+§25の「SUI既存Storeを基準」という表現は、**SUIが共通資料DBを直接所有・操作するという意味ではない**。最新の製品方針では、**SUIは文書管理APIのみ利用し、DBへ直接アクセスしない**。KON DataspaceはSUI/SHO/TEI等が利用可能な共通データ基盤を目指す。基準実装の選択は**オンプレミスPostgreSQL＋NAS**、不足する機能はOSSで補い、クラウドProviderへ交換可能にする。実装時期は**TEI完成後**、基本配布形態は**Go単一バイナリ**。したがってB0/B1/B2の「既存SUI Store」は、現時点で実在する保存経路と手動/既存API参照を意味し、SUIの直接SQLや独立KON Service実装済みを意味しない。
+
+最小Interop候補は`Object / Content / Revision / Operation / Relation`。IdentityはSource、Content、Revision、View/Canvas、意味候補を分け、APIは条件付き更新・版照合・Audience/Disclosure・部分結果を表現する。Undo/Redo、Graph/RAG、全文検索、実Messagingは必要性と実測を待つ。データ保管と認可判断を同一視せず、KONは外部IdP/Host Grantの現Scopeを受け取って境界を守る。TEI Accepted MeaningとHost実EffectをKONに移管しない。
+
+**VA-KON-01の修正**：B0＝現存の保存/参照経路、B1＝文書管理API/Source・Revisionの薄いAdapter、B2＝KON候補API（将来のPostgreSQL＋NAS Provider）。B2の比較は当面契約テストと費用見積りまでで、実KON実装をTEIより先に要求しない。SUI→SHOの実一資料受渡し、Reader Readback、二Client版競合が成立した時点で独立化判断を再審査する。
+
+### 29.2 CSWはYI Constellationの実践から改善するが、実行権限は独立させる
+
+CSWはYI Constellationの**共通開発手法を改善する研究・実践ループ**として接続する。CSW自体をYI製品群の必須Runtime/Hostにしない。探索→設計候補→独立検証→Owner受理→実装→実運用観測の昇格境界を保持し、AIが生成した候補・局所PASSを業務意味の受理や外部Effectへ昇格しない。
+
+**DSH/既存Harness優先**：初期比較は (A)LLM＋既存Tool、(B)既存Harness、(C)YI横断Skill、(D)TEI/SEI専門Plugin、(E)独自Loop。Eは最初から構築しない。CSWの知見は選択的Skill/Pluginとして呼び出し、**未選択時は通常作業を阻害しない**。DSHを使う場合も実OS/Process境界、読み取り拒否、送出先制限、Tool Reply完全受領、Attempt同一性を確認し、Prompt上の制限だけで隔離達成としない。H2/H3の比較適格性は現状の未成立を尊重し、設計追加でPASSにしない。
+
+**VA-CSW-01（計画・未実施）**：同じTEI read-only Inspector/Plugin変更一件でA〜Eのうち実行可能な方式を比較。独立ExpectedはSource/Plugin/Binding資格、実Call-site/Provider/Consumer受領、誤修正数、再現性、介入回数、時間/費用、未選択CSWで通常Buildが継続すること。DSHは実隔離と完全受領が検証されるまで「導入済みで安全」と評価しない。OwnerはTEI/TAI/CSWそれぞれのIssueで判断し、横断票がOwnerを代替しない。
+
+**優先する実証**：①TEI Inspector実Provider、②SHO Writerの実ReadbackとSUI→SHO同一資料、③DSH/既存Harnessの実隔離とReply完全受領、④CSW選択的Skill比較、⑤KON契約の必要性再評価。**KON実装、SUI直接DB、CSW強制常駐、独自Harness先行構築は行わない**。実接続・A〜E比較・Owner受理は **NOT RUN**。
