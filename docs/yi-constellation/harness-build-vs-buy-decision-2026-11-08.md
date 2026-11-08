@@ -141,3 +141,70 @@ P-1〜6は既存契約を**どこで検証するか**の目次であり、全工
 **P3（独自Loop投資判断、依然保留）**：P0〜P2で同一の重大欠落が異なるHarness上で再現し、外部Plugin/API/Host改善では解けず、適格な品質・安全・保守TCOが投資対象として説明できる場合だけ、最小の局所Loop実装をOwnerへ提出。未実装・過剰なHuman確認／誤停止／誤実行のトレードオフを比較し、導入しない結論も受入とする。
 
 **現在の資格**：ADR-0048は採用された設計方針。ただし共通Application APIの全入口同値・Provider二Consumer・VUI状態Flow・専門Pluginの価値、Harness×Modelの比較、HV-4の投資採用は**NOT RUN／未決**。新しいRuntime/Schema/Registry/Ownerの正式採用は行っていない。
+
+## 12. 2026-11-08追補：活動・対話・業務の三つのFlowを区別する
+
+[TEI #3503 Interaction Flow](https://github.com/hat47x/tei-platform/issues/3503)、[TAI #165 非定型活動](https://github.com/hat47x/tai-pleroma/issues/165)、[TEI #3278 原子的Trait](https://github.com/hat47x/tei-platform/issues/3278)を横断照合すると、従来の「Harness＝Agent Loop」と「Workflow＝業務手順」の二分法では足りない。**似た図で表せても、状態の正本・変更権限・失敗回復が異なる三つのFlow**を区別する。
+
+| Flow | 中心となる問い | 管理するもの | 再開・強制の責務 |
+| --- | --- | --- | --- |
+| Activity / Adaptive Case | 次に何を調べ、何を保留し、何を進めるか | Goal、仮説、根拠、Task、期限、計画候補 | TAI/SEIが根拠・未決を扱い、外部Harnessが候補計画を実行。新事実時は再計画 |
+| Interaction Flow | 必要情報をどう集め、対象と値をどう確認するか | Event、画面/対話Step、確認対象、Interaction State | TEI #3503が確定Event・Revision・確認失効・中断再開を扱う |
+| Business Procedure / Operation | どの業務操作が合法で、何が実際に起きたか | Business State、Guard、型付きOperation、Effect | TEI/実Hostが現在Grant、expected revision、Operation identity、Receiptを検査 |
+
+**Interaction State ≠ Business State ≠ Effect State**。チャット履歴が失われても、正しいSource/状態と再解決できる根拠をProduct側に残す。一方、AIの内部思考や全Sessionを第二の共有Canonicalへ保存する必要はない。
+
+具体例：音声で注文確定の意図を検出→商品・金額・版を提示→利用者の確定Event→現在Business StateとHost Grantを再検証→型付きOperation送信→実Provider Receipt/独立Readback→Consumerへ結果表示。確認後に金額・対象・版が変われば確認失効。Commit後の通信断ならEffectはunknownであり、Harnessの再試行判断だけで再送しない。これは[TEI #3503](https://github.com/hat47x/tei-platform/issues/3503)のIF-02〜06と接続する設計例であり、実装済みフローではない。
+
+## 13. 図表を生成・Validation入力とするLifecycle設計
+
+他チャットの「**フロー図表から生成を駆動し、固定部分と拡張可能部分を明示する**」方針を、TEI #3503、[標準データ/Role #2620](https://github.com/hat47x/tei-platform/issues/2620)、[Extension #2090](https://github.com/hat47x/tei-platform/issues/2090)、[Trait #3279](https://github.com/hat47x/tei-platform/issues/3279)に接続する。図は説明の副産物ではなく、Authoritative Sourceに含まれるGraph/Role、またはその編集ProjectionとしてGeneratorと検証へ結ぶ。ただし新しいWorkflow DSL/Engineの採用を先行決定しない。
+
+**想定される処理経路（概念図・実Schemaではない）**：
+
+Authoritative Source（標準Graph＋Role＋出典） → Interpret/Required検査 → Contract/Trait/Provider/Target選択 → CLI/Web/Desktop/VUI別AdapterとFlow生成 → Hostで型付きOperation実行 → Receipt/独立Observation → 出典付き診断・差分をSourceへ戻す。
+
+| 固定すべき意味・境界 | 拡張できる範囲 | 反証条件 |
+| --- | --- | --- |
+| Node/Edge identity、方向、多重性、Source/Revision/Scope | 図種・レイアウト・Journey・段階名 | 編集で未知Source/Edgeを消さない。意味Diffを表示 |
+| Event/Operation型、Guard対象、欠損とNULL | 音声/テキスト/フォームの入力候補、表示/質問順 | 候補EventではCommit不可。確定Eventが同じならIntent同じ |
+| Interaction/Business/Effect Stateの分離 | 対話の分岐、再入力、確認体験、媒体 | 確認後変更は旧確認失効。状態消失を成功へ変えない |
+| Hostの現在権限、Effect Fence、Receipt確認 | Pluginが追加する検証・通知・観測・推薦 | Pluginを外しても強制境界を迂回できない |
+| Trait Binding/required Fulfillmentと実Provider呼出し | 標準生成・manual-required・外部Provider | 手動実装未配置はFAIL。宣言のみはunverified |
+| Targetと配送の実資格 | 独自Frontend、CLI、Web、Desktop、VUI | 必須Stepが落ちたTargetを同等と認定しない |
+
+**Hookの責務を分ける**：Operation Hook（業務操作）、Interaction Hook（イベント/確認）、Generation Hook（表現/コード導出）、Observation Hook（診断/結果）という概念区分を比較する。Hookは生成コードへの文字列挿入位置ではなく型付きExtension Binding。合成順に依存する処理は明示的な順序・競合を診断し、Traitの原子的要求集合を実行順序と同一視しない。Cordis型の登録解除は既に発生した業務Effectの取消ではない。
+
+**意味・実装・表示の失効**も分ける。図の配置だけ変わった場合と、Guard/Transition、Provider、Target生成器が変わった場合は異なる再Build・再検査範囲を持つ。説明図がいつの間にか第二の意味正本へ昇格しないよう、Source/編集投影/Generator入力を明示する。
+
+## 14. 既存Ownerへ接続する4種類の比較実験
+
+各ケースは**計画でありNOT RUN**。実験Tool、独立Expected、Fixtureは既存ProductのOwnerが保持し、本書で第二の試験Engineを作らない。
+
+| 比較ケース | 実行Owner・時期 | 何を判断できるか | 危険な誤認定 |
+| --- | --- | --- | --- |
+| S0 公開TEIモデルのTool-only対Product Skill | TAI #168 / TEI #2509。**初回P0** | 同Task/Source/Model/Tool/GrantでH2とH3の増分 | Skillを読んだだけ／古い4 Sessionを適格化 |
+| S1 Interaction Flow | TEI #3503 F0〜F4。P0の後に条件付き | CLI/Webの確定EventとOperationの一致、Hook選択・VUI追加の価値 | 音声応答や画面上成功＝実業務Effect |
+| S2 未定型な適応活動 | TAI #165 SCN-004-B、#271／SEI #767。後段 | 固定手順より未知・反証・保留・安全な部分前進と再計画が改善するか | AIの計画文章＝受理済み事実/実権限 |
+| S3 高度B2C | [TEI #3509](https://github.com/hat47x/tei-platform/issues/3509) B0〜B3。別レーン | Headless/独自Frontend維持でもExperiment、Conversion Journey、変更影響Pluginに追加価値があるか | UI生成成功＝CVR/売上改善。TEI Runtimeの強制 |
+
+S3は**Harnessが不要という結論も出せる対照**である。B2C向けPluginは、既存Commerce/Analytics/Flag Providerを置換せず、Frontendの自由度を損なわない契約・計測・障害発見に価値を持ち得る。実CVR改善を主張する場合はExposure、Experiment allocation、Consent、外部Commerceで確定したOutcomeと独立した実験評価が要る。初回TEI H2/H3のHard GateにB2Cシナリオを持ち込まない。
+
+S2では逆に、事前に全遷移が固定できないCaseにおけるAgentの動的計画が差別化候補。ただし、Actionの選択と、実際に作用してよいという現在資格を混同しない。[TAI #531](https://github.com/hat47x/tai-pleroma/issues/531)のOutcome Receipt / no-op / hold / policy denied / partial / unknownの区分と、独立Observationを後段の評価に接続する。
+
+## 15. 独自Loopの投資判断：重大欠落の原因を先に識別する
+
+「既存Harnessで失敗した」を一括して自前Loopの必要性にしない。G0の実隔離不成立、G1/G2の不完全Reply、Source/Required不足、未知の権限は、まず実験の資格問題として扱い、適格母集団の良い試行だけ残して成果率を計算しない。
+
+| 具体的に観測された欠落 | 第一に試すもの | 自前Loopへ昇格できる条件案 |
+| --- | --- | --- |
+| Tool発見・使用が悪い | 既存Product Skill、Tool Profile、限定Design Context | Tool条件を揃えた複数Harnessで重大な同型失敗が再現 |
+| 対話確認・Flowが不安定 | TEI #3503の確定Event/Guard、状態付きAdapter | 同じProduct OperationでもLoop固有の避けられない失敗が残る |
+| 根拠・現在性の誤用 | SEI Method、TAI #271の選択的再資格化 | 許された十分な根拠でも複数Harnessで重大誤成功が再現 |
+| Session切断・再開失敗 | Harness標準継続＋実HostのOperation Id/Receipt照会 | 同じ安全条件では局所Plugin/既存Hostで回避不可能 |
+| 機密境界が守れない | OS/Hostの実隔離＋許可済みProjection | 機密条件で外部Harnessが不適格で、局所実装なら実拒否を示せる |
+| B2Cの自由度や性能低下 | 完全Headless/独自Frontend＋必要な契約Plugin | UIとBackendの自由度を維持しても独自Loopだけが必要な実証 |
+
+**投資判断票**には、Task分布・対照系と独立Expected、実Harness/Model/Tool/Skill byte、Source/Grant/Recipient、事前割付ITTと適格PP、重大事故/不要停止/保留、実Outcomeの配送、遅延と総費用、複数年のAPI追従/隔離/保守、縮退・撤退条件を揃える。閾値は業務用途別に事前設定し、結果を見て変更しない。安いToken・Plugin実ロード・AIの完了発言を成果認定の代わりにしない。
+
+**現時点の停止線**：#3503のFlow Schema/実媒体・#3278のTrait実Fulfillment・#3509のB2C Conversion Plugin/CVR・#165の非定型CaseとHV-3/HV-4比較はいずれも提案・未実証。TAI #168の比較適格0/4と既存G0/G1/G2→新しい独立4 Slotを変更しない。新しい中央Host/Runtime、第二Operation/Workflow Engine、Trait専用Resolverの導入を決定しない。
