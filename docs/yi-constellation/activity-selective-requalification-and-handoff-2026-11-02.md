@@ -859,7 +859,7 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **Activityが区別する3種類の再利用**：(a)過去のConsumer受理済み意味／実Rule等は、その元依存が変わらない範囲で履歴として保持、(b)現在の**引用・Source Anchor・外部解析Evidence**は必要Providerのraw Source/Manifest revision、実Location、Analyzer/Provider version、取得時点、Actually Consumed Closure・Audienceを別照合、(c)新しいSHO文書/外部Harness/別Recipientへ送る場合は、対象Sourceと独立Consumer Read・**現Disclosure Grant**を用途別に再確認する。Consumer WorldFPが同じという理由で(b)(c)を無条件PASSにしない。逆にProviderの引用Sourceだけが変わり、独立して適格なBusiness Meaningや別Readに影響しなければ**全部の判断・Scenarioを再実行しない**。
 
-**既存SC-15/16/20/21への対照**：P1 同じConsumer FP＋別Provider Raw、P2 同Raw＋Provider Manifestだけ変更、P3 Historic Consumer Result＋Current Provider navigation、P4 CLI/MCPの同じ見た目のResultだが実Provider/Scope違い、を各Productの独立Expectedへ参照する。P1のGo局所PASSをP2〜4や実外部解析Provider起動・SHO Writer/Handoff合格にしない。TEI #3394（外部解析Evidence）、#3479（Source drift）、#2600（失効/再利用）、#1158/ADR-0048（同一操作・Adapter）の**既存Ownerだけ**で実証し、TAIはどのClaimを現在用途に使えるかの選択だけを担当。新共通Source Store・Provider Registry・Evidence Packet Renderer・二重Validatorは不要。
+**既存SC-15/16/20/21への対照**：P1 同じConsumer FP＋別Provider Raw、P2 同Raw＋Provider Manifestだけ変更、P3 Historic Consumer Result＋Current Provider navigation、P4 CLI/MCPの同じ見た目のResultだが実Provider/Scope違い、を各Productの独立Expectedへ参照する。P1のSource-only局所Go証拠、後続P2のManifest-only／Source×Manifest 2×2局所Go対照を、それぞれ独立した範囲で扱う。いずれもP3〜4の実消費、実外部解析Provider起動・SHO Writer/Handoff合格へ昇格しない。TEI #3394（外部解析Evidence）、#3479（Source drift）、#2600（失効/再利用）、#1158/ADR-0048（同一操作・Adapter）の**既存Ownerだけ**で実証し、TAIはどのClaimを現在用途に使えるかの選択だけを担当。新共通Source Store・Provider Registry・Evidence Packet Renderer・二重Validatorは不要。
 
 **優先度**：初回TAI #168の固定H2/H3 G0実Read拒否→G1送出面→G2 Tool Reply完全受領→新4独立Sessionには入れない。別のProduct/Activity Handoffが発生する場合に限り、必要Sourceの再資格化試験として適用。外部Provider実受信、実SHO Writer、CLI/MCP同値の全回帰、Owner業務受理は**NOT RUN**。
 
@@ -905,5 +905,5 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 - **AF-02：Chat/VUIの部分入力 vs 実Commit**。未確定delta・音声候補・一時Previewは表示できても実OperationへDispatchしない。Confirm後に実Hostが拒否／Commit unknownとなったときは、UIとTAIの成功表示を止め、独立の許可ReadとEffect照合を継続。
 - **AF-03：ActivityのGoal変更 vs 進行中Attempt**。旧Goalで既にDispatchされたOperationのReceiptは歴史として保全し、旧Attemptを自動再送・取消しない。新Goalで必要なSource/Grant/Skill/Disclosureだけ再資格化し、旧Operation/Actionを新Goalの実行許可へ混入させない。
 
-**採用・順序**：三層の責務分離と既存ADR/採用Requirementの照合は**計画として採用**するが、統合Flow DSL・正式Hook ABI・実Generator・Chat/VUI/完全B2C異質Consumer・AF-01〜03の実E2EはNOT RUN。P0はTEI #1251の通常CLI/Studioから実Selected Providerを呼ぶ狭いRead、P0+はread-only Hook一Slot、P1はGraph Edit→受理Source→Target生成、P2はChat/VUI/B2C。TAI #168の最初のH2/H3固定Task/Tool/Skill/独立Expectedには一切追加しない。B1 Product単独で足りればB2 TAIや新中央Workflow Runtimeは不要。
+**採用・順序**：三層の責務分離は**今回のTAI計画上の整理案**とし、TEIの採用済みADR/RQ-036と整合させる。ただし正式なTAI横断Flow契約のOwner受理は未実施であり、統合Flow DSL・正式Hook ABI・実Generator・Chat/VUI/完全B2C異質Consumer・AF-01〜03の実E2EはNOT RUN。P0はTEI #1251の通常CLI/Studioから実Selected Providerを呼ぶ狭いRead、P0+はread-only Hook一Slot、P1はGraph Edit→受理Source→Target生成、P2はChat/VUI/B2C。TAI #168の最初のH2/H3固定Task/Tool/Skill/独立Expectedには一切追加しない。B1 Product単独で足りればB2 TAIや新中央Workflow Runtimeは不要。
 
