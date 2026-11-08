@@ -579,3 +579,40 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 4. 現在のTAI H2/H3 G0/G1/G2と適格試験を変更せず、SUI側のSource/Meaning/Save/外部EffectはそれぞれのProduct Ownerで検証する。新中央Host/DB/Oracle/Action Engineを設けず、AIのTool/Readerや将来のProvider機構は既存境界を再利用する。
 
 **資格と限界**：SUI #3400/#3401/#3399の提案・受入設計、現行ADRと既存実証の区分をSource-static照合したのみ。本更新でSUIの10分実User Job、T2/T1、異種Source実Provider、複数Client E2E、外部Action、別モデル独立評価、OwnerによるADR改訂/受理は**NOT RUN**。
+
+
+## 24. 2026-11-08：結果不明と根拠失効を区別して、実行と再開の誤判断を減らす
+
+> **位置付け**：TEI・SUI・SHO・EKI・TAIで既に扱われる「処理が終わったか分からない」「根拠が古い」「受領先が異なる」の失敗を、製品ごとの正本を維持したまま横断価値試験へ渡す。新たな共通State Store、Transaction、Receipt形式、再試行Engine、認可機構を要求しない。以下は各Ownerの既存契約に沿った**横断判定計画**であり、新しい実製品E2E成功の宣言ではない。
+
+### 24.1 同じ失敗語に見えるものを三つに分ける
+
+- **入力／判断根拠が stale**：Source/Import/Model/Expected/Grantの対象版・時点・Scopeが現作業に対して再資格化未了。旧digestへの復帰（A→B→A）やConsumerのWorld FP不変だけで資格を復権しない。局所的に不明なClaimだけ留保し、無関係なread-only作業まで全停止しない。
+- **実作用が unknown**：要求送信後のACK/Receipt欠落は、「成功」「未実行」「失敗」のいずれも証明しない。再実行の前に、そのOperation identity・対象・現在版・永続実結果を**権限のある実Ownerでread-only照合**する。照合できない場合はunknownを保持し、非冪等Writeの自動再試行をしない。
+- **Consumerへの受渡しが partial/unverified**：Producer成功・Tool終了・同一byteの一部受信は、指定Consumerの全件受領、現在Audienceへの開示許可、User Jobの完了とは異なる。同一Attemptの実Request/Reply/対象版と受領者を区別する。
+
+| 所有製品と既存境界 | 最小の照合と継続可能な部分 | 禁止する過大な結論 |
+| --- | --- | --- |
+| **TEI** [#2892](https://github.com/hat47x/tei-platform/issues/2892) [#1174](https://github.com/hat47x/tei-platform/issues/1174) [#3262](https://github.com/hat47x/tei-platform/issues/3262) | Migration history/実DB post-imageと現在Grant、Source/Provider入力閉包、CLI/MCP受領をClaim別に再照合。Source read-onlyとSchema Applyを別資格にする | History unknown＝Applied/Not Applied、宣言済Capability＝実Provider Invoke、Context Gate PASS＝本番Commit |
+| **SUI** [#3399](https://github.com/hat47x/sui-sensemaking/issues/3399) | 二ClientのETag/CASと保存後headの独立Read。ACK欠落時もdirty buffer/保留・異論を保持し、旧Undoを別人の変更へ適用しない | 保存リクエストを再送しただけで成功確定、単独Undo成功＝共有状態の安全な巻戻し |
+| **SHO** [#20](https://github.com/hat47x/sho-composer/issues/20) [#4](https://github.com/hat47x/sho-composer/issues/4) | 原Markdownのwork copy/disk/外部Editor・同期版を分離し、保存対象Fileの実再読取。ReaderだけならWriter・Cloud無しで継続 | Raw Reader PASS＝正式Save/他端末同期/引用意味の受理、mtime一致＝無競合 |
+| **EKI** [#77](https://github.com/hat47x/eki-fabric/issues/77) [#787](https://github.com/hat47x/eki-fabric/pull/787) | Durable Task/Attempt/Lease/FenceのOwner状態を再読取し、再送/再予約を区別。固定6イベントの局所Unix socket実配送は限定Evidenceとして再利用 | 同プロセス実byte配送＝本番Worker受領/Lease現在性/最終業務結果、ACK無＝未実行 |
+| **TAI** [#168](https://github.com/hat47x/tai-pleroma/issues/168) [#271](https://github.com/hat47x/tai-pleroma/issues/271) | 実Tool Request/Replyのpart/end・送出・Session/Attempt識別と、外部EffectのOwner側観測を分ける。Read-only回答は実Replyの不足を明示して継続可否を用途別判断 | Tool呼出終了＝完全受領、Skillロード＝現Grant、実出力の一部＝User Job達成 |
+
+### 24.2 既存VA-01で検査する一つの横断反証パケット（新Harness不要）
+
+**VA-RC-01：正常経路と「確定直前／直後の中断」を同じUser Jobで比較する。** 各Productで現に実装された入口だけを使用し、外部を仮に実装済みと置かない。B0（直接既存手段）とB1（対象Product）を同じ事前版・権限・独立Expectedで対照し、B2（追加連携）が必要な場合だけ評価する。
+
+| Case | 注入する失敗 | 独立Expected／利用者に見せる結果 |
+| --- | --- | --- |
+| RC-01 | **確定前**の失効：Source/Grant/ETag/Attempt revを更新し旧操作を提出 | stale/拒否を正しく示し、影響しないread-only機能は継続。古い正本・意味・現在Grantを再利用しない |
+| RC-02 | **確定後**のACK喪失：保存/DB適用/Lease/Tool実作用の応答だけ遮断 | 実Ownerへの独立再Readで「確定／未確定／不明」を分離。観測無しの自動二重Write・再予約・削除は0 |
+| RC-03 | **受領途中**の切断：一部JSON/Tool part/文書/イベントだけ届く | 完全受領・有効な0件・途中欠測・秘匿拒否を混同せず、当該Claimだけ未確認 |
+| RC-04 | **正常な省略**：Optional Provider/Cloud/AI/共同編集/複雑なTargetなし | 許可済みRaw読取、単独Markdown編集、手動の意味形成などが不必要に失格とならない |
+| RC-05 | **同byte復帰・別主体／所在**：A→B→A、同digest別File、別Issuer/Scope | 内容同値だけでIdentity・Authority・Review・保存競合・業務受理を復権しない |
+
+**観測票（既存VA-01の列を使う）**：User Job／B0-B2、Ownerと操作ID、Source/Artifact/Expected revision、実ConsumerとAudience、現在Permission/Grant、Request送出・実Reply全件・永続post-image、結果 `confirmed-done / confirmed-not-done / unknown`、独立Expected、正しい部分継続・誤停止・誤成功、回復操作回数と時間。異なる製品間でOperation IDやRevisionを単一グローバルIDにしない。実コードのない境界は `NOT RUN` として分母から区別する。
+
+**導入順**：①各Ownerの既存Case（SUI CU-02/09、SHO PV-03/07、TEI Migration unknown、EKI Attempt/Lease、TAI H2/H3 Reply）から一つずつ取り、独立Expectedだけ固定、②実Ownerの確定境界と独立Readを先に検証、③二製品受渡しは実Producer→実Consumerの同一Attemptを別に測る。②未達でも各Productの独立したread-only/保存可能領域は妨げない。各Product契約の変更はOwnerのIssueへ返し、本横断票を新しい製品要求・実行許可・Owner受理にしない。
+
+**現況**：既存Issue・ADRと局所CIへの設計照合のみ。RC-01〜05をこの変更で実注入したわけではない。外部Provider/二Client/本番Worker/正式Writer/完全H2-H3、B0/B1/B2比較、Owner受理は **NOT RUN**。
