@@ -651,6 +651,23 @@ TAIは既存Stage 4の投影契約／合成試験とActivityの現在用途を�
 
 **次の試験を増やさない**：初回TEI公開H2/H3のG0→G1→G2→独立4 Sessionを先行し、後続のB0/B1/B2でEdge編集が必要になった場合だけ、同IDの二種類端点・原入力nullと欠落・Source版変更後の再解決・実Consumerからの受領を独立Expectedで検証する。新たな共通Host/Graph Schema/Function Action Engineは不要。
 
+### 21.9 生成器BuildとSelectの受理差は同一契約の完了を阻む（入れ子投影の誤成功、2026-11-08）
+
+<!-- tai-stage4-nested-contract-build-select-asymmetry-20261108 -->
+
+[TAI merged #538](https://github.com/hat47x/tai-pleroma/pull/538)は、**まったく同じ入れ子Projection Contract**（field内に`fields`を含む）をTEIの二入口で実行したときの差を測った。 `tei-generator-build` は`renderCandidateBytes`側の`json.Unmarshal`で**未知`fields`を無言で捨てたまま成功／候補生成**し、`tei-generator-select`は`DisallowUnknownFields`により **`json: unknown field "fields"`と明示拒否**。したがって「候補Build exit=0」「Selectの拒否」「出力のデータ形の欠落」は三つの別観測で、Build成功を**再利用できる契約、完全なNested Result、採用済みMeaning**として伝達してはならない。
+
+| 独立Expected | Build | Select | TAI Activityが再利用してよいClaim |
+| --- | --- | --- | --- |
+| 正常Flat（現契約で表現できる範囲） | 成功し必要Field保持 | 成功 | **明示したFlat Fieldのみ** |
+| 未知`projection.kind` | 明示拒否が望ましい（既存#526実測では拒否） | 明示拒否 | 対象外／理由が追跡できること |
+| 既知Kind＋Nested `fields` | **実測ではexit0・Nested情報消失** | **実測ではunknown field拒否** | **採用不可／構造未保持**。生成したArtifactは修正済み証拠にしない |
+| 修正後の両入口（後続TEI Owner） | Nestedを完全に保持し、独立Expected一致 **または** 入口で明示拒否 | 同じContract/Version/Parserで同じ取扱い | 変更された契約の実同値性を別Pinで再資格化 |
+
+これは§21.4の静かなLossを**同一契約のBuilder／Selector間の非対称**へ具体化した追加反例であり、TAI自身で第二JSON Decoder/TEI生成器を実装する根拠ではない。解消はTEIの生成器／Authoring契約Owner、TAI Stage 4はConsumer/受入票、SUIは実DocumentのTopologyとSource/Disclosureを担当する。対応方針は「完全なNested対応」か「誤成功しない明示拒否」を比較し、Schemaの構文受理、構造保持、Meaning、実Consumer受領、編集Offerを別に採点する。
+
+**実施順と証拠上限**：#538はTAI側一括91段の局所実測とTEIのIssue草案更新であり、TEIの両デコーダを修正・マージした証拠ではない。後続の修正HeadでRaw Contract/Pinned Generator/Output byte/Select結果を同一Trialに束縛し、Nested必要時だけ再資格化。合法なFlat/Optional Edge v4の実績と、無関係なread-only Jobを一律失効させない。初回TEI H2/H3の公開固定Taskには含めず、B0/B1/B2の後続構造作業で必要な場合だけ検証する。実Nested fix、元SUI→実TAI Consumer、正規Owner MeaningはNOT RUN。
+
 ## 22. 2026-11-07：実H3 Skill Loadの到達と、Activityに再利用できる資格を分離する（実測／横断価値NOT RUN）
 
 [TEI mainのDSH四Session実測](https://github.com/hat47x/tei-platform/blob/main/plan/evidence/DSH_H2_H3_FOUR_SESSION_2026-11-07/README.md)を、[初回Runbook §24.5](first-real-skill-qualification-runbook-2026-11-02.md)へ接続した。実DSHでH2-A→H3-A→H3-B→H2-Bの**四つのSessionがcompleted**。H3 2件はそれぞれProduct Skill Toolによる**Root本文5,482 byte（同SHA）**受信に加え、referenceのread 7,710 result bytes（同digest）の実Callを記録。従来「H3実Loader NOT RUN」とした歴史的記述は、**この限定Tool/Reference受領については更新**する。ただし「Product SkillのRequired全閉包・現在Tool実行資格・業務正答・TAIのActivity価値」の合格ではない。
