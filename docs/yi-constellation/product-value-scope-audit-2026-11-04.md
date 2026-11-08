@@ -678,7 +678,7 @@ CSWはYI Constellationの**共通開発手法を改善する研究・実践ル�
 
 **横断Traceの最小キー**：User Job/Case ID、Source identity/revision、Operation/Binding、実Provider、Attempt、現Audience/Grant、Artifact、Consumer、独立Expected、Observed、到達段階、未確認段階、Owner、再現コマンド。異なるIssueの成功を足し合わせて一つのE2E PASSにしない。局所成功の再利用はSource/Plugin/Generator/Grantの鮮度を明記し、失効した段階以降のみ再検証する。
 
-**P0の一件を選ぶ**：TEIの一Functionについて、既存CLI/MCPの検証済み入口から**実Providerの一Rowset**を取得し、Source→Query→Provider→Resultの同一Attemptを追う。次にSHOの正式保存後ReadbackとSUI→SHOの実Consumer受領を別の一件として試す。後者の成功を前者の業務Effectの証明にしない。既存13 CLI応答・42 Consumer検査・4件Markdown Reader・6イベントIPCは各々の限定段階の証拠として保持し、全Adapter同値や本番配送の証明へ加算しない。
+**P0の一件を選ぶ**：TEIの最初の実Read Functionは現行[TEI Master Plan](https://github.com/hat47x/tei-platform/blob/main/plan/MASTER_PLAN.md)で **`order_entry.recent_orders`** に固定済み。既存CLI/MCPの限定入口から、その一Functionについて **Query raw→実Provider選択→SQL/args→実Rowset/Mapper→Function Data Context** を同一Attempt・独立Expectedで追う。**`sales.order.submit`** の13実CLI Reply／42対照は別Functionの宣言検証であり、ここへ継ぎ足さない（[VA-04 §13](../../evaluations/VA-04-evidence-readiness-preflight.md)）。次にSHOの正式保存後ReadbackとSUI→SHOの実Consumer受領を別の一件として試す。後者の成功を前者の業務Effectの証明にしない。既存13 CLI応答・42 Consumer検査・4件Markdown Reader・6イベントIPCは各々の限定段階の証拠として保持し、全Adapter同値や本番配送の証明へ加算しない。
 
 **VA-EVID-01（計画・未実施）**：同一Functionで (a)入口は応答するがProvider未呼出し、(b)Provider実Read成功だがConsumer未受領、(c)Effect確定後ACK喪失、(d)Plugin版変更後の古いBinding、(e)Audience変更後の旧Readbackを注入。Expectedは到達F段階の正確な表示、誤った成功Claimの拒否、無関係read-only作業の継続、独立Owner確認と再実行資格の明示。既存VA-RC-01の失効・ACK試験は再利用し重複した成功数を作らない。
 
