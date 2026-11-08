@@ -833,3 +833,15 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **TAIで再利用する資格の最小単位**：実CLIの`Command+argumentValues/flags+workspace manifest+Binary/Source Revision+対象Kind+実Reply bytes/diagnostics+Required Rule/Relation Scope`を、必要なClaimごとに既存Activity票で束縛する。新Purposeで必須Ruleがこの閉包外なら`unknown/partial`で保持し、該当する探索だけ追加。公開ReadやB1 Product単独で達成できるJobは止めない。T1-B盲検生成、実外部H3最終Byte Delivery、MCP実動作、OS Read-deny/Current Grant、業務Owner意味受理はNOT RUN。既存G0→G1→G2→比較適格4 Sessionを優先する。
 
+
+
+<!-- tai-activity-imported-provider-source-drift-20261108 -->
+### 23.8 Consumer意味版が不変でも、外部Provider原文の引用資格だけは変わり得る（選択的再資格化）
+
+[TEI #3479 Draft](https://github.com/hat47x/tei-platform/pull/3479)の実Go局所反例では、importした**別ProviderのSource raw末尾LFだけ**が変化しても、ConsumerのWorld/Meaning/Source Index/Model Revisionが不変となり得る一方、Provider raw SHA・現在Locator fingerprintは変わる。[旧HEAD CI #42461871730](https://github.com/hat47x/tei-platform/actions/runs/42461871730)はこの**一つの限定反例**で成功。Provider Manifestだけを変更する追加反例はPR後続HEADの独立CI受理待ちであり、旧実行結果をその成功へ転用しない。旧Consumer Resultと現在Provider LocatorのNavigationを混ぜ、当時の原子的Read Snapshotを捏造しない。
+
+**Activityが区別する3種類の再利用**：(a)過去のConsumer受理済み意味／実Rule等は、その元依存が変わらない範囲で履歴として保持、(b)現在の**引用・Source Anchor・外部解析Evidence**は必要Providerのraw Source/Manifest revision、実Location、Analyzer/Provider version、取得時点、Actually Consumed Closure・Audienceを別照合、(c)新しいSHO文書/外部Harness/別Recipientへ送る場合は、対象Sourceと独立Consumer Read・**現Disclosure Grant**を用途別に再確認する。Consumer WorldFPが同じという理由で(b)(c)を無条件PASSにしない。逆にProviderの引用Sourceだけが変わり、独立して適格なBusiness Meaningや別Readに影響しなければ**全部の判断・Scenarioを再実行しない**。
+
+**既存SC-15/16/20/21への対照**：P1 同じConsumer FP＋別Provider Raw、P2 同Raw＋Provider Manifestだけ変更、P3 Historic Consumer Result＋Current Provider navigation、P4 CLI/MCPの同じ見た目のResultだが実Provider/Scope違い、を各Productの独立Expectedへ参照する。P1のGo局所PASSをP2〜4や実外部解析Provider起動・SHO Writer/Handoff合格にしない。TEI #3394（外部解析Evidence）、#3479（Source drift）、#2600（失効/再利用）、#1158/ADR-0048（同一操作・Adapter）の**既存Ownerだけ**で実証し、TAIはどのClaimを現在用途に使えるかの選択だけを担当。新共通Source Store・Provider Registry・Evidence Packet Renderer・二重Validatorは不要。
+
+**優先度**：初回TAI #168の固定H2/H3 G0実Read拒否→G1送出面→G2 Tool Reply完全受領→新4独立Sessionには入れない。別のProduct/Activity Handoffが発生する場合に限り、必要Sourceの再資格化試験として適用。外部Provider実受信、実SHO Writer、CLI/MCP同値の全回帰、Owner業務受理は**NOT RUN**。
