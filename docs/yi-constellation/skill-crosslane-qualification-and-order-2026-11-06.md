@@ -422,6 +422,14 @@ YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実�
 
 **再資格化**：v3/v4 Contract bytes・Generator/Assembler版・Scope、`dropped→present`となったEdge、Downstream実受領/Requiredを別に照合し、旧Attemptを遡及書換えしない。[TAI #488 X02/X06](https://github.com/hat47x/tai-pleroma/issues/488)/[#271 SC-15/16](https://github.com/hat47x/tai-pleroma/issues/271)へ既存試験で参照。初回TEI SK-02 H2/H3は0/4、追加Blocking/新Graph Resolverなし。
 
+### 18.9 ContractをBuildできること・SHOで別名作業コピーを再読取できることの資格を分離（TAI #538／SHO #24・#25）
+
+前§18.8のTAI `edge-record` v4合成PASSは、**あらゆるTEI Generator入力経路が同じ契約を解釈する**ことまでは保証しない。[TAI merged #538](https://github.com/hat47x/tai-pleroma/pull/538)の実負例では、同じ`projection.field.fields`入れ子宣言を`tei-generator-build`は**未知欄を捨てて受理**するが、`tei-generator-select`は`json: unknown field "fields"`で拒否する。生成結果だけを見るSkillは`buildable`と`selectable`を別々に記録し、入れ子宣言の情報が失われた場合に`shape-preserved`を主張しない。正式なDecoder/契約是正はTEI側の既存Generator Ownerへ返し、YICに共通Decoderを複製しない。
+
+**SHOの現在の段階**：[SHO merged #21](https://github.com/hat47x/sho-composer/pull/21)で固定SUI合成原文のReader回帰、[merged #22](https://github.com/hat47x/sho-composer/pull/22)でPOSIX FIFO限定拒否、[merged #24](https://github.com/hat47x/sho-composer/pull/24)で**pure G2-P局所byte Patch Planner**がmainに入った。一方[SHO Draft #25](https://github.com/hat47x/sho-composer/pull/25)は、**別名のtest-only Working Copyを`wx`で作成→close→別FD/CLIで再Open**するG2-W1を追加し、コード固定HEAD `eb12e0cc…`の[Ubuntu/Windows CI #42461729731](https://github.com/hat47x/sho-composer/actions/runs/42461729731)でWriter **Ubuntu20 PASS／Windows19 PASS＋POSIX専用1 SKIP**を観測。元SourceとOutputそれぞれの同byte別File差替えや実Output readback改変を部分検出し、**A→B→AはSource/Output双方で見落とす**負例を明示。#25の現HEADは後続文書差分を含み、そのexact-head CI資格を前の成功から推定しない。
+
+**YIC選択の停止線**：G2-Pの`changed=false`は物理Writeゼロの証拠ではない。G2-W1の`working-copy-readback-verified`は**特定の作業コピーの限定byte確認**であって、正式SHO Editor Save・元文書上書き・no-op書込ゼロ・CAS/Grant/atomic publish・Source Revision履歴/Owner意味受理ではない。Product Skillが「文書を保存できた」「元引用へ正しく再接続できた」「外部へ配布してよい」を一括成功と回答しないよう、[SHO #4](https://github.com/hat47x/sho-composer/issues/4)のG2-W2/Storageと既存YIC X02/X06・SC-15/16へ別列で引き継ぐ。SUI実Producer→SHO同一File H1とTEI/SHO/SEI E2Eは引き続き未実施。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
@@ -528,6 +536,8 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 
 **H6-E6の局所保存面で実測できた新しい反例**：[TEI PR #3309](https://github.com/hat47x/tei-platform/pull/3309)はDSH 0.2.2-rc.1のWindows/headless/read-onlyで合成canaryのTool Readを行い、headless stdout **2,035 bytesに1件**、ローカル永続`session.v4.jsonl.zstd`の全展開**40,136 bytes/34行に1件**の残留を観測した限定Evidence（本照合時点Open、main未merge）。**9つの連結zstd frame**の先頭だけを展開すると179 bytes/2行・canary **0件**になり、実際に残ったTool本文を見落とす。走査済`storages`84件・`cache`5件・`attachments`73件で一致0という結果も**そのSession・調査Root・解析形式に限定**し、全保存先・過去Session・別Harnessの無残留へ昇格しない。これはHTTP拡張の`dsh_session_log`送出（§19.6）とは別の**ローカル永続化**であり、`session-log.enabled=false`では削除も非永続化も証明しない。初回SK-02のG0物理隔離のpreflightでは、**前Sessionの保存Root全体を実アクセス拒否できるか**をReviewer合成canaryで確認する。全ローカルLog消去は初回の新Hard Gateにはせず、別User/ACLの実拒否と必要な完全展開による観測を明示する。実Secret/Cloud Provider送信、全Storage/Telemetry/Network網羅、正式H6-E6 conformance・Owner受理は**NOT RUN**。
 
+**Session Logのサイズ制限は内容送出停止の証明ではない（H6-E2更新）**：[TEI merged #3451](https://github.com/hat47x/tei-platform/pull/3451)の局所Mockでは、`maxBytes=512`でもSession Logの**生byte 474**が送出された。復号・再直列化した表示**518 byte**を上限超過とした解釈は[Open #3470](https://github.com/hat47x/tei-platform/pull/3470)が訂正した。さらに同PR記録で`maxBytes=1024`時には**975→490 bytes**の複数Requestへのbacklog分割送出を観測し、`maxBytes=256`ではLog欄が全要求で欠落したがSession自体はcompleted。**後者はAgent/Tool/他送信経路の無送出を意味しない**。試験票では生wire上の`dsh_session_log`有無・生byte/水位/Attempt/題名Request再送と、Model/Tool/ローカル保存/別Network Sinkを独立に記録する。#3470は未mergeで実Provider保存・単一特大Event時の挙動・完全Egressは未検証。秘密に由来するRaw bodyや固定小集合digestを公開Evidenceへ新規転記しない。初回SK-02の既存G1 Evidenceへ接続し、新しいBlockingやLog Collectorを作らない。
+
 ### 19.9 CLI Discoveryの意味的read-onlyと実ファイル書込みを分ける（TEI merged #3333）
 
 §19.7のTEI CLI実負例（`view -execute`＋記録flagでファイル生成）が、**現在main側の機械可読Discovery**へ一段反映された。[TEI merged PR #3333](https://github.com/hat47x/tei-platform/pull/3333)は`tei.cli.discovery/v0`の`view`エントリへ`writeFlags: ["-operation-log","-lifecycle-state"]`を追加し、実CLIで指定Pathに非空記録ファイル/SQLite stateが生成され、flag無しの同じ`-execute`は作業Dirへ新Fileを作らないことを対照試験で確認した。**`effect: "read-only"`の既存値はそのまま**であり、これは「Source/正本の業務意味を変更しない」という説明であって「実ProcessがFSへ書かない」という保証ではない。実Host Policy、Business Effect、全flag組合せに対する非書込みは実証していない。
@@ -552,6 +562,8 @@ TAI [Draft #270 Runbook §22.5](https://github.com/hat47x/tai-pleroma/blob/docs/
 | [SEI merged #823](https://github.com/hat47x/sei-cognition/pull/823)：H2共有Runnerの回帰Captureで**期待20個のTest ID**と実行ID/summary/skipを突合。exit 0でも欠落・ID置換・skipは不合格。再実行の失敗/Preflight Blockが旧Evidenceを消さないことを局所試験 | **テスト実施の網羅/結果と旧証拠保全**の参考手法として既存§19.5/G2へ照合。SEIの「H2」は**TAI #168の外部Harness H2セッションとは別**。SEI局所20テストPASSをTAI H2/H3四Sessionの得点・隔離・正答/Skill効果として算入しない |
 
 YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`、(2) `discovery/helpの実契約と現在Tool Profile`、(3) `actual argv/allowed effects/FS paths`、(4) `Tool Call↔Result実Count/IDとモデル完全受領`、(5) `実際に走ったTest ID/Skip/Preflightと独立Expected`の順。製品CLIで失敗・未取得が分かる場合、独立した許可済みread-only操作は継続してよいが、対象Claimは`unknown/ineligible`を保持する。実Harnessの新G0物理Read拒否とG1送出、固定4 Slot/ITT/PPは**未実施／0/4比較資格**のままであり、今回のCI合格を代替しない。
+
+**Toolの広告と実Invocationは別Witness（現main）**：[TEI merged #3444](https://github.com/hat47x/tei-platform/pull/3444)が実CaptureからRequestの`tools`名を要約し、合成H6-E0 3要求中2要求で**24件が広告**された例を保存。ただし**実Call/Resultは別ログで照合**するものであり、24件を呼んだ・許可された・Tool Replyをモデルが受領したとは断言しない。§19.2のG2では`advertised / allowed / invoked / produced / actually received`をAttemptとSource/Tool Contractで束縛し、広告済みだが使用不能・Tool途中欠落の対照を既存TAI #168/#488で評価する。観測したMock以外のSubagent/Host/Telemetry、実OS拒否とH2/H3正式0/4は未資格。
 
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
@@ -721,9 +733,11 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **YICへの具体的反映（新Builder/Receipt Storeではない）**：TEI #2831の既存L3と#3267のVCB-01〜09を参照し、TAI #488 X01/X03/X04では、(1)現在の要求Functionに必要なPlugin/Targetを**実Bindingで選択**、(2)実Host/Processが**何をInvokeしたか**、(3)同一Attemptで**どのSource/Lock/Artifact/Child/Argを消費**したか、(4)対象Consumerが**実Result bytesを受領**したか、(5)現在Grant/Disclosure/Owner受理、を**別の証拠列**として照合する。Plugin/CapabilityのCatalog照合（§27.6）で未選択/未検査を区別できても、**実InvokerのIdentity検査は代替できない**。逆にL3成功がTool/Skill選択・業務実行可否を決める権限にはならない。
 
-**後続の一因子負例**：A）同じArtifact SHAだがstage2 Invokerは外部seed、B）同じInvokerだがChild/Args/供給が異なる、C）self digestを申告だけして実Process Imageと不一致、D）`cmd/tei`ではBuild入口が未接続、E）Runtimeの実Target/Consumer/Grantが未確認、F）一部Plugin追加が現在の要求Functionに無関係。この六Caseを**TEI側#2831/#3267/#951に既存Conformanceとして委譲**し、YICは各状態の誤推薦・不要な全停止・実Tool/Skill増分効果を後続B0/B1/B2で評価する。TEIの正式Self-build L3（対象`cmd/tei`）、G4資格、全Trusted Checkout、異OS/Toolchain Matrix、実Target/Provider、Owner受理は**NOT RUN／未成立**。
+**後続の一因子負例**：A）同じArtifact SHAだがstage2 Invokerは外部seed、B）同じInvokerだがChild/Args/供給が異なる、C）self digestを申告だけして実Process Imageと不一致、D）`cmd/tei`ではBuild入口が未接続、E）Runtimeの実Target/Consumer/Grantが未確認、F）一部Plugin追加が現在の要求Functionに無関係。この六Caseを**TEI側#2831/#3267/#951に既存Conformanceとして委譲**し、YICは各状態の誤推薦・不要な全停止・実Tool/Skill増分効果を後続B0/B1/B2で評価する。**当時は未実施だった対象`cmd/tei`のL3は、後続の[TEI merged #3440](https://github.com/hat47x/tei-platform/pull/3440)と[Evidence訂正 #3447](https://github.com/hat47x/tei-platform/pull/3447)で、stage1生成物をstage2の実Invokerとして使う三条件TRUEを限定実測済み**。driver Referenceだけでなく`cmd/tei`の**1対象・1条件のProcess同一性L3**として認める。一方、L2のTEI Meaning→Build Planの解決、Trusted Supply、2回独立環境比較、G4資格、実Target/Provider、Owner受理は**NOT RUN／未成立**。
 
 **実施順序**：初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の**固定公開TEI SK-02 H2/H3**は、従来どおりG0物理Read拒否→G1送出範囲→G2 Tool Result完全性→事前固定4独立Sessionを先行し、**比較適格0/4**。ここへSelf-build/新Plugin Matrixを初回Blockingとして差し込まず、後続の別Pin/Trial Groupでのみ製品能力の追加価値を測る。TAIが第二Generator、Build Invoker、Trait Resolver、Host/Authorityを作らない。
+
+**Product Build入口の現段階はL3と別**：[TEI merged #3463](https://github.com/hat47x/tei-platform/pull/3463)は`tei self-build`へ`-workspace/-intent/-supply/-state/-output/-child`の起動前拒否と実Child/Artifact照合を追加したが、`-intent`は**IDの記録のみ**、Supplyの独立照合も未実装で`qualified=false`固定。後続[Open #3476](https://github.com/hat47x/tei-platform/pull/3476)はIntent宣言byte・任意Supply Verifierをchild起動前に照合する候補だが、`intentDeclaration.resolved=false`でL2-b意味解釈は未成立。YICでは**実Invoker L3／Intentの実解決L2-a・L2-b／Current Host・BOMの利用資格**を別票にし、`self-build`が成功したというTool出力だけでSkillに本番Builder資格を付与しない。[TEI #2831](https://github.com/hat47x/tei-platform/issues/2831)/#3267をOwnerとし第二Builder/Attesterを増やさない。
 
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
@@ -790,6 +804,8 @@ YICでは§23.1〜23.4の条件付き書込み・中断/再開に、**Serviceが
 **Traitとの接続（新仕様ではない）**：[TEI Draft #3027](https://github.com/hat47x/tei-platform/pull/3027)が担当する原子的な実装/検証義務の候補として`GuardEvidence`、`TerminalCoverage`、`TypedResponseProjection`、`ClientReactionPolicy`、`EffectReconciliation`を**例示**する。各TraitはDefinition→Binding→Fulfillment（生成/提供/手動/外部）→Conformance Evidenceを区別。Productが手動実装を要求した場合も対応実装と試験を省略しない。Trait名・標準BOMの存在は実選択・全分岐実行・現行Grantの証明ではなく、正式DefinitionはProduct Ownerに残す。
 
 **YICが評価する付加価値と導入順**：最初の[TAI #168 SK-02](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI read-only H2/H3を変更しない（限定H3 Tool Read達成、比較適格**0/4**）。その後、TEI #3274の(a)実Node限定Characterization→(b)Graph/TraceのLoader・実Guard/Terminal実Path→(c)Typed Application Result→HTTPまたはDesktop IPC→Clientの正負対照が各Ownerで成立する**必要な範囲**で、B0既存Tool／B1 Product Skill／B2横断Activity Skillを比較する。B1が`unknown commit`を保留し、適法なread-only Status照会へ案内できればB2を必須にしない。実Targetでの誤再試行、不要な全停止、未知の保全、Tool/Token/人手を同じ独立Expectedに基づいて測る。HTTP Graph実Loader、実Client/Provider効果、Skillによる実Reaction、Trait/BOM exact E2E、Owner受理は**NOT RUN**。
+
+**実Go Hostで観測できた範囲を上方修正**：[TEI merged #3478](https://github.com/hat47x/tei-platform/pull/3478)が既存Reference Go HTTP Handlerの**10分岐（404/405/401/403/503/202/422/202後panic等）とCallback/Audit順序**を固定Testへ追加した。`HTTP 202 + Audit.Stage=completed`は**Request処理が終わった**だけで、Business Effect確定の証拠ではない。**202送出後にpanicした場合はResponse 202のままAuditはerror**となる反例を持つ。PRの実Code/Test main統合は確認済みだが、本照合では新Go Host focused testのexact-head CI合否を別途検証していないため「10経路CI PASS」とは主張しない。実Provider Commit、Client全bytes受領、Graph LoaderやCurrent Grant、HDG全Runtime Path Coverageは引き続き未実証。Skillは202を見て自動完了・自動再送せず、既存§23.5の`effect unknown→元Operation照会／保留`を維持する。
 
 ## 24. OKF Attested ComputationをYICのSkill選択とClaim表示へ接続する（TAI #514・各Productの既存受入に委譲／後続・NOT RUN）
 
@@ -969,6 +985,8 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 **YICが選ぶべき次の縦断は『発見』より先に『必要な証拠の欠け方の診断』**：別のRequired Rule/Relationだけ欠ける／Canonical kind・attribute／Relation parentをずらす／InspectとSource Indexを別版にする／必要ないRuleだけ省く、の一因子差をProductが閉包・過剰拒否の両方で見分けたことを入力資格として参照する。独立Reviewer-only未知要件をAIに見せず新Scenarioを提案する**T1-Bは依然NOT RUN**。今回の`boundedReference=partial`／`testExecutionAdmission=exploration-only`／`qualifiedTestGeneration=false`を変更せず、C0局所約10%とC1/NFR/Requirement Coverageを別分母に保つ。後続YIC X02/X06とTAI #271へEvidenceを渡す際は、**Source required scope→実CLI Reply→Consumer Gate→候補Scenario→独立Expected**の到達した部分をClaimごとに保持する。初回H2/H3のTool whitelist・Skill byte・4Slotを変更せず、新Test Generator/Rule Storeを追加しない。
 
+**Source-only改訂の実CLI反例（World不変はContext不変ではない）**：[TEI merged #3477](https://github.com/hat47x/tei-platform/pull/3477)は、隔離Workspace内の`validation.tei`の**末尾LFのみ**を変え、Canonical World Fingerprintが不変でも`sourceIndexFingerprint`が変化し、旧World-Pinned Scenarioが走れる一方で**古いContextを再利用すると拒否される**対照を既存T1-A後段へ移植した。改版前/候補生成直前/実行後にSource IndexとWorldの版を取り直すが、**二回の読取は原子的Snapshotではない**。A→B→Aで元指紋が戻っても中間変更不存在は証明できない。#3477はmain統合済みである一方、旧Draft #3383の[専用CI #42396735765](https://github.com/hat47x/tei-platform/actions/runs/42396735765)成功を**新PR exact-head／main push成功へ転記しない**。`qualifiedTestGeneration=false`、T1-B盲検未実施は維持。YICはWorld/Source/Context/Scenario/Actual Consumerのそれぞれに対象版・依存Scope・時点を束縛し、Sourceだけ変わる場合は影響するClaimの再資格化を優先する。新Test Generatorや全世界無条件失効は導入しない。
+
 ### 26.7 Product Skillが「見える」「解析できる」「現在利用できる」を混同しないための負例（2026-11-08）
 
 [TEI実CLI Dogfood #3149](https://github.com/hat47x/tei-platform/issues/3149)からの新Source反例を、§26.5/26.6のP-1/AI Skill適合へ接続する。設計を変更する場所はTEI #3345（指紋のScope）、#3346（設計Markdown Loader）、#3347（CLI応答）、#3262（RequiredのSource閉包）であり、YIC側は**選択した実Product Reader/Skillがどこまで受領したか**だけを判別する。
@@ -984,6 +1002,11 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **実CLIとMCP経路の到達範囲**：[TEI Open PR #3356](https://github.com/hat47x/tei-platform/pull/3356)は現main実バイナリを用いた第2ラウンドDogfoodの文書・生出力記録であり、本照合時点は未merge/全CI未確認。固定main `4fd88c2b1`由来Binaryの観測では、Workspace識別・`view.writeFlags`・help等の既存課題が解消した一方、**D-3指紋のScope差、D-9 `docs/plan` Markdownが`managedFiles`のみで`readByLoader:false`、D-10 `validate.diagnostics`の形の不統一**が残る。`commands`19件と当該GoソースにTEI専用MCP Server入口は見つからず、**MCP Tool/Resource実試行はNOT RUN**。これは当該Source/Tool版についての観測で、将来Adapterを永久に不在と断定しない。
 
 生成AI・人間の既存共通経路は**実CLIのResponse/実受領Scope**を先に利用し、`managed`な設計文書の原文を許可済み別File Readerで調べる場合も、TEIモデルへ意味としてParsed/Bound済みと表示しない。`catalog`にRuleが無くても文書内Ruleの不存在は証明しない。新MCP/Markdown ParserをYICに作らず、[TEI #3346](https://github.com/hat47x/tei-platform/issues/3346)/[#2621](https://github.com/hat47x/tei-platform/issues/2621)/[#3262](https://github.com/hat47x/tei-platform/issues/3262)のOwnerへ委譲する。
+
+
+**現版MCP参照Adapterが実在することへ訂正**：上記[第2ラウンド #3356](https://github.com/hat47x/tei-platform/pull/3356)の「専用MCP入口なし」は**当時の固定CLI Binaryでの観測**であり現在の全Source/Toolsetの説明には使わない。[TEI merged #3458](https://github.com/hat47x/tei-platform/pull/3458)は`tools/reference-mcp-readonly-adapter`の`tei_validate`とCLI `validate -json`の同一`WorkspaceValidationReport`投影を実装し、Windowsで**正常／Load失敗／Meaning重複エラー**の実CLI対照を限定PASSした。CLI失敗code・診断とMCP `isError`が一致することを確認したが、`catalog/inspect/trace`全Replyの完全同値、初期化/通知/unknown method/欠損/大容量の受理、実Host・認可・外部Harness配送は**NOT RUN**。MCP参照Adapterを独立Meaning SSOTとはせずCLI/Application Serviceからの薄いSurfaceとして扱う。Tool-only B0／Product Skill B1比較には将来の別Transport資格として配置し、**初回固定H2/H3にはMCP導入を要求しない**。
+
+**Windows第3回Dogfoodでの変化**：[TEI merged #3445](https://github.com/hat47x/tei-platform/pull/3445)の固定実バイナリ`9a8b9e214`（Windows/Go1.27.0）のread-only再実測では**D-3指紋不統一は解消**（同一Workspaceのinspect/validate/catalog/viewでWorld・Source Index FP対応）、**D-9 Markdown未Loadedは残存**、D-10は一部解消。第2回のD-3/D-10未解消という文言は旧Binaryの歴史結果として保持し、現行版の一律未達としない。現在さらに[Open #3467](https://github.com/hat47x/tei-platform/pull/3467)は残るWorkspace識別範囲と空参照`null→[]`修正候補だが、当該PRの実Testをmain資格へ昇格しない。
 
 
 **実験分離**：初回TAI #168 SK-02のH2/H3では`view`や設計Markdown Readerを許可Listへ追加しない。現行TEI Toolでの限定記録を後続Product Reader適合へ使用する場合は、旧Binary/Tool Contractとの差異を事前に固定する。T1-A既知ValidationのCLI実判別は成立済みでも、TT-56必要Rule閉包・未知Rule発見T1-B・正式Source解釈・外部Harness全Byte・Owner受理は未資格。初回H2/H3比較適格0/4を維持する。
