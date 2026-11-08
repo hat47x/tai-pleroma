@@ -231,3 +231,8 @@ TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、
 ### 2026-11-08：三Flowを図表・Generator・Pluginの共通契約へ
 
 [横断監査 §27](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §17](../evaluations/VA-01-product-value-necessity.md)に **VA-FLOW-01** を追加。Adaptive Activity Flow／Interaction Flow／Business Operation Flowを分離し、標準固定部・Plugin可変Slotを持つ図表をGenerator/Validationの入力とする。最小順序はread-only実Provider Trace→三Flow図表とManifest照合→専門Web/Chat/VUI Consumer→B2C負荷・UX比較。専門B2Cに標準UIやAI Harnessを強制しない。既存OwnerのIssueとTEI MASTER_PLANを正本とし、新たな中央Host/Workflowを導入しない。**実試験・Owner受理はNOT RUN**。
+
+
+### 2026-11-08：Evidence資格を保持したAIチューニング閉路
+
+[横断監査 §28](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §18](../evaluations/VA-01-product-value-necessity.md)へ **VA-TUNE-01** を追加。Observe→Diagnose→Propose→Preview→Verify→Accept→Apply→Re-observeの最小閉路を、CLI/Studioのread-only実Provider Traceから着手する。Source/Structural/Accepted Meaning/Build/Executionの資格を分離し、World FP一致やCache hitだけでEvidenceを再利用しない。Query/Index・Cache・Plugin置換を独立Expected、P50/P95、実Plan、旧Artifact保全で比較。中央Evidence Storeを初期必須としない。**実負荷・AI変更適用・Owner受理はNOT RUN**。
