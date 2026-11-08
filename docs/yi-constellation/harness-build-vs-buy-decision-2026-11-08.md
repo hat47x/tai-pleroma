@@ -32,6 +32,7 @@
 - 2026-10-11公開の **MedHarnessBench**（査読前プレプリント）は、342のHealthcare Taskと16,000超の制御実行を使い、領域専用のRuntime Supportが処理品質・タスク達成に改善をもたらすと報告。最終回答だけでなく、Supportの提供→起動→利用→後続行動への反映を分離評価する手法が有用。URL：https://arxiv.org/abs/2610.15714
 - 一方、2026年の **npj Digital Medicine** のAgent比較研究は、汎用Agent化による精度向上が限定的で、Token量10倍超、遅延2倍超の例を報告。Agentの段階を増やせば必ず改善するという仮説を否定する対照資料。URL：https://www.nature.com/articles/s41746-026-02443-6
 - **DSH一次資料**：Everything is Plugin／Cordis／Developer Preview。URL：https://github.com/deepseek-ai/deepseek-harness
+- 2026-10-05公開の **MedicalHarness**（査読前プレプリント）は、107タスク×5モデル×5 Harnessで、結果分散の約4分の1がHarnessとモデルとの相互作用に関連し、全タスクに最良なHarnessはなかったと報告。比較時にModel・Tool・Taskを固定し、Context管理／計画／Tool公開を切替える分析が参考になる。URL：https://arxiv.org/abs/2610.05778
 
 これは医療向け製品・自動診療の導入判断ではない。YIの横断実験はまず公開・合成資料で行う。医療相当の高リスク事例を将来扱う場合も、専門家の独立Expected、施設・データ保持者の実認可、Human Review、臨床的な実結果の検証を別に要求し、合成タスクのPASSを患者への適用資格としない。
 
@@ -47,7 +48,6 @@ YIで医療の知見を転用しやすいのは、まず **TEIの業務更新、
 | SUI | 意味探索、Card/Canvas/関係の投影・確認・再開。Product Raw全体や非公開Metadataを既定で外部へ渡さない |
 | SHO | 原文保持、引用位置、編集・構成・保存と再開。Harnessの回答文を正式保存／出典検証済み成果物と混同しない |
 | EKI／実Host／Provider | 必要時の委任、実アクセス・送出、操作同一性、Receipt、独立結果観測／配送。EffectはHarnessの応答で成立しない |
-| KON Dataspace | データの着地・取得・履歴・複数Consumer向けの足場の構想。**第二Canonical/必須クラウド/Agent Session Storeに直結しない**。二Consumer実消費までは独立基盤の採用を保留 |
 | OKF（接続対象） | 定義・検査可能な計算Claimの表現。計算契約の宣言／Attester／Receipt／Owner受理を別に扱い、TAIに第二Attesterを置かない |
 
 **Activity/結果の境界**：Source Observation → Accepted Meaning → Current Qualification → Intent → Host Grant → Actual Effect/Receipt → Independent Observation → Consumer Delivery/Outcome。PluginのLoad/UseやAgentの回答は、この連鎖の一部にすぎない。特にCordisの可逆なPlugin登録解除はDB Commit/外部送信のRollbackではない。
@@ -84,6 +84,60 @@ YIで医療の知見を転用しやすいのは、まず **TEIの業務更新、
 - **TAI #488 / Draft #489**：HVの比較結果をX01〜X06の照合列に返すだけ。第二の試験Engine・独立Oracle・Fixtureを作らない。
 - **TAI #234**：並列性・継続・費用・再起動は別評価。初回H2/H3が未適格のうちに常時稼働JobやSchedulerを構築しない。
 - **TEI #2899 / #2509 / #2515**：DSH Plugin構造の研究、外部Harnessの実Tool/Skill、実OS/送出の境界を別Ownerで検査。DSHをTEI標準Runtimeにはしない。
-- **Product Owner**：TEI/SEI/SUI/SHO/EKI/KON/OKFそれぞれの受理・公開・実装判断を維持。YI横断構成が単独Productの価値・完成条件を増幅／先取りしない。
+- **Product Owner**：TEI/SEI/SUI/SHO/EKI/OKFそれぞれの受理・公開・実装判断を維持。YI横断構成が単独Productの価値・完成条件を増幅／先取りしない。
 
 **未実施**：上記HV-0〜HV-4の同一母集団での独立比較、HV-3の実専門Pluginの増分、実臨床検証、二Harnessの実隔離適格試験、複数年TCO採点、Ownerによる独自Loop投資受理。これは2026-11-08時点の設計・実験計画であり、実装済み認定ではない。
+
+## 8. 2026-11-08横断再整理：AI Harnessと業務Flow・共通APIを同一物として扱わない
+
+**成熟した設計差分**：TEIの採用済み[ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)は、CLI／MCP／Web／Desktopを一つの型付きApplication Operationへ集約する。APIはHTTPに限定されず、Hostが選択したProviderと現在の利用資格を束縛する。2026-11-08時点では全入口の同値性・実Provider二Consumer実証までは成立していない（[TEI #1251](https://github.com/hat47x/tei-platform/issues/1251)、[#1158](https://github.com/hat47x/tei-platform/issues/1158)）。**YIのHarness接続はこれに従うConsumer／薄いAdapter**となり、TEIの別操作Engine、Agent向け別意味APIや「CLI呼出しの文字列解析」を正式な第二APIとして作らない。
+
+| 境界 | 所有者と不変条件 | Harness用に増設しないもの |
+| --- | --- | --- |
+| Model／Agent実行 | 選択した外部Harness。会話・Agent Loop・Tool選択／モデル接続。実OS/Providerの許可は別 | YI必須の自前Loop／Model Router／共通Scheduler |
+| Application Capability | 各Productの型付きOperationとPlugin選択・意味/Validation（TEIはADR-0048） | CLI／MCP／Web／VUIで個別に複製した業務ロジック／万能Dispatcher |
+| Domain Procedure／Workflow | 既存Productの状態と業務規則。合法遷移・期待版・保留・取消・再開条件は**決定論的に検査** | 自由文チャット履歴を業務状態やWorkflowの唯一の正本にする |
+| Information／Meaning | SEI/SUI/SHO等のSource／Evidence・未決・引用・開示可能な投影。元データの保有者が現在Scopeを判定 | 自己申告だけの「検証済み」・無制限Rawコピー |
+| Host／Effect | 実Provider/OS/HostがGrant、実送出、Attempt、Receipt、Consumer Readを観測 | Pluginの登録／unloadを実EffectやDB rollbackと同一視 |
+| Activity／Handoff | TAIは必要なProduct能力と用途別Task/Evidence参照を継ぎ、履歴と現在性を区別 | Agent会話全文を第二の永続Business Canonicalへ昇格 |
+
+**VUI／状態を伴うFlowは独自AI Harnessを要求しない**：音声入力・ASR・NLU／LLM候補・状態付き対話・確認・実Operation・TTS応答という媒体差は、それぞれProvider/Representation/Adapterとして組み合わせ、状態遷移の合法性はWorkflow/TEIのTyped Operation側で検査する。VUIが「やり直し」「次へ」「取消」「確認」等のFlow制御に相当するときは、必要な入力と遷移を明示してPause/Resumeする。音声UIで成功したという観測だけで本番操作のReceiptへ昇格しない。生成AIを使わない決定論的Flowを**同じ業務Taskの対照系**として維持する。これらはTEI標準APIへ別の必須VUI種別や新Workflow Engineを採用した決定ではない。
+
+**PluginとTraitの接続**：TEI側のContract/Roleに対して原子的なTraitを合成し、手動実装要求とDefault実装の区別を保持する構想は、Harness固有のイベント一覧の模倣ではない。PluginのHookは **(a) optionalな提案・表示の差込点** と **(b) 不可避なHost/Providerの権限・Effect検査** を分ける。Cordis middlewareで可逆に登録した処理がスキップされたときに(b)を迂回できる設計は不適格。Trait・Hookpointの公開形式やTEI Source構文は各Product Owner判断前に固定しない。
+
+## 9. 原則となる6つの接続点（SchemaやPlugin APIの先行採用ではない）
+
+| 接続点 | 固定する要求と検証すべき負例 | Product／Host Owner |
+| --- | --- | --- |
+| P-1 能力発見・適用範囲 | Capability候補と現在選択／Load／Invokeを区別。Toolが見えるだけで意味受理・使用許可を宣言しない | TAI #168/#488、TEI #951/#1251 |
+| P-2 入力・参照投影 | Source/Scope/時点/完全性/部分集合/非開示の残差を保つ。未承認RawやHidden ExpectedをHarnessに渡さない | SEI #767、TAI #232 |
+| P-3 事前条件・操作Intent | Target/expected revision/業務状態と現在Host Grant/Disclosureを別検査。Tool説明文やSkillの規則を強制境界と誤らない | TEI ADR-0048、TAI #232 |
+| P-4 実呼出しと結果翻訳 | CLI/MCP/Web/Desktop/VUIは**共通型付きOperation**へ。NULL/欠損、診断、部分成功、通信切断をテキストで潰さない | TEI #1158/#3419〜3422 |
+| P-5 実Effectと独立確認 | Plugin dispose、Tool exit、LLMの完了発言をReceipt/実Readbackと分離。unknown/duplicate/partialは再送禁止条件へ | EKI／実Provider、TEI #2515、TAI #271 |
+| P-6 再開・配送・説明 | Task/Evidence/Source revision/未決/期限/Consumer実受領を必要十分に渡す。別Harnessへ旧Grantを継承しない | TAI #271/#168、SHO/SEI |
+
+P-1〜6は既存契約を**どこで検証するか**の目次であり、全工程を一つの巨大Hook interfaceへ移す提案ではない。ある媒体・業務で不要な段階を実装必須にしない。Plugin内の標準動作変更は、「どのContractを置換／合成し、何が引き続き強制されるか」が読めるようにし、選択した実Providerへの到達を確認する。同じ結果でも**Provider B選択→Provider A呼出し**なら失格とする。
+
+## 10. 独自Harnessの費用対効果：Harness×Modelの交互作用と決定論的対照
+
+**研究上の補正**：2026-10公開の査読前[MedicalHarness](https://arxiv.org/abs/2610.05778)は107タスク・5モデル・5 Harnessの制御比較で、HarnessとModelとの相互作用がOutcomeに大きく関わり、万能の「最良Harness」がないと報告した。医療専用[MedHarnessBench](https://arxiv.org/abs/2610.15714)の専門Support改善報告と、[npj Digital Medicine](https://www.nature.com/articles/s41746-026-02443-6)の汎用Agent費用増加を合わせると、YIの投資判断は**Task分布×Model×Harness×Product Tool/Skill/専門Plugin**ごとの比較が必要となる。ただし異なる論文のベンチマーク数値を同じ母集団として差引き・統合しない。
+
+- **第一対照（既存P0）**：TAI #168のG0→G1/G2→事前割付4独立Slotを変更しない。比較資格0/4を動かす追加試験を要求しない。H2/H3でModel・Task・Tool・Sourceを固定してSkill一要因を測る。
+- **第二対照（方法成立後）**：同Task＋固定Source/実Operation/Token上限/Grant/Exposureで (i) 決定論的Flow/人の通常操作、(ii) 外部Harness Tool-only、(iii) +Skill、(iv) +専門Plugin を比較。専門Pluginの差を見るときにHarnessを同時変更しない。正しい停止・保留・人の確認要求も評価対象とし、「自動完了」だけを最大化しない。
+- **第三対照（必要時）**：同一Model/Providerで外部Harness二種を切替え、続いて同HarnessでModel二種を比較。順序・タスク難度・Secret/Expected漏えい・Tool面の差を統制し、結果の交互作用が無視できない場合は組合せごとの対応資格を記録。必ずしも全組合せの網羅を初期Gateとしない。
+
+**費用対効果**：総費用は Provider/Token／接続/ロード／Test/独立Oracle／Host隔離／人手確認・修正／適格失敗の再試行／Pluginと外部Harness API追従／退避と置換を含む。収益面は「許可された正しいOutcomeの数、必要な保留、人の時間、漏洩・誤作用の損失を回避した範囲」を分ける。運用費が低くてもOS Read-deny不適格・情報開示違反・独立Result未確認は採択対象にならない。
+
+**製品性の狭い定義**：YI固有のUXをつくることと、独自AI Loopを所有することを切り離す。Product固有の良質なOperation、可逆な専門Workflow、限定Evidence、説明/UIは外部Harness上にも製品として成立する。既存Harnessで欠けているのが**接続点や専門手順**なら先にPlugin／Application APIを改善し、独自Loop投資へ短絡しない。
+
+## 11. 後続の計画分担・Owner判断
+
+**優先度P0（既存のまま）**：TAI #168／Draft #270の実DSH隔離G0とTool/Reply G1/G2、独立4 Slotをまず成立させる。実際に必要な場合だけTAI #232／TEI #2515でHost強制境界を検証する。G0は現在の比較条件を満たすために必須であり、今回の追加設計による新Gateではない。
+
+**P1（TEI操作面の成熟、既存Ownerの仕事）**：TEI ADR-0048と#1251/#1158/#3419〜3422に従い、Application APIの単一の選択済みProviderへCLI/MCP/Studio/Webから届くか、Resultだけでなくactual entryを検証。特に「B選択／A呼出し」、Result Envelope drift、typed error内Secret、未選択Pluginの露出、Source失効を負例とする。初回のH2/H3に全4操作・HTTP/実WebViewやVUIを追加Hard Gateとしない。
+
+**P2（YI固有の専門能力の実験、必要性が確認されたとき）**：高影響だが**合成**の業務Flowを対象に、型付きOperation Intent→状態遷移→Authorization check→Mock Effect→Unknown Receipt→独立readback／Handoffを一Taskで比較する。決定論的Flow・外部Tool-only・Skill・専門Pluginの差を、既存Product Ownerの独立Expectedで採点。原子的Trait・Hook利用について実Providerに到達するかを確認し、外部HarnessでなくTEI内にあるべき強制条件を移設しない。VUIは同じFlowの異媒体Adapterという**条件付き第二例**で試す（ASRの誤認識と操作前確認・再開を反証）。医療データ／患者への実適用はしない。
+
+**P3（独自Loop投資判断、依然保留）**：P0〜P2で同一の重大欠落が異なるHarness上で再現し、外部Plugin/API/Host改善では解けず、適格な品質・安全・保守TCOが投資対象として説明できる場合だけ、最小の局所Loop実装をOwnerへ提出。未実装・過剰なHuman確認／誤停止／誤実行のトレードオフを比較し、導入しない結論も受入とする。
+
+**現在の資格**：ADR-0048は採用された設計方針。ただし共通Application APIの全入口同値・Provider二Consumer・VUI状態Flow・専門Pluginの価値、Harness×Modelの比較、HV-4の投資採用は**NOT RUN／未決**。新しいRuntime/Schema/Registry/Ownerの正式採用は行っていない。
