@@ -430,6 +430,10 @@ YIC後続のX06/SC-15/16では、**Producer実byteと独立Expected／SHOが実�
 
 **YIC選択の停止線**：G2-Pの`changed=false`は物理Writeゼロの証拠ではない。G2-W1の`working-copy-readback-verified`は**特定の作業コピーの限定byte確認**であって、正式SHO Editor Save・元文書上書き・no-op書込ゼロ・CAS/Grant/atomic publish・Source Revision履歴/Owner意味受理ではない。Product Skillが「文書を保存できた」「元引用へ正しく再接続できた」「外部へ配布してよい」を一括成功と回答しないよう、[SHO #4](https://github.com/hat47x/sho-composer/issues/4)のG2-W2/Storageと既存YIC X02/X06・SC-15/16へ別列で引き継ぐ。SUI実Producer→SHO同一File H1とTEI/SHO/SEI E2Eは引き続き未実施。
 
+**K1Rの実クロスRepo Reader成功を限定認定**：[SHO Draft #27](https://github.com/hat47x/sho-composer/pull/27)は、公開TEIの合成K1 Markdown **実4ファイル**を、private SHO側に配置したtest-only CIから**固定SHAの公開Repo→private Repoの実G1b CLI**で受領した。[CI #42462172893](https://github.com/hat47x/sho-composer/actions/runs/42462172893)はcompleted/successで、index 309byte/3 link、data 480/0、functions 600/1、business 492/1の原byte/SHA/Parser 14.3.3/限定link照合とmissing-file≠zero-linkを確認。初回の**公開TEI token→private SHO checkout失敗**はParser失敗ではなく、アクセス境界の拒否だった。秘密Repo側へ実行を移したので公開TEIへPATを与えずReaderを複製もしなかった。
+
+YICが認定できるのは**Pinされた公開合成原文4ファイルのprivate SHO実Readerによる限定受領**だけ。`allDocumentReferencesEnumerated=false`、Source revision/Grantはunknown、OKF正式F0/YAML・同一OKF Pluginの二Consumer（K2）・真正SUI Producer→SHO同File H1・G2正式Writer・Meaning Accepted・外部Skill実Loaderは**NOT RUN**。§18.5の「SUI→SHO H1未達」はこのK1R成功で訂正しない。次のYIC X02/X06では、Public Sourceを読む権限とPrivate Readerが存在する権限、Readerが実際に読んだbytes、ClaimのSource出典完全性、外部へ開示可能なEvidence Projectionを各Ownerの既存判定へ分離する。新GitHub権限共有・公開Mirror・中央Readerを導入しない。
+
 ## 19. H2/H3実比較に必要な実隔離・同一経路・参照閉包の資格
 
 ### 19.1 Product-only CIの成功から比較資格を推定しない
@@ -633,6 +637,10 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **現実の順序は変えない**：既存 #168 の固定公開TEIで最初の実外部Harness H2 Tool Request→実CLI→Harness Response、H3 Skill root+refs実Loader、H2→H3→H3→H2比較を先行。その後に用途が必要とするSC-17/18・Skill再選択・横断Handoffを別Trial Groupにする。本節は反証条件の接続であり、新SR試験、実外部Harness、実Purpose変更の利用者検証、Owner意味受理、Publish/Provider Effectは**NOT RUN**。
 
+**SEI Methodの『推薦を再開できた』と『未解決の問いを保持した』は別（後続試験）**：[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)は既存のSEI Product上流計画で、`TEI source-index(index/subject)→SEI add recommendation→resume --json`という**SEI H3-A0**を次の最小実走候補に選んだ。現行SEI `runAdd`では`--unresolved`は**Decision限定**であり、Recommendationを保存/再開できたとしてもQuestion・UnknownをNativeで永続化した事実はない。`resume.unresolved=[]`を『未決は存在しない』と断定せず、架空のDecisionを作って未決保存を装わない。Recommendationの`--source`は実際の**推薦者**の欄で、TEI Tool/Sourceの独立実行証拠を代入しない。
+
+**比較Armの順序**：SEIのH3-A1は同一Q・Tool/Source/Grant・Budget=1・blind Expectedで、D0（Model/既存Tool）／D1（決定的追加Read）／M1（SEI Method）を比較する計画。決定的Readだけで解ける陰性対照ではM1が同じProbeを選んでも増分成功にしない。未決のNative保存を要するA2は[SEI #711](https://github.com/hat47x/sei-cognition/issues/711)/[#678](https://github.com/hat47x/sei-cognition/issues/678)のOwner受理へ保留。A0/A1/A2、Method実接続・TEI→SEI実Tool delivery・Owner意味受理は**NOT RUN**。TAI #168の**外部Harness H3**と名称・試験分母を混ぜず、YICの§21再開/§27.7〜27.8の**独立後続Trial Group**に限り再利用する。新Method Registry/Runner/Question Storeなし。
+
 ## 22. 現在のRuntime可用性・認証配線・Digest互換をSkill選択へ反映する（SC-21への実装判断の接続／後続実証NOT RUN）
 
 ### 22.1 Capabilityの掲載と現在の実提供は異なる
@@ -806,6 +814,8 @@ YICでは§23.1〜23.4の条件付き書込み・中断/再開に、**Serviceが
 **YICが評価する付加価値と導入順**：最初の[TAI #168 SK-02](https://github.com/hat47x/tai-pleroma/issues/168)の固定公開TEI read-only H2/H3を変更しない（限定H3 Tool Read達成、比較適格**0/4**）。その後、TEI #3274の(a)実Node限定Characterization→(b)Graph/TraceのLoader・実Guard/Terminal実Path→(c)Typed Application Result→HTTPまたはDesktop IPC→Clientの正負対照が各Ownerで成立する**必要な範囲**で、B0既存Tool／B1 Product Skill／B2横断Activity Skillを比較する。B1が`unknown commit`を保留し、適法なread-only Status照会へ案内できればB2を必須にしない。実Targetでの誤再試行、不要な全停止、未知の保全、Tool/Token/人手を同じ独立Expectedに基づいて測る。HTTP Graph実Loader、実Client/Provider効果、Skillによる実Reaction、Trait/BOM exact E2E、Owner受理は**NOT RUN**。
 
 **実Go Hostで観測できた範囲を上方修正**：[TEI merged #3478](https://github.com/hat47x/tei-platform/pull/3478)が既存Reference Go HTTP Handlerの**10分岐（404/405/401/403/503/202/422/202後panic等）とCallback/Audit順序**を固定Testへ追加した。`HTTP 202 + Audit.Stage=completed`は**Request処理が終わった**だけで、Business Effect確定の証拠ではない。**202送出後にpanicした場合はResponse 202のままAuditはerror**となる反例を持つ。PRの実Code/Test main統合は確認済みだが、本照合では新Go Host focused testのexact-head CI合否を別途検証していないため「10経路CI PASS」とは主張しない。実Provider Commit、Client全bytes受領、Graph LoaderやCurrent Grant、HDG全Runtime Path Coverageは引き続き未実証。Skillは202を見て自動完了・自動再送せず、既存§23.5の`effect unknown→元Operation照会／保留`を維持する。
+
+**Route/Actionは独立に正しくてもBinding同値と限らない**：[TEI merged #3485](https://github.com/hat47x/tei-platform/pull/3485)のReferenceは、E1 `composeRequestPlan`と実Go Host Policyを**別宣言のTest Fixture**として保持し、method/path/actionIdの片側差異をNode 5件・Go 4 subtestのSourceで反証対象にした。Node構成DAGやGo Host 10分岐がそれぞれ正しくても、**実Product E1→Go Hostで同じRoute/Actionを選択・Invokeした**ことにはならない。#3485はmain統合済みだが、追加されたNode/Goテストの**当該HEAD専用CI結果は今回別確認できていない**ため、Product実Bindingや端から端のPASSへ昇格しない。YIC X04/X05は`declared route/action`／`host policy`／`actual invoked operation`／`response status`／`effect receipt`の独立列を用い、`202 Accepted`で保存完了や安全再試行を推定しない。追加Graph/Host/Retry Engineを作らない。
 
 ## 24. OKF Attested ComputationをYICのSkill選択とClaim表示へ接続する（TAI #514・各Productの既存受入に委譲／後続・NOT RUN）
 
@@ -1028,6 +1038,10 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 
 <!-- yic-skill-operation-parity-function-boundary-20261108 -->
+**同じConsumer Context指紋でも外部Providerと選択規則の鮮度は別**：§26.8の[TEI main #3477](https://github.com/hat47x/tei-platform/pull/3477)は**同じWorkspace内**のSource-only差異を実判別したが、[Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)と[後継Draft #3490](https://github.com/hat47x/tei-platform/pull/3490)は、Imported Provider **raw Sourceの改版／Manifestだけの改版／選択後の実Entry差替え／Capability選択Policy fingerprint変更**を、それぞれ異なる失効Channelとして列挙した。**Consumer World/SourceIndex FPが不変**でも、Consumerが依存する外部原文・Manifest・選択規則・実Artifact/Provider Entryがfreshとは限らない。参照履歴の初期規則12宣言/未選択6と現規則の未選択4は母数が同じでも**解決Policyが異なる**ので時系列の性能改善に算入しない。
+
+既存TEI #3262/#951/#3267のOwnerで、Task相対Requiredの**import occurrence・Provider Manifest identity・選択Rule/FP・実Entry/Artifact・Consumerの実受領**を別照合する。依存しない外部Sourceが変わっただけなら無関係なReadを過剰失効させず、実Source/Current Grant未確認のFunction Invoke・Qualified BOM発行・Publisher処理だけ止める。#3479/#3490の新負例・本PR統合後CI／外部実Provider/Hostの確定は**NOT RUN**、今回のYIC新規試験ではなくX02/X04/X06の独立Expectedへ参照を渡す。初回TEI SK-02 H2/H3の固定ProviderなしScopeを拡張しない。
+
 ### 26.9 CLI／MCPで同じFunction Readを公開しても、Skill利用資格は別に判定する（2026-11-08）
 
 前節§26.8の[TEI main #3482](https://github.com/hat47x/tei-platform/pull/3482)で**13実CLI Reply・42 Consumer対照**による一Functionの限定Required Slice検査は成立した。ただし、Functionの宣言取得と**実Provider呼出し・現在Grant・別Transportの全結果受領**は別の資格である。本節はそのうち、**同じ型付きOperationをCLI／MCPで使うSkill側の適合**だけを担当する。
