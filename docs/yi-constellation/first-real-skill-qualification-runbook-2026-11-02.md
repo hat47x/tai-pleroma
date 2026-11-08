@@ -1,6 +1,8 @@
 # YI Constellation：最初の実Product Skill資格確認 Runbook（2026-11-02）
 
-**状態（2026-11-07確認）**：固定TEI実CLIの公開Source W0/S1は限定達成。[TAI実S1 #42107393245](https://github.com/hat47x/tai-pleroma/actions/runs/42107393245)のSource Index／台帳照合に加え、[TEI PR #3113](https://github.com/hat47x/tei-platform/pull/3113)の**実DSH外部Harness Tool-only探索Session**で固定TEI実バイナリの呼出し・Tool応答・最終回答が観測された（§24）。ただし**H2の実ファイル／Skill／Reviewer隔離が未証明**のため、4独立Sessionの比較適格Slotには算入しない。H3のSkill実Load・4Session採点・実Egress否定／Owner意味受理は**NOT RUN**。次のBlocking Exitは新たなTool接続の存在確認ではなく**隔離・Source／Tool／Grantが固定された比較適格H2 Session**（§24.2）。旧§1〜14の「TAIでCLI未実行」等は当時の履歴で、現在の事実ではない。新Harness Runner/統合Registryなし。
+**現行資格（2026-11-08確認）**：TEI固定公開SourceのProduct W0/S1は限定達成。外部DSH実Harnessでは、実TEI CLI Tool呼出しに加え、H3-A/Bが固定Product Skill本文5,482 bytesと参照ファイルを実Toolでロードした**限定実観測**がある（§24.5）。ただし従来4 SessionはTaskとWorkspaceの実パス差、過去H2 Session再利用、親/別Lane Read可能、Tool許可外argv、8,192byte切断と56 Request/55 Reply、独立Expected未採点のため**比較適格0/4**。旧§1〜24.4内の「H3実Load NOT RUN／外部Harness未接続」は当時の記録。W0/S1・実Tool/Skill Load・実OS隔離・比較適格性・Qualityは別の証拠資格である。
+
+**次の最短の実施指示**：[G0→G1/G2→新独立4 Slot実行票（2026-11-08）](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)を実Host担当・実Harness担当・独立Reviewerへ渡す。**最初の一手は同一の実OS identity/Toolで「公開Source Read成功」と「存在する別Ownerの合成Canary Read拒否」を観測すること**。G0不成立なら新DSH Sessionを増やさない。G1の外部送出・G2の実Result/モデル受領完全性を後続で揃え、既存§19〜24/Checkerの新規H2→H3→H3→H2事前割付へ進む。初回のTask/Skill/Tool/Root/ModelのPinやBlocking条件は変更せず、新しいRunner/Policy/Oracleを設けない。
 
 ## 目的：合成fixture中心の議論から、実際のProductを使用した証拠へ
 
