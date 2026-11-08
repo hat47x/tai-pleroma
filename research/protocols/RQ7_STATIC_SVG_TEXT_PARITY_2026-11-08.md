@@ -22,6 +22,8 @@
 | **入力制限と安全境界** | Public fixtureのみ。DAG以外・dangling/duplicate Edge・無効IDを拒否。XMLエスケープと外部リソース不使用を検査 | 任意のProduct Graph（循環・Hyperedge・Role・大型データ）への適用可能性 |
 | **正解隔離** | `render_svg`は宣言Graphだけを読む。Goldを読み込まないので、出力XMLにGold判定を描かない | 実験者がGoldを知ったことによる被験者選択・評価バイアス |
 
+**サンプルの独立性制約**: 公開v0/v1の合計22ケースは、宣言Node/Edgeの構造としては**3種類の異なるGraph**（Build=11件、File Relay=9件、Cross-boundary=2件）から派生している。22ケースのPASSを22種類の複雑な図・実Source・独立した図表設計に対する検証と数えない。独立Graph・多項Role・循環・大規模Pipelineは未実証。
+
 **重要**: SVG内のメタデータだけを検査すると、`data-from=src`と書きながら別Nodeへ矢印を向けても「一致」と誤判定する。そのため**座標だけを誤らせた負例**を加えている。ただし正しいブラウザー描画・UI/ARIA/画像理解までは証明しない。
 
 ## 3. 再現可能な入力と操作
