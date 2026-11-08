@@ -221,3 +221,8 @@ TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**
 [横断監査 §25](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §15](../evaluations/VA-01-product-value-necessity.md)へ **VA-KON-01** を追加。SUIの既存Raw/Source/Revision保存を基準に、Canvas A/Bの異なる意味投影とSHOのread-only引用を一件で比較する。B0＝現状手動、B1＝薄いAdapter、B2＝独立KON Store候補。複数Consumerの実需と測定可能な改善がない限りKON独立配備を初期依存へ昇格しない。
 
 TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、SHOのMarkdown編集、EKIのDelivery、TAIのHarness/受領をKONへ集約しない。§24のRC-02/03は再利用し、別の障害試験正本を作らない。**比較・実連携・KON実装・Owner受理はNOT RUN**。
+
+
+### 2026-11-08：型付きHookとVUI Interaction Flowの横断ゲート
+
+[横断監査 §26](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §16](../evaluations/VA-01-product-value-necessity.md)に **VA-HOOK-01** を追加。Operation Lifecycleへモデル正本のAdd/Replace/Transform/Compose Bindingを接続し、CLI/Web/Desktop/MCP/VUIをAdapterとして生成する。VUIは状態付きInteraction Flowであり、音声I/Oだけに縮約しない。Interaction/Business/Execution Stateを分離する。実装の最小順はread-only Inspector実Provider→Hook競合/Selected≠Invoked→VUI確認・中断・再開。生成器・実Provider・Cross-target・Owner受理は **NOT RUN**。
