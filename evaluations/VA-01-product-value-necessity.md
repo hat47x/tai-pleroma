@@ -317,3 +317,19 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 ## 20. 2026-11-08：F0〜F5の段階別価値・実証資格
 
 [横断監査 §30](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-EVID-01** を追加。F0 Source／F1 API／F2 Representation／F3 Provider／F4 Effect／F5 Deliveryを同一Attemptと独立Expectedで判定する。F2の表示価値やF3のread-only価値を過小評価せず、F1応答をF4更新・F5完全受領と誤認しない。Provider未呼出し、Consumer部分受領、確定後ACK喪失、Plugin版差、Audience変更を負例にし、VA-RC-01と重複計上しない。実注入・Owner受理は **NOT RUN**。
+
+
+### 20.1 F4を使わないread-onlyと、実Effectを伴うUpdateを同じ得点にしない
+
+F0〜F5は**User Jobに対するClaimの証拠軸**であって六段階が常に直列に成立すべきという要件ではない。[横断監査 §30.1〜30.2](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)に従い、当該操作に不要な段階はnot-applicable、必要だが未取得ならunknown、観測したものだけobserved-in-scopeとする。表示・参照価値を実Commitの未確認で誤拒否せず、保存・更新の効果がある場合だけF4のAuthority／post-imageを要求する。配送は**read-onlyでも**Consumerに到達したか独立判定する。F1/F2/F3/F4/F5の最大番号を「製品成熟度」として採点しない。
+
+| 既存VA-EVID-01への補助対照（新Engine/Case正本なし） | 事前固定するExpected | B0/B1/B2で比較するもの |
+| --- | --- | --- |
+| **read-only一Function** | [TEI #3482](https://github.com/hat47x/tei-platform/pull/3482)の限定13 Reply／42 Consumer Controlsを出発点とする。実Providerを呼ばない同じJSON見かけはF3 unknown、実Rowsetと同Attemptで受け取れば対象ScopeのF3 observed。更新しないのでF4 not-applicable。外部Tool/Harness F5は独立で、Clientに届いていなければunknown | 誤完了、必要でないEffect検査による誤停止、実Provider結合に要する手順・遅延・実費 |
+| **Reader/Working Copy保存** | [SHO #25](https://github.com/hat47x/sho-composer/pull/25)のDraft CIはtest-only File書込→別Open Readbackに限定PASS。通常Editor Save、CAS/atomic durable publish、原典Source Revision・別Recipientへ受領はunknown。独立read-only Readerは書込みの承認を必要としない | no-op保存のByte破壊、未保存buffer損失、保存効果と別Readerの受領、他Product依存なしで成立するDocument job |
+| **TEI→SEI判定の保存・再開** | [SEI #824](https://github.com/hat47x/sei-cognition/pull/824)引用の[CI #42474971439](https://github.com/hat47x/tei-platform/actions/runs/42474971439)で独立Requiredに基づく**評価者作成Recommendation**のSEI Store保存・Resumeは限定Observed。Method自動生成・Question/UnknownのNative継続・外部H2適格・Owner採否はunknown | 普通のD1判定で十分か、Method M1が独立Expectedの不足診断・労力・誤判定を改善するか。何も増えなければM1常時必須化しない |
+| **EKIの実配送** | [#785](https://github.com/hat47x/eki-fabric/pull/785)の6イベントReference PASSはactual Adapter/Consumer deliveryではない。実Local IPC／ConnectのSame Expected／Epoch・Lease・Fence保持までunknown | 送受信の誤成功、結果不明、P50/P95とCPU/通信費。限定Taskを分散しない選択の価値も維持 |
+
+**識別子の停止線**：TEI mainのRQ-036はModel Mapであり、[BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)がBOMへ仮採番したRQ-036と衝突する。新しいAcceptance Gateの追加ではなく、採用前のID→Source/Meaning照合でBOM要求の採番だけ保留する。Verified BOMの設計価値や他の既定作業を止めない。
+
+**今回の新比較**：上記B0/B1/B2、同一Attemptの実Provider、正式SHO Editor、SEI Method、EKI二Adapter、Owner受理は**NOT RUN**。既存CIはそのSource/HEADと試験Scopeの限定資格としてのみ引用する。
