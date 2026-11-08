@@ -1136,3 +1136,19 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 | **独自Harnessの再検討** | 上記でも残るD（Design Input）／T（Tool Delivery）／G（未知Rule生成）の独立再現失敗を複数Task/Domainで測定し、重大誤判断・追跡・再現性・隔離・費用/人手の確実な増分がある場合のみ別Owner判断 | 未検証のうちから中央Agent/Runner/Registry/Memory/Hostを実装 |
 
 **略号の衝突に注意**：既存§27.4の`B0=Tool-only / B1=TEI Product機能 / B2=必要時TAI横断Skill`はProduct選択の比較。一方[TEI #3487](https://github.com/hat47x/tei-platform/pull/3487)が使う`B0=決定的CLI/API / B1=既存Harness＋Skill有無 / B2=薄いAdapter`はHarness方式の比較であり、**同じB2でも別の処置**。YIC採点票は系列名・Armの実Tool/Skill/Adapterを明記し、両者を同じ分母に合算しない。初回TAI #168 H2→H3→H3→H2は旧Pinned公開TEIの独立Trial Groupで、G0物理Read拒否→G1送出→G2 Tool Result完全受領を先行。**比較適格0/4**、新MCP/共通APIを旧試行へ事後混入しない。第二のYIC共通API/Policy/Host/Agent Loopなし。
+
+### 27.8 既存Harness・Skill・専門Plugin・固有Loopの効果を段階比較する（未実証）
+
+§27.7の「独自Harnessを先に作らない」を、他チャットの**DSH Everything is Plugins**／専門領域のAI意思決定支援の比較構想と突き合わせて具体化する。TEI/SEIの価値は、汎用Agent Loopを所有することではなく、**実際のSource・意味制約・独立検証・判断保留を提供できる専門Plugin**にある可能性が高い。ただしこれは**価値仮説**であり、医療など高影響領域での改善や安全性を実証したものではない。
+
+| Arm | 同一Task・Tool/Source・独立Expectedでの処置 | 分離して評価する増分 |
+| --- | --- | --- |
+| **A：LLM＋許可済Tool** | 決定的なTEI CLI/APIと独立Referenceだけを使用。Skill/Plugin専用説明は投入しない | 既存モデル＋Toolだけで成立する能力・限界 |
+| **B：既存Harness** | Aと同じTask/Tool/権限を外部Harnessで実行。既定Promptや暗黙Contextは実受領Byteとして記録 | Harness自体のTool配線・再試行・ログ/隔離による増減 |
+| **C：YI Product/横断Skill** | Bに実Skill本文を追加。TEI Product単独で足りるときは横断Skillを選ばない | Skillによる選択・説明・誤断定・Tool回数の差 |
+| **D：TEI/SEI専門Plugin** | B/Cの実Harnessから、既存Product Operationを呼ぶ専門Pluginを利用。Plugin Load/版/Effect/Consumer受領を別Receipt | 決定的Rule/意味制約/認知・保留の専門機能が増す価値 |
+| **E：固有実行Loop（条件付き）** | A〜Dで解消できない再現失敗があり、隔離・費用・品質の改善見込みが独立に示された場合のみ同じ条件で試す | 独自Loopだけに帰属する効果。設計段階で採用しない |
+
+**測定するOutcome**は、Taskの独立正答、重大誤判断・不適切な確信/判断保留、根拠のSource/Revision/Meaning区別、Tool Call↔Result完全受領、権限・機密送出、再現性、処理時間、Token/実費、人手介入、失敗時の回復。高影響領域の専門性は独立Reviewer/OwnerのExpectedを要求し、同一LLM生成のExpectedやPluginの自己採点で合格にしない。B/C/D/Eの条件差は一度に一要因ずつ変え、実行されなかったTool/Skillを処置に算入しない。
+
+**評価順の停止線**：既存TAI #168のG0物理Read拒否・G1外部送出・G2実Tool/Model完全受領と4独立Sessionの資格を先に確立する。ここが不合格ならArm比較の実採点は開始しない。§27.4のProduct B0/B1/B2、§27.7のHarness B0/B1/B2、本節A〜Eは**異なる実験系列**として別IDで保持する。A〜E実験、専門Plugin実Load/業務判断、固有Loopの増分、医療等のOutcomeは**すべてNOT RUN**。新中央Harness/Runner/Registry/認可Hostの起票は行わず、既存TAI #168/#488、TEI #1158/#3262のOwnerと受入票を再利用する。
