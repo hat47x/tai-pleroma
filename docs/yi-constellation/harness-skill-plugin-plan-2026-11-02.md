@@ -799,3 +799,18 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **追試済みの証拠と保存先**：[TAI実S1 Actions #42112462908](https://github.com/hat47x/tai-pleroma/actions/runs/42112462908)のJobは**completed/success**。固定Product Skill root/referenceのGit Blob一致、実Byte SHA-256取得、H2 Skillなし／H3 root+ref候補ありの別ファイルビューに同一実TEI Go Binaryと公開Workspaceを配置したこと、各ビューの実CLI `catalog/inspect/validate`とSource／World／Index FP・diagnostics一致をログで確認した。詳細は[Runbook §22.4](first-real-skill-qualification-runbook-2026-11-02.md)と[新Evidence記録](../../evaluations/records/TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json)へ固定し、CIでEvidence RecordのSource raw byte pinも検査する。Product Skillに残るCLI envelope記述の不一致は[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605#issuecomment-6670006488)へ報告した。
 
 **残る出口**は変わらない：実AI Harnessで限定ビューを渡したH2 1 SessionのTool Request／実argv/exit/stdoutとSkill非露出、続くH3でのProduct root/refの実Loadを**実Harness自身のログ**で確認してから、4 SessionのITT／PP・独立Expected採点へ進む。ファイルを配置したCIの成功を「実Skill Loaded」や「Host/OS Egress隔離」としては使わない。
+
+## 42. 2026-11-08：独自Harnessの投資境界、TEI共通Application API、状態付き媒体を接続する
+
+**独自Agent Loopの設計・導入は未決定**。関連判断の正本：[外部Harness活用と独自Harness投資の段階判断](harness-build-vs-buy-decision-2026-11-08.md) §1〜11。外部DSHを含むHarnessはTool/Model/LoopをPlugin化できるため、YI側はまずProductが持つ型付きCapability・意味・根拠・Effectと、薄いHarness Adapter/必要時だけLoadするSkill/専門Pluginの価値を実証する。DSH/CordisにTEI内部Plugin ABIを固定しない。
+
+**2026-11-08採用済みTEI ADR-0048との差分**：CLI/MCP/HTTP/Web/Desktopの同じOperationはTEI内の共通Application API（HTTP必須ではない）を呼び、Hostが選んだProviderとGrantを使用する。外部HarnessのTool／SkillやVUIのStateful Dialogueは、このOperationを呼ぶ*利用者*であって第二Operation Engineではない。音声/ASR/TTS・人の操作・画面・LLMの候補生成は媒体別Adapterに分け、業務上の合法遷移、expected revision、承認、Idempotency/Unknown ReceiptはProduct／実Hostが強制する。Flowを扱うからといってYI中央Agent Loop／Workflow Serverを必須にしない。
+
+**投資判断の比較軸**：
+- **HV-0〜HV-4**＝LLM/従来操作の対照→既存Harness＋Product Tool→＋Skill→＋専門Plugin→独自Loop。これは**実験ラベルのみ**。初回のH2 Tool-only/H3 Skill有は既存SK-02のSlot名であり新しいHV段階と同じステータス体系ではない。
+- 独立Task/Source/Expectedに対してModel・Harness・Tool/Skill/Pluginを**一度に一要因**変え、正答だけでなく保留/重大誤成功/不要停止、Source引用、未知Effect再送、Host開示、Consumer実受領、時間と総TCOを評価。必要時にModel×Harnessの交互作用も検査。音声を使わない決定論的Flowも対照系として維持。
+- 専門PluginはCapability Discovery／限定Projection／Preflight／型付き結果／実Effect/Receipt／Handoffの**既存Ownerを結ぶ接続点**から最少採用。Plugin lifecycle cleanupを業務rollbackと同一視しない。Provider Bを選んでAが呼ばれたら同ResultでもFAIL。TEIの[ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)・[#1251](https://github.com/hat47x/tei-platform/issues/1251)・TAI #232/#271の資格を横断で参照し、別Validator/Registry/Authorityを設けない。
+
+**実行順（Hard Gateを増やさない）**：P0は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)既存G0 Read-deny→G1/G2 Tool/送出/Reply→独立H2→H3→H3→H2 4 Slot（現状0/4比較適格）。P1はTEI ADR-0048の限定Production入口と実Provider選択のOwner試験。P2は**合成**の状態付き高影響FlowをTool-only/Skill/専門Plugin/決定論的Flowで比較し、必要ならVUIを異媒体の追加対照とする。P3は複数の外部Harnessで同じ重大欠落が再現し、専門Pluginでは解消できず、複数年TCOとOwnerが受理可能な場合に限り**局所独自Loop**を評価する。
+
+**現状の限界**：採用済みなのはTEIの設計ADRであり、全入口の同値・実Provider選択の全操作、専門PluginのHV-3有効性、VUI Flow、H2/H3の独立適格比較、独自Loopの必要性は未実証。医療分野の研究結果は医療以外へそのまま外挿しない。Owner正式採用／本番運用はNOT RUN。
