@@ -1,6 +1,7 @@
 # YI Constellation：外部Harness活用と独自Harness投資の段階判断（2026-11-08）
 
-**状態：Ownerレビュー用の設計・投資判断案。独自Harness実装の決定ではない。**  
+**状態：Ownerレビュー用の設計・投資判断案。独自Harness実装の決定ではない。**
+**最初に実行すること**：[独立H2/H3比較のG0〜G2実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)に沿い、同じ実Toolで公開Read正例／保護された合成Canary Read拒否を観測する。現状の比較適格は0/4。先に独自Loop/専門Pluginの投資実装を増やすのでなく、既存G0→G1/G2→新規独立4 Slotを成立させる。  
 **Owner：TAI（横断比較・構成・配布）／各Product（専門能力・意味・証拠）／実Host・Provider（現行権限・実作用）。**  
 **対象：YI Constellation全体。YI専用リポジトリ、第二の中央Host、統一Agent Runtime、第二Registry、第二Authorityの新設は前提としない。**  
 関連：TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)、[#488](https://github.com/hat47x/tai-pleroma/issues/488)、[#271](https://github.com/hat47x/tai-pleroma/issues/271)、[#232](https://github.com/hat47x/tai-pleroma/issues/232)、[#234](https://github.com/hat47x/tai-pleroma/issues/234)、[Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)、TEI [#2899](https://github.com/hat47x/tei-platform/issues/2899)、[#2509](https://github.com/hat47x/tei-platform/issues/2509)、[#2515](https://github.com/hat47x/tei-platform/issues/2515)、SEI [#767](https://github.com/hat47x/sei-cognition/issues/767)。
