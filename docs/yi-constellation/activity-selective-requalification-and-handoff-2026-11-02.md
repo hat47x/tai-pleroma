@@ -846,9 +846,9 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 [TEI merged #3307](https://github.com/hat47x/tei-platform/pull/3307)は`tei commands`の閉じた引数値集合・型・既定値を実検証器へ結び付けた。特に**`inspect`と`trace`で対応`subject-kind`集合は異なる**ため、Command Discoveryの一覧から全KindをどのToolでも扱えるとは言えない。[TEI merged #3333](https://github.com/hat47x/tei-platform/pull/3333)では`view`の名前付き出力Flagを広告し、`effect=read-only`であっても指定Flagでファイルを書き得ることを実測済み。これらはTAIの**Tool選択候補・実argv・Reply解釈・実FS効果**を区別するために使い、TAIが第二CLI契約やフラグ表を保有しない。
 
-[TEI #3149／Draft #3356](https://github.com/hat47x/tei-platform/pull/3356)の第2ラウンド実測では、調査した実`tei commands`とGoソースに**TEIネイティブMCPサーバー入口は見つからず**、現行の実証経路はCLI。これは全世界にMCP Bridgeが存在しないという断定ではなく、**当該TEI Product/RevisionのMCPを実Consumerで試験済みにしない**という限定。最初のTAI #168 H2/H3はDSH→既存TEI実BinaryのTool transportで行い、MCP導入をBlockingにも新実装責務にも加えない。
+[TEI #3149／Draft #3356](https://github.com/hat47x/tei-platform/pull/3356)の第2ラウンドでは、**当時**実`tei commands`とGoソースにTEIネイティブMCPサーバー入口を発見できなかった。その後[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)で4つのread-only操作を実装した**参照MCP Adapter**がmainへ入り、[#3458](https://github.com/hat47x/tei-platform/pull/3458)で`validate`のCLI/MCP結果差を解消した。Product内のCLI/Adapter値の一致を限定実測済みと訂正しつつ、正式Product MCP契約／DSHからのAdapter実Connect／現在Host Grant／LLMのTool全Byte受領は未達とする。TAI #168の初回H2/H3は引き続きDSH→Pinned TEI CLIで試し、MCP追加をBlockingにもTAI新Runtime責務にも加えない。
 
-**TAIで再利用する資格の最小単位**：実CLIの`Command+argumentValues/flags+workspace manifest+Binary/Source Revision+対象Kind+実Reply bytes/diagnostics+Required Rule/Relation Scope`を、必要なClaimごとに既存Activity票で束縛する。新Purposeで必須Ruleがこの閉包外なら`unknown/partial`で保持し、該当する探索だけ追加。公開ReadやB1 Product単独で達成できるJobは止めない。T1-B盲検生成、実外部H3最終Byte Delivery、MCP実動作、OS Read-deny/Current Grant、業務Owner意味受理はNOT RUN。既存G0→G1→G2→比較適格4 Sessionを優先する。
+**TAIで再利用する資格の最小単位**：実CLIの`Command+argumentValues/flags+workspace manifest+Binary/Source Revision+対象Kind+実Reply bytes/diagnostics+Required Rule/Relation Scope`を、必要なClaimごとに既存Activity票で束縛する。新Purposeで必須Ruleがこの閉包外なら`unknown/partial`で保持し、該当する探索だけ追加。公開ReadやB1 Product単独で達成できるJobは止めない。T1-B盲検生成、実外部H3最終Byte Delivery、**DSH→MCP Adapter実受領**、OS Read-deny/Current Grant、業務Owner意味受理はNOT RUN。既存G0→G1→G2→比較適格4 Sessionを優先する。
 
 
 
