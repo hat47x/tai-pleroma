@@ -569,6 +569,20 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **Toolの広告と実Invocationは別Witness（現main）**：[TEI merged #3444](https://github.com/hat47x/tei-platform/pull/3444)が実CaptureからRequestの`tools`名を要約し、合成H6-E0 3要求中2要求で**24件が広告**された例を保存。ただし**実Call/Resultは別ログで照合**するものであり、24件を呼んだ・許可された・Tool Replyをモデルが受領したとは断言しない。§19.2のG2では`advertised / allowed / invoked / produced / actually received`をAttemptとSource/Tool Contractで束縛し、広告済みだが使用不能・Tool途中欠落の対照を既存TAI #168/#488で評価する。観測したMock以外のSubagent/Host/Telemetry、実OS拒否とH2/H3正式0/4は未資格。
 
+### 19.11 Skill比較をD・T・Q・A・Eの独立資格で判定し、初回H2/H3の実施順を固定する
+
+[TEI Draft #3515](https://github.com/hat47x/tei-platform/pull/3515)で再編したSource/Delivery/Question/Authority/Effectと、既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)を一つの**Attempt照合票**へ接続する。新しい判定器・試験分母は作らない。**D=Design/Source**はTask相対Requiredと実Load/Parse/Bind、**T=Tool Delivery**は広告→実Call/Result ID→終了/Model受領bytes、**Q=Question/Quality**は対象集合・否定Predicate・独立Expected/正答・過剰確信、**A=Authority/Disclosure**は実OS deny/allowed Read・外部送出Sink/現在Grant、**E=Effect/Outcome**はOperation・既知/部分/unknown Effect・独立Read/業務価値を分離する。初回read-only TaskのEは`not-applicable`とし、未実行のWrite合格に見せない。
+
+| 独立反例 | 正しいSkill判断 |
+| --- | --- |
+| Worldや13実CLI Replyだけ一致、Required/Imported Source/実Providerが未到達 | DはそのTaskで`partial`。現Product Toolでの追加Readは許すが、全件性や実行適格を宣言しない |
+| Tool 24件が広告され、実Request 56/Result 55、H3 Skill本文実Read | Tは未閉包。実際のTool/Model受信の同一Attempt・Count・EOFと受信Bodyを確認する |
+| 空結果`[]`、未表示Relation／TOP1のみ、またはMethod推薦だけ保存 | Qは対象母集団・Query/Scope・欠測/否定依存・独立Expectedで判定。`NOT EXISTS`・`unresolvedなし`へ昇格しない |
+| `readOnly`宣言、禁止パスが見えない、`dsh_session_log`のfield欠落 | Aは合格ではない。禁止Expected Readの実OS拒否、許可Read、Wire/Telemetry/永続Sinkを別観測 |
+| 202/Receipt/保存コピー・AI最適化提案を受領 | Eを完了扱いせず、Effect判定・実結果・Target Consumer・元Resource再Read・現在権限を個別証明する |
+
+**初回SK-02の実施順は不変**：G0実OS拒否/許可Read→G1送出と保持先→G2 Tool Call/Result完全受領→固定H2→H3→H3→H2の新独立4 Session→Q盲検採点。旧H2の32 CLI起動／56 Call・55 ResultやH3のSkill Readは履歴Witnessであり**比較適格0/4**。後続のSEI Method、CSW、KON/SHO、実Provider、性能チューニングは初回H2のHard dependencyにしない。新中央Evidence Store/Runner/Host/Oracleなし。
+
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
 ### 20.1 TEI Product側の実装候補と現行の証明限界
@@ -817,6 +831,8 @@ YICでは§23.1〜23.4の条件付き書込み・中断/再開に、**Serviceが
 
 **Route/Actionは独立に正しくてもBinding同値と限らない**：[TEI merged #3485](https://github.com/hat47x/tei-platform/pull/3485)のReferenceは、E1 `composeRequestPlan`と実Go Host Policyを**別宣言のTest Fixture**として保持し、method/path/actionIdの片側差異をNode 5件・Go 4 subtestのSourceで反証対象にした。Node構成DAGやGo Host 10分岐がそれぞれ正しくても、**実Product E1→Go Hostで同じRoute/Actionを選択・Invokeした**ことにはならない。#3485はmain統合済みだが、追加されたNode/Goテストの**当該HEAD専用CI結果は今回別確認できていない**ため、Product実Bindingや端から端のPASSへ昇格しない。YIC X04/X05は`declared route/action`／`host policy`／`actual invoked operation`／`response status`／`effect receipt`の独立列を用い、`202 Accepted`で保存完了や安全再試行を推定しない。追加Graph/Host/Retry Engineを作らない。
 
+**Host側の実到達点を更新**：[TEI merged #3501](https://github.com/hat47x/tei-platform/pull/3501)は実WorkspaceからPattern/Capability Canonical Sourceを`InspectSubject`で読み、[merged #3506](https://github.com/hat47x/tei-platform/pull/3506)は実Resolver `ResolveCommandBinding`でSource→Capability→CustomGoBindingを一意解決し、欠落・重複・誤Capabilityを拒否。[merged #3516](https://github.com/hat47x/tei-platform/pull/3516)は既存Go Handler→Canonical認可→Driver→**テスト用合成Adapter実Invoke**の7経路をTestに追加した。前段の一意Binding解決と実Adapter呼出しは別の証拠。#3516の実Testの**exact-head CI合否は本照合で未確認**。実DB/正式PluginのArtifact Load、Business Commit、Client全bytes受領、現在Grant、全Runtime Pathは未資格。Adapter Invoke後の503は無副作用の証拠でない。YIC X04/X05は`declared/selected/actually invoked/response/effect`を別列にし、202を実完了・再送許可にしない。既存TEI #3274/#951/#1174へ委譲し新Hostを作らない。
+
 ## 24. OKF Attested ComputationをYICのSkill選択とClaim表示へ接続する（TAI #514・各Productの既存受入に委譲／後続・NOT RUN）
 
 ### 24.1 原典の採用範囲とOwner
@@ -1032,15 +1048,15 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 | --- | --- |
 | **Required/Actual**：Task/Function、必要Capability・Application・Rule/Relation・DB要求、実Loader Read、`inspect` Canonical、Source Role/Path/Index、World/Source FP、受領Byte/Source Revision/Consumerを同一Attemptに束縛 | 単一`bounded-present`で全Query/Provider/Target/Hostの実実行資格、Meaning Accepted、現在Grantを認定しない |
 | **Source-only鮮度**：[TEI merged #3477](https://github.com/hat47x/tei-platform/pull/3477)では同WorkspaceのSource末尾LFだけの改版でもWorld FP不変／Source Index FP変化を区別し、旧Contextを拒否する実CLI対照が成立 | World FP一致から原文Revision一致、A→B→Aが起きていないこと、二Readの原子的Snapshotを推論しない |
-| **Imported Provider境界**：[TEI Open Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)は別Provider rawだけの改版がConsumer World/Index FPに現れない反証候補。Focused新CI/実Provider全閉包は本確認時点未適格 | #3477の同Workspace PASSから外部Import原文までfreshと認めず、Source不明を空/成功にしない |
+| **Imported Provider境界**：[TEI merged #3479](https://github.com/hat47x/tei-platform/pull/3479)はImported Providerのraw/Manifestだけの改版でもConsumer World/Index FPが不変となる局所反例を実装。旧HEADで限定Go TestがPASSしてもgofmt起因で全体HealthがFAILした履歴があり、main統合・最新CI・実Provider全閉包を分離 | #3477の同Workspace PASSから外部Import原文までfreshと認めず、Source不明を空/成功にしない |
 
 **横断試験順序**：既存#3262/#3273/#1180/#2514のOwnerが、現在の必要Sliceと取得範囲をFixed Expectedにし、Product Tool-only→Product Skillの**不足診断・誤不存在・過剰拒否・Tool回数**を比較する。Context資格が揃った部分でのみ、AIが未知の未カバー条件を提案できるかをReviewer-only独立Expectedで盲検T1-B判定する。実H3全Reply配送、Provider/Host、T1-B、YIC Skill増分効果は**NOT RUN**。初回公開TEI H2/H3固定Task/Tool/4 Slotには変更を加えない。
 
 
 <!-- yic-skill-operation-parity-function-boundary-20261108 -->
-**同じConsumer Context指紋でも外部Providerと選択規則の鮮度は別**：§26.8の[TEI main #3477](https://github.com/hat47x/tei-platform/pull/3477)は**同じWorkspace内**のSource-only差異を実判別したが、[Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)と[後継Draft #3490](https://github.com/hat47x/tei-platform/pull/3490)は、Imported Provider **raw Sourceの改版／Manifestだけの改版／選択後の実Entry差替え／Capability選択Policy fingerprint変更**を、それぞれ異なる失効Channelとして列挙した。**Consumer World/SourceIndex FPが不変**でも、Consumerが依存する外部原文・Manifest・選択規則・実Artifact/Provider Entryがfreshとは限らない。参照履歴の初期規則12宣言/未選択6と現規則の未選択4は母数が同じでも**解決Policyが異なる**ので時系列の性能改善に算入しない。
+**同じConsumer Context指紋でも外部Providerと選択規則の鮮度は別**：§26.8の[TEI main #3477](https://github.com/hat47x/tei-platform/pull/3477)は**同じWorkspace内**のSource-only差異を実判別したが、[merged #3479](https://github.com/hat47x/tei-platform/pull/3479)と[merged #3490](https://github.com/hat47x/tei-platform/pull/3490)は、Imported Provider **raw Sourceの改版／Manifestだけの改版／選択後の実Entry差替え／Capability選択Policy fingerprint変更**を、それぞれ異なる失効Channelとして列挙した。**Consumer World/SourceIndex FPが不変**でも、Consumerが依存する外部原文・Manifest・選択規則・実Artifact/Provider Entryがfreshとは限らない。参照履歴の初期規則12宣言/未選択6と現規則の未選択4は母数が同じでも**解決Policyが異なる**ので時系列の性能改善に算入しない。
 
-既存TEI #3262/#951/#3267のOwnerで、Task相対Requiredの**import occurrence・Provider Manifest identity・選択Rule/FP・実Entry/Artifact・Consumerの実受領**を別照合する。依存しない外部Sourceが変わっただけなら無関係なReadを過剰失効させず、実Source/Current Grant未確認のFunction Invoke・Qualified BOM発行・Publisher処理だけ止める。#3479/#3490の新負例・本PR統合後CI／外部実Provider/Hostの確定は**NOT RUN**、今回のYIC新規試験ではなくX02/X04/X06の独立Expectedへ参照を渡す。初回TEI SK-02 H2/H3の固定ProviderなしScopeを拡張しない。
+既存TEI #3262/#951/#3267のOwnerで、Task相対Requiredの**import occurrence・Provider Manifest identity・選択Rule/FP・実Entry/Artifact・Consumerの実受領**を別照合する。依存しない外部Sourceが変わっただけなら無関係なReadを過剰失効させず、実Source/Current Grant未確認のFunction Invoke・Qualified BOM発行・Publisher処理だけ止める。#3479/#3490の限定Reference実装はmain統合済み。ただし**最新main全体CIでの再追認／原子的な外部Source閉包／実Provider/Hostの確定**はNOT RUN、今回のYIC新規試験ではなくX02/X04/X06の独立Expectedへ参照を渡す。初回TEI SK-02 H2/H3の固定ProviderなしScopeを拡張しない。
 
 ### 26.9 CLI／MCPで同じFunction Readを公開しても、Skill利用資格は別に判定する（2026-11-08）
 
@@ -1056,6 +1072,14 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 | 使用者の現在Grantが変化／Provider Sourceのみ改訂 | 同じSchema/Result hashでも、別Ownerの現在Source Occurrence・Provider Raw/Manifest・Grantを必要Claimだけ再資格化。旧Artifactの有効履歴は保持し、盲再送はしない |
 
 **採用判断**：同一Taskを(1)既存CLI Toolだけ、(2)Product SkillでCLIを案内、(3)必要であればMCPの同じOperationを使う別Group、(4)Productを跨ぐときのみTAI Skillで比較する。MCP経路を初回TAI #168の固定H2/H3 Trialに**後付け追加しない**。Skill選択/再開に必要な証拠は、TEI #3262/#2586/#1158と既存Ownerの実Consumer結果を参照する。新しいYIC Common API／MCP Host／第二Scenario/Oracle/Resolverを作らない。TEIの実Provider Function E2E、CLI/MCP全型・全失敗同値、YIC実Skill選択、外部Harness H2/H3適格4/4、Owner業務受理は**NOT RUN**。
+
+### 26.10 全体Model MapによるSkillナビゲーションと実Function資格を分ける（TEI RQ-036）
+
+[TEI merged #3505](https://github.com/hat47x/tei-platform/pull/3505)で**RQ-036は正式な製品要件**となり、Data/Function/Business/Event/State/Operation/Rule/Plugin/TargetをScope相対の**全体図表・ガイド**として示し、固定／設定／Hook/拡張／案件置換／観測のみの箇所を区別する方針が採用された。一方、[TEI Draft #3518](https://github.com/hat47x/tei-platform/pull/3518)のread-only typed Model Map M0は既存World/Catalog/Source Indexから導く**partial-projection**の実装候補であり、Event/State/Plugin実Binding/全Graph/GUIを実装済みとはいわない。`resolved`は宣言の一意性であって意味受理や実Provider到達ではない。
+
+**利用者・生成AIの共通の認知順**：①現在Scopeの全体Mapで位置を発見→②未取得・非公開・未解決・非表示の欠落範囲とSource Identityを示す→③必要Functionの独立Required Slice（§26.8）をCLI/共通APIで照合→④標準不変/可変Hook/実効Graph Revisionを確認→⑤実Plugin/Provider Invocation・現在Grant・実Effectの資格を確認→⑥既存Product Tool/Skillを最小選択する。図の座標変更は意味Graphの変更ではないが、Guard/Transition/Action編集はAuthoritative Source Patchと意味受理・Target再生成が必要。
+
+[TEI merged #3510](https://github.com/hat47x/tei-platform/pull/3510)は原子的Traitの単体Fulfillmentと**実効Lifecycle全PathのGuard/Authority/Effect Fence等の義務**を分ける設計を追加した。[Draft #3507](https://github.com/hat47x/tei-platform/pull/3507)のChat/VUI/B2C/Plugin Graph Patchは**方式候補**。YICはMap表示や`Plugin selected`を実Load/Host利用許可へ昇格させず、実効Graphに未選択Patch混入、旧Revision、Guard迂回、同名ID混同があるとき対象Operationだけ保留。RQ-036 MAP-01〜16、M0実Runtime全体、Graph Edit→Target、初心者UI、Chat/B2Cは**NOT RUN**。新共通Map正本／Graph Compiler／常駐Hostなし。
 
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
@@ -1166,3 +1190,11 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 **測定するOutcome**は、Taskの独立正答、重大誤判断・不適切な確信/判断保留、根拠のSource/Revision/Meaning区別、Tool Call↔Result完全受領、権限・機密送出、再現性、処理時間、Token/実費、人手介入、失敗時の回復。高影響領域の専門性は独立Reviewer/OwnerのExpectedを要求し、同一LLM生成のExpectedやPluginの自己採点で合格にしない。B/C/D/Eの条件差は一度に一要因ずつ変え、実行されなかったTool/Skillを処置に算入しない。
 
 **評価順の停止線**：既存TAI #168のG0物理Read拒否・G1外部送出・G2実Tool/Model完全受領と4独立Sessionの資格を先に確立する。ここが不合格ならArm比較の実採点は開始しない。§27.4のProduct B0/B1/B2、§27.7のHarness B0/B1/B2、本節A〜Eは**異なる実験系列**として別IDで保持する。A〜E実験、専門Plugin実Load/業務判断、固有Loopの増分、医療等のOutcomeは**すべてNOT RUN**。新中央Harness/Runner/Registry/認可Hostの起票は行わず、既存TAI #168/#488、TEI #1158/#3262のOwnerと受入票を再利用する。
+
+### 27.9 CSWによる設計発想とAI性能チューニングを、Skill効果・実性能証拠へ直接昇格させない
+
+他チャットのCSW開発プロセス統合は、**探索・着想の幅を広げる方法**として扱い、現行ProductのSource/Runtime/Ownerと競合する第二計画正本を作らない。設計過程の**Hypothesis→Candidate→Validated→Accepted→Implemented→Observed**は別の資格。探索結果や合意済み設計があっても、実Code/CI/Provider/Outcomeは自動的に成立しない。YICの既存Harness Arm（§27.7〜27.8）とは別の**方式比較**として、通常開発B0／汎用AI発想・批評B1／CSW導入B2を同じ設計課題・独立Expected・時間/Tool/費用・反証発見数・実装/Regression/撤回可能性で比較する。CSWや専用Skillの追加が常に有利という前提は置かず、必要なら既存DSH等でSkillとして試す。初回SK-02の4 Slotに混入しない。
+
+**性能チューニングも独立のEffect/Benchmark実験**：[TEI merged #3520](https://github.com/hat47x/tei-platform/pull/3520)ではread-onlyのSynthetic Design/Call/Statistics/Delivery/Disclosure Joinを、Source/World/Query/Provider選択≠実呼出し/Grant/統計Window/Reply Parts/欠測の**独立Expected 19件**で限定PASSした（[exact-head専用CI #42476197836](https://github.com/hat47x/tei-platform/actions/runs/42476197836) success）。**Product実Telemetry/実DB・Provider Rowset/モデル受領・統計的な性能改善はNOT RUN**。合成Packetの`providerInvoked=B`は実Invoker Receiptではない。速度・Cache Hitの数字から、実Query結果の意味的完全性、増分更新の正しさ、現在権限を認定しない。
+
+**次の薄い縦切り**：TEI #2586/[Draft #3500](https://github.com/hat47x/tei-platform/pull/3500)はNative Browse Pattern→既存Driver→instrumented SQL Executor→明示Field Mappingの局所Go Testが限定成功、**隔離実PostgreSQLはSKIP**。まずTaskに必要な1 Function/Queryで実Scope・Provider/Row/Field・Read Snapshotと独立Expectedを取得→同じ負荷/Version/統計WindowでTrace/Hint比較→成立条件を満たす変更だけ局所採用/ロールバック評価する。局所合成成功を実DB Provider資格と呼ばない。Graph/Skill推薦が改善を提案したことと、生成されたTarget/実測Latency・費用・正確性が改善したことは別。§27.7のHarness ArmとこのCSW/性能Armを同じ分母に合算せず、既存TEI #3271/#2582/#1180/#2514およびTAI #422/#488へOwner委譲する。新Optimizer/Telemetry Collector/Harnessは不要。**CSW増分・本番性能・実Provider・ユーザー価値は未測定**。
