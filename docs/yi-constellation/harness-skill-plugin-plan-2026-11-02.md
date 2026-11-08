@@ -1,6 +1,8 @@
 # YI Constellation：外部ハーネス向けSkill／Plugin構成計画（2026-11-02）
 
-状態：**設計提案 / Owner未受理 / 新Skillのハーネス実接続・配布・効果比較はNOT RUN**。本書はTAIの製品横断連携案であり、各Productの契約・実装・意味受理・権限正本を変更しない。
+状態：**設計提案 / Owner未受理 / 新Skillの正式配布・H2/H3独立比較と効果検証はNOT RUN**。外部DSHでTEI実Tool起動とH3 Product Skill本文・参照の限定実Loadは確認済みだが、比較適格0/4である。本書はTAIの製品横断連携案であり、各Productの契約・実装・意味受理・権限正本を変更しない。
+
+**直近の実行経路**：[G0実OS Read許可/拒否→G1/G2 Tool/送出→新独立4 Slotの実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)を参照。追加の設計案を初回Blocking条件にしない。
 
 ## 1. 目的と前提
 
