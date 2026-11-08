@@ -85,3 +85,21 @@
 - **実証の次の最小単位**：REAは一Read-only Source-backed Function、EKIは既存6イベントを二実Adapterで配送、Ontologyは1 Object/Relation/Ruleの表記比較、HTTPはHost Handlerの一Terminal Short-circuit。広域/全Version対応は、最初の限定不足を独立Expectedで示した場合だけ先へ進む。
 
 **現況**：本追補は既存各ProductのIssue・PR・報告済み試験のSource-static照合と価値比較の設計だけ。REA実Process、EKI実Adapter/性能、Ontology Twin/SEI運用、HTTP新Go Host CI、これらの横断B0/B1/B2・Owner正式受理は本VA-COND-01では**NOT RUN**。Product側の計画・コード・Owner判断は変更しない。
+
+
+## 7. 2026-11-08：実配送・実Readerを局所証拠として採用する
+
+前節§6の「実配送なし」「SHO Writer未実施」という粗い二分法を、対象・Reader/Transport Profileに関する**新しい実観測**によって補正する。ただし異なる能力を一本のProduct E2E成功に合算しない。
+
+| 実施され始めた能力 | 確認した具体的なSource/実行証拠 | まだ証明されていないもの |
+| --- | --- | --- |
+| **EKI固定配送（試験用実byte）** | [EKI #787 merged](https://github.com/hat47x/eki-fabric/pull/787)は6イベントを**OS Unix socket**で同一プロセス内のgoroutine間実送受信し、欠落/重複/順序/改変の4反例とraceを隔離Go 1.23.2で局所PASS。#786 Trace Comparatorの前段より具体的な配送Witness | EKI本番Local IPC/Connect Adapter、別Worker/Process、実Lease/Grant、Accepted Result、Transport性能。Go 1.27正本repoの当該full testは未実施 |
+| **SHO公開TEI Markdown Reader** | [SHO Draft #27](https://github.com/hat47x/sho-composer/pull/27)はprivate側のCIが公開TEI固定pinから実4 Markdown Fileを取得し、同一物理Fileを実G1b Readerでread-only parse。修正HEADの[CI #42462172893](https://github.com/hat47x/sho-composer/actions/runs/42462172893)成功。初回公開TEI jobはprivate SHO checkout権限でfailしており、Reader失敗ではなかった | 原資料/非公開Dataの外部解放、正式OKF F0、両Consumer K2、SUI→SHO同一Producer File H1、Writer Save/Review、現在Disclosure/Meaning。SHO #27はDraft・未merge |
+| **SHO test-only Writer** | [SHO Draft #25](https://github.com/hat47x/sho-composer/pull/25)のG2-W1作業コピー/FD比較の同一固定HEADはUbuntu/Windows局所CI成功。Output同bytes別Fileを検出できる場合とA→B→A見落としを分離 | 正式Editor Save、CAS/Atomic Publish、Undo/Redo、no-op write0、同一外部File Handoff |
+| **TEI Source Intake/Graph** | [TEI #3492 Draft](https://github.com/hat47x/tei-platform/pull/3492)の実Workspace M1a Readと合成Graph/CRUDは試験Sourceとして設計、PR HEAD CIは別判定。旧#3263の350+commit古いDraftを重複マージしない | 実三視点Product Renderer、Business Meaning、双方向Graph編集/逆Patch、実Provider Read |
+
+**共通の方向**：同じbyteのReader実受領に成功したらそのSource/Tool/Revision/Scopeのread-only価値は認める。しかし「private repoにアクセスできなかった」という**正しい権限拒否**をReader機能の不合格にしないし、公開fixtureへのアクセス成功を秘密の新規開示資格にしない。同一プロセスUnixソケットの配送成功を別プロセスの実運用通信・失効したLeaseの権限実験へ昇格させない。常時稼働の共通Transport/Document Hostの新規要件は不要。
+
+**次の小さな一辺**：EKIは同一Expectedを別プロセスLocal IPCとConnectで測る。SHOは正式Editor Writerのno-op/再開と、別個にSUI Producer実File→SHO CLI実Consumerを同一Attemptで測る。TEIは実Source/Meaning→Graph/CRUDへ一Functionだけ繋ぐ。どれもTAI H2/H3の初回必須依存にせず、独立ExpectedとOwnerレビューを別に記録する。
+
+**証拠水準**：本VA-COND-01ではGitHubのRun/PR記録を確認しただけで、外部Provider/実本番Transport/Reader/Writer/DB/OS秘密情報について新たな再現試験を実施していない。
