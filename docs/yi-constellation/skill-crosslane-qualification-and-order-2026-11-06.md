@@ -591,6 +591,8 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **外部DSHの実測台帳は受入完了ではない**：[TEI Open #3561](https://github.com/hat47x/tei-platform/pull/3561)は既存**16実測記録の索引（新実測なし）**を作り、2件以上の一致から、`read-only`/`workspace-write`/子Processでも宣言root外Read、Model入力/Session Log/stdout/永続ログへの複数配送、子Process起動、AGENTS/CLAUDE/Skill descriptionの暗黙入力、表示設定と実効制約の差、Session Log停止≠無送出を限定的に横断整理した。**2件以上の観測一致は、全DSH版/全MachineやProvider全Egressの網羅証明ではない**。実OS ACL/AppContainerで禁止Readが拒否された証拠、現在Provider保持/全Sinks、外部4 Session Q評価は未成立。YICのG0物理deny→G1送出/保持→G2完全受領を再利用し、Sandbox modeの表示を代替Witnessにしない。#3561のPR/独立実CIは未merge／新実測なし。
 
+**実証に使うBinaryの自己申告にも上限がある**：[SEI merged #825](https://github.com/hat47x/sei-cognition/pull/825)は`build_sei.sh`の全長commitと作業ツリーの`+dirty`印、`sei doctor`警告を実装。WSLローカルGo試験・汚れた作業ツリーからのBuildの確認はあるが、配布物のSHA256SUMSが存在しても実Process Image/配布署名/Trusted Checkout/Provider RuntimeやWindowsを保証せず、dirtyは警告であり実行拒否ではない。YICは§19.10のBinary/Source/actual processの照合で、この表示を**補助Witness**としてのみ参照する。
+
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
 ### 20.1 TEI Product側の実装候補と現行の証明限界
@@ -1217,7 +1219,7 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 
 **次の薄い縦切り**：TEI #2586/[Draft #3500](https://github.com/hat47x/tei-platform/pull/3500)はNative Browse Pattern→既存Driver→instrumented SQL Executor→明示Field Mappingの局所Go Testが限定成功、**隔離実PostgreSQLはSKIP**。まずTaskに必要な1 Function/Queryで実Scope・Provider/Row/Field・Read Snapshotと独立Expectedを取得→同じ負荷/Version/統計WindowでTrace/Hint比較→成立条件を満たす変更だけ局所採用/ロールバック評価する。局所合成成功を実DB Provider資格と呼ばない。Graph/Skill推薦が改善を提案したことと、生成されたTarget/実測Latency・費用・正確性が改善したことは別。§27.7のHarness ArmとこのCSW/性能Armを同じ分母に合算せず、既存TEI #3271/#2582/#1180/#2514およびTAI #422/#488へOwner委譲する。新Optimizer/Telemetry Collector/Harnessは不要。**CSW増分・本番性能・実Provider・ユーザー価値は未測定**。
 
-**性能・Skill改善を検証する実処置の識別**：CSWの[Draft #598](https://github.com/hat47x/csw-research/pull/598)では通常設計／汎用AI／CSWを別Armで比較する設計が進んでいるが、YICは当該研究の採否や実Trialを先取りしない。実施したProcess/SkillのBody・Version・Providerと、結果に引用したMethod名だけを区別し、CSW、DSH、TEIの各寄与を独立Expected/Costで評価する。既存のD/T/Q/A/Eと§27.7〜27.9を再利用し、別の共通価値Score Engineを作らない。
+**性能・Skill改善を検証する実処置の識別**：CSWに関する別チャットのDraft PR #598では通常設計／汎用AI／CSWを別Armで比較する設計が進んでいるが、YICは当該研究の採否や実Trialを先取りしない。実施したProcess/SkillのBody・Version・Providerと、結果に引用したMethod名だけを区別し、CSW、DSH、TEIの各寄与を独立Expected/Costで評価する。既存のD/T/Q/A/Eと§27.7〜27.9を再利用し、別の共通価値Score Engineを作らない。
 
 ### 27.10 専門Pluginの実選択・実呼出しと外部Sourceの同一Loadを、Harness成果と別資格で検証する
 
@@ -1237,3 +1239,5 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 **別の製品間Reader実証を混同しない**：[SHO Open Draft #27](https://github.com/hat47x/sho-composer/pull/27)のSHO所有CI [#42462172893](https://github.com/hat47x/sho-composer/actions/runs/42462172893)では、公開TEIの固定4 Markdown Fileをprivate SHOの**実G1b Reader**が原Byte SHA/長さ・限定Link・missingとzero-linkの区別付きで読んだ（CI success）。公開TEI CIからprivate SHOをcheckoutできなかった初回失敗はReader不具合ではなく**Repo権限境界**。この成功はK1R限定であり、SUI実Producer→SHO、Writer/Working Copy、K2二Consumer、Owner MeaningやCurrent Grantを証明しない。横断Skillは既存の実Source/Reader資格を参照し、権限を広げたり実装を複製したりしない。
 
 **次の試験順序**：既存TEI #951/#1016/#3262/#3267のOwnerで、まず一FunctionのSelected Inspectorを**通常CLIとStudio両方の実Consumer経路**から同一exact tupleで呼び、実Artifact・実Grant・独立Expectedを比較する。Provider Source private Witnessは外部共有を必須とせず、必要な開示許可がある場合だけ別試験に進める。YICは§27.8のC（Skill）とD（専門Plugin）を同一Task/Tool/Sourceで比較し、**実Callとモデル完全受領が確認できたAttemptだけ**を採点する。初回TAI #168のG0物理Read拒否→G1送出→G2 Tool Result完全性→固定4 Sessionは依然**0/4比較適格**であり、ここへ新Inspector/K1Rを初回Blockingとして加えない。通常CLI/Studio実Plugin E2E、#3524現HEADの統合、実Provider/Host/Owner受理、C対DのSkill増分は**NOT RUN**。
+
+**通常CLI・Studioの実接続候補は新段階へ進んだが未採用**：[TEI Draft #3540](https://github.com/hat47x/tei-platform/pull/3540)は既存`composition.Registry.Select`＋`inspectoradapter.Selected`を**通常`cmd/tei/main.go`の`inspect` dispatchとWails Studioの両Host**へ束縛する`S2-reference`候補を実装中。静的参照ProviderをHostが選び、失敗時にBuiltinへ黙って戻さない。GitHub PR記録では以前のHEAD `79bc230…`でWails Desktop smoke [#42486768987](https://github.com/hat47x/tei-platform/actions/runs/42486768987)とStudio参照編集 [#42486769050](https://github.com/hat47x/tei-platform/actions/runs/42486769050)が限定成功したが、現HEAD `839992f5…`の全CI/実通常Binary・WebView Provider callと同一であるとは未確認。**S2-reference（静的Host選択）とS2-product（正式Plugin Profile・独立Build/Load/Grant/Conformance）**を分け、Plugin Provider B selected→A invoked、Source/Artifact差・Call-site・Consumer実Resultを既存TEI #1251/951の一機能実試行で照合する。YICはどのContract/Adapter/Hostを実使用したかを後続C対Dに記録するだけで、初回H2/H3に追加しない。
