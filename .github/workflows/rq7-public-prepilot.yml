@@ -36,5 +36,9 @@ jobs:
         run: |
           python research/tools/rq7_calibrate.py --dataset v0 > /dev/null
           python research/tools/rq7_calibrate.py --dataset v1 > /dev/null
+      - name: Compare static SVG/XML with text Node-Edge semantics only
+        run: |
+          python research/tools/rq7_svg.py --dataset v0 --check
+          python research/tools/rq7_svg.py --dataset v1 --check
       - name: Verify all public render paths and Gold separation
         run: python -m unittest discover -s research/tools -p 'test_rq7_*.py' -v
