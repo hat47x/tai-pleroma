@@ -855,10 +855,30 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 <!-- tai-activity-imported-provider-source-drift-20261108 -->
 ### 23.8 Consumer意味版が不変でも、外部Provider原文の引用資格だけは変わり得る（選択的再資格化）
 
-[TEI #3479 Draft](https://github.com/hat47x/tei-platform/pull/3479)の実Go局所反例では、importした**別ProviderのSource raw末尾LFだけ**が変化しても、ConsumerのWorld/Meaning/Source Index/Model Revisionが不変となり得る一方、Provider raw SHA・現在Locator fingerprintは変わる。[旧HEAD CI #42461871730](https://github.com/hat47x/tei-platform/actions/runs/42461871730)はこの**一つの限定反例**で成功。Provider Manifestだけを変更する追加反例はPR後続HEADの独立CI受理待ちであり、旧実行結果をその成功へ転用しない。旧Consumer Resultと現在Provider LocatorのNavigationを混ぜ、当時の原子的Read Snapshotを捏造しない。
+[TEI merged #3479](https://github.com/hat47x/tei-platform/pull/3479)の実Go局所反例では、importした**別ProviderのSource raw末尾LFだけ**が変化しても、ConsumerのWorld/Meaning/Source Index/Model Revisionが不変となり得る一方、Provider raw SHA・現在Locator fingerprintは変わる。[旧HEAD CI #42461871730](https://github.com/hat47x/tei-platform/actions/runs/42461871730)はこの**一つの限定反例**で成功。その後の#3479はProvider Manifest-only改訂とSource／Manifestの2×2局所負例も追加してmainへ統合されたが、旧Source-only単独[CI #42461871730](https://github.com/hat47x/tei-platform/actions/runs/42461871730)を後続2×2の合格とは数えない。Go testが通過した旧HEADと書式修正後HEAD／mainの全Health資格を分け、同一Nested Loadの原子性は依然未実証。旧Consumer Resultと現在Provider LocatorのNavigationを混ぜ、当時の原子的Read Snapshotを捏造しない。
 
 **Activityが区別する3種類の再利用**：(a)過去のConsumer受理済み意味／実Rule等は、その元依存が変わらない範囲で履歴として保持、(b)現在の**引用・Source Anchor・外部解析Evidence**は必要Providerのraw Source/Manifest revision、実Location、Analyzer/Provider version、取得時点、Actually Consumed Closure・Audienceを別照合、(c)新しいSHO文書/外部Harness/別Recipientへ送る場合は、対象Sourceと独立Consumer Read・**現Disclosure Grant**を用途別に再確認する。Consumer WorldFPが同じという理由で(b)(c)を無条件PASSにしない。逆にProviderの引用Sourceだけが変わり、独立して適格なBusiness Meaningや別Readに影響しなければ**全部の判断・Scenarioを再実行しない**。
 
 **既存SC-15/16/20/21への対照**：P1 同じConsumer FP＋別Provider Raw、P2 同Raw＋Provider Manifestだけ変更、P3 Historic Consumer Result＋Current Provider navigation、P4 CLI/MCPの同じ見た目のResultだが実Provider/Scope違い、を各Productの独立Expectedへ参照する。P1のGo局所PASSをP2〜4や実外部解析Provider起動・SHO Writer/Handoff合格にしない。TEI #3394（外部解析Evidence）、#3479（Source drift）、#2600（失効/再利用）、#1158/ADR-0048（同一操作・Adapter）の**既存Ownerだけ**で実証し、TAIはどのClaimを現在用途に使えるかの選択だけを担当。新共通Source Store・Provider Registry・Evidence Packet Renderer・二重Validatorは不要。
 
 **優先度**：初回TAI #168の固定H2/H3 G0実Read拒否→G1送出面→G2 Tool Reply完全受領→新4独立Sessionには入れない。別のProduct/Activity Handoffが発生する場合に限り、必要Sourceの再資格化試験として適用。外部Provider実受信、実SHO Writer、CLI/MCP同値の全回帰、Owner業務受理は**NOT RUN**。
+
+### 23.9 TEI Source実読取→SEI推薦の保存・再開は実受渡し済み、認知Method・未解決Question継続は別（2026-11-08）
+
+<!-- tai-activity-tei-sei-h3a0-real-recommendation-resume-20261108 -->
+
+[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)のH3-A0は、[TEI→SEI二製品CI #42474971439](https://github.com/hat47x/tei-platform/actions/runs/42474971439)において、**実TEI Source Indexの2 mode読取→独立Requiredでの限定照合→評価者が作成したRecommendationをSEI実Storeへ保存→別`resume`で再読取→不正`--unresolved`指定後にStore不変**までを観測した。これは、合成Schema一致や別Fixtureのハッシュ一致より強い**実Product Reader/Writerの限定Handoff Witness**。ただし実行主体は試験の評価者であり、SEIが自律的に推薦を生成・選択・承認したものではない。SEI MethodがTEI Sourceを独立に再評価した、正式DecisionをOwnerが受理した、業務Effectを実行した、とすることもできない。
+
+| 対象Claim | H3-A0で確認できる範囲 | Activity再開時に未確認のまま保持する範囲 |
+| --- | --- | --- |
+| **TEI Source Observation** | 実CLI Source Indexの実Readと照合対象 | 対象Function／Provider／未取得Sourceを含めた完全Required・現在Imported Source/Manifest閉包 |
+| **SEI Recommendation保存** | 評価者作成の明示Recommendationを既存CLI/Storeへ保存 | 提案根拠の第三者真偽、SEI Methodの選択、Product/Ownerの意味受理 |
+| **再開の実Consumer** | 保存物を別`resume`で再読取、不正入力後のStore不変 | 別Audience/Host Grant、現在TEI Source Citationの鮮度、未解決Question原文のNative永続化 |
+| **継続できるActivity** | どの推薦を作成・保持・再表示したかの限定履歴 | 未解決問いの継続、次のTool/Skill利用資格、業務判断、効果/Outcome |
+
+**否定Claimを安易に増やさない**：[SEI merged #770](https://github.com/hat47x/sei-cognition/pull/770)の公開合成Methodでは、`R=[]`が母集団に存在しないことの証明にならず、問`Q`、Predicate、Source/Provider Scope、同一Epochの依存が必要。A0で保存済みのRecommendationが存在することを、未解決Questionが0件、これ以上調査不要、別のSource Worldに関係がない、という結論へ転用しない。現行SEI Recommendationに未解決QuestionのNative保存はなく、A2は[#711](https://github.com/hat47x/sei-cognition/issues/711)/[#678](https://github.com/hat47x/sei-cognition/issues/678)で別Ownerが検討する。
+
+**独立比較の次段**：SEI #824のA1-N（決定的なD1で解ける陰性対照）、A1-D（Source/Imported Provider失効）、A1-U（未知依存を見つける必要のある正例）は、D0/D1/M1を**同一開始Observation／実許可Tool／独立Expected／予算**で比較する候補。D1がすでに正しく解決できる問いでMethod M1を必要条件にせず、Methodの提案→実Tool Invocation→完全Reply受領→新規の正しい識別→結果保存をそれぞれ評価する。**A1はNOT RUN**。A2のQuestion継続保存も未実装。
+
+**B0/B1/B2と引渡し**：TEI／SEIのProduct単独・二Product連携で利用者Jobを満たせるなら、TAI Activityの常時仲介を必須にしない。必要なときだけ、現在Purpose、TEI Source/Rule Revision、SEI Recommendation/Store Revision、実Consumer再読取、Audience/Disclosure、開示範囲内の未解決を選択的再資格化。初回TEI SK-02の固定H2/H3公開TaskにSEI Methodを追加しない。TAIによる実Activity再開E2E、A1比較、A2、Owner Accepted Meaning、実Effect/Outcomeは未実証。新SEI Record Store/推論Method Host/TAI第二Readerを提案しない。
+
