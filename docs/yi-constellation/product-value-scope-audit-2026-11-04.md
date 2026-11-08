@@ -683,3 +683,22 @@ CSWはYI Constellationの**共通開発手法を改善する研究・実践ル�
 **VA-EVID-01（計画・未実施）**：同一Functionで (a)入口は応答するがProvider未呼出し、(b)Provider実Read成功だがConsumer未受領、(c)Effect確定後ACK喪失、(d)Plugin版変更後の古いBinding、(e)Audience変更後の旧Readbackを注入。Expectedは到達F段階の正確な表示、誤った成功Claimの拒否、無関係read-only作業の継続、独立Owner確認と再実行資格の明示。既存VA-RC-01の失効・ACK試験は再利用し重複した成功数を作らない。
 
 **実装順**：既存MASTER_PLANとOwner Issueを変更せず、(1)一件の実Provider/同一Attempt証拠、(2)一件の正式Writer/Consumer受領、(3)Harnessの実隔離/完全Reply、(4)必要な範囲のCross-target/性能比較へ進む。新中央Registry・Evidence Store・Workflow Hostは設けない。実Provider/正式Writer/外部Consumer/独立Owner受理は **NOT RUN**。
+
+
+### 30.1 F0〜F5は共通直列Gateではなく、User Jobごとに必要性が違う
+
+§30のF0〜F5は**観測項目の索引**であって「F4を通過しなければF5が使えない」という単調な成熟度スコアではない。各User Jobで必要な段階を先に指定し、**not-applicable（当該仕事には不要）／unknown（必要だが未観測）／failed／observed-in-scope**を区別する。例えばread-onlyのSource取得→Provider実Read→SHO/SEI/人への受領は、**業務更新F4なし**でF5受領を実証できる。一方、実Update・MigrationではF4のCurrent Grant、Commit/Effect、post-image/回復の観測を省略できない。F5受信が成功したからといって、F3実Provider・F4実Effect・Owner Meaningを遡って受理しない。F0〜F5を全Product共通の新Schema、必須直列工程、総合得点としない。
+
+### 30.2 11月8日夜時点の局所実測を「欠けた一辺」に更新
+
+| 既存Owner・局所観測 | すでに実証したこと（固定範囲） | 誤昇格しないこと／次の最短実証 |
+| --- | --- | --- |
+| [TEI main #3482](https://github.com/hat47x/tei-platform/pull/3482)、[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)で引用した[CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657) | 公開sales.order用**13実CLI Reply・42 Consumer Controls・独立Required Rule 3・既存6 Scenario Step＋既知T1-A**の限定PASS。 | Function宣言と実Provider Rowsetは別。次は[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)/[Workbench Draft #3486](https://github.com/hat47x/tei-platform/pull/3486)の一Functionで**選択されたProvider＝実呼出しProvider**と、Query/Rowset/Consumerの同一Attemptを確認。全Function閉包・実Commitは主張しない |
+| [TEI→SEI H3-A0](https://github.com/hat47x/sei-cognition/pull/824)で引用した[二Product実CI #42474971439](https://github.com/hat47x/tei-platform/actions/runs/42474971439) | 実TEI Source Indexの両modeを読み、独立Requiredに対照し、**評価者作成RecommendationをSEI Storeへ保存→別Resumeで再読取**した限定一往復。 | SEI Methodが未知義務を発見・生成・Tool呼出しした証明ではない。未解決Question/UnknownのNative継続や実H3-X02のD0/D1/M1比較は別。[SEI #711](https://github.com/hat47x/sei-cognition/issues/711)/[#767](https://github.com/hat47x/sei-cognition/issues/767)のOwnerが必要十分なInquiryを判定 |
+| [SHO Draft #25](https://github.com/hat47x/sho-composer/pull/25)、[G2-W1 CI #42461901303](https://github.com/hat47x/sho-composer/actions/runs/42461901303) | **test-only Working Copyへの実File書込→別Open Readback**とByte/FD負例、Ubuntu W1 20 PASS／Windows 19 PASS・POSIX専用1 SKIP。 | 従来の「Writerの実ディスク試験はすべてNOT RUN」を訂正する。ただし**正式Editor Save/no-op write0・Atomic Durable Publish・CAS/ABA・実SUI Producer同一File H1・Owner Writer受理は未実証**。SHO初回価値には[#4](https://github.com/hat47x/sho-composer/issues/4)の通常Markdown Writer→Restartを次の一辺にする |
+| [EKI main #785](https://github.com/hat47x/eki-fabric/pull/785)／[#753](https://github.com/hat47x/eki-fabric/issues/753) | 固定6イベントのReference意味と6負例が隔離Goで限定PASS。 | 実Local IPC/Connect Adapter・Lease/Fenceの通信越え実資格、実Consumer受領は別。[#754](https://github.com/hat47x/eki-fabric/issues/754)の方式選択は両実Adapterの同じExpected測定後。配送の実装を最初のSUI/SHO/TEI単独作業の必須Gateにしない |
+| [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | 外部Harness→実CLI Tool技術縦切りの観測はある（56 Call／55 Reply／TEI起動32）。 | G0の許可外Read実拒否、G1副次Sink、G2完全Replyと独立採点が不足し、**比較適格H2/H3 0/4**は維持。別ProductのCI成功を外部Harnessの安全・有効性として合算しない |
+
+**具体的な管理不備（要求のID≠意味）**：旧BOM計画はRQ-035衝突をRQ-036へ改番した[Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)に移行したが、**現在のTEI main [RQ-036](https://github.com/hat47x/tei-platform/blob/main/requirements/TEI_PRODUCT_REQUIREMENTS.md)は「ドメインの全容を図表とナビゲーションで理解・拡張」するModel Map要求**である。よってRQ-036も再衝突しており、BOMの「RQ-036採番済み」をAccepted要求として扱えない。BOM製品価値そのものは維持し、**当該Draftの要求ID採用だけをOwner再採番まで保留**する。ID一致だけでモデル地図とBOMを合成せず、採用済みmainの意味を上書きしない。新中央Requirement Registryも不要。
+
+**次の判定**：新Issue数や全てのF段階のPASSを目標とせず、(1) TEI一Function Provider実Read、(2) SHO正式Editor保存・独立Readback、(3) SEI A0後のD0/D1/M1独立比較、(4) EKI実Transport／TAI適格H2を**互いに非阻害なOwner Lane**で検証する。いずれも今回の新E2E・利用者B0/B1/B2・Owner正式受理は**NOT RUN**。
