@@ -234,6 +234,13 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 
 [TEI merged #3363](https://github.com/hat47x/tei-platform/pull/3363)の参照能力表では、公開Workspaceの24 Binding中22 selected、2 missing。ただしこれは**宣言の解決**であり、実Plugin Artifact/Load/Invoke/Client Deliveryではない。[TEI merged #3474](https://github.com/hat47x/tei-platform/pull/3474)の読取調査では、部署・環境Bindingが計画に反映されても、参照実行は固定Capabilityを直接呼ぶ経路が残り、`routing.Router`も非試験実行で構築されていなかった。断絶はPoC段階の意図的分離かもしれず、即「不具合」とは呼ばない。
 
+
+<!-- tai-harness-d1-selected-go-consumers-and-synthetic-host-20261108 -->
+
+**11月8日に進んだ「実Call」の限界**：[TEI merged #3381](https://github.com/hat47x/tei-platform/pull/3381)では、既存Compositionのexact-selected Provider BとHost登録Go Bを`inspect`の型付き入口へ接続したうえ、CLI注入HelperとStudio Host APIの**6 Subject×2＝12回のin-process Go call-site対照**をmainへ統合した。B→A誤登録、Provider scope/contract/digest違い、Host撤回、Epoch失効や不適合Resultの拒否があるため、**参照Go CallがBを実際に呼んだことは限定観測**できる。これは前の「selectedのみ」の一部を前進させる重要な区別。ただし通常`cmd/tei/main.go`のユーザーCLI dispatchはBuiltin経路のままで、実Wails Studio BridgeもBをProduction配線していない。Host登録の合成digestは**実配布Binary/Plugin Code fingerprint/署名/現在Grantの証拠ではない**。旧統合候補[#3517](https://github.com/hat47x/tei-platform/pull/3517)は重複を避けてunmerged close、D1 S2の通常起動はTEI #1251の次段とする。
+
+**別Runtimeの意味的な停止線**：[TEI merged #3516](https://github.com/hat47x/tei-platform/pull/3516)は実Reference Go HTTP HostからCanonical認可→Driver→**合成Adapter Callback**の正例/拒否7ケースを検証した。Hostの実Callback到達であって実DB Commit/外部Plugin Effect/クライアント完全受領ではない。[TEI merged #3520](https://github.com/hat47x/tei-platform/pull/3520)はDesign/Provider申告/統計Window/Reply parts/Disclosureを**Synthetic入力だけで**独立19件判別した。JSONの`providerInvoked=B`だけでHostのB実Callを証明したり、統計上の改善を業務性能改善と呼んだりしない。これらの限定Witnessは、各Ownerが先行する**実Plugin Call→実Query/Provider Read→実Consumer Delivery→独立Benchmark**の必要な区間で再利用し、TAIハーネスへ新Hook/Optimizer/Hostを作る根拠にはしない。
+
 必要な1 Pluginの資格は **Declared → Environment-selected → Actual Binary/Provider Included → 実Loaded/Invoked → Current Grant/Scope → Resultを実Consumerが受領 → Effectが必要なら独立Read/Receipt** のうち、Taskが要求する地点までに限定する。「22 selected＝22動く」「CLI/MCP値一致＝Plugin実Invoke」「Consumerが見た＝Owner Meaning採用」を禁ずる。実Inspector一つのread-only Load/Invokeを既存TEI Owner #951/#1251へ委ね、別のTAI Plugin Registry/Runner/Policy Engineを追加しない。
 
 ### 11.4 SHOの限定保存を独自Harnessの前提にしない
