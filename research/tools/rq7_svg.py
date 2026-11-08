@@ -173,12 +173,63 @@ def text_semantics(text: str) -> tuple[dict[str, str], set[tuple[str, str]]]:
     return nodes, edges
 
 
+
+def check_svg_geometry(case: dict, payload: str) -> None:
+    """Check edge endpoints/node placement, not just XML data attributes.
+
+    Still NOT a browser pixel review: layout and oracle share a fixed DAG
+    placement model, and actual font/viewport/assistive technology is untested.
+    """
+    root = ET.fromstring(payload)
+    labels, positions, width, height = graph_layout(case)
+    if root.get("viewBox") != f"0 0 {width} {height}" or root.get("role") != "img":
+        raise ValueError("SVG viewport or role mismatch")
+    if root.get("aria-labelledby") != "graph-title graph-description":
+        raise ValueError("SVG accessible name missing")
+    if root.find(tag("title")) is None or root.find(tag("desc")) is None:
+        raise ValueError("SVG title or description missing")
+    groups = [g for g in root.findall(tag("g")) if g.get("class") == "declared-node"]
+    lines = [g for g in root.findall(tag("line")) if g.get("class") == "declared-edge"]
+    if len(groups) != len(labels) or len(lines) != len(case["declared"]["edges"]):
+        raise ValueError("SVG visual object count mismatch")
+    for g in groups:
+        node = g.get("data-id")
+        if node not in positions:
+            raise ValueError("SVG unknown visual node")
+        x, y = positions[node]
+        if g.get("transform") != f"translate({x},{y})":
+            raise ValueError("SVG node moved without identity change")
+        rect = g.find(tag("rect"))
+        if rect is None or rect.get("width") != "180" or rect.get("height") != "60":
+            raise ValueError("SVG node outline altered")
+        texts = g.findall(tag("text"))
+        if len(texts) != 2 or texts[0].get("fill") != "#111111" or texts[1].get("fill") != "#111111":
+            raise ValueError("SVG visible text contrast/arity changed")
+    for line in lines:
+        src, dst = line.get("data-from"), line.get("data-to")
+        if src not in positions or dst not in positions:
+            raise ValueError("SVG edge endpoints unidentified")
+        x1, y1 = positions[src]
+        x2, y2 = positions[dst]
+        expected = {
+            "x1": str(x1 + 180), "y1": str(y1 + 30),
+            "x2": str(x2 - 9), "y2": str(y2 + 30),
+            "marker-end": "url(#arrowhead)",
+            "stroke": "#333333",
+            "stroke-width": "2",
+        }
+        if any(line.get(key) != value for key, value in expected.items()):
+            raise ValueError("SVG arrow geometry changed without edge identity change")
+
+
 def check_public_pair(case: dict) -> None:
     nodes = {n["id"]: n["label"] for n in case["declared"]["nodes"]}
     edges = {tuple(e) for e in case["declared"]["edges"]}
     expected = (nodes, edges)
-    if svg_semantics(render_svg(case)) != expected:
+    svg = render_svg(case)
+    if svg_semantics(svg) != expected:
         raise ValueError(f"{case['id']}: SVG semantic mismatch")
+    check_svg_geometry(case, svg)
     if text_semantics(rq7_pilot.declared_text(case)) != expected:
         raise ValueError(f"{case['id']}: text semantic mismatch")
 
