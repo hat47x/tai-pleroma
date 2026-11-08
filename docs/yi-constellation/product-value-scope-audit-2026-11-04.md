@@ -658,3 +658,16 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **VA-HOOK-01（計画・未実施）**：同一型付きOperationに、(a)標準のみ、(b)TEI生成のTransform Hook、(c)Replace Hook、(d)複数Hook順序競合、(e)VUI Resume中のProvider更新、(f)選択Pluginと実呼出し不一致を与える。独立Expectedで意味・権限・失敗・Resume/冪等性・Consumer受領を比較。まずCLI/Studioのread-only Inspector一件で実Providerまで追跡し、次にVUIの「曖昧入力→確認→中断→再開」を同じOperationに接続する。実音声認識、実Provider、各Target実行、Cross-target Conformance、Owner受理は **NOT RUN**。
 
 **初期非目標**：全Pluginの静的/動的/外部Process方式を一括決定しない。全Hookを動的Hot Swapしない。新中央Host/Resolver/認可Engineを作らない。KON独立Service化の必要性も本節からは導かない。実装IssueはTEI Owner側で起票・受理し、横断文書を業務意味の受理票へ昇格させない。
+
+
+## 27. 2026-11-08：三つのFlowと図表正本の生成資格を分離する
+
+**§26の補強**：共通Operation Lifecycleは全活動を直列化する唯一のフローではない。並存する三つのモデルを区別する。**Adaptive Activity Flow** は探索・試行・非定型作業の進行、**Interaction Flow** はUI/VUI/Chatの確認・中断・再開、**Business Operation Flow** は権限・制約・副作用を持つ業務操作である。三者は共通の型付きEvent/Referenceを介して接続するが、Activityの進行や対話の肯定を業務Commitへ暗黙昇格しない。TEIの全体図表は三Flow・組織Role・Event・状態遷移・標準Patternを一枚のナビゲーション体系へ位置付け、各Patternの位置・前提・適用範囲を専門知識なしで辿れるようにする。
+
+**図表を実装入力とする契約**：Diagram/Flow定義を表示用成果物に留めず、検証とGeneratorの入力にする。Node/EdgeのIdentity、型、遷移条件、Owner、Hook Slot、Source Reference、版、標準固定部と拡張可能部、禁止置換点を明示する。Graphviz/Mermaid等の表現はViewであり、配置座標やラベル一致だけを意味・Identityの正本にしない。標準部分の書換えは明示的なExtension Slotまたは新Contract版を要求し、図の変更が実装へ反映されない場合はBuild/Validation診断とする。
+
+**固定と可変の境界**：認可前の実Effect禁止、Source/Grant/Meaningの資格、実Ownerへの結果確認、型・多重度・NULL/未取得・部分受領の区別は必須のInvariant。画面配置、VUI文言、探索順、業種別Pattern、Transform/Compose Hook、Target別最適化は契約を守る範囲でPlugin可変。専門B2Cでは標準UIやAI Harnessを必須とせず、型付きApplication API＋専門UX/Performance Pluginで最適化できる。標準の導入をConversionや変更速度の阻害要因にしない。
+
+**VA-FLOW-01（設計・未実施）**：同じ「申請を調べる→曖昧な質問を確認→業務更新を明示承認」のUser Jobを三Flowで表し、(A)標準UI/Flow、(B)専門Web B2C UI、(C)Chat/VUI Adapterで実行する。独立Expectedは、Flow境界、Owner/Grant、Sourceと意味候補の非同一、図表Diff→生成Manifest/実Binding一致、途中停止とResume、同一Operationの結果一致。UX評価は完了率・離脱・応答時間・変更リードタイム・運用コストを別軸で計測し、標準UIに有利な指標だけを採用しない。性能計測ではBaseline、データ量、P50/P95、Cache hit/miss、Provider SQL/Query Plan、Plugin version、計測環境を記録し、改善の原因を特定できない数字を採用しない。
+
+**実装順序**：①既存TEI CLI/Studio read-only Inspectorの実Provider一件と型付きOperation Trace、②三Flowの最小図表モデル・固定/可変Slot・Generator Manifest照合、③専門Web UIとChat/VUIの二Consumer差分、④実B2C負荷・UX比較。**初期段階で標準UIの強制、中央Workflow Host、中央認可、全Flowの同一State Storeは導入しない**。実Provider・図表駆動生成・専門B2C負荷・ユーザー比較・Owner受理は **NOT RUN**。
