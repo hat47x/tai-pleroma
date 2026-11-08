@@ -226,3 +226,33 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 - **SHO/TAI/EKI**：未解釈Markdownの安全な保存、実同一File受領未達の明示、空対象集合でもHandoff確認が必要な区別（TEI #3353）を各Productの独立試験に委譲。SHO WriterやSUI→SHO実H1はTAI H2/H3比較の先行必須にしない。
 
 **更新時の境界**：§9に記した#3324/#3326並行Draftは当時の記録。現在はclosed/unmerged、統合#3354がmerged。今回のVA-01自体での新しいB0/B1/B2利用者比較・未知T1-B・実Provider/Studio・SHO Writer/H1・適格H2/H3、Owner採否は**NOT RUN**。既存局所CIを総合価値PASSへ足し合わせない。
+
+
+## 12. 2026-11-08：独自Harnessの投資条件を、製品能力の増分で判定する
+
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)・[#488](https://github.com/hat47x/tai-pleroma/issues/488)のH2/H3固定比較を変更せず、**YI Constellation独自の汎用Harnessを最初から構築する必要があるか**を、別の後続価値試験として明示する。既存外部HarnessはTool/Skill/PluginやSession機構を備える場合があり、TAIの増分は製品固有のDesign Context・SEI根拠十分性・安全な意思決定・再開・開示といった**成果に帰着する差**で示す。Everything is Plugins型の汎用化を理由に、TEI/SEIのMethodやOwner Meaningの正本をHarnessへ移転しない。
+
+### 12.1 実装しないことも判別できる逐次比較（既存H2/H3のArm名を上書きしない）
+
+| 後続比較Arm | 同じUser Jobで実行する構成 | 価値がなければ採らない追加要素 |
+| --- | --- | --- |
+| **HV-0** | Product自身のCLI/既存UIによる同一Sourceのread-only作業 | Harnessを使うこと自体 |
+| **HV-1** | 既存外部Harness＋Productの実Tool。Skill説明なし | YI独自Harness、TAI常時介在 |
+| **HV-2** | 同じ外部Harness＋必要なProduct Skill（固定rootと実Reference Load） | 複数Product横断Skillの自動必須化 |
+| **HV-3** | 既存Harnessの既存Plugin/Tool適合層を通じ、TEIのRequired Context、SEIの限定Inquiry等を**実呼出** | 独自実行ループ、第二Resolver/Permission Engine |
+| **HV-4** | HV-3では達成不能な一つのProduct固有不変条件を先に独立Expectedで固定し、その不足だけを補う専用ループ候補 | 一律の自前Harness移行・全製品共通常駐 |
+
+**比較の開始条件**：既存SK-02のG0物理隔離／G1副次送出／G2全Tool Reply受領を満たす実Harness環境と、同一公開Source・Task・Model版・予算・Expectedがあること。現時点では既存H2/H3比較適格は0/4。**HV-0/1/2の実比較もまだNOT RUN**であり、H3実Skill Loadの歴史的Observedのみを増分価値PASSとしない。HV-3/4はH2/H3の完了を妨げず、Product側単独MethodやPlugin試験を先行してよい。
+
+### 12.2 費用対効果の独立Expected
+- **成果**：根拠付き正答、重大な誤完了/誤拒否、Domain Obligation欠落の診断、未決として保持できた比率、後続Consumer実受領、再開後の同一Purpose/Scope/Revision、Ownerが必要な確認手数。
+- **安全・適格**：Source開示の物理拒否、Skill/Reviewer Holdout非露出、Session Log/Network別Sinkの実送出、現Grant、実Effect／未知Commit、Agentに許す判断と人が受理する判断を分ける。安全の重大違反を低Token費用で相殺しない。
+- **費用**：初回接続/Skill作成/Plugin適合作業、Runner更新負担、Prompt/Token/計算・通信費、人の介入・復旧・監査時間、既存Toolchain移行量、p50/p95作業完了時間。少数試行を一般的な統計優位と宣言しない。
+- **独立性**：各Armの割付、実際のTool/Skill/Plugin提供とConsumer受領を分離。モデルに盲検Expectedや隠れたSourceを渡さない。同一モデルの別Context・多数決は独立Expectedや別モデル実反証ではない。
+
+### 12.3 TEI/SEIの高付加価値を先に比較する（新しいProduct Method実装を作らない）
+[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824) §9.2はD0（通常Tool）/D1（根拠・不足診断）/M1（SEI Method）を**同条件**で比較するH3-X01〜08を計画化し、正常な空result/Source Index mode/Plugin selected≠invoked等の不足を識別する。最初の比較はH3-X02（独立Required Ruleと実取得Mode）。**M1がD1より成果・費用・誤判定で優越しなければMethod常時必須化はしない**。TEI [#3262](https://github.com/hat47x/tei-platform/issues/3262)の実Contextと[#3482 merged](https://github.com/hat47x/tei-platform/pull/3482)のFunction declaration sliceを入力候補にするが、Functionの実Provider ReadやSEI実Tool連結の成立は別証拠。
+
+**新しい独立Negative案**：HV-N1=Skillに手順があるだけで実Tool未実装、HV-N2=Plugin selectedだがactual invokedは別Provider、HV-N3=正常な空Resultから全業務Source不存在を断定、HV-N4=H2/Skill独立Expectedや非公開Rawへ越境Read、HV-N5=SEI Method回答は良いが現在のGrant/受領なし、HV-N6=独自ループの費用が継続的に増えるのに独立ExpectedでHV-3を超えない。全て**新規実行NOT RUN**。
+
+**採否の停止線**：初回外部Harness H2/H3の資格確認を最優先、既存TEI/SEIのMethod/Pluginを接続して成果を測る。HV-4は、既存HarnessとPluginでは再現・隔離・再開・意思決定の必要条件を満たせない**具体的反例**と、専用実装で改善できる見込みが独立評価で示された場合だけ設計レビューする。独自Harnessの新Runtime/Plugin Manager/Memory/Tool Routerの先行製品化を承認しない。
