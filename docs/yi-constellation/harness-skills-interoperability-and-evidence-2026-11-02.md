@@ -217,7 +217,7 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 | **Value試験（TAI #422/Activity §18）** | 人間／既存の素朴な作業手順 | Product単体で完了するJob | TAI Activity連携を加えたときのJob |
 | **Harness試験（TEI #3487）** | 決定的CLI/共通API | 外部HarnessでSkillなし／ありの差を検証 | 外部Harnessの不足だけを埋める薄いAdapter |
 
-同じ「B1」を一つのTrial/Value Countへ混ぜない。Trialには`comparisonAxis=value|harness`（**実験記録上の区別であり公開Schema追加ではない**）、Task/参加者、実Source/版、Actual Delivery、独立Expected、費用・観測可能なEffectを紐づける。前者は**TAIを足す必要性**、後者は**外部Harnessに加えた実装の必要性**を評価する。既存SK-02のH2/H3はHarness B1内部のSkill差であり、H2/H3結果からValue B2の価値や独自Harness採否を直接推定しない。決定的APIのB0に文章生成能力がないことを不合格とせず、Source/Contractの正確さ・拒否の正しさ・費用の基準として観測する。
+**[TAI Draft #423](https://github.com/hat47x/tai-pleroma/pull/423)の既存HV-0〜HV-4候補**は独自Harness投資判断の詳細計画であり、この§11はその実行資格・用語衝突をSK-02計画へ接続するもの。HV番号を別のRunner/Scoreや正式公開Schemaとして作り直さない。同じ「B1」を一つのTrial/Value Countへ混ぜない。Trialには`comparisonAxis=value|harness`（**実験記録上の区別であり公開Schema追加ではない**）、Task/参加者、実Source/版、Actual Delivery、独立Expected、費用・観測可能なEffectを紐づける。前者は**TAIを足す必要性**、後者は**外部Harnessに加えた実装の必要性**を評価する。既存SK-02のH2/H3はHarness B1内部のSkill差であり、H2/H3結果からValue B2の価値や独自Harness採否を直接推定しない。決定的APIのB0に文章生成能力がないことを不合格とせず、Source/Contractの正確さ・拒否の正しさ・費用の基準として観測する。
 
 ### 11.2 増分実装の候補と採用停止線
 
