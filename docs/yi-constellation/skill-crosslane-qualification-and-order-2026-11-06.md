@@ -1012,6 +1012,20 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **実験分離**：初回TAI #168 SK-02のH2/H3では`view`や設計Markdown Readerを許可Listへ追加しない。現行TEI Toolでの限定記録を後続Product Reader適合へ使用する場合は、旧Binary/Tool Contractとの差異を事前に固定する。T1-A既知ValidationのCLI実判別は成立済みでも、TT-56必要Rule閉包・未知Rule発見T1-B・正式Source解釈・外部Harness全Byte・Owner受理は未資格。初回H2/H3比較適格0/4を維持する。
 
 
+### 26.8 一Functionの独立Required Sliceを実CLIとSource版で照合してからSkillへ渡す（TEI main #3482）
+
+§26.5〜26.7のDesign Contextを**全Function完全／実行適格へ昇格させず**、一Functionの宣言・Source位置と取得範囲についてだけ実証水準を更新する。[TEI merged #3482](https://github.com/hat47x/tei-platform/pull/3482)は既存`context_gate.py`とCatalog/Inspect/Source Indexを使い、`semantic-capability:sales.order.submit`の入出力order、`application:order_entry`、必要3 Validation、`sales_core` DB requirement、Source definition RoleとLoader Readを**独立固定Required**へ照合した。Namespace依存をCapabilityの実Invoke Bindingと混同しない。
+
+**現物版付きの限定成功**：従前[TEI #3354](https://github.com/hat47x/tei-platform/pull/3354)の**11実CLI Reply・32受領コピー改変Control**から、[PR専用CI #42462672188](https://github.com/hat47x/tei-platform/actions/runs/42462672188)で**13実CLI Reply・42 Control**（既存32＋9拒否・1過剰拒否防止）へ拡張。さらにmain squash commit `8ed583790e63b63527c1dd8f8aecc1d6ce6e3260` の[main push専用CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657)も**completed/success**。同一main RunのGo実Binary SHA-256は`ce9fa9b8bfcabe81725ed1b459396b0111a2f4225b95ab47408b3f5fd3aad278`。既存6 Pinned Scenario、既知T1-A、Source-only改版対照も限定PASSした。42件は**実Go Code Mutant／未知Rule発見**ではなく、実Product CLI JSON Replyの試験用一時コピーをConsumerが正しく判別した件数。C0局所約9.4%、C1/NFR/全Requirement分母は未測定。
+
+| 後続X02/X04/X06へ渡す独立資格 | 誤判定を防ぐ停止線 |
+| --- | --- |
+| **Required/Actual**：Task/Function、必要Capability・Application・Rule/Relation・DB要求、実Loader Read、`inspect` Canonical、Source Role/Path/Index、World/Source FP、受領Byte/Source Revision/Consumerを同一Attemptに束縛 | 単一`bounded-present`で全Query/Provider/Target/Hostの実実行資格、Meaning Accepted、現在Grantを認定しない |
+| **Source-only鮮度**：[TEI merged #3477](https://github.com/hat47x/tei-platform/pull/3477)では同WorkspaceのSource末尾LFだけの改版でもWorld FP不変／Source Index FP変化を区別し、旧Contextを拒否する実CLI対照が成立 | World FP一致から原文Revision一致、A→B→Aが起きていないこと、二Readの原子的Snapshotを推論しない |
+| **Imported Provider境界**：[TEI Open Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)は別Provider rawだけの改版がConsumer World/Index FPに現れない反証候補。Focused新CI/実Provider全閉包は本確認時点未適格 | #3477の同Workspace PASSから外部Import原文までfreshと認めず、Source不明を空/成功にしない |
+
+**横断試験順序**：既存#3262/#3273/#1180/#2514のOwnerが、現在の必要Sliceと取得範囲をFixed Expectedにし、Product Tool-only→Product Skillの**不足診断・誤不存在・過剰拒否・Tool回数**を比較する。Context資格が揃った部分でのみ、AIが未知の未カバー条件を提案できるかをReviewer-only独立Expectedで盲検T1-B判定する。実H3全Reply配送、Provider/Host、T1-B、YIC Skill増分効果は**NOT RUN**。初回公開TEI H2/H3固定Task/Tool/4 Slotには変更を加えない。
+
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
 ### 27.1 Oracle Fusion Claw/FSCRから取り込む範囲を限定する
@@ -1092,5 +1106,26 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 
 
 **独立Expectedの後続対照**（既存TAI #488 X01/X03/X04/X06、TEI #951/#3267/#3277/#3279を再利用）：(a) Package選択済み／Capability Binding無し、(b) 同じPackageのA能力だけ選択、(c) 適合技術名とCapability IDの文字列表現が異なる、(d) 同名/Kind一致でもProvider実体無し・未実Load、(e) 実Load済みでもTarget/Host Grant失効、(f) 未選択候補を含むが要求Functionは全充足。単純一致で偽陽性・偽陰性を作る実装を反証し、各Product正本に不足を戻す。正式なVerified Composition BOM、実DB Provider、実Application Target、YIC実Skill効果/Owner受理は**NOT RUN**。初回固定TEI H2/H3は§19のG0→G1→G2を先行して0/4資格を解消し、このPlugin Coverage試験を新Blocking/Trial数へ追加しない。
+
+### 27.7 共通Application APIと既存Harnessの増分価値を独立比較する（ADR-0048）
+
+**採用済み製品契約**：[TEI merged #3439](https://github.com/hat47x/tei-platform/pull/3439)の**ADR-0048**は、CLI/MCP/HTTP/Web/Desktopを共通Application APIのAdapterとし、操作・対象・結果・診断・Effectの意味処理をProduct側に置く。共通APIはHTTP専用ではなく、ローカルCLI/組込みへWeb Serverや新認可Hostを強制しない。[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)で`catalog/inspect/trace/validate`の4 Toolを持つ**read-only stdio MCP参照Adapter**が実在。[TEI merged #3458](https://github.com/hat47x/tei-platform/pull/3458)は実CLI・MCP間の`validate`文書/意味失敗/Load失敗の限定パリティをテスト済み。ただし全ToolのByte完全同値、実外部Harness接続、Host認証・送出/Effectの同値は未実証。[TEI merged #3487](https://github.com/hat47x/tei-platform/pull/3487)は**独自Harnessの追加前に増分価値を比較する文書計画**であり、外部試験の合格ではない。
+
+| 比較する段階 | 固定する条件・測る価値 | 避ける結論 |
+| --- | --- | --- |
+| **決定的なProduct API/CLI** | 同一Source・Task・独立Expectedで実モデル取得、欠落や未対応・意味Validation拒否を判別。Tool自身は未知Ruleを生成する機構ではない | B0が未知Ruleを発見しないから一律不適格 |
+| **既存HarnessのSkillなし／Product Skillあり** | 同じTool/Model/Sourceで、実Skill Loaded・Tool/Result全受領、誤判断・Evidence trace・操作/Token/時間・過剰拒否を比較 | Skillが一覧にあるだけ／H3の実Skill Readで正答増分や隔離を実証した |
+| **必要な薄いAdapter** | 現Harnessでは埋まらない実Tool Delivery欠落を小Adapterで解消し、同じTaskで安全・費用・遅延を再比較 | Adapterで解消した問題を独自AI実行Loopが必要と短絡 |
+| **独自Harnessの再検討** | 上記でも残るD（Design Input）／T（Tool Delivery）／G（未知Rule生成）の独立再現失敗を複数Task/Domainで測定し、重大誤判断・追跡・再現性・隔離・費用/人手の確実な増分がある場合のみ別Owner判断 | 未検証のうちから中央Agent/Runner/Registry/Memory/Hostを実装 |
+
+**略号の衝突に注意**：既存§27.4の`B0=Tool-only / B1=TEI Product機能 / B2=必要時TAI横断Skill`はProduct選択の比較。一方[TEI #3487](https://github.com/hat47x/tei-platform/pull/3487)が使う`B0=決定的CLI/API / B1=既存Harness＋Skill有無 / B2=薄いAdapter`はHarness方式の比較であり、**同じB2でも別の処置**。YIC採点票は系列名・Armの実Tool/Skill/Adapterを明記し、両者を同じ分母に合算しない。初回TAI #168 H2→H3→H3→H2は旧Pinned公開TEIの独立Trial Groupで、G0物理Read拒否→G1送出→G2 Tool Result完全受領を先行。**比較適格0/4**、新MCP/共通APIを旧試行へ事後混入しない。第二のYIC共通API/Policy/Host/Agent Loopなし。
+
+### 27.8 KON Dataspaceを共通データ基盤の別Productとして受け渡す（設計採用・実接続未検証）
+
+2026-11-08採用の正式名称**KON Dataspace**（リポジトリ名`kon-dataspace`）は、YI Constellationの**独立したマルチモーダル・マルチTenant/Serviceの共通データ基盤**である。TAIの横断Skill、TEIの意味/Function、SUIの探索、SEIの意思決定、SHOの文書、EKIのData/Delivery/Transportと役割を取り違えない。共通データ基盤を新しい中央Meaning SSOT/Agent Host/Grant Issuerとしない。
+
+**YIC側の候補受入条件**：TEIによる柔軟なData定義、KONが選ぶ物理DB分離、現在Tenant/Service/Principal/Namespace/Resource Grant、外部IdP/Broker属性の解釈、別Transactionで更新される共有Projectionを**それぞれ独立のProduct資格**として受け取る。Skillがあるから当該Tenantの情報を閲覧・再配布してよいとは扱わない。跨DB/跨Service ProjectionはSource時点/水位/Effect Receiptを区別し、Readに成功しても最新性・Meaning/Business Outcome・Write許可を推測しない。KONへの業務ロジック全面移動は決めず、TEI側のDomain/Operation Ownerを維持する。
+
+**検証順序**：既存の許可済み合成read-only Source→KON型付きProjection（実Provider接続がある場合のみ）→同一AttemptのConsumer実受領→そのAudienceのGrant/Disclosure→必要な場合だけHost Effectの別観測。Productだけで完結するMarkdown編集やTEIローカルReaderはKON未接続でも継続。現在、KON実API・実DB/IdP・SHO/TEI/SEI/EKI実接続・外部Owner受理は**NOT RUN**。新YIC Registry/認可層/Runtime/Schemaを作らず、各Productの責務に委譲する。
 
 
