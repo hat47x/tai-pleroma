@@ -14,6 +14,9 @@
 - **TEI 1 Function宣言Required**：merged #3482／main push CI #42462861657のbounded Contextは13実CLI Reply、42局所Consumer Controlsを限定PASS。Capability定義・Application uses・Validation/Sourceの独立照合であり、実Call Binding/Provider/Grantはnot-observed。
 - **SHO実Cross-Repo Reader**：Draft #27のprivate-owned CI #42462172893で公開TEIのPin済み4 Markdown Fileを実G1b ReaderがRaw byte/限定Linkとして受領。Frontmatter F0/同一Provider二Consumer K2/SUI Producer H1/G2 Writerは未検証。
 
+- **EKI低層Transport**：#787の試験用Unix socketで6イベントを実送受信し4負例/race5回を局所PASS。ただし同一Goプロセス内goroutine・JSON compact比較であり、実Local IPC/Connect Adapter／別Worker／Lease Grant／原Wire byteの同一性は未検証。#786の実Adapter Trace比較は未入力SKIP。
+- **TEI共通API／SEI記録**：TEI main #3458はvalidate一操作のCLI/MCP共通Reportを実装済み、他3 Toolの意味同値や外部Harness受領は未資格。SEI CLIはRecommendation/DecisionのAddとResumeのみを正式な保存入口とし、Question未決やMethod Applicationの書込・TEI Source真正性は未証明。
+
 ---
 ## 1. 研究で問い直す対象
 
@@ -809,3 +812,57 @@ Advertised read-onlyと実際の- execute付きFile書込み、OS Read-deny、�
 **価値の分母**：実Consumer成功数、原文/Source取得の追加労力、false completed／false stopped、実Provider呼出の必要回数、正しいSource/Meaning/Scopeへ到達できた件数、保存・読取・再開の修復手数、ユーザーが実際に得た選択肢を分けて記録する。技術的Go/CI/Reference PASSからOwnerの実価値受理は自動発行しない。
 
 **引き続き未実証**：1 Functionの実Invocation/Provider Read、TEI↔Studio二実Consumer、外部H2/H3比較適格（0/4）、SHO Writer正式保存、SUI→SHO真正H1、OKF F0/K2、実EKI Connect/Local IPC配送、独立AI T1-B、Verified BOM、本番Host Grant、OwnerのMeaning・利用者Outcome。局所達成を取り消さず、未成立のClaimだけを保留する。
+
+
+---
+
+## 19. 2026-11-08：Transport実Byteと認知・利用の資格を、既存Productの実装境界で検収する
+
+**位置付け**：§18で確認したTEIのFunction宣言13 Reply／42 Consumer対照とSHO private-owned Readerの限定実証に対し、EKIで実際に動いた低層通信、TEIの共通Application API、SEIに実在する保存・再開機能を追加照合する。いずれも各製品の既存Owner／CLI／証拠正本を使用し、新しいYI共通Message Bus、Store、Agent Runtime、Proof Engine、Host、API Registryを導入しない。
+
+### 19.1 EKI：OSソケットによる6イベントの実通信は成立。ただしProduct Adapterの実配送ではない
+
+[EKI merged #785〜#787](https://github.com/hat47x/eki-fabric/pull/787)と[Owner #753](https://github.com/hat47x/eki-fabric/issues/753)を再確認。mainの実 test-only Source（spikes/data-delivery-transport/unix_fixture_test.go）は、OSのUnix-domain socketを使い、固定Fixtureの6イベントを同一Goテストプロセス内の送受信goroutine間で実送受信する。ローカルLinux x86_64 / Go 1.23.2の隔離試験で内容・順序比較PASS、欠落・重複・順序変更・内容改変4負例の拒否PASS、race付き5回PASS。[実結果記録](https://github.com/hat47x/eki-fabric/blob/main/spikes/data-delivery-transport/RESULTS_2026-11-08.md)には実環境とScopeが明記されている。これを**Transport T0-Socket：試験用OSソケットの実通信は限定達成**とする。
+
+重要な限定は二つ。第一に送受信は同一テストプロセス内であり、EKI本番Local IPC/Connect Adapter、別プロセスWorker、Lease失効強制、実Host Grant、Provider Effectの実通信ではない。第二に比較関数は双方のJSONをcompactしてから等価照合しており、**送信原Byte列と受信原Byte列の完全一致、Frame単位の全受領証跡、履歴の完全性を保証する設計ではない**。送信内の lease_revoked や result_claim 文字列は配送されたPayloadであり、認可失効や業務Resultの実成立ではない。
+
+[merged #786](https://github.com/hat47x/eki-fabric/pull/786)のObserved Trace Comparatorは、Case/Fixture digest/Profile/Run ID/Adapter Revision/Capture Method/Dispositionを受領して、独立Expectedとの8種類の不正を拒否する別のtest-only入口。実Adapter Traceを指定しなければその試験はSKIP。**Comparatorの単体PASSと、別試験のOSソケットPASSを足してEKI実Adapter Disposition／有効Grant／Consumer実Action PASSにしない**。次は#753の既存実Adapterを一件だけ対象とし、固定6 Event→実Transport→実受領Trace→独立Comparatorを同一Attempt/同版で連結する。Connect/WebRTC方式の先行採用はしない。
+
+### 19.2 TEI：共通APIのvalidate限定修正は成立。他3操作と外部Tool受領は別
+
+[TEI ADR-0048／#3419/#3420](https://github.com/hat47x/tei-platform/issues/3420)では、プロセス内・CLI・MCP・HTTP・Desktopの**操作の意味契約**を同じ既存Application側から利用する方向を採用。ただしHTTP Hostを必須化しない。[main merged #3403](https://github.com/hat47x/tei-platform/pull/3403)のstdio read-only MCP参照Adapterはcatalog/inspect/trace/validateの4 Toolを実装。[main merged #3458](https://github.com/hat47x/tei-platform/pull/3458)では実既存operations.WorkspaceValidationReportFromをCLIとMCPが共有し、validateの意味失敗とMCP isError判定の不一致を限定修正した。現mainの実Source internal/operations/validation_report.goとMCP Adapter main.goを再取得し、実Contractに存在することを確認。
+
+**MCPへの実応答経路があることと、全Operationの契約一致・現在の読取許可があることは違う**。現Adapter optionalStringは引数が不正な型／空値の場合もfallbackへ落とし得る。未指定と不正指定、Workspace固定と実Scope、意味ErrorとProtocol Error、JSON-RPC frame成功とモデルConsumerが内容を全件受領したことを独立照合する必要がある。特に正常validateのResultがCLI/MCPで共通投影されても、catalog/inspect/traceが同じSource・Scope・RevisionのConsumer結果を返すと自動認定しない。外部DSH探索のCatalog 8,192byte切断と56 Request/55 Replyを、このローカルMCPの限定実装によって解消したことにはならない。
+
+最小の次段：#3420の既存Ownerで、現CLIと現MCPを実プロセスとして同じ対象一件へ呼び出す。正常／source-root-error／unknown kind／型違いinput／part欠落を独立Expectedで対照し、Protocol固有envelopeを無理に原Byte同一にせず、同じOperation意味とFailureを検証する。TEI #3262のRequired Source全Closure・#2586のFunction実Provider Read・TAI #168の外部Harness比較を、MCP Adapterの内側で重複実装しない。
+
+### 19.3 SEI：保存できるRecommendationと、根拠が解決したDecisionを混同しない
+
+[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)／[Draft #824](https://github.com/hat47x/sei-cognition/pull/824)と現main runtime/go/seicli/seicli.goを照合。実CLIには推薦・決定の追加と、既存Record Bundleからのresumeがある。しかし現時点で正式なObservation／Question／Method ApplicationのWrite/Resumeが実在するわけではない。さらにrecommendation追加のCLIにQuestion未解決をそのまま記録する --unresolved があるわけではなく、resumeのUnresolvedは認識済みDecisionが明示したUnresolvedRefsに限定される。
+
+したがって、**推薦した／保存した／再開できた**はそれぞれ別の局所到達であり、未受理Questionが欠けずに表現できること、TEIのSource/Meaningが受理されたこと、SEI Methodが本当に適用されたこと、Owner Decisionが成立したことを保証しない。--basis kind:id や --source は証拠の外部根拠の真偽を自動検証するWitnessではなく、snapshot_digestはSEI束のrawだけを識別する。MCP resumeのread-onlyと、ログを書き得る他のToolを「SEI Tool全体read-only」と広告しない。
+
+最短のSEI検収は、既存TEIの実source-indexを独立Requiredで限定読取 → 実Result/Source Byte/Tool受領状態を固定 → 現SEI CLIの**Recommendation追加・resume JSONによる再読取**を隔離Storeで実行 → 情報損失・不明な外部根拠・Owner未決をそのまま見せること。新SEI Method Storeや質問用CLI Writeを前提化しない。その後D0（Toolのみ）／D1（設計不足を説明）／M1（Method候補を使用）を同条件・同予算・独立Expectedで比較し、M1がD1を改善しないならMethodの常時呼出しを採用しない。**このTEI→SEI実二製品受渡し・D0/D1/M1比較は未実施**。
+
+### 19.4 ORX-65〜72：同じ成功表示でも成立した作用が違う
+
+| ID | 最小二世界／反例 | 独立Expected・実測の限界 |
+| --- | --- | --- |
+| **ORX-65 SocketとAdapter** | 試験用goroutine間Unix socketを6件通したが、実Worker/Local IPC Adapterは未起動 | EKIのOSソケット試験PASSを認め、製品のLease/Grant/Delivery/Consumer Dispositionはunknown（#787/#753） |
+| **ORX-66 JSON意味と原Byte** | JSON compact後の内容・順序が一致するが、原Byte/Frameは別 | EKI参照試験は意味上のイベント一致、Raw transport byte・完全Frame receipt・永続観測の証明にはしない（#787） |
+| **ORX-67 ComparatorのSKIP** | 独立Comparator8負例と別の実ソケット試験が各PASS、実Adapter Trace入力なし | 合格行のUnionを実AdapterのObserved Resultと呼ばない。実Adapter Traceを受領して初めて判定（#786/#787） |
+| **ORX-68 CLI/MCP validateと全API** | validateのみ意味失敗の共通Report、catalog等は未実照合 | validate局所改善は認め、CLI/MCP全操作パリティ・外部H3全Resultには昇格しない（#3458/#3420） |
+| **ORX-69 不正入力がDefaultになる** | MCP側でsubjectKindが不正型／emptyなのにfallbackへ解決 | 未指定と不正指定を別判定し、別Subjectに成功したことを元Subjectの取得・Grantにしない（#3420） |
+| **ORX-70 Recommendationと未決Question** | SEIにRecommendation記録は存在するがQuestion未解決を専用CLIでは保存できない | Resumeに未決が無いことを『未決Questionなし』と判定しない。未採用Recommendation≠未決Question（SEI #824/#767） |
+| **ORX-71 Snapshotの出典誤認** | SEI Bundle digest一致だがTEI原Sourceが移動・差替え | SEI再読取は履歴Recordの一致。実TEI Sourceの現在Byte/Scope/AuthorityをReader再確認（SEI #824／TEI #3262） |
+| **ORX-72 動作する3製品の合算** | TEI Context13 Reply、SEI既存Add/Resume、EKI Socketが別々に動いた | それぞれの局所事実を保持するが同一Attempt実TEI→SEI→EKIのConsumer成果・Owner ValueはNOT RUN |
+
+### 19.5 次の実行順序と、研究に残す価値の問い
+
+**先行P0（追加Coreなし）**：TEIの独立Requiredを持つ一FunctionのCall Binding／実Provider Readを一件、または現CLI/MCP同じOperationの実2 Processでの意味失敗比較を一件。どちらも現在動いている入口と既存Ownerのみで始める。価値判断は『正しいAction/Sourceへ到達』『追加Reader/説明に要した時間』『正当ケースの過剰拒否』で比較し、MCPというプロトコルを使えた件数だけをOutcomeにしない。
+
+**並行P1（保存と移送の区別）**：SHOは既存のWorking Copy実保存と正式Writer/再開の差をOwner #4に維持し、SUI真正One-fileのnon-skip実Handoffを1回実行する。EKIは上記固定6 Eventについて実Adapter Trace／同一Attempt・同じ独立Expectedを接続。SEIは推薦保存・再開で実際に表現可能な未知/未採用だけを記録し、実Method ApplicationやQuestion記憶を先行必須にしない。
+
+**後続P2（増分価値がある場合だけ）**：TEI/SEI/SHOの実Consumerが追加のMethod／外部Delivery／形式を必要とする利用者Jobが成立してから、D0/D1/M1比較やYICの横断Product Skillを評価する。SEI Methodに増分価値が無ければ省略し、EKI配送が必要ないローカルJobをブロックしない。既存TAI #168 H2/H3は比較適格0/4を維持し、OS G0・全Egress G1・Tool Reply G2と独立4Slotの既存Gateを増設しない。
+
+**現時点のClaims**：EKI #787の**実OS socket試験PASS**、TEI #3458の**validate限定API共有**、SEI現CLIの**Add/Resume経路存在**は別々に認める。実EKI本番Adapter通信/Lease、TEI↔SEI同一Attempt引渡し、全CLI/MCP Adapter受領、SEI Method実適用、Function実Provider/Host Effect、SUI→SHO H1、T1-B、Ownerの意味・価値受理は **NOT RUN／NOT QUALIFIED**。
