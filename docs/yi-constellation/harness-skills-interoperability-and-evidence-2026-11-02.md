@@ -179,3 +179,28 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 **二次配布・Skill資格の停止線**：Raw digest一致やlink_open=0は元Sourceの不存在、SUI Island/Tree意味同値、OKF/SEI認識十分性、SHO文書の保存済み状態ではない。実Product間1 File ReadがPASSしても、yi-sho-composeのHarness install/load・実Tool invoke、外部LLMへ送るDisclosure/current Recipient Grant、Writerの保存後Reader/再開は**別試験**。SHO単独で必要なことはSHO単独で検証し、TAI常時介在・新Document Core/Parser/Host/Transport/Registryを前提にしない。
 
 **YIC/TAI実証の順序**：初回TEI H2/H3の実OS Read-deny→G1通常モデル入力/暗黙Context/Session Log→G2 Tool Reply完全性→新4独立Session（比較適格0/4）を変更しない。SUI→SHOの1 Fileは**並行する小さいProduct間試験**として実施可能だが、TAI #271のSCN-001 B0/B1/B2の実Task価値・Skillの増分効果・正式Source Meaning受理へ自動昇格しない。
+
+
+---
+
+<!-- tai-interoperability-tei-shared-app-api-mcp-reference-20261108 -->
+## 11. TEI共通アプリケーションAPIとMCP参照Adapterを、Skillの実Tool資格に接続する（2026-11-08）
+
+[TEI採用ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)は、CLI／MCP／HTTP／Web／Desktopを**同じ型付きアプリケーション操作のAdapter**とし、操作ID・Request/Result/Failure/Source Scope・効果・版を既存Ownerから取得する方針。HTTPサーバーや一つの認証方式を全入口の必須Hostにしない。既存のCLI-firstとGo単一バイナリ・外部Hostへの導出を維持する。これは**採用済み設計**だが、全入口実装・同値試験の完了ではない。
+
+### 11.1 先行MCPの実在と、何を実測したか
+
+[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)で、mainの[read-only MCP参照Adapter](https://github.com/hat47x/tei-platform/blob/main/tools/reference-mcp-readonly-adapter/main.go)が実在する。起動時に固定Workspaceを指定するstdio JSON-RPC Adapterで、model catalog／inspect／trace／validateの**4 Toolだけ**を既存internal/operationsへ渡す。モデルからpath/rootを書き換えるSchemaではなく、受理・書込み・Grantの操作は公開しない。PRの限定実測では、同じ公開Workspaceの各操作から抜き出したFingerprint・主要値・schemaVersionの対照で不一致0を報告。**その部分集合一致を、全JSON・失敗分類・Source/Host隔離・外部Harness全受領の完全同値へ昇格しない**。旧[TEI #3400](https://github.com/hat47x/tei-platform/issues/3400)の「当時MCP入口なし」は歴史的Source版の観測であり、現在mainに薄いReferenceが存在することと矛盾しない。
+
+### 11.2 TAI/YICが参照する適合条件と次の最小差分
+
+| 現行Evidence | Skill選択・Handoffへの利用 | 未成立の主張 |
+| --- | --- | --- |
+| 採用ADR-0048＋4 read-only Operation | 同じ目的のRequest/Result/Failureの正本は**TEI操作契約**とし、CLI/MCP tool名・JSON-RPC numeric code・CLI exitをAdapter投影として扱う | CLI/MCP/HTTP/IPCを含む実Full Parity、実Toolを使った同一Harness Trial |
+| 参照MCP／部分値一致 | **存在確認済み、限定Tool呼出しのProduct候補**。実Tool Result Bytes・Protocol/Schema版・Workspace固定・Source Index/World Fingerprint・diagnosticsを、Task/Attemptで別に照合 | 書込み可能／Host認可済み／全Sourceがモデルに届いた／同じエラーを全入口が等しく判定 |
+| [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)の静的Gap | validateの意味不合格をMCP isError:false/ok:trueへ誤昇格させない。未知欄・型違い・NULLをdefaultへ落とさず、実CLIと実stdio MCPの両方でT01〜T07を検証 | 現行参照MCPの全Case合格、CAPI-1/2/3/4完成 |
+| [TEI #3422](https://github.com/hat47x/tei-platform/issues/3422)の後続Effect | read-only成功、正常Result、試験用allow-allを現在のwrite Grant/Owner Accepted Meaningへ移さない。期限切れ/通信断はRollback確証でない | 異入口からの実Mutation同値、未知Effectの安全Retry、本番Host資格 |
+
+**実行順序**：TEI #1158／#3419が共通4操作の型を固定→#3420が実CLI/stdio MCPで成功・失敗・NULL・未知欄／Workspace拒否を同条件比較→必要なTaskのみに#3421のHTTP/IPC、#3422の作用を追加。YICは既存X01/X03/X05/X06を用い、実Productが返した操作資格を消費するだけで、第二API仕様・Schema変換器・Runner・認証Policy正本を持たない。[YIC適合計画 §26](https://github.com/hat47x/tai-pleroma/blob/docs/yic-skill-crosslane-qualification-20261106/docs/yi-constellation/skill-crosslane-qualification-and-order-2026-11-06.md)とTAI #271の現在Grant/受領資格へ参照で渡す。
+
+**初回SK-02を固定**：既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のH2→H3→H3→H2は**固定TEI pin＋CLI Tool／H3 Skill**の比較であって、今回新設されたMCP Adapterを途中から混ぜない。比較適格0/4、G0 OS実Read拒否→G1実Sink/Egress→G2完全Tool Reply→事前割付独立4 Sessionのまま。実Full CLI/MCP parity、実Host＋外部Harness／MCP接続、正式Product APIとしてのOwner採用、横断Activityの増分価値は**NOT RUN**。
