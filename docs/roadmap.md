@@ -155,3 +155,15 @@
 **次の不足一辺を三方向で並走**：Dは既存Design Contextで独立Requiredの一Function/Ruleと合法な空配列・異modeを区別、TはTAI #168/TEI #2509で実H2の禁止Read・Tool全Call/Replyと副次Sink受領を確認、Gは#3273/#2514の事前固定HoldoutによるT1-B。Dの限定Readが成立してもTとGを自動PASSにせず、Tの外部比較適格0/4を維持する。Provider選択→実Inspector Invoke、物理Schema→業務Relation、SHO Raw Writer→保存再開・SUI同一実File H1は各Product Ownerで並行検証し、初回H2/H3の新しい必須依存にしない。
 
 **価値の対照**：正常な未選択Capability、未読込のRequired外Subject、SHO未解釈Draftなどは局所利用を誤って止めない。同時に、必要なRule/Provider/Receipt/現在Grantを欠いた操作は誤って完了表示しない。B0/B1/B2で誤拒否と誤受入を別測定。外部Harnessの正式比較、実Target/Consumer同一Attempt、BOM適格、C1・全Coverage、Owner受理は**NOT RUN**。新しい中央Gate/Runner/Registryを設けない。
+
+
+### 2026-11-08夕：外部解析・配送・Ontology・HTTP例外の採用時点を分ける
+
+[VA-COND-01 §6](../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、既存Phase 0〜3と[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のH2/H3比較を変えない**並行評価の索引**として追加する。製品別の詳細設計・実装・意思決定は各Owner Issueに残す。
+
+- **近接の一機能（TEI/SHO）**：[TEI #3394](https://github.com/hat47x/tei-platform/issues/3394)でREA実Evidenceの**外部read-only観測（T1-A）**と、明示的なTEI Authoring提案/Loader受入（T1-B）を分離。先に一Functionの元Source/Rule/CRUD候補だけを観測し、独立Expected/SHO Writer/旧Runtime同値は後段にする。外部解析なしの通常のTEI/SHO作業を停止しない。
+- **近接の契約対照（EKI）**：[EKI #753](https://github.com/hat47x/eki-fabric/issues/753)・[merged #785](https://github.com/hat47x/eki-fabric/pull/785)は6イベント独立Expectedと参照意味の負例が限定成立。Local IPC/Connectの実配送・Leaseの適格性/遅延は**未実施**。既存Expectedのまま2 Adapter実測後に[#754](https://github.com/hat47x/eki-fabric/issues/754)で通信方式を選ぶ。
+- **長期の研究（TEI/SEI/SUI）**：[TEI #3475](https://github.com/hat47x/tei-platform/issues/3475)のOntology SDK/Decision TwinはO0のFit/Gap・DSL可読性・メッセージ契約研究のみ先行可。実デジタルツインやシミュレーション（O2/O3）はTEI全体セルフビルド受理とSUI基本機能完成**後**に限る。既存P0/SHO独立Writer/SEI判断を待たせない。
+- **局所のHTTP契約（TEI）**：[TEI #3274](https://github.com/hat47x/tei-platform/issues/3274)・[PR #3478](https://github.com/hat47x/tei-platform/pull/3478)で実Go Host Handlerの分岐/監査を検査する構想が進展。既存Node CI成功と新Go CI実行を別資格にし、HTTP 202/Client受信/AuditをBusiness EffectやCommit確認へ昇格しない。
+
+**これらは新しい横断Blocking Gateではない**。各Productで必要な一辺だけを実行してから、同一User JobのB0/B1/B2で誤成功・過剰停止・費用を比較する。新しいHost/Plugin Registry/Runner/Transport基盤を先行実装しない。最新Issue・PR確認と本計画の反映のみで、実REA/実Adapter/Twin/新Go Host CI・Owner受理は本更新では**NOT RUN**。
