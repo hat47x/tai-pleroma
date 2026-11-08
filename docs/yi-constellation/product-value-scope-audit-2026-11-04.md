@@ -549,3 +549,33 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **実施順序（既存Ownerの最小一辺ずつ）**：D（#3262の独立Required/Loader/Parser）・T（TAI #168の実Tool受領/実隔離）・G（#3273の独立Blind T1-B）を分けて進める。TEI Inspector実消費、Workbench実Source→Meaning、SHO普通のRaw Writerと同一File H1は並走可。これらの完成をTAIの初回H2/H3に一律先行必須化しない。不要なRequiredによる**誤停止**と、欠けたSource/Effectの**誤成功**を同じUser Job、B0/B1/B2、独立Expectedで計数する。新共通Engine/Registry/Hostなし。
 
 **今回の証拠**：既存ProductのIssue/PR/CI報告の再照合と本計画追補まで。main統合後の別実CI、盲検T1-B、実Provider/Studio/Workbench/SHO Writer、比較適格H2/H3、Ownerの正式意味受理・利用者B0/B1/B2は本更新では**NOT RUN**。
+
+
+## 23. 2026-11-08：SUIの二つの製品価値を、初回価値と段階拡張として照合する
+
+[現行SUI価値正本 ADR-0089](https://github.com/hat47x/sui-sensemaking/blob/main/01_Plans/adr/ADR-0089-product-value-canon.md)と、新しい[意味形成価値の原点照合 #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)／[異種データ統合Workspace構想 #3401](https://github.com/hat47x/sui-sensemaking/issues/3401)を区別して取り込む。**#3400/#3401は提案であり、ADR改訂・製品価値受理は未実施**。従来の「SUI=カード保存だけ」「統合は常に余計」という二分法は採らない。
+
+### 23.1 主要価値を二軸で検討し、実装入口を二重に必須化しない
+
+| 価値の軸と利用者の仕事 | 最初の独立した仕事／評価 | この軸を正しく守る条件 | 先に製品全体へ強制しないもの |
+| --- | --- | --- | --- |
+| **SUI-V（意味形成）**：「理由は不明だが気になる」という資料を、元の意味の一体性のまま置き、別の見立て・異論・変化を残して再開する | AI OFF/従来の紙・MarkdownをB0、既存SUIで材料→配置→候補比較→保留→翌日再開をB1として比較。[#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)のSV-01〜05/08から**初回10分と再開**に絞る。T2はSUI開発以外の実務資料で検証 | 任意の理由入力を義務にしない。Cardは文単位の機械分割でなく意味が生きる単位。原資料と新解釈のGain/Loss、理由を後付けした時点、異論・保留・人の判断履歴を別に追跡。AI提示前の自力の気付きを先に記録 | 全資料の自動カード化、標準クラスタリング、AI生成要約/表札、巨大Canvas自動分割、全操作Event Sourcing、全Method常時実行 |
+| **SUI-I（異種情報からの状況理解）**：RDB/文書/時系列から対象・関係・時点を仮同定し、別Viewで比較して新しい関係を検討する | [#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)のI1で**少数対象、3系統、必要な2 View以下**のread-only Candidate。既存DB/表計算/文書B0、カード手動取込B1、限定外部参照B2を同一問いで比較。II-01〜08の誤同定・権限・部分取得を先に圧力試験 | Source版/Scope/時点と「同じ対象かもしれない」を区別し、同名/同値を自動Identity受理しない。Graph多重辺・未公開Scope・遅延Index・Partialを可視性と別に扱う。外部更新はAction提案とEffect/Receiptを分ける | 全RDB/Graph/Vector/Media Source、常時全件Cache、万能Join/Query Engine、統一業務Ontology、全Viewの同時実装、Scenarioから自動業務実行 |
+
+**二軸は競争関係ではない**。SUI-Vの正しい「理由のない保留」を、SUI-IのEntity/Relation正式Schema不足として拒否しない。SUI-Iの一つの意味あるSource付き関係発見を、AIクラスタリングの見栄えやカード枚数で代替しない。#3401は戦略的な追加主要価値**候補**として研究を保ち、初回SUI-VやTAI #168の必須依存へ変更しない。人の認知増分と操作・計算費用、誤誘導/誤結合は同じ総合スコアに畳まず別計測する。
+
+### 23.2 Itemの低摩擦収容から外部Actionまで、意味・作用を飛び越えない
+
+- **取込/探索**：未整理Item・長文・異種資料は、最初からTask/Action/Event型や細粒度Cardへの分解を要求せずRaw/Sourceを保つ。Tree/Canvasの配置と関係は別投影であり、同じCardが複数Canvasに現れても同一の位置・所属・解釈とは限らない。[#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)のSV-06/09に既存Ownerを維持。
+- **理解/判断**：AIの提案と人が採用した判断、仮説の関係と正式な業務Relation、古い理由と後で説明された理由を分ける。View/Canvasの結線を実ActionやEventに直結しない。統一されたAction/Event型を全Itemの必須属性としない。
+- **操作/受領**：外部Actionが必要な場合にのみ型付きIntent→Hostの現Grant/Operation Identity→実Effect/Receipt→新しいObservationへ接続。[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)はread-only/Proposal-onlyを初期境界とし、Event発生やCommitをCanvasの変更から作らない。
+- **共同編集**：[SUI #3399](https://github.com/hat47x/sui-sensemaking/issues/3399)ではローカルUndo、保存Revision/CAS、意味判断履歴を別に扱う。二クライアントの409／dirty buffer保全を先に実証し、全操作永続Event/CRDT/独立共同編集Hostを導入前提にしない。
+
+### 23.3 採用・実装への判定
+
+1. SUI-Vは**実務T2での意味形成の増分**（気付きの変化/元資料へ戻る/異論と保留/再開）を実測する。単一のSUI内部dogfood、T3模擬参加者、AIの整った説明はT2/T1の代替としない。
+2. SUI-IはSource付き候補の実Read・二つのViewだけでB1手動取込にない価値を示す。II-01〜08のidentity/開示/partial違反があれば、その用途のB2を不適格に戻す。SUI-Vの正例を取り消さない。
+3. 両軸に影響する共同編集は[#3399](https://github.com/hat47x/sui-sensemaking/issues/3399)の二Client保存→409→独立再Readの範囲から。実需が出るまでCRDT等の配備方式を選ばない。
+4. 現在のTAI H2/H3 G0/G1/G2と適格試験を変更せず、SUI側のSource/Meaning/Save/外部EffectはそれぞれのProduct Ownerで検証する。新中央Host/DB/Oracle/Action Engineを設けず、AIのTool/Readerや将来のProvider機構は既存境界を再利用する。
+
+**資格と限界**：SUI #3400/#3401/#3399の提案・受入設計、現行ADRと既存実証の区分をSource-static照合したのみ。本更新でSUIの10分実User Job、T2/T1、異種Source実Provider、複数Client E2E、外部Action、別モデル独立評価、OwnerによるADR改訂/受理は**NOT RUN**。
