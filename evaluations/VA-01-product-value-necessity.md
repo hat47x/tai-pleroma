@@ -312,3 +312,8 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 ## 19. 2026-11-08：CSW選択導入の独立比較
 
 **VA-CSW-01**：LLM＋既存Tool／既存Harness／横断Skill／専門Plugin／独自Loopを同一TEI read-only Inspector作業と独立Expectedで比較する。未選択時の通常Build、実OS隔離・読取拒否・送出制限・Tool Reply完全受領、実Provider/Consumer受領、誤修正・介入・時間/費用を別列にする。既存Harnessが要件を満たす限り独自Loopを採用しない。実比較・Owner受理は **NOT RUN**。
+
+
+## 20. 2026-11-08：F0〜F5の段階別価値・実証資格
+
+[横断監査 §30](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-EVID-01** を追加。F0 Source／F1 API／F2 Representation／F3 Provider／F4 Effect／F5 Deliveryを同一Attemptと独立Expectedで判定する。F2の表示価値やF3のread-only価値を過小評価せず、F1応答をF4更新・F5完全受領と誤認しない。Provider未呼出し、Consumer部分受領、確定後ACK喪失、Plugin版差、Audience変更を負例にし、VA-RC-01と重複計上しない。実注入・Owner受理は **NOT RUN**。
