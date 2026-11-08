@@ -167,3 +167,19 @@
 - **局所のHTTP契約（TEI）**：[TEI #3274](https://github.com/hat47x/tei-platform/issues/3274)・[PR #3478](https://github.com/hat47x/tei-platform/pull/3478)で実Go Host Handlerの分岐/監査を検査する構想が進展。既存Node CI成功と新Go CI実行を別資格にし、HTTP 202/Client受信/AuditをBusiness EffectやCommit確認へ昇格しない。
 
 **これらは新しい横断Blocking Gateではない**。各Productで必要な一辺だけを実行してから、同一User JobのB0/B1/B2で誤成功・過剰停止・費用を比較する。新しいHost/Plugin Registry/Runner/Transport基盤を先行実装しない。最新Issue・PR確認と本計画の反映のみで、実REA/実Adapter/Twin/新Go Host CI・Owner受理は本更新では**NOT RUN**。
+
+
+### 2026-11-08夜：既存Harnessを基準にYI固有能力の増分価値を測る
+
+[VA-01 §12](../evaluations/VA-01-product-value-necessity.md)と[VA-04 §11](../evaluations/VA-04-evidence-readiness-preflight.md)を既存Phase 0〜3の**採用判断と実証順序**へ追加する。汎用Agent Harnessを自作する費用対効果は外部Tool/Skill/Pluginが備える機能に左右されるため、**先に外部Harness＋YIのProduct Tool/Skill/Plugin/Methodを測る**。専用実行ループは既存方式で満たせない一条件と独立Expectedがある場合だけ比較対象へ進める。既存H2/H3の事前固定Task/Skill/Tool/Model/参加者割付は変更しない。
+
+| 順序 | 直近の最小出口 | 記録すべき結果／未達 |
+| --- | --- | --- |
+| **0：外部Harness比較資格** | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／TEI #2509/#2515でG0実読取拒否→G1実Sink/Egress→G2全Call/Reply/byteのH2/H3適格一Session。既存4 completed/H3 Loaded ≠4適格 | 旧探索は比較資格0/4。実施後のITT/PP、独立Expected、Token/人手/誤判断/再開費用を別記 |
+| **1：Product独立能力** | [TEI #3482 merged](https://github.com/hat47x/tei-platform/pull/3482)のFunction宣言↔独立Required/Sourceを実CLIで検収し、#2586のFunction→Query→実Provider Readを別実行。[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)のH3-X02 D0/D1/M1を同一Task/Scopeで独立採点 | TEIの13 ReplyとFunction declaredは実Provider/SEI Methodではない。D1に対するM1の優位が見えなければMethod必須化しない |
+| **2：成果物と配送の局所実証** | [EKI #786 merged](https://github.com/hat47x/eki-fabric/pull/786)の固定Trace ComparatorにLocal IPC/Connect実Adapter観測を入力。[SHO Draft #25](https://github.com/hat47x/sho-composer/pull/25)のtest-only Working CopyからG2-W2実Editor保存・no-op・再開へ進む | Fixture比較器PASS≠Delivery；Working Copy byte一致≠正式保存・CAS/ABA・SUI同一File H1。各Ownerで並走可能 |
+| **3：Harness追加投資判断** | 同一User JobでProduct単独／Toolのみ／Product Skill／Plugin・SEI Methodを比較し、実測で不足が残る場合だけ専用ループ案を検討（VA-01 HV-0〜HV-4） | 後続の実外部Harness比較・異モデルVA-X/VA-E、Owner受理・専用Runtime採用はNOT RUN |
+
+**重要な停止線**：Sourceの現在性はConsumer World FPだけで保証しない。[TEI Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)のImported Provider Source-only driftなど、入力原文の版を別照合する。Repo/PRの統合は合成ケースの実Target/Provider/Current Grant/Consumer受領の証明ではない。必要範囲のSource/Grantが未資格ならそのActionのみ保留し、合法なローカル探索・通常Markdown読取・既存Product単独作業を止めない。
+
+**この追補で実行したこと**：GitHubのIssue/PR/記録済み限定CIの読取り、VA-01/VA-04/本ロードマップ更新。新TEI実Read、SEI Method、EKI二実Adapter、SHO Editor、本番外部Harness/独立価値比較・Owner受理は**NOT RUN**。新たな共通Runner/Authority/Registryを作らない。
