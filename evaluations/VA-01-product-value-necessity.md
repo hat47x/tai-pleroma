@@ -275,3 +275,20 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 **採否の順序**：まず[#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)のV0/V1で一仕事の理解変化と再開を確認する。別レーンで[#3401](https://github.com/hat47x/sui-sensemaking/issues/3401)のI0→I1→I2をread-onlyで実証。共同編集は[#3399](https://github.com/hat47x/sui-sensemaking/issues/3399)の最小2 Clientだけ。SUIのActionIntentは外部Effect/Hostの承認と別資格であり、YIC新Runtime/中央Data Serviceを作らない。TAI #168のH2/H3比較Blockingへ新しい要件を加えない。
 
 **証拠の状態**：上記5ケースの比較は設計提案・Product Source-staticの対照まで。実B0/B1/B2、独立ExpectedのProduct Owner固定、SUI実務T2／第三者T1、異種Source 3系統のProvider実Read、2 Client保存E2E、AI効果測定、Owner正式受理は**NOT RUN**。
+
+
+## 14. 2026-11-08：不明な実行結果を「成功／失敗」に押し込めない価値試験
+
+[横断監査 §24](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-RC-01** を既存VA-01の対照実験へ接続する。追加の共通Runtime/Receipt/再試行機構ではなく、既存Productが現に所有する確定境界・独立Readで検証する。新たな製品要件の採否はOwnerへ返す。
+
+| 比較 | B0 既存手段／B1 Product／必要時B2追加連携 | 独立Expected・価値に数える成果 |
+| --- | --- | --- |
+| **RC-01 確定直前失効** | 同じ旧版の保存/DDL/Lease/Tool操作を、Source・Grant・ETag・Attempt変更後に要求 | 誤った確定0、stale拒否の理由が説明できる、無関係なread-only継続は阻害しない |
+| **RC-02 確定直後ACK喪失** | OwnerへCommitされたか不明な状態を意図的に作り、権限ある別Readで現状態を確認 | `confirmed-done / confirmed-not-done / unknown`を分離。独立観測不能なら自動非冪等再試行0 |
+| **RC-03 Partial delivery** | 一部Tool Reply、文書、固定イベントだけを受領 | 全件/有効0件/部分/permission-deniedを区別し、指定Consumerの仕事の達成を偽装しない |
+| **RC-04 Optional不在** | Optional Cloud/AI/高度Targetなしで基本User Jobを行う | 根拠のない全体停止0。操作回数・時間・誤停止を測る |
+| **RC-05 同bytesの復帰** | 版A→B→A、同digest別所在/主体に置換 | Source/Identity/Review/現在Grant/業務結果をdigest一致だけで復権しない |
+
+**実施単位**：TEI [#2892](https://github.com/hat47x/tei-platform/issues/2892)のMigration、SUI [#3399](https://github.com/hat47x/sui-sensemaking/issues/3399)の2 Client、SHO [#20](https://github.com/hat47x/sho-composer/issues/20)のVault、EKI [#77](https://github.com/hat47x/eki-fabric/issues/77)のLease、TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のTool Replyのうち、実入口が存在するものから選ぶ。各Caseの実Expectedと原Observedは別担当で記録。旧PR局所CI・模擬結果を本CaseのPASSに算入しない。全Caseの同時実装も求めない。
+
+**状態**：試験計画のみ。RC-01〜05の実注入、B0/B1/B2の費用・品質計測、実Provider/OS/外部Harness再実行、Owner受理は **NOT RUN**。
