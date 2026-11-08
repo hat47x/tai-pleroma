@@ -192,3 +192,38 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 **段取り**：TEIの一Function Dを固定し、TAIの適格H2一Session T、SEIのD0/D1/M1、EKIの実Transport Adapter、SHOの正式Writerは独立に進める。後段のProduct間同一Attemptが必要な時にだけSource cohort/Scope/実Artifact/Reader/現在Grantを結合する。中央Ledger/Runnerを追加しない。
 
 **実施状態**：今回はGitHub Issue/PR・報告済みCIの照合とこの文書の追記のみ。#3482の統合後実CLI試行、#3479のDraft Go反例、実EKI Adapter、SHO正式Editor Save、SEI Method実Tool、外部H2/H3適格Trial、Owner Meaning Acceptanceは本更新では**NOT RUN／未資格**。
+
+
+## 12. 2026-11-08：共通Application APIから実Effectまでの一機能受入票
+
+**現在のSource更新（別Runの資格を分離）**：TEI [#3482 merged](https://github.com/hat47x/tei-platform/pull/3482) はPR HEADの専用[CI #42462672188](https://github.com/hat47x/tei-platform/actions/runs/42462672188)に加え、main squash commit `8ed583790e63b63527c1dd8f8aecc1d6ce6e3260`の[push実CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657)も **completed/success**。main上の**13実CLI Reply・42 bounded Consumer Controls**、Context Packet/9、6 pinned Scenario＋既知T1-A・Source-only driftが同一限定Runで確認された。これは§11の「main後CI未確認」を後続証拠で補正するもので、全Repo Health／全Function／Provider実Read／外部H2/H3／Owner受理の資格ではない。
+
+[採用済みADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)と[TEI #3487 merged](https://github.com/hat47x/tei-platform/pull/3487)に従い、CLI/MCP/HTTP/Web/Desktopの共通Operation意味を**選択した一Function**から試す。現行[TEI #3458 merged](https://github.com/hat47x/tei-platform/pull/3458)ではCLI/MCPの `validate` 正常・Load失敗・意味エラーに限定して実応答を合わせた。**すべてのOperation/Transportが同値実装済みとはしない**。[TEI #3485 merged](https://github.com/hat47x/tei-platform/pull/3485)はE1 Plan/Go HostのMethod/Path/Action二宣言のずれを試すtest-only負例で、実Host Bindingを資格化しない。
+
+### 12.1 既存Ownerの一Function縦断（新しいGateではなく単一Runの列）
+
+| 受入辺 | 必須の観測／期待値 | 今認めるClaimの上限と次のOwner |
+| --- | --- | --- |
+| **F0 Source** | `sales.order.submit`の独立Required＋実Loader/Parser/Source Index／Workspace＋輸入ProviderのManifest/Rawの取得版・対象Scope | #3482 main 13実Replyは限定宣言観測。Consumer World一致でも外部Provider raw/manifestが変わる[Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)を別票。複数Loadの原子的同時性は未確認 |
+| **F1 Operation/API** | 同じ関数のCatalog→Inspect/Trace→Validate結果と診断をCLI/MCPで各実取得。操作成功・意味Validation成否・Transportエラーの3軸 | #3458 `validate`局所Parityを基線。ほか3 Toolの意味差/実Consumerパケットは#3419/#3420。CLIとMCPの包みShape同一を不必要に強制しない |
+| **F2 Representation** | 三視点Data/Function/Business/CRUDと実Source・Source occurrence/Canvas nodeを紐付け、向き/多重辺/unknownを保持 | 置換[Draft #3492](https://github.com/hat47x/tei-platform/pull/3492)の実Workspace inspectは限定M1a read。Graph表示・Owner Meaning・反対向き編集の資格ではない |
+| **F3 Selection→Invoke** | 実選択Capability/Provider、exact Provider/Rule/Artifact、実Buildに含まれる版、同一Attemptで呼ばれたProviderと実Query Read／拒否理由 | #951/#1251/#3278/#3267の既存Owner。Design ContextのFunction declarationやPlugin Selectedのみで合格しない。BOM実Target資格は別 |
+| **F4 Action→Effect→Client** | Validated typed parameter、現在のHost/DB Grant、実Action/DDLの確定・不確定、independent DB read/Client Current Reaction | [TEI #3491 Draft](https://github.com/hat47x/tei-platform/pull/3491)の2^53超のUI値丸め・[TEI #3489 Draft](https://github.com/hat47x/tei-platform/pull/3489)のMigration AppliedUnknownをfalse Appliedへ昇格する反例を含む。HTTP 202/Audit completedは業務Effectではない（#3274/#3478） |
+| **F5 External Receipt** | 必要なTool Call/Reply byte/end・Consumerへの実Receipt・Source/Grant現在性・独立Expected・レビュー | TAI #168のG0拒否→G1送出→G2受領と既存H2/H3 Group。F0〜F4の限定ローカル成功は外部比較資格0/4を増やさない |
+
+**段階的採点**：F0/F1が成立すれば一Functionのread-onlyツール価値を測れる。F2/F3未成立を理由にその局所成功を消さない。F4への操作を行うならF0〜F3の必要Scope、Authorityと未確定Effectを独立に確認する。F5はH2/H3比較を実施する場合だけ必要。各辺を全面Product完成の直列Blockingへ変換しない。
+
+### 12.2 独立Expectedを先に用意する6つの差分（提案・NOT RUN）
+
+| ID | 入力差分 | Expected／false accept・false blockの判別 |
+| --- | --- | --- |
+| **FQ-01** | CLI/MCP `validate`は同じRuleを検出、CLI exit1/MCP isError true。ただしJSON-RPC envelopeが異なる | 意味上同じ失敗を適合とし、表層Shape差のみで誤拒否しない。実Host/Grantは未知 |
+| **FQ-02** | Consumer WorldとSource Index FPは同じ、Imported Provider Manifest末尾改行だけ変わる | Source/Manifest Referenceは旧現在性を再利用せず、無関係の読取済みlocal Claimは保持 |
+| **FQ-03** | Functionと三視点候補が表示されるが、Providerの実Read/SQL Bindingなし | F0〜F2局所成功・F3 unsupported、実注文取得や完全CRUD/Owner Meaningとは呼ばない |
+| **FQ-04** | E1宣言のActionとGo Host実Routeが一致しない、またはHTTP 202後にpanic | Host/Client/Effectの結果を別判定。再実行で二重Writeを起こさずunknownを保持 |
+| **FQ-05** | UI row=`9007199254740993`を有効なdecimal digitとして渡す／同じIDがunsafe Numberへ丸められる | 汎用Starterはinvoke前に拒否、typed Action Portの独立防御と両方を計測。文字列を精度なしに変換して続行しない |
+| **FQ-06** | Migration HistoryがAppliedUnknown、同checksum／またはHistory Readerが部分取得 | repo applied／実DDL confirmedに昇格しない。未知は限定診断・当該Apply停止、既存read-only Workbench探索は続行 |
+
+**後続試験の単位**：一Source cohort・一Function・CLI/MCPの実read-only応答から開始し、必要なGraph/Plugin実Invoke/外部Actionへ拡張する際だけ独立ExpectedとHost資格を追加。合成Referenceの42 ControlsやGo testは全業務・本番Providerを保証しない。新しいUniversal API/Graph/Receipt Databaseを作らない。
+
+**更新で実施したこと**：GitHub既存Issue/PR/CI報告の再照合と本文追記。ここでFQ-01〜06の新実行、実CLI/MCP同一Attempt試行、実Provider/DB/Client、TAI適格H2/H3、Owner採用を行ったわけではない（**NOT RUN**）。#3492/#3491/#3489/#3479はDraftとして扱い、採否は各Ownerに残す。
