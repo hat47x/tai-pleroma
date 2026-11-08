@@ -226,3 +226,8 @@ TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、
 ### 2026-11-08：型付きHookとVUI Interaction Flowの横断ゲート
 
 [横断監査 §26](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §16](../evaluations/VA-01-product-value-necessity.md)に **VA-HOOK-01** を追加。Operation Lifecycleへモデル正本のAdd/Replace/Transform/Compose Bindingを接続し、CLI/Web/Desktop/MCP/VUIをAdapterとして生成する。VUIは状態付きInteraction Flowであり、音声I/Oだけに縮約しない。Interaction/Business/Execution Stateを分離する。実装の最小順はread-only Inspector実Provider→Hook競合/Selected≠Invoked→VUI確認・中断・再開。生成器・実Provider・Cross-target・Owner受理は **NOT RUN**。
+
+
+### 2026-11-08：三Flowを図表・Generator・Pluginの共通契約へ
+
+[横断監査 §27](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §17](../evaluations/VA-01-product-value-necessity.md)に **VA-FLOW-01** を追加。Adaptive Activity Flow／Interaction Flow／Business Operation Flowを分離し、標準固定部・Plugin可変Slotを持つ図表をGenerator/Validationの入力とする。最小順序はread-only実Provider Trace→三Flow図表とManifest照合→専門Web/Chat/VUI Consumer→B2C負荷・UX比較。専門B2Cに標準UIやAI Harnessを強制しない。既存OwnerのIssueとTEI MASTER_PLANを正本とし、新たな中央Host/Workflowを導入しない。**実試験・Owner受理はNOT RUN**。
