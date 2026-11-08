@@ -204,7 +204,7 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 
 | 受入辺 | 必須の観測／期待値 | 今認めるClaimの上限と次のOwner |
 | --- | --- | --- |
-| **F0 Source** | `sales.order.submit`の独立Required＋実Loader/Parser/Source Index／Workspace＋輸入ProviderのManifest/Rawの取得版・対象Scope | #3482 main 13実Replyは限定宣言観測。Consumer World一致でも外部Provider raw/manifestが変わる[Draft #3479](https://github.com/hat47x/tei-platform/pull/3479)を別票。複数Loadの原子的同時性は未確認 |
+| **F0 Source** | 対象Functionを先に固定し、独立Required＋実Loader/Parser/Source Index／Workspace・選択ProviderのSource/Manifest取得版とScopeを確認 | #3482 main の13実Reply/42限定対照は **`sales.order.submit` の宣言証拠**。最初の実Read対象 **`order_entry.recent_orders`** への転用不可。[main #3479](https://github.com/hat47x/tei-platform/pull/3479)はImported Provider raw/manifest漂流の局所負例。複数Loadの原子的同時性は未資格 |
 | **F1 Operation/API** | 同じ関数のCatalog→Inspect/Trace→Validate結果と診断をCLI/MCPで各実取得。操作成功・意味Validation成否・Transportエラーの3軸 | #3458 `validate`局所Parityを基線。ほか3 Toolの意味差/実Consumerパケットは#3419/#3420。CLIとMCPの包みShape同一を不必要に強制しない |
 | **F2 Representation** | 三視点Data/Function/Business/CRUDと実Source・Source occurrence/Canvas nodeを紐付け、向き/多重辺/unknownを保持 | 置換[Draft #3492](https://github.com/hat47x/tei-platform/pull/3492)の実Workspace inspectは限定M1a read。Graph表示・Owner Meaning・反対向き編集の資格ではない |
 | **F3 Selection→Invoke** | 実選択Capability/Provider、exact Provider/Rule/Artifact、実Buildに含まれる版、同一Attemptで呼ばれたProviderと実Query Read／拒否理由 | #951/#1251/#3278/#3267の既存Owner。Design ContextのFunction declarationやPlugin Selectedのみで合格しない。BOM実Target資格は別 |
@@ -227,3 +227,38 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 **後続試験の単位**：一Source cohort・一Function・CLI/MCPの実read-only応答から開始し、必要なGraph/Plugin実Invoke/外部Actionへ拡張する際だけ独立ExpectedとHost資格を追加。合成Referenceの42 ControlsやGo testは全業務・本番Providerを保証しない。新しいUniversal API/Graph/Receipt Databaseを作らない。
 
 **更新で実施したこと**：GitHub既存Issue/PR/CI報告の再照合と本文追記。ここでFQ-01〜06の新実行、実CLI/MCP同一Attempt試行、実Provider/DB/Client、TAI適格H2/H3、Owner採用を行ったわけではない（**NOT RUN**）。#3492/#3491/#3489/#3479はDraftとして扱い、採否は各Ownerに残す。
+
+
+## 13. 2026-11-08：実Read対象を一本化し、宣言・Provider・ConsumerのClaimを結ぶ
+
+前節§12のF0〜F5を**一Functionに対して実行可能な順序**へ落とす。既存[TEI Master Plan](https://github.com/hat47x/tei-platform/blob/main/plan/MASTER_PLAN.md)のP0-R／[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)が最初のProduct実Read対象を **`order_entry.recent_orders`** と明記している。これと[TEI #3482 main](https://github.com/hat47x/tei-platform/pull/3482)で13実CLI Reply・42局所Controlの実成功を得た **`sales.order.submit` の宣言・Required証拠**は異なるFunction/Operation。後者を前者の実Query/実Rowsetや「同一FunctionのF0→F3達成」として継ぎ足さない。
+
+### 13.1 初回P0-Rの一Attempt検収票（新たなCLI/APIの定義ではない）
+
+| 接続辺 | 最初の一件で固定・取得するもの | 独立Expected／合否の境界 |
+| --- | --- | --- |
+| R0：Input | `order_entry.recent_orders`、一Workspace/Source cohort/実Revision、選択されたQuery Source／SQL raw、要求したRowset・Field/NULL/Grain、必要な現Grant | 原典/Query/Functionの実Loader取得範囲を固定。不足時は`not-loaded / partial / unknown`を区別し、暗黙の補完をしない |
+| R1：Binding | Function→Query/SQL→DataSource alias→物理Providerの**実選択・実呼出**、SQL/typed args、exact Provider/Rule/Manifest・実取得時点 | SelectedだけのPASSを拒否。命名一致、`sales.order.submit`のSource一致、別Domainの#3500合成Connector成功は不十分 |
+| R2：Data | 実Providerが返したRowset/取得対象母集団と範囲、Mapper Field Presence、NULL/未取得、page/partial、Function Data Contextのreadback | 元DBの独立Read/固定Expectedと対応。空Rowset・切詰め・非開示を「全件不存在」「業務成功」に変えない |
+| R3：Read-only Consumer | 同じFunction Data Context→Form/Tableまたは一CLI/MCPの許可された投影。Source/Consumer Scopeと実Replyが必要な場合はEnd/partまで観測 | 投影・Reader成功のみ認める。Form/Tableの二表現の一致、MCP validate parity、適格H2/H3のConsumer受信は各別資格 |
+| R4：後続の選択条件 | 一機能が限定成立した後だけ、三視点Diagram/CRUD・Selected Inspector・Lifecycle Graph・AI性能Hintを**利用Consumer**として比較 | 図のCatalog宣言≠実Model Map完備、in-process Go callback≠通常CLI/Wails wiring、19合成AI統計対照≠実Provider性能向上 |
+
+**実施の責務**：P0-Rの正本はTEI #2586/主計画、Function Data Contextと表示は#2506/#2507、Provider Selection/Inspectorは#951/#1251、独立Expectedは#2514/#1180、外部Tool受領はTAI #168。横断VA-04では観測列の取り違えだけを防ぎ、Source/実行Ledger/Runnerをもう一つ作らない。順序はR0→R1→R2の不足一辺を解消したうえでR3へ。三視点のM1やAI Tuneの実装を最初のP0-RのHard dependencyにしない。
+
+### 13.2 今回確認したmain/Draftの更新点
+- [main #3479](https://github.com/hat47x/tei-platform/pull/3479)：外部Provider raw/Manifestだけが変わりConsumer World/Indexが不変な局所失効反例は**main統合済み**。§11〜12に残る「Draft」の記述は当時の状態。現在もSame-Load/全Source閉包や現Grantは未受理。[Draft #3524](https://github.com/hat47x/tei-platform/pull/3524)は初回Nested Loadに紐付いたprivate Source/Manifest witnessの候補でありmainとは分離。
+- [main #3381](https://github.com/hat47x/tei-platform/pull/3381)／[status #3531](https://github.com/hat47x/tei-platform/pull/3531)：Selected Inspector BをCLI注入Helper・Studio Host Go APIの**二局所call-site**で検証するコードはmain。通常`cmd/tei/main.go` dispatch／実Wails Bridge／正規Artifact・Grantは**S2未達**。これは同一FunctionのProduct Readや実CLI/Studio E2Eではない。
+- [main #3516](https://github.com/hat47x/tei-platform/pull/3516)：実Go HTTP Host→Canonical Auth→Driver→**合成Adapter** 7経路の有限CI成功。実Provider DB Commit/Client受領とは別。
+- [main #3520](https://github.com/hat47x/tei-platform/pull/3520)：AI性能Statistics/Design Hint合成Join **19件**が専用CIで局所成功。実SQL Plan/Telemetry/AI提案/Performance改善・実Effectは未実施。統計をP0-Rの実Call受領証拠へ無断昇格させない。
+- [main #3505](https://github.com/hat47x/tei-platform/pull/3505)：**RQ-036＝全容Model Map/Diagram** が製品要求の現行意味。未統合[BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)の同IDを上書きでマージしない。衝突の一次追跡とBOM再採番のOwner判断は既存[TAI Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)とTEI #3267/#1119へ返し、この票で別IDを独断採番しない。
+
+### 13.3 先に固定する受入反例（提案・本更新NOT RUN）
+
+**R-QUAL-01**：`sales.order.submit`の13 ReplyはPASS、`order_entry.recent_orders`実Provider呼出なし。Expected＝宣言の局所成功だけ保持、P0-Rは未達。  
+**R-QUAL-02**：`recent_orders`のSQL/argsは一致、Selected Provider Bだが実Aへ送出。Expected＝R1不適格、Response一致でも拒否。  
+**R-QUAL-03**：同一Consumer World/IndexでImported Provider Manifestだけ変化。Expected＝引用/Bindingの現在性を選択的再確認。無関係なSourceの局所PASSは失効させない。  
+**R-QUAL-04**：合成MapperのRowset PASSだが、実PG ReaderがSKIPまたは返信が途中切断。Expected＝合成PASSと実Read/Deliveryを混ぜず、NULL・空集合・partialを保持。  
+**R-QUAL-05**：Selected Inspector二Go call-site成功を通常CLI/Wails製品接続と報告。Expected＝S1局所肯定、S2未達。  
+**R-QUAL-06**：Model Map RQ-036のmain要求と、BOM Draftの同一IDが衝突。Expected＝現行正本を維持し未修正統合を拒否、BOM Owner判断待ち。
+
+**実行結果の分類**：#3482 main専用CI等は各Productの歴史的な限定実測。R-QUAL-01〜06とP0-Rの一Attempt実Provider/実Rowset/実Consumer、正規S2、Owner Meaning・横断H2/H3適格は、本VA-04では**NOT RUN**。
