@@ -216,13 +216,6 @@ TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**
 **次の作業**：SUI #3399の2 Client CAS/ACK、SHO #20の文書保存、TEI #2892のHistory unknown、EKI #77のAttempt/Lease、TAI #168のTool Replyのうち実入口が存在する最小一件を、それぞれProduct Owner側で確認する。全体共通Store/Transaction/Runnerの導入やTAI H2/H3への新Blockingは行わない。**本追補は計画のみでRC実注入／Owner受理はNOT RUN**。
 
 
-### 2026-11-08：KON Dataspaceの独立化は二Consumer実需で判断する
-
-[横断監査 §25](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §15](../evaluations/VA-01-product-value-necessity.md)へ **VA-KON-01** を追加。SUIの既存Raw/Source/Revision保存を基準に、Canvas A/Bの異なる意味投影とSHOのread-only引用を一件で比較する。B0＝現状手動、B1＝薄いAdapter、B2＝独立KON Store候補。複数Consumerの実需と測定可能な改善がない限りKON独立配備を初期依存へ昇格しない。
-
-TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、SHOのMarkdown編集、EKIのDelivery、TAIのHarness/受領をKONへ集約しない。§24のRC-02/03は再利用し、別の障害試験正本を作らない。**比較・実連携・KON実装・Owner受理はNOT RUN**。
-
-
 ### 2026-11-08：型付きHookとVUI Interaction Flowの横断ゲート
 
 [横断監査 §26](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §16](../evaluations/VA-01-product-value-necessity.md)に **VA-HOOK-01** を追加。Operation Lifecycleへモデル正本のAdd/Replace/Transform/Compose Bindingを接続し、CLI/Web/Desktop/MCP/VUIをAdapterとして生成する。VUIは状態付きInteraction Flowであり、音声I/Oだけに縮約しない。Interaction/Business/Execution Stateを分離する。実装の最小順はread-only Inspector実Provider→Hook競合/Selected≠Invoked→VUI確認・中断・再開。生成器・実Provider・Cross-target・Owner受理は **NOT RUN**。
@@ -238,8 +231,6 @@ TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、
 [横断監査 §28](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §18](../evaluations/VA-01-product-value-necessity.md)へ **VA-TUNE-01** を追加。Observe→Diagnose→Propose→Preview→Verify→Accept→Apply→Re-observeの最小閉路を、CLI/Studioのread-only実Provider Traceから着手する。Source/Structural/Accepted Meaning/Build/Executionの資格を分離し、World FP一致やCache hitだけでEvidenceを再利用しない。Query/Index・Cache・Plugin置換を独立Expected、P50/P95、実Plan、旧Artifact保全で比較。中央Evidence Storeを初期必須としない。**実負荷・AI変更適用・Owner受理はNOT RUN**。
 
 
-### 2026-11-08：KONのAPI境界訂正とCSWの選択的実践
+### 2026-11-08：CSWの選択的実践
 
-[横断監査 §29](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §19](../evaluations/VA-01-product-value-necessity.md)に境界訂正と **VA-CSW-01** を反映。SUIは文書管理APIのみ利用し、DBへ直接アクセスしない。KONはオンプレミスPostgreSQL＋NASを基準にクラウドProvider交換可能、Go単一バイナリ、**TEI完成後に実装**。既存SUI Storeを共通DB正本とみなさない。
-
-CSWはYI開発の選択的Skill/Pluginと検証ループであり、必須Runtimeではない。DSH/既存HarnessのOS隔離・送出範囲・完全Replyを先に実測し、独自Harnessは比較で不可欠性が示されるまで保留。実装優先順はTEI実Provider Inspector→SHO Writer Readback/SUI→SHO受渡し→Harness隔離/完全受領→CSW比較→KON API契約再評価。**実試験・Owner受理はNOT RUN**。
+[横断監査 §29](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §19](../evaluations/VA-01-product-value-necessity.md)へ **VA-CSW-01** を反映。CSWは選択的Skill/Pluginと独立検証の開発ループであり必須Runtimeではない。既存HarnessのOS隔離・送出範囲・完全Replyを先に実測し、独自Loopは比較で不可欠性が示されるまで保留。**実比較・Owner受理はNOT RUN**。
