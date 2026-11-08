@@ -236,3 +236,10 @@ TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、
 ### 2026-11-08：Evidence資格を保持したAIチューニング閉路
 
 [横断監査 §28](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §18](../evaluations/VA-01-product-value-necessity.md)へ **VA-TUNE-01** を追加。Observe→Diagnose→Propose→Preview→Verify→Accept→Apply→Re-observeの最小閉路を、CLI/Studioのread-only実Provider Traceから着手する。Source/Structural/Accepted Meaning/Build/Executionの資格を分離し、World FP一致やCache hitだけでEvidenceを再利用しない。Query/Index・Cache・Plugin置換を独立Expected、P50/P95、実Plan、旧Artifact保全で比較。中央Evidence Storeを初期必須としない。**実負荷・AI変更適用・Owner受理はNOT RUN**。
+
+
+### 2026-11-08：KONのAPI境界訂正とCSWの選択的実践
+
+[横断監査 §29](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §19](../evaluations/VA-01-product-value-necessity.md)に境界訂正と **VA-CSW-01** を反映。SUIは文書管理APIのみ利用し、DBへ直接アクセスしない。KONはオンプレミスPostgreSQL＋NASを基準にクラウドProvider交換可能、Go単一バイナリ、**TEI完成後に実装**。既存SUI Storeを共通DB正本とみなさない。
+
+CSWはYI開発の選択的Skill/Pluginと検証ループであり、必須Runtimeではない。DSH/既存HarnessのOS隔離・送出範囲・完全Replyを先に実測し、独自Harnessは比較で不可欠性が示されるまで保留。実装優先順はTEI実Provider Inspector→SHO Writer Readback/SUI→SHO受渡し→Harness隔離/完全受領→CSW比較→KON API契約再評価。**実試験・Owner受理はNOT RUN**。
