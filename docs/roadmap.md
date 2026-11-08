@@ -250,3 +250,12 @@ TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**
 **訂正済み現況**：[TEI #3479](https://github.com/hat47x/tei-platform/pull/3479)のImported Provider raw/Manifest失効反例、および[#3381](https://github.com/hat47x/tei-platform/pull/3381)のSelected Inspector二Go call-siteはmain統合済み。ただし後者の通常CLI/Wails Product WiringはS2未達。[#3516](https://github.com/hat47x/tei-platform/pull/3516)のHTTP合成Adapter7経路と[#3520](https://github.com/hat47x/tei-platform/pull/3520)のAI性能合成19件は限定成功。実Provider/性能改善/本番Effectは未資格。RQ-036は[main #3505](https://github.com/hat47x/tei-platform/pull/3505)の全容Model Mapを維持し、同番号を使う[BOM Draft #3297](https://github.com/hat47x/tei-platform/pull/3297)はOwner再採番まで無修正統合禁止。衝突の追跡は[TAI Draft #532](https://github.com/hat47x/tai-pleroma/pull/532)を再利用。
 
 **判定**：P0-RのR0〜R2実ReadとR-QUAL-01〜06は本更新ではNOT RUN。現TAI H2/H3適格0/4、未知AIテストT1-B、Owner意味受理を変えない。不要なPlugin/Graph/AI/SHO/外部Harnessの全完成を実Readの先行必須にせず、Source取得/権限/実受領の必要な一辺だけを正しく停止・再資格化する。
+
+
+### 2026-11-08夜：直列Fゲートの誤読を防ぎ、既存の限定成果から実Consumerへ接続
+
+[横断監査 §30.1/30.2](yi-constellation/product-value-scope-audit-2026-11-04.md)／[VA-01 §20.1](../evaluations/VA-01-product-value-necessity.md)／[VA-04 §13](../evaluations/VA-04-evidence-readiness-preflight.md)に、最新実証の進捗とClaim適用条件を反映。**F0〜F5を全操作必須の直列Gateや成熟度総得点にしない。** read-onlyではF4実業務更新をnot-applicableにできる一方、実UpdateはF4の現Grant/Commit/独立Readが必要。F5の実受領はread-onlyでも別に確認し、F5からF3 Provider/実Owner Effectを推論しない。
+
+**直近の限定成果**：TEI main #3482の13実CLI Reply・42 Consumer Controls、[TEI→SEI A0実CI #42474971439](https://github.com/hat47x/tei-platform/actions/runs/42474971439)の独立Requiredに基づく**評価者作成Recommendation**の保存・Resume、[SHO Draft #25](https://github.com/hat47x/sho-composer/pull/25)のtest-only実Working Copy書込→別Open Readback（二OS CI限定PASS）、[EKI #785](https://github.com/hat47x/eki-fabric/pull/785)の6 Event Reference意味負例をそれぞれ別資格に固定。従来の「SHOはWriterの実書込を一切試していない」「SEIへ一度も保存・再開できていない」という広すぎる未実施表現を補正。ただし正式Editor Save、SEI Method自動発見、EKI実配送、TEI実Provider SQL、SUI→SHO H1、H2/H3適格比較は未達。
+
+**次に欠けている最小一辺**：TEI一Functionの選択Provider＝実Provider→Rowset→Consumer、SHO正式Editor保存→再Open、SEI H3-A0の先でD0/D1/M1の比較、EKI実Transport二方式、TAI G0/G1/G2実適格（他Productと非阻害）。**要求番号の採用は別**：TEI main RQ-036はModel Map。BOM Draft #3297のRQ-036はID競合を再発しており、Ownerによる別番号採番・参照整合までBOM要求の正式採用を保留する。BOM研究・既存読取作業や初回H2/H3を停止しない。新中央Registry/Host/Runner/Schemaは作らず、Owner受理・実価値比較は**NOT RUN**。
