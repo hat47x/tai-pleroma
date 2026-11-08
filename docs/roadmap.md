@@ -192,3 +192,18 @@
 **次の実行優先**：SUI #3400 V0の現実装Fit/Gap→SUI外の実務資料でV1（初回10分/翌日再開・AI提案前の本人見立て・違和感/異論と新気付きを観測）。同時に#3401 I0のSource/Scope/Identity棚卸しをread-onlyで行い、実3系統Sourceを必要とする場面のI1/I2を後続。共同編集#3399は二Client CAS/409とdirty buffer保持から始め、全操作Event/CRDTや共通認可Hostを先行しない。Canvas複数表示・Item未分類・ActionIntentは自動Business Event/実Effectへ昇格しない。本文保存、業務意味、人の採否、外部Provider/Grant/Receiptを別正本・別資格として扱う。
 
 TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**。SUI内部dogfoodやT3モデル候補をT2の実ユーザー効果へ換算しない。5件のVA-SUI対照・実T2/T1/3実Source/2 Client E2E、Owner採否は**NOT RUN**。追加の全Product共通Engine/Registry/DB/Runnerを作らない。
+
+
+### 2026-11-08夜：一機能の共通API・実読取・実作用を分けて検収
+
+[VA-04 §12](../evaluations/VA-04-evidence-readiness-preflight.md)と[VA-COND-01 §7](../evaluations/VA-COND-01-conditional-capabilities-and-source-drift.md)を、先行横断Phase 0〜3を置換しない**具体的な作業順**として接続する。新しい共通Application APIを構築するのではなく、TEI main採用済みADR-0048を一Functionで段階的に検証する。
+
+1. **確実に達成済みの有限証拠から開始**：TEI #3482のmain commit `8ed583790e63b63527c1dd8f8aecc1d6ce6e3260`専用[push CI #42462861657](https://github.com/hat47x/tei-platform/actions/runs/42462861657)で **13実CLI Reply/42 bounded Controls PASS**。対象 `sales.order.submit`のRequired宣言・Source/Application Scopeまで。全Repo Health、全Rule/Business、実Provider/Function実行は別評価。旧「main後CI未確認」という履歴記述を現在のClaimとして使わない。
+2. **一つの共通Operationを正しく照合**：main [#3458](https://github.com/hat47x/tei-platform/pull/3458)のCLI/MCP `validate`成功・Load失敗・意味エラーの同値を基線に、read-only `catalog/inspect/trace`についてSource・Scope・Meaning・diagnostics・Transport errorをそれぞれ測る。全CLI/MCP/HTTP/Studio同値やPlugin actual invokeは未実証。差は各TEI #3419〜3422・#951/#1251へ戻す。
+3. **実Read／表示／Action資格を別に追加**：TEI [#3492 Draft](https://github.com/hat47x/tei-platform/pull/3492)のGraph/CRUD M1a Source readは、#2586のQuery→Provider実Read、#3491のUI unsafe integer、#3489のMigration unknown/DDL Apply、#3485のE1-Go Route test-only一致と独立。必要なFunctionのData/Meaningを採用しない限り、Writeを伴うUser Jobへ昇格しない。
+4. **小さな実配送の成果を認め、引渡し資格を過大視しない**：[EKI #787 merged](https://github.com/hat47x/eki-fabric/pull/787)の試験用Unix Socket 6 Event実送受信は局所Observed（同プロセス）。[SHO Draft #27](https://github.com/hat47x/sho-composer/pull/27)の公開TEI固定原文4 File private CLI Reader受領は限定CI成功。EKI本番Adapter/別Worker/性能、SHO実SUI Producer H1、正式Writer Save、Owner受理にはそれぞれ追加実証が必要。
+5. **価値判断は既存評価票を再利用**：[VA-01 §12](../evaluations/VA-01-product-value-necessity.md)のHV-0〜4でProduct単独/外部Harness Tool/Skill/Pluginを比較。新しいHarness Runtimeに投資する前に不足の一条件を実測。旧TAI H2/H3は適格0/4で、実OS拒否/副次送出/Tool Reply完全受領を未解決のまま四試行の利益へ計上しない。
+
+**判定の対称性**：Function宣言≠実Provider、CLI/MCP同値≠Host Grant、Graph表示≠業務意味、DDL History unknown≠適用済み、UI数値丸め≠原値、HTTP 202≠Commit、OS socket実byte≠Production Delivery、Raw Reader≠正式Writer。正常なread-only作業や未解釈Markdownは高度機能が未完成でも局所継続する。反例FQ-01〜06は各Ownerで独立Expectedを固定し、不要な全体ブロックと誤成功の両方を評価する。
+
+今回の変更は**GitHubの現状照合と計画反映のみ**。新しい共通API E2E、実Provider DB read/write、EKI二実Adapter比較、SHO正式保存、TAI H2/H3適格、B0/B1/B2利用者価値比較は**NOT RUN**。既存IssueのOwner・Scopeを維持し、第二Runtime/Runner/Registry/Authorizationを追加しない。
