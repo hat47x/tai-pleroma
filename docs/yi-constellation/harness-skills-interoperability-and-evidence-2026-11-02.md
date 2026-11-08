@@ -236,11 +236,9 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 
 必要な1 Pluginの資格は **Declared → Environment-selected → Actual Binary/Provider Included → 実Loaded/Invoked → Current Grant/Scope → Resultを実Consumerが受領 → Effectが必要なら独立Read/Receipt** のうち、Taskが要求する地点までに限定する。「22 selected＝22動く」「CLI/MCP値一致＝Plugin実Invoke」「Consumerが見た＝Owner Meaning採用」を禁ずる。実Inspector一つのread-only Load/Invokeを既存TEI Owner #951/#1251へ委ね、別のTAI Plugin Registry/Runner/Policy Engineを追加しない。
 
-### 11.4 KON／SHOを独自Harnessの前提にしない
+### 11.4 SHOの限定保存を独自Harnessの前提にしない
 
-新たな**KON Dataspace**（`hat47x/kon-dataspace`）はYIのマルチモーダル共通データ基盤として別Productの設計対象であり、TAIの活動引継ぎで必ず配置する中央Storeではない。KONへの実Read/Grant/Provider/二次配布は当該Productの完成を待ち、初回TEI Skill試験と、SUI→SHOの公開Markdown限定交換は既存のProduct境界で進められる。
+SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規別名Working Copyを実Fileへ保存し、別Openで読んだRaw bytesを照合する**test-only** W1を両OS CIで限定実証。Source/Output File Identity変化や同byte A→B→Aを独立反例にしたが、正式Writer・安全な本番Save/no-op write0・原子的Publish・SUI実H1・Owner受理は未実証。この段階のP0/P1 Producer→Consumer／G2-W1は、外部AI Harnessの常時介在なしで進められる。B1 Product単独でUser Jobが満たされればTAIの常時仲介も独自Loopも不要。
 
-SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規別名Working Copyを実Fileへ保存し、別Openで読んだRaw bytesを照合する**test-only** W1を両OS CIで限定実証。Source/Output File Identity変化や同byte A→B→Aを独立反例にしたが、正式Writer・安全な本番Save/no-op write0・原子的Publish・SUI実H1・Owner受理は未実証。この段階のP0/P1 Producer→Consumer／G2-W1は、外部AI HarnessやKONの常時介在なしで進められる。B1 Product単独でUser Jobが満たされればTAIの常時仲介も独自Loopも不要。
-
-**優先順**：初回SK-02比較適格1 H2→同一試験Groupの独立4 Sessionを先に成立させる。SHO/SUI/KON/Plugin実Invoke/独自Loopは各Ownerの並行Gateで進め、初回の固定Task/Tool/Skill Profileへ詰め込まない。ここで新外部Harness実試行・ROI測定・実Provider・KON実Consumer・正式Owner受理はNOT RUN。
+**優先順**：初回SK-02比較適格1 H2→同一試験Groupの独立4 Sessionを先に成立させる。SHO/SUI/Plugin実Invoke/独自Loopは各Ownerの並行Gateで進め、初回の固定Task/Tool/Skill Profileへ詰め込まない。ここで新外部Harness実試行・ROI測定・実Provider・正式Owner受理はNOT RUN。
 
