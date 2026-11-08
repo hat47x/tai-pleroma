@@ -670,3 +670,16 @@ CSWはYI Constellationの**共通開発手法を改善する研究・実践ル�
 **VA-CSW-01（計画・未実施）**：同じTEI read-only Inspector/Plugin変更一件でA〜Eのうち実行可能な方式を比較。独立ExpectedはSource/Plugin/Binding資格、実Call-site/Provider/Consumer受領、誤修正数、再現性、介入回数、時間/費用、未選択CSWで通常Buildが継続すること。DSHは実隔離と完全受領が検証されるまで「導入済みで安全」と評価しない。OwnerはTEI/TAI/CSWそれぞれのIssueで判断し、横断票がOwnerを代替しない。
 
 **優先する実証**：①TEI Inspector実Provider、②SHO Writerの実ReadbackとSUI→SHO同一資料、③DSH/既存Harnessの実隔離とReply完全受領、④CSW選択的Skill比較、⑤導入判断の再評価。**CSW強制常駐、独自Harness先行構築は行わない**。実接続・A〜E比較・Owner受理は **NOT RUN**。
+
+
+## 30. 2026-11-08：部分的に確認された機能を過大評価しない実証階梯
+
+**§24・§26〜29の判定を統一する**。同じUser Jobに対し、証拠を **F0 Source（原資料・参照）→ F1 API（入口・契約）→ F2 Representation（表示・出力）→ F3 Provider（実データ呼出し）→ F4 Effect（実Ownerによる確定）→ F5 Delivery（実Consumerの完全受領）** の6段階で記録する。これは**到達済み段階の資格表示**であり、全製品・全機能にF5を必須化するものではない。read-only価値はF3で成立し得るし、表示価値はF2でも独立に測れる。ただしF2の表示成功をF4の業務更新やF5の配送成功として宣言しない。
+
+**横断Traceの最小キー**：User Job/Case ID、Source identity/revision、Operation/Binding、実Provider、Attempt、現Audience/Grant、Artifact、Consumer、独立Expected、Observed、到達段階、未確認段階、Owner、再現コマンド。異なるIssueの成功を足し合わせて一つのE2E PASSにしない。局所成功の再利用はSource/Plugin/Generator/Grantの鮮度を明記し、失効した段階以降のみ再検証する。
+
+**P0の一件を選ぶ**：TEIの一Functionについて、既存CLI/MCPの検証済み入口から**実Providerの一Rowset**を取得し、Source→Query→Provider→Resultの同一Attemptを追う。次にSHOの正式保存後ReadbackとSUI→SHOの実Consumer受領を別の一件として試す。後者の成功を前者の業務Effectの証明にしない。既存13 CLI応答・42 Consumer検査・4件Markdown Reader・6イベントIPCは各々の限定段階の証拠として保持し、全Adapter同値や本番配送の証明へ加算しない。
+
+**VA-EVID-01（計画・未実施）**：同一Functionで (a)入口は応答するがProvider未呼出し、(b)Provider実Read成功だがConsumer未受領、(c)Effect確定後ACK喪失、(d)Plugin版変更後の古いBinding、(e)Audience変更後の旧Readbackを注入。Expectedは到達F段階の正確な表示、誤った成功Claimの拒否、無関係read-only作業の継続、独立Owner確認と再実行資格の明示。既存VA-RC-01の失効・ACK試験は再利用し重複した成功数を作らない。
+
+**実装順**：既存MASTER_PLANとOwner Issueを変更せず、(1)一件の実Provider/同一Attempt証拠、(2)一件の正式Writer/Consumer受領、(3)Harnessの実隔離/完全Reply、(4)必要な範囲のCross-target/性能比較へ進む。新中央Registry・Evidence Store・Workflow Hostは設けない。実Provider/正式Writer/外部Consumer/独立Owner受理は **NOT RUN**。
