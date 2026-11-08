@@ -77,6 +77,26 @@ YIで医療の知見を転用しやすいのは、まず **TEIの業務更新、
 - **費用**：Tokenだけでなくモデル料金／Harness利用枠／追加API課金、Plugin開発・更新・依存追従、OS/Net隔離・運用、リトライ、独立採点、人的確認、遅延p50/p95、切替不能の損失まで含める。**安全・権限が不適格な安価構成は比較候補から除く**。
 - **成果単価**：承認可能な正しい成果1件当たり総費用と、人の修正・再確認時間をHV段階別に比較。安全度が悪化した構成は単純な成果単価だけで採らない。試験ごとに可観測列、母数、CI/実Hostの区別を保持する。
 
+
+### 6.1 用途ごとに選ぶ：認知Methodの追加とHarnessの採用を同じ階段にしない（2026-11-08）
+
+[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)のH3-A0では、固定TEI `source-index`の実読取→SEI Recommendation保存→別CLIからの再取得が**ローカル二製品の限定実証**として成立した。次のA1ではD0（現在の観測だけ）、D1（妥当な決定論的追加Read）、M1（SEI Cognitive Method支援）を同じ問い・Budget・blind Expectedで比較する。これは[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のH2 Tool-only/H3 Skillありと**異なる要因**であり、D0/D1/M1の成績をH2/H3の増分として統合しない。
+
+追加判断：**情報が十分か／何を考えるか／どの実行環境で行うか／実際に作用してよいか**を別々に選ぶ。外部HarnessやMethodの採用を全Task共通の上昇階段にしない。
+
+| 判断軸 | 最小の出発点 | 条件付きに追加する能力 | 切替えの根拠／止める理由 |
+| --- | --- | --- | --- |
+| **必要情報** | Productの既存ReadとRequired Sourceの照合（TEI #3262） | 新しい許可済みProbe、SEIの問い相対Method | 実Readの不足原因が特定でき、追加Readの判別力がある。partial/非開示/未解析はUnknownのまま |
+| **判断方法** | 既存ルール／決定論的Probe、人の通常判断 | SEI Method、必要時だけ発散的なCSW探索（CX比較は別群） | 独立Expectedに対して新しい有効な判断や保留が増える。D1で十分ならM1/CSWを必須化しない |
+| **実行の外殻** | Product CLI／型付きAPIとHostの実機能 | 外部HarnessのTool-only（H2）、必要ならProduct Skill（H3）、専門Plugin | 人の時間・誤選択・再開の失敗が減り、G0/G1/G2の実隔離/配送が適格。Tool/Skill文面はGrantではない |
+| **実作用** | read-only／Preview／合成操作 | Hostが現在許可した実Actionと独立Readback | 操作を求める目的・現在Scope・Host GrantとEffect復旧条件が成立。医療相当の領域は合成PoCから自動進級しない |
+
+同一Taskで各軸を**同時に変更して因果的な増分を断言しない**。ただし全組合せを初回に実施する義務もない。選ぶのはその用途で実際に必要な最小比較（例：Product既存Read vs 決定論的Probe vs SEI Method、またはH2 vs H3）。有意な利益が観測されなければ標準構成に追加しない。適格性・品質・費用は別採点し、正しい保留を「未完了だから失敗」と数えない。
+
+**コストと観測の接続**：[TEI #3520](https://github.com/hat47x/tei-platform/pull/3520)ではread-onlyのAI Tuning Observation Referenceが**19件の合成負例で限定PASS**。これはDesign/Call/Statistics/Delivery/Disclosureの申告間整合を調べるConsumerであって、実Providerの稼働、実統計の正確さ、LLMの応答時間や実際の性能改善を証明しない。YIの費用比較ではSource/対象/時点/Scope/Providerと実Invoke/実受領を結び、モデルToken、Tool起動・転送、Product処理、隔離/準備、独立レビュー・手修正・再試行を**工程別に観測**する。p50/p95等の定量比較は十分な適格試行数が揃ってから行い、初回4 Slotの分位点やSkill効果を統計的結論にしない。旧版のSourceが同じに見えても外部Provider原文だけ改訂される[TEI #3479](https://github.com/hat47x/tei-platform/pull/3479)の負例により、**Consumer側World/Index同値だけでは現在の原資料・コスト測定対象の同一性を保証できない**。
+
+**進める順序は不変**：TAI #168のG0実Read許可/拒否→G1送出→G2完全Tool Reply→独立した新H2→H3→H3→H2の4 SlotがP0。SEI A1、CSW CX、AI tuning、他Harness/Modelの比較は別レーン／後段であり、P0の追加Blocking条件にはしない。独自Loop（HV-4）の判断は、Product/Method/Skill/Host改善で埋まらない同型の重大欠落が**適格な複数Harness**で再現した場合に限定する。新しい中央Router、Adaptive Cost Policy、Scheduler、Proof Storeはこの判断を理由に作らない。
+
 **投資ゲート**：HV-4の検討を開始できるのは、(i) 独立した二つ以上の既存Harness上でHV-3まで試し、(ii) 同じ重大欠落が再現し、(iii) Plugin/設定/CLI/Host改善で解決できないことを説明でき、(iv) 欠落がYI固有の持続的価値と結び付き、(v) 保守・隔離・互換性・安全検証を含めた複数年TCOと責任主体が確認できたときに限る。これらを**採用条件案**としてOwnerがレビューする。閾値や投資額は実測前に決め打ちしない。HV-4を作らない判断も正式な成功とする。
 
 ## 7. 計画への接続と未実施の区別
