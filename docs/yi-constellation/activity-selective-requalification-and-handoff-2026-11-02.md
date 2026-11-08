@@ -882,3 +882,28 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **B0/B1/B2と引渡し**：TEI／SEIのProduct単独・二Product連携で利用者Jobを満たせるなら、TAI Activityの常時仲介を必須にしない。必要なときだけ、現在Purpose、TEI Source/Rule Revision、SEI Recommendation/Store Revision、実Consumer再読取、Audience/Disclosure、開示範囲内の未解決を選択的再資格化。初回TEI SK-02の固定H2/H3公開TaskにSEI Methodを追加しない。TAIによる実Activity再開E2E、A1比較、A2、Owner Accepted Meaning、実Effect/Outcomeは未実証。新SEI Record Store/推論Method Host/TAI第二Readerを提案しない。
 
+## 24. Adaptive Activity・Interaction Flow・Business Operationを、異なる変更単位と受理資格に分ける（2026-11-08、方式候補）
+
+<!-- tai-adaptive-interaction-business-flow-separation-20261108 -->
+
+[TEI採用済みADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)、[採用RQ-036／merged #3505](https://github.com/hat47x/tei-platform/pull/3505)、[Trait/Lifecycle全Path義務 merged #3510](https://github.com/hat47x/tei-platform/pull/3510)と、[横断Interaction Flow Draft #3507](https://github.com/hat47x/tei-platform/pull/3507)を、**TAIが何を保持・引き継ぐか**の最小責務へ接続する。「全てを一つの共通Workflow Hostで動かす」ことも、「全画面で同じ状態遷移を強制する」ことも設計要件にしない。
+
+| 層／既存Owner | 扱う問いと状態（提案） | TEI共通Operationへの引渡しで必要なもの | 変えてよいもの・禁止する誤昇格 |
+| --- | --- | --- | --- |
+| **Adaptive Activity（TAI／SEI）** | 利用者のGoal、現在Purpose/Plan、選択したProduct/Skill、仮説・根拠・未解決、停止／保留／Resume、成果の価値 | **許可されたIntent**と現状のSource/Claim/Scope、未観測の明示。必要なProductが一つならTAIを常時介在させない | AIの計画・Tool選択・探索順は変更可能。GoalやRecommendationを実Business Action／現在Host Grantへ昇格しない |
+| **Interaction Flow（TEI／表示Product）** | Web/Desktop/CLI/Chat/VUI等の入力、表示・Selection、Stream/Turn、画面／会話の局所State、Submit前の確認 | Source/対象ID/Actor/Version、**確認済みOperation Request**、UI固有のTransient Stateを分離 | UI表現・Navigation・Hookは変更可。Chat delta、音声中間候補、Previewの表示を確定したMutationとはしない |
+| **Business Operation（TEIの共通Operation＋実Host/Provider）** | 業務Validation、現在Authority、実Dispatch/Commit、Partial Effect/Unknown、Receipt／独立Resource Observation | 型付きRequest/Result/Failure、Operation Identity、実Host Principal、必要なTrait/Grant、実Observed Effect | Product/Target固有Providerが履行。HTTP 202／Adapter Callback完了／成功表示／Receiptのみを業務Outcomeにしない |
+
+**三層をつなぐのは共通の意味付きOperation ID／対象Identity／Source+Operation Revision／現在Actor・Audience Scope／限定Receiptであって、同じ状態機械のコピーではない**。TAIが「再開時に前回どこまで到達したか」を保存しても、TEI InteractionのWindow/Session stateや、実ProviderのTransaction/Commit stateを所有しない。戻り値が`unknown`なら、TAIは**当該Actionの無条件再送のみ保留**し、独立して許可済みのRead/草稿・別Goalの作業は続けてよい。
+
+**Typed Lifecycle GraphとPlugin Patchの受入**：不変なのは固定された順序や画面Node集合ではなく、各実効Pathが守るべき型／Source/Subject Identity／Authority／Validation／Effect Fence／Result/Receipt/Disclosureなどの義務。TEI側では**Authoritative Source → Typed Graph → Plugin Patch → Effective Graph → Target Code → Runtime Observation**の資格を段階分離する。Diagram座標だけの編集は業務コードの再生成理由にせず、Guard/Action/Edge変更はSource RevisionとOwner意味判断へ戻して必要なTargetを再生成する。Plugin PatchがAuthorizeを迂回、同一Slot競合、Unknown Effectで再Dispatchする場合はTarget単位に拒否する。**TAI自身は図表の第二Graph Compiler、Generator、Hook ABIを実装しない**。
+
+**Model Mapの位置付け**：[TEI merged #3505](https://github.com/hat47x/tei-platform/pull/3505)のRQ-036はEvent/State/Operation/Pattern/Data/Function/Provider/Targetを俯瞰・辿れる**製品要求**として採用済みだが、[read-only Model Map M0 Draft #3518](https://github.com/hat47x/tei-platform/pull/3518)は未統合の部分投影。M0の`resolved`はCatalogで宣言先を特定しただけであり、全Business graphの閉包・実Provider/Grant/Effectの実証ではない。TAI Activityに取り込むのは対象User Jobに必要なLink/Source/Gapだけとし、全体Mapがまだ部分的なことを全Actorの停止理由にしない。
+
+**先に実証する三つの反例**（TEI #3503/#3507／#3278／#1180/#2514の既存Ownerへ引渡し）：
+- **AF-01：表示だけの変更 vs 業務State変更**。同じOperation ID/SourceでCanvas配置・Web UI遷移だけを変更しても古い業務Resultを再実行しない。Guard/Target Action変更では必要なExecutable/Grant・Receipt資格だけ再検証。
+- **AF-02：Chat/VUIの部分入力 vs 実Commit**。未確定delta・音声候補・一時Previewは表示できても実OperationへDispatchしない。Confirm後に実Hostが拒否／Commit unknownとなったときは、UIとTAIの成功表示を止め、独立の許可ReadとEffect照合を継続。
+- **AF-03：ActivityのGoal変更 vs 進行中Attempt**。旧Goalで既にDispatchされたOperationのReceiptは歴史として保全し、旧Attemptを自動再送・取消しない。新Goalで必要なSource/Grant/Skill/Disclosureだけ再資格化し、旧Operation/Actionを新Goalの実行許可へ混入させない。
+
+**採用・順序**：三層の責務分離と既存ADR/採用Requirementの照合は**計画として採用**するが、統合Flow DSL・正式Hook ABI・実Generator・Chat/VUI/完全B2C異質Consumer・AF-01〜03の実E2EはNOT RUN。P0はTEI #1251の通常CLI/Studioから実Selected Providerを呼ぶ狭いRead、P0+はread-only Hook一Slot、P1はGraph Edit→受理Source→Target生成、P2はChat/VUI/B2C。TAI #168の最初のH2/H3固定Task/Tool/Skill/独立Expectedには一切追加しない。B1 Product単独で足りればB2 TAIや新中央Workflow Runtimeは不要。
+
