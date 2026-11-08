@@ -214,3 +214,10 @@ TAI #168のG0/G1/G2・H2/H3固定Task/Skill/Profile/比較適格0/4は**不変**
 [横断計画 §24](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §14](../evaluations/VA-01-product-value-necessity.md)へ **VA-RC-01（RC-01〜05）** を追加。既存各製品が所有するWrite/Save/Lease/外部Toolの「確定前失効」「確定後ACK喪失」「途中受領」を、**実Ownerへの独立Readと同一AttemptのConsumer受領**で判別する。未知結果から成功・未実行を推測せず、非冪等操作を無条件再試行しない。影響を受けないread-only・Markdown単独編集・手動作業は継続し、誤停止も測る。
 
 **次の作業**：SUI #3399の2 Client CAS/ACK、SHO #20の文書保存、TEI #2892のHistory unknown、EKI #77のAttempt/Lease、TAI #168のTool Replyのうち実入口が存在する最小一件を、それぞれProduct Owner側で確認する。全体共通Store/Transaction/Runnerの導入やTAI H2/H3への新Blockingは行わない。**本追補は計画のみでRC実注入／Owner受理はNOT RUN**。
+
+
+### 2026-11-08：KON Dataspaceの独立化は二Consumer実需で判断する
+
+[横断監査 §25](yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-01 §15](../evaluations/VA-01-product-value-necessity.md)へ **VA-KON-01** を追加。SUIの既存Raw/Source/Revision保存を基準に、Canvas A/Bの異なる意味投影とSHOのread-only引用を一件で比較する。B0＝現状手動、B1＝薄いAdapter、B2＝独立KON Store候補。複数Consumerの実需と測定可能な改善がない限りKON独立配備を初期依存へ昇格しない。
+
+TEIの型付きMeaning/Query/Provider/実Operation、SUIの人の意味形成、SHOのMarkdown編集、EKIのDelivery、TAIのHarness/受領をKONへ集約しない。§24のRC-02/03は再利用し、別の障害試験正本を作らない。**比較・実連携・KON実装・Owner受理はNOT RUN**。
