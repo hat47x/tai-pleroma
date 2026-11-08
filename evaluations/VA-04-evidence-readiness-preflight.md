@@ -166,3 +166,29 @@ EKIの軽量認知・低レイテンシ・マルチモーダルなデータ通�
 4. **並行して独立**：Inspector A/Bのselectedとactual invokedの一致（TEI #1251/#3371）、WorkbenchのPhysical→Business Meaning受理（#3270/#3372）、SHO Writer原文保存（SHO #4）とSUI→SHO同一実File受領（SHO #21）。互いを全面完成の前提にしない。
 
 **記録水準**：本追補はGitHubの既存Issue/PR/CI報告の照合と文書更新だけ。#3354の局所CI、#3365 Draft CIは各Ownerの履歴証拠であり、本VA-04で新たな実CLI/外部H2/Plugin/SHO/独立T1-B/Owner受理を実行したわけではない。各新実験は **NOT RUN**。新しい共通Gate/Reader/Runner/Registry/Hostは設けない。
+
+
+## 11. 2026-11-08：外部Source・Function・Delivery・作業コピーの同一性を接続
+
+既存C1〜C5とD/T/Gを置換せず、**S（Source観測）/B（Binding/実Invocation）/T（Delivery）/G（Generation/Independent Expected）/A（Authority/Effect）**の証拠列を既存Runへ投影する。これはProductが所有する資格の照合であり、新しい横断Schema/Registryではない。同じFingerprint/byte/HTTP Statusでも、Sourceの実取得・実Provider/Consumer・適用時点が違う場合を見逃さない。
+
+| Owner／局所進展 | 正確に保持できるObserved | 昇格禁止・次の不足 |
+| --- | --- | --- |
+| **TEI Design Context** [#3482 merged](https://github.com/hat47x/tei-platform/pull/3482)／[#3262](https://github.com/hat47x/tei-platform/issues/3262) | sales.order.submitの独立Required宣言・Application namespace・Validation 3件・DB requirement・Source Indexを既存CLIの13 Replyへ束縛する変更がmain統合。作成時点の新CIは未確認 | Function declarationの限定存在≠Query/Provider実Read・現在Grant・業務受理。main実CIは別途確認 |
+| **TEI Imported Provider** [Draft #3479](https://github.com/hat47x/tei-platform/pull/3479) | Consumer World/Semantic Digest/Source Index不変でも、外部Provider原文のLFだけ変更でProvider raw SHA/locatorが変わる反例のGo試験提案。既存[#3477](https://github.com/hat47x/tei-platform/pull/3477)は同一Workspace内のSource-only drift | Consumer FP同値≠Imported Source現在性。#3479はDraft・新CI未確認。P0b/Host/Ownerは未資格 |
+| **EKI Delivery** [#753](https://github.com/hat47x/eki-fabric/issues/753)／[#786 merged](https://github.com/hat47x/eki-fabric/pull/786) | 6イベント固定Expectedと意味判定に加え、Case/Fixture SHA/Profile/Run/Adapter/Dispositionを照合するTrace比較入口をmainへ追加。比較器8負例は隔離Go試験で限定成功 | 実Adapter Trace未指定時SKIPや自己申告Trace形式一致≠Local IPC/Connect実配送・Lease・性能 |
+| **SHO Writer** [Draft #25](https://github.com/hat47x/sho-composer/pull/25) | G2-W1 test-only Working Copyのbyte/readback、Output FD識別、W18〜20を含む固定HEAD CIでUbuntu/Windowsの限定成功。A→B→A未検出も明示 | 作業コピー一致≠実Editor Save/Storage CAS/ABA対策/永続Publication。SUI→SHO同一実File H1も別 |
+| **SEI Method** [Draft #824](https://github.com/hat47x/sei-cognition/pull/824) | H3-X01〜08と、D0/D1/M1を同条件・独立Expectedで評価するH3-X02（必要Rule/取得Mode）が上流計画に追加（設計） | TEIのContextやAIの正答≠SEI実Method・知識照合・Decision/Authority |
+
+### 11.1 先にExpectedを固定する5つの反例（提案・NOT RUN）
+| ID | 入力・注入 | 停止線 |
+| --- | --- | --- |
+| **CQ-01** | 13実CLI ReplyにFunction名/Source参照があるが、Query→Provider Read未接続 | bounded declaredのみ。Actual Row/Effect/GrantをPASSにしない |
+| **CQ-02** | Consumer World/Source Indexが同じで、外部ProviderのSource原文・Revisionだけ変わる | Provider Sourceの引用鮮度は再確認。別のConsumerの局所PASSは不必要に消さない |
+| **CQ-03** | EKI固定Traceの正しい結果を手書きし実Adapterは起動しない | 比較器の契約試験のみPASS、DeliveryはNOT RUN。古いLeaseやClaimを復活させない |
+| **CQ-04** | SHOのOutput bytes一致、別FD置換またはA→B→A | 観測できる別File置換はreconciliation、ABAはunknown。正式保存・Publish資格はなし |
+| **CQ-05** | TEI Source/Rule正常だが外部Harness Replyが欠落、SEI Methodだけ正答 | TEI局所D肯定は保持、T不足ならH3比較は不可。SEI正答を実Method/Authorityの成功としない |
+
+**段取り**：TEIの一Function Dを固定し、TAIの適格H2一Session T、SEIのD0/D1/M1、EKIの実Transport Adapter、SHOの正式Writerは独立に進める。後段のProduct間同一Attemptが必要な時にだけSource cohort/Scope/実Artifact/Reader/現在Grantを結合する。中央Ledger/Runnerを追加しない。
+
+**実施状態**：今回はGitHub Issue/PR・報告済みCIの照合とこの文書の追記のみ。#3482の統合後実CLI試行、#3479のDraft Go反例、実EKI Adapter、SHO正式Editor Save、SEI Method実Tool、外部H2/H3適格Trial、Owner Meaning Acceptanceは本更新では**NOT RUN／未資格**。
