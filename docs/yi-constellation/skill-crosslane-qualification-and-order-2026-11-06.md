@@ -1028,9 +1028,9 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 
 <!-- yic-skill-operation-parity-function-boundary-20261108 -->
-### 26.8 Functionの実読取範囲と、CLI／MCPでの同一操作資格を別に判定する（2026-11-08）
+### 26.9 CLI／MCPで同じFunction Readを公開しても、Skill利用資格は別に判定する（2026-11-08）
 
-[TEI merged #3482](https://github.com/hat47x/tei-platform/pull/3482)の**main push専用CI #42462861657**は、一Functionの独立Required Sliceについて、**13件の実read-only CLI Reply**と**42件のConsumer合成判別Control**を限定PASS。必要Capability宣言・Application参照・Required Rule3件・Source Index上のDefinition/Roleと、実Loader/Inspectの照合を追加した。これは§26.6の11 CLI/32対照からの**同じ製品Gateの限定拡張**であり、二つの異なるProduct Control集合を合算しない。ResultはFunctionのdeclarationStatus=bounded-presentを示し得るが、**Functionの実Query実行／Provider Read／Business/Host権限／Qualified Test Generationではない**。既知T1-Aと、未実施のAI盲検T1-Bも別。
+前節§26.8の[TEI main #3482](https://github.com/hat47x/tei-platform/pull/3482)で**13実CLI Reply・42 Consumer対照**による一Functionの限定Required Slice検査は成立した。ただし、Functionの宣言取得と**実Provider呼出し・現在Grant・別Transportの全結果受領**は別の資格である。本節はそのうち、**同じ型付きOperationをCLI／MCPで使うSkill側の適合**だけを担当する。
 
 一方、[TEI採用ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)はCLI/MCP/Web/Desktopの共通**操作契約**を製品側に置き、[merged #3403](https://github.com/hat47x/tei-platform/pull/3403)はmainに4 read-only MCP参照Adapterを導入した。参照の主要値一致だけで全異常系同値とはいえない。**validateの旧ok／isError不一致は[TEI merged #3458](https://github.com/hat47x/tei-platform/pull/3458)で修正済み**で、実CLI／実stdio MCPの正常・Source Load失敗・重複宣言の3系列は限定回帰PASS。ただし[TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)の未知欄・型不正・NULL・上限・全Protocol、他3操作の全異常系一致は未資格であり、**MCPのToolが見える／部分値一致＝同一Product操作のSkill利用適格PASS**ではない。
 
