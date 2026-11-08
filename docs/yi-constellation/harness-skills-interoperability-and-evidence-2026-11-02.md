@@ -204,3 +204,43 @@ TAIがProduct間で運ぶのはすべてをまとめた普遍JSONではなく、
 **実行順序**：TEI #1158／#3419が共通4操作の型を固定→#3420が実CLI/stdio MCPで成功・失敗・NULL・未知欄／Workspace拒否を同条件比較→必要なTaskのみに#3421のHTTP/IPC、#3422の作用を追加。YICは既存X01/X03/X05/X06を用い、実Productが返した操作資格を消費するだけで、第二API仕様・Schema変換器・Runner・認証Policy正本を持たない。[YIC適合計画 §26](https://github.com/hat47x/tai-pleroma/blob/docs/yic-skill-crosslane-qualification-20261106/docs/yi-constellation/skill-crosslane-qualification-and-order-2026-11-06.md)とTAI #271の現在Grant/受領資格へ参照で渡す。
 
 **初回SK-02を固定**：既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のH2→H3→H3→H2は**固定TEI pin＋CLI Tool／H3 Skill**の比較であって、今回新設されたMCP Adapterを途中から混ぜない。比較適格0/4、G0 OS実Read拒否→G1実Sink/Egress→G2完全Tool Reply→事前割付独立4 Sessionのまま。実Full CLI/MCP parity、実Host＋外部Harness／MCP接続、正式Product APIとしてのOwner採用、横断Activityの増分価値は**NOT RUN**。
+
+<!-- tai-harness-incremental-buy-vs-build-axes-20261108 -->
+## 11. 既存Harness／YI Skill／薄いAdapter／独自Loopの増分価値を、製品価値試験と分離する（2026-11-08）
+
+他チャットで検討中の「外部HarnessのPlugin拡張によりYI独自Harnessの投資価値が変わる」という問いを、既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のSkill資格、[#422](https://github.com/hat47x/tai-pleroma/issues/422)のB0/B1/B2 User Job、[TEI merged #3487](https://github.com/hat47x/tei-platform/pull/3487)の共通API/独自Harness価値検証へ接続する。**外部Harnessの製品仕様全体や費用優位を今回独立に実測したわけではない**ため、TEIのDocs合意や比較候補をTAIの新Runtime採用へ変換しない。
+
+### 11.1 「B0/B1/B2」が二種類あることを明示する
+
+| 比較の問い | B0 | B1 | B2 |
+| --- | --- | --- | --- |
+| **Value試験（TAI #422/Activity §18）** | 人間／既存の素朴な作業手順 | Product単体で完了するJob | TAI Activity連携を加えたときのJob |
+| **Harness試験（TEI #3487）** | 決定的CLI/共通API | 外部HarnessでSkillなし／ありの差を検証 | 外部Harnessの不足だけを埋める薄いAdapter |
+
+同じ「B1」を一つのTrial/Value Countへ混ぜない。Trialには`comparisonAxis=value|harness`（**実験記録上の区別であり公開Schema追加ではない**）、Task/参加者、実Source/版、Actual Delivery、独立Expected、費用・観測可能なEffectを紐づける。前者は**TAIを足す必要性**、後者は**外部Harnessに加えた実装の必要性**を評価する。既存SK-02のH2/H3はHarness B1内部のSkill差であり、H2/H3結果からValue B2の価値や独自Harness採否を直接推定しない。決定的APIのB0に文章生成能力がないことを不合格とせず、Source/Contractの正確さ・拒否の正しさ・費用の基準として観測する。
+
+### 11.2 増分実装の候補と採用停止線
+
+1. **既存CLI／共通Application API**：採用済み[TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)を使い、実Source/Design Required/ReplyをProduct内部で確認。新しいHarness/Registryは不要。
+2. **既存外部Harness＋YI Product Skill**：まずH2/H3のOS強制Read境界・実Tool全byte配送・Skill実Load・独立採点が成立するか。現時点はH3 Root/Referenceの歴史的実Loadがあるが、**正式比較適格0/4**。H2/H3の旧4Sessionの数字を費用改善・採用証拠にしない。
+3. **薄いTransport／Plugin Adapter**：必要な`inspect/trace/validate`等のCurrent Sourceと限定Resultを既存Product操作から返す。実際に外部Harnessで既存CLI Toolより不足が減るときだけ採用。Productが持つOriginal Source、Meaning、Authorization、Provider EffectはAdapterの新正本にしない。
+4. **独自Agent Loop/Host**：上記1〜3で解消できない**繰返し再現した問題**（用途別根拠閉包・実時間制約・非開示・部分効果の復旧など）があり、独立した複数Task/Domainで品質・費用・運用負担・隔離の**純増益**が確認できた場合にのみ検討。外部Harnessが拡張可能だから必ず十分、または医療等の高リスク領域だから独自Loop必須とは決めない。高リスクの実Authority/Owner採用は個別Domain判断。
+
+共通評価欄は、業務Taskの正答／重要な誤判断／`unknown`の保持、実Consumer全byte受領、OS/Tool/Log/Networkの開示境界、Userに見える負担（手戻り・再調査・停止）、端末実行時間、実料金・維持費とする。改善値が確定していない段階でROIを定量値として作らない。**同じTask/Source/Host Profileを維持し、追加した一要素だけを比較**する。Skill/Adapter/Loopを同時に入れ替えない。
+
+### 11.3 Transport実装の現在地とPluginの実効果を分ける
+
+[TEI merged #3403](https://github.com/hat47x/tei-platform/pull/3403)のread-only参照MCP Adapterは**mainに実在**し、同じWorkspaceで4 ToolとCLIの主要値が限定一致。[merged #3458](https://github.com/hat47x/tei-platform/pull/3458)は`validate`のCLI/MCP間で`ok/isError`と診断文書を共通化。**「MCP入口がない」は旧#3356調査時点の履歴**であり、現在は参照入口がある。ただし正式公開MCP ABI/DSHからの実Connect・Consent/Grant・外部送出・同一モデル受領は未確認。[SK-02 Runbook §24.17](first-real-skill-qualification-runbook-2026-11-02.md)で、初回は引き続き固定CLI Tool、後続だけMCP Transportを対照とする。
+
+[TEI merged #3363](https://github.com/hat47x/tei-platform/pull/3363)の参照能力表では、公開Workspaceの24 Binding中22 selected、2 missing。ただしこれは**宣言の解決**であり、実Plugin Artifact/Load/Invoke/Client Deliveryではない。[TEI merged #3474](https://github.com/hat47x/tei-platform/pull/3474)の読取調査では、部署・環境Bindingが計画に反映されても、参照実行は固定Capabilityを直接呼ぶ経路が残り、`routing.Router`も非試験実行で構築されていなかった。断絶はPoC段階の意図的分離かもしれず、即「不具合」とは呼ばない。
+
+必要な1 Pluginの資格は **Declared → Environment-selected → Actual Binary/Provider Included → 実Loaded/Invoked → Current Grant/Scope → Resultを実Consumerが受領 → Effectが必要なら独立Read/Receipt** のうち、Taskが要求する地点までに限定する。「22 selected＝22動く」「CLI/MCP値一致＝Plugin実Invoke」「Consumerが見た＝Owner Meaning採用」を禁ずる。実Inspector一つのread-only Load/Invokeを既存TEI Owner #951/#1251へ委ね、別のTAI Plugin Registry/Runner/Policy Engineを追加しない。
+
+### 11.4 KON／SHOを独自Harnessの前提にしない
+
+新たな**KON Dataspace**（`hat47x/kon-dataspace`）はYIのマルチモーダル共通データ基盤として別Productの設計対象であり、TAIの活動引継ぎで必ず配置する中央Storeではない。KONへの実Read/Grant/Provider/二次配布は当該Productの完成を待ち、初回TEI Skill試験と、SUI→SHOの公開Markdown限定交換は既存のProduct境界で進められる。
+
+SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規別名Working Copyを実Fileへ保存し、別Openで読んだRaw bytesを照合する**test-only** W1を両OS CIで限定実証。Source/Output File Identity変化や同byte A→B→Aを独立反例にしたが、正式Writer・安全な本番Save/no-op write0・原子的Publish・SUI実H1・Owner受理は未実証。この段階のP0/P1 Producer→Consumer／G2-W1は、外部AI HarnessやKONの常時介在なしで進められる。B1 Product単独でUser Jobが満たされればTAIの常時仲介も独自Loopも不要。
+
+**優先順**：初回SK-02比較適格1 H2→同一試験Groupの独立4 Sessionを先に成立させる。SHO/SUI/KON/Plugin実Invoke/独自Loopは各Ownerの並行Gateで進め、初回の固定Task/Tool/Skill Profileへ詰め込まない。ここで新外部Harness実試行・ROI測定・実Provider・KON実Consumer・正式Owner受理はNOT RUN。
+
