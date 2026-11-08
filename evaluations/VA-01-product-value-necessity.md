@@ -301,3 +301,8 @@ H1 SUI→SHOは[SHO #21](https://github.com/hat47x/sho-composer/pull/21)のRunne
 同一Raw一件のCanvas A/Bで異なる仮説と位置を許し、SHO Readerが原Sourceを引用できるかを試す。独立ExpectedはRaw identityとView identityの非同一、同名別Source／同byte別所在／A→B→A、現在Audienceによる存在非開示、SUI仮説とTEI Accepted Meaningの非同一、ACK喪失・Partialの正しい判定（§14 RC-02/03を再利用）。測定は共有Identity/Revisionの不一致、誤同定・秘密露出、Consumer復帰、手作業・運用コストを別列にする。
 
 **採用停止線**：B0/B1の実User Jobで満たせない複数Consumer需要とB2の測定可能な改善が示されるまで、KON独立Service/中央DB/独自認可Engineを初回必須にしない。KONの長期汎用マルチテナント構想は維持する。SUI #3399/#3400/#3401、SHO #20、TEI #2586/#3419のOwnerと正本を変更しない。実SUI→SHO連携、B0/B1/B2比較、KON Store/Service、Owner受理は **NOT RUN**。
+
+
+## 16. 2026-11-08：Hook合成とVUI再開の媒体横断適合
+
+[横断監査 §26](../docs/yi-constellation/product-value-scope-audit-2026-11-04.md)の **VA-HOOK-01** を追加。同一Operationの標準／Transform／Replace／順序競合／VUI Resume中Provider更新／Selected≠Invokedを独立Expectedで比較。各TargetのGenerated Binding fingerprint、実Provider Call、Consumer受領、現在Grant、結果不明の停止・独立Readを別々に採点する。既存VA-RC-01と同じACK喪失は再利用し二重計上しない。初手はCLI/Studio read-only Inspectorの実Provider一件、次段階で曖昧な音声候補→明示確認→中断→再開。全Target・実VUI・Owner受理は **NOT RUN**。
