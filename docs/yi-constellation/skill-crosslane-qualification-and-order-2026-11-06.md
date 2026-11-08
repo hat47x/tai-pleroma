@@ -1198,3 +1198,22 @@ Skillは**Project/Runbookの説明と候補Tool選択**に使えるが、Executi
 **性能チューニングも独立のEffect/Benchmark実験**：[TEI merged #3520](https://github.com/hat47x/tei-platform/pull/3520)ではread-onlyのSynthetic Design/Call/Statistics/Delivery/Disclosure Joinを、Source/World/Query/Provider選択≠実呼出し/Grant/統計Window/Reply Parts/欠測の**独立Expected 19件**で限定PASSした（[exact-head専用CI #42476197836](https://github.com/hat47x/tei-platform/actions/runs/42476197836) success）。**Product実Telemetry/実DB・Provider Rowset/モデル受領・統計的な性能改善はNOT RUN**。合成Packetの`providerInvoked=B`は実Invoker Receiptではない。速度・Cache Hitの数字から、実Query結果の意味的完全性、増分更新の正しさ、現在権限を認定しない。
 
 **次の薄い縦切り**：TEI #2586/[Draft #3500](https://github.com/hat47x/tei-platform/pull/3500)はNative Browse Pattern→既存Driver→instrumented SQL Executor→明示Field Mappingの局所Go Testが限定成功、**隔離実PostgreSQLはSKIP**。まずTaskに必要な1 Function/Queryで実Scope・Provider/Row/Field・Read Snapshotと独立Expectedを取得→同じ負荷/Version/統計WindowでTrace/Hint比較→成立条件を満たす変更だけ局所採用/ロールバック評価する。局所合成成功を実DB Provider資格と呼ばない。Graph/Skill推薦が改善を提案したことと、生成されたTarget/実測Latency・費用・正確性が改善したことは別。§27.7のHarness ArmとこのCSW/性能Armを同じ分母に合算せず、既存TEI #3271/#2582/#1180/#2514およびTAI #422/#488へOwner委譲する。新Optimizer/Telemetry Collector/Harnessは不要。**CSW増分・本番性能・実Provider・ユーザー価値は未測定**。
+
+### 27.10 専門Pluginの実選択・実呼出しと外部Sourceの同一Loadを、Harness成果と別資格で検証する
+
+§27.8の**D：TEI/SEI専門Plugin**を具体的な検証対象にする。Pluginを宣言・選択しただけでは不十分で、実際に**選択されたProviderの関数が、どのSourceと権限で呼ばれ、どのConsumerに結果が届いたか**を一つのAttemptに束縛する。ただしこの一連の観測は、TEI共通APIの既存Ownerが提供するものであり、TAIが新しいRegistry/Runner/Host/意味正本を作る理由にはならない。
+
+**現mainで進んだ部分**：[TEI merged #3381](https://github.com/hat47x/tei-platform/pull/3381)では、型付きInspector Portの欠落を`INSPECTION_PROVIDER_MISSING`で拒否し、暗黙のBuiltin fallbackを禁止する。既存Compositionの選択・Host登録・Scope/Epoch/失効と連動した**局所in-process Go実関数呼出し**を実装。誤Provider登録、Grant撤回、A→B→A、誤Subject/Schema/Effectを拒否するテストも追加された。[TEI merged #3531](https://github.com/hat47x/tei-platform/pull/3531)はこの到達点をProduct status/MASTER_PLANに反映した文書更新。**通常のCLI起動は依然Builtin**であり、Studio実Wails Bridge／2×2 exact BOM／実Build・Artifact・Provider運用・外部Harness Skill増分は未実証。選択済みGo関数の局所実呼出しと、製品全体の正式Plugin切替を混同しない。
+
+**Source証拠の粒度**：[TEI merged #3479](https://github.com/hat47x/tei-platform/pull/3479)の外部Provider原文改版反例は、Consumer World/Source Indexが変わらないのにProvider Raw/Manifestが変わり得ることを示す。これに対し[TEI Open #3524](https://github.com/hat47x/tei-platform/pull/3524)は、**同じNested Provider LoadでParserが実際に読んだ選択NamespaceのSourceとManifest**をprivateなcopy-on-read Witnessに固定する候補である。旧[Draft #2812](https://github.com/hat47x/tei-platform/pull/2812)の成功は旧HEADに限り、#3524の現HEAD CI結果と合算しない。**FullInputClosure=false**であり、未解析Source、選択外Namespace、複数Fileの原子的Snapshot、A→B→A履歴、実Consumer開示は未保証。内部Go構造体の通常fmt出力によるraw/path漏洩も負例に含め、AI・SHO・MCPへ内部Witnessを無条件に公開しない。
+
+| 受入の段階 | 必須の独立観測 | 未成立なら何を止めるか |
+| --- | --- | --- |
+| **Selected** | Product Capability/Environment/Scope/Selection Revision、Provider登録Identity | 当該Provider依存の推薦だけを`unknown`。他のread-only Taskは続行 |
+| **Invoked** | 実Call-site/関数・Subject/Effect・選択/登録一致・失効/Grant、拒否Reason | 宣言だけの「実利用済み」を禁止。Builtinへの暗黙fallbackを成功扱いしない |
+| **Source consumed** | 同一LoadでParserが読んだSource/Manifest、Scope/Revision/Raw fingerprintと実開示範囲 | Source未取得を空/不変とせず、private Witnessを外部Tool Replyと誤認しない |
+| **Delivered / accepted** | CLI/MCP/Studio/SHO/SEI等の実Consumer受領Byte、Required Shape、現在Audience/Disclosure、独立Expected/Owner | 実CallだけでProduct間E2E、意味受理、業務Effectを認定しない |
+
+**別の製品間Reader実証を混同しない**：[SHO Open Draft #27](https://github.com/hat47x/sho-composer/pull/27)のSHO所有CI [#42462172893](https://github.com/hat47x/sho-composer/actions/runs/42462172893)では、公開TEIの固定4 Markdown Fileをprivate SHOの**実G1b Reader**が原Byte SHA/長さ・限定Link・missingとzero-linkの区別付きで読んだ（CI success）。公開TEI CIからprivate SHOをcheckoutできなかった初回失敗はReader不具合ではなく**Repo権限境界**。この成功はK1R限定であり、SUI実Producer→SHO、Writer/Working Copy、K2二Consumer、Owner MeaningやCurrent Grantを証明しない。横断Skillは既存の実Source/Reader資格を参照し、権限を広げたり実装を複製したりしない。
+
+**次の試験順序**：既存TEI #951/#1016/#3262/#3267のOwnerで、まず一FunctionのSelected Inspectorを**通常CLIとStudio両方の実Consumer経路**から同一exact tupleで呼び、実Artifact・実Grant・独立Expectedを比較する。Provider Source private Witnessは外部共有を必須とせず、必要な開示許可がある場合だけ別試験に進める。YICは§27.8のC（Skill）とD（専門Plugin）を同一Task/Tool/Sourceで比較し、**実Callとモデル完全受領が確認できたAttemptだけ**を採点する。初回TAI #168のG0物理Read拒否→G1送出→G2 Tool Result完全性→固定4 Sessionは依然**0/4比較適格**であり、ここへ新Inspector/K1Rを初回Blockingとして加えない。通常CLI/Studio実Plugin E2E、#3524現HEADの統合、実Provider/Host/Owner受理、C対DのSkill増分は**NOT RUN**。
