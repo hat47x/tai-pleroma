@@ -88,6 +88,29 @@ class SvgTextStructuralParity(unittest.TestCase):
         self.assertEqual(graph_nodes, {n["id"]: n["label"] for n in case["declared"]["nodes"]})
         self.assertNotEqual(graph_edges, {tuple(x) for x in case["declared"]["edges"]})
 
+    def test_tampered_arrow_geometry_rejected_even_when_edge_metadata_matches(self):
+        case = self.cases["v1"][0]
+        root = ET.fromstring(rq7_svg.render_svg(case))
+        line = root.find(rq7_svg.tag("line"))
+        self.assertIsNotNone(line)
+        line.set("x2", str(int(line.get("x2")) + 110))
+        modified = ET.tostring(root, encoding="unicode")
+        # The old metadata-only check still sees the same edge IDs.
+        self.assertEqual(
+            rq7_svg.svg_semantics(modified)[1],
+            {tuple(e) for e in case["declared"]["edges"]},
+        )
+        with self.assertRaisesRegex(ValueError, "arrow geometry"):
+            rq7_svg.check_svg_geometry(case, modified)
+
+    def test_tampered_node_position_rejected(self):
+        case = self.cases["v1"][0]
+        root = ET.fromstring(rq7_svg.render_svg(case))
+        node = root.find(rq7_svg.tag("g"))
+        node.set("transform", "translate(0,0)")
+        with self.assertRaisesRegex(ValueError, "node moved"):
+            rq7_svg.check_svg_geometry(case, ET.tostring(root, encoding="unicode"))
+
     def test_tampered_visible_text_rejected(self):
         case = self.cases["v1"][0]
         root = ET.fromstring(rq7_svg.render_svg(case))
