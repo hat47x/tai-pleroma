@@ -877,3 +877,9 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **成果測定**：独立した具体的欠落・誤類推、差分の実装可能性、検証負担、総実費と人手、追加修正の不必要さを区別。「全部のAgentが賛成した」は独立Expectedではない。既存[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の独立VA-X/VA-E、[TEI #1445](https://github.com/hat47x/tei-platform/issues/1445)の工程比較、[#2514](https://github.com/hat47x/tei-platform/issues/2514)の判別力を再利用し、新しいOracle Engineを作らない。
 
 **現状**：H3-A0は限定ローカルPASS、CSW-CX比較／実DSH-CSW-Plugin／A1認知Method改善／4適格H2/H3／Owner正式採用は**NOT RUN**。Productの正本は各Repo、TAIに第二正本・テスト基盤は作らない。
+
+**追加の評価上の区別（2026-11-08／§45への接続）**：[Build-vs-Buy §6.1](harness-build-vs-buy-decision-2026-11-08.md)で、**認知Method（D0/D1/M1）・外部Harness（H2/H3）・CSW発散探索（CX-0/1/2）を互換の「能力段階」とは扱わず、別の実験軸**とした。SEI [Draft #824](https://github.com/hat47x/sei-cognition/pull/824)はTEI実CLI→SEI Recommendation保存/別CLI ResumeのA0限定PASSまで。A1 D0/D1/M1は未実施であり、同じ問い/許可Read/Budget/Blind Expectedで**妥当な決定論的Probe（D1）を弱くしない**ことが前提。D1で十分ならM1必須化もTAIの中央ルーティング実装もしない。CSW CXはアイデアの具体的新差分の独立評価であり、SEIの根拠十分性・Productの業務Meaningを置換しない。
+
+**費用・遅延の観測Owner**：[TEI #3520](https://github.com/hat47x/tei-platform/pull/3520)のAI Tuning Observation Referenceの19合成負例はDesign/Provider/Statistics/Delivery/Disclosureの検査**のみ限定PASS**。実生成AI改善やDB性能改善はNOT RUN。横断H2/H3のTask比較は、Model Token/Tool read・Transfer/Product実処理/隔離Setup/人の修正・確認/非適格再実行を区別し、必要なSource/Provider/Scope/Revisionと実Consumer受領を結び付ける。TEI [#3479](https://github.com/hat47x/tei-platform/pull/3479)のProvider原文のみ改訂でConsumer World/Indexが変わらない反例を考慮し、Source不一致を「同一条件のコスト改善」に含めない。最初の4 Slotでは分位点や改善率の一般化をしない。これは**独自Harness要否の後段投資比較**であり、既存[SK-02 G0〜G2実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)の新Hard Gateではない。
+
+**直近の行動は一本化**：TAI #168のG0実Read許可・拒否の正負対を同一OS identityで示し、G1/G2の全実Tool Replyと送出を確認してから、新規H2→H3→H3→H2を割付・独立採点する。SEI Method、CSW、Tuning、実Provider、二Harness横断とHV-4は、結果に応じた別試行。必要性未確認のProduct Skill/専門Pluginは標準セットへ無条件に含めない。
