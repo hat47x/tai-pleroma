@@ -213,3 +213,14 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 - 実Graph/Sourceデータの開示は#2516 Current Policyが許したSliceのみ。現段階では製品のraw CLI Packetを本研究へコピーせず、GitHub exact-head記録を参照するだけとする。
 
 **今回の達成**は、実CLIと別言語Consumerの限定された応答内整合を研究設計へ接続したこと。独立Source Readerの存在・Source閉包・現在性を実証したものではない。#1124 M0→M1、#2831 Self-build P0、#2542 ETL/MFT、RQ7の人間/AI認知実験と独立holdoutは別Gateであり**NOT RUN/NOT PROVEN**。第二Source Reader/Provider/Host/Policy/Graph Engineを作らない。
+
+
+## 14. 2026-11-08：静的SVG/Textの同等性を研究の独立Gateへ
+
+[公開DAGの静的SVG/Text比較設計](RQ7_STATIC_SVG_TEXT_PARITY_2026-11-08.md)と[52テストの実行記録](../results/RQ7_STATIC_SVG_TEXT_PARITY_CI_2026-11-08.md)を研究Gate **G-Cal1a**へ接続。従来のV1/V3はMermaidソースなので、外部通信なしのSVGで実際に描画可能なNode/Edgeを持つ **V1-svg/V3-svg候補**を追加した。ただし同一実験の介入条件へ無断で合算しない。
+
+- 公開22ケースでDeclared Node/Edge/ラベルがText/XMLと一致し、矢印座標とNode配置の悪意ある差替えを拒否。**Distinct Graphは3種類のみ**。循環・多項Role・日本語長文・大規模構造は対象外。
+- 固定CI [#42434940638](https://github.com/hat47x/tai-pleroma/actions/runs/42434940638)、コードhead `4a10c1cd950c158a5f6d407700370153da67a727`で **52/52 PASS**。**ブラウザーの実画面・a11y・Human/AI認知比較・独立HoldoutのPASSではない**。
+- V0/V1相当のDeclared表示Componentだけを生成。V2/V3のResolved/Observed/Consumed追加Evidenceを同等に見せる実UIは**NOT RUN**。E-traceが実CLI観測Projectionであることと、E-pipelineの独立宣言Graphに関する実験の区別を保つ。
+
+次のG-Cal1bは実ブラウザー/描画Engineを固定した画面視認・情報量・keyboard/screen-readerの独立レビュー。これを経ずに「図が理解しやすい」「図に無いなら処理が存在しない」という製品主張へ昇格させない。Source/Policy/Authority/Ownerの保証境界は#3321/#2516/#1124/#2831/#2542へ残す。
