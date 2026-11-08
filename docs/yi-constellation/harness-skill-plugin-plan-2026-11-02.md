@@ -858,6 +858,8 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 ## 45. 2026-11-08：CSW探索Methodの任意導入とTEI→SEI実ローカル往復
 
+**独立実験の実行票（後段・NOT RUN）**：[CX-01 CSW Method転用のCX-0/1/2比較](../../evaluations/CX-01-csw-exploration-method-transfer-2026-11-08.md)。現在の主P0/H2/H3に追加Blockingは設けない。
+
 **判断の正本**：[Build-vs-Buy §17〜18](harness-build-vs-buy-decision-2026-11-08.md)。本節は「CSWを新しいAgent Harnessにしない」「必要なときだけ既存3執筆Skillから探索的手法を借りる」「実TEI→SEIローカル到達と外部DSH資格0/4を同じPASSにしない」ための実施計画。新API/Kernel/Agent Loop/Session Storeは作らない。
 
 **実績更新（2026-11-08）**：[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)のH3-A0で、固定TEI `source-index`のindex/subject両Modeと独立Required、SEIのRecommendation保存→別`resume --json`読戻し、Decision専用`--unresolved`拒否後のStore不変を**実Go CLIのローカル二製品経路で限定確認**。次はA1 D0（無介入）/D1（決定論的追加Read）/M1（認知Method支援）を同じQ/予算/盲検Expectedと陰性対照で比較。方法の価値がなくてもPASSとする。これはTAI #168のH2/H3試行でなく、外部Harness実受領・SEI UnknownのNative保存・Meaning受理は未資格。
