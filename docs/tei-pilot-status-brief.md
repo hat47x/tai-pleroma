@@ -1,0 +1,69 @@
+# TEIパイロットの現況（2026-11-06）
+
+TEIによるプロダクト構築のフィージビリティ検証について、**何が示せて、何が示せていないか**を1枚にまとめる。判断が要る点は、そのまま並べる。詳細は各リンク先とreceiptを見る。
+
+この文書は受入判断ではない。公開gateは`blocked`のままである。
+
+## 1. 示せたこと
+
+| 条件 | 状態 | 根拠 |
+| --- | --- | --- |
+| 生成単位が生成器 | **示せた**。5契約を意味から再生成でき、生成コードの手修正は3回の意味変更でいずれも0行 | [任意の追加](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[必須の追加](../evaluations/records/TEI-meaning-change-required-2026-11-06.json)、[任意→必須](../evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json) |
+| 証拠が版に束縛される | **示せた**。契約digest・sourceDigest・TEIのcommitを含む実実行receiptが191件。全receiptに必須項目と限界記述があり、登録漏れも検査している | [status](status.md)、[体裁](../evaluations/records/TEI-receipt-scope-2026-11-06.json) |
+| 意味が版付きで存在する | **部分**。契約とfixturesは版付きで、生成物とdigestで対応する。ただし製品への写像は手書き | [写像](../evaluations/records/SUI-consumer-mapping-2026-11-06.json) |
+| 適合試験がある | **部分**。1回の意味変更は25ケースで確認できる。ただし試験は被覆に依存し、被覆の無い変更は緑のまま通る | [被覆](../evaluations/records/TEI-fixture-coverage-2026-11-06.json) |
+| 実行先が交換できる | **反例あり**。one-shotでは通るが、long-runningでは生成候補が応答し続けられない | [record](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json) |
+| 人が同じ手順で再現できる | **部分**。2つのrunbookと1コマンド（103段）で再現できる。実インフラが要る検証は含まない | [再現手順](reproduction-runbook.md)、[意味変更の進め方](meaning-change-runbook.md) |
+
+## 2. 反例（そのまま残す）
+
+1. **実行モデルは交換できない。** Profileの宣言を差し替えても、生成候補は標準入力1件で終わるためlong-runningで動かない（`text`と`text-record`の両テンプレートで確認）。
+2. **十進値は丸められる。** `0.1234567890123456789` → `0.12345678901234568`、`12345678901234567890` → `12345678901234567000`（[receipt](../evaluations/records/TEI-decimal-fidelity-2026-11-06.json)）。
+3. **新しい意味は製品に自動で届かない。** 消費側は既知フィールドには忠実だが、知らないフィールドは`valid: true`のまま落ちる。
+4. **入れ子の投影は受理も拒否もされない。** `build`は平坦化して通し、`select`は`unknown field`で拒否する（[receipt](../evaluations/records/TEI-decode-divergence-2026-11-06.json)）。
+
+## 3. TEI側で判断が要る点
+
+[Issue草案](../analysis/tei-side-gaps-issue-drafts-2026-11-06.md)に4件。1と3は同じ原因を指すため、実質は3論点。
+
+1. 契約のデコード方針を一本化するか（未知フィールドを拒否するか、入れ子を受理するか）
+2. 数値・真偽値の配列（`many`）を扱えるようにするか
+3. 生成テンプレートをTarget Profileのprocess modelに対応させるか
+
+十進値の精度と`optional`のnull省略は、TEI側で既に#2585として追跡されている。TAIからは新しいIssueを作らない。
+
+## 4. 製品側で判断が要る点
+
+[整理](../analysis/product-side-decisions-2026-11-06.md)に6件。うち2件は製品側の文書で決定済みとして閉じた。
+
+残る4件:
+
+1. 実行結果の受入をControl Planeへ配線するか（RAC-1の役割は定義済み、実行場所が未記載）
+2. 複数Workerの割り当てを分散させるか（配置の規則が未記載）
+3. 未知adapterをどう扱うか（該当記述を見つけられていない）
+4. `readOnly`が伝播しない件（同上）
+
+## 5. 実インフラが要る検証（未実施）
+
+実IdP、実管理DB、公開CA、実逆プロキシ、複数ホスト配備、人の受理。**これらを「通った」とは書かない。**
+
+## 6. 再現方法
+
+```text
+python integrations/tools/run_suite.py --tei-repo <TEI> --sui-repo <SUI> ... （103段、35〜50分）
+python tools/check-synthetic-receipts/check.py --root .
+python integrations/tools/doc_consistency_check.py
+```
+
+期待結果は[再現手順](reproduction-runbook.md)§4に固定してある。
+
+## 7. この文書が証明しないこと
+
+- 生産性・自律性の向上（PoC完了後に評価する。中間評価を人の判断材料にしない）
+- 意味の正しさ、業務上の受入
+- パイロットの成功が全プロダクトの移行成功を意味すること
+- 実環境での動作
+
+## 8. 更新の仕方
+
+段階が進んだら、§1の表と§2の反例をreceiptに合わせて更新する。数値（段数・receipt件数）は`doc_consistency_check.py`が文書間で突き合わせる。

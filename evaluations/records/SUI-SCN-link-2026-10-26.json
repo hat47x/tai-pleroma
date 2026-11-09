@@ -20,5 +20,6 @@
   "notes": [
     "SUIのcard digestをSCN-001 fixtureの観測と照合する参照。",
     "SUIの実資料・認可・意味形成の正しさは検証しない。"
-  ]
+  ],
+  "publicationAllowed": false
 }

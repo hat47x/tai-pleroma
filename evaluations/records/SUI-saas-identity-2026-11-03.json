@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-06",
+  "date": "2026-11-09",
   "host": "Windows with Python 3.12, SUI modules and models imported from the local checkout, an in-memory SQLite database, and a local JWKS stub",
   "command": "python integrations/tools/sui_saas_identity_contract.py --sui-src <SUI>/03_Implement/backend/src",
   "result": "PASS",

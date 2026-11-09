@@ -3,42 +3,64 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-02",
-  "teiCommit": "98b0e68e12477c97e7ba9afbbf4e55a85426dba7",
+  "date": "2026-11-09",
+  "teiCommit": "2d0b09b13b16c7f2d7183dbc995d3c62208c79ef",
   "host": "Windows with Go on PATH and Python 3.12",
-  "command": "python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo D:\\GIT\\hat47x\\tei-wt-main3 --workspace D:\\GIT\\hat47x\\tai-wt-flow2\\integrations\\pilot-sui-document",
+  "command": "python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document",
   "result": "PASS",
-  "elapsedMillis": 9515,
+  "elapsedMillis": 20141,
   "contracts": {
     "document-record": {
-      "sourceDigest": "sha256:8c83e2a209572abdf70a400680bdeb4487be69f4cdba6acd23f3d893bde2e72b",
+      "contractId": "sui.document.record",
+      "contractVersion": "5",
+      "contractDigest": "sha256:cefe467d14f99cb3f4c6ca1f3fe8d638cb36bb5ccf9b77d57fbab12d5380edc8",
+      "sourceDigest": "sha256:8c99823f459770b277a363e41823384d68a1c616cc237018d2d12c8a122d741a",
       "cases": 4,
       "passed": 4
     },
     "card-record": {
-      "sourceDigest": "sha256:2bd8bc6f6242ccd4adc04d26caf909dbc0e4fbc243444d94e7bf0f5641c003ee",
+      "contractId": "sui.card.record",
+      "contractVersion": "8",
+      "contractDigest": "sha256:097e10334421891d106cfcd793239b0d16269f25905f46620bf610375b4c4261",
+      "sourceDigest": "sha256:eb16f56f802d11b946e80b55e30358f71ef1114bdf137d939bf2c3cc635f90a1",
       "cases": 5,
       "passed": 5
     },
     "island-record": {
-      "sourceDigest": "sha256:c85f64786c098f23efe7def2fbd1a2d1a4309308836178deda65b9026b891c29",
+      "contractId": "sui.island.record",
+      "contractVersion": "5",
+      "contractDigest": "sha256:5abb808aa5ef50449085c9bfcce657259f1761685b04cd26cb2819e5e0bb77d5",
+      "sourceDigest": "sha256:e88a379b24a45ce945c818c2b2aff6e06a751bf19d743ff21e475ac8784c4c27",
       "cases": 4,
       "passed": 4
     },
     "edge-record": {
-      "sourceDigest": "sha256:aad2b0d06670958d757f7832c3f75681e252ee86b0a1e021484f6fef9fe9c325",
+      "contractId": "sui.edge.record",
+      "contractVersion": "4",
+      "contractDigest": "sha256:787b47725a9ede68b665baefa7acea6742d05b626cf975b4c22640575e8496bd",
+      "sourceDigest": "sha256:a5e9f586ac696ebe2a23e46fda3aa7bdb853fa2a8574caba3779c80aa08b894b",
+      "cases": 7,
+      "passed": 7
+    },
+    "affiliation-record": {
+      "contractId": "sui.affiliation.record",
+      "contractVersion": "1",
+      "contractDigest": "sha256:082b03aed88f516678989ae3abc58daf1a030ff416aa97c4ff236126e1bca8b9",
+      "sourceDigest": "sha256:16d8606229699b5bd140cdd8c6f8501a9074591d69256c5ae217f2c449332567",
       "cases": 4,
       "passed": 4
     }
   },
-  "casesRun": 17,
-  "casesPassed": 17,
+  "casesRun": 24,
+  "casesPassed": 24,
   "composed": {
-    "documentId": "doc-1",
+    "id": "doc-1",
     "cards": 2,
     "islands": 1,
-    "edges": 1
+    "edges": 1,
+    "affiliations": 1
   },
   "danglingReferenceRejected": true,
+  "artifact": null,
   "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance."
 }

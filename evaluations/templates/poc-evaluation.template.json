@@ -1,0 +1,43 @@
+{
+  "schema": "tai.reference.poc-evaluation/v0",
+  "synthetic": true,
+  "evaluated": false,
+  "changeId": "change-000-template",
+  "changeKind": "meaning",
+  "conditions": {
+    "product": "<product name>",
+    "evaluationSet": "integrations/tools/run_suite.py の該当段",
+    "environment": "<OS・ツール版>",
+    "teiCommit": "0000000"
+  },
+  "runs": [
+    {
+      "path": "B",
+      "order": 1,
+      "startedAt": "0000-00-00T00:00:00Z",
+      "endedAt": "0000-00-00T00:00:00Z",
+      "durationSeconds": 0,
+      "handEdits": {"files": 0, "hunks": 0, "lines": 0},
+      "interventions": {"instructions": 0, "confirmations": 0, "retries": 0},
+      "attempts": {"total": 0, "failed": 0},
+      "contextInput": {"files": 0, "lines": 0, "bytes": 0},
+      "reviewFindings": {"meaning": 0, "implementation": 0, "operation": 0}
+    },
+    {
+      "path": "T",
+      "order": 2,
+      "startedAt": "0000-00-00T00:00:00Z",
+      "endedAt": "0000-00-00T00:00:00Z",
+      "durationSeconds": 0,
+      "handEdits": {"files": 0, "hunks": 0, "lines": 0},
+      "interventions": {"instructions": 0, "confirmations": 0, "retries": 0},
+      "attempts": {"total": 0, "failed": 0},
+      "contextInput": {"files": 0, "lines": 0, "bytes": 0},
+      "reviewFindings": {"meaning": 0, "implementation": 0, "operation": 0}
+    }
+  ],
+  "limits": [
+    "この文書は雛形であり測定結果ではない",
+    "単一の生産性倍率は出さない"
+  ]
+}

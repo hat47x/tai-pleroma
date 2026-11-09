@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-06",
+  "date": "2026-11-09",
   "host": "Windows with a local TLS-terminating proxy in front of SUI on loopback",
   "command": "python integrations/pilot-sui-document/assembler/proxy_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-proxy-2026-11-03.json",
   "result": "PASS",

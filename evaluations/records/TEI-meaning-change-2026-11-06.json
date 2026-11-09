@@ -1,0 +1,91 @@
+{
+  "schema": "tai.reference.tei-meaning-change/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator and the pilot's conformance flow on a temporary copy",
+  "command": "python integrations/tools/tei_meaning_change_experiment.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-meaning-change-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "baseline": {
+      "allPassed": true,
+      "cases": {
+        "run": 24,
+        "passed": 24
+      }
+    },
+    "meaningChange": {
+      "contract": "island-record",
+      "versionAfter": "6",
+      "semanticsAdded": {
+        "inputs": 1,
+        "fields": 1,
+        "versionBump": 1
+      },
+      "rewrittenLines": 47,
+      "handEditedFiles": 1
+    },
+    "regenerated": {
+      "document-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "card-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "island-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "edge-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "affiliation-record": {
+        "exit": 0,
+        "generated": true
+      }
+    },
+    "allRegeneratedAutomatically": true,
+    "conformanceAfterRegeneration": {
+      "run": 24,
+      "passed": 24,
+      "result": "PASS"
+    },
+    "conformancePassedAfterRegeneration": true,
+    "changeDetectedByConformance": false,
+    "fixtureHandEdit": {
+      "handEditedLines": 52,
+      "handEditedFiles": 1,
+      "newCases": 1
+    },
+    "composed": {
+      "summaryInComposed": true
+    },
+    "conformanceAfterFixtureEdit": {
+      "run": 25,
+      "passed": 25,
+      "result": "PASS"
+    },
+    "conformancePassedAfterFixtureEdit": true,
+    "consumer": {
+      "ran": true,
+      "exit": 0,
+      "output": [
+        "{\"valid\": true, \"documentId\": \"doc-1\"}"
+      ],
+      "result": "PASS",
+      "documentV1Valid": true,
+      "keepsSummary": false,
+      "surviveExit": 0
+    },
+    "consumerDropsNewField": true
+  },
+  "scope": "Copies the pilot to a temporary directory, adds an optional summary field to the island meaning, regenerates all five candidates, and runs the same conformance flow. It records four things: the generated code needs no hand edit, the suite stayed green before the change was covered (conformance only sees what fixtures exercise), one added fixture case proves the meaning projects into the composed document, and the product consumer still validates as valid while dropping the new field. It does not change the pilot workspace."
+}

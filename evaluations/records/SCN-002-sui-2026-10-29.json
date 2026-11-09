@@ -14,5 +14,6 @@
     "cards": 7,
     "islands": 4,
     "edges": 2
-  }
+  },
+  "publicationAllowed": false
 }

@@ -1,0 +1,93 @@
+{
+  "schema": "tai.reference.sui-consumer-mapping/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 and SUI's reference consumer",
+  "command": "python integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-consumer-mapping-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "valid": true,
+    "documentDropped": [],
+    "collections": {
+      "cards": {
+        "sourceKeys": [
+          "id",
+          "text",
+          "x",
+          "y"
+        ],
+        "consumerKeys": [
+          "id",
+          "text",
+          "x",
+          "y"
+        ],
+        "dropped": [],
+        "sourceCount": 5
+      },
+      "islands": {
+        "sourceKeys": [
+          "cardIds",
+          "id",
+          "title"
+        ],
+        "consumerKeys": [
+          "cardIds",
+          "id",
+          "title"
+        ],
+        "dropped": [],
+        "sourceCount": 1
+      },
+      "edges": {
+        "sourceKeys": [
+          "fromId",
+          "fromKind",
+          "id",
+          "toId",
+          "toKind",
+          "type"
+        ],
+        "consumerKeys": [
+          "fromId",
+          "fromKind",
+          "id",
+          "toId",
+          "toKind",
+          "type"
+        ],
+        "dropped": [],
+        "sourceCount": 1
+      },
+      "affiliations": {
+        "sourceKeys": [
+          "cardId",
+          "id",
+          "islandId"
+        ],
+        "consumerKeys": [
+          "cardId",
+          "id",
+          "islandId"
+        ],
+        "dropped": [],
+        "sourceCount": 1
+      }
+    },
+    "collectionsWithLoss": [],
+    "modelAffiliations": 1,
+    "modelReadingOrder": 2,
+    "sourceAffiliations": 1,
+    "sourceReadingOrder": 2,
+    "everyProjectedFieldSurvives": true,
+    "affiliationsKept": true,
+    "readingOrderKept": true
+  },
+  "scope": "Builds DocumentV1 through SUI's own consumer and compares the payload with the artifact, per collection and per document field. It records that every projected field that the consumer knows about survives (including readingOrder and affiliations), which contrasts with the meaning-change finding that a field the consumer does not know is dropped while validation still passes. It does not change SUI."
+}

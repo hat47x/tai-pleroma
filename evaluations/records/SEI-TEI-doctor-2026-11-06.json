@@ -1,0 +1,174 @@
+{
+  "schema": "tai.reference.sei-doctor/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with a locally built sei CLI and a temporary store",
+  "command": "python integrations/tools/sei_doctor_check.py --sei-repo D:\\GIT\\hat47x\\sei-cognition --artifact evaluations/artifacts/sei-decision-projection.json --out evaluations/records/SEI-TEI-doctor-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/sei-decision-projection.json",
+    "digest": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+  },
+  "observed": {
+    "missing": {
+      "exit": 0,
+      "lines": {
+        "binary": {
+          "status": "ok",
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
+        },
+        "contracts": {
+          "status": "info",
+          "detail": "sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1"
+        },
+        "binary-path": {
+          "status": "info",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
+        },
+        "binary-hash": {
+          "status": "info",
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
+        },
+        "data-root": {
+          "status": "warn",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store"
+        },
+        "mcp": {
+          "status": "info",
+          "detail": "to connect an AI tool, use this server definition in its MCP settings:"
+        }
+      }
+    },
+    "init": {
+      "exit": 0
+    },
+    "afterInit": {
+      "exit": 0,
+      "lines": {
+        "binary": {
+          "status": "ok",
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
+        },
+        "contracts": {
+          "status": "info",
+          "detail": "sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1"
+        },
+        "binary-path": {
+          "status": "info",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
+        },
+        "binary-hash": {
+          "status": "info",
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
+        },
+        "data-root": {
+          "status": "ok",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store (writable)"
+        },
+        "store": {
+          "status": "ok",
+          "detail": "sei-store-2026-11-09-c8ad8b7a: 0 records, 0 validated, 0 not verified"
+        },
+        "lock": {
+          "status": "ok",
+          "detail": "no lock held"
+        },
+        "gate-log": {
+          "status": "ok",
+          "detail": "will be created on the first gate check"
+        },
+        "mcp": {
+          "status": "info",
+          "detail": "to connect an AI tool, use this server definition in its MCP settings:"
+        }
+      }
+    },
+    "withStaleLock": {
+      "exit": 0,
+      "lines": {
+        "binary": {
+          "status": "ok",
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
+        },
+        "contracts": {
+          "status": "info",
+          "detail": "sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1"
+        },
+        "binary-path": {
+          "status": "info",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
+        },
+        "binary-hash": {
+          "status": "info",
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
+        },
+        "data-root": {
+          "status": "ok",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store (writable)"
+        },
+        "store": {
+          "status": "ok",
+          "detail": "sei-store-2026-11-09-c8ad8b7a: 0 records, 0 validated, 0 not verified"
+        },
+        "lock": {
+          "status": "warn",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
+        },
+        "gate-log": {
+          "status": "ok",
+          "detail": "will be created on the first gate check"
+        },
+        "mcp": {
+          "status": "info",
+          "detail": "to connect an AI tool, use this server definition in its MCP settings:"
+        }
+      }
+    },
+    "afterUnlock": {
+      "exit": 0,
+      "lines": {
+        "binary": {
+          "status": "ok",
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
+        },
+        "contracts": {
+          "status": "info",
+          "detail": "sei.semantic-interchange/v1alpha1, sei.semantic-reference/v1alpha1, sei.decision-memory/v1alpha1, sei.capability-observation/v1alpha1, sei.cognitive-method/v1alpha1"
+        },
+        "binary-path": {
+          "status": "info",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
+        },
+        "binary-hash": {
+          "status": "info",
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
+        },
+        "data-root": {
+          "status": "ok",
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store (writable)"
+        },
+        "store": {
+          "status": "ok",
+          "detail": "sei-store-2026-11-09-c8ad8b7a: 0 records, 0 validated, 0 not verified"
+        },
+        "lock": {
+          "status": "ok",
+          "detail": "no lock held"
+        },
+        "gate-log": {
+          "status": "ok",
+          "detail": "will be created on the first gate check"
+        },
+        "mcp": {
+          "status": "info",
+          "detail": "to connect an AI tool, use this server definition in its MCP settings:"
+        }
+      }
+    },
+    "doctorLeftNoTempFiles": true,
+    "initOutputPresent": true
+  },
+  "scope": "Runs doctor on a missing store, after init, with a hand-made lock file, and after removing it. It checks that doctor is read-only and never removes the lock itself; it does not test a corrupt store."
+}

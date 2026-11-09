@@ -156,6 +156,61 @@ REAL_RECORDS = (
     "evaluations/records/MMI-delivery-audit-2026-11-03.json",
     "evaluations/records/SUI-TEI-audit-2026-11-03.json",
     "evaluations/records/SUI-TEI-admin-2026-11-03.json",
+    "evaluations/records/SUI-TEI-context-2026-11-03.json",
+    "evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
+    "evaluations/records/SUI-TEI-ce4-2026-11-03.json",
+    "evaluations/records/SUI-TEI-registry-2026-11-03.json",
+    "evaluations/records/SUI-TEI-agent-guard-2026-11-06.json",
+    "evaluations/records/SUI-TEI-agent-credential-admin-2026-11-06.json",
+    "evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json",
+    "evaluations/records/SUI-TEI-etag-stability-2026-11-06.json",
+    "evaluations/records/SUI-TEI-archive-lifecycle-2026-11-06.json",
+    "evaluations/records/SUI-TEI-merge-decision-log-2026-11-06.json",
+    "evaluations/records/SUI-TEI-ce4-audit-order-2026-11-06.json",
+    "evaluations/records/SUI-TEI-polygon-handoff-2026-11-06.json",
+    "evaluations/records/SUI-TEI-similar-candidates-2026-11-06.json",
+    "evaluations/records/SUI-TEI-export-dedup-2026-11-06.json",
+    "evaluations/records/SUI-TEI-native-action-2026-11-06.json",
+    "evaluations/records/SUI-TEI-list-pagination-2026-11-06.json",
+    "evaluations/records/SUI-TEI-agent-read-path-2026-11-06.json",
+    "evaluations/records/SUI-TEI-agent-key-wiring-2026-11-06.json",
+    "evaluations/records/SUI-TEI-saas-precondition-2026-11-06.json",
+    "evaluations/records/SUI-TEI-dedup-window-2026-11-06.json",
+    "evaluations/records/SUI-TEI-profile-policy-2026-11-06.json",
+    "evaluations/records/SUI-TEI-probes-2026-11-06.json",
+    "evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json",
+    "evaluations/records/SUI-TEI-headers-2026-11-06.json",
+    "evaluations/records/SUI-TEI-card-move-2026-11-06.json",
+    "evaluations/records/SUI-TEI-migrations-2026-11-06.json",
+    "evaluations/records/SUI-TEI-preflight-2026-11-06.json",
+    "evaluations/records/SUI-TEI-policy-requirements-2026-11-06.json",
+    "evaluations/records/SUI-TEI-builders-2026-11-06.json",
+    "evaluations/records/SUI-TEI-failsafe-2026-11-06.json",
+    "evaluations/records/SUI-TEI-parsers-2026-11-06.json",
+    "evaluations/records/SEI-TEI-doctor-2026-11-06.json",
+    "evaluations/records/SEI-TEI-resume-2026-11-06.json",
+    "evaluations/records/TEI-nesting-2026-11-06.json",
+    "evaluations/records/TEI-decode-divergence-2026-11-06.json",
+    "evaluations/records/TEI-many-primitive-2026-11-06.json",
+    "evaluations/records/TEI-meaning-change-2026-11-06.json",
+    "evaluations/records/TEI-meaning-change-required-2026-11-06.json",
+    "evaluations/records/TEI-optional-flag-2026-11-06.json",
+    "evaluations/records/TEI-result-exit-parity-2026-11-06.json",
+    "evaluations/records/TEI-decimal-fidelity-2026-11-06.json",
+    "evaluations/records/TEI-receipt-consistency-2026-11-06.json",
+    "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
+    "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+    "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
+    "evaluations/records/TEI-receipt-scope-2026-11-06.json",
+    "evaluations/records/TEI-fixture-coverage-2026-11-06.json",
+    "evaluations/records/SUI-consumer-mapping-2026-11-06.json",
+    "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json",
+    "evaluations/records/SUI-TEI-document-types-2026-11-06.json",
+    "evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
+    "evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+    "evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json",
+    "evaluations/records/SUI-TEI-edge-chain-2026-11-06.json",
+    "evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json",
     "evaluations/records/SUI-TEI-provision-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-2026-11-03.json",
     "evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
@@ -180,6 +235,10 @@ REAL_RECORDS = (
     "evaluations/records/EKI-TEI-http-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-projection-execution-2026-11-03.json",
     "evaluations/records/EKI-TEI-policy-execution-2026-11-03.json",
+    "evaluations/records/EKI-TEI-manual-execution-2026-11-03.json",
+    "evaluations/records/EKI-TEI-worker-revoke-2026-11-03.json",
+    "evaluations/records/EKI-TEI-revoked-agent-2026-11-03.json",
+    "evaluations/records/EKI-TEI-multi-worker-2026-11-03.json",
     "evaluations/records/EKI-TEI-budget-aligned-artifact-2026-11-03.json",
     "evaluations/records/TEI-records-2026-11-03.json",
     "evaluations/records/TEI-artifact-digests-2026-11-03.json",
@@ -200,6 +259,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-suite-2026-11-03.json",
     "evaluations/records/SUI-TEI-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-multidoc-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-proxy-2026-11-03.json",
     "evaluations/records/SUI-TEI-ca-chain-2026-11-03.json",
@@ -374,7 +434,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
+        if "SUI-TEI-postgres-multidoc" in relative:
+            observed = data.get("observed", {})
+            reads = observed.get("reads") or []
+            if (
+                observed.get("documents") != len(reads)
+                or any(read.get("status") != 200 for read in reads)
+                or any(status != 200 for status in observed.get("createStatuses") or [])
+            ):
+                errors.append(f"SUI multi-document save did not round trip every document: {relative}")
+        if "SUI-TEI-postgres" in relative and "multidoc" not in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
             observed = data.get("observed", {})
             expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
             if data.get("result") != expected:
@@ -407,7 +476,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
+        if "SUI-TEI-postgres" in relative and "multidoc" not in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("documentRows") != 1:
                 errors.append(f"SUI Postgres save did not persist one document: {relative}")
@@ -415,6 +484,89 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("tls") is not True or observed.get("authenticatedStatus") != 200:
                 errors.append(f"SUI TLS check did not succeed: {relative}")
+        if "TEI-fixture-coverage" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("selfTestDetectsMissingRequired") is not True
+                or observed.get("uncoveredRequiredFields")
+            ):
+                errors.append(f"TEI fixture field coverage regressed: {relative}")
+        if "TEI-receipt-scope" in relative:
+            observed = data.get("observed", {})
+            gaps = observed.get("gapCounts") or {}
+            if (
+                data.get("result") != "PASS"
+                or observed.get("allRealReceiptsStateLimits") is not True
+                or any(gaps.values())
+            ):
+                errors.append(f"receipt scope walk found gaps: {relative}")
+        if "TEI-target-profile-compare" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("oneShotPassed") is not True
+                or observed.get("longRunningRefused") is not True
+            ):
+                errors.append(f"TEI target-profile comparison changed: {relative}")
+        if "TEI-meaning-change-requiredness" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("conformanceDetectedTheChange") is not True
+                or observed.get("consumerMappingUnchanged") is not True
+            ):
+                errors.append(f"TEI requiredness change changed: {relative}")
+        if "TEI-receipt-consistency" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyPassIsConsistent") is not True
+                or observed.get("unexpected")
+            ):
+                errors.append(f"a PASS receipt contradicts a success flag: {relative}")
+        if "TEI-decimal-fidelity" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("allProjected") is not True:
+                errors.append(f"TEI decimal fidelity probe did not run: {relative}")
+            if observed.get("precisionPreserved") is True:
+                errors.append(f"TEI decimal fidelity changed; re-measure before claiming loss: {relative}")
+        if "TEI-result-exit-parity" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("selfTestDetectsTheShape") is not True
+                or observed.get("suspects")
+            ):
+                errors.append(f"receipt verdict can disagree with exit code: {relative}")
+        if "TEI-optional-flag" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("flagChangesBehaviour") is not True:
+                errors.append(f"TEI optional flag stopped changing behaviour: {relative}")
+        if "SUI-TEI-integration-flow" in relative:
+            if data.get("result") != "PASS" or data.get("casesPassed") != data.get("casesRun"):
+                errors.append(f"SUI integration flow did not pass every case: {relative}")
+        if "TEI-meaning-change-required" in relative and "requiredness" not in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("coverageFailedBeforeFixtureEdit") is not True
+                or observed.get("coveragePassedAfterFixtureEdit") is not True
+                or observed.get("consumerDropsRequiredField") is not True
+            ):
+                errors.append(f"TEI required-field meaning change changed: {relative}")
+        if "TEI-meaning-change" in relative and "required" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("consumerDropsNewField") is not True:
+                errors.append(f"TEI meaning-change behaviour changed: {relative}")
+        if "TEI-many-primitive" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("numericManyRefused") is not True:
+                errors.append(f"TEI numeric many behaviour changed: {relative}")
+        if "TEI-decode-divergence" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("prefixDistinguishable") is not True:
+                errors.append(f"TEI decode paths became uniform: {relative}")
         if "TEI-suite-2026" in relative:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or any(step.get("returncode") != 0 for step in steps.values()):
@@ -479,6 +631,25 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
+        if "EKI-TEI-multi-worker" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or len(observed.get("workers", [])) != 2 or observed.get("executed", 0) < 1:
+                errors.append(f"EKI multi-worker evidence did not hold: {relative}")
+        if "EKI-TEI-revoked-agent" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("executed") is not False or observed.get("refusedStatus") not in (401, 403):
+                errors.append(f"EKI refused-agent evidence did not hold: {relative}")
+        if "EKI-TEI-worker-revoke" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("eventualState") is not True or observed.get("reregisterRefused") is not True:
+                errors.append(f"EKI worker revocation evidence did not hold: {relative}")
+        if "EKI-TEI-manual-execution" in relative:
+            observed = data.get("observed", {})
+            body = observed.get("resultBody") or {}
+            if data.get("result") != "PASS" or observed.get("executed") is not True or observed.get("claimed") is not True or not observed.get("taskId"):
+                errors.append(f"EKI manual execution evidence did not hold: {relative}")
+            elif observed.get("resultStatus") != 409 or body.get("code") != "RESULT_NOT_READY":
+                errors.append(f"EKI result acceptance changed; update the finding: {relative}")
         if "EKI-TEI-policy-execution" in relative:
             observed = data.get("observed", {})
             if (
@@ -517,6 +688,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
                 errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
+        if "SEI-TEI-resume" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("humanViewHasNoRawBidi") is not True:
+                errors.append(f"SEI resume view leaked a raw bidi control: {relative}")
+        if "SEI-TEI-doctor" in relative:
+            observed = data.get("observed", {})
+            lock = observed.get("withStaleLock", {}).get("lines", {}).get("lock", {})
+            if data.get("result") != "PASS" or lock.get("status") != "warn":
+                errors.append(f"SEI doctor lock handling changed: {relative}")
         if "SEI-TEI-gate-variants" in relative:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
@@ -585,11 +765,171 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
+        if "SUI-TEI-edge-optional-contract" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("absentKindsProjectedWithoutThem") is not True:
+                errors.append(f"SUI optional-kind Edge contract behaviour changed: {relative}")
+        if "SUI-consumer-mapping" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("everyProjectedFieldSurvives") is not True:
+                errors.append(f"SUI consumer dropped a projected field: {relative}")
+        if "SUI-TEI-edge-chain" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("cardToIslandComposes") is not True:
+                errors.append(f"SUI edge projection-to-assembly chain broke: {relative}")
+        if "SUI-TEI-assembler-tests" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("failed") is not False:
+                errors.append(f"SUI assembler unit tests failed: {relative}")
+        if "SUI-TEI-assembler-kinds" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("assemblerRewritesKinds") is not True:
+                errors.append(f"SUI assembler kind fallback changed: {relative}")
+        if "SUI-TEI-edge-optionality" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("bothKindsPresent") is not True:
+                errors.append(f"SUI Edge optionality behaviour changed: {relative}")
+        if "SUI-TEI-document-types" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("allPrimitivesMatch") is not True:
+                errors.append(f"SUI projection contract types changed: {relative}")
+        if "SUI-TEI-document-coverage" in relative:
+            observed = data.get("observed", {})
+            edge = observed.get("coverage", {}).get("Edge", {})
+            if data.get("result") != "PASS" or edge.get("coverageRatio") != 1.0:
+                errors.append(f"SUI DocumentV1 coverage changed: {relative}")
+        if "SUI-TEI-parsers" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("visibility", {}).get("caseMismatch") is not None:
+                errors.append(f"SUI visibility parsing became case-insensitive: {relative}")
+        if "SUI-TEI-failsafe" in relative:
+            cases = data.get("observed", {}).get("cases", {})
+            if data.get("result") != "PASS" or cases.get("safeModeExport", {}).get("reason") != "safe_mode":
+                errors.append(f"SUI local fail-safe ladder changed: {relative}")
+        if "SUI-TEI-builders" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("unknownAdapterFallsBackToNoop") is not True:
+                errors.append(f"SUI policy component fallbacks changed: {relative}")
+        if "SUI-TEI-policy-requirements" in relative:
+            cases = data.get("observed", {}).get("cases", {})
+            broken = cases.get("allTenBroken", {}).get("reason", "")
+            if data.get("result") != "PASS" or broken.count(", ") < 8:
+                errors.append(f"SUI SaaS policy requirement list changed: {relative}")
+        if "SUI-TEI-preflight" in relative:
+            observed = data.get("observed", {}).get("results", {})
+            if data.get("result") != "PASS" or observed.get("withAdapters:local-dev", {}).get("outcome") != "refused":
+                errors.append(f"SUI trusted runtime preflight rule changed: {relative}")
+        if "SUI-TEI-migrations" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("singleHead") is not True:
+                errors.append(f"SUI migration heads are not linear: {relative}")
+        if "SUI-TEI-card-move" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("noOp", {}).get("outcome") != "refused":
+                errors.append(f"SUI card-move domain changed: {relative}")
+        if "SUI-TEI-headers" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("readHeaders", {}).get("nosniff") != "nosniff":
+                errors.append(f"SUI security headers missing: {relative}")
+        if "SUI-TEI-auth-assurance" in relative:
+            cases = data.get("observed", {}).get("cases", {})
+            if data.get("result") != "PASS" or cases.get("aalLowWinsOverAcrHigh", {}).get("assuranceLevel") != "low":
+                errors.append(f"SUI auth assurance precedence changed: {relative}")
+        if "SUI-TEI-probes" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("healthzBody") != {"status": "ok"}:
+                errors.append(f"SUI probe endpoints changed: {relative}")
+        if "SUI-TEI-profile-policy" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("sessionRequiredProfiles") != ["saas-multitenant"]:
+                errors.append(f"SUI profile policy table changed: {relative}")
+        if "SUI-TEI-dedup-window" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("immediateSent") is not False:
+                errors.append(f"SUI audit dedup window did not suppress an immediate repeat: {relative}")
+        if "SUI-TEI-saas-precondition" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("updateMissing") != [428, "document_precondition_required"]:
+                errors.append(f"SUI SaaS precondition helper did not demand If-Match: {relative}")
+        if "SUI-TEI-agent-key-wiring" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("agentRequestStatus") != 503:
+                errors.append(f"SUI agent key wiring probe did not observe the local-dev 503: {relative}")
+        if "SUI-TEI-agent-read-path" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("writeAttemptStatus") != 403:
+                errors.append(f"SUI agent read path did not refuse a write: {relative}")
+        if "SUI-TEI-list-pagination" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("allSeenOnce") is not True:
+                errors.append(f"SUI document list pagination missed or repeated a document: {relative}")
+        if "SUI-TEI-native-action" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("disabledStatus") != 404:
+                errors.append(f"SUI native action was not disabled by default: {relative}")
+        if "SUI-TEI-export-dedup" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("repeatSuppressed") is not True:
+                errors.append(f"SUI export audit dedup did not suppress a repeat: {relative}")
+        if "SUI-TEI-similar-candidates" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("mergedCardExcluded") is not True:
+                errors.append(f"SUI similar candidates included an ineligible card: {relative}")
+        if "SUI-TEI-polygon-handoff" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("paddingDecision") != "rollback_required":
+                errors.append(f"SUI polygon handoff did not require rollback: {relative}")
+        if "SUI-TEI-ce4-audit-order" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("applyBeforeAnyEventStatus") != 409:
+                errors.append(f"SUI CE4 audit order did not refuse an early apply: {relative}")
+        if "SUI-TEI-merge-decision-log" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("duplicateStatus") != 409:
+                errors.append(f"SUI merge decision log accepted a duplicate: {relative}")
+        if "SUI-TEI-archive-lifecycle" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("writeArchivedStatus") != 423:
+                errors.append(f"SUI archive gate did not refuse the write: {relative}")
+        if "SUI-TEI-etag-stability" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("etagStableAcrossReads") is not True:
+                errors.append(f"SUI document ETag was not stable: {relative}")
+            if observed.get("etagChangedAfterSave") is not True:
+                errors.append(f"SUI document ETag did not change after a save: {relative}")
+        if "SUI-TEI-audit-pagination" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("noOverlap") is not True or observed.get("hasCursor") is not True:
+                errors.append(f"SUI admin audit pagination did not hold: {relative}")
+        if "SUI-TEI-agent-credential-admin" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("anonymousStatus") not in (401, 403):
+                errors.append(f"SUI agent credential admin did not refuse anonymous callers: {relative}")
+        if "SUI-TEI-agent-guard" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("guardRaised") is not True or observed.get("auditExportedClearsGuard") is not True:
+                errors.append(f"SUI agent credential guard did not hold: {relative}")
+        if "SUI-TEI-registry" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("listStatus") != 200 or observed.get("createStatus") != 201:
+                errors.append(f"SUI model registry did not hold: {relative}")
+        if "SUI-TEI-ce4" in relative and "-audit-order" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("dryStatus") != 200 or observed.get("hasBundleHash") is not True:
+                errors.append(f"SUI CE4 resolve did not hold: {relative}")
+        if "SUI-TEI-context-bundle" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("firstStatus") != 200 or observed.get("deterministic") is not True:
+                errors.append(f"SUI context bundle did not hold: {relative}")
+        if "SUI-TEI-context" in relative and "-bundle" not in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("acceptedStatus") != 200 or observed.get("previewStatus") != 422:
+                errors.append(f"SUI context query contract did not hold: {relative}")
         if "SUI-TEI-admin" in relative and "admin-path" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("adminStatus") != 200 or observed.get("anonymousStatus") not in (401, 403) or observed.get("businessKeyStatus") not in (401, 403):
                 errors.append(f"SUI admin plane check did not hold: {relative}")
-        if "SUI-TEI-audit" in relative:
+        if "SUI-TEI-audit" in relative and "-pagination" not in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("eventCount", 0) < 1 or observed.get("viewStatus") != 200:
                 errors.append(f"SUI audit export did not deliver an event: {relative}")
