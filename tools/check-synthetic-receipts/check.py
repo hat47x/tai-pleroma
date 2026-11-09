@@ -201,6 +201,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-projection-strategy-2026-11-06.json",
     "evaluations/records/TEI-independent-oracle-2026-11-06.json",
     "evaluations/records/SUI-readonly-enforcement-2026-11-06.json",
+    "evaluations/records/TEI-conclusion-integrity-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -522,6 +523,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "TEI-conclusion-integrity" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyCitedLinkExists") is not True
+                or observed.get("everyCitedReceiptIsPass") is not True
+            ):
+                errors.append(f"a conclusion citation is dead or not PASS: {relative}")
         if "SUI-readonly-enforcement" in relative:
             observed = data.get("observed", {})
             if (
