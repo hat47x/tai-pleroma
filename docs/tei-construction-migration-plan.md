@@ -78,6 +78,7 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行とrollingの配備・rollbackまで到達。属性単位（text/document_id）とCard record（text+documentId）とIsland/Edge recordを選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[island-edge](../evaluations/records/SUI-TEI-island-edge-2026-11-02.json)、[document](../evaluations/records/SUI-TEI-document-record-2026-11-02.json)）。Documentはflat recordの合成で表し、合成層のテスト6件と、生成候補を実行して合成する結合経路17ケースもPASS（[assembler](../evaluations/records/SUI-TEI-assembler-2026-11-02.json)、[flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[affiliation](../evaluations/records/SUI-TEI-affiliation-2026-11-02.json)）。入れ子投影は未達 |
 | 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。生産性は完成後に評価する（仮決定）。人の作業時間・長期保守はPoC中には測らない |
 | 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録（[段階4の判断](../analysis/tei-stage4-decision-2026-11-06.md)、2026-11-06）|
+| 5 | 意味変更の再生成ループを回し、写像の追随コストを計上する | 意味変更2件以上を「契約→再生成→被覆追加→適合」の1回転で記録し、写像の手修正を件数で計上する。別実行先で同じ適合試験が通ることを1件示す（[段階5の計画](#77-段階5の計画2026-11-06)）|
 
 各段階は小さなPRとreceiptで記録します。段階2で生成できない場合は、TEI側の不足としてIssueへ戻し、下流のプロダクトへ回避実装を足しません。
 
@@ -171,6 +172,40 @@ DocumentV1と現在の投影契約の差分を[sui-documentv1-tei-gap.md](sui-do
 
 SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読み取り専用のartifactとして投影を渡す案を[sui-api-boundary-tei-mapping.md](sui-api-boundary-tei-mapping.md)へ整理しました。DocumentV1の書き込み経路は、完全な写像ができるまで扱いません。
 
+## 7.7 段階5の計画（2026-11-06）
+
+段階4で「TEI側の不足を先に埋める」と決め、3件の実測を揃えた。うち端点種別はTAI側で解消し、残る2論点（デコード方針の不統一、数値・真偽値の配列）はTEI側の判断待ちである。判断を待つ間に、TAIが単独で進められるのは**意味変更の再生成ループを回すこと**なので、段階5をそこに置く。
+
+範囲は広げない。SUIのDocumentV1投影のままで、意味を変える回数を増やす。
+
+| 項目 | 内容 |
+| --- | --- |
+| 目的 | 意味変更1件あたりに何が自動で追従し、何を人が直すかを、件数として蓄積する |
+| 出口1 | 意味変更を2件以上、「契約→再生成→被覆追加→適合」の1回転で記録する |
+| 出口2 | 写像（消費側）の追随を、意味変更1件あたりの手修正件数として計上する |
+| 出口3 | 別のTarget Profileで同じ適合試験が通ることを1件示す |
+| 出口4 | 下記の判定表を、receiptを根拠に更新する |
+| 停止条件 | TEI側2論点が解けるまで、入れ子投影と数値配列の投影には踏み込まない |
+| 非目標 | 生産性・自律性の評価（完成後に測る）、実インフラが要る検証の代替 |
+
+段階4で分かった「適合試験は意味変更を自動では検出しない」に対して、被覆検査（[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)）を先に置いた。段階5では、意味変更のたびにこの検査が落ちることを確認してから被覆を足す順序にする。落ちなければ、その意味変更は試験に届いていない。
+
+## 7.8 フィージビリティ判定の現況（2026-11-06）
+
+計画§2の5条件に、§5の条件のうち§2と重ならない2つ（digestの残存と人の再現）を加えて、現在のreceiptに照らして並べる。**示せた**は receipt で再確認できるもの、**部分**は条件を満たす範囲と満たさない範囲が同居するもの。
+
+| 条件 | 現況 | 根拠 |
+| --- | --- | --- |
+| 意味が正本 | **部分**。契約とfixturesが版付きで存在し、生成物とdigestで対応する。ただし製品への写像は手書きで、新しい意味は自動で届かない | [contract digests](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)、[meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
+| 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
+| 適合試験がある | **部分**。24→25ケースが通り、フィールド被覆も検査する。ただし意味変更を自動では検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json) |
+| 実行先が交換できる | **部分**。one-shot Target Profile実行、rollingの配備・rollback、Postgres保存は示せた。別実行先で同じ試験を通すことは未実施 | [target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[postgres](../evaluations/records/SUI-TEI-postgres-2026-11-03.json) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが181件、合成61件 | [status](status.md) |
+| 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
+| 人が同じ手順で再現できる | **部分**。一括95段のコマンド1本で再現できるが、実インフラ依存の段は環境前提を持つ | [suite](../evaluations/records/TEI-suite-2026-11-03.json) |
+
+この表は「TEIで構築した」の証明ではない。条件ごとに何が示せて何が示せていないかを、判断できる形で並べたものである。段階5の出口4で更新する。
+
 ## 8. 停止条件・非目標
 
 - フィージビリティが確認できるまで、既存プロダクトの本番移行や公開は行いません。
@@ -180,10 +215,21 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 ## 9. 未決
 
-1. パイロットの意味を受理する主体と、生成物を確認する責任者。
-2. SUIのどの範囲を最初の意味の単位とするか（DocumentV1全体か、投影だけか）。
-3. 比較測定の基準となる現行実装の版と、変更課題の選び方。
-4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。
+段階4・5の実測で解けたものと、残るものを分けておく。
+
+解けた（仮決定済み）:
+
+- パイロットの範囲はDocumentV1の投影（読み取りと合成）に限定した（§3）。
+- 比較測定の基準は、同じ意味変更を手作業で行う場合とし、PoC中は評価しない（§6、§7評価の位置づけ）。
+- TEI側の不足の優先順位は、デコード方針の統一（入れ子を含む）を第一、数値配列を第二とした（[段階4の判断](../analysis/tei-stage4-decision-2026-11-06.md)）。
+- 端点種別の任意性はTAI側で解消した（契約v4＋合成層の端点解決）。
+
+残る:
+
+1. パイロットの意味を受理する主体と、生成物を確認する責任者。TAIでは決められない（業務上の受入）。
+2. 製品側6判断（[草案](../analysis/product-side-decisions-issue-drafts-2026-11-06.md)）。
+3. TEI側2論点の判断（[草案](../analysis/tei-side-gaps-issue-drafts-2026-11-06.md)）。
+4. 別実行先での同一適合試験。実インフラが要る。
 
 
 
