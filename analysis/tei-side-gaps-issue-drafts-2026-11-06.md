@@ -90,6 +90,17 @@ tei-generator-select → 拒否（`json: unknown field "fields"`）
 
 ---
 
+## 補足: #2585 として既に追跡されている2件
+
+TAIのパイロットで、TEIの`TEI_PRODUCT_CRITICAL_PATH_2026-10.md`§34が挙げていた2つの懸念が**そのまま再現した**。どちらも#2585で追跡されているため、新しいIssueにはしない。
+
+| 現象 | TAIでの実測 |
+| --- | --- |
+| 十進値の`float64`経由の精度喪失 | `0.1234567890123456789` → `0.12345678901234568`、`12345678901234567890` → `12345678901234567000`（[receipt](../evaluations/records/TEI-decimal-fidelity-2026-11-06.json)） |
+| `optional`のmissing/null同一省略 | JSONの`null`が「省略」に畳まれ、`missing`との区別が付かない（[receipt](../evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json)） |
+
+TAI側の意味は「生成成功≠型付き意味保持」である。金額のように丸めを許さない値を持つ契約は、#2585の判断が出るまで`std.decimal`で投影しない。
+
 ## 4. 生成テンプレートがprocess modelごとに要る
 
 **提案タイトル**: `reference-generator-selection: 生成テンプレートをTarget Profileのprocess modelに対応させる`

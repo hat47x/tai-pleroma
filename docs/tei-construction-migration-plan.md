@@ -262,6 +262,26 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 限界も書いておく。この点検は構文の形だけを見るので、変数を経由した不一致や、receiptを書いた後に別経路で失敗する形は見つけられない。件数が0でも「不一致が原理的に無い」ことの証明にはならない。
 
+### 7.7.1-d 十進値の精度（2026-11-06）
+
+TEIの`plan/workstreams/TEI_PRODUCT_CRITICAL_PATH_2026-10.md`§34は「投影のJSON化で十進値の`float64`経由の精度喪失、optionalのmissing/null同一省略などがあり得る。実消費値の忠実度は#2585の別検査であり、生成成功≠型付き意味保持」と書いている。**TAIのパイロットでも同じかを測った。**（[receipt](../evaluations/records/TEI-decimal-fidelity-2026-11-06.json)）
+
+Card契約の`x`（`std.decimal`）に桁数を与えて、投影された値を`Decimal`で比較した。
+
+| 入力 | 投影後 | 一致 |
+| --- | --- | --- |
+| `10` | `10` | 一致 |
+| `0.1234567890123456789` | `0.12345678901234568` | **不一致**（下位桁が丸め） |
+| `0.0000000001` | `1E-10` | 一致 |
+| `12345678901234567890` | `12345678901234567000` | **不一致**（2^53超の整数が丸め） |
+| `0.1` | `0.1` | 一致 |
+
+- TEIの記載どおり、**十進値は`float64`を経て丸められる**。整数でも2^53を超えると失われる
+- パイロットの用途では座標が`float64`なので実害は小さいが、「生成成功≠型付き意味保持」は**TAIの契約でも成り立つ**
+- `optional`のmissing/null同一省略も、TEIの記載と一致する（Edge契約v4で実測済み）
+- これらは#2585としてTEI側で既に追跡されている。TAIは新しい論点を作らず、**同じ現象が自分の契約でも起きることの証拠**として記録する
+- 値の丸めを避けたい契約（金額など）では、`std.decimal`のままだと足りない。TEI側の判断（#2585）を待つ
+
 ### 7.7.2 段階5の結論（2026-11-06）
 
 段階5の出口を、達成・反例・保留に分けて締める。
@@ -303,7 +323,7 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが189件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが190件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 
