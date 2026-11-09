@@ -12,6 +12,10 @@ Status: **整理**。TAIが接続検証で突き当たった、製品側の設�
 
 TAI側でできること: 受入が配線された後の縦断確認（Task→実行→受入→結果参照）。配線そのものは製品変更。
 
+追加の観測（2026-11-06、TEIの意味変更から）: 受入の有無と別に、**製品が意味を受け取る経路そのものが手書きの許可リスト**であることが分かった。SUIの`from_artifact`はカード・島・辺の各フィールドを明示的に読み、知らないキーは読まない。そのため新しい意味は`DocumentV1`の検証を通過したまま落ちる（[mapping](../evaluations/records/SUI-consumer-mapping-2026-11-06.json)、[meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json)）。
+
+この事実は、受入を配線する判断にも効く。受入が「投影された意味をそのまま受理する」のか「製品のモデルに写した後の値を受理する」のかで、受理の対象が変わる。写像が許可リストである限り、後者を選ぶと新しい意味は受入の対象にならない。
+
 ## 2. `NOT_YET_VALID`の時刻順序を計測・修正するか
 
 観測: 同時投入時、dispatchが一部のTaskを`reserve lease: NOT_YET_VALID: approval is issued in the future`で延期する。延期は次tickで解消することが多く、Attemptが作られないまま残る場合がある。[分析](tei-sui-integration-2026-11-03.md)

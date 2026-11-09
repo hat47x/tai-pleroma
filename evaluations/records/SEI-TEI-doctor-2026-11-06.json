@@ -25,7 +25,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -33,7 +33,7 @@
         },
         "data-root": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\store"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\store"
         },
         "mcp": {
           "status": "info",
@@ -57,7 +57,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -65,11 +65,11 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-09-7049003e: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-09-ddc467b4: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "ok",
@@ -98,7 +98,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -106,15 +106,15 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-09-7049003e: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-09-ddc467b4: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
         },
         "gate-log": {
           "status": "ok",
@@ -139,7 +139,7 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
@@ -147,11 +147,11 @@
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-7nv5gamk\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-eok_pou6\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-09-7049003e: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-09-ddc467b4: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "ok",
