@@ -14,8 +14,8 @@
   "observed": {
     "createStatus": 200,
     "statuses": [
-      409,
-      200
+      200,
+      409
     ],
     "winners": 1,
     "conflicts": 1,
