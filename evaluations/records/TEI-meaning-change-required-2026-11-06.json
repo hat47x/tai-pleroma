@@ -1,0 +1,106 @@
+{
+  "schema": "tai.reference.tei-meaning-change-required/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator and the pilot's conformance flow on a temporary copy",
+  "command": "python integrations/tools/tei_meaning_change_required.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace integrations/pilot-sui-document --coverage-tool integrations/tools/fixture_field_coverage_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-meaning-change-required-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "baseline": {
+      "result": "PASS",
+      "casesRun": 24,
+      "casesPassed": 24
+    },
+    "meaningChange": {
+      "contract": "card-record",
+      "versionAfter": "9",
+      "semanticsAdded": {
+        "inputs": 1,
+        "fields": 1,
+        "versionBump": 1,
+        "required": true
+      },
+      "rewrittenLines": 99,
+      "handEditedFiles": 1
+    },
+    "regenerated": {
+      "document-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "card-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "island-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "edge-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "affiliation-record": {
+        "exit": 0,
+        "generated": true
+      }
+    },
+    "allRegeneratedAutomatically": true,
+    "coverageBeforeFixtureEdit": {
+      "passed": false,
+      "uncoveredRequired": [
+        "card-record.revision"
+      ],
+      "uncoveredOptional": []
+    },
+    "coverageFailedBeforeFixtureEdit": true,
+    "coverageNamesTheField": true,
+    "conformanceBeforeFixtureEdit": {
+      "result": null,
+      "casesRun": null,
+      "casesPassed": null,
+      "tail": [
+        "KeyError: 'present'"
+      ]
+    },
+    "conformanceBrokeBeforeFixtureEdit": true,
+    "fixtureHandEdit": {
+      "touchedCases": 3,
+      "newCases": 1,
+      "rewrittenLines": 71,
+      "handEditedFiles": 1
+    },
+    "coverageAfterFixtureEdit": {
+      "passed": true,
+      "uncoveredRequired": [],
+      "uncoveredOptional": []
+    },
+    "coveragePassedAfterFixtureEdit": true,
+    "conformanceAfterFixtureEdit": {
+      "result": "PASS",
+      "casesRun": 25,
+      "casesPassed": 25
+    },
+    "conformancePassedAfterFixtureEdit": true,
+    "consumer": {
+      "ran": true,
+      "exit": 0,
+      "valid": true,
+      "keepsRevision": false,
+      "cardKeys": [
+        "id",
+        "text",
+        "x",
+        "y"
+      ]
+    },
+    "consumerDropsRequiredField": true
+  },
+  "scope": "Copies the pilot, adds a required revision to the card meaning, regenerates all five candidates, then measures the coverage check, the conformance flow, and the hand edits needed. It records that a required addition costs an edit in every present case instead of one added case, and that the product consumer still validates while dropping the field. It does not change the pilot workspace."
+}

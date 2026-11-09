@@ -190,6 +190,27 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 段階4で分かった「適合試験は意味変更を自動では検出しない」に対して、被覆検査（[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)）を先に置いた。段階5では、意味変更のたびにこの検査が落ちることを確認してから被覆を足す順序にする。落ちなければ、その意味変更は試験に届いていない。
 
+### 7.7.1 意味変更2件の実測（2026-11-06）
+
+出口1・出口2を2件で満たした。変更の形を変えて、費用の違いを見た。
+
+| | 変更1（任意フィールド追加） | 変更2（必須フィールド追加） |
+| --- | --- | --- |
+| 意味の変更 | Island に任意の `summary` | Card に必須の `revision`（`std.integer`） |
+| 生成コードの手修正 | 0行 | 0行 |
+| 被覆検査（被覆追加の前） | 落ちない（変更を検出しない） | **落ちる**（`card-record.revision` を名指し） |
+| 適合試験（被覆追加の前） | 24/24 PASS | 失敗（全presentケースがmissingになる） |
+| 被覆の手修正 | 新規1ケース、既存0件 | 既存3ケース＋新規1ケース |
+| 被覆追加後 | 24/25 PASS | 25/25 PASS |
+| 消費側での扱い | 落ちる（`keepsSummary: false`） | 落ちる（`keepsRevision: false`、`cardKeys` は従来の4つ） |
+
+- **任意の追加は「試験に届かない」**。被覆を足すまで緑のままで、変更が壊れていても分からない
+- **必須の追加は「試験が壊れる」**。既存ケースが一斉にmissingになり、被覆検査も名指しで落ちる
+- どちらも生成コードの手修正は0行。人が直すのは契約（意味）とfixtures（被覆）だけで、合わせて1ファイルずつ
+- 消費側はどちらも黙って落とす。`valid: true` は「知っている意味が壊れていない」以上の意味を持たない
+
+段階5の残る出口は、出口3（別Target Profileで同じ適合試験）と出口4（判定表の更新、本節で実施）である。
+
 ## 7.8 フィージビリティ判定の現況（2026-11-06）
 
 計画§2の5条件に、§5の条件のうち§2と重ならない2つ（digestの残存と人の再現）を加えて、現在のreceiptに照らして並べる。**示せた**は receipt で再確認できるもの、**部分**は条件を満たす範囲と満たさない範囲が同居するもの。
@@ -198,11 +219,11 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | --- | --- | --- |
 | 意味が正本 | **部分**。契約とfixturesが版付きで存在し、生成物とdigestで対応する。ただし製品への写像は手書きで、新しい意味は自動で届かない | [contract digests](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)、[meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
-| 適合試験がある | **部分**。24→25ケースが通り、フィールド被覆も検査する。ただし意味変更を自動では検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json) |
+| 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shot Target Profile実行、rollingの配備・rollback、Postgres保存は示せた。別実行先で同じ試験を通すことは未実施 | [target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[postgres](../evaluations/records/SUI-TEI-postgres-2026-11-03.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが181件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが182件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
-| 人が同じ手順で再現できる | **部分**。一括95段のコマンド1本で再現できるが、実インフラ依存の段は環境前提を持つ | [suite](../evaluations/records/TEI-suite-2026-11-03.json) |
+| 人が同じ手順で再現できる | **部分**。一括96段のコマンド1本で再現できるが、実インフラ依存の段は環境前提を持つ | [suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 
 この表は「TEIで構築した」の証明ではない。条件ごとに何が示せて何が示せていないかを、判断できる形で並べたものである。段階5の出口4で更新する。
 
