@@ -60,44 +60,52 @@ def main():
         "explicitKinds": attempt("explicitKinds", [
             {"id": "edge-1", "fromId": "card-1", "toId": "card-2", "type": "supports", "fromKind": "card", "toKind": "card"},
         ]),
-        # No kinds at all: the assembler assumes card -> card.
-        "absentKindsDefaultToCard": attempt("absentKinds", [
+        # No kinds at all: the endpoint itself decides which kind it names.
+        "absentKindsResolvedFromEndpoint": attempt("absentKinds", [
             {"id": "edge-2", "fromId": "card-1", "toId": "card-2", "type": "supports"},
         ]),
-        # A card -> island edge without kinds is mis-resolved as card -> card and
-        # refused, because island-1 is not a card.
-        "absentKindsBreakCardToIsland": attempt("absentKindsIsland", [
+        # A card -> island edge without kinds resolves to an island endpoint.
+        # Before the fix this was mis-resolved as a card and refused.
+        "absentKindsResolveCardToIsland": attempt("absentKindsIsland", [
             {"id": "edge-3", "fromId": "card-1", "toId": "island-1", "type": "contains"},
         ]),
-        # An explicit None behaves like absent, because `or "card"` catches it.
-        "nullKindsDefaultToCard": attempt("nullKinds", [
+        # An explicit None behaves like absent.
+        "nullKindsResolvedFromEndpoint": attempt("nullKinds", [
             {"id": "edge-4", "fromId": "card-1", "toId": "card-2", "type": "supports", "fromKind": None, "toKind": None},
         ]),
         "unknownKindRefused": attempt("unknownKind", [
             {"id": "edge-5", "fromId": "card-1", "toId": "card-2", "type": "supports", "fromKind": "thing", "toKind": "card"},
         ]),
+        # An endpoint id that names no known card or island must fail closed.
+        "absentKindUnknownEndpointRefused": attempt("absentKindUnknown", [
+            {"id": "edge-6", "fromId": "card-1", "toId": "card-9", "type": "supports"},
+        ]),
     }
-    checks["contractRequiresKinds"] = True
-    # The fallback is used for resolution only: the output keeps the null kinds,
-    # so a composed document can carry an edge with no endpoint kinds.
-    checks["assemblerRewritesKinds"] = checks["absentKindsDefaultToCard"]["kinds"] != [{"from": "card", "to": "card"}]
+    # The output keeps whatever kinds were projected, so an edge without kinds
+    # stays without kinds; the resolution result is not written back.
+    checks["assemblerRewritesKinds"] = checks["absentKindsResolvedFromEndpoint"]["kinds"] != [
+        {"from": "card", "to": "card"}
+    ]
     contract = json.loads(
         (Path(args.workspace) / "candidates/edge-record/contract.json").read_text(encoding="utf-8")
     )
-    kinds_required = {
-        field["name"]: not bool(field.get("optional"))
+    kinds_optional = {
+        field["name"]: bool(field.get("optional"))
         for field in contract["projection"]["fields"]
         if field["name"] in ("fromKind", "toKind")
     }
-    checks["contractRequiresKinds"] = kinds_required
+    # The contract now allows the kinds to be absent (v4), matching SUI, so the
+    # assembler's resolution path is reachable from a projected edge.
+    checks["contractKindsOptional"] = kinds_optional
     passed = (
         checks["explicitKinds"]["outcome"] == "assembled"
-        and checks["absentKindsDefaultToCard"]["outcome"] == "assembled"
-        and checks["absentKindsBreakCardToIsland"]["outcome"] == "refused"
-        and checks["nullKindsDefaultToCard"]["outcome"] == "assembled"
+        and checks["absentKindsResolvedFromEndpoint"]["outcome"] == "assembled"
+        and checks["absentKindsResolveCardToIsland"]["outcome"] == "assembled"
+        and checks["nullKindsResolvedFromEndpoint"]["outcome"] == "assembled"
         and checks["unknownKindRefused"]["outcome"] == "refused"
+        and checks["absentKindUnknownEndpointRefused"]["outcome"] == "refused"
         and checks["assemblerRewritesKinds"] is True
-        and all(kinds_required.values())
+        and all(kinds_optional.values())
     )
     receipt = {
         "schema": "tai.reference.tei-assembler-kind-fallback/v0",
@@ -110,7 +118,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, and an unknown kind. It records that the assembler defaults to card while the contract requires the kinds, so the fallback only ever runs on inputs the contract already refused. The fallback is used for endpoint resolution only: the composed edge keeps its null kinds, so the document can still carry an edge without endpoint kinds. It does not change either side.",
+        "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, an unknown kind, and an unknown endpoint. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract now makes the kinds optional (v4), so this path is reachable from a projected edge. It does not run the HTTP or persistence paths.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))

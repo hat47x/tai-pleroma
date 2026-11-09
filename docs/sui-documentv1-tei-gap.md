@@ -134,6 +134,49 @@ Optionalの不一致: Edge.fromKind / Edge.toKind
 未知の種別 → 拒否
 ```
 
-- 仮定は**端点解決のためだけ**に使われ、合成後のEdgeには種別が入らない。種別を持たないEdgeが文書に残る
-- 投影契約は種別なしを`missing`/`unresolved`で落とすので、仮定の経路は投影を通った入力では発火しない。契約と合成層で同じ入力の扱いが違う
-- card→islandのEdgeが種別を欠くと、誤った種別で解決して拒否される。投影側で落ちる場合より、失敗の理由が分かりにくい
+初回の実測では、欠落時に`card`を仮定していた。これを**端点IDから解決する**よう変更した（[再実測](../evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json)）。
+
+```text
+種別なし（card→card） → 解決して合成（出力の種別は投影どおり）
+種別なし（card→island） → 解決して合成（以前は誤って拒否）
+端点が未知 → 拒否「no such endpoint」
+端点がcardとislandの両方に一致 → 拒否「ambiguous endpoint」
+```
+
+- 仮定ではなく端点の同一性で種別を決めるため、**card→islandのEdgeが種別を欠いても失われない**
+- 端点が特定できない場合は推測せず拒否する（fail-closed）
+- 合成後のEdgeは投影された種別をそのまま保つ（解決結果を書き戻さない）
+- 契約を任意に寄せた（`edge-record` v4、[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)）。**投影から合成までの一貫を実測した**（[chain](../evaluations/records/SUI-TEI-edge-chain-2026-11-06.json)）: 種別なしのcard→islandが投影され合成され、端点が解決できなければ拒否される
+- 単体試験13件がPASS（[receipt](../evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json)）
+
+## 端点種別を任意にした契約の試作（2026-11-06）
+
+製品（SUI）が端点種別を任意にしている以上、契約側を任意に寄せる選択肢はTAIで試せる。試作して生成器に通した。[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)
+
+```text
+両方あり → present（種別をそのまま投影）
+種別なし → present（種別を出力から省略）
+片方だけ null → present（もう片方の種別は残る）
+```
+
+- **任意にした契約は問題なく受理され、生成器も種別なしのEdgeを投影できる。** 現行契約の必須性は、製品の任意性に対して厳しすぎたことが分かる
+- これで「端点種別を持たないSUIのEdgeが投影で失われる」問題は、契約側の変更で解ける。TEI側の変更を要さない
+- ただし合成層（`document_assembler.py`）は依然として`card`を仮定する。投影で種別を省略した場合、合成側で「種別なし」をどう扱うかを別に決める必要がある
+- 現行のパイロット契約は必須のまま維持した。契約版の更新は、合成層の扱いと併せて判断する
+
+## 消費側の写像の忠実さ（2026-11-06）
+
+投影したフィールドがSUIの参照消費側（`from_artifact` → `to_documentv1_payload` → `DocumentV1`）を通った後も残るかを実測した。[receipt](../evaluations/records/SUI-consumer-mapping-2026-11-06.json)
+
+```text
+document: id, title, readingOrder → 残る（readingOrder 2件）
+cards: id, text, x, y → 残る（5件）
+islands: id, title, cardIds → 残る
+edges: id, fromId, toId, type, fromKind, toKind → 残る
+affiliations: id, cardId, islandId → 残る（1件）
+```
+
+- **既知のフィールドには忠実**である。`valid: true`はこの場合に意味のある証拠になる
+- 一方、消費側が知らない新しいフィールドは`valid: true`のまま落ちる（[意味変更の実測](../evaluations/records/TEI-meaning-change-2026-11-06.json)の`summary`）
+- したがって`valid`の意味は「知っている意味が壊れていない」であって「意味が届いた」ではない
+

@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-09",
   "host": "Windows with a locally built sei CLI and a temporary store",
   "command": "python integrations/tools/sei_doctor_check.py --sei-repo D:\\GIT\\hat47x\\sei-cognition --artifact evaluations/artifacts/sei-decision-projection.json --out evaluations/records/SEI-TEI-doctor-2026-11-06.json",
   "result": "PASS",
@@ -17,7 +17,7 @@
       "lines": {
         "binary": {
           "status": "ok",
-          "detail": "sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown"
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
         },
         "contracts": {
           "status": "info",
@@ -25,15 +25,15 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
-          "detail": "sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)"
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
         },
         "data-root": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\store"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store does not exist yet; create the store with: sei init --data-root D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store"
         },
         "mcp": {
           "status": "info",
@@ -49,7 +49,7 @@
       "lines": {
         "binary": {
           "status": "ok",
-          "detail": "sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown"
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
         },
         "contracts": {
           "status": "info",
@@ -57,19 +57,19 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
-          "detail": "sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)"
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-07-42f602cf: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-09-c8ad8b7a: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "ok",
@@ -90,7 +90,7 @@
       "lines": {
         "binary": {
           "status": "ok",
-          "detail": "sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown"
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
         },
         "contracts": {
           "status": "info",
@@ -98,23 +98,23 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
-          "detail": "sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)"
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-07-42f602cf: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-09-c8ad8b7a: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "warn",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store\\store.lock is present. If no sei process is running, remove that file by hand and retry."
         },
         "gate-log": {
           "status": "ok",
@@ -131,7 +131,7 @@
       "lines": {
         "binary": {
           "status": "ok",
-          "detail": "sei dev, commit 6d98ddf2d1080a1c3a308294fb342c231a08294d, target unknown"
+          "detail": "sei dev, commit fbfa9840903ce1f44321af06e3c57fcfa26e112b, target unknown"
         },
         "contracts": {
           "status": "info",
@@ -139,19 +139,19 @@
         },
         "binary-path": {
           "status": "info",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\sei.exe"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\sei.exe"
         },
         "binary-hash": {
           "status": "info",
-          "detail": "sha256 eb83fa3f0971300450fd48a16b8ab7bd51e7c7db8c580a8e950fd2b8bbde601b (compare with SHA256SUMS from the author)"
+          "detail": "sha256 c6309749cff079518cf16b59da7b94fb83e35b6c19ba5c1a3d7ebd8fd911f305 (compare with SHA256SUMS from the author)"
         },
         "data-root": {
           "status": "ok",
-          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-j_xw70ge\\store (writable)"
+          "detail": "D:\\GIT\\hat47x\\.gotmp\\tei-sei-doctor-60iyxh_q\\store (writable)"
         },
         "store": {
           "status": "ok",
-          "detail": "sei-store-2026-11-07-42f602cf: 0 records, 0 validated, 0 not verified"
+          "detail": "sei-store-2026-11-09-c8ad8b7a: 0 records, 0 validated, 0 not verified"
         },
         "lock": {
           "status": "ok",

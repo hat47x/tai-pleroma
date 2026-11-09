@@ -96,5 +96,6 @@
   "notes": [
     "SEIの一時storeへ3名の承認待ちdecisionを記録する。",
     "承認・発注・公開は実行しない。実在の権限でもない。"
-  ]
+  ],
+  "publicationAllowed": false
 }

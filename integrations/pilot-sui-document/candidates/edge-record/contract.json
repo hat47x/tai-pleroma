@@ -1,9 +1,9 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.edge.record",
-  "version": "3",
+  "version": "4",
   "status": "reference-local",
-  "note": "SUI Edgeのid・fromId・toId・type・fromKind・toKindを投影する参照用の契約。CardとIslandの両端を扱える。",
+  "note": "SUI Edgeのid・fromId・toId・type・fromKind・toKindを投影する参照用の契約。CardとIslandの両端を扱える。SUIはfromKind/toKindを任意にできるため、欠落時は出力から省略する。",
   "inputs": [
     {"attribute": "sui.edge.edge_id", "primitive": "std.identifier"},
     {"attribute": "sui.edge.from_id", "primitive": "std.identifier"},
@@ -20,8 +20,8 @@
       {"name": "fromId", "input": "fromId", "attribute": "sui.edge.from_id", "primitive": "std.identifier"},
       {"name": "toId", "input": "toId", "attribute": "sui.edge.to_id", "primitive": "std.identifier"},
       {"name": "type", "input": "type", "attribute": "sui.edge.relation", "primitive": "std.code"},
-      {"name": "fromKind", "input": "fromKind", "attribute": "sui.edge.from_kind", "primitive": "std.code"},
-      {"name": "toKind", "input": "toKind", "attribute": "sui.edge.to_kind", "primitive": "std.code"}
+      {"name": "fromKind", "input": "fromKind", "attribute": "sui.edge.from_kind", "primitive": "std.code", "optional": true},
+      {"name": "toKind", "input": "toKind", "attribute": "sui.edge.to_kind", "primitive": "std.code", "optional": true}
     ]
   }
 }

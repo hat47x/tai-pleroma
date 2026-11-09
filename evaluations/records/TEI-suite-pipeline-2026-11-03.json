@@ -3,18 +3,18 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-09",
   "host": "Windows with Go on PATH and Python 3.12",
   "command": "python integrations/pilot-sui-document/assembler/run_pilot.py",
   "result": "PASS",
   "teiCommit": "2d0b09b13b16c7f2d7183dbc995d3c62208c79ef",
   "artifact": {
-    "digest": "sha256:49acd8ec2db5559d7e6c288ab3e6a09a24a9c7cacfd276185827f5cb9d7281cf"
+    "digest": "sha256:4f54fcf4cbca9e8d9e160f5524cf49a9680ab66d31f55dabbbd592556c84206b"
   },
   "steps": {
     "flow": {
       "returncode": 0,
-      "casesPassed": 21
+      "casesPassed": 24
     },
     "schema": {
       "returncode": 0,

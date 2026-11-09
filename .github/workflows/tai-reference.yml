@@ -73,6 +73,9 @@ jobs:
       - name: YI 64-hexagram structural audit
         working-directory: .
         run: python evaluations/audit-yi-constellation.py
+      - name: robotics audit output path test
+        working-directory: .
+        run: python -m unittest -v evaluations/test_audit_robotics_records.py
       - name: synthetic facility test
         working-directory: tools/reference-synthetic-facility
         run: python -m unittest -v check_test.py

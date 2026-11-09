@@ -20,7 +20,10 @@
   "nativeRunnerArgsAllowlist": true,
   "nativeRunnerGPUFailClosed": true,
   "nativeRunnerStreamingDigest": true,
-  "nativeRunnerPlatforms": ["windows", "linux"],
+  "nativeRunnerPlatforms": [
+    "windows",
+    "linux"
+  ],
   "builtBinaries": [
     "eki-control",
     "eki-agent"
@@ -42,5 +45,6 @@
     "WSLのDocker engineでEKIのAgent/control test profileを実行した。",
     "Taskを実行するWorkerではなく、claim deliveryとWorker planeのtest profile。",
     "Task結果・実Provider・Authorityは未検証。"
-  ]
+  ],
+  "publicationAllowed": false
 }

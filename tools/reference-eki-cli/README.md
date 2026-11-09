@@ -60,7 +60,7 @@ gitの事実は、`--no-replace-objects`で、`GIT_DIR`等の環境変数を除�
 - 追加フィールド（既存のschema `tai.reference.eki-cli/v0`と既存フィールドは変えない）:
   - `pin`: 期待値と実際（commit・go version・追跡内容）。既定は`checked=false`。
   - `checkout`: 実行前後の状態と`unchanged`/`changed`。
-  - `toolchain`: Goのtoken、引き継いだ`GOTOOLCHAIN`/`GOFLAGS`/`GOWORK`、強制した値、ビルドの結果とフラグ。
+  - `toolchain`: Goのtoken、引き継いだ`GOTOOLCHAIN`・`GOFLAGS`のフラグ名（値は絶対パスを含み得るため記録しない）・`GOWORK`、強制した値、ビルドの結果とフラグ。
   - `binaries`: 作ったバイナリのsha256、version出力の1行、一致の有無、`reportedCommit`。
 - 失敗のreasonは定型文だけです。goやgitのエラー文、絶対パスは入れません。
 
