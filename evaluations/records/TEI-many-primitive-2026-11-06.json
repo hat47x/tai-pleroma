@@ -1,0 +1,76 @@
+{
+  "schema": "tai.reference.tei-many-primitive/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator selection tool",
+  "command": "python integrations/tools/tei_many_primitive_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-many-primitive-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "variants": {
+      "textMany": {
+        "exit": 0,
+        "generated": true,
+        "tail": "]",
+        "whole": "[\n  {\n    \"Path\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-manyprim-higfeaps\\\\textMany\",\n    \"SourceDigest\": \"sha256:cb57a491eee4dcdb977c1b3d5dd53d915deec00b9d6be64d2db31435872ae3c9\",\n    \"Manifest\": {\n      \"schema\": \"tei.reference.generator-candidate/v0\",\n      \"id\": \"text-record-template\",\n      \"version\": \"1\",\n      \"language\": \"go\",\n      \"origin\": \"template\",\n      \"source\": \"main.go\",\n      \"sourceDigest\": \"sha256:cb57a491eee4dcdb977c1b3d5dd53d915deec00b9d6be64d2db31435872ae3c9\",\n      \"generator\": {\n        \"id\": \"text-record-projection-template\",\n        \"version\": \"1\",\n        \"strategy\": \"text-record-template\",\n        \"language\": \"go\",\n        \"contractDigest\": \"sha256:9048f409303931728cd7ded79ec7047a10f26e5e9517758143f4d2fad1cef194\",\n        \"templateDigest\": \"sha256:e25efa933272b8555bbd7c3385a593d73d8f4f2fa494a7069d0ff88ee0e4e12d\"\n      }\n    }\n  }\n]"
+      },
+      "identifierMany": {
+        "exit": 0,
+        "generated": true,
+        "tail": "]",
+        "whole": "[\n  {\n    \"Path\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-manyprim-higfeaps\\\\identifierMany\",\n    \"SourceDigest\": \"sha256:cb57a491eee4dcdb977c1b3d5dd53d915deec00b9d6be64d2db31435872ae3c9\",\n    \"Manifest\": {\n      \"schema\": \"tei.reference.generator-candidate/v0\",\n      \"id\": \"text-record-template\",\n      \"version\": \"1\",\n      \"language\": \"go\",\n      \"origin\": \"template\",\n      \"source\": \"main.go\",\n      \"sourceDigest\": \"sha256:cb57a491eee4dcdb977c1b3d5dd53d915deec00b9d6be64d2db31435872ae3c9\",\n      \"generator\": {\n        \"id\": \"text-record-projection-template\",\n        \"version\": \"1\",\n        \"strategy\": \"text-record-template\",\n        \"language\": \"go\",\n        \"contractDigest\": \"sha256:c65714d2484dce0a67bc760a5eb5a6ffe67337c88d2d33a0addd17b1f891eefb\",\n        \"templateDigest\": \"sha256:e25efa933272b8555bbd7c3385a593d73d8f4f2fa494a7069d0ff88ee0e4e12d\"\n      }\n    }\n  }\n]"
+      },
+      "decimalMany": {
+        "exit": 1,
+        "generated": false,
+        "tail": "exit status 1",
+        "whole": "record field \"xs\": many is not supported for primitive \"std.decimal\" in this Target profile\nexit status 1"
+      },
+      "booleanMany": {
+        "exit": 1,
+        "generated": false,
+        "tail": "exit status 1",
+        "whole": "record field \"xs\": many is not supported for primitive \"std.boolean\" in this Target profile\nexit status 1"
+      },
+      "integerMany": {
+        "exit": 1,
+        "generated": false,
+        "tail": "exit status 1",
+        "whole": "record field \"xs\": many is not supported for primitive \"std.integer\" in this Target profile\nexit status 1"
+      },
+      "decimalSingle": {
+        "exit": 0,
+        "generated": true,
+        "tail": "]",
+        "whole": "[\n  {\n    \"Path\": \"D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\tei-manyprim-higfeaps\\\\decimalSingle\",\n    \"SourceDigest\": \"sha256:96868381704ff678398f55f4fd6dda0803a184eb0e0087a4184b77561fe98ee5\",\n    \"Manifest\": {\n      \"schema\": \"tei.reference.generator-candidate/v0\",\n      \"id\": \"text-record-template\",\n      \"version\": \"1\",\n      \"language\": \"go\",\n      \"origin\": \"template\",\n      \"source\": \"main.go\",\n      \"sourceDigest\": \"sha256:96868381704ff678398f55f4fd6dda0803a184eb0e0087a4184b77561fe98ee5\",\n      \"generator\": {\n        \"id\": \"text-record-projection-template\",\n        \"version\": \"1\",\n        \"strategy\": \"text-record-template\",\n        \"language\": \"go\",\n        \"contractDigest\": \"sha256:ff48aca50093b15627344e6ec11c664295792e9561396bef7873cc81342cd8a5\",\n        \"templateDigest\": \"sha256:e25efa933272b8555bbd7c3385a593d73d8f4f2fa494a7069d0ff88ee0e4e12d\"\n      }\n    }\n  }\n]"
+      }
+    },
+    "executions": {
+      "textMany": {
+        "exit": 0,
+        "state": "present",
+        "text": "{\"xs\":[\"a\",\"b\"]}"
+      },
+      "identifierMany": {
+        "exit": 0,
+        "state": "present",
+        "text": "{\"xs\":[\"id-1\",\"id-2\"]}"
+      }
+    },
+    "textManyAccepted": true,
+    "identifierManyAccepted": true,
+    "numericManyRefused": true,
+    "booleanManyRefused": true,
+    "integerManyRefused": true,
+    "decimalSingleAccepted": true,
+    "refusalNamesThePrimitive": true,
+    "textManyProjects": true,
+    "identifierManyProjects": true
+  },
+  "scope": "Builds one record contract for each of six primitive/cardinality combinations and runs the two accepted ones. It records that many is refused for decimal, boolean and integer with the message `many is not supported for primitive` while single decimal is accepted, so numeric arrays cannot be projected today. It does not change TEI."
+}

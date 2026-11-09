@@ -3,9 +3,9 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-06",
+  "date": "2026-11-09",
   "host": "Windows with SUI in local-dev profile",
-  "command": "python integrations/pilot-sui-document/assembler/agent_credential_guard_check.py",
+  "command": "python integrations/pilot-sui-document/assembler/agent_credential_guard_check.py --sui-repo <SUI>",
   "result": "PASS",
   "observed": {
     "agentEnabled": true,

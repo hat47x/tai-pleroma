@@ -3,12 +3,12 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-06",
+  "date": "2026-11-09",
   "host": "Windows with SUI in local-dev profile and an admin key",
   "command": "python integrations/pilot-sui-document/assembler/admin_audit_pagination_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-audit-pagination-2026-11-06.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-dec\\evaluations\\artifacts\\scn-003-document.json",
+    "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
@@ -17,7 +17,9 @@
     "hasCursor": true,
     "secondStatus": 200,
     "page2Size": 1,
-    "noOverlap": true
+    "noOverlap": true,
+    "invalidCursorStatus": 200,
+    "invalidCursorRestarts": true
   },
-  "scope": "Provisions three users, then reads the admin audit trail one event at a time with the returned cursor and checks the pages do not overlap. It does not test cursor expiry or a large trail."
+  "scope": "Provisions three users, then reads the admin audit trail one event at a time with the returned cursor and checks the pages do not overlap. It also sends a malformed cursor; the API accepts it and restarts from the first page. It does not test cursor expiry or a large trail."
 }

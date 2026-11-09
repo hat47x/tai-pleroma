@@ -62,7 +62,7 @@ def main():
     thread.start()
     base = f"http://127.0.0.1:{port}"
     admin = {"X-Admin-Api-Key": "admin-key"}
-    first = second = None
+    first = second = invalid = None
     try:
         deadline = time.time() + 60
         while time.time() < deadline:
@@ -84,6 +84,9 @@ def main():
             second = httpx.get(
                 f"{base}/admin/provision/audit", params={"limit": 1, "cursor": cursor}, headers=admin, timeout=30
             )
+        invalid = httpx.get(
+            f"{base}/admin/provision/audit", params={"limit": 1, "cursor": "not-a-cursor"}, headers=admin, timeout=30
+        )
     finally:
         server.should_exit = True
         thread.join(timeout=20)
@@ -92,6 +95,8 @@ def main():
     page2 = second.json() if second is not None and second.status_code == 200 else {}
     ids1 = [event.get("eventId") for event in page1.get("events", [])]
     ids2 = [event.get("eventId") for event in page2.get("events", [])]
+    invalid_page = invalid.json() if invalid is not None and invalid.status_code == 200 else {}
+    invalid_ids = [event.get("eventId") for event in invalid_page.get("events", [])]
     checks = {
         "firstStatus": first.status_code if first else None,
         "page1Size": len(ids1),
@@ -99,6 +104,8 @@ def main():
         "secondStatus": second.status_code if second else None,
         "page2Size": len(ids2),
         "noOverlap": bool(ids1) and bool(ids2) and not set(ids1) & set(ids2),
+        "invalidCursorStatus": invalid.status_code if invalid else None,
+        "invalidCursorRestarts": invalid_ids == ids1,
     }
     passed = (
         checks["firstStatus"] == 200
@@ -107,6 +114,8 @@ def main():
         and checks["secondStatus"] == 200
         and checks["page2Size"] == 1
         and checks["noOverlap"]
+        and checks["invalidCursorStatus"] == 200
+        and checks["invalidCursorRestarts"]
     )
     receipt = {
         "schema": "tai.reference.sui-admin-audit-pagination/v0",
@@ -119,7 +128,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Provisions three users, then reads the admin audit trail one event at a time with the returned cursor and checks the pages do not overlap. It does not test cursor expiry or a large trail.",
+        "scope": "Provisions three users, then reads the admin audit trail one event at a time with the returned cursor and checks the pages do not overlap. It also sends a malformed cursor; the API accepts it and restarts from the first page. It does not test cursor expiry or a large trail.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))

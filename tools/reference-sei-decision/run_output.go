@@ -13,6 +13,9 @@ import (
 // "go: downloading ..." cannot be mixed into a JSON document that the caller
 // parses.
 func runOutput(ctx context.Context, dir string, args ...string) ([]byte, error) {
+	if pinned, ok := pinnedFrom(ctx); ok {
+		return pinned.run(ctx, args)
+	}
 	cmd := exec.CommandContext(ctx, "go", args...)
 	cmd.Dir = dir
 	var stderr bytes.Buffer

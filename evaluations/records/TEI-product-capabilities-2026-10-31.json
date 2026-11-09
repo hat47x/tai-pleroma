@@ -8,27 +8,57 @@
   "sourceIndexFingerprint": "sha256:bf176400314b3f545c86cfd921f61a445ee2a19987275fd9b55b14084943822c",
   "capabilities": {
     "product_contracts.eki_task_submit": {
-      "inputs": [{"name": "request", "type": "product_contracts.task_request"}],
+      "inputs": [
+        {
+          "name": "request",
+          "type": "product_contracts.task_request"
+        }
+      ],
       "output": "product_contracts.attempt"
     },
     "product_contracts.eki_attempt_execute": {
-      "inputs": [{"name": "execution", "type": "product_contracts.attempt"}],
+      "inputs": [
+        {
+          "name": "execution",
+          "type": "product_contracts.attempt"
+        }
+      ],
       "output": "product_contracts.result_claim"
     },
     "product_contracts.eki_result_accept": {
-      "inputs": [{"name": "claim", "type": "product_contracts.result_claim"}],
+      "inputs": [
+        {
+          "name": "claim",
+          "type": "product_contracts.result_claim"
+        }
+      ],
       "output": "product_contracts.accepted_result"
     },
     "product_contracts.sui_document_put": {
-      "inputs": [{"name": "document", "type": "product_contracts.document"}],
+      "inputs": [
+        {
+          "name": "document",
+          "type": "product_contracts.document"
+        }
+      ],
       "output": "product_contracts.document"
     },
     "product_contracts.sei_decision_record": {
-      "inputs": [{"name": "decision", "type": "product_contracts.decision"}],
+      "inputs": [
+        {
+          "name": "decision",
+          "type": "product_contracts.decision"
+        }
+      ],
       "output": "product_contracts.decision"
     },
     "product_contracts.mmi_observation_select": {
-      "inputs": [{"name": "selection", "type": "product_contracts.selection"}],
+      "inputs": [
+        {
+          "name": "selection",
+          "type": "product_contracts.selection"
+        }
+      ],
       "output": "product_contracts.selection"
     }
   },
@@ -41,12 +71,25 @@
     "product_contracts.mmi_observation_select": "MMIObservationSelect"
   },
   "bindingImplementations": {
-    "product_contracts.eki_task_submit": ["EKITaskSubmit", "EKITaskSubmitHTTP"],
-    "product_contracts.eki_attempt_execute": ["EKIAttemptExecute"],
-    "product_contracts.eki_result_accept": ["EKIResultAccept"],
-    "product_contracts.sui_document_put": ["SUIDocumentPut"],
-    "product_contracts.sei_decision_record": ["SEIDecisionRecord"],
-    "product_contracts.mmi_observation_select": ["MMIObservationSelect"]
+    "product_contracts.eki_task_submit": [
+      "EKITaskSubmit",
+      "EKITaskSubmitHTTP"
+    ],
+    "product_contracts.eki_attempt_execute": [
+      "EKIAttemptExecute"
+    ],
+    "product_contracts.eki_result_accept": [
+      "EKIResultAccept"
+    ],
+    "product_contracts.sui_document_put": [
+      "SUIDocumentPut"
+    ],
+    "product_contracts.sei_decision_record": [
+      "SEIDecisionRecord"
+    ],
+    "product_contracts.mmi_observation_select": [
+      "MMIObservationSelect"
+    ]
   },
   "httpBinding": {
     "method": "POST",
@@ -93,5 +136,6 @@
     "product_contracts.sei_decision_record": "create product_contracts.decision",
     "product_contracts.mmi_observation_select": "none"
   },
-  "effectScope": "TEI DataEffect declares business intent only. It does not authorize execution or assert that durable data changed."
+  "effectScope": "TEI DataEffect declares business intent only. It does not authorize execution or assert that durable data changed.",
+  "publicationAllowed": false
 }

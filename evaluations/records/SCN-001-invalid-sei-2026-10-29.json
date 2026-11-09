@@ -6,5 +6,6 @@
   "passed": true,
   "setupExitCode": 0,
   "duplicateExitCode": 1,
-  "reason": "exit status 1"
+  "reason": "exit status 1",
+  "publicationAllowed": false
 }

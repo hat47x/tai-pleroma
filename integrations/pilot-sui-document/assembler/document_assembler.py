@@ -4,6 +4,10 @@ The TEI projection contracts are flat. This module is the application-side
 composition step: it checks identifier uniqueness, resolves edge endpoints
 against cards or islands according to fromKind/toKind, and checks that each
 affiliation points at an existing card and island.
+
+SUI allows Edge.fromKind/toKind to be absent. When they are, the endpoint id
+itself decides the kind, and an id that names no known card or island -- or that
+names both -- is refused rather than assumed to be a card.
 """
 
 KINDS = ("card", "island")
@@ -38,10 +42,22 @@ def assemble(document, cards, islands, edges, affiliations=()):
     for edge in edges:
         edge_id = edge["id"]
         for side in ("from", "to"):
-            kind = edge.get(f"{side}Kind") or "card"
-            if kind not in KINDS:
-                raise AssemblyError(f"edge {edge_id} has unknown {side}Kind {kind}")
+            kind = edge.get(f"{side}Kind")
             endpoint = edge.get(f"{side}Id")
+            if kind is None:
+                # SUI allows the endpoint kind to be absent. Resolve it from the
+                # endpoint itself instead of assuming a card: an id that names an
+                # island must not be looked up as a card, and an id that names
+                # both is ambiguous rather than silently a card.
+                matches = [name for name, ids in known.items() if endpoint in ids]
+                if len(matches) != 1:
+                    detail = "no such endpoint" if not matches else "ambiguous endpoint"
+                    raise AssemblyError(
+                        f"edge {edge_id} has no {side}Kind and {endpoint} is {detail}"
+                    )
+                kind = matches[0]
+            elif kind not in KINDS:
+                raise AssemblyError(f"edge {edge_id} has unknown {side}Kind {kind}")
             if endpoint not in known[kind]:
                 raise AssemblyError(f"edge {edge_id} references unknown {kind} {endpoint}")
 
