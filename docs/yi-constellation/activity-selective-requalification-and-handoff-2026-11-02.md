@@ -926,3 +926,21 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **採用状態**：この節は既存の実装事実をTAI計画の**受入条件案**へ反映したもの。上記の横断同一Attempt E2E、実EKI Agent/Adapter、実PostgreSQL Actionsの結果、外部Effect、Owner意味受理は本節ではNOT RUN。初回#168 H2/H3のG0/G1/G2と比較適格0/4を変更せず、別のActivityでEffectやLeaseを扱う場合だけ適用する。
 
+## 26. 2026-11-09：設計取得の継続Tokenと、Activityの意味・根拠の鮮度を分ける
+
+<!-- tai-activity-continuation-source-snapshot-vs-semantic-freshness-20261109 -->
+
+[TEI merged #3723](https://github.com/hat47x/tei-platform/pull/3723)は、**実TEI参照CLI／参照MCP**の`trace`継続で、Source原文コメント1行追加、属性追加、`scope`変更、`direction`変更に対し、旧Tokenを`STALE_SNAPSHOT`で拒否することを実測した。同じ選択子は継続でき、`summary→full`および`offset/limit`の変更は許容される。MCPでは`continuation.fingerprint`を用いた継続が成立し、別の`graphFingerprint`を代入すると拒否された。これは**Source Index raw byteと選択子に束縛された読取Snapshotの限定資格**であり、全Source World・Provider原文・現在Authority・Meaningが不変という証明ではない。
+
+| Activityが再開するときの観測 | 許される処理 | 禁止する推論 |
+| --- | --- | --- |
+| 同じSnapshot/Selector、Token有効 | **その同一読取対象**のページを継続し、実取得件数と欠落を別に記録 | 全Requiredを読み終えた、他Providerもfresh、現在Ownerが受理した |
+| `STALE_SNAPSHOT`（コメント変更も含む） | 新しい`trace`から開始し、対象Snapshotに依存するページ／引用だけ再取得 | コメントだけなので旧Tokenを強制再利用、既存Activity全件を一律失効 |
+| `INVALID_ARGUMENT`（mode/offsetの不適合） | 引数を修正して再要求。Source変更と区別 | 失効と同じ原因、元Source不存在 |
+| TEI Source Index不変でも外部Provider raw変更 | §23.8のSource/Manifest/引用範囲に従い**必要Claimだけ**再資格化 | `continuation`有効なので外部原典もfresh |
+| Page結果は得たが実Consumerが未受領 | Product Read成功とDelivery未確認を別に保持 | CLI/MCP成功だけでTAI/LLMへ全byte到達した |
+
+**必要な最小契約**：`Source Index Fingerprint`、選択子（`scope/direction`）、TokenのSnapshot、ページ範囲・total/nextOffset、Raw Source/Manifest Revision、取得Tool/Transport、実Consumer受領とAudienceを**混ぜずに関連付ける**。これらを新しい中央Activity Storeへ複製せず、既存のTEI読取契約とTAIの選択的再資格化票で扱う。Graph/Source Indexのハッシュが一致しても意味受理を再利用できないという既存のWorld/Model/Artifact分離を維持する。
+
+**次の実測**：同一TEI Functionでページ1取得後に原文コメント変更→旧Token拒否→新Tokenで必要ページだけ再取得する正負対照、外部Provider rawのみ改版（Source Index同一）→引用資格だけ再検査する正負対照、CLIと参照MCPの同一選択子／Snapshotでの実Result対照、外部DSH Consumerの完全Reply受領を**別Trial**で扱う。TEI #3723の参照実装継続試験は実測済みだが、実外部Provider、原子的な読取中Snapshot、Host Grant、DSHへのMCP完全配送、TAI Activity自動再開E2EはNOT RUN。初回#168のH2/H3固定比較に新Toolや新Treatmentを混入しない。
+
