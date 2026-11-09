@@ -80,8 +80,8 @@ python integrations/pilot-sui-document/assembler/agent_key_wiring_check.py --sui
 | 準備 | 状態 |
 | --- | --- |
 | 各Probeの実行コマンドと期待値 | 本文書に記載済み |
-| `allow+read_only`を返すスタブアダプター | **未作成**。SUIの`AccessControlAdapter`プロトコルに合わせて作る。判定を待たずに作れる |
+| `allow+read_only`を返すスタブアダプター | **作成済み**（[receipt](../evaluations/records/SUI-readonly-enforcement-2026-11-06.json)）。`enforce_access`が`decision.read_only`を見ないことを実行で確認した |
 | 入れ子契約を受理する版の試作 | 未作成。受理された場合に備え、Document全体を1つのrecordで表す契約を試作できる（現行は平坦方式） |
 | 数値配列の投影契約の試作 | 未作成。`many`拡張後すぐ試せるよう、座標列の契約を用意できる |
 
-**「未作成」の3件は、判断を待たずに作れる。** ただし作っても判定は変わらないため、TAIは範囲を広げない方針との整合を取って、判断が来てから作る（先に作ると、使われない試作が増える）。
+スタブアダプターは作った（実行で確かめられたため）。残る2件（入れ子契約・数値配列契約の試作）は、**判断が来てから**作る。判定は変わらないため、先に作ると使われない試作が増える。

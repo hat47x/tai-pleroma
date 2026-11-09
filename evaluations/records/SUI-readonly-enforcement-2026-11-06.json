@@ -1,0 +1,42 @@
+{
+  "schema": "tai.reference.sui-readonly-enforcement/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python and SUI's access_control module called directly",
+  "command": "python integrations/pilot-sui-document/assembler/sui_readonly_enforcement_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-readonly-enforcement-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "adapterReturnedReadOnlyAllow": true,
+    "writeNotRefused": true,
+    "readAllowed": true,
+    "denyIsRefused": true,
+    "observation": {
+      "readOnlyAllowWrite": {
+        "allow": true,
+        "readOnly": true,
+        "refused": false,
+        "detail": null
+      },
+      "readOnlyAllowRead": {
+        "allow": true,
+        "readOnly": true,
+        "refused": false,
+        "detail": null
+      },
+      "denyWrite": {
+        "allow": false,
+        "readOnly": false,
+        "refused": true,
+        "detail": "Access denied: stub"
+      }
+    },
+    "readOnlyDoesNotRestrictWrite": true
+  },
+  "scope": "Calls SUI's resolve_access_decision and enforce_access with a stub adapter that returns allow-plus-read-only, and with a denying adapter as a control. It records that the read-only decision does not refuse a write while a deny does, so the enforcement point ignores the read-only flag. It exercises the functions directly, not an HTTP route, and the stub is not a real PDP."
+}

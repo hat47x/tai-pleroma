@@ -200,6 +200,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-receipt-consistency-2026-11-06.json",
     "evaluations/records/TEI-projection-strategy-2026-11-06.json",
     "evaluations/records/TEI-independent-oracle-2026-11-06.json",
+    "evaluations/records/SUI-readonly-enforcement-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -521,6 +522,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "SUI-readonly-enforcement" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("writeNotRefused") is not True
+                or observed.get("denyIsRefused") is not True
+            ):
+                errors.append(f"read-only enforcement changed; re-measure: {relative}")
         if "TEI-independent-oracle" in relative:
             observed = data.get("observed", {})
             if (

@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "realRecords": 201,
+    "realRecords": 202,
     "syntheticRecords": 64,
     "missingRequiredFields": {},
     "missingScope": [],
@@ -22,7 +22,7 @@
     "historical": 70,
     "unregisteredReceipts": [],
     "allRealReceiptsStateLimits": true,
-    "registeredCount": 254,
+    "registeredCount": 255,
     "foreignReceipts": [
       "AS-LB-loopback-http-2026-11-02.json"
     ],
