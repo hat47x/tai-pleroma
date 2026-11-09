@@ -1,0 +1,919 @@
+{
+  "schema": "tai.research.rq7-stimuli/v0",
+  "synthetic": true,
+  "experiment_run_status": "NOT_RUN",
+  "evidence_level": "synthetic-stipulated-events-not-product-observation",
+  "holdout": false,
+  "disclosure": "public",
+  "intro": "All events, input revisions, coverage flags and Consumer reads are stipulated in this public fixture to test an answer instrument. They are NOT TEI/EKI/MFT execution receipts. Verifying the data structure is not verification of these observations in a Product.",
+  "cases": [
+    {
+      "id": "B-P01",
+      "domain": "build",
+      "scope": "synthetic-build-run-01",
+      "revision": "graph-b1",
+      "claim": "Within the declared build boundary, were all branch-required steps accounted for?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "src",
+            "label": "Source"
+          },
+          {
+            "id": "compile",
+            "label": "Compile"
+          },
+          {
+            "id": "test",
+            "label": "Optional unit test"
+          },
+          {
+            "id": "package",
+            "label": "Package"
+          }
+        ],
+        "edges": [
+          [
+            "src",
+            "compile"
+          ],
+          [
+            "compile",
+            "test"
+          ],
+          [
+            "compile",
+            "package"
+          ],
+          [
+            "test",
+            "package"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "src",
+          "compile",
+          "package"
+        ],
+        "valid_skips": [
+          "test"
+        ],
+        "expected_input_revision": "source-s1",
+        "expected_generation": "artifact-g1"
+      },
+      "observed": {
+        "observer_coverage": "closed-for-specified-steps",
+        "events": [
+          {
+            "step": "src",
+            "kind": "observed"
+          },
+          {
+            "step": "compile",
+            "kind": "observed"
+          },
+          {
+            "step": "package",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "source-s1",
+        "artifact_generation": "artifact-g1"
+      },
+      "consumer": {
+        "read_generation": "artifact-g1"
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "B-N01",
+      "domain": "build",
+      "scope": "synthetic-build-run-01",
+      "revision": "graph-b1",
+      "claim": "Were there no undeclared steps within the monitored build boundary?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "src",
+            "label": "Source"
+          },
+          {
+            "id": "compile",
+            "label": "Compile"
+          },
+          {
+            "id": "test",
+            "label": "Optional unit test"
+          },
+          {
+            "id": "package",
+            "label": "Package"
+          }
+        ],
+        "edges": [
+          [
+            "src",
+            "compile"
+          ],
+          [
+            "compile",
+            "test"
+          ],
+          [
+            "compile",
+            "package"
+          ],
+          [
+            "test",
+            "package"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "src",
+          "compile",
+          "package"
+        ],
+        "valid_skips": [
+          "test"
+        ],
+        "expected_input_revision": "source-s1",
+        "expected_generation": "artifact-g1"
+      },
+      "observed": {
+        "observer_coverage": "closed-for-specified-steps",
+        "events": [
+          {
+            "step": "src",
+            "kind": "observed"
+          },
+          {
+            "step": "compile",
+            "kind": "observed"
+          },
+          {
+            "step": "hook",
+            "kind": "observed"
+          },
+          {
+            "step": "package",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "source-s1",
+        "artifact_generation": "artifact-g1"
+      },
+      "consumer": {
+        "read_generation": "artifact-g1"
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "B-N02",
+      "domain": "build",
+      "scope": "synthetic-build-run-01",
+      "revision": "graph-b1",
+      "claim": "Did this build actually consume the declared source revision?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "src",
+            "label": "Source"
+          },
+          {
+            "id": "compile",
+            "label": "Compile"
+          },
+          {
+            "id": "test",
+            "label": "Optional unit test"
+          },
+          {
+            "id": "package",
+            "label": "Package"
+          }
+        ],
+        "edges": [
+          [
+            "src",
+            "compile"
+          ],
+          [
+            "compile",
+            "test"
+          ],
+          [
+            "compile",
+            "package"
+          ],
+          [
+            "test",
+            "package"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "src",
+          "compile",
+          "package"
+        ],
+        "valid_skips": [
+          "test"
+        ],
+        "expected_input_revision": "source-s1",
+        "expected_generation": "artifact-g1"
+      },
+      "observed": {
+        "observer_coverage": "closed-for-specified-steps",
+        "events": [
+          {
+            "step": "src",
+            "kind": "observed"
+          },
+          {
+            "step": "compile",
+            "kind": "observed"
+          },
+          {
+            "step": "package",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "source-s2",
+        "artifact_generation": "artifact-g1"
+      },
+      "consumer": {
+        "read_generation": "artifact-g1"
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "B-N03",
+      "domain": "build",
+      "scope": "synthetic-build-run-01",
+      "revision": "graph-b1",
+      "claim": "Can we confirm that every branch-required build step executed?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "src",
+            "label": "Source"
+          },
+          {
+            "id": "compile",
+            "label": "Compile"
+          },
+          {
+            "id": "test",
+            "label": "Optional unit test"
+          },
+          {
+            "id": "package",
+            "label": "Package"
+          }
+        ],
+        "edges": [
+          [
+            "src",
+            "compile"
+          ],
+          [
+            "compile",
+            "test"
+          ],
+          [
+            "compile",
+            "package"
+          ],
+          [
+            "test",
+            "package"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "src",
+          "compile",
+          "package"
+        ],
+        "valid_skips": [
+          "test"
+        ],
+        "expected_input_revision": "source-s1",
+        "expected_generation": "artifact-g1"
+      },
+      "observed": {
+        "observer_coverage": "partial",
+        "events": [
+          {
+            "step": "src",
+            "kind": "observed"
+          },
+          {
+            "step": "compile",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "source-s1",
+        "artifact_generation": "artifact-g1"
+      },
+      "consumer": {
+        "read_generation": "artifact-g1"
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "B-D01",
+      "domain": "build",
+      "scope": "synthetic-build-run-01",
+      "revision": "graph-b1",
+      "claim": "Does the declared graph contain a path from Source to Package?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "src",
+            "label": "Source"
+          },
+          {
+            "id": "compile",
+            "label": "Compile"
+          },
+          {
+            "id": "test",
+            "label": "Optional unit test"
+          },
+          {
+            "id": "package",
+            "label": "Package"
+          }
+        ],
+        "edges": [
+          [
+            "src",
+            "compile"
+          ],
+          [
+            "compile",
+            "test"
+          ],
+          [
+            "compile",
+            "package"
+          ],
+          [
+            "test",
+            "package"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "src",
+          "compile",
+          "package"
+        ],
+        "valid_skips": [
+          "test"
+        ],
+        "expected_input_revision": "source-s1",
+        "expected_generation": "artifact-g1"
+      },
+      "observed": {
+        "observer_coverage": "partial",
+        "events": [
+          {
+            "step": "src",
+            "kind": "observed"
+          },
+          {
+            "step": "compile",
+            "kind": "observed"
+          },
+          {
+            "step": "package",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "source-s1",
+        "artifact_generation": "artifact-g1"
+      },
+      "consumer": {
+        "read_generation": "artifact-g1"
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "F-P01",
+      "domain": "file-relay",
+      "scope": "synthetic-transfer-and-read-01",
+      "revision": "graph-f1",
+      "claim": "Did the Consumer read both members belonging to manifest-g1?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "extract",
+            "label": "Extract"
+          },
+          {
+            "id": "detail",
+            "label": "Detail member"
+          },
+          {
+            "id": "control",
+            "label": "Control member"
+          },
+          {
+            "id": "manifest",
+            "label": "Manifest"
+          },
+          {
+            "id": "transfer",
+            "label": "Transfer"
+          },
+          {
+            "id": "read",
+            "label": "Consumer read"
+          }
+        ],
+        "edges": [
+          [
+            "extract",
+            "detail"
+          ],
+          [
+            "extract",
+            "control"
+          ],
+          [
+            "detail",
+            "manifest"
+          ],
+          [
+            "control",
+            "manifest"
+          ],
+          [
+            "manifest",
+            "transfer"
+          ],
+          [
+            "transfer",
+            "read"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "extract",
+          "detail",
+          "control",
+          "manifest",
+          "transfer",
+          "read"
+        ],
+        "valid_skips": [],
+        "expected_input_revision": "dataset-d1",
+        "expected_generation": "manifest-g1"
+      },
+      "observed": {
+        "observer_coverage": "closed-for-specified-steps",
+        "events": [
+          {
+            "step": "extract",
+            "kind": "observed"
+          },
+          {
+            "step": "detail",
+            "kind": "observed"
+          },
+          {
+            "step": "control",
+            "kind": "observed"
+          },
+          {
+            "step": "manifest",
+            "kind": "observed"
+          },
+          {
+            "step": "transfer",
+            "kind": "observed"
+          },
+          {
+            "step": "read",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "dataset-d1",
+        "artifact_generation": "manifest-g1"
+      },
+      "consumer": {
+        "ack": "synthetic-transfer-ack",
+        "reads": [
+          {
+            "member": "detail",
+            "generation": "manifest-g1"
+          },
+          {
+            "member": "control",
+            "generation": "manifest-g1"
+          }
+        ]
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "F-N01",
+      "domain": "file-relay",
+      "scope": "synthetic-transfer-and-read-01",
+      "revision": "graph-f1",
+      "claim": "Did the Consumer read both members belonging to manifest-g1?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "extract",
+            "label": "Extract"
+          },
+          {
+            "id": "detail",
+            "label": "Detail member"
+          },
+          {
+            "id": "control",
+            "label": "Control member"
+          },
+          {
+            "id": "manifest",
+            "label": "Manifest"
+          },
+          {
+            "id": "transfer",
+            "label": "Transfer"
+          },
+          {
+            "id": "read",
+            "label": "Consumer read"
+          }
+        ],
+        "edges": [
+          [
+            "extract",
+            "detail"
+          ],
+          [
+            "extract",
+            "control"
+          ],
+          [
+            "detail",
+            "manifest"
+          ],
+          [
+            "control",
+            "manifest"
+          ],
+          [
+            "manifest",
+            "transfer"
+          ],
+          [
+            "transfer",
+            "read"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "extract",
+          "detail",
+          "control",
+          "manifest",
+          "transfer",
+          "read"
+        ],
+        "valid_skips": [],
+        "expected_input_revision": "dataset-d1",
+        "expected_generation": "manifest-g1"
+      },
+      "observed": {
+        "observer_coverage": "closed-for-specified-steps",
+        "events": [
+          {
+            "step": "extract",
+            "kind": "observed"
+          },
+          {
+            "step": "detail",
+            "kind": "observed"
+          },
+          {
+            "step": "control",
+            "kind": "observed"
+          },
+          {
+            "step": "manifest",
+            "kind": "observed"
+          },
+          {
+            "step": "transfer",
+            "kind": "observed"
+          },
+          {
+            "step": "read",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "dataset-d1",
+        "artifact_generation": "manifest-g1"
+      },
+      "consumer": {
+        "ack": "synthetic-transfer-ack",
+        "reads": [
+          {
+            "member": "detail",
+            "generation": "manifest-g2"
+          },
+          {
+            "member": "control",
+            "generation": "manifest-g1"
+          }
+        ]
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "F-N02",
+      "domain": "file-relay",
+      "scope": "synthetic-transfer-and-read-01",
+      "revision": "graph-f1",
+      "claim": "Can we confirm the Consumer read both members of manifest-g1?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "extract",
+            "label": "Extract"
+          },
+          {
+            "id": "detail",
+            "label": "Detail member"
+          },
+          {
+            "id": "control",
+            "label": "Control member"
+          },
+          {
+            "id": "manifest",
+            "label": "Manifest"
+          },
+          {
+            "id": "transfer",
+            "label": "Transfer"
+          },
+          {
+            "id": "read",
+            "label": "Consumer read"
+          }
+        ],
+        "edges": [
+          [
+            "extract",
+            "detail"
+          ],
+          [
+            "extract",
+            "control"
+          ],
+          [
+            "detail",
+            "manifest"
+          ],
+          [
+            "control",
+            "manifest"
+          ],
+          [
+            "manifest",
+            "transfer"
+          ],
+          [
+            "transfer",
+            "read"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "extract",
+          "detail",
+          "control",
+          "manifest",
+          "transfer",
+          "read"
+        ],
+        "valid_skips": [],
+        "expected_input_revision": "dataset-d1",
+        "expected_generation": "manifest-g1"
+      },
+      "observed": {
+        "observer_coverage": "partial",
+        "events": [
+          {
+            "step": "extract",
+            "kind": "observed"
+          },
+          {
+            "step": "detail",
+            "kind": "observed"
+          },
+          {
+            "step": "control",
+            "kind": "observed"
+          },
+          {
+            "step": "manifest",
+            "kind": "observed"
+          },
+          {
+            "step": "transfer",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "dataset-d1",
+        "artifact_generation": "manifest-g1"
+      },
+      "consumer": {
+        "ack": "synthetic-transfer-ack",
+        "reads": []
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "F-D01",
+      "domain": "file-relay",
+      "scope": "synthetic-transfer-and-read-01",
+      "revision": "graph-f1",
+      "claim": "Does the declared graph route Transfer before Consumer read?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "extract",
+            "label": "Extract"
+          },
+          {
+            "id": "detail",
+            "label": "Detail member"
+          },
+          {
+            "id": "control",
+            "label": "Control member"
+          },
+          {
+            "id": "manifest",
+            "label": "Manifest"
+          },
+          {
+            "id": "transfer",
+            "label": "Transfer"
+          },
+          {
+            "id": "read",
+            "label": "Consumer read"
+          }
+        ],
+        "edges": [
+          [
+            "extract",
+            "detail"
+          ],
+          [
+            "extract",
+            "control"
+          ],
+          [
+            "detail",
+            "manifest"
+          ],
+          [
+            "control",
+            "manifest"
+          ],
+          [
+            "manifest",
+            "transfer"
+          ],
+          [
+            "transfer",
+            "read"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "extract",
+          "detail",
+          "control",
+          "manifest",
+          "transfer",
+          "read"
+        ],
+        "valid_skips": [],
+        "expected_input_revision": "dataset-d1",
+        "expected_generation": "manifest-g1"
+      },
+      "observed": {
+        "observer_coverage": "partial",
+        "events": [
+          {
+            "step": "extract",
+            "kind": "observed"
+          },
+          {
+            "step": "detail",
+            "kind": "observed"
+          },
+          {
+            "step": "control",
+            "kind": "observed"
+          },
+          {
+            "step": "manifest",
+            "kind": "observed"
+          },
+          {
+            "step": "transfer",
+            "kind": "observed"
+          },
+          {
+            "step": "read",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "dataset-d1",
+        "artifact_generation": "manifest-g1"
+      },
+      "consumer": {
+        "ack": "synthetic-transfer-ack",
+        "reads": []
+      },
+      "disclosure": "public-synthetic"
+    },
+    {
+      "id": "X-N01",
+      "domain": "cross-boundary",
+      "scope": "synthetic-selected-provider-only",
+      "revision": "graph-x1",
+      "claim": "Can we confirm that no other external Provider was accessed?",
+      "declared": {
+        "nodes": [
+          {
+            "id": "select",
+            "label": "Select provider"
+          },
+          {
+            "id": "request",
+            "label": "Call selected provider"
+          }
+        ],
+        "edges": [
+          [
+            "select",
+            "request"
+          ]
+        ]
+      },
+      "resolved": {
+        "required": [
+          "select",
+          "request"
+        ],
+        "valid_skips": [],
+        "expected_input_revision": "request-r1",
+        "expected_generation": "none"
+      },
+      "observed": {
+        "observer_coverage": "partial",
+        "events": [
+          {
+            "step": "select",
+            "kind": "observed"
+          },
+          {
+            "step": "request",
+            "kind": "observed"
+          }
+        ],
+        "actual_input_revision": "request-r1",
+        "artifact_generation": "none"
+      },
+      "consumer": {
+        "ack": "selected-provider-ack-only",
+        "reads": []
+      },
+      "disclosure": "public-synthetic"
+    }
+  ]
+}
