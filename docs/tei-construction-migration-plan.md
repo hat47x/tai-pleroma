@@ -1,6 +1,8 @@
 ﻿# TEIによるプロダクト構築への移行 — フィージビリティ検証計画
 
-状態: **Draft（提案）**。Owner指示（2026-11-01）を前提にした検証計画であり、製品要求・採用済み設計ではありません。要求の正本は各リポジトリの`requirements/`、TEIの方法は[TEIの業務システム設計要求](https://github.com/hat47x/tei-platform/blob/main/requirements/BUSINESS_SYSTEM_DESIGN_REQUIREMENTS.md)を参照します。
+状態: **Draft（提案）**。Owner指示（2026-11-01）を前提にした検証計画であり、製品要求・採用済み設計ではありません。
+
+現況（何が示せて何が示せていないか・判断が要る点）は[TEIパイロットの現況](tei-pilot-status-brief.md)に1枚でまとめています。要求の正本は各リポジトリの`requirements/`、TEIの方法は[TEIの業務システム設計要求](https://github.com/hat47x/tei-platform/blob/main/requirements/BUSINESS_SYSTEM_DESIGN_REQUIREMENTS.md)を参照します。
 
 ## 1. 前提とする方向
 
