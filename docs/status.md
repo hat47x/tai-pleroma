@@ -138,7 +138,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 
 ## 2026-11-06 時点の追記
 
-実実行receiptは185件、一括検証は97段＋checker（`integrations/tools/run_suite.py`、全段PASS）。
+実実行receiptは185件、一括検証は98段＋checker（`integrations/tools/run_suite.py`、全段PASS）。
 
 - EKI: 製品テストと自前構成の両方で、HTTP投入→Agent実行→ResultClaimまで到達。結果の受入は未配線（`409 RESULT_NOT_READY`）。mTLS登録と失効（最終状態・認証段で401）も確認
 - SUI: Postgres・TLS・ローカルCA・TLS終端プロキシ・2インスタンス共有、監査エクスポート、管理APIの認証分離、利用者provision、TEI artifact配信、context query/bundle、CE4 resolve、モデル登録を確認
@@ -150,3 +150,5 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 再現手順は[再現手順（runbook）](reproduction-runbook.md)に固定しています。前提・固定した版・つまずきやすい点・再現できないものを分けて書いています。
 
 receiptの体裁（必須項目と`scope`の限界記述）は[TEI-receipt-scope](../evaluations/records/TEI-receipt-scope-2026-11-06.json)で棚卸ししています。258件のうち70件が必須項目を欠き、69件が`scope`を持たず、15件の`scope`に限界の記述がありません。古いreceiptから順に直し、全部直ったら`--strict`を一括検証へ入れてGateにします。
+
+receiptの体裁は、全件を歩く検査を一括検証へ入れてGateにしています（`--strict`）。体裁確立前の70件は[historical-receipts.json](../evaluations/records/historical-receipts.json)に理由付きで列挙し、証拠として数えません。欠けていた`publicationAllowed`52件と限界記述15件は、当時の記録を変えずに補いました。

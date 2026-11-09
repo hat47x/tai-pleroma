@@ -118,7 +118,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, an unknown kind, and an unknown endpoint. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract now makes the kinds optional (v4), so this path is reachable from a projected edge.",
+        "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, an unknown kind, and an unknown endpoint. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract now makes the kinds optional (v4), so this path is reachable from a projected edge. It does not run the HTTP or persistence paths.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))

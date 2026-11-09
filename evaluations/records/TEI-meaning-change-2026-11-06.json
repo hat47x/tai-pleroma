@@ -5,7 +5,7 @@
   "publicationAllowed": false,
   "date": "2026-11-09",
   "host": "Windows with the TEI reference generator and the pilot's conformance flow on a temporary copy",
-  "command": "python integrations/tools/tei_meaning_change_experiment.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-meaning-change-2026-11-06.json",
+  "command": "python integrations/tools/tei_meaning_change_experiment.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-meaning-change-2026-11-06.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",

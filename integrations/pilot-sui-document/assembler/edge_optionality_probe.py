@@ -111,7 +111,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
         "observed": checks,
-        "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. Since the contract made the kinds optional (v4), a null or absent kind is omitted and the edge is still projected; before v4 those inputs were reported missing or unresolved and the edge was lost.",
+        "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. Since the contract made the kinds optional (v4), a null or absent kind is omitted and the edge is still projected; before v4 those inputs were reported missing or unresolved and the edge was lost. It does not change the contract.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))

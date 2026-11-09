@@ -479,8 +479,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"TEI fixture field coverage regressed: {relative}")
         if "TEI-receipt-scope" in relative:
             observed = data.get("observed", {})
-            if data.get("result") != "PASS" or "gapCounts" not in observed:
-                errors.append(f"receipt scope walk did not record the gap counts: {relative}")
+            gaps = observed.get("gapCounts") or {}
+            if (
+                data.get("result") != "PASS"
+                or observed.get("allRealReceiptsStateLimits") is not True
+                or any(gaps.values())
+            ):
+                errors.append(f"receipt scope walk found gaps: {relative}")
         if "TEI-target-profile-compare" in relative:
             observed = data.get("observed", {})
             if (

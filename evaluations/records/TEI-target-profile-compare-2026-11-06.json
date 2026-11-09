@@ -5,7 +5,7 @@
   "publicationAllowed": false,
   "date": "2026-11-09",
   "host": "Windows with the TEI target-profile tool and one built record candidate",
-  "command": "python integrations/tools/tei_target_profile_compare.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --strategy text-record-template --contract candidates/card-record/contract.json --fixtures candidates/card-record/fixtures.json --profile-a profiles/record.json --profile-b profiles/record-rolling.json --artifact evaluations/artifacts/scn-003-document.json --out <receipt>",
+  "command": "python integrations/tools/tei_target_profile_compare.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --strategy text-record-template --contract candidates/card-record/contract.json --fixtures candidates/card-record/fixtures.json --profile-a profiles/record.json --profile-b profiles/record-rolling.json --artifact evaluations/artifacts/scn-003-document.json --out <receipt>",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",

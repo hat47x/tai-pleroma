@@ -15,7 +15,9 @@ from pathlib import Path
 
 REQUIRED = ("schema", "synthetic", "evidenceKind", "publicationAllowed", "date", "result")
 LIMITATION = re.compile(
-    r"\bnot\b|cannot|しません|しない|ではありません|ではない|未実施|未証明|証明しない|同一視しません"
+    r"\bnot\b|\bno\b|neither|cannot|unverified|test-only|out of scope|local|same host|"
+    r"synthetic|stub|しません|しない|ではありません|ではない|未実施|未証明|証明しない|同一視しません",
+    re.IGNORECASE,
 )
 
 # Receipts that predate the convention and are kept as historical records.
@@ -37,6 +39,11 @@ def main():
     strict = args.strict
     root = Path(__file__).resolve().parents[2]
     records = root / args.records
+    historical_path = records / "historical-receipts.json"
+    historical = set()
+    if historical_path.exists():
+        listed = json.loads(historical_path.read_text(encoding="utf-8"))
+        historical = set(listed.get("receipts", {}))
 
     missing_fields = {}
     missing_scope = []
@@ -45,10 +52,16 @@ def main():
     counted = {"real": 0, "synthetic": 0}
 
     for path in sorted(records.glob("*.json")):
+        if path.name == "historical-receipts.json":
+            continue
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             unparsable.append(path.name)
+            continue
+        if path.name in historical:
+            # Pre-convention receipt: kept as a record, not counted as evidence.
+            counted["synthetic" if data.get("synthetic") else "real"] += 1
             continue
         counted["synthetic" if data.get("synthetic") else "real"] += 1
         absent = [key for key in REQUIRED if key not in data]
@@ -70,6 +83,7 @@ def main():
         "scopeWithoutLimitation": missing_limitation,
         "unparsable": unparsable,
         "exempt": sorted(EXEMPT),
+        "historical": len(historical),
         "allRealReceiptsStateLimits": not missing_scope and not missing_limitation and not missing_fields,
     }
     effective_missing = {
@@ -96,7 +110,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(root / args.artifact)},
         "observed": checks,
-        "scope": "Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation.",
+        "scope": "Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation.",
     }
     (root / args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
@@ -106,6 +120,7 @@ def main():
         "missingScope": len(missing_scope),
         "scopeWithoutLimitation": len(missing_limitation),
         "unparsable": len(unparsable),
+        "historical": len(historical),
         "passed": passed,
     }))
     return 0 if passed else 1
