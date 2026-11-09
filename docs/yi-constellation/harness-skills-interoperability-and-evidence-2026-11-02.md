@@ -249,3 +249,14 @@ SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規�
 
 **優先順**：初回SK-02比較適格1 H2→同一試験Groupの独立4 Sessionを先に成立させる。SHO/SUI/Plugin実Invoke/独自Loopは各Ownerの並行Gateで進め、初回の固定Task/Tool/Skill Profileへ詰め込まない。ここで新外部Harness実試行・ROI測定・実Provider・正式Owner受理はNOT RUN。
 
+<!-- tai-plugin-declaration-consumer-actual-reach-20261109 -->
+### 11.5 宣言の解決は実行ではない――6種のBindingとHook結末名の現在地（2026-11-09）
+
+[TEI merged #3757](https://github.com/hat47x/tei-platform/pull/3757)のread-only製品コード調査では、Environmentの6種類の宣言のうち、**非試験の解決まで届くものが3種類、実行まで届くものが1種類**と整理された。特に`ObservationProviders`／`EvidenceProviders`は実`cmd/tei/main.go`からBindingを解決する一方、`observation.Router`／`evidence.Router`の組立ては試験のみで、Productの`Observe`／`Collect`呼出しは観測されていない。参照コードの解決・試験Router・実Product Provider Invocationを一括して「Pluginが動いた」と数えない。C-1〜C-4でどの宣言を実行へ繋ぐべきかはTEI Ownerの未決判断であり、TAIに全Bindingを強制配線する理由ではない。
+
+[TEI merged #3761](https://github.com/hat47x/tei-platform/pull/3761)は、Hookが返す不成立`outcome`名を`internal/hook`境界で検査し、宣言外なら`HOOK_OUTCOME_UNDECLARED`とする6試験を追加した。**境界内部で語彙が守られる**ことは前進だが、実Pluginは未接続であり、CLI JSON/別Process/外部Transportへこの検査が及ぶことも未確認。名前の正当性、実Plugin呼出し、失敗の原因、実副作用を別資格とする。名前が空でも理由付き不成立が合法なため、空値を一律欠落扱いしない。
+
+[TEI merged #3760](https://github.com/hat47x/tei-platform/pull/3760)では、明示したcatalog/digest/source-rootから`tei self-build` entryがin-processで計画を導き、参照child経路と同一`planFingerprint`を出した。実観測は`ok=true`でも**`qualified=false`／`l2bClaimed=false`**。同じ計画Hash、Receipt形式、Artifact Bindingの一致を、catalogの真正性、Runtime Authority、実配備の成功へ昇格させない。Skill/PluginがこのSelf-build経路を利用する際も、入力Source・導出主体・Trust・Tool/Target実行・受領を分ける。
+
+**実装順**：既存TEI OwnerのProduct実配線が必要なCapabilityを一つだけ選び、Declared→Resolved→Router/Entry Constructed→実Invoked→結果受領のうち未到達箇所を**単一Consumer**で検証する。Hookの外部境界やSelf-buildのL2-bはそれぞれ別Gate。TAI側に新Router/Hook Registry/自己ビルドHostを設けず、初回SK-02 H2/H3の固定Tool Profileへ追加しない。実Provider/Pluginの全経路、外部Hook outcome、正式L2-b、Owner受理はNOT RUN。
+
