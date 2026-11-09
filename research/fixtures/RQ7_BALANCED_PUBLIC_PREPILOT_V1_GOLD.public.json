@@ -1,0 +1,136 @@
+{
+  "schema": "tai.research.rq7-public-gold/v0",
+  "experiment_set": "public-prepilot-v1-gold-balance",
+  "synthetic": true,
+  "run_status": "NOT_RUN",
+  "holdout": false,
+  "use": "Public development prepilot; does not establish independent Gold, blinded evaluation, Product execution, or human/AI performance. No automatic conversion into official acceptance.",
+  "values": [
+    "supported",
+    "refuted",
+    "undetermined"
+  ],
+  "scoring_note": "V0/V1 declare graph structure only; V2/V3 have identical additionally stipulated evidence. Claim-aware verdicts: direct edge differs from path, scope-limited observed differs from global absence. Unverified closure assumptions must not be exported to Product claims.",
+  "cases": [
+    {
+      "id": "B-DP01",
+      "expected": {
+        "V0": "supported",
+        "V1": "supported",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The declared graph contains the direct src -> compile edge; execution evidence is irrelevant to this declarative question."
+    },
+    {
+      "id": "B-DP02",
+      "expected": {
+        "V0": "supported",
+        "V1": "supported",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The declared graph has src -> compile -> package; this is a declaration-only reachability claim."
+    },
+    {
+      "id": "B-DR01",
+      "expected": {
+        "V0": "refuted",
+        "V1": "refuted",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "The declared graph has no direct src -> package edge; an indirect path does not satisfy direct-edge existence."
+    },
+    {
+      "id": "B-DR02",
+      "expected": {
+        "V0": "refuted",
+        "V1": "refuted",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "The directed graph has no path from package back to src."
+    },
+    {
+      "id": "F-DP01",
+      "expected": {
+        "V0": "supported",
+        "V1": "supported",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The declared file-relay graph contains the direct transfer -> read edge."
+    },
+    {
+      "id": "F-DP02",
+      "expected": {
+        "V0": "supported",
+        "V1": "supported",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The declared graph reaches read from extract via its members, manifest and transfer."
+    },
+    {
+      "id": "F-DR01",
+      "expected": {
+        "V0": "refuted",
+        "V1": "refuted",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "There is no direct extract -> read edge; the existence of a multistep path is different."
+    },
+    {
+      "id": "F-DR02",
+      "expected": {
+        "V0": "refuted",
+        "V1": "refuted",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "No directed path goes backward from read to extract in the declared graph."
+    },
+    {
+      "id": "B-EP01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "In the stipulated closed subset, src, compile and package are all observed; the optional test is a legitimate skip."
+    },
+    {
+      "id": "B-EN01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "The stipulated execution includes hook, an undeclared observed step."
+    },
+    {
+      "id": "F-EU01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "undetermined",
+        "V3": "undetermined"
+      },
+      "reason": "Transfer ACK and partial observations do not prove that the Consumer read the two members."
+    },
+    {
+      "id": "X-EU01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "undetermined",
+        "V3": "undetermined"
+      },
+      "reason": "The supplied observer covers only the selected Provider; calls outside that boundary cannot be excluded."
+    }
+  ]
+}

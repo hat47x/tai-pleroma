@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.eki-dispatch-attempt/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with a locally built eki-control, an embedded SQLite state store, generated Ed25519 keys, and a seeded policy row",
+  "command": "eki-control --config dispatch.json (dispatch enabled, policy epoch 1 seeded), then POST /v1/tasks with the projected TaskRequest",
+  "result": "OBSERVED",
+  "observed": {
+    "policySeeded": true,
+    "dispatchConsidered": 2,
+    "dispatched": 0,
+    "deferred": 2,
+    "deferredReason": "no usable worker is registered",
+    "taskStatus": "queued",
+    "taskExecuted": false
+  },
+  "evidence": "eki-dispatch-attempt-2026-11-03.log",
+  "scope": "Shows that a seeded policy lets the placement loop consider the Task, but placement stops because no Worker is registered. It does not register a Worker or verify execution."
+}

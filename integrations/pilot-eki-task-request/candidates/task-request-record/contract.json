@@ -1,0 +1,179 @@
+{
+  "schema": "tei.reference.generator-contract/v0",
+  "id": "eki.task-request.record",
+  "version": "1",
+  "status": "reference-local",
+  "note": "EKI TaskRequest（eki.task-request/v1）の平坦なヘッダ部分をrecordとして写す参照用の契約。inputs・parameters・resources・reliability・extensionsは対象外。",
+  "inputs": [
+    {
+      "attribute": "eki.task_request.schema_version",
+      "primitive": "std.text"
+    },
+    {
+      "attribute": "eki.task_request.executor_id",
+      "primitive": "std.text"
+    },
+    {
+      "attribute": "eki.task_request.executor_version_constraint",
+      "primitive": "std.text"
+    },
+    {
+      "attribute": "eki.task_request.priority",
+      "primitive": "std.text"
+    },
+    {
+      "attribute": "eki.task_request.client_request_id",
+      "primitive": "std.text"
+    },
+    {
+      "attribute": "eki.task_request.cpu_millis",
+      "primitive": "std.integer"
+    },
+    {
+      "attribute": "eki.task_request.memory_bytes",
+      "primitive": "std.integer"
+    },
+    {
+      "attribute": "eki.task_request.wall_time_seconds",
+      "primitive": "std.integer"
+    },
+    {
+      "attribute": "eki.task_request.output_bytes_max",
+      "primitive": "std.integer"
+    },
+    {
+      "attribute": "eki.task_request.network_bytes_max",
+      "primitive": "std.integer"
+    },
+    {
+      "attribute": "eki.task_request.retryable",
+      "primitive": "std.boolean"
+    },
+    {
+      "attribute": "eki.task_request.preemptible",
+      "primitive": "std.boolean"
+    },
+    {
+      "attribute": "eki.task_request.checkpointable",
+      "primitive": "std.boolean"
+    },
+    {
+      "attribute": "eki.task_request.deterministic",
+      "primitive": "std.boolean"
+    },
+    {
+      "attribute": "eki.task_request.max_attempts",
+      "primitive": "std.integer"
+    },
+    {
+      "attribute": "eki.task_request.effect_mode",
+      "primitive": "std.text"
+    }
+  ],
+  "output": {
+    "primitive": "std.text"
+  },
+  "projection": {
+    "kind": "record",
+    "fields": [
+      {
+        "name": "schema",
+        "input": "schema",
+        "attribute": "eki.task_request.schema_version",
+        "primitive": "std.text"
+      },
+      {
+        "name": "executorId",
+        "input": "executorId",
+        "attribute": "eki.task_request.executor_id",
+        "primitive": "std.text"
+      },
+      {
+        "name": "versionConstraint",
+        "input": "versionConstraint",
+        "attribute": "eki.task_request.executor_version_constraint",
+        "primitive": "std.text"
+      },
+      {
+        "name": "priority",
+        "input": "priority",
+        "attribute": "eki.task_request.priority",
+        "primitive": "std.text",
+        "optional": true
+      },
+      {
+        "name": "clientRequestId",
+        "input": "clientRequestId",
+        "attribute": "eki.task_request.client_request_id",
+        "primitive": "std.text",
+        "optional": true
+      },
+      {
+        "name": "cpuMillis",
+        "input": "cpuMillis",
+        "attribute": "eki.task_request.cpu_millis",
+        "primitive": "std.integer"
+      },
+      {
+        "name": "memoryBytes",
+        "input": "memoryBytes",
+        "attribute": "eki.task_request.memory_bytes",
+        "primitive": "std.integer"
+      },
+      {
+        "name": "wallTimeSeconds",
+        "input": "wallTimeSeconds",
+        "attribute": "eki.task_request.wall_time_seconds",
+        "primitive": "std.integer"
+      },
+      {
+        "name": "outputBytesMax",
+        "input": "outputBytesMax",
+        "attribute": "eki.task_request.output_bytes_max",
+        "primitive": "std.integer"
+      },
+      {
+        "name": "networkBytesMax",
+        "input": "networkBytesMax",
+        "attribute": "eki.task_request.network_bytes_max",
+        "primitive": "std.integer"
+      },
+      {
+        "name": "retryable",
+        "input": "retryable",
+        "attribute": "eki.task_request.retryable",
+        "primitive": "std.boolean"
+      },
+      {
+        "name": "preemptible",
+        "input": "preemptible",
+        "attribute": "eki.task_request.preemptible",
+        "primitive": "std.boolean"
+      },
+      {
+        "name": "checkpointable",
+        "input": "checkpointable",
+        "attribute": "eki.task_request.checkpointable",
+        "primitive": "std.boolean"
+      },
+      {
+        "name": "deterministic",
+        "input": "deterministic",
+        "attribute": "eki.task_request.deterministic",
+        "primitive": "std.boolean"
+      },
+      {
+        "name": "maxAttempts",
+        "input": "maxAttempts",
+        "attribute": "eki.task_request.max_attempts",
+        "primitive": "std.integer"
+      },
+      {
+        "name": "effectMode",
+        "input": "effectMode",
+        "attribute": "eki.task_request.effect_mode",
+        "primitive": "std.text"
+      }
+    ]
+  }
+}

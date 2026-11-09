@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.sui-session-tests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 and the SUI checkout on PYTHONPATH",
+  "command": "python integrations/tools/sui_session_tests.py --sui-repo <SUI>",
+  "result": "PASS",
+  "suiCommit": "09c240460017d0a4ecc6ab55582631d3e1a8b0a9",
+  "observed": {
+    "files": [
+      "tests/test_session_context_routes.py",
+      "tests/test_active_tenant_session_keyed.py",
+      "tests/test_saas_auth_session_store.py",
+      "tests/test_saas_auth_sessions_migration.py"
+    ],
+    "passed": 65,
+    "failed": 0,
+    "returncode": 0
+  },
+  "scope": "Runs four SUI test files covering session-context routes, keyed tenant sessions, the auth-session store, and its migration. It does not exercise a live deployment."
+}

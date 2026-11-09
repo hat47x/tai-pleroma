@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.tei-sui-large-doc/v0",
+  "synthetic": true,
+  "evidenceKind": "synthetic",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/large_save.py --sui-repo D:\\GIT\\hat47x\\sui-wt-exist --artifact D:\\GIT\\hat47x\\tai-wt-large\\evaluations\\artifacts\\documentv1-projection.json --cards 300",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-large\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
+  },
+  "observed": {
+    "requestedCards": 300,
+    "putStatus": 200,
+    "readStatus": 200,
+    "savedCards": 300,
+    "payloadBytes": 22744,
+    "syntheticCardsAdded": 298
+  },
+  "scope": "The cards beyond the pilot projection are synthetic and labeled. This checks the save path at a larger card count; it is not pilot evidence and does not prove production limits."
+}

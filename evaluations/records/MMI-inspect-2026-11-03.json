@@ -1,0 +1,29 @@
+{
+  "schema": "tai.reference.mmi-inspect/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Node 24 and MMI's tsx CLI",
+  "command": "python integrations/tools/mmi_inspect_check.py",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "exitOk": true,
+      "contract": true,
+      "hasCandidates": true,
+      "digestsPresent": true,
+      "hasTableRange": true
+    },
+    "candidates": 3,
+    "sheets": [
+      "API",
+      "権限",
+      "状態遷移"
+    ],
+    "sourceDigests": [
+      "sha256:8be8fb31fb3660d93de887c473c5c8a6744d2f045f95e2006e957b5485f8210e"
+    ]
+  },
+  "scope": "Runs MMI's read-only inspect on one repository workbook and checks the semantic-candidate contract. It does not apply a format profile or write to the workbook."
+}

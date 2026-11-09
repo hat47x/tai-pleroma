@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-sei-consumer/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "seiCommit": "41757df38f5cc8dc35d263219c6561a603c8d682",
+  "host": "Windows with Go 1.27",
+  "command": "go test ./teiprojection/...",
+  "result": "PASS",
+  "observed": {
+    "package": "github.com/hat47x/sei-cognition/runtime/go/teiprojection",
+    "tests": 3,
+    "passed": 3,
+    "readsArtifact": true,
+    "writes": false,
+    "callsRuntime": false
+  },
+  "scope": "The SEI package parses the TAI decision projection artifact and checks the envelope and flat Decision fields. It does not write decisions, call the SEI runtime, or prove a product integration."
+}

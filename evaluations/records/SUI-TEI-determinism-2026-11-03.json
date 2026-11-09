@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.tei-determinism/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12 and Go",
+  "command": "python integrations/pilot-sui-document/assembler/determinism_check.py --tei-repo D:\\GIT\\hat47x\\tei-wt-cur",
+  "result": "PASS",
+  "observed": {
+    "runs": 2,
+    "identical": true,
+    "digests": [
+      "6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34",
+      "6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
+    ],
+    "casesPassed": [
+      21,
+      21
+    ]
+  },
+  "scope": "Runs the projection flow repeatedly with the same inputs and compares the artifact digests. It does not prove determinism across hosts or toolchain versions."
+}

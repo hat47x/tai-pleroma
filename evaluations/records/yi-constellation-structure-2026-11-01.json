@@ -15,5 +15,6 @@
   },
   "errors": [],
   "passed": true,
-  "scope": "構造と大象の引用。意味の解釈と製品割当の理由は検算しない。"
+  "scope": "構造と大象の引用。意味の解釈と製品割当の理由は検算しない。",
+  "publicationAllowed": false
 }

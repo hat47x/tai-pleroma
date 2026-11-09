@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-sui-tls/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12, uvicorn, and a self-signed certificate",
+  "command": "python integrations/pilot-sui-document/assembler/tls_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2",
+  "result": "PASS",
+  "observed": {
+    "serverReady": true,
+    "url": "https://127.0.0.1:59614",
+    "certificate": "self-signed for localhost/127.0.0.1",
+    "authenticatedStatus": 200,
+    "anonymousStatus": 401,
+    "tls": true,
+    "database": "temporary SQLite",
+    "runtimeProfile": "local-dev"
+  },
+  "scope": "SUI runs behind its own TLS listener with a self-signed certificate on a local socket. It does not verify a real CA, a reverse proxy, HSTS, client certificates, or deployment."
+}

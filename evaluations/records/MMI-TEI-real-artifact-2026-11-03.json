@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.tei-mmi-real-artifact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "mmiCommit": "cb6ff7d2f5dc86721d18c607915a877be8811371",
+  "host": "Windows with Node 24 and tsx",
+  "command": "TEI_MMI_PROJECTION_ARTIFACT=<artifact> node --import tsx --test test/teiProjection.test.ts",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/mmi-format-profile-projection.json",
+    "profileId": "profile-a"
+  },
+  "observed": {
+    "tests": 5,
+    "passed": 5,
+    "profileId": "profile-a",
+    "writes": false,
+    "typecheck": "pass"
+  },
+  "scope": "The MMI consumer parses the TAI format profile projection artifact from disk. It does not write profiles, change the format profile schema, or prove a product integration."
+}

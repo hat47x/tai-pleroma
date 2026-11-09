@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sui-proxy-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with a local TLS-terminating proxy in front of SUI on loopback",
+  "command": "python integrations/pilot-sui-document/assembler/proxy_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-proxy-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "proxyReady": true,
+    "createStatus": 200,
+    "fetchStatus": 200,
+    "roundTrip": true,
+    "anonymousStatus": 401
+  },
+  "scope": "Runs SUI behind a small local TLS-terminating proxy that adds X-Forwarded-* headers, then saves and reads one document. It is not a production reverse proxy and does not exercise HSTS or real certificates."
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.receipt-scope/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 reading the receipt directory",
+  "command": "python integrations/tools/receipt_scope_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-receipt-scope-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "realRecords": 197,
+    "syntheticRecords": 64,
+    "missingRequiredFields": {},
+    "missingScope": [],
+    "scopeWithoutLimitation": [],
+    "unparsable": [],
+    "exempt": [],
+    "historical": 70,
+    "unregisteredReceipts": [],
+    "allRealReceiptsStateLimits": true,
+    "registeredCount": 251,
+    "auxiliary": [
+      "SCN-003-compose-2026-11-03.validate.json"
+    ],
+    "gapCounts": {
+      "missingRequiredFields": 0,
+      "missingScope": 0,
+      "scopeWithoutLimitation": 0,
+      "unregistered": 0
+    }
+  },
+  "scope": "Walks every receipt and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation."
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.sui-saas-tests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 and the SUI checkout on PYTHONPATH",
+  "command": "python integrations/tools/sui_saas_tests.py --sui-repo <SUI>",
+  "result": "PASS",
+  "suiCommit": "09c240460017d0a4ecc6ab55582631d3e1a8b0a9",
+  "observed": {
+    "files": [
+      "tests/test_saas_session_csrf.py",
+      "tests/test_trusted_saas_runtime.py",
+      "tests/test_saas_document_read_pdp_outage.py",
+      "tests/test_tenant_session_precondition.py"
+    ],
+    "passed": 56,
+    "failed": 0,
+    "returncode": 0
+  },
+  "scope": "Runs four SUI test files covering SaaS CSRF, runtime policy, PDP outage and tenant session preconditions. It does not exercise a live deployment."
+}

@@ -5,13 +5,13 @@
   "cases": [
     {
       "id": "present-no-title",
-      "input": {"id": "island-1", "cardIds": ["card-1", "card-2"]},
-      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\",\"card-2\"],\"id\":\"island-1\"}"}
+      "input": {"id": "island-1", "cardIds": ["card-1"]},
+      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\"],\"id\":\"island-1\"}"}
     },
     {
       "id": "present-title",
-      "input": {"id": "island-1", "title": "Group A", "cardIds": ["card-1", "card-2"]},
-      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\",\"card-2\"],\"id\":\"island-1\",\"title\":\"Group A\"}"}
+      "input": {"id": "island-1", "title": "Group A", "cardIds": ["card-1"]},
+      "want": {"state": "present", "text": "{\"cardIds\":[\"card-1\"],\"id\":\"island-1\",\"title\":\"Group A\"}"}
     },
     {
       "id": "missing-cardids",

@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.result-exit-parity/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 parsing the tool sources",
+  "command": "python integrations/tools/result_exit_parity_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-result-exit-parity-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "scriptsWithVerdict": 112,
+    "suspects": [],
+    "suspectCount": 0,
+    "selfTest": {
+      "detectsFixedVerdictWithConditionalExit": true,
+      "exitLine": 3
+    },
+    "everyVerdictFollowsExitCode": true,
+    "selfTestDetectsTheShape": true
+  },
+  "scope": "Parses the tool sources and flags scripts whose receipt verdict is a fixed PASS literal while the exit code is conditional. A self-test confirms the detector fires on the shape that integration_flow.py had, so a clean result is not vacuous. It is a shape check, so it can miss a mismatch built by other means, and it does not judge whether the verdict is the right one."
+}

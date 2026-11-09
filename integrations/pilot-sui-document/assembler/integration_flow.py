@@ -50,6 +50,11 @@ def main():
         for name in CONTRACTS:
             contract_path = os.path.join(workspace, "candidates", name, "contract.json")
             fixtures_path = os.path.join(workspace, "candidates", name, "fixtures.json")
+            with open(contract_path, encoding="utf-8") as handle:
+                contract = json.load(handle)
+            with open(contract_path, "rb") as handle:
+                contract_bytes = handle.read().replace(b"\r\n", b"\n")
+            contract_digest = "sha256:" + hashlib.sha256(contract_bytes).hexdigest()
             out_dir = os.path.join(tmp, name)
             build = run(
                 [
@@ -83,6 +88,9 @@ def main():
                 if passed and actual.get("state") == "present":
                     records[case["id"]] = json.loads(actual["text"])
             candidates[name] = {
+                "contractId": contract.get("id"),
+                "contractVersion": contract.get("version"),
+                "contractDigest": contract_digest,
                 "sourceDigest": manifest.get("SourceDigest") or manifest.get("Manifest", {}).get("sourceDigest"),
                 "cases": len(fixtures["cases"]),
                 "passed": sum(1 for item in case_results if item["contract"] == name and item["passed"]),
@@ -115,7 +123,13 @@ def main():
             "source": {
                 "teiCommit": tei_commit,
                 "contracts": {
-                    name: {"sourceDigest": data["sourceDigest"], "cases": data["cases"]}
+                    name: {
+                        "contractId": data["contractId"],
+                        "contractVersion": data["contractVersion"],
+                        "contractDigest": data["contractDigest"],
+                        "sourceDigest": data["sourceDigest"],
+                        "cases": data["cases"],
+                    }
                     for name, data in candidates.items()
                 },
             },
@@ -129,6 +143,7 @@ def main():
             json.dump(artifact, handle, ensure_ascii=False, indent=2)
             handle.write("\n")
 
+    receipt_passes = sum(1 for item in case_results if item["passed"]) == cases_run and rejected
     receipt = {
         "schema": "tai.reference.tei-integration-flow/v0",
         "synthetic": False,
@@ -138,9 +153,9 @@ def main():
         "teiCommit": tei_commit,
         "host": "Windows with Go on PATH and Python 3.12",
         "command": f"python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo {tei_repo} --workspace {workspace}",
-        "result": "PASS",
+        "result": "PASS" if receipt_passes else "FAIL",
         "elapsedMillis": round((time.monotonic() - started) * 1000),
-        "contracts": {name: {"sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
+        "contracts": {name: {"contractId": data["contractId"], "contractVersion": data["contractVersion"], "contractDigest": data["contractDigest"], "sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
         "casesRun": cases_run,
         "casesPassed": sum(1 for item in case_results if item["passed"]),
         "composed": {
@@ -166,7 +181,7 @@ def main():
         json.dump(receipt, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
     print(json.dumps({"casesPassed": receipt["casesPassed"], "rejected": rejected}))
-    return 0 if receipt["casesPassed"] == cases_run and rejected else 1
+    return 0 if receipt_passes else 1
 
 
 if __name__ == "__main__":

@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.eki-http-execution/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with the EKI checkout and its own conformance process tests",
+  "command": "go test ./conformance/process -run TestHTTPTaskSubmissionIsExecutedByTheAgent -v",
+  "result": "PASS",
+  "ekiCommit": "8159af1",
+  "observed": {
+    "taskId": "tsk_0392f98887715afb385a41e0020e9980",
+    "attemptId": "atm_b1d8db7f810e3bc11f2cb8ca88e2121c",
+    "claimDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+    "acceptedResultDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+    "executed": true
+  },
+  "scope": "Runs EKI's own process-level test: an HTTP Task submission is executed by an Agent and its ResultClaim is accepted. It uses EKI's TEST PROFILE and the test's own Task, not TAI's projected TaskRequest.",
+  "limitations": [
+    "The test profile is not the decided Worker protocol (#198).",
+    "TAI's projected TaskRequest was not the subject of this run."
+  ]
+}

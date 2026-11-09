@@ -1,0 +1,64 @@
+{
+  "schema": "tai.reference.sui-saas-oauth-contract/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12, SUI modules imported from the local checkout, and an in-process stub server",
+  "command": "python integrations/tools/sui_saas_oauth_contract.py --sui-src <SUI>/03_Implement/backend/src",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "grantType": true,
+      "code": true,
+      "redirectUri": true,
+      "clientId": true,
+      "clientSecret": true,
+      "codeVerifier": true,
+      "formContentType": true,
+      "accessToken": true,
+      "tokenType": true,
+      "expiresIn": true,
+      "idToken": true,
+      "rejectsHttpError": true,
+      "rejectsUnexpectedField": true
+    },
+    "captured": [
+      {
+        "form": {
+          "grant_type": "authorization_code",
+          "code": "code-1",
+          "redirect_uri": "https://sui.example/callback",
+          "client_id": "client-1",
+          "client_secret": "secret-1",
+          "code_verifier": "verifier-1"
+        },
+        "contentType": "application/x-www-form-urlencoded"
+      },
+      {
+        "form": {
+          "grant_type": "authorization_code",
+          "code": "code-2",
+          "redirect_uri": "https://sui.example/callback",
+          "client_id": "client-1",
+          "client_secret": "secret-1",
+          "code_verifier": "verifier-2"
+        },
+        "contentType": "application/x-www-form-urlencoded"
+      },
+      {
+        "form": {
+          "grant_type": "authorization_code",
+          "code": "code-3",
+          "redirect_uri": "https://sui.example/callback",
+          "client_id": "client-1",
+          "client_secret": "secret-1",
+          "code_verifier": "verifier-3"
+        },
+        "contentType": "application/x-www-form-urlencoded"
+      }
+    ],
+    "digest": "sha256:3d41b67e1d38f2213a251e7fb38f26cb7db00c838b450f622cece89b804e84e9"
+  },
+  "scope": "Calls SUI's OAuth broker token-exchange client against a local stub. It does not run the browser redirect, verify a real IdP, or issue a session."
+}

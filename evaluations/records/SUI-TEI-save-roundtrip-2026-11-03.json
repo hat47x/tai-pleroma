@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.tei-sui-save/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/save_to_sui.py --sui-repo D:\\GIT\\hat47x\\sui-wt-exist --artifact D:\\GIT\\hat47x\\tai-wt-rt\\evaluations\\artifacts\\documentv1-projection.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-rt\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:6d39148ca5f9b8a9b2ac8cccbb9fb925f2172293a23ba28895bbca0e14bacf34"
+  },
+  "observed": {
+    "createStatus": 200,
+    "createReadStatus": 200,
+    "updateStatus": 200,
+    "finalReadStatus": 200,
+    "documentId": "doc-1",
+    "cards": 2,
+    "writes": true,
+    "database": "temporary SQLite",
+    "runtimeProfile": "local-dev",
+    "apiKey": "configured",
+    "unauthorizedStatus": 401,
+    "roundTrip": true,
+    "roundTripChecks": {
+      "cardIds": true,
+      "cardText": true,
+      "cardPosition": true,
+      "islandIds": true,
+      "islandCardIds": true,
+      "edgeIds": true
+    }
+  },
+  "scope": "The SUI app runs in-process with a temporary SQLite database, no API key, and the local-dev profile. It exercises create, read, and update over HTTP. It does not verify a production database, authentication, or deployment."
+}

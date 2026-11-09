@@ -1,0 +1,3 @@
+time=2026-11-03T11:15:12.962+09:00 level=INFO msg="dispatch tick" considered=1 dispatched=0 deferred=1 reasons="tsk_6635e22b2089f451ca14102254f8d4e6: no usable worker is registered"
+time=2026-11-03T11:15:21.668+09:00 level=INFO msg="dispatch tick" considered=2 dispatched=0 deferred=2 reasons="tsk_6635e22b2089f451ca14102254f8d4e6: no usable worker is registered; tsk_8559e20d47e5a60f39ec73c83e9cda42: no usable worker is registered"
+time=2026-11-03T11:15:21.643+09:00 level=INFO msg=request method=GET path=/v1/tasks/tsk_8559e20d47e5a60f39ec73c83e9cda42 status=200 principal=tai duration_ms=0

@@ -1,0 +1,115 @@
+{
+  "schema": "tai.research.rq7-public-gold/v0",
+  "synthetic": true,
+  "run_status": "NOT_RUN",
+  "holdout": false,
+  "use": "Public development self-check only; do not provide with stimuli to a blinded evaluator. Do not treat as empirical effectiveness evidence.",
+  "values": [
+    "supported",
+    "refuted",
+    "undetermined"
+  ],
+  "scoring_note": "Each claim is evaluated within the stated scope. A closed observer status is stipulated synthetic input, not a proof of real instrumentation completeness. V0/V1 expose only declarations; V2/V3 expose the same resolved/observed/consumer facts.",
+  "cases": [
+    {
+      "id": "B-P01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "Unit test is a declared but explicitly valid skip; all required build steps are stipulated as observed within a closed test boundary."
+    },
+    {
+      "id": "B-N01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "The stipulated execution trace includes hook, which is not in the declared graph."
+    },
+    {
+      "id": "B-N02",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "The actual input is source-s2, while the selected resolved source was source-s1; identical artifact generation does not erase this difference."
+    },
+    {
+      "id": "B-N03",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "undetermined",
+        "V3": "undetermined"
+      },
+      "reason": "The observer scope is partial and Package is unobserved; no justified conclusion about actual non-execution."
+    },
+    {
+      "id": "B-D01",
+      "expected": {
+        "V0": "supported",
+        "V1": "supported",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The declared graph contains the directed path src -> compile -> package. This is only a declarative claim."
+    },
+    {
+      "id": "F-P01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The stipulated Consumer read contains both detail and control with manifest-g1."
+    },
+    {
+      "id": "F-N01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "refuted",
+        "V3": "refuted"
+      },
+      "reason": "The detail member read has manifest-g2, while control has manifest-g1; ACK does not resolve generation mixing."
+    },
+    {
+      "id": "F-N02",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "undetermined",
+        "V3": "undetermined"
+      },
+      "reason": "The transfer has an ACK but the Consumer reading observation is missing and coverage is partial."
+    },
+    {
+      "id": "F-D01",
+      "expected": {
+        "V0": "supported",
+        "V1": "supported",
+        "V2": "supported",
+        "V3": "supported"
+      },
+      "reason": "The declared graph explicitly has transfer -> read; this alone does not establish real delivery."
+    },
+    {
+      "id": "X-N01",
+      "expected": {
+        "V0": "undetermined",
+        "V1": "undetermined",
+        "V2": "undetermined",
+        "V3": "undetermined"
+      },
+      "reason": "Only the selected Provider is within observation; the absence of other Provider calls cannot be proved."
+    }
+  ]
+}

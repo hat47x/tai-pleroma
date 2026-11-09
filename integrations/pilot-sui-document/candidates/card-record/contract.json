@@ -1,9 +1,9 @@
 {
   "schema": "tei.reference.generator-contract/v0",
   "id": "sui.card.record",
-  "version": "7",
+  "version": "8",
   "status": "reference-local",
-  "note": "SUI Cardのid・text・x・yと、optionalなclaimType・holdState・textReviewedを投影する参照用の契約。",
+  "note": "SUI Cardのid・text・x・yと、optionalなclaimType・holdState・textReviewed・sourcesを投影する参照用の契約。",
   "inputs": [
     {"attribute": "sui.card.card_id", "primitive": "std.identifier"},
     {"attribute": "sui.card.text", "primitive": "std.text"},
@@ -11,7 +11,8 @@
     {"attribute": "sui.card.y", "primitive": "std.decimal"},
     {"attribute": "sui.card.claim_type", "primitive": "std.code"},
     {"attribute": "sui.card.hold_state", "primitive": "std.code"},
-    {"attribute": "sui.card.text_reviewed", "primitive": "std.boolean"}
+    {"attribute": "sui.card.text_reviewed", "primitive": "std.boolean"},
+    {"attribute": "sui.card.sources", "primitive": "std.identifier"}
   ],
   "output": {"primitive": "std.text"},
   "projection": {
@@ -23,7 +24,8 @@
       {"name": "y", "input": "y", "attribute": "sui.card.y", "primitive": "std.decimal"},
       {"name": "claimType", "input": "claimType", "attribute": "sui.card.claim_type", "primitive": "std.code", "optional": true},
       {"name": "holdState", "input": "holdState", "attribute": "sui.card.hold_state", "primitive": "std.code", "optional": true},
-      {"name": "textReviewed", "input": "textReviewed", "attribute": "sui.card.text_reviewed", "primitive": "std.boolean", "optional": true}
+      {"name": "textReviewed", "input": "textReviewed", "attribute": "sui.card.text_reviewed", "primitive": "std.boolean", "optional": true},
+      {"name": "sources", "input": "sources", "attribute": "sui.card.sources", "primitive": "std.identifier", "many": true, "optional": true}
     ]
   }
 }

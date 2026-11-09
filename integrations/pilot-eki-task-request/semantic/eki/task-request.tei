@@ -1,0 +1,20 @@
+namespace eki
+
+data TaskRequest {
+    attribute schemaVersion type std.text
+    attribute executorId type std.text
+    attribute executorVersionConstraint type std.text
+    attribute priority type std.text
+    attribute clientRequestId type std.text
+    attribute cpuMillis type std.integer
+    attribute memoryBytes type std.integer
+    attribute wallTimeSeconds type std.integer
+    attribute outputBytesMax type std.integer
+    attribute networkBytesMax type std.integer
+    attribute retryable type std.boolean
+    attribute preemptible type std.boolean
+    attribute checkpointable type std.boolean
+    attribute deterministic type std.boolean
+    attribute maxAttempts type std.integer
+    attribute effectMode type std.text
+}
