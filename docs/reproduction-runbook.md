@@ -65,7 +65,7 @@ $env:EKI_REPO = "D:\GIT\hat47x\eki-wt-proj2"
 
 ## 3. 一括検証を実行する
 
-TAIの作業ツリーで1コマンド実行します。所要時間は35〜50分です（102段の実測）。
+TAIの作業ツリーで1コマンド実行します。所要時間は35〜50分です（103段の実測）。
 
 ```powershell
 python integrations/tools/run_suite.py `
@@ -85,7 +85,7 @@ python integrations/tools/run_suite.py `
 ## 4. 期待する結果
 
 ```text
-suite:   102段すべて returncode 0、result = PASS
+suite:   103段すべて returncode 0、result = PASS
 checker: 合成61件・実実行184件、passed = true
 doc整合: passed = true（97段、実実行184件が一致）
 ```
