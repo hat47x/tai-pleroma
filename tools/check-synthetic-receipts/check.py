@@ -194,6 +194,8 @@ REAL_RECORDS = (
     "evaluations/records/TEI-many-primitive-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-required-2026-11-06.json",
+    "evaluations/records/TEI-optional-flag-2026-11-06.json",
+    "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
     "evaluations/records/TEI-receipt-scope-2026-11-06.json",
@@ -504,7 +506,22 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("longRunningRefused") is not True
             ):
                 errors.append(f"TEI target-profile comparison changed: {relative}")
-        if "TEI-meaning-change-required" in relative:
+        if "TEI-meaning-change-requiredness" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("conformanceDetectedTheChange") is not True
+                or observed.get("consumerMappingUnchanged") is not True
+            ):
+                errors.append(f"TEI requiredness change changed: {relative}")
+        if "TEI-optional-flag" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("flagChangesBehaviour") is not True:
+                errors.append(f"TEI optional flag stopped changing behaviour: {relative}")
+        if "SUI-TEI-integration-flow" in relative:
+            if data.get("result") != "PASS" or data.get("casesPassed") != data.get("casesRun"):
+                errors.append(f"SUI integration flow did not pass every case: {relative}")
+        if "TEI-meaning-change-required" in relative and "requiredness" not in relative:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"

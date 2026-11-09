@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "realRecords": 193,
+    "realRecords": 195,
     "syntheticRecords": 64,
     "missingRequiredFields": {},
     "missingScope": [],
@@ -22,7 +22,7 @@
     "historical": 70,
     "unregisteredReceipts": [],
     "allRealReceiptsStateLimits": true,
-    "registeredCount": 247,
+    "registeredCount": 249,
     "auxiliary": [
       "SCN-003-compose-2026-11-03.validate.json"
     ],

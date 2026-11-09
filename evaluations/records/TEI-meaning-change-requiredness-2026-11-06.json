@@ -1,0 +1,92 @@
+{
+  "schema": "tai.reference.tei-meaning-change-requiredness/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator and the pilot's conformance flow on a temporary copy",
+  "command": "python integrations/tools/tei_meaning_change_requiredness.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "baseline": {
+      "result": "PASS",
+      "casesRun": 24,
+      "casesPassed": 24
+    },
+    "meaningChange": {
+      "contract": "island-record",
+      "kind": "optional-to-required",
+      "versionAfter": "6",
+      "fieldsBefore": 3,
+      "fieldsAfter": 3,
+      "rewrittenLines": 35,
+      "handEditedFiles": 1
+    },
+    "regenerated": {
+      "document-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "card-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "island-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "edge-record": {
+        "exit": 0,
+        "generated": true
+      },
+      "affiliation-record": {
+        "exit": 0,
+        "generated": true
+      }
+    },
+    "allRegeneratedAutomatically": true,
+    "conformanceBeforeFixtureEdit": {
+      "result": "FAIL",
+      "casesRun": 24,
+      "casesPassed": 23
+    },
+    "conformanceDetectedTheChange": true,
+    "fixtureHandEdit": {
+      "editedCases": 1,
+      "newCases": 0,
+      "rewrittenLines": 38,
+      "handEditedFiles": 1
+    },
+    "conformanceAfterFixtureEdit": {
+      "result": "PASS",
+      "casesRun": 24,
+      "casesPassed": 24
+    },
+    "conformancePassedAfterFixtureEdit": true,
+    "consumer": {
+      "baselineKeys": {
+        "exit": 0,
+        "islandKeys": [
+          "cardIds",
+          "id",
+          "title"
+        ]
+      },
+      "afterKeys": {
+        "exit": 0,
+        "islandKeys": [
+          "cardIds",
+          "id",
+          "title"
+        ]
+      }
+    },
+    "consumerMappingUnchanged": true,
+    "noNewFieldAdded": true
+  },
+  "scope": "Copies the pilot, makes island.title required instead of optional, regenerates, and runs the same conformance flow before and after editing one case. It records that this change is visible to the suite without new coverage, costs one edited case and no generated-code edit, and needs no consumer mapping change because the field set is unchanged. It does not change the pilot workspace."
+}

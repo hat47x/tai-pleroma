@@ -225,6 +225,63 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 出口4（判定表の更新）は本節で実施した。段階5は、出口3が反例で終わったため**未達のまま次の段階へ持ち越す**。
 
+### 7.7.1-b 意味変更3件目と、検証側の誤判定（2026-11-06）
+
+段階6の出口（3件目）を先に回した。変更の形を3つ目に変えている。
+
+| | 変更3 |
+| --- | --- |
+| 意味の変更 | Island の `title` を任意から必須へ（**フィールドの追加なし**） |
+| 生成コードの手修正 | 0行（3件とも0行） |
+| 適合試験（被覆追加の前） | **検出した**（24ケース中23件しか通らない） |
+| 被覆の手修正 | 既存1ケースを書き換え（新規0件） |
+| 写像の追随 | **不要**（フィールド集合が変わらないため） |
+
+- 任意→必須の変更は、既存ケースのうち「その項目を欠いた状態」を exercise しているものが落ちる。**被覆を足さなくても検出できる**のは、その欠落ケースが既にあったため
+- 写像が不要だった理由は、消費側の許可リストに載っているフィールドを消していないから。フィールドの追加・削除を伴わない意味変更は、写像の追随を要さない
+- 任意フラグが生成物に効くことは別に確認した（[optional flag](../evaluations/records/TEI-optional-flag-2026-11-06.json)）。`title`欠落時、任意なら`present`（省略）、必須なら`missing`になる
+
+#### 見つけた検証側の不具合
+
+変更3の初回実行で「適合試験が変更を検出しなかった」という結果が出たが、内訳は24ケース中23件通過だった。**`integration_flow.py`の`result`が、失敗ケースがあっても`PASS`を書いていた。**
+
+- 原因: `result`が固定値`"PASS"`で、終了コードだけがケース数を見ていた
+- 影響: suiteの段は終了コードで落ちるため suite は正常だったが、**receiptの`result`だけが嘘をつく**状態だった。receiptを読む検査（checker）は、この段について`result`を見る規則が無かったため見逃していた
+- 修正: `result`をケース通過数と組み合わせて決め、checkerに「flowのreceiptは`casesPassed == casesRun`」の規則を追加した
+
+この不具合は、receiptを「実行の記録」として読むときに効く。終了コードと`result`が別々に決まっている箇所は、他にもないか段階6で確認する。
+
+### 7.7.2 段階5の結論（2026-11-06）
+
+段階5の出口を、達成・反例・保留に分けて締める。
+
+| 出口 | 状態 | 根拠 |
+| --- | --- | --- |
+| 1. 意味変更2件以上の1回転 | **達成** | 任意フィールド追加と必須フィールド追加の2件（[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json)） |
+| 2. 写像の追随を手修正として計上 | **達成** | どちらも契約1ファイル＋fixtures1ファイル。生成コードの手修正は0行 |
+| 3. 別Target Profileで同じ適合試験 | **反例** | one-shotは通り、long-runningは通らない。原因は生成候補の実行モデル（[record](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)） |
+| 4. 判定表の更新 | **達成** | §7.8を実測に合わせて更新 |
+
+段階5で確定したこと:
+
+1. **意味変更の費用は、意味の形で変わる。** 任意の追加は「試験に届かない」（被覆を足すまで緑）、必須の追加は「試験が壊れる」（既存ケースが一斉に落ちる）。どちらも生成コードは自動で追従し、人が直すのは契約とfixturesだけ。
+2. **適合試験は意味の変更を検出しない。** 検出するのは被覆の有無であり、被覆は意味変更のたびに人が足す。段階5ではこれを検査（被覆0件のフィールドを名指しで落とす）で強制した。
+3. **製品の写像は生成されない。** 消費側は既知フィールドに忠実だが、新しい意味は`valid: true`のまま落ちる。写像の追随は意味変更1件あたり1ファイルの手修正として計上する。
+4. **実行先の交換は、生成候補の実行モデルを変えない。** Profileの宣言を差し替えても、process modelが変われば候補は動かない。
+
+### 7.7.3 次の段階（仮決定・2026-11-06）
+
+段階6は、TAIが単独で進められる範囲では**新しい検証を増やさず、再生成ループの運用を定着させる**段階にする。理由は、意味変更の費用・被覆の強制・写像の追随・実行モデルの4点が揃い、これ以上パイロットの範囲を広げても同じ結論の反復になるためである。
+
+| 項目 | 内容 |
+| --- | --- |
+| 目的 | 決めた運用（被覆を先に落とす、写像の手修正を計上する）が、次の変更でも回ることを確かめる |
+| 出口 | 3件目の意味変更を、被覆検査→被覆追加→適合→写像追随の順で記録する。写像の追随が不要だった場合はその理由を書く |
+| 停止条件 | TEI側3論点（デコード方針、数値配列、process model）のいずれかに判断が出たら、範囲を広げる前に再観測する |
+| 非目標 | パイロット範囲の拡大（SUI全体、書き込み経路、複数プロダクト接続） |
+
+範囲を広げない理由は、段階4で「TEI側の不足を先に埋める」と決めたことと同じである。TAIの側で範囲を広げると、未解決の不足を下流の回避実装で覆い隠すことになる。
+
 ## 7.8 フィージビリティ判定の現況（2026-11-06）
 
 計画§2の5条件に、§5の条件のうち§2と重ならない2つ（digestの残存と人の再現）を加えて、現在のreceiptに照らして並べる。**示せた**は receipt で再確認できるもの、**部分**は条件を満たす範囲と満たさない範囲が同居するもの。
@@ -235,7 +292,7 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが186件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが188件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 
