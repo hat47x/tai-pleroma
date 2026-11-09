@@ -7,6 +7,7 @@
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
 - **RQ7公開研究機材（2026-11-09）**: [有界Graphの公開合成Gold・SVG/Text構造比較と再現手順](protocols/RQ7_PUBLIC_TOOLING_MAINLINE_2026-11-09.md)。固定DAGの研究用テストのみ、実TEI Source/権限・人間/AIの認知効果はNOT RUN。研究全体の未採用設計は[Draft #473](https://github.com/hat47x/tai-pleroma/pull/473)で別途検討。
 - **RQ7研究計画・実行証拠の停止線（2026-11-09）**: [有界Graph完全性と認知負荷の比較](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)、[実CLI証拠の移管／Root・Read Attemptの識別限界](protocols/RQ7_REAL_CLI_EVIDENCE_TRANSFER_2026-11-08.md)、[静的SVG/Text比較](protocols/RQ7_STATIC_SVG_TEXT_PARITY_2026-11-08.md)、[公開Goldの層別校正](results/RQ7_PUBLIC_GOLD_BASELINE_CALIBRATION_2026-11-08.md)。計画/局所試験を人間・AIの比較成績や実TEI Owner受理に読み替えない。
+- **RQ7（2026-11-08追補）**: [有界Graph完全性の比較研究](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)、[公開Gold偏り・設計意図と観測のClaim境界](protocols/RQ7_DESIGN_CLAIMS_AND_GOLD_BALANCE_2026-11-06.md)、[v0/v1公開刺激・独立構造照合の計画](protocols/RQ7_PILOT_STIMULUS_AND_SCORING_2026-11-06.md)、[公開Goldの決定的Baseline校正・39テスト実行記録](results/RQ7_PUBLIC_GOLD_BASELINE_CALIBRATION_2026-11-08.md)、[TEI実CLI候補の証拠移管とE-trace/E-pipeline分離](protocols/RQ7_REAL_CLI_EVIDENCE_TRANSFER_2026-11-08.md)、[公開DAGの静的SVG/Text比較設計](protocols/RQ7_STATIC_SVG_TEXT_PARITY_2026-11-08.md)と[52テストの限定CI証拠](results/RQ7_STATIC_SVG_TEXT_PARITY_CI_2026-11-08.md)。v1は12ケース・v0（10ケース）は不変。構造だけの特権的校正方式がEvidence付きでも10/12正答するため、Evidence依存4件を別に採点する。認知改善・TEI実Product・独立holdoutは未実証。
 - **2026-11-02研究追補**: [生成的探索と証拠制約の接続](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)（CSWの認知Method、SUIの仮説、SEI/TEIの意味、EKIの権限・結果を分離して比較する提案。RQ6、実験NOT RUN）
 - 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
 - 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
@@ -95,3 +96,4 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 - [TAI Draft #177](https://github.com/hat47x/tai-pleroma/pull/177)（2026-11-02 merged）はHarness間の認知・権限・結果境界のConsumer側評価、[Draft #231](https://github.com/hat47x/tai-pleroma/pull/231)（2026-11-02 merged）は価値・要望・要件の往復と利用者価値の研究。研究PR #129は仮説、反証条件、実験計画と解釈上の限界を担い、他Draftの正本を移さない。
 
 この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。
+
