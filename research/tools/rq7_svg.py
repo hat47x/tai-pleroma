@@ -74,6 +74,75 @@ def graph_layout(case: dict) -> tuple[dict, dict, int, int]:
     return labels, positions, width, height
 
 
+
+def route_points(positions: dict, source: str, target: str) -> list[tuple[int, int]]:
+    """A narrow, explicit DAG-only route. Long edges use the upper corridor.
+
+    This is not a general edge routing algorithm: the fixture currently has
+    just three distinct small DAGs, and the geometry check must fail closed.
+    """
+    x1, y1 = positions[source]
+    x2, y2 = positions[target]
+    start, end = (x1 + 180, y1 + 30), (x2 - 9, y2 + 30)
+    if x2 - x1 > 230:
+        corridor = min(y for _, y in positions.values()) - 18
+        return [
+            start,
+            (start[0] + 18, start[1]),
+            (start[0] + 18, corridor),
+            (end[0] - 18, corridor),
+            (end[0] - 18, end[1]),
+            end,
+        ]
+    return [start, end]
+
+
+def route_path_data(points: list[tuple[int, int]]) -> str:
+    return " ".join(
+        (f"M {x},{y}" if i == 0 else f"L {x},{y}")
+        for i, (x, y) in enumerate(points)
+    )
+
+
+def intersects_interior(a: tuple[int, int], b: tuple[int, int],
+                        x: int, y: int, w: int = 180, h: int = 60) -> bool:
+    """Liang–Barsky segment/rectangle intersection, excluding the border."""
+    x0, y0 = a
+    dx, dy = b[0] - x0, b[1] - y0
+    left, right, top, bottom = x + 1, x + w - 1, y + 1, y + h - 1
+    lo, hi = 0.0, 1.0
+    for p, q in (
+        (-dx, x0 - left), (dx, right - x0),
+        (-dy, y0 - top), (dy, bottom - y0),
+    ):
+        if p == 0:
+            if q < 0:
+                return False
+        else:
+            t = q / p
+            if p < 0:
+                lo = max(lo, t)
+            else:
+                hi = min(hi, t)
+            if lo > hi:
+                return False
+    return True
+
+
+def check_route_clearance(case: dict, positions: dict) -> None:
+    """Reject any arrow segment cutting through unrelated rendered nodes."""
+    for source, target in case["declared"]["edges"]:
+        points = route_points(positions, source, target)
+        for node, (x, y) in positions.items():
+            if node in (source, target):
+                continue
+            for a, b in zip(points, points[1:]):
+                if intersects_interior(a, b, x, y):
+                    raise ValueError(
+                        f"edge {source}->{target} crosses unrelated node {node}"
+                    )
+
+
 def render_svg(case: dict) -> str:
     labels, pos, width, height = graph_layout(case)
     root = ET.Element(tag("svg"), {
@@ -97,16 +166,21 @@ def render_svg(case: dict) -> str:
     ET.SubElement(marker, tag("path"), {
         "d": "M 0 0 L 10 5 L 0 10 z", "fill": "#333333"
     })
+    check_route_clearance(case, pos)
     for src, dst in case["declared"]["edges"]:
-        x1, y1 = pos[src]
-        x2, y2 = pos[dst]
-        elem = ET.SubElement(root, tag("line"), {
+        points = route_points(pos, src, dst)
+        attrs = {
             "class": "declared-edge", "data-from": src, "data-to": dst,
-            "x1": str(x1 + 180), "y1": str(y1 + 30),
-            "x2": str(x2 - 9), "y2": str(y2 + 30),
             "stroke": "#333333", "stroke-width": "2",
             "marker-end": "url(#arrowhead)",
-        })
+        }
+        if len(points) == 2:
+            (x1, y1), (x2, y2) = points
+            attrs.update(x1=str(x1), y1=str(y1), x2=str(x2), y2=str(y2))
+            elem = ET.SubElement(root, tag("line"), attrs)
+        else:
+            attrs["d"] = route_path_data(points)
+            elem = ET.SubElement(root, tag("path"), attrs)
         ET.SubElement(elem, tag("title")).text = f"{src} to {dst}"
     for node, label in labels.items():
         x, y = pos[node]
@@ -146,10 +220,10 @@ def svg_semantics(payload: str) -> tuple[dict[str, str], set[tuple[str, str]]]:
         if visible != [node, label]:
             raise ValueError("SVG visible text does not match node ID and label")
         nodes[node] = label
-    for line in root.findall(tag("line")):
-        if line.get("class") != "declared-edge":
+    for edge in root.findall(tag("line")) + root.findall(tag("path")):
+        if edge.get("class") != "declared-edge":
             continue
-        key = line.get("data-from"), line.get("data-to")
+        key = edge.get("data-from"), edge.get("data-to")
         if None in key or key in edges:
             raise ValueError("duplicate or unidentified SVG edge")
         edges.add(key)
@@ -190,7 +264,8 @@ def check_svg_geometry(case: dict, payload: str) -> None:
         raise ValueError("SVG title or description missing")
     groups = [g for g in root.findall(tag("g")) if g.get("class") == "declared-node"]
     lines = [g for g in root.findall(tag("line")) if g.get("class") == "declared-edge"]
-    if len(groups) != len(labels) or len(lines) != len(case["declared"]["edges"]):
+    paths = [g for g in root.findall(tag("path")) if g.get("class") == "declared-edge"]
+    if len(groups) != len(labels) or len(lines) + len(paths) != len(case["declared"]["edges"]):
         raise ValueError("SVG visual object count mismatch")
     for g in groups:
         node = g.get("data-id")
@@ -205,21 +280,28 @@ def check_svg_geometry(case: dict, payload: str) -> None:
         texts = g.findall(tag("text"))
         if len(texts) != 2 or texts[0].get("fill") != "#111111" or texts[1].get("fill") != "#111111":
             raise ValueError("SVG visible text contrast/arity changed")
-    for line in lines:
-        src, dst = line.get("data-from"), line.get("data-to")
+    for edge in lines + paths:
+        src, dst = edge.get("data-from"), edge.get("data-to")
         if src not in positions or dst not in positions:
             raise ValueError("SVG edge endpoints unidentified")
-        x1, y1 = positions[src]
-        x2, y2 = positions[dst]
+        points = route_points(positions, src, dst)
         expected = {
-            "x1": str(x1 + 180), "y1": str(y1 + 30),
-            "x2": str(x2 - 9), "y2": str(y2 + 30),
             "marker-end": "url(#arrowhead)",
             "stroke": "#333333",
             "stroke-width": "2",
         }
-        if any(line.get(key) != value for key, value in expected.items()):
+        if len(points) == 2:
+            if edge.tag != tag("line"):
+                raise ValueError("unexpected path for adjacent edge")
+            (x1, y1), (x2, y2) = points
+            expected.update(x1=str(x1), y1=str(y1), x2=str(x2), y2=str(y2))
+        else:
+            if edge.tag != tag("path"):
+                raise ValueError("long edge requires a routed path")
+            expected["d"] = route_path_data(points)
+        if any(edge.get(key) != value for key, value in expected.items()):
             raise ValueError("SVG arrow geometry changed without edge identity change")
+    check_route_clearance(case, positions)
 
 
 def check_public_pair(case: dict) -> None:
