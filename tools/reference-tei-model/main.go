@@ -49,7 +49,7 @@ type Receipt struct {
 type Toolchain struct {
 	GoVersionToken string   `json:"goVersionToken"`       // go1.26.9, from `go version` run in the TEI checkout
 	GoToolchainEnv string   `json:"goToolchainEnv"`       // inherited GOTOOLCHAIN (local | auto | go1.x ...)
-	GoFlags        string   `json:"goFlags"`              // inherited GOFLAGS
+	GoFlags        string   `json:"goFlags"`              // names of the inherited GOFLAGS flags, never their values
 	GoWork         string   `json:"goWork"`               // inherited GOWORK ("" or off when no go.work applies)
 	Enforced       []string `json:"enforced"`             // NAME=value set for the go commands because the run is pinned
 	Build          string   `json:"build"`                // not-run | built | failed
@@ -198,7 +198,7 @@ func defaultProbeToolchain(ctx context.Context, teiRoot string, pinned bool) (st
 	if raw := commandOutput(ctx, teiRoot, append(append([]string{}, inherited...), "GOTOOLCHAIN=local"), "go", "env", "-json", "GOWORK"); raw != "" {
 		_ = json.Unmarshal([]byte(raw), &workenv)
 	}
-	tool.GoToolchainEnv, tool.GoFlags, tool.GoWork = goenv["GOTOOLCHAIN"], goenv["GOFLAGS"], workenv["GOWORK"]
+	tool.GoToolchainEnv, tool.GoFlags, tool.GoWork = goenv["GOTOOLCHAIN"], goFlagNames(goenv["GOFLAGS"]), workenv["GOWORK"]
 	return full, tool
 }
 
@@ -518,4 +518,20 @@ func main() {
 	if !receipt.Passed {
 		os.Exit(1)
 	}
+}
+
+// goFlagNames keeps only the names of the flags in a GOFLAGS value. Values such as
+// -modfile=/abs/path or -ldflags=... can carry local paths, which a receipt must not hold.
+func goFlagNames(raw string) string {
+	var names []string
+	for _, field := range strings.Fields(raw) {
+		if !strings.HasPrefix(field, "-") {
+			continue
+		}
+		if i := strings.Index(field, "="); i >= 0 {
+			field = field[:i]
+		}
+		names = append(names, field)
+	}
+	return strings.Join(names, " ")
 }
