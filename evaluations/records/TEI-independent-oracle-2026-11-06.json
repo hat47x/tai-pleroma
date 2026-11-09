@@ -1,0 +1,142 @@
+{
+  "schema": "tai.reference.tei-independent-oracle/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with the TEI reference generator and SUI's DocumentV1 model",
+  "command": "python integrations/tools/tei_independent_oracle_check.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-independent-oracle-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "casesConsidered": 12,
+    "casesProjected": 12,
+    "casesValidInSuiModel": 9,
+    "invalidInSui": [
+      "edge-record:absent-kinds",
+      "edge-record:absent-one-kind",
+      "edge-record:null-kind-is-omitted"
+    ],
+    "knownInvalidInSui": [
+      "edge-record:absent-kinds",
+      "edge-record:absent-one-kind",
+      "edge-record:null-kind-is-omitted"
+    ],
+    "unexpectedInvalid": [],
+    "knownMismatchesStillReproduce": true,
+    "failures": [
+      {
+        "contract": "edge-record",
+        "case": "absent-kinds",
+        "projected": true,
+        "validInSuiModel": false,
+        "reason": "ProjectionError: edge.fromKind must be a non-empty string"
+      },
+      {
+        "contract": "edge-record",
+        "case": "absent-one-kind",
+        "projected": true,
+        "validInSuiModel": false,
+        "reason": "ProjectionError: edge.fromKind must be a non-empty string"
+      },
+      {
+        "contract": "edge-record",
+        "case": "null-kind-is-omitted",
+        "projected": true,
+        "validInSuiModel": false,
+        "reason": "ProjectionError: edge.fromKind must be a non-empty string"
+      }
+    ],
+    "everyProjectedCaseIsValidInSui": false,
+    "results": [
+      {
+        "contract": "document-record",
+        "case": "present-no-title",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "document-record",
+        "case": "present-title",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "card-record",
+        "case": "present",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "card-record",
+        "case": "present-2",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "card-record",
+        "case": "empty-text",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "island-record",
+        "case": "present-no-title",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "island-record",
+        "case": "present-title",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "edge-record",
+        "case": "present",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "edge-record",
+        "case": "card-to-island",
+        "projected": true,
+        "validInSuiModel": true,
+        "reason": null
+      },
+      {
+        "contract": "edge-record",
+        "case": "absent-kinds",
+        "projected": true,
+        "validInSuiModel": false,
+        "reason": "ProjectionError: edge.fromKind must be a non-empty string"
+      },
+      {
+        "contract": "edge-record",
+        "case": "absent-one-kind",
+        "projected": true,
+        "validInSuiModel": false,
+        "reason": "ProjectionError: edge.fromKind must be a non-empty string"
+      },
+      {
+        "contract": "edge-record",
+        "case": "null-kind-is-omitted",
+        "projected": true,
+        "validInSuiModel": false,
+        "reason": "ProjectionError: edge.fromKind must be a non-empty string"
+      }
+    ]
+  },
+  "scope": "Wraps each present projection in an artifact and validates it with SUI's DocumentV1 model, which is not derived from the TEI contract, so this is an outside check rather than the contract's own expectations. Three kind-less edge cases are refused by SUI's consumer; that mismatch is recorded by name instead of being ignored. It covers only the fields SUI's model knows, and it does not prove the meaning is right."
+}

@@ -23,8 +23,8 @@
       "markdown"
     ],
     "eventCounts": {
-      "markdown": 1,
-      "bundle": 2
+      "bundle": 2,
+      "markdown": 1
     },
     "deliveredCount": 3,
     "repeatSuppressed": true,

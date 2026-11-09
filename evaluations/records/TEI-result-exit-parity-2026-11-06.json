@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Python 3.12 parsing the tool sources",
   "command": "python integrations/tools/result_exit_parity_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-result-exit-parity-2026-11-06.json",
   "result": "PASS",
@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "scriptsWithVerdict": 114,
+    "scriptsWithVerdict": 115,
     "suspects": [],
     "suspectCount": 0,
     "selfTest": {

@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Python 3.12 reading the pilot contracts and fixtures",
   "command": "python integrations/tools/fixture_field_coverage_check.py --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-fixture-coverage-2026-11-06.json",
   "result": "PASS",

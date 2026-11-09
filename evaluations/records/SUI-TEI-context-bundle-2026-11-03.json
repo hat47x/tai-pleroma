@@ -4,20 +4,65 @@
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
   "date": "2026-11-10",
-  "host": "Windows with SUI in local-dev profile",
+  "host": "Windows / loopback SUI local-dev profile",
+  "inputDataKind": "synthetic-A2-minimal-v1-stub",
   "command": "python integrations/pilot-sui-document/assembler/context_bundle_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
+  "artifactUsage": "reference-metadata-only; artifact bytes NOT consumed by SUI /context/bundle",
+  "consumedInput": {
+    "kind": "synthetic-stub",
+    "stubDatasetId": "A2-minimal-v1",
+    "sourceRevisionMatched": false
+  },
   "observed": {
     "firstStatus": 200,
+    "secondStatus": 200,
+    "includeUnreviewedStrictStatus": 200,
     "bundleHash": "c2890a02b4bf0cf6167c2c6f1ea5cbc3973ef17bb08cb7fe509d99c6ba6bc8ca",
     "deterministic": true,
+    "sameAttemptResponseIdentical": true,
     "hasQueryHash": true,
     "noPreviewStatus": 422,
-    "noPreviewCode": "preview_required"
+    "noPreviewCode": "preview_required",
+    "visibility": {
+      "passed": true,
+      "errors": [],
+      "counts": {
+        "selected": 1,
+        "referenceOnly": 1,
+        "unreviewedReferenceOnly": 1,
+        "counterOpinionReferenceOnly": 1
+      },
+      "selectionScope": "A2-minimal-v1 fixed synthetic stub only",
+      "sourceRevisionMatched": "not-checked",
+      "disclosureAuthorization": "not-checked",
+      "candidateCompleteness": "not-established"
+    },
+    "filterContrast": {
+      "passed": true,
+      "reviewedOnlyPassed": true,
+      "includeUnreviewedStrictPassed": true,
+      "sameSelectedEvidenceRelationsAndConstraints": true,
+      "differentQueryCanonicalHashes": true,
+      "differentExclusionReason": true,
+      "reviewedOnlyCounts": {
+        "selected": 1,
+        "referenceOnly": 1,
+        "unreviewedReferenceOnly": 1,
+        "counterOpinionReferenceOnly": 1
+      },
+      "includeUnreviewedStrictCounts": {
+        "selected": 1,
+        "referenceOnly": 1,
+        "unreviewedReferenceOnly": 1,
+        "counterOpinionReferenceOnly": 1
+      },
+      "scope": "fixed A2 synthetic stub, strict SafeMode; no real source, disclosure, or Owner acceptance"
+    }
   },
-  "scope": "Builds SUI's context bundle twice from the same query with the A2-minimal-v1 stub dataset, checks the hash is stable, and checks that a query without preview confirmation is refused. The stub dataset is synthetic."
+  "scope": "Executes SUI local-dev /context/bundle against A2-minimal-v1 synthetic stub; separately observes selected vs reference-only metadata (counts only), same-attempt response content equality, strict reviewedOnly vs includeUnreviewed filter contrast, hash stability, plus preview refusal. Does NOT establish cross-runtime digest interoperability, candidate completeness, matching external Source revision, disclosure authorization, or human decision."
 }
