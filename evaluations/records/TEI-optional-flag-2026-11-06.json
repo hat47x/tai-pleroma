@@ -1,0 +1,61 @@
+{
+  "schema": "tai.reference.tei-optional-flag/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator selection tool and two compiled candidates",
+  "command": "python integrations/tools/tei_optional_flag_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-optional-flag-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "built": {
+      "optional": true,
+      "required": true
+    },
+    "observed": {
+      "optional": {
+        "built": true,
+        "cases": {
+          "titleAbsent": {
+            "state": "present",
+            "text": "{\"cardIds\":[\"card-1\"],\"id\":\"island-1\"}"
+          },
+          "titlePresent": {
+            "state": "present",
+            "text": "{\"cardIds\":[\"card-1\"],\"id\":\"island-1\",\"title\":\"Group A\"}"
+          },
+          "titleNull": {
+            "state": "present",
+            "text": "{\"cardIds\":[\"card-1\"],\"id\":\"island-1\"}"
+          }
+        }
+      },
+      "required": {
+        "built": true,
+        "cases": {
+          "titleAbsent": {
+            "state": "missing",
+            "text": "[\"title\"]"
+          },
+          "titlePresent": {
+            "state": "present",
+            "text": "{\"cardIds\":[\"card-1\"],\"id\":\"island-1\",\"title\":\"Group A\"}"
+          },
+          "titleNull": {
+            "state": "unresolved",
+            "text": null
+          }
+        }
+      }
+    },
+    "casesIdenticalBetweenFlagStates": false,
+    "titleAbsentStateOptional": "present",
+    "titleAbsentStateRequired": "missing",
+    "flagChangesBehaviour": true
+  },
+  "scope": "Builds the island candidate from the optional and the required contract and runs the same three inputs. It records whether the optional flag changes the generated behaviour. It does not judge which behaviour is correct, and it does not change either contract."
+}

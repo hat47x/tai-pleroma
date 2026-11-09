@@ -10,5 +10,6 @@
     "EKI Control APIのGET /v1/tasksに対する認証結果だけを確認する。",
     "Taskの送信・委任・Worker・結果検証・Authorityは未検証。"
   ],
-  "tasksStatus": 405
+  "tasksStatus": 405,
+  "publicationAllowed": false
 }

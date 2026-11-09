@@ -1,0 +1,514 @@
+{
+  "schema": "tai.reference.historical-receipts/v0",
+  "synthetic": false,
+  "evidenceKind": "inspection",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "count": 70,
+  "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。",
+  "receipts": {
+    "EKI-acceptance-2026-10-31.json": {
+      "missing": [
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-api-2026-10-26.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-cancel-2026-10-26.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-cli-2026-10-26.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-execution-2026-10-31.json": {
+      "missing": [
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-runtime-limits-2026-11-01.json": {
+      "missing": [
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-task-2026-10-26.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "EKI-worker-env-2026-10-28.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-ai-review-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-eki-feasibility-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-invalid-eki-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-invalid-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-invalid-sei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-invalid-sui-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-invalid-tei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-large-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-negative-matrix-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-process-matrix-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-publication-gate-2026-10-29.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-run-2026-10-26.json": {
+      "missing": [
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-run-2026-11-01.json": {
+      "missing": [
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-sui-contract-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-sui-unknown-edge-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-synthetic-facility-2026-10-28.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-synthetic-flow-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-synthetic-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-b-eki-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-b-eki-cancel-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-b-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-b-sei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-b-sui-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-b-tei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-c-eki-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-c-eki-cancel-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-c-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-c-sei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-c-sui-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-c-tei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-001-variant-matrix-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-003-review-2026-10-30.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-D-06-ai-review-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-D-07-ai-review-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-ai-review-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-approvals-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-eki-inspect-a-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-eki-quote-b-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-rejections-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-sei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-slice-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-sui-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-002-tei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-D-08-ai-review-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-eki-docs-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-mmi-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-sei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-slice-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-sui-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-003-tei-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SCN-cross-scenario-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SEI-decision-2026-10-26.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SUI-SCN-link-2026-10-26.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SUI-api-2026-10-26.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SW-01-S1-harness-2026-10-31.json": {
+      "missing": [
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "SW-01-S1-harnessA-rerun-2026-10-31.json": {
+      "missing": [
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "TEI-capability-chain-2026-10-31.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "TEI-model-2026-10-29.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "TEI-product-capabilities-2026-10-31.json": {
+      "missing": [
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "robotics-records-2026-11-02.json": {
+      "missing": [
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    },
+    "yi-constellation-structure-2026-11-01.json": {
+      "missing": [
+        "synthetic",
+        "evidenceKind",
+        "date",
+        "result"
+      ],
+      "reason": "2026-11-02より前の体裁確立前のreceipt。当時の記録として保持し、証拠としては数えない。"
+    }
+  },
+  "scope": "Lists receipts that predate the metadata convention and are kept as historical records. They are not counted as evidence, and their missing fields are not invented. This file does not validate their content."
+}

@@ -1,0 +1,406 @@
+{
+  "schema": "tai.reference.tei-fixture-field-coverage/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 reading the pilot contracts and fixtures",
+  "command": "python integrations/tools/fixture_field_coverage_check.py --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-fixture-coverage-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "contracts": {
+      "document-record": {
+        "contractVersion": "5",
+        "caseCount": 4,
+        "fields": {
+          "id": {
+            "optional": false,
+            "withValue": [
+              "present-no-title",
+              "present-title"
+            ],
+            "explicitNull": [
+              "unresolved-id"
+            ],
+            "absent": [
+              "missing-id"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "title": {
+            "optional": true,
+            "withValue": [
+              "present-title",
+              "missing-id",
+              "unresolved-id"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present-no-title"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "readingOrder": {
+            "optional": true,
+            "withValue": [
+              "present-title"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present-no-title",
+              "missing-id",
+              "unresolved-id"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          }
+        }
+      },
+      "card-record": {
+        "contractVersion": "8",
+        "caseCount": 5,
+        "fields": {
+          "id": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "present-2",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "text": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "present-2",
+              "empty-text"
+            ],
+            "explicitNull": [
+              "unresolved-text"
+            ],
+            "absent": [
+              "missing-text"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "x": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "present-2",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "y": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "present-2",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "claimType": {
+            "optional": true,
+            "withValue": [
+              "present-2"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "holdState": {
+            "optional": true,
+            "withValue": [
+              "present-2"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "textReviewed": {
+            "optional": true,
+            "withValue": [
+              "present-2"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "sources": {
+            "optional": true,
+            "withValue": [
+              "present-2"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present",
+              "empty-text",
+              "missing-text",
+              "unresolved-text"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          }
+        }
+      },
+      "island-record": {
+        "contractVersion": "5",
+        "caseCount": 4,
+        "fields": {
+          "id": {
+            "optional": false,
+            "withValue": [
+              "present-no-title",
+              "present-title",
+              "missing-cardids",
+              "unresolved-cardids"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "title": {
+            "optional": true,
+            "withValue": [
+              "present-title",
+              "missing-cardids",
+              "unresolved-cardids"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "present-no-title"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "cardIds": {
+            "optional": false,
+            "withValue": [
+              "present-no-title",
+              "present-title"
+            ],
+            "explicitNull": [
+              "unresolved-cardids"
+            ],
+            "absent": [
+              "missing-cardids"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          }
+        }
+      },
+      "edge-record": {
+        "contractVersion": "4",
+        "caseCount": 7,
+        "fields": {
+          "id": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "card-to-island",
+              "missing-to",
+              "unresolved-from",
+              "absent-kinds",
+              "absent-one-kind",
+              "null-kind-is-omitted"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "fromId": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "card-to-island",
+              "missing-to",
+              "absent-kinds",
+              "absent-one-kind",
+              "null-kind-is-omitted"
+            ],
+            "explicitNull": [
+              "unresolved-from"
+            ],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "toId": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "card-to-island",
+              "unresolved-from",
+              "absent-kinds",
+              "absent-one-kind",
+              "null-kind-is-omitted"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "missing-to"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "type": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "card-to-island",
+              "missing-to",
+              "unresolved-from",
+              "absent-kinds",
+              "absent-one-kind",
+              "null-kind-is-omitted"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "fromKind": {
+            "optional": true,
+            "withValue": [
+              "present",
+              "card-to-island",
+              "missing-to",
+              "unresolved-from"
+            ],
+            "explicitNull": [
+              "null-kind-is-omitted"
+            ],
+            "absent": [
+              "absent-kinds",
+              "absent-one-kind"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "toKind": {
+            "optional": true,
+            "withValue": [
+              "present",
+              "card-to-island",
+              "missing-to",
+              "unresolved-from",
+              "absent-one-kind",
+              "null-kind-is-omitted"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "absent-kinds"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          }
+        }
+      },
+      "affiliation-record": {
+        "contractVersion": "1",
+        "caseCount": 4,
+        "fields": {
+          "id": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "empty-island",
+              "missing-card",
+              "unresolved-island"
+            ],
+            "explicitNull": [],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": false
+          },
+          "cardId": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "empty-island",
+              "unresolved-island"
+            ],
+            "explicitNull": [],
+            "absent": [
+              "missing-card"
+            ],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          },
+          "islandId": {
+            "optional": false,
+            "withValue": [
+              "present",
+              "empty-island",
+              "missing-card"
+            ],
+            "explicitNull": [
+              "unresolved-island"
+            ],
+            "absent": [],
+            "coveredByValue": true,
+            "coveredByAbsence": true
+          }
+        }
+      }
+    },
+    "uncoveredRequiredFields": [],
+    "uncoveredOptionalFields": [],
+    "untouchedFields": [],
+    "selfTest": {
+      "reportedRequired": true,
+      "reportedOptional": true,
+      "reportedUntouched": false
+    },
+    "selfTestDetectsMissingRequired": true,
+    "selfTestDetectsMissingOptional": true,
+    "everyRequiredFieldHasAValueCase": true,
+    "everyOptionalFieldHasValueOrAbsence": true
+  },
+  "scope": "Reads each contract and its fixtures and records, per field, which cases supply a value, an explicit null, or nothing. A self-test adds one uncovered required and one uncovered optional field to a temp copy and confirms both are reported, so a green result is not vacuous. It does not run the generator."
+}

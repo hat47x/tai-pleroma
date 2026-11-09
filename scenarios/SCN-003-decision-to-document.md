@@ -58,7 +58,7 @@ Status: **提案（仮決定で進行中）**。受入判断ではない。
 | 段 | 確認できたこと | 未確認 |
 | --- | --- | --- |
 | SEI | 判断recordのスキーマ適合とconsumer読み取り | 実判断データ、永続化 |
-| EKI | 投影TaskRequestの受理、policy・Worker行ありでの`running`到達 | 実行、結果受理、実Worker登録 |
+| EKI | 投影TaskRequestの受理、`running`到達、mTLSでのWorker登録、予算を製品ポリシーへ合わせた投影の実行とResultClaim受理 | 本番Worker Protocol互換、Trust Bundleの発行手順、実Workerでの運用 |
 | MMI | 形式プロファイルのスキーマ適合とconsumer読み取り | 実プロファイル、適用 |
 | SUI | 合成文書の保存・往復、ETag、競合、再試行 | 実資料、実テナント、実認可 |
 

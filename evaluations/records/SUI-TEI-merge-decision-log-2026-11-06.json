@@ -1,0 +1,29 @@
+{
+  "schema": "tai.reference.sui-merge-decision-log/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/merge_decision_log_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-merge-decision-log-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "appendStatus": 201,
+    "duplicateStatus": 409,
+    "listStatus": 200,
+    "listCount": 1,
+    "listedDecisionId": "decision-1",
+    "absentGroupStatus": 200,
+    "absentGroupCount": 0,
+    "restoreStatus": 200,
+    "restoreCount": 1,
+    "restoreAbsentStatus": 200,
+    "restoreAbsentCount": 0
+  },
+  "scope": "Appends one merge decision, replays the same decision, lists the group, and lists a group with no decisions. It also reads the snapshot-version restore view. It does not test concurrent appends or authorisation of other tenants."
+}

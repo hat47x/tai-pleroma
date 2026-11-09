@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-05",
+  "date": "2026-11-09",
   "host": "Windows with a locally built sei CLI and a temporary record store",
   "command": "python integrations/tools/sei_gate_variants.py",
   "result": "PASS",
