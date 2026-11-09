@@ -589,9 +589,22 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **回答中の文字列存在と、実際の正答・Skill増分を分ける（TEI main #3548）**：[TEI merged #3548](https://github.com/hat47x/tei-platform/pull/3548)は既存4回答（H2-A/H3-A/H3-B/H2-B）の各々について、保存済み`inspect`/`validate`から**独立Expectedを使わず**導出した13事実の文字列存在を調べ、全回答**13 present／0 absent**をローカル実測した（新Go11テストPASS）。Canonical IDだけで属性の`symbol`表記を見落とす偽陰性と、PowerShellのJSON後続stderrを単一JSON扱いする失敗を修正している。だが「事実が文字として含まれる」は**文脈に即して正しく使った／重要なUnknownを保持した／H3のほうが優れている／モデルへTool Result全byteが届いた**ことではない。初回比較のQはReviewer-only blind Expectedで評価し、13/13を回答得点やT/G0/G1合格へ混入しない。JSON先頭値のみを抽出する方法も、その限定ログ形の解析であり、後続stderr・送出Sinkを無かったことにしない。
 
-**外部DSHの実測台帳は受入完了ではない**：[TEI Open #3561](https://github.com/hat47x/tei-platform/pull/3561)は既存**16実測記録の索引（新実測なし）**を作り、2件以上の一致から、`read-only`/`workspace-write`/子Processでも宣言root外Read、Model入力/Session Log/stdout/永続ログへの複数配送、子Process起動、AGENTS/CLAUDE/Skill descriptionの暗黙入力、表示設定と実効制約の差、Session Log停止≠無送出を限定的に横断整理した。**2件以上の観測一致は、全DSH版/全MachineやProvider全Egressの網羅証明ではない**。実OS ACL/AppContainerで禁止Readが拒否された証拠、現在Provider保持/全Sinks、外部4 Session Q評価は未成立。YICのG0物理deny→G1送出/保持→G2完全受領を再利用し、Sandbox modeの表示を代替Witnessにしない。#3561のPR/独立実CIは未merge／新実測なし。
+**外部DSHの実測台帳は受入完了ではない**：[TEI merged #3561](https://github.com/hat47x/tei-platform/pull/3561)は既存**16実測記録の索引（新実測なし）**を作り、2件以上の一致から、`read-only`/`workspace-write`/子Processでも宣言root外Read、Model入力/Session Log/stdout/永続ログへの複数配送、子Process起動、AGENTS/CLAUDE/Skill descriptionの暗黙入力、表示設定と実効制約の差、Session Log停止≠無送出を限定的に横断整理した。**2件以上の観測一致は、全DSH版/全MachineやProvider全Egressの網羅証明ではない**。実OS ACL/AppContainerで禁止Readが拒否された証拠、現在Provider保持/全Sinks、外部4 Session Q評価は未成立。YICのG0物理deny→G1送出/保持→G2完全受領を再利用し、Sandbox modeの表示を代替Witnessにしない。#3561の台帳はmainへ統合済み。ただし**台帳整備は新実測やG0/現在Egressの実資格ではない**。
 
 **実証に使うBinaryの自己申告にも上限がある**：[SEI merged #825](https://github.com/hat47x/sei-cognition/pull/825)は`build_sei.sh`の全長commitと作業ツリーの`+dirty`印、`sei doctor`警告を実装。WSLローカルGo試験・汚れた作業ツリーからのBuildの確認はあるが、配布物のSHA256SUMSが存在しても実Process Image/配布署名/Trusted Checkout/Provider RuntimeやWindowsを保証せず、dirtyは警告であり実行拒否ではない。YICは§19.10のBinary/Source/actual processの照合で、この表示を**補助Witness**としてのみ参照する。
+
+### 19.12 Subagentの子Session・親Turn継承をH2/H3の隔離／送出の独立境界として扱う（DSH H6-E2実測）
+
+§19.6〜19.11の実OS読取隔離・送出の停止線に、[TEI merged #3624](https://github.com/hat47x/tei-platform/pull/3624)と[merged #3631](https://github.com/hat47x/tei-platform/pull/3631)の**別種のSubagent実測**を追加する。DSH `0.2.2-rc.1` headless／合成canaryで、通常`subagent`は親と**別Session ID・別永続Log**を生成し、子のRequestは`afterSeq=-1`から始まり、**子自身にもSession Log拡張が送出**された。`subagent_fork`はさらに**親の完了Turnを継承**し、子の初回Requestに先行Turnのmessageが5件含まれ、親canaryが子Request本文と子の独立永続Logにも現れた。未完了Turnでの継承、fork連鎖、Telemetry/MCP全経路は未実測であり『何も届かない』とは言えない。[merged #3636](https://github.com/hat47x/tei-platform/pull/3636)の台帳は**23→24記録**へ更新済みだが、台帳行数は独立実験の成功数ではない。
+
+| 既存の資格軸 | 新しい境界と反証対象 |
+| --- | --- |
+| **G0・A（実OS Read拒否）** | 親だけのWorkspace/Sandbox設定を子へ当然継承したと見なさない。子Process/子Sessionが見える可能性のある禁止Root・Skill・旧Session Logと、許可Readの実OS拒否・許可を**各実Process Scope**で検収する。子未生成を前提条件にする場合は実InvocationとTool広告だけでなく、子起動不存在の限定Witnessを要求する |
+| **G1・A（送出／保持）** | 親HTTP/Session Logだけでなく**子Session ID・別log root・Request序列・Model inputとSink・同じcanary再送**を対象に追加。子の`delivery-accepted`からProvider側の保持・全Telemetryを推定しない。Providerエンドポイント全経路を証明できない場合は範囲未確定のまま |
+| **G2・T（Tool完全受領）** | 子でToolが広告されたこと、子で実Call/Resultが発生したこと、親に要約されたことを別観測する。`subagent_fork`が親の完了Turnを持つことと、H3用Skill原文/外部Tool結果の完全なReceiver受領を同一視しない |
+| **Q（比較の独立性）** | 子を使わない固定H2/H3なら、子を起動しなかった実証を残す。子を許す別Trialは事前にTask/Model/Skill/Tool・Subagentのmodeと親会話継承の有無を固定し、従来の4 Sessionへ事後混入させない |
+
+既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)の同一票に**条件付きの子Session列**として追加し、独立の新Gate/Log Collector/Sandbox/Runnerは新設しない。合成canaryの局所挙動以外の実Provider保存・子連鎖・OTel/MCP・Owner意味受理・初回4 Sessionの合格は**NOT RUN**。G0→G1→G2→固定H2/H3実施順、比較適格**0/4**は不変。
 
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
@@ -661,9 +674,13 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **現実の順序は変えない**：既存 #168 の固定公開TEIで最初の実外部Harness H2 Tool Request→実CLI→Harness Response、H3 Skill root+refs実Loader、H2→H3→H3→H2比較を先行。その後に用途が必要とするSC-17/18・Skill再選択・横断Handoffを別Trial Groupにする。本節は反証条件の接続であり、新SR試験、実外部Harness、実Purpose変更の利用者検証、Owner意味受理、Publish/Provider Effectは**NOT RUN**。
 
-**SEI Methodの『推薦を再開できた』と『未解決の問いを保持した』は別（後続試験）**：[SEI Draft #824](https://github.com/hat47x/sei-cognition/pull/824)は既存のSEI Product上流計画で、`TEI source-index(index/subject)→SEI add recommendation→resume --json`という**SEI H3-A0**を次の最小実走候補に選んだ。現行SEI `runAdd`では`--unresolved`は**Decision限定**であり、Recommendationを保存/再開できたとしてもQuestion・UnknownをNativeで永続化した事実はない。`resume.unresolved=[]`を『未決は存在しない』と断定せず、架空のDecisionを作って未決保存を装わない。Recommendationの`--source`は実際の**推薦者**の欄で、TEI Tool/Sourceの独立実行証拠を代入しない。
+**SEI Methodの『推薦を再開できた』と『未解決の問いを保持した』は別（後続試験）**：[SEI merged #824](https://github.com/hat47x/sei-cognition/pull/824)は既存のSEI Product上流計画で、`TEI source-index(index/subject)→SEI add recommendation→resume --json`という**SEI H3-A0**を次の最小実走候補に選んだ。現行SEI `runAdd`では`--unresolved`は**Decision限定**であり、Recommendationを保存/再開できたとしてもQuestion・UnknownをNativeで永続化した事実はない。`resume.unresolved=[]`を『未決は存在しない』と断定せず、架空のDecisionを作って未決保存を装わない。Recommendationの`--source`は実際の**推薦者**の欄で、TEI Tool/Sourceの独立実行証拠を代入しない。
 
 **比較Armの順序**：SEIのH3-A1は同一Q・Tool/Source/Grant・Budget=1・blind Expectedで、D0（Model/既存Tool）／D1（決定的追加Read）／M1（SEI Method）を比較する計画。決定的Readだけで解ける陰性対照ではM1が同じProbeを選んでも増分成功にしない。未決のNative保存を要するA2は[SEI #711](https://github.com/hat47x/sei-cognition/issues/711)/[#678](https://github.com/hat47x/sei-cognition/issues/678)のOwner受理へ保留。A0/A1/A2、Method実接続・TEI→SEI実Tool delivery・Owner意味受理は**NOT RUN**。TAI #168の**外部Harness H3**と名称・試験分母を混ぜず、YICの§21再開/§27.7〜27.8の**独立後続Trial Group**に限り再利用する。新Method Registry/Runner/Question Storeなし。
+
+**SEIを使うSkillの保存・判定の新しい停止線**：[SEI merged #824](https://github.com/hat47x/sei-cognition/pull/824)はTEI Source→Recommendation→Resume実験の**計画がmainへ採用**された状態で、実H3-A0を達成したことではない。[merged #838](https://github.com/hat47x/sei-cognition/pull/838)は`sei export`前に既知Contractを検証し、不正Storeを通常Exportしない。調査用の明示`--unchecked`は`unchecked:true`とOutputだけを返して、**検証済みsnapshot_digest/bundle_idを与えない**。未知Contract recordの`not_verified`はExport可能であって、Meaning Acceptedではない。[merged #839](https://github.com/hat47x/sei-cognition/pull/839)はDecisionにbasis/rationaleが無い場合を`not_verified`へ表示し、要求するかは**任意フラグ（既定false）**。`allow`も根拠の十分性や意味受理を証明しない。MCP `check_decision`にはこの新要求方針は未接続。
+
+**YICの再開／Skill選択**：`recommendation persisted / resume visible / unresolved native recorded / known contract verified / unchecked export / gate policy / current Source & Meaning / downstream actually received`を異なる資格として扱う。未決を空と断言せず、不正Storeの調査用Exportを通常の承認済み資料やOKF F1/F2受領として外部配布しない。既存SEI #711/#678/#833とTAI #488 X02/X06へ参照し、初回TAI H2/H3にSEI保存を追加しない。SEIの合成Go TestがPASSしていてもTEI→SEI実Tool delivery、Owner受理、実Product間Runは**NOT RUN**。
 
 ## 22. 現在のRuntime可用性・認証配線・Digest互換をSkill選択へ反映する（SC-21への実装判断の接続／後続実証NOT RUN）
 
@@ -774,6 +791,12 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 **Self-build宣言byteの突合が進んでも、製品Build状態を実証し直す**：[TEI merged #3544](https://github.com/hat47x/tei-platform/pull/3544)は親が保持した`-intent-file`原byte digestとchild申告digest/Intent FP/Plan FPを別記録にし、別宣言を読んだchildを拒否するSC0-13、検査未実施理由を残すSC0-14を追加した。しかし`l2bClaimed=false`は固定であり、宣言byte同一は**同じBuild Planが正しく導出された証拠ではない**。
 
 **同一構造体への二重追記という実際の統合回帰も確認**：[TEI merged #3550](https://github.com/hat47x/tei-platform/pull/3550)は`IntentFile`の二重フィールド/二重flag登録を修正し、Windowsローカル`go build ./...`・SelfBuild focused Test等PASSを報告した。一方、別[Open #3562](https://github.com/hat47x/tei-platform/pull/3562)は同系の回帰を修正する並行PRであり、PR説明だけでは**現mainに回帰が残るか判定できない**。この照合時点でmainの`cmd/tei/cli_self_build_outer.go`を**直接再取得し`IntentFile string`と`StringVar(&parsed.IntentFile,…)`が各1件**なのは確認した。これは**一ファイルの形の確認**であってmain全体のBuild/CI/actual child Build成功ではない。YICではVersion/実Binary/Source・起動前拒否・Intent byte・child申告・L2b/実Artifactを別々に記録し、旧CIの成功を最新mainへ無断適用しない。既存#2831のOwnerとCIが次に検収し、G4は引き続き`UNQUALIFIED`。
+
+**実Self-buildの部分資格が上がった箇所（2026-11-09、TEI #2831）**：[TEI merged #3651](https://github.com/hat47x/tei-platform/pull/3651)ではentry保持byte digest／entry自身の宣言Fingerprint／child宣言Fingerprint／plan照合`matched`／plan-artifact lock`bound`が**同一実プロセス**で成立した。[merged #3642](https://github.com/hat47x/tei-platform/pull/3642)でchildが自らlockを作ってentryのlockと比較する。さらに[merged #3654](https://github.com/hat47x/tei-platform/pull/3654)で`internal/buildintent.Resolve`とPortを参照Fixtureから分離したが、**通常entryがそれを既定で実行する経路に切り替わってはいない**。[merged #3661](https://github.com/hat47x/tei-platform/pull/3661)は宣言とPlanのRecipe・Source/Dependencyの**Identity集合**を追加照合。[merged #3664](https://github.com/hat47x/tei-platform/pull/3664)では`parameters`は双方とも名前ソートだけで値不変と実測し、順序違いを許し値/存在/件数違いを拒否する。旧『parametersの意味は未決』はこの限定範囲では訂正。ただしBuilder解決済みIdentity/Secret Requirements等には未決が残る。
+
+**値の支配主体はargvでも固定**：[TEI merged #3659](https://github.com/hat47x/tei-platform/pull/3659)は`-child-arg`から親管理の`-artifact-out/-state/-supply`を重ねると、親が記録した値と子の採用値が変わる負例を検出し、子起動前に`INVALID_ARGUMENT`で拒否した。これは**entryの記録と実child argvの限定整合**であって、供給Trust・Build Planの意味導出・実Artifact因果・現在Grantの保証ではない。
+
+**資格票**：`input bytes matched / entry-derived intent FP matched / child declared plan matched / child lock matched / recipe-source-dependency-parameters subset matched / actual process invoker / actual build artifact / independent build Expected / Host current Grant`を別列で記録。上記の同一試行の一致でも**`l2bClaimed=false`／`qualified=false`、G4=`UNQUALIFIED`**。この設計をTEI #2831/#3267へ委譲し、YICでは`self-build ok`をSkill/Provider本番利用可・Verified BOM発行へ昇格しない。追加Runner/Builder/Authorityなし。
 
 ## 23. Skill再開時の条件付き書込み・重複抑止・機密応答を別資格にする（後続・NOT RUN）
 
@@ -922,9 +945,9 @@ YICはまずTaskの必要Claim/現在Audienceに合わせ、**SEI Product単独�
 
 **Ownerと実証限界**：SUI #3396は3件の元World→公開Projection非単射を実CIで確認、#3397は通常Markdownの局所Producer/固定Rawを実CIで確認。SHO #21の固定合成Readerは2OSで限定PASSだが、**真正SUI Producer→同一File→実SHO Reader**の対象はCI SKIP/NOT RUN。TEI #3329は**Docs-only・Draft**で、正式OKF v0.2 Reader/Exporter/Toolとしての受理は未実装。Item/Canvasの共通Identityモデル、F1/F2の横断E2E、Source/Grant現在性、Owner Meaning AcceptanceはNOT RUN。初回公開TEI SK-02のTask/Skill原byte・CLI許可と比較適格**0/4**を変更せず、必要なProduct間引継ぎが発生したときにだけTAI Activity Skillを選ぶ。未整理Itemの通常閲覧はOKF Plugin不在でも継続可能とする。
 
-**SUIの具体的な設計差分（Docs-only／未採用）**：[SUI Draft #3398](https://github.com/hat47x/sui-sensemaking/pull/3398)は、Item Inbox・複数Canvas共有・KJ/Hybrid Treeの導入順と、`Item ≠ Card ≠ Canvas ≠ Display Occurrence`を整理した。**分類・未読/既読・Hold/Review・Shelf・外部取得状態は互いに別軸**。同一ItemをCanvas A/Bで表示しても元Identity・出典は共通で、座標/表示OccurrenceはCanvasごとに独立。Canvas分割・Move/Share/Link/Extractが新しいItem生成、根拠の複製、越境Relationの勝手な断絶を生まないことを既存SUI Ownerで検証する。未整理PDF/URL/画像/Markdownは許可Readerで直接開ければよく、Card化できないことをSkillの一般的な失敗として数えない。
+**SUIの具体的な設計差分（Docs-only／未採用）**：[SUI merged #3398](https://github.com/hat47x/sui-sensemaking/pull/3398)は、Item Inbox・複数Canvas共有・KJ/Hybrid Treeの導入順と、`Item ≠ Card ≠ Canvas ≠ Display Occurrence`を整理した。**分類・未読/既読・Hold/Review・Shelf・外部取得状態は互いに別軸**。同一ItemをCanvas A/Bで表示しても元Identity・出典は共通で、座標/表示OccurrenceはCanvasごとに独立。Canvas分割・Move/Share/Link/Extractが新しいItem生成、根拠の複製、越境Relationの勝手な断絶を生まないことを既存SUI Ownerで検証する。未整理PDF/URL/画像/Markdownは許可Readerで直接開ければよく、Card化できないことをSkillの一般的な失敗として数えない。
 
-**Task/Action/Eventは排他的なItem種別に固定しない**：同じItemが複数の意味Roleを持つ場合があるが、**Task意図／Actionの実行要求／発生したEvent／Operation Receipt**は同一Subjectとは限らない。Skillが「TODOと書かれたItem」を発見しても、実Task Provider/スケジューラへの登録や実Actionの実行を許可されたことにはならない。実EffectやOwner受理は§20／§27.2の既存契約へ接続する。後続SUIの二Canvas/30〜50 Item閲覧・分割負例をYIC X02/X06でConsumer目的ごとに再利用し、KJの基本体験を汎用Task Sync/Action Engineへ置き換えない。#3398はDocs-only・Draftであり、Item Inbox、二CanvasのUI、Role解決、外部Task Providerの実呼出しは**NOT RUN**。
+**Task/Action/Eventは排他的なItem種別に固定しない**：同じItemが複数の意味Roleを持つ場合があるが、**Task意図／Actionの実行要求／発生したEvent／Operation Receipt**は同一Subjectとは限らない。Skillが「TODOと書かれたItem」を発見しても、実Task Provider/スケジューラへの登録や実Actionの実行を許可されたことにはならない。実EffectやOwner受理は§20／§27.2の既存契約へ接続する。後続SUIの二Canvas/30〜50 Item閲覧・分割負例をYIC X02/X06でConsumer目的ごとに再利用し、KJの基本体験を汎用Task Sync/Action Engineへ置き換えない。#3398は**Docs-onlyでmain統合済み**。Item Inbox、二CanvasのUI、Role解決、外部Task Providerの実呼出しは**NOT RUN**。
 
 ## 26. TEI標準データ構造・標準表現型・FunctionをSkill選択で取り違えない（既存Product Ownerへ委譲／後続検証・NOT RUN）
 
@@ -1089,7 +1112,7 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 
 **採用判断**：同一Taskを(1)既存CLI Toolだけ、(2)Product SkillでCLIを案内、(3)必要であればMCPの同じOperationを使う別Group、(4)Productを跨ぐときのみTAI Skillで比較する。MCP経路を初回TAI #168の固定H2/H3 Trialに**後付け追加しない**。Skill選択/再開に必要な証拠は、TEI #3262/#2586/#1158と既存Ownerの実Consumer結果を参照する。新しいYIC Common API／MCP Host／第二Scenario/Oracle/Resolverを作らない。TEIの実Provider Function E2E、CLI/MCP全型・全失敗同値、YIC実Skill選択、外部Harness H2/H3適格4/4、Owner業務受理は**NOT RUN**。
 
-**CLI/MCPの失敗語彙まで一致しない限り、別Transportへ同じSkill判定を移さない**：[TEI Open #3551](https://github.com/hat47x/tei-platform/pull/3551)はMCP参照Adapterの引数に不正な型・`null`・空文字列・未宣言fieldがあっても既定値へ丸めていた挙動を、**省略だけdefault／不正はJSON-RPC `-32602`で拒否**する修正候補（15負例・WSL局所Go Test PASS）。[Open #3563](https://github.com/hat47x/tei-platform/pull/3563)は、存在しない`model catalog -namespace nope`でCLIは`NAMESPACE_NOT_FOUND`を返すのにMCPが空の成功を返していた差を、共通`NamespaceFilterError()`へ移す修正候補（Windows局所Go/実CLI比較PASS）。**いずれも本照合時点Open、mainへの適用・exact HEAD全CI・未知/過大入力と他Operationの完全パリティは未確認**。YICはToolの`ok`、`isError`、CLI exit/code、Scope/Workspace実一致を結果の別列で扱い、エラーを空結果/成功に変えるAdapter経路へSkillを無条件に移さない。初回SK-02固定CLIは変更しない。
+**CLI/MCPの失敗語彙まで一致しない限り、別Transportへ同じSkill判定を移さない**：[TEI merged #3551](https://github.com/hat47x/tei-platform/pull/3551)はMCP参照Adapterの引数に不正な型・`null`・空文字列・未宣言fieldがあっても既定値へ丸めていた挙動を、**省略だけdefault／不正はJSON-RPC `-32602`で拒否**する修正候補（15負例・WSL局所Go Test PASS）。[merged #3563](https://github.com/hat47x/tei-platform/pull/3563)は、存在しない`model catalog -namespace nope`でCLIは`NAMESPACE_NOT_FOUND`を返すのにMCPが空の成功を返していた差を、共通`NamespaceFilterError()`へ移す修正候補（Windows局所Go/実CLI比較PASS）。**両PRはmainへ統合済みだが、全MCP Operationのエラー/正常/過大入力・現在認可・Harnessへの完全配送の同値性は未確認**。YICはToolの`ok`、`isError`、CLI exit/code、Scope/Workspace実一致を結果の別列で扱い、エラーを空結果/成功に変えるAdapter経路へSkillを無条件に移さない。初回SK-02固定CLIは変更しない。
 
 ### 26.10 全体Model MapによるSkillナビゲーションと実Function資格を分ける（TEI RQ-036）
 
@@ -1098,6 +1121,10 @@ X-TEAの単票/明細をテーブル間1:1・1:Nの形と機能タイプに結�
 **利用者・生成AIの共通の認知順**：①現在Scopeの全体Mapで位置を発見→②未取得・非公開・未解決・非表示の欠落範囲とSource Identityを示す→③必要Functionの独立Required Slice（§26.8）をCLI/共通APIで照合→④標準不変/可変Hook/実効Graph Revisionを確認→⑤実Plugin/Provider Invocation・現在Grant・実Effectの資格を確認→⑥既存Product Tool/Skillを最小選択する。図の座標変更は意味Graphの変更ではないが、Guard/Transition/Action編集はAuthoritative Source Patchと意味受理・Target再生成が必要。
 
 [TEI merged #3510](https://github.com/hat47x/tei-platform/pull/3510)は原子的Traitの単体Fulfillmentと**実効Lifecycle全PathのGuard/Authority/Effect Fence等の義務**を分ける設計を追加した。[Draft #3507](https://github.com/hat47x/tei-platform/pull/3507)のChat/VUI/B2C/Plugin Graph Patchは**方式候補**。YICはMap表示や`Plugin selected`を実Load/Host利用許可へ昇格させず、実効Graphに未選択Patch混入、旧Revision、Guard迂回、同名ID混同があるとき対象Operationだけ保留。RQ-036 MAP-01〜16、M0実Runtime全体、Graph Edit→Target、初心者UI、Chat/B2Cは**NOT RUN**。新共通Map正本／Graph Compiler／常駐Hostなし。
+
+**Traceと実CLI/MCPの継続情報を取り違えない**：[TEI merged #3633](https://github.com/hat47x/tei-platform/pull/3633)で`trace`の内側`graphFingerprint`と、ページ継続に使う`result.snapshotFingerprint`を分離し、`continuation.field`で参照先を宣言する形がmainへ入った。[Open #3666](https://github.com/hat47x/tei-platform/pull/3666)の旧Binary/現main実測では、graph用値を誤って次ページへ渡すとSource改版なしでも`STALE_SNAPSHOT`となり、正しいcontinuation値なら同一Snapshotの次ページが返る。Skillは`nextOffset`近傍の曖昧な名前からTokenを推定せず、**対象CLI/Adapter版で示されたContinuation Source field・Scope/Direction/Subject**を用いる。旧値を無断再試行・新しいSource確定・全件取得と認定しない。MCPの同形投影、別Scope/Direction、全Page EOF・Tool完全受領は未実証。
+
+**外部OperationのBinding整合は実接続ではない**：[TEI merged #3658](https://github.com/hat47x/tei-platform/pull/3658)で`submit→execute→accept`の合成`attemptId`/`claimId`連鎖・宣言型との出力形差を検査した結果、EKI HTTPの`TaskAccepted(task_id,status)`はTEIのAttemptへ**直接写像できない**ことを明示。Adapter/Contract/Ownerが解決するまで、YICが同名IDやHTTP成功だけでTask/Attempt/Claimの連続性、外部処理結果、再開・実Effectを補完しない。実EKI HTTPへのlive接続はNOT RUN。既存TEI #3657/EKI側契約を唯一のOwnerとし、新Integration GatewayをYICに作らない。
 
 ## 27. 外部Pressure CaseのOutcome／Skill RunbookをYICの選択と再開資格へ接続する（TAI #531を既存Ownerに分解／後続・NOT RUN）
 
