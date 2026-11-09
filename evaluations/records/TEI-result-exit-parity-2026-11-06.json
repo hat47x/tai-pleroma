@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "scriptsWithVerdict": 112,
+    "scriptsWithVerdict": 113,
     "suspects": [],
     "suspectCount": 0,
     "selfTest": {
