@@ -83,8 +83,10 @@ def route_points(positions: dict, source: str, target: str) -> list[tuple[int, i
     """
     x1, y1 = positions[source]
     x2, y2 = positions[target]
-    start, end = (x1 + 180, y1 + 30), (x2 - 9, y2 + 30)
     if x2 - x1 > 230:
+        # Separate this shortcut's arrow port from any adjacent edge that
+        # enters the same target at its midline (avoids visually merged arrows).
+        start, end = (x1 + 180, y1 + 15), (x2 - 9, y2 + 15)
         corridor = min(y for _, y in positions.values()) - 18
         return [
             start,
@@ -94,7 +96,7 @@ def route_points(positions: dict, source: str, target: str) -> list[tuple[int, i
             (end[0] - 18, end[1]),
             end,
         ]
-    return [start, end]
+    return [(x1 + 180, y1 + 30), (x2 - 9, y2 + 30)]
 
 
 def route_path_data(points: list[tuple[int, int]]) -> str:
