@@ -12,7 +12,7 @@
 | 2. 生成物が既存の適合試験を通る | **部分（前進）** | 契約とは独立なSUIのモデルで、投影した12ケースのうち9件が妥当と確認できた。残る3件はSUI内部の食い違い（反例5）。試験は依然として被覆に依存する（[oracle](../evaluations/records/TEI-independent-oracle-2026-11-06.json)） |
 | 3. Target Profileを一つ選び、その実行先で動作する | **達成（one-shot限定）** | one-shotでは通る（[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)）。ただし別Profileは通らない（[compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)） |
 | 4. 生成器・成果物・試験のdigestがreceiptに残り、後から再確認できる | **達している** | 実実行receipt 193件に契約digest・sourceDigest・TEI commitが入る（[status](../docs/status.md)） |
-| 5. 上記を人が同じ手順で再現できる | **部分** | 2つのrunbookと1コマンド（104段）で再現できる。実インフラが要る検証は含まない（[再現手順](../docs/reproduction-runbook.md)） |
+| 5. 上記を人が同じ手順で再現できる | **部分** | 2つのrunbookと1コマンド（105段）で再現できる。実インフラが要る検証は含まない（[再現手順](../docs/reproduction-runbook.md)） |
 
 **「TEIで構築した」とはまだ呼べない。** 計画§2の操作的定義のうち「実行先が交換できる」に反例があり、「適合試験がある」「意味が正本」は部分のままである。
 
