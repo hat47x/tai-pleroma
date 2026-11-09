@@ -254,6 +254,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-suite-2026-11-03.json",
     "evaluations/records/SUI-TEI-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-2026-11-03.json",
+    "evaluations/records/SUI-TEI-postgres-multidoc-2026-11-03.json",
     "evaluations/records/SUI-TEI-postgres-tls-2026-11-03.json",
     "evaluations/records/SUI-TEI-proxy-2026-11-03.json",
     "evaluations/records/SUI-TEI-ca-chain-2026-11-03.json",
@@ -428,7 +429,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
+        if "SUI-TEI-postgres-multidoc" in relative:
+            observed = data.get("observed", {})
+            reads = observed.get("reads") or []
+            if (
+                observed.get("documents") != len(reads)
+                or any(read.get("status") != 200 for read in reads)
+                or any(status != 200 for status in observed.get("createStatuses") or [])
+            ):
+                errors.append(f"SUI multi-document save did not round trip every document: {relative}")
+        if "SUI-TEI-postgres" in relative and "multidoc" not in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
             observed = data.get("observed", {})
             expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
             if data.get("result") != expected:
@@ -461,7 +471,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres" in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
+        if "SUI-TEI-postgres" in relative and "multidoc" not in relative and "etag" not in relative and "migrate" not in relative and "concurrency" not in relative and "contention" not in relative and "retry" not in relative and "tls" not in relative:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("documentRows") != 1:
                 errors.append(f"SUI Postgres save did not persist one document: {relative}")
