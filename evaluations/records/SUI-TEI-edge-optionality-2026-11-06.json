@@ -1,0 +1,48 @@
+{
+  "schema": "tai.reference.tei-edge-optionality/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator and a locally compiled candidate",
+  "command": "python integrations/pilot-sui-document/assembler/edge_optionality_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "cases": {
+      "bothKinds": {
+        "exit": 0,
+        "state": "present",
+        "missing": null,
+        "text": "{\"fromId\":\"card-1\",\"fromKind\":\"card\",\"id\":\"edge-1\",\"toId\":\"card-2\",\"toKind\":\"card\",\"type\":\"supports\"}"
+      },
+      "nullFromKind": {
+        "exit": 0,
+        "state": "present",
+        "missing": null,
+        "text": "{\"fromId\":\"card-1\",\"id\":\"edge-2\",\"toId\":\"island-1\",\"toKind\":\"island\",\"type\":\"contains\"}"
+      },
+      "nullBothKinds": {
+        "exit": 0,
+        "state": "present",
+        "missing": null,
+        "text": "{\"fromId\":\"card-1\",\"id\":\"edge-3\",\"toId\":\"card-2\",\"type\":\"supports\"}"
+      },
+      "absentBothKinds": {
+        "exit": 0,
+        "state": "present",
+        "missing": null,
+        "text": "{\"fromId\":\"card-1\",\"id\":\"edge-4\",\"toId\":\"card-2\",\"type\":\"supports\"}"
+      }
+    },
+    "bothKindsPresent": true,
+    "nullFromKindOmitted": true,
+    "nullBothKindsOmitted": true,
+    "absentKindsProjected": true,
+    "absentKindsOmittedFromText": true
+  },
+  "scope": "Builds the Edge candidate from the pilot contract and feeds it one complete edge, an edge with a null fromKind, both kinds null, and both kinds absent. Since the contract made the kinds optional (v4), a null or absent kind is omitted and the edge is still projected; before v4 those inputs were reported missing or unresolved and the edge was lost. It does not change the contract."
+}

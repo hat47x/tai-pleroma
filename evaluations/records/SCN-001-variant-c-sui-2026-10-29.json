@@ -9,5 +9,6 @@
   "cardCount": 5,
   "islandCount": 3,
   "edgeCount": 1,
-  "edgeType": "contradicts"
+  "edgeType": "contradicts",
+  "publicationAllowed": false
 }

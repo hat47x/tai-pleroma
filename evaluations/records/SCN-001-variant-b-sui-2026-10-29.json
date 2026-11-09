@@ -9,5 +9,6 @@
   "cardCount": 5,
   "islandCount": 3,
   "edgeCount": 1,
-  "edgeType": "supports"
+  "edgeType": "supports",
+  "publicationAllowed": false
 }

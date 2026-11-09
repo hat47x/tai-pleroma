@@ -1,6 +1,6 @@
 # Product Landscape 横断要求 v0（提案・未採用）
 
-状態: **Draft / Proposed / acceptance NOT RUN**。この文書は製品群の位置づけをTAIへ集約するための**要求候補**である。TAI main `88a6fad6d088f98ccab6080b3b7be24b62399113` と [Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72) のレビュー対象であり、製品の仕様変更・正式な横断契約・製品リリース判断ではない。
+状態: **Draft / Proposed / acceptance NOT RUN**。この文書は製品群の位置づけをTAIへ集約するための**要求候補**である。TAI main `88a6fad6d088f98ccab6080b3b7be24b62399113` と [Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72) のレビュー対象として書かれた（現在：#72 は2026-11-02 merged。G1分類は [Issue #73](https://github.com/hat47x/tai-pleroma/issues/73) で未決）。この文書は製品の仕様変更・正式な横断契約・製品リリース判断ではない。
 
 ## 1. 要求の対象と、対象外
 
@@ -30,7 +30,7 @@
 | PL-REQ-12 | **公開境界**: 公開できないEntity・Edge・属性・集計の情報を漏らさないこと | G2 | ノード非表示だけでなく間接漏洩を検査（P-13） |
 | PL-REQ-13 | **責務の非複製**: 各ProductのAPI/Decision/Authority/原本をTAIの正本へコピーしないこと | G1→G3 | [知識モデル](product-knowledge-model.md)責務表・P-18 |
 | PL-REQ-14 | **横断変更**: 関係のSource/Contract更新時に直接影響・間接影響・判断待ちを分けられること | G3 | 利用契約と影響可能性、候補とacceptedを区別 |
-| PL-REQ-15 | **統合方式を固定しない**: 中央Host/共通Runtime/DB/Plugin名前空間を採用要件にしないこと | G1 | [TEI Draft #2226](https://github.com/hat47x/tei-platform/pull/2226)・[Draft #2298](https://github.com/hat47x/tei-platform/pull/2298)は他製品の提案で未merge |
+| PL-REQ-15 | **統合方式を固定しない**: 中央Host/共通Runtime/DB/Plugin名前空間を採用要件にしないこと | G1 | [TEI Draft #2226](https://github.com/hat47x/tei-platform/pull/2226)・[Draft #2298](https://github.com/hat47x/tei-platform/pull/2298)は他製品の提案で未merge（現在：#2226 は2026-11-02、#2298 は2026-11-03 merged。TEI側で方針として受理されたかは未確認） |
 | PL-REQ-16 | **変更の資格**: カタログを書ける権限と、製品所有者の合意・業務Authorityを同一視しないこと | G2→G3 | [TAI責務境界](architecture-slice-001.md)・[TEI #267](https://github.com/hat47x/tei-platform/issues/267) |
 
 ## 3. 正本・採否の責任分担（要求の前提）

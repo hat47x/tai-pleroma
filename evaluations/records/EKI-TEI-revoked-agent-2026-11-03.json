@@ -1,0 +1,33 @@
+{
+  "schema": "tai.reference.eki-revoked-agent/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the EKI binaries, a generated Worker CA, a Control Plane TLS certificate and a hand-written trust anchor",
+  "command": "python integrations/tools/eki_manual_execution.py",
+  "result": "PASS",
+  "observed": {
+    "attempts": [
+      {
+        "submit": null,
+        "task": null,
+        "worker": "wrk_b3c8d41cf4616ff2a6a4b170d38399a7",
+        "executed": false,
+        "claimed": false,
+        "resultStatus": null,
+        "resultBody": null,
+        "refusedStatus": 401
+      }
+    ],
+    "submitStatus": null,
+    "taskId": null,
+    "workerId": "wrk_b3c8d41cf4616ff2a6a4b170d38399a7",
+    "executed": false,
+    "claimed": false,
+    "refusedStatus": 401,
+    "resultStatus": null,
+    "resultBody": null
+  },
+  "scope": "Enrolls a Worker, revokes it, then starts the Agent with assignments and checks that the Control Plane refuses its requests. It does not submit a Task."
+}

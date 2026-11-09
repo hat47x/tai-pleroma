@@ -79,7 +79,7 @@ Snapshotの候補は、TAI catalog commit、参照した各製品のSource Revis
 | 根拠への固定版参照と検証範囲 | 原本、意味記録、証拠の実体・監査 |
 | 横断変更の影響候補とレビュー先 | 各製品の採否・実装・展開 |
 
-**共有正本の誤解を避ける**: 「プロダクト横断の情報はTAIに集約する」はコピー集中・中央Host必須を意味しない。新たな共通DB、エージェントランタイム、共通Contractを先に実装しない。[architecture-slice-001](architecture-slice-001.md)の「必要性が証明されるまでTAI固有の状態DB・統一Contractを設けない」という制約を維持する。TEI独自Host廃止方針は[Draft PR #2226](https://github.com/hat47x/tei-platform/pull/2226)で審査中であり、merge済みと書かない。
+**共有正本の誤解を避ける**: 「プロダクト横断の情報はTAIに集約する」はコピー集中・中央Host必須を意味しない。新たな共通DB、エージェントランタイム、共通Contractを先に実装しない。[architecture-slice-001](architecture-slice-001.md)の「必要性が証明されるまでTAI固有の状態DB・統一Contractを設けない」という制約を維持する。TEI独自Host廃止方針は[Draft PR #2226](https://github.com/hat47x/tei-platform/pull/2226)で審査中であり、merge済みと書かない（現在：#2226 は Draft のまま2026-11-02 merged。TEI側で方針として受理されたかは未確認）。
 
 ## 7. 段階的導入（段階間のゲート）
 

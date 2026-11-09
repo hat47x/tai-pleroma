@@ -3,12 +3,12 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-04",
+  "date": "2026-11-09",
   "host": "Windows with SUI exporting audit events over HTTP to a local sink",
   "command": "python integrations/pilot-sui-document/assembler/audit_export_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-audit-2026-11-03.json",
   "result": "PASS",
   "artifact": {
-    "path": "D:\\GIT\\hat47x\\tai-wt-sxm\\evaluations\\artifacts\\scn-003-document.json",
+    "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
@@ -25,8 +25,8 @@
     "contentType": "application/json",
     "body": {
       "schemaVersion": 1,
-      "eventId": "audit-e9823bc1-3271-4508-9607-2d7b02d1f797",
-      "occurredAt": "2026-11-03T15:25:44.834407+00:00",
+      "eventId": "audit-bf2d7e42-a81a-4054-a5b9-fecbfbd727c4",
+      "occurredAt": "2026-11-09T13:37:55.256954+00:00",
       "eventType": "view",
       "tenantId": "local-default",
       "docId": "doc-1",

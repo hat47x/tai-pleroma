@@ -1,3 +1,4 @@
 workspace: eki_task_request_projection_pilot
+formatVersion: 1
 sources:
   - semantic

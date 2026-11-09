@@ -9,7 +9,7 @@
 - [YI Constellationウェブサイトの情報設計](yi-constellation-website.md) — TAIリポジトリ内で制作するブランドサイトの情報構造と公開境界。
 - [Issue #74](https://github.com/hat47x/tai-pleroma/issues/74) — 構想のOwner判断と受入追跡。
 
-**いずれも提案段階**であり、現行のSCN-001参照実装・公開判断や[横断的Product分類のDraft PR #72](https://github.com/hat47x/tai-pleroma/pull/72)を置き換えません。
+**いずれも提案段階**であり、現行のSCN-001参照実装・公開判断や[横断的Product分類のDraft PR #72](https://github.com/hat47x/tai-pleroma/pull/72)（2026-11-02 merged）を置き換えません。
 
 仮説・提案・受理済み・実装済み・検証済みを区別し、Issue・PRや関連基盤の根拠へリンクしてください。初期段階では採用済みのアーキテクチャを仮定しません。
 
@@ -38,7 +38,7 @@ G1の正式な対象・分類・公開の採否は[TAI Issue #73](https://github
 
 - [価値観・要望・要件の往復設計](yi-constellation/value-needs-requirements-2026-11-01.md) — 構想・10価値領域・9要望・18要件候補。**研究提案であり正式な採用済み要件ではありません**。
 - [価値の実現と検証の研究計画](yi-constellation/value-realization-research-protocol-2026-11-01.md) — 実質的な選択可能性、価値の緊張、個人/組織/社会の対照研究、既存シナリオへの対応。
-- 既存の[PowerPoint構想資料](YI_Constellation.pptx)とは版と状態が異なります。Draft #72/#75/#81/#128/#169、TAI #73/#74/#127/#165〜168等のレビューと合わせて読み、Owner未受理の具体案を製品の正式契約として扱わないでください。
+- 既存の[PowerPoint構想資料](YI_Constellation.pptx)とは版と状態が異なります。Draft #72/#75/#81/#128/#169（いずれも2026-11-02 merged）、TAI #73/#74/#127/#165〜168等のレビューと合わせて読み、Owner未受理の具体案を製品の正式契約として扱わないでください。
 
 ## 製品シリーズの分析
 

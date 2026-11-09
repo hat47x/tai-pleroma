@@ -1,0 +1,50 @@
+{
+  "schema": "tai.reference.sui-runtime-profile-policy/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 calling SUI's profile resolver and reading main.py",
+  "command": "python integrations/pilot-sui-document/assembler/runtime_profile_policy_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-profile-policy-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "profiles": {
+      "local-dev": {
+        "mode": "single-tenant"
+      },
+      "evaluation": {
+        "mode": "single-tenant"
+      },
+      "enterprise-production": {
+        "mode": "single-tenant"
+      },
+      "saas-multitenant": {
+        "mode": "tenant-session-required"
+      },
+      "unknown-profile": {
+        "error": "Unsupported runtime profile for tenant session bootstrap"
+      }
+    },
+    "singleTenantProfiles": [
+      "local-dev",
+      "evaluation",
+      "enterprise-production"
+    ],
+    "sessionRequiredProfiles": [
+      "saas-multitenant"
+    ],
+    "unknownProfileError": "Unsupported runtime profile for tenant session bootstrap",
+    "sourceGuards": {
+      "docsEnabledExpression": "settings.runtime_profile in {\"local-dev\", \"evaluation\"}",
+      "docsEnabledPresent": true,
+      "agentWiringGuard": true,
+      "safeModeExportGuard": true,
+      "bootstrapSingleTenantSet": true
+    }
+  },
+  "scope": "Calls resolve_tenant_session_bootstrap_mode for five profile names and greps main.py for the docs, agent-wiring, and safe-mode guards. It does not boot each profile."
+}
