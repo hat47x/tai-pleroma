@@ -194,6 +194,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-many-primitive-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-required-2026-11-06.json",
+    "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-fixture-coverage-2026-11-06.json",
     "evaluations/records/SUI-consumer-mapping-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json",
@@ -474,6 +475,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("uncoveredRequiredFields")
             ):
                 errors.append(f"TEI fixture field coverage regressed: {relative}")
+        if "TEI-target-profile-compare" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("oneShotPassed") is not True
+                or observed.get("longRunningRefused") is not True
+            ):
+                errors.append(f"TEI target-profile comparison changed: {relative}")
         if "TEI-meaning-change-required" in relative:
             observed = data.get("observed", {})
             if (

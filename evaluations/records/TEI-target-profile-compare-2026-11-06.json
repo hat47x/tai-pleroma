@@ -1,0 +1,50 @@
+{
+  "schema": "tai.reference.tei-target-profile-compare/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI target-profile tool and one built record candidate",
+  "command": "python integrations/tools/tei_target_profile_compare.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "candidateBuilt": true,
+    "compareExit": 1,
+    "comparisonPassed": false,
+    "contractId": "sui.card.record",
+    "contractVersion": "8",
+    "fixtureDigest": "sha256:f23cd5273fd093847fd2cd88b3123b3035917c472c27fb76f9cea3c6a0b4c2d6",
+    "profiles": [
+      {
+        "id": "sui-record-oneshot",
+        "processModel": "oneshot",
+        "passed": true,
+        "mode": "oneshot",
+        "processes": 5,
+        "requests": 5,
+        "responses": 5,
+        "reason": null
+      },
+      {
+        "id": "sui-record-rolling",
+        "processModel": "long-running",
+        "passed": false,
+        "mode": "long-running",
+        "processes": 1,
+        "requests": 5,
+        "responses": 1,
+        "reason": "candidate wait failed: exit status 2"
+      }
+    ],
+    "oneShotPassed": true,
+    "longRunningRefused": true,
+    "refusalReason": "candidate wait failed: exit status 2",
+    "refusalIsProcessModel": true,
+    "sameContractBothProfiles": true
+  },
+  "scope": "Builds one record candidate, then runs TEI's compare over a one-shot and a long-running Target Profile with the same contract and fixtures. It records that the one-shot profile passes and that the long-running profile refuses the same candidate because the generated program answers one request per process. It does not prove a real target and does not change the candidate template."
+}
