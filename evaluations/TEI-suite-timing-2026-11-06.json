@@ -8,32 +8,32 @@
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 100,
-    "totalSeconds": 787.22,
+    "steps": 101,
+    "totalSeconds": 755.78,
     "slowest": [
       {
         "name": "sui_docs_tests",
-        "seconds": 93.97,
-        "attempts": 1
-      },
-      {
-        "name": "tei_meaning_change_requiredness",
-        "seconds": 48.64,
-        "attempts": 1
-      },
-      {
-        "name": "tei_meaning_change",
-        "seconds": 47.28,
-        "attempts": 1
-      },
-      {
-        "name": "sui_session_tests",
-        "seconds": 46.47,
+        "seconds": 91.64,
         "attempts": 1
       },
       {
         "name": "tei_meaning_change_required",
-        "seconds": 45.62,
+        "seconds": 87.2,
+        "attempts": 1
+      },
+      {
+        "name": "tei_meaning_change_requiredness",
+        "seconds": 48.24,
+        "attempts": 1
+      },
+      {
+        "name": "tei_meaning_change",
+        "seconds": 43.63,
+        "attempts": 1
+      },
+      {
+        "name": "sui_session_tests",
+        "seconds": 37.62,
         "attempts": 1
       }
     ],
