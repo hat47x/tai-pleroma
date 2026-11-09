@@ -27,6 +27,7 @@
 
 - [Product Landscape 横断要求 v0（Draft）](product-landscape-requirements.md) — PL-REQ-01〜16、G1〜G3、要件・受入・Ownerのトレース。
 - [Product Landscape View Contract v0（Draft）](product-landscape-view-contract.md) — Portfolio/Capability/Integrationの図の意味、版と公開の条件。
+- [TAI全体像の横断読解ガイド v0（Draft）](tai-crossview-reader-guide-2026-11-09.md) — 利用目的から役割・Product選択・実証・配布・結果の各資料を混同せず辿るための読者用ガイド。
 
 G1の正式な対象・分類・公開の採否は[TAI Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)で追跡する。Issueと文書はいずれも現在**Draft・未受入**。
 
