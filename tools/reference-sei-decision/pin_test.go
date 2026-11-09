@@ -187,6 +187,11 @@ func TestPinReceiptKeepsEveryStoredKeyAndSchema(t *testing.T) {
 			t.Errorf("%s: the stored record is not supposed to carry the new keys", name)
 		}
 		for key, value := range stored {
+			// Added by hand to stored records by the receipt-format gate (tools/check-synthetic-receipts);
+			// the tool itself has never emitted it, so a new receipt is not expected to carry it.
+			if key == "publicationAllowed" {
+				continue
+			}
 			got, ok := fresh[key]
 			if !ok {
 				t.Errorf("%s: key %q of the stored record is missing from a new receipt", name, key)
