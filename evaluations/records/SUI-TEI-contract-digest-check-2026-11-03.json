@@ -1,0 +1,20 @@
+{
+  "schema": "tai.reference.tei-contract-digest-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12",
+  "command": "python integrations/pilot-sui-document/assembler/verify_contract_digests.py --artifact D:\\GIT\\hat47x\\tai-wt-cd\\evaluations\\artifacts\\documentv1-projection.json --workspace D:\\GIT\\hat47x\\tai-wt-cd\\integrations\\pilot-sui-document",
+  "result": "PASS",
+  "artifact": {
+    "path": "D:\\GIT\\hat47x\\tai-wt-cd\\evaluations\\artifacts\\documentv1-projection.json",
+    "digest": "sha256:dcf4df7386ac568ac519156db7ba19b4365eda7284ab99ff873173198ede3f73"
+  },
+  "observed": {
+    "contracts": 5,
+    "mismatches": [],
+    "allMatch": true
+  },
+  "scope": "Compares each contract digest recorded in the artifact with the contract file, normalizing line endings. It does not verify the generator binaries or the TEI repository revision."
+}

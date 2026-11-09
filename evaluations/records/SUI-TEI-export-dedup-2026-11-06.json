@@ -1,0 +1,35 @@
+{
+  "schema": "tai.reference.sui-export-audit-dedup/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with SUI exporting audit events over HTTP to a local sink",
+  "command": "python integrations/pilot-sui-document/assembler/export_audit_dedup_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-export-dedup-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "firstExportStatus": 200,
+    "repeatExportStatus": 200,
+    "thirdExportStatus": 200,
+    "noIdExportStatus": 200,
+    "deliveredExportKinds": [
+      "bundle",
+      "bundle",
+      "markdown"
+    ],
+    "eventCounts": {
+      "markdown": 1,
+      "bundle": 2
+    },
+    "deliveredCount": 3,
+    "repeatSuppressed": true,
+    "distinctKept": true,
+    "noIdDelivered": true
+  },
+  "scope": "Records the same exportId twice, then a different exportId, then one export without an exportId, and checks what reached the sink. It does not test the dedup window boundary or a restart."
+}

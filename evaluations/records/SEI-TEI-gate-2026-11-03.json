@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.tei-sei-gate/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with a locally built sei CLI and temporary record stores",
+  "command": "python integrations/tools/sei_gate_check.py",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/sei-decision-projection.json"
+  },
+  "observed": {
+    "checks": {
+      "allowVerdict": true,
+      "allowExit": true,
+      "allowBinding": true,
+      "denyVerdict": true,
+      "denyExit": true,
+      "denyReason": true,
+      "notVerifiedListed": true
+    },
+    "allowVerdict": "allow",
+    "denyVerdict": "deny",
+    "denyReasons": [
+      "the decision names no responsible party"
+    ],
+    "decisionDigest": "sha256:a28bd68f626f191b79c996c79186c3a6c8bd583de66bff1f2cf31ca1543056f1"
+  },
+  "scope": "Runs SEI's policy gate for one allow and one deny case using the projected statement. The gate does not verify Authority or that the action matches the decision."
+}

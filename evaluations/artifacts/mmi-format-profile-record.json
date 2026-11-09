@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "mmi-format-profile-v1",
+  "id": "profile-a",
+  "label": "Profile A",
+  "purpose": "Render tables",
+  "status": "candidate",
+  "featureVersion": "1.0.0",
+  "sourceProfileId": "profile-base",
+  "sourceEvidence": [
+    "structure"
+  ],
+  "features": [
+    "table"
+  ],
+  "provenance": {
+    "sourceKind": "tei-projection",
+    "sourceDigest": "sha256:4fcbeaac8a902b92dea6f798f527080ba4dff49655d028fc3f3e713ce2d542c5",
+    "generationMethod": "worksheet-prototype-v1"
+  }
+}

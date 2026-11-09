@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.sui-model-registry/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with SUI in local-dev profile and an admin key",
+  "command": "python integrations/pilot-sui-document/assembler/model_registry_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-registry-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "listStatus": 200,
+    "listShape": true,
+    "createStatus": 201,
+    "anonymousStatus": 401,
+    "unsupportedStatus": 422
+  },
+  "scope": "Reads the model registry, registers one provider, refuses an anonymous read and an unsupported provider kind. It does not call a model."
+}

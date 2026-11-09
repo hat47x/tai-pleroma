@@ -1,0 +1,29 @@
+{
+  "schema": "tai.reference.tei-sui-postgres/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python 3.12, uvicorn, and an embedded PostgreSQL 16.2",
+  "command": "python integrations/pilot-sui-document/assembler/postgres_save.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "serverReady": true,
+    "createStatus": 200,
+    "createBody": "{\"version\":1,\"id\":\"doc-1\",\"title\":\"Notes\",\"createdAt\":\"2026-11-03T00:00:00Z\",\"updatedAt\":\"2026-11-03T00:00:00Z\",\"transform\":{\"panX\":0.0,\"panY\":0.0,\"zoom\":1.0},\"cards\":[{\"id\":\"card-1\",\"text\":\" hello \",\"x\":10.0,\"y\":20.5,\"critique\":null},{\"id\":\"card-2\",\"text\":\"world\",\"x\":0.0,\"y\":0.0,\"claimType\":\"claim\"",
+    "readStatus": 200,
+    "anonymousStatus": 401,
+    "documentId": "doc-1",
+    "cards": 5,
+    "roundTrip": true,
+    "database": "embedded PostgreSQL 16.2",
+    "documentRows": 1,
+    "revisionRows": 1,
+    "runtimeProfile": "local-dev"
+  },
+  "scope": "SUI runs against a real PostgreSQL process started by pgserver. It does not verify a managed database, the SaaS multi-tenant profile, backups, migrations, or deployment."
+}

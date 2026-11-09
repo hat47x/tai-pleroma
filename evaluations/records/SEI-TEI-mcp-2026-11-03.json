@@ -1,0 +1,43 @@
+{
+  "schema": "tai.reference.tei-sei-mcp/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with a locally built sei CLI and a temporary record store",
+  "command": "python integrations/tools/sei_mcp_probe.py",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "initialize": true,
+      "toolsListed": true,
+      "resumeTool": true,
+      "callOk": true,
+      "callMentionsRecord": true
+    },
+    "tools": [
+      "resume",
+      "add_recommendation",
+      "check_decision"
+    ],
+    "initializeResult": {
+      "capabilities": {
+        "tools": {}
+      },
+      "protocolVersion": "2025-06-18",
+      "serverInfo": {
+        "name": "sei",
+        "version": "dev"
+      }
+    },
+    "callResult": {
+      "content": [
+        {
+          "text": "Store sei-store-2026-11-09-0851b908: 1 records\nUnresolved scope: recognized Decision.unresolved_refs only; not a case-wide inventory.\n0 entries; 0 distinct logical references. Case completeness: not assessed.\nNot verified by this view: the responsible party's Authority; human confirmation; whether a record comes from a real object or a synthetic fixture. A responsible party is shown as recorded.\nSnapshot SHA-256: sha256:136447f72412a4dd7c06e47165f8b9d1cff30a1b36fd90247ae80b97d128dcc6\n\nDecisions (1)\n  [decision-1] Adopt option A\n      why: Lower cost\n      responsible: person:alice\n\nUnresolved (0)\n\nRecommendations not yet relied on by any decision (0)\n\nRecommendations relied on by a decision (0)\n\nSemantic Lineage, as recorded (0)",
+          "type": "text"
+        }
+      ]
+    }
+  },
+  "scope": "Sends initialize, tools/list and tools/call resume over SEI's stdio MCP server. It does not test a real AI client, session namespacing or write tools."
+}

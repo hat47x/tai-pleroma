@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.sui-full-tests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Python 3.12, the SUI checkout on PYTHONPATH, and SUI_* variables removed",
+  "command": "python -m pytest tests -q -p no:randomly (in 03_Implement/backend)",
+  "result": "OBSERVED",
+  "suiCommit": "21d07f01",
+  "observed": {
+    "passed": 2082,
+    "failed": 14,
+    "skipped": 49,
+    "deselected": 8,
+    "durationSeconds": 1359,
+    "failureGroups": {
+      "tests/test_codegen_pipeline.py": 12,
+      "tests/test_external_content_store.py": 2
+    },
+    "failureCauses": [
+      "codegen tests run a subprocess whose output cannot be encoded as cp932 on this host",
+      "external content store tests write under C:\\Users\\...\\Temp, which the sandbox denies on this host"
+    ]
+  },
+  "scope": "Records one full run of SUI's backend test suite on this host. The 14 failures were traced to host encoding and temp-directory restrictions, not to assertions about product behaviour. It is not a live deployment.",
+  "limitations": [
+    "The run took about 23 minutes and was not repeated.",
+    "Failure classification comes from inspecting one representative test per group."
+  ]
+}

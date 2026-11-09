@@ -1,0 +1,67 @@
+{
+  "run_id": "AS-LB-loopback-synthetic-2026-11-02",
+  "status": "PASS-limited-localhost-only",
+  "observed_at": "2026-11-02",
+  "runtime": {
+    "node": "v22.16.0",
+    "platform": "Linux",
+    "network": "ephemeral HTTP server bound to 127.0.0.1 only",
+    "request_count": 9
+  },
+  "source": {
+    "file": "evaluations/tools/check-preanswer-loopback.cjs",
+    "sha256": "eb8db66211136b9825173ac2141b2361546a708116857ab6d730ce435a406f54",
+    "github_blob": "1049188e3639c3d25d95989867a1a43cd4e53726",
+    "local_blob_matched": true
+  },
+  "checks": [
+    [
+      "LB-01",
+      "PASS",
+      "two internal worlds with identical release yield exact equal observed HTTP request payloads"
+    ],
+    [
+      "LB-02",
+      "PASS (expected negative witness)",
+      "bad planner includes synthetic private Action in receiver payload"
+    ],
+    [
+      "LB-03",
+      "PASS (expected negative witness)",
+      "secondary Session Event leaks canary while model messages and final answer match"
+    ],
+    [
+      "LB-04",
+      "PASS",
+      "explicitly permitted public Capability can correctly change output"
+    ],
+    [
+      "LB-05",
+      "PASS",
+      "different private error reasons projected to same outward HTTP bytes"
+    ],
+    [
+      "LB-06",
+      "PASS",
+      "public-only payload remains exactly stable"
+    ]
+  ],
+  "checks_passed": 6,
+  "checks_failed": 0,
+  "scope": "Real Node http.request to test-owned local loopback receiver. Checks specific bytes captured by this server. It does NOT exercise any actual TAI/TEI/SEI/SUI/SHO/EKI/DSH/MCP/Harness/Browser/OS sandbox.",
+  "excluded": [
+    "real host/network egress discovery",
+    "external or remote endpoints",
+    "non-loopback traffic",
+    "OS or network isolation enforcement",
+    "actual Product policy correctness",
+    "browser DOM/a11y/clipboard",
+    "real session log infrastructure",
+    "timing side channels",
+    "authorized business data",
+    "owner acceptance",
+    "independent sealed holdout"
+  ],
+  "safety": "All inputs are public synthetic identifiers only. Intentional bad-world marker/Action is not a production secret. Loopback result is not proof of noninterference on other channels.",
+  "interpretation": "PASS indicates test checks and intentional negative leak detection functioned, not that a real system resisted exfiltration."
+}

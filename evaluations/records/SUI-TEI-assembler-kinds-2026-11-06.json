@@ -1,0 +1,70 @@
+{
+  "schema": "tai.reference.tei-assembler-kind-fallback/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python 3.12 importing the pilot assembler module directly",
+  "command": "python integrations/pilot-sui-document/assembler/assembler_kind_fallback_check.py --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "explicitKinds": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": "card",
+          "to": "card"
+        }
+      ]
+    },
+    "absentKindsResolvedFromEndpoint": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": null,
+          "to": null
+        }
+      ]
+    },
+    "absentKindsResolveCardToIsland": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": null,
+          "to": null
+        }
+      ]
+    },
+    "nullKindsResolvedFromEndpoint": {
+      "outcome": "assembled",
+      "edgeCount": 1,
+      "kinds": [
+        {
+          "from": null,
+          "to": null
+        }
+      ]
+    },
+    "unknownKindRefused": {
+      "outcome": "refused",
+      "reason": "edge edge-5 has unknown fromKind thing"
+    },
+    "absentKindUnknownEndpointRefused": {
+      "outcome": "refused",
+      "reason": "edge edge-6 has no toKind and card-9 is no such endpoint"
+    },
+    "assemblerRewritesKinds": true,
+    "contractKindsOptional": {
+      "fromKind": true,
+      "toKind": true
+    }
+  },
+  "scope": "Calls assemble with explicit kinds, absent kinds, a card-to-island edge without kinds, explicit nulls, an unknown kind, and an unknown endpoint. It records that an absent endpoint kind is resolved from the endpoint id itself, that a card-to-island edge without kinds now assembles, that an unknown endpoint fails closed, and that the composed edge keeps exactly the kinds that were projected. The contract now makes the kinds optional (v4), so this path is reachable from a projected edge. It does not run the HTTP or persistence paths."
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "tai.reference.tei-assembler-unit-tests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python 3.12 running the pilot assembler's unittest cases",
+  "command": "python integrations/pilot-sui-document/assembler/assembler_unit_tests_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "exit": 0,
+    "testsRun": 13,
+    "summary": "OK",
+    "failed": false
+  },
+  "scope": "Runs test_document_assembler with unittest and records the test count and result. It covers identifier uniqueness, endpoint resolution including absent kinds, containment, and affiliation collisions; it does not exercise the HTTP or persistence paths."
+}

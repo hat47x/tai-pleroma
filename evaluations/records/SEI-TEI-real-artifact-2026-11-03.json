@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.tei-sei-real-artifact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "seiCommit": "792809ce13a56d0230e9523a62283a8d51ea5a6e",
+  "host": "Windows with Go 1.27",
+  "command": "TEI_PROJECTION_ARTIFACT=<artifact> go test -run TestParseRealArtifactWhenProvided -v ./teiprojection/...",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/sei-decision-projection.json",
+    "refId": "decision-1"
+  },
+  "observed": {
+    "test": "TestParseRealArtifactWhenProvided",
+    "passed": true,
+    "refId": "decision-1",
+    "writes": false
+  },
+  "scope": "The SEI consumer parses the TAI decision projection artifact from disk. It does not write, call the SEI runtime, or prove a product integration."
+}

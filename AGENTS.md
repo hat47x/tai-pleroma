@@ -29,11 +29,43 @@ SUI / TEI / SEI / SHO / EKIは、それぞれ独立した能力・ライフサ�
 - 利用者にとっての価値から最小の縦断シナリオを選び、機能・責務・観測方法・撤回条件を具体化します。
 - 個々の主体の権限と意思決定を尊重します。AIの提案を業務上の承認や、外部作用の実行許可として扱いません。
 - 秘密情報、個人情報、未公開の他リポジトリ資料や実行ログをコミット・Issue・PRへ転載しません。
-- 変更は小さく保ちます。原則として短命ブランチとPRを利用し、並行変更を確認します。共有履歴のforce更新を避け、Draft PRは統合しません。
-- 試験の結果は、対象の版、実行コマンド、期待結果、観測結果、未実施項目を記します。モック・合成試験の成功を実システムでの成功と同一視しません。
-- 新しい契約、権限変更、本番作用、破壊的操作、意味上の受理が必要な箇所はOwner判断を明示して止めます。
+- 変更は小さく保ちます。原則として短命ブランチとPRを利用し、並行変更を確認します。共有履歴のforce更新を避け、Draft PRは作業中の表示として扱い、内容と検証結果が揃ったらDraftを解除して統合します。
+- 既定は自律です。読む、書く、検証する、統合するまでを、機械で確認できる範囲で進めます。判断に迷ったときは止まらず、狭く安全な解釈で進め、仮定と既定案をPR本文かコミットメッセージへ残します。
+- 試験の結果は、対象の版、実行コマンド、期待結果、観測結果、未実施項目を記します。モック・合成試験の成功を実システムでの成功と同一視しません。実行できなかった検証は、その制約と残る危険性を記録して進めます。
+- 人が確認するのは、リポジトリの外へ取り消せない効果を出す場合だけです。具体的には、秘密情報・個人情報・未公開資料の外部送信、本番作用、外部システムの削除や破壊的移行、第三者ライセンスの法的判断、対外公開です。これらに当たらない契約・実装・文書の変更は、案を実装して検証し、版と採否の記録を残して進めます。
 - 記述は原則として自然な日本語を用い、コード識別子や外部仕様名は原表記を維持します。
+
+## YI Constellationの上流要求研究（Draft参照）
+
+- [価値・要望・要件の往復整理](docs/yi-constellation/value-needs-requirements-2026-11-01.md)と[価値の実現・研究計画](docs/yi-constellation/value-realization-research-protocol-2026-11-01.md)は**提案/研究資料**であり、正式な製品仕様・新しいOwner判断ではありません。
+- 価値を扱うときは、誰のどの状況の価値か、本人の表明かAI推論か、実際に選べる機会か既に達成した結果かを区別します。直接・間接の当事者と、利用を望まない選択も考慮します。
+- 仮説・意味の**生成的探索**では候補と異論の豊かさを保ち、検証・反証・正式採否は別工程で行います。実外部作用には既存Owner/Host/Providerの権限・対象・結果確認を用います。
+- 開発の最初の経路は、必要な機能を既存の外部AIハーネス、通常ファイル、CLI/typed operationsから利用できるかを確かめます。TEIのAI-first/Headless-first/GUI-later設計は当該製品の境界を尊重し、TAIに新たな中央Agent・Hostを強制しません。
+- 価値を具体化した結果は既存のTAI #127/#165/#166/#167/#168、製品群/配布の #73/#74、各ProductのIssue/ADRへ**採用された差分のみ**接続してください。既存Draft PRの変更、未実施のPASS化、独自の統合受入Gateの新設を避けます。
+
+
+
+## 機密Rawと外部ハーネスの境界（提案・実保証ではない）
+
+- [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)を参照。SEI/SUI/SHO等の原文・人事/顧客情報・未レビュー構造は、明示許可された用途でだけ扱います。外部LLM、MCP、別Productへの入力には、**Source保持側のサーバで許可した投影・要約・照合結果**を優先し、RawやCredentialを作業ログ・Prompt・Issue/PR・テストfixtureへコピーしません。
+- 強い機密Profileでは、別OS identity、ACL、Filesystem/IPC/Networkの実行時制限等でRaw Storeへ直接アクセスできないことが必要です。`read-only`、client側SafeMode、Toolの注記、Agentの自己抑制だけを機密保護の根拠にしません。ローカルMCP/CLIの直接経路、外向き通信、Telemetry、ログ・一時ファイルも点検します。
+- 実効のOS隔離/egress制御・元Sourceの開示資格を確認できない場合、機密Profileを`unverified/unsupported`と記録し、合成非機密fixtureで作業を続けます。OS管理者の権限とProductの閲覧権限、秘密を渡した後の扱いは別に評価します。
 
 ## 初期実証の基準
 
 個人・組織・社会のいずれか一つの具体的な課題について、**情報の把握 → 解釈・判断 → 成果物または行動 → 結果の観測・更新**を追跡できる最小シナリオから始めます。複数基盤の接続数ではなく、一連の知的機能としての有用性と検証可能性を評価します。
+
+## 主要価値と過剰要件の多エージェントレビュー
+
+- [統括Issue #422](https://github.com/hat47x/tai-pleroma/issues/422)と[横断レビュー計画](docs/yi-constellation/product-value-scope-audit-2026-11-04.md)を参照。Product価値を起点に「中核／用途条件付き／研究候補／移譲・重複／簡素化・延期／未判定」を区別する。Issue数・探索領域を単純削減しない。
+- 作業の開始時に**repo・exact commit・Source位置・評価対象・利用可能なツール・未閲覧範囲**を記録する。製品別分析、独立反証、証拠監査、統合の担当を分け、できる場合は別モデル・別Contextを使う。同じ根拠を使った複数モデルの一致を独立の実証と呼ばない。
+- 対案には「機構なしの最小代替」と「機構を省くと破れる不変条件」の両方を示す。観測・設計案・合成実行・製品実接続・Owner受理を混同しない。Agentが触れられない/実行できない範囲はNOT RUNと明示する。
+- 標準CLI・通常ファイル・既存外部Harnessで足りるかを最初に検討し、必要なSkill/資料だけを選択して読む。Product OwnerのSource/Contract/Authorityを横断担当が編集・採用確定しない。同一ファイルの並行編集、未承認merge/close、機密Rawの外部送出は禁止する。
+
+
+## VA-00/VA-04：整合性監査と実証前のSource確認
+
+- [TAI #424](https://github.com/hat47x/tai-pleroma/issues/424)の文書整合性監査（別担当再点検を含む）と、[VA-04](evaluations/VA-04-evidence-readiness-preflight.md)の入力閉包/契約発見の事前確認は別工程。元ProductのIssue/ADR採否に踏み込まず、既存Lane・Draft PRと編集範囲が重なれば記録してOwnerへ返す。
+- TEIのvalidate/commands等の結果は、宣言されたSource、発見されたSource、実消費されたSource、Assertion対象、実権限・Consumer受領の範囲を示せる場合にのみその範囲でPASSとする。ok=trueや発見数、Case件数、Source fingerprintのみから全モデル検証済みと推定しない。
+- EKIのSuitabilityについて提案ADRと現行実装の結果値が異なる場合、どちらかを新しい横断標準として固定せず、Admission/Policy拒否とSuitability判定を分けて既存Ownerへ差し戻す。
+- **価値比較の停止はUser Job単位**：TEIのread-only CLI、実PG Command、Studio/SHO Authoring、Self-build G4は異なる観測対象。Source/Target/Effectの資格不足は該当Claimだけ未検証・停止とし、他Laneへ無関係な必須条件を波及させない。DB移行の正本切替、Plugin/Target選択、AI提案とHost実行権限は各Product Ownerへ委ね、局所CIやPR mergeをOwner受理に昇格しない。参照は[横断計画§16](docs/yi-constellation/product-value-scope-audit-2026-11-04.md)と[VA-02 §9](evaluations/VA-02-cross-product-first-run-protocol.md)。

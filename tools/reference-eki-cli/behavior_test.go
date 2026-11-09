@@ -16,14 +16,14 @@ func TestGoEnvironmentIsEnforcedForPinnedRun(t *testing.T) {
 	// without changing a file of the checkout. The fake prints the linked-in marker.
 	t.Setenv("GOFLAGS", "-ldflags=-X=main.marker=injected")
 	unpinned := Run(t.Context(), repo.Root)
-	if unpinned.ControlVersion != "eki-control injected" || unpinned.Toolchain.GoFlags != "-ldflags=-X=main.marker=injected" {
+	if unpinned.ControlVersion != "eki-control injected" || unpinned.Toolchain.GoFlags != "-ldflags" {
 		t.Fatalf("an unpinned run inherits and records the environment: %+v", unpinned)
 	}
 	pinned := run(t, repo.Root, Options{ExpectCommit: repo.Head})
 	if !pinned.Passed || pinned.ControlVersion != "eki-control dev" {
 		t.Fatalf("a pinned run must ignore the inherited GOFLAGS: %+v", pinned)
 	}
-	if pinned.Toolchain.GoFlags != "-ldflags=-X=main.marker=injected" || len(pinned.Toolchain.Enforced) != 3 {
+	if pinned.Toolchain.GoFlags != "-ldflags" || len(pinned.Toolchain.Enforced) != 3 {
 		t.Fatalf("the inherited value stays recorded next to the enforced ones: %+v", pinned.Toolchain)
 	}
 }
@@ -329,5 +329,20 @@ func TestReceiptKeepsExistingKeysAndSchema(t *testing.T) {
 	var old Receipt
 	if err := json.Unmarshal(stored, &old); err != nil || old.Schema != "tai.reference.eki-cli/v0" || old.Pin.Checked {
 		t.Fatalf("stored record: %+v %v", old, err)
+	}
+}
+
+func TestGoFlagNamesDropValuesAndPaths(t *testing.T) {
+	cases := map[string]string{
+		"":                                     "",
+		"-mod=readonly":                        "-mod",
+		"-modfile=/home/u/x/go.mod -tags=a,b":  "-modfile -tags",
+		"-ldflags=-X=main.v=1 -count=1 -v":     "-ldflags -count -v",
+		"-ldflags='-X main.v=/abs/path' -race": "-ldflags -race",
+	}
+	for raw, want := range cases {
+		if got := goFlagNames(raw); got != want {
+			t.Errorf("goFlagNames(%q) = %q, want %q", raw, got, want)
+		}
 	}
 }

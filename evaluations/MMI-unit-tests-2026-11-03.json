@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.mmi-unit-tests/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-03",
+  "host": "Windows with Node 24 and a CRLF checkout of the MMI repository",
+  "command": "npm.cmd run test:unit (in 03_Implement)",
+  "result": "OBSERVED",
+  "mmiCommit": "49ff7da3",
+  "observed": {
+    "tests": 1329,
+    "failed": 1,
+    "failureName": "hashed sample and kit text assets contain no CR after checkout",
+    "failureCause": "the checkout materialises documentation assets with CRLF on Windows, and the test asserts LF-only text"
+  },
+  "scope": "Records one run of MMI's product unit lane. The single failure comes from the CRLF checkout on this host, not from an assertion about product behaviour.",
+  "limitations": [
+    "The lane was run once.",
+    "The failure was classified from its name and the assertion diff, not by re-running with an LF checkout."
+  ]
+}

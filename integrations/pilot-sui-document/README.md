@@ -404,3 +404,335 @@ admin path:     PASS
 `verify_sui_reader.py`が、tenant別ディレクトリと運用者レベル（ルート）の両方から同じpayloadを読めることを検査します（[receipt](../../evaluations/records/SUI-TEI-admin-path-2026-11-02.json)）。
 
 HTTPサーバ・認証・実配備は未検証です。
+## 所属とcontainmentの整合（2026-11-03）
+
+SUIの`DocumentV1`は、`Island.cardIds`の包含と`Affiliation`が同じ組を指すと拒否します。合成層へ同じ規則を追加しました。
+
+- island.cardIdsに入っているCardのAffiliationは`AssemblyError`
+- パイロットのfixtureを、containmentとAffiliationが重複しない形へ変更
+
+## DocumentV1モデルでの検証（2026-11-03）
+
+`assembler/validate_against_sui.py`で、artifactをSUIのconsumerに読ませ、`DocumentV1`モデルで検証しました。
+
+```text
+documentId: doc-1
+cards: 2 / islands: 1 / affiliations: 1
+DocumentV1 valid: true
+```
+
+`transform`と時刻は呼び出し側から供給しています（[receipt](../../evaluations/records/SUI-TEI-documentv1-validation-2026-11-03.json)）。
+## 保存計画CLI（2026-11-03）
+
+`assembler/plan_save_cli.py`で、artifactと既存DocumentV1から保存計画を作れます。
+
+```sh
+python integrations/pilot-sui-document/assembler/plan_save_cli.py \
+  --sui-repo <SUI> --artifact evaluations/artifacts/documentv1-projection.json \
+  --existing <existing-documentv1.json> --out <receipt.json>
+```
+
+- 既定は非破壊マージ（`preserve_existing=True`）
+- 追加・変更・保持・警告をreceiptへ記録
+- 書き込みは行わない
+
+観測（1回）:
+
+```text
+action: update
+cardsAdded: 1 / cardsChanged: 1
+preservedCards: 1 / preservedIslands: 1
+warnings: 0 / writes: false
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json)
+### 保存契約の検証（2026-11-03）
+
+CLIは、保存計画のpayloadをSUIの保存経路と同じA1契約アダプタで検証します。
+
+- payloadに`schemaVersion`は不要（付与しない）`n- 既存文書はマージ前に`validate_existing_document`で検証する
+- 非破壊マージ後のpayloadが契約を通ることを確認
+- 観測: `contractValid: true`、`contractCards: 3`
+
+- [receipt](../../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)
+## 保存の実行（2026-11-03）
+
+`assembler/save_to_sui.py`で、投影artifactをSUIのHTTP APIへ保存します。
+
+- SUIアプリを一時SQLite DBで起動（`local-dev`、APIキーなし）
+- `PUT /docs/{doc_id}`で作成し、`GET`で読み戻し
+- 既存文書を検証したうえで非破壊マージし、`PUT`で更新
+- 最終`GET`まで確認
+
+観測:
+
+```text
+create: 200 / read: 200
+update: 200 / final read: 200
+cards: 2 / writes: true
+database: temporary SQLite
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-e2e-2026-11-03.json)
+- 本番DB・認証・実配備は未検証
+## 認証ありの保存（2026-11-03）
+
+`--api-key`を渡すと、業務APIキーを設定した状態で保存します。
+
+```text
+APIキーなしの PUT: 401
+正しい X-API-Key:  200（作成・読み戻し・更新・最終GET）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-auth-2026-11-03.json)
+- 一時SQLite、`local-dev`のまま
+- 本番認証・本番DB・実配備は未検証
+## 保存後の往復整合（2026-11-03）
+
+保存後の`GET`と投影を比較します。
+
+```text
+cardIds / cardText / cardPosition: 一致
+islandIds / islandCardIds:         一致
+edgeIds:                           一致
+roundTrip: true
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json)
+## 実サーバでの保存（2026-11-03）
+
+`assembler/serve_and_save.py`で、SUIをuvicorn上の実HTTPサーバとして起動して保存します。
+
+- 127.0.0.1の実ソケット、一時SQLite、APIキーあり
+- `PUT /docs/doc-1` 作成: 200
+- `GET` 読み戻し: 200、roundTrip: true
+- APIキーなしの`PUT`: 401
+
+- [receipt](../../evaluations/records/SUI-TEI-server-2026-11-03.json)
+- 本番DB・TLS・リバースプロキシ・実配備は未検証
+## 決定性（2026-11-03）
+
+`assembler/determinism_check.py`で、同じ入力の投影を2回実行し、artifactのdigestを比較します。
+
+```text
+runs: 2 / identical: true
+digest: 6d39148c...bacf34（両回一致）
+casesPassed: 21 / 21
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-determinism-2026-11-03.json)
+- 異なるホスト・ツールチェーン間の決定性は未検証
+## 保存計画と保存の統合（2026-11-03）
+
+`save_to_sui.py`は、既存文書がある場合に`plan_save(preserve_existing=True)`のpayloadをそのまま`PUT`へ渡します。
+
+観測（2回目の保存）:
+
+```text
+planAction: update
+planCardsAdded: 0 / planCardsChanged: 0
+planPreservedCards: 0 / planWarnings: 0
+roundTrip: true
+```
+
+同じ内容の再保存が差分ゼロで通ることを確認しました。
+
+- [receipt](../../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
+## 複数文書の保存（2026-11-03）
+
+`assembler/multi_save.py`で、同じ投影を10の文書IDへ保存します。
+
+```text
+documents: 10
+createdAll: true / readAll: true
+isolatedIds: true
+writes: true
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-multi-doc-2026-11-03.json)
+- 大量カード・同時書き込み・本番DBは未検証
+## 大量カードの保存（合成、2026-11-03）
+
+`assembler/large_save.py`は、パイロット投影へ合成Cardを追加して保存します。
+
+```text
+requestedCards: 300 / savedCards: 300
+putStatus: 200 / readStatus: 200
+payloadBytes: 22744
+syntheticCardsAdded: 298
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-large-doc-2026-11-03.json)
+- **合成fixture**であり、パイロットの実証ではない
+- 本番上限・同時書き込みは未検証
+## ETag前提条件（2026-11-03）
+
+`assembler/etag_check.py`で、保存経路の`If-Match`を確認します。
+
+```text
+ETagあり: true
+古い If-Match: 409
+一致する If-Match: 200
+前提条件なし: 200（local-devのlast-write-wins）
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-etag-2026-11-03.json)
+- SaaSプロファイルの前提条件必須動作、同時書き込みは未検証
+## Cardのsources（2026-11-03）
+
+Cardのoptionalな`sources`配列を投影へ追加しました。
+
+```text
+sui.card.record v8: id, text, x, y, claimType?, holdState?, textReviewed?, sources[]?
+```
+
+- 契約・fixture・SUI consumer・DocumentV1 payloadまで反映
+- 21ケースPASS、SUI unittest 21件PASS
+- `validate_against_sui`でDocumentV1妥当性を確認
+
+- [receipt](../../evaluations/records/SUI-TEI-sources-2026-11-03.json)
+- [validation](../../evaluations/records/SUI-TEI-sources-validation-2026-11-03.json)
+## DocumentのreadingOrder（2026-11-03）
+
+Documentのoptionalな`readingOrder`配列を投影へ追加しました。
+
+```text
+sui.document.record v5: id, title?, readingOrder[]?
+```
+
+- 契約・fixture・SUI consumer・DocumentV1 payloadまで反映
+- 21ケースPASS、SUI unittest 24件PASS
+- `validate_against_sui`でDocumentV1妥当性を確認
+
+- [receipt](../../evaluations/records/SUI-TEI-reading-order-2026-11-03.json)
+- [validation](../../evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json)
+## 追加フィールドの往復（2026-11-03）
+
+`sources`と`readingOrder`を含むartifactで保存し、読み戻しを比較しました。
+
+```text
+cardSources: true / readingOrder: true
+roundTrip: true（8項目すべて一致）
+planAction: update / 差分なし
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json)
+## 契約の版をartifactへ記録（2026-11-03）
+
+artifactの`source.contracts`へ`contractId`と`contractVersion`を記録するようにしました。
+
+```text
+card-record: sui.card.record v8 / cases 5
+document-record: sui.document.record v5 / cases 4
+```
+
+契約ファイルのハッシュは`sourceDigest`（生成候補ソースのdigest）とは別物なので、版の確認には`contractVersion`を使います。
+
+- [receipt](../../evaluations/records/SUI-TEI-contract-versions-2026-11-03.json)
+## 契約内容の照合（2026-11-03）
+
+artifactの`contractDigest`（契約JSONのLF正規化ハッシュ）と、契約ファイルを比較できます。
+
+```text
+contracts: 5
+mismatches: []
+allMatch: true
+```
+
+- [artifact flow receipt](../../evaluations/records/SUI-TEI-contract-digest-2026-11-03.json)
+- [digest check](../../evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json)
+## 一括実行（2026-11-03）
+
+`assembler/run_pilot.py`で、投影フロー・DocumentV1検証・契約digest照合を1コマンドで実行します。
+
+```text
+flow: 21ケースPASS
+schema: valid
+documentV1: valid
+contractDigests: allMatch
+result: PASS
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json)
+- 保存は含まない
+## 一括実行に保存を追加（2026-11-03）
+
+`--save`を付けると、検証の後に保存と往復整合まで実行します（既定は無効）。
+
+```text
+flow: 21ケースPASS
+schema: valid
+documentV1: valid
+contractDigests: allMatch
+save: roundTrip true / planAction update / 200
+result: PASS
+```
+
+- [receipt](../../evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json)
+- 一時SQLite・`local-dev`
+## artifactのJSON Schema（2026-11-03）
+
+`artifact.schema.json`を追加し、`assembler/validate_artifact_schema.py`でartifactを検証します。
+
+```text
+valid: true
+errors: []
+```
+
+- 検証する: envelope・契約メタデータ・要素の形
+- 検証しない: 参照整合性・DocumentV1
+- [receipt](../../evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json)
+
+## SUI Contextの選択集合・参照集合の実HTTP観測（2026-11-06・追加試験）
+
+この補助検査は、既存の`assembler/context_bundle_check.py`が**localhostのSUI local-dev APIを実際に呼ぶ**とき、`/context/bundle`の選択と参照の分離も観測する。対象はSUIの既存`A2-minimal-v1`**合成stub**であり、実ユーザーのカードや業務原資料の検索ではない。
+
+SUI側（確認版`09c240460017d0a4ecc6ab55582631d3e1a8b0a9`）の`models_context.py`と`test_context_bundle_routes.py`では、`reviewFilter=reviewedOnly`＋`safeModePolicy=strict`のとき、未レビューの`counter_opinion`は`selected`から除外されながら、`evidence`・`relations`に参照が残る。ここで検査するのは、**選択されたカード1件、参照のみ1件、未レビュー参照のみ1件、反証参照のみ1件**という固定stubの観測形と、既存のBundle hash決定性・preview拒否である。
+
+- `selected`に無いことは、元カードの不存在／検索未実行／Owner棄却を意味しない。`evidence`にIDがあることは、内容の利用・公開許可も意味しない。
+- `excludedReason=unreviewed_filtered`は**Bundle単位の理由**であり、どのcardIdがどの理由で除外されたかという個別判断ではない。
+- 集計は個別のcardIdや本文を標準出力・receiptに追加せず、**件数のみ**記録する。ただし、Sourceの参照IDそのものの開示可否はSUIのPolicy/Ownerが別途判断する。これは情報開示Policyの受入テストではない。
+- `synthetic=false`／`evidenceKind=real-execution`という既存receipt表示は「SUIのHTTPを実際に実行した」ことを示す。**入力stubの合成性は残る**。実資料の真正性、独立したSource revision一致、正式な意味受理、外部効果や利用者の認知増分を保証しない。
+- SUI/TAIの版固定契約は[別Draft #292](https://github.com/hat47x/tai-pleroma/pull/292)の担当であり、本変更では版固定・認可方式を拡張しない。既存の[YI候補可視性研究 Draft #443](https://github.com/hat47x/tai-pleroma/pull/443)とは、**こちらは実SUI HTTPの合成stubに限定した証拠取得**という分担とする。
+
+### 同一Attemptの応答等価性と、消費された入力の出所
+
+SUI #3389（配列順・locale）／#3390（lone surrogate）では、`bundleHash`を他言語で再計算できる条件が未決である。そのため、`context_bundle_check.py`は**同じ固定queryを2回HTTP実行した応答について**、`bundleHash`の文字列一致と**JSON応答全体の構造的等価性**を別のbooleanで確認する。ハッシュが同じでも候補・関係・根拠の応答が異なれば`FAIL`。これは**単一の実行環境内の再現性**であり、他言語互換のdigest検証、Source全数、権限・受理の証明ではない。
+
+特に従来のreceiptの`artifact.path/digest`はTAI側の参照資料を識別する**記録上のメタデータ**で、Context APIのrequest bodyには送っていない。消費したのは`query`とSUIの`A2-minimal-v1`合成stubである。この区別を`artifactUsage`と`consumedInput`に追記し、記録上のdigestから「元資料を検査した」と主張しない。`host`には実行時のOSを記録し、固定のWindowsラベルを用いない。
+
+PR CIには、TAIの単体試験とは独立に、公開SUIリポジトリのコミット`a828a0154db3201322ed27d006c035d9784866a8`を固定チェックアウトし、SUI backendの`requirements-test.lock`で環境構築して**実localhost HTTPを実行する専用job**を追加する。SUI外部API/本番DBへのアクセス、LLM利用、外部公開を行わず、receiptは一時領域へ保存しActions artifactとして自動アップロードしない。CI成功時の上限は「固定合成stubで二応答の等価性とselected/reference-onlyの形を観測した」まで。環境依存や実運用のPolicy・Owner受理は未実証のまま。
+
+### 追加対照：集約条件を変えても、未レビューの反証を自動採用しない
+
+既存SUIの`ContextQuery.reviewFilter`は`reviewedOnly`と`includeUnreviewed`を許す一方、`safeModePolicy`は`strict`で固定する。この組合せは、**「候補も含めて検討したい」という要求と「未レビュー本文を自動選択しない」という制約を別々に実証できる**最小の例である。
+
+`A2-minimal-v1`固定stubについて同一local-devサーバーで以下の二条件を実HTTP実行する。
+
+| 検査対象 | reviewedOnly＋strict | includeUnreviewed＋strict |
+| --- | --- | --- |
+| `selected` | レビュー済みカード1件のみ | SafeModeによりレビュー済みカード1件のみ |
+| `evidence`／`relations` | 未レビューの反証カードへの参照を残す | 同じ参照を残す |
+| `excludedReason` | `unreviewed_filtered` | `safe_mode_unreviewed_text` |
+| `queryCanonicalHash` | 条件Aの値 | **条件Bの異なる値**（同じ版／Runtimeで確認） |
+
+TAIの`compare_strict_filter_profiles`は、両方の固定stub応答を個別検査した後、`selected/evidence/relations/contradictions`が等しいこと、異なるクエリハッシュと除外理由が返ったことを**本文やcardIdを出力せず**確認する。未レビュー候補の選択、反証メタデータの脱落、異なるクエリへのハッシュ流用があれば`FAIL`。これらは固定stub用の期待値であり、全Documentでの同一性を要求する汎用API契約ではない。
+
+この対照から**未レビュー本文の自動選択が観測されない**ことは分かっても、`evidence.cardId`等の存在メタデータを、どのAudienceに開示してよいかは分からない。Source保持側の現在の権限と利用目的による開示判断は、SUI Ownerと既存TAI #232の別Gateに保つ。`reviewFilter=includeUnreviewed`自体を「利用者の正式な承認」と誤認しない。
+
+最初の一回は固定合成stubの**操作条件を変えた対照**として扱う。成果が確認できた後、初めて対象Sourceの同一Revisionと許可範囲を固定した実Document研究へ進む。CSW／64卦の発見力や実利用者の認知負担改善をこの差分で実証したことにはしない。
+
+### 試験と受入境界
+
+```sh
+cd integrations/pilot-sui-document/assembler
+python -m unittest -v test_context_bundle_visibility.py
+# SUIのローカル実行環境が利用可能な場合のみ：
+python context_bundle_check.py --sui-repo <SUI checkout> \
+  --artifact <TAI>/evaluations/artifacts/scn-003-document.json \
+  --out <private receipt file>
+```
+
+前者は**pure Pythonの合成応答による単体テスト**。後者はSUI実Serverへのread-only POST（構造検査のみ）であり、SUI Python環境、SQLite等の実行可能な環境が必要になる。単体テストの成功だけで後者を実行済みとはしない。
+
+観測が異なれば`result=FAIL`で停止し、個別カードを自動採用したり推奨・決定に昇格させたりしない。正しい合法な候補除外が起きたときに無条件で障害と呼ばないため、検査は**固定stubの期待値**に限る。生きたSUI Document/Cardを比較する研究には、同一Source revisionと許可された参照範囲を別途確定する必要がある。

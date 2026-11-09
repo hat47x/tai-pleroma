@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.sui-provision/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with SUI in local-dev profile and an admin key",
+  "command": "python integrations/pilot-sui-document/assembler/provision_user_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-provision-2026-11-03.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 201,
+    "provisioned": true,
+    "refs": true,
+    "repeatSameUser": true,
+    "anonymousStatus": 401,
+    "auditEvents": 3
+  },
+  "scope": "Provisions one synthetic user through the admin API, repeats the call, refuses anonymous callers and reads the admin audit trail. It does not connect an identity provider."
+}

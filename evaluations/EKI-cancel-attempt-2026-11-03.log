@@ -1,0 +1,2 @@
+﻿time=2026-11-03T15:34:30.325+09:00 level=INFO msg=request method=POST path=/v1/tasks/tsk_8559e20d47e5a60f39ec73c83e9cda42/cancel status=202 principal=tai duration_ms=8
+time=2026-11-03T15:34:41.530+09:00 level=INFO msg=request method=GET path=/v1/tasks/tsk_8559e20d47e5a60f39ec73c83e9cda42 status=200 principal=tai duration_ms=0

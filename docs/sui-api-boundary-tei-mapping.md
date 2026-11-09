@@ -101,3 +101,102 @@ TAI側の記録: [receipt](../evaluations/records/SUI-TEI-adapter-2026-11-02.jso
 - 実サーバ・実配備・tenant面のHTTP経路は未検証
 
 TAI側の記録: [receipt](../evaluations/records/SUI-TEI-http-route-2026-11-02.json)
+#### 実認可の確認（2026-11-02）
+
+`SUI_ADMIN_API_KEY`を設定した状態で、管理経路をTestClientで確認しました（[sui-sensemaking #3372](https://github.com/hat47x/sui-sensemaking/pull/3372)、`b56d78f`）。
+
+- 正しい`X-Admin-Api-Key`で200、artifactをverbatim返す
+- 無認証は401
+- DB依存はoverrideで外しており、実DB・実サーバは未検証
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-auth-2026-11-02.json)
+### tenant面のHTTP確認（2026-11-03）
+
+tenant面の`/docs/{doc_id}/epistemic/projection`をTestClientで確認しました（[sui-sensemaking #3375](https://github.com/hat47x/sui-sensemaking/pull/3375)、`bee69d0`）。
+
+- binding経由で200、artifactをverbatim返す
+- agent credentialは403 `agent_route_not_enabled`
+- bindingなしは503 `tei_reference_unavailable`
+- 認可関数はテスト用に差し替えており、実セッション・実DBは未検証
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-tenant-route-2026-11-03.json)
+### 保存計画（2026-11-03）
+
+`plan_save`を追加しました（[sui-sensemaking #3376](https://github.com/hat47x/sui-sensemaking/pull/3376)、`47c6479`）。
+
+- 投影と既存DocumentV1を比較し、追加・削除・変更を返す
+- 投影が持たない既存フィールド（`critiqueInputs`、`transform`、`narratives`など）は失われるため警告する
+- 書き込みは行わない
+- unittest 4件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-2026-11-03.json)
+### 非破壊マージ（2026-11-03）
+
+`merge_preserving_existing`を追加しました（[sui-sensemaking #3377](https://github.com/hat47x/sui-sensemaking/pull/3377)、`de50696`）。
+
+- 投影が持たないdocument/card/islandのフィールドを保持
+- 投影にない既存Card/Islandも保持
+- `createdAt`は既存値を維持
+- 書き込みは行わない
+- unittest 5件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-merge-2026-11-03.json)
+### 保存計画への非破壊マージ統合（2026-11-03）
+
+`plan_save`へ`preserve_existing`を追加しました（[sui-sensemaking #3378](https://github.com/hat47x/sui-sensemaking/pull/3378)、`56133c7`）。
+
+- 既存Card/Islandと投影外フィールドを保持した計画を作る
+- 保持時は削除警告を出さず、`preserved_cards`/`preserved_islands`で示す
+- 書き込みは行わない
+- unittest 6件がPASS
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json)
+### 保存契約（A1）の通過確認（2026-11-03）
+
+保存planのpayloadを、保存経路と同じ`_validate_document_payload_with_a1_contract`で検証しました。
+
+- payloadに`schemaVersion`は不要（[sui-sensemaking #3380](https://github.com/hat47x/sui-sensemaking/pull/3380)で追加を取り消し）
+- 非破壊マージ後のpayloadが契約を通る（`contractValid: true`）`n- 当初の422は、既存文書の`critiqueInputs`が不正だったことが原因`n- 対策として、マージ前に既存文書を`DocumentV1`で検証する（[sui-sensemaking #3381](https://github.com/hat47x/sui-sensemaking/pull/3381)、`fb22b65`）
+- 保存・API呼び出しは未実施
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-contract-2026-11-03.json)
+### 保存の実行（2026-11-03）
+
+`save_to_sui.py`で、投影から作成・読み戻し・非破壊マージによる更新までを通しました。
+
+- `PUT /docs/doc-1` 作成: 200
+- `GET` 読み戻し: 200
+- 既存検証 + マージ + `PUT`: 200
+- 最終`GET`: 200
+- 一時SQLite、`local-dev`、APIキーなし
+
+本番DB・認証・実配備は未検証です。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-e2e-2026-11-03.json)
+### 認証ありの保存（2026-11-03）
+
+業務APIキーを設定した状態で、同じ保存経路を確認しました。
+
+- APIキーなし: 401
+- `X-API-Key`あり: 作成・読み戻し・更新・最終GETがすべて200
+- 一時SQLite、`local-dev`
+
+本番認証・本番DB・実配備は未検証です。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-auth-2026-11-03.json)
+### 保存後の往復整合（2026-11-03）
+
+保存後に読み戻したDocumentV1と投影を比較し、CardのID・本文・座標、IslandのID・`cardIds`、EdgeのIDが一致することを確認しました（`roundTrip: true`）。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json)
+### 実サーバでの保存（2026-11-03）
+
+SUIをuvicornで起動し、実ソケット経由で保存を確認しました。
+
+- 作成・読み戻し: 200、`roundTrip: true`
+- APIキーなし: 401
+- 一時SQLite、`local-dev`
+
+本番DB・TLS・リバースプロキシ・実配備は未検証です。
+
+TAI側の記録: [receipt](../evaluations/records/SUI-TEI-server-2026-11-03.json)

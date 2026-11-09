@@ -1,0 +1,300 @@
+{
+  "schema": "tai.reference.tei-document-type-coverage/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python 3.12 reading SUI's models.py annotations and the pilot contracts",
+  "command": "python integrations/pilot-sui-document/assembler/document_type_coverage_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-document-types-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "fields": {
+      "DocumentV1": {
+        "id": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "title": {
+          "annotation": "str | None",
+          "innerType": "str",
+          "expected": "std.text",
+          "declared": "std.text",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "readingOrder": {
+          "annotation": "list[str] | None",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": true,
+          "annotationCollection": true,
+          "collectionMatches": true
+        }
+      },
+      "Card": {
+        "id": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "text": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.text",
+          "declared": "std.text",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "x": {
+          "annotation": "float",
+          "innerType": "float",
+          "expected": "std.decimal",
+          "declared": "std.decimal",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "y": {
+          "annotation": "float",
+          "innerType": "float",
+          "expected": "std.decimal",
+          "declared": "std.decimal",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "claimType": {
+          "annotation": "Literal['fact', 'claim', 'hypothesis', 'unknown'] | None",
+          "innerType": "Literal['fact', 'claim', 'hypothesis', 'unknown']",
+          "expected": "std.code",
+          "declared": "std.code",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "holdState": {
+          "annotation": "Literal['held', 'pending', 'shelved'] | None",
+          "innerType": "Literal['held', 'pending', 'shelved']",
+          "expected": "std.code",
+          "declared": "std.code",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "textReviewed": {
+          "annotation": "bool | None",
+          "innerType": "bool",
+          "expected": "std.boolean",
+          "declared": "std.boolean",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "sources": {
+          "annotation": "list[str] | None",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": true,
+          "annotationCollection": true,
+          "collectionMatches": true
+        }
+      },
+      "Island": {
+        "id": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "title": {
+          "annotation": "str | None",
+          "innerType": "str",
+          "expected": "std.text",
+          "declared": "std.text",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "cardIds": {
+          "annotation": "list[str]",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": true,
+          "annotationCollection": true,
+          "collectionMatches": true
+        }
+      },
+      "Edge": {
+        "id": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "fromId": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "toId": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.identifier",
+          "declared": "std.identifier",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "type": {
+          "annotation": "str",
+          "innerType": "str",
+          "expected": "std.code",
+          "declared": "std.code",
+          "matches": true,
+          "optional": false,
+          "annotationOptional": false,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "fromKind": {
+          "annotation": "Literal['card', 'island'] | None",
+          "innerType": "Literal['card', 'island']",
+          "expected": "std.code",
+          "declared": "std.code",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        },
+        "toKind": {
+          "annotation": "Literal['card', 'island'] | None",
+          "innerType": "Literal['card', 'island']",
+          "expected": "std.code",
+          "declared": "std.code",
+          "matches": true,
+          "optional": true,
+          "annotationOptional": true,
+          "many": false,
+          "annotationCollection": false,
+          "collectionMatches": true
+        }
+      }
+    },
+    "primitiveMismatches": {
+      "DocumentV1": [],
+      "Card": [],
+      "Island": [],
+      "Edge": []
+    },
+    "optionalMismatches": {
+      "DocumentV1": [],
+      "Card": [],
+      "Island": [],
+      "Edge": []
+    },
+    "collectionMismatches": {
+      "DocumentV1": [],
+      "Card": [],
+      "Island": [],
+      "Edge": []
+    },
+    "unexpectedAnnotations": {
+      "DocumentV1": [],
+      "Card": [],
+      "Island": [],
+      "Edge": []
+    },
+    "allPrimitivesMatch": true,
+    "allCollectionsMatch": true,
+    "noUnexpectedAnnotations": true,
+    "knownOptionalGap": {
+      "DocumentV1": [],
+      "Card": [],
+      "Island": [],
+      "Edge": []
+    }
+  },
+  "scope": "For every name the contract covers, reads the SUI annotation, reduces it to its inner type, and compares the expected primitive, cardinality and optionality with the declared ones. It does not check value ranges or semantics. Edge.fromKind/toKind are Optional in SUI but required in the contract, which the probe records as a known gap rather than a defect."
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "tai.reference.sui-response-headers/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/response_headers_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-headers-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "readHeaders": {
+      "nosniff": "nosniff",
+      "frameOptions": "DENY",
+      "cacheControl": null,
+      "vary": null,
+      "requestId": "35e4976c32574d5b9e816cd74a851d7e"
+    },
+    "unauthorizedHeaders": {
+      "nosniff": "nosniff",
+      "frameOptions": "DENY",
+      "cacheControl": null,
+      "vary": null,
+      "requestId": "08de1635f4a44354a3155deeea65f3d3"
+    },
+    "unauthorizedBodyHasRequestId": true,
+    "traceEchoed": "caller-supplied-id",
+    "unsafeTraceReplaced": "044248d6c5324020ae73bedb1fa89d10",
+    "agentHeaders": {
+      "nosniff": "nosniff",
+      "frameOptions": "DENY",
+      "cacheControl": "private, no-store",
+      "vary": "Sui-Sensemaking-Agent-Credential, Sui-Sensemaking-Agent-Bearer",
+      "requestId": "2681731e8a4a4f3ab1b6de7e82b410cc"
+    },
+    "agentStatus": 503
+  },
+  "scope": "Reads the security headers on success and 401 responses, checks that an inbound x-trace-id is echoed or replaced when unsafe, and checks the agent-specific cache headers. It does not test a reverse proxy or the browser CSRF guard."
+}

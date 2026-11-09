@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.sui-saas-identity/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12, SUI modules and models imported from the local checkout, an in-memory SQLite database, and a local JWKS stub",
+  "command": "python integrations/tools/sui_saas_identity_contract.py --sui-src <SUI>/03_Implement/backend/src",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "userResolved": true,
+      "tenantResolved": true,
+      "providerResolved": true,
+      "subjectResolved": true,
+      "callbackStatus": true,
+      "sessionCookie": true,
+      "sessionPersisted": true,
+      "sessionPrincipal": true,
+      "sessionTenant": true
+    },
+    "tenantId": "tenant-a"
+  },
+  "scope": "Runs the callback with a broker-issued RS256 token through SUI's JWKS, issuer/audience, subject and tenant-claim checks, then records that a session cookie is minted and persisted to the configured store. The store is a recording double, not the product's durable store."
+}

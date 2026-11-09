@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.sui-saas-login-contract/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12 and SUI modules imported from the local checkout",
+  "command": "python integrations/tools/sui_saas_login_contract.py --sui-src <SUI>/03_Implement/backend/src",
+  "result": "PASS",
+  "observed": {
+    "checks": {
+      "status": true,
+      "authorizeEndpoint": true,
+      "responseType": true,
+      "clientId": true,
+      "redirectUri": true,
+      "scope": true,
+      "statePresent": true,
+      "pkceMethod": true,
+      "pkceChallenge": true,
+      "pendingCookie": true,
+      "pendingHttpOnly": true,
+      "pendingSecure": true
+    },
+    "authorizeParams": {
+      "client_id": "sui-client",
+      "code_challenge": "aCaqqL0IeMpgXaM7kHguUbkhRLW7blLgvDs9enGjFiE",
+      "code_challenge_method": "S256",
+      "redirect_uri": "https://sui.example/session/callback",
+      "response_type": "code",
+      "scope": "openid",
+      "state": "KwEBlwGpiiXuWZO4ZSlOxHfeYtGtC_TtvdKwQi1K8PI"
+    },
+    "redirectDigest": "sha256:c465cc93dc54dab5a07aaa1605ada8c3d511c01d03c389159cf05d486875c0e4"
+  },
+  "scope": "Calls SUI's login initiation with test settings and checks the redirect parameters and pending cookie. No broker, callback, token exchange, or session issuance is exercised."
+}

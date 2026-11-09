@@ -11,8 +11,9 @@ import (
 )
 
 type SUILink struct {
-	Passed      bool     `json:"passed"`
-	LinkedCards []string `json:"linkedCards"`
+	Passed         bool     `json:"passed"`
+	LinkedCards    []string `json:"linkedCards"`
+	DocumentDigest string   `json:"documentDigest"`
 }
 
 type Receipt struct {
@@ -22,6 +23,7 @@ type Receipt struct {
 	PublicationBlocked bool     `json:"publicationBlocked"`
 	Passed             bool     `json:"passed"`
 	Reason             string   `json:"reason,omitempty"`
+	Pin                PinCheck `json:"pin"`
 	Notes              []string `json:"notes"`
 }
 
@@ -31,6 +33,12 @@ func digest(raw []byte) string {
 }
 
 func Link(link SUILink, artifact []byte) Receipt {
+	return LinkPinned(link, artifact, Options{})
+}
+
+// LinkPinned is Link with an opt-in expectation about the SUI link receipt. It compares
+// what the receipt file declares; it does not show that the file is genuine.
+func LinkPinned(link SUILink, artifact []byte, options Options) Receipt {
 	text := string(artifact)
 	receipt := Receipt{
 		Schema: "tai.reference.sui-draft-link/v0", ArtifactDigest: digest(artifact),
@@ -39,9 +47,18 @@ func Link(link SUILink, artifact []byte) Receipt {
 			"意味の受理・公開承認・Authorityを検証しない。",
 		},
 	}
+	pin, reason := evaluatePin(options, link)
+	receipt.Pin = pin
 	if !link.Passed || len(link.LinkedCards) != 5 {
 		receipt.Reason = "SUI link is not a passed 5-card link"
 		return receipt
+	}
+	if reason != "" {
+		receipt.Reason = reason
+		return receipt
+	}
+	if pin.Checked {
+		receipt.Notes = append(receipt.Notes, "版固定の一致が示すのは、link receiptが申告したdocumentDigestが期待と合ったことだけで、SUIの正しさ・コードの同一性・認可は示さない。receiptファイルの改ざんは検出しない。revisionの確認はlink段で行う。")
 	}
 	for _, id := range link.LinkedCards {
 		if !strings.Contains(text, "| "+id+" |") {
@@ -81,7 +98,13 @@ func main() {
 	linkPath := flag.String("sui-link", "", "SUI link receipt")
 	artifactPath := flag.String("artifact", "", "D-04 artifact")
 	outPath := flag.String("out", "", "write receipt")
+	expectDigest := flag.String("expect-document-digest", os.Getenv("TAI_SUI_EXPECT_DOCUMENT_DIGEST"), "pin: sha256:<hex> the SUI link receipt documentDigest must have (env TAI_SUI_EXPECT_DOCUMENT_DIGEST)")
 	flag.Parse()
+	options := Options{ExpectDocumentDigest: *expectDigest}
+	if err := options.validate(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
 	if *linkPath == "" || *artifactPath == "" {
 		fmt.Fprintln(os.Stderr, "-sui-link and -artifact are required")
 		os.Exit(2)
@@ -101,7 +124,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	receipt := Link(link, artifact)
+	receipt := LinkPinned(link, artifact, options)
 	encoded, _ := json.MarshalIndent(receipt, "", "  ")
 	encoded = append(encoded, '\n')
 	if *outPath != "" {

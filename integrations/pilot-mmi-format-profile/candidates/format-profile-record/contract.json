@@ -1,0 +1,139 @@
+{
+    "schema":  "tei.reference.generator-contract/v0",
+    "id":  "mmi.format-profile.record",
+    "version":  "1",
+    "status":  "reference-local",
+    "note":  "MMI Format Profile v1の平坦なヘッダ部分をrecordとして写す参照用の契約。features・sourceEvidence・provenanceの元項目までを含み、approvalは対象外。",
+    "inputs":  [
+                   {
+                       "attribute":  "mmi.format_profile.schema_version",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.profile_id",
+                       "primitive":  "std.identifier"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.label",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.purpose",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.status",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.feature_version",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.source_profile_id",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.features",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.source_evidence",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.source_kind",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.source_digest",
+                       "primitive":  "std.text"
+                   },
+                   {
+                       "attribute":  "mmi.format_profile.generation_method",
+                       "primitive":  "std.text"
+                   }
+               ],
+    "output":  {
+                   "primitive":  "std.text"
+               },
+    "projection":  {
+                       "kind":  "record",
+                       "fields":  [
+                                      {
+                                          "name":  "schemaVersion",
+                                          "input":  "schemaVersion",
+                                          "attribute":  "mmi.format_profile.schema_version",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "id",
+                                          "input":  "id",
+                                          "attribute":  "mmi.format_profile.profile_id",
+                                          "primitive":  "std.identifier"
+                                      },
+                                      {
+                                          "name":  "label",
+                                          "input":  "label",
+                                          "attribute":  "mmi.format_profile.label",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "purpose",
+                                          "input":  "purpose",
+                                          "attribute":  "mmi.format_profile.purpose",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "status",
+                                          "input":  "status",
+                                          "attribute":  "mmi.format_profile.status",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "featureVersion",
+                                          "input":  "featureVersion",
+                                          "attribute":  "mmi.format_profile.feature_version",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "sourceProfileId",
+                                          "input":  "sourceProfileId",
+                                          "attribute":  "mmi.format_profile.source_profile_id",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "features",
+                                          "input":  "features",
+                                          "attribute":  "mmi.format_profile.features",
+                                          "primitive":  "std.text",
+                                          "many":  true
+                                      },
+                                      {
+                                          "name":  "sourceEvidence",
+                                          "input":  "sourceEvidence",
+                                          "attribute":  "mmi.format_profile.source_evidence",
+                                          "primitive":  "std.text",
+                                          "many":  true
+                                      },
+                                      {
+                                          "name":  "sourceKind",
+                                          "input":  "sourceKind",
+                                          "attribute":  "mmi.format_profile.source_kind",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "sourceDigest",
+                                          "input":  "sourceDigest",
+                                          "attribute":  "mmi.format_profile.source_digest",
+                                          "primitive":  "std.text"
+                                      },
+                                      {
+                                          "name":  "generationMethod",
+                                          "input":  "generationMethod",
+                                          "attribute":  "mmi.format_profile.generation_method",
+                                          "primitive":  "std.text"
+                                      }
+                                  ]
+                   }
+}

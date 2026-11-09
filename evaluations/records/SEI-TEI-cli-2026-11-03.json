@@ -1,0 +1,34 @@
+{
+  "schema": "tai.reference.tei-sei-cli/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with a locally built sei CLI and a temporary record store",
+  "command": "python integrations/tools/sei_cli_record.py",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/sei-decision-projection.json"
+  },
+  "seiCommit": "fbfa9840903ce1f44321af06e3c57fcfa26e112b",
+  "observed": {
+    "checks": {
+      "init": true,
+      "add": true,
+      "resume": true,
+      "export": true,
+      "verify": true,
+      "snapshotDigest": true
+    },
+    "recordId": "decision-1",
+    "snapshotDigest": "sha256:60a5b4ad656100dbd74b4dee5b8d24945749a947a67d8e1abd82671109ea06d5",
+    "resume": [
+      "Store sei-store-2026-11-09-6e2133cf: 1 records",
+      "Unresolved scope: recognized Decision.unresolved_refs only; not a case-wide inventory.",
+      "0 entries; 0 distinct logical references. Case completeness: not assessed.",
+      "Not verified by this view: the responsible party's Authority; human confirmation; whether a record comes from a real object or a synthetic fixture. A responsible party is shown as recorded.",
+      "Snapshot SHA-256: sha256:60a5b4ad656100dbd74b4dee5b8d24945749a947a67d8e1abd82671109ea06d5"
+    ]
+  },
+  "scope": "Records the projected decision through SEI's CLI, reads the snapshot, exports a bundle and verifies it. The store is temporary and no policy gate is exercised."
+}
