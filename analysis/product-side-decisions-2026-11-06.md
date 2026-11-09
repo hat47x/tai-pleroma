@@ -160,3 +160,19 @@ EKIには`internal/control/resultacceptance`があり、**EKIの`internal/contro
 | 6. `readOnly`の非伝播 | 解決: `enforce_access`が`decision.read_only`を見ない（潜在的） |
 
 **「製品の判断待ち」は残っていない。** 残るのは実施項目（1の配線、6の強制点）と、TEI側3論点の判断である。
+
+## 追記（2026-11-06、独立オラクルで見つかった8件目）
+
+SUI自身のモデルを検証に使う検査（[receipt](../evaluations/records/TEI-independent-oracle-2026-11-06.json)）で、**SUIの内部矛盾**が出た。
+
+| 対象 | 挙動 |
+| --- | --- |
+| `models.Edge` | `fromKind`/`toKind`は`Optional`（`None`を許す） |
+| `documentv1_projection.from_artifact` | `edge.fromKind must be a non-empty string`で**拒否する** |
+
+- パイロットのEdge契約v4は端点種別を任意にした（TEI側の投影では省略できる）。その出力は**SUIのモデルでは妥当なのに、SUIの消費側は受け取れない**
+- つまり `optional` の宣言と消費側の要求が食い違っている。**製品内部の不整合**であり、TAIの契約の問題ではない
+- 影響: TAIが「投影から合成まで一貫」と書いた範囲は、**TAIの合成層までで、SUIの消費側は通っていない**。この点は過去の記述の限界として記録する
+
+TAI側でできること: SUIの側でどちらに揃えるかが決まった後の再観測。``
+

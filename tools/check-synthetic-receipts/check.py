@@ -199,6 +199,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-decimal-fidelity-2026-11-06.json",
     "evaluations/records/TEI-receipt-consistency-2026-11-06.json",
     "evaluations/records/TEI-projection-strategy-2026-11-06.json",
+    "evaluations/records/TEI-independent-oracle-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -520,6 +521,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "TEI-independent-oracle" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("unexpectedInvalid")
+                or observed.get("knownMismatchesStillReproduce") is not True
+            ):
+                errors.append(f"SUI model mismatch set changed; re-measure: {relative}")
         if "TEI-projection-strategy" in relative:
             observed = data.get("observed", {})
             if (

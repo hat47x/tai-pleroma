@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Python 3.12 reading the receipt directory",
   "command": "python integrations/tools/receipt_consistency_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-receipt-consistency-2026-11-06.json",
   "result": "PASS",
@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "passReceiptsChecked": 193,
+    "passReceiptsChecked": 195,
     "expectedNegative": {
       "TEI-meaning-change-required-2026-11-06.json": [
         "coverageBeforeFixtureEdit/passed"

@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with the TEI reference generator selection tool built by go run",
   "command": "python integrations/tools/tei_contract_decode_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-decode-divergence-2026-11-06.json",
   "result": "PASS",

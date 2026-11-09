@@ -17,15 +17,15 @@
     "projectedSubmissionRejected": false,
     "firstExitCode": 0,
     "secondExitCode": null,
-    "taskId": "tsk_6dec04f66bdbe26a48de0aba8b907dbf",
-    "attemptId": "atm_e977f10d34d9773991bfa532ee5efa3e",
+    "taskId": "tsk_42fb35568b01d975f5c85701142f55d1",
+    "attemptId": "atm_afffe1a2e7d18fd2db4059ff6582954d",
     "claimDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
     "logTail": [
       "=== RUN   TestTAIProjectedTaskExecution",
-      "    zz_tai_projection_e2e_test.go:134: TAI_RESULT task=tsk_6dec04f66bdbe26a48de0aba8b907dbf attempt=atm_e977f10d34d9773991bfa532ee5efa3e claim=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
-      "--- PASS: TestTAIProjectedTaskExecution (2.65s)",
+      "    zz_tai_projection_e2e_test.go:134: TAI_RESULT task=tsk_42fb35568b01d975f5c85701142f55d1 attempt=atm_afffe1a2e7d18fd2db4059ff6582954d claim=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+      "--- PASS: TestTAIProjectedTaskExecution (3.98s)",
       "PASS",
-      "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t12.322s"
+      "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t14.977s"
     ]
   },
   "scope": "Submits TAI's projected TaskRequest through EKI's Client API. The policy-aligned first submission completed without a retry. The test uses EKI's TEST PROFILE; a ResultClaim in this test does not establish real resource consumption/cost, delivered Consumer Body, production authority, or Worker Protocol compatibility."
