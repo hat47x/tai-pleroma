@@ -127,6 +127,15 @@ projection kind "record" + long-running-template
 
 **「long-runningが無い」のではなく、「long-runningで動く投影の生成戦略が無い」**ということです。
 
+**TEI側の試験と文書にも、この組み合わせを扱った記述はありません。** 2026-11-06時点の`tei-wt-r2`（`2d0b09b13`）で次を検索し、いずれも0件でした。
+
+| 対象 | 検索 | 結果 |
+| --- | --- | --- |
+| `*_test.go`（1629件） | `projection.*oneshot`、`oneshot.*projection`、`projection.*long-running`、`long-running.*projection` | 0件 |
+| `docs/`・`plan/`の`*.md` | 同上（単語間の任意語を許す形） | 0件 |
+
+つまり、この結合はコードの中に暗黙にあり、試験でも文書でも宣言されていません。**意図的な制約として文書化されているわけではない**ので、「設計どおりか」ではなく「組み合わせが検証されていない」という論点として扱うのが正確です。
+
 **論点**:
 
 1. 生成テンプレートをprocess modelごとに用意するか（one-shot用とlong-running用で別のmainを生成する）。
