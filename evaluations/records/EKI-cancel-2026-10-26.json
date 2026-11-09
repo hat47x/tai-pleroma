@@ -19,5 +19,6 @@
   "statusReadStatus": 200,
   "taskStatus": "cancelled",
   "terminalCode": "CANCELLED",
-  "resultStatus": 501
+  "resultStatus": 501,
+  "publicationAllowed": false
 }

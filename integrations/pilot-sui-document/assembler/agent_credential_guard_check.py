@@ -1,5 +1,6 @@
 """Check SUI's rule for agent credentials that run without audit export."""
 
+import argparse
 import json
 import os
 import subprocess
@@ -40,7 +41,10 @@ def run_probe(env):
 
 
 def main():
-    sui = Path(os.environ.get("SUI_REPO", r"D:\GIT\hat47x\sui-wt-latest")) / "03_Implement/backend/src"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sui-repo", default=os.environ.get("SUI_REPO", r"D:\GIT\hat47x\sui-wt-latest"))
+    args = parser.parse_args()
+    sui = Path(args.sui_repo) / "03_Implement/backend/src"
     base = {
         **os.environ,
         "SUI_RUNTIME_PROFILE": "local-dev",
@@ -68,7 +72,7 @@ def main():
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
         "host": "Windows with SUI in local-dev profile",
-        "command": "python integrations/pilot-sui-document/assembler/agent_credential_guard_check.py",
+        "command": "python integrations/pilot-sui-document/assembler/agent_credential_guard_check.py --sui-repo <SUI>",
         "result": "PASS" if passed else "FAIL",
         "observed": checks,
         "scope": "Calls SUI's agent_audit_is_not_exported rule with agent credentials enabled, once without audit export (expects True) and once with audit export plus SafeMode export (expects False). It reads the rule, not the startup log.",

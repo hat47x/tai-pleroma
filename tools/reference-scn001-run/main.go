@@ -15,6 +15,15 @@ import (
 	"time"
 )
 
+// PinSummary is what the run keeps of a component tool's own version-pin result: whether
+// an expectation was given and what the tool concluded. The tool's receipt carries the
+// details (expected and actual values). A match shows that the checkout and toolchain
+// agreed with the expectation; it does not show the product is correct.
+type PinSummary struct {
+	Checked bool   `json:"checked"`
+	Result  string `json:"result"`
+}
+
 type MMIComponent struct {
 	Passed                bool              `json:"passed"`
 	Server                string            `json:"server,omitempty"`
@@ -27,6 +36,7 @@ type MMIComponent struct {
 	SourceDigestBefore    string            `json:"sourceDigestBefore,omitempty"`
 	SourceDigestAfter     string            `json:"sourceDigestAfter,omitempty"`
 	SelectedDigests       map[string]string `json:"selectedDigests,omitempty"`
+	Pin                   *PinSummary       `json:"pin,omitempty"`
 }
 
 type DecisionView struct {
@@ -49,6 +59,7 @@ type SEIComponent struct {
 	HumanReviewed       bool         `json:"humanReviewed"`
 	Published           bool         `json:"published"`
 	ReadOnlyProjection  bool         `json:"readOnlyProjection"`
+	Pin                 *PinSummary  `json:"pin,omitempty"`
 }
 
 type ArtifactComponent struct {
@@ -91,13 +102,14 @@ type SCNComponent struct {
 }
 
 type SUILinkComponent struct {
-	Passed         bool     `json:"passed"`
-	DocumentID     string   `json:"documentId"`
-	DocumentDigest string   `json:"documentDigest"`
-	LinkedCards    []string `json:"linkedCards"`
-	IslandGroups   []string `json:"islandGroups"`
-	EdgeCount      int      `json:"edgeCount"`
-	Contradiction  bool     `json:"contradiction"`
+	Passed         bool        `json:"passed"`
+	DocumentID     string      `json:"documentId"`
+	DocumentDigest string      `json:"documentDigest"`
+	LinkedCards    []string    `json:"linkedCards"`
+	IslandGroups   []string    `json:"islandGroups"`
+	EdgeCount      int         `json:"edgeCount"`
+	Contradiction  bool        `json:"contradiction"`
+	Pin            *PinSummary `json:"pin,omitempty"`
 }
 
 type ExternalExecutionComponent struct {
@@ -313,6 +325,9 @@ type Verification struct {
 	RunDigest             string `json:"runDigest,omitempty"`
 	ArtifactBytesVerified bool   `json:"artifactBytesVerified"`
 	InputBindingVerified  bool   `json:"inputBindingVerified"`
+	// PinnedComponents names the components whose version pin was checked and matched.
+	// Empty means no component was pinned, not that a pin failed.
+	PinnedComponents []string `json:"pinnedComponents,omitempty"`
 }
 
 // VerifyArtifact re-reads an explicitly selected local artifact. It checks
@@ -379,6 +394,11 @@ func Verify(receipt RunReceipt) Verification {
 	mmi := receipt.Components.MMI
 	sei := receipt.Components.SEI
 	scn := receipt.Components.SCN001
+	pinned, reason := verifyPins(receipt)
+	if reason != "" {
+		verification.Reason = reason
+		return verification
+	}
 	artifact := receipt.Components.ReviewArtifact
 	// Failure leaves evidence incomplete; it cannot authorize claims outside
 	// this reference profile, even when the component digest is recomputed.
@@ -403,14 +423,17 @@ func Verify(receipt RunReceipt) Verification {
 			"N-01": "pass", "N-02": "pass", "N-03": "pass", "N-04": "pass",
 			"N-05": "not-run", "N-06": "pass", "N-07": "pass",
 		}
-		if len(scn.Cases) != len(required) && len(scn.Cases) != len(required)+1 {
+		// N-08, N-09 and N-10 were added after the first records. A record may carry any
+		// subset of them, each only as a pass; a stored record from before them stays valid.
+		optional := map[string]bool{"N-08": true, "N-09": true, "N-10": true}
+		if len(scn.Cases) < len(required) || len(scn.Cases) > len(required)+len(optional) {
 			verification.Reason = "SCN-001 case count does not match the successful reference evaluation"
 			return verification
 		}
 		seen := map[string]bool{}
 		for _, item := range scn.Cases {
 			status, ok := required[item.ID]
-			if item.ID == "N-08" {
+			if optional[item.ID] {
 				status, ok = "pass", true
 			}
 			if !ok || seen[item.ID] || item.Status != status {
@@ -526,7 +549,42 @@ func Verify(receipt RunReceipt) Verification {
 	}
 	verification.Passed = true
 	verification.InputBindingVerified = bound
+	verification.PinnedComponents = pinned
 	return verification
+}
+
+// verifyPins accepts only pin summaries that agree with their component. A checked pin
+// that did not match cannot sit in a passing component, and an unchecked pin must say so.
+func verifyPins(receipt RunReceipt) (pinned []string, reason string) {
+	c := receipt.Components
+	items := []struct {
+		name   string
+		passed bool
+		pin    *PinSummary
+	}{{"mmi", c.MMI.Passed, c.MMI.Pin}, {"sei", c.SEI.Passed, c.SEI.Pin}}
+	if c.SUILink != nil {
+		items = append(items, struct {
+			name   string
+			passed bool
+			pin    *PinSummary
+		}{"suiLink", c.SUILink.Passed, c.SUILink.Pin})
+	}
+	for _, item := range items {
+		if item.pin == nil {
+			continue
+		}
+		switch {
+		case !item.pin.Checked && item.pin.Result != "not-checked":
+			return nil, item.name + " pin is unchecked but reports a result"
+		case item.pin.Checked && item.pin.Result != "match":
+			if item.passed {
+				return nil, item.name + " passed although its version pin did not match"
+			}
+		case item.pin.Checked:
+			pinned = append(pinned, item.name)
+		}
+	}
+	return pinned, ""
 }
 
 func Run(ctx context.Context, root string) (RunReceipt, error) {
@@ -695,6 +753,9 @@ func runWithSUIEvidenceOutput(ctx context.Context, root, artifactOut, suiLinkPat
 		"D-04の内部レビュー用Markdownを生成し、そのdigestをreviewArtifactへ記録した。公開用ではない。",
 		"publicationGateは実物レビューR-01〜R-07の状態を読み、公開可否だけを判定する。",
 		"P-06とN-05はnot-runであり、全体の知的機能の合格ではない。",
+	}
+	if pinned, _ := verifyPins(receipt); len(pinned) > 0 {
+		receipt.Notes = append(receipt.Notes, "版固定の期待値を指定した構成要素（"+strings.Join(pinned, "・")+"）は、各ツールの照合が一致した。一致が示すのは、checkoutの版・追跡内容・実行環境が期待と合ったことだけで、製品の正しさ・Authority・公開承認は示さない。")
 	}
 	if suiReceiptPath != "" {
 		receipt.Notes = append(receipt.Notes, "SUIの元receiptのsnapshotを、今回MMI観測を反映したfixtureへ既存照合器で照合した。実資料・認可・Document本文のdigest再計算は未検証。")

@@ -15,10 +15,16 @@ def recorded_suite():
     return len(payload.get("steps", {})), payload.get("result")
 
 
-def documented_step_count():
-    readme = (ROOT / "integrations/tools/README.md").read_text(encoding="utf-8")
-    match = re.search(r"(\d+)段", readme)
+def step_count_in(relative):
+    path = ROOT / relative
+    if not path.exists():
+        return None
+    match = re.search(r"(\d+)段", path.read_text(encoding="utf-8"))
     return int(match.group(1)) if match else None
+
+
+def documented_step_count():
+    return step_count_in("integrations/tools/README.md")
 
 
 def receipt_counts():
@@ -48,8 +54,10 @@ def main():
     synthetic, real = receipt_counts()
     documented = documented_receipt_counts()
 
+    runbook_steps = step_count_in("docs/reproduction-runbook.md")
     checks = {
         "recordedSteps": recorded_steps,
+        "runbookSteps": runbook_steps,
         "recordedResult": recorded_result,
         "documentedSteps": documented_steps,
         "records": synthetic,
@@ -61,6 +69,8 @@ def main():
         recorded_result == "PASS"
         and documented_steps is not None
         and documented_steps == recorded_steps
+        and runbook_steps is not None
+        and runbook_steps == recorded_steps
         and documented is not None
         and documented[0] == synthetic
         and documented[1] == real

@@ -153,6 +153,7 @@ type ValidityInspection struct {
 	HumanReviewed                    bool               `json:"humanReviewed"`
 	AuthorityVerified                bool               `json:"authorityVerified"`
 	PublicationApproved              bool               `json:"publicationApproved"`
+	*PinReport
 }
 
 // strictFrontDoor applies the acceptance of basisFromSnapshot: valid UTF-8, no duplicate or case-folded

@@ -103,3 +103,7 @@ go run . -sei-root ../../../sei-cognition \
 - 次はOwner判断です。lineageの向きとrelationの効果（SEI側）、`revises`の扱いと再受理を表すrelationの規約、どのDecisionが受理かを示す規約（指名の代わり）、受理の有効性をどこに置くか。
 
 fixtureは`testdata/validity/`にあります。すべて合成で、実在の名前・規程・個人情報を含みません。`bad-*`はSEI d818028の`verify --input`が拒否することを手動で確認した形（試験がSEIで毎回確認するのは`bad-relation`・`bad-same-logical-no-exact`・`bad-partial-exact-endpoint`の3件だけで、残る5件の拒否は試験で固定していません）、`x-*`はSEIが受理するがlineageの解釈が分かれる形、`ok-*`はSEIが受理し、この検査が未確認として残す形（未解釈record・同じ論理IDの重複・参照先のないendpoint）です。出力は診断であり、新しいContractや状態の正本ではありません。
+
+## 版を固定して実行する（任意）
+
+期待するcommitを渡すと、SEIを起動する前にcheckoutのHEAD・追跡内容・Go toolchainを照合し、外れていれば失敗します。既定は記録だけです。手順と境界は[PIN.md](PIN.md)にあります。

@@ -149,5 +149,6 @@
     "/tenant-admin/document-access",
     "/tenant-admin/document-access/{doc_id}",
     "/version"
-  ]
+  ],
+  "publicationAllowed": false
 }

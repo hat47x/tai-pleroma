@@ -45,7 +45,7 @@ type Receipt struct {
 type Toolchain struct {
 	GoVersionToken string   `json:"goVersionToken"`       // go1.26.9, from `go version` run in the EKI checkout
 	GoToolchainEnv string   `json:"goToolchainEnv"`       // inherited GOTOOLCHAIN (local | auto | go1.x ...)
-	GoFlags        string   `json:"goFlags"`              // inherited GOFLAGS
+	GoFlags        string   `json:"goFlags"`              // names of the inherited GOFLAGS flags, never their values
 	GoWork         string   `json:"goWork"`               // inherited GOWORK: "" or off when no go.work applies, present when one does (never its path)
 	Enforced       []string `json:"enforced"`             // NAME=value set for the go commands because the run is pinned
 	Build          string   `json:"build"`                // not-run | built | failed
@@ -174,7 +174,7 @@ func probeToolchain(ctx context.Context, ekiRoot string, pinned bool) (string, T
 	if raw := commandOutput(ctx, ekiRoot, append(append([]string{}, inherited...), "GOTOOLCHAIN=local"), "go", "env", "-json", "GOWORK"); raw != "" {
 		_ = json.Unmarshal([]byte(raw), &workenv)
 	}
-	tool.GoToolchainEnv, tool.GoFlags = goenv["GOTOOLCHAIN"], goenv["GOFLAGS"]
+	tool.GoToolchainEnv, tool.GoFlags = goenv["GOTOOLCHAIN"], goFlagNames(goenv["GOFLAGS"])
 	// `go env GOWORK` prints the path of the go.work file; the receipt keeps only
 	// whether one applies, never the path.
 	switch work := workenv["GOWORK"]; work {
@@ -552,4 +552,20 @@ func realMain(args []string, getenv func(string) string, stdout, stderr io.Write
 
 func main() {
 	os.Exit(realMain(os.Args[1:], os.Getenv, os.Stdout, os.Stderr))
+}
+
+// goFlagNames keeps only the names of the flags in a GOFLAGS value. Values such as
+// -modfile=/abs/path or -ldflags=... can carry local paths, which a receipt must not hold.
+func goFlagNames(raw string) string {
+	var names []string
+	for _, field := range strings.Fields(raw) {
+		if !strings.HasPrefix(field, "-") {
+			continue
+		}
+		if i := strings.Index(field, "="); i >= 0 {
+			field = field[:i]
+		}
+		names = append(names, field)
+	}
+	return strings.Join(names, " ")
 }

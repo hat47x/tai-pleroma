@@ -67,5 +67,6 @@
   "notes": [
     "MMI MCPのinspectとselectだけを呼ぶ読み取り専用接続。",
     "原本・ledger・成果物を書き換えない。実運用の権限・認可は検証しない。"
-  ]
+  ],
+  "publicationAllowed": false
 }

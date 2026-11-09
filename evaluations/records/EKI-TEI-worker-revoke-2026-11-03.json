@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-09",
   "host": "Windows with the EKI binaries on one host",
   "command": "python integrations/tools/eki_worker_revoke.py",
   "result": "PASS",
@@ -12,7 +12,7 @@
     "reregisterRefused": true,
     "agentRefused": false,
     "agentSideExercised": false,
-    "workerId": "wrk_51f0c0f437507c1bac3c396137f4fb5c"
+    "workerId": "wrk_b9d79a0aa7e9595f14feb32504a8f3b2"
   },
   "scope": "Enrolls a Worker, revokes it through eki-control worker-state, checks that re-registration is refused and that the Agent's next delivery is refused. The Agent side was not exercised, because an Agent with no assignments never calls the Worker listener; a multi-host deployment was not tested."
 }

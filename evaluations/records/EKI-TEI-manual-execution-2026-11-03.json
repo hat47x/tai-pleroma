@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-07",
+  "date": "2026-11-09",
   "host": "Windows with the EKI binaries, a generated Worker CA, a Control Plane TLS certificate and a hand-written trust anchor",
   "command": "python integrations/tools/eki_manual_execution.py",
   "binaries": {
@@ -15,8 +15,24 @@
     "attempts": [
       {
         "submit": 202,
-        "task": "tsk_8218066e82b71a4e5b32237a2edc23e7",
-        "worker": "wrk_7c607d1238f923c9e8f17cc22311b909",
+        "task": "tsk_a33e9e3cdb5b1762cb93f53dae8ed63e",
+        "worker": "wrk_3ad74e260dbb152d821a0e45550d89d0",
+        "executed": false,
+        "claimed": false,
+        "resultStatus": 409,
+        "resultBody": {
+          "type": "urn:eki:problem:result-not-ready",
+          "title": "The task has not produced an accepted result yet",
+          "status": 409,
+          "code": "RESULT_NOT_READY",
+          "retryable": true,
+          "task_id": "tsk_a33e9e3cdb5b1762cb93f53dae8ed63e"
+        }
+      },
+      {
+        "submit": 202,
+        "task": "tsk_3763f7a4754cf76257a1fe09fb374369",
+        "worker": "wrk_7fcdee6cc0670657ce9d0433a6762150",
         "executed": true,
         "claimed": true,
         "resultStatus": 409,
@@ -26,13 +42,13 @@
           "status": 409,
           "code": "RESULT_NOT_READY",
           "retryable": true,
-          "task_id": "tsk_8218066e82b71a4e5b32237a2edc23e7"
+          "task_id": "tsk_3763f7a4754cf76257a1fe09fb374369"
         }
       }
     ],
     "submitStatus": 202,
-    "taskId": "tsk_8218066e82b71a4e5b32237a2edc23e7",
-    "workerId": "wrk_7c607d1238f923c9e8f17cc22311b909",
+    "taskId": "tsk_3763f7a4754cf76257a1fe09fb374369",
+    "workerId": "wrk_7fcdee6cc0670657ce9d0433a6762150",
     "executed": true,
     "claimed": true,
     "resultStatus": 409,
@@ -42,7 +58,7 @@
       "status": 409,
       "code": "RESULT_NOT_READY",
       "retryable": true,
-      "task_id": "tsk_8218066e82b71a4e5b32237a2edc23e7"
+      "task_id": "tsk_3763f7a4754cf76257a1fe09fb374369"
     }
   },
   "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest, lets the Agent execute the fixed command and then reads the Task result endpoint. The claim is submitted but the read answers RESULT_NOT_READY, because result acceptance is not wired into the running Control Plane."

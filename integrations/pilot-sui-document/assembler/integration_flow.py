@@ -143,6 +143,7 @@ def main():
             json.dump(artifact, handle, ensure_ascii=False, indent=2)
             handle.write("\n")
 
+    receipt_passes = sum(1 for item in case_results if item["passed"]) == cases_run and rejected
     receipt = {
         "schema": "tai.reference.tei-integration-flow/v0",
         "synthetic": False,
@@ -152,7 +153,7 @@ def main():
         "teiCommit": tei_commit,
         "host": "Windows with Go on PATH and Python 3.12",
         "command": f"python integrations/pilot-sui-document/assembler/integration_flow.py --tei-repo {tei_repo} --workspace {workspace}",
-        "result": "PASS",
+        "result": "PASS" if receipt_passes else "FAIL",
         "elapsedMillis": round((time.monotonic() - started) * 1000),
         "contracts": {name: {"contractId": data["contractId"], "contractVersion": data["contractVersion"], "contractDigest": data["contractDigest"], "sourceDigest": data["sourceDigest"], "cases": data["cases"], "passed": data["passed"]} for name, data in candidates.items()},
         "casesRun": cases_run,
@@ -180,7 +181,7 @@ def main():
         json.dump(receipt, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
     print(json.dumps({"casesPassed": receipt["casesPassed"], "rejected": rejected}))
-    return 0 if receipt["casesPassed"] == cases_run and rejected else 1
+    return 0 if receipt_passes else 1
 
 
 if __name__ == "__main__":
