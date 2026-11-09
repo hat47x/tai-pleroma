@@ -2,7 +2,7 @@
 
 - **状態**: 既存[研究Draft #473](https://github.com/hat47x/tai-pleroma/pull/473)から**検証済みの公開合成ツールに限って**現行mainを基点に移管（2026-11-09）。これは**研究機材**であり、Human/AI認知改善、TEI実CLI/Graphの完全性・実施承認を意味しない。
 - **分割の目的**: #473が長期研究・E-trace/E-pipelineと合成fixture/CIを同一Draftに保持し、mainと大きく乖離したため、独立して実行可能な「公開データと検査」の部分だけを取り出す。変更元の各ファイルは、固定head `cbe3a4aa11302ad2efb2813a6f78ab297d951dd4`の**Git blobを完全一致で複製**した。元Draftに残る同内容のファイルはmain統合後のPR差分から相殺されるべきであり、別機構として二重導入しない。
-- **機材の対象**: [v0/v1公開fixture](../fixtures/)を使用したNode/Edge/Label・Direct edge/Directed path・Gold verdictの構造検査、固定DAGへの静的SVG描画とText投影、正答分布および単純Baselineの校正。
+- **機材の対象**: [v0/v1公開fixture](../fixtures)を使用したNode/Edge/Label・Direct edge/Directed path・Gold verdictの構造検査、固定DAGへの静的SVG描画とText投影、正答分布および単純Baselineの校正。
 - **範囲外**: 新TEI Source Reader、Pipeline/Build/ETL Runner、Graph/Relation資格を与えるProvider、Studio UI、Policy/Authority、独立holdout、実AI/Human、ブラウザー画面/a11y、プロダクト受理。
 
 ## 1. 資産と入力/出力
