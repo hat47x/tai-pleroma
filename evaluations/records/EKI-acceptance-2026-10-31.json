@@ -29,5 +29,6 @@
     "verifierの観測digestは、同じ固定コマンドを再実行して得た出力digestと一致した。",
     "再実行は同一ホストでの確認であり、独立した検証機関ではない。",
     "sandbox・CPU/メモリ/network/temp-diskの強制は未実装。"
-  ]
+  ],
+  "publicationAllowed": false
 }

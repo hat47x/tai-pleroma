@@ -1,3 +1,4 @@
 workspace: sei_decision_projection_pilot
+formatVersion: 1
 sources:
   - semantic

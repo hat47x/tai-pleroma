@@ -3,7 +3,7 @@
 状態：**Proposed / Owner受入待ち / 利用者評価NOT RUN**  
 基準：TAI main `26b6a644ae52d0e6ac500865f5c7fe9af754a5f4`（2026-10-29確認）  
 追跡：[#127 P-06の価値検証](https://github.com/hat47x/tai-pleroma/issues/127)、[既存のクリティカルパス](critical-path-2026-10.md)  
-関連する未統合案：[横断Product Landscape #72](https://github.com/hat47x/tai-pleroma/pull/72)、[統合配布 #75](https://github.com/hat47x/tai-pleroma/pull/75)。
+関連する未統合案：[横断Product Landscape #72](https://github.com/hat47x/tai-pleroma/pull/72)、[統合配布 #75](https://github.com/hat47x/tai-pleroma/pull/75)（いずれも2026-11-02 merged）。
 
 ## 1. なぜこの開発が必要か
 
@@ -52,7 +52,7 @@ AIを「中核」に置くとは、AIの出力を自動的に正式な決定と�
 | 5 | 委任が有益な場合だけN-05 | 非委任との対照、独立した結果確認 | 実行権限・実Provider・停止条件 | queuedを完了と呼ぶ |
 | 後段 | #74シリーズ配布、#73横断一覧 | 構成別の再現・利用導線 | 一つの利用価値の裏付け | 包装を製品成熟度と取り違える |
 
-#28/#33とSource版固定のDraft #79/#105/#123、DecisionのDraft #71は並行Ownerの仕事として保持する。P-06を理由にこれらのPRを編集・mergeしない。
+#28/#33とSource版固定のDraft #79/#105/#123、DecisionのDraft #71（いずれも2026-10-31〜11-02にmerged）は並行Ownerの仕事として保持する。P-06を理由にこれらのPRを編集・mergeしない。
 
 ## 5. 検証する価値と、撤回する条件
 

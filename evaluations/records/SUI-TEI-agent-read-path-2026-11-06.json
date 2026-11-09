@@ -1,0 +1,53 @@
+{
+  "schema": "tai.reference.sui-agent-read-path/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
+  "command": "python integrations/pilot-sui-document/assembler/agent_read_path_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-agent-read-path-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "createStatus": 200,
+    "allowedStatus": 200,
+    "allowedHasEtag": false,
+    "cardCount": 2,
+    "reviewedCardHasText": true,
+    "unreviewedCardsWithheld": true,
+    "viewKeys": [
+      "cards",
+      "createdAt",
+      "edges",
+      "id",
+      "islands",
+      "title",
+      "transform",
+      "updatedAt",
+      "version"
+    ],
+    "titleWithheld": true,
+    "writeAttemptStatus": 403,
+    "writeAttemptCode": "agent_write_not_enabled",
+    "listStatus": 200,
+    "listIds": [
+      "doc-1"
+    ],
+    "listTitlesWithheld": true,
+    "listCreatorWithheld": true,
+    "hashKeyWiredByProfile": false,
+    "derivedStatus": 403,
+    "derivedCode": "agent_route_not_enabled",
+    "ungrantedStatus": 404,
+    "ungrantedCode": "agent_document_not_granted",
+    "mixedStatus": 400,
+    "mixedCode": "agent_credential_conflict",
+    "badTokenStatus": 401,
+    "auditStatus": 200,
+    "auditWrongChannelStatus": 403
+  },
+  "scope": "Registers one agent credential through the repository, then reads the granted document, attempts a write, a list, a derived view, an ungranted document, a mixed credential request, a bogus token, and two audit channels. It checks the allowlist and redaction rules, not a real external agent."
+}

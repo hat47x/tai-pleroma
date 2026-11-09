@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hat47x/tai-pleroma/evaluations/poc-evaluation.schema.json",
+  "title": "PoC evaluation record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "synthetic", "evaluated", "changeId", "changeKind", "conditions", "runs", "limits"],
+  "properties": {
+    "schema": {"const": "tai.reference.poc-evaluation/v0"},
+    "synthetic": {"type": "boolean"},
+    "evaluated": {
+      "type": "boolean",
+      "description": "false は雛形であり測定結果ではないことを示す"
+    },
+    "changeId": {"type": "string", "minLength": 1},
+    "changeKind": {"enum": ["meaning", "defect", "addition"]},
+    "conditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["product", "evaluationSet", "environment", "teiCommit"],
+      "properties": {
+        "product": {"type": "string", "minLength": 1},
+        "evaluationSet": {"type": "string", "minLength": 1},
+        "environment": {"type": "string", "minLength": 1},
+        "teiCommit": {"type": "string", "minLength": 7}
+      }
+    },
+    "runs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path", "order", "startedAt", "endedAt", "durationSeconds",
+          "handEdits", "interventions", "attempts", "contextInput", "reviewFindings"
+        ],
+        "properties": {
+          "path": {"enum": ["B", "T"]},
+          "order": {"type": "integer", "minimum": 1},
+          "startedAt": {"type": "string", "minLength": 10},
+          "endedAt": {"type": "string", "minLength": 10},
+          "durationSeconds": {"type": "number", "minimum": 0},
+          "handEdits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["files", "hunks", "lines"],
+            "properties": {
+              "files": {"type": "integer", "minimum": 0},
+              "hunks": {"type": "integer", "minimum": 0},
+              "lines": {"type": "integer", "minimum": 0}
+            }
+          },
+          "interventions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["instructions", "confirmations", "retries"],
+            "properties": {
+              "instructions": {"type": "integer", "minimum": 0},
+              "confirmations": {"type": "integer", "minimum": 0},
+              "retries": {"type": "integer", "minimum": 0}
+            }
+          },
+          "attempts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["total", "failed"],
+            "properties": {
+              "total": {"type": "integer", "minimum": 0},
+              "failed": {"type": "integer", "minimum": 0}
+            }
+          },
+          "contextInput": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["files", "lines", "bytes"],
+            "properties": {
+              "files": {"type": "integer", "minimum": 0},
+              "lines": {"type": "integer", "minimum": 0},
+              "bytes": {"type": "integer", "minimum": 0}
+            }
+          },
+          "reviewFindings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["meaning", "implementation", "operation"],
+            "properties": {
+              "meaning": {"type": "integer", "minimum": 0},
+              "implementation": {"type": "integer", "minimum": 0},
+              "operation": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "limits": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
