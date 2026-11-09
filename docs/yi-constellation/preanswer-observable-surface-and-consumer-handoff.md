@@ -1,4 +1,6 @@
-# YI Constellation：回答前の観測面・実Consumer表示・Tool候補の開示資格（2026-11-02）
+# YI Constellation：回答前の観測面・実Consumer表示・Tool候補の開示資格
+
+> 評価の記録と受入条件は [TAI #562](https://github.com/hat47x/tai-pleroma/issues/562) に置く。この文書は日付を持たない設計資料で、内容は提案・合成のみ。
 
 > **状態：設計・合成Referenceのみ。** 各ProductのOwner正式採用、実MCP/CLI/DOM/Renderer/Host/Network/外部AI接続、実際の漏洩の再現は**NOT RUN**。TAI #168/#232/#271と、各Productの既存Ownerへ帰属する横断受入案。共通Host／中央Policy Engine／共有Resource Registry／新しい意味正本は導入しない。
 
