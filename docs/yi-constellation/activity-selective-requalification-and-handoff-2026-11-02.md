@@ -990,7 +990,7 @@ Activityの再利用キーは、意味の契約だけでなく`Target Profile/Pr
 
 [TAI merged #551](https://github.com/hat47x/tai-pleroma/pull/551)は全258 Receipt（実実行194／合成64）を棚卸しし、必須項目欠落70、`scope`欠落69、限界記述欠落15を検出した。既存一括Checkerの対象は**登録済み246件**であり、全Receiptを網羅しない。過去のReceiptが存在する、または一括Suiteが緑であるだけで、`Scope qualified`や実Consumer/Owner受理としない。
 
-既存TAI側修復方針は、古いReceiptから`scope`と必須項目を補い、`receipt_scope_check.py --report`で全件の欠落を可視化し、**修復完了後**に`--strict`を一括Gate化すること。今はStrict PASSと主張しない。[TAI merged #550](https://github.com/hat47x/tai-pleroma/pull/550)はGo 1.27/Python 3.12/Node 24とTEI/SUI/EKI固定Revisionで一括97段の再現Runbookを追加したが、Runbookの手順固定と**第三者が同一環境で独立再現したこと**は別資格。実IdP/DB/公開CA/多Host/人間の受理も対象外。
+**後続実装により更新**：[TAI merged #552](https://github.com/hat47x/tai-pleroma/pull/552)で非historical Receiptの体裁修復と`receipt_scope_check.py --strict`の一括Gate化が実施され、当該98段SuiteではStrict PASS。体裁確立前の70件は推測で補わず`historical-receipts.json`へ理由付き隔離し、証拠に算入しない。[merged #553](https://github.com/hat47x/tai-pleroma/pull/553)は未登録12件を棚卸しし、実Receipt 1件をChecker登録、10件をhistorical、1件をAUXILIARYに分類し、未登録Receipt検査をStrictへ追加した。これは登録・体裁の改善であり、過去の70件の内容や実Effectを後から証明するものではない。[TAI merged #550](https://github.com/hat47x/tai-pleroma/pull/550)はGo 1.27/Python 3.12/Node 24とTEI/SUI/EKI固定Revisionで一括97段の再現Runbookを追加したが、Runbookの手順固定と**第三者が同一環境で独立再現したこと**は別資格。実IdP/DB/公開CA/多Host/人間の受理も対象外。
 
 | 証拠の段階 | 必要な主張の上限 | Activityでの扱い |
 | --- | --- | --- |
@@ -1000,5 +1000,29 @@ Activityの再利用キーは、意味の契約だけでなく`Target Profile/Pr
 | 実Target/Consumer E2E | 同一Attemptの実Call/Reply/受領・独立Expected | 対象Purpose/Scopeだけ再利用 |
 | Owner Acceptance | 現在Authorityの正式な意味・Effect受理 | 前段の技術的PASSから自動昇格しない |
 
-**最小実行順**：TAI Stage 5の既存97段・Receipt監査をOwner側で継続し、TEIのTarget/Template不一致はTEI側、SUI Consumerの新Field受領はSUI側の現行契約で検証する。最初のTAI #168 H2/H3比較にはこれらの異なるTaskを追加しない。今回のActivityによる実Target再生成・実Consumer E2E・全Receipt修復・第三者再現・正式Owner受理はNOT RUN。
+**最小実行順**：TAI Stage 5のReceipt監査をOwner側で継続し、TEIのTarget/Template不一致はTEI側、SUI Consumerの新Field受領はSUI側の現行契約で検証する。Stage 5 Suiteの段数は97→98→103と増えており、**段数は実行Revisionに結び付ける**。最初のTAI #168 H2/H3比較にはこれらの異なるTaskを追加しない。今回のActivityによる実Target再生成・実Consumer E2E・historical 70件の証拠化・第三者再現・正式Owner受理はNOT RUN。
+
+## 29. 2026-11-09：型付き意味の忠実度とReceiptの整合を、再利用の必須判定へ追加する
+
+<!-- tai-activity-decimal-fidelity-and-receipt-gates-20261109 -->
+
+### 29.1 金額・大整数をJSON投影の`valid`だけで受理しない
+
+[TAI merged #559](https://github.com/hat47x/tai-pleroma/pull/559)の実パイロットでは、十進`0.1234567890123456789`が`0.12345678901234568`へ、整数`12345678901234567890`が`12345678901234567000`へ変化した。JSON投影が`float64`を経由するためであり、`10`や`0.1`の見かけ上の一致を一般化できない。既存TEIの型付き意味忠実度課題[#2585](https://github.com/hat47x/tei-platform/issues/2585)に対応する**実測反例**であり、TAIの別Issueを作らない。
+
+**受入条件**：型の表示名ではなく、実Producer raw値→投影→実Consumer値を**同一Field/単位/scale/precision/rounding policy**で比較する。金額や2^53を超えるID/整数など厳密一致が必要な値は、#2585の正式な保存・再生保証が確認できるまで、現行の`std.decimal`投影を「意味保持済み」として利用しない。近似許容の座標は用途別許容差をOwnerが宣言し、厳密金額と混ぜない。optional missing/nullの同一省略は別の情報損失として維持する。
+
+### 29.2 ReceiptのPASSは失敗観測を含み得る――矛盾の意味を明示する
+
+[TAI merged #561](https://github.com/hat47x/tai-pleroma/pull/561)は`result:PASS`のReceipt192件を検査し、`observed`内の`passed/valid/comparisonPassed=false`を3件発見した。3件は**反例を示すために意図したfalse**であり、理由付き例外として列挙し、それ以外の同種矛盾をGateで拒否する。したがって、`PASS`は「当該反例が期待どおり観測された」場合もあり、**被試験の機能が成功した意味ではない**。Receiptの`result`、`expected outcome`、実Observed、否定試験かどうか、Claim Scopeを別に読む。意図的な失敗観測を成功へ書き換えない。
+
+[TAI merged #552](https://github.com/hat47x/tai-pleroma/pull/552)のStrict体裁Gate、[#553](https://github.com/hat47x/tai-pleroma/pull/553)の未登録検査、[#561](https://github.com/hat47x/tai-pleroma/pull/561)の成功フラグ矛盾検査は**別の検査層**。いずれも実Product/Consumerの意味受理・現行Grant・外部Effectの証明ではない。historical 70件を後付けPASSにしない。
+
+### 29.3 連携元の新しい到達範囲を限定して取り込む
+
+[TEI merged #3843](https://github.com/hat47x/tei-platform/pull/3843)は、CLI/Studio Hostから宣言済みHook能力への実`CommandCaller`配線を追加し、実CLIの`view -command -execute`で`calls.before-update[].called=true`を観測した。これは§11.5の「宣言→解決→呼出し」の**限定的な前進**だが、実Plugin供給、実データ取得、after-*、業務Effectは未実証。[TEI merged #3848](https://github.com/hat47x/tei-platform/pull/3848)は参照Observation/Evidenceに`attemptedCount`と`complete`を追加し、2件中1件の部分成功を`complete=false`と表現できる。ただし`unknown`の意味は未対応で、実Provider/製品Routerへの配線も別。
+
+[SUI merged #3426](https://github.com/hat47x/sui-sensemaking/pull/3426)はMCP文書Metadataの一覧探索を1ページから最大20ページへ拡張し、2ページ目の文書を取得するテストを追加した。**501件目以降の見落としを軽減した**が、1万件超、実大規模Backend、`null`の原因識別は未検証。TAIは`not-found`と`not searched due to page limit`を区別し、空のMetadataを文書不存在の証明にしない。
+
+**優先順とOwner**：最優先はTEI #2585の型忠実度を必要な1 Fieldで検証し、実Provider→Mapper→Consumerの同一Attemptに組み込むこと。Receipt Gateは既存TAI Stage 5、HookはTEI、MCPページ探索はSUIが所有。TAI #168の初回H2/H3固定比較には混入しない。ここで厳密Decimal保存、実Plugin、実大規模SUI、外部Effect、Owner受理を実証したとは主張しない。
 
