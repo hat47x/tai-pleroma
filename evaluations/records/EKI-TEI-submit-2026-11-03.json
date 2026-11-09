@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-06",
+  "date": "2026-11-09",
   "host": "Windows with a locally built eki-control and an embedded SQLite state store",
   "command": "python integrations/tools/eki_submit_projection.py --control-binary <eki-control> --artifact evaluations/artifacts/eki-task-request-record.json",
   "result": "PASS",
@@ -14,7 +14,7 @@
   "observed": {
     "submitStatus": 202,
     "repeatStatus": 202,
-    "taskId": "tsk_6405ecedd7cb734001e78c0fa3fdecf3",
+    "taskId": "tsk_83afa4e1bf18e1a15f56a8614aee62a7",
     "statusReadStatus": 200,
     "taskStatus": "queued",
     "idempotent": true,

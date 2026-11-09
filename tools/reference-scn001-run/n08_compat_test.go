@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestSuccessfulRunAcceptsLegacyAndPassingN08Only(t *testing.T) {
+func TestSuccessfulRunAcceptsLegacyAndPassingOptionalCasesOnly(t *testing.T) {
 	for _, tc := range []struct {
 		name       string
 		additional []CaseResult
@@ -11,7 +11,11 @@ func TestSuccessfulRunAcceptsLegacyAndPassingN08Only(t *testing.T) {
 		{"legacy", nil, true},
 		{"passing N08", []CaseResult{{ID: "N-08", Status: "pass"}}, true},
 		{"failed N08", []CaseResult{{ID: "N-08", Status: "fail"}}, false},
-		{"unknown", []CaseResult{{ID: "N-09", Status: "pass"}}, false},
+		{"passing N09 and N10", []CaseResult{{ID: "N-08", Status: "pass"}, {ID: "N-09", Status: "pass"}, {ID: "N-10", Status: "pass"}}, true},
+		{"failed N09", []CaseResult{{ID: "N-09", Status: "fail"}}, false},
+		{"not-run N10", []CaseResult{{ID: "N-10", Status: "not-run"}}, false},
+		{"unknown", []CaseResult{{ID: "N-11", Status: "pass"}}, false},
+		{"duplicate N10", []CaseResult{{ID: "N-10", Status: "pass"}, {ID: "N-10", Status: "pass"}}, false},
 		{"duplicate N08", []CaseResult{{ID: "N-08", Status: "pass"}, {ID: "N-08", Status: "pass"}}, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

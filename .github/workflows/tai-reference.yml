@@ -82,6 +82,9 @@ jobs:
       - name: SUI context visibility synthetic scan
         working-directory: research
         run: python check_sui_context_visibility.py
+      - name: robotics audit output path test
+        working-directory: .
+        run: python -m unittest -v evaluations/test_audit_robotics_records.py
       - name: synthetic facility test
         working-directory: tools/reference-synthetic-facility
         run: python -m unittest -v check_test.py
@@ -94,6 +97,12 @@ jobs:
       - name: synthetic receipts scan
         working-directory: .
         run: python tools/check-synthetic-receipts/check.py --root .
+      - name: document consistency
+        working-directory: .
+        run: python integrations/tools/doc_consistency_check.py
+      - name: PoC evaluation template
+        working-directory: .
+        run: python integrations/tools/poc_evaluation_template_check.py
       - name: synthetic flow test
         working-directory: tools/check-synthetic-flow
         run: python -m unittest -v check_test.py

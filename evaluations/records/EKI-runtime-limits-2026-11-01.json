@@ -8,7 +8,10 @@
   "memoryLimitEnforcedWhileRunning": true,
   "cpuLimitEnforcedWhileRunning": true,
   "sampleIntervalMillis": 20,
-  "runningLimitPlatforms": ["linux", "windows"],
+  "runningLimitPlatforms": [
+    "linux",
+    "windows"
+  ],
   "processTreeStoppedOnExceed": true,
   "cpuLimitEnforcedAfterExit": true,
   "sandbox": false,
@@ -27,7 +30,9 @@
   "linuxBwrapVerification": "normal run, read-only root, no network interface, CPU over-limit stop",
   "linuxBwrapVerifyScript": "tools/linux-sandbox-verify/verify.sh",
   "networkLimitEnforced": false,
-  "networkIsolationProfiles": ["linux-bwrap"],
+  "networkIsolationProfiles": [
+    "linux-bwrap"
+  ],
   "networkBudgetSatisfiedByIsolation": true,
   "networkBudgetMeasured": false,
   "temporaryDiskLimitEnforcedWhileRunning": true,
@@ -79,5 +84,6 @@
     "瞬間的な超過は取り逃す可能性がある。",
     "sandboxではない。",
     "network制限は未実装。"
-  ]
+  ],
+  "publicationAllowed": false
 }

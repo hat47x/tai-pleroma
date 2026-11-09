@@ -19,5 +19,6 @@
   "submitResponseStatus": "queued",
   "repeatStatus": 202,
   "statusReadStatus": 200,
-  "taskStatus": "queued"
+  "taskStatus": "queued",
+  "publicationAllowed": false
 }

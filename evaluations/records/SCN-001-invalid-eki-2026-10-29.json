@@ -15,5 +15,6 @@
     "Workerは起動しておらず、Taskの実行・結果・委任の完了は未検証。"
   ],
   "submitStatus": 400,
-  "reason": "task submission failed: 400 {'raw': '{\"type\":\"urn:eki:problem:invalid-task-request\",\"title\":\"The request is malformed or invalid\",\"status\":400,\"detail\":\"priority must be background, normal or high\",\"code\":\"INVALID_TASK_REQUEST\"}\\n'}"
+  "reason": "task submission failed: 400 {'raw': '{\"type\":\"urn:eki:problem:invalid-task-request\",\"title\":\"The request is malformed or invalid\",\"status\":400,\"detail\":\"priority must be background, normal or high\",\"code\":\"INVALID_TASK_REQUEST\"}\\n'}",
+  "publicationAllowed": false
 }
