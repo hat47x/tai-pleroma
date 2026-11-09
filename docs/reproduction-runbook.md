@@ -113,6 +113,10 @@ python integrations/tools/doc_consistency_check.py
 | 契約JSONの`unknown field`でTEIが落ちる | 未知フィールドを拒否する入口（`tei-generator-select`）を使っている | 入口の違いは[段階4の実測](../evaluations/records/TEI-decode-divergence-2026-11-06.json)を参照 |
 | `candidate wait failed` / `returned 1 of N responses` | long-runningプロファイルにone-shotな候補を渡している | 仕様どおりの失敗（[比較](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)）。one-shotプロファイルを使う |
 
+## 5.5 意味を変えるとき
+
+契約を変える手順は[意味変更の進め方](meaning-change-runbook.md)に分けてあります。順序（被覆→再生成→適合→写像）と、3回の実測で分かった費用をまとめています。
+
 ## 6. 再現できないもの
 
 以下は実インフラが要るため、この手順に含みません。**未実施**として扱います。
