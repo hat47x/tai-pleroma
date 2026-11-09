@@ -21,7 +21,7 @@
 
 本分析では、製品群の外側にある生成AIハーネスにも、同じ手順を使いました。ハーネスの上九「巽在牀下、喪其資斧」は、中継に徹しすぎて、手段と権限を失う局面として読みました。六つの製品とは別の対象に、同じ手順を当てられることを示す例です。
 
-CSWの[具体的な技法](../../../cultural-substrate-weaving/skills/cultural-substrate-weaving/references/writing-techniques.md)には、困から井へ至る二経路の作例と、井の爻辞の読み分けがあります。単線の変爻を六つ並べる手順は、まだ本文にありません。追加の候補になります。
+CSWの[具体的な技法](https://github.com/hat47x/cultural-substrate-weaving/blob/ee54125cc25b2afde7d6161c847f18783cea1793/skills/cultural-substrate-weaving/references/writing-techniques.md)には、困から井へ至る二経路の作例と、井の爻辞の読み分けがあります。単線の変爻を六つ並べる手順は、まだ本文にありません。追加の候補になります。
 
 ### K2 爻位を、導入の局面として読む
 
@@ -45,7 +45,7 @@ CSWの文化体系の手掛かりには、卦と爻の意味を読むこと、�
 
 ### K5 象意の類似だけでは割当できないという警戒を強める
 
-CSWの[観点と最初の選定](../../../cultural-substrate-weaving/skills/cultural-substrate-weaving/references/framework-selection.md)は、対象を特定の卦へ帰属するには、象意の類似とは別の割当規約が要ると述べています。本分析でも、製品名の卦は作者が先に決めたものであり、機能の分析から卦を選んだものではありません。名前の後に、機能の偏りを卦の象意で説明すると、事後の正当化になります。
+CSWの[観点と最初の選定](https://github.com/hat47x/cultural-substrate-weaving/blob/ee54125cc25b2afde7d6161c847f18783cea1793/skills/cultural-substrate-weaving/references/framework-selection.md)は、対象を特定の卦へ帰属するには、象意の類似とは別の割当規約が要ると述べています。本分析でも、製品名の卦は作者が先に決めたものであり、機能の分析から卦を選んだものではありません。名前の後に、機能の偏りを卦の象意で説明すると、事後の正当化になります。
 
 この警戒は、CSWの本文で、もう一段強く書けます。卦の読みは、名前を正当化するためではなく、まだ見えていない問いを出すために使う。製品名や作品の題名に卦を採った場合も、名前と読みを分けて扱う。
 
@@ -65,7 +65,7 @@ CSWの作業規則に従い、生成元と生成物を分けず、本文を直�
 
 2026-11-01に三つのファイルを読み直し、井の九三から坎への計算、坎の象「水洊至、習坎。君子以常德行、習教事」、注意書き、原典へのリンクを確認しました。価値の交差の節では、第二の体系を製品の分類に使わず、価値の主語を変える操作として書きました。CSWの`main`はcleanで、`dist/`は存在しないため、ZIPの確認は不要でした。
 
-編集の内容は、[CSWの差分](../../../cultural-substrate-weaving/)で確認できます。CSWの本文は、製品設計の方法論ではなく、執筆のための手つきとして書きました。製品名や製品の役割は、CSWの本文へ持ち込んでいません。
+編集の内容は、[CSWの差分](https://github.com/hat47x/cultural-substrate-weaving/compare/ee54125cc25b2afde7d6161c847f18783cea1793...70d8db5eab9cef76e340e196e0cb8c09f85f7086)で確認できます。CSWの本文は、製品設計の方法論ではなく、執筆のための手つきとして書きました。製品名や製品の役割は、CSWの本文へ持ち込んでいません。
 
 ## 4. 還流の境界
 

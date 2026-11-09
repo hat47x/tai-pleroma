@@ -102,7 +102,7 @@ TEIの参照接続について、実行したTEIのcommitを記録した保存�
 | 同上 | 期待値なし | `passed=true`。`pin.sourceTree`の`trackedChanges=1`を記録（既定の実行は止まりません） |
 | `aec98f37b`＋`cmd/tei`に未追跡の`.go`ファイル | commitを指定 | `pin.sourceTree.status=untracked-build-inputs`（1件）、`passed=false`、TEI未ビルド |
 | `aec98f37b`＋未追跡の`.txt`ファイルのみ | commitを指定 | `passed=true`、`untrackedFiles=1`を記録 |
-| `aec98f37b`、環境に`GOFLAGS=-tags=server`・`GOTOOLCHAIN=auto` | commitを指定 | `passed=true`。`toolchain.goFlags`に`-tags=server`、`goToolchainEnv`に`auto`を記録し、ビルドは`GOFLAGS=-mod=readonly`・`GOTOOLCHAIN=local`で実行 |
+| `aec98f37b`、環境に`GOFLAGS=-tags=server`・`GOTOOLCHAIN=auto` | commitを指定 | `passed=true`。`toolchain.goFlags`に`-tags`（値は記録しない）、`goToolchainEnv`に`auto`を記録し、ビルドは`GOFLAGS=-mod=readonly`・`GOTOOLCHAIN=local`で実行 |
 
 いずれも、実行の前後でTEIのcloneの`.git/index`のsha256と`git status --porcelain`の件数（0）は不変で、一時ディレクトリの残りもありませんでした。receiptの`workspaceTree`は4エントリで、前後のdigestが一致しました。
 

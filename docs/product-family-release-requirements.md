@@ -89,4 +89,4 @@ Independent Review & Publication
 
 - TAI main `88a6fad6d088f98ccab6080b3b7be24b62399113`: [workflow](../.github/workflows/tai-reference.yml)はGo/Python参照試験。シリーズ構成マニフェスト・自動リリースの実装とは違う。
 - [TAI status](status.md)（2026-10-26更新）: SCN-001が合成試験で、公開はblocked。EKIではTask受付とWorker実行を区別。
-- [TAI Product Landscape Draft #72](https://github.com/hat47x/tai-pleroma/pull/72)／[G1分類 Issue #73](https://github.com/hat47x/tai-pleroma/issues/73): 対象をProduct/Repository/Methodとして正確に扱うためのレビュー。ここで先に正式Product IDを発行しない。
+- [TAI Product Landscape Draft #72](https://github.com/hat47x/tai-pleroma/pull/72)（2026-11-02 merged）／[G1分類 Issue #73](https://github.com/hat47x/tai-pleroma/issues/73): 対象をProduct/Repository/Methodとして正確に扱うためのレビュー。ここで先に正式Product IDを発行しない。

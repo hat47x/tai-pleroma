@@ -61,6 +61,7 @@ type Receipt struct {
 	Passed                 bool             `json:"passed"`
 	Reason                 string           `json:"reason,omitempty"`
 	Notes                  []string         `json:"notes"`
+	*PinReport
 }
 
 // nameList collects a repeatable string flag.
@@ -74,6 +75,9 @@ func (n *nameList) Set(value string) error {
 }
 
 func run(ctx context.Context, dir string, args ...string) ([]byte, error) {
+	if pinned, ok := pinnedFrom(ctx); ok {
+		return pinned.run(ctx, args)
+	}
 	cmd := exec.CommandContext(ctx, "go", args...)
 	cmd.Dir = dir
 	output, err := cmd.CombinedOutput()
@@ -84,6 +88,9 @@ func run(ctx context.Context, dir string, args ...string) ([]byte, error) {
 }
 
 func output(ctx context.Context, dir, name string, args ...string) string {
+	if pinned, ok := pinnedFrom(ctx); ok {
+		return pinned.output(name)
+	}
 	cmd := exec.CommandContext(ctx, name, args...)
 	cmd.Dir = dir
 	raw, err := cmd.Output()
@@ -223,12 +230,12 @@ func main() {
 	defer cancel()
 	if *decisionValidity != "" {
 		// The exit code only says whether a report was produced; the verdict is in the report.
-		code := runValidity(ctx, root, *decisionValidity, *currentTarget, namedDecisions, *outPath, os.Stdout, os.Stderr)
+		code := runValidityPinned(ctx, root, *decisionValidity, *currentTarget, namedDecisions, *outPath, pinOptions(), os.Stdout, os.Stderr)
 		cancel()
 		os.Exit(code)
 	}
 	if *basisBundle != "" {
-		inspection, err := inspectBasis(ctx, root, *basisBundle)
+		inspection, err := inspectBasisPinned(ctx, root, *basisBundle, pinOptions())
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -248,14 +255,7 @@ func main() {
 		os.Stdout.Write(encoded)
 		return
 	}
-	receipt := Run(ctx, root)
-	if *variant == "scn002-approvals" {
-		receipt = RunApproval(ctx, root)
-	} else if *variant == "scn002-rejections" {
-		receipt = RunRejection(ctx, root)
-	} else if *variant != "" {
-		receipt = RunVariant(ctx, root, *variant)
-	}
+	receipt := RunWithOptions(ctx, root, *variant, pinOptions())
 	if *synthetic {
 		receipt.Synthetic = true
 		receipt.EvidenceKind = "synthetic"

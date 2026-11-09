@@ -1,0 +1,51 @@
+{
+  "schema": "tai.reference.tei-target-profile-compare/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI target-profile tool and one built record candidate",
+  "command": "python integrations/tools/tei_target_profile_compare.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --strategy text-template --contract candidates/text-identity/contract.json --fixtures candidates/text-identity/fixtures.json --profile-a profiles/oneshot.json --profile-b profiles/rolling.json --artifact evaluations/artifacts/scn-003-document.json --out <receipt>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "candidateBuilt": true,
+    "compareExit": 1,
+    "comparisonPassed": false,
+    "contractId": "sui.card.text",
+    "contractVersion": "1",
+    "fixtureDigest": "sha256:23e70fc056f9dcc462a292d65c046e0f4129b61de9d51c65b081645a69207247",
+    "profiles": [
+      {
+        "id": "sui-text-oneshot",
+        "processModel": "oneshot",
+        "passed": true,
+        "mode": "oneshot",
+        "processes": 4,
+        "requests": 4,
+        "responses": 4,
+        "reason": null
+      },
+      {
+        "id": "sui-text-rolling",
+        "processModel": "long-running",
+        "passed": false,
+        "mode": "long-running",
+        "processes": 1,
+        "requests": 4,
+        "responses": 1,
+        "reason": "candidate returned 1 of 4 responses"
+      }
+    ],
+    "oneShotPassed": true,
+    "longRunningRefused": true,
+    "refusalReason": "candidate returned 1 of 4 responses",
+    "refusalIsExecutionModel": true,
+    "sameContractBothProfiles": true,
+    "expectedContractId": "sui.card.text"
+  },
+  "scope": "Builds one candidate for the given contract, then runs TEI's compare over a one-shot and a long-running Target Profile with the same contract and fixtures. It records that the one-shot profile passes and that the long-running profile refuses the same candidate because the generated program answers one request per process. It does not prove a real target and does not change the candidate template."
+}

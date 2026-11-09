@@ -77,3 +77,15 @@
 - [policy投入後の試行](eki-dispatch-attempt-2026-11-03.log): Taskは検討対象になるが「no usable worker is registered」。
 - [policyとWorker行の投入](records/EKI-TEI-dispatch-running-2026-11-03.json): Taskがrunningへ進む。Workerプロセスは動かしておらず、結果は無い。
 - 実行・結果受理はEKI側で未配線（[EKIの実行系が未配線](../analysis/tei-sui-integration-2026-11-03.md)）。
+
+### SUIの製品面（2026-11-03）
+
+- [監査ログのHTTPエクスポート](records/SUI-TEI-audit-2026-11-03.json): 閲覧でイベント1件、docIdとBearerヘッダを確認
+- [管理APIの認証分離](records/SUI-TEI-admin-2026-11-03.json): 匿名401・業務キー401・管理キー200
+- [利用者provision](records/SUI-TEI-provision-2026-11-03.json): 201・冪等・監査3件
+- [TEI artifactの配信](records/SUI-TEI-reference-2026-11-03.json): `GET /docs/{id}/epistemic/projection`が200でartifactを返す
+- [Postgres+TLS](records/SUI-TEI-postgres-tls-2026-11-03.json): 保存・取得・匿名401
+- [TLS終端プロキシ](records/SUI-TEI-proxy-2026-11-03.json): プロキシ越しの保存・取得
+- [ローカルCAのチェーン](records/SUI-TEI-ca-chain-2026-11-03.json): 信頼は通るが未信頼クライアントは拒否
+- [2インスタンスと共有Postgres](records/SUI-TEI-multi-instance-2026-11-03.json): 相互読み取りと古いETagの409
+

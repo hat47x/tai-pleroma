@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.sui-tei-reference-multi/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with SUI reading a local TEI reference directory holding two bindings",
+  "command": "python integrations/pilot-sui-document/assembler/tei_reference_multi_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --sei-artifact evaluations/artifacts/sei-decision-projection.json --out evaluations/records/SUI-TEI-reference-multi-2026-11-03.json",
+  "result": "PASS",
+  "artifacts": {
+    "document": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de",
+    "sei": "sha256:e0ed3caccce9f7d7b74c36bc84e8bde41bc1bd99f4c2d0dd533a445da52f245c"
+  },
+  "observed": {
+    "createStatus": 200,
+    "firstStatus": 200,
+    "secondStatus": 200,
+    "firstHasDocumentSchema": true,
+    "secondHasSeiSchema": true,
+    "firstNotSei": true,
+    "secondNotDocument": true,
+    "unboundStatus": 404
+  },
+  "scope": "Binds two different TEI artifacts to two documents through SUI's local reference directory and checks that each document returns only its own artifact. SUI echoes artifacts verbatim."
+}

@@ -3,9 +3,9 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-03",
+  "date": "2026-11-09",
   "host": "Windows with Python 3.12, TestClient, and an embedded PostgreSQL 16.2",
-  "command": "python integrations/pilot-sui-document/assembler/postgres_multi_save.py --sui-repo D:\\GIT\\hat47x\\sui-wt-latest --artifact evaluations/artifacts/scn-003-document.json",
+  "command": "python integrations/pilot-sui-document/assembler/postgres_multi_save.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
