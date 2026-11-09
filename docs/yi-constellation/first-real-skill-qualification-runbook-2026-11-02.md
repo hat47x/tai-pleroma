@@ -993,3 +993,12 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 **証拠上限**：#3745はTurn越え継承を限定実測、#3758はその台帳への記録であり、新たな実験ではない。Turn1が複数の場合の増加量、実行中Turnのfork、深さ4以上設定、`maxActiveSubagents`との組合せ、Telemetry/MCPは未確認。初回H2/H3のG0実OS Read-deny→G1暗黙Context/Session Log→G2完全Tool/Model Deliveryの順序、比較適格0/4は不変。旧4探索Sessionを新しい4独立Slotへ数え直さない。
 
+<!-- tai-sk02-dsh-oversize-event-delivery-gap-20261109 -->
+### 24.19 DSH Session Logの単一巨大eventは、Tool作業が進んでもContext送出を停止させ得る（H6-E2）
+
+[TEI merged #3838](https://github.com/hat47x/tei-platform/pull/3838)の合成実測（DSH `0.2.2-rc.1` headless、`maxBytes=4096`）では、約8KBのTool出力後も要求を継続すると、**要求005〜011から`dsh_session_log`拡張field自体が消え**、送出水位が`12`で停止した。永続Logは96 event・maxSeq94まで増加したが、`delivery-accepted`は4件から増えない。水位直後の単一`user/message` event（5,792 bytes）が4096を超え、後続eventを分割して送出しない。対照の小さいTool結果は同じ上限でも拡張が継続した。これは「Tool実行が進んだ」「永続Logに残った」「モデルへ届いた」を独立に扱うべき**具体的反例**。
+
+**G1/G2の受入追補**：対象Attemptで`Tool Result raw bytes`、永続Logのevent seq/byte、`maxBytes`、各モデル要求の拡張field有無・送出水位・実Model Input、`delivery-accepted`の増分を別々に観測する。拡張field不在を「Contextは空だった」としない。Log保存だけでモデル受領を認定しない。巨大eventの**後にも最低1回モデル要求を出す**負例を置く（最初の巨大eventで終了するとbacklogの停滞が観測できない）。既存の初回SK-02 G0→G1→G2と独立4 Session条件を変更せず、後続のTransport/Log負例として扱う。
+
+**未確認**：Telemetry/UI/別flagでの検知、上限変更後の回復、別版DSH、実TEI Provider、MCP実Consumer、Owner受理はNOT RUN。特定バージョンの合成現象をすべてのHarnessへ一般化しない。
+
