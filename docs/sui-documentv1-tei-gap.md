@@ -163,3 +163,20 @@ Optionalの不一致: Edge.fromKind / Edge.toKind
 - これで「端点種別を持たないSUIのEdgeが投影で失われる」問題は、契約側の変更で解ける。TEI側の変更を要さない
 - ただし合成層（`document_assembler.py`）は依然として`card`を仮定する。投影で種別を省略した場合、合成側で「種別なし」をどう扱うかを別に決める必要がある
 - 現行のパイロット契約は必須のまま維持した。契約版の更新は、合成層の扱いと併せて判断する
+
+## 消費側の写像の忠実さ（2026-11-06）
+
+投影したフィールドがSUIの参照消費側（`from_artifact` → `to_documentv1_payload` → `DocumentV1`）を通った後も残るかを実測した。[receipt](../evaluations/records/SUI-consumer-mapping-2026-11-06.json)
+
+```text
+document: id, title, readingOrder → 残る（readingOrder 2件）
+cards: id, text, x, y → 残る（5件）
+islands: id, title, cardIds → 残る
+edges: id, fromId, toId, type, fromKind, toKind → 残る
+affiliations: id, cardId, islandId → 残る（1件）
+```
+
+- **既知のフィールドには忠実**である。`valid: true`はこの場合に意味のある証拠になる
+- 一方、消費側が知らない新しいフィールドは`valid: true`のまま落ちる（[意味変更の実測](../evaluations/records/TEI-meaning-change-2026-11-06.json)の`summary`）
+- したがって`valid`の意味は「知っている意味が壊れていない」であって「意味が届いた」ではない
+

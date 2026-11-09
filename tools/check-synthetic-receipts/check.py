@@ -194,6 +194,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-many-primitive-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-2026-11-06.json",
     "evaluations/records/TEI-fixture-coverage-2026-11-06.json",
+    "evaluations/records/SUI-consumer-mapping-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-types-2026-11-06.json",
     "evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
@@ -677,6 +678,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("absentKindsProjectedWithoutThem") is not True:
                 errors.append(f"SUI optional-kind Edge contract behaviour changed: {relative}")
+        if "SUI-consumer-mapping" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("everyProjectedFieldSurvives") is not True:
+                errors.append(f"SUI consumer dropped a projected field: {relative}")
         if "SUI-TEI-edge-chain" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("cardToIslandComposes") is not True:
