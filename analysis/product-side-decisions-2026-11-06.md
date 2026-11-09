@@ -93,9 +93,29 @@ TAI側でできること: 変更後の再観測（読み取りの決定に`read_
 | 2. `NOT_YET_VALID` | **決定済み**（#437として計測で閉じる。再開条件つき） |
 | 3. 複数Workerの分散 | **未決**（2の副作用であり、配置の規則は未記載） |
 | 4. agent資格情報の配線 | **決定済み**（ADR-0093。テナント束縛が前提） |
-| 5. 未知adapterの扱い | 未確認（製品文書に該当記述を見つけられていない） |
-| 6. `readOnly`の非伝播 | 未確認（同上） |
+| 5. 未知adapterの扱い | **決定済み**（実装内に理由つきで記述。noopは常に許可） |
+| 6. `readOnly`の非伝播 | **要再特定**（`read_only`は認可経路にあるが、効果は未確認） |
 
 決定済みの2件は判断待ちから外した。残る4件のうち3・5・6は、製品側の文書をさらに当たるか、Issueで見解の供給を受ける必要がある。
 
 この整理で分かったのは、**TAIが「製品の設計判断が要る」と見ていた項目のうち2件は、製品側ですでに決まっていた**ことである。TAIは製品の文書を先に確認する順序を取るべきだった。次回以降、接続検証で判断待ちを作るときは、製品のADR・設計文書を先に当たる。
+
+## 追記（2026-11-06、項目5・6の再確認）
+
+### 5. 未知adapterの扱い — 決定済み
+
+SUIの`routes/docs.py`に、**noopアダプターの挙動と、その理由が実装の中に書かれている**。
+
+> The default adapter (no adapter configured at all, or the "noop" name) always allows GET/PUT /docs/{doc_id} regardless of visibility — apply_tenant_boundary_guard is the sole gate in that mode. Filtering the list by visibility there would make the list *more* restrictive than the single-document read path it is a foundation for, not more correct.
+
+つまり「未知・未設定のadapterはnoopとして常に許可し、一覧の可視性フィルタは単票の読み取り経路より厳しくしない」ことが**意図として書かれている**。TAIが観測した挙動は仕様どおりで、不具合ではない。**この項目は閉じる。**
+
+### 6. `readOnly`の非伝播 — 要再特定
+
+SUIには認可経路に`read_only: bool`の引数がある（`routes/docs.py`の`_authorize_request`）。しかし、この値がアダプターの判定まで届くか、届かない場合に何が起きるかは**まだ確かめていない**。
+
+- 分かっていること: `read_only`は認可要求の組み立てに渡されている
+- 分かっていないこと: 外部PDPやnoopアダプターがその値を判定に使うか、使わないなら「読み取り専用の要求が書き込みとして扱われ得る」のか
+- 次にやること: `_authorize_request`の呼び出し元と、アダプターの`AccessRequest`に`read_only`が入るかを読む。**実行での確認はその後**
+
+この項目を「製品の判断待ち」に置くのは、**根拠を読めていないため**であって、不具合を見つけたためではない。根拠が確定するまで判断待ちとして数えない。
