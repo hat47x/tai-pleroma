@@ -89,9 +89,9 @@ TAI側でできること: 変更後の再観測（読み取りの決定に`read_
 
 | 項目 | 状態 |
 | --- | --- |
-| 1. 受入の配線 | **未決**（RAC-1の役割は定義済み、配置が未記載） |
+| 1. 受入の配線 | **解決**（パッケージは実装・文書化済み。本番経路からの呼び出しが無い） |
 | 2. `NOT_YET_VALID` | **決定済み**（#437として計測で閉じる。再開条件つき） |
-| 3. 複数Workerの分散 | **未決**（2の副作用であり、配置の規則は未記載） |
+| 3. 複数Workerの分散 | **決定済み**（`pickWorker`が「最初の使用可能なWorker」を固定的に選ぶと明記） |
 | 4. agent資格情報の配線 | **決定済み**（ADR-0093。テナント束縛が前提） |
 | 5. 未知adapterの扱い | **決定済み**（実装内に理由つきで記述。noopは常に許可） |
 | 6. `readOnly`の非伝播 | **解決**（配線はある。`enforce_access`が`decision.read_only`を見ない潜在的な穴） |
@@ -129,3 +129,34 @@ SUIの認可経路を読んで、**配線はあるが、1か所だけ制限が�
 したがって本件は「製品の判断待ち」ではなく、**外部アダプターの契約と強制点の不整合**として整理する。TAIの観測（`readOnly`が伝播しない）は、既定構成では到達しない潜在的な穴に当たる。
 
 TAI側でできること: 外部アダプターが`allow+read_only`を返す構成を作れるようになった時点で、`write`が実際に拒否されるかを実行で確かめる。**今は「読んだ結果の指摘」であって、実行での確認はしていない。**
+
+## 追記（2026-11-06、項目1・3の再確認）
+
+### 1. 受入の配線 — 解決（実装はある、呼び出しが無い）
+
+EKIには`internal/control/resultacceptance`があり、**[README](../../../eki-fabric)でRAC-1の契約が詳細に書かれている**（A-VERIFYINGのAttemptと検証証拠から`AcceptedResult`へ昇格させ、受理済み結果の記録・Attemptの終了・Taskの完了を一つのtransactionで行う）。
+
+しかし、**`internal/control`と`cmd/`の非テストコードからこのパッケージを呼ぶ箇所が無い**。`resultacceptance`はテストとconformanceからだけ参照されている。
+
+したがって本件は「どこに置くかを決めていない」のではなく、**置き場所は決まっていて（`internal/control`）、本番経路への配線が未実装**である。TAIが観測した`409 RESULT_NOT_READY`はこの未配線の結果で、設計の未決ではない。
+
+### 3. 複数Workerの分散 — 決定済み（コードに明記）
+
+`internal/control/dispatch/dispatch.go`の`pickWorker`は、**「最初の使用可能なWorker」を返す**。コメントにこう書かれている。
+
+> pickWorker returns the first usable Worker, or an error naming the gap. The fixed heuristic of this loop takes the first; the Scheduler still ranks the one-element candidate list it produces.
+
+つまり分散は現状の設計に無く、**Schedulerが候補リストを順位付けする将来の話**として切り分けられている。TAIが観測した「全Attemptが同じWorkerに載る」は仕様どおりで、不具合ではない。**この項目は閉じる。**
+
+## 製品側6件の決着（2026-11-06）
+
+| 項目 | 決着 |
+| --- | --- |
+| 1. 受入の配線 | 解決: 実装済み・本番未配線（ギャップ） |
+| 2. `NOT_YET_VALID` | 決定済み: 計測で閉じる（#437） |
+| 3. 複数Workerの分散 | 決定済み: 最初の使用可能Worker（コードに明記） |
+| 4. agent資格情報の配線 | 決定済み: テナント束縛（ADR-0093） |
+| 5. 未知adapterの扱い | 決定済み: noopは常に許可（実装内に理由） |
+| 6. `readOnly`の非伝播 | 解決: `enforce_access`が`decision.read_only`を見ない（潜在的） |
+
+**「製品の判断待ち」は残っていない。** 残るのは実施項目（1の配線、6の強制点）と、TEI側3論点の判断である。

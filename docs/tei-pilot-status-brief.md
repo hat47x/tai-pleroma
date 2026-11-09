@@ -34,13 +34,10 @@ TEIによるプロダクト構築のフィージビリティ検証について�
 
 ## 4. 製品側で判断が要る点
 
-[整理](../analysis/product-side-decisions-2026-11-06.md)に6件。うち3件は製品側の文書・実装の記述で決定済みとして閉じた（agent資格情報の配線、`NOT_YET_VALID`、未知adapterの扱い）。
+[整理](../analysis/product-side-decisions-2026-11-06.md)に6件。**判断待ちは残っていない。**
 
-残る3件:
-
-1. 実行結果の受入をControl Planeへ配線するか（RAC-1の役割は定義済み、実行場所が未記載）
-2. 複数Workerの割り当てを分散させるか（配置の規則が未記載）
-3. `AccessDecision.read_only`が強制点で無視される件（配線はあるが、外部アダプターが`allow+read_only`を返しても`write`が通る。既定構成では到達しない）
+- 決定済み4件: agent資格情報の配線（ADR-0093）、`NOT_YET_VALID`（#437として計測で閉じる）、未知adapterの扱い（noopは常に許可）、複数Workerの分散（`pickWorker`が最初の使用可能Workerを選ぶと明記）
+- 実施項目2件: 受入（RAC-1）を本番経路へ配線する（パッケージは実装・文書化済み、呼び出しが無い）、`enforce_access`が`decision.read_only`を見るようにする（潜在的）
 
 ## 5. 実インフラが要る検証（未実施）
 

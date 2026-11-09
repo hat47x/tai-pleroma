@@ -2,7 +2,7 @@
 
 状態: **草案（未投稿）**。
 
-> 2026-11-06追記: 6件のうち3件は決定済みとして閉じた — **agent資格情報の配線**と**`NOT_YET_VALID`**は製品の文書で、**未知adapterの扱い**は実装内の記述で。投稿する場合は、残る3件（受入の配線、複数Workerの分散、`readOnly`の非伝播＝要再特定）に絞る。[整理](../analysis/product-side-decisions-2026-11-06.md)
+> 2026-11-06追記: 6件すべての性格が確定した。**判断待ちは残っていない** — 4件は決定済み（agent資格情報、`NOT_YET_VALID`、未知adapter、複数Workerの分散）、2件は実施項目（受入のRAC-1配線、`decision.read_only`の強制）。投稿する場合は、実施項目2件と、追加で見つけた7件目（`AccessDecision.read_only`）に絞る。[整理](../analysis/product-side-decisions-2026-11-06.md)
 GitHubへのIssue起票は、リポジトリ外へ効果を出す操作として扱い、この作業では行っていません。判断の材料と本文をここに揃え、投稿するかどうかは別に決めます。
 
 各項は、[製品側の判断が必要な6点](product-side-decisions-2026-11-06.md)の要約と、その根拠となるreceiptです。TAIは再観測と記録を担い、製品側の実装変更は行いません。
