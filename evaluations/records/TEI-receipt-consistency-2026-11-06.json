@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "passReceiptsChecked": 195,
+    "passReceiptsChecked": 196,
     "expectedNegative": {
       "TEI-meaning-change-required-2026-11-06.json": [
         "coverageBeforeFixtureEdit/passed"
