@@ -1,0 +1,14 @@
+{
+  "schema": "tei.reference.target-profile/v0",
+  "id": "sui-record-rolling",
+  "version": "1",
+  "description": "rolling profile for the SUI card record projection pilot; the same contract and fixtures must pass here as on the one-shot profile",
+  "processModel": "long-running",
+  "storage": "filesystem",
+  "network": "none",
+  "update": "rolling",
+  "memoryLimitBytes": 67108864,
+  "observability": ["stdout", "exit-code"],
+  "unsupported": ["hard-realtime", "audit-log"],
+  "generatorId": "text-record-template"
+}

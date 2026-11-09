@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-04",
+  "date": "2026-11-09",
   "host": "Windows with one embedded PostgreSQL and two SUI processes",
   "command": "python integrations/pilot-sui-document/assembler/postgres_multi_instance_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-multi-instance-2026-11-03.json",
   "result": "PASS",

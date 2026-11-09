@@ -1,7 +1,7 @@
 {
   "schema": "tei.reference.generator-fixture/v0",
   "contractId": "sui.edge.record",
-  "contractVersion": "3",
+  "contractVersion": "4",
   "cases": [
     {
       "id": "present",
@@ -22,6 +22,21 @@
       "id": "unresolved-from",
       "input": {"id": "edge-1", "fromId": null, "toId": "card-2", "type": "supports", "fromKind": "card", "toKind": "card"},
       "want": {"state": "unresolved"}
+    },
+    {
+      "id": "absent-kinds",
+      "input": {"id": "edge-3", "fromId": "card-1", "toId": "island-1", "type": "contains"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"id\":\"edge-3\",\"toId\":\"island-1\",\"type\":\"contains\"}"}
+    },
+    {
+      "id": "absent-one-kind",
+      "input": {"id": "edge-4", "fromId": "card-1", "toId": "card-2", "type": "supports", "toKind": "card"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"id\":\"edge-4\",\"toId\":\"card-2\",\"toKind\":\"card\",\"type\":\"supports\"}"}
+    },
+    {
+      "id": "null-kind-is-omitted",
+      "input": {"id": "edge-5", "fromId": "card-1", "toId": "card-2", "type": "supports", "fromKind": null, "toKind": "card"},
+      "want": {"state": "present", "text": "{\"fromId\":\"card-1\",\"id\":\"edge-5\",\"toId\":\"card-2\",\"toKind\":\"card\",\"type\":\"supports\"}"}
     }
   ]
 }

@@ -22,5 +22,6 @@
     "Control PlaneのAttemptはverifyingへ進んだ。",
     "Result VerificationとResult Acceptanceは未完了。",
     "sandbox・CPU/メモリ/network/temp-diskの強制は未実装。"
-  ]
+  ],
+  "publicationAllowed": false
 }

@@ -1,0 +1,58 @@
+{
+  "schema": "tai.reference.tei-decimal-fidelity/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator and a locally compiled candidate",
+  "command": "python integrations/tools/tei_decimal_fidelity_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-decimal-fidelity-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "cases": {
+      "shortDecimal": {
+        "state": "present",
+        "sentX": "10",
+        "projectedX": "10",
+        "equal": true
+      },
+      "longDecimal": {
+        "state": "present",
+        "sentX": "0.1234567890123456789",
+        "projectedX": "0.12345678901234568",
+        "equal": false
+      },
+      "tinyDecimal": {
+        "state": "present",
+        "sentX": "1E-10",
+        "projectedX": "1E-10",
+        "equal": true
+      },
+      "largeInteger": {
+        "state": "present",
+        "sentX": "12345678901234567890",
+        "projectedX": "12345678901234567000",
+        "equal": false
+      },
+      "repeatingDecimal": {
+        "state": "present",
+        "sentX": "0.1",
+        "projectedX": "0.1",
+        "equal": true
+      }
+    },
+    "allProjected": true,
+    "precisionPreserved": false,
+    "longDecimalPreserved": false,
+    "largeIntegerPreserved": false,
+    "tinyDecimalPreserved": true,
+    "precisionLossCases": [
+      "longDecimal",
+      "largeInteger"
+    ]
+  },
+  "scope": "Sends decimal values with more digits than a float64 carries and compares the projected text with the input using Decimal. It records whether the digits survive; it does not test the downstream consumer's number handling, and it does not change the contract or the generator."
+}

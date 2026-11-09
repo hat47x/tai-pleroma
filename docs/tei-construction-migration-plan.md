@@ -1,6 +1,8 @@
-# TEIによるプロダクト構築への移行 — フィージビリティ検証計画
+﻿# TEIによるプロダクト構築への移行 — フィージビリティ検証計画
 
-状態: **Draft（提案）**。Owner指示（2026-11-01）を前提にした検証計画であり、製品要求・採用済み設計ではありません。要求の正本は各リポジトリの`requirements/`、TEIの方法は[TEIの業務システム設計要求](https://github.com/hat47x/tei-platform/blob/main/requirements/BUSINESS_SYSTEM_DESIGN_REQUIREMENTS.md)を参照します。
+状態: **Draft（提案）**。Owner指示（2026-11-01）を前提にした検証計画であり、製品要求・採用済み設計ではありません。
+
+現況（何が示せて何が示せていないか・判断が要る点）は[TEIパイロットの現況](tei-pilot-status-brief.md)に1枚でまとめています。要求の正本は各リポジトリの`requirements/`、TEIの方法は[TEIの業務システム設計要求](https://github.com/hat47x/tei-platform/blob/main/requirements/BUSINESS_SYSTEM_DESIGN_REQUIREMENTS.md)を参照します。
 
 ## 1. 前提とする方向
 
@@ -77,7 +79,8 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | 1 | SUIの対象範囲を三視点でTEIの作業領域へモデル化 | 意味の記述と未決の一覧 |
 | 2 | 意味から生成器・成果物を導出し、適合試験を通す | 契約→生成→4ケース選抜→one-shot Target Profile実行とrollingの配備・rollbackまで到達。属性単位（text/document_id）とCard record（text+documentId）とIsland/Edge recordを選抜（[generation](../evaluations/records/SUI-TEI-text-generation-2026-11-01.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[multi](../evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json)、[record](../evaluations/records/SUI-TEI-card-record-2026-11-02.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[island-edge](../evaluations/records/SUI-TEI-island-edge-2026-11-02.json)、[document](../evaluations/records/SUI-TEI-document-record-2026-11-02.json)）。Documentはflat recordの合成で表し、合成層のテスト6件と、生成候補を実行して合成する結合経路17ケースもPASS（[assembler](../evaluations/records/SUI-TEI-assembler-2026-11-02.json)、[flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[affiliation](../evaluations/records/SUI-TEI-affiliation-2026-11-02.json)）。入れ子投影は未達 |
 | 3 | 現行実装との比較測定とreceipt化 | ツール工程の測定（[workflow](../evaluations/records/SUI-TEI-workflow-2026-11-02.json)）と、T1の小さな比較（[compare](../evaluations/records/SUI-TEI-compare-2026-11-02.json)）を実施。生産性は完成後に評価する（仮決定）。人の作業時間・長期保守はPoC中には測らない |
-| 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録 |
+| 4 | 次の範囲へ広げるか、TEI側の不足を先に埋めるかの判断 | 判断記録（[段階4の判断](../analysis/tei-stage4-decision-2026-11-06.md)、2026-11-06）|
+| 5 | 意味変更の再生成ループを回し、写像の追随コストを計上する | 意味変更2件以上を「契約→再生成→被覆追加→適合」の1回転で記録し、写像の手修正を件数で計上する。別実行先で同じ適合試験が通ることを1件示す（[段階5の計画](#77-段階5の計画2026-11-06)）|
 
 各段階は小さなPRとreceiptで記録します。段階2で生成できない場合は、TEI側の不足としてIssueへ戻し、下流のプロダクトへ回避実装を足しません。
 
@@ -121,8 +124,10 @@ TAI配下の自作プロダクト（TAI、EKI、SUI、SEI、MMI、TEI自身を�
 | 投影フロー・DocumentV1検証・契約digest照合を一括実行する | パイロットの健全性を1コマンドで確認できる | 手順を増やすとき |
 | artifactへ契約内容のcontractDigestを記録し、契約ファイルと照合する | 契約の版と内容の両方を確認できる | 契約ファイルの改行方針を変えるとき |
 | artifactへ契約のcontractIdとcontractVersionを記録する | 契約ファイルのdigestに頼らず、版を確認できる | 契約の版運用を変えるとき |
-| sourcesとeadingOrderの保存後往復を確認する | 追加フィールドが保存で失われないことを確かめられる | フィールドの正規化を変えるとき |
-| DocumentのeadingOrder配列を投影へ含める | 読み順を投影で失わない | 読み順の意味を変えるとき |
+| sourcesと
+eadingOrderの保存後往復を確認する | 追加フィールドが保存で失われないことを確かめられる | フィールドの正規化を変えるとき |
+| Documentの
+eadingOrder配列を投影へ含める | 読み順を投影で失わない | 読み順の意味を変えるとき |
 | Cardのsources配列を投影へ含める | DocumentV1の出典参照を投影で失わない | sourcesの意味や検証を変えるとき |
 | SUIの投影セマンティックモデルは当面TAIのパイロットに置く | SUIにTEIツールチェーンへの依存をまだ持たせない | SUIが自分のドメインモデルをTEIで持つとき |
 | 保存経路のIf-Matchを確認し、古いETagを409で拒否する | 競合時に黙って上書きしないことを確かめられる | SaaSの前提条件必須プロファイルを確認するとき |
@@ -169,6 +174,230 @@ DocumentV1と現在の投影契約の差分を[sui-documentv1-tei-gap.md](sui-do
 
 SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読み取り専用のartifactとして投影を渡す案を[sui-api-boundary-tei-mapping.md](sui-api-boundary-tei-mapping.md)へ整理しました。DocumentV1の書き込み経路は、完全な写像ができるまで扱いません。
 
+## 7.7 段階5の計画（2026-11-06）
+
+段階4で「TEI側の不足を先に埋める」と決め、3件の実測を揃えた。うち端点種別はTAI側で解消し、残る2論点（デコード方針の不統一、数値・真偽値の配列）はTEI側の判断待ちである。判断を待つ間に、TAIが単独で進められるのは**意味変更の再生成ループを回すこと**なので、段階5をそこに置く。
+
+範囲は広げない。SUIのDocumentV1投影のままで、意味を変える回数を増やす。
+
+| 項目 | 内容 |
+| --- | --- |
+| 目的 | 意味変更1件あたりに何が自動で追従し、何を人が直すかを、件数として蓄積する |
+| 出口1 | 意味変更を2件以上、「契約→再生成→被覆追加→適合」の1回転で記録する |
+| 出口2 | 写像（消費側）の追随を、意味変更1件あたりの手修正件数として計上する |
+| 出口3 | 別のTarget Profileで同じ適合試験が通ることを1件示す |
+| 出口4 | 下記の判定表を、receiptを根拠に更新する |
+| 停止条件 | TEI側2論点が解けるまで、入れ子投影と数値配列の投影には踏み込まない |
+| 非目標 | 生産性・自律性の評価（完成後に測る）、実インフラが要る検証の代替 |
+
+段階4で分かった「適合試験は意味変更を自動では検出しない」に対して、被覆検査（[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)）を先に置いた。段階5では、意味変更のたびにこの検査が落ちることを確認してから被覆を足す順序にする。落ちなければ、その意味変更は試験に届いていない。
+
+### 7.7.1 意味変更2件の実測（2026-11-06）
+
+出口1・出口2を2件で満たした。変更の形を変えて、費用の違いを見た。
+
+| | 変更1（任意フィールド追加） | 変更2（必須フィールド追加） |
+| --- | --- | --- |
+| 意味の変更 | Island に任意の `summary` | Card に必須の `revision`（`std.integer`） |
+| 生成コードの手修正 | 0行 | 0行 |
+| 被覆検査（被覆追加の前） | 落ちない（変更を検出しない） | **落ちる**（`card-record.revision` を名指し） |
+| 適合試験（被覆追加の前） | 24/24 PASS | 失敗（全presentケースがmissingになる） |
+| 被覆の手修正 | 新規1ケース、既存0件 | 既存3ケース＋新規1ケース |
+| 被覆追加後 | 24/25 PASS | 25/25 PASS |
+| 消費側での扱い | 落ちる（`keepsSummary: false`） | 落ちる（`keepsRevision: false`、`cardKeys` は従来の4つ） |
+
+- **任意の追加は「試験に届かない」**。被覆を足すまで緑のままで、変更が壊れていても分からない
+- **必須の追加は「試験が壊れる」**。既存ケースが一斉にmissingになり、被覆検査も名指しで落ちる
+- どちらも生成コードの手修正は0行。人が直すのは契約（意味）とfixtures（被覆）だけで、合わせて1ファイルずつ
+- 消費側はどちらも黙って落とす。`valid: true` は「知っている意味が壊れていない」以上の意味を持たない
+
+段階5の残る出口は出口3（別Target Profileで同じ適合試験）だったので、試した。**通らなかった。**（[compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)）
+
+| Profile | 実行モデル | 結果 |
+| --- | --- | --- |
+| `sui-record-oneshot` | oneshot | PASS（5プロセス・5リクエスト・5応答） |
+| `sui-record-rolling` | long-running | **FAIL**（1プロセス・5リクエスト・1応答、`candidate wait failed: exit status 2`） |
+| `sui-text-oneshot` | oneshot | PASS（4プロセス・4リクエスト・4応答） |
+| `sui-text-rolling` | long-running | **FAIL**（1プロセス・4リクエスト・1応答、`candidate returned 1 of 4 responses`） |
+
+理由は生成候補の側にある。生成テンプレート（`text-template`と`text-record-template`）が出力するプログラムは、標準入力から1件読んで1件返して終わる。long-runningプロファイルは1プロセスに複数リクエストを送るため、2件目で候補が既に終了している。**2つのテンプレートで同じ非対称が出たので、特定テンプレートの欠陥ではなく生成物の共通の性質**である（[text側の比較](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)）。
+
+- **交換できるのはProfileの宣言であって、生成候補の実行モデルではない。** 同じ意味でも、実行モデルが変われば候補の作り直しが要る
+- これは"実行先が交換できる"の反例であり、生成テンプレートがprocess modelごとに要ることを示す。TEI側の論点として追加する（入れ子・数値配列に次ぐ3件目）
+
+出口4（判定表の更新）は本節で実施した。段階5は、出口3が反例で終わったため**未達のまま次の段階へ持ち越す**。
+
+### 7.7.1-b 意味変更3件目と、検証側の誤判定（2026-11-06）
+
+段階6の出口（3件目）を先に回した。変更の形を3つ目に変えている。
+
+| | 変更3 |
+| --- | --- |
+| 意味の変更 | Island の `title` を任意から必須へ（**フィールドの追加なし**） |
+| 生成コードの手修正 | 0行（3件とも0行） |
+| 適合試験（被覆追加の前） | **検出した**（24ケース中23件しか通らない） |
+| 被覆の手修正 | 既存1ケースを書き換え（新規0件） |
+| 写像の追随 | **不要**（フィールド集合が変わらないため） |
+
+- 任意→必須の変更は、既存ケースのうち「その項目を欠いた状態」を exercise しているものが落ちる。**被覆を足さなくても検出できる**のは、その欠落ケースが既にあったため
+- 写像が不要だった理由は、消費側の許可リストに載っているフィールドを消していないから。フィールドの追加・削除を伴わない意味変更は、写像の追随を要さない
+- 任意フラグが生成物に効くことは別に確認した（[optional flag](../evaluations/records/TEI-optional-flag-2026-11-06.json)）。`title`欠落時、任意なら`present`（省略）、必須なら`missing`になる
+
+#### 見つけた検証側の不具合
+
+変更3の初回実行で「適合試験が変更を検出しなかった」という結果が出たが、内訳は24ケース中23件通過だった。**`integration_flow.py`の`result`が、失敗ケースがあっても`PASS`を書いていた。**
+
+- 原因: `result`が固定値`"PASS"`で、終了コードだけがケース数を見ていた
+- 影響: suiteの段は終了コードで落ちるため suite は正常だったが、**receiptの`result`だけが嘘をつく**状態だった。receiptを読む検査（checker）は、この段について`result`を見る規則が無かったため見逃していた
+- 修正: `result`をケース通過数と組み合わせて決め、checkerに「flowのreceiptは`casesPassed == casesRun`」の規則を追加した
+
+この不具合は、receiptを「実行の記録」として読むときに効く。終了コードと`result`が別々に決まっている箇所は、他にもないか段階6で確認する。
+
+### 7.7.1-c 終了コードと`result`の一致の点検（2026-11-06）
+
+段階6の最初の作業として、`result`と終了コードが別々に決まる箇所を機械的に点検した。[receipt](../evaluations/records/TEI-result-exit-parity-2026-11-06.json)
+
+- 対象は`integrations/tools`と`integrations/pilot-sui-document/assembler`の111スクリプト
+- 検出する形は「`result`が固定の`PASS`文字列」かつ「末尾の終了が条件式」。`integration_flow.py`が持っていた形そのもの
+- 結果は**0件**。`integration_flow.py`の修正後、同じ形は残っていない
+- 検出器自体が空振りでないことは、旧`integration_flow.py`と同じ形のソースを内部で解析して確認する自己試験で担保している
+
+限界も書いておく。この点検は構文の形だけを見るので、変数を経由した不一致や、receiptを書いた後に別経路で失敗する形は見つけられない。件数が0でも「不一致が原理的に無い」ことの証明にはならない。
+
+### 7.7.1-d 十進値の精度（2026-11-06）
+
+TEIの`plan/workstreams/TEI_PRODUCT_CRITICAL_PATH_2026-10.md`§34は「投影のJSON化で十進値の`float64`経由の精度喪失、optionalのmissing/null同一省略などがあり得る。実消費値の忠実度は#2585の別検査であり、生成成功≠型付き意味保持」と書いている。**TAIのパイロットでも同じかを測った。**（[receipt](../evaluations/records/TEI-decimal-fidelity-2026-11-06.json)）
+
+Card契約の`x`（`std.decimal`）に桁数を与えて、投影された値を`Decimal`で比較した。
+
+| 入力 | 投影後 | 一致 |
+| --- | --- | --- |
+| `10` | `10` | 一致 |
+| `0.1234567890123456789` | `0.12345678901234568` | **不一致**（下位桁が丸め） |
+| `0.0000000001` | `1E-10` | 一致 |
+| `12345678901234567890` | `12345678901234567000` | **不一致**（2^53超の整数が丸め） |
+| `0.1` | `0.1` | 一致 |
+
+- TEIの記載どおり、**十進値は`float64`を経て丸められる**。整数でも2^53を超えると失われる
+- パイロットの用途では座標が`float64`なので実害は小さいが、「生成成功≠型付き意味保持」は**TAIの契約でも成り立つ**
+- `optional`のmissing/null同一省略も、TEIの記載と一致する（Edge契約v4で実測済み）
+- これらは#2585としてTEI側で既に追跡されている。TAIは新しい論点を作らず、**同じ現象が自分の契約でも起きることの証拠**として記録する
+- 値の丸めを避けたい契約（金額など）では、`std.decimal`のままだと足りない。TEI側の判断（#2585）を待つ
+
+### 7.7.1-e `PASS`と成功フラグの矛盾（2026-11-06）
+
+receiptが`result: PASS`と言いながら、自分の`observed`の中に成功を意味する名前のフラグ（`passed`・`valid`・`comparisonPassed`など）が`false`で入っている場合を機械的に探した。[receipt](../evaluations/records/TEI-receipt-consistency-2026-11-06.json)
+
+- 対象は`PASS`のreceipt 192件
+- 該当は**3件**で、いずれも**反例を記録するための意図的な`false`**だった
+  - 必須フィールド追加の`coverageBeforeFixtureEdit/passed`: 被覆を足す前は落ちることを示す
+  - Target Profile比較の`comparisonPassed`: long-runningで通らないことを示す（text側も同じ）
+- 意図的な3件は理由つきで検査に列挙し、**それ以外の矛盾は落ちる**ようにした
+
+この検査の意味は「矛盾が無い」ことの証明ではなく、**矛盾を意図したものとして申告させる**ことにある。反例を記録するreceiptは、その旨を宣言しないと通らない。
+
+### 7.7.2 段階5の結論（2026-11-06）
+
+段階5の出口を、達成・反例・保留に分けて締める。
+
+| 出口 | 状態 | 根拠 |
+| --- | --- | --- |
+| 1. 意味変更2件以上の1回転 | **達成** | 任意フィールド追加と必須フィールド追加の2件（[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json)） |
+| 2. 写像の追随を手修正として計上 | **達成** | どちらも契約1ファイル＋fixtures1ファイル。生成コードの手修正は0行 |
+| 3. 別Target Profileで同じ適合試験 | **反例** | one-shotは通り、long-runningは通らない。原因は生成候補の実行モデル（[record](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)） |
+| 4. 判定表の更新 | **達成** | §7.8を実測に合わせて更新 |
+
+段階5で確定したこと:
+
+1. **意味変更の費用は、意味の形で変わる。** 任意の追加は「試験に届かない」（被覆を足すまで緑）、必須の追加は「試験が壊れる」（既存ケースが一斉に落ちる）。どちらも生成コードは自動で追従し、人が直すのは契約とfixturesだけ。
+2. **適合試験は意味の変更を検出しない。** 検出するのは被覆の有無であり、被覆は意味変更のたびに人が足す。段階5ではこれを検査（被覆0件のフィールドを名指しで落とす）で強制した。
+3. **製品の写像は生成されない。** 消費側は既知フィールドに忠実だが、新しい意味は`valid: true`のまま落ちる。写像の追随は意味変更1件あたり1ファイルの手修正として計上する。
+4. **実行先の交換は、生成候補の実行モデルを変えない。** Profileの宣言を差し替えても、process modelが変われば候補は動かない。
+
+### 7.7.3 次の段階（仮決定・2026-11-06）
+
+段階6は、TAIが単独で進められる範囲では**新しい検証を増やさず、再生成ループの運用を定着させる**段階にする。理由は、意味変更の費用・被覆の強制・写像の追随・実行モデルの4点が揃い、これ以上パイロットの範囲を広げても同じ結論の反復になるためである。
+
+| 項目 | 内容 |
+| --- | --- |
+| 目的 | 決めた運用（被覆を先に落とす、写像の手修正を計上する）が、次の変更でも回ることを確かめる |
+| 出口 | 3件目の意味変更を、被覆検査→被覆追加→適合→写像追随の順で記録する。写像の追随が不要だった場合はその理由を書く |
+| 停止条件 | TEI側3論点（デコード方針、数値配列、process model）のいずれかに判断が出たら、範囲を広げる前に再観測する |
+| 非目標 | パイロット範囲の拡大（SUI全体、書き込み経路、複数プロダクト接続） |
+
+範囲を広げない理由は、段階4で「TEI側の不足を先に埋める」と決めたことと同じである。TAIの側で範囲を広げると、未解決の不足を下流の回避実装で覆い隠すことになる。
+
+### 7.7.4 段階5・6の運用の定着（2026-11-06）
+
+段階5・6で回した「意味変更→再生成→被覆→適合→写像」の手順を、[意味変更の進め方](meaning-change-runbook.md)として固定した。3回の実測から、次の3点を運用規則にしている。
+
+1. **順序は被覆→再生成→適合→写像。** 逆にすると、被覆の無い変更が緑のまま通る
+2. **被覆検査が落ちない変更は、試験に届いていない。** 被覆を足してから適合へ進む
+3. **写像はTAIで自動化しない。** 製品の意味への写像は製品の責務で、下流に回避実装を足すとTEIの不足が見えなくなる
+
+段階6の当初の狙い「新しい検証を増やさず運用を定着させる」に対して、実際には検証を4つ足した（体裁、登録漏れ、`result`と終了コードの一致、`PASS`と成功フラグの矛盾）。いずれも**「緑なのに嘘」を1件以上実際に捕まえた**か、捕まえる形を自己試験で示したもので、運用の定着を支える検査として残す。この判断も残しておく（増やすこと自体を目的にしない）。
+
+## 7.8 フィージビリティ判定の現況（2026-11-06）
+
+計画§2の5条件に、§5の条件のうち§2と重ならない2つ（digestの残存と人の再現）を加えて、現在のreceiptに照らして並べる。**示せた**は receipt で再確認できるもの、**部分**は条件を満たす範囲と満たさない範囲が同居するもの。
+
+| 条件 | 現況 | 根拠 |
+| --- | --- | --- |
+| 意味が正本 | **部分**。契約とfixturesが版付きで存在し、生成物とdigestで対応する。ただし製品への写像は手書きで、新しい意味は自動で届かない | [contract digests](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)、[meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
+| 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
+| 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
+| 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが191件、合成61件 | [status](status.md) |
+| 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
+| 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
+
+この表は「TEIで構築した」の証明ではない。条件ごとに何が示せて何が示せていないかを、判断できる形で並べたものである。段階5の出口4で更新する。
+
+## 7.9 receiptの体裁の棚卸し（2026-11-06）
+
+「証拠が版に束縛される」を示せた一方で、receiptの体裁は機械的に検査していなかった。`scope`（何を証明しないか）を毎回書く運用は、検査が無ければ抜ける。
+
+全receiptを歩いて数えた（[receipt](../evaluations/records/TEI-receipt-scope-2026-11-06.json)）。
+
+| 項目 | 件数 |
+| --- | --- |
+| 実実行receipt | 194 |
+| 合成receipt | 64 |
+| 必須項目（`schema`/`synthetic`/`evidenceKind`/`publicationAllowed`/`date`/`result`）を欠く | 70 |
+| `scope`が無い | 69 |
+| `scope`に限界の記述が無い | 15 |
+
+- 欠けているのは主に2026-10月下旬から11月初旬のEKI/SCN-001系で、体裁を決める前のreceiptである
+- 一括検証のcheckerは**登録済みの247件**（実実行185・合成61）だけを見るため、未登録のreceiptは検査をすり抜ける。この棚卸しは全258件を対象にした
+### 修復の結果（同日）
+
+見積もった2種類の修復を実施した。
+
+| 修復 | 件数 | 内容 |
+| --- | --- | --- |
+| `publicationAllowed: false`を補う | 52 | 公開gateが`blocked`である現在の位置づけを明示する。結果は変えない |
+| `scope`へ限界の一文を足す | 15 | 既存の記述を消さず、その範囲を超えて主張しないことを明示する |
+| それでも体裁が揃わないもの | 70 | [historical-receipts.json](../evaluations/records/historical-receipts.json)へ理由付きで列挙。`synthetic`/`evidenceKind`/`result`/`date`は**推測して埋めない** |
+
+- 推測で埋めると「実行していないものに結果を与える」ことになるため、体裁確立前の70件は証拠として数えない扱いにした
+- 一括検証へ`receipt_scope_check.py --strict`を入れ、非historicalのreceiptに欠けがあれば落ちるようにした（98段目）
+- 現在は 実実行193件・合成64件・historical 70件、ギャップ0でPASS
+
+### 登録漏れの検査（同日）
+
+体裁を直したあと、**checkerに登録されていないreceipt**が残っていることが分かった。checkerは登録済みのものにしか意味の規則を当てないため、未登録は「体裁は正しいが中身は検査されない」状態になる。
+
+棚卸しの結果、`evaluations/records`の258件のうち12件が未登録だった。
+
+| 種別 | 件数 | 扱い |
+| --- | --- | --- |
+| 体裁確立前のreceipt | 10 | `historical-receipts.json`に列挙済み。証拠として数えない |
+| 道具の出力（receiptではない） | 1 | `SCN-003-compose-2026-11-03.validate.json`。検査対象から明示的に除外 |
+| 登録漏れの実receipt | 1 | `SUI-TEI-postgres-multidoc-2026-11-03.json`。規則を書いて登録した（10文書の作成・読み戻しが全て200か） |
+
+- 除外は「黙って飛ばす」のではなく、`AUXILIARY`として名前を挙げる形にした
+- `receipt_scope_check.py --strict`に「未登録のreceiptが無いこと」を加えたので、今後は登録漏れでも落ちる
+
 ## 8. 停止条件・非目標
 
 - フィージビリティが確認できるまで、既存プロダクトの本番移行や公開は行いません。
@@ -178,7 +407,58 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 ## 9. 未決
 
-1. パイロットの意味を受理する主体と、生成物を確認する責任者。
-2. SUIのどの範囲を最初の意味の単位とするか（DocumentV1全体か、投影だけか）。
-3. 比較測定の基準となる現行実装の版と、変更課題の選び方。
-4. TEI側で先に埋める必要がある不足（統合モデラー、Target Profile、証拠の束縛）の優先順位。
+段階4・5の実測で解けたものと、残るものを分けておく。
+
+解けた（仮決定済み）:
+
+- パイロットの範囲はDocumentV1の投影（読み取りと合成）に限定した（§3）。
+- 比較測定の基準は、同じ意味変更を手作業で行う場合とし、PoC中は評価しない（§6、§7評価の位置づけ）。
+- TEI側の不足の優先順位は、デコード方針の統一（入れ子を含む）を第一、数値配列を第二とした（[段階4の判断](../analysis/tei-stage4-decision-2026-11-06.md)）。
+- 端点種別の任意性はTAI側で解消した（契約v4＋合成層の端点解決）。
+
+残る:
+
+1. パイロットの意味を受理する主体と、生成物を確認する責任者。TAIでは決められない（業務上の受入）。
+2. 製品側6判断のうち未決4件（[整理](../analysis/product-side-decisions-2026-11-06.md)、[草案](../analysis/product-side-decisions-issue-drafts-2026-11-06.md)）。2件は製品文書で決定済みとして閉じた。
+3. TEI側3論点の判断（[草案](../analysis/tei-side-gaps-issue-drafts-2026-11-06.md)）。
+4. 別実行先での同一適合試験。実インフラが要る。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
