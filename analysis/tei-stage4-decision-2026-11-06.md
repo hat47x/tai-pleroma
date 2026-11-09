@@ -84,7 +84,32 @@
 ### 結果を踏まえた判断の修正
 
 1. **入れ子投影はTAIで解消できないことを確定する。** 契約のデコードが未知フィールドを無視するため、TAI側からは「拒否させる」ことも「受理させる」こともできない。TEI側の変更が要る。
-2. **TEI側の不足は3件になった**: 入れ子投影の受理（または明示的な拒否）、`Edge.fromKind`/`toKind`の任意性の扱い、端点種別の必須性を契約と合成層で揃えること。
+2. **TEI側の不足は3件になった**: 入れ子投影の受理（または明示的な拒否）、数値・真偽値の配列（`many`）の扱い、契約デコード経路の一本化。
+   端点種別の必須性は**TAI側で解消済み**のため、この3件から外した（下記）。
 3. 段階4の作業は、これ以上TEI側へ踏み込まず、次の2つに絞る: (a) TEI側3件の判断材料を整える、(b) 製品側6判断の材料を整える。いずれも起票は外部作用のため行わない。
 
 `Edge.fromKind`/`toKind`の任意性と合成層の仮定は、**TEIの契約表現ではなくTAIのパイロット側の設計**でもある。製品のDocumentV1が端点種別を任意にしている以上、契約側を任意に寄せる選択肢があり、それはTAI側で試せる。**試作の結果、任意にした契約は受理され、種別なしのEdgeを省略付きで投影できた**（[receipt](../evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json)）。端点種別の欠落はTEI側ではなく契約側で解ける。残る論点は合成層が種別なしをどう扱うかだけである。
+
+### 3件すべての実測が揃った（2026-11-06）
+
+| 不足 | 実測 | receipt |
+| --- | --- | --- |
+| 入れ子投影 | `build`は受理して平坦化、`select`は`unknown field "fields"`で拒否 | [nesting](../evaluations/records/TEI-nesting-2026-11-06.json)、[decode](../evaluations/records/TEI-decode-divergence-2026-11-06.json) |
+| 数値・真偽値の配列 | `std.text`/`std.identifier`の`many`は生成・実行できる。`std.decimal`/`std.boolean`/`std.integer`の`many`は拒否。単一の`std.decimal`は受理 | [many](../evaluations/records/TEI-many-primitive-2026-11-06.json) |
+| デコード経路の一本化 | 同じ入れ子契約が入口で逆の答えになる（`build`受理・`select`拒否） | [decode](../evaluations/records/TEI-decode-divergence-2026-11-06.json) |
+
+- 1件目と3件目は同じ原因（`renderCandidateBytes`が`json.Unmarshal`、`readJSON`が`DisallowUnknownFields`）を指す。**実質は「デコード方針の不統一」と「数値配列の制約」の2論点**に整理できる
+- いずれもTAIからは変更できず、判断材料だけを揃えた状態になった。[Issue草案](tei-side-gaps-issue-drafts-2026-11-06.md)に投稿可能な粒度でまとめてある
+
+### TAI側で解消した項目
+
+`Edge.fromKind`/`toKind`の必須性は、製品の任意性に合わせて**契約v4で任意化**し、合成層も端点IDから種別を解決するよう変更した。投影から合成までの一貫は[chain](../evaluations/records/SUI-TEI-edge-chain-2026-11-06.json)で実測済み（24ケースPASS）。この項目はTEI側の不足から外れる。
+
+### 次に残るもの
+
+1. TEI側2論点の判断待ち（投稿は外部作用のため未実施）。
+2. 製品側6判断の判断待ち（[草案](product-side-decisions-issue-drafts-2026-11-06.md)）。
+3. 実インフラが要る検証（実IdP、管理DB、公開CA、逆プロキシ、複数ホスト配備）。
+4. PoC完了後の生産性・自律性の評価receipt。
+
+いずれもTAIの作業だけでは閉じない。TAIは再観測の準備を保ち、判断が下りた項目から順に測り直す。

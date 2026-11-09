@@ -3,14 +3,14 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "host": "Windows with a locally built sei CLI and a temporary record store",
   "command": "python integrations/tools/sei_cli_record.py",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/sei-decision-projection.json"
   },
-  "seiCommit": "6d98ddf2d1080a1c3a308294fb342c231a08294d",
+  "seiCommit": "fbfa9840903ce1f44321af06e3c57fcfa26e112b",
   "observed": {
     "checks": {
       "init": true,
@@ -21,13 +21,13 @@
       "snapshotDigest": true
     },
     "recordId": "decision-1",
-    "snapshotDigest": "sha256:07fdcfd01ecd84ea958af581c0c900445075d6d7c3e2d850054148259cfd80ab",
+    "snapshotDigest": "sha256:9e3443ce0a3c50c6ccfe7b44073856b2713a11a01ac2666abe300cbc9d852c91",
     "resume": [
-      "Store sei-store-2026-11-07-85810c44: 1 records",
+      "Store sei-store-2026-11-09-4382e3b1: 1 records",
       "Unresolved scope: recognized Decision.unresolved_refs only; not a case-wide inventory.",
       "0 entries; 0 distinct logical references. Case completeness: not assessed.",
       "Not verified by this view: the responsible party's Authority; human confirmation; whether a record comes from a real object or a synthetic fixture. A responsible party is shown as recorded.",
-      "Snapshot SHA-256: sha256:07fdcfd01ecd84ea958af581c0c900445075d6d7c3e2d850054148259cfd80ab"
+      "Snapshot SHA-256: sha256:9e3443ce0a3c50c6ccfe7b44073856b2713a11a01ac2666abe300cbc9d852c91"
     ]
   },
   "scope": "Records the projected decision through SEI's CLI, reads the snapshot, exports a bundle and verifies it. The store is temporary and no policy gate is exercised."

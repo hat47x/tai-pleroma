@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
   "command": "python integrations/pilot-sui-document/assembler/native_action_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-recover-20261107 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-native-action-2026-11-06.json",
   "result": "PASS",
@@ -26,7 +26,7 @@
     "commitStatus": 200,
     "commitBody": {
       "protocolVersion": "1",
-      "revision": "bcea98febb6858f636a83a04122eb1061d3b7ec055e0d2d7ef4d4e29d6c4baa8"
+      "revision": "ec0bcf30f96ac55a0d56ba419fa13bc592baf3686c6d85fdd65a7be24c2389f5"
     },
     "movedPosition": {
       "x": 100.0,
