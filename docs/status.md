@@ -131,14 +131,14 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 - MMIはformat profileの受理（`assertFormatProfile`）とconsumerの5件を確認した
 - EKIは投影TaskRequestの受理（202/queued）と、policy・Worker行を入れた場合の`running`到達まで確認した
 - TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証31段がPASSした
-- 実実行receiptは179件、合成receiptは61件
+- 実実行receiptは180件、合成receiptは61件
 - 公開gateは`allowed=false`・blocker 7件のまま（[2026-11-03の再確認](../evaluations/SCN-001-publication-gate-recheck-2026-11-03.json)）
 
 詳細は[TEI/SUI統合の整理](../analysis/tei-sui-integration-2026-11-03.md)と[フィージビリティ整理](../analysis/tei-construction-feasibility-2026-11-03.md)にある。残課題は[Issue #394](https://github.com/hat47x/tai-pleroma/issues/394)へ整理した。実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証である。
 
 ## 2026-11-06 時点の追記
 
-実実行receiptは179件、一括検証は93段＋checker（`integrations/tools/run_suite.py`、全段PASS）。
+実実行receiptは180件、一括検証は94段＋checker（`integrations/tools/run_suite.py`、全段PASS）。
 
 - EKI: 製品テストと自前構成の両方で、HTTP投入→Agent実行→ResultClaimまで到達。結果の受入は未配線（`409 RESULT_NOT_READY`）。mTLS登録と失効（最終状態・認証段で401）も確認
 - SUI: Postgres・TLS・ローカルCA・TLS終端プロキシ・2インスタンス共有、監査エクスポート、管理APIの認証分離、利用者provision、TEI artifact配信、context query/bundle、CE4 resolve、モデル登録を確認
