@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "host": "Windows with Python 3.12 reading SUI's models.py annotations and the pilot contracts",
   "command": "python integrations/pilot-sui-document/assembler/document_type_coverage_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-document-types-2026-11-06.json",
   "result": "PASS",

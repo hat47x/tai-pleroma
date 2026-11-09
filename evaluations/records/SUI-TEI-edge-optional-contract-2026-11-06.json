@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "host": "Windows with the TEI reference generator selection tool and a locally compiled candidate",
   "command": "python integrations/pilot-sui-document/assembler/edge_optional_contract_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-optional-contract-2026-11-06.json",
   "result": "PASS",

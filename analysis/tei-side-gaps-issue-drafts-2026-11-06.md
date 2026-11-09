@@ -48,11 +48,20 @@ projection.fields[] に fields キー → 拒否されず、生成成功、平�
 
 SUIのDocumentV1には、数値の配列（例: 図形の座標列）や真偽値の配列を持つ要素があります。TAIはこれらを投影せず元データを正本としていますが、入れ子投影を受理する場合や、座標列のような数値配列を投影する場合は、`many`と`std.decimal`の組み合わせが要ります。
 
-**論点**: 制約を維持するか、テンプレートをprimitiveごとの要素型に広げるか。広げる場合、生成テンプレートの変更と、既存の`std.text`/`std.identifier`の`many`が壊れないことの確認が要ります。
+TAIの実測（6通り、[receipt](../evaluations/records/TEI-many-primitive-2026-11-06.json)）:
+
+```text
+std.text / std.identifier の many → 受理され、生成・実行できる（[a,b] をそのまま出力）
+std.decimal / std.boolean / std.integer の many → 拒否
+  record field "xs": many is not supported for primitive "std.decimal" in this Target profile
+std.decimal の単一（many なし）→ 受理
+```
+
+**論点**: 制約を維持するか、テンプレートをprimitiveごとの要素型に広げるか。広げる場合、生成テンプレートの変更と、既存の`std.text`/`std.identifier`の`many`が壊れないことの確認が要ります。 現状は単一の数値が通るのに配列だけが落ちるため、座標列を持つ文書は平坦な合成で表現できません。
 
 **TAI側でできること**: 拡張後の再観測（数値配列の契約が生成・実行できるか）。
 
-**根拠**: TAIのパイロットは数値配列を投影対象外として回避中（[写像の実測](../docs/sui-documentv1-tei-gap.md)）。
+**根拠**: [TEI-many-primitive receipt](../evaluations/records/TEI-many-primitive-2026-11-06.json)、[写像の実測](../docs/sui-documentv1-tei-gap.md)
 
 ---
 

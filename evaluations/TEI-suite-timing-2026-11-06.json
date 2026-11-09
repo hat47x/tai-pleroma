@@ -3,37 +3,37 @@
   "synthetic": false,
   "evidenceKind": "observation",
   "publicationAllowed": false,
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 91,
-    "totalSeconds": 1162.99,
+    "steps": 92,
+    "totalSeconds": 2295.23,
     "slowest": [
       {
         "name": "sui_docs_tests",
-        "seconds": 256.05,
+        "seconds": 138.0,
+        "attempts": 1
+      },
+      {
+        "name": "pipeline",
+        "seconds": 121.07,
+        "attempts": 1
+      },
+      {
+        "name": "eki_projection",
+        "seconds": 113.94,
         "attempts": 1
       },
       {
         "name": "sui_session_tests",
-        "seconds": 120.4,
+        "seconds": 108.29,
         "attempts": 1
       },
       {
-        "name": "postgres_migrate",
-        "seconds": 69.02,
-        "attempts": 1
-      },
-      {
-        "name": "postgres_concurrency",
-        "seconds": 54.84,
-        "attempts": 1
-      },
-      {
-        "name": "postgres_contention",
-        "seconds": 34.39,
+        "name": "postgres_retry",
+        "seconds": 94.37,
         "attempts": 1
       }
     ],
@@ -42,8 +42,8 @@
   "products": {
     "tei": "",
     "sui": "",
-    "sei": "6d98ddf",
-    "mmi": "09f849bd",
+    "sei": "fbfa984",
+    "mmi": "ca568390",
     "eki": "66b0c04"
   },
   "scope": "Reads the committed suite receipt and records per-step timings and the checked-out product revisions. It is a baseline observation for later comparison, not a productivity measurement."
