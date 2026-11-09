@@ -5,7 +5,7 @@
   "publicationAllowed": false,
   "date": "2026-11-09",
   "host": "Windows with Python 3.12, uvicorn, and an embedded PostgreSQL 16.2",
-  "command": "python integrations/pilot-sui-document/assembler/postgres_contention_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-recover-20261107 --artifact evaluations/artifacts/scn-003-document.json",
+  "command": "python integrations/pilot-sui-document/assembler/postgres_contention_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
@@ -18,8 +18,8 @@
         "round": 1,
         "statuses": [
           409,
-          200,
-          409
+          409,
+          200
         ],
         "retries": [
           0,
@@ -43,9 +43,9 @@
       {
         "round": 3,
         "statuses": [
+          200,
           409,
-          409,
-          200
+          409
         ],
         "retries": [
           0,
@@ -69,9 +69,9 @@
       {
         "round": 5,
         "statuses": [
+          200,
           409,
-          409,
-          200
+          409
         ],
         "retries": [
           0,

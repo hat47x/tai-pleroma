@@ -24,5 +24,5 @@
     "workerResult": false
   },
   "evidence": "EKI-TEI-dispatch-running-2026-11-03.log",
-  "scope": "Shows the projected TaskRequest reaching the running state once a policy row and a registered-worker row exist. The worker row was inserted directly, no worker process ran, and no result was produced."
+  "scope": "Shows the projected TaskRequest reaching the running state once a policy row and a registered-worker row exist. The worker row was inserted directly, no worker process ran, and no result was produced. このreceiptは実行時点の記録であり、ここに書いた範囲を超える主張はしない。"
 }

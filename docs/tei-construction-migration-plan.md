@@ -257,7 +257,19 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 - 欠けているのは主に2026-10月下旬から11月初旬のEKI/SCN-001系で、体裁を決める前のreceiptである
 - 一括検証のcheckerは**登録済みの246件**（実実行185・合成61）だけを見るため、未登録のreceiptは検査をすり抜ける。この棚卸しは全258件を対象にした
-- 直し方は、古い順に`scope`と必須項目を補い、全部直ったら`receipt_scope_check.py --strict`を一括検証へ入れてGateにする。それまでは`--report`（既定）で件数を記録する
+### 修復の結果（同日）
+
+見積もった2種類の修復を実施した。
+
+| 修復 | 件数 | 内容 |
+| --- | --- | --- |
+| `publicationAllowed: false`を補う | 52 | 公開gateが`blocked`である現在の位置づけを明示する。結果は変えない |
+| `scope`へ限界の一文を足す | 15 | 既存の記述を消さず、その範囲を超えて主張しないことを明示する |
+| それでも体裁が揃わないもの | 70 | [historical-receipts.json](../evaluations/records/historical-receipts.json)へ理由付きで列挙。`synthetic`/`evidenceKind`/`result`/`date`は**推測して埋めない** |
+
+- 推測で埋めると「実行していないものに結果を与える」ことになるため、体裁確立前の70件は証拠として数えない扱いにした
+- 一括検証へ`receipt_scope_check.py --strict`を入れ、非historicalのreceiptに欠けがあれば落ちるようにした（98段目）
+- 現在は 全194件・合成64件・historical 70件（登録済みは実実行185件）、ギャップ0でPASS
 
 ## 8. 停止条件・非目標
 

@@ -11,5 +11,6 @@
   "notes": [
     "EKIの`eki-control`/`eki-agent`のversion表示だけを確認する。",
     "Taskの委任・Worker・Authority・結果検証は未実施。"
-  ]
+  ],
+  "publicationAllowed": false
 }

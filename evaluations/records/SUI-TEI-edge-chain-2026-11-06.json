@@ -5,7 +5,7 @@
   "publicationAllowed": false,
   "date": "2026-11-09",
   "host": "Windows with the TEI reference generator and the pilot assembler",
-  "command": "python integrations/pilot-sui-document/assembler/edge_assembly_chain_check.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-chain-2026-11-06.json",
+  "command": "python integrations/pilot-sui-document/assembler/edge_assembly_chain_check.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace D:\\GIT\\hat47x\\tai-wt-dec2\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-edge-chain-2026-11-06.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",

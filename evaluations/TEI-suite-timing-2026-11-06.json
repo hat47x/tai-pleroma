@@ -8,32 +8,32 @@
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 97,
-    "totalSeconds": 726.68,
+    "steps": 98,
+    "totalSeconds": 882.74,
     "slowest": [
       {
         "name": "sui_docs_tests",
-        "seconds": 95.12,
-        "attempts": 1
-      },
-      {
-        "name": "tei_meaning_change",
-        "seconds": 76.89,
-        "attempts": 1
-      },
-      {
-        "name": "sui_multi_instance",
-        "seconds": 43.22,
-        "attempts": 1
-      },
-      {
-        "name": "tei_target_profiles",
-        "seconds": 41.64,
+        "seconds": 118.19,
         "attempts": 1
       },
       {
         "name": "tei_meaning_change_required",
-        "seconds": 41.4,
+        "seconds": 71.11,
+        "attempts": 1
+      },
+      {
+        "name": "tei_meaning_change",
+        "seconds": 67.34,
+        "attempts": 1
+      },
+      {
+        "name": "sui_session_tests",
+        "seconds": 62.62,
+        "attempts": 1
+      },
+      {
+        "name": "sui_auth_flow_tests",
+        "seconds": 32.33,
         "attempts": 1
       }
     ],
@@ -44,7 +44,7 @@
     "sui": "",
     "sei": "fbfa984",
     "mmi": "ca568390",
-    "eki": "66b0c04"
+    "eki": ""
   },
   "scope": "Reads the committed suite receipt and records per-step timings and the checked-out product revisions. It is a baseline observation for later comparison, not a productivity measurement."
 }
