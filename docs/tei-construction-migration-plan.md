@@ -296,6 +296,24 @@ receiptが`result: PASS`と言いながら、自分の`observed`の中に成功�
 
 この検査の意味は「矛盾が無い」ことの証明ではなく、**矛盾を意図したものとして申告させる**ことにある。反例を記録するreceiptは、その旨を宣言しないと通らない。
 
+### 7.7.1-f 実行モデルの反例の原因を特定（2026-11-06）
+
+long-runningプロファイルで通らない原因を「生成候補が1件で終わるから」で止めていたが、TEIの生成器の構成を確かめて、より正確にした。[receipt](../evaluations/records/TEI-projection-strategy-2026-11-06.json)
+
+- TEIにはlong-running用のテンプレートがある（`template-long-running.go.tmpl`、Python/Java/JS/WASM/WASIの同種もある）
+- しかし**投影（`projection: true`）の戦略は`text-template`と`text-record-template`の2つだけ**で、どちらもone-shotのmainを出す
+- 投影契約にlong-running用の戦略を渡すと、生成器が拒否する
+
+```text
+tei-generator-build -strategy long-running-template（projection kind "record"）
+→ projection kind "record" requires the text-record-template strategy
+tei-generator-build -strategy long-running-template（projection kind "normalize"）
+→ 同じく拒否
+tei-generator-build -strategy text-record-template → 生成できる（one-shot）
+```
+
+つまり **「long-runningが無い」のではなく、「long-runningで動く投影の生成戦略が無い」**。TEI側の論点は「生成テンプレートをprocess modelに対応させる」ではなく、**「投影戦略をprocess modelに対応させる（または投影契約にlong-runningテンプレートを許可する）」**と書くほうが正確である。Issue草案3件目をこの表現に直した。
+
 ### 7.7.2 段階5の結論（2026-11-06）
 
 段階5の出口を、達成・反例・保留に分けて締める。
@@ -347,7 +365,7 @@ receiptが`result: PASS`と言いながら、自分の`observed`の中に成功�
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが191件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが192件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 

@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with SUI exporting audit events over HTTP to a local sink",
   "command": "python integrations/pilot-sui-document/assembler/export_audit_dedup_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-export-dedup-2026-11-06.json",
   "result": "PASS",

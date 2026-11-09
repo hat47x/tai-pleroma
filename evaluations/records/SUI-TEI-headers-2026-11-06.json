@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Python 3.12, FastAPI TestClient, and a temporary SQLite database",
   "command": "python integrations/pilot-sui-document/assembler/response_headers_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-headers-2026-11-06.json",
   "result": "PASS",
@@ -18,24 +18,24 @@
       "frameOptions": "DENY",
       "cacheControl": null,
       "vary": null,
-      "requestId": "b73ddc357df7434fb309caf488672ee6"
+      "requestId": "35e4976c32574d5b9e816cd74a851d7e"
     },
     "unauthorizedHeaders": {
       "nosniff": "nosniff",
       "frameOptions": "DENY",
       "cacheControl": null,
       "vary": null,
-      "requestId": "cffcd2b0ea024efea15e237bbc95be8e"
+      "requestId": "08de1635f4a44354a3155deeea65f3d3"
     },
     "unauthorizedBodyHasRequestId": true,
     "traceEchoed": "caller-supplied-id",
-    "unsafeTraceReplaced": "72e8f237eb544149ab27c81adcbf666f",
+    "unsafeTraceReplaced": "044248d6c5324020ae73bedb1fa89d10",
     "agentHeaders": {
       "nosniff": "nosniff",
       "frameOptions": "DENY",
       "cacheControl": "private, no-store",
       "vary": "Sui-Sensemaking-Agent-Credential, Sui-Sensemaking-Agent-Bearer",
-      "requestId": "3a1ffb21481644468f132a3000e7dba0"
+      "requestId": "2681731e8a4a4f3ab1b6de7e82b410cc"
     },
     "agentStatus": 503
   },

@@ -101,9 +101,9 @@ TAIのパイロットで、TEIの`TEI_PRODUCT_CRITICAL_PATH_2026-10.md`§34が�
 
 TAI側の意味は「生成成功≠型付き意味保持」である。金額のように丸めを許さない値を持つ契約は、#2585の判断が出るまで`std.decimal`で投影しない。
 
-## 4. 生成テンプレートがprocess modelごとに要る
+## 4. 投影の生成戦略がprocess modelに対応していない
 
-**提案タイトル**: `reference-generator-selection: 生成テンプレートをTarget Profileのprocess modelに対応させる`
+**提案タイトル**: `reference-generator-selection: 投影の生成戦略をTarget Profileのprocess modelに対応させる`
 
 **本文**:
 
@@ -117,6 +117,15 @@ sui-text-rolling    (long-running) → FAIL  1プロセス・4リクエスト・
 ```
 
 `text-template`と`text-record-template`の両方で同じ非対称が出ました。生成されるプログラムは標準入力から1件読んで1件返して終わるため、1プロセスに複数リクエストを送るlong-runningプロファイルでは2件目以降に応答できません。
+
+原因をさらに特定しました（[receipt](../evaluations/records/TEI-projection-strategy-2026-11-06.json)）。TEIにはlong-running用のテンプレート（`template-long-running.go.tmpl`など）がありますが、**`projection: true`の戦略は`text-template`と`text-record-template`の2つだけ**で、どちらもone-shotです。投影契約にlong-running用の戦略を渡すと生成器が拒否します。
+
+```text
+projection kind "record" + long-running-template
+→ projection kind "record" requires the text-record-template strategy
+```
+
+**「long-runningが無い」のではなく、「long-runningで動く投影の生成戦略が無い」**ということです。
 
 **論点**:
 

@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Python and pydantic 2.14.2",
   "command": "python integrations/pilot-sui-document/assembler/validate_against_sui.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact D:\\GIT\\hat47x\\tai-wt-dec2\\evaluations\\artifacts\\scn-003-document.json",
   "result": "PASS",
