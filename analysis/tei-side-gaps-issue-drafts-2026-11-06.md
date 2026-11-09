@@ -4,6 +4,21 @@
 
 対象は[段階4の判断](tei-stage4-decision-2026-11-06.md)で「TAIでは解消できない」と確定した3件です。いずれもTAIは再観測と記録のみを担います。
 
+## 0. 3件の性格の違い（2026-11-06追記）
+
+TEIの試験と文書を当たったところ、3件は**同じ種類の「不足」ではありません**。Issueの書き方を件ごとに変える必要があります。
+
+| 件 | TEIの試験 | TEIの文書 | 性格 | Issueの種類 |
+| --- | --- | --- | --- | --- |
+| 1. デコード方針（入れ子・未知フィールド） | **無い**（`unknown field`を確かめる試験が見つからない） | 無い | 暗黙の挙動 | **方針決定の依頼** |
+| 2. 数値・真偽値の配列（`many`） | **有る**（`projection_pfc_many_test.go`が`std.integer`/`std.decimal`/`std.boolean`を拒否することを表明） | #2585 PFC-06として言及 | **意図した制約** | **拡張の提案**（不具合ではない） |
+| 3. 投影×process model | **無い**（1629件の`*_test.go`で0件） | 無い | 暗黙の結合 | **未検証の指摘＋方針決定の依頼** |
+
+- 2は「実行時は文字列しか扱えない」という**実装上の理由が試験に書かれている**。したがって「壊れている」ではなく「対応を広げられるか」を問う
+- 1と3は、コードの中にだけ挙動があり、試験でも文書でも宣言されていない。**決まっていないことを決めてもらう**依頼になる
+- この区別をせずに3件を同じ調子で並べると、2が「不具合の報告」に見えてしまう
+
+
 ---
 
 ## 1. 入れ子の投影フィールドを無言で捨てず、拒否するか受理するか
@@ -40,11 +55,15 @@ projection.fields[] に fields キー → 拒否されず、生成成功、平�
 
 ## 2. `ProjectionField`の`many`が扱えるprimitiveを広げるか
 
-**提案タイトル**: `reference-generator-selection: record投影のmanyフィールドでstd.identifier以外を扱う`
+**提案タイトル**: `reference-generator-selection: record投影のmanyフィールドで文字列以外の要素型を扱えるようにする`
 
 **本文**:
 
 `validateContract`は、`many`なrecordフィールドについて`std.text`と`std.identifier`以外を拒否します（#2585 PFC-06の対応として、record templateがmanyを文字列として描画するための制約です）。
+
+これは**意図した制約で、TEIの試験が表明しています**。`tools/reference-generator-selection/projection_pfc_many_test.go`の`TestRecordProjectionManySupportMatrix`が、`std.text`と`std.identifier`は受理し、`std.integer`・`std.decimal`・`std.boolean`は拒否することを確かめています（コメントに「the runtime only handles strings」と理由が書かれています）。
+
+したがって本件は**不具合の報告ではなく、対応範囲を広げる提案**です。TAIが観測した「数値配列が投影できない」は仕様どおりの結果であり、報告する価値があるのは「その制約が業務上いつ問題になるか」の側です。
 
 SUIのDocumentV1には、数値の配列（例: 図形の座標列）や真偽値の配列を持つ要素があります。TAIはこれらを投影せず元データを正本としていますが、入れ子投影を受理する場合や、座標列のような数値配列を投影する場合は、`many`と`std.decimal`の組み合わせが要ります。
 
