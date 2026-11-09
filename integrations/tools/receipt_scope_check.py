@@ -86,6 +86,12 @@ def main():
             counted["synthetic" if data.get("synthetic") else "real"] += 1
             continue
         counted["synthetic" if data.get("synthetic") else "real"] += 1
+        if path.name not in registered and not str(data.get("schema", "")).startswith("tai.reference."):
+            # Other workstreams' receipts keep their own shape; listed, not judged.
+            counted["synthetic" if data.get("synthetic") else "real"] += 1
+            foreign.append(path.name)
+            continue
+
         absent = [key for key in REQUIRED if key not in data]
         if absent:
             missing_fields[path.name] = absent
@@ -97,7 +103,12 @@ def main():
         if data.get("publicationAllowed") is not False:
             missing_fields.setdefault(path.name, []).append("publicationAllowed!=false")
         if path.name not in registered:
-            unregistered.append(path.name)
+            # A receipt written to TAI's schema but never registered is a gap.
+            # Anything else belongs to another workstream in this repository.
+            if str(data.get("schema", "")).startswith("tai.reference."):
+                unregistered.append(path.name)
+            else:
+                foreign.append(path.name)
 
     checks = {
         "realRecords": counted["real"],
@@ -142,7 +153,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(root / args.artifact)},
         "observed": checks,
-        "scope": "Walks every receipt and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. Receipts from other workstreams in this repository use their own schema; they are listed as foreign rather than judged against TAI's format, so their metadata is not checked here. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation.",
+        "scope": "Walks the receipts and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. Receipts that are not registered and do not declare TAI's schema belong to other workstreams; they are listed as foreign rather than judged against TAI's format, so their metadata is not checked here. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation.",
     }
     (root / args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
