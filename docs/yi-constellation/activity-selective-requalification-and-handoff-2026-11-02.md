@@ -944,3 +944,29 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **次の実測**：同一TEI Functionでページ1取得後に原文コメント変更→旧Token拒否→新Tokenで必要ページだけ再取得する正負対照、外部Provider rawのみ改版（Source Index同一）→引用資格だけ再検査する正負対照、CLIと参照MCPの同一選択子／Snapshotでの実Result対照、外部DSH Consumerの完全Reply受領を**別Trial**で扱う。TEI #3723の参照実装継続試験は実測済みだが、実外部Provider、原子的な読取中Snapshot、Host Grant、DSHへのMCP完全配送、TAI Activity自動再開E2EはNOT RUN。初回#168のH2/H3固定比較に新Toolや新Treatmentを混入しない。
 
+## 27. 2026-11-09：投影で見えない関係と、未知の外部作用を「存在しない」へ変換しない
+
+<!-- tai-activity-sui-hidden-relations-and-eki-effect-unknown-20261109 -->
+
+### 27.1 SUIのAgent投影は意図的に非完全であり、空のRelationは不存在証明ではない
+
+[SUI merged #3416](https://github.com/hat47x/sui-sensemaking/pull/3416)は、島を端点とする関係線（島↔島・Card↔島）を**agent向け`GET /docs/{doc_id}`とMCP投影の双方で返さない**方針Bを文書・試験で固定した。投影`relations=[]`や`counts=0`は、原Documentに関係が無いことを意味しない。隠した関係は`bundleHash`にも入らず、原Documentで関係が変化しても投影Fingerprintが不変になり得る。[SUI merged #3421](https://github.com/hat47x/sui-sensemaking/pull/3421)の固定fixtureでは`updatedAt`のみ変化すると単位digestは一致しても`bundleHash`が変化し、未レビューのIslandはdigestを出さない。**単位digest、投影Bundle Hash、原Document Revision、Owner Meaningは別資格**である。
+
+[TAI merged #537](https://github.com/hat47x/tai-pleroma/pull/537)の`edge-record v4`は、**入力に存在する**Card→Island等の端点Kindを解決できるが、SUI Agent投影が**出力しない**Edgeを復元できない。したがって「v4の合成PASS」と「SUI公開投影から全関係を読める」は同一Claimではない。既存§21.8の端点解決は**受領済みEdge**に限定する。原Documentの全関係が必要なJobは、正規SUI Ownerが現在Audience/Grantで許可する別のread-only Source経路を示すまで`partial/unknown`とし、公開投影を迂回した未レビューID取得を行わない。SUI #3416の方針A（島↔島だけ追加）は**実Consumerで必要性が確認された場合のみ**別Issue/Schema版で判断する。
+
+### 27.2 EKIのLease回収は外部Effectの不存在を示さない
+
+[EKI merged #811](https://github.com/hat47x/eki-fabric/pull/811)が現行実装を照合した結果、`internal/control/service/recall.go`は`claimreconcile.Decide`へ`PossibleExternalEffect:false`を固定で渡している。信頼できるEffect情報が欠落したTaskでも、grace経過後に`CloseLeaseExpired`で閉じ得る。これは§25で整理した`Control.closed`と`Business Effect.unknown`の**実装上の断絶**であり、`claimreconcile`／Task State Modelの「可能な外部副作用＋Receipt不明→Reconcile/UNKNOWN」という契約を実Controlが満たすことは未実証。**既に自動再送が発生したという観測はない**ので、再送事故が起きたとは書かない。
+
+**横断で共通する規則**は、`not projected`／`not observed`／`not supplied`／`not verified`を`false`／`none`へ勝手に変換しないこと。ただしすべてを同じStatus型へ統一しない。SUIは**観測の範囲**、EKIは**外部作用の不確実性**をそれぞれの正本が表す。TAIはGoalに必要なClaimの欠落を認識し、許可された代替Read／独立Effect照合／安全な保留を選択する。
+
+| 独立反例 | 不適切な結論 | 必要な判定・次の所有先 |
+| --- | --- | --- |
+| SUI投影`relations=[]`、原文には島Edgeあり | 関係は存在しない | `projection incomplete`。SUI #3402の公開方針維持、必要ならOwnerへ追加Readの可否照会 |
+| 原文の島Edgeだけ変更、投影`bundleHash`不変 | Source/意味は不変 | `projected view unchanged`のみ。原Document Revision/Sourceを別Pin |
+| v4 Optional Kind合成成功、SUIで島Edge非露出 | 全Relationを合成済み | `received subset assembled`のみ。SUI→TAI同一Attemptの必要Relationを確認 |
+| EKI `closed/lease_expired`、Effect情報欠損 | 副作用なし・再実行可 | `effect unknown`。EKI #745が実ControlへのEffect契約接続を所有 |
+| EKI 6イベントTransport成功、Client API未受領 | 業務結果Accepted | `delivered to test receiver`のみ。EKI #242/#753の同一Task E2Eを別試験 |
+
+**実装順**：まず各Ownerの既存試験と公開境界を利用する。SUI Agent Projectionの方針をTAIが上書きせず、EKIの`PossibleExternalEffect`をTAIの推測値で埋めない。次に必要なActivity一件でSource/Scope/実Consumer受領/Effectの独立ExpectedをPinし、実行できない部分だけ`partial/unknown`を明示する。TAI #168のH2/H3初回固定試験には新SUI/EKI Toolを加えず、独自Registry/中央Workflow Hostを増設しない。今回の横断同一Attempt・Owner受理・EKI #745のコード修正はNOT RUN。
+
