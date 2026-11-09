@@ -970,3 +970,35 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **実装順**：まず各Ownerの既存試験と公開境界を利用する。SUI Agent Projectionの方針をTAIが上書きせず、EKIの`PossibleExternalEffect`をTAIの推測値で埋めない。次に必要なActivity一件でSource/Scope/実Consumer受領/Effectの独立ExpectedをPinし、実行できない部分だけ`partial/unknown`を明示する。TAI #168のH2/H3初回固定試験には新SUI/EKI Toolを加えず、独自Registry/中央Workflow Hostを増設しない。今回の横断同一Attempt・Owner受理・EKI #745のコード修正はNOT RUN。
 
+## 28. 2026-11-09：Target Profile差・Consumer意味欠落・Receipt体裁を、Activityの資格へ接続する
+
+<!-- tai-activity-target-profile-and-receipt-scope-audit-20261109 -->
+
+### 28.1 同じContractが適合しても、実行Process Modelは交換可能とは限らない
+
+[TAI merged #548](https://github.com/hat47x/tai-pleroma/pull/548)は同一`sui.card.record v8` Contract/Fixture/生成候補で`sui-record-oneshot`を5 Process/5 Request/5 Response **PASS**、`sui-record-rolling`を1 Process/5 Request/1 Response **FAIL**と実測した。[merged #549](https://github.com/hat47x/tai-pleroma/pull/549)は別`text-template`でもoneshot 4/4、rolling 1/4を確認した。両生成テンプレートがstdinを**1件だけ**読んで応答し終了するため、long-runningの2件目以降に応答しない。**Target Profileを宣言で切り替えられることは、同じ生成Artifactがその実行モデルで動くことではない**。同じ意味のモデルでもProcess Model別の生成・適合資格が必要。
+
+Activityの再利用キーは、意味の契約だけでなく`Target Profile/Process Model`、Generator Template/Version、Binary/Artifact digest、実Process・Request/Reply件数、Host/Transport、独立Expectedを区別する。Targetが変わった場合、意味が同じならSource Meaningを無条件に失効させる必要はないが、**Artifact/実行/Delivery資格を選択的に再評価**する。対応はTEI Generator/Target Ownerの既存Issueへ渡し、TAIに第二のGenerator/Runnerを作らない。
+
+### 28.2 「契約がvalid」と「新しい意味がConsumerへ届く」を区別する
+
+[TAI merged #544](https://github.com/hat47x/tai-pleroma/pull/544)では、Cardへの必須`revision`追加は既存適合試験と被覆検査を壊したが、Islandへの任意`summary`追加は新しいFixtureを追加するまで緑のままだった。どちらも生成コード手修正は0行でも、参照Consumerの既知Field集合が変わらず新Fieldは**黙って欠落**。[merged #542](https://github.com/hat47x/tai-pleroma/pull/542)は逆に、既知のDocument/Card/Island/Edge/Affiliation Fieldは参照SUI Consumerを通して保持されることを限定実測した。
+
+よって`valid:true`の意味は「**現在Consumerが知っているFieldの契約違反がない**」まで。新しい任意/必須Fieldを含むRequired Field Setについて、Producer Output Field→Consumer Mapping→実受領Field/Count→独立Expectedを同じContract Revisionで照合する。**未知Fieldの非保存**を「意味変更なし」「全Fieldが届いた」へ昇格させない。Source全件が必要なActivityは`partial`のまま保持し、SUI公開投影の非露出（§27）とも別の原因として診断する。
+
+### 28.3 Receiptの存在・登録・体裁・証明範囲を分ける
+
+[TAI merged #551](https://github.com/hat47x/tai-pleroma/pull/551)は全258 Receipt（実実行194／合成64）を棚卸しし、必須項目欠落70、`scope`欠落69、限界記述欠落15を検出した。既存一括Checkerの対象は**登録済み246件**であり、全Receiptを網羅しない。過去のReceiptが存在する、または一括Suiteが緑であるだけで、`Scope qualified`や実Consumer/Owner受理としない。
+
+既存TAI側修復方針は、古いReceiptから`scope`と必須項目を補い、`receipt_scope_check.py --report`で全件の欠落を可視化し、**修復完了後**に`--strict`を一括Gate化すること。今はStrict PASSと主張しない。[TAI merged #550](https://github.com/hat47x/tai-pleroma/pull/550)はGo 1.27/Python 3.12/Node 24とTEI/SUI/EKI固定Revisionで一括97段の再現Runbookを追加したが、Runbookの手順固定と**第三者が同一環境で独立再現したこと**は別資格。実IdP/DB/公開CA/多Host/人間の受理も対象外。
+
+| 証拠の段階 | 必要な主張の上限 | Activityでの扱い |
+| --- | --- | --- |
+| Suite/Fixture PASS | 固定条件下の適合 | 現在の実Source/Target/Consumerへ自動転用しない |
+| Receipt存在／Checker登録 | 記録がある／登録済みの集合 | 未登録・欠落・`scope`未記述を別診断 |
+| Receipt体裁合格 | 必須項目と限界記述が揃う | 内容の真偽・現在鮮度・実Effectは別 |
+| 実Target/Consumer E2E | 同一Attemptの実Call/Reply/受領・独立Expected | 対象Purpose/Scopeだけ再利用 |
+| Owner Acceptance | 現在Authorityの正式な意味・Effect受理 | 前段の技術的PASSから自動昇格しない |
+
+**最小実行順**：TAI Stage 5の既存97段・Receipt監査をOwner側で継続し、TEIのTarget/Template不一致はTEI側、SUI Consumerの新Field受領はSUI側の現行契約で検証する。最初のTAI #168 H2/H3比較にはこれらの異なるTaskを追加しない。今回のActivityによる実Target再生成・実Consumer E2E・全Receipt修復・第三者再現・正式Owner受理はNOT RUN。
+
