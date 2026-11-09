@@ -101,7 +101,14 @@ class SvgTextStructuralParity(unittest.TestCase):
             *positions["test"],
         ), "pre-fix straight line should cross test node")
         routed = rq7_svg.route_points(positions, "compile", "package")
+        adjacent = rq7_svg.route_points(positions, "test", "package")
         self.assertEqual(len(routed), 6)
+        self.assertEqual(len(adjacent), 2)
+        self.assertEqual(routed[-1][0], adjacent[-1][0])
+        self.assertNotEqual(routed[-1][1], adjacent[-1][1],
+                            "two different incoming arrows must not merge at one port")
+        self.assertNotEqual(routed[0][1], rq7_svg.route_points(positions, "compile", "test")[0][1],
+                            "long and adjacent outgoing edges must have different ports")
         for a, b in zip(routed, routed[1:]):
             self.assertFalse(rq7_svg.intersects_interior(a, b, *positions["test"]))
         svg = ET.fromstring(rq7_svg.render_svg(case))
