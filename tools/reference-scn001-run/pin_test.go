@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"strings"
 	"testing"
@@ -89,6 +90,23 @@ func TestCombinedRunKeepsTheMMIPinSummary(t *testing.T) {
 		t.Fatalf("a checked pin that did not match cannot be in a passing run: %+v", pin)
 	}
 	if verification := Verify(receipt); !verification.Passed {
+		t.Fatalf("%+v", verification)
+	}
+}
+
+// The SEI tool (reference-sei-decision, version pin) reports its pin as a "pin" object that
+// also carries the expected and actual values. The run keeps only checked and result.
+func TestSEIPinObjectOfTheSEIToolDecodesIntoThePinSummary(t *testing.T) {
+	raw := `{"passed":true,"pin":{"checked":true,"result":"match","commit":{"expected":"x","actual":"x"},"goVersion":{"expected":"go1.26.9","actual":"go1.26.9"}}}`
+	var sei SEIComponent
+	if err := json.Unmarshal([]byte(raw), &sei); err != nil {
+		t.Fatal(err)
+	}
+	if sei.Pin == nil || !sei.Pin.Checked || sei.Pin.Result != "match" {
+		t.Fatalf("%+v", sei.Pin)
+	}
+	receipt := withPins(t, nil, sei.Pin)
+	if verification := Verify(receipt); !verification.Passed || strings.Join(verification.PinnedComponents, ",") != "sei" {
 		t.Fatalf("%+v", verification)
 	}
 }
