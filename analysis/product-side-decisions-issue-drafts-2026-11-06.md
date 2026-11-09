@@ -117,6 +117,33 @@ SaaS事前検査は`access_control_adapter == "external_http"`を要求するた
 
 ---
 
+## 7. `AccessDecision.read_only`が強制点で無視される
+
+**提案タイトル**: `access control: AccessDecision.read_only を強制点で扱う`
+
+**本文**:
+
+`AccessDecision`は「許可するが読み取り専用」を表現できます（`allow: bool`と`read_only: bool`）。しかし強制点の`enforce_access`は`decision.allow`しか見ず、`decision.read_only`を扱いません。
+
+```python
+def enforce_access(decision: AccessDecision, *, action: AccessAction) -> None:
+    if decision.allow:
+        return
+    ...  # deny
+```
+
+- ローカルのガードレール（`apply_local_failsafe`、`_read_only_fallback`）は`read_only`を強制しているため、既定構成では観測されません
+- 一方、**外部アダプターが`allow=True, read_only=True`を返した場合、`write`は通ります**。契約が表現できる制限を、強制点が実装していない状態です
+- 監査には`decision_read_only`が残るため、「制限付きで許可した」ことは記録されますが、動作は制限されません
+
+**論点**: 強制点で`decision.read_only`を見る（`write`/`export`/`share`を403にする）か、`AccessDecision`から`read_only`を外して「制限はreasonで表す」ことに統一するか。
+
+**TAIの位置づけ**: 「読んだ結果の指摘」であり、実行での確認はしていません。外部アダプターが`allow+read_only`を返す構成を作れるようになった時点で確かめます。
+
+**根拠**: [整理](../analysis/product-side-decisions-2026-11-06.md)の6番
+
+---
+
 ## 投稿する場合の手順（未実施）
 
 1. 各草案を1件ずつIssueへ起票する（本文はそのまま使える）。
