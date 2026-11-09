@@ -1,0 +1,285 @@
+{
+  "fixture_id": "SK-L-2026-11-02",
+  "status": "public-synthetic-evaluation-reference-NOT-RUN",
+  "classification": "non-normative-testdata",
+  "purpose": "Compare a Tool-only / Product Skill / TAI cross-product Skill without treating Markdown authoring, relations or research links as performed operations.",
+  "owners": [
+    "TEI #2619/#2620/#2621/#2622",
+    "#2500/#2516",
+    "SHO #7/#8/#9",
+    "TAI #168/#270"
+  ],
+  "case_count": 10,
+  "cases": [
+    {
+      "id": "SK-L01",
+      "intent": "Organize a research index only",
+      "input": {
+        "kind": "research-index",
+        "occurrences": [
+          {
+            "id": "o1",
+            "url": "https://example.invalid/paper-a",
+            "title": "Paper A",
+            "fetched": false
+          },
+          {
+            "id": "o2",
+            "url": "https://example.invalid/paper-b",
+            "title": "Paper B",
+            "fetched": false
+          }
+        ],
+        "request": "reorder-links",
+        "fetch_authorized": false
+      },
+      "expected": {
+        "index_edit_allowed": true,
+        "fulltext_understood": false,
+        "source_fetched": false,
+        "scientific_claim_verified": false
+      }
+    },
+    {
+      "id": "SK-L02",
+      "intent": "Preserve multiple occurrences and avoid inventing citation edges",
+      "input": {
+        "kind": "research-index",
+        "occurrences": [
+          {
+            "id": "o1",
+            "url": "urn:synthetic:paper-a",
+            "indent": 0
+          },
+          {
+            "id": "o2",
+            "url": "urn:synthetic:paper-a",
+            "indent": 2
+          }
+        ],
+        "explicit_academic_edges": []
+      },
+      "expected": {
+        "occurrences": 2,
+        "distinct_source_candidates": 1,
+        "explicit_academic_edges": 0,
+        "infer_cites_from_indent": false
+      }
+    },
+    {
+      "id": "SK-L03",
+      "intent": "Read a table embedded in Markdown without executing it",
+      "input": {
+        "kind": "markdown-section",
+        "table_headers": [
+          "Output",
+          "Operator",
+          "Input"
+        ],
+        "rows": [
+          [
+            "total",
+            "x * y",
+            "price,quantity"
+          ]
+        ],
+        "semantic_role_declared": false
+      },
+      "expected": {
+        "may_present_as_source": true,
+        "execute_as_function": false,
+        "execute_as_test": false,
+        "needs_role_confirmation": true
+      }
+    },
+    {
+      "id": "SK-L04",
+      "intent": "Interpret an explicit Function Role while retaining unresolved numeric policy",
+      "input": {
+        "kind": "markdown-definition",
+        "semantic_role_declared": true,
+        "role": "Function",
+        "formula": "amount = quantity * unit_price",
+        "typed_inputs": {
+          "quantity": "decimal",
+          "unit_price": "decimal"
+        },
+        "rounding_policy": null,
+        "expected_table_present": true,
+        "actual_test_run": false
+      },
+      "expected": {
+        "function_candidate": true,
+        "rounding_resolved": false,
+        "independent_oracle_executed": false,
+        "owner_semantic_acceptance": false
+      }
+    },
+    {
+      "id": "SK-L05",
+      "intent": "Model relation is not a fetch instruction",
+      "input": {
+        "kind": "data-model-and-context",
+        "data_model_relations": [
+          "order.lines",
+          "line.allocations"
+        ],
+        "function_context": {
+          "explicit_mappings": []
+        },
+        "fetch_request": false
+      },
+      "expected": {
+        "available_relation_count": 2,
+        "selected_read_paths": [],
+        "implicit_fetch_allowed": false,
+        "observed_fetch_count": 0
+      }
+    },
+    {
+      "id": "SK-L06",
+      "intent": "Explicit Function Data Context restricts read-set",
+      "input": {
+        "kind": "data-model-and-context",
+        "data_model_relations": [
+          "order.lines",
+          "line.allocations",
+          "order.customer.privateNotes"
+        ],
+        "function_context": {
+          "explicit_mappings": [
+            {
+              "path": "order.lines",
+              "fields": [
+                "id",
+                "quantity"
+              ],
+              "scope": "selected-order"
+            }
+          ]
+        },
+        "authorized_paths": [
+          "order.lines"
+        ],
+        "observed_fetches": []
+      },
+      "expected": {
+        "selected_read_paths": [
+          "order.lines"
+        ],
+        "fetch_allocations": false,
+        "fetch_customer_private": false,
+        "observed_fetch_count": 0
+      }
+    },
+    {
+      "id": "SK-L07",
+      "intent": "Do not infer absence from partial provider result",
+      "input": {
+        "kind": "partial-result",
+        "mapping": {
+          "path": "order.lines",
+          "scope": "selected-order"
+        },
+        "provider_response": {
+          "rows": [],
+          "coverage": "partial",
+          "complete": false
+        },
+        "claim": "There are no order lines"
+      },
+      "expected": {
+        "negative_claim_justified": false,
+        "absence_established": false,
+        "coverage_known_as_full": false
+      }
+    },
+    {
+      "id": "SK-L08",
+      "intent": "Lossy aggregate needs explicit write interpretation",
+      "input": {
+        "kind": "derived-view",
+        "source_rows": [
+          {
+            "id": "a1",
+            "location": "Tokyo",
+            "qty": 3
+          },
+          {
+            "id": "a2",
+            "location": "Osaka",
+            "qty": 2
+          }
+        ],
+        "projection": {
+          "kind": "summarize",
+          "grain": "order",
+          "display": "Tokyo3,Osaka2",
+          "lossy": true
+        },
+        "edit": {
+          "display": "Tokyo4,Osaka1",
+          "typed_action_binding": null,
+          "source_identity_map": null
+        }
+      },
+      "expected": {
+        "read_projection_possible": true,
+        "automatic_reverse_write_allowed": false,
+        "provider_effect_observed": false
+      }
+    },
+    {
+      "id": "SK-L09",
+      "intent": "Native SQL is an explicit special-provider binding",
+      "input": {
+        "kind": "data-operation",
+        "ordinary_expression": {
+          "kind": "relation-filter",
+          "path": "order.lines"
+        },
+        "native_sql": {
+          "present": true,
+          "explicit_binding": false
+        },
+        "provider_capabilities": {
+          "batch": true,
+          "atomic_batch": null,
+          "patch": false
+        }
+      },
+      "expected": {
+        "ordinary_standard_operator_candidate": true,
+        "native_sql_executable": false,
+        "transaction_atomicity_proven": false,
+        "patch_eligible": false
+      }
+    },
+    {
+      "id": "SK-L10",
+      "intent": "Research claim to design and code requires evidence at each stage",
+      "input": {
+        "kind": "research-to-design",
+        "resource_link": "urn:synthetic:paper-x",
+        "document_fetched": false,
+        "source_claim_verified": false,
+        "design_proposal_created": true,
+        "tei_meaning_accepted": false,
+        "code_repository_artifact_exists": false,
+        "independent_test_executed": false
+      },
+      "expected": {
+        "document_link_recorded": true,
+        "paper_claim_accepted": false,
+        "design_is_proposal": true,
+        "implementation_verified": false
+      }
+    }
+  ],
+  "evaluation_notes": [
+    "Contains synthetic inputs and public reference expectations; NEVER use these as sealed holdout answers in a blinded agent trial.",
+    "Expectations are local evidence boundaries, not a TEI Schema, Skill authority, actual Product capability, independent Product Oracle or User acceptance.",
+    "No real papers, raw data, credentials, host paths or customer/tenant identifiers are present.",
+    "All full Product/Skill/Harness/Studio/Data Provider/OS tests are NOT RUN."
+  ]
+}

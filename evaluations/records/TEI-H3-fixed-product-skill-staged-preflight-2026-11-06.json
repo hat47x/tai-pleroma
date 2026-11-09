@@ -1,0 +1,75 @@
+{
+  "schema": "tai.evidence.tei-h3-fixed-skill-staging/v0",
+  "status": "real Product CLI / staged candidate Skill bytes verified; external Harness NOT RUN",
+  "product": {
+    "repository": "hat47x/tei-platform",
+    "commit": "50ebf8014340fd1906f6b35cfa30173e0ee2fc6c",
+    "binarySha256": "6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f",
+    "source": "reference/workspace/semantic/sales/order.tei",
+    "sourceSha256": "f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33",
+    "subject": {
+      "kind": "semantic-data",
+      "id": "sales.order"
+    }
+  },
+  "candidateSkill": {
+    "name": "yi-tei-modeling",
+    "status": "available-as-pinned-source; not Harness loaded",
+    "root": {
+      "path": "skills/yi-tei-modeling/SKILL.md",
+      "gitBlobSha1": "9cd8475bd6489c6661ae644bf771cfcce04188b1",
+      "sha256": "cf137ae534e655881dfc686d70afbf14138cb21a61885b987c224dd893ea2282"
+    },
+    "reference": {
+      "path": "skills/yi-tei-modeling/references/read-only-model-investigation.md",
+      "gitBlobSha1": "ec2f90e85ed42659aca8b44a9be216987860b099",
+      "sha256": "72f6deb92e8800f0846c8ec6a8ac4e69eed7b637fc3b02868db9fe116dd49497"
+    },
+    "provenance": "Git blob and SHA-256 checked from same pinned TEI checkout in GitHub Actions; files not loaded by an AI Harness"
+  },
+  "actualCi": {
+    "runId": 42112462908,
+    "jobId": 127543278410,
+    "url": "https://github.com/hat47x/tai-pleroma/actions/runs/42112462908",
+    "jobResult": "completed/success",
+    "checks": [
+      "H3 candidate root/reference tracked bytes match pinned TEI checkout",
+      "H2 ephemeral view includes only TEI executable and reference/workspace, no Skill candidate file",
+      "H3 ephemeral view includes identical TEI executable/Workspace plus exact root/reference candidate",
+      "Both ephemeral views execute real CLI catalog, inspect, validate against pinned World and Source Index fingerprints",
+      "Selected Source sha256, one canonical Subject, diagnostics count match prior S1 evidence"
+    ]
+  },
+  "observedDocumentationRisks": [
+    {
+      "id": "CATALOG_ENVELOPE",
+      "rootSkillClaims": "entries[].subject.kind/id",
+      "actualCli": "result.entries[].subject.kind/id",
+      "owner": "TEI #2605",
+      "action": "preserve initial Skill treatment; fix Product document separately with new version"
+    },
+    {
+      "id": "EXAMPLE_SUBJECT",
+      "referenceExample": "subject-id sales.order",
+      "firstTaskSubject": "semantic-data:sales.order",
+      "claimCeiling": "same named public Subject task, not unseen-subject generalization"
+    },
+    {
+      "id": "EXECUTABLE_FAMILY",
+      "skillExample": "go run ./cmd/tei",
+      "experimentTool": "one prebuilt binary pinned by SHA-256 across H2/H3",
+      "action": "record proposed/attempted outside-profile calls, do not substitute go run for pinned executable"
+    }
+  ],
+  "notEstablished": [
+    "actual external Harness session or adapter invocation",
+    "actual Skill root/reference byte loaded by model",
+    "H2 real Tool/network scope restricted to staged files",
+    "H3 actual optional linked document resolution",
+    "independent business/task Oracle scoring",
+    "Current Grant and real OS/network egress enforcement",
+    "four independent H2/H3 sessions",
+    "Owner Meaning acceptance or TEI Skill formal release"
+  ],
+  "provenanceNote": "This is a human-readable bounded transcription from the linked actual CI log, not a signed proof or a self-standing Harness receipt."
+}

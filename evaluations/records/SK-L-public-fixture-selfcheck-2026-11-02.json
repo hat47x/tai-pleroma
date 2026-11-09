@@ -1,0 +1,115 @@
+{
+  "run_id": "SK-L-public-fixture-selfcheck-2026-11-02",
+  "run_environment": "functions JS V8",
+  "fixture": {
+    "repository": "hat47x/tai-pleroma",
+    "branch": "docs/yi-harness-skills-20261102",
+    "path": "evaluations/fixtures/SK-01-authoring-context.synthetic.json",
+    "blob_sha": "4ae2fa0f14e4cad5399c3890b2e20687aeead3fa"
+  },
+  "script": {
+    "repository": "hat47x/tai-pleroma",
+    "path": "evaluations/scripts/sk_l_fixture_selfcheck.mjs",
+    "commit_sha": "e288e293a7df965bd15cf863e6cc7306d8a5431b"
+  },
+  "result": {
+    "pass": true,
+    "checks": 12,
+    "passed": 12,
+    "failed": 0,
+    "case_count": 10,
+    "checks_detail": [
+      {
+        "id": "SK-L01",
+        "pass": true,
+        "computed": false,
+        "expected": false,
+        "note": "L0 URLs never imply paper body retrieval"
+      },
+      {
+        "id": "SK-L02",
+        "pass": true,
+        "computed": 1,
+        "expected": 1,
+        "note": "One duplicate occurrence but not an explicit cites edge"
+      },
+      {
+        "id": "SK-L02-edge",
+        "pass": true,
+        "computed": 0,
+        "expected": 0,
+        "note": "Indent is not an academic edge"
+      },
+      {
+        "id": "SK-L03",
+        "pass": true,
+        "computed": false,
+        "expected": false,
+        "note": "A visually function-like table remains unbound authoring"
+      },
+      {
+        "id": "SK-L04",
+        "pass": true,
+        "computed": true,
+        "expected": true,
+        "note": "Function interpretation may be proposed, numeric policy and run remain unresolved"
+      },
+      {
+        "id": "SK-L05",
+        "pass": true,
+        "computed": true,
+        "expected": true,
+        "note": "Data Model relations alone do not authorize/fetch rows"
+      },
+      {
+        "id": "SK-L06",
+        "pass": true,
+        "computed": "order.lines",
+        "expected": "order.lines",
+        "note": "Only explicitly mapped line fields, not allocations/private notes"
+      },
+      {
+        "id": "SK-L06-fetch",
+        "pass": true,
+        "computed": 0,
+        "expected": 0,
+        "note": "Declared mapping is not observed Provider fetch"
+      },
+      {
+        "id": "SK-L07",
+        "pass": true,
+        "computed": true,
+        "expected": true,
+        "note": "Empty partial response does not prove absence"
+      },
+      {
+        "id": "SK-L08",
+        "pass": true,
+        "computed": true,
+        "expected": true,
+        "note": "Lossy derived view lacks typed reverse-write contract"
+      },
+      {
+        "id": "SK-L09",
+        "pass": true,
+        "computed": true,
+        "expected": true,
+        "note": "Native SQL unbound and batch atomicity unknown"
+      },
+      {
+        "id": "SK-L10",
+        "pass": true,
+        "computed": true,
+        "expected": true,
+        "note": "Proposal not paper-reproduction or tested implementation"
+      }
+    ]
+  },
+  "limitations": [
+    "Pure JavaScript consistency assertions over public synthetic fixture; no TEI/SHO/SEI data model/DSL/compiler/Skill execution.",
+    "Public expectations are unsealed and cannot measure blind Harness competence.",
+    "Node runner file was written but not executed by an installed Node in this tool call; the identical evaluateFixture function ran in V8.",
+    "No Provider fetch/DB, OS isolation, real source retrieval, CI, Tool/Skill load, private paper content, effect or Owner acceptance."
+  ],
+  "recommended_reproduction": "node evaluations/scripts/sk_l_fixture_selfcheck.mjs"
+}

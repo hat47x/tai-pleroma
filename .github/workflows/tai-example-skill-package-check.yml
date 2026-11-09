@@ -1,0 +1,35 @@
+name: TAI example Skill package static integrity (non-Harness)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'examples/skills/yi-tai-activity/**'
+      - 'evaluations/tools/check-tai-skill-package.cjs'
+      - '.github/workflows/tai-example-skill-package-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-example-package:
+    name: Check Skill reference closure (not Harness certification)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Record checkout identity
+        run: |
+          git rev-parse HEAD
+          git status --porcelain
+          node --version
+      - name: Check checker syntax
+        run: node --check evaluations/tools/check-tai-skill-package.cjs
+      - name: Verify 8 positive/negative synthetic cases
+        run: node evaluations/tools/check-tai-skill-package.cjs --self-test
+      - name: Inspect real checked-out Skill package and links
+        run: node evaluations/tools/check-tai-skill-package.cjs --check

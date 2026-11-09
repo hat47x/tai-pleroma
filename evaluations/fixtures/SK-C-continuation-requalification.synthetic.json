@@ -1,0 +1,335 @@
+{
+  "schema": "sk-c-selective-requalification/v0",
+  "purpose": "public synthetic evidence dependency and handoff classification pressure; not a canonical YI model or real product state",
+  "graph": {
+    "nodes": [
+      "tei-source",
+      "tei-role",
+      "tei-target",
+      "sho-design",
+      "provider-binding",
+      "provider-read",
+      "rule-eval",
+      "sei-method",
+      "sei-claim",
+      "eki-attempt",
+      "eki-body",
+      "sho-delivery",
+      "sho-index-title",
+      "sho-index",
+      "current-grant",
+      "attempted-effect",
+      "tai-outcome"
+    ],
+    "edges": [
+      [
+        "tei-source",
+        "tei-role"
+      ],
+      [
+        "tei-role",
+        "tei-target"
+      ],
+      [
+        "tei-target",
+        "sho-design"
+      ],
+      [
+        "provider-binding",
+        "provider-read"
+      ],
+      [
+        "provider-read",
+        "rule-eval"
+      ],
+      [
+        "rule-eval",
+        "sei-claim"
+      ],
+      [
+        "sei-method",
+        "sei-claim"
+      ],
+      [
+        "eki-attempt",
+        "eki-body"
+      ],
+      [
+        "eki-body",
+        "sho-delivery"
+      ],
+      [
+        "sho-design",
+        "sho-delivery"
+      ],
+      [
+        "sho-index-title",
+        "sho-index"
+      ],
+      [
+        "current-grant",
+        "attempted-effect"
+      ],
+      [
+        "sei-claim",
+        "tai-outcome"
+      ],
+      [
+        "sho-delivery",
+        "tai-outcome"
+      ],
+      [
+        "sho-index",
+        "tai-outcome"
+      ],
+      [
+        "attempted-effect",
+        "tai-outcome"
+      ]
+    ]
+  },
+  "cases": [
+    {
+      "id": "SK-C01",
+      "mode": "impact",
+      "changed": [
+        "sho-index-title"
+      ],
+      "expectedAffected": [
+        "sho-index-title",
+        "sho-index",
+        "tai-outcome"
+      ],
+      "expectedPreserved": [
+        "tei-role",
+        "tei-target",
+        "sei-claim",
+        "eki-body"
+      ]
+    },
+    {
+      "id": "SK-C02",
+      "mode": "impact",
+      "changed": [
+        "tei-source"
+      ],
+      "expectedAffected": [
+        "tei-source",
+        "tei-role",
+        "tei-target",
+        "sho-design",
+        "sho-delivery",
+        "tai-outcome"
+      ],
+      "expectedPreserved": [
+        "provider-read",
+        "sei-claim",
+        "eki-body"
+      ]
+    },
+    {
+      "id": "SK-C03",
+      "mode": "impact",
+      "changed": [
+        "provider-binding"
+      ],
+      "expectedAffected": [
+        "provider-binding",
+        "provider-read",
+        "rule-eval",
+        "sei-claim",
+        "tai-outcome"
+      ],
+      "expectedPreserved": [
+        "tei-role",
+        "tei-target",
+        "sho-design",
+        "eki-body"
+      ]
+    },
+    {
+      "id": "SK-C04",
+      "mode": "impact",
+      "changed": [
+        "sei-method"
+      ],
+      "expectedAffected": [
+        "sei-method",
+        "sei-claim",
+        "tai-outcome"
+      ],
+      "expectedPreserved": [
+        "tei-target",
+        "eki-body",
+        "sho-design"
+      ]
+    },
+    {
+      "id": "SK-C05",
+      "mode": "impact",
+      "changed": [
+        "eki-attempt"
+      ],
+      "expectedAffected": [
+        "eki-attempt",
+        "eki-body",
+        "sho-delivery",
+        "tai-outcome"
+      ],
+      "expectedPreserved": [
+        "tei-target",
+        "sei-claim",
+        "sho-index"
+      ]
+    },
+    {
+      "id": "SK-C06",
+      "mode": "impact",
+      "changed": [
+        "current-grant"
+      ],
+      "expectedAffected": [
+        "current-grant",
+        "attempted-effect",
+        "tai-outcome"
+      ],
+      "expectedPreserved": [
+        "provider-read",
+        "tei-target",
+        "sho-index"
+      ]
+    },
+    {
+      "id": "SK-C07",
+      "mode": "handoff",
+      "state": {
+        "needsEffect": true,
+        "currentGrant": false,
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": true,
+        "sourceEpochAligned": true,
+        "scopeComplete": true,
+        "resultDisclosable": true,
+        "ownerAccepted": true
+      },
+      "expectedStatus": "effect-blocked"
+    },
+    {
+      "id": "SK-C08",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "body-missing"
+    },
+    {
+      "id": "SK-C09",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "consumer-not-observed"
+    },
+    {
+      "id": "SK-C10",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": true,
+        "sourceEpochAligned": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "joint-snapshot-unproved"
+    },
+    {
+      "id": "SK-C11",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": true,
+        "sourceEpochAligned": true,
+        "scopeComplete": true,
+        "resultDisclosable": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "result-withheld"
+    },
+    {
+      "id": "SK-C12",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": true,
+        "sourceEpochAligned": true,
+        "scopeComplete": true,
+        "resultDisclosable": true,
+        "ownerAccepted": true,
+        "needsEffect": false
+      },
+      "expectedStatus": "qualified-fixture-only"
+    },
+    {
+      "id": "SK-C13",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": false,
+        "consumerRead": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "body-unverified"
+    },
+    {
+      "id": "SK-C14",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": true,
+        "sourceEpochAligned": true,
+        "scopeComplete": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "scope-unproved"
+    },
+    {
+      "id": "SK-C15",
+      "mode": "handoff",
+      "state": {
+        "claimAck": true,
+        "bodyPresent": true,
+        "bodyDigestMatches": true,
+        "consumerRead": true,
+        "sourceEpochAligned": true,
+        "scopeComplete": true,
+        "resultDisclosable": true,
+        "ownerAccepted": false,
+        "needsEffect": false
+      },
+      "expectedStatus": "owner-unaccepted"
+    }
+  ],
+  "qualification": {
+    "synthetic": true,
+    "includesExpected": true,
+    "actualHarness": false,
+    "actualEKIBody": false,
+    "realRuleOracle": false
+  }
+}

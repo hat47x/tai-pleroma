@@ -1,0 +1,286 @@
+name: TAI S1 actual TEI public-source read (not Harness)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'evaluations/tools/probe-tei-s1-real-source.cjs'
+      - 'evaluations/tools/check-sk02-pair-eligibility.cjs'
+      - 'evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json'
+      - 'evaluations/records/TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json'
+      - '.github/workflows/tai-tei-s1-real-public-cli.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-product-s1-only:
+    name: TEI pinned Go binary + named Source read (non-Harness)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tai
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: hat47x/tei-platform
+          ref: 50ebf8014340fd1906f6b35cfa30173e0ee2fc6c
+          path: tei
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: tei/go.mod
+          cache: false
+      - name: Record source and actual build toolchain
+        run: |
+          git -C tei rev-parse HEAD
+          git -C tei status --porcelain
+          git -C tai rev-parse HEAD
+          go version
+          node --version
+      - name: Preflight pinned H3 Product Skill bytes (not loaded into a Harness)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='skills/yi-tei-modeling/SKILL.md'
+          REFS='skills/yi-tei-modeling/references/read-only-model-investigation.md'
+          test "$(git -C tei rev-parse HEAD)" = '50ebf8014340fd1906f6b35cfa30173e0ee2fc6c'
+          test "$(git -C tei hash-object "$ROOT")" = '9cd8475bd6489c6661ae644bf771cfcce04188b1'
+          test "$(git -C tei hash-object "$REFS")" = 'ec2f90e85ed42659aca8b44a9be216987860b099'
+          sha256sum "tei/$ROOT" "tei/$REFS"
+          node -e '
+            const fs=require("node:fs"),crypto=require("node:crypto"),assert=require("node:assert/strict");
+            const e=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+            assert.equal(e.product.commit,"50ebf8014340fd1906f6b35cfa30173e0ee2fc6c");
+            for(const o of [e.candidateSkill.root,e.candidateSkill.reference]){
+              const bytes=fs.readFileSync("tei/"+o.path);
+              const actual=crypto.createHash("sha256").update(bytes).digest("hex");
+              assert.equal(actual,o.sha256,"registered candidate Skill byte pin drift: "+o.path);
+            }
+            assert.equal(e.candidateSkill.status,"available-as-pinned-source; not Harness loaded");
+          ' tai/evaluations/records/TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json
+          echo "Candidate H3 root and reference bytes belong to fixed Product commit; no external Skill Loader observed."
+      - name: Build exact Product CLI once (no local workspace writes)
+        working-directory: tei
+        env:
+          GOTOOLCHAIN: local
+          GOWORK: 'off'
+          GOFLAGS: -mod=readonly
+        run: |
+          go build -trimpath -buildvcs=false -o "$RUNNER_TEMP/tei-s1" ./cmd/tei
+          sha256sum "$RUNNER_TEMP/tei-s1"
+      - name: Exercise skill-free H2 and explicit H3 staged file views (not Harness)
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/sk02-staged"
+          for ARM in h2 h3; do
+            mkdir -p "$BASE/$ARM"
+            cp -a tei/reference/workspace "$BASE/$ARM/workspace"
+            cp "$RUNNER_TEMP/tei-s1" "$BASE/$ARM/tei"
+            test ! -e "$BASE/$ARM/go.mod"
+            test -z "$(find "$BASE/$ARM" -type l -print -quit)"
+            test "$(sha256sum "$BASE/$ARM/workspace/semantic/sales/order.tei" | cut -d ' ' -f1)" = 'f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33'
+            test "$(sha256sum "$BASE/$ARM/tei" | cut -d ' ' -f1)" = '6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f'
+          done
+          mkdir -p "$BASE/h3/skills/yi-tei-modeling/references"
+          cp tei/skills/yi-tei-modeling/SKILL.md "$BASE/h3/skills/yi-tei-modeling/SKILL.md"
+          cp tei/skills/yi-tei-modeling/references/read-only-model-investigation.md "$BASE/h3/skills/yi-tei-modeling/references/read-only-model-investigation.md"
+          test ! -e "$BASE/h2/skills"
+          test -z "$(find "$BASE/h2" -type f -name 'SKILL.md' -print -quit)"
+          cmp -s tei/skills/yi-tei-modeling/SKILL.md "$BASE/h3/skills/yi-tei-modeling/SKILL.md"
+          cmp -s tei/skills/yi-tei-modeling/references/read-only-model-investigation.md "$BASE/h3/skills/yi-tei-modeling/references/read-only-model-investigation.md"
+          chmod -R a-w "$BASE"
+          for ARM in h2 h3; do
+            "$BASE/$ARM/tei" model catalog -workspace "$BASE/$ARM/workspace" > "$RUNNER_TEMP/sk02-$ARM-catalog.json"
+            "$BASE/$ARM/tei" inspect -workspace "$BASE/$ARM/workspace" -subject-kind semantic-data -subject-id sales.order > "$RUNNER_TEMP/sk02-$ARM-inspect.json"
+            "$BASE/$ARM/tei" validate -workspace "$BASE/$ARM/workspace" -json > "$RUNNER_TEMP/sk02-$ARM-validate.json"
+            # A released, prebuilt TEI executable must work without the Go SDK
+            # being discoverable by PATH. This is not a sandbox/host isolation test.
+            env -i PATH=/nonexistent "$BASE/$ARM/tei" model catalog -workspace "$BASE/$ARM/workspace" > "$RUNNER_TEMP/sk02-$ARM-no-go-catalog.json"
+          done
+          node -e '
+            const fs=require("fs"),assert=require("node:assert/strict");
+            const root=process.argv[1],ledger=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+            const good=ledger.indexedSourceBinding.productInspect;
+            for(const arm of ["h2","h3"]){
+              const load=kind=>JSON.parse(fs.readFileSync(root+"/sk02-"+arm+"-"+kind+".json","utf8"));
+              const cat=load("catalog"),ins=load("inspect"),val=load("validate");
+              const noGo=load("no-go-catalog");
+              assert.equal(noGo.ok,true,"prebuilt binary must read Source with Go absent from PATH");
+              assert.equal(noGo.result.worldFingerprint,cat.result.worldFingerprint);
+              assert.equal(noGo.result.sourceIndexFingerprint,cat.result.sourceIndexFingerprint);
+              assert.equal(noGo.result.entries.filter(e=>e.subject?.kind==="semantic-data"&&e.subject.id==="sales.order").length,1);
+              assert.equal(cat.ok,true);
+              assert.equal(ins.ok,true);
+              assert.equal(cat.result.entries.filter(e=>e.subject?.kind==="semantic-data"&&e.subject.id==="sales.order").length,1);
+              assert.equal(ins.result.subject.kind,"semantic-data");
+              assert.equal(ins.result.subject.id,"sales.order");
+              assert.equal(ins.result.sourceStatus,"indexed");
+              assert.equal(ins.result.sources.artifacts.find(x=>x.path==="semantic/sales/order.tei")?.fingerprint,good.artifactFingerprint);
+              assert.equal(cat.result.worldFingerprint,good.worldFingerprint);
+              assert.equal(cat.result.sourceIndexFingerprint,good.sourceIndexFingerprint);
+              assert.equal(ins.result.worldFingerprint,good.worldFingerprint);
+              assert.equal(val.worldFingerprint,good.worldFingerprint);
+              assert.equal(val.sourceIndexFingerprint,good.sourceIndexFingerprint);
+              assert.equal(val.ok,true);
+              assert.equal(val.diagnostics.length,ledger.actualRead.diagnosticsCount);
+            }
+            console.log(JSON.stringify({status:"PASS",evidence:"actual fixed TEI CLI on ephemeral scoped filesystem views",
+              h2SkillPresent:false,h3CandidateFilesPresent:true,
+              claimLimit:"not an external Harness; no Skill loaded, no actual OS/network isolation proven"}));
+          ' "$RUNNER_TEMP" tai/evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json
+      # Historical compatibility characterization of the *pinned* Product CLI:
+      # changing only a recognized .tei source filename to .tei.md currently
+      # omits that Source silently. This is a migration blocker, not a pass.
+      - name: Characterize legacy .tei.md rename silently losing the named Source
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/sk02-extension-rename-negative"
+          for EXT in tei tei.md; do
+            ROOT="$BASE/$EXT"
+            mkdir -p "$ROOT/semantic"
+            printf '%s\n' 'workspace: extension_probe' 'formatVersion: 1' 'sources:' '  - semantic' > "$ROOT/tei.workspace.yaml"
+            cp tei/reference/workspace/semantic/sales/order.tei "$ROOT/semantic/order.$EXT"
+            "$RUNNER_TEMP/tei-s1" model catalog -workspace "$ROOT" > "$RUNNER_TEMP/sk02-extension-$EXT-catalog.json"
+          done
+          "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/tei.md" -json > "$RUNNER_TEMP/sk02-extension-renamed-validate.json"
+          # A recognized legacy Source and a changed .tei.md definition coexist.
+          # The legacy parser can keep the World unchanged while the Source Index
+          # observes the additional managed artifact. Neither implies semantic load.
+          mkdir -p "$BASE/mixed/semantic"
+          cp "$BASE/tei/tei.workspace.yaml" "$BASE/mixed/tei.workspace.yaml"
+          cp "$BASE/tei/semantic/order.tei" "$BASE/mixed/semantic/order.tei"
+          sed 's/attribute total type std.money/attribute total type std.text/' \
+            "$BASE/tei/semantic/order.tei" > "$BASE/mixed/semantic/order.tei.md"
+          grep -Fn 'attribute total type std.text' "$BASE/mixed/semantic/order.tei.md"
+          "$RUNNER_TEMP/tei-s1" model catalog -workspace "$BASE/mixed" > "$RUNNER_TEMP/sk02-extension-mixed-catalog.json"
+          # Isolate a one-factor mutation: same managed file PATH, different
+          # .tei.md BYTES; legacy .tei and manifest bytes stay unchanged.
+          mkdir -p "$BASE/mixed-original/semantic"
+          cp "$BASE/mixed/tei.workspace.yaml" "$BASE/mixed-original/tei.workspace.yaml"
+          cp "$BASE/mixed/semantic/order.tei" "$BASE/mixed-original/semantic/order.tei"
+          cp "$BASE/mixed/semantic/order.tei" "$BASE/mixed-original/semantic/order.tei.md"
+          if cmp -s "$BASE/mixed-original/semantic/order.tei.md" "$BASE/mixed/semantic/order.tei.md"; then
+            echo "expected single new-style managed source content mutation was lost"
+            exit 1
+          fi
+          "$RUNNER_TEMP/tei-s1" model catalog -workspace "$BASE/mixed-original" > "$RUNNER_TEMP/sk02-extension-mixed-original-catalog.json"
+          # The extracted sales.order is incomplete by itself (external customer
+          # relation etc.). Compare the exact legacy diagnostics and exit rather
+          # than assuming validation succeeds when all other source roots are absent.
+          set +e
+          "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/tei" -json > "$RUNNER_TEMP/sk02-extension-legacy-validate.json"
+          LEGACY_VALIDATE_EXIT=$?
+          "$RUNNER_TEMP/tei-s1" validate -workspace "$BASE/mixed" -json > "$RUNNER_TEMP/sk02-extension-mixed-validate.json"
+          MIXED_VALIDATE_EXIT=$?
+          set -e
+          test "$LEGACY_VALIDATE_EXIT" -eq "$MIXED_VALIDATE_EXIT"
+          node -e '
+            const fs=require("node:fs"),assert=require("node:assert/strict");
+            const load=p=>JSON.parse(fs.readFileSync(p,"utf8"));
+            const legacy=load(process.argv[1]);
+            const renamed=load(process.argv[2]);
+            const validated=load(process.argv[3]);
+            const mixed=load(process.argv[4]),mixedValidated=load(process.argv[5]),legacyValidated=load(process.argv[6]);
+            const mixedOriginal=load(process.argv[7]);
+            const count=r=>r.result.entries.filter(x=>x.subject?.kind==="semantic-data"&&x.subject?.id==="sales.order").length;
+            assert.equal(legacy.ok,true);
+            assert.equal(renamed.ok,true);
+            assert.equal(count(legacy),1,"legacy .tei must load the expected user Subject");
+            assert.equal(count(renamed),0,"fixed historical Loader does not discover .tei.md");
+            assert.equal(validated.ok,true,"silent missing Source can coexist with validate ok");
+            assert.equal(mixed.ok,true);
+            assert.equal(mixedValidated.schemaVersion,"tei.cli.validate/v0");
+            assert.equal(legacyValidated.schemaVersion,"tei.cli.validate/v0");
+            assert.equal(mixedValidated.ok,legacyValidated.ok,"unparsed .tei.md must not change parsed validation result");
+            assert.equal(mixedValidated.diagnostics.length,legacyValidated.diagnostics.length);
+            assert.equal(mixedValidated.worldFingerprint,legacyValidated.worldFingerprint);
+            assert.equal(count(mixed),1,"legacy definition still wins in mixed source tree");
+            assert.equal(mixed.result.worldFingerprint,legacy.result.worldFingerprint,
+              "ignored new meaning must leave old interpreted World unchanged");
+            assert.notEqual(mixed.result.sourceIndexFingerprint,legacy.result.sourceIndexFingerprint,
+              "new managed file must change Source Index despite unchanged interpreted World");
+            assert.equal(count(mixedOriginal),1,"same legacy Subject remains loaded when unparsed source bytes change");
+            assert.equal(mixedOriginal.result.worldFingerprint,mixed.result.worldFingerprint,
+              "changing only unread .tei.md bytes cannot alter the interpreted legacy World");
+            assert.notEqual(mixedOriginal.result.sourceIndexFingerprint,mixed.result.sourceIndexFingerprint,
+              "Source Index must detect changed bytes of the SAME unparsed managed file path");
+            console.log(JSON.stringify({
+              status:"EXPECTED_NEGATIVE_BEHAVIOR_REPRODUCED", historicalVersionOnly:true,
+              legacySubjectCount:count(legacy),renamedSubjectCount:count(renamed),
+              renamedValidateOK:validated.ok,
+              mixedLegacySubjectCount:count(mixed),mixedValidationMatchesLegacy:mixedValidated.ok===legacyValidated.ok,
+              mixedDiagnosticCount: mixedValidated.diagnostics.length,
+              mixedWorldUnchanged:mixed.result.worldFingerprint===legacy.result.worldFingerprint,
+              mixedSourceIndexChanged:mixed.result.sourceIndexFingerprint!==legacy.result.sourceIndexFingerprint,
+              samePathUnparsedBytesChangeIndex:mixedOriginal.result.sourceIndexFingerprint!==mixed.result.sourceIndexFingerprint,
+              samePathUnparsedBytesKeepWorld:mixedOriginal.result.worldFingerprint===mixed.result.worldFingerprint,
+              claimLimit:"Fixed historical CLI sees added .tei.md as Source Index input but not interpreted Meaning; neither validate ok nor an Index delta establishes loaded definitions."
+            }));
+          ' "$RUNNER_TEMP/sk02-extension-tei-catalog.json" "$RUNNER_TEMP/sk02-extension-tei.md-catalog.json" "$RUNNER_TEMP/sk02-extension-renamed-validate.json" "$RUNNER_TEMP/sk02-extension-mixed-catalog.json" "$RUNNER_TEMP/sk02-extension-mixed-validate.json" "$RUNNER_TEMP/sk02-extension-legacy-validate.json" "$RUNNER_TEMP/sk02-extension-mixed-original-catalog.json"
+      - name: Read named Product Source and perform negative control
+        env:
+          GOTOOLCHAIN: local
+          GOWORK: 'off'
+        run: |
+          set -euo pipefail
+          node --check tai/evaluations/tools/check-sk02-pair-eligibility.cjs
+          node --check tai/evaluations/tools/probe-tei-s1-real-source.cjs
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs --self-test | tee "$RUNNER_TEMP/tei-s1-selftest.json"
+          node -e 'const fs=require("fs"),assert=require("assert/strict"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));const required=Array.from({length:19},(_,i)=>"S1-W"+String(i+1).padStart(2,"0"));assert.deepEqual(x.cases,required);assert.equal(x.passed,19);assert.equal(x.total,19);assert.match(x.scope,/synthetic/);' "$RUNNER_TEMP/tei-s1-selftest.json"
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs "$RUNNER_TEMP/tei-s1" "$GITHUB_WORKSPACE/tei" | tee "$RUNNER_TEMP/tei-s1-receipt.json"
+      - name: Confirm evidence remains locally scoped and no unsupported certification
+        run: |
+          node -e 'const fs=require("fs"); const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.schema!=="tai.s1.real-tei-public-read/v0" || x.catalogMatches!==1 || x.negative.userSubjectLoaded!==false || x.sourceWitness?.artifactPath!=="semantic/sales/order.tei" || x.sourceWitness?.artifactFingerprint!=="sha256:"+x.sourceDigest?.slice(7) || x.sourceWitness?.definitionReferences<1 || !x.notEstablished.includes("H2/H3 four independent sessions")) process.exit(1)' "$RUNNER_TEMP/tei-s1-receipt.json"
+
+      - name: Cross-check fresh Product receipt against committed S1 ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          LEDGER="tai/evaluations/records/TAI-TEI-S1-real-public-source-2026-11-06.json"
+          RECEIPT="$RUNNER_TEMP/tei-s1-receipt.json"
+          node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RECEIPT" | tee "$RUNNER_TEMP/tei-s1-ledger-check.json"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); if(x.verdict!=="matching-bounded-S1-evidence"||x.compared!==39)process.exit(1)' "$RUNNER_TEMP/tei-s1-ledger-check.json"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.sourceDigest="sha256:"+"0".repeat(64);fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-tampered-receipt.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-tampered-receipt.json" > "$RUNNER_TEMP/tei-s1-tampered-log.txt" 2>&1; then
+            echo "Tampered S1 receipt incorrectly accepted"
+            exit 1
+          fi
+          grep -F "ledger mismatch: source bytes" "$RUNNER_TEMP/tei-s1-tampered-log.txt"
+
+          # A JSON parser may normally keep the last duplicate member, hiding
+          # a forged byte digest even when all expected top-level fields exist.
+          node -e 'const fs=require("fs");const p=process.argv[1],o=process.argv[2];const s=fs.readFileSync(p,"utf8");fs.writeFileSync(o,s.replace(/^\s*\{/,"{\"sourceDigest\":\"sha256:"+"0".repeat(64)+"\","))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-duplicate-receipt.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-duplicate-receipt.json" > "$RUNNER_TEMP/tei-s1-duplicate-receipt.log" 2>&1; then
+            echo "Duplicate-key S1 receipt incorrectly accepted"
+            exit 1
+          fi
+          grep -F 'DUPLICATE_TRIAL_JSON_MEMBER' "$RUNNER_TEMP/tei-s1-duplicate-receipt.log"
+          node -e 'const fs=require("fs");const p=process.argv[1],o=process.argv[2];const s=fs.readFileSync(p,"utf8");fs.writeFileSync(o,s.replace(/^\s*\{/,"{\"source\":{},\"extra\":0,"))' "$LEDGER" "$RUNNER_TEMP/tei-s1-duplicate-ledger.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$RUNNER_TEMP/tei-s1-duplicate-ledger.json" "$RECEIPT" > "$RUNNER_TEMP/tei-s1-duplicate-ledger.log" 2>&1; then
+            echo "Duplicate-key S1 ledger incorrectly accepted"
+            exit 1
+          fi
+          grep -F 'DUPLICATE_TRIAL_JSON_MEMBER' "$RUNNER_TEMP/tei-s1-duplicate-ledger.log"
+
+          # A reused stdout hash must not conceal different actual argv/cwd.
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.observations[1].args[3]="/tmp/unrelated-workspace";fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-wrong-argv.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-wrong-argv.json" > "$RUNNER_TEMP/tei-s1-wrong-argv.log" 2>&1; then
+            echo "S1 argv tamper incorrectly accepted"
+            exit 1
+          fi
+          grep -F "ledger mismatch: actual CLI argv 1" "$RUNNER_TEMP/tei-s1-wrong-argv.log"
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));x.observations[2].cwd="/tmp/unrelated-cwd";fs.writeFileSync(process.argv[2],JSON.stringify(x))' "$RECEIPT" "$RUNNER_TEMP/tei-s1-wrong-cwd.json"
+          if node tai/evaluations/tools/probe-tei-s1-real-source.cjs --verify-ledger "$LEDGER" "$RUNNER_TEMP/tei-s1-wrong-cwd.json" > "$RUNNER_TEMP/tei-s1-wrong-cwd.log" 2>&1; then
+            echo "S1 cwd tamper incorrectly accepted"
+            exit 1
+          fi
+          grep -F "ledger mismatch: actual CLI cwd 2" "$RUNNER_TEMP/tei-s1-wrong-cwd.log"

@@ -1,0 +1,45 @@
+{
+  "run_id": "SK-F-public-fixture-selfcheck-2026-11-02",
+  "observed_at": "2026-11-02",
+  "scope": "V8 execution of exact GitHub-committed CommonJS source with a fake fs.readFileSync shim returning exact committed synthetic JSON bytes; not Node runtime, product tool, or harness integration.",
+  "source": {
+    "repository": "hat47x/tai-pleroma",
+    "ref": "docs/yi-harness-skills-20261102",
+    "file": "evaluations/tools/check-sk-f-fixture.cjs",
+    "blob_sha": "ebaca1f8c2c35e23bbb15504679fa67928354d49"
+  },
+  "fixture": {
+    "file": "evaluations/fixtures/SK-F-access-rule-disclosure.synthetic.json",
+    "blob_sha": "3c13227ae3332723547c953df8373a5cc172d5c4",
+    "includes_expected": true
+  },
+  "result": {
+    "checked": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "observed_case_ids": [
+    "SK-F01",
+    "SK-F02",
+    "SK-F03",
+    "SK-F04",
+    "SK-F05",
+    "SK-F06",
+    "SK-F07",
+    "SK-F08",
+    "SK-F09",
+    "SK-F10",
+    "SK-F11",
+    "SK-F12"
+  ],
+  "not_run": [
+    "Node.js runner in actual Node runtime",
+    "TEI Provider, Rule evaluator or CLI",
+    "SEI Product inquiry",
+    "TAI Skill load, MCP and external Harness",
+    "OS/Network proof of raw-data isolation",
+    "Actual database read trace or external data access",
+    "Independent sealed holdout or business Owner acceptance"
+  ],
+  "caveat": "Public fixture expected values are read by the same program and therefore check consistency only; they are not a blinded or independent Oracle. The real security properties, read minimality and effectiveness remain unverified."
+}

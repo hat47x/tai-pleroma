@@ -1,0 +1,115 @@
+{
+  "schema": "tai.evidence.product-s1-public-read/v0",
+  "evidenceNature": "actual TEI Go CLI invoked in TAI GitHub Actions, publicly reproducible pinned test, not AI Harness",
+  "source": {
+    "repo": "hat47x/tei-platform",
+    "commit": "50ebf8014340fd1906f6b35cfa30173e0ee2fc6c",
+    "workspace": "reference/workspace",
+    "path": "semantic/sales/order.tei",
+    "sha256": "f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33",
+    "subject": {
+      "kind": "semantic-data",
+      "id": "sales.order"
+    }
+  },
+  "build": {
+    "platform": "linux/amd64",
+    "go": "go1.26.10",
+    "binary_sha256": "6769ec0908007f1147de0502b3e88421159e0b2c4df70fc57b53c9d29ccbc36f"
+  },
+  "actualRead": {
+    "catalogMatches": 1,
+    "catalogSourceStatus": "indexed",
+    "inspectOk": true,
+    "validateOk": true,
+    "diagnosticsCount": 3,
+    "stdoutSha256": {
+      "commands": "107ac34cf33262b1fe6d3d9d9acd24d7e857db174562033568031f9d25902067",
+      "catalog": "3b7d69763be1161e07a7b1461e8aacd90531465d4971f9e31af2f12bed2331fc",
+      "inspect": "a61522cd321f70aff27acca9c0206bcd283369df43ea8b378ecba41631cc0779",
+      "validate": "14164b8446c19d5498b81de7a3c45f98c104ab633d830e7a196f9d727a02c83c"
+    }
+  },
+  "negativeControl": {
+    "fixture": "temporary empty workspace with manifest sources semantic",
+    "validateOk": true,
+    "requiredUserSubjectCount": 0,
+    "observedStdEntries": 12,
+    "interpretation": "empty validation success does not imply expected user-defined Source loaded"
+  },
+  "provenance": {
+    "runId": 42099390431,
+    "jobId": 127497877820,
+    "runUrl": "https://github.com/hat47x/tai-pleroma/actions/runs/42099390431",
+    "jobStatus": "completed",
+    "jobConclusion": "success",
+    "failedPredecessorRun": 42099147476,
+    "predecessorCause": "probe mistakenly read catalog.entries instead of catalog.result.entries"
+  },
+  "notProven": [
+    "actual external Harness loaded TEI Product Skill",
+    "H2/H3 four independent sessions",
+    "full source input closure",
+    "business meaning accepted",
+    "current Host grants or external disclosure controls",
+    "real provider effect/independent consumer read",
+    "Windows execution"
+  ],
+  "notes": [
+    "This JSON transcribes selected values directly observed in the linked CI log; it is not a signed machine-export of the complete receipt.",
+    "Reference S1 differs from earlier TAI main reference-tei-model SCN-001 scope.",
+    "Do not treat product-only CLI execution as a real AI or Skill evaluation.",
+    "2026-11-06: a later S1 CI (#42101157330) additionally bound Inspect artifact path/byte fingerprint/definition reference to the independently read Source, and cross-checked Catalog/Inspect/Validate fingerprints.",
+    "Values fixed from real Product S1 CI logs. Later equivalent pinned CI must compare its generated receipt to this ledger; the prior entries alone do not attest against drift."
+  ],
+  "indexedSourceBinding": {
+    "runId": 42101157330,
+    "jobId": 127503995252,
+    "runUrl": "https://github.com/hat47x/tai-pleroma/actions/runs/42101157330",
+    "conclusion": "success",
+    "independentSourceRead": {
+      "path": "semantic/sales/order.tei",
+      "sha256": "f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33"
+    },
+    "productInspect": {
+      "subject": {
+        "kind": "semantic-data",
+        "id": "sales.order"
+      },
+      "artifactPath": "semantic/sales/order.tei",
+      "artifactFingerprint": "sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33",
+      "definitionReferences": 1,
+      "sourceStatus": "indexed",
+      "worldFingerprint": "sha256:c92de09f9595b1f46bfc18e6f99260d8391113b6d2639357d372abf634a1d65a",
+      "sourceIndexFingerprint": "sha256:1827f4b46169710cbe26179498bf30ef775aecba858c3beff8e2e0d53ca23531"
+    },
+    "sameSnapshotClaims": [
+      "Catalog/Inspect World Fingerprint equality",
+      "Catalog/Inspect Source Index Fingerprint equality",
+      "Validate/Inspect World Fingerprint equality",
+      "Validate/Inspect Source Index Fingerprint equality"
+    ],
+    "syntheticControls": {
+      "cases": [
+        "S1-W01",
+        "S1-W02",
+        "S1-W03",
+        "S1-W04",
+        "S1-W05",
+        "S1-W06",
+        "S1-W07",
+        "S1-W08"
+      ],
+      "passed": 8,
+      "total": 8,
+      "scope": "synthetic Index binding assertions executed by real Node; Product CLI tested separately"
+    },
+    "limitations": [
+      "same CLI invocation set, but not atomic multi-file snapshot",
+      "Source Index fingerprint of this declared file is not independent Owner Meaning Acceptance",
+      "the declared Source was observed in Product Index; not all transitive imports and Source roots",
+      "not an external AI Harness session or Skill activation",
+      "not proof of current Host capability, actual network egress, Provider effect, or downstream Consumer"
+    ]
+  }
+}

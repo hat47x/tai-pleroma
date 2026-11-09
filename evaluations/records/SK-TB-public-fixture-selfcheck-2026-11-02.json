@@ -1,0 +1,45 @@
+{
+  "run_id": "SK-TB-node-reference-2026-11-02",
+  "date": "2026-11-02",
+  "scope": "Exact GitHub-blob-matching public synthetic current-trust decision table and independent arithmetic SHA vector; not an EKI/Skill/Harness test.",
+  "status": "PASS",
+  "environment": {
+    "runtime": "Node.js v22.16.0",
+    "os": "container Linux",
+    "script": "evaluations/tools/check-sk-tb-fixture.cjs",
+    "fixture": "evaluations/fixtures/SK-TB-current-trust.synthetic.json",
+    "script_git_blob_sha": "8625b8ff4c3c92be62f8400e0335f03cfd747ec8",
+    "fixture_git_blob_sha": "87d1928d956e8a192dbca34f35c810aa1cbd8046",
+    "blob_match": "both local copies' Git blob SHA-1 matched the fetched repository blobs"
+  },
+  "result": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "case_ids": [
+      "SK-TB01",
+      "SK-TB02",
+      "SK-TB03",
+      "SK-TB04",
+      "SK-TB05",
+      "SK-TB06",
+      "SK-TB07",
+      "SK-TB08",
+      "SK-TB09"
+    ],
+    "single_sha_hex": "7192385c3c0605de55bb9476ce1d90748190ecb32a8eed7f5207b30cf6a1fe89",
+    "double_sha_hex": "3e6f500e47d4e783b851016489b9938390d7a6a8f5b1b00c95ab40dc18f000b9"
+  },
+  "controls": {
+    "fixture_public_expected": true,
+    "sealed_holdout": false,
+    "real_certificates": false,
+    "real_mtls": false,
+    "actual_eki_code": false,
+    "actual_Harness_or_Skill": false,
+    "real_OS_isolation": false,
+    "real_Tool_network_observation": false,
+    "owner_acceptance": false
+  },
+  "next": "EKI #466/#467 Product Owner must run independent DER/cert, DB fault and actual mTLS checks. TAI SK-01 then tests Product Skill/Harness handoff without inventing auth."
+}

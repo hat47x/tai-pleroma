@@ -1,0 +1,35 @@
+{
+  "id": "SK-RQ-public-reference-selfcheck-2026-11-02",
+  "date": "2026-11-02",
+  "source": "GitHub-stored public synthetic fixture fetched and verified in V8 isolate, not Node.",
+  "status": "PASS",
+  "scope": "Pure V8 inline reference classification versus public expected outcomes. NO Product/Skill/Real-Tool validation.",
+  "inputs": {
+    "branch": "docs/yi-harness-skills-20261102",
+    "fixture": "evaluations/fixtures/SK-RQ-selective-requalification.synthetic.json",
+    "fixture_git_blob_sha": "e1762f318344fb4f54d26398d136bb7382f908bd",
+    "script": "evaluations/tools/check-sk-rq-fixture.cjs",
+    "script_git_blob_sha": "4074cdba97509c7b02603e3e75df38e2ddcba2af"
+  },
+  "results": {
+    "cases": 12,
+    "classifications": 14,
+    "passed": 14,
+    "failed": 0,
+    "expected_public": true,
+    "sealed_holdout": false,
+    "script_stored": true,
+    "node_script_executed": false
+  },
+  "excluded": [
+    "TEI actual dependency or provider validation",
+    "SEI actual Method",
+    "SHO actual document publication",
+    "EKI actual mTLS and body delivery",
+    "external Harness and Product Skill installation",
+    "OS and network isolation",
+    "independent holdout oracle",
+    "business Owner acceptance and real effects"
+  ],
+  "caveat": "Retain-bounded-evidence means prior scoped evidence stays historical; present eligibility, confidentiality and Host authorization require separate checks. Fixture is not a adopted cross-product decision engine."
+}

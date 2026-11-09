@@ -1,0 +1,100 @@
+{
+  "id": "SK-TB-trust-reference-2026-11-02",
+  "classification": "public-synthetic-unsealed",
+  "status": "design-reference-not-product-test",
+  "owners": [
+    "EKI #433/#466/#467/#468",
+    "TAI #232 / PR #270"
+  ],
+  "description": "Reference decisions for trust configuration/read failures and externally observable Skill handoff. No real certificates, credentials or private data.",
+  "cases": [
+    {
+      "id": "SK-TB01",
+      "kind": "trust",
+      "installed": "never",
+      "compatApproved": true,
+      "legacyCAAndRegistryValid": true,
+      "latest": "not-configured",
+      "expected": "legacy-path-eligible"
+    },
+    {
+      "id": "SK-TB02",
+      "kind": "trust",
+      "installed": "ever",
+      "compatApproved": false,
+      "legacyCAAndRegistryValid": true,
+      "latest": "ok",
+      "currentIssuerAllowed": true,
+      "expected": "proceed-to-other-host-checks"
+    },
+    {
+      "id": "SK-TB03",
+      "kind": "trust",
+      "installed": "ever",
+      "legacyCAAndRegistryValid": true,
+      "latest": "ok",
+      "currentIssuerAllowed": false,
+      "expected": "reject-current-issuer"
+    },
+    {
+      "id": "SK-TB04",
+      "kind": "trust",
+      "installed": "ever",
+      "legacyCAAndRegistryValid": true,
+      "latest": "io-error",
+      "expected": "reject-unverified-current-trust"
+    },
+    {
+      "id": "SK-TB05",
+      "kind": "trust",
+      "installed": "ever",
+      "legacyCAAndRegistryValid": true,
+      "latest": "record-decode-error",
+      "expected": "reject-unverified-current-trust"
+    },
+    {
+      "id": "SK-TB06",
+      "kind": "trust",
+      "installed": "ever",
+      "legacyCAAndRegistryValid": true,
+      "latest": "not-found",
+      "expected": "reject-unverified-current-trust"
+    },
+    {
+      "id": "SK-TB07",
+      "kind": "digest",
+      "sampleBytesHex": "010203040506",
+      "sampleBytesAreActualDER": false,
+      "algorithmContract": "SHA-256(raw CA DER bytes) once",
+      "oracleSingle": "7192385c3c0605de55bb9476ce1d90748190ecb32a8eed7f5207b30cf6a1fe89",
+      "doubleSha": "3e6f500e47d4e783b851016489b9938390d7a6a8f5b1b00c95ab40dc18f000b9",
+      "expected": "single-sha-only"
+    },
+    {
+      "id": "SK-TB08",
+      "kind": "handoff",
+      "skillDigestMatches": true,
+      "historicalTrustSuccess": true,
+      "latest": "read-error",
+      "grantAtResume": "expired",
+      "safeReadOnlyWorkAvailable": true,
+      "expected": "reauthorize-before-effect"
+    },
+    {
+      "id": "SK-TB09",
+      "kind": "disclosure",
+      "privateIssuerPresentS0": false,
+      "privateIssuerPresentS1": true,
+      "publicProjectionS0": "public-tools-v1",
+      "publicProjectionS1": "public-tools-v1",
+      "expected": "indistinguishable-to-public-consumer"
+    }
+  ],
+  "caveats": [
+    "This is a public fixture with expected outcomes, not an independent/sealed model evaluation.",
+    "Legacy compatibility is only a candidate when explicitly approved by EKI Owner and existing CA/Registry checks pass.",
+    "Hash vector uses six arbitrary synthetic bytes (not a parseable CA certificate); cryptographic comparison is arithmetic only.",
+    "Source-static EKI #466/#467 findings do not establish successful mTLS exploit or fixed production behavior.",
+    "No real EKI mTLS, OS sandbox, Skill, remote LLM, Provider effects or Owner acceptance has been tested."
+  ]
+}

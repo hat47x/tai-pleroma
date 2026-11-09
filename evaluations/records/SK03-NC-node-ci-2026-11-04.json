@@ -1,0 +1,66 @@
+{
+  "purpose": "TAI SK-03 artificial negative-claim transport and strict-JSON reader CI observation",
+  "observed_at_utc": "2026-11-04T14:51:03Z",
+  "evidence_kind": "GitHub Actions actual Node.js process, SYNTHETIC fixture and producer; not external Harness/Product",
+  "source": {
+    "repository": "hat47x/tai-pleroma",
+    "pull_request": 270,
+    "pr_head_at_run": "1dbb8ae837251b3674f11a50ec7abb6602d0432e",
+    "actual_actions_merge_checkout": "064b9680f0e62ea261d1feb26a4798aa7c774c77",
+    "sk02_checker": {
+      "path": "evaluations/tools/check-sk02-pair-eligibility.cjs",
+      "git_blob_sha1": "4ddf95786a52359ed8718dcbb2f928c3cba56512"
+    },
+    "sk03_checker": {
+      "path": "evaluations/tools/check-sk03-negative-claim-transport.cjs",
+      "git_blob_sha1": "8044cd873b3a05dc53c3ddc31b535724c08529d3"
+    },
+    "workflow": {
+      "path": ".github/workflows/tai-sk02-synthetic-pair-check.yml",
+      "git_blob_sha1": "02f8e911866f7ff692ce29edcd837f62e4a0335b"
+    }
+  },
+  "run": {
+    "url": "https://github.com/hat47x/tai-pleroma/actions/runs/41851651173",
+    "run_id": 41851651173,
+    "job_id": 126649240228,
+    "job_conclusion": "success",
+    "runner": "Ubuntu 24.04.5, Node.js 22 via actions/setup-node",
+    "actual_checks": [
+      {
+        "name": "SK-02 test-only synthetic E01-E60",
+        "passed": 60,
+        "total": 60
+      },
+      {
+        "name": "SK-02 raw CLI JSON duplicate/malformed rejection",
+        "passed": true
+      },
+      {
+        "name": "SK-03 actual Node child-process synthetic JSON negative-claim cases",
+        "passed": 19,
+        "total": 19
+      },
+      {
+        "case": "NC17",
+        "outcome": "producer-unparseable"
+      },
+      {
+        "case": "NC18",
+        "outcome": "producer-unparseable"
+      },
+      {
+        "case": "NC19",
+        "outcome": "producer-unparseable"
+      }
+    ]
+  },
+  "limitations": [
+    "GitHub Actions PR merge-ref test; follow-on HEAD or main are not automatically qualified",
+    "SK-03 producer emits manufactured JSON and claim metadata; completeness and Source closure not independently observed",
+    "Only local Node subprocess execution; no real TEI CLI or MCP remote server or named external AI harness",
+    "No Product Semantic/SQL/Host/OS/DB/effect/independent Oracle/real authorization/consumer test",
+    "No confidential information or external model API was intentionally used",
+    "Does not qualify a User Subject as loaded in TEI or establish Skill benefit/portable Harness support"
+  ]
+}
