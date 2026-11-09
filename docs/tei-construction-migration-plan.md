@@ -375,8 +375,8 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 残る:
 
 1. パイロットの意味を受理する主体と、生成物を確認する責任者。TAIでは決められない（業務上の受入）。
-2. 製品側6判断（[草案](../analysis/product-side-decisions-issue-drafts-2026-11-06.md)）。
-3. TEI側2論点の判断（[草案](../analysis/tei-side-gaps-issue-drafts-2026-11-06.md)）。
+2. 製品側6判断のうち未決4件（[整理](../analysis/product-side-decisions-2026-11-06.md)、[草案](../analysis/product-side-decisions-issue-drafts-2026-11-06.md)）。2件は製品文書で決定済みとして閉じた。
+3. TEI側3論点の判断（[草案](../analysis/tei-side-gaps-issue-drafts-2026-11-06.md)）。
 4. 別実行先での同一適合試験。実インフラが要る。
 
 
