@@ -73,6 +73,18 @@ jobs:
       - name: YI 64-hexagram structural audit
         working-directory: .
         run: python evaluations/audit-yi-constellation.py
+      - name: YI candidate visibility tests (synthetic only)
+        working-directory: research
+        run: python -m unittest -v test_yi_selection_surface.py
+      - name: YI candidate visibility scan (synthetic only)
+        working-directory: research
+        run: python check_yi_selection_surface.py
+      - name: SUI context visibility synthetic tests
+        working-directory: research
+        run: python -m unittest -v test_sui_context_visibility.py
+      - name: SUI context visibility synthetic scan
+        working-directory: research
+        run: python check_sui_context_visibility.py
       - name: robotics audit output path test
         working-directory: .
         run: python -m unittest -v evaluations/test_audit_robotics_records.py

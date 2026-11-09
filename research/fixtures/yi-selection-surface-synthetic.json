@@ -1,0 +1,119 @@
+{
+  "schema": "tai.research.yi-selection-surface/synthetic-v0",
+  "synthetic": true,
+  "run": {
+    "id": "YI-SEL-01-synthetic",
+    "source": "SCN-001-derived fictional example, no external data",
+    "sourceRevision": "synthetic-manual-v0",
+    "candidateUniverse": "observed_in_this_run_only",
+    "externalCoverage": "unknown"
+  },
+  "candidates": [
+    {
+      "id": "H01",
+      "basis": "synthetic:facility-notice",
+      "kind": "hypothesis"
+    },
+    {
+      "id": "H02",
+      "basis": "synthetic:internal-rule",
+      "kind": "counterexample"
+    },
+    {
+      "id": "H03",
+      "basis": "synthetic:meeting-guide",
+      "kind": "hypothesis"
+    },
+    {
+      "id": "H04",
+      "basis": "synthetic:unresolved-scope",
+      "kind": "unresolved"
+    }
+  ],
+  "stages": [
+    {
+      "name": "generated",
+      "observedIds": [
+        "H01",
+        "H02",
+        "H03",
+        "H04"
+      ],
+      "closedForRun": true
+    },
+    {
+      "name": "captured",
+      "observedIds": [
+        "H01",
+        "H02",
+        "H03",
+        "H04"
+      ],
+      "closedForRun": true
+    },
+    {
+      "name": "searched",
+      "observedIds": [
+        "H01",
+        "H02",
+        "H03"
+      ],
+      "closedForRun": true
+    },
+    {
+      "name": "presented",
+      "observedIds": [
+        "H01",
+        "H03"
+      ],
+      "closedForRun": true
+    },
+    {
+      "name": "evaluated",
+      "observedIds": [
+        "H01",
+        "H03"
+      ],
+      "closedForRun": true
+    },
+    {
+      "name": "recommended",
+      "observedIds": [
+        "H01"
+      ],
+      "closedForRun": true
+    }
+  ],
+  "claims": [
+    {
+      "candidate": "H04",
+      "stage": "searched",
+      "kind": "absent_in_bounded_stage",
+      "scope": "this_run",
+      "note": "not selected for search, reason unverified"
+    },
+    {
+      "candidate": "H02",
+      "stage": "presented",
+      "kind": "absent_in_bounded_stage",
+      "scope": "this_run",
+      "note": "mediator omitted; not a rejection by Owner"
+    },
+    {
+      "candidate": "H03",
+      "stage": "recommended",
+      "kind": "absent_in_bounded_stage",
+      "scope": "this_run",
+      "note": "not recommended; does not mean rejected or false"
+    },
+    {
+      "candidate": "H01",
+      "stage": "recommended",
+      "kind": "observed_in_bounded_stage",
+      "scope": "this_run",
+      "note": "recommendation only; NOT accepted by Owner"
+    }
+  ],
+  "ownerAccepted": false,
+  "realWorldEvaluation": "not_run"
+}

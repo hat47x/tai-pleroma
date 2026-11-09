@@ -1,0 +1,85 @@
+{
+  "schema": "tai.research.sui-context-visibility/synthetic-v0",
+  "synthetic": true,
+  "sourceNote": "Authored synthetic mirror of SUI Context A2-minimal-v1 stub shape, NOT a captured SUI response",
+  "query": {
+    "queryId": "q-synthetic-visibility",
+    "safeModePolicy": "strict",
+    "reviewFilter": "reviewedOnly",
+    "previewConfirmed": true
+  },
+  "directSnapshot": {
+    "scope": "A2-minimal-v1-stub-only",
+    "sourceRevision": "SUI main 09c240460017d0a4ecc6ab55582631d3e1a8b0a9 (author-supplied, not verified by checker)",
+    "candidateIds": [
+      "card-reviewed-01",
+      "card-unreviewed-01"
+    ]
+  },
+  "bundle": {
+    "schemaVersion": "1.0.0",
+    "bundleHash": "synthetic-placeholder-not-real-SUI-hash",
+    "selected": [
+      {
+        "id": "card-reviewed-01",
+        "reviewed": true,
+        "title": "Reviewed working hypothesis",
+        "claimType": "hypothesis",
+        "resolutionState": "unresolved",
+        "aiDisposition": "constraint",
+        "autoResolve": false
+      }
+    ],
+    "relations": [
+      {
+        "type": "supports",
+        "from": "card-reviewed-01",
+        "to": "card-unreviewed-01",
+        "resolutionState": "unresolved",
+        "aiDisposition": "constraint",
+        "autoResolve": false
+      }
+    ],
+    "evidence": [
+      {
+        "cardId": "card-reviewed-01",
+        "kind": "support",
+        "reviewed": true,
+        "resolutionState": "unresolved",
+        "aiDisposition": "constraint",
+        "autoResolve": false
+      },
+      {
+        "cardId": "card-unreviewed-01",
+        "kind": "counter_opinion",
+        "reviewed": false,
+        "resolutionState": "unresolved",
+        "aiDisposition": "constraint",
+        "autoResolve": false
+      }
+    ],
+    "contradictions": [
+      {
+        "id": "ctr-01",
+        "label": "open conflict",
+        "weight": 2,
+        "resolutionState": "unresolved",
+        "aiDisposition": "constraint",
+        "autoResolve": false
+      }
+    ],
+    "reviewFlags": {
+      "reviewed": 1,
+      "unreviewed": 0
+    },
+    "truncationMeta": {
+      "stubDatasetId": "A2-minimal-v1",
+      "depth": 2,
+      "holdState": "hold:stub_dataset_contract_only"
+    },
+    "excludedReason": [
+      "unreviewed_filtered"
+    ],
+    "queryCanonicalHash": "synthetic-placeholder-not-real-SUI-hash"
+  }
+}
