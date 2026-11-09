@@ -209,7 +209,19 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 - どちらも生成コードの手修正は0行。人が直すのは契約（意味）とfixtures（被覆）だけで、合わせて1ファイルずつ
 - 消費側はどちらも黙って落とす。`valid: true` は「知っている意味が壊れていない」以上の意味を持たない
 
-段階5の残る出口は、出口3（別Target Profileで同じ適合試験）と出口4（判定表の更新、本節で実施）である。
+段階5の残る出口は出口3（別Target Profileで同じ適合試験）だったので、試した。**通らなかった。**（[compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)）
+
+| Profile | 実行モデル | 結果 |
+| --- | --- | --- |
+| `sui-record-oneshot` | oneshot | PASS（5プロセス・5リクエスト・5応答） |
+| `sui-record-rolling` | long-running | **FAIL**（1プロセス・5リクエスト・1応答、`candidate wait failed: exit status 2`） |
+
+理由は生成候補の側にある。record templateが生成するプログラムは標準入力から1件読んで1件返して終わる。long-runningプロファイルは1プロセスに複数リクエストを送るため、2件目で候補が終了している。
+
+- **交換できるのはProfileの宣言であって、生成候補の実行モデルではない。** 同じ意味でも、実行モデルが変われば候補の作り直しが要る
+- これは"実行先が交換できる"の反例であり、生成テンプレートがprocess modelごとに要ることを示す。TEI側の論点として追加する（入れ子・数値配列に次ぐ3件目）
+
+出口4（判定表の更新）は本節で実施した。段階5は、出口3が反例で終わったため**未達のまま次の段階へ持ち越す**。
 
 ## 7.8 フィージビリティ判定の現況（2026-11-06）
 
@@ -220,10 +232,10 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | 意味が正本 | **部分**。契約とfixturesが版付きで存在し、生成物とdigestで対応する。ただし製品への写像は手書きで、新しい意味は自動で届かない | [contract digests](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)、[meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
-| 実行先が交換できる | **部分**。one-shot Target Profile実行、rollingの配備・rollback、Postgres保存は示せた。別実行先で同じ試験を通すことは未実施 | [target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json)、[postgres](../evaluations/records/SUI-TEI-postgres-2026-11-03.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが182件、合成61件 | [status](status.md) |
+| 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが183件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
-| 人が同じ手順で再現できる | **部分**。一括96段のコマンド1本で再現できるが、実インフラ依存の段は環境前提を持つ | [suite](../evaluations/records/TEI-suite-2026-11-03.json) |
+| 人が同じ手順で再現できる | **部分**。一括97段のコマンド1本で再現できるが、実インフラ依存の段は環境前提を持つ | [suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 
 この表は「TEIで構築した」の証明ではない。条件ごとに何が示せて何が示せていないかを、判断できる形で並べたものである。段階5の出口4で更新する。
 
