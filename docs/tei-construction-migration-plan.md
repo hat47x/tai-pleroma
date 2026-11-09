@@ -251,6 +251,17 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 この不具合は、receiptを「実行の記録」として読むときに効く。終了コードと`result`が別々に決まっている箇所は、他にもないか段階6で確認する。
 
+### 7.7.1-c 終了コードと`result`の一致の点検（2026-11-06）
+
+段階6の最初の作業として、`result`と終了コードが別々に決まる箇所を機械的に点検した。[receipt](../evaluations/records/TEI-result-exit-parity-2026-11-06.json)
+
+- 対象は`integrations/tools`と`integrations/pilot-sui-document/assembler`の111スクリプト
+- 検出する形は「`result`が固定の`PASS`文字列」かつ「末尾の終了が条件式」。`integration_flow.py`が持っていた形そのもの
+- 結果は**0件**。`integration_flow.py`の修正後、同じ形は残っていない
+- 検出器自体が空振りでないことは、旧`integration_flow.py`と同じ形のソースを内部で解析して確認する自己試験で担保している
+
+限界も書いておく。この点検は構文の形だけを見るので、変数を経由した不一致や、receiptを書いた後に別経路で失敗する形は見つけられない。件数が0でも「不一致が原理的に無い」ことの証明にはならない。
+
 ### 7.7.2 段階5の結論（2026-11-06）
 
 段階5の出口を、達成・反例・保留に分けて締める。
@@ -292,7 +303,7 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが188件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが189件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 

@@ -21,13 +21,13 @@
       "snapshotDigest": true
     },
     "recordId": "decision-1",
-    "snapshotDigest": "sha256:075143fd7a333551fbe6569ad1300699c299de53a03361d73bde7bd3f647cc8c",
+    "snapshotDigest": "sha256:508f0119942920c91c801e0a4ead4fd3d2c637d1ab58cd35cc1e9e15e1f4e8fa",
     "resume": [
-      "Store sei-store-2026-11-09-2d39d38b: 1 records",
+      "Store sei-store-2026-11-09-c9cf8c5f: 1 records",
       "Unresolved scope: recognized Decision.unresolved_refs only; not a case-wide inventory.",
       "0 entries; 0 distinct logical references. Case completeness: not assessed.",
       "Not verified by this view: the responsible party's Authority; human confirmation; whether a record comes from a real object or a synthetic fixture. A responsible party is shown as recorded.",
-      "Snapshot SHA-256: sha256:075143fd7a333551fbe6569ad1300699c299de53a03361d73bde7bd3f647cc8c"
+      "Snapshot SHA-256: sha256:508f0119942920c91c801e0a4ead4fd3d2c637d1ab58cd35cc1e9e15e1f4e8fa"
     ]
   },
   "scope": "Records the projected decision through SEI's CLI, reads the snapshot, exports a bundle and verifies it. The store is temporary and no policy gate is exercised."
