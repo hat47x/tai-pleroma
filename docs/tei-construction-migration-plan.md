@@ -377,17 +377,17 @@ tei-generator-build -strategy text-record-template → 生成できる（one-sho
 
 ## 7.8 フィージビリティ判定の現況（2026-11-06）
 
-計画§2の5条件に、§5の条件のうち§2と重ならない2つ（digestの残存と人の再現）を加えて、現在のreceiptに照らして並べる。**示せた**は receipt で再確認できるもの、**部分**は条件を満たす範囲と満たさない範囲が同居するもの。
+計画§2の5条件に、§5の条件のうち§2と重ならない2つ（digestの残存と人の再現）を加えて、現在のreceiptに照らして並べる。**判定の正本は[TEIパイロットの判定](../analysis/tei-pilot-conclusion-2026-11-06.md)**で、この表は条件ごとの内訳である。片方だけを更新しない。**示せた**は receipt で再確認できるもの、**部分**は条件を満たす範囲と満たさない範囲が同居するもの。
 
 | 条件 | 現況 | 根拠 |
 | --- | --- | --- |
 | 意味が正本 | **部分**。契約とfixturesが版付きで存在し、生成物とdigestで対応する。ただし製品への写像は手書きで、新しい意味は自動で届かない | [contract digests](../evaluations/records/SUI-TEI-document-coverage-2026-11-06.json)、[meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
-| 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
-| 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
+| 適合試験がある | **部分**。意味変更3件で、被覆検査が先に落ちてから被覆を足す順序を確認した。加えてSUIのモデルを独立オラクルとして12件中9件が妥当と確認できた（残る3件はSUI内部の食い違い）。ただし試験そのものは意味変更を自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
+| 実行先が交換できる | **部分（one-shot限定で達成）**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**。原因は投影戦略がone-shotの2つに固定されていることで、long-running用テンプレートは投影に使えない。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
 | 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが195件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
-| 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
+| 人が同じ手順で再現できる | **部分**。一括106段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 
 この表は「TEIで構築した」の証明ではない。条件ごとに何が示せて何が示せていないかを、判断できる形で並べたものである。段階5の出口4で更新する。
 
