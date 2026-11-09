@@ -260,3 +260,21 @@ SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規�
 
 **実装順**：既存TEI OwnerのProduct実配線が必要なCapabilityを一つだけ選び、Declared→Resolved→Router/Entry Constructed→実Invoked→結果受領のうち未到達箇所を**単一Consumer**で検証する。Hookの外部境界やSelf-buildのL2-bはそれぞれ別Gate。TAI側に新Router/Hook Registry/自己ビルドHostを設けず、初回SK-02 H2/H3の固定Tool Profileへ追加しない。実Provider/Pluginの全経路、外部Hook outcome、正式L2-b、Owner受理はNOT RUN。
 
+<!-- tai-studio-element-directed-ai-harness-20261109 -->
+### 11.6 TEI Studioの要素選択をAI指示の主入口にする――Harnessは交換可能な実行器（2026-11-09）
+
+**価値仮説**：汎用Chatからモデル全体を説明させるより、TEI Studioの図・表・ツリー・プロパティ・CRUD交点・Function・SQL・診断・試験結果を**ユーザーが直接選択して指示する**方が、指示対象の同定、必要Contextの最小化、変更範囲の限定、検証結果への往復に優れる。特に大きなData/Function/Business三要素図では、**全体図の現在地を保ったまま局所選択→AI提案→差分確認→同じ位置へ復帰**を優先する。これは[TEI merged #3847](https://github.com/hat47x/tei-platform/pull/3847)がRQ-036/三要素Method §19.8に追加したG1〜G7とMAP-17〜23（全件NOT RUN）を**AI指示の入口として利用する案**であり、別の図面正本やTEI Studio実装済み機能の主張ではない。
+
+**境界と最小データ**：選択UIは`ModelElementId/Kind`、`Source/Model Revision`、選択した表現上の`view/selection/span`、`Audience/Grant`、要求する`Intent`、近傍参照の範囲と欠落を、既存Modeler/ADR-0048 Application APIから読み出す。UI座標・ハイライト・展開状態は**Presentation state**でありAccepted Meaning/業務Keyへ昇格させない。選択対象が変更・移動・削除されていたら再解決して停止／再確認し、**古い座標から別要素を黙って編集しない**。要素のRole/Meaning/Action/ContextはAIの候補として提示できるが、Accepted Meaning・Grant・実Event・業務副作用を自動確定しない。
+
+| 操作段階 | 正本／担当 | 必要な否定試験 |
+| --- | --- | --- |
+| Select & Inspect | TEI Modeler＋既存CLI/API/MCP read-only、図の現在地・近傍・出典 | 同名別ID、削除済みID、旧Revision、表示上の非公開部分、図と構造化表現の不一致 |
+| AI Instruction & Preview | 外部Harness（DSH等）＋YI Skill、対象限定Context、提案Patch | 非選択要素への変更、Context過送出、未知Field/Sourceを捏造、複数選択の曖昧な作用範囲 |
+| Preflight & Apply | TEIの既存型付きApplication API/Host/Provider/現在Grant | 意味受理なし、旧Revision、権限なし、無関係要素への副作用、partial write |
+| Post-check & Return | TEIの既存差分・Driver/Receipt・図面/CRUDクロス参照 | UI表示成功≠保存成功、Build PASS≠意味保持、Receipt≠実Effect、図面上の現在地喪失 |
+
+**構成選択**：DSHのACP/SDK/Headlessなどの入口は**接続候補**として評価し、TEI StudioにDSH固有のSession Store/Agent Loopを組み込むことを前提にしない。まず外部Harnessを**交換可能なSidecar/Adapter**として、Studio Selection→既存Application APIでContext取得→Skill/Harnessへ最小Context→提案をTEI側Preflightへ戻す細い経路を比較する。DSHのサービス契約・利用規約・組織向け配布／モデル接続条件は別に確認し、定額Consumer契約が任意の自動API/ヘッドレス利用を許すとは推定しない。企業向けにはモデル選択・通信先・機密データの送信範囲・ローカル処理・監査を**Harnessから独立に設定可能**にする。特定Harnessの名称や出自を採用必須条件にしない。
+
+**最小価値試験（新しい必須Gateを増やさない）**：同じTEI Function/Diagramの局所変更を、B0=Studio手動、B1=Studio+外部Harness汎用指示、B2=Studio選択要素からの直接AI指示で比較する。対象特定までの時間、投入Context byte、無関係差分数、正しいSource/Model/Revisionへの帰着、独立Expected/Ownerレビュー、総Cost、失敗時の回復を記録。**B2がB1に対して実測で改善した範囲だけ**製品要件へ昇格する。初回TAI #168のH2/H3固定Skill比較と混ぜない。TEIの実UI Selection/Modeler Bridge/外部Harness接続/企業認可/実業務書込/Owner受理はNOT RUN。実装OwnerはTEI RQ-036/ADR-0048/既存Studio Issue、TAIは価値比較とSkill契約のみ。
+
