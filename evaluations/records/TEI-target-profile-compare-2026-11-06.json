@@ -5,7 +5,7 @@
   "publicationAllowed": false,
   "date": "2026-11-09",
   "host": "Windows with the TEI target-profile tool and one built record candidate",
-  "command": "python integrations/tools/tei_target_profile_compare.py --tei-repo D:\\GIT\\hat47x\\tei-wt-recover-20261107 --workspace D:\\GIT\\hat47x\\tai-wt-dec\\integrations\\pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+  "command": "python integrations/tools/tei_target_profile_compare.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --strategy text-record-template --contract candidates/card-record/contract.json --fixtures candidates/card-record/fixtures.json --profile-a profiles/record.json --profile-b profiles/record-rolling.json --artifact evaluations/artifacts/scn-003-document.json --out <receipt>",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
@@ -43,8 +43,9 @@
     "oneShotPassed": true,
     "longRunningRefused": true,
     "refusalReason": "candidate wait failed: exit status 2",
-    "refusalIsProcessModel": true,
-    "sameContractBothProfiles": true
+    "refusalIsExecutionModel": true,
+    "sameContractBothProfiles": true,
+    "expectedContractId": "sui.card.record"
   },
-  "scope": "Builds one record candidate, then runs TEI's compare over a one-shot and a long-running Target Profile with the same contract and fixtures. It records that the one-shot profile passes and that the long-running profile refuses the same candidate because the generated program answers one request per process. It does not prove a real target and does not change the candidate template."
+  "scope": "Builds one candidate for the given contract, then runs TEI's compare over a one-shot and a long-running Target Profile with the same contract and fixtures. It records that the one-shot profile passes and that the long-running profile refuses the same candidate because the generated program answers one request per process. It does not prove a real target and does not change the candidate template."
 }

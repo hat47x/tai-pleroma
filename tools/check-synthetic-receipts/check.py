@@ -195,6 +195,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-meaning-change-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-required-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+    "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
     "evaluations/records/TEI-fixture-coverage-2026-11-06.json",
     "evaluations/records/SUI-consumer-mapping-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json",

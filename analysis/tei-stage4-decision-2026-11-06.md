@@ -144,3 +144,11 @@
 - 適合試験に「意味の変更を検出できるか」の観点を加える。被覆の無い意味変更を緑のまま通さないため、契約のフィールドごとに最低1ケースを要求する検査を作った（[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)）。現行の5契約・24ケースは全フィールドが値ケースを持つ。検査自体が「被覆の無いフィールドを報告できるか」を自己試験するため、緑は空振りではない。
 - 写像の自動生成は、TEI側の入れ子投影と統合モデラーの判断に依存する。TAIでは試作しない（下流への回避実装を足さない原則）。
 
+## 8. 追加のTEI側論点（2026-11-06、段階5から）
+
+段階5の出口3（別Target Profileで同じ適合試験）が反例で終わり、TEI側の論点が1件増えた。
+
+- **生成テンプレートがprocess modelごとに要る。** one-shotでは同じ契約・fixtureが通るが、long-runningでは生成候補が1リクエストで終了するため通らない。`text-template`と`text-record-template`の両方で同じ非対称が出たので、生成物の共通の性質である（[record](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)）。
+- これは「実行先が交換できる」の反例であり、意味の検証だけを引き継げないことを意味する。TAIは回避実装を足さず、判断材料として[Issue草案](tei-side-gaps-issue-drafts-2026-11-06.md)の4件目に置いた。
+
+これでTEI側の論点は、デコード方針の不統一、数値配列の制約、process model対応の3件になった。

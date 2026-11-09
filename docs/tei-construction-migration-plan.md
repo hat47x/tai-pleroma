@@ -215,8 +215,10 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | --- | --- | --- |
 | `sui-record-oneshot` | oneshot | PASS（5プロセス・5リクエスト・5応答） |
 | `sui-record-rolling` | long-running | **FAIL**（1プロセス・5リクエスト・1応答、`candidate wait failed: exit status 2`） |
+| `sui-text-oneshot` | oneshot | PASS（4プロセス・4リクエスト・4応答） |
+| `sui-text-rolling` | long-running | **FAIL**（1プロセス・4リクエスト・1応答、`candidate returned 1 of 4 responses`） |
 
-理由は生成候補の側にある。record templateが生成するプログラムは標準入力から1件読んで1件返して終わる。long-runningプロファイルは1プロセスに複数リクエストを送るため、2件目で候補が終了している。
+理由は生成候補の側にある。生成テンプレート（`text-template`と`text-record-template`）が出力するプログラムは、標準入力から1件読んで1件返して終わる。long-runningプロファイルは1プロセスに複数リクエストを送るため、2件目で候補が既に終了している。**2つのテンプレートで同じ非対称が出たので、特定テンプレートの欠陥ではなく生成物の共通の性質**である（[text側の比較](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)）。
 
 - **交換できるのはProfileの宣言であって、生成候補の実行モデルではない。** 同じ意味でも、実行モデルが変われば候補の作り直しが要る
 - これは"実行先が交換できる"の反例であり、生成テンプレートがprocess modelごとに要ることを示す。TEI側の論点として追加する（入れ子・数値配列に次ぐ3件目）
@@ -233,7 +235,7 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが183件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが184件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括97段のコマンド1本で再現できるが、実インフラ依存の段は環境前提を持つ | [suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 

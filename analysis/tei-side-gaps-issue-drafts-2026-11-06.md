@@ -90,10 +90,41 @@ tei-generator-select → 拒否（`json: unknown field "fields"`）
 
 ---
 
+## 4. 生成テンプレートがprocess modelごとに要る
+
+**提案タイトル**: `reference-generator-selection: 生成テンプレートをTarget Profileのprocess modelに対応させる`
+
+**本文**:
+
+同じ受理済み契約・fixture・生成候補を、one-shotとlong-runningの2つのTarget Profileで実行しました（[record](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)）。
+
+```text
+sui-record-oneshot  (oneshot)      → PASS  5プロセス・5リクエスト・5応答
+sui-record-rolling  (long-running) → FAIL  1プロセス・5リクエスト・1応答  candidate wait failed: exit status 2
+sui-text-oneshot    (oneshot)      → PASS  4プロセス・4リクエスト・4応答
+sui-text-rolling    (long-running) → FAIL  1プロセス・4リクエスト・1応答  candidate returned 1 of 4 responses
+```
+
+`text-template`と`text-record-template`の両方で同じ非対称が出ました。生成されるプログラムは標準入力から1件読んで1件返して終わるため、1プロセスに複数リクエストを送るlong-runningプロファイルでは2件目以降に応答できません。
+
+**論点**:
+
+1. 生成テンプレートをprocess modelごとに用意するか（one-shot用とlong-running用で別のmainを生成する）。
+2. Target Profileの`processModel`宣言を、生成候補の実行モデルと突き合わせて検証するか（今は実行時に初めて分かる）。
+3. long-runningを「未対応」として明示し、対応するまでProfile側で拒否するか。
+
+TAIの立場では、これは「実行先が交換できる」の反例です。同じ意味でも実行モデルが変われば候補の作り直しが要り、意味の検証だけを引き継ぐことはできません。TAIは下流に回避実装を足さず、判断待ちとします。
+
+**TAI側でできること**: 対応後の再観測（同じ契約が両Profileで通るか）。
+
+**根拠**: [record比較](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text比較](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json)
+
+---
+
 ## 投稿する場合の手順（未実施）
 
 1. 各草案をTEIリポジトリ（`hat47x/tei-platform`）へ1件ずつIssueとして起票する。
-2. 2と3は、1の判断（拒否か受理か）に従属する。1を先に投稿し、2・3はその決定に合わせて調整する。
+2. 2と3は、1の判断（拒否か受理か）に従属する。1を先に投稿し、2・3はその決定に合わせて調整する。4は独立して投稿できる。
 3. TAI側は、判断が下りたら同じパイロットで再観測しreceiptを追加する。
 
 この手順は外部への効果を含むため、実行の可否は人（Owner）の判断に委ねます。
