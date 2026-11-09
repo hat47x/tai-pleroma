@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "realRecords": 202,
+    "realRecords": 222,
     "syntheticRecords": 64,
     "missingRequiredFields": {},
     "missingScope": [],
@@ -22,9 +22,22 @@
     "historical": 70,
     "unregisteredReceipts": [],
     "allRealReceiptsStateLimits": true,
-    "registeredCount": 255,
+    "registeredCount": 256,
     "foreignReceipts": [
-      "AS-LB-loopback-http-2026-11-02.json"
+      "AS-LB-loopback-http-2026-11-02.json",
+      "SK-C-public-fixture-selfcheck-2026-11-02.json",
+      "SK-F-public-fixture-selfcheck-2026-11-02.json",
+      "SK-J-public-fixture-selfcheck-2026-11-02.json",
+      "SK-L-public-fixture-selfcheck-2026-11-02.json",
+      "SK-M-public-fixture-selfcheck-2026-11-02.json",
+      "SK-N-public-negative-witness-selfcheck-2026-11-02.json",
+      "SK-RQ-public-fixture-selfcheck-2026-11-02.json",
+      "SK-TB-public-fixture-selfcheck-2026-11-02.json",
+      "SK03-NC-local-transport-2026-11-03.json",
+      "SK03-NC-node-ci-2026-11-04.json",
+      "TAI-TEI-S1-real-public-source-2026-11-06.json",
+      "TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json",
+      "TEI-PR2649-one-revision-actual-cli-observation-2026-11-03.json"
     ],
     "auxiliary": [
       "SCN-003-compose-2026-11-03.validate.json"
@@ -34,8 +47,8 @@
       "missingScope": 0,
       "scopeWithoutLimitation": 0,
       "unregistered": 0,
-      "foreign": 1
+      "foreign": 14
     }
   },
-  "scope": "Walks every receipt and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. Receipts from other workstreams in this repository use their own schema; they are listed as foreign rather than judged against TAI's format, so their metadata is not checked here. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation."
+  "scope": "Walks the receipts and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. Receipts that are not registered and do not declare TAI's schema belong to other workstreams; they are listed as foreign rather than judged against TAI's format, so their metadata is not checked here. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation."
 }
