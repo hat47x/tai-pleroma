@@ -215,6 +215,18 @@ def main():
         output = second.stdout + second.stderr
     match = re.search(r"TAI_RESULT task=(\S+) attempt=(\S+) claim=([0-9a-f]+)", output)
     passed = (second.returncode == 0 if second is not None else first.returncode == 0) and match is not None
+    if second is None:
+        submission_note = "The policy-aligned first submission completed without a retry."
+    elif first_rejected:
+        submission_note = (
+            "The first submission was rejected for resource budget; a second submission "
+            "used the test-profile budget limits."
+        )
+    else:
+        submission_note = (
+            "The first test invocation failed for a reason not proven to be resource budget; "
+            "a second submission used the test-profile budget limits."
+        )
     receipt = {
         "schema": "tai.reference.eki-projection-execution/v0",
         "synthetic": False,
@@ -237,7 +249,13 @@ def main():
             "claimDigest": match.group(3) if match else None,
             "logTail": output.strip().splitlines()[-10:],
         },
-        "scope": "Submits TAI's projected TaskRequest through EKI's Client API. The projected wall-time budget exceeds the harness policy, so when it is rejected the tool retries with wall_time_seconds, output_bytes_max and network_bytes_max clamped to the harness policy (60 s, 1 MiB, 1 MiB) to show the execution path. This is EKI's TEST PROFILE, not Worker Protocol compatibility.",
+        "scope": (
+            "Submits TAI's projected TaskRequest through EKI's Client API. "
+            + submission_note
+            + " The test uses EKI's TEST PROFILE; a ResultClaim in this test does not establish "
+            "real resource consumption/cost, delivered Consumer Body, production authority, "
+            "or Worker Protocol compatibility."
+        ),
     }
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"passed": passed, "rejected": first_rejected, "task": receipt["observed"]["taskId"]}))

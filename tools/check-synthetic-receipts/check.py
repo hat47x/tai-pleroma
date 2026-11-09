@@ -652,8 +652,17 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"EKI result acceptance changed; update the finding: {relative}")
         if "EKI-TEI-policy-execution" in relative:
             observed = data.get("observed", {})
-            if data.get("result") != "PASS" or observed.get("projectedSubmissionRejected") is not False or not observed.get("claimDigest"):
-                errors.append(f"EKI policy-aligned execution evidence did not hold: {relative}")
+            if (
+                data.get("result") != "PASS"
+                or observed.get("projectedSubmissionRejected") is not False
+                or observed.get("firstExitCode") != 0
+                or observed.get("secondExitCode", "missing") is not None
+                or not observed.get("taskId")
+                or not observed.get("attemptId")
+                or not observed.get("claimDigest")
+                or "without a retry" not in data.get("scope", "")
+            ):
+                errors.append(f"EKI policy-aligned no-retry evidence did not hold: {relative}")
         if "EKI-TEI-projection-execution" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or not observed.get("taskId") or not observed.get("claimDigest"):
