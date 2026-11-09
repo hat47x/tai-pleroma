@@ -53,7 +53,7 @@ python tools/check-synthetic-receipts/check.py --root .
 python integrations/tools/doc_consistency_check.py
 ```
 
-期待結果は[再現手順](reproduction-runbook.md)§4に固定してある。
+期待結果は[再現手順](reproduction-runbook.md)§4に固定してある。判断が下りたときの測り直しは[再観測の準備](re-observation-plan.md)にまとめてある。
 
 ## 7. この文書が証明しないこと
 
