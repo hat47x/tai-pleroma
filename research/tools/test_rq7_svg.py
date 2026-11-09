@@ -36,7 +36,10 @@ class SvgTextStructuralParity(unittest.TestCase):
         self.assertEqual(root.tag, rq7_svg.tag("svg"))
         self.assertEqual(root.attrib["role"], "img")
         self.assertIn("graph-title", root.attrib["aria-labelledby"])
-        self.assertEqual(len(root.findall(rq7_svg.tag("line"))), len(case["declared"]["edges"]))
+        self.assertEqual(
+            len(root.findall(rq7_svg.tag("line"))) + len(root.findall(rq7_svg.tag("path"))),
+            len(case["declared"]["edges"]),
+        )
         self.assertEqual(len(root.findall(rq7_svg.tag("g"))), len(case["declared"]["nodes"]))
         self.assertIn("<svg", svg)
         self.assertNotIn("<script", svg)
@@ -87,6 +90,56 @@ class SvgTextStructuralParity(unittest.TestCase):
         graph_nodes, graph_edges = rq7_svg.svg_semantics(mutated)
         self.assertEqual(graph_nodes, {n["id"]: n["label"] for n in case["declared"]["nodes"]})
         self.assertNotEqual(graph_edges, {tuple(x) for x in case["declared"]["edges"]})
+
+    def test_long_edge_no_longer_crosses_middle_node(self):
+        case = self.cases["v1"][0]
+        labels, positions, _, _ = rq7_svg.graph_layout(case)
+        self.assertIn("test", labels)
+        self.assertTrue(rq7_svg.intersects_interior(
+            (positions["compile"][0] + 180, positions["compile"][1] + 30),
+            (positions["package"][0] - 9, positions["package"][1] + 30),
+            *positions["test"],
+        ), "pre-fix straight line should cross test node")
+        routed = rq7_svg.route_points(positions, "compile", "package")
+        adjacent = rq7_svg.route_points(positions, "test", "package")
+        self.assertEqual(len(routed), 6)
+        self.assertEqual(len(adjacent), 2)
+        self.assertEqual(routed[-1][0], adjacent[-1][0])
+        self.assertNotEqual(routed[-1][1], adjacent[-1][1],
+                            "two different incoming arrows must not merge at one port")
+        self.assertNotEqual(routed[0][1], rq7_svg.route_points(positions, "compile", "test")[0][1],
+                            "long and adjacent outgoing edges must have different ports")
+        for a, b in zip(routed, routed[1:]):
+            self.assertFalse(rq7_svg.intersects_interior(a, b, *positions["test"]))
+        svg = ET.fromstring(rq7_svg.render_svg(case))
+        matches = [p for p in svg.findall(rq7_svg.tag("path"))
+                   if p.get("class") == "declared-edge"
+                   and p.get("data-from") == "compile"
+                   and p.get("data-to") == "package"]
+        self.assertEqual(len(matches), 1)
+        self.assertTrue(matches[0].get("d").startswith("M "))
+        rq7_svg.check_route_clearance(case, positions)
+
+    def test_old_straight_shortcut_is_rejected_as_visual_wrong_connection(self):
+        case = self.cases["v1"][0]
+        root = ET.fromstring(rq7_svg.render_svg(case))
+        long_edge = next(p for p in root.findall(rq7_svg.tag("path"))
+                         if p.get("data-from") == "compile"
+                         and p.get("data-to") == "package")
+        root.remove(long_edge)
+        labels, pos, _, _ = rq7_svg.graph_layout(case)
+        # Data IDs remain exactly right; only routing is visually misleading.
+        ET.SubElement(root, rq7_svg.tag("line"), {
+            "class": "declared-edge", "data-from": "compile", "data-to": "package",
+            "x1": str(pos["compile"][0] + 180), "y1": str(pos["compile"][1] + 30),
+            "x2": str(pos["package"][0] - 9), "y2": str(pos["package"][1] + 30),
+            "stroke": "#333333", "stroke-width": "2",
+            "marker-end": "url(#arrowhead)",
+        })
+        mutated = ET.tostring(root, encoding="unicode")
+        self.assertEqual(rq7_svg.svg_semantics(mutated)[1], {tuple(e) for e in case["declared"]["edges"]})
+        with self.assertRaisesRegex(ValueError, "long edge requires"):
+            rq7_svg.check_svg_geometry(case, mutated)
 
     def test_tampered_arrow_geometry_rejected_even_when_edge_metadata_matches(self):
         case = self.cases["v1"][0]

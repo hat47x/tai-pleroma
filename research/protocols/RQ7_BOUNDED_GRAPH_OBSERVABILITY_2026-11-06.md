@@ -224,3 +224,14 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 - V0/V1相当のDeclared表示Componentだけを生成。V2/V3のResolved/Observed/Consumed追加Evidenceを同等に見せる実UIは**NOT RUN**。E-traceが実CLI観測Projectionであることと、E-pipelineの独立宣言Graphに関する実験の区別を保つ。
 
 次のG-Cal1bは実ブラウザー/描画Engineを固定した画面視認・情報量・keyboard/screen-readerの独立レビュー。これを経ずに「図が理解しやすい」「図に無いなら処理が存在しない」という製品主張へ昇格させない。Source/Policy/Authority/Ownerの保証境界は#3321/#2516/#1124/#2831/#2542へ残す。
+
+## 15. 2026-11-09：実ブラウザーで初めて検出・反証可能になった可視化誤り
+
+[G-Cal1b-geometryの比較設計](RQ7_CHROMIUM_GEOMETRY_GATE_2026-11-09.md)で、公開Build DAGの`compile→package`という直接Edgeの直線が中間`test` Nodeを横切る、**論理GraphとSVGのメタデータが正しくても視覚表現が紛らわしい反例**を特定した。
+
+- 旧座標は`(440,60)→(711,60)`、中間Nodeは`x=490..670,y=30..90`。旧G-Cal1aの52テストは指定レイアウトへの忠実性を検証したが、Node遮蔽の不在を検査していなかった。
+- 公開3種の固定DAGだけを対象に、長距離Edgeを上側経路へ迂回し、近接Edgeとの同一Port重なりを避ける。Declared Node/Edge/Gold、Text、プロトコルの意味状態は不変。
+- 正確な修正が有効かどうかは、Pythonの矩形交差判定に加え、Chromiumの`getBBox/getScreenCTM/getPointAtLength`とdesktop/mobile viewportで**実表示から評価**する。外部のProduct SourceやPolicyは使用しない。
+- **評価資格の区分**: `G-Cal1b-geometry`は実ブラウザーの幾何検査に限る。長文のラベル・Screen Reader・キーボード・人間/AIの意味理解、実TEI複合Graph・多項Relationは別の未実証Gate。見た目の改善をS01 Source Accepted/Authoritative/Owner受理へ転用しない。
+
+研究上の本質は、`semantic source parity`、`SVG metadata parity`、`rendered geometry`、`human/AI comprehension`を区別すること。先行研究のGraph edge routing自体は既知であり、本変更は小規模刺激の信頼性改善であって、新規アルゴリズムの発明を主張しない。
