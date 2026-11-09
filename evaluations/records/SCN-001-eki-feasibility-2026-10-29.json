@@ -20,5 +20,6 @@
     "Control Plane、Agent、Task cancel、Native Runnerのspikeを確認した。",
     "Taskを実行するWorkerではなく、結果・Authorityは未検証。",
     "sandbox・CPU/メモリ制限は未実装。"
-  ]
+  ],
+  "publicationAllowed": false
 }

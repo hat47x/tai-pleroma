@@ -11,5 +11,6 @@
   "notes": [
     "TEIのvalidateだけを実行する読み取り専用接続。",
     "SCN-001のObservation/RuleCandidateの型宣言を検証するが、実データ・意味・Authorityは検証しない。"
-  ]
+  ],
+  "publicationAllowed": false
 }

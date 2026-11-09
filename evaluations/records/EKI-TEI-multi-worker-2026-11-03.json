@@ -1,0 +1,51 @@
+{
+  "schema": "tai.reference.eki-multi-worker/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-06",
+  "host": "Windows with the EKI binaries, a generated Worker CA, a Control Plane TLS certificate and a hand-written trust anchor",
+  "command": "python integrations/tools/eki_multi_worker.py",
+  "result": "PASS",
+  "observed": {
+    "attempts": [
+      {
+        "submitted": [
+          "tsk_6753c233a13d0398e9d941c205c2cec5",
+          "tsk_93aaa50af33b5cb4239f79489eac0708",
+          "tsk_1895e64eafa3a4b57717c307f7b46d07",
+          "tsk_1c2aa722e216daa6ef49578c177a653d"
+        ],
+        "workers": [
+          "wrk_47949fb7c634d1bd48a01f7998669f29",
+          "wrk_34e7a31671687234eb177d4b466007a9"
+        ],
+        "executed": 2,
+        "claimed": 2,
+        "workersUsed": [
+          "wrk_34e7a31671687234eb177d4b466007a9",
+          "wrk_34e7a31671687234eb177d4b466007a9",
+          "wrk_34e7a31671687234eb177d4b466007a9",
+          "wrk_34e7a31671687234eb177d4b466007a9"
+        ]
+      }
+    ],
+    "submitted": [
+      "tsk_6753c233a13d0398e9d941c205c2cec5",
+      "tsk_93aaa50af33b5cb4239f79489eac0708",
+      "tsk_1895e64eafa3a4b57717c307f7b46d07",
+      "tsk_1c2aa722e216daa6ef49578c177a653d"
+    ],
+    "workers": [
+      "wrk_47949fb7c634d1bd48a01f7998669f29",
+      "wrk_34e7a31671687234eb177d4b466007a9"
+    ],
+    "executed": 2,
+    "claimed": 2,
+    "workersUsed": [
+      "wrk_34e7a31671687234eb177d4b466007a9"
+    ],
+    "distributed": false
+  },
+  "scope": "Registers two Workers on one Control Plane and submits four Tasks. Both Workers register and Tasks execute, but in this configuration the attempts concentrated on one Worker and not all Tasks finished within the wait; observed.distributed and observed.executed record that."
+}

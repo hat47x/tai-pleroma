@@ -15,7 +15,7 @@
 - **SUI／SEI／TEI／SHO・MMI／EKI**: 固有の意味・ソース・実装・受入・単独リリースの正本はそれぞれの製品側に残す。
 - **星座の概念関係 ≠ 配布物の受渡し ≠ 実行時API依存**。説明用の点線を、確定した互換性や組織の上下関係にしない。
 
-この構想の正本となるOwner判断は[TAI Issue #74](https://github.com/hat47x/tai-pleroma/issues/74)、実装未完の設計提案は[Draft PR #75](https://github.com/hat47x/tai-pleroma/pull/75)で追跡する。製品分類と関係性は別の[Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)、[Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72)にある。
+この構想の正本となるOwner判断は[TAI Issue #74](https://github.com/hat47x/tai-pleroma/issues/74)、実装未完の設計提案は[Draft PR #75](https://github.com/hat47x/tai-pleroma/pull/75)（2026-11-02 merged）で追跡する。製品分類と関係性は別の[Issue #73](https://github.com/hat47x/tai-pleroma/issues/73)、[Draft PR #72](https://github.com/hat47x/tai-pleroma/pull/72)（2026-11-02 merged）にある。
 
 **現状:** GitHub上のTAIのmainはSCN-001等の参照試験が中心で、全製品を組み立てるBundle ReleaseとYIサイトの本番公開は未実装。本文は視覚説明の**Draft**であり、正式ブランド承認・第三者受入・PPTX実描画を意味しない。
 

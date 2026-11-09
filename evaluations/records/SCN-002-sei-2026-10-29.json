@@ -65,5 +65,6 @@
   "notes": [
     "SEIの一時storeへ合成variant fixtureを記録し、resumeのprojectionだけを読む参照。",
     "決定の意味・権限・公開を検証しない。実運用のstoreではない。"
-  ]
+  ],
+  "publicationAllowed": false
 }
