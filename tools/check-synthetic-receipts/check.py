@@ -192,6 +192,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-nesting-2026-11-06.json",
     "evaluations/records/TEI-decode-divergence-2026-11-06.json",
     "evaluations/records/TEI-many-primitive-2026-11-06.json",
+    "evaluations/records/TEI-meaning-change-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-coverage-2026-11-06.json",
     "evaluations/records/SUI-TEI-document-types-2026-11-06.json",
     "evaluations/records/SUI-TEI-edge-optionality-2026-11-06.json",
@@ -462,6 +463,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("tls") is not True or observed.get("authenticatedStatus") != 200:
                 errors.append(f"SUI TLS check did not succeed: {relative}")
+        if "TEI-meaning-change" in relative:
+            observed = data.get("observed", {})
+            if data.get("result") != "PASS" or observed.get("consumerDropsNewField") is not True:
+                errors.append(f"TEI meaning-change behaviour changed: {relative}")
         if "TEI-many-primitive" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("numericManyRefused") is not True:
