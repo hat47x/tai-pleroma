@@ -235,7 +235,7 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更2件で、被覆検査が先に落ちてから被覆を足す順序を確認した。ただし意味変更を適合試験そのものは自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**（生成候補がprocess-per-request前提で、1プロセス5リクエストに応答できない）。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが185件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが186件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括97段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 
@@ -256,7 +256,7 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 | `scope`に限界の記述が無い | 15 |
 
 - 欠けているのは主に2026-10月下旬から11月初旬のEKI/SCN-001系で、体裁を決める前のreceiptである
-- 一括検証のcheckerは**登録済みの246件**（実実行185・合成61）だけを見るため、未登録のreceiptは検査をすり抜ける。この棚卸しは全258件を対象にした
+- 一括検証のcheckerは**登録済みの247件**（実実行185・合成61）だけを見るため、未登録のreceiptは検査をすり抜ける。この棚卸しは全258件を対象にした
 ### 修復の結果（同日）
 
 見積もった2種類の修復を実施した。
@@ -269,7 +269,22 @@ SUIの`GET /docs/{doc_id}/epistemic/projection`を最初の接続面とし、読
 
 - 推測で埋めると「実行していないものに結果を与える」ことになるため、体裁確立前の70件は証拠として数えない扱いにした
 - 一括検証へ`receipt_scope_check.py --strict`を入れ、非historicalのreceiptに欠けがあれば落ちるようにした（98段目）
-- 現在は 全194件・合成64件・historical 70件（登録済みは実実行185件）、ギャップ0でPASS
+- 現在は 実実行193件・合成64件・historical 70件、ギャップ0でPASS
+
+### 登録漏れの検査（同日）
+
+体裁を直したあと、**checkerに登録されていないreceipt**が残っていることが分かった。checkerは登録済みのものにしか意味の規則を当てないため、未登録は「体裁は正しいが中身は検査されない」状態になる。
+
+棚卸しの結果、`evaluations/records`の258件のうち12件が未登録だった。
+
+| 種別 | 件数 | 扱い |
+| --- | --- | --- |
+| 体裁確立前のreceipt | 10 | `historical-receipts.json`に列挙済み。証拠として数えない |
+| 道具の出力（receiptではない） | 1 | `SCN-003-compose-2026-11-03.validate.json`。検査対象から明示的に除外 |
+| 登録漏れの実receipt | 1 | `SUI-TEI-postgres-multidoc-2026-11-03.json`。規則を書いて登録した（10文書の作成・読み戻しが全て200か） |
+
+- 除外は「黙って飛ばす」のではなく、`AUXILIARY`として名前を挙げる形にした
+- `receipt_scope_check.py --strict`に「未登録のreceiptが無いこと」を加えたので、今後は登録漏れでも落ちる
 
 ## 8. 停止条件・非目標
 

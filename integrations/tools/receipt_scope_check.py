@@ -39,6 +39,12 @@ def main():
     strict = args.strict
     root = Path(__file__).resolve().parents[2]
     records = root / args.records
+    # Records that are not receipts (tool output kept for traceability).
+    AUXILIARY = {"SCN-003-compose-2026-11-03.validate.json"}
+    checker_source = (root / "tools/check-synthetic-receipts/check.py").read_text(encoding="utf-8")
+    registered = {
+        Path(name).name for name in re.findall(r'"(evaluations/records/[^"]+\.json)"', checker_source)
+    }
     historical_path = records / "historical-receipts.json"
     historical = set()
     if historical_path.exists():
@@ -49,6 +55,7 @@ def main():
     missing_scope = []
     missing_limitation = []
     unparsable = []
+    unregistered = []
     counted = {"real": 0, "synthetic": 0}
 
     for path in sorted(records.glob("*.json")):
@@ -58,6 +65,9 @@ def main():
             data = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             unparsable.append(path.name)
+            continue
+        if path.name in AUXILIARY:
+            # Explicitly listed tool output, not a receipt.
             continue
         if path.name in historical:
             # Pre-convention receipt: kept as a record, not counted as evidence.
@@ -74,6 +84,8 @@ def main():
             missing_limitation.append(path.name)
         if data.get("publicationAllowed") is not False:
             missing_fields.setdefault(path.name, []).append("publicationAllowed!=false")
+        if path.name not in registered:
+            unregistered.append(path.name)
 
     checks = {
         "realRecords": counted["real"],
@@ -84,17 +96,23 @@ def main():
         "unparsable": unparsable,
         "exempt": sorted(EXEMPT),
         "historical": len(historical),
+        "unregisteredReceipts": unregistered,
         "allRealReceiptsStateLimits": not missing_scope and not missing_limitation and not missing_fields,
     }
     effective_missing = {
         name: fields for name, fields in missing_fields.items() if name not in EXEMPT
     }
     checks["missingRequiredFields"] = effective_missing
-    checks["allRealReceiptsStateLimits"] = not effective_missing and not missing_scope and not missing_limitation
+    checks["allRealReceiptsStateLimits"] = (
+        not effective_missing and not missing_scope and not missing_limitation and not unregistered
+    )
+    checks["registeredCount"] = len(registered)
+    checks["auxiliary"] = sorted(AUXILIARY)
     checks["gapCounts"] = {
         "missingRequiredFields": len(effective_missing),
         "missingScope": len(missing_scope),
         "scopeWithoutLimitation": len(missing_limitation),
+        "unregistered": len(unregistered),
     }
     # Until the gaps are repaired this receipt records them; --strict turns the
     # same walk into a gate.
@@ -110,7 +128,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(root / args.artifact)},
         "observed": checks,
-        "scope": "Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation.",
+        "scope": "Walks every receipt and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation.",
     }
     (root / args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
