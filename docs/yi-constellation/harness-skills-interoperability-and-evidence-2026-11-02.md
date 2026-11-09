@@ -278,3 +278,25 @@ SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規�
 
 **最小価値試験（新しい必須Gateを増やさない）**：同じTEI Function/Diagramの局所変更を、B0=Studio手動、B1=Studio+外部Harness汎用指示、B2=Studio選択要素からの直接AI指示で比較する。対象特定までの時間、投入Context byte、無関係差分数、正しいSource/Model/Revisionへの帰着、独立Expected/Ownerレビュー、総Cost、失敗時の回復を記録。**B2がB1に対して実測で改善した範囲だけ**製品要件へ昇格する。初回TAI #168のH2/H3固定Skill比較と混ぜない。TEIの実UI Selection/Modeler Bridge/外部Harness接続/企業認可/実業務書込/Owner受理はNOT RUN。実装OwnerはTEI RQ-036/ADR-0048/既存Studio Issue、TAIは価値比較とSkill契約のみ。
 
+<!-- tai-shared-harness-session-product-ui-kj-csw-20261109 -->
+### 11.7 SEI/SUI/TEI/CSWを跨ぐSessionを主体にし、各UIへHarnessを内蔵しない（2026-11-09）
+
+**§11.6の精密化**：TEI Studioの選択要素からAIへ指示する機能は有力だが、**TEI StudioがHarnessの所有者になる**という意味ではない。利用者が一つのHarness Activity/Sessionを継続し、TEI Modeler、SUI Canvas、SEIの判断レビュー、CSWの知識操作UIを必要に応じて切り替える。各Product UIは自分の選択・表示・編集と既存APIを所有し、**Harness Sessionは外部の交換可能な実行環境**が保持する。各製品への常駐Agent Loop、Session Store、共通Host、中央Registry、全製品同時接続は要求しない。TEI UIを使わないCLI/MCP/Headless経路も等価な第一級入口として残す。
+
+**Session共有の意味**は「同じActivity IDを各製品が持つ」ことではなく、**許可された目的・履歴・未解決の問い・検証状態を、異なるProductへ再提示できること**。共有してよいのは再解決可能な参照と明示的な要約／選択的なEvidenceだけ。元Source全量・非公開Canvas・SEIの未受理判断・CSWの探索メモ・認可Tokenを暗黙複製しない。切替時には`Product/SourceRef/Revision`、`SelectedElement/Scope`、`Purpose/Audience/Disclosure/Grant`、`Intent/Unresolved Questions`、`Evidence References + Status`、`Return Location`を、**既存Product APIで現在の権限と鮮度を再確認して**渡す。これは概念上の最小Handoff項目であり、共通Schema/Storeの採用決定ではない。UI座標やハイライトはPresentation stateであり、ProductのAccepted Meaningへ逆流させない。
+
+**CSW×SUIのKJ法的協調**は、Harnessが推論と会話の連続性を支え、SUIがCard/Island/Canvasの配置・関係・履歴・共同操作を正本として保持し、CSWが視点の切替・問いの生成・仮説比較を提供する形を第一候補とする。たとえばSUI上のCard群を選択→CSWで分類軸を複数提案→SUIで島の再配置案を**Preview**→人間が採否を選ぶ→TEIで必要な構造化モデル候補を作る→SEIで根拠付き判断を検討する。KJ法的な探索は**島の配置が即Accepted Meaningとなる操作ではない**。元Cardの引用位置・Island所属・非公開RelationはSUI投影で失われ得るため、§27の非単射/非公開境界を維持し、公開Projectionだけから原配置を逆生成しない。CSW固有の語彙を全Productに必須化せず、CSWなしでもSUIの通常操作を完結できる。
+
+| 切替反例 | 必要な動作／停止条件 |
+| --- | --- |
+| TEIで選択したFunctionをSUIへ移動、元Model Revisionが変更 | 選択の現在性を再解決し、旧Revisionの自動Patchを停止 |
+| SUIの非公開Island/RelationをCSWに要求 | 現Audience/Grantで許された範囲のみ取得し、未公開を不存在としない |
+| CSWの仮説がSEIのRecommendationへ渡る | 仮説・根拠候補・Owner受理済み意味を区別し、決定として自動採用しない |
+| Sessionがfork/再開される | 親Contextの継承と実送出を別に観測し、独立Sessionとは数えない（Runbook §24.18） |
+| Session Logに巨大event、画面上は作業継続 | 保存／送出／モデル受領を分ける（Runbook §24.19） |
+| UIでPreview成功、TEI/EKIの実Effectが不明 | Preview/Delivery/Commit/Receiptを分離し、未知Effectを自動再実行しない |
+
+**価値比較の順序**：P0=各Product単独のUI/CLIで同じJobを完結、P1=同一外部Harness Sessionで2製品を明示的に切替、P2=CSW＋SUIのCard/Island協調で創造的探索を行う。P1は参照の再解決、Context byte、対象同定誤り、移動前後の作業再開、不要な送出、失敗時の復帰をP0と比較。P2は候補数でなく**異なる分類軸、反例の発見、元Cardへの遡及、採否の負担**をP1と比較する。CSWの認知効果とHarnessのSession継続効果を混同しない。**利用者がP0で十分ならHarnessを必須化しない**。
+
+**実装Owner/停止線**：各UI/Source/Grantは各Product Owner、TAIは薄いSkill/Handoffと比較方法、Harnessは既存DSH等の交換可能な外部実行器。まずTEI↔SUIのread-only選択参照で同一Sessionを再開できるか検証し、その後CSW↔SUIのCard/Island Preview、最後にTEI書込やSEI判断へ段階拡張する。新しい全製品共通Session DB/AuthorityやYI独自Agent Loopを先行しない。**実Product間Session共有、SUI実Canvas連携、CSW認知比較、Owner受理はNOT RUN**。初回TAI #168のH2/H3固定4 Sessionには混入しない。
+
