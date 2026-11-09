@@ -608,8 +608,6 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 
 **外部DSHの実測台帳は受入完了ではない**：[TEI merged #3561](https://github.com/hat47x/tei-platform/pull/3561)は既存**16実測記録の索引（新実測なし）**を作り、2件以上の一致から、`read-only`/`workspace-write`/子Processでも宣言root外Read、Model入力/Session Log/stdout/永続ログへの複数配送、子Process起動、AGENTS/CLAUDE/Skill descriptionの暗黙入力、表示設定と実効制約の差、Session Log停止≠無送出を限定的に横断整理した。**2件以上の観測一致は、全DSH版/全MachineやProvider全Egressの網羅証明ではない**。実OS ACL/AppContainerで禁止Readが拒否された証拠、現在Provider保持/全Sinks、外部4 Session Q評価は未成立。YICのG0物理deny→G1送出/保持→G2完全受領を再利用し、Sandbox modeの表示を代替Witnessにしない。#3561の台帳はmainへ統合済み。ただし**台帳整備は新実測やG0/現在Egressの実資格ではない**。
 
-**Subagent連鎖は深さ上限と親Turn完了の条件を持つ（先行§19.12の追補）**：[TEI merged #3698](https://github.com/hat47x/tei-platform/pull/3698)はDSH `0.2.2-rc.1`のSubagent `maxDepth`既定1をoverlayで3へ上げると**深さ3まで4 Session/12 Request**を構成し深さ4を`isError`拒否することを局所実測した。[merged #3719](https://github.com/hat47x/tei-platform/pull/3719)では同じ条件で`subagent_fork`も深さ3まで動作し、**同一Turn中に連鎖すると未完了Turnは継承せず各子の初回messageは1件**。これは§19.12の「親の**完了Turn**を継承」する正例と両立する。通常spawn対forkの合成Request合計は765,677対765,350 bytesで、構造・局所送出量の比較に限る。`maxDepth`は変更可能であり、既定1や親1 Sessionだけをセキュリティ境界とみなさない。完了Turnを挟む多段fork、同時起動上限、Telemetry/MCP、実Provider保持はNOT RUN。初回のH2/H3実比較はChild利用有無を固定し、子が存在すればG0/G1/G2の同Attempt受領Scopeへ別Session IDと各log rootを含める。
-
 **実証に使うBinaryの自己申告にも上限がある**：[SEI merged #825](https://github.com/hat47x/sei-cognition/pull/825)は`build_sei.sh`の全長commitと作業ツリーの`+dirty`印、`sei doctor`警告を実装。WSLローカルGo試験・汚れた作業ツリーからのBuildの確認はあるが、配布物のSHA256SUMSが存在しても実Process Image/配布署名/Trusted Checkout/Provider RuntimeやWindowsを保証せず、dirtyは警告であり実行拒否ではない。YICは§19.10のBinary/Source/actual processの照合で、この表示を**補助Witness**としてのみ参照する。
 
 ### 19.12 Subagentの子Session・親Turn継承をH2/H3の隔離／送出の独立境界として扱う（DSH H6-E2実測）
@@ -624,6 +622,8 @@ YIC側で再利用する観測順は、(1) `Source/Version/actual Binary Digest`
 | **Q（比較の独立性）** | 子を使わない固定H2/H3なら、子を起動しなかった実証を残す。子を許す別Trialは事前にTask/Model/Skill/Tool・Subagentのmodeと親会話継承の有無を固定し、従来の4 Sessionへ事後混入させない |
 
 既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)の同一票に**条件付きの子Session列**として追加し、独立の新Gate/Log Collector/Sandbox/Runnerは新設しない。合成canaryの局所挙動以外の実Provider保存・子連鎖・OTel/MCP・Owner意味受理・初回4 Sessionの合格は**NOT RUN**。G0→G1→G2→固定H2/H3実施順、比較適格**0/4**は不変。
+
+**Subagent連鎖は深さ上限と親Turn完了の条件を持つ（本節追補）**：[TEI merged #3698](https://github.com/hat47x/tei-platform/pull/3698)はDSH `0.2.2-rc.1`のSubagent `maxDepth`既定1をoverlayで3へ上げると**深さ3まで4 Session/12 Request**を構成し深さ4を`isError`拒否することを局所実測した。[merged #3719](https://github.com/hat47x/tei-platform/pull/3719)では同じ条件で`subagent_fork`も深さ3まで動作し、**同一Turn中に連鎖すると未完了Turnは継承せず各子の初回messageは1件**。これは§19.12の「親の**完了Turn**を継承」する正例と両立する。通常spawn対forkの合成Request合計は765,677対765,350 bytesで、構造・局所送出量の比較に限る。`maxDepth`は変更可能であり、既定1や親1 Sessionだけをセキュリティ境界とみなさない。完了Turnを挟む多段fork、同時起動上限、Telemetry/MCP、実Provider保持はNOT RUN。初回のH2/H3実比較はChild利用有無を固定し、子が存在すればG0/G1/G2の同Attempt受領Scopeへ別Session IDと各log rootを含める。
 
 ## 20. 書込みSkillがGrantを自己生成しないための条件付き境界
 
