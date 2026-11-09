@@ -17,7 +17,7 @@ TEIによるプロダクト構築のフィージビリティ検証について�
 
 ## 2. 反例（そのまま残す）
 
-1. **実行モデルは交換できない。** Profileの宣言を差し替えても、生成候補は標準入力1件で終わるためlong-runningで動かない（`text`と`text-record`の両テンプレートで確認）。原因はさらに絞れた。TEIにlong-running用テンプレートはあるが、**投影の生成戦略はone-shotの2つだけ**で、投影契約にlong-running戦略を渡すと生成器が拒否する（[receipt](../evaluations/records/TEI-projection-strategy-2026-11-06.json)）。
+1. **実行モデルは交換できない。** Profileの宣言を差し替えても、生成候補は標準入力1件で終わるためlong-runningで動かない（`text`と`text-record`の両テンプレートで確認）。原因はさらに絞れた。TEIにlong-running用テンプレートはあるが、**投影の生成戦略はone-shotの2つだけ**で、投影契約にlong-running戦略を渡すと生成器が拒否する（[receipt](../evaluations/records/TEI-projection-strategy-2026-11-06.json)）。この組み合わせはTEIの試験にも文書にも無く（1629件の`*_test.go`と`docs`/`plan`の検索で0件）、**暗黙の結合であって宣言された制約ではない**。
 2. **十進値は丸められる。** `0.1234567890123456789` → `0.12345678901234568`、`12345678901234567890` → `12345678901234567000`（[receipt](../evaluations/records/TEI-decimal-fidelity-2026-11-06.json)）。
 3. **新しい意味は製品に自動で届かない。** 消費側は既知フィールドには忠実だが、知らないフィールドは`valid: true`のまま落ちる。
 4. **入れ子の投影は受理も拒否もされない。** `build`は平坦化して通し、`select`は`unknown field`で拒否する（[receipt](../evaluations/records/TEI-decode-divergence-2026-11-06.json)）。
