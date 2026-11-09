@@ -976,3 +976,20 @@ B0/B1/B2は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値
 
 後続にCLIとMCPを比較する場合は**同じ実Workspace/manifest raw、Binary/Adapter commit、Tool引数、主Claim、診断/失敗、stdoutとMCP content text、Target Consumer実受信**を一AttemptごとにPinし、実Protocolの違いによる失敗を業務意味の違いと混同しない。異なるTransportを同じ四Slotへ混ぜた試行は、事前登録したTreatmentの比較としては不適格。現在の初回BlockingはG0実Read拒否→G1暗黙Context/Send/Sink→G2 CLI Result完全性→新独立4 Session、比較適格0/4を維持する。
 
+<!-- tai-sk02-fork-turn-context-inheritance-20261109 -->
+### 24.18 DSHのTurn越えforkは親Contextを継承するため、H2/H3の独立Sessionに算入しない（H6-E2、2026-11-09）
+
+[TEI merged #3758](https://github.com/hat47x/tei-platform/pull/3758)が索引化した[実測 #3745](https://github.com/hat47x/tei-platform/pull/3745)では、**親の完了Turnを挟んだfork連鎖**で、子の初回要求すべてが**親canaryを含む5メッセージ**を受け、深さ3まで継承した。14要求・786,786 bytesの観測に対し、深さ4は`isError:true`で拒否。これは「同じTurn内のforkはContextを積み上げない」という旧局所観測を、Turn境界越えにも一般化できない実反例。**子をforkしただけで新独立Sessionと数えない**。
+
+| 比較上の観測 | 初回SK-02での扱い |
+| --- | --- |
+| H2を実施した親からforkしたH3／H3からforkしたH2 | 親の完了Turn/Skill/Tool/Canaryが子に混入し得るため**同一比較Groupの独立4 Slotには不適格** |
+| 同じTurn内でのfork | 旧観測の範囲だけで判断。独立したProcess/Session/Contextの証拠なしに独立としない |
+| 新規Sessionを別起動した | Session IDが別でも実Context/Env/Log/Store/Source隔離とG0/G1/G2が成立したときだけ候補 |
+| fork連鎖でcanaryが見えない | Depth/Turn/Parent Log/Toolの不完全観測なら**非送出の証明にしない** |
+| 親Turnからの実送出 | 実Context送出と推定するが、別の実Provider/Network Sinkや正式Disclosure違反を自動断定しない |
+
+**Trial起動条件の最小補強**：事前固定したH2/H3各Slotは**新規独立Root Session**から開始し、`rootSessionId/parentSessionId/forkDepth/turnBoundary`（観測できる欄のみ）、Skill/Tool/Source digest、Context canary、OS Principal/Workspace、実Model Request/Replyと保存Logを対応付ける。新しい公開Schemaや独自Harnessは作らない。forkの必要がある運用では、**継承を許容するDisclosure/Scope**の別試験Groupとして扱い、G1の暗黙Context・Log/Sink観測を追加する。**forkを禁止するProduct仕様を提案するものではない**。
+
+**証拠上限**：#3745はTurn越え継承を限定実測、#3758はその台帳への記録であり、新たな実験ではない。Turn1が複数の場合の増加量、実行中Turnのfork、深さ4以上設定、`maxActiveSubagents`との組合せ、Telemetry/MCPは未確認。初回H2/H3のG0実OS Read-deny→G1暗黙Context/Session Log→G2完全Tool/Model Deliveryの順序、比較適格0/4は不変。旧4探索Sessionを新しい4独立Slotへ数え直さない。
+
