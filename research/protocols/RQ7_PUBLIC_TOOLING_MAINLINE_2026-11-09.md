@@ -12,7 +12,7 @@
 | [`rq7_pilot.py`](../tools/rq7_pilot.py) | 公開v0（10件）/v1（12件）切替、V0/V1/V2/V3のText/Mermaidソース、公開Gold漏出/構造検査 | 実画面描画・実CLI観測ではない |
 | [`rq7_calibrate.py`](../tools/rq7_calibrate.py) | 常時S/R/Uと特権的Typed Selectorだけを読むBaselineのGold照合 | 被験者・実AIモデルの成績ではない |
 | [`rq7_svg.py`](../tools/rq7_svg.py) | 公開DAGのみ静的SVG化し、TextとNode/Edge/ラベル/矢印座標を照合 | 実ブラウザー画像のクリッピング/人間の読解は未確認 |
-| [`test_rq7_*.py`](../tools/) | Gold非漏出、構造・変異、矢印位置改変、公開2データセットの回帰 | 正解の独立学術/業務評価ではない |
+| [`test_rq7_svg.py`](../tools/test_rq7_svg.py) | Gold非漏出、構造・変異、矢印位置改変、公開2データセットの回帰 | 正解の独立学術/業務評価ではない |
 | [研究限定CI](../../.github/workflows/rq7-public-prepilot.yml) | Public synthetic testだけをPR/対象Pathの変更に対して実行 | Product本体の資格を与えるCI Gateではない |
 
 `v0/v1`のGoldは**公開開発用**で、独立した sealed holdout ではない。v0の宣言だけのGold（S/R/U）は2/0/8、v1は4/4/4。v1の追加合成Evidence付きは5/5/2であるが、同じGraphの質問を多数含むため、被験者の認知向上を意味しない。22公開ケースは**Distinct Declared Graphが3種**（Build 11/ETL 9/Cross-boundary 2）。テストが多いことを独立した図表数へ読み替えない。
