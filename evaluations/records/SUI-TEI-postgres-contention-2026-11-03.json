@@ -17,6 +17,19 @@
       {
         "round": 1,
         "statuses": [
+          200,
+          409,
+          409
+        ],
+        "retries": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 2,
+        "statuses": [
           409,
           409,
           200
@@ -28,24 +41,11 @@
         ]
       },
       {
-        "round": 2,
-        "statuses": [
-          200,
-          409,
-          409
-        ],
-        "retries": [
-          0,
-          0,
-          0
-        ]
-      },
-      {
         "round": 3,
         "statuses": [
-          200,
           409,
-          409
+          409,
+          200
         ],
         "retries": [
           0,
@@ -57,7 +57,7 @@
         "round": 4,
         "statuses": [
           409,
-          409,
+          503,
           200
         ],
         "retries": [
@@ -70,8 +70,8 @@
         "round": 5,
         "statuses": [
           409,
-          409,
-          200
+          200,
+          409
         ],
         "retries": [
           0,
@@ -82,7 +82,7 @@
     ],
     "roundCount": 5,
     "writers": 3,
-    "transient": 0,
+    "transient": 1,
     "retries": 0,
     "documentRows": 1,
     "database": "embedded PostgreSQL 16.2"
