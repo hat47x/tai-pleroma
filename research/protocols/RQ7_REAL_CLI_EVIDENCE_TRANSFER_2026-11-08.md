@@ -75,3 +75,18 @@
 [SLSA Build Provenance](https://slsa.dev/spec/v1.2/build-provenance)ではBuild definition、resolved dependencies、run details、builderの信頼境界を区別し、依存列挙の完全性にも保証水準を要求する。したがって「実行に関する来歴を固定する」という考え自体はRQ7の新規発明でない。RQ7が検討するのは、**資格の異なる証拠を同じ図に載せたとき、人間・AIが不適切なClaim昇格を回避できるか**の実験上の評価である。学術的新規性・認知効果は未確定。
 
 **今回の結論資格**：#3321実CLI観測結果の**外部で確認できる限定CIとSource上の停止線**を研究計画へ接続した。TAIからTEIのRaw CLI実出力を取得・再実行していない。RQ7 E-trace実表示、E-pipeline、実AI/Human評価、Independent Source Reader、Policy/Permission、全Source/Relation Closure、Owner Meaning/Effectは**NOT RUN / NOT PROVEN**。
+
+## 7. 2026-11-09 追補：内容同値と物理Root・Read Attempt同一性は別
+
+[TEI現行Trace Draft #3321](https://github.com/hat47x/tei-platform/pull/3321)は、旧14件から**18/18件の限定Node負例**まで拡張され、実Go CLIの4観測を比較した。exact head `6dba996ee07af5ddd9b8c705fdf654e092171d59`に対応する[専用Actions #42575521655](https://github.com/hat47x/tei-platform/actions/runs/42575521655)は**成功**。公開PR本文は、別物理RootへManifest/Sourceをbyte-identicalに複製すると、Load/Source/World/Index/Snapshotの観測tokenが一致してしまい、**物理RootとRead Attemptを識別できない**反例を明記している。これは現行同一性保証の限界を実際に示すものであり、異Rootでも同一観測値があり得るという観測に限定される。
+
+### 7.1 研究上の意味
+
+- `ObservedSignature(root_A)==ObservedSignature(root_B)` は、内容の同値性と整合しても、`PhysicalRootIdentity(A)==PhysicalRootIdentity(B)`や`ReadAttemptIdentity(A)==ReadAttemptIdentity(B)`を意味しない。署名・Hashの文字種や長さを可変にしても、この**同一性に関する非単射性**は自動で解消しない。
+- Source path・Manifestを含むPacketのHash一致、完全な直接Edgeページ、異言語Node Consumerの確認を合算しても、同一Attemptの独立Source再読取・実Policy・Owner受理は増えない。境界ごとに評価する。
+- 今後の研究候補`R-ID-01`: 別物理Rootがbyte-identicalなためFingerprintが一致したとき、AI/Humanが「同じ実Workspace・同じRead Attempt」と断定しないか。`R-ID-02`: 内容は同一でもWindow、Ownerや現在Policyが異なり得るとき、内容の一致から現在のInspect/Publishを許可しないか。これらは**まだ公開fixtureへ収録していない、NOT RUNの課題**である。
+- RQ7のE-traceに投入する際は、観測上のScopeとSource自体が宣言したScope、Load時Manifestと物理Root、Source FingerprintとRead Attempt、Current Authority/Owner Meaningを**別列として説明**。判断できない対象はUnknown。外部Consumerへ非公開PathやRootの同定情報を漏らさない。
+
+### 7.2 #545のmain統合後の研究責務
+
+[TAI #545](https://github.com/hat47x/tai-pleroma/pull/545)で公開合成ツール/Gold/SVG/Text/研究限定CIは**mainへ統合済み**（squash `52fe39f68aac3a4a0f96fb9f60b9810a0afeccf2`）。本プロトコルはそのツールを二重に追加せず、**未実行のHuman/AI比較とE-trace/E-pipeline実証条件のOwner**として残す。旧[Draft #473](https://github.com/hat47x/tai-pleroma/pull/473)を古い祖先のまま丸ごとマージしない。
