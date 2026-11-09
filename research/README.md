@@ -6,6 +6,7 @@
 - 起点: [SCN-001](../scenarios/SCN-001-shared-space-guidance.md) と [TAIの現状](../docs/status.md)
 - 最小実験: [SCN-001横断プロトコル](protocols/SCN-001_EPISTEMIC_CONTINUITY.md)
 - **RQ7公開研究機材（2026-11-09）**: [有界Graphの公開合成Gold・SVG/Text構造比較と再現手順](protocols/RQ7_PUBLIC_TOOLING_MAINLINE_2026-11-09.md)。固定DAGの研究用テストのみ、実TEI Source/権限・人間/AIの認知効果はNOT RUN。研究全体の未採用設計は[Draft #473](https://github.com/hat47x/tai-pleroma/pull/473)で別途検討。
+- **RQ7研究計画・実行証拠の停止線（2026-11-09）**: [有界Graph完全性と認知負荷の比較](protocols/RQ7_BOUNDED_GRAPH_OBSERVABILITY_2026-11-06.md)、[実CLI証拠の移管／Root・Read Attemptの識別限界](protocols/RQ7_REAL_CLI_EVIDENCE_TRANSFER_2026-11-08.md)、[静的SVG/Text比較](protocols/RQ7_STATIC_SVG_TEXT_PARITY_2026-11-08.md)、[公開Goldの層別校正](results/RQ7_PUBLIC_GOLD_BASELINE_CALIBRATION_2026-11-08.md)。計画/局所試験を人間・AIの比較成績や実TEI Owner受理に読み替えない。
 - **2026-11-02研究追補**: [生成的探索と証拠制約の接続](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md)（CSWの認知Method、SUIの仮説、SEI/TEIの意味、EKIの権限・結果を分離して比較する提案。RQ6、実験NOT RUN）
 - 実験前の固定案: [SCN-001予備比較・Gold判定](protocols/SCN-001_PILOT_FREEZE_2026-10-29.md)
 - 静的な基礎観測: [SCN-001固定入力のdigest照合](results/SCN-001_STATIC_INPUT_AUDIT_2026-10-29.md)（製品比較実験はNOT RUN）
