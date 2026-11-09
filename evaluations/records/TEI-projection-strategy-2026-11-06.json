@@ -1,0 +1,44 @@
+{
+  "schema": "tai.reference.tei-projection-strategy/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-09",
+  "host": "Windows with the TEI reference generator selection tool",
+  "command": "python integrations/tools/tei_projection_strategy_probe.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-projection-strategy-2026-11-06.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "longRunningWithRecordProjection": {
+      "exit": 1,
+      "generated": false,
+      "tail": "exit status 1",
+      "refusedAsProjection": true
+    },
+    "longRunningWithIdentityProjection": {
+      "exit": 1,
+      "generated": false,
+      "tail": "exit status 1",
+      "refusedAsProjection": true
+    },
+    "recordProjectionWithItsOwnStrategy": {
+      "exit": 0,
+      "generated": true,
+      "tail": "]",
+      "refusedAsProjection": false
+    },
+    "identityProjectionWithItsOwnStrategy": {
+      "exit": 0,
+      "generated": true,
+      "tail": "]",
+      "refusedAsProjection": false
+    },
+    "projectionIsPinnedToOneShotStrategy": true,
+    "longRunningCannotCarryAProjection": true,
+    "oneShotStrategiesStillWork": true
+  },
+  "scope": "Builds projection contracts with a long-running strategy and with their own strategies. It records that a projection kind is pinned to a projection strategy and that the long-running templates are not projection strategies, so no long-running projection candidate can be produced. It does not change TEI and does not test the line-amount templates."
+}

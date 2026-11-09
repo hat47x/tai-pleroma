@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Python 3.12 and the SUI checkout on PYTHONPATH",
   "command": "python integrations/tools/sui_saas_tests.py --sui-repo <SUI>",
   "result": "PASS",

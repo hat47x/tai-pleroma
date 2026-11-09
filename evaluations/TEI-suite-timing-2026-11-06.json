@@ -3,37 +3,37 @@
   "synthetic": false,
   "evidenceKind": "observation",
   "publicationAllowed": false,
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
   "command": "python integrations/tools/poc_evaluation_baseline.py",
   "result": "PASS",
   "observed": {
-    "steps": 103,
-    "totalSeconds": 907.59,
+    "steps": 104,
+    "totalSeconds": 732.95,
     "slowest": [
       {
-        "name": "eki_manual",
-        "seconds": 98.81,
-        "attempts": 1
-      },
-      {
-        "name": "tei_meaning_change_required",
-        "seconds": 84.81,
-        "attempts": 1
-      },
-      {
         "name": "sui_docs_tests",
-        "seconds": 83.1,
-        "attempts": 1
-      },
-      {
-        "name": "pipeline",
-        "seconds": 54.02,
+        "seconds": 89.73,
         "attempts": 1
       },
       {
         "name": "tei_meaning_change",
-        "seconds": 48.96,
+        "seconds": 50.12,
+        "attempts": 1
+      },
+      {
+        "name": "tei_meaning_change_required",
+        "seconds": 48.27,
+        "attempts": 1
+      },
+      {
+        "name": "sui_session_tests",
+        "seconds": 41.97,
+        "attempts": 1
+      },
+      {
+        "name": "tei_meaning_change_requiredness",
+        "seconds": 41.49,
         "attempts": 1
       }
     ],

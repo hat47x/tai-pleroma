@@ -198,6 +198,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-result-exit-parity-2026-11-06.json",
     "evaluations/records/TEI-decimal-fidelity-2026-11-06.json",
     "evaluations/records/TEI-receipt-consistency-2026-11-06.json",
+    "evaluations/records/TEI-projection-strategy-2026-11-06.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -495,10 +496,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         if "TEI-receipt-scope" in relative:
             observed = data.get("observed", {})
             gaps = observed.get("gapCounts") or {}
+            # Foreign receipts are other workstreams' own schema, not TAI gaps.
+            own_gaps = {key: value for key, value in gaps.items() if key != "foreign"}
             if (
                 data.get("result") != "PASS"
                 or observed.get("allRealReceiptsStateLimits") is not True
-                or any(gaps.values())
+                or any(own_gaps.values())
             ):
                 errors.append(f"receipt scope walk found gaps: {relative}")
         if "TEI-target-profile-compare" in relative:
@@ -517,6 +520,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "TEI-projection-strategy" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("projectionIsPinnedToOneShotStrategy") is not True
+                or observed.get("oneShotStrategiesStillWork") is not True
+            ):
+                errors.append(f"TEI projection strategy binding changed: {relative}")
         if "TEI-receipt-consistency" in relative:
             observed = data.get("observed", {})
             if (
