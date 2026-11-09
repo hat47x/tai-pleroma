@@ -270,6 +270,7 @@ def main():
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(checks))
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":
