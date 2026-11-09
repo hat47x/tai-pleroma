@@ -910,3 +910,19 @@ SCN-001の中断→新資料O-06→再開では、**矛盾したSourceを保留�
 
 **採用・順序**：三層の責務分離は**今回のTAI計画上の整理案**とし、TEIの採用済みADR/RQ-036と整合させる。ただし正式なTAI横断Flow契約のOwner受理は未実施であり、統合Flow DSL・正式Hook ABI・実Generator・Chat/VUI/完全B2C異質Consumer・AF-01〜03の実E2EはNOT RUN。P0はTEI #1251の通常CLI/Studioから実Selected Providerを呼ぶ狭いRead、P0+はread-only Hook一Slot、P1はGraph Edit→受理Source→Target生成、P2はChat/VUI/B2C。TAI #168の最初のH2/H3固定Task/Tool/Skill/独立Expectedには一切追加しない。B1 Product単独で足りればB2 TAIや新中央Workflow Runtimeは不要。
 
+## 25. 2026-11-09：Lease回収・業務状態遷移・根拠付きDecisionを、同じ「完了」にしない
+
+<!-- tai-activity-lease-recovery-closure-vs-effect-20261109 -->
+
+**今回の新しい実装事実**：[EKI merged #802](https://github.com/hat47x/eki-fabric/pull/802)は、別プロセスの実`eki-control`が期限切れLeaseを回収し、合成Attemptを`closed/lease_expired`へ移し、ResultClaimを付けず台帳から除くことを、Go 1.27のprocess testで限定検証した。猶予内Attemptは`dispatched`のまま保持。**別プロセスの制御実行**は前進だが、Agentが実Taskを遂行したか、外部Effectが既に起きたか、再試行可能かは分からない。特に現在のTaskには「外部作用あり」の識別がなく、全Taskを再試行可能として閉じる現状が残る。さらに`leases reclaimed count=N`はReclaimがnilを返した呼出し数であり、実際に`closed`となったAttempt数ではない。Activityはログの件数をEffectやClosureの証拠に採用しない。
+
+[EKI merged #789](https://github.com/hat47x/eki-fabric/pull/789)の6イベント別PID Unix socket配送は、同一Process内[#787](https://github.com/hat47x/eki-fabric/pull/787)より強いTransport Witnessだが、試験用子ProcessはEKI認証Workerではない。欠落した6件目を不完全と判別できても、実EKI Adapter・実Lease Grant・Consumed／Accepted Resultには昇格しない。[TEI merged #3717](https://github.com/hat47x/tei-platform/pull/3717)は4系統13件のPostgreSQL実試験をDSN付きで走らせるCIを追加し、`go test`のSKIPが緑になる問題を防ぐ。**PR本文で確認できるのはworkflow追加と静的／ローカル検査**であり、実PostgreSQL Actionsの全件PASSは別途Run/HEAD確認まで保留する。[TEI merged #3718](https://github.com/hat47x/tei-platform/pull/3718)の期間`open→closing→closed`原子的状態記録も、実締め処理・承認・DB効果は未実装である。
+
+[SEI merged #839](https://github.com/hat47x/sei-cognition/pull/839)では、根拠`basis`または理由`rationale`の無いDecisionを`gate check.not_verified`で表示し、`--require-basis`／`--require-rationale`を明示した場合だけ拒否する。**既定は両方falseで、allowが根拠の存在を保証しない**。さらに記録の存在は原典真正性・意味的十分性・Owner Acceptanceを保証しない。MCPの`check_decision`には新方針未接続。[SEI merged #818](https://github.com/hat47x/sei-cognition/pull/818)の`resume`は推薦のbasis/responsibilityを表示しJSONにrationaleを含めるが、参照先の実存在／digest照合をしない。
+
+**Activityの最小受領票**：同じ`Attempt`について①Control（lease期限／回収／閉鎖）、②Delivery（実Adapter・別Processの実受信／欠落）、③Business Operation（実Dispatch／可能な副作用／EffectUnknown／独立ReadまたはReceipt）、④Decision（basis/rationaleの**記録**・独立Source検証・現在Owner／Grant）の四資格を**別々に**保持する。①が`closed`でも③が`unknown`なら無条件再送しない。②が完全でも④の判断は自動承認しない。④の`allow`でも③のCommit成功や①のLease継続を推測しない。TEI／EKI／SEIの実正本を横断する新共有台帳は設けず、既存Operation ID・Attempt ID・Revisionと各Ownerの限定Receiptを**用途別に参照**する。
+
+**次の最小反例**：`closed/lease_expired + EffectUnknown`のとき再Dispatch禁止・独立観測継続、`reclaimed count>0 + closed count=0`の誤成功拒否、`transport 6/6 + no actual Consumer`の未受領、`Decision allow + basis=0`の未検証表示、`period closed + no business closing effect`の未完了を、各Product Ownerの既存Issueで検査する。TAIは選択的再資格化とユーザーに見せる不確実性だけを所有。新TAI Lease Manager／Decision Gate／Postgres Runner／共通Workflow Hostを作らない。
+
+**採用状態**：この節は既存の実装事実をTAI計画の**受入条件案**へ反映したもの。上記の横断同一Attempt E2E、実EKI Agent/Adapter、実PostgreSQL Actionsの結果、外部Effect、Owner意味受理は本節ではNOT RUN。初回#168 H2/H3のG0/G1/G2と比較適格0/4を変更せず、別のActivityでEffectやLeaseを扱う場合だけ適用する。
+
