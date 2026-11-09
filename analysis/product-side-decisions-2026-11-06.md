@@ -134,7 +134,7 @@ TAI側でできること: 外部アダプターが`allow+read_only`を返す構�
 
 ### 1. 受入の配線 — 解決（実装はある、呼び出しが無い）
 
-EKIには`internal/control/resultacceptance`があり、**[README](../../../eki-fabric)でRAC-1の契約が詳細に書かれている**（A-VERIFYINGのAttemptと検証証拠から`AcceptedResult`へ昇格させ、受理済み結果の記録・Attemptの終了・Taskの完了を一つのtransactionで行う）。
+EKIには`internal/control/resultacceptance`があり、**EKIの`internal/control/resultacceptance/README.md`にRAC-1の契約が詳細に書かれている**（A-VERIFYINGのAttemptと検証証拠から`AcceptedResult`へ昇格させ、受理済み結果の記録・Attemptの終了・Taskの完了を一つのtransactionで行う）。
 
 しかし、**`internal/control`と`cmd/`の非テストコードからこのパッケージを呼ぶ箇所が無い**。`resultacceptance`はテストとconformanceからだけ参照されている。
 
