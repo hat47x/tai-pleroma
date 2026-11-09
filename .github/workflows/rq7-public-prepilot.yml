@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "research/tools/rq7_*.py"
+      - "research/tools/rq7_browser_smoke.py"
       - "research/tools/test_rq7_*.py"
       - "research/fixtures/RQ7_*.json"
       - ".github/workflows/rq7-public-prepilot.yml"
@@ -12,6 +13,7 @@ on:
     branches: [main]
     paths:
       - "research/tools/rq7_*.py"
+      - "research/tools/rq7_browser_smoke.py"
       - "research/tools/test_rq7_*.py"
       - "research/fixtures/RQ7_*.json"
       - ".github/workflows/rq7-public-prepilot.yml"
@@ -42,3 +44,27 @@ jobs:
           python research/tools/rq7_svg.py --dataset v1 --check
       - name: Verify all public render paths and Gold separation
         run: python -m unittest discover -s research/tools -p 'test_rq7_*.py' -v
+
+  public-synthetic-chromium-geometry:
+    needs: public-synthetic-tooling
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install isolated Playwright/Chromium for real-browser geometry smoke
+        run: |
+          python -m pip install "playwright==1.56.0"
+          python -m playwright install --with-deps chromium
+      - name: Check drawn SVG arrow paths, label bounds and horizontal scrolling
+        run: python research/tools/rq7_browser_smoke.py --screenshots "$RUNNER_TEMP/rq7-browser"
+      - name: Preserve public synthetic Chromium screenshots for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rq7-public-synthetic-chromium
+          path: ${{ runner.temp }}/rq7-browser/*.png
+          if-no-files-found: warn
+          retention-days: 7
