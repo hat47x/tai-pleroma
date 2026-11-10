@@ -1,0 +1,100 @@
+{
+  "schema": "tai.reference.yi-g2-landing/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the product requirement documents",
+  "command": "python integrations/tools/yi_g2_landing_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-g2-landing-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "spaces": {
+      "SEI": {
+        "documents": [
+          "sei-cognition/requirements/PRODUCT_REQUIREMENTS.md"
+        ],
+        "missingDocuments": [],
+        "highestNumber": 23,
+        "count": 23,
+        "nextFreeNumber": 24,
+        "prefixes": [
+          "REQ-"
+        ]
+      },
+      "TEI": {
+        "documents": [
+          "tei-platform/requirements/TEI_PRODUCT_REQUIREMENTS.md"
+        ],
+        "missingDocuments": [],
+        "highestNumber": 37,
+        "count": 37,
+        "nextFreeNumber": 38,
+        "prefixes": [
+          "RQ-"
+        ]
+      },
+      "EKI": {
+        "documents": [
+          "eki-fabric/requirements/PRODUCT_REQUIREMENTS.md"
+        ],
+        "missingDocuments": [],
+        "highestNumber": 64,
+        "count": 64,
+        "nextFreeNumber": 65,
+        "prefixes": [
+          "RQ-"
+        ]
+      },
+      "SUI": {
+        "documents": [
+          "sui-sensemaking/00_Prompt/domain.md",
+          "sui-sensemaking/00_Prompt/qualitative_card_quality_requirements.md",
+          "sui-sensemaking/00_Prompt/w_type_iterative_inquiry_requirements.md"
+        ],
+        "missingDocuments": [],
+        "highestNumber": 12,
+        "count": 12,
+        "nextFreeNumber": 13,
+        "prefixes": [
+          "CQ-CTX-",
+          "CQ-DIVERSE-",
+          "CQ-FID-",
+          "CQ-REV-",
+          "CQ-STATUS-",
+          "CQ-TRACE-",
+          "CQ-UNIT-",
+          "DOM-AI-",
+          "DOM-AIOK-",
+          "DOM-CORE-",
+          "DOM-CRIT-",
+          "DOM-SHARE-",
+          "DOM-SM-"
+        ]
+      },
+      "MMI": {
+        "documents": [
+          "markdown-matrix-injector/01_Plans/adr/"
+        ],
+        "missingDocuments": [],
+        "highestNumber": 31,
+        "count": 31,
+        "nextFreeNumber": 32,
+        "prefixes": [
+          "ADR-"
+        ]
+      }
+    },
+    "productsWithoutNumberedRequirements": [],
+    "productsThatNeedAnAdrInstead": [],
+    "productsWhoseNumbersAreDecisions": [
+      "MMI"
+    ],
+    "allDocumentsReadable": true,
+    "everyProductHasAFreeNumber": true
+  },
+  "scope": "Reads each product's requirement document and reports the namespace its numbered IDs use, the highest number in use and the next free one, so that G2 can move a candidate in without a number collision. MMI's numbers are decision ADRs rather than requirement IDs, which is recorded separately. It does not move anything: no requirement is added, and it does not check whether a product should accept a candidate or whether the numbering style suits the requirement."
+}
