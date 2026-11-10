@@ -1,0 +1,43 @@
+{
+  "schema": "tai.reference.yi-g1-status/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading docs/yi-constellation/analysis",
+  "command": "python integrations/tools/yi_g1_status_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-g1-status-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "selfTestDetectsTheWording": true,
+    "decisionFields": 6,
+    "decisionFieldsFilled": 0,
+    "recordFilled": 0,
+    "g1IsDecided": false,
+    "perCandidateOpenCount": 25,
+    "claims": {
+      "05-要件候補.md": {
+        "statusLine": "状態: 候補（2026-11-01）。いずれも未受理であり、各製品の要求文書へ入る前の提案です。採否は、各製品のOwnerとレビューで決めます。",
+        "assertsAcceptance": false
+      },
+      "18-G1レビューパケット.md": {
+        "statusLine": "状態: レビュー用の提案（2026-11-01）。採否を決めるのはOwnerであり、本資料は決定ではありません。",
+        "assertsAcceptance": false
+      },
+      "33-候補と願い.md": {
+        "statusLine": "状態: 自由な照合（2026-11-01）。質的な見立てであり、検証、採用、優先順位の確定ではありません。",
+        "assertsAcceptance": false
+      },
+      "07-計画.md": {
+        "statusLine": "状態: 提案（2026-11-01）。実施済みの計画ではなく、Ownerレビューを待つ案です。",
+        "assertsAcceptance": false
+      }
+    },
+    "documentsClaimingAcceptance": [],
+    "noDocumentClaimsAcceptanceWhileOpen": true
+  },
+  "scope": "Reads the G1 packet's decision fields, its record section, and the status wording of the candidate documents, and records whether any document claims acceptance while the packet is unfilled. It currently records that G1 is unfilled, six fields are empty and no document claims acceptance. The acceptance detector is exercised by --self-test so a detector that never fires cannot pass silently. It does not decide anything, and a filled decision is not checked for being the right one."
+}
