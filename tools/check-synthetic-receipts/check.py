@@ -203,6 +203,7 @@ REAL_RECORDS = (
     "evaluations/records/SUI-readonly-enforcement-2026-11-06.json",
     "evaluations/records/TEI-conclusion-integrity-2026-11-06.json",
     "evaluations/records/YI-doc-integrity-2026-11-11.json",
+    "evaluations/records/yi-constellation-structure-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -524,6 +525,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "yi-constellation-structure" in relative:
+            if data.get("passed") is not True or data.get("errors"):
+                errors.append(f"YI structural audit recorded errors: {relative}")
+            for document in data.get("documents", []):
+                if not (root / document).exists():
+                    errors.append(f"YI structural audit names a missing document: {document}")
         if "YI-doc-integrity" in relative:
             observed = data.get("observed", {})
             if (

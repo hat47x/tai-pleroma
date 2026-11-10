@@ -302,7 +302,13 @@ def main() -> int:
     errors += check_pairs()
 
     result = {
-        "schema": "tai.evaluation.yi-constellation-structure/v0",
+        "schema": "tai.reference.yi-constellation-structure/v0",
+        "synthetic": False,
+        "evidenceKind": "real-execution",
+        "publicationAllowed": False,
+        "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "host": "Windows with Python 3.12 reading the analysis documents",
+        "command": "python evaluations/audit-yi-constellation.py --json evaluations/records/yi-constellation-structure-<date>.json",
         "checkedAt": datetime.now(timezone.utc).isoformat(),
         "documents": [
             "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
@@ -321,7 +327,8 @@ def main() -> int:
         },
         "errors": errors,
         "passed": not errors,
-        "scope": "構造と大象の引用。意味の解釈と製品割当の理由は検算しない。",
+        "result": "PASS" if not errors else "FAIL",
+        "scope": "構造と大象の引用を、埋め込んだ文王卦序の一覧とfixtureに照らして検算する。意味の解釈、製品割当の理由、原典の異同は検算しない。",
     }
     print(f"errors: {len(errors)}")
     for error in errors[:60]:

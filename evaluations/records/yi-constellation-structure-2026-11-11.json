@@ -1,0 +1,29 @@
+{
+  "schema": "tai.reference.yi-constellation-structure/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-10",
+  "host": "Windows with Python 3.12 reading the analysis documents",
+  "command": "python evaluations/audit-yi-constellation.py --json evaluations/records/yi-constellation-structure-<date>.json",
+  "checkedAt": "2026-11-10T16:23:24.751021+00:00",
+  "documents": [
+    "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
+    "docs/yi-constellation/analysis/09-変爻の分析.md"
+  ],
+  "checks": {
+    "fixture": "64 canonical rows, unique names/bits, consistent numbering",
+    "identity": "6 product names, headings and summary labels (SUI=萃/45)",
+    "neighborhood": "6 roots / 32 one-line targets / 35 union (structural only)",
+    "64table": "number, name, upper/lower trigram, position",
+    "matrix": "8x8 upper/lower placement",
+    "changes": "36 summary and detailed line changes, polarity labels",
+    "xiang": "36 daisho quotes against the fixture",
+    "appendix": "8 xugua and zagua quotes against the fixture",
+    "pairs": "5 zonggua pairs and 8 xugua transitions"
+  },
+  "errors": [],
+  "passed": true,
+  "result": "PASS",
+  "scope": "構造と大象の引用を、埋め込んだ文王卦序の一覧とfixtureに照らして検算する。意味の解釈、製品割当の理由、原典の異同は検算しない。"
+}
