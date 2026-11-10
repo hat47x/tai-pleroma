@@ -1,0 +1,61 @@
+{
+  "schema": "tai.reference.yi-landing-paths/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the plan and the product repositories",
+  "command": "python integrations/tools/yi_landing_paths_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-landing-paths-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "plan": "docs/yi-constellation/analysis/07-計画.md",
+    "repositoriesInTable": [
+      "cultural-substrate-weaving",
+      "eki-fabric",
+      "markdown-matrix-injector",
+      "sei-cognition",
+      "sui-sensemaking",
+      "tai-pleroma",
+      "tei-platform"
+    ],
+    "repositoriesMissing": [],
+    "placesNamed": 11,
+    "pathsPresent": {
+      "tai-pleroma": [
+        "docs/yi-constellation/",
+        "docs/"
+      ],
+      "sui-sensemaking": [
+        "00_Prompt/",
+        "ROADMAP.md"
+      ],
+      "markdown-matrix-injector": [
+        "00_Prompt/requirements.md",
+        "01_Plans/adr/"
+      ],
+      "sei-cognition": [
+        "requirements/"
+      ],
+      "tei-platform": [
+        "requirements/",
+        "plan/adr/"
+      ],
+      "eki-fabric": [
+        "requirements/PRODUCT_REQUIREMENTS.md"
+      ],
+      "cultural-substrate-weaving": [
+        "skills/cultural-substrate-weaving/references/"
+      ]
+    },
+    "pathsMissing": [],
+    "touchAvoidContradictions": [],
+    "everyRepoSits": true,
+    "everyPathExists": true,
+    "noPathIsBothTouchedAndAvoided": true
+  },
+  "scope": "Reads section 4 of the plan, resolves each named repository, 置き場所 and backticked 触る path on disk, and records which of them exist and whether any path is named both to touch and not to touch. It checks paths only: it does not open them, does not check whether writing there is authorised, and cannot judge the prose in the 触る and 触らない columns beyond the backticked paths."
+}
