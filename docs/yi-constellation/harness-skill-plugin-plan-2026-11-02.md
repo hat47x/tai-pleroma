@@ -883,3 +883,20 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **費用・遅延の観測Owner**：[TEI #3520](https://github.com/hat47x/tei-platform/pull/3520)のAI Tuning Observation Referenceの19合成負例はDesign/Provider/Statistics/Delivery/Disclosureの検査**のみ限定PASS**。実生成AI改善やDB性能改善はNOT RUN。横断H2/H3のTask比較は、Model Token/Tool read・Transfer/Product実処理/隔離Setup/人の修正・確認/非適格再実行を区別し、必要なSource/Provider/Scope/Revisionと実Consumer受領を結び付ける。TEI [#3479](https://github.com/hat47x/tei-platform/pull/3479)のProvider原文のみ改訂でConsumer World/Indexが変わらない反例を考慮し、Source不一致を「同一条件のコスト改善」に含めない。最初の4 Slotでは分位点や改善率の一般化をしない。これは**独自Harness要否の後段投資比較**であり、既存[SK-02 G0〜G2実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)の新Hard Gateではない。
 
 **直近の行動は一本化**：TAI #168のG0実Read許可・拒否の正負対を同一OS identityで示し、G1/G2の全実Tool Replyと送出を確認してから、新規H2→H3→H3→H2を割付・独立採点する。SEI Method、CSW、Tuning、実Provider、二Harness横断とHV-4は、結果に応じた別試行。必要性未確認のProduct Skill/専門Pluginは標準セットへ無条件に含めない。
+
+## 46. 2026-11-10：Product UIを横断するHarness Sessionの連続性（設計・後段試験）
+
+**方針**：TEI/SEI/SUI/SHO/EKIのUIに個別のAI Harness Loopを組み込むことを標準要件にしない。利用者が外部Harnessの**同一Session**で複数Productの閲覧・探索・編集候補・文書作業へ移れることを優先する。必要に応じ、Product UIは既存のCLI/API/MCP/Computer Useなどの操作入口と、許可されたProduct Context/参照をHarnessへ提供する。各Productの通常UIはHarnessなしでも成立する。HarnessがSessionの共有機能を提供しない場合にYICが中央Session Storeを実装することは、初期要件にしない。
+
+**三つの別概念**：
+1. **Harness Session**：対話・推論・Tool呼出履歴を維持する外部Harness側の実行単位。利用者・実Process/Account/Providerに束縛され、YIC共通Session IDへの一律写像や移植を前提にしない。
+2. **Product Context/Projection**：各Productが自身のSource/Meaning/Review/現在Grantに基づき、対象・用途・Audienceを限定して返すRead/編集候補。UIの表示状態、URL、Workspace IDやSession IDだけから、生データの共有・同一意味・権限を推測しない。
+3. **Activity/Handoff参照**：複数Product間で引き継ぐ必要がある場合だけ、目的、対象/Scope、Source/Revision、Owner判断、未決、実Observation/Artifact参照、受渡先と開示条件を保持。TAI #271が選択的再資格化を担当するが、Productの第二の正本にはしない。
+
+**利用形態**：A) 同一Harness SessionがProduct A→Bへ切替（Tool/Projectionは再発見し、Bの現在Grant/Disclosureを検査）、B) 別Sessionまたは別Harnessへ再開（許可済みHandoff情報だけを運び、旧Session Tool権限を継承しない）、C) 同一Session共有が未提供（Product単独操作を維持し、必要なら明示的な成果物参照で引き継ぐ）。Product UI側でAgentを毎回再起動することを前提とせず、UIがユーザーの意思・現在閲覧対象・変更候補をHarnessへ**安全に伝えられるか**を試す。
+
+**独立に観測すること**：同じHarness Session IDであること、実Tool/Skillの到達可能性、投影に含まれたSource/Scope/版、実際にHarnessへ渡ったbytes、現在のPrincipal/Grant、Product側の変更前審査、Effect Receiptと別Consumerによる実Read。セッションが続いても、古い認可・別Tenant/非レビュー情報・生Source・内部Oracleは自動共有しない。CSWの発散/KJ法的な探索をSUIへ表示しても、提案が採用済み意味や書込み指示へ自動昇格しない。
+
+**実証の位置**：最初の固定TEI H2/H3は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0〜G2、独立4Slotを**先に**完了させる。次段階に、(S-01)同一Harness SessionでTEI read-only→SUI許可Projection→SHO受領を参照だけで接続、(S-02)UI切替で対象が変わり旧Contextを誤使用する負例、(S-03)途中Grant失効/別Tenantと送出不可、(S-04)共有Session未対応時のProduct単独経路を置く。各ProductがTool/Projectionを実装・公開していない場合は NOT RUN / UNSUPPORTED とする。試験OwnerはTAI #168（Harness）、#271（引継ぎと再資格化）、#232（開示）、各Product既存Issue（操作/実結果）。**新しい共通Host/セッション基盤/認可器/Widget APIは先行採用しない**。
+
+状態：設計追補のみ。S-01〜04の実Product UI、共有Session、実Harness、実OS/Network送出、Owner正式受理は **NOT RUN**。既存H3限定Skill Read/Tool Callと比較適格0/4を変更しない。
