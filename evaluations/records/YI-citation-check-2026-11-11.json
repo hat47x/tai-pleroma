@@ -1,0 +1,70 @@
+{
+  "schema": "tai.reference.yi-citation-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the product requirement documents",
+  "command": "python integrations/tools/yi_citation_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-citation-check-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "documents": [
+      "14-既存要求との照合.md",
+      "18-G1レビューパケット.md"
+    ],
+    "documentsRead": {
+      "SEI": [
+        "requirements/PRODUCT_REQUIREMENTS.md"
+      ],
+      "TEI": [
+        "requirements/TEI_PRODUCT_REQUIREMENTS.md"
+      ],
+      "EKI": [
+        "requirements/PRODUCT_REQUIREMENTS.md"
+      ],
+      "MMI": [
+        "00_Prompt/requirements.md"
+      ],
+      "SUI": [
+        "00_Prompt/domain.md",
+        "00_Prompt/qualitative_card_quality_requirements.md"
+      ]
+    },
+    "productsReadable": {
+      "SEI": true,
+      "TEI": true,
+      "EKI": true,
+      "MMI": true,
+      "SUI": true
+    },
+    "definedIdCounts": {
+      "SEI": 9,
+      "TEI": 37,
+      "EKI": 64,
+      "MMI": 0,
+      "SUI": 54
+    },
+    "citedIds": 24,
+    "unresolved": [],
+    "notDefinedByProduct": [],
+    "everyCitationResolves": true,
+    "everyCitationIsDefined": true,
+    "crossCheckClassification": {
+      "新規": 7,
+      "拡張": 8,
+      "既存": 9,
+      "受入検査": 1
+    },
+    "keptInPacket": 15,
+    "movedInPacket": 10,
+    "candidatesNotAccounted": [],
+    "candidatesCountedTwice": [],
+    "candidatesOutsideTheKnownSet": [],
+    "everyCandidateIsAccountedOnce": true
+  },
+  "scope": "Reads the requirement documents of SEI, TEI, EKI, MMI and SUI and checks that the IDs cited by the YI cross-check and G1 packet are defined there, and that the G1 packet accounts for every candidate exactly once. An ID is attributed to the product name written before it on the same line. This checks presence and bookkeeping only: a defined ID is not evidence that the candidate is a duplicate, that the requirement covers the reading, or that an Owner accepted anything."
+}

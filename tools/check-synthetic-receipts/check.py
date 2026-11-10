@@ -204,6 +204,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-conclusion-integrity-2026-11-06.json",
     "evaluations/records/YI-doc-integrity-2026-11-11.json",
     "evaluations/records/yi-constellation-structure-2026-11-11.json",
+    "evaluations/records/YI-citation-check-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -525,6 +526,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-citation-check" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyCitationIsDefined") is not True
+                or observed.get("everyCandidateIsAccountedOnce") is not True
+            ):
+                errors.append(f"YI citations no longer resolve or the packet lost a candidate: {relative}")
         if "yi-constellation-structure" in relative:
             if data.get("passed") is not True or data.get("errors"):
                 errors.append(f"YI structural audit recorded errors: {relative}")
