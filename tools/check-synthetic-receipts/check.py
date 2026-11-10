@@ -206,6 +206,7 @@ REAL_RECORDS = (
     "evaluations/records/yi-constellation-structure-2026-11-11.json",
     "evaluations/records/YI-citation-check-2026-11-11.json",
     "evaluations/records/YI-g2-landing-2026-11-11.json",
+    "evaluations/records/YI-g1-status-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -527,6 +528,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-g1-status" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("noDocumentClaimsAcceptanceWhileOpen") is not True
+                or observed.get("selfTestDetectsTheWording") is not True
+            ):
+                errors.append(f"YI documents claim an undecided acceptance: {relative}")
         if "YI-g2-landing" in relative:
             observed = data.get("observed", {})
             if (
