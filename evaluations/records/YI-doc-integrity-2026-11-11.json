@@ -1,0 +1,29 @@
+{
+  "schema": "tai.reference.yi-doc-integrity/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading docs/yi-constellation",
+  "command": "python integrations/tools/yi_doc_integrity_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-doc-integrity-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "analysisFiles": 47,
+    "links": 482,
+    "notIndexedInReadme": [],
+    "brokenLinks": [],
+    "brokenReadmeLinks": [],
+    "candidatesInList": 25,
+    "candidatesInPacket": 25,
+    "missingFromPacket": [],
+    "unknownInPacket": [],
+    "everyFileIsIndexed": true,
+    "everyLinkResolves": true,
+    "candidateSetsAgree": true
+  },
+  "scope": "Reads every analysis file under docs/yi-constellation and checks that each is named in the README index, that every relative link resolves, and that the requirement IDs in the candidate list and the G1 packet agree. It does not check whether the prose is right, whether a reading holds, or whether an Owner accepted a candidate."
+}

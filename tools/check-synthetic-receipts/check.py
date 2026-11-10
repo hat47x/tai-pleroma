@@ -202,6 +202,7 @@ REAL_RECORDS = (
     "evaluations/records/TEI-independent-oracle-2026-11-06.json",
     "evaluations/records/SUI-readonly-enforcement-2026-11-06.json",
     "evaluations/records/TEI-conclusion-integrity-2026-11-06.json",
+    "evaluations/records/YI-doc-integrity-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -523,6 +524,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-doc-integrity" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyFileIsIndexed") is not True
+                or observed.get("everyLinkResolves") is not True
+                or observed.get("candidateSetsAgree") is not True
+            ):
+                errors.append(f"YI document set is not navigable: {relative}")
         if "TEI-conclusion-integrity" in relative:
             observed = data.get("observed", {})
             if (
