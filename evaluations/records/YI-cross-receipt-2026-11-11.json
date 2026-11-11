@@ -1,0 +1,57 @@
+{
+  "schema": "tai.reference.yi-cross-receipt/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yi_cross_receipt_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-cross-receipt-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "facts": [
+      {
+        "fact": "candidateCount",
+        "values": [
+          {
+            "receipt": "YI-doc-integrity-2026-11-11.json",
+            "path": "candidatesInList",
+            "value": 25
+          },
+          {
+            "receipt": "YI-doc-integrity-2026-11-11.json",
+            "path": "candidatesInPacket",
+            "value": 25
+          }
+        ],
+        "agrees": true
+      },
+      {
+        "fact": "crossCuttingDecisionCount",
+        "values": [
+          {
+            "receipt": "YI-g1-status-2026-11-11.json",
+            "path": "decisionFields",
+            "value": 6
+          },
+          {
+            "receipt": "YI-g1-evidence-2026-11-11.json",
+            "path": "decisionsChecked",
+            "value": 6
+          }
+        ],
+        "agrees": true
+      }
+    ],
+    "mismatches": [],
+    "kept": 15,
+    "moved": 10,
+    "total": 25,
+    "keptPlusMovedEqualsTotal": true,
+    "everyOverlappingFactAgrees": true
+  },
+  "scope": "Compares the facts that more than one YI receipt reports, and checks that kept plus moved equals the candidate total. It compares numbers only, so two receipts can agree on a number while disagreeing about what it counts; it does not detect a stale list whose length happens to match, such as decisionsWithNoObservation."
+}
