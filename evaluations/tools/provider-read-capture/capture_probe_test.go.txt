@@ -1,0 +1,134 @@
+package postgresquery_test
+
+// TASK A probe. Lives only in a throwaway archive copy of TEI Draft #4076 (head 5a8fac51).
+// It calls the product's own Resolver.ExecuteBrowseQueryInEnvironment and postgres Executor,
+// and writes what the product returned. It never creates, alters or seeds anything.
+
+import (
+	"context"
+	"crypto/sha256"
+	"database/sql"
+	"encoding/json"
+	"fmt"
+	"os"
+	"testing"
+	"time"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
+
+	"tei/internal/driver"
+	postgresquery "tei/internal/driver/queryruntime/postgres"
+	"tei/internal/workspace"
+)
+
+type t3aRead struct {
+	Status   string `json:"status"`
+	Operator string `json:"operator"`
+	Offset   int64  `json:"offset"`
+}
+type t3aWitness struct {
+	System      string `json:"systemIdentifier"`
+	Database    string `json:"database"`
+	DatabaseOID string `json:"databaseOid"`
+	User        string `json:"user"`
+	BypassRLS   bool   `json:"bypassRlsOrSuper"`
+	RLSOnTable  bool   `json:"rlsOnTable"`
+	Error       string `json:"error,omitempty"`
+}
+
+// witness is taken on the SAME single connection the product Executor uses (MaxOpenConns=1).
+func t3aWitness1(ctx context.Context, db *sql.DB) t3aWitness {
+	var w t3aWitness
+	err := db.QueryRowContext(ctx, `select (select system_identifier::text from pg_control_system()), current_database(),
+ (select oid::text from pg_database where datname=current_database()), current_user,
+ (select rolbypassrls or rolsuper from pg_roles where rolname=current_user),
+ (select relrowsecurity from pg_class where oid='sales."order"'::regclass)`).
+		Scan(&w.System, &w.Database, &w.DatabaseOID, &w.User, &w.BypassRLS, &w.RLSOnTable)
+	if err != nil {
+		w.Error = err.Error()
+	}
+	return w
+}
+
+type t3aFile struct {
+	WitnessBefore t3aWitness `json:"witnessBefore"`
+	WitnessAfter  t3aWitness `json:"witnessAfter"`
+	Reads         []t3aOut   `json:"reads"`
+}
+
+type t3aOut struct {
+	Read       t3aRead    `json:"read"`
+	Error      string     `json:"error,omitempty"`
+	InstanceID string     `json:"instanceId,omitempty"`
+	QueryID    string     `json:"queryId,omitempty"`
+	Columns    []string   `json:"mappedColumns,omitempty"`
+	Rows       [][]string `json:"rows"`
+	RowCount   int        `json:"rowCount"`
+	RowsSHA    string     `json:"rowsSha"`
+}
+
+func TestT3AProbe(t *testing.T) {
+	dsn, ws, out := os.Getenv("T3A_DSN"), os.Getenv("T3A_WS"), os.Getenv("T3A_OUT")
+	if dsn == "" || ws == "" || out == "" {
+		t.Skip("T3A probe not requested")
+	}
+	var reads []t3aRead
+	if err := json.Unmarshal([]byte(os.Getenv("T3A_READS")), &reads); err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+	db, err := sql.Open("pgx", dsn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	db.SetMaxOpenConns(1)
+	if _, err := db.ExecContext(ctx, "SET default_transaction_read_only = on"); err != nil {
+		t.Fatalf("cannot force read-only session: %v", err)
+	}
+	results := []t3aOut{}
+	before := t3aWitness1(ctx, db)
+	loaded, err := workspace.Load(ws)
+	if err != nil {
+		results = append(results, t3aOut{Error: "workspace load: " + err.Error()})
+	} else {
+		resolver := driver.NewResolver(loaded.World)
+		executor := postgresquery.Executor{DB: db, Database: "sales_core"}
+		for _, r := range reads {
+			o := t3aOut{Read: r, Rows: [][]string{}}
+			got, err := resolver.ExecuteBrowseQueryInEnvironment(ctx, "development", "order_entry",
+				"order_entry.recent_orders", executor, map[string]any{
+					"status": r.Status, "status_operator": r.Operator, "page_offset": r.Offset})
+			if err != nil {
+				o.Error = err.Error()
+			} else {
+				o.InstanceID = string(got.Instance.ID)
+				if got.Execution.Resolution.Query != nil {
+					o.QueryID = string(got.Execution.Resolution.Query.ID)
+				}
+				for _, c := range got.Execution.Result.Mapped.Columns {
+					o.Columns = append(o.Columns, c.Raw+"->"+string(c.Attribute))
+				}
+				for _, row := range got.Execution.Result.Mapped.Rows {
+					line := []string{}
+					for _, v := range row {
+						if b, ok := v.([]byte); ok {
+							v = string(b)
+						}
+						line = append(line, fmt.Sprint(v))
+					}
+					o.Rows = append(o.Rows, line)
+				}
+			}
+			o.RowCount = len(o.Rows)
+			b, _ := json.Marshal(o.Rows)
+			o.RowsSHA = fmt.Sprintf("%x", sha256.Sum256(b))[:12]
+			results = append(results, o)
+		}
+	}
+	body, _ := json.MarshalIndent(t3aFile{WitnessBefore: before, WitnessAfter: t3aWitness1(ctx, db), Reads: results}, "", " ")
+	if err := os.WriteFile(out, body, 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
