@@ -200,6 +200,8 @@ SUIは投影していない。`03_Implement/mcp` のstdio server自体は存在�
 `node_modules` が **linux-x64 のesbuild** で、Windowsでは起動できない
 （`@esbuild/linux-x64` があり `win32-x64` が無い）。依存を入れ直さない限り
 `unsupported:environment-esbuild-platform-mismatch` として扱う。
+同梱 `package.json` の `engines.node` は `22.x` で、この環境のNodeは v24.19.0 であり、
+依存を入れ直しても engine 制約は満たさない。両方を記録する。
 
 ### 6.5 Consumer受領（H-A-5 / E6）
 
@@ -268,7 +270,9 @@ DSHの4 Session（Skill bytes固定 `sha256:aa3068df...`）:
   同一cwd・同一Preset・live owner不在等のHarness側条件は検証しない。
 - **実Effect・書込み**。投影はread-only面のみ（SEIは `-read-only` を強制）。
 - **SHO/SUI**。SHOは `bin/sho-inspect.cjs` の冒頭に「not yet a finalized public CLI
-  contract」とあり契約未確定。SUIはread-only入口を確認できていない。どちらも未投影。
+  contract」とあり契約未確定。投影はしたが、SHOにMCP面が無いので型付き経路は作れない。
+  SUIはstdio serverが存在するが、同梱依存が linux-x64 esbuild でWindowsでは起動できず、
+  `engines.node` も `22.x`（実環境は v24）。どちらも未投影。
 
 ### DSH（0.2.2-rc.1）固有
 - `--json` は**有界投影**。非`final`の文字列/keyは8KiB、1イベント行は32KiBでcapされ
