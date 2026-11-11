@@ -46,6 +46,18 @@ KON Dataspaceは、既存の独立製品化保留方針を尊重し、調査対�
 - 性能と保守性は、まだ測定していません。本資料では測り方と停止条件だけを定めます。
 - 製品のIssue本文と設計文書の記述を、実装済み・検証済みと同一視していません。
 
+### 2.2 API・データモデル・コード生成の現状
+
+| 製品 | 主な公開面 | データモデル | コード生成・型同期 |
+| --- | --- | --- | --- |
+| TEI | `tei` CLIの`validate`、`inspect`、`view`、`source-index`、`deployment-provider-plan`、`self-build`など | `.tei` WorkspaceのData、Relation、Query、Command、Capability、Application、Plugin、RunPlan、EffectRule、Period | Generator SelectionとTarget Profile。投影関数と単一実行物を生成する |
+| SUI | `GET/PUT /docs/{docId}`、epistemic投影、管理面のartifact取得 | DocumentV1、Card、Island、Edge、Affiliation、sources、レビュー情報 | TypeScript型、Pydantic、JSON Schemaを手で対応。drift試験あり。TEI Generatorは未使用 |
+| SEI | `sei` CLI、`teiintegration`、`teiprojection` | Semantic Reference、Decision Memory、Capability Observation、Cognitive Method、Semantic Interchange | JSON Schema、Go struct、fixtureを手で対応。汎用のコード生成は未使用 |
+| EKI | Task API、結果取得、Artifact API、Worker/Admin面 | TaskRequest、AdmittedTask、WorkOrder、Lease、ResultClaim、AcceptedResult | OpenAPIとGo structを手で対応。TEI Generatorは未使用 |
+| TAI | 製品横断の参照とSCN-001。常駐APIは持たない | シナリオ、評価記録、パイロット契約 | 製品コードの生成はしない。パイロットでTEI Generatorを使う |
+| SHO | `sho-inspect` CLI | Markdown raw bytes、リンク出現、ブロック行、Expected JSON | NodeのReader。汎用のコード生成は未使用 |
+| CSW | なし | 執筆Skill本文 | なし |
+
 ## 3. 判断基準
 
 ### 3.1 守る境界
