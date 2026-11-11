@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -150,6 +151,63 @@ func DirectReadback(consumer string, res *Result, expectedSHA256 string) Consume
 	} else {
 		c.Note = "the arm's final text does not match the expected digest"
 	}
+	return c
+}
+
+// ClaimReadback is the content form: the consumer reads a file the producer
+// wrote and checks that every required claim value appears in it.
+//
+// The claims are supplied by the CONSUMER from an independent source — in a pilot
+// they are the values a second route (the product's typed tool) already reported.
+// That makes the check "did the delivered bytes carry the facts another route
+// established", which is stronger than comparing a file against the producer's
+// own summary and cannot be satisfied by a self-consistent fabrication.
+//
+// A file that exists but is missing a claim is `partial`, and the note names
+// which claim was absent. A file that is absent is `not-observed`.
+func ClaimReadback(consumer, path string, claims map[string]string) ConsumerReceipt {
+	c := ConsumerReceipt{Consumer: consumer, Path: path, State: ReceiptNotObserved}
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		c.Note = "path could not be resolved"
+		return c
+	}
+	b, err := os.ReadFile(abs)
+	if err != nil {
+		c.Note = "no readable file at the expected location"
+		return c
+	}
+	c.ByteCount = int64(len(b))
+	sum := sha256.Sum256(b)
+	c.BytesSHA256 = "sha256:" + hex.EncodeToString(sum[:])
+	if len(claims) == 0 {
+		c.State = ReceiptPartial
+		c.Note = "bytes were read, but the consumer had no claim to check against"
+		return c
+	}
+	text := string(b)
+	var missing []string
+	for name, want := range claims {
+		if want == "" {
+			missing = append(missing, name+" (no expected value)")
+			continue
+		}
+		if !strings.Contains(text, want) {
+			missing = append(missing, name)
+		}
+	}
+	sort.Strings(missing)
+	if len(missing) == 0 {
+		all := true
+		c.Matches = &all
+		c.State = ReceiptComplete
+		c.Note = "a separate reader read the file and every consumer-supplied claim was present"
+		return c
+	}
+	all := false
+	c.Matches = &all
+	c.State = ReceiptPartial
+	c.Note = "a separate reader read the file, but these claims were absent: " + strings.Join(missing, ", ")
 	return c
 }
 

@@ -1,0 +1,48 @@
+﻿{
+  "contract": "yi.harness-adapter/v0",
+  "experiment": "E6 consumer receipt via independent file readback",
+  "date": "2026-11-11",
+  "configuration": {
+    "harness": "dsh-headless 0.2.2-rc.1",
+    "permissionMode": "workspace-write",
+    "addDir": "trial-dir/consumed",
+    "mcpServer": "tei (tools/reference-mcp-readonly-adapter, -workspace trial workspace)",
+    "product": "TEI read-only CLI, synthetic copy of reference/workspace"
+  },
+  "arm": {
+    "transport": "delivered",
+    "run": "completed",
+    "toolCalls": 3,
+    "exitCode": 0,
+    "receiptBefore": "not-observed"
+  },
+  "consumers": [
+    {
+      "consumer": "independent-file-reader",
+      "form": "digest",
+      "state": "partial",
+      "bytes": 180,
+      "matches": false,
+      "note": "compared the delivered file against the harness arm's own final text digest; the arm summarised rather than echoing, so the digests differ by design of the prompt"
+    },
+    {
+      "consumer": "independent-claim-reader",
+      "form": "claims-from-second-route",
+      "state": "partial",
+      "bytes": 180,
+      "matches": false,
+      "claimsChecked": ["worldFingerprint", "sourceIndexFingerprint", "modelRevision"],
+      "claimsPresent": ["worldFingerprint", "modelRevision"],
+      "claimsAbsent": ["sourceIndexFingerprint"],
+      "note": "a separate reader read the file and found two of three claims; sourceIndexFingerprint was not in the delivered bytes"
+    }
+  ],
+  "claimsSource": "the product CLI's own `tei model catalog` output, obtained by this test independently of the harness arm",
+  "result": "receipt left not-observed and became partial with an independently derived reason",
+  "notClaimed": [
+    "that the harness wrote the correct answer",
+    "that the product accepted anything",
+    "that any effect occurred",
+    "that the weak digest form can ever reach complete"
+  ]
+}
