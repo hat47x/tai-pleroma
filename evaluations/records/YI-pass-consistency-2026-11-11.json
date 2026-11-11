@@ -1,0 +1,240 @@
+{
+  "schema": "tai.reference.yi-pass-consistency/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yi_pass_consistency_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-pass-consistency-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receipts": 30,
+    "rows": [
+      {
+        "receipt": "YI-acceptance-authority-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [
+          "allProductsNameAnAuthority"
+        ],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-artifact-digest-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-candidate-fields-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-centre-handoff-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-centre-key-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-citation-check-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-context-handoff-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-cross-receipt-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-csw-return-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-danger-units-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-deck-figures-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-doc-integrity-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-eki-measurement-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-empty-reference-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-fold-dissent-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-g1-evidence-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [
+          "everyDecisionHasAnObservation"
+        ],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-g1-status-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-g2-landing-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-landing-paths-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-naming-radius-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-overreach-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-publication-refusal-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [
+          "allowed"
+        ],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-receipt-auditability-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-scope-halves-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-sho-actual-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-stage3-inventory-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-staleness-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-state-classification-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [
+          "everyStateHasAnExample"
+        ],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-unreferenced-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "yi-constellation-structure-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
+        "consistent": true
+      }
+    ],
+    "unexplainedPassWithGap": [],
+    "everyPassExplainsItsGaps": true
+  },
+  "scope": "For each YI receipt that reports PASS, looks for an invariant field observed as false and records whether the receipt also explains the gap, either in a finding or in a list of what is missing. It checks the receipt's own bookkeeping, not the world: a receipt that explains its gap can still have measured the wrong thing."
+}

@@ -1,0 +1,53 @@
+{
+  "record": "yi.handoff.g6-sei-binding-observation",
+  "observedAt": "2026-11-11",
+  "scope": "test-only reconciliation between a real handoff ticket's references and SEI exact_binding shape",
+  "whatIsVerified": {
+    "ticket": "sui-to-sho-handoff.handoff.json (SUI Producer, TEI read-only observation cited)",
+    "seiSchema": "sei-cognition/contracts/schemas/v1alpha1/semantic-reference.schema.json",
+    "tool": "evaluations/tools/check-handoff-sei-binding.cjs",
+    "command": "node evaluations/tools/check-handoff-sei-binding.cjs --ticket <ticket> --schema <schema>",
+    "exitCode": 0
+  },
+  "observedSubjects": [
+    {
+      "locator": "sui-to-sho-handoff.md",
+      "state": "reference-linked-unverified",
+      "profileMatched": false,
+      "reason": "the ticket carries no representation_profile, so profile agreement cannot be verified"
+    },
+    {
+      "locator": "tei:tei.cli.model/v0:application:order_entry",
+      "state": "reference-linked-unverified",
+      "profileMatched": false,
+      "reason": "the ticket carries no representation_profile, so profile agreement cannot be verified"
+    },
+    {
+      "locator": "sui-sensemaking:document:sui-sho-p0-cross-product-synthetic",
+      "state": "reference-incomplete",
+      "reason": "digest is absent"
+    }
+  ],
+  "selfTest": {
+    "cases": [
+      { "id": "G6-N1-empty-is-not-absent", "result": "pass", "meaning": "an empty reference set is not evidence of absence" },
+      { "id": "G6-N2-missing-digest-is-incomplete", "result": "pass", "meaning": "a partial citation is not complete" },
+      { "id": "G6-N3-bad-digest-is-mismatch", "result": "pass", "meaning": "a malformed digest is not stale; it is a target mismatch" },
+      { "id": "G6-N4-duplicate-locator-is-ambiguous", "result": "pass", "meaning": "two exact references to one locator are never collapsed to one" },
+      { "id": "G6-linked-never-verified", "result": "pass", "meaning": "a linked reference stays unverified" },
+      { "id": "G6-linked-carries-profile-gap", "result": "pass", "meaning": "profile agreement is unverified and stays declared as such" },
+      { "id": "G6-exact-binding-shape", "result": "pass", "meaning": "the carried shape matches SEI exact_binding required fields" },
+      { "id": "G6-exact-binding-rejects-bad-digest", "result": "pass", "meaning": "a malformed digest cannot form an exact binding" }
+    ]
+  },
+  "whatIsNotVerified": {
+    "seiRuntimeConformance": "not-run — the SEI Go semantic runtime was not executed",
+    "seiFixtureValidation": "not-run — no SEI fixture was validated against this tool",
+    "teiClaimClosure": "not-run — TEI #2586 Query/Context/Claim closure was not exercised",
+    "representationProfileAgreement": "not-run — the ticket carries no representation_profile",
+    "issuerAuthority": "not-run — no signature, issuer or revocation check",
+    "meaningAcceptance": false,
+    "currentSourceProof": false
+  },
+  "prohibition": "reference-linked-unverified must never be promoted to verified by this tool or by a consumer of its output."
+}

@@ -58,6 +58,10 @@
         "question": "SHOの状態をどう示すか",
         "evidencePresent": [
           {
+            "kind": "observation",
+            "path": "evaluations/records/YI-sho-actual-2026-11-11.json"
+          },
+          {
             "kind": "document",
             "path": "docs/yi-constellation/analysis/21-SHOの扱い.md"
           },
@@ -67,9 +71,9 @@
           }
         ],
         "evidenceMissing": [],
-        "hasObservation": false,
-        "observationCount": 0,
-        "gaps": "sho-composerの実際の内容（LICENSEと初期コミットのみ）を確かめた記録"
+        "hasObservation": true,
+        "observationCount": 1,
+        "gaps": "SHOを製品として扱った場合の要求文書・Owner・利用者の実在（リポジトリの内容は測った）"
       },
       {
         "id": "D4",
@@ -133,11 +137,15 @@
     "decisionsChecked": 6,
     "decisionsWithNoObservation": [
       "D2",
-      "D3",
       "D5"
     ],
     "missingFiles": [],
+    "decisionsWithoutObservation": [
+      "D2",
+      "D5"
+    ],
     "everyDecisionHasAnObservation": false,
+    "finding": "6つの横断判断のうち、D1・D3・D4・D6は観測を持ち、D2・D5は文書だけである。観測を持たない2つ（呼び方と受理者）は、観測ではなく組織の決定かもしれない。",
     "everyCitedPathExists": true,
     "everyDecisionNamesItsGap": true
   },
