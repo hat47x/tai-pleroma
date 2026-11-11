@@ -112,6 +112,30 @@ MEASURE_JS = r"""() => {
 }"""
 
 
+
+def chromium_accessible_image(page, session, case: dict) -> dict:
+    """Fetch the real Chromium accessibility tree; NOT an AT/screen-reader trial."""
+    nodes = session.send("Accessibility.getFullAXTree")["nodes"]
+    expected_name = f"Declared graph for {case['id']}"
+    images = [
+        node for node in nodes
+        if node.get("role", {}).get("value") == "image"
+        and node.get("name", {}).get("value") == expected_name
+    ]
+    if len(images) != 1:
+        raise AssertionError(
+            f"{case['id']}: expected one named Chromium accessible SVG image, got {len(images)}"
+        )
+    actual = images[0].get("description", {}).get("value")
+    expected = rq7_svg.accessible_graph_description(case)
+    if actual != expected:
+        raise AssertionError(
+            f"{case['id']}: Chromium accessibility description does not match declared Graph"
+        )
+    return {"name": expected_name, "description_matches": True}
+
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--screenshots", type=Path, help="optional output directory for public synthetic PNGs")
@@ -139,6 +163,8 @@ def main() -> None:
                 reduced_motion="reduce",
             )
             page = context.new_page()
+            accessibility_session = context.new_cdp_session(page)
+            accessibility_session.send("Accessibility.enable")
             requests = []
             page.on("request", lambda r: requests.append(r.url) if r.url.startswith(("http:", "https:")) else None)
             for case in cases:
@@ -146,6 +172,7 @@ def main() -> None:
                 page.set_content(document(case), wait_until="load")
                 page.evaluate("document.fonts.ready")
                 result = page.evaluate(MEASURE_JS)
+                ax_image = chromium_accessible_image(page, accessibility_session, case)
                 expected = case["declared"]
                 if result["nodeCount"] != len(expected["nodes"]) or result["edgeCount"] != len(expected["edges"]):
                     raise AssertionError(f"{case['id']} {viewport_name}: browser rendered wrong graph: {result}")
@@ -168,7 +195,8 @@ def main() -> None:
                     page.locator("#diagram").screenshot(
                         path=str(args.screenshots / f"{case['id']}-{viewport_name}.png")
                     )
-                checked.append({"case": case["id"], "viewport": viewport_name, **result})
+                checked.append({"case": case["id"], "viewport": viewport_name, **result,
+                                "chromium_accessible_image": ax_image})
             if viewport_name == "desktop":
                 # A deliberately long label exposes the known single-line
                 # layout limitation. Detect it, never count it as a PASS.
@@ -189,6 +217,8 @@ def main() -> None:
         "label_overflows_in_original_three_graphs": 0,
         "known_long_label_limitation": "DETECTED_NEGATIVE_CONTROL_NOT_SUPPORTED",
         "real_browser_dom_geometry": "CHECKED",
+        "chromium_accessibility_tree_name_and_topology": "CHECKED",
+        "real_screen_reader_interaction": "NOT_RUN",
         "independent_visual_human_review": "NOT_RUN",
         "screen_reader_and_keyboard_a11y": "NOT_RUN",
         "human_ai_cognition": "NOT_RUN",
