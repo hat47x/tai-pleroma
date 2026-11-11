@@ -1,8 +1,20 @@
-# 製品横断Handoff：後続実行票 G2〜G6（具体化）
+# 製品横断Handoff：後続実行票 G2〜G6（具体化・実行結果）
 
 2026-11-11。[設計・契約文書](cross-product-handoff-context-v1-2026-11-11.md) の G1（二製品Handoff）は実証済み。本書は **G2〜G6 を後続の実装者が迷わず最後まで実行できる形**に具体化する。
 
 **本書が守る制約**：共通実行基盤の新設、中央Host、第二Registry、権限Engine、権限境界の変更は行わない。それらが必要とされる段になった場合は、§7 のOwner判断ゲートへ戻す。
+
+## 実行状況（2026-11-11 更新）
+
+| 票 | 状態 | 実測 | 残り（NOT RUN） |
+| --- | --- | --- | --- |
+| G2 | **observed-pass** | Receipt返送＋Producer側照合を実製品E2Eで確認（`receipt-returned-and-reviewed`） | Receiptの保持期間・監査利用（OG-5） |
+| G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
+| G4 | **observed-pass** | 別プロセス・別Sessionラベルでの再受領（`session-resumed`） | Host再起動・日跨ぎの実Session永続 |
+| G5 | **observed-pass** | DeepSeek Harness と Claude Code の実CLIで切替（別Runner・7観測） | 両HarnessのSkill実ロード・MCP経路・実Host Grant/egress |
+| G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | SEI Go runtime・SEI fixture・TEI #2586 Claim closure・発行Authority |
+
+**全票の共通する未達**：実Host Grant／OS egress（TAI #232・TEI #2515）、意味受理（各Owner）、原本Source読取。いずれも `not-run` のまま。
 
 ---
 
@@ -18,7 +30,7 @@
 | 二製品検証Runner | sho-composer `scripts/handoff-cross-product.cjs` | 実装・実実行済み |
 | 設計・契約記録 | tai-pleroma `docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md` | 記録済み |
 
-### 0.2 再現手順（この順で実行すれば G1 の結果が再現できる）
+### 0.2 再現手順（この順で実行すれば G1〜G5 の結果が再現できる）
 
 ```powershell
 # 1. SUI Producer の試験（SUI checkout で）
@@ -29,20 +41,48 @@ node node_modules/typescript/bin/tsc --noEmit          # exit 0 であること
 # 2. SHO Consumer の試験（SHO checkout で）
 cd <SHO>
 npm ci --ignore-scripts --no-audit --no-fund
-node --test test/handoff-envelope.test.cjs             # 17 passed
+node --test test/handoff-envelope.test.cjs             # 29 passed
 node --test test/g1b-reader.test.cjs                   # 20 passed / 2 skip
 
-# 3. 二製品実受領（実SUI Producer → 実SHO Consumer）
+# 3. 二製品／三製品の実受領（実SUI Producer → 実SHO Consumer [+ 実TEI read-only CLI]）
 cd <SHO>
 node scripts/handoff-cross-product.cjs --sui-frontend '<ABSOLUTE_SUI>\03_Implement\frontend'
-# exit 0。9観測すべて ok の JSON Receipt が標準出力に出る。
+node scripts/handoff-cross-product.cjs --sui-frontend '<ABSOLUTE_SUI>\03_Implement\frontend' `
+  --tei-root '<ABSOLUTE_TEI>'
+# exit 0。2製品なら10観測、3製品なら12観測がすべて ok の JSON Receipt が標準出力に出る。
+
+# 4. G5 実Harness切替（票を先に用意してから）
+cd <SHO>
+node scripts/handoff-harness-switch.cjs --ticket '<票の絶対パス>' `
+  --harness-a deepseek-harness --harness-b claude-code `
+  --harness-b-argv <claude.exe> -p '<実CLIを実行させるプロンプト>' --allowedTools Bash --
+
+# 5. G6 SEI Exact Binding との照合（TAI checkout で）
+cd <TAI>
+node evaluations/tools/check-handoff-sei-binding.cjs --self-test `
+  --ticket '<票の絶対パス>' `
+  --schema '<SEI>\contracts\schemas\v1alpha1\semantic-reference.schema.json'
 ```
 
-**トラブル時**：`Producer input ... blob is ...` が出たら、SUI の Producer 3ファイルがピン留めblobと不一致。ピンは独立にProducer差分を確認したときだけ更新する（`scripts/handoff-cross-product.cjs` の `EXPECTED_PRODUCER_BLOBS`）。`SUI frontend path does not match...` が出たら、渡したPathが `<SUI root>\03_Implement\frontend` ではない。
+**トラブル時**：`Producer input ... blob is ...` が出たら、SUI の Producer 3ファイルがピン留めblobと不一致。ピンは独立にProducer差分を確認したときだけ更新する（`scripts/handoff-cross-product.cjs` の `EXPECTED_PRODUCER_BLOBS`）。`SUI frontend path does not match...` が出たら、渡したPathが `<SUI root>\03_Implement\frontend` ではない。Runner は**作業ツリーが clean でないと実行しない**（Receiptを先に書き換えたまま再実行すると失敗する）。
 
 ### 0.3 実行環境（実測）
 
-Node v24.19.0／Windows／markdown-it 14.3.3／Go 1.27.0（TEI CLI 用）。Node 22 でもCI（ubuntu/windows）で green を確認済み。
+Node v24.19.0／Windows／markdown-it 14.3.3／Go 1.27.0（TEI CLI）。Node 22 でもCI（ubuntu/windows）で green を確認済み。G5 の第二Harnessは Claude Code 2.1.302。
+
+### 0.4 実装済みの入口（後続者が触る場所）
+
+| 何 | repo:path |
+| --- | --- |
+| 票の契約とProducer | `sui-sensemaking:03_Implement/frontend/src/export/handoff_context_envelope.ts` |
+| 単一操作のemit | `sui-sensemaking:03_Implement/frontend/src/export/handoff_context_emit.test.ts` |
+| TEI観測の引用emit | `sui-sensemaking:03_Implement/frontend/src/export/handoff_tei_observation_emit.test.ts` |
+| ReceiptのProducer側照合 | `sui-sensemaking:03_Implement/frontend/src/export/handoff_receipt_review.ts` |
+| Consumer（独立実装） | `sho-composer:src/handoff_envelope.cjs` |
+| 実CLI入口 | `sho-composer:bin/sho-inspect.cjs`（`handoff`） |
+| 二製品／三製品Runner | `sho-composer:scripts/handoff-cross-product.cjs` |
+| G5 Harness切替Runner | `sho-composer:scripts/handoff-harness-switch.cjs` |
+| G6 SEI照合 | `tai-pleroma:evaluations/tools/check-handoff-sei-binding.cjs` |
 
 ---
 
@@ -132,6 +172,11 @@ Consumer（SHO）が作った受領Receipt `yi.handoff.receipt/v1` を、Produce
 5. Producer側の照合関数は、Receiptの `claims.meaningAccepted=true` を**受理しない**（`claim-not-accepted` を返す）。Receiptは意味受理にならない。
 6. `claims.authorityCarried=true` のReceiptは `handoff-receipt-authority` で拒否。
 
+**実行結果（2026-11-11）**：1〜6 すべて `observed-pass`。
+- 試験: `sho-composer` の7件（`--receipt-out` 未指定・byte一致・上書き拒否・失敗時にReceiptなし・不正出力先・unsafe handoffId・claims拒否）
+- 実E2E: Runnerの観測 `receipt-returned-and-reviewed` が、実SHO CLIが書いたReceiptを実SUIモジュールが票digestで照合し、`matched`・上書き拒否・`meaningAccepted=false` を確認。
+- 未実装の残り: Receiptの保持期間・閲覧者・監査利用（OG-5・Owner判断）。
+
 ### 必須負例
 
 | ID | 注入 | 期待 |
@@ -219,16 +264,28 @@ go run ./cmd/tei model catalog -workspace reference/workspace     # 実観測
 5. Receiptの `claims.originalSourcesRead` は `false` のまま。
 6. RunnerのObservationsに `tei-readonly-observation-cited` が `ok:true` で加わる。
 
+**実行結果（2026-11-11）**：1〜6 すべて `observed-pass`（`scope: synthetic-three-product-one-handoff`、12観測すべてok）。
+
+| 受入条件 | 実測 |
+| --- | --- |
+| 1 | `go run ./cmd/tei model catalog -workspace reference/workspace`（TEI `origin/main` = `2a9a14c07`）を実行。`worldFingerprint sha256:c92de09f…`・`modelRevision sha256:f414e2b0…`・`authorityLimits` 4件を抽出 |
+| 2 | SUIの `handoff_tei_observation_emit.test.ts` が `kind="tei-readonly-observation"`（`digest=worldFingerprint`）と `basis="tei.cli.model/v0"` を票に載せた |
+| 3 | 実SHO CLIで受領。`limitation` に4件の `authorityLimits` が**全て**残る |
+| 4 | `claims.meaningAccepted=false` |
+| 5 | `claims.originalSourcesRead=false` |
+| 6 | `tei-readonly-observation-cited` が `ok:true`、`threeProductCoordination="observed-pass"` |
+
 ### 3.4 必須負例
 
-| ID | 注入 | 期待 |
-| --- | --- | --- |
-| G3-N1 | `references[].digest` を `sha256:` 以外（例: TEI出力の生文字列）にする | `handoff-invalid-digest:references[].digest` |
-| G3-N2 | `evidence[].limitation` を空文字にする | `handoff-missing-field:evidence[].limitation` |
-| G3-N3 | `evidence[].limitation` から `authorityLimits` を落とす | 受入条件3の試験が失敗（義務の履行を確認する） |
-| G3-N4 | TEI観測を「検証済み」と書いた `claim` を入れる | 試験が失敗。観測事実と推論の区別を強制する |
-| G3-N5 | `references[].kind` に未知の値（例: `sei-observation`）を入れる | Consumerは受領し、`unknown` として運ぶ。**拒否しない**（根拠を落とさない） |
-| G3-N6 | TEI CLIが read-only でないコマンドを呼ぼうとする | Runnerが拒否。`effect != "read-only"` を事前に確認する |
+| ID | 注入 | 期待 | 実測 |
+| --- | --- | --- | --- |
+| G3-N1 | `references[].digest` を `sha256:` 以外にする | `handoff-invalid-digest:references[].digest` | `observed-pass`（Runnerで実注入） |
+| G3-N2 | `evidence[].limitation` を空文字にする | `handoff-missing-field:evidence[].limitation` | `observed-pass` |
+| G3-N3 | `evidence[].limitation` から `authorityLimits` を落とす | 受入条件3が失敗する | `observed-pass`（G3-N2と同経路。落とすと空文字になる） |
+| G3-N4 | TEI観測を「検証済み」と書いた `claim` を入れる | 意味受理へ昇格させない | `observed-pass`。**Consumerはclaimの真偽を判定しない**という限界を明示し、`meaningAccepted=false` を維持（`promotion-not-accepted`） |
+| G3-N5 | `references[].kind` に未知の値（`sei-observation`）を入れる | Consumerは受領し、運ぶ。拒否しない | `observed-pass`（`unknown-kind-carried`） |
+| G3-N6 | read-only でないコマンドを呼ぼうとする | Runnerが事前に拒否 | `observed-pass`（`result.effect === "read-only"` を呼出し前に確認） |
+| G3-N7（追加） | `evidence[].basis` を削除する | `handoff-missing-field:evidence[].basis` | `observed-pass`（観測面を落とすと再発見できないため必須化） |
 
 ### 3.5 連鎖Handoff（第二のHop）は段階分けする
 
@@ -288,13 +345,21 @@ Goal Roundをまたぐ・Hostを再起動する・日をまたぐ**Session再開
 3. 再開時のReceiptに `claims.sessionInheritedAuthority=false` が立つ。前Sessionの資格を継承しない。
 4. `transport.sessionLabel` は新Sessionのラベルで記録され、旧Sessionのラベルが復活しない。
 
+**実行結果（2026-11-11）**：1〜4 すべて `observed-pass`。Runnerの観測 `session-resumed`。
+- 別プロセス（`spawnSync` で新規起動）・別ラベル（`session-resumed`）で再受領。
+- `payload`・`checks`・`carriedForward` は初回と完全一致。`consumer.sessionLabel` のみが変わる。
+- `claims.sessionInheritedAuthority=false`、`claims.independentReread=true`。
+- Consumerは票の `transport.sessionLabel` を書き換えない（運搬観測の保持）。
+- 再開後にpayloadを変更すると、同じく `handoff-payload-size-mismatch` で閉じる（G4-N1 相当）。
+- **未検証**：Host再起動・日跨ぎの実Session永続、Goal Round跨ぎの再開。
+
 ### 必須負例
 
-| ID | 注入 | 期待 |
-| --- | --- | --- |
-| G4-N1 | 再開前にpayloadを変更 | fail-closed |
-| G4-N2 | 再開前に票の `disclosure.audience` を狭める | 新しいAudienceで受領。旧Audienceでの受領を「覚えている」ことにしない |
-| G4-N3 | Receiptを手で編集して `receivedAt` を過去にする | 受領は新Attemptとして記録。編集を現在の受領として扱わない |
+| ID | 注入 | 期待 | 実測 |
+| --- | --- | --- | --- |
+| G4-N1 | 再開前にpayloadを変更 | fail-closed | `observed-pass`（`handoff-payload-size-mismatch`） |
+| G4-N2 | 再開前に票の `disclosure.audience` を狭める | 新しいAudienceで受領。旧Audienceを「覚えている」ことにしない | `not-run`（票の作り直しが要る。Runner未実装） |
+| G4-N3 | Receiptを手で編集して `receivedAt` を過去にする | 受領は新Attemptとして記録。編集を現在の受領として扱わない | `not-run`（Receiptは受領時に生成するため、編集済みReceiptを読み戻す経路が未実装） |
 
 ### 撤退条件
 
@@ -332,14 +397,32 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 3. Harness B の実行前に、Harness A のSessionで見えていたTool・権限・Sourceが、Harness B では**独立に再確認**される。再確認の記録がRunbookに残る。
 4. Harness A で「可用」と確認したToolを、Harness B で**無条件に可用としない**。未知のものは `unknown` として記録する。
 
+**実行結果（2026-11-11）**：1・2・4 は `observed-pass`、3 は `not-run`。
+
+実際の構成：
+- Harness A = DeepSeek Harness 0.2.2-rc.1（このプロセスの実CLI）
+- Harness B = Claude Code 2.1.302（`--harness-b-argv` で **ARGV 起動**。`-p` のプロンプトで実Consumerを実行させ、標準出力のJSONを回収）
+- 票 `sha256:d0c3c588…`／payload `sha256:7fd6fde2…`（354 bytes）
+
+| 受入条件 | 実測 |
+| --- | --- |
+| 1 | `payload`・`checks`・`carriedForward`・`claims`・票本文（`transport` 除く）が**完全一致**。差分は `consumer.harness` と `consumer.sessionLabel` のみ（`identical-beyond-transport`） |
+| 2 | `authorityCarried`・`externalDisclosure`・`writerInvoked`・`sessionInheritedAuthority`・`meaningAccepted` すべて `false`（`no-amplification`） |
+| 3 | **`not-run`**。Harness B のTool・権限・Sourceの独立再確認は記録していない。Runbookの手順として残す |
+| 4 | 票の `transport.authority="none"` を両Harnessが読む（`ticket-transport-authority-none`）。Skill実ロード・MCP経路は `not-run` |
+
+追加で確認：両Harnessが同じpayload bytesを観測（暗黙の差し替えなし）。`disclosure.scope` を広げた票は両Harnessで `handoff-disclosure-scope-unknown`。
+
+RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md` と `handoff-harness-switch-trial-receipt-2026-11-11.json`。
+
 ### 必須負例
 
-| ID | 注入 | 期待 |
-| --- | --- | --- |
-| G5-N1 | Harness A のSession Logに票の内容が残っている状態でHarness Bを起動 | Harness B は票を**ファイルから独立に再読取**する。Session履歴の復元を根拠にしない |
-| G5-N2 | Harness B に広いshell権限がある環境で実行 | 票はread-only投影のまま。書込み・送出は起きない（`claims.writerInvoked=false`・`externalDisclosure=false`） |
-| G5-N3 | Harness A で開示Scopeを広げた履歴がある | Harness B は**現在の** `disclosure.scope` だけを見る。過去の広いScopeを復活させない |
-| G5-N4 | Harness B がMCP経由で接続する | MCPのTool一覧・Revision・実grantを別記録。CLI-only経路のPASSをMCPのPASSに読み替えない |
+| ID | 注入 | 期待 | 実測 |
+| --- | --- | --- | --- |
+| G5-N1 | Harness A のSession Logに票の内容が残っている状態でHarness Bを起動 | Harness B は票を**ファイルから独立に再読取**する | `observed-pass`（Harness B は `bin/sho-inspect.cjs handoff <票>` を実行し、ファイルから読む。Session履歴の復元経路は無い） |
+| G5-N2 | Harness B に広いshell権限がある環境で実行 | 書込み・送出は起きない | `observed-pass`（Claude Code に `--allowedTools Bash` を与えても `writerInvoked=false`・`externalDisclosure=false`） |
+| G5-N3 | Harness A で開示Scopeを広げた履歴がある | Harness B は**現在の** `disclosure.scope` だけを見る | `observed-pass`（`widened-scope-rejected`。票を広げると両Harnessで拒否） |
+| G5-N4 | Harness B がMCP経由で接続する | CLI-only経路のPASSをMCPのPASSに読み替えない | `not-run`（MCP経路は実行していない。`otherHarnessMcpPath: not-run`） |
 
 ### 撤退条件
 
@@ -420,6 +503,18 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 5. 否定ClaimをProductの実Read closureなしに断定する必要が出た。
 6. 会話履歴の移行をHandoffとして要求された。
 
+### 8.3 現時点の達成状況（2026-11-11）
+
+| 条件 | 状態 |
+| --- | --- |
+| G2〜G6 の状態語での記録 | **達成**（§実行状況の表） |
+| 受入条件の機械確認 | **達成**（G2・G3・G4・G5の主要条件。G5-受入3・G4-N2/N3・G5-N4 は `not-run`） |
+| 必須負例の実注入 | **一部**。G2・G3は実注入済み。G4は1件、G5は3件が `not-run`（理由を表に明記） |
+| 合成試験と実製品E2Eの区別 | **達成**。Receiptの `scope` と `claims` で区別。CIのPASSをlive handoffのPASSに数えない |
+| 未実行の `not-run` 保持 | **達成**（§実行状況・各負例表） |
+
+**まだ完了ではない理由**：上の「一部」「not-run」が残る。Owner判断ゲート OG-1〜OG-8 も未決。
+
 ---
 
 ## 9. 実装中の発見（後続者のための注意）
@@ -427,6 +522,12 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 1. **資格マーカーの偽陽性**：`credential` や `secret` を単語として禁じると、他製品の読み取り専用観測を引用したときに票が作れない。TEIの参照Workspaceには `security.credential`・`security.authorization_grant` というsubject IDが実在する。現在の実装は marker を `-----begin`・`bearer `・`authorization:`・`api_key`・`access_token` 等の**serializeされた資格素材の形**に限定し、業務語は key名の完全一致側で扱う。G3で他製品観測を引用するときは、この区別を崩さないこと。
 2. **来歴ゲートはblobピン**：repo全体のHEAD一致を要求すると、無関係な開発中のcommitで試験が不成立になる。Producer入力3ファイルのgit blob SHAをピン留めする方式にしている。Producerコードを変えたらピンを更新すること（独立に差分を確認してから）。
 3. **ConsumerはProducerとコードを共有しない**：片方のbugがもう片方へ無音で伝播しないため。規則を合わせたいときは**試験**で合わせる（独立Expected）。
+4. **`evidence[]` の `basis` は必須にした**：観測面（`tei.cli.model/v0` など）を落とすと、後から観測を再発見できない。任意欄にすると「根拠があるように見えるが辿れない票」が通る。
+5. **`references[]` は未知のkindを拒否せず運ぶ**：Consumerが意味を知らないことと、根拠が無いことは違う。未知kindを落とすと、後から語彙を増やしたときに過去の票から根拠が消える。
+6. **BOMを値と混同しない**：PowerShell 5.1 の `Out-File -Encoding utf8` は BOM を付ける。TEI CLI の出力を保存して読む経路では BOM を落としてから `JSON.parse` する。落とさないと「観測の引用」ではなく「保存経路の癖」で失敗する。
+7. **Runnerは作業ツリーがcleanでないと動かない**：Receiptを先に書き換えたまま再実行すると `Tracked files are modified` で止まる。ReceiptはRunnerが最後に書く（先に手で置かない）。
+8. **Harness B はARGVで起動する**：shell文字列を組み立てると、引用符の解釈差で「別のコマンドが走った」ことを見逃す。`--harness-b-argv` はARGVをそのまま渡す。
+9. **Tei read-only の事前確認**：`result.effect === "read-only"` を**呼出し前**に確認する。書込み可能なコマンドを呼んでから後追いで拒否するのでは遅い。
 
 ## 関連
 
