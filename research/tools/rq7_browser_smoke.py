@@ -14,6 +14,7 @@ import json
 from pathlib import Path
 
 import rq7_pilot
+import rq7_structured_alt
 import rq7_svg
 
 
@@ -42,6 +43,7 @@ def document(case: dict) -> str:
         'border-bottom:1px solid #bbb;}#diagram svg{display:block;max-width:none;}'
         'pre{white-space:pre-wrap;padding:8px;}</style></head><body>'
         f'<main><div id="diagram">{svg}</div>'
+        f'{rq7_structured_alt.structured_graph_html(case)}'
         f'<pre id="declared-text">{text}</pre></main></body></html>'
     )
 
@@ -136,6 +138,64 @@ def chromium_accessible_image(page, session, case: dict) -> dict:
 
 
 
+
+def verify_visible_structured_rows(page, case: dict) -> None:
+    """Compare actual Chromium DOM cells to source identities, not just counts."""
+    actual = page.evaluate(r"""() => {
+      const extract = id => [...document.querySelectorAll('#' + id + ' tbody tr')]
+        .map(tr => [...tr.querySelectorAll('th, td')].map(cell => cell.textContent));
+      return {
+        nodes: extract('declared-nodes'),
+        edges: extract('declared-direct-edges'),
+        captions: [...document.querySelectorAll('#graph-data table caption')]
+          .map(c => c.textContent),
+      };
+    }""")
+    expected_nodes = [[n["id"], n["label"]] for n in case["declared"]["nodes"]]
+    expected_edges = [[a, b] for a, b in case["declared"]["edges"]]
+    if actual["nodes"] != expected_nodes:
+        raise AssertionError(f"{case['id']}: browser's table node identities differ")
+    if actual["edges"] != expected_edges:
+        raise AssertionError(f"{case['id']}: browser's table direct-edge identities differ")
+    if actual["captions"] != [
+        "Declared nodes", "Declared directed edges, not transitive paths"
+    ]:
+        raise AssertionError(f"{case['id']}: browser's table captions differ")
+
+
+def verify_keyboard_structured_alternative(page, session, case: dict) -> None:
+    """Keyboard disclosure + native tables in Chromium AX; NOT an SR test."""
+    rq7_structured_alt.check_structured_graph(
+        case, rq7_structured_alt.structured_graph_html(case)
+    )
+    if page.locator("#graph-data").evaluate("(el) => el.open"):
+        raise AssertionError("graph disclosure unexpectedly expanded at load")
+    # Do not inject focus on the summary: verify it is reachable by Tab.
+    page.evaluate("document.activeElement.blur()")
+    focus_reached = False
+    for _ in range(8):
+        page.keyboard.press("Tab")
+        if page.evaluate("document.activeElement.matches('#graph-data summary')"):
+            focus_reached = True
+            break
+    if not focus_reached:
+        raise AssertionError(f"{case['id']}: native disclosure not reachable by keyboard")
+    page.keyboard.press("Enter")
+    if not page.locator("#graph-data").evaluate("(el) => el.open"):
+        raise AssertionError(f"{case['id']}: Enter did not expand native disclosure")
+    verify_visible_structured_rows(page, case)
+    ax = session.send("Accessibility.getFullAXTree")["nodes"]
+    tables = [n for n in ax if n.get("role", {}).get("value") == "table"]
+    if len(tables) != 2:
+        raise AssertionError(f"{case['id']}: Chromium AX tree lacks two semantic tables")
+    if not any(n.get("role", {}).get("value") == "columnheader" for n in ax):
+        raise AssertionError(f"{case['id']}: Chromium AX tree lacks column headers")
+    page.keyboard.press("Enter")
+    if page.locator("#graph-data").evaluate("(el) => el.open"):
+        raise AssertionError(f"{case['id']}: Enter did not collapse native disclosure")
+
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--screenshots", type=Path, help="optional output directory for public synthetic PNGs")
@@ -173,6 +233,7 @@ def main() -> None:
                 page.evaluate("document.fonts.ready")
                 result = page.evaluate(MEASURE_JS)
                 ax_image = chromium_accessible_image(page, accessibility_session, case)
+                verify_keyboard_structured_alternative(page, accessibility_session, case)
                 expected = case["declared"]
                 if result["nodeCount"] != len(expected["nodes"]) or result["edgeCount"] != len(expected["edges"]):
                     raise AssertionError(f"{case['id']} {viewport_name}: browser rendered wrong graph: {result}")
@@ -200,6 +261,20 @@ def main() -> None:
                 if viewport_name == "desktop" and case is cases[0]:
                     # Same visual graph and metadata, but tampered accessible
                     # topology: the Chromium AX tree must reject the missing edge.
+                    # Same table row count, but a different physical relation:
+                    # text/graph count equality must not be accepted.
+                    page.evaluate(
+                        "document.querySelector('#declared-direct-edges tbody tr td').textContent = 'wrong_target'"
+                    )
+                    try:
+                        verify_visible_structured_rows(page, case)
+                    except AssertionError as exc:
+                        if "table direct-edge identities differ" not in str(exc):
+                            raise
+                    else:
+                        raise AssertionError(
+                            "browser structured table wrong-edge mutation was not detected"
+                        )
                     page.evaluate(
                         "document.querySelector('#diagram svg desc').textContent = 'Declared nodes only; no edges'"
                     )
@@ -233,6 +308,8 @@ def main() -> None:
         "known_long_label_limitation": "DETECTED_NEGATIVE_CONTROL_NOT_SUPPORTED",
         "real_browser_dom_geometry": "CHECKED",
         "chromium_accessibility_tree_name_and_topology": "CHECKED",
+        "structured_node_edge_tables_and_keyboard_disclosure": "CHECKED",
+        "structured_table_same_count_wrong_edge_negative": "DETECTED",
         "real_screen_reader_interaction": "NOT_RUN",
         "independent_visual_human_review": "NOT_RUN",
         "screen_reader_and_keyboard_a11y": "NOT_RUN",
