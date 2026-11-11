@@ -404,6 +404,8 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 - Harness B = Claude Code 2.1.302（`--harness-b-argv` で **ARGV 起動**。`-p` のプロンプトで実Consumerを実行させ、標準出力のJSONを回収）
 - 票 `sha256:d0c3c588…`／payload `sha256:7fd6fde2…`（354 bytes）
 
+**再実行の可否（2026-11-11 追記）**：異なるHarness間の実測は、Claude Code のセッション上限に達したため**当日は再実行できない**（`unrecognized_model`／`session limit`）。これは外部クォータの制約であり、機構の故障ではない。異なるHarnessが使えない環境では、**同一Harnessの別Session**を対照として走らせることができる（`docs/handoff-harness-switch-control-receipt-2026-11-11.json`）。**対照が通っても「異なるHarness間で増幅しない」ことの証拠にはならない**。対照が通らなければ機構側のbugである。
+
 | 受入条件 | 実測 |
 | --- | --- |
 | 1 | `payload`・`checks`・`carriedForward`・`claims`・票本文（`transport` 除く）が**完全一致**。差分は `consumer.harness` と `consumer.sessionLabel` のみ（`identical-beyond-transport`） |
