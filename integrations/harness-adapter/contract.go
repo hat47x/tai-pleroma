@@ -86,7 +86,23 @@ const (
 // listed is not a tool being callable, and a tool being callable is not a tool
 // being permitted.
 type ToolSchemaPin struct {
+	// Name is the model-facing name the harness publishes. For an MCP tool that
+	// is `mcp__<serverName>__<rawName>`; for a native tool it is the harness's
+	// own name.
 	Name string `json:"name"`
+	// ProductName is the raw product-side name, when the model-facing name is a
+	// namespace-qualified form. Empty means the two are the same name.
+	//
+	// Keeping both is what lets a reader answer "did the product's tool run, or
+	// did the harness's own shell tool run?" without parsing one from the other
+	// at comparison time.
+	ProductName string `json:"productName,omitempty"`
+	// Via names how the tool reached the harness: "native", "mcp", or
+	// "shell-bridge" when the model used the harness's own shell tool to reach a
+	// product CLI instead of a typed tool.
+	Via string `json:"via,omitempty"`
+	// ServerName is the MCP namespace, when Via is "mcp".
+	ServerName string `json:"serverName,omitempty"`
 	// SchemaSHA256 digests the schema the harness actually advertised.
 	SchemaSHA256 string `json:"schemaSha256,omitempty"`
 	// Advertised is true only when the harness's own tool list was observed.
@@ -496,6 +512,87 @@ func (r *Result) ToolNames() []string {
 		out = append(out, n)
 	}
 	sort.Strings(out)
+	return out
+}
+
+// MCPToolCalls returns the observed calls that went through an MCP tool, with
+// the server namespace and raw tool name decoded. Calls made through the
+// harness's own shell tool are NOT included: reaching a product CLI by running
+// it in a shell is a different observation from calling a typed product tool.
+func (r *Result) MCPToolCalls() []MCPCall {
+	var out []MCPCall
+	for _, c := range r.ToolCalls {
+		server, raw, ok := DecodeMCPToolName(c.Tool)
+		if !ok {
+			continue
+		}
+		out = append(out, MCPCall{
+			ServerName: server,
+			RawName:    raw,
+			Call:       c,
+		})
+	}
+	return out
+}
+
+// MCPCall is one observed MCP tool call with its name decoded.
+type MCPCall struct {
+	ServerName string
+	RawName    string
+	Call       ToolCallRecord
+}
+
+// ShellBridgeCalls returns the observed calls that used the harness's own shell
+// tool. They may still have reached a product CLI, but they are recorded as a
+// bridge rather than as a typed tool invocation, because the product never saw
+// a typed request.
+func (r *Result) ShellBridgeCalls() []ToolCallRecord {
+	var out []ToolCallRecord
+	for _, c := range r.ToolCalls {
+		if isShellTool(c.Tool) {
+			out = append(out, c)
+		}
+	}
+	return out
+}
+
+// isShellTool reports whether a harness tool name is a general command runner.
+// The list is harness-specific vocabulary, so it is a helper rather than a
+// contract constant.
+func isShellTool(tool string) bool {
+	switch strings.ToLower(tool) {
+	case "pwsh", "bash", "shell", "powershell", "terminal", "exec", "run_command":
+		return true
+	}
+	return false
+}
+
+// ToolSchemaPins derives the advertised/invoked pin for each observed tool.
+// An MCP tool contributes both its model-facing name and its raw product name.
+func (r *Result) ToolSchemaPins() []ToolSchemaPin {
+	counts := map[string]int{}
+	for _, c := range r.ToolCalls {
+		counts[c.Tool]++
+	}
+	names := make([]string, 0, len(counts))
+	for n := range counts {
+		names = append(names, n)
+	}
+	sort.Strings(names)
+	out := make([]ToolSchemaPin, 0, len(names))
+	for _, n := range names {
+		pin := ToolSchemaPin{Name: n, Invoked: true, CallCount: counts[n]}
+		if server, raw, ok := DecodeMCPToolName(n); ok {
+			pin.Via = "mcp"
+			pin.ProductName = raw
+			pin.ServerName = server
+		} else if isShellTool(n) {
+			pin.Via = "shell-bridge"
+		} else {
+			pin.Via = "native"
+		}
+		out = append(out, pin)
+	}
 	return out
 }
 

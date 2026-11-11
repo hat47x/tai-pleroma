@@ -54,6 +54,14 @@ type DSHHeadlessAdapter struct {
 	// because it is a second process and an observation of declared
 	// configuration, not of what the turn actually used.
 	ProbeEffectiveConfig bool
+	// MCPServers are the MCP servers this run should connect to. The adapter
+	// renders them into a DSH insert-patch overlay and passes it as `--patch`;
+	// it does not speak MCP and does not start the server. An empty list means
+	// no overlay is generated and no MCP tool appears.
+	MCPServers []MCPServerSpec
+	// MCPWorkDir is where the generated overlay file is written. Empty means
+	// the adapter's WorkDir.
+	MCPWorkDir string
 	// WorkDir is the cwd the harness runs in.
 	WorkDir string
 	// Timeout bounds one task.
@@ -152,8 +160,20 @@ func (a *DSHHeadlessAdapter) platform() string { return runtime.GOOS }
 // looks exactly like a harness failure. This function is pure so a test can pin
 // the order without running anything.
 func (a *DSHHeadlessAdapter) buildArgv(t Task, session *SessionRef) []string {
+	return a.buildArgvWith(t, session, nil)
+}
+
+// buildArgvWith is buildArgv plus patches rendered for this one run. The
+// generated MCP overlay is passed per-run rather than stored on the adapter, so
+// two runs with different MCP specs cannot observe each other's overlay.
+func (a *DSHHeadlessAdapter) buildArgvWith(t Task, session *SessionRef, extraPatches []string) []string {
 	argv := []string{a.cli(), "--profile", a.Profile}
 	for _, p := range a.PatchFiles {
+		if p != "" {
+			argv = append(argv, "--patch", p)
+		}
+	}
+	for _, p := range extraPatches {
 		if p != "" {
 			argv = append(argv, "--patch", p)
 		}
@@ -186,7 +206,6 @@ func (a *DSHHeadlessAdapter) Run(ctx context.Context, t Task, session *SessionRe
 		return nil, fmt.Errorf("task %q: prompt is required", t.ID)
 	}
 	started := a.Clock()
-	argv := a.buildArgv(t, session)
 
 	res := &Result{
 		Contract:     ContractVersion,
@@ -198,6 +217,36 @@ func (a *DSHHeadlessAdapter) Run(ctx context.Context, t Task, session *SessionRe
 		Receipt:      Receipt{State: ReceiptNotObserved, Consumer: a.Name()},
 		Observations: map[string]string{},
 	}
+
+	// Render the caller's MCP servers into a DSH insert overlay before building
+	// argv, so the run either gets the exact overlay that was digested or fails
+	// before starting.
+	var extraPatches []string
+	if len(a.MCPServers) > 0 {
+		dir := a.MCPWorkDir
+		if dir == "" {
+			dir = a.WorkDir
+		}
+		path, digest, err := WriteDSHPatch(dir, a.MCPServers)
+		if err != nil {
+			res.Diagnostics = append(res.Diagnostics, Diagnostic{
+				Severity: "error", Code: "mcp-overlay-render-failed", Message: err.Error(),
+			})
+			res.Unsupported = append(res.Unsupported, "mcp:server-spec-rejected")
+			res.FinishedAt = a.Clock().UTC().Format(time.RFC3339)
+			return res, nil
+		}
+		extraPatches = append(extraPatches, path)
+		res.Outbound = append(res.Outbound, OutboundRecord{
+			Direction:   "mcp-overlay",
+			BytesSHA256: digest,
+			Detail:      "generated DSH insert patch for " + mcpServerNames(a.MCPServers),
+		})
+		res.Observations["mcp-servers"] = mcpServerNames(a.MCPServers)
+	}
+
+	argv := a.buildArgvWith(t, session, extraPatches)
+
 	res.Outbound = append(res.Outbound, OutboundRecord{
 		Direction:   "argv",
 		BytesSHA256: DigestString(Quote(argv)),

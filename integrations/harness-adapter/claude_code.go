@@ -49,8 +49,17 @@ type ClaudeCodeAdapter struct {
 	// unattended run this must be "none", otherwise anything that would prompt
 	// is denied and the run ends without a tool call.
 	PermissionPrompts string
-	// MCPConfigs are passed as repeated --mcp-config.
+	// MCPConfigs are passed as repeated --mcp-config. They are pre-built files
+	// the caller supplies; the adapter does not compose them.
 	MCPConfigs []string
+	// MCPServers are rendered into a Claude Code --mcp-config JSON file for this
+	// run, in addition to MCPConfigs. A spec that names environment variables is
+	// refused, because this config shape needs literal values and the adapter
+	// must not read secrets.
+	MCPServers []MCPServerSpec
+	// MCPWorkDir is where the generated config file is written. Empty means the
+	// adapter's WorkDir.
+	MCPWorkDir string
 	// Env is extra environment for the child process.
 	Env []string
 	// Timeout bounds one task.
@@ -139,6 +148,11 @@ func (a *ClaudeCodeAdapter) platform() string { return runtime.GOOS }
 
 // buildArgv assembles the exact argv.
 func (a *ClaudeCodeAdapter) buildArgv(t Task, session *SessionRef) []string {
+	return a.buildArgvWith(t, session, nil)
+}
+
+// buildArgvWith is buildArgv plus config files rendered for this one run.
+func (a *ClaudeCodeAdapter) buildArgvWith(t Task, session *SessionRef, extraConfigs []string) []string {
 	argv := []string{a.cli(), "-p", t.Prompt, "--output-format", "stream-json", "--verbose"}
 	if session != nil && session.ExternalID != "" {
 		// A Claude Code session id must be a UUID. The adapter forwards whatever
@@ -164,6 +178,11 @@ func (a *ClaudeCodeAdapter) buildArgv(t Task, session *SessionRef) []string {
 			argv = append(argv, "--mcp-config", m)
 		}
 	}
+	for _, m := range extraConfigs {
+		if m != "" {
+			argv = append(argv, "--mcp-config", m)
+		}
+	}
 	return argv
 }
 
@@ -176,7 +195,6 @@ func (a *ClaudeCodeAdapter) Run(ctx context.Context, t Task, session *SessionRef
 		return nil, fmt.Errorf("task %q: prompt is required", t.ID)
 	}
 	started := a.Clock()
-	argv := a.buildArgv(t, session)
 	res := &Result{
 		Contract:     ContractVersion,
 		Adapter:      a.Name(),
@@ -187,6 +205,36 @@ func (a *ClaudeCodeAdapter) Run(ctx context.Context, t Task, session *SessionRef
 		Receipt:      Receipt{State: ReceiptNotObserved, Consumer: a.Name()},
 		Observations: map[string]string{},
 	}
+
+	// Render the caller's MCP servers into a Claude Code --mcp-config file before
+	// building argv. A refusal is reported and the run does not start: starting
+	// without the tools the task declared would silently change the experiment.
+	var extraConfigs []string
+	if len(a.MCPServers) > 0 {
+		dir := a.MCPWorkDir
+		if dir == "" {
+			dir = a.WorkDir
+		}
+		path, digest, err := WriteClaudeMCPConfig(dir, a.MCPServers)
+		if err != nil {
+			res.Diagnostics = append(res.Diagnostics, Diagnostic{
+				Severity: "error", Code: "mcp-config-render-failed", Message: err.Error(),
+			})
+			res.Unsupported = append(res.Unsupported, "mcp:server-spec-rejected")
+			res.FinishedAt = a.Clock().UTC().Format(time.RFC3339)
+			return res, nil
+		}
+		extraConfigs = append(extraConfigs, path)
+		res.Outbound = append(res.Outbound, OutboundRecord{
+			Direction:   "mcp-config",
+			BytesSHA256: digest,
+			Detail:      "generated Claude Code --mcp-config for " + mcpServerNames(a.MCPServers),
+		})
+		res.Observations["mcp-servers"] = mcpServerNames(a.MCPServers)
+	}
+
+	argv := a.buildArgvWith(t, session, extraConfigs)
+
 	res.Outbound = append(res.Outbound, OutboundRecord{
 		Direction:   "argv",
 		BytesSHA256: DigestString(Quote(argv)),
