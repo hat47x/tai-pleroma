@@ -289,24 +289,20 @@ go run ./cmd/tei model catalog -workspace reference/workspace     # 実観測
 
 ### 3.5 連鎖Handoff（第二のHop）は段階分けする
 
-SHOが受領内容を**別の製品へ再emit**する連鎖は、いまの票には**来歴の区別**がない。`evidence[]` が「このProductが自分で読んだ観測」なのか「前の票から継承した観測」なのかを区別できないため、継承した主張が第一手の観測として誤認され得る。
+SHOが受領内容を**別の製品へ再emit**する連鎖は、いまの票には`chain`欄がない。`evidence[]` が「このProductが自分で読んだ観測」なのか「前の票から継承した観測」なのかを欄としては区別できない。
 
-**次の段階でのみ**、`yi.handoff.context/v2` に `chain` を追加することを検討する：
+**OG-4（2026-11-11 代行決定）により `yi.handoff.context/v2` と `chain` は作らない。** 具体スキーマ（`hop`・`priorHandoffId`・`inheritedEvidence`）の案は、決定に反する将来経路を文書が提示することになるため**本書に載せない**。来歴は v1 の範囲で次で運ぶ。
 
-```
-chain: {
-  hop: 1..n,
-  priorHandoffId: string | null,
-  inheritedEvidence: [{ claim, basis, observedAt, limitation, fromHandoffId }]
-}
-```
+| 来歴を運ぶ方法（v1） | 内容 |
+| --- | --- |
+| 新しい票として発行 | 連鎖の各段は独立の `handoffId` を持つ票を作る。前の票を「拡張」しない |
+| `evidence[].basis` に継承元を書く | `basis` は観測面（例: `tei.cli.model/v0`）。継承した観測なら `from:<priorHandoffId>` を basis に含める |
+| `evidence[].limitation` に継承であることを書く | 前の票の `limitation` を**変更せず**そのまま運び、「これは `<priorHandoffId>` から継承した観測である」と付ける |
+| `references[].note` に継承元の locator を書く | 継承元の参照を `note` に含め、後から辿れるようにする |
 
-規則（v2で満たすべきもの）:
-- `inheritedEvidence` の各件は `limitation` を**変更しない**。前の票のlimitationをそのまま運ぶ。
-- `inheritedEvidence` は第一手の観測として提示しない。Consumerは `hop` と `fromHandoffId` を見て継承であることを判別できる。
-- `hop` の上限は設けないが、上限なしを「無制限に信頼できる」と扱わない。
+**判別の仕方**：Consumerは `basis` に `from:<handoffId>` が含まれるかを見て、第一手の観測か継承かを判別できる。新しい欄は増えない。
 
-**v2への昇格はOwnerゲート。** 連鎖の実需要が確認されるまで v1 のままにする。
+**変更する条件**：実 Owner が連鎖の実需要を確認し、v1 の方法では来歴を運べないことを実測した場合。その場合は**新規の判断**として v2 を設計する（本書の決定を自動的に覆さない）。
 
 ### 撤退条件
 
@@ -472,7 +468,7 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 | 2 | **`not-run`**。TEI #2586 の Claim closure は未接続。否定Claimの適合判定はしていない |
 | 3 | `reference-linked-unverified` に留めている。`profile.matched=false`・`declaredByTicket=null` を明示して返す |
 
-**fail-closed（追加）**：票でないJSON・`schema` が `yi.handoff.context/v1` でないもの・`references` が配列でないものは exit 2。空配列や references 欠落を「照合して何も見つからなかった」として exit 0 で返さない。
+**fail-closed（追加）**：票でないJSON・`schema` が `yi.handoff.context/v1` でないもの・`references` が配列でないもの・`references` が**空配列**のものは exit 2。空配列や references 欠落を「照合して何も見つからなかった」として exit 0 で返さない。
 
 ### 必須負例
 
@@ -482,7 +478,7 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 | G6-N2 | 部分取得を「全件」として報告 | `evidence-mismatch` | **`not-run`（正式に閉じた）**。このツールは参照の形だけを照合し、参照先の内容を読まない。`notDeterminable['evidence-mismatch']` に理由を明示 |
 | G6-N3 | Source-only移動後にWorldFPのみ一致、引用locatorは旧版 | `stale-or-different-binding` | **`not-run`（正式に閉じた）**。同bytes別path・旧版locatorの検出手段がない。`notDeterminable['stale-or-different-binding']` に理由を明示 |
 | G6-N4 | 同じdigestの別Source | 同一視しない。所在とdigestを別列で確認 | **`observed-pass`**（一部）。同一 `locator` の複数参照は `reference-ambiguous`。ただし「同digestの別Source」の検出は `locator` でしか区別できないため、**別Sourceの検出そのものは未実装** |
-| G6-N5（追加） | 票でないJSON／`schema` 不一致／`references` が配列でない | exit 2（fail-closed） | **`observed-pass`** |
+| G6-N5（追加） | 票でないJSON／`schema` 不一致／`references` が配列でない／**`references` が空配列** | exit 2（fail-closed） | **`observed-pass`** |
 | G6-N6（追加） | `representation_profile` を票が宣言しない | `matched=false`・`declaredByTicket=null` を明示 | **`observed-pass`** |
 
 **ID の使い回しに関する注意（解消済み）**：self-test の ID は `ST-N1`〜`ST-N4`・`ST-linked-*`・`ST-exact-binding-*` に改名し、票の負例 ID（`G6-N1`〜`G6-N6`）と**完全に分離した**。かつては self-test が `G6-N1`〜`G6-N4` を別シナリオに使っており、票の G6-N1〜N3 が通ったように読める状態だった。いまは名前が違うので混同しない。
@@ -559,21 +555,40 @@ OG-1・OG-5 は現状維持。既存の実装を変えない。
 
 **まだ完了ではない理由**：上の「一部」「not-run」が残る。ただし OG-2・OG-3・OG-4・OG-6・OG-7・OG-8 は「実装しない」が確定したため、これらの `not-run` は**努力不足ではなく決定の結果**である。残る `not-run` は外部条件（実Host Grant/egress、意味受理、SEI runtime、TEI Claim closure）に依存する。
 
-### 8.4 独立監査の結果（2026-11-11）
+### 8.4 独立監査の結果
 
-実装者とは別コンテキストの3エージェントで、SUI/SHO/TAI の差分を決定と不変条件に対して監査した。
-
-- **blocking: 0件**
-- **non-blocking: 16件**（主なもの：票への本文除外 assert 欠落、TEI modelRevision の `revision.digest` 誤帰属、`readBoundedRegularFile` の check-then-use、`fileDeletedAfterTrial` の事前記録、G6 負例 ID の使い回し、2文書の数値不整合）- **question: 8件**（主なもの：OG-3 の「本文」の適用範囲、repo 横断の開示Scope語彙、committed receipt ファイルの位置づけ）
-
-**監査後に修正したもの**：`revision.digest` の誤帰属、`readBoundedRegularFile` の fd ベース読み、`fileDeletedAfterTrial` の事前記録、G6 の fail-open、2文書の数値不整合、G6 負例 ID の対応明記。
-
-**監査後に修正したもの（2026-11-12 追記）**：監査時点で「修正していない」と残した2件も対応済み。
+**第1回（2026-11-11、3エージェント）**：blocking 0・non-blocking 16・question 8。
+主なもの：票への本文除外 assert 欠落、TEI modelRevision の `revision.digest` 誤帰属、`readBoundedRegularFile` の check-then-use、`fileDeletedAfterTrial` の事前記録、G6 負例 ID の使い回し、2文書の数値不整合。→ **全件対応済み**。
 
 - **票への本文除外 assert**：payload と同じ除外を票側にも置いた。原本の生データ（Document/Island/Card の原本・card meta の原本Source）が自由文欄に注入されると CI が失敗する。あわせて OG-3 の「本文」の適用範囲を ADR-0117 に明記した。
 - **未知のトップレベルフィールドの黙って落とす挙動**：Consumer・Producer とも `unknownFields` として逐語運ぶ。落とすと後から語彙を増やしたときに過去の票・Receiptから拡張欄が無警告で失われる。reject すると前方互換が壊れ、解釈すると「未知の値は unknown のまま」不変条件に反するため、逐語運ぶだけが両方を満たす。
 - **G6 self-test ID の使い回し**：`G6-N1`〜`G6-N4` を `ST-N1`〜`ST-N4`・`ST-linked-*`・`ST-exact-binding-*` に改名し、票の負例 ID と完全に分離した。
 - **未使用の `HANDOFF_READBACK_SCHEMA`**：削除。write-back 契約は OG-5 により未実装で、未使用の定数は契約が存在するように読める。
+
+**第2回（2026-11-12、マージ前レビュー、3エージェント）**：blocking 2・non-blocking 8・question 1。
+
+| blocking | 内容 | 対応 |
+| --- | --- | --- |
+| B-1 | SHO の試験記録が「12観測・`sessionResumeRechecks=true`」と記載。リンクする receipt は14観測・`harnessSessionResume="not-run"`。実 Harness Session 再開を合格として記録していた | **修正**。14観測に更新し `newProcessRereceive=true`・`harnessSessionResume="not-run"` に修正。HEAD値も現在値に合わせ、「三製品は observed-pass、Session再開の実製品確認と別Harness移行は NOT RUN」と分けて記載 |
+| B-2 | TAI §3.5 が `yi.handoff.context/v2` と `chain` の具体スキーマを「次の段階で検討する」案として残していた。OG-4（v2/chain は作らない）と矛盾 | **修正**。具体スキーマを削除し、v1 で来歴を運ぶ方法（新しい票として発行・`evidence[].basis` に `from:<handoffId>`・`limitation` に継承であることを書く）に置換 |
+
+| non-blocking | 内容 | 対応 |
+| --- | --- | --- |
+| NB-1 | SUI の契約コメントが実挙動と不一致 | **修正**。生産ModuleはI/Oを持たないこと、書き出しは各テストが明示的に渡すdirectoryだけだと実挙動に合わせた |
+| NB-2 | `handoff_receipt_review.test.ts` に describe 外の `it` が2件 | **修正**。describe ブロック内へ移動 |
+| NB-3 | G6 記録 JSON の selfTest.cases が陈旧した ID（`G6-N*`） | **修正**。実出力の `ST-*` に更新し、票の負例とは別シナリオであることを note に明記 |
+| NB-4 | G6 ツールが `references: []` を exit 0 で通す（fail-open） | **修正**。空配列も拒否する |
+| NB-5 | `ticketSha256` が BOM 除去前の生バイトから計算 | **修正**。BOM 除去後の文字列から計算 |
+| NB-6 | SHO の unknownFields がトップレベルだけ。`producer.productSkill`・`consumer.entrypoint` が正規化で消えていた | **修正**。既知コンテナ内の未知キーも `unknownFields.<container>.<key>` に集録。fixture から未知キーを外し baseline を0に保つ |
+| NB-7 | `conversationHistory` が note ごと落ちる | **修正**。そのまま運ぶ |
+| NB-8 | `payloadRaw.length` の比較が byte/char で混線し得る | **修正**。`Buffer.byteLength` を明示的に使用 |
+| NB-9 | SHO 試験記録のHEAD・観測数が receipt と不一致 | **修正**（B-1 と同時） |
+
+| question | 内容 | 対応 |
+| --- | --- | --- |
+| Q-1 | `ReceiptReview.unknownClaims` は照合が claims 検証へ到達した経路でだけ設定される | **対応しない**。拒否される経路では claims の検証自体が到達しないため、早期 fail-closed の帰結。コメントで明記するだけで足りると判断 |
+
+**第2回で「対応しない」と判断したもの**：Q-1 のほか、「好み」や「別の設計の方がよい」という指摘は含めなかった（マージ前レビューの依頼条件）。
 
 ### OG-3 の厳格読取への切替手順（別決定・未実施）
 
