@@ -119,7 +119,7 @@ def main():
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(Path(args.artifact).resolve())},
         "observed": checks,
-        "scope": "Walks the YI receipts and records, per receipt, whether it carries a version, a command, an expected result, an observed result and a stated limit. One 2026-11-01 receipt predates the convention and is excluded by name rather than judged; its absent fields are recorded in the 19-document instead. It checks presence only: a receipt with all five can still be wrong, and the limit test is lexical.",
+        "scope": "Walks the YI receipts and records, per receipt, whether it carries a version, a command, an expected result, an observed result and a stated limit. One 2026-11-01 receipt predates the convention and is excluded by name rather than judged; its absent fields are recorded in the 19-document instead. It checks presence only and cannot tell whether a receipt is right, and the limit test is lexical, so a scope that names the wrong limit passes here. It does not check whether five carried fields are internally consistent.",
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({

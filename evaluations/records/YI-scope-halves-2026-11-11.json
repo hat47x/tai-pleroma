@@ -1,0 +1,187 @@
+{
+  "schema": "tai.reference.yi-scope-halves/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yi_scope_halves_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-scope-halves-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "selfTestDetectsBothHalves": true,
+    "receipts": 27,
+    "rows": [
+      {
+        "receipt": "YI-acceptance-authority-2026-11-11.json",
+        "scopeLength": 257,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-candidate-fields-2026-11-11.json",
+        "scopeLength": 316,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-centre-handoff-2026-11-11.json",
+        "scopeLength": 375,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-centre-key-2026-11-11.json",
+        "scopeLength": 313,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-citation-check-2026-11-11.json",
+        "scopeLength": 472,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-context-handoff-2026-11-11.json",
+        "scopeLength": 350,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-csw-return-2026-11-11.json",
+        "scopeLength": 253,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-danger-units-2026-11-11.json",
+        "scopeLength": 357,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-deck-figures-2026-11-11.json",
+        "scopeLength": 306,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-doc-integrity-2026-11-11.json",
+        "scopeLength": 328,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-eki-measurement-2026-11-11.json",
+        "scopeLength": 298,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-empty-reference-2026-11-11.json",
+        "scopeLength": 338,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-fold-dissent-2026-11-11.json",
+        "scopeLength": 374,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-g1-evidence-2026-11-11.json",
+        "scopeLength": 346,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-g1-status-2026-11-11.json",
+        "scopeLength": 484,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-g2-landing-2026-11-11.json",
+        "scopeLength": 464,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-landing-paths-2026-11-11.json",
+        "scopeLength": 371,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-naming-radius-2026-11-11.json",
+        "scopeLength": 346,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-overreach-2026-11-11.json",
+        "scopeLength": 499,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-publication-refusal-2026-11-11.json",
+        "scopeLength": 298,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-receipt-auditability-2026-11-11.json",
+        "scopeLength": 520,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-sho-actual-2026-11-11.json",
+        "scopeLength": 305,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-stage3-inventory-2026-11-11.json",
+        "scopeLength": 365,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-staleness-2026-11-11.json",
+        "scopeLength": 454,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-state-classification-2026-11-11.json",
+        "scopeLength": 298,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-unreferenced-2026-11-11.json",
+        "scopeLength": 319,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "yi-constellation-structure-2026-11-11.json",
+        "scopeLength": 66,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      }
+    ],
+    "missingLimit": [],
+    "missingMeasured": [],
+    "receiptsStatingBothHalves": 27,
+    "everyScopeStatesBothHalves": true
+  },
+  "scope": "Reads each YI receipt's scope and records whether it states both what was measured and what was not. The test is lexical, so a scope that names a limit in passing but leaves the real gap unstated passes here; it does not check that the stated limit is the right one."
+}
