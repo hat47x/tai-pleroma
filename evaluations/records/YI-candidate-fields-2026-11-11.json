@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.yi-candidate-fields/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading doc 05",
+  "command": "python integrations/tools/yi_candidate_fields_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-candidate-fields-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "source": "docs/yi-constellation/analysis/05-要件候補.md",
+    "candidates": 25,
+    "complete": 25,
+    "incomplete": [],
+    "missingByField": {},
+    "everyCandidateStatesItsFields": true
+  },
+  "scope": "Reads each candidate section in doc 05 and records whether it states a requirement, a reason, conditions, non-goals, a test proposal and an owner. It matches labels, not meaning: a section that carries the label but states something unusable passes here, and it does not judge whether a candidate is worth accepting."
+}
