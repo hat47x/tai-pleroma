@@ -215,28 +215,40 @@ Harnessが書いたファイルを別プロセスが読んだ。
 
 ### 6.6 Skill対（H-A-4 / E5）
 
+[evidence/four-session-observation-2026-11-12.json](evidence/four-session-observation-2026-11-12.json)、
 [evidence/skill-pair-observation-2026-11-11.json](evidence/skill-pair-observation-2026-11-11.json)、
 [evidence/skill-pair-step-2026-11-11.json](evidence/skill-pair-step-2026-11-11.json)
 
-同じTaskを同じHarnessで2回、H3だけProduct Skillを配置した。**Harnessごとに適格性が違う**。
+割付を実行前に固定し（`S1-H2 → S2-H3 → S3-H3 → S4-H2`）、その順序で4 Sessionを回した。
+順序は設計の一部である（Harnessが途中で温まっただけの差をSkillの効果と誤読しないため）。
 
-| Harness | H3のLoadState | pair の適格性 |
-| --- | --- | --- |
-| `dsh-headless` | `loaded` via `skill` tool | **eligible=true** |
-| `claude-code` | `not-loaded`（SKILL.mdは置いたがLoader toolが呼ばれない） | eligible=false |
-| `step-cli` | `not-loaded`（`skill-history=discovered` のみ＝配置であってロードでない） | eligible=false |
+DSHの4 Session（Skill bytes固定 `sha256:aa3068df...`）:
 
-- DSHの対は `skillEffect="eligibility-confirmed; accuracy not measured"`。
-  **適格性は出たが、正答の比較はしていない**。それは
-  [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) の独立Expectedの担当。
-- Claude Code / Step Code の未ロードは **「Skillに効果が無かった」ではない**。
-  `ineligibleReasons` に理由を書き、効果の主張をしない。適格な増分比較ができるのは
-  現時点でDSHだけである。
-- 実接続で欠陥を発見した: 当初は1つの共有pinを両Armへ渡していたため、Skillを削除した
+| Session | 割付 | tools | LoadState |
+| --- | --- | --- | --- |
+| S1 | H2 | 1 | `unknown`（配置なし） |
+| S2 | H3 | 2 | **`loaded`** via `skill` |
+| S3 | H3 | 2 | **`loaded`** via `skill` |
+| S4 | H2 | 1 | `unknown`（配置なし） |
+
+- ITT: allocated=4、H3 loaded=2/2、H2 clean=2/2 → **2つの適格な対**。
+  `skillEffect` は両対とも `"eligibility-confirmed; accuracy not measured"`。
+- **採点はしていない**。`notClaimed` に「accuracy or an effect size」
+  「4 Sessionからの統計的結論」「ロードしたSkillが回答を改善したこと」を明記した。
+  照合票は4 Sessionの生観測と2つの適格対だけを運び、精度の主張は
+  [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) の独立Expectedに残す。
+- Harnessごとに適格性が違う: DSH=eligible、`claude-code`=H3が `not-loaded`（SKILL.mdは
+  置いたがLoader toolが呼ばれない）、`step-cli`=H3が `not-loaded`
+  （`skill-history=discovered` のみ＝配置であってロードでない）。
+  **未ロードは「効果なし」ではない**。`ineligibleReasons` に理由を書き、効果を主張しない。
+- 実接続で2つの欠陥を発見した。(1) 1つの共有pinを両Armへ渡していたため、Skillを削除した
   H2が `placed=true` と記録された。pinを**Armごと**に取り、H2の配置・H3の未配置を
-  失格条件にした。契約試験では出ず、実runで初めて出た。
-- 2つ目に発見した点: `skill-history` の `discovered` は配置の観測であってロードではない。
-  discoveredより強い状態（例 `activated`）だけをロードとして扱うよう分けた。
+  失格条件にした。(2) `skill-history` の `discovered` をロードと読んでいた。
+  discoveredより強い状態だけをロードとして扱うよう分けた。どちらも契約試験では出ず、
+  実runで初めて出た。
+- 予算の制約も記録した: OpenRouterの残高が `maxTokens: 65536` を受けられず、最初の4 Sessionは
+  `PI_AI_ERROR` で落ちた。`maxTokens: 8000` で通った。**失敗した4 Sessionも ITT の分母に
+  残し**、成功分だけを数えていない。
 
 ## 7. 未対応・Vendor固有の制約
 

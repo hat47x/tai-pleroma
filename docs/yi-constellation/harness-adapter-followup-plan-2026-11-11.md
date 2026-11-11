@@ -24,9 +24,9 @@
 | **H-A-4 Skill LoadState観測** | **達成（入力まで）** | `skill_observation.go`。TAI #488 への照合票入力を作る |
 | **H-A-5 Consumer受領** | **達成（partialまで）** | `consumer_receipt.go`。独立読み手でpartialを実測 |
 
-**未達**（残る作業）: **E5の実4 Session事前割付**（`H2→H3→H3→H2` を DSH で回し、
-TAI #488 の照合票へ提出する）、**SUIの投影**（read-only入口は存在するが、同梱
-`node_modules` が linux-x64 の esbuild でWindowsでは起動できない）、
+**未達**（残る作業）: **TAI #488 の照合票への提出**（4 Sessionの生観測と2つの
+適格対はできたが、Issueへ返していない）、**SUIの投影**（read-only入口は存在するが、
+同梱 `node_modules` が linux-x64 の esbuild でWindowsでは起動できない）、
 **Codexの導入**（未インストール）。
 
 ### 0.1 Exitの現在地（2026-11-12実測）
@@ -37,7 +37,7 @@ TAI #488 の照合票へ提出する）、**SUIの投影**（read-only入口は�
 | E2 | **達成**（7欄一致） | Claude Code・Step Code とも `tei_model_catalog` が schemaVersion/ok/errorCode/worldFingerprint/sourceIndexFingerprint/modelRevision/validationOk の7欄一致。DSHは投影cap（8KiB）で截断され比較不能と記録 |
 | E3 | **達成**（refused と readable の両方） | Claude Code=**refused**（Verified=true）、DSH=**readable**（Verified=false、findingとして記録） |
 | E4 | **達成**（2 Harness × 2製品） | DSH と Claude Code がそれぞれ1 Task内で TEI+SEI を型付き到達。SHOはCLI実起動で completed |
-| E5 | **部分的**（適格な対はDSHの1対のみ） | DSH: H3=S loaded → eligible=true。Claude Code: H3=not-loaded → ineligible。Step Code: H3=not-loaded → ineligible。**未ロードを効果なしと呼ばない** |
+| E5 | **達成**（2つの適格対） | 事前割付 `S1-H2→S2-H3→S3-H3→S4-H2` をDSHで実行。ITT 4/4、H3 loaded 2/2、H2 clean 2/2、適格な対2つ。**正答は未採点**（`notClaimed` に明記）。Claude Code/Step Code の H3 は未ロードで ineligible |
 | E6 | **達成（partial）** | 独立読み手が partial を再現（2回）。claim欠落の理由をnoteに残した |
 
 ## 1. 目標と出口
@@ -263,14 +263,17 @@ ProductがValidation概念を持たない場合は `ValidationPassed = nil`（fa
 
 ### H-A-4 Skill増分の測定
 
-> **実施済み（2026-11-11、1対の実接続）。** `skill_observation.go` が `LoadState` から
-> H2/H3の適格性を出す。実runで H3=`loaded`・H2=`unknown`・`eligible=true` を観測。
+> **実施済み（2026-11-12）。** `skill_observation.go` が `LoadState` から
+> H2/H3の適格性を出す。事前割付 `S1-H2→S2-H3→S3-H3→S4-H2` をDSHで実行し、
+> ITT 4/4・H3 loaded 2/2・H2 clean 2/2・**適格な対2つ**を観測。
 > `skill_loaded` の自己申告boolは参照しない。正答の比較は行わない
-> （`SkillEffect` は eligible でも "accuracy not measured" のまま）。
-> 実4 Sessionの `H2→H3→H3→H2` 事前割付は **NOT RUN**。
-> 実接続で見つけた欠陥: 共有pinを渡すと、Skillを削除したH2が `placed=true` と
-> 誤記録された。pinをArmごとに取り、H2の配置・H3の未配置を失格条件にした。
-> 証拠: `evidence/skill-pair-observation-2026-11-11.json`。
+> （`SkillEffect` は eligible でも "accuracy not measured" のまま、
+> `notClaimed` に明記）。
+> 実接続で見つけた欠陥は2つ: (1) 共有pinを渡すと Skillを削除したH2が
+> `placed=true` と誤記録された → pinをArmごとに取り、H2の配置・H3の未配置を失格条件に。
+> (2) `skill-history` の `discovered` をロードと読んでいた → より強い状態だけをロードに。
+> 証拠: `evidence/four-session-observation-2026-11-12.json`。
+> 残: TAI #488 の照合票への提出。
 
 **なぜ**: Skillを置いたことと、Skillが効いたことは別。TAI #168のH2/H3比較適格は0/4のまま。
 
@@ -355,7 +358,7 @@ expectedをproducerの自己申告に合わせると、自己整合な捏造で�
 | MCP同値 | [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)（ADR-0048 CAPI-2） | CLI vs MCP の fingerprint/schemaVersion/ok/error.code 比較 | 5欄一致（2Harness）・`tei_model_catalog`は比較対象外・未報告 |
 | Root検証 | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515) | probe Armの成否。**拒否できなくても記録** | DSH=readable を実測・未報告 |
 | Product横断 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | SEI/SHO/SUI投影の適格性。未対応は `unsupported` | TEI+SEI型付き達成・SHO CLI実起動・SUI未起動（Windowsでesbuild不整合） |
-| Skill測定 | [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) | LoadState観測。効果有無の結論 | H2/H3 1対がeligible・実4 Session NOT RUN |
+| Skill測定 | [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) | LoadState観測。効果有無の結論 | 4 Session（ITT 4/4・適格対2）を実測・Issue未提出 |
 | Consumer受領 | [EKI #465](https://github.com/hat47x/eki-fabric/issues/465)／[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271) | Receiptの独立readback | partialを実測・未報告 |
 | Adapter契約自体 | [TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md) | 5水準・7Pinの実装がADRの受入試験T01〜T13のどれに対応するか | 未整理 |
 
