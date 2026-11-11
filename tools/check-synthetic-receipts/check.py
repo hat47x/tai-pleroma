@@ -222,6 +222,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-danger-units-2026-11-11.json",
     "evaluations/records/YI-publication-refusal-2026-11-11.json",
     "evaluations/records/YI-deck-figures-2026-11-11.json",
+    "evaluations/records/YI-receipt-auditability-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -543,6 +544,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-receipt-auditability" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyReceiptIsAuditable") is not True
+                or observed.get("receipts") < 15
+            ):
+                errors.append(f"a YI receipt lost its audit fields: {relative}")
         if "YI-deck-figures" in relative:
             observed = data.get("observed", {})
             if (
