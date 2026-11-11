@@ -206,6 +206,36 @@ def main(argv: list[str] | None = None) -> int:
             ],
             expected=2,
         )
+        # 負例: 改変されたHandoffと、別Consumerの受領は受け付けない
+        tampered = load(work / "handoff.json")
+        tampered["source"]["revision"]["worldFingerprint"] = "sha256:" + "0" * 64
+        (work / "handoff-tampered.json").write_text(
+            json.dumps(tampered, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        run_tool(
+            [
+                "receipt",
+                "--envelope",
+                str(work / "handoff-tampered.json"),
+                "--consumer",
+                "tai-activity-session-1",
+                "--out",
+                str(work / "receipt-tampered.json"),
+            ],
+            expected=2,
+        )
+        run_tool(
+            [
+                "receipt",
+                "--envelope",
+                str(work / "handoff.json"),
+                "--consumer",
+                "someone-else",
+                "--out",
+                str(work / "receipt-wrong-consumer.json"),
+            ],
+            expected=2,
+        )
         record(
             "H1",
             "Handoffは選択・Source・Revision・Disclosure Scopeだけを運ぶ",
@@ -214,6 +244,8 @@ def main(argv: list[str] | None = None) -> int:
                 "selection": envelope["selection"],
                 "revision": envelope["source"]["revision"],
                 "emptyScopeRejected": True,
+                "tamperedEnvelopeRejected": True,
+                "wrongConsumerRejected": True,
             },
         )
 

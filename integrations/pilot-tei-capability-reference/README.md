@@ -65,7 +65,7 @@ python integrations/pilot-tei-capability-reference/tei_capability_reference.py v
 | R2 | 対象が見つからない | `SUBJECT_NOT_FOUND`、`not-found`、製品構成は引き続き観測 |
 | R3 | Sourceが更新された | `worldFingerprint`・`sourceIndexFingerprint`・`modelRevision`・artifactの変化と`requalificationRequired` |
 | R4 | Consumerが古い結果を受け取る | `stale`、TEIの`STALE_SNAPSHOT`、`requalification-required` |
-| H1 | Handoffの最小性 | 選択・Source・Revision・Disclosure Scopeだけを運び、空Scopeを拒否 |
+| H1 | Handoffの最小性 | 選択・Source・Revision・Disclosure Scopeだけを運び、空Scope・改変・別Consumerを拒否 |
 | N1 | Tool不在 | `toolAvailability=unavailable`、`productCapability=unknown` |
 
 実行:

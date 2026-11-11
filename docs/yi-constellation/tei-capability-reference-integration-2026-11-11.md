@@ -101,7 +101,7 @@ TEIのselective disclosureは、TEI自身の`authorityLimits`が示すとおり*
 - 対象: TEI main `b8cbd432aae22ccf3fa75b0119e1d90d87ef0d11`のWindowsビルド、公開`reference/workspace`（manifest `sha256:8e367b05…f471af74`）。
 - 結果: R1/H1/R2/R3/R4/N1がPASS。詳細は[evaluations/records/TAI-TEI-capability-reference-2026-11-11.json](../../evaluations/records/TAI-TEI-capability-reference-2026-11-11.json)。
 
-**実行した検証**: 実CLIのJSON契約、型付き診断、fingerprintの変化、Handoffの最小性、Tool不在の分離。
+**実行した検証**: 実CLIのJSON契約、型付き診断、fingerprintの変化、Handoffの最小性（空Scope・改変・別Consumerの拒否を含む）、Tool不在の分離。
 **実行していない検証**: 外部Harnessの実Session、Product Skillの実Load、実Consumerへの配送、別Workspace・別権限・OS隔離、意味の正しさの独立採点。
 
 ## 9. 制約と未決
