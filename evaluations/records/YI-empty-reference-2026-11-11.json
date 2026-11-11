@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.yi-empty-reference-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Node.js running MMI's check and provenance commands",
+  "command": "python integrations/tools/yi_empty_reference_probe.py --mmi-repo <MMI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-empty-reference-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checkExitCode": 0,
+    "checkErrorCount": 0,
+    "checkProblems": [],
+    "provenanceDiagnostics": 0,
+    "emptyRangeStatus": "resolved",
+    "emptyRangeDiagnosed": false,
+    "finding": "原本の最終行より後を指す参照は、mmi checkでもmmi provenanceでも問題として報告されない。範囲そのものは解決済み（resolved）と扱われる。空邑（裏づけの無い参照）は、この検査では検出されない。"
+  },
+  "scope": "Runs MMI's check and provenance commands on a synthetic document whose reference points past the last row of a three-row source, and records that neither command reports it as a problem. The source and the document are synthetic; a sheet that does not exist is reported, so the finding is about empty ranges, not about all bad references."
+}
