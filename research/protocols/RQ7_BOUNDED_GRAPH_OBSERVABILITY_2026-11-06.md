@@ -246,3 +246,12 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 この研究Gateの成功は実スクリーンリーダーの理解、キーボードでの個別Relation選択、人間/AI認知効率、Source完全性、実権限、Owner Meaning Acceptanceではない。特に[TEI #4382](https://github.com/hat47x/tei-platform/pull/4382)のApplication投影でclose-requires/correctionが欠落していた例と、[TAI #619](https://github.com/hat47x/tai-pleroma/pull/619)の同じ件数でも集合の意味が違い得る例を踏まえ、**宣言 → 可視投影 → AX投影**を独立Claimとして扱う。TEI #3321の同一Fingerprintで別物理Rootという例、#4240のABA/TOCTOU、#4299の子プロセス自己申告の限界をこの可視検査で解消したとは扱わない。
 
 **同一Sourceから構成した三表示が一致**してもSource本体の全関係の閉包や非開示Policyの正しさは導けない。実ProductのSource/Owner/Authorityを第2正本としてTAIに作らず、公開合成22ケース・3種DAGの範囲だけを研究機材の資格として記録する。
+
+
+## 17. 2026-11-11：AX説明だけでなく構造化された関係への到達を分離
+
+[公開Graphの構造化テキスト代替表示・キーボード到達研究](RQ7_STRUCTURED_GRAPH_ALT_2026-11-11.md)を独立した**G-Cal1b-Nav**として設ける。W3C WAI [Complex Images](https://www.w3.org/WAI/tutorials/images/complex/)は、複雑な図のテキスト表現において、単一の`aria-describedby`説明だけでは見出しや表の構造・ナビゲーションが伝わらない点を注意している。
+
+今回の研究用HTMLは、公開合成DAGの**Node(ID/Label)**と**直接Edge(from/to)**を別々の表へ投影し、ネイティブ`details/summary`で開閉する。全行の意味・方向を検査するほか、同じEdge件数のまま向きを取り違えた負例、ChromiumでのTab/Enterによる到達とAccessibility Treeの構造を検査対象とする。これを実TEIのSource Reader、Studio Editor、S01 Source Acceptanceや認可機構へ転用しない。
+
+**保証の追加区分**: Source/Goldの正本性、可視SVGの幾何、AXの全文説明、構造化表の個別関係への到達、スクリーンリーダー実使用、Human/AIの認知負担、Current Authority、実Consumer/Owner Acceptanceは各々別のClaim。今回の小規模合成表示の成功から、一般の大規模Graph・非公開Relation・実ETL/Self-buildを完全に描けるとは主張しない。
