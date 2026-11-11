@@ -485,7 +485,7 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 | G6-N5（追加） | 票でないJSON／`schema` 不一致／`references` が配列でない | exit 2（fail-closed） | **`observed-pass`** |
 | G6-N6（追加） | `representation_profile` を票が宣言しない | `matched=false`・`declaredByTicket=null` を明示 | **`observed-pass`** |
 
-**ID の使い回しに関する注意**：self-test の `G6-N1`〜`G6-N4` は**票の負例とは別のシナリオ**に使っている。票の G6-N1〜N3 は未実装であり、**通ったわけではない**。混同を避けるため、self-test 側の ID は `ST-N1`〜`ST-N4` に改名すべきである（後続作業）。
+**ID の使い回しに関する注意（解消済み）**：self-test の ID は `ST-N1`〜`ST-N4`・`ST-linked-*`・`ST-exact-binding-*` に改名し、票の負例 ID（`G6-N1`〜`G6-N6`）と**完全に分離した**。かつては self-test が `G6-N1`〜`G6-N4` を別シナリオに使っており、票の G6-N1〜N3 が通ったように読める状態だった。いまは名前が違うので混同しない。
 
 
 **「正式に閉じた」の意味**：G6-N1〜N3 は**実装しない**と決め、その理由と責任者をツールの出力（`notDeterminable`）に載せた。黙って通す（「確認済み」と読ませる）のではない。断定には Product 自身の read closure が必要で、それを持たないツールが判定すると read closure を持たない断定になる。
@@ -564,12 +564,29 @@ OG-1・OG-5 は現状維持。既存の実装を変えない。
 実装者とは別コンテキストの3エージェントで、SUI/SHO/TAI の差分を決定と不変条件に対して監査した。
 
 - **blocking: 0件**
-- **non-blocking: 16件**（主なもの：票への本文除外 assert 欠落、TEI modelRevision の `revision.digest` 誤帰属、`readBoundedRegularFile` の check-then-use、`fileDeletedAfterTrial` の事前記録、G6 負例 ID の使い回し、2文書の数値不整合）
-- **question: 8件**（主なもの：OG-3 の「本文」の適用範囲、repo 横断の開示Scope語彙、committed receipt ファイルの位置づけ）
+- **non-blocking: 16件**（主なもの：票への本文除外 assert 欠落、TEI modelRevision の `revision.digest` 誤帰属、`readBoundedRegularFile` の check-then-use、`fileDeletedAfterTrial` の事前記録、G6 負例 ID の使い回し、2文書の数値不整合）- **question: 8件**（主なもの：OG-3 の「本文」の適用範囲、repo 横断の開示Scope語彙、committed receipt ファイルの位置づけ）
 
 **監査後に修正したもの**：`revision.digest` の誤帰属、`readBoundedRegularFile` の fd ベース読み、`fileDeletedAfterTrial` の事前記録、G6 の fail-open、2文書の数値不整合、G6 負例 ID の対応明記。
 
-**監査後に修正していないもの**：票への本文除外 assert の欠落（ fixture はメタ記述のみで現状は遵守。将来の編集に対する guard として別途検討）、未知のトップレベルフィールドの黙って落とす挙動（OG-4 の連鎖方針と絡む。v1 のまま運用し、破綻が実測されたら対応）。
+**監査後に修正したもの（2026-11-12 追記）**：監査時点で「修正していない」と残した2件も対応済み。
+
+- **票への本文除外 assert**：payload と同じ除外を票側にも置いた。原本の生データ（Document/Island/Card の原本・card meta の原本Source）が自由文欄に注入されると CI が失敗する。あわせて OG-3 の「本文」の適用範囲を ADR-0117 に明記した。
+- **未知のトップレベルフィールドの黙って落とす挙動**：Consumer・Producer とも `unknownFields` として逐語運ぶ。落とすと後から語彙を増やしたときに過去の票・Receiptから拡張欄が無警告で失われる。reject すると前方互換が壊れ、解釈すると「未知の値は unknown のまま」不変条件に反するため、逐語運ぶだけが両方を満たす。
+- **G6 self-test ID の使い回し**：`G6-N1`〜`G6-N4` を `ST-N1`〜`ST-N4`・`ST-linked-*`・`ST-exact-binding-*` に改名し、票の負例 ID と完全に分離した。
+- **未使用の `HANDOFF_READBACK_SCHEMA`**：削除。write-back 契約は OG-5 により未実装で、未使用の定数は契約が存在するように読める。
+
+### OG-3 の厳格読取への切替手順（別決定・未実施）
+
+緩和を採ったが、実 Owner が「レビュー済み投影文本字も不可」と判断する場合は次で切り替える。**起票は外部効果なので Owner 判断とする。**
+
+| 手順 | 内容 |
+| --- | --- |
+| 1 | `handoff_context_emit.test.ts`・`handoff_tei_observation_emit.test.ts` の `buildContextProjection` を `safeMode: true` に変更 |
+| 2 | payload の354 bytes／独立期待SHA `7fd6fde2…71cd` が**変わる**。P0 byte 契約の更新が必要 |
+| 3 | SHO 側 `test/fixtures/sui-to-sho-p0.md` と SUI の `context_projection_markdown_handoff.test.ts` の独立期待も追随 |
+| 4 | SHO の Runner の `EXPECTED_PAYLOAD_BYTES`／`EXPECTED_PAYLOAD_SHA256` を更新 |
+| 5 | SUI の `CHANGE_DETECTION_PIN`（票digestの変化検出）を更新 |
+| 6 | `EXPECTED_PRODUCER_BLOBS` の3blob を更新（独立に差分を確認してから） |
 
 ---
 
