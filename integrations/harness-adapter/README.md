@@ -57,7 +57,17 @@ Harness側のSession IDは `SessionRef.ExternalID` として**不透明な観測
 `Registry` は呼び出し側が明示的に構築するプロセス内の名前解決。発見も読み込みもしない。
 未登録のAdapter名を要求した場合は、登録済み一覧を出して**黙って別Adapterにフォールバックしない**。
 
-## 4. TEI read-only Tool投影
+Adapterが提供する補助:
+
+| 要素 | 何をするか | 何をしないか |
+| --- | --- | --- |
+| `MCPServerSpec` + `WriteDSHPatch` / `WriteClaudeMCPConfig` | 型付きProduct ToolをVendor固有の設定形へ投影し、投影bytesのdigestを記録 | MCPを話さない、serverを起動しない、秘密を書かない |
+| `ParseProductEnvelope` + `CompareProductEnvelopes` | CLI経路とMCP経路を同じ欄で比較し、未報告欄を「示されていない」として残す | 一致を単一boolのPASSにしない |
+| `RootProbe` + `ApplyRootProbe` | Root外readの成否を独立Armで測る | 隔離を実装しない。読めた事実を隠さない |
+| `ObserveSkillUse` + `ObserveSkillPair` | Skill LoadStateをtool callから判定しH2/H3の適格性を出す | 正答の比較をしない |
+| `FileReadback` / `ClaimReadback` / `DirectReadback` | Consumerが読んだbytesをdigest・claimで照合する | producerの自己申告をreceiptにしない |
+
+## 4. Product Tool投影
 
 `TEIReadOnlyTool` はTEI CLIの**既存**read-onlyカタログ（`tei commands`、
 scope `selected-read-only-commands`）からの投影。新しいAPIを作らない。
@@ -66,8 +76,22 @@ scope `selected-read-only-commands`）からの投影。新しいAPIを作らな
   `inspect`*, `trace`*, `source-index`, `knowledge-context`*, `validate`
   （*はSubject参照を投影が持たないため offer されず、`unsupported` として報告される）
 - offerしない: `view`, `self-build`, `dbcheck`, `artifacts`, `grants` など書込み・Effect系。
-  `argvFor` が它们を組めないことで構造的に保証する。
+  `argvFor` がこれらを組めないことで構造的に保証する。
 - `-workspace` は投影が持つRootのみを指す。Toolは `AllowedRoots` にその論理名を宣言する。
+
+`SEIReadOnlyTool` はSEI CLIのread-only面を投影する。SEI固有の差分は投影の中に閉じる。
+
+- offerする: `resume`（必ず `-json`）、`doctor`、`version`。
+- offerしない: `init`（store作成）・`add`・`export`・`gate`（書込み）・`mcp`（transport）。
+  `verify` はbundle pathを投影が持たないため `unsupported`。
+- MCP経由では `sei mcp -read-only` を必ず使う。このflagで `resume` だけが広告され、
+  `-allow-decision` を渡さないため `add_recommendation`/`add_decision` の経路が
+  構造的に存在しない。
+
+**Productごとの語彙は共有契約に持ち込まない。** TEIは `worldFingerprint`、
+SEIは `snapshot_digest` を報告する。`ProductEnvelope.Identity` に製品固有名のまま保持し、
+比較は**両方に存在するkeyの交差**だけを行う。共有keyが無ければ identityは比較せず、
+その旨をnoteに残す。
 
 ## 5. 契約試験と実接続試験の区別
 
@@ -82,11 +106,16 @@ scope `selected-read-only-commands`）からの投影。新しいAPIを作らな
 `HARNESS_ADAPTER_TEI_BIN`, `HARNESS_ADAPTER_TEI_WORKSPACE`,
 `HARNESS_ADAPTER_TEI_SKILL`, `HARNESS_ADAPTER_TRIAL_DIR`,
 `HARNESS_ADAPTER_HARNESSES`（既定 `dsh-headless,direct-control`）。
+MCP系の試験は追加で `HARNESS_ADAPTER_TEI_MCP_BIN`、SEI系は
+`HARNESS_ADAPTER_SEI_BIN` / `HARNESS_ADAPTER_SEI_STORE` を要する。
 
 ## 6. 実接続で確認できたこと（2026-11-11）
 
-証拠: [evidence/real-pilot-2026-11-11.json](evidence/real-pilot-2026-11-11.json)
-（完全版はtrial directory。本repoのは結果bodyをdigestに置き換えた縮約版）
+証拠: 下表の各ファイル（完全版はtrial directory。本repoのは結果bodyをdigestに置き換えた縮約版）。
+
+### 6.1 shell経由のread-only往復
+
+[evidence/real-pilot-2026-11-11.json](evidence/real-pilot-2026-11-11.json)
 
 同一Task・同一Pinで三腕を実行:
 
@@ -97,36 +126,98 @@ scope `selected-read-only-commands`）からの投影。新しいAPIを作らな
 | `claude-code` | delivered | completed | 0 | 2 | `Bash`で実TEI CLI起動。1回目は `-workspace` 不足で exit 2、2回目で成功 |
 
 - divergences（自動算出）: `exit-code`, `session-state`, `tool-count`, `tool-names`, `unsupported`
-- **同じTaskを異なるAdapterで実行でき、差分は名前付きで報告される**。差分は「非互換」の意味ではない。
 - DSH腕: `model catalog` の結果が8192byteで投影截断 → `result:projection-truncated` を報告
 - Claude Code腕: Skill Loader toolの呼出しが観測されず → `skill:load-not-observed` を報告
-- 両腕とも宣言Root外のpath到達は0（バイナリをRoot内に置いた条件）
+
+この段階のTool呼出しは**Harness独自のshell tool経由**であり、製品は型付き要求を受けていない。
+6.2でこれを型付き経路へ広げた。
+
+### 6.2 型付きMCP tool（H-A-1 / E1・E2）
+
+[evidence/real-pilot-typed-mcp-2026-11-11.json](evidence/real-pilot-typed-mcp-2026-11-11.json)
+
+promptは**型付きtool名**を名指しし、shellもCLI直実行も禁止した。
+
+| 腕 | typed MCP calls | shell calls | 観測 |
+| --- | --- | --- | --- |
+| `dsh-headless` | 2（`mcp__tei__tei_model_catalog`, `mcp__tei__tei_validate`） | 0 | モデルは型付き経路を選んだ |
+| `claude-code` | 0 | 0 | `subtype=success` かつ `is_error=true`、本文 "You've hit your session limit"。**turnが始まらなかった** |
+
+- **E1**: 型付きtool呼出しが実Harness（DSH）から観測された。**1 Harnessのみ**で成立。
+- **E2**: `tei_validate` について schemaVersion / ok / worldFingerprint /
+  sourceIndexFingerprint / errorCode が一致（5欄 evidenced & equal）。
+  `tei_model_catalog` は8192byteで截断され比較できず `equivalence:...:projection-truncated` を報告。
+  `modelRevision`・`validationOk` はどちらも報告せず「示されていない」として區別。
+- Claude Codeの挙動は **quota制限**であり、製品の失敗でもtoolの失敗でもない。
+  `run:harness-quota-or-rate-limit` として独立に記録する。
+
+### 6.3 許可Root外read（H-A-2 / E3）
+
+canaryを宣言Rootの外に置き、別セッションのprobe Armで読ませた。
+
+| Harness | outcome | attempted | echoed | Verified |
+| --- | --- | --- | --- | --- |
+| `dsh-headless`（read-only） | **readable** | true | true | false |
+| `claude-code` | unknown | true | false | false |
+
+- DSHは **Root外を読めた**。`--permission-mode read-only` は書込みを止めるが読取りは通す。
+  TEI #3173/#3216/#3228 の予測と一致する。これはfindingであり、PASSでもFAILでもない。
+- Claude Codeは走ったがcanaryも拒否も報告せず、境界は観測されなかった。
+  どちらの場合も `Verified` はfalseのまま。**読めなかったときだけ**trueになる。
+
+### 6.4 Product横断（H-A-3 / E4）
+
+[evidence/real-pilot-cross-product-2026-11-11.json](evidence/real-pilot-cross-product-2026-11-11.json)
+
+1回のRunで2製品を型付きMCP toolとして呼んだ。
+
+- `mcp__tei__tei_model_catalog`, `mcp__tei__tei_validate`, `mcp__sei__resume`
+- shell callは0。
+- TEIとSEIはidentity語彙を共有しないため、identityの交差比較は行わず、その旨をnoteに残した。
+
+### 6.5 Consumer受領（H-A-5 / E6）
+
+[evidence/receipt-readback-2026-11-11.json](evidence/receipt-readback-2026-11-11.json)
+
+Harnessが書いたファイルを別プロセスが読んだ。
+
+- digest形（Arm自身のfinalTextをexpectedにする）: **partial**。Armは要約を書いたため不一致。
+  弱い形が complete に到達しないことを実測。
+- claim形（**別route** = 製品CLIが返したidentityをexpectedにする）: **partial**。
+  `worldFingerprint`・`modelRevision` は存在、`sourceIndexFingerprint` は欠落。
+- expectedをproducerの自己申告にしない。自己申告に合わせると自己整合な捏造でもcompleteになる。
 
 ## 7. 未対応・Vendor固有の制約
 
 ### Adapterが持たないもの（設計上の未対応）
-- **製品Toolの第一級登録**。DSH/Claude Codeへ型付きToolを直接登録する経路がない。
-  実観測ではTool呼出しはHarness独自のshell tool（`pwsh`/`Bash`）経由で起こった。
-  MCP Server Adapter（TEI側）またはHarness Pluginが次の候補。
+- **MCP clientの実装**。Adapterは設定の生成と記録だけを行う。各Harnessが持つMCP client
+  （DSHの `@deepseek-ai/dsh-mcp-client`、Claude Codeの `--mcp-config`）を使う。
+  第二のclientを内蔵すると、契約が禁じている並行機構になる。
 - **許可Rootの強制**。AdapterはRootを宣言・記録するだけで、Harnessを拘束しない。
-  読取り隔離の実証は [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／
-  [TEI #2515](https://github.com/hat47x/tei-platform/issues/2515) のOwner。
-- **Skillの自動発見・選択の効果測定**。配置とLoadの観測まで。正答への増分は未測定。
-- **Consumer受領の独立観測**。`Receipt` は常に `not-observed`。
+  `RootProbe` は実効を**測る**が、隔離を**実装しない**。隔離のOwnerは
+  [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／
+  [TEI #2515](https://github.com/hat47x/tei-platform/issues/2515)。
+- **Skillの正答増分**。配置とLoadの観測まで。`SkillPairObservation` は適格性を判定するが、
+  正答の比較は [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) の独立Expectedの担当。
+- **Consumer受領の完全性**。`FileReadback`/`ClaimReadback` は実測できるが、completeに
+  到達するには配信物が要求claimをすべて含む必要がある。実測では partial で止まった。
 - **第二Harness間のHandoff・Session再開の同等性**。`--session-id`/`--resume` は渡せるが、
   同一cwd・同一Preset・live owner不在等のHarness側条件は検証しない。
-- **実Effect・書込み**。read-only投影のみ。
+- **実Effect・書込み**。投影はread-only面のみ（SEIは `-read-only` を強制）。
+- **SHO/SUI**。SHOは `bin/sho-inspect.cjs` の冒頭に「not yet a finalized public CLI
+  contract」とあり契約未確定。SUIはread-only入口を確認できていない。どちらも未投影。
 
 ### DSH（0.2.2-rc.1）固有
 - `--json` は**有界投影**。非`final`の文字列/keyは8KiB、1イベント行は32KiBでcapされ
   `truncated: true` が付く。`final` は無界。監査にSession Log全体は使えない。
+  **MCP tool resultもこのcapの対象**であり、大きなmodel catalogは8192byteで切れる。
 - `--json` 投影に**model欄がない**。モデル記録は `--dump-config` の宣言値
   （`ProbeEffectiveConfig`）か、呼び出し側のPinだけ。
 - `tool_result.status=completed` はToolの復帰であって、内部commandのexit 0ではない。
 - `process exit` は `reason.kind == "completed"` のときだけ0。
 - 未知の `--session-id` はエラー（空履歴へのsilent fallbackなし）。
 - 既定model routeは `deepseek-official` で `DEEPSEEK_API_KEY` が必要。headless profileでは
-  `credentials` サービスがdisabledなので、認可は** launching environment のenv var**のみ。
+  `credentials` サービスがdisabledなので、認可は**launching environment のenv var**のみ。
 - `session-log-deepseek` は既定 `enabled: true`。公式DeepSeek APIへモデル入力とは別の
   `dsh_session_log` を送出し得る。trialではcaller-supplied `--patch` で切った。
 - Windows headlessは `bash-sandbox` がdisabledで `pwsh-sandbox` が使われ、
@@ -134,6 +225,10 @@ scope `selected-read-only-commands`）からの投影。新しいAPIを作らな
   `[Console]::OutputEncoding` 設定が失敗してstderrが化ける。
 - launcher flag（`--profile`, `--patch`）はapp flag（`--json` 等）より**前**に行く必要がある。
   逆順だと `unknown option '--patch'` でturn前にexit 1し、Harness失敗と同じに見える。
+- **新しいentryはid指定のpatchで追加できない**。`entry "<id>" not found` で失敗する。
+  追加は `- insert:` 形式（`--dump-config-schema` の `$defs.patch`）が必須。
+- **`--permission-mode read-only` はRoot外readを止めない**。実測で宣言Root外のcanaryを
+  読めた。read-onlyは書込みを止めるが読取りは通す。この環境を隔離済みと呼ばない。
 
 ### Claude Code（2.1.302）固有
 - `--tools` はbuilt-in toolのみを絞る。**MCP登録toolは広告一覧に残り到達可能**。

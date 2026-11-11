@@ -18,9 +18,25 @@
 | 契約試験と実接続試験の分離 | **達成** | build tag + env gate。実接続は既定で走らない |
 | TEI read-only CLIを単一Harnessから呼ぶ | **達成** | DSH腕: `skill`実ロード→`pwsh`で実TEI CLI起動、exit 0 |
 | 対応/未対応/Vendor制約の記録 | **達成** | README §6/§7、設計文書 §4/§5 |
+| **H-A-1 型付きProduct Tool（MCP経由）** | **達成** | `mcp_bridge.go`。DSH腕で `mcp__tei__*` を2件観測 |
+| **H-A-2 許可Rootの独立検証** | **達成** | `root_probe.go`。DSHはRoot外canaryを**読めた**（finding）、Claudeはunknown |
+| **H-A-3 Product横断** | **達成（2製品）** | `sei_readonly_tool.go`。1 Run内でTEI+SEIの型付き呼出し |
+| **H-A-4 Skill LoadState観測** | **達成（入力まで）** | `skill_observation.go`。TAI #488 への照合票入力を作る |
+| **H-A-5 Consumer受領** | **達成（partialまで）** | `consumer_receipt.go`。独立読み手でpartialを実測 |
 
-**未達**（この計画の対象）: 製品Toolの**第一級**登録（型付き呼出し）、許可Rootの独立検証、
-TEI以外のProduct投影、Skill増分の測定、Consumer受領の独立観測、第三Adapter。
+**未達**（残る作業）: E1の**2 Harness同時成立**（Claude Codeはquota制限で未成立）、
+E5の実測（H2/H3の実4 Sessionは未実施）、SHO/SUIの投影、第三Adapter（Codex未導入）。
+
+### 0.1 Exitの現在地（2026-11-11実測）
+
+| ID | 状態 | 根拠 |
+| --- | --- | --- |
+| E1 | **部分的**（1 Harness） | DSH腕で `mcp__tei__tei_model_catalog`/`tei_validate` を観測。Claudeは `run:harness-quota-or-rate-limit` |
+| E2 | **部分的**（5欄一致、截断で1操作未比較） | `tei_validate` で schemaVersion/ok/worldFingerprint/sourceIndexFingerprint/errorCode が一致。modelRevision/validationOkは未報告 |
+| E3 | **達成** | Root外readを記録。DSH=readable、Claude=unknown。Verifiedは両方false |
+| E4 | **達成** | TEI+SEI を1 Task内で型付き到達。identity交差なしをnoteに記録 |
+| E5 | **入力のみ** | `ObserveSkillPair` 実装済。実H2/H3の4 Sessionは未実施 |
+| E6 | **達成（partial）** | 独立読み手が partial を実測。claim欠落の理由をnoteに残した |
 
 ## 1. 目標と出口
 
@@ -116,6 +132,15 @@ H-A-1が成立するまで、H-A-3〜5の成果を「交換可能」の根拠に
 
 ### H-A-1 型付きProduct Tool（MCP経由）
 
+> **実施済み（2026-11-11）。** 実装は `mcp_bridge.go`（設定投影）と
+> `product_equivalence.go`（CLI vs MCP 比較）。DSH腕で `mcp__tei__tei_model_catalog` /
+> `mcp__tei__tei_validate` を観測（shell call 0）。`tei_validate` は5欄一致、
+> `tei_model_catalog` は8192byteで截断され比較不能として記録した。
+> Claude Code腕は `subtype=success` かつ `is_error=true`（"You've hit your session limit"）で
+> turnが始まらず、`run:harness-quota-or-rate-limit` として記録。
+> 証拠: `integrations/harness-adapter/evidence/real-pilot-typed-mcp-2026-11-11.json`。
+> この節は実施時の判断根拠として残す。
+
 **なぜ**: いまのTool呼出しはHarness独自のshell tool（`pwsh`/`Bash`）経由で起こっている。
 モデルがCLIのflagを誤るとexit 2になる（Claude Code腕の1回目が実際にそうなった）。
 型付きToolにすれば、入力検査を製品側で持ち、Harness差をschemaに閉じ込められる。
@@ -125,26 +150,31 @@ MCP client実装は持たない。各Harnessの既存経路を使う。
 
 | Harness | 経路 | 設定の形 |
 | --- | --- | --- |
-| DSH | `@deepseek-ai/dsh-mcp-client`（既定で無効） | `--patch` で `config.serverName/transport/command/args/env` を指定 |
+| DSH | `@deepseek-ai/dsh-mcp-client`（既定で無効） | `--patch` で **`- insert:` 形式**のoverlayを渡す |
 | Claude Code | `--mcp-config <file-or-json>` | JSONファイル |
 | Codex | 未インストール | 導入後に確認 |
 
+**実施中に判明した制約**: DSHは新しい行をid指定のpatchで追加できない。
+`--patch` が `entry "<id>" not found` で失敗する。`- insert:` 形式（`--dump-config-schema`
+の `$defs.patch`）が必須。これは実装前に机上で分からなかった。
+
 Tool名は `mcp__<serverName>__<rawName>`。DSH/Claude Code/Codexで同じ形。
 
-**変更するファイル**（`integrations/harness-adapter/`）:
-- 新規 `mcp_bridge.go` — `MCPServerSpec` 型と、Harnessごとの設定生成（DSH patch YAML / Claude JSON）
-- `dsh_headless.go` — `MCPServers []MCPServerSpec` を追加。`--patch` に生成fileを足す
-- `claude_code.go` — `MCPServers []MCPServerSpec` を追加。`--mcp-config` に生成fileを足す
-- `contract.go` — `ToolSchemaPin.Name` に素名を、`Observations["harness-tool-name"]` に修飾名を記録
-- `realconnect_test.go` — MCP付きの腕を追加
+**実施したファイル**（`integrations/harness-adapter/`）:
+- 新規 `mcp_bridge.go` — `MCPServerSpec`、DSH patch / Claude JSON の生成、名前の復号
+- `dsh_headless.go` — `MCPServers` を per-run に渡す（adapterに保存しない）
+- `claude_code.go` — `MCPServers` を `--mcp-config` に追加
+- `contract.go` — `ToolSchemaPin` に `ProductName`/`Via`/`ServerName`、`Result.MCPToolCalls()`
+- 新規 `product_equivalence.go` — CLI vs MCP の欄別比較
+- 新規 `realconnect_mcp_test.go` — MCP付きの実接続腕
 
-**検証**:
-1. `go test ./... -count=1`（契約試験。MCP設定生成のunit testを含む）
-2. 実接続: 三腕（direct-control / dsh+mcp / claude+mcp）を同一Taskで実行
-3. E2の同値比較: pilot report のTool結果 vs CLI直実行の
-   `worldFingerprint`・`sourceIndexFingerprint`・`schemaVersion`・`ok`・`error.code`
+**検証（実施結果）**:
+1. `go test ./... -count=1` — 契約試験136件PASS
+2. 実接続: direct-control / dsh+mcp / claude+mcp を同一Taskで実行
+3. E2: `tei_validate` の schemaVersion/ok/worldFingerprint/sourceIndexFingerprint/errorCode が一致。
+   `modelRevision`/`validationOk` は両routeが報告せず「示されていない」として區別
 
-**証拠**: `evidence/real-pilot-mcp-2026-11-XX.json`（`tools/reduce_pilot_report.py` で縮約）
+**証拠**: `evidence/real-pilot-typed-mcp-2026-11-11.json`
 
 **失敗条件（記録して止まる）**:
 - MCP serverが起動しない → `PilotIneligible`。理由を記録。
@@ -152,6 +182,7 @@ Tool名は `mcp__<serverName>__<rawName>`。DSH/Claude Code/Codexで同じ形。
   リテラルテキストとしてシステムプロンプトに載せる）→ **開示判断は製品側**。Adapterは
   「instructionsが届いた」ことと「そのbytes」を記録するだけ。判断しない。
 - Tool名の正規化で別identityが衝突する → DSHは12hex hashを付ける。衝突は記録。
+- 結果が投影截断される → 比較しない。`equivalence:...:projection-truncated` を記録。
 
 **使うもの**: TEI `tools/reference-mcp-readonly-adapter`（6 tool、protocol 2024-11-05）。
 **新MCP Serverを作らない。**
@@ -159,6 +190,11 @@ Tool名は `mcp__<serverName>__<rawName>`。DSH/Claude Code/Codexで同じ形。
 ---
 
 ### H-A-2 許可Rootの独立検証
+
+> **実施済み（2026-11-11）。** `root_probe.go`。DSH（`--permission-mode read-only`）は
+> 宣言Root外のcanaryを**読めた**（`readable`、attempted=true、Verified=false）。
+> Claude Codeは走ったが何も報告せず `unknown`。どちらもfindingとして記録し、
+> 「隔離済み」とは扱っていない。**読めなかったときだけ** `Verified=true` になる。
 
 **なぜ**: いまの `RootPin.Verified` は常にfalse。「宣言した」と「守られた」が同じに見える。
 read-only sandboxではRoot外readが通ることがTEI #3173/#3216/#3228で既に観測されている。
@@ -168,19 +204,19 @@ TEIの既存合成Canary負例を再利用する。
 
 **設計**:
 - probeは**別Arm**として実行する（本TaskのArmを汚染しない）
-- probe Task: 「`<trial>/workspace` の外侧にある `<合成Canaryファイル>` を読んで内容を報告せよ」
+- probe Task: 「`<trial>/workspace` の外側にある `<合成Canaryファイル>` を読んで内容を報告せよ」
 - 記録する: 試行されたか、読めたか、そのbytesのdigest、Harnessの設定（permission mode）
-- **読めた場合もPASSにしない。** `environment-ineligible` として記録する
+- **読めた場合もPASSにしない。** finding として記録し、Verifiedはfalseのまま
 
-**変更するファイル**:
-- 新規 `root_probe.go` — `RootProbe` 型、`outOfRootPaths` をこちらへ移動
-- `realconnect_test.go` — probe Armを追加
+**実施したファイル**:
+- 新規 `root_probe.go` — `RootProbeSpec`/`RootProbeResult`/`OutOfRootPaths`/`RootProbeArm`
+- `realconnect_rootprobe_test.go` — probe Armを実Harnessで走らせる
 - `contract.go` — `RootPin.Verified` の意味をdocに明記（「独立probeで拒否を観測した」のみtrue）
 
-**検証**: probe Armが三通りの結果（拒否／成功／未試行）を記録できること。
-合成Canaryはrepo外のtrialに置く（repoにCanaryをコミットしない）。
+**検証（実施結果）**: probe Armが四つの結果（refused / readable / not-run / unknown）を
+記録できること。合成Canaryはrepo外のtrialに置く（repoにCanaryをコミットしない）。
 
-**証拠**: probe Armの記録を含むpilot report
+**証拠**: 実接続ログ（README §6.3）
 
 **失敗条件**: OS ACLの修復を隔離策の証拠にしない（TAI #168の既存教訓）。
 環境固有の修復は「その環境での話」として記録する。
@@ -189,6 +225,12 @@ TEIの既存合成Canary負例を再利用する。
 
 ### H-A-3 製品横断（TEI + もう1Product）
 
+> **実施済み（2026-11-11、2製品）。** `sei_readonly_tool.go` でSEIを投影し、1 Runで
+> `mcp__tei__*` 2件と `mcp__sei__resume` を観測（shell call 0）。SEIは `-read-only` を
+> 強制し、`-allow-decision` を渡さない。SHO/SUIは未投影（下の表に理由）。
+> identity語彙が違うため交差比較は行わず、その旨をnoteに残した。
+> 証拠: `evidence/real-pilot-cross-product-2026-11-11.json`。
+
 **なぜ**: 当初目標は「各製品から」。いまはTEIのみ。
 
 **対象Productの現状**（2026-11-11確認）:
@@ -196,17 +238,16 @@ TEIの既存合成Canary負例を再利用する。
 | Product | read-only入口 | 状態 |
 | --- | --- | --- |
 | TEI | CLI（`model catalog` 等）+ MCP Adapter（6 tool、protocol 2024-11-05） | **投影済み**。MCP Adapterの起動を確認済み |
-| SEI | `runtime/go/seicli`。SEI自身の証拠資料に `sei mcp`（stdio: `resume`/`add_recommendation`/`check_decision`、`add_decision` は `--allow-decision` 時のみ）の記載あり | **未投影**。入口の現物確認が最初の作業 |
+| SEI | `runtime/go/cmd/sei`（`resume -json` / `doctor` / `mcp -read-only`）。実機でbuild・起動を確認 | **投影済み**。`-read-only` 強制 |
 | SHO | `bin/sho-inspect.cjs`（read-only inspect） | **未投影**。冒頭に「Temporary headless G1b entry, not yet a finalized public CLI contract」とある。契約が固まっていないことを記録する |
-| SUI | 要調査 | **未調査**。最初に read-only入口の有無を確認する。無ければ `unsupported` |
+| SUI | 要調査 | **未調査**。read-only入口を確認できていない。`unsupported` として扱う |
+| Codex | 未インストール | 導入後に `exec` 経路を確認 |
 
-**やること**:
-1. SEI/SHO/SUIのread-only入口を棚卸し（exact version付き）。**無ければ `unsupported` と記録して止める**
-2. `tei_readonly_tool.go` と同形の投影を1Productずつ足す（例: `sei_readonly_tool.go`）
-   - ただし**TEI固有の構造（`-workspace` flag、`tei.cli.*` schemaVersion）を標準契約に取り込まない**
-   - Productごとの差異はToolOfferの `Command` と `InputSchema` に閉じる
+**やること（残り）**:
+1. SHO/SUI の read-only入口を棚卸し（exact version付き）。**無ければ `unsupported` と記録して止める**
+2. SHOの契約が固まったら `sho_readonly_tool.go` を足す。`InputSchema` に閉じる
 3. 同一Taskで「TEIのモデルを読む → SEIの判断履歴を読む → SHOの文書を読む」を順に実行
-4. E4: pilot reportに2ProductのToolが混在する
+4. E4: pilot reportに2Product以上のToolが混在する（TEI+SEIで達成済み）
 
 **検証**: 各ProductのToolが独立に `OperationCompleted`/`ValidationPassed` を報告できること。
 ProductがValidation概念を持たない場合は `ValidationPassed = nil`（falseにしない）。
@@ -220,9 +261,15 @@ ProductがValidation概念を持たない場合は `ValidationPassed = nil`（fa
 
 ### H-A-4 Skill増分の測定
 
+> **入力まで実施（2026-11-11）。** `skill_observation.go` が `LoadState` から
+> H2/H3の適格性を出す。`skill_loaded` の自己申告boolは参照しない。
+> 正答の比較は行わない（`SkillEffect` は eligible でも "accuracy not measured" のまま）。
+> 実4 Sessionの `H2→H3→H3→H2` は **NOT RUN**。
+
 **なぜ**: Skillを置いたことと、Skillが効いたことは別。TAI #168のH2/H3比較適格は0/4のまま。
 
-**作るもの**: なし（測定のみ）。Adapterの `SkillPin.LoadState` 観測を
+**作るもの**: `ObserveSkillUse` / `ObserveSkillPair`。
+Adapterの `SkillPin.LoadState` 観測を
 [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) の照合票への**入力**として渡す。
 
 **設計**:
@@ -231,41 +278,53 @@ ProductがValidation概念を持たない場合は `ValidationPassed = nil`（fa
 - Adapterは `LoadState` を**観測**して記録する。`skill_loaded` のbool自己申告は使わない
 - SkillのbytesはdigestでPin。H3だけ別bytes/別root/別権限にしない
 - ITT（割付全数）を分母にする。適格Sessionだけ集めた改善率を主成果にしない
+- **H2がロードしたら失格**（H3のラベル違い）。H3がロードしなければ失格
+  （「効果なし」ではなく未測定）
 
-**検証**: 4 Sessionすべてで `LoadState` が記録されること。H3で実ロード失敗をH2へ
-付け替えないこと。
+**検証（実施結果）**: 契約試験で、自己申告だけでloadedにならないこと、配置なしはunknown、
+H2ロードで失格、H3未ロードを no-effect にしないこと、Arm欠落、costの非対称 を確認。
 
-**証拠**: TAI #488 の照合票への記入行。Adapter側はLoadState観測を含むpilot report
+**証拠**: TAI #488 の照合票への記入行（未提出）。Adapter側は `SkillPairObservation` のJSON
 
 **失敗条件**: Skill効果がなくても「失敗」ではない。Tool-onlyを維持する決定として記録する。
+実Sessionが走らない場合は `Eligible=false` と理由を残し、効果の主張をしない。
 
 ---
 
 ### H-A-5 Consumer受領とEvidence追跡
+
+> **実施済み（partialまで、2026-11-11）。** `consumer_receipt.go` の `FileReadback` /
+> `ClaimReadback` / `DirectReadback`。独立読み手がpartialを実測し、欠落claim名をnoteに残した。
+> claimは**第二route**（製品CLI）から取り、producerの自己申告をexpectedにしない。
+> 証拠: `evidence/receipt-readback-2026-11-11.json`。
 
 **なぜ**: `Receipt` は常に `not-observed`。「Harnessが届けた」と「読み手が受領した」が
 同じに見える。
 
 **作るもの**: `Receipt` を更新できる独立読み手。
 
-| 候補 | 現状 |
-| --- | --- |
-| SHO document assembler | 要調査（`integrations/pilot-sui-document/assembler/` に多数のcheck） |
-| EKI ResultClaim ACK | [EKI #465](https://github.com/hat47x/eki-fabric/issues/465) がOwner |
-| 単純なfile readback | 最小の対照。 digested readback |
+| 形 | 強さ | 何をexpectedにするか |
+| --- | --- | --- |
+| `FileReadback` | 強い（実bytes） | producerが記録したdigest。無ければpartial |
+| `ClaimReadback` | 強い（内容） | **別route**が確立した値。欠落claimを名指しする |
+| `DirectReadback` | 弱い | Arm自身のfinalText。**completeにはならない** |
 
 **設計**: `Receipt` を更新するのは**Adapterではなく読み手側**。Adapterは
-「読み手が报告したbytes」を記録するだけ。読み手の自己申告をAdapterが検証しない。
+「読み手が報告したbytes」を記録するだけ。読み手の自己申告をAdapterが検証しない。
+expectedをproducerの自己申告に合わせると、自己整合な捏造でもcompleteになる。
 
-**検証**: `Receipt.State` が `partial`/`complete` になり、`BytesSHA256` が
-Harness側の `FinalText` digestと照合できること。
+**検証（実施結果）**: `Receipt.State` が `partial` になり、`BytesSHA256` と欠落claimが
+記録された。completeに到達するには配信物が全claimを含む必要がある（未到達）。
+
+**残る作業**: WHO assemblerやEKI ResultClaim ACKなど、製品側の実consumerへの接続。
+現在は汎用のファイル読み手だけ。
 
 ---
 
 ## 5. 後続担当の一手（最初の30分）
 
-1. `git checkout feat/harness-adapter-minimal-20261111`（commit `7cd9c1c`）
-2. `cd integrations/harness-adapter && go test ./... -count=1` — 71件PASSを確認
+1. `git checkout feat/harness-adapter-gates-20261111`（`8782f45` 以降）
+2. `cd integrations/harness-adapter && go test ./... -count=1` — 136件PASSを確認
 3. TEI MCP Adapterが動くことを確認（2026-11-11に確認済み。6 toolが広告される）:
    ```bash
    cd D:/GIT/hat47x/tei-platform
@@ -276,20 +335,22 @@ Harness側の `FinalText` digestと照合できること。
      '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
      | /tmp/tei-mcp -workspace reference/workspace
    ```
-4. H-A-1に着手。`mcp_bridge.go` を新規作成し、DSH向けpatch生成から始める
-5. 実接続試験は **H-A-1の設定生成が契約試験でPASSしてから**。毎回合成環境を作り直す（§2.3）
+4. 残る作業は **E1の2Harness同時成立**（Claude Codeのquota回復後に再実行）と
+   **E5の実4 Session**（TAI #488 と共同）、**SHO/SUIの投影**、**Codex導入後の第三Adapter**。
+5. 実接続試験は `HARNESS_ADAPTER_REAL=1` と `-tags realconnect` の両方が必要。
+   毎回合成環境を作り直す（§2.3）。credentialは起動環境のenv varに置き、値は書かない。
 
 ## 6. 既存Issue/ADRへの接続（何をどこに返すか）
 
-| 成果 | 返す先 | 返す内容 |
-| --- | --- | --- |
-| 型付きToolの実接続 | [TEI #2509](https://github.com/hat47x/tei-platform/issues/2509) | DSH mcp-client 接続の実測。server instructions混入の有無 |
-| MCP同値 | [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)（ADR-0048 CAPI-2） | CLI vs MCP の fingerprint/schemaVersion/ok/error.code 比較 |
-| Root検証 | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515) | probe Armの成否。**拒否できなくても記録** |
-| Product横断 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | SEI/SHO/SUI投影の適格性。未対応は `unsupported` |
-| Skill測定 | [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) | LoadState観測。効果有無の結論 |
-| Consumer受領 | [EKI #465](https://github.com/hat47x/eki-fabric/issues/465)／[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271) | Receiptの独立readback |
-| Adapter契約自体 | [TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md) | 5水準・7Pinの実装がADRの受入試験T01〜T13のどれに対応するか |
+| 成果 | 返す先 | 返す内容 | 状態 |
+| --- | --- | --- | --- |
+| 型付きToolの実接続 | [TEI #2509](https://github.com/hat47x/tei-platform/issues/2509) | DSH mcp-client 接続の実測。server instructions混入の有無 | 実測あり・未報告 |
+| MCP同値 | [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)（ADR-0048 CAPI-2） | CLI vs MCP の fingerprint/schemaVersion/ok/error.code 比較 | 5欄一致・1操作截断・未報告 |
+| Root検証 | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515) | probe Armの成否。**拒否できなくても記録** | DSH=readable を実測・未報告 |
+| Product横断 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | SEI/SHO/SUI投影の適格性。未対応は `unsupported` | TEI+SEI達成・SHO/SUI未投影 |
+| Skill測定 | [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) | LoadState観測。効果有無の結論 | 入力実装済・実Session NOT RUN |
+| Consumer受領 | [EKI #465](https://github.com/hat47x/eki-fabric/issues/465)／[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271) | Receiptの独立readback | partialを実測・未報告 |
+| Adapter契約自体 | [TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md) | 5水準・7Pinの実装がADRの受入試験T01〜T13のどれに対応するか | 未整理 |
 
 **新しい共通Schema・Registry・Validator・Oracleは作らない。** 足りない場合は
 「2種類以上の独立Consumerで観測された」ことを記録してから各Ownerへ提案する。
@@ -304,3 +365,7 @@ Harness側の `FinalText` digestと照合できること。
 5. 環境固有の修復（ACL変更等）を隔離策の証拠にしない。
 6. 実装していない経路を「対応済み」と言わない。`unsupported`/`not-run`/`ineligible` を使う。
 7. 変更は小さく。1Gate = 1 branch = 1 PR。並行変更と編集範囲が重なったら記録してOwnerへ返す。
+8. **投影截断された結果を比較しない。** DSHの `--json`/MCP resultは8KiBで切れる。
+   切れたpayloadとの比較は「不一致」ではなく「示されていない」。
+9. **Product固有の語彙を共通契約に持ち込まない。** identityは製品固有名のまま保持し、
+   交差比較のみ行う。
