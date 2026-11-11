@@ -212,6 +212,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-centre-handoff-2026-11-11.json",
     "evaluations/records/YI-centre-key-2026-11-11.json",
     "evaluations/records/YI-staleness-2026-11-11.json",
+    "evaluations/records/YI-context-handoff-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -533,6 +534,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-context-handoff" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("deferredRecorded") is not True
+                or observed.get("carriesAllThreeUnits") is not False
+            ):
+                errors.append(f"the context handoff probe changed shape; re-measure: {relative}")
         if "YI-staleness" in relative:
             observed = data.get("observed", {})
             if (
