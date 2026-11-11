@@ -262,6 +262,10 @@ func (a *StepCLIAdapter) Run(ctx context.Context, t Task, session *SessionRef) (
 	res.Diagnostics = append(res.Diagnostics, stream.Diagnostics...)
 	if len(stream.SkillStages) > 0 {
 		res.Observations["skill-stages"] = strings.Join(stream.SkillStages, ",")
+		// The shared contract reads `skill-history`, so Step's stages are published
+		// under that key too. A stage set of only `discovered` is placement, and
+		// ObserveSkillUse treats it as such.
+		res.Observations["skill-history"] = strings.Join(uniqueStrings(stream.SkillStages), ",")
 	}
 	// The run verdict comes from the terminal event and an explicit tool error,
 	// never from exit 0 alone.
@@ -662,4 +666,19 @@ func ParseStepJSONStream(raw []byte) (*StepStream, error) {
 		})
 	}
 	return stream, nil
+}
+
+// uniqueStrings returns the distinct values in first-seen order, so a repeated
+// `discovered` per skill does not become a noisy history string.
+func uniqueStrings(in []string) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(in))
+	for _, s := range in {
+		if s == "" || seen[s] {
+			continue
+		}
+		seen[s] = true
+		out = append(out, s)
+	}
+	return out
 }

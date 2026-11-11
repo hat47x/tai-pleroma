@@ -20,6 +20,7 @@ package harnessadapter
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -207,9 +208,13 @@ func TestRealPilotStepTypedMCP(t *testing.T) {
 			t.Logf("no CLI reference for %s; E2 not shown for it", cliTool)
 			continue
 		}
-		if c.ResultBytes >= 8192 {
-			t.Logf("typed %s was bounded (%d bytes); E2 not shown", raw, c.ResultBytes)
-			res.Unsupported = append(res.Unsupported, "equivalence:"+raw+":result-bounded")
+		// Step does NOT bound the run log's tool results (unlike DSH's 8 KiB
+		// projection cap), so a large result is still lossless here and IS
+		// comparable. The check below only refuses a payload that is not valid
+		// JSON end-to-end — that is the signal a payload was actually cut.
+		if !jsonValidComplete(c.ResultText) {
+			t.Logf("typed %s payload is not a complete JSON document; E2 not shown", raw)
+			res.Unsupported = append(res.Unsupported, "equivalence:"+raw+":result-incomplete")
 			continue
 		}
 		typedEnv, err := ParseProductEnvelope([]byte(c.ResultText))
@@ -268,4 +273,13 @@ func envOr(name, fallback string) string {
 		return v
 	}
 	return fallback
+}
+
+// jsonValidComplete reports whether the payload is a complete JSON document. A
+// bounded projection is cut mid-token, so it fails to parse; a large but intact
+// payload parses even when it is long. This is the honest test for "was it cut",
+// replacing a byte-count heuristic that conflated size with truncation.
+func jsonValidComplete(s string) bool {
+	var v any
+	return json.Unmarshal([]byte(s), &v) == nil
 }

@@ -32,14 +32,26 @@ type SkillObservation struct {
 	// Cost is the arm's own reported cost, when the harness reports one. It is
 	// vendor vocabulary and is never summed across vendors.
 	Cost string `json:"cost,omitempty"`
+	// SkillHistory is the harness's own skill activity states, verbatim. A
+	// harness that reports only `discovered` has listed the file, not loaded it.
+	SkillHistory string `json:"skillHistory,omitempty"`
 	// Note carries a non-secret explanation of a gap.
 	Note string `json:"note,omitempty"`
 }
 
 // ObserveSkillUse derives the Skill observation for one arm's result.
 //
+// SkillPlacementStates are the harness-reported states a skill can be in, as
+// distinct from a loader-tool call. A harness that reports `discovered` has seen
+// the skill file; that is a placement observation, not a load.
+const (
+	// SkillHistoryDiscovered marks a skill the harness listed in its catalog.
+	SkillHistoryDiscovered = "discovered"
+)
+
 // It reads only what the arm recorded. A `skill_loaded` self-report boolean is
-// never consulted: the load must be visible as a tool call naming the Skill.
+// never consulted: the load must be visible as either a loader tool call naming
+// the Skill, or a harness skill-history state that says more than `discovered`.
 func ObserveSkillUse(pin SkillPin, res *Result) SkillObservation {
 	obs := SkillObservation{
 		SkillID:           pin.ID,
@@ -56,6 +68,15 @@ func ObserveSkillUse(pin SkillPin, res *Result) SkillObservation {
 	obs.ToolCallsAfterLoad = len(res.ToolCalls)
 	if res.Observations != nil {
 		obs.Cost = res.Observations["total-cost-usd"]
+		// Some harnesses report a skill history rather than a loader tool. A state
+		// stronger than `discovered` is a load; `discovered` alone is not.
+		if hist := res.Observations["skill-history"]; hist != "" {
+			obs.SkillHistory = hist
+			if strongerThanDiscovered(hist) {
+				obs.LoadState = LoadLoaded
+				obs.LoadedVia = "skill-history"
+			}
+		}
 	}
 	for _, c := range res.ToolCalls {
 		if !isSkillLoadTool(c.Tool) {
@@ -71,6 +92,15 @@ func ObserveSkillUse(pin SkillPin, res *Result) SkillObservation {
 		obs.LoadedVia = c.Tool
 		return obs
 	}
+	if obs.LoadState == LoadLoaded {
+		return obs
+	}
+	if obs.SkillHistory != "" {
+		// The harness saw the skill file but reported nothing stronger.
+		obs.LoadState = LoadNotLoaded
+		obs.Note = "the harness reported skill-history " + obs.SkillHistory + ", which is placement, not a load"
+		return obs
+	}
 	if pin.PlacedPath != "" {
 		obs.LoadState = LoadNotLoaded
 		obs.Note = "the Skill was placed but no loader tool call named it"
@@ -78,6 +108,20 @@ func ObserveSkillUse(pin SkillPin, res *Result) SkillObservation {
 		obs.Note = "the adapter did not place the Skill for this arm"
 	}
 	return obs
+}
+
+// strongerThanDiscovered reports whether a harness skill-history state asserts
+// more than "the file was listed". Only an explicit activation counts.
+func strongerThanDiscovered(hist string) bool {
+	for _, state := range strings.Split(hist, ",") {
+		switch strings.TrimSpace(state) {
+		case "", SkillHistoryDiscovered:
+			continue
+		default:
+			return true
+		}
+	}
+	return false
 }
 
 // SkillPairObservation is one paired trial: the same Task with the Skill placed

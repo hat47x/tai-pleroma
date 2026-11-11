@@ -208,3 +208,54 @@ func TestObserveSkillPairRejectsUnplacedH3(t *testing.T) {
 		t.Fatalf("reason not recorded: %v", pair.IneligibleReasons)
 	}
 }
+
+// TestSkillHistoryDiscoveredIsPlacementNotLoad is the Step Code case: the harness
+// reports `discovered` for every skill it listed, including ones it never
+// activated. Placement must not become a load.
+func TestSkillHistoryDiscoveredIsPlacementNotLoad(t *testing.T) {
+	pin := SkillPin{ID: "yi-tei-modeling", PlacedPath: `C:\ws\skills\x\SKILL.md`}
+	res := &Result{
+		Adapter:      "step-cli",
+		Observations: map[string]string{"skill-history": "discovered"},
+		FinalText:    "ready",
+	}
+	obs := ObserveSkillUse(pin, res)
+	if obs.LoadState == LoadLoaded {
+		t.Fatal("`discovered` was read as a load")
+	}
+	if obs.LoadState != LoadNotLoaded {
+		t.Fatalf("load state = %q", obs.LoadState)
+	}
+	if !strings.Contains(obs.Note, "placement, not a load") {
+		t.Fatalf("the distinction was not named: %q", obs.Note)
+	}
+}
+
+// TestSkillHistoryStrongerStateIsALoad checks the positive case: a state beyond
+// discovery IS a load, and is recorded as having come from the history rather
+// than from a loader tool.
+func TestSkillHistoryStrongerStateIsALoad(t *testing.T) {
+	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
+	res := &Result{Adapter: "x", Observations: map[string]string{"skill-history": "discovered,activated"}}
+	obs := ObserveSkillUse(pin, res)
+	if obs.LoadState != LoadLoaded {
+		t.Fatalf("load state = %q; an activation state should count", obs.LoadState)
+	}
+	if obs.LoadedVia != "skill-history" {
+		t.Fatalf("loaded via = %q", obs.LoadedVia)
+	}
+}
+
+// TestLoaderToolCallWinsOverHistory keeps the stronger evidence when both are present.
+func TestLoaderToolCallWinsOverHistory(t *testing.T) {
+	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
+	res := &Result{
+		Adapter:      "dsh-headless",
+		Observations: map[string]string{"skill-history": "discovered"},
+		ToolCalls:    []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"s"}`}},
+	}
+	obs := ObserveSkillUse(pin, res)
+	if obs.LoadState != LoadLoaded || obs.LoadedVia != "skill" {
+		t.Fatalf("a loader tool call was overridden by history: %+v", obs)
+	}
+}
