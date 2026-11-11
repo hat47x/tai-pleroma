@@ -35,7 +35,7 @@ E5の実測（H2/H3の実4 Sessionは未実施）、SHO/SUIの投影、第三Ada
 | E2 | **部分的**（5欄一致、截断で1操作未比較） | `tei_validate` で schemaVersion/ok/worldFingerprint/sourceIndexFingerprint/errorCode が一致。modelRevision/validationOkは未報告 |
 | E3 | **達成** | Root外readを記録。DSH=readable、Claude=unknown。Verifiedは両方false |
 | E4 | **達成** | TEI+SEI を1 Task内で型付き到達。identity交差なしをnoteに記録 |
-| E5 | **入力のみ** | `ObserveSkillPair` 実装済。実H2/H3の4 Sessionは未実施 |
+| E5 | **部分的**（1対が適格） | `ObserveSkillPair` で H2/H3 の1対が `eligible=true`。正答は未採点。実4 Sessionの事前割付は未実施 |
 | E6 | **達成（partial）** | 独立読み手が partial を実測。claim欠落の理由をnoteに残した |
 
 ## 1. 目標と出口
@@ -261,10 +261,14 @@ ProductがValidation概念を持たない場合は `ValidationPassed = nil`（fa
 
 ### H-A-4 Skill増分の測定
 
-> **入力まで実施（2026-11-11）。** `skill_observation.go` が `LoadState` から
-> H2/H3の適格性を出す。`skill_loaded` の自己申告boolは参照しない。
-> 正答の比較は行わない（`SkillEffect` は eligible でも "accuracy not measured" のまま）。
-> 実4 Sessionの `H2→H3→H3→H2` は **NOT RUN**。
+> **実施済み（2026-11-11、1対の実接続）。** `skill_observation.go` が `LoadState` から
+> H2/H3の適格性を出す。実runで H3=`loaded`・H2=`unknown`・`eligible=true` を観測。
+> `skill_loaded` の自己申告boolは参照しない。正答の比較は行わない
+> （`SkillEffect` は eligible でも "accuracy not measured" のまま）。
+> 実4 Sessionの `H2→H3→H3→H2` 事前割付は **NOT RUN**。
+> 実接続で見つけた欠陥: 共有pinを渡すと、Skillを削除したH2が `placed=true` と
+> 誤記録された。pinをArmごとに取り、H2の配置・H3の未配置を失格条件にした。
+> 証拠: `evidence/skill-pair-observation-2026-11-11.json`。
 
 **なぜ**: Skillを置いたことと、Skillが効いたことは別。TAI #168のH2/H3比較適格は0/4のまま。
 

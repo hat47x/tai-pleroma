@@ -187,6 +187,24 @@ Harnessが書いたファイルを別プロセスが読んだ。
   `worldFingerprint`・`modelRevision` は存在、`sourceIndexFingerprint` は欠落。
 - expectedをproducerの自己申告にしない。自己申告に合わせると自己整合な捏造でもcompleteになる。
 
+### 6.6 Skill対（H-A-4 / E5）
+
+[evidence/skill-pair-observation-2026-11-11.json](evidence/skill-pair-observation-2026-11-11.json)
+
+同じTaskを同じHarnessで2回、H3だけProduct Skillを配置した。
+
+| Arm | tools | Skill load | 判定 |
+| --- | --- | --- | --- |
+| H3（Skill配置） | 2（`skill`, `mcp__tei__tei_model_catalog`） | `loaded` via `skill` | — |
+| H2（Skill削除） | 1（`mcp__tei__tei_model_catalog`） | `unknown`（配置なし） | — |
+
+- pair: `eligible=true`、`skillEffect="eligibility-confirmed; accuracy not measured"`。
+- **適格性は出たが、正答の比較はしていない**。それは [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)
+  の独立Expectedの担当であり、このPackageが代行しない。
+- 実接続で欠陥を発見した: 当初は1つの共有pinを両Armへ渡していたため、Skillを削除した
+  H2が `placed=true` と記録された。pinを**Armごと**に取り、H2の配置・H3の未配置を
+  失格条件にした。契約試験では出ず、実runで初めて出た。
+
 ## 7. 未対応・Vendor固有の制約
 
 ### Adapterが持たないもの（設計上の未対応）
