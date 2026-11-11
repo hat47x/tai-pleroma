@@ -223,3 +223,84 @@ func TestSameTaskTwoVendorAdapters(t *testing.T) {
 		}
 	}
 }
+
+// TestClaudeResultIsErrorWinsOverSuccessSubtype is a bug found by a real run:
+// Claude Code returned `subtype: "success"` together with `is_error: true` and
+// the message "You've hit your session limit". Reading the subtype alone
+// reported `run=completed` for a turn that produced no answer — exactly the
+// collapse this contract forbids.
+func TestClaudeResultIsErrorWinsOverSuccessSubtype(t *testing.T) {
+	raw := []byte(`{"type":"result","subtype":"success","is_error":true,"result":"You've hit your session limit · resets 7:30pm (Asia/Tokyo)","session_id":"s1","total_cost_usd":0}` + "\n")
+	a := NewClaudeCodeAdapter(`C:\ws`)
+	a.Runner = &FakeRunner{Script: []FakeStep{
+		{Match: "stream-json", Result: ExecResult{ExitCode: 1, Stdout: raw}},
+	}}
+	res, err := a.Run(context.Background(), Task{ID: "t", Prompt: "p"}, nil)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if res.Run != RunError {
+		t.Fatalf("is_error=true with subtype=success reported run=%q; the error must win", res.Run)
+	}
+	if res.Observations["quota-limit"] == "" {
+		t.Fatalf("a quota limit was not recorded as its own observation: %v", res.Observations)
+	}
+	if !containsString(res.Unsupported, "run:harness-quota-or-rate-limit") {
+		t.Fatalf("quota condition not reported as unsupported: %v", res.Unsupported)
+	}
+	if !containsString(res.Unsupported, "run:harness-reported-error") {
+		t.Fatalf("harness-reported error not recorded: %v", res.Unsupported)
+	}
+}
+
+// TestClaudeQuotaTextIsNarrow stops an ordinary task failure from being
+// relabelled as a quota event.
+func TestClaudeQuotaTextIsNarrow(t *testing.T) {
+	if got := quotaLimitText("I could not read the file", nil); got != "" {
+		t.Fatalf("an ordinary failure was read as a quota limit: %q", got)
+	}
+	if got := quotaLimitText("", []Diagnostic{{Code: "claude-result-is-error", Message: "some other error"}}); got != "" {
+		t.Fatalf("a non-quota diagnostic was read as a quota limit: %q", got)
+	}
+	if got := quotaLimitText("rate limit reached", nil); got == "" {
+		t.Fatal("an explicit rate limit was not recognised")
+	}
+}
+
+// TestClaudeSuccessStaysCompleted is the positive control: without is_error the
+// success subtype still means completed.
+func TestClaudeSuccessStaysCompleted(t *testing.T) {
+	raw := []byte(`{"type":"result","subtype":"success","is_error":false,"result":"ok","session_id":"s1"}` + "\n")
+	a := NewClaudeCodeAdapter(`C:\ws`)
+	a.Runner = &FakeRunner{Script: []FakeStep{
+		{Match: "stream-json", Result: ExecResult{ExitCode: 0, Stdout: raw}},
+	}}
+	res, _ := a.Run(context.Background(), Task{ID: "t", Prompt: "p"}, nil)
+	if res.Run != RunCompleted {
+		t.Fatalf("a clean success reported run=%q", res.Run)
+	}
+	if res.Observations["quota-limit"] != "" {
+		t.Fatalf("a clean success produced a quota observation: %v", res.Observations)
+	}
+}
+
+// TestClaudeMCPToolsStayAdvertised documents the vendor constraint measured in
+// the field: Claude Code keeps MCP tools in the advertised list even after
+// --tools narrows the built-in set to "Bash,Read,Glob,Grep".
+func TestClaudeMCPToolsStayAdvertised(t *testing.T) {
+	raw := []byte(`{"type":"system","subtype":"init","cwd":"C:\\ws","session_id":"s1","tools":["Bash","Read","Glob","Grep","mcp__tei__tei_model_catalog","mcp__tei__tei_validate"]}` + "\n" +
+		`{"type":"result","subtype":"success","is_error":false,"result":"ok","session_id":"s1"}` + "\n")
+	a := NewClaudeCodeAdapter(`C:\ws`)
+	a.Tools = "Bash,Read,Glob,Grep"
+	a.Runner = &FakeRunner{Script: []FakeStep{
+		{Match: "stream-json", Result: ExecResult{ExitCode: 0, Stdout: raw}},
+	}}
+	res, _ := a.Run(context.Background(), Task{ID: "t", Prompt: "p"}, nil)
+	tools := res.Observations["advertised-tools"]
+	if !strings.Contains(tools, "mcp__tei__tei_model_catalog") {
+		t.Fatalf("MCP tool was not in the advertised list: %q", tools)
+	}
+	if !strings.Contains(tools, "Bash") {
+		t.Fatalf("built-in tools missing from the record: %q", tools)
+	}
+}

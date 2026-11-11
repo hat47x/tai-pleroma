@@ -323,13 +323,30 @@ func (a *ClaudeCodeAdapter) Run(ctx context.Context, t Task, session *SessionRef
 	for _, d := range stream.Diagnostics {
 		res.Diagnostics = append(res.Diagnostics, d)
 	}
-	switch stream.ResultSubtype {
-	case "success":
+	// The run verdict must not depend on the subtype alone. A real Claude Code
+	// run was observed returning `subtype: "success"` together with
+	// `is_error: true` and the message "You've hit your session limit": the
+	// subtype describes how the turn ended, while `is_error` says the turn did
+	// not produce a usable answer. Reading only the subtype reported
+	// `run=completed` for a run that produced nothing, which is exactly the
+	// collapse this contract forbids.
+	switch {
+	case stream.IsError:
+		res.Run = RunError
+		res.Unsupported = append(res.Unsupported, "run:harness-reported-error")
+	case stream.ResultSubtype == "success":
 		res.Run = RunCompleted
-	case "":
+	case stream.ResultSubtype == "":
 		res.Run = RunUnknown
 	default:
 		res.Run = RunError
+	}
+	// A quota or rate limit is not a product failure and not a task failure: the
+	// harness could not be asked. Record it as its own observation so a reader
+	// does not read "error" as "the tool was wrong".
+	if limitText := quotaLimitText(stream.FinalText, stream.Diagnostics); limitText != "" {
+		res.Observations["quota-limit"] = limitText
+		res.Unsupported = append(res.Unsupported, "run:harness-quota-or-rate-limit")
 	}
 	if stream.AdvertisedTools != nil {
 		res.Observations["advertised-tools"] = strings.Join(stream.AdvertisedTools, ",")
@@ -346,16 +363,57 @@ func (a *ClaudeCodeAdapter) Run(ctx context.Context, t Task, session *SessionRef
 	return res, nil
 }
 
+// quotaLimitText recognises the harness's own quota/rate-limit message. It is
+// deliberately narrow: only an explicit statement that the harness could not be
+// asked counts, so an ordinary task failure is not relabelled as a quota event.
+func quotaLimitText(finalText string, diags []Diagnostic) string {
+	lower := strings.ToLower(finalText)
+	for _, phrase := range []string{
+		"session limit", "rate limit", "usage limit", "quota", "plan limit",
+	} {
+		if strings.Contains(lower, phrase) {
+			return strings.TrimSpace(firstLineOf(finalText))
+		}
+	}
+	for _, d := range diags {
+		if d.Code == "claude-result-is-error" {
+			l := strings.ToLower(d.Message)
+			for _, phrase := range []string{"session limit", "rate limit", "usage limit", "quota"} {
+				if strings.Contains(l, phrase) {
+					return strings.TrimSpace(firstLineOf(d.Message))
+				}
+			}
+		}
+	}
+	return ""
+}
+
+// firstLineOf returns the first non-empty line, bounded for evidence.
+func firstLineOf(s string) string {
+	for _, line := range strings.Split(s, "\n") {
+		if t := strings.TrimSpace(line); t != "" {
+			if len(t) > 300 {
+				return t[:300]
+			}
+			return t
+		}
+	}
+	return ""
+}
+
 // ---------------------------------------------------------------------------
 // stream-json decoding.
 // ---------------------------------------------------------------------------
 
 // ClaudeStream is the decoded projection.
 type ClaudeStream struct {
-	Session         SessionRef
-	ToolCalls       []ToolCallRecord
-	FinalText       string
-	ResultSubtype   string
+	Session       SessionRef
+	ToolCalls     []ToolCallRecord
+	FinalText     string
+	ResultSubtype string
+	// IsError is the terminal `result` event's own error flag. It can disagree
+	// with ResultSubtype, and when it does the error is what happened.
+	IsError         bool
 	Model           ModelPin
 	AdvertisedTools []string
 	// Observations are vendor-specific measurements with no cross-vendor
@@ -460,6 +518,7 @@ func ParseClaudeStreamJSON(raw []byte) (*ClaudeStream, error) {
 			}
 		case "result":
 			stream.ResultSubtype = ev.Subtype
+			stream.IsError = ev.IsError
 			stream.FinalText = ev.Result
 			if ev.SessionID != "" && stream.Session.ExternalID == "" {
 				stream.Session.ExternalID = ev.SessionID

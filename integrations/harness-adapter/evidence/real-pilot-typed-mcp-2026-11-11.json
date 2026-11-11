@@ -1,0 +1,441 @@
+{
+  "contract": "yi.harness-adapter/v0",
+  "taskId": "real-pilot-typed-mcp",
+  "startedAt": "2026-11-11T07:45:57Z",
+  "finishedAt": "2026-11-11T07:46:33Z",
+  "taskPins": {
+    "source": {
+      "repo": "tei-platform",
+      "resolvedPath": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace",
+      "bytesSha256": "sha256:5291c38ffd35933902f3d3bc9cf3a9d12b38fa76d947ea0c8cd36408534bfd2d",
+      "byteCount": 149,
+      "note": "synthetic copy; 1 immediate files"
+    },
+    "model": {
+      "provider": "harness-default",
+      "route": "harness-default"
+    },
+    "roots": [
+      {
+        "logical": "tei-workspace",
+        "path": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace",
+        "access": "read-only",
+        "verified": false,
+        "note": "declared; out-of-root reads are recorded by the probe arm, not assumed absent"
+      }
+    ],
+    "harness": {
+      "family": "multi",
+      "exePath": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\bin\\tei.exe",
+      "exeSha256": "sha256:a1ca2142126a8f898921a59e74bcca4fa555af5abd529ed18c888a043723e0c3"
+    },
+    "extra": {
+      "mcp-server": "tei",
+      "mcp-server-bytes": "sha256:fb0ce5b2e7a23aa3c829a49e84f0dad02eba1909fb011b698e63dba2708973b1",
+      "typed-tool-names": "mcp__tei__tei_model_catalog,mcp__tei__tei_validate"
+    }
+  },
+  "outcomes": [
+    {
+      "adapter": "dsh-headless",
+      "state": "observed",
+      "availability": {
+        "reachable": true,
+        "reason": "version probe ok",
+        "detail": {
+          "exePath": "C:\\Users\\yhata\\AppData\\Local\\Programs\\DeepSeek Harness\\resources\\runtime\\cli\\bin\\dsh.cmd",
+          "family": "dsh",
+          "platform": "windows",
+          "probe": "version",
+          "version": "0.2.2-rc.1"
+        }
+      },
+      "result": {
+        "contract": "yi.harness-adapter/v0",
+        "adapter": "dsh-headless",
+        "transport": "delivered",
+        "run": "completed",
+        "session": {
+          "adapter": "dsh-headless",
+          "externalId": "session-2fbdb80d-6cfe-4f52-a850-38cba11c5f05",
+          "state": "created",
+          "cwd": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace"
+        },
+        "finalText": {
+          "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+          "bytes": 2096,
+          "sha256": "sha256:77a93debb489f6cfd2afd98d9b0a2edf671c190483fad20a0523406869f8ba13"
+        },
+        "toolCalls": [
+          {
+            "callId": "call_resp_01a1c992-63d4-7ceb-a575-7d0ac6328154_0",
+            "tool": "mcp__tei__tei_model_catalog",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 8192,
+              "sha256": "sha256:898c8a4637e4f6369fe8e2b92197a2c8f17c6c5eaf8c7f2ab9f28303154663ca"
+            },
+            "resultBytes": 8192,
+            "harnessStatus": "completed",
+            "truncated": true,
+            "note": "harness-reported status; not a product verdict"
+          },
+          {
+            "callId": "call_resp_01a1c992-63d4-7ceb-a575-7d0ac6328154_1",
+            "tool": "mcp__tei__tei_validate",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 2389,
+              "sha256": "sha256:9a0e62bf0aa5c189d1eac2a40edf173e80bc51486dab02979b88899438dc1c2d"
+            },
+            "resultBytes": 2389,
+            "harnessStatus": "completed",
+            "note": "harness-reported status; not a product verdict"
+          }
+        ],
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "harness-projection-truncated",
+            "message": "the --json projection bounded at least one payload; the durable session log may hold more",
+            "source": "dsh"
+          }
+        ],
+        "outbound": [
+          {
+            "direction": "mcp-overlay",
+            "bytesSha256": "sha256:a5b4714e1d01db594aeaae6a5d8c74c195699ab6e9add8928477a801ebe1d16d",
+            "detail": "generated DSH insert patch for tei"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:6ee520cddc31c1aff394c9e3a0247654ff24d9420da7d3b5583bd8e37ba30753",
+            "byteCount": 517,
+            "detail": "dsh headless invocation"
+          },
+          {
+            "direction": "task-text",
+            "bytesSha256": "sha256:68eaeb50de81f0ac3d3ae9d96d46bad18e7f523e879878761e37eb483ad33635",
+            "byteCount": 304,
+            "detail": "task prompt"
+          }
+        ],
+        "receipt": {
+          "state": "not-observed",
+          "consumer": "dsh-headless",
+          "note": "harness reported delivery; consumer receipt not independently observed"
+        },
+        "unsupported": [
+          "result:projection-truncated"
+        ],
+        "observedModel": {
+          "provider": "spawn",
+          "model": "~deepseek/deepseek-flash-latest",
+          "route": "dsh-effective-config"
+        },
+        "observations": {
+          "effective-model": "spawn/~deepseek/deepseek-flash-latest",
+          "effective-model-note": "declared default model route from --dump-config; not an observation of what this turn used",
+          "mcp-servers": "tei"
+        },
+        "exitCode": 0,
+        "reason": "completed",
+        "startedAt": "2026-11-11T07:45:58Z",
+        "finishedAt": "2026-11-11T07:46:23Z"
+      },
+      "elapsedMs": 26102
+    },
+    {
+      "adapter": "claude-code",
+      "state": "observed",
+      "availability": {
+        "reachable": true,
+        "reason": "version probe ok; authentication is a separate condition the adapter cannot verify",
+        "detail": {
+          "exePath": "C:\\Users\\yhata\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Anthropic.ClaudeCode_Microsoft.Winget.Source_8wekyb3d8bbwe\\claude.exe",
+          "family": "claude-code",
+          "platform": "windows",
+          "probe": "version",
+          "version": "2.1.302 (Claude Code)"
+        }
+      },
+      "result": {
+        "contract": "yi.harness-adapter/v0",
+        "adapter": "claude-code",
+        "transport": "delivered",
+        "run": "completed",
+        "session": {
+          "adapter": "claude-code",
+          "externalId": "74f4834b-d8b9-4716-9344-ee3b1c05c456",
+          "state": "created",
+          "cwd": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace"
+        },
+        "finalText": "You've hit your session limit · resets 7:30pm (Asia/Tokyo)",
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "harness-stderr",
+            "message": "[claude-code:unrecognized_model] {\"model\":\"claude-fable-5-2\",\"query_source\":\"sdk\"}",
+            "source": "claude-code"
+          },
+          {
+            "severity": "error",
+            "code": "claude-result-is-error",
+            "message": "You've hit your session limit · resets 7:30pm (Asia/Tokyo)",
+            "source": "claude-code"
+          },
+          {
+            "severity": "warning",
+            "code": "harness-unknown-event-types",
+            "message": "event types this decoder does not model: rate_limit_event",
+            "source": "claude-code"
+          }
+        ],
+        "outbound": [
+          {
+            "direction": "mcp-config",
+            "bytesSha256": "sha256:fa74552ee1056ae3a546e5e93a2b069d1346dc7e5d3c17019d53b5fd9def4eec",
+            "detail": "generated Claude Code --mcp-config for tei"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:0b25c9ed5918290c2cebc592bd2ab849205cd2f15d68af9f39069f00d7d4a156",
+            "byteCount": 522,
+            "detail": "claude code print invocation"
+          },
+          {
+            "direction": "task-text",
+            "bytesSha256": "sha256:68eaeb50de81f0ac3d3ae9d96d46bad18e7f523e879878761e37eb483ad33635",
+            "byteCount": 304,
+            "detail": "task prompt"
+          },
+          {
+            "direction": "stderr",
+            "bytesSha256": "sha256:23a5fbd0010bef7317f724b0515a608484ff37939929d8e7b3a8e344e821f014",
+            "byteCount": 83,
+            "detail": "harness stderr"
+          }
+        ],
+        "receipt": {
+          "state": "not-observed",
+          "consumer": "claude-code",
+          "note": "harness reported delivery; consumer receipt not independently observed"
+        },
+        "observedModel": {
+          "model": "<synthetic>",
+          "route": "claude-code-print"
+        },
+        "observations": {
+          "advertised-tools": "Bash,Glob,Grep,Read,mcp__claude_ai_Claude_Docs__batch,mcp__claude_ai_Claude_Docs__create,mcp__claude_ai_Claude_Docs__delete,mcp__claude_ai_Claude_Docs__export,mcp__claude_ai_Claude_Docs__guide,mcp__claude_ai_Claude_Docs__query,mcp__claude_ai_Claude_Docs__read,mcp__claude_ai_Claude_Docs__update,mcp__claude_ai_Google_Drive__copy_file,mcp__claude_ai_Google_Drive__create_file,mcp__claude_ai_Google_Drive__download_file_content,mcp__claude_ai_Google_Drive__get_file_metadata,mcp__claude_ai_Google_Drive__get_file_permissions,mcp__claude_ai_Google_Drive__get_shared_drive_metadata,mcp__claude_ai_Google_Drive__list_recent_files,mcp__claude_ai_Google_Drive__list_shared_drives,mcp__claude_ai_Google_Drive__read_file_content,mcp__claude_ai_Google_Drive__search_files,mcp__claude_ai_Google_Drive__share_file,mcp__claude_ai_Google_Drive__trash_file,mcp__claude_ai_Google_Drive__update_file,mcp__tei__tei_inspect,mcp__tei__tei_model_catalog,mcp__tei__tei_model_locate,mcp__tei__tei_model_overview,mcp__tei__tei_trace,mcp__tei__tei_validate",
+          "duration-api-ms": "0",
+          "mcp-servers": "tei",
+          "num-turns": "1",
+          "total-cost-usd": "0.000000"
+        },
+        "exitCode": 1,
+        "reason": "success",
+        "startedAt": "2026-11-11T07:46:23Z",
+        "finishedAt": "2026-11-11T07:46:29Z"
+      },
+      "elapsedMs": 6212
+    },
+    {
+      "adapter": "direct-control",
+      "state": "observed",
+      "availability": {
+        "reachable": true,
+        "reason": "local deterministic control arm; no external harness involved",
+        "detail": {
+          "family": "direct-control"
+        }
+      },
+      "result": {
+        "contract": "yi.harness-adapter/v0",
+        "adapter": "direct-control",
+        "transport": "delivered",
+        "run": "completed",
+        "session": {
+          "adapter": "direct-control",
+          "state": "unknown",
+          "note": "no harness session exists in the control arm"
+        },
+        "toolCalls": [
+          {
+            "callId": "control-tei.model-catalog-1",
+            "tool": "tei.model-catalog",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 14031,
+              "sha256": "sha256:9c15113e0cc8eb0f965d1863e3d7e7b2840256aa2081a5e91227325809863d3b"
+            },
+            "resultBytes": 14031,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true,
+              "validationPassed": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.model-overview-2",
+            "tool": "tei.model-overview",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 5300,
+              "sha256": "sha256:4373f7250caad9cf322c28754990459ec5c0af07e510cf8626be7015b83bdc0a"
+            },
+            "resultBytes": 5300,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true,
+              "validationPassed": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.source-index-3",
+            "tool": "tei.source-index",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 61676,
+              "sha256": "sha256:26ca1c6f61d8e8cd71ed9552d848e397357edcb6794dc9652324bbeaf57e0d3a"
+            },
+            "resultBytes": 61676,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.validate-4",
+            "tool": "tei.validate",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 2390,
+              "sha256": "sha256:42e6c074d8cb56d3694d4bdcd321d80ed629ad347ac44a3f3b5b296f30765243"
+            },
+            "resultBytes": 2390,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.version-5",
+            "tool": "tei.version",
+            "inputJson": "{}",
+            "resultText": "tei tei.cli.version/v0 windows/amd64 go=go1.27.0 revision=7b0ab6b63c0f277441aff59f451f79c9a0f1b1ec (modified)\nbuild settings: -buildmode=exe -compiler=gc\n",
+            "resultBytes": 154,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.workspace-files-6",
+            "tool": "tei.workspace-files",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1200 bytes; full report kept in the trial directory",
+              "bytes": 9917,
+              "sha256": "sha256:603ef155ddc8537993a2732b647c1ab34f46696e769593d7542118730489872d"
+            },
+            "resultBytes": 9917,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          }
+        ],
+        "diagnostics": [
+          {
+            "severity": ""
+          },
+          {
+            "severity": ""
+          },
+          {
+            "severity": ""
+          }
+        ],
+        "outbound": [
+          {
+            "direction": "task-text",
+            "bytesSha256": "sha256:68eaeb50de81f0ac3d3ae9d96d46bad18e7f523e879878761e37eb483ad33635",
+            "byteCount": 304,
+            "detail": "task prompt (not sent to any model)"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:98147eea7d6927a80c7c4d31d1cecc1ed6ad19e7a6c1e6198023c0bdf3cac539",
+            "byteCount": 122,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:54dc7098aec3adba01ded2566cd19faf52304875a15c005d59ba61e72e568843",
+            "byteCount": 123,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:89da545473b7aa42a8609e5fcda9efe33089e191dcd4dd1ad4809672742c5b93",
+            "byteCount": 121,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:9fc51dcbd4f60f9db769bf4547db4df80795c03aa9dad1c1f3ea5bd9ca20bac1",
+            "byteCount": 123,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:f8aa25b301ce47dd3de9d3e54dcc44160eb07dabf694943198f8f567db50fc56",
+            "byteCount": 62,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:e5f1deb8981a80b29dd5bddb189b4644e544d3b5cc3d9dd5419a572c99963dad",
+            "byteCount": 124,
+            "detail": "product CLI invocation"
+          }
+        ],
+        "receipt": {
+          "state": "not-observed",
+          "consumer": "direct-control",
+          "note": "control arm output is local; consumer receipt is a separate observation"
+        },
+        "observedModel": {},
+        "startedAt": "2026-11-11T07:46:29Z",
+        "finishedAt": "2026-11-11T07:46:33Z"
+      },
+      "elapsedMs": 3906
+    }
+  ],
+  "divergences": [
+    "exit-code",
+    "session-state",
+    "tool-count",
+    "tool-names",
+    "unsupported"
+  ],
+  "notes": [
+    "An arm is observed, not passed. No arm in this report is evidence that a harness is interchangeable with another.",
+    "Session ids, tool statuses and harness exit codes are recorded separately from product acceptance and permission."
+  ]
+}
