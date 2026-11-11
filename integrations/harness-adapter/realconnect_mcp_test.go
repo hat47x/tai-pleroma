@@ -297,11 +297,16 @@ func TestRealPilotTypedMCPToolEquivalence(t *testing.T) {
 		for _, c := range mcpCalls {
 			cliCommand := strings.ReplaceAll(strings.ReplaceAll(c.RawName, "tei_", ""), "_", "-")
 			cliToolName := "tei." + cliCommand
-			if c.Call.Truncated || c.Call.ResultBytes >= 8192 {
-				t.Logf("harness %q: typed %s was bounded by the harness projection (%d bytes); E2 not shown for it",
+			// Only a payload the harness actually cut is incomparable. A large but
+			// intact payload is lossless for this harness (Claude Code does not
+			// apply DSH's 8 KiB projection cap), so size alone is not a reason to
+			// skip the comparison — an earlier byte-count heuristic wrongly
+			// skipped a 14 KiB result that parsed fine.
+			if c.Call.Truncated || !jsonValidComplete(c.Call.ResultText) {
+				t.Logf("harness %q: typed %s payload is incomplete (%d bytes); E2 not shown for it",
 					o.Adapter, c.RawName, c.Call.ResultBytes)
 				res.Unsupported = append(res.Unsupported,
-					"equivalence:"+c.RawName+":projection-truncated")
+					"equivalence:"+c.RawName+":projection-incomplete")
 				continue
 			}
 			var cliPayload []byte
