@@ -24,20 +24,21 @@
 | **H-A-4 Skill LoadState観測** | **達成（入力まで）** | `skill_observation.go`。TAI #488 への照合票入力を作る |
 | **H-A-5 Consumer受領** | **達成（partialまで）** | `consumer_receipt.go`。独立読み手でpartialを実測 |
 
-**未達**（残る作業）: E2の`tei_model_catalog`比較（両Harnessで結果が大きい）、
-E5の実4 Session事前割付とTAI #488照合票への提出、SUIの投影（read-only入口が
-Windowsで起動できないことを確認）、Claude Codeの再実行（quota回復後）。
+**未達**（残る作業）: **E5の実4 Session事前割付**（`H2→H3→H3→H2` を DSH で回し、
+TAI #488 の照合票へ提出する）、**SUIの投影**（read-only入口は存在するが、同梱
+`node_modules` が linux-x64 の esbuild でWindowsでは起動できない）、
+**Codexの導入**（未インストール）。
 
-### 0.1 Exitの現在地（2026-11-11実測）
+### 0.1 Exitの現在地（2026-11-12実測）
 
 | ID | 状態 | 根拠 |
 | --- | --- | --- |
-| E1 | **達成**（2 Harness） | DSH腕で `mcp__tei__*`、Step Code腕で `yi-harness-adapter-mcp__tei__*` を観測。Claude Codeは `run:harness-quota-or-rate-limit` |
-| E2 | **達成**（比較可能な操作で5欄一致） | `tei_validate` が schemaVersion/ok/worldFingerprint/sourceIndexFingerprint/errorCode で一致（DSH・Step Code とも）。`tei_model_catalog` は結果が大きいため比較対象外と記録。modelRevision/validationOkは未報告 |
-| E3 | **達成** | Root外readを記録。DSH=readable、Claude=unknown。Verifiedは両方false |
-| E4 | **達成**（3製品） | TEI+SEI を1 Task内で型付き到達。SHOはCLI実起動で completed。identity交差なしをnoteに記録 |
-| E5 | **部分的**（1対が適格） | `ObserveSkillPair` で H2/H3 の1対が `eligible=true`。正答は未採点。実4 Sessionの事前割付は未実施 |
-| E6 | **達成（partial）** | 独立読み手が partial を実測。claim欠落の理由をnoteに残した |
+| E1 | **達成**（3 Harness） | DSH=`mcp__tei__*`、Claude Code=`mcp__tei__*`、Step Code=`<pluginId>__tei__*`。すべて shell call 0 |
+| E2 | **達成**（7欄一致） | Claude Code・Step Code とも `tei_model_catalog` が schemaVersion/ok/errorCode/worldFingerprint/sourceIndexFingerprint/modelRevision/validationOk の7欄一致。DSHは投影cap（8KiB）で截断され比較不能と記録 |
+| E3 | **達成**（refused と readable の両方） | Claude Code=**refused**（Verified=true）、DSH=**readable**（Verified=false、findingとして記録） |
+| E4 | **達成**（2 Harness × 2製品） | DSH と Claude Code がそれぞれ1 Task内で TEI+SEI を型付き到達。SHOはCLI実起動で completed |
+| E5 | **部分的**（適格な対はDSHの1対のみ） | DSH: H3=S loaded → eligible=true。Claude Code: H3=not-loaded → ineligible。Step Code: H3=not-loaded → ineligible。**未ロードを効果なしと呼ばない** |
+| E6 | **達成（partial）** | 独立読み手が partial を再現（2回）。claim欠落の理由をnoteに残した |
 
 ## 1. 目標と出口
 

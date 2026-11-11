@@ -136,6 +136,7 @@ MCP系の試験は追加で `HARNESS_ADAPTER_TEI_MCP_BIN`、SEI系は
 ### 6.2 型付きMCP tool（H-A-1 / E1・E2）
 
 [evidence/real-pilot-typed-mcp-2026-11-11.json](evidence/real-pilot-typed-mcp-2026-11-11.json)、
+[evidence/real-pilot-typed-mcp-claude-2026-11-11.json](evidence/real-pilot-typed-mcp-claude-2026-11-11.json)、
 [evidence/real-pilot-step-typed-mcp-2026-11-11.json](evidence/real-pilot-step-typed-mcp-2026-11-11.json)
 
 promptは**型付きtool名**を名指しし、shellもCLI直実行も禁止した。
@@ -143,18 +144,23 @@ promptは**型付きtool名**を名指しし、shellもCLI直実行も禁止し�
 | Harness | 型付きtool名の形 | 観測 |
 | --- | --- | --- |
 | `dsh-headless` | `mcp__tei__tei_model_catalog` | 2件、shell call 0 |
+| `claude-code` | `mcp__tei__tei_model_catalog` | 2件、shell call 0 |
 | `step-cli` | `yi-harness-adapter-mcp__tei__tei_model_catalog` | 2件、shell call 0 |
-| `claude-code` | — | `subtype=success` かつ `is_error=true`（"You've hit your session limit"）。**turnが始まらなかった** |
 
-- **E1 達成**（2 Harness）。Step Codeは `<pluginId>__<server>__<tool>` を使うので、
+- **E1 達成**（3 Harness）。Step Codeは `<pluginId>__<server>__<tool>` を使うので、
   共通契約は「Harnessごとの綴りを記録し、復号する」形にした。`mcp__*` を標準形に固定しない。
-- **E2 達成（比較可能な範囲で）**: `tei_validate` が schemaVersion / ok /
-  worldFingerprint / sourceIndexFingerprint / errorCode で一致（DSH・Step Code とも5/5）。
-  `tei_model_catalog` は結果が大きい（DSH 8192byteで截断、Step 14030byte）ため
-  比較対象外として記録し、「不一致」とは扱わない。
-  `modelRevision`・`validationOk` はどちらも報告せず「示されていない」として區別。
-- Claude Codeの挙動は **quota制限**であり、製品の失敗でもtoolの失敗でもない。
-  `run:harness-quota-or-rate-limit` として独立に記録する。
+- **E2 達成**: Claude Code と Step Code で `tei_model_catalog` が
+  schemaVersion / ok / errorCode / worldFingerprint / sourceIndexFingerprint /
+  modelRevision / validationOk の**7欄すべて一致**。
+  `tei_validate` は5/5一致（`validationOk` は両routeが報告しない）。
+- DSHだけが投影cap（8KiB）で `tei_model_catalog` を截断するので、DSHの当該比較は
+  `not shown` として記録する。**サイズではなくJSONが閉じているかで判定する**
+  （byte数の閾値で判定していた旧実装は、Claude Codeの14030byte完全JSONを
+  誤って比較対象外にしていた。実runで踏んで直した）。
+- Claude Codeの当初の挙動（`subtype=success` + `is_error=true`、"You've hit your
+  session limit"）は **quota制限**であり、製品の失敗でもtoolの失敗でもない。
+  `run:harness-quota-or-rate-limit` として独立に記録する。枠回復後の再実行で
+  2件の型付き呼出しが観測された。
 
 ### 6.3 許可Root外read（H-A-2 / E3）
 
@@ -162,22 +168,25 @@ canaryを宣言Rootの外に置き、別セッションのprobe Armで読ませ�
 
 | Harness | outcome | attempted | echoed | Verified |
 | --- | --- | --- | --- | --- |
+| `claude-code`（acceptEdits） | **refused** | true | false | **true** |
 | `dsh-headless`（read-only） | **readable** | true | true | false |
-| `claude-code` | unknown | true | false | false |
 
 - DSHは **Root外を読めた**。`--permission-mode read-only` は書込みを止めるが読取りは通す。
   TEI #3173/#3216/#3228 の予測と一致する。これはfindingであり、PASSでもFAILでもない。
-- Claude Codeは走ったがcanaryも拒否も報告せず、境界は観測されなかった。
-  どちらの場合も `Verified` はfalseのまま。**読めなかったときだけ**trueになる。
+- Claude Codeはcanaryへ**到達して失敗**した（`tool Read` のエラー）。そのときだけ
+  `Verified=true` になる。同じ権限設定でも2 Harnessの境界は同じでない、という観測。
+- Claude Codeの拒否はこの経路（Read tool + acceptEdits + cwd固定）での話である。
+  OS identity/ACLによる隔離証明には昇格させない。
 
 ### 6.4 Product横断（H-A-3 / E4）
 
-[evidence/real-pilot-cross-product-2026-11-11.json](evidence/real-pilot-cross-product-2026-11-11.json)
+[evidence/real-pilot-cross-product-2026-11-11.json](evidence/real-pilot-cross-product-2026-11-11.json)、
+[evidence/real-pilot-cross-product-claude-2026-11-11.json](evidence/real-pilot-cross-product-claude-2026-11-11.json)
 
-1回のRunで2製品を型付きMCP toolとして呼んだ。
+1回のRunで2製品を型付きtoolとして呼んだ。**DSH と Claude Code の両方で成立**。
 
-- `mcp__tei__tei_model_catalog`, `mcp__tei__tei_validate`, `mcp__sei__resume`
-- shell callは0。
+- DSH: `mcp__tei__tei_model_catalog`, `mcp__tei__tei_validate`, `mcp__sei__resume`
+- Claude Code: 同じ3件。shell call 0
 - TEIとSEIはidentity語彙を共有しないため、identityの交差比較は行わず、その旨をnoteに残した。
 
 SHOは型付き経路が無い。`SHOReadOnlyTool` は製品CLIを直接起動し、次のように記録した。
@@ -206,21 +215,28 @@ Harnessが書いたファイルを別プロセスが読んだ。
 
 ### 6.6 Skill対（H-A-4 / E5）
 
-[evidence/skill-pair-observation-2026-11-11.json](evidence/skill-pair-observation-2026-11-11.json)
+[evidence/skill-pair-observation-2026-11-11.json](evidence/skill-pair-observation-2026-11-11.json)、
+[evidence/skill-pair-step-2026-11-11.json](evidence/skill-pair-step-2026-11-11.json)
 
-同じTaskを同じHarnessで2回、H3だけProduct Skillを配置した。
+同じTaskを同じHarnessで2回、H3だけProduct Skillを配置した。**Harnessごとに適格性が違う**。
 
-| Arm | tools | Skill load | 判定 |
-| --- | --- | --- | --- |
-| H3（Skill配置） | 2（`skill`, `mcp__tei__tei_model_catalog`） | `loaded` via `skill` | — |
-| H2（Skill削除） | 1（`mcp__tei__tei_model_catalog`） | `unknown`（配置なし） | — |
+| Harness | H3のLoadState | pair の適格性 |
+| --- | --- | --- |
+| `dsh-headless` | `loaded` via `skill` tool | **eligible=true** |
+| `claude-code` | `not-loaded`（SKILL.mdは置いたがLoader toolが呼ばれない） | eligible=false |
+| `step-cli` | `not-loaded`（`skill-history=discovered` のみ＝配置であってロードでない） | eligible=false |
 
-- pair: `eligible=true`、`skillEffect="eligibility-confirmed; accuracy not measured"`。
-- **適格性は出たが、正答の比較はしていない**。それは [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)
-  の独立Expectedの担当であり、このPackageが代行しない。
+- DSHの対は `skillEffect="eligibility-confirmed; accuracy not measured"`。
+  **適格性は出たが、正答の比較はしていない**。それは
+  [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) の独立Expectedの担当。
+- Claude Code / Step Code の未ロードは **「Skillに効果が無かった」ではない**。
+  `ineligibleReasons` に理由を書き、効果の主張をしない。適格な増分比較ができるのは
+  現時点でDSHだけである。
 - 実接続で欠陥を発見した: 当初は1つの共有pinを両Armへ渡していたため、Skillを削除した
   H2が `placed=true` と記録された。pinを**Armごと**に取り、H2の配置・H3の未配置を
   失格条件にした。契約試験では出ず、実runで初めて出た。
+- 2つ目に発見した点: `skill-history` の `discovered` は配置の観測であってロードではない。
+  discoveredより強い状態（例 `activated`）だけをロードとして扱うよう分けた。
 
 ## 7. 未対応・Vendor固有の制約
 
