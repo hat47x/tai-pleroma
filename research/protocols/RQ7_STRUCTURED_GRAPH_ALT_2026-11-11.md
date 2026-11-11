@@ -19,7 +19,7 @@
 | **Declared nodes** | `<th scope=row>`にID、`<td>`に元のLabel | Source上の全Role・Nodeの閉包とは限らない |
 | **Declared directed edges, not transitive paths** | 元Graphの各直接`from→to`。推移的Reachabilityを勝手に加えない | Build/ETL実行順や実Effectを意味しない |
 
-実装では文字列をHTMLエスケープし、Gold/実Observed/Policy/Source路径を付加しない。テーブルをまとめるだけでなく、**Graph本体と行のID/ラベル/向きまで完全一致**することを検査する。
+実装では文字列をHTMLエスケープし、Gold/実Observed/Policy/Sourceパスを付加しない。テーブルをまとめるだけでなく、**Graph本体と行のID/ラベル/向きまで完全一致**することを検査する。
 
 ## 3. 受入の独立検査
 
