@@ -121,7 +121,58 @@ func TestRealPilotCrossProductTEISEI(t *testing.T) {
 	dsh.MCPWorkDir = filepath.Join(trialDir, "overlays")
 	dsh.ProbeEffectiveConfig = true
 
-	adapters := []Adapter{dsh, direct}
+	// The harnesses to run are caller-chosen, so the same Task can be exercised on
+	// whichever harness is available; the direct control arm is always included.
+	adapters := []Adapter{direct}
+	for _, name := range splitEnvList(os.Getenv("HARNESS_ADAPTER_HARNESSES")) {
+		switch name {
+		case "direct-control":
+			continue
+		case "dsh-headless":
+			adapters = append(adapters, dsh)
+		case "claude-code":
+			cc := NewClaudeCodeAdapter(workspace)
+			cc.Timeout = 20 * time.Minute
+			cc.Tools = os.Getenv("HARNESS_ADAPTER_CC_TOOLS")
+			cc.PermissionMode = os.Getenv("HARNESS_ADAPTER_CC_PERMISSION_MODE")
+			cc.MCPServers = []MCPServerSpec{teiSpec, seiSpec}
+			cc.MCPWorkDir = filepath.Join(trialDir, "overlays")
+			adapters = append(adapters, cc)
+		case "step-cli":
+			st := NewStepCLIAdapter(filepath.Join(trialDir, "step-project"))
+			st.Timeout = 20 * time.Minute
+			st.Model = os.Getenv("HARNESS_ADAPTER_STEP_MODEL")
+			if st.Model == "" {
+				st.Model = "step-3.7-flash"
+			}
+			// Step declares MCP servers per plugin, so two products need two
+			// declarations; the plugin id namespaces the tool names.
+			plugin := StepPluginContract{
+				PluginID: "yi-harness-adapter-mcp", Name: "YI Harness Adapter MCP",
+				MCPServerName: "tei", MCPServer: teiSpec,
+				Dir: filepath.Join(trialDir, "step-project", ".stepcode", "plugins"),
+			}
+			if _, _, err := plugin.WritePlugin(); err != nil {
+				t.Fatalf("write step tei plugin: %v", err)
+			}
+			plugin2 := StepPluginContract{
+				PluginID: "yi-harness-adapter-mcp-sei", Name: "YI Harness Adapter MCP SEI",
+				MCPServerName: "sei", MCPServer: seiSpec,
+				Dir: filepath.Join(trialDir, "step-project", ".stepcode", "plugins"),
+			}
+			if _, _, err := plugin2.WritePlugin(); err != nil {
+				t.Fatalf("write step sei plugin: %v", err)
+			}
+			st.ApprovalMode = "auto"
+			st.NonInteractiveApproval = "allow"
+			if k := os.Getenv("STEP_API_KEY"); k != "" {
+				st.Env = []string{"STEP_API_KEY=" + k, "STEP_BASE_URL=" + envOr("STEP_BASE_URL", "https://api.stepfun.ai/step_plan/v1")}
+			}
+			adapters = append(adapters, st)
+		default:
+			t.Fatalf("unknown harness %q", name)
+		}
+	}
 	for _, a := range adapters {
 		av, err := a.Probe(ctx)
 		if err != nil {
@@ -138,29 +189,46 @@ func TestRealPilotCrossProductTEISEI(t *testing.T) {
 	t.Logf("pilot summary:\n%s", rep.Summary())
 
 	// 4. E4: both products must appear in the typed MCP calls.
-	arm := findArm(rep, dsh.Name())
-	if arm == nil || arm.Result == nil {
-		t.Fatal("harness arm produced no result")
-	}
-	if arm.State == PilotIneligible {
-		t.Skipf("harness ineligible: %s", arm.Reason)
-	}
-	servers := map[string]bool{}
-	for _, c := range arm.Result.MCPToolCalls() {
-		servers[c.ServerName] = true
-		t.Logf("typed MCP call: %s (server %s, raw %s)", c.Call.Tool, c.ServerName, c.RawName)
-	}
-	for _, want := range []string{"tei", "sei"} {
-		if !servers[want] {
-			t.Logf("product %q was not reached through a typed MCP tool; E4 not shown for it", want)
+	// Report each harness arm's reach separately; the control arm is not a
+	// harness, so it is skipped.
+	for _, o := range rep.Outcomes {
+		if o.Adapter == direct.Name() {
+			continue
 		}
-	}
-	if servers["tei"] && servers["sei"] {
-		t.Log("E4: two products reached in one Task through typed MCP tools")
-	}
-	// A shell call that reaches either CLI is recorded as a bypass, not as a typed
-	// tool.
-	if n := len(arm.Result.ShellBridgeCalls()); n > 0 {
-		t.Logf("the harness also made %d shell call(s); those are not typed tool observations", n)
+		if o.State == PilotIneligible || o.Result == nil {
+			t.Logf("harness %q: state=%s (%s)", o.Adapter, o.State, o.Reason)
+			continue
+		}
+		arm := &o
+		servers := map[string]bool{}
+		for _, c := range arm.Result.MCPToolCalls() {
+			servers[c.ServerName] = true
+			t.Logf("harness %q typed MCP call: %s (server %s, raw %s)",
+				o.Adapter, c.Call.Tool, c.ServerName, c.RawName)
+		}
+		// Step publishes `<pluginId>__<server>__<tool>`, so its names decode through
+		// StepToolName rather than MCPToolCalls. Count those too.
+		for _, c := range arm.Result.ToolCalls {
+			if _, server, raw, ok := StepToolName(c.Tool); ok {
+				servers[server] = true
+				t.Logf("harness %q Step-style typed call: %s (server %s, raw %s)",
+					o.Adapter, c.Tool, server, raw)
+			}
+		}
+		for _, want := range []string{"tei", "sei"} {
+			if !servers[want] {
+				t.Logf("harness %q: product %q was not reached through a typed tool; E4 not shown for it",
+					o.Adapter, want)
+			}
+		}
+		if servers["tei"] && servers["sei"] {
+			t.Logf("E4 (harness %q): two products reached in one Task through typed tools", o.Adapter)
+		}
+		// A shell call that reaches either CLI is recorded as a bypass, not as a
+		// typed tool.
+		if n := len(arm.Result.ShellBridgeCalls()); n > 0 {
+			t.Logf("harness %q also made %d shell call(s); those are not typed tool observations",
+				o.Adapter, n)
+		}
 	}
 }
