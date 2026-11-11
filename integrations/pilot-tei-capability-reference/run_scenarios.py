@@ -161,7 +161,6 @@ def main(argv: list[str] | None = None) -> int:
         envelope = load(work / "handoff.json")
         unexpected = set(envelope) - {
             "schemaVersion",
-            "handoffId",
             "createdAt",
             "activity",
             "consumer",

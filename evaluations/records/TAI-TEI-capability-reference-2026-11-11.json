@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tai.tei-capability-reference/scenario-record/v0",
-  "date": "2026-11-11T04:28:09Z",
+  "date": "2026-11-11T04:39:24Z",
   "activity": {
     "id": "TAI-ACT-TEI-CAPABILITY-REFERENCE-01",
     "purpose": "activity-continuation-reference"
@@ -75,7 +75,6 @@
           "consumer",
           "createdAt",
           "envelopeDigest",
-          "handoffId",
           "limits",
           "schemaVersion",
           "selection",

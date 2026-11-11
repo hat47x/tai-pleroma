@@ -39,7 +39,6 @@ CAPABILITY_KIND = "semantic-capability"
 # 消費者へ渡してよい鍵だけを列挙する。会話、Workspace全体、Raw bytes は含めない。
 HANDOFF_KEYS = {
     "schemaVersion",
-    "handoffId",
     "createdAt",
     "activity",
     "consumer",
@@ -621,7 +620,6 @@ def build_handoff(args: argparse.Namespace) -> dict[str, Any]:
 
     envelope = {
         "schemaVersion": HANDOFF_SCHEMA,
-        "handoffId": None,
         "createdAt": args.created_at or utc_now(),
         "activity": view.get("activity"),
         "consumer": {"id": args.consumer},
@@ -652,7 +650,6 @@ def build_handoff(args: argparse.Namespace) -> dict[str, Any]:
             "Revisionが変わった場合は再資格化が必要で、古い結果を暗黙に再利用しない。",
         ],
     }
-    envelope["handoffId"] = digest_without(envelope, "handoffId")
     envelope["envelopeDigest"] = digest_without(envelope, "envelopeDigest")
     unexpected = set(envelope) - HANDOFF_KEYS - {"envelopeDigest"}
     if unexpected:
