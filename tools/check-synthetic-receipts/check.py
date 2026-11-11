@@ -208,6 +208,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-g2-landing-2026-11-11.json",
     "evaluations/records/YI-g1-status-2026-11-11.json",
     "evaluations/records/YI-landing-paths-2026-11-11.json",
+    "evaluations/records/YI-stage3-inventory-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -529,6 +530,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-stage3-inventory" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyEvidenceFileExists") is not True
+                or not observed.get("notRun")
+            ):
+                errors.append(f"stage-3 inventory lost an item or hid a not-run: {relative}")
         if "YI-landing-paths" in relative:
             observed = data.get("observed", {})
             if (
