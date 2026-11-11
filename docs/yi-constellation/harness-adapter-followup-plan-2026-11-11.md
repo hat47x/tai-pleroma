@@ -24,17 +24,18 @@
 | **H-A-4 Skill LoadState観測** | **達成（入力まで）** | `skill_observation.go`。TAI #488 への照合票入力を作る |
 | **H-A-5 Consumer受領** | **達成（partialまで）** | `consumer_receipt.go`。独立読み手でpartialを実測 |
 
-**未達**（残る作業）: E1の**2 Harness同時成立**（Claude Codeはquota制限で未成立）、
-E5の実測（H2/H3の実4 Sessionは未実施）、SHO/SUIの投影、第三Adapter（Codex未導入）。
+**未達**（残る作業）: E2の`tei_model_catalog`比較（両Harnessで結果が大きい）、
+E5の実4 Session事前割付とTAI #488照合票への提出、SUIの投影（read-only入口が
+Windowsで起動できないことを確認）、Claude Codeの再実行（quota回復後）。
 
 ### 0.1 Exitの現在地（2026-11-11実測）
 
 | ID | 状態 | 根拠 |
 | --- | --- | --- |
-| E1 | **部分的**（1 Harness） | DSH腕で `mcp__tei__tei_model_catalog`/`tei_validate` を観測。Claudeは `run:harness-quota-or-rate-limit` |
-| E2 | **部分的**（5欄一致、截断で1操作未比較） | `tei_validate` で schemaVersion/ok/worldFingerprint/sourceIndexFingerprint/errorCode が一致。modelRevision/validationOkは未報告 |
+| E1 | **達成**（2 Harness） | DSH腕で `mcp__tei__*`、Step Code腕で `yi-harness-adapter-mcp__tei__*` を観測。Claude Codeは `run:harness-quota-or-rate-limit` |
+| E2 | **達成**（比較可能な操作で5欄一致） | `tei_validate` が schemaVersion/ok/worldFingerprint/sourceIndexFingerprint/errorCode で一致（DSH・Step Code とも）。`tei_model_catalog` は結果が大きいため比較対象外と記録。modelRevision/validationOkは未報告 |
 | E3 | **達成** | Root外readを記録。DSH=readable、Claude=unknown。Verifiedは両方false |
-| E4 | **達成** | TEI+SEI を1 Task内で型付き到達。identity交差なしをnoteに記録 |
+| E4 | **達成**（3製品） | TEI+SEI を1 Task内で型付き到達。SHOはCLI実起動で completed。identity交差なしをnoteに記録 |
 | E5 | **部分的**（1対が適格） | `ObserveSkillPair` で H2/H3 の1対が `eligible=true`。正答は未採点。実4 Sessionの事前割付は未実施 |
 | E6 | **達成（partial）** | 独立読み手が partial を実測。claim欠落の理由をnoteに残した |
 
@@ -58,7 +59,7 @@ E5の実測（H2/H3の実4 Sessionは未実施）、SHO/SUIの投影、第三Ada
 
 | ID | 出口 | 判定方法 |
 | --- | --- | --- |
-| E1 | 2Harness × 型付きTool × 同一Task が観測される | pilot report の `toolNames` に `mcp__*` が入る |
+| E1 | 2Harness × 型付きTool × 同一Task が観測される | Harnessごとの綴り（DSH/Claudeは `mcp__*`、Stepは `<pluginId>__<server>__<tool>`）で型付き呼出しが観測される |
 | E2 | CLI直実行とMCP経路の同値 | fingerprint/schemaVersion/ok/error.code の完全比較 |
 | E3 | Root外readの成否が記録される | probe Arm の記録。**拒否できなくても記録できればE3達成** |
 | E4 | 2Product（TEI + もう1つ）が同一Taskで呼ばれる | pilot report に2ProductのToolが混在 |
@@ -348,11 +349,12 @@ expectedをproducerの自己申告に合わせると、自己整合な捏造で�
 
 | 成果 | 返す先 | 返す内容 | 状態 |
 | --- | --- | --- | --- |
-| 型付きToolの実接続 | [TEI #2509](https://github.com/hat47x/tei-platform/issues/2509) | DSH mcp-client 接続の実測。server instructions混入の有無 | 実測あり・未報告 |
-| MCP同値 | [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)（ADR-0048 CAPI-2） | CLI vs MCP の fingerprint/schemaVersion/ok/error.code 比較 | 5欄一致・1操作截断・未報告 |
+| 型付きToolの実接続（DSH） | [TEI #2509](https://github.com/hat47x/tei-platform/issues/2509) | DSH mcp-client 接続の実測。server instructions混入の有無 | 実測あり・未報告 |
+| 型付きToolの実接続（Step Code） | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)／[TEI #4218](https://github.com/hat47x/tei-platform/issues/4218) | 第2Harnessでの型付き到達。plugin宣言の形、tool名の復号、quota非依存 | 実測あり・未報告 |
+| MCP同値 | [TEI #3420](https://github.com/hat47x/tei-platform/issues/3420)（ADR-0048 CAPI-2） | CLI vs MCP の fingerprint/schemaVersion/ok/error.code 比較 | 5欄一致（2Harness）・`tei_model_catalog`は比較対象外・未報告 |
 | Root検証 | [TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)／[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515) | probe Armの成否。**拒否できなくても記録** | DSH=readable を実測・未報告 |
-| Product横断 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | SEI/SHO/SUI投影の適格性。未対応は `unsupported` | TEI+SEI達成・SHO/SUI未投影 |
-| Skill測定 | [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) | LoadState観測。効果有無の結論 | 入力実装済・実Session NOT RUN |
+| Product横断 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) | SEI/SHO/SUI投影の適格性。未対応は `unsupported` | TEI+SEI型付き達成・SHO CLI実起動・SUI未起動（Windowsでesbuild不整合） |
+| Skill測定 | [TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) | LoadState観測。効果有無の結論 | H2/H3 1対がeligible・実4 Session NOT RUN |
 | Consumer受領 | [EKI #465](https://github.com/hat47x/eki-fabric/issues/465)／[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271) | Receiptの独立readback | partialを実測・未報告 |
 | Adapter契約自体 | [TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md) | 5水準・7Pinの実装がADRの受入試験T01〜T13のどれに対応するか | 未整理 |
 

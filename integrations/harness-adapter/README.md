@@ -50,7 +50,8 @@ Harness側のSession IDは `SessionRef.ExternalID` として**不透明な観測
 | Adapter | 実行形態 | 状態 |
 | --- | --- | --- |
 | `dsh-headless` | `dsh --profile <p> [--patch ...] --json [flags] <task>` | **実接続済み**（DSH 0.2.2-rc.1, Windows） |
-| `claude-code` | `claude -p <prompt> --output-format stream-json --verbose [flags]` | **実接続済み**（Claude Code 2.1.302, Windows） |
+| `claude-code` | `claude -p <prompt> --output-format stream-json --verbose [flags]` | **実接続済み**（Claude Code 2.1.302, Windows）。2026-11-11夜は利用枠が枯渇 |
+| `step-cli` | `step --approve --mode json -p [flags] <task>` | **実接続済み**（Step Code 0.1.7, Windows） |
 | `direct-control` | モデルなし。Taskが宣言した製品Toolを決定的に実行 | **実装済み**。比較の対照腕 |
 | `scripted-*` | 契約試験専用の二重結合。`FakeRunner` に再生させる | **契約試験のみ**。製品ではない |
 
@@ -134,19 +135,23 @@ MCP系の試験は追加で `HARNESS_ADAPTER_TEI_MCP_BIN`、SEI系は
 
 ### 6.2 型付きMCP tool（H-A-1 / E1・E2）
 
-[evidence/real-pilot-typed-mcp-2026-11-11.json](evidence/real-pilot-typed-mcp-2026-11-11.json)
+[evidence/real-pilot-typed-mcp-2026-11-11.json](evidence/real-pilot-typed-mcp-2026-11-11.json)、
+[evidence/real-pilot-step-typed-mcp-2026-11-11.json](evidence/real-pilot-step-typed-mcp-2026-11-11.json)
 
 promptは**型付きtool名**を名指しし、shellもCLI直実行も禁止した。
 
-| 腕 | typed MCP calls | shell calls | 観測 |
-| --- | --- | --- | --- |
-| `dsh-headless` | 2（`mcp__tei__tei_model_catalog`, `mcp__tei__tei_validate`） | 0 | モデルは型付き経路を選んだ |
-| `claude-code` | 0 | 0 | `subtype=success` かつ `is_error=true`、本文 "You've hit your session limit"。**turnが始まらなかった** |
+| Harness | 型付きtool名の形 | 観測 |
+| --- | --- | --- |
+| `dsh-headless` | `mcp__tei__tei_model_catalog` | 2件、shell call 0 |
+| `step-cli` | `yi-harness-adapter-mcp__tei__tei_model_catalog` | 2件、shell call 0 |
+| `claude-code` | — | `subtype=success` かつ `is_error=true`（"You've hit your session limit"）。**turnが始まらなかった** |
 
-- **E1**: 型付きtool呼出しが実Harness（DSH）から観測された。**1 Harnessのみ**で成立。
-- **E2**: `tei_validate` について schemaVersion / ok / worldFingerprint /
-  sourceIndexFingerprint / errorCode が一致（5欄 evidenced & equal）。
-  `tei_model_catalog` は8192byteで截断され比較できず `equivalence:...:projection-truncated` を報告。
+- **E1 達成**（2 Harness）。Step Codeは `<pluginId>__<server>__<tool>` を使うので、
+  共通契約は「Harnessごとの綴りを記録し、復号する」形にした。`mcp__*` を標準形に固定しない。
+- **E2 達成（比較可能な範囲で）**: `tei_validate` が schemaVersion / ok /
+  worldFingerprint / sourceIndexFingerprint / errorCode で一致（DSH・Step Code とも5/5）。
+  `tei_model_catalog` は結果が大きい（DSH 8192byteで截断、Step 14030byte）ため
+  比較対象外として記録し、「不一致」とは扱わない。
   `modelRevision`・`validationOk` はどちらも報告せず「示されていない」として區別。
 - Claude Codeの挙動は **quota制限**であり、製品の失敗でもtoolの失敗でもない。
   `run:harness-quota-or-rate-limit` として独立に記録する。
@@ -174,6 +179,18 @@ canaryを宣言Rootの外に置き、別セッションのprobe Armで読ませ�
 - `mcp__tei__tei_model_catalog`, `mcp__tei__tei_validate`, `mcp__sei__resume`
 - shell callは0。
 - TEIとSEIはidentity語彙を共有しないため、identityの交差比較は行わず、その旨をnoteに残した。
+
+SHOは型付き経路が無い。`SHOReadOnlyTool` は製品CLIを直接起動し、次のように記録した。
+
+- `sho-inspect.cjs inspect <pinned.md>` が exit 0・11018 bytes、`status:indexed`
+- product verdict: `completed=true`、`failureCode=""`、`validationPassed=nil`（SHOは検証を評価しない）
+- 文書がRoot外なら offer せず `sho.inspect:document-outside-allowed-root`
+- MCP spec要求はエラー。**SHOにstdio JSON-RPC面が無い**ためMCP腕は試行していない
+
+SUIは投影していない。`03_Implement/mcp` のstdio server自体は存在するが、同梱の
+`node_modules` が **linux-x64 のesbuild** で、Windowsでは起動できない
+（`@esbuild/linux-x64` があり `win32-x64` が無い）。依存を入れ直さない限り
+`unsupported:environment-esbuild-platform-mismatch` として扱う。
 
 ### 6.5 Consumer受領（H-A-5 / E6）
 
@@ -258,6 +275,27 @@ Harnessが書いたファイルを別プロセスが読んだ。
   DSHの投影にはない。
 - `rate_limit_event` など本decoderがモデル化しないevent型があり
   `harness-unknown-event-types` として警告される。
+- `result` eventは `subtype="success"` と `is_error=true` を同時に返し得る。
+  実runで "You've hit your session limit" がこの形だった。subtypeだけで
+  `run=completed` と判定してはならない。
+
+### Step Code（0.1.7）固有
+- 実行形は `step --approve --mode json -p`。終端は `agent_settled` で、
+  exit 0だけでは完了と言えない。`isError` のtool resultは `run=error` として扱う。
+- **Tool名の形が2つある**。`~/.stepcode/config.toml` の `[mcp_servers.<name>]` 経由は
+  `<server>__<tool>`、plugin宣言経由は `<pluginId>__<server>__<tool>`。
+  `mcp__` 接頭辞は無い。`StepToolName` が両方を復号する。
+- **plugin宣言の置き場所**は `<cwd>/.stepcode/plugins/<safe-name>/step.plugin.json`
+  で、projectを `--approve` で信頼する必要がある。`step install <dir>` は
+  marketplace facadeで、manifestの `entry` は「recorded but not loaded」。
+  MCP宣言だけなら config.toml か project-scoped plugin が効く。
+- **`config.toml` はBOMを受け付けない**。BOM付きだと
+  "only letter, numbers, dashes and underscores are allowed in keys" で拒否される。
+- 無人でMCP toolを呼ぶには `--approval-mode auto --non-interactive-approval allow` が要る。
+  既定では「workspaceを変更し得る」と判定され、toolが拒否される。
+- Skillは `kind:"skill", stage:"discovered"` だけが観測される。活性化stageは無いので、
+  `--skill` を渡しても `skill:load-not-observed` を報告する。
+- `--mode json` はrun logであり、永続session transcriptとは別物。
 
 ## 8. 使い方
 
@@ -268,7 +306,7 @@ go test ./... -count=1                                   # 契約試験（外部
 go build -o /tmp/harness-adapter ./cmd/harness-adapter
 /tmp/harness-adapter -task task.json -adapters direct-control -out report.json
 /tmp/harness-adapter -task task.json -real \
-  -adapters dsh-headless,claude-code,direct-control -out report.json
+  -adapters dsh-headless,step-cli,claude-code,direct-control -out report.json
 ```
 
 Task JSONは `Task` 型そのまま。Prompt・Pins・ContextRefs・Tools・Skills・Limitsを持つ。
@@ -279,4 +317,5 @@ Task JSONは `Task` 型そのまま。Prompt・Pins・ContextRefs・Tools・Skil
 - `AllCapabilities()` は閉集合。増やすなら定数を足してこの文書も更新する。
 - Adapterを足すときは `Adapter` interfaceを実装し、`Probe` は**必ず実プロセスを踏む**。
   `Reachable=true` を実行なしで返してはならない。
-- 実接続テストは `realconnect_test.go` に閉じ、通常buildから除外する。
+- 実接続テストは `realconnect*_test.go` に閉じ、通常buildから除外する。
+- Tool名の復号はHarnessごとに別関数にする。`mcp__*` を全Vendorの標準形に固定しない。
