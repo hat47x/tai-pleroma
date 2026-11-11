@@ -359,6 +359,32 @@ sui.card.record: id, text, x, y, claimType?, holdState?, textReviewed?
 - [artifact](../../evaluations/artifacts/documentv1-projection.json)
 
 `critiqueHistory`のような構造体の配列は未対応です。
+## Source状態と文書開示の宣言（2026-11-12）
+
+SUI側のread-only参照（`GET /docs/{doc_id}/tei/sui-reference`）は、artifactの`source.status`と`disclosure.scope`を**省略可能な入力**として読めます（[SUI PR #3429](https://github.com/hat47x/sui-sensemaking/pull/3429)・ADR-0116）。本ディレクトリのschemaと構造検証も、同じキーを**optional**として受理します。
+
+| キー | 値 | 省略時 |
+| --- | --- | --- |
+| `source.status` | `active` / `revoked` / `expired` | `unknown`（`active`へ読み替えない） |
+| `source.statusReason` | 自由文字列 | 無し |
+| `source.documentRevision` | 版の識別子（内容digestとは別物） | 無し |
+| `source.observedAt` | RFC3339の観測時刻 | 無し |
+| `disclosure.scope` | `public` / `internal` / `restricted` | 文書単位の制限なし |
+
+- `revoked` / `expired` は、SUI側で参照を返さず `409` になります（内容・ID・件数を返さない）
+- `disclosure.scope=restricted` は、SUI側で参照を返さず `403` になります（種別・ID・件数も返さない）
+- 省略時は **`active` を既定値として埋めない**。埋めると、古いartifactを現在と誤認させる
+- `assembler/producer_declaration.py` は、呼び出し側が渡したキーだけを書きます（渡していないキーを発明しない）
+
+検証:
+
+```bash
+cd integrations/pilot-sui-document/assembler
+python -m pytest test_producer_declaration.py test_artifact_schema.py -q   # 15 passed
+```
+
+既存の `evaluations/artifacts/*.json` のうち projection schema を持つファイルは、追加後のschemaでも全てvalidです（省略可能キーのため）。宣言を書いたartifactの受け入れは、SUI側のconsumer（`build_sui_reference`）に対して4ケース（active/revoked/expired/restricted）で確認済みです。
+
 ## artifactの構造検証（2026-11-02）
 
 `assembler/validate_artifact.py`で、artifactのenvelopeと要素の形を検査します。
