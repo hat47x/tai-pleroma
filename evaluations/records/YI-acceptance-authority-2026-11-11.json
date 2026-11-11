@@ -1,0 +1,87 @@
+{
+  "schema": "tai.reference.yi-acceptance-authority/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading each product's requirement and plan documents",
+  "command": "python integrations/tools/yi_acceptance_authority_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-acceptance-authority-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "products": {
+      "TAI": {
+        "repository": "tai-pleroma",
+        "documentsRead": 41,
+        "roleMentions": 366,
+        "acceptedMentions": 81,
+        "describesAnAcceptanceRole": true
+      },
+      "SEI": {
+        "repository": "sei-cognition",
+        "documentsRead": 1,
+        "roleMentions": 0,
+        "acceptedMentions": 50,
+        "describesAnAcceptanceRole": false
+      },
+      "TEI": {
+        "repository": "tei-platform",
+        "documentsRead": 1,
+        "roleMentions": 7,
+        "acceptedMentions": 26,
+        "describesAnAcceptanceRole": true
+      },
+      "EKI": {
+        "repository": "eki-fabric",
+        "documentsRead": 1,
+        "roleMentions": 0,
+        "acceptedMentions": 3,
+        "describesAnAcceptanceRole": false
+      },
+      "SUI": {
+        "repository": "sui-sensemaking",
+        "documentsRead": 6,
+        "roleMentions": 0,
+        "acceptedMentions": 18,
+        "describesAnAcceptanceRole": false
+      },
+      "SHO": {
+        "repository": "sho-composer",
+        "documentsRead": 11,
+        "roleMentions": 66,
+        "acceptedMentions": 3,
+        "describesAnAcceptanceRole": true
+      },
+      "MMI": {
+        "repository": "markdown-matrix-injector",
+        "documentsRead": 1,
+        "roleMentions": 0,
+        "acceptedMentions": 3,
+        "describesAnAcceptanceRole": false
+      }
+    },
+    "productsDescribingAnAcceptanceRole": [
+      "TAI",
+      "TEI",
+      "SHO"
+    ],
+    "productsWithoutAnAcceptanceRole": [
+      "SEI",
+      "EKI",
+      "SUI",
+      "MMI"
+    ],
+    "allProductsNameAnAuthority": false,
+    "acceptedWithoutARole": [
+      "SEI",
+      "EKI",
+      "SUI",
+      "MMI"
+    ],
+    "finding": "4つの製品（SEI・EKI・SUI・MMI）は、受理・承認の役割を名指す語を持たない。うちSEI・EKI・SUI・MMIはいずれもAcceptedや受理の記録を持つが、誰が受理したかは書かれていない。D5で「各製品のOwnerが受理する」を選ぶと、この4製品では役割が文書に現れないまま受理の記録だけが残る。"
+  },
+  "scope": "Counts mentions of acceptance roles and acceptance records in each product's requirement and plan documents. It counts words, not decisions: a document that names an Owner does not establish that the person exists or has agreed, and this does not decide D5."
+}
