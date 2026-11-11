@@ -220,6 +220,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-overreach-2026-11-11.json",
     "evaluations/records/YI-eki-measurement-2026-11-11.json",
     "evaluations/records/YI-danger-units-2026-11-11.json",
+    "evaluations/records/YI-publication-refusal-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -541,6 +542,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-publication-refusal" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("refusalObserved") is not True
+                or observed.get("allowed") is not False
+            ):
+                errors.append(f"the publication refusal changed shape: {relative}")
         if "YI-danger-units" in relative:
             observed = data.get("observed", {})
             if (
