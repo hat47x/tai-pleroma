@@ -1,0 +1,78 @@
+{
+  "schema": "tai.reference.yi-danger-units/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yi_danger_units_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-danger-units-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptsDeclaringPublicationHeld": 286,
+    "receiptsRead": 300,
+    "units": {
+      "permissionDeviation": {
+        "label": "権限の逸脱",
+        "observedIn": 13,
+        "examples": [
+          "SUI-readonly-enforcement-2026-11-06.json",
+          "SUI-saas-callback-contract-2026-11-03.json",
+          "SUI-TEI-agent-credential-admin-2026-11-06.json",
+          "SUI-TEI-agent-read-path-2026-11-06.json",
+          "SUI-TEI-fields-roundtrip-2026-11-03.json"
+        ]
+      },
+      "delegationRefusal": {
+        "label": "委任の拒否",
+        "observedIn": 37,
+        "examples": [
+          "EKI-TEI-manual-execution-2026-11-03.json",
+          "EKI-TEI-revoked-agent-2026-11-03.json",
+          "robotics-records-2026-11-02.json",
+          "SCN-001-negative-matrix-2026-10-29.json",
+          "SCN-002-eki-quote-b-2026-10-29.json"
+        ]
+      },
+      "permissionExpiry": {
+        "label": "権限の期限切れ",
+        "observedIn": 15,
+        "examples": [
+          "EKI-TEI-revoked-agent-2026-11-03.json",
+          "SEI-TEI-doctor-2026-11-06.json",
+          "SK-J-public-fixture-selfcheck-2026-11-02.json",
+          "SK-M-public-fixture-selfcheck-2026-11-02.json",
+          "SK-N-public-negative-witness-selfcheck-2026-11-02.json"
+        ]
+      },
+      "verificationFailure": {
+        "label": "検証の失敗",
+        "observedIn": 32,
+        "examples": [
+          "AS-LB-loopback-http-2026-11-02.json",
+          "EKI-runtime-limits-2026-11-01.json",
+          "SCN-001-invalid-eki-2026-10-29.json",
+          "SCN-001-invalid-mmi-2026-10-29.json",
+          "SCN-001-invalid-sui-2026-10-29.json"
+        ]
+      },
+      "publicationRefusal": {
+        "label": "公開の拒否",
+        "observedIn": 2,
+        "examples": [
+          "TEI-meaning-change-requiredness-2026-11-06.json",
+          "YI-danger-units-2026-11-11.json"
+        ]
+      }
+    },
+    "publicationRefusalEvidence": 2,
+    "publicationFieldOnlyIn": 0,
+    "unitsWithNoObservation": [],
+    "everyUnitHasEvidence": true,
+    "finding": "危険の最小単位のうち、権限の逸脱・委任の拒否・権限の期限切れ・検証の失敗には、既存のreceiptがある。公開の拒否だけは、ほとんどがpublicationAllowed:falseという宣言であり、拒否が実際に起きた観測としては少ない。"
+  },
+  "scope": "Searches the receipts for wording that evidences each of the five smallest danger units and records how many receipts show it. The match is lexical: a receipt that mentions a 403 in its scope or notes counts the same as one that observed a 403, so the counts are an upper bound, not a measure of the unit. It does not decide whether Kan should be a product."
+}
