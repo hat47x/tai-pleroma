@@ -1,0 +1,43 @@
+{
+  "schema": "tai.reference.yi-staleness-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Node.js running MMI's provenance and review-basis CLIs",
+  "command": "python integrations/tools/yi_staleness_probe.py --mmi-repo <MMI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-staleness-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "referenceStatus": {
+      "beforeRecord": "unrecorded",
+      "afterWrite": "fresh",
+      "afterSourceEdit": "stale",
+      "afterOutsideEdit": "stale"
+    },
+    "reportStatus": {
+      "beforeRecord": "not-configured",
+      "afterWrite": "recorded",
+      "afterSourceEdit": "recorded",
+      "afterOutsideEdit": "recorded"
+    },
+    "reasons": {
+      "afterSourceEdit": [
+        "logical-table-changed"
+      ],
+      "afterOutsideEdit": [
+        "logical-table-changed"
+      ]
+    },
+    "recordWasWritten": true,
+    "unrecordedBeforeWriting": true,
+    "freshAfterWriting": true,
+    "editInsideRangeIsStale": true,
+    "reportStatusStaysRecordedAfterEdits": true,
+    "finding": "review-basisを記録した後、参照ごとの判定はfreshになり、原本を改訂するとstale（logical-table-changed）へ変わる。報告全体のstatusはrecordedのままなので、鮮度はper-referenceのstatusを読む必要がある。"
+  },
+  "scope": "Runs MMI's review-basis and provenance commands on a synthetic Markdown artifact, records the per-reference verdict before and after the source is revised, and reports that a revision makes the record stale while the report-level status stays recorded. The artifact and the spreadsheet are synthetic, the store is a temporary directory, and this says nothing about whether a person reviewed the change or whether the edit was inside the referenced range."
+}
