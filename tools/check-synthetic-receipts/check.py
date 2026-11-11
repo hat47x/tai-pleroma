@@ -233,6 +233,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-cross-receipt-2026-11-11.json",
     "evaluations/records/YI-artifact-digest-2026-11-11.json",
     "evaluations/records/YI-pass-consistency-2026-11-11.json",
+    "evaluations/records/SCN-001-outcome-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -647,6 +648,20 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyClaimStillStated") is not True
             ):
                 errors.append(f"a deck figure no longer matches its receipt: {relative}")
+        if "SCN-001-outcome" in relative:
+            observed = data.get("observed", {})
+            positive = observed.get("cases", {}).get("positive", {}).get("claims", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("expectationMismatches") != []
+                or observed.get("selfTest", {}).get("failures") != []
+                or positive.get("T-Draft", {}).get("verdict") != "established"
+                or positive.get("P-Publish", {}).get("verdict") != "unmet"
+                or positive.get("Value", {}).get("verdict") != "not-evaluated"
+                or observed.get("ownerAuthorityVerified") is not False
+                or observed.get("gate", {}).get("allowed") is not False
+            ):
+                errors.append(f"the SCN-001 outcome observation merged its claims: {relative}")
         if "YI-publication-refusal" in relative:
             observed = data.get("observed", {})
             if (

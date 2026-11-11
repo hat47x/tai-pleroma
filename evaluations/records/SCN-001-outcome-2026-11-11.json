@@ -1,0 +1,327 @@
+{
+  "schema": "tai.reference.scn001-outcome-observation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "WSL2 Ubuntu with Go 1.27.0, Node 24.22.2, Python 3.12.3; MMI 386f81c3, SEI cd6eb025, SHO 88a15786",
+  "command": "python integrations/tools/scn001_outcome_probe.py --tai-root . --stale-run evaluations/records/SCN-001-run-2026-11-01.json --sho-root <SHO> --out evaluations/records/SCN-001-outcome-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/SCN-001-D-04-provisional.md",
+    "digest": "sha256:0600ddbe0cbdb57f5c3b7ad6ee874d9c57efd2b3c53a5584edd1498fd6d4b07f"
+  },
+  "observed": {
+    "attempt": {
+      "startedAt": "2026-11-11T11:12:31Z",
+      "generatedAt": "2026-11-11T11:12:38Z",
+      "runDigest": "sha256:c06520fb6544dff4151f9f62af716a7eeec3068d81b83a4dc47ba9d473c07118",
+      "runPassed": true,
+      "mmiCommit": "386f81c3f7bf4dc5e9e4b0f24eb3aa03d30be453",
+      "mmiServer": "markdown-matrix-injector/0.3.0",
+      "seiCommit": "cd6eb02582f0e0ca84b91c9d273880a602e8e784",
+      "artifactDigest": "sha256:0600ddbe0cbdb57f5c3b7ad6ee874d9c57efd2b3c53a5584edd1498fd6d4b07f",
+      "artifactBytes": 1969,
+      "artifactScope": "development-review-only",
+      "matchesStoredArtifact": true,
+      "runReceiptRetained": false
+    },
+    "cases": {
+      "positive": {
+        "verifier": {
+          "exit": 0,
+          "passed": true,
+          "artifactBytesVerified": true,
+          "inputBindingVerified": true,
+          "reason": "",
+          "compared": true
+        },
+        "claims": {
+          "T-Draft": {
+            "verdict": "established",
+            "basis": "bytes-and-input-binding-verified-for-this-attempt"
+          },
+          "R-Deliver.otherImplementation": {
+            "verdict": "limited",
+            "basis": "same-bytes-read-by-another-implementation"
+          },
+          "R-Deliver.intendedRecipient": {
+            "verdict": "not-run",
+            "basis": "no-intended-recipient-observed"
+          },
+          "Authority.publication": {
+            "verdict": "absent",
+            "basis": "no-owner-authority-verified"
+          },
+          "S-NoUnauthorizedPublish": {
+            "verdict": "satisfied",
+            "basis": "gate-refusal-observed"
+          },
+          "P-Publish": {
+            "verdict": "unmet",
+            "basis": "waiting-for-authority"
+          },
+          "Effect": {
+            "verdict": "none",
+            "basis": "declared-by-receipt",
+            "retryWithoutIndependentRead": null
+          },
+          "Value": {
+            "verdict": "not-evaluated",
+            "basis": "no-user-or-owner-evaluation"
+          }
+        }
+      },
+      "artifactNotCompared": {
+        "verifier": {
+          "exit": 0,
+          "passed": true,
+          "artifactBytesVerified": false,
+          "inputBindingVerified": true,
+          "reason": "",
+          "compared": false
+        },
+        "claims": {
+          "T-Draft": {
+            "verdict": "hold",
+            "basis": "artifact-bytes-not-compared"
+          },
+          "R-Deliver.otherImplementation": {
+            "verdict": "limited",
+            "basis": "same-bytes-read-by-another-implementation"
+          },
+          "R-Deliver.intendedRecipient": {
+            "verdict": "not-run",
+            "basis": "no-intended-recipient-observed"
+          },
+          "Authority.publication": {
+            "verdict": "absent",
+            "basis": "no-owner-authority-verified"
+          },
+          "S-NoUnauthorizedPublish": {
+            "verdict": "satisfied",
+            "basis": "gate-refusal-observed"
+          },
+          "P-Publish": {
+            "verdict": "unmet",
+            "basis": "waiting-for-authority"
+          },
+          "Effect": {
+            "verdict": "none",
+            "basis": "declared-by-receipt",
+            "retryWithoutIndependentRead": null
+          },
+          "Value": {
+            "verdict": "not-evaluated",
+            "basis": "no-user-or-owner-evaluation"
+          }
+        }
+      },
+      "differentBytes": {
+        "verifier": {
+          "exit": 1,
+          "passed": false,
+          "artifactBytesVerified": false,
+          "inputBindingVerified": true,
+          "reason": "review artifact bytes do not match the run receipt",
+          "compared": true
+        },
+        "claims": {
+          "T-Draft": {
+            "verdict": "not-established",
+            "basis": "artifact-missing-or-different-bytes"
+          },
+          "R-Deliver.otherImplementation": {
+            "verdict": "not-established",
+            "basis": "reader-read-different-bytes"
+          },
+          "R-Deliver.intendedRecipient": {
+            "verdict": "not-run",
+            "basis": "no-intended-recipient-observed"
+          },
+          "Authority.publication": {
+            "verdict": "absent",
+            "basis": "no-owner-authority-verified"
+          },
+          "S-NoUnauthorizedPublish": {
+            "verdict": "satisfied",
+            "basis": "gate-refusal-observed"
+          },
+          "P-Publish": {
+            "verdict": "unmet",
+            "basis": "waiting-for-authority"
+          },
+          "Effect": {
+            "verdict": "none",
+            "basis": "declared-by-receipt",
+            "retryWithoutIndependentRead": null
+          },
+          "Value": {
+            "verdict": "not-evaluated",
+            "basis": "no-user-or-owner-evaluation"
+          }
+        }
+      },
+      "artifactMissing": {
+        "verifier": {
+          "exit": 1,
+          "passed": false,
+          "artifactBytesVerified": false,
+          "inputBindingVerified": true,
+          "reason": "cannot read review artifact",
+          "compared": true
+        },
+        "claims": {
+          "T-Draft": {
+            "verdict": "not-established",
+            "basis": "artifact-missing-or-different-bytes"
+          },
+          "R-Deliver.otherImplementation": {
+            "verdict": "not-established",
+            "basis": "reader-could-not-read: not-found"
+          },
+          "R-Deliver.intendedRecipient": {
+            "verdict": "not-run",
+            "basis": "no-intended-recipient-observed"
+          },
+          "Authority.publication": {
+            "verdict": "absent",
+            "basis": "no-owner-authority-verified"
+          },
+          "S-NoUnauthorizedPublish": {
+            "verdict": "satisfied",
+            "basis": "gate-refusal-observed"
+          },
+          "P-Publish": {
+            "verdict": "unmet",
+            "basis": "waiting-for-authority"
+          },
+          "Effect": {
+            "verdict": "none",
+            "basis": "declared-by-receipt",
+            "retryWithoutIndependentRead": null
+          },
+          "Value": {
+            "verdict": "not-evaluated",
+            "basis": "no-user-or-owner-evaluation"
+          }
+        }
+      },
+      "staleReceipt": {
+        "verifier": {
+          "exit": 0,
+          "passed": true,
+          "artifactBytesVerified": true,
+          "inputBindingVerified": true,
+          "reason": "",
+          "compared": true,
+          "receipt": "evaluations/records/SCN-001-run-2026-11-01.json",
+          "generatedAt": "2026-11-01T06:18:08Z",
+          "runDigest": "sha256:eb123c4871b95cd815051388fd99830ad6114668f2ffa79bad1e632037759d07",
+          "sameArtifactDigest": true
+        },
+        "claims": {
+          "T-Draft": {
+            "verdict": "hold",
+            "basis": "receipt-belongs-to-another-attempt"
+          },
+          "R-Deliver.otherImplementation": {
+            "verdict": "limited",
+            "basis": "same-bytes-read-by-another-implementation"
+          },
+          "R-Deliver.intendedRecipient": {
+            "verdict": "not-run",
+            "basis": "no-intended-recipient-observed"
+          },
+          "Authority.publication": {
+            "verdict": "absent",
+            "basis": "no-owner-authority-verified"
+          },
+          "S-NoUnauthorizedPublish": {
+            "verdict": "satisfied",
+            "basis": "gate-refusal-observed"
+          },
+          "P-Publish": {
+            "verdict": "unmet",
+            "basis": "waiting-for-authority"
+          },
+          "Effect": {
+            "verdict": "none",
+            "basis": "declared-by-receipt",
+            "retryWithoutIndependentRead": null
+          },
+          "Value": {
+            "verdict": "not-evaluated",
+            "basis": "no-user-or-owner-evaluation"
+          }
+        }
+      }
+    },
+    "reader": {
+      "positive": {
+        "exit": 0,
+        "status": "indexed",
+        "error": null,
+        "digest": "sha256:0600ddbe0cbdb57f5c3b7ad6ee874d9c57efd2b3c53a5584edd1498fd6d4b07f",
+        "byteLength": 1969,
+        "revision": "unknown",
+        "linkOccurrenceCount": 0,
+        "coverage": {
+          "parsedMarkdownLinkTokens": true,
+          "allDocumentReferencesEnumerated": false,
+          "unresolvedReferenceCandidatesEvaluated": false,
+          "renderedAnchorsObserved": false,
+          "externalSourcesAcquired": false,
+          "sourceWriterInvoked": false
+        }
+      },
+      "differentBytes": {
+        "exit": 0,
+        "status": "indexed",
+        "error": null,
+        "digest": "sha256:e2b5251aa8ca696d26b1f43506a6716de8ad1a710e088aae68134ecaaf64ffec",
+        "byteLength": 1969,
+        "revision": "unknown",
+        "linkOccurrenceCount": 0,
+        "coverage": {
+          "parsedMarkdownLinkTokens": true,
+          "allDocumentReferencesEnumerated": false,
+          "unresolvedReferenceCandidatesEvaluated": false,
+          "renderedAnchorsObserved": false,
+          "externalSourcesAcquired": false,
+          "sourceWriterInvoked": false
+        }
+      },
+      "artifactMissing": {
+        "exit": 2,
+        "status": null,
+        "error": "not-found",
+        "digest": null,
+        "byteLength": null,
+        "revision": null,
+        "linkOccurrenceCount": null,
+        "coverage": null
+      }
+    },
+    "gate": {
+      "allowed": false,
+      "exit": 1,
+      "blockerCount": 7,
+      "refusalObserved": true
+    },
+    "selfTest": {
+      "cases": 17,
+      "failures": []
+    },
+    "expectationMismatches": [],
+    "passedWithoutComparingArtifact": true,
+    "readerSuccessIsNotAMatch": true,
+    "staleReceiptVerifiesAgainstNewArtifact": true,
+    "intendedRecipientObserved": false,
+    "ownerAuthorityVerified": false,
+    "userValueEvaluated": false,
+    "externalEffectExercised": false,
+    "finding": "技術的成果（T-Draft）は今回のAttemptの範囲で成立した。検証器は成果物を比較しなくてもpassed:trueを返すため、その場合は保留と読む。別実装のReaderは差し替えたファイルにも成功を返すので、一致はdigestの比較だけが示す。D-04は決定的に生成されるため、過去のreceiptも今回の成果物に対して検証を通る。本来の受取先による受領、Ownerの公開権限、利用者による価値評価は観測していない（false）。外部Effectのunknown・partial・no-opは、外部Providerが無いので自己試験の表でだけ確かめた。公開gateは拒否を返し、公開は行っていない。公開というGoalは未達のままである。"
+  },
+  "scope": "PASS means only that every claim came out as written down beforehand; it is not a statement that the user's goal was achieved. The input documents are synthetic. The reader is another product's implementation run by the same operator on the same host, on a copy of the artifact, so it is not receipt by the intended recipient. No owner authority, no human review and no user evaluation were observed, and no external effect was attempted."
+}
