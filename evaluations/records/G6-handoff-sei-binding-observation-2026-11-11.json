@@ -29,15 +29,16 @@
     }
   ],
   "selfTest": {
+    "note": "IDs are the tool's own self-test cases (ST- prefix). They are a DIFFERENT scenario from the ticket's negative cases G6-N1..N6, which this tool cannot determine. Do not read an ST- pass as a G6-N pass.",
     "cases": [
-      { "id": "G6-N1-empty-is-not-absent", "result": "pass", "meaning": "an empty reference set is not evidence of absence" },
-      { "id": "G6-N2-missing-digest-is-incomplete", "result": "pass", "meaning": "a partial citation is not complete" },
-      { "id": "G6-N3-bad-digest-is-mismatch", "result": "pass", "meaning": "a malformed digest is not stale; it is a target mismatch" },
-      { "id": "G6-N4-duplicate-locator-is-ambiguous", "result": "pass", "meaning": "two exact references to one locator are never collapsed to one" },
-      { "id": "G6-linked-never-verified", "result": "pass", "meaning": "a linked reference stays unverified" },
-      { "id": "G6-linked-carries-profile-gap", "result": "pass", "meaning": "profile agreement is unverified and stays declared as such" },
-      { "id": "G6-exact-binding-shape", "result": "pass", "meaning": "the carried shape matches SEI exact_binding required fields" },
-      { "id": "G6-exact-binding-rejects-bad-digest", "result": "pass", "meaning": "a malformed digest cannot form an exact binding" }
+      { "id": "ST-N1-empty-is-not-absent", "result": "pass", "meaning": "an empty reference set is not evidence of absence" },
+      { "id": "ST-N2-missing-digest-is-incomplete", "result": "pass", "meaning": "a partial citation is not complete" },
+      { "id": "ST-N3-bad-digest-is-mismatch", "result": "pass", "meaning": "a malformed digest is not stale; it is a target mismatch" },
+      { "id": "ST-N4-duplicate-locator-is-ambiguous", "result": "pass", "meaning": "two exact references to one locator are never collapsed to one" },
+      { "id": "ST-linked-never-verified", "result": "pass", "meaning": "a linked reference stays unverified" },
+      { "id": "ST-linked-carries-profile-gap", "result": "pass", "meaning": "profile agreement is unverified and stays declared as such" },
+      { "id": "ST-exact-binding-shape", "result": "pass", "meaning": "the carried shape matches SEI exact_binding required fields" },
+      { "id": "ST-exact-binding-rejects-bad-digest", "result": "pass", "meaning": "a malformed digest cannot form an exact binding" }
     ]
   },
   "whatIsNotVerified": {
@@ -48,6 +49,11 @@
     "issuerAuthority": "not-run — no signature, issuer or revocation check",
     "meaningAcceptance": false,
     "currentSourceProof": false
+  },
+  "ticketNegativeCasesNotDeterminable": {
+    "G6-N1": "not-run — this tool has no population, predicate or coverage",
+    "G6-N2": "not-run — this tool compares reference shapes only and does not read the referenced content",
+    "G6-N3": "not-run — this tool cannot detect a source-only move"
   },
   "prohibition": "reference-linked-unverified must never be promoted to verified by this tool or by a consumer of its output."
 }

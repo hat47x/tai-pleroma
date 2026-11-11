@@ -149,11 +149,13 @@ function main(argv) {
   }
   if (options.ticket !== null) {
     if (!path.isAbsolute(options.ticket)) return fail('--ticket must be an absolute path');
-    const ticket = JSON.parse(fs.readFileSync(options.ticket, 'utf8').replace(/^\uFEFF/, ''));
-    // Fail closed, not open. An input that is not a v1 handoff ticket, or that
-    // has no `references` array, must NOT produce a "reconciled with nothing"
-    // exit 0 -- that would read as "I checked and found nothing" when in fact
-    // nothing was checkable.
+    const rawText = fs.readFileSync(options.ticket, 'utf8').replace(/^﻿/, '');
+    let ticket;
+    try {
+      ticket = JSON.parse(rawText);
+    } catch (error) {
+      return fail('the input is not valid JSON: ' + String(error && error.message || error));
+    }
     if (ticket === null || typeof ticket !== 'object' || Array.isArray(ticket)) {
       return fail('the input is not a JSON object');
     }
@@ -163,12 +165,16 @@ function main(argv) {
     if (!Array.isArray(ticket.references)) {
       return fail('the ticket has no references array; there is nothing to reconcile');
     }
+    if (ticket.references.length === 0) {
+      // An empty array must not read as "checked and found nothing". There is
+      // nothing to check, which is a different statement.
+      return fail('the ticket has no references to reconcile');
+    }
     const report = reconcile(ticket.references);
     process.stdout.write(JSON.stringify({
       schema: 'yi.handoff.sei-binding-review/v1',
       ticket: options.ticket,
-      ticketSha256: 'sha256:' + crypto.createHash('sha256')
-        .update(fs.readFileSync(options.ticket)).digest('hex'),
+      ticketSha256: 'sha256:' + crypto.createHash('sha256').update(rawText, 'utf8').digest('hex'),
       ...report,
     }, null, 2) + '\n');
   }
@@ -196,33 +202,36 @@ function selfTest() {
     ...overrides,
   });
 
-  // G6-N1: 空配列を「グローバル不存在」と結論づけない。ここでは母集団が無いこと
+  // ST-N1: 空配列を「グローバル不存在」と結論づけない。ここでは母集団が無いこと
   // 自体を「照合対象が無い」と記録し、不存在の証明にはしない。
   // NOTE: this case is about the RECONCILER, not about the CLI. A ticket with no
   // `references` array is rejected by main() before reconcile() is reached, so
   // it can never be read as "checked and found nothing".
+  // The `ST-` prefix keeps this distinct from the ticket's own G6-N1..N3, which
+  // this tool CANNOT determine (see notDeterminable). Reusing those IDs made a
+  // different check look like the ticket's requirement had passed.
   const empty = reconcile([]);
   cases.push({
-    id: 'G6-N1-empty-is-not-absent',
+    id: 'ST-N1-empty-is-not-absent',
     ok: empty.subjects.length === 0 && empty.note.includes('NOT'),
     expected: 'no subjects, no absence claim',
     actual: empty.subjects.length,
   });
-  // G6-N2: 部分取得を全件として扱わない。digest欠落は incomplete。
-  check('G6-N2-missing-digest-is-incomplete', [ref({ digest: null })], DIAGNOSTICS.incomplete);
+  // ST-N2: 部分取得を全件として扱わない。digest欠落は incomplete。
+  check('ST-N2-missing-digest-is-incomplete', [ref({ digest: null })], DIAGNOSTICS.incomplete);
 
-  // G6-N3: 形の違うdigestはtarget-mismatch（staleと混同しない）。
-  check('G6-N3-bad-digest-is-mismatch', [ref({ digest: 'sha256:ABC' })], DIAGNOSTICS.mismatch);
+  // ST-N3: 形の違うdigestはtarget-mismatch（staleと混同しない）。
+  check('ST-N3-bad-digest-is-mismatch', [ref({ digest: 'sha256:ABC' })], DIAGNOSTICS.mismatch);
 
-  // G6-N4: 同じlocatorに複数参照はambiguous（一意に選ばない）。
-  check('G6-N4-duplicate-locator-is-ambiguous', [ref(), ref({ digest: 'sha256:' + 'b'.repeat(64) })],
+  // ST-N4: 同じlocatorに複数参照はambiguous（一意に選ばない）。
+  check('ST-N4-duplicate-locator-is-ambiguous', [ref(), ref({ digest: 'sha256:' + 'b'.repeat(64) })],
     DIAGNOSTICS.ambiguous);
 
   // 成功しても linked-unverified に留まる。verifiedへ昇格させない。
-  check('G6-linked-never-verified', [ref()], DIAGNOSTICS.linked);
+  check('ST-linked-never-verified', [ref()], DIAGNOSTICS.linked);
   const linked = reconcile([ref()]);
   cases.push({
-    id: 'G6-linked-carries-profile-gap',
+    id: 'ST-linked-carries-profile-gap',
     ok: linked.subjects[0].profile.matched === false &&
       linked.subjects[0].profile.declaredByTicket === null,
     expected: 'profile matched=false',
@@ -232,14 +241,14 @@ function selfTest() {
   // Exact Binding の形はSEI schemaの必須欄に一致する。
   const binding = exactBindingShape(goodDigest);
   cases.push({
-    id: 'G6-exact-binding-shape',
+    id: 'ST-exact-binding-shape',
     ok: binding !== null && Object.keys(binding).sort().join(',') ===
       ['content_digest', 'logical_ref', 'representation_profile'].sort().join(','),
     expected: 'logical_ref,content_digest,representation_profile',
     actual: binding === null ? null : Object.keys(binding).sort(),
   });
   cases.push({
-    id: 'G6-exact-binding-rejects-bad-digest',
+    id: 'ST-exact-binding-rejects-bad-digest',
     ok: exactBindingShape('not-a-digest') === null,
     expected: null,
     actual: exactBindingShape('not-a-digest'),
