@@ -1,0 +1,269 @@
+{
+  "schema": "tai.reference.yi-receipt-auditability/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yi_receipt_auditability_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-receipt-auditability-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receipts": 20,
+    "excludedAsHistorical": [
+      "yi-constellation-structure-2026-11-01.json"
+    ],
+    "excludedOwnOutput": "YI-receipt-auditability-2026-11-11.json",
+    "perReceipt": [
+      {
+        "receipt": "YI-centre-handoff-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-centre-key-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-citation-check-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-context-handoff-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-danger-units-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-deck-figures-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-doc-integrity-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-eki-measurement-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-empty-reference-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-fold-dissent-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-g1-status-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-g2-landing-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-landing-paths-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-overreach-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-publication-refusal-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-stage3-inventory-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-staleness-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-state-classification-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-unreferenced-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "yi-constellation-structure-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      }
+    ],
+    "missingByField": {},
+    "completeReceipts": 20,
+    "incompleteReceipts": [],
+    "everyReceiptIsAuditable": true,
+    "finding": "YIのreceiptは、対象の版・実行コマンド・期待結果・観測結果・未実施項目を持つかを一枚ずつ確かめた。欠けている欄があれば、後から読む人はその実行を監査できない。"
+  },
+  "scope": "Walks the YI receipts and records, per receipt, whether it carries a version, a command, an expected result, an observed result and a stated limit. One 2026-11-01 receipt predates the convention and is excluded by name rather than judged; its absent fields are recorded in the 19-document instead. It checks presence only: a receipt with all five can still be wrong, and the limit test is lexical."
+}
