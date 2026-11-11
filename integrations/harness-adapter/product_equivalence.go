@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 )
 
 // ProductEnvelope is the subset of a product CLI/MCP result that two routes can
 // be compared on. It is deliberately small: the point of E2 is to check that the
 // same product operation, reached by a typed tool and by a direct CLI run,
-// reports the same identity and outcome — not to compare every payload byte.
+// reports the same identity and outcome 遯ｶ繝ｻnot to compare every payload byte.
 //
 // Fields a product does not report stay absent. Absent is never equal to present
 // and never equal to empty: `evidenced=false` on both sides means the comparison
@@ -32,9 +33,36 @@ type ProductEnvelope struct {
 	ModelRevision string `json:"modelRevision,omitempty"`
 	// ValidationOK is the product's validation verdict, when it evaluated one.
 	ValidationOK *bool `json:"validationOk,omitempty"`
+	// Identity holds the product's own identity fields under the product's own
+	// names. Products do not share a vocabulary here: TEI says
+	// `worldFingerprint`, SEI says `snapshot_digest`. Forcing one name would make
+	// the contract lie about products it does not own.
+	//
+	// The contract compares the INTERSECTION of identity keys, so two products
+	// with no shared key are not silently claimed to agree.
+	Identity map[string]string `json:"identity,omitempty"`
 	// RawText is the payload exactly as the route returned it. It is kept so a
 	// reader can re-derive anything this struct does not model.
 	RawText string `json:"-"`
+}
+
+// productDoc is the wire shape this contract reads. Fields a product does not
+// send stay empty.
+type productDoc struct {
+	SchemaVersion          string          `json:"schemaVersion"`
+	OK                     *bool           `json:"ok"`
+	Error                  json.RawMessage `json:"error"`
+	Failure                json.RawMessage `json:"failure"`
+	Result                 json.RawMessage `json:"result"`
+	WorldFingerprint       string          `json:"worldFingerprint"`
+	SourceIndexFingerprint string          `json:"sourceIndexFingerprint"`
+	ModelRevision          string          `json:"modelRevision"`
+	SnapshotDigest         string          `json:"snapshot_digest"`
+	BundleID               string          `json:"bundle_id"`
+	RecordCount            *int            `json:"record_count"`
+	Validation             *struct {
+		OK bool `json:"ok"`
+	} `json:"validation"`
 }
 
 // ParseProductEnvelope reads a product result from either route. Both TEI routes
@@ -63,20 +91,7 @@ func ParseProductEnvelope(payload []byte) (ProductEnvelope, error) {
 	}
 	env := ProductEnvelope{RawText: text}
 
-	var doc struct {
-		SchemaVersion string          `json:"schemaVersion"`
-		OK            *bool           `json:"ok"`
-		Error         json.RawMessage `json:"error"`
-		Failure       json.RawMessage `json:"failure"`
-		Result        json.RawMessage `json:"result"`
-		// validate returns these at the top level rather than inside `result`.
-		WorldFingerprint       string `json:"worldFingerprint"`
-		SourceIndexFingerprint string `json:"sourceIndexFingerprint"`
-		ModelRevision          string `json:"modelRevision"`
-		Validation             *struct {
-			OK bool `json:"ok"`
-		} `json:"validation"`
-	}
+	var doc productDoc
 	if err := json.Unmarshal([]byte(text), &doc); err != nil {
 		return env, fmt.Errorf("product payload is not JSON: %w", err)
 	}
@@ -86,44 +101,60 @@ func ParseProductEnvelope(payload []byte) (ProductEnvelope, error) {
 	if env.ErrorCode == "" {
 		env.ErrorCode = errorCodeOf(doc.Failure)
 	}
-	env.WorldFingerprint = doc.WorldFingerprint
-	env.SourceIndexFingerprint = doc.SourceIndexFingerprint
-	env.ModelRevision = doc.ModelRevision
 	if doc.Validation != nil {
 		v := doc.Validation.OK
 		env.ValidationOK = &v
 	}
-	// The catalog/validate operations nest these inside `result`.
+	// Identity: the product's own identity names, read from the top level and
+	// from `result`. A product that reports none leaves the map empty, which the
+	// comparison treats as "not shown", never as agreement.
+	env.Identity = doc.IdentityCandidates()
+	// The catalog/validate operations nest identity inside `result`.
 	if len(doc.Result) > 0 {
-		var nested struct {
-			SchemaVersion          string `json:"schemaVersion"`
-			WorldFingerprint       string `json:"worldFingerprint"`
-			SourceIndexFingerprint string `json:"sourceIndexFingerprint"`
-			ModelRevision          string `json:"modelRevision"`
-			Validation             *struct {
-				OK bool `json:"ok"`
-			} `json:"validation"`
-		}
+		var nested productDoc
 		if json.Unmarshal(doc.Result, &nested) == nil {
 			if env.SchemaVersion == "" {
 				env.SchemaVersion = nested.SchemaVersion
-			}
-			if env.WorldFingerprint == "" {
-				env.WorldFingerprint = nested.WorldFingerprint
-			}
-			if env.SourceIndexFingerprint == "" {
-				env.SourceIndexFingerprint = nested.SourceIndexFingerprint
-			}
-			if env.ModelRevision == "" {
-				env.ModelRevision = nested.ModelRevision
 			}
 			if env.ValidationOK == nil && nested.Validation != nil {
 				v := nested.Validation.OK
 				env.ValidationOK = &v
 			}
+			for k, v := range nested.IdentityCandidates() {
+				if _, exists := env.Identity[k]; !exists {
+					env.Identity[k] = v
+				}
+			}
 		}
 	}
 	return env, nil
+}
+
+// IdentityCandidates returns the product-specific identity fields this
+// contract can read, under the product's own names. A product that reports none
+// returns an empty map; the comparison then says "not shown" rather than
+// inventing agreement.
+func (d *productDoc) IdentityCandidates() map[string]string {
+	out := map[string]string{}
+	if d.WorldFingerprint != "" {
+		out["worldFingerprint"] = d.WorldFingerprint
+	}
+	if d.SourceIndexFingerprint != "" {
+		out["sourceIndexFingerprint"] = d.SourceIndexFingerprint
+	}
+	if d.ModelRevision != "" {
+		out["modelRevision"] = d.ModelRevision
+	}
+	if d.SnapshotDigest != "" {
+		out["snapshot_digest"] = d.SnapshotDigest
+	}
+	if d.BundleID != "" {
+		out["bundle_id"] = d.BundleID
+	}
+	if d.RecordCount != nil {
+		out["record_count"] = strconv.Itoa(*d.RecordCount)
+	}
+	return out
 }
 
 // errorCodeOf reads a product failure code from either the `error` or `failure`
@@ -180,6 +211,10 @@ type EquivalenceResult struct {
 
 // CompareProductEnvelopes compares two routes on the fields both products
 // report. It never promotes an unevidenced field to agreement.
+//
+// Identity is compared on the INTERSECTION of the two products' own identity
+// keys. Two products that share no identity key contribute no identity
+// comparison, and the report says so instead of claiming a match.
 func CompareProductEnvelopes(leftName string, left ProductEnvelope, rightName string, right ProductEnvelope) EquivalenceResult {
 	res := EquivalenceResult{LeftName: leftName, RightName: rightName}
 
@@ -196,10 +231,24 @@ func CompareProductEnvelopes(leftName string, left ProductEnvelope, rightName st
 		{Field: "schemaVersion", Left: left.SchemaVersion, Right: right.SchemaVersion},
 		{Field: "ok", Left: booleans(left.EnvelopeOK), Right: booleans(right.EnvelopeOK)},
 		{Field: "errorCode", Left: left.ErrorCode, Right: right.ErrorCode},
-		{Field: "worldFingerprint", Left: left.WorldFingerprint, Right: right.WorldFingerprint},
-		{Field: "sourceIndexFingerprint", Left: left.SourceIndexFingerprint, Right: right.SourceIndexFingerprint},
-		{Field: "modelRevision", Left: left.ModelRevision, Right: right.ModelRevision},
 		{Field: "validationOk", Left: booleans(left.ValidationOK), Right: booleans(right.ValidationOK)},
+	}
+	// Identity keys present on both sides, compared under the product's own names.
+	keys := make([]string, 0, len(left.Identity))
+	for k := range left.Identity {
+		if _, ok := right.Identity[k]; ok {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		fields = append(fields, FieldComparison{
+			Field: "identity:" + k, Left: left.Identity[k], Right: right.Identity[k],
+		})
+	}
+	if len(keys) == 0 {
+		res.Notes = append(res.Notes,
+			"the two routes reported no shared identity key, so identity was not compared")
 	}
 	for _, f := range fields {
 		if f.Field == "errorCode" {
@@ -212,7 +261,7 @@ func CompareProductEnvelopes(leftName string, left ProductEnvelope, rightName st
 		res.Fields = append(res.Fields, f)
 	}
 	// errorCode is comparable only when both routes actually reported a verdict.
-	// Two empty codes prove nothing on their own — an unparsed or silent route
+	// Two empty codes prove nothing on their own 遯ｶ繝ｻan unparsed or silent route
 	// looks identical to a successful one. But when both sides reported `ok`,
 	// "no failure code on either side" is a real observation: both said the
 	// operation succeeded and neither named a failure.

@@ -31,10 +31,10 @@ func TestParseProductEnvelopeTopLevelAndNested(t *testing.T) {
 	if cat.SchemaVersion != "tei.cli.model/v0" {
 		t.Fatalf("catalog schemaVersion = %q", cat.SchemaVersion)
 	}
-	if cat.WorldFingerprint != "sha256:c92de09f" || cat.SourceIndexFingerprint != "sha256:1827f4b4" {
+	if cat.Identity["worldFingerprint"] != "sha256:c92de09f" || cat.Identity["sourceIndexFingerprint"] != "sha256:1827f4b4" {
 		t.Fatalf("catalog fingerprints not found: %+v", cat)
 	}
-	if cat.ModelRevision != "sha256:f414e2b0" {
+	if cat.Identity["modelRevision"] != "sha256:f414e2b0" {
 		t.Fatalf("model revision = %q", cat.ModelRevision)
 	}
 	if cat.ValidationOK == nil || !*cat.ValidationOK {
@@ -48,7 +48,7 @@ func TestParseProductEnvelopeTopLevelAndNested(t *testing.T) {
 	if val.SchemaVersion != "tei.cli.validate/v0" {
 		t.Fatalf("validate schemaVersion = %q", val.SchemaVersion)
 	}
-	if val.WorldFingerprint != "sha256:c92de09f" {
+	if val.Identity["worldFingerprint"] != "sha256:c92de09f" {
 		t.Fatalf("validate top-level fingerprint not read: %+v", val)
 	}
 	if val.ValidationOK == nil || *val.ValidationOK {
@@ -93,7 +93,7 @@ func TestParseProductEnvelopeDoesNotRewriteProductContent(t *testing.T) {
 // TestCompareAgreementRequiresBothSides is the core rule: an empty value on one
 // side is "not shown", never "equal".
 func TestCompareAgreementRequiresBothSides(t *testing.T) {
-	left := ProductEnvelope{SchemaVersion: "v0", WorldFingerprint: "sha256:a"}
+	left := ProductEnvelope{SchemaVersion: "v0", Identity: map[string]string{"worldFingerprint": "sha256:a"}}
 	right := ProductEnvelope{SchemaVersion: "v0"} // fingerprint not reported
 	res := CompareProductEnvelopes("mcp", left, "cli-direct", right)
 	if res.Agreed {
@@ -103,13 +103,13 @@ func TestCompareAgreementRequiresBothSides(t *testing.T) {
 	for _, f := range res.Fields {
 		byField[f.Field] = f
 	}
-	if byField["worldFingerprint"].Evidenced {
+	if byField["identity:worldFingerprint"].Evidenced {
 		t.Fatal("an unreported field was marked evidenced")
 	}
 	if byField["schemaVersion"].Evidenced != true || !byField["schemaVersion"].Equal {
 		t.Fatalf("the evidenced field was not compared: %+v", byField["schemaVersion"])
 	}
-	if len(res.Notes) == 0 || !strings.Contains(res.Notes[0], "not shown") {
+	if len(res.Notes) == 0 || !strings.Contains(strings.Join(res.Notes, " "), "not shown") {
 		t.Fatalf("the gap was not explained: %v", res.Notes)
 	}
 }
@@ -117,14 +117,14 @@ func TestCompareAgreementRequiresBothSides(t *testing.T) {
 // TestCompareDetectsDisagreement is the positive control: a real difference must
 // be reported as a difference, not as a coverage gap.
 func TestCompareDetectsDisagreement(t *testing.T) {
-	left := ProductEnvelope{SchemaVersion: "v0", WorldFingerprint: "sha256:a", SourceIndexFingerprint: "sha256:b"}
-	right := ProductEnvelope{SchemaVersion: "v0", WorldFingerprint: "sha256:DIFFERENT", SourceIndexFingerprint: "sha256:b"}
+	left := ProductEnvelope{SchemaVersion: "v0", Identity: map[string]string{"worldFingerprint": "sha256:a", "sourceIndexFingerprint": "sha256:b"}}
+	right := ProductEnvelope{SchemaVersion: "v0", Identity: map[string]string{"worldFingerprint": "sha256:DIFFERENT", "sourceIndexFingerprint": "sha256:b"}}
 	res := CompareProductEnvelopes("mcp", left, "cli-direct", right)
 	if res.Agreed {
 		t.Fatal("disagreement was reported as agreement")
 	}
 	for _, f := range res.Fields {
-		if f.Field == "worldFingerprint" {
+		if f.Field == "identity:worldFingerprint" {
 			if !f.Evidenced || f.Equal {
 				t.Fatalf("fingerprint difference not recorded: %+v", f)
 			}
