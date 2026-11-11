@@ -900,3 +900,41 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **実証の位置**：最初の固定TEI H2/H3は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0〜G2、独立4Slotを**先に**完了させる。次段階に、(S-01)同一Harness SessionでTEI read-only→SUI許可Projection→SHO受領を参照だけで接続、(S-02)UI切替で対象が変わり旧Contextを誤使用する負例、(S-03)途中Grant失効/別Tenantと送出不可、(S-04)共有Session未対応時のProduct単独経路を置く。各ProductがTool/Projectionを実装・公開していない場合は NOT RUN / UNSUPPORTED とする。試験OwnerはTAI #168（Harness）、#271（引継ぎと再資格化）、#232（開示）、各Product既存Issue（操作/実結果）。**新しい共通Host/セッション基盤/認可器/Widget APIは先行採用しない**。
 
 状態：設計追補のみ。S-01〜04の実Product UI、共有Session、実Harness、実OS/Network送出、Owner正式受理は **NOT RUN**。既存H3限定Skill Read/Tool Callと比較適格0/4を変更しない。
+
+## 47. 2026-11-11：Skill選択・開発Role・Product Focusの直交性と既存計画への収束
+
+本節は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のASV-01〜07、[#168](https://github.com/hat47x/tai-pleroma/issues/168)の後続Harness試験、[#488](https://github.com/hat47x/tai-pleroma/issues/488)のSkill適合照合票を**再利用**する。試験Engineや新しい中央Contractを追加しない。YICで共有するのは必要な能力を選ぶ**操作上の意味**であり、全Productへ一つのAgent Loopを埋め込むことではない。
+
+### 47.1 同時に選ぶが、同一視しない六つの軸
+
+| 軸 | 既存Owner／選び方 | 間違った昇格を禁止するもの |
+| --- | --- | --- |
+| Activity / User Intent | TAI #271。目的・Audience・停止条件と未決を明示 | 同じSessionを同じ仕事とみなす |
+| Harness / Session | TAI #168。実在Profile/Tool/Session継続可否を観測 | Session IDが同じなら現在のGrantも同じとみなす |
+| Product Focus / Projection | SUI #3401/#3368、TEI #1124、SHO #6など。UI選択対象・版・用途に限定して出す | カード/画面が見えたことを全Raw送出・全Source既読とみなす |
+| Product / Method Skill | 各Product所有、CSWは任意の探索Method。TAI横断Skillは必要時のみ | Skillが実Tool・権限・Meaning/Effectを発行したとみなす |
+| Model → Role → Work | TEI #4218の開発用外部Dispatcher等が所有。モデル/Role/Taskを二段で割り当てる | Step Code/DSH等のワーカー選択をProduct Skillや実行Authorityと混同 |
+| Tool / Host / Effect | 各Product/API、Host/Provider、EKI #468。実Tool/Grant/Attempt/Receiptで確認 | Toolを発見しただけで呼出し/結果/業務完了とする |
+
+**二つの経路を分離する**：(A) 利用者のProduct UIから既存Harnessへ意図と許可済みFocusを渡す「Product利用」、(B) Issue/PRをロールで開発Workerへ振り分ける「開発運用」。共通の概念語を用いても、後者のlease、モデル選択、価格/使用枠、Step CodeプロセスをProduct Skillの標準機構へ移植しない。DSHはEverything is Pluginとの技術的親和性から先行評価できるが、YIC配布/UXでは代表Harnessを等価に扱い、実機能差は観測で明示する。
+
+### 47.2 UIから同一Harness SessionへのContext引渡し
+
+- Product UIが現在選択しているCard/Canvas/Model/Document/Network対象は**選択候補**。ID、view/occurrence、revision、用途、利用者が指示した操作を区別し、送出する実Projectionは現在のProduct/Hostの読取・開示資格で決める。対象切替、再選択、別タブ、戻る/Undoの際には古いFocusをそのまま次操作へ適用しない。
+- 同じSession上に複数Productの選択が残る場合は、現在操作するProduct・対象・Scopeを明示して解決し、未解決なら確認またはread-onlyに留める。**Harness内部の会話全体を全Productへ同期しない**。Token、内部Reason、Credential、隠れたCard/Tool/数は配布しない。
+- Live Sessionへ戻れなければ既存[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のHandoff参照でActivityを別Sessionへ再開できるか評価する。実Session継続／Activity再開／許可Projection再読取／Tool実Invoke／実Effectは別の結果欄とする。
+
+### 47.3 専門作業の具体例と順序
+
+**SUI × CSW × SEI**：人がCanvas上の資料群を選択 → 許可済みProjectionを外部Harnessへ渡す → 必要時のみCSWの探索手法で分類案・異論・新しい問いを発想 → SUIで配置案をPreview/Undoし、人の選択と元の未決を保持 → 根拠が必要な判断だけSEI/原Sourceへ戻る。KJ法的配置は有用なUI操作であって、分類案の確定・元カード更新・意味受理を自動実行しない。CSWの文化的Framework解釈を事実認定に使わず、CSW本体の執筆用Skillを工学向け新Runtimeへ拡張しない。
+
+**EKI × Harness**：ネットワーク/Task/Grantの現在の見える範囲で探索・差分/影響のPreview → 必要な実Tool/Host Authority確認 → 明示Action → Attempt/Receipt/Output Body/独立Observation。大量変更・ACK・Cancel・HarnessのSession終了一つだけで業務成功/Effect不存在を推定しない。EKIに委任していないHarness上の単純作業を、EKI Taskへ強制変換しない。
+
+### 47.4 受入の配置・優先順
+
+- **P0**：TAI #168の固定TEI read-only H2/H3、G0物理Read拒否→G1送出→G2 Tool Reply→事前割付独立4Slot。ここにSUI/CSW/開発Dispatcher/共有UI Sessionを追加しない。
+- **P1（別Trial Group）**：[#271](https://github.com/hat47x/tai-pleroma/issues/271) ASV-02/03/06/07でFocus切替・同一SessionとActivity再開の違い・Unsupported時の縮退・独立UIとの差を比較。比較照合票は#488が参照し、実Runnerは#168/各Productの既存試験を使う。
+- **P2（用途条件付き）**：ASV-01でSUI×CSW発想/Preview/保留、ASV-05でEKI read-only Preview→mock Action、ASV-04でTool候補/Renderer/実送出差を検証。実Product UI/API・開示・Effectは各Owner。Tool-only・一般Method・Product Skill・TAI Skillの増分を分け、価値が認められないSkillは必須化しない。
+- **配布・正式受理**：TAI #74でProduct単独・TAI最小・必要時合成のProfileごとにSkill/参照資料/Tool/Adapter版をPin。配布適格と特定Task/Principalにおける利用適格を別に記録。製品意味と実権限のOwner受理を自動代理しない。
+
+状態：上記は既存Issueを接続する**設計判断・実行順**。共有SessionのProduct UI往復、CSW Canvas、EKI実大量変更、二Harness実互換、Owner採用は未実証（NOT RUN）。#271のASV票と#4218のDispatcherに二重の実装Ownerや新Core APIを設けない。
