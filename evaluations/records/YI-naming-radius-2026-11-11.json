@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.yi-naming-blast-radius/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the repository's Markdown",
+  "command": "python integrations/tools/yi_naming_blast_radius.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-naming-radius-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "currentWord": "統合製品",
+    "alternativeWord": "輔相製品",
+    "usagesInProductDocuments": 8,
+    "filesTouched": [
+      "README.md",
+      "docs/product-family-delivery.md",
+      "docs/yi-constellation/value-needs-requirements-2026-11-01.md",
+      "presentations/yi-constellation-editorial-review.md",
+      "presentations/yi-constellation-family-overview.md"
+    ],
+    "alternativeAlreadyUsed": 0,
+    "alternativeUsages": [],
+    "usagesThatAlreadyLimit": [],
+    "blastRadius": 5,
+    "finding": "「統合製品」は製品文書5ファイル・8箇所で使われている。「輔相製品」は製品文書では0箇所。改名すると、この範囲の記述を同時に直す必要がある。"
+  },
+  "scope": "Counts where the current and alternative names appear in the repository's own documents, excluding the YI analysis and the evaluation records, so the Owner can see the blast radius of either choice. It does not decide the name, does not read whether each usage means the same thing, and does not count usage in the decks or in other repositories."
+}
