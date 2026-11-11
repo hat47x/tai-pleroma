@@ -57,6 +57,22 @@ func DSHSkillRoots(projectRoot, dshHome, agentsHome string) []SkillRoot {
 	}
 }
 
+// SkillRootFor returns the skill root a named harness scans under projectRoot.
+// It returns "" for a harness whose root this package does not know, so a caller
+// reports the gap instead of placing bytes somewhere the harness never reads.
+func SkillRootFor(harness, projectRoot string) string {
+	switch harness {
+	case "dsh-headless", "dsh":
+		return filepath.Join(projectRoot, ".dsh", "skills")
+	case "claude-code":
+		return filepath.Join(projectRoot, ".claude", "skills")
+	case "step-cli":
+		// Step scans .agents/skills and .claude/skills in the cwd and ancestors.
+		return filepath.Join(projectRoot, ".agents", "skills")
+	}
+	return ""
+}
+
 // PlaceSkill copies a Product Skill directory into a harness skill root as
 // <root>/<id>/SKILL.md, mirroring the directory-bundle shape both DSH and
 // Claude Code expect. It returns the placement record, including the digest of

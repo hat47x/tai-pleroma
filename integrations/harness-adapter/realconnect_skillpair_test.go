@@ -55,15 +55,23 @@ func TestRealSkillPairH2H3(t *testing.T) {
 		"Call %s. Report the model revision, the world fingerprint and the declared total. "+
 			"Do not run any shell command and do not run the TEI CLI directly.", typedCatalog)
 
-	// H3 placement: the Product Skill in the DSH root. H2 gets the same
-	// workspace with the Skill directory removed.
-	skillRoot := filepath.Join(workspace, ".dsh", "skills")
+	// H3 placement: the Product Skill in the root the chosen harness scans. H2
+	// gets the same workspace with the Skill directory removed. The root differs
+	// per harness, so it is chosen from the harness rather than assumed.
+	harnessName := os.Getenv("HARNESS_ADAPTER_SKILL_HARNESS")
+	if harnessName == "" {
+		harnessName = "dsh-headless"
+	}
+	skillRoot := SkillRootFor(harnessName, workspace)
+	if skillRoot == "" {
+		t.Skipf("no skill root is known for harness %q", harnessName)
+	}
 	pl, err := PlaceSkill(skillRoot, teiSkill, false)
 	if err != nil {
 		t.Fatalf("place skill: %v", err)
 	}
 	pin := SkillPinFromPlacement(pl)
-	t.Logf("Skill placed for H3: %s (%s, %d bytes)", pl.PlacedPath, pl.BytesSHA256, pl.ByteCount)
+	t.Logf("Skill placed for H3 in %s: %s (%s, %d bytes)", skillRoot, pl.PlacedPath, pl.BytesSHA256, pl.ByteCount)
 
 	run := func(arm string, withSkill bool) *Result {
 		if !withSkill {
@@ -77,19 +85,48 @@ func TestRealSkillPairH2H3(t *testing.T) {
 				t.Fatalf("re-place skill: %v", err)
 			}
 		}
-		dsh := NewDSHHeadlessAdapter("headless", workspace)
-		dsh.Timeout = 12 * time.Minute
-		dsh.PermissionMode = os.Getenv("HARNESS_ADAPTER_DSH_PERMISSION_MODE")
-		dsh.ApprovalPolicy = "never"
-		dsh.PatchFiles = splitEnvList(os.Getenv("HARNESS_ADAPTER_DSH_PATCH"))
-		dsh.MCPServers = []MCPServerSpec{spec}
-		dsh.MCPWorkDir = filepath.Join(trialDir, "overlays")
-		dsh.ProbeEffectiveConfig = true
-		av, err := dsh.Probe(ctx)
+		// The harness is caller-chosen so the same paired Task can be run on more
+		// than one harness. Only the harness changes; the Task, Skill bytes and
+		// placement rule stay identical.
+		var adapter Adapter
+		switch harnessName {
+		case "claude-code":
+			cc := NewClaudeCodeAdapter(workspace)
+			cc.Timeout = 12 * time.Minute
+			cc.Tools = os.Getenv("HARNESS_ADAPTER_CC_TOOLS")
+			cc.PermissionMode = os.Getenv("HARNESS_ADAPTER_CC_PERMISSION_MODE")
+			cc.MCPServers = []MCPServerSpec{spec}
+			cc.MCPWorkDir = filepath.Join(trialDir, "overlays")
+			adapter = cc
+		case "step-cli":
+			st := NewStepCLIAdapter(filepath.Join(trialDir, "step-project"))
+			st.Timeout = 12 * time.Minute
+			st.Model = os.Getenv("HARNESS_ADAPTER_STEP_MODEL")
+			if st.Model == "" {
+				st.Model = "step-3.7-flash"
+			}
+			st.ApprovalMode = "auto"
+			st.NonInteractiveApproval = "allow"
+			if k := os.Getenv("STEP_API_KEY"); k != "" {
+				st.Env = []string{"STEP_API_KEY=" + k, "STEP_BASE_URL=" + envOr("STEP_BASE_URL", "https://api.stepfun.ai/step_plan/v1")}
+			}
+			adapter = st
+		default:
+			dsh := NewDSHHeadlessAdapter("headless", workspace)
+			dsh.Timeout = 12 * time.Minute
+			dsh.PermissionMode = os.Getenv("HARNESS_ADAPTER_DSH_PERMISSION_MODE")
+			dsh.ApprovalPolicy = "never"
+			dsh.PatchFiles = splitEnvList(os.Getenv("HARNESS_ADAPTER_DSH_PATCH"))
+			dsh.MCPServers = []MCPServerSpec{spec}
+			dsh.MCPWorkDir = filepath.Join(trialDir, "overlays")
+			dsh.ProbeEffectiveConfig = true
+			adapter = dsh
+		}
+		av, err := adapter.Probe(ctx)
 		if err != nil || !av.Reachable {
 			t.Skipf("harness not reachable for %s: %v %s", arm, err, av.Reason)
 		}
-		res, err := dsh.Run(ctx, Task{
+		res, err := adapter.Run(ctx, Task{
 			ID:     arm,
 			Prompt: taskPrompt,
 			Pins: Pins{

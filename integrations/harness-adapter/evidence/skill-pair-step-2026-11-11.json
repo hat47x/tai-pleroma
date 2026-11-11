@@ -1,0 +1,31 @@
+[
+  {
+    "taskId": "real-skill-pair",
+    "h2": {
+      "arm": "step-cli",
+      "skillId": "yi-tei-modeling",
+      "placed": false,
+      "loadState": "not-loaded",
+      "toolCallsAfterLoad": 2,
+      "answerPresent": true,
+      "skillHistory": "discovered",
+      "note": "the harness reported skill-history discovered, which is placement, not a load"
+    },
+    "h3": {
+      "arm": "step-cli",
+      "skillId": "yi-tei-modeling",
+      "placed": true,
+      "placedBytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+      "loadState": "not-loaded",
+      "toolCallsAfterLoad": 17,
+      "answerPresent": true,
+      "skillHistory": "discovered",
+      "note": "the harness reported skill-history discovered, which is placement, not a load"
+    },
+    "eligible": false,
+    "ineligibleReasons": [
+      "H3 arm did not load the Skill (not-loaded)"
+    ],
+    "skillEffect": "not-measured"
+  }
+]
