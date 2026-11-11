@@ -1,0 +1,514 @@
+{
+  "contract": "yi.harness-adapter/v0",
+  "taskId": "real-pilot-tei-read-only",
+  "startedAt": "2026-11-11T06:22:47Z",
+  "finishedAt": "2026-11-11T06:24:51Z",
+  "taskPins": {
+    "source": {
+      "repo": "tei-platform",
+      "resolvedPath": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace",
+      "bytesSha256": "sha256:5291c38ffd35933902f3d3bc9cf3a9d12b38fa76d947ea0c8cd36408534bfd2d",
+      "byteCount": 149,
+      "note": "synthetic copy of D:\\GIT\\hat47x\\tei-platform\\reference\\workspace; 1 immediate files"
+    },
+    "model": {
+      "provider": "harness-default",
+      "route": "harness-default"
+    },
+    "skills": [
+      {
+        "id": "yi-tei-modeling",
+        "placedPath": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.dsh\\skills\\yi-tei-modeling\\SKILL.md",
+        "bytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+        "loadState": "unknown"
+      },
+      {
+        "id": "yi-tei-modeling",
+        "placedPath": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.claude\\skills\\yi-tei-modeling\\SKILL.md",
+        "bytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+        "loadState": "unknown"
+      }
+    ],
+    "toolSchemas": [
+      {
+        "name": "tei.model-catalog",
+        "advertised": true,
+        "invoked": false
+      },
+      {
+        "name": "tei.validate",
+        "advertised": true,
+        "invoked": false
+      }
+    ],
+    "roots": [
+      {
+        "logical": "tei-workspace",
+        "path": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace",
+        "access": "read-only",
+        "verified": false,
+        "note": "declared, not independently verified"
+      }
+    ],
+    "harness": {
+      "family": "multi",
+      "exePath": "D:\\GIT\\hat47x\\tei-platform\\tei.exe",
+      "exeSha256": "sha256:1c190bf62db63fb6d9421bf3a8f6c9847ac05348297ae7153e7c8b2a9b3ad314"
+    }
+  },
+  "outcomes": [
+    {
+      "adapter": "direct-control",
+      "state": "observed",
+      "availability": {
+        "reachable": true,
+        "reason": "local deterministic control arm; no external harness involved",
+        "detail": {
+          "family": "direct-control"
+        }
+      },
+      "result": {
+        "contract": "yi.harness-adapter/v0",
+        "adapter": "direct-control",
+        "transport": "delivered",
+        "run": "completed",
+        "session": {
+          "adapter": "direct-control",
+          "state": "unknown",
+          "note": "no harness session exists in the control arm"
+        },
+        "toolCalls": [
+          {
+            "callId": "control-tei.model-catalog-1",
+            "tool": "tei.model-catalog",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 14031,
+              "sha256": "sha256:9c15113e0cc8eb0f965d1863e3d7e7b2840256aa2081a5e91227325809863d3b"
+            },
+            "resultBytes": 14031,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true,
+              "validationPassed": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.model-overview-2",
+            "tool": "tei.model-overview",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 5300,
+              "sha256": "sha256:4373f7250caad9cf322c28754990459ec5c0af07e510cf8626be7015b83bdc0a"
+            },
+            "resultBytes": 5300,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true,
+              "validationPassed": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.source-index-3",
+            "tool": "tei.source-index",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 61676,
+              "sha256": "sha256:26ca1c6f61d8e8cd71ed9552d848e397357edcb6794dc9652324bbeaf57e0d3a"
+            },
+            "resultBytes": 61676,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.validate-4",
+            "tool": "tei.validate",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 2390,
+              "sha256": "sha256:42e6c074d8cb56d3694d4bdcd321d80ed629ad347ac44a3f3b5b296f30765243"
+            },
+            "resultBytes": 2390,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.version-5",
+            "tool": "tei.version",
+            "inputJson": "{}",
+            "resultText": "tei tei.cli.version/v0 windows/amd64 go=go1.27.0 revision=188ce21dbfb17271e1c1c14fe6d70ce7d7fa8de0 (modified)\nbuild settings: -buildmode=exe -compiler=gc\n",
+            "resultBytes": 154,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "note": "deterministic product invocation; no model involved"
+          },
+          {
+            "callId": "control-tei.workspace-files-6",
+            "tool": "tei.workspace-files",
+            "inputJson": "{}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 9917,
+              "sha256": "sha256:603ef155ddc8537993a2732b647c1ab34f46696e769593d7542118730489872d"
+            },
+            "resultBytes": 9917,
+            "harnessStatus": "not-a-harness",
+            "exitCode": 0,
+            "productVerdict": {
+              "operationCompleted": true
+            },
+            "note": "deterministic product invocation; no model involved"
+          }
+        ],
+        "diagnostics": [
+          {
+            "severity": ""
+          },
+          {
+            "severity": ""
+          },
+          {
+            "severity": ""
+          }
+        ],
+        "outbound": [
+          {
+            "direction": "task-text",
+            "bytesSha256": "sha256:0533d7b30a20f411ff38fa17648fc64581cd721100f4767a7e5cbf9a8b40060e",
+            "byteCount": 315,
+            "detail": "task prompt (not sent to any model)"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:98147eea7d6927a80c7c4d31d1cecc1ed6ad19e7a6c1e6198023c0bdf3cac539",
+            "byteCount": 122,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:54dc7098aec3adba01ded2566cd19faf52304875a15c005d59ba61e72e568843",
+            "byteCount": 123,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:89da545473b7aa42a8609e5fcda9efe33089e191dcd4dd1ad4809672742c5b93",
+            "byteCount": 121,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:9fc51dcbd4f60f9db769bf4547db4df80795c03aa9dad1c1f3ea5bd9ca20bac1",
+            "byteCount": 123,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:f8aa25b301ce47dd3de9d3e54dcc44160eb07dabf694943198f8f567db50fc56",
+            "byteCount": 62,
+            "detail": "product CLI invocation"
+          },
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:e5f1deb8981a80b29dd5bddb189b4644e544d3b5cc3d9dd5419a572c99963dad",
+            "byteCount": 124,
+            "detail": "product CLI invocation"
+          }
+        ],
+        "receipt": {
+          "state": "not-observed",
+          "consumer": "direct-control",
+          "note": "control arm output is local; consumer receipt is a separate observation"
+        },
+        "observedModel": {},
+        "startedAt": "2026-11-11T06:22:47Z",
+        "finishedAt": "2026-11-11T06:22:49Z"
+      },
+      "elapsedMs": 2583
+    },
+    {
+      "adapter": "dsh-headless",
+      "state": "observed",
+      "availability": {
+        "reachable": true,
+        "reason": "version probe ok",
+        "detail": {
+          "exePath": "C:\\Users\\yhata\\AppData\\Local\\Programs\\DeepSeek Harness\\resources\\runtime\\cli\\bin\\dsh.cmd",
+          "family": "dsh",
+          "platform": "windows",
+          "probe": "version",
+          "version": "0.2.2-rc.1"
+        }
+      },
+      "result": {
+        "contract": "yi.harness-adapter/v0",
+        "adapter": "dsh-headless",
+        "transport": "delivered",
+        "run": "completed",
+        "session": {
+          "adapter": "dsh-headless",
+          "externalId": "session-f8153948-6f0b-4cb6-8471-e3177b28b01f",
+          "state": "created",
+          "cwd": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace"
+        },
+        "finalText": {
+          "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+          "bytes": 3021,
+          "sha256": "sha256:0d12ea15888734be2d52306c99a2700ca6e258d4eaeddab081a693e6e1adbf04"
+        },
+        "toolCalls": [
+          {
+            "callId": "call_resp_01a1c946-c5a6-76c2-b14d-19ceb742df2e_0",
+            "tool": "skill",
+            "inputJson": "{\"name\":\"yi-tei-modeling\"}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 7611,
+              "sha256": "sha256:c06cf8c417527e0d90246f9882296372c0e5c0f17aed242ce9221faeac9fa958"
+            },
+            "resultBytes": 7611,
+            "harnessStatus": "completed",
+            "note": "harness-reported status; not a product verdict"
+          },
+          {
+            "callId": "call_resp_01a1c946-d11a-792c-a1db-3552a76d6fa3_0",
+            "tool": "read",
+            "inputJson": "{\"file_path\":\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\\.dsh\\\\skills\\\\yi-tei-modeling\\\\references\\\\read-only-model-investigation.md\"}",
+            "resultText": "Error: cannot read \"D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.dsh\\skills\\yi-tei-modeling\\references\\read-only-model-investigation.md\": not found",
+            "resultBytes": 146,
+            "harnessStatus": "error",
+            "note": "harness-reported status; not a product verdict"
+          },
+          {
+            "callId": "call_resp_01a1c946-d11a-792c-a1db-3552a76d6fa3_1",
+            "tool": "pwsh",
+            "inputJson": "{\"description\":\"Check TEI CLI version and workspace listing\",\"command\":\"$tei = \\\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\\bin\\\\tei.exe\\\"; Get-Item $tei | Select-Object FullName, Length, LastWriteTime | Format-List; & $tei version -json; \\\"EXIT=$LASTEXITCODE\\\"\"}",
+            "resultText": "\r\n\r\nFullName      : D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\bin\\tei.exe\r\nLength        : 29393408\r\nLastWriteTime : 2026/11/11 15:22:39\r\n\r\n\r\n\r\n{\"schemaVersion\":\"tei.cli.version/v0\",\"effect\":\"read-only\",\"goVersion\":\"go1.27.0\",\"goos\":\"windows\",\"goarch\":\"amd64\",\"vcsRevision\":\"188ce21dbfb17271e1c1c14fe6d70ce7d7fa8de0\",\"vcsModified\":true,\"buildSettings\":[\"-buildmode=exe\",\"-compiler=gc\"],\"source\":\"build-info\"}\nEXIT=0\r\n[stderr]\n�^���쐬�ł��܂���B���̌��ꃂ�[�h�ł́A�R�A�̌^�݂̂��T�|�[�g����Ă��܂��B\r\n�����ꏊ �s:1 ����:1\r\n+ [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false);  ...\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) []�ARuntimeException\r\n    + FullyQualifiedErrorId : CannotCreateTypeConstrainedLanguage\r\n \r\n�^���쐬�ł��܂���B���̌��ꃂ�[�h�ł́A�R�A�̌^�݂̂��T�|�[�g����Ă��܂��B\r\n�����ꏊ �s:1 ����:70\r\n+ ... ew($false); $OutputEncoding = [System.Text.UTF8Encoding]::new($false) ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) []�ARuntimeException\r\n    + FullyQualifiedErrorId : CannotCreateTypeConstrainedLanguage\r\n \r\n",
+            "resultBytes": 1402,
+            "harnessStatus": "completed",
+            "note": "harness-reported status; not a product verdict"
+          },
+          {
+            "callId": "call_resp_01a1c946-f28d-7b16-b9f1-4895fbb8e460_0",
+            "tool": "pwsh",
+            "inputJson": "{\"description\":\"Run TEI model catalog read-only\",\"command\":\"$tei = \\\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\\bin\\\\tei.exe\\\"; $ws = \\\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\"; & $tei model catalog -workspace $ws 2>&1 | Out-String -Width 400\"}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 8192,
+              "sha256": "sha256:898c8a4637e4f6369fe8e2b92197a2c8f17c6c5eaf8c7f2ab9f28303154663ca"
+            },
+            "resultBytes": 8192,
+            "harnessStatus": "completed",
+            "truncated": true,
+            "note": "harness-reported status; not a product verdict"
+          },
+          {
+            "callId": "call_resp_01a1c947-13b1-752a-9cf5-29c50f60b941_0",
+            "tool": "pwsh",
+            "inputJson": "{\"description\":\"Run TEI validate read-only with JSON\",\"command\":\"$tei = \\\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\\bin\\\\tei.exe\\\"; $ws = \\\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\"; & $tei validate -workspace $ws -json 2>$null | Out-String -Width 400; \\\"EXIT=$LASTEXITCODE\\\"\"}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 3385,
+              "sha256": "sha256:93d575b6340c54cf8fbf66e339acfdca79f6fc8d83a981d47ab0acbd8e838258"
+            },
+            "resultBytes": 3385,
+            "harnessStatus": "completed",
+            "note": "harness-reported status; not a product verdict"
+          }
+        ],
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "harness-projection-truncated",
+            "message": "the --json projection bounded at least one payload; the durable session log may hold more",
+            "source": "dsh"
+          }
+        ],
+        "outbound": [
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:b49f309829709a50467e4936f4fa610c9ee4cd0280ffe8d04f33924cf822b942",
+            "byteCount": 456,
+            "detail": "dsh headless invocation"
+          },
+          {
+            "direction": "task-text",
+            "bytesSha256": "sha256:0533d7b30a20f411ff38fa17648fc64581cd721100f4767a7e5cbf9a8b40060e",
+            "byteCount": 315,
+            "detail": "task prompt"
+          },
+          {
+            "direction": "skill-bytes",
+            "bytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+            "detail": "skill yi-tei-modeling placed at D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.dsh\\skills\\yi-tei-modeling\\SKILL.md"
+          },
+          {
+            "direction": "skill-bytes",
+            "bytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+            "detail": "skill yi-tei-modeling placed at D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.claude\\skills\\yi-tei-modeling\\SKILL.md"
+          }
+        ],
+        "receipt": {
+          "state": "not-observed",
+          "consumer": "dsh-headless",
+          "note": "harness reported delivery; consumer receipt not independently observed"
+        },
+        "unsupported": [
+          "result:projection-truncated"
+        ],
+        "observedModel": {
+          "provider": "spawn",
+          "model": "~deepseek/deepseek-flash-latest",
+          "route": "dsh-effective-config"
+        },
+        "observations": {
+          "effective-model": "spawn/~deepseek/deepseek-flash-latest",
+          "effective-model-note": "declared default model route from --dump-config; not an observation of what this turn used"
+        },
+        "exitCode": 0,
+        "reason": "completed",
+        "startedAt": "2026-11-11T06:22:56Z",
+        "finishedAt": "2026-11-11T06:24:18Z"
+      },
+      "elapsedMs": 89119
+    },
+    {
+      "adapter": "claude-code",
+      "state": "observed",
+      "availability": {
+        "reachable": true,
+        "reason": "version probe ok; authentication is a separate condition the adapter cannot verify",
+        "detail": {
+          "exePath": "C:\\Users\\yhata\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Anthropic.ClaudeCode_Microsoft.Winget.Source_8wekyb3d8bbwe\\claude.exe",
+          "family": "claude-code",
+          "platform": "windows",
+          "probe": "version",
+          "version": "2.1.302 (Claude Code)"
+        }
+      },
+      "result": {
+        "contract": "yi.harness-adapter/v0",
+        "adapter": "claude-code",
+        "transport": "delivered",
+        "run": "completed",
+        "session": {
+          "adapter": "claude-code",
+          "externalId": "d12fe9b7-2fcc-4f93-b536-4df6c6365d6a",
+          "state": "created",
+          "cwd": "D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace"
+        },
+        "finalText": {
+          "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+          "bytes": 1567,
+          "sha256": "sha256:452481fde97ed025a49a6e4a3a287ba4abfa02a31008cf98c9bfb2545a63fca1"
+        },
+        "toolCalls": [
+          {
+            "callId": "toolu_013Bw7kQsiky2cbhMJ8j4D5d",
+            "tool": "Bash",
+            "inputJson": "{\"command\":\"cd \\\"D:/GIT/hat47x/.tmp_harness_pilot/workspace\\\" && ./bin/tei.exe model catalog; echo \\\"exit=$?\\\"; ./bin/tei.exe validate; echo \\\"exit=$?\\\"\",\"description\":\"Run TEI model catalog and validate\"}",
+            "resultText": "{\"schemaVersion\":\"tei.cli.model/v0\",\"ok\":false,\"error\":{\"code\":\"INVALID_ARGUMENT\",\"message\":\"model catalog requires an exact -workspace and optional exact -namespace, without positional arguments\"}}\nexit=2\nexactly one of -workspace or -world is required\nexit=2",
+            "resultBytes": 260,
+            "harnessStatus": "completed",
+            "note": "harness-reported status; not a product verdict"
+          },
+          {
+            "callId": "toolu_01MrNvMgdL1QtxvaqJpeG2gZ",
+            "tool": "Bash",
+            "inputJson": "{\"command\":\"cd \\\"D:/GIT/hat47x/.tmp_harness_pilot/workspace\\\" && W=\\\"D:\\\\GIT\\\\hat47x\\\\.tmp_harness_pilot\\\\workspace\\\"; ./bin/tei.exe model catalog -workspace \\\"$W\\\"; echo \\\"exit=$?\\\"; ./bin/tei.exe validate -workspace \\\"$W\\\"; echo \\\"exit=$?\\\"\",\"description\":\"Rerun with -workspace flag\"}",
+            "resultText": {
+              "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+              "bytes": 14549,
+              "sha256": "sha256:a312eb3b1b533df16c95534faccf6c7fd977268e0ae6c2bb19bf5c06e5474f91"
+            },
+            "resultBytes": 14549,
+            "harnessStatus": "completed",
+            "note": "harness-reported status; not a product verdict"
+          }
+        ],
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "harness-unknown-event-types",
+            "message": "event types this decoder does not model: rate_limit_event",
+            "source": "claude-code"
+          }
+        ],
+        "outbound": [
+          {
+            "direction": "argv",
+            "bytesSha256": "sha256:741362bb10f82e48a5258961a8bb08831dfcfc3ef087d089cfac0a7a7c77d170",
+            "byteCount": 455,
+            "detail": "claude code print invocation"
+          },
+          {
+            "direction": "task-text",
+            "bytesSha256": "sha256:0533d7b30a20f411ff38fa17648fc64581cd721100f4767a7e5cbf9a8b40060e",
+            "byteCount": 315,
+            "detail": "task prompt"
+          },
+          {
+            "direction": "skill-bytes",
+            "bytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+            "detail": "skill yi-tei-modeling placed at D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.dsh\\skills\\yi-tei-modeling\\SKILL.md"
+          },
+          {
+            "direction": "skill-bytes",
+            "bytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+            "detail": "skill yi-tei-modeling placed at D:\\GIT\\hat47x\\.tmp_harness_pilot\\workspace\\.claude\\skills\\yi-tei-modeling\\SKILL.md"
+          }
+        ],
+        "receipt": {
+          "state": "not-observed",
+          "consumer": "claude-code",
+          "note": "harness reported delivery; consumer receipt not independently observed"
+        },
+        "unsupported": [
+          "skill:load-not-observed"
+        ],
+        "observedModel": {
+          "model": "claude-sonnet-5-5",
+          "route": "claude-code-print"
+        },
+        "observations": {
+          "advertised-tools": "Bash,Glob,Grep,Read,mcp__claude_ai_Claude_Docs__batch,mcp__claude_ai_Claude_Docs__create,mcp__claude_ai_Claude_Docs__delete,mcp__claude_ai_Claude_Docs__export,mcp__claude_ai_Claude_Docs__guide,mcp__claude_ai_Claude_Docs__query,mcp__claude_ai_Claude_Docs__read,mcp__claude_ai_Claude_Docs__update,mcp__claude_ai_Google_Drive__copy_file,mcp__claude_ai_Google_Drive__create_file,mcp__claude_ai_Google_Drive__download_file_content,mcp__claude_ai_Google_Drive__get_file_metadata,mcp__claude_ai_Google_Drive__get_file_permissions,mcp__claude_ai_Google_Drive__get_shared_drive_metadata,mcp__claude_ai_Google_Drive__list_recent_files,mcp__claude_ai_Google_Drive__list_shared_drives,mcp__claude_ai_Google_Drive__read_file_content,mcp__claude_ai_Google_Drive__search_files,mcp__claude_ai_Google_Drive__share_file,mcp__claude_ai_Google_Drive__trash_file,mcp__claude_ai_Google_Drive__update_file",
+          "duration-api-ms": "10763",
+          "num-turns": "3",
+          "total-cost-usd": "0.045219"
+        },
+        "exitCode": 0,
+        "reason": "success",
+        "startedAt": "2026-11-11T06:24:19Z",
+        "finishedAt": "2026-11-11T06:24:51Z"
+      },
+      "elapsedMs": 32948
+    }
+  ],
+  "divergences": [
+    "exit-code",
+    "session-state",
+    "tool-count",
+    "tool-names",
+    "unsupported"
+  ],
+  "notes": [
+    "An arm is observed, not passed. No arm in this report is evidence that a harness is interchangeable with another.",
+    "Session ids, tool statuses and harness exit codes are recorded separately from product acceptance and permission."
+  ]
+}
