@@ -474,16 +474,36 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 
 ## 7. Owner判断ゲート一覧
 
-| ID | 判断事項 | 影響する票 | 現状 |
-| --- | --- | --- | --- |
-| OG-1 | 開示Scope語彙（`synthetic-only`／`reviewed-projection-only`）の確定 | 全票 | 候補のまま |
-| OG-2 | `source.status` と文書単位の開示宣言をTEI側artifact生成契約にするか | G3 | 未決。無い場合は`unknown`として動く |
-| OG-3 | 本文・題名の業務面への公開（SUI #3369） | G3・G6 | 未決 |
-| OG-4 | 連鎖Handoffの `chain`（v2）を採るか | G3.5 | 未決。v1のまま |
-| OG-5 | 返送Receiptの保持期間・閲覧者・監査利用 | G2 | 未決 |
-| OG-6 | **共通実行基盤の新設・権限境界の変更** | 全票 | **行わない。必要なら具体案を出す** |
-| OG-7 | Harness別Adapterの配布・版固定（TAI #74） | G5 | 未決 |
-| OG-8 | MCP Tool一覧への read-only 追加（SUI MCP の allowlist） | G5 | 未決。CLI-onlyで継続 |
+> **代行決定（2026-11-11）**：Owner から委任を受けて、安全側の既定で決定した。**実 Owner は各決定を覆せる。** 覆す場合は Issue/PR に理由を残すこと。代行決定の原則は「(a) 露出面を広げない、(b) 新しい共通基盤を作らない、(c) 既存の安全不変条件を緩めない、(d) 必要性が実測されるまで機能を増やさない」の4つ。
+
+| ID | 判断事項 | 影響する票 | 代行決定 | 理由 |
+| --- | --- | --- | --- | --- |
+| OG-1 | 開示Scope語彙 | 全票 | **v1 の閉集合（`synthetic-only`／`reviewed-projection-only`）のまま。新增しない。** | 語彙を増やすと露出面が広がる。新しいScopeは、それ自体の監査と試験を持つ要求が実測されてから。`reviewed-projection-only` の意味は「人間がレビュー済みと判定した内容の投影」に限定する |
+| OG-2 | `source.status` と文書単位の開示宣言をTEI側契約にするか | G3 | **追加しない。** 無いまま `unknown` として動かす | TEI の artifact 生成契約を広げる必要が実測されていない。Consumer は欠落を `unknown` として扱い fail-closed なので、安全側で足りている |
+| OG-3 | 本文・題名の業務面への公開（SUI #3369） | G3・G6 | **公開しない。** 既定は SafeMode ON、構造のみ | 未レビュー情報の意図しない共有は安全不変条件。用途ごとの明示許可があるまで緩めない |
+| OG-4 | 連鎖Handoffの `chain`（v2）を採るか | G3.5 | **v2 は作らない。** 連鎖が必要になったら**新しい票として発行**し、`evidence[].basis` に継承元の handoffId を、`limitation` に「継承した観測である」ことを書く | v1 の型を広げずに来歴を運べる。未知欄を増やすと Consumer の解釈がぶれる |
+| OG-5 | 返送Receiptの保持期間・閲覧者・監査利用 | G2 | **一時的な作業物。保持義務を課さない。試験後は消す。** 監査・コンプライアンス用途には使わない | Receipt は Consumer の観測であって証明書ではない。監査に使う要求が実測されたら別判断 |
+| OG-6 | **共通実行基盤の新設・権限境界の変更** | 全票 | **行わない（却下）。** 共通Runtime・中央Host・第二Registry・権限Engine・自動Scheduler は作らない。権限境界も変えない | 元の制約どおり。不足が実測されたら具体案を別途出す |
+| OG-7 | Harness別Adapterの配布・版固定（TAI #74） | G5 | **配布しない。** CLI-only 経路を参照経路として維持する | 配布物は版固定・依存閉包・許可の説明を要する。現状は観測の記録で足りている |
+| OG-8 | MCP Tool一覧への read-only 追加（SUI MCP の allowlist） | G5 | **追加しない。** 既存の2 read-only Tool のまま | allowlist を広げると MCP 面が広がる。CLI 経路で足りており、CLI を参照経路とする |
+
+### 7.1 代行決定で「実装しない」が確定したもの
+
+OG-2・OG-3・OG-4・OG-6・OG-7・OG-8 は**実装しない**。したがって以下は作らない。
+
+- TEI 側の `source.status`・文書単位開示宣言の生成
+- 本文・題名を Handoff 票やpayloadへ載せる経路
+- `yi.handoff.context/v2` と `chain`
+- 共通Runtime・中央Host・第二Registry・権限Engine・自動Scheduler
+- Harness別Adapter の配布パッケージ
+- MCP Tool の追加
+
+### 7.2 代行決定で「維持」が確定したもの
+
+OG-1・OG-5 は現状維持。既存の実装を変えない。
+
+- 開示Scopeは `synthetic-only`／`reviewed-projection-only` の2値
+- Receipt は一時作業物。保持・監査の義務なし
 
 ---
 
@@ -515,7 +535,9 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 | 合成試験と実製品E2Eの区別 | **達成**。Receiptの `scope` と `claims` で区別。CIのPASSをlive handoffのPASSに数えない |
 | 未実行の `not-run` 保持 | **達成**（§実行状況・各負例表） |
 
-**まだ完了ではない理由**：上の「一部」「not-run」が残る。Owner判断ゲート OG-1〜OG-8 も未決。
+**Owner判断**：§7 の OG-1〜OG-8 は **2026-11-11 に代行決定済み**。実 Owner は覆せる。
+
+**まだ完了ではない理由**：上の「一部」「not-run」が残る。ただし OG-2・OG-3・OG-4・OG-6・OG-7・OG-8 は「実装しない」が確定したため、これらの `not-run` は**努力不足ではなく決定の結果**である。残る `not-run` は外部条件（実Host Grant/egress、意味受理、SEI runtime、TEI Claim closure）に依存する。
 
 ---
 
