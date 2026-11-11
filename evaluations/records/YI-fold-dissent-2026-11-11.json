@@ -1,0 +1,30 @@
+{
+  "schema": "tai.reference.yi-fold-with-dissent/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Go running the SUI link reference on the saved SUI API receipt",
+  "command": "python integrations/tools/yi_fold_with_dissent_probe.py --tai-root . --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-fold-dissent-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "linkedCardCount": 5,
+    "islandGroups": [
+      "I-01",
+      "I-02",
+      "I-03"
+    ],
+    "edgeCount": 1,
+    "contradiction": true,
+    "endpointsPresent": true,
+    "endpointsRemainSeparate": true,
+    "noCardLostInTheFold": true,
+    "dissentSurvivesTheFold": true,
+    "finding": "5枚のカードを3つの島へ畳むとき、矛盾する2つの島（I-01とI-02）は別の島として残り、両者を結ぶcontradictsの辺も1本そのまま残る。畳んだ後も、少数の反証は構造として消えない。"
+  },
+  "scope": "Runs the SUI link reference against the saved SUI API receipt and records that the contradicting islands stay separate with their edge after the cards are folded into islands. The receipt is a saved synthetic probe, not a live SUI session; whether a real participant's dissent survives editing is not established, and the fold itself is not an operation this probe performs."
+}
