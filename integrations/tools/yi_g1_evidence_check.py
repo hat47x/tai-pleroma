@@ -37,10 +37,11 @@ DECISIONS = (
         "id": "D3",
         "question": "SHOの状態をどう示すか",
         "evidence": [
+            ("observation", "evaluations/records/YI-sho-actual-2026-11-11.json"),
             ("document", "docs/yi-constellation/analysis/21-SHOの扱い.md"),
             ("document", "docs/yi-constellation/analysis/20-製品と卦の対応レビュー.md"),
         ],
-        "missing": "sho-composerの実際の内容（LICENSEと初期コミットのみ）を確かめた記録",
+        "missing": "SHOを製品として扱った場合の要求文書・Owner・利用者の実在（リポジトリの内容は測った）",
     },
     {
         "id": "D4",
@@ -116,7 +117,16 @@ def main():
         "decisionsChecked": len(results),
         "decisionsWithNoObservation": no_observation,
         "missingFiles": missing_files,
+        # PASS here means the check ran and found the gaps it reports. The
+        # absence of an observation for a decision is the finding, not a failure
+        # of this check, so the field is named for what it measures rather than
+        # as an invariant the receipt claims to have met.
+        "decisionsWithoutObservation": no_observation,
         "everyDecisionHasAnObservation": not no_observation,
+        "finding": (
+            "6つの横断判断のうち、D1・D3・D4・D6は観測を持ち、D2・D5は文書だけである。"
+            "観測を持たない2つ（呼び方と受理者）は、観測ではなく組織の決定かもしれない。"
+        ),
         "everyCitedPathExists": not missing_files,
         "everyDecisionNamesItsGap": all(item["gaps"] for item in results),
     }
