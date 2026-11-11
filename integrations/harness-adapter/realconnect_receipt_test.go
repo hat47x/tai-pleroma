@@ -99,6 +99,9 @@ func TestRealReceiptFileReadback(t *testing.T) {
 		t.Fatalf("run: %v", err)
 	}
 	t.Logf("harness arm: %s", res.Summary())
+	for _, d := range res.Diagnostics {
+		t.Logf("  diagnostic [%s] %s: %s", d.Severity, d.Code, d.Message)
+	}
 	t.Logf("receipt before readback: %s", res.Receipt.State)
 
 	// The producer records nothing about the file; the CONSUMER reads it. The
