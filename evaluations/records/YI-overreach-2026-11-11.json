@@ -1,0 +1,33 @@
+{
+  "schema": "tai.reference.yi-overreach-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Go running TEI's validate against a synthetic workspace",
+  "command": "python integrations/tools/yi_overreach_probe.py --tai-root . --tei-root <TEI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-overreach-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptPresent": true,
+    "validationExit": 0,
+    "validateOk": true,
+    "errorDiagnosticCount": 0,
+    "errorDiagnostics": [],
+    "missingTypeNamed": false,
+    "workspaceRejected": false,
+    "readOnlyObserved": true,
+    "overreachRefusedAtDesignTime": false,
+    "finding": "宣言していない型をapplicationが使っても、TEIのvalidateはokを返す。今回のworkspaceでは診断が0件で、型の欠落は設計段階で拒否されない。TEIのvalidateは、applicationの型解決を検査していない。",
+    "control": {
+      "validateOk": false,
+      "receiptPassed": false,
+      "reason": "TEI validate failed: exit status 1: ",
+      "refusesAnUnknownPrimitive": true
+    }
+  },
+  "scope": "Builds a synthetic workspace whose application names a type the semantic model never declares, runs TEI's validate on it, and records whether the validator refuses it before any execution. In this run it did not: validate returned ok with no diagnostics. A control workspace with an unknown primitive in the model is refused, so the difference is which error the validator notices, not that it never refuses. Both workspaces are synthetic, and this does not test an authority or permission boundary."
+}
