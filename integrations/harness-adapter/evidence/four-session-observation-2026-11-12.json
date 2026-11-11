@@ -1,0 +1,132 @@
+{
+  "allocation": [
+    "S1-H2",
+    "S2-H3",
+    "S3-H3",
+    "S4-H2"
+  ],
+  "sessions": [
+    {
+      "arm": "S1-H2",
+      "withSkill": false,
+      "allocated": true,
+      "observation": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": false,
+        "loadState": "unknown",
+        "toolCallsAfterLoad": 1,
+        "answerPresent": true,
+        "note": "S1-H2 | the adapter did not place the Skill for this arm"
+      }
+    },
+    {
+      "arm": "S2-H3",
+      "withSkill": true,
+      "allocated": true,
+      "observation": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": true,
+        "placedBytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+        "loadState": "loaded",
+        "loadedVia": "skill",
+        "toolCallsAfterLoad": 2,
+        "answerPresent": true,
+        "note": "S2-H3 | "
+      }
+    },
+    {
+      "arm": "S3-H3",
+      "withSkill": true,
+      "allocated": true,
+      "observation": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": true,
+        "placedBytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+        "loadState": "loaded",
+        "loadedVia": "skill",
+        "toolCallsAfterLoad": 2,
+        "answerPresent": true,
+        "note": "S3-H3 | "
+      }
+    },
+    {
+      "arm": "S4-H2",
+      "withSkill": false,
+      "allocated": true,
+      "observation": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": false,
+        "loadState": "unknown",
+        "toolCallsAfterLoad": 1,
+        "answerPresent": true,
+        "note": "S4-H2 | the adapter did not place the Skill for this arm"
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "taskId": "real-four-session/P1",
+      "h2": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": false,
+        "loadState": "unknown",
+        "toolCallsAfterLoad": 1,
+        "answerPresent": true,
+        "note": "S1-H2 | the adapter did not place the Skill for this arm"
+      },
+      "h3": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": true,
+        "placedBytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+        "loadState": "loaded",
+        "loadedVia": "skill",
+        "toolCallsAfterLoad": 2,
+        "answerPresent": true,
+        "note": "S2-H3 | "
+      },
+      "eligible": true,
+      "skillEffect": "eligibility-confirmed; accuracy not measured"
+    },
+    {
+      "taskId": "real-four-session/P2",
+      "h2": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": false,
+        "loadState": "unknown",
+        "toolCallsAfterLoad": 1,
+        "answerPresent": true,
+        "note": "S4-H2 | the adapter did not place the Skill for this arm"
+      },
+      "h3": {
+        "arm": "dsh-headless",
+        "skillId": "yi-tei-modeling",
+        "placed": true,
+        "placedBytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+        "loadState": "loaded",
+        "loadedVia": "skill",
+        "toolCallsAfterLoad": 2,
+        "answerPresent": true,
+        "note": "S3-H3 | "
+      },
+      "eligible": true,
+      "skillEffect": "eligibility-confirmed; accuracy not measured"
+    }
+  ],
+  "itt": {
+    "allocated": 4,
+    "h2Clean": 2,
+    "h3Loaded": 2
+  },
+  "notClaimed": [
+    "accuracy or an effect size",
+    "a statistical result from four sessions",
+    "that a loaded Skill improved the answer"
+  ]
+}
