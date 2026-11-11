@@ -1,0 +1,145 @@
+{
+  "schema": "tai.reference.yi-g1-evidence-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the analysis and receipts",
+  "command": "python integrations/tools/yi_g1_evidence_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-g1-evidence-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "decisions": [
+      {
+        "id": "D1",
+        "question": "ハーネスの境界をどこに置くか",
+        "evidencePresent": [
+          {
+            "kind": "observation",
+            "path": "evaluations/records/YI-context-handoff-2026-11-11.json"
+          },
+          {
+            "kind": "observation",
+            "path": "evaluations/records/YI-centre-handoff-2026-11-11.json"
+          },
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/13-設計ノート.md"
+          }
+        ],
+        "evidenceMissing": [],
+        "hasObservation": true,
+        "observationCount": 2,
+        "gaps": "各製品の接続口（実製品側）の観測。参照実装はあるが、実製品には接続していない"
+      },
+      {
+        "id": "D2",
+        "question": "TAIを「輔相製品」と呼ぶか",
+        "evidencePresent": [
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/20-製品と卦の対応レビュー.md"
+          },
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/18-G1レビューパケット.md"
+          }
+        ],
+        "evidenceMissing": [],
+        "hasObservation": false,
+        "observationCount": 0,
+        "gaps": "用語の変更が利用者・製品文書へ与える影響の観測（読みの一致だけでは足りない）"
+      },
+      {
+        "id": "D3",
+        "question": "SHOの状態をどう示すか",
+        "evidencePresent": [
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/21-SHOの扱い.md"
+          },
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/20-製品と卦の対応レビュー.md"
+          }
+        ],
+        "evidenceMissing": [],
+        "hasObservation": false,
+        "observationCount": 0,
+        "gaps": "sho-composerの実際の内容（LICENSEと初期コミットのみ）を確かめた記録"
+      },
+      {
+        "id": "D4",
+        "question": "坎をどう扱うか",
+        "evidencePresent": [
+          {
+            "kind": "observation",
+            "path": "evaluations/records/YI-danger-units-2026-11-11.json"
+          },
+          {
+            "kind": "observation",
+            "path": "evaluations/records/YI-publication-refusal-2026-11-11.json"
+          },
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/50-G4レビューパケット.md"
+          }
+        ],
+        "evidenceMissing": [],
+        "hasObservation": true,
+        "observationCount": 2,
+        "gaps": "危険の単位の測定（今は語彙検索による上限であり、単位そのものを測っていない）"
+      },
+      {
+        "id": "D5",
+        "question": "系列全体の要求を誰が受理するか",
+        "evidencePresent": [
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/18-G1レビューパケット.md"
+          },
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/07-計画.md"
+          }
+        ],
+        "evidenceMissing": [],
+        "hasObservation": false,
+        "observationCount": 0,
+        "gaps": "受理者の権限と責任の所在を示す文書（現状は推奨のみ）"
+      },
+      {
+        "id": "D6",
+        "question": "SHOを製品・MMIの役割・保留のどれにするか",
+        "evidencePresent": [
+          {
+            "kind": "document",
+            "path": "docs/yi-constellation/analysis/21-SHOの扱い.md"
+          },
+          {
+            "kind": "observation",
+            "path": "evaluations/records/YI-empty-reference-2026-11-11.json"
+          }
+        ],
+        "evidenceMissing": [],
+        "hasObservation": true,
+        "observationCount": 1,
+        "gaps": "SHOを製品として扱った場合の要求文書・Owner・利用者の実在"
+      }
+    ],
+    "decisionsChecked": 6,
+    "decisionsWithNoObservation": [
+      "D2",
+      "D3",
+      "D5"
+    ],
+    "missingFiles": [],
+    "everyDecisionHasAnObservation": false,
+    "everyCitedPathExists": true,
+    "everyDecisionNamesItsGap": true
+  },
+  "scope": "For each of G1's six cross-cutting decisions, records which evidence files exist, whether any of them is an observation rather than a document, and what gap the packet itself names. It reads presence and paths only: it does not judge whether the evidence supports the recommendation, and the named gaps are the packet author's, not a measurement."
+}
