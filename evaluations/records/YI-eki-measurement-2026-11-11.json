@@ -1,0 +1,29 @@
+{
+  "schema": "tai.reference.yi-eki-measurement-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading EKI's measurement ADR",
+  "command": "python integrations/tools/yi_eki_measurement_probe.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-eki-measurement-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "adr": "eki-fabric\\plan\\adr\\0039-measurement-of-beneficiaries-and-limits.md",
+    "sections": [
+      "2.1 数えるもの（RQ-YI-015）",
+      "2.2 数えないもの（RQ-YI-014）",
+      "2.3 集計の置き場所"
+    ],
+    "hasCountedSection": true,
+    "hasNotCountedSection": true,
+    "stopOrLimitIsMeasured": true,
+    "boundaryNamesOwner": false,
+    "finding": "EKIのADR-0039は、受益の分布と、停止・取消・上限が効いたことを「数えるもの」と「数えないもの」に分けて設計している。停止が効いたことを価値として測る設計はあるが、非常時の委任を通常時と別の型で記録できるかは、このADRでは扱っていない。",
+    "valueIsMeasuredNotEnforced": false
+  },
+  "scope": "Reads EKI's ADR-0039 and records that it designs how beneficiaries and stop/limit effects are counted, with a boundary that leaves evaluation to TAI. It is a reading of the ADR, not an execution: no counter runs, no record is produced, and whether the design is implemented is not established here."
+}
