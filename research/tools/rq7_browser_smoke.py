@@ -197,6 +197,21 @@ def main() -> None:
                     )
                 checked.append({"case": case["id"], "viewport": viewport_name, **result,
                                 "chromium_accessible_image": ax_image})
+                if viewport_name == "desktop" and case is cases[0]:
+                    # Same visual graph and metadata, but tampered accessible
+                    # topology: the Chromium AX tree must reject the missing edge.
+                    page.evaluate(
+                        "document.querySelector('#diagram svg desc').textContent = 'Declared nodes only; no edges'"
+                    )
+                    try:
+                        chromium_accessible_image(page, accessibility_session, case)
+                    except AssertionError as exc:
+                        if "description does not match" not in str(exc):
+                            raise
+                    else:
+                        raise AssertionError(
+                            "Chromium accessibility-tree description mutation was not detected"
+                        )
             if viewport_name == "desktop":
                 # A deliberately long label exposes the known single-line
                 # layout limitation. Detect it, never count it as a PASS.
