@@ -2,6 +2,18 @@
 
 状態: **Proposed（Owner受理待ち）**。直近の計画案であり、導入済み機能やコミット済みの実行結果を示さない。
 
+## 2026-11-11 現行証拠からの着手順（既存Phase・Gateへの索引）
+
+[TAI横断読解ガイド §7〜8](tai-crossview-reader-guide-2026-11-09.md)に、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値・要件適正化、[#488](https://github.com/hat47x/tai-pleroma/issues/488)のSkill選択、[#168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness適格、[#271](https://github.com/hat47x/tai-pleroma/issues/271)の再資格化、[#127](https://github.com/hat47x/tai-pleroma/issues/127)の実利用価値評価を**重複させず**接続した。新しい中央Agent/Runtime/Registry・共通Gate・Product正本は作らない。
+
+1. **まず「追加しない」基準を保存**：[Draft #601](https://github.com/hat47x/tai-pleroma/pull/601)のTEI単独CLI（3コマンドでread-only調査成立）をB0の限定証拠として使用する。SkillのJSON Path driftはTEI #2605へ戻す。**モデルによるB0/B1/B2比較、費用・時間の増分は未実施**。
+2. **横断連携の最初の実物は既存作業へ**：[PR #602](https://github.com/hat47x/tai-pleroma/pull/602)のSUI→SHO実Producer/Consumer・TEI read-only根拠引用・別Harness CLI観測を独立の限定証拠として扱う。G6は`reference-linked-unverified`までで、ProductのClaim closure、実Source/Host Grant/OS egress、実業務Outcomeは**未成立**。同PRのOwner境界・未実施を保ち、第二のHandoff実装を作らない。
+3. **再開の価値は「定義・行・不在」を分けて検証**：merged [#594](https://github.com/hat47x/tai-pleroma/pull/594)のRevision/旧Receipt判別と、Draft [#600](https://github.com/hat47x/tai-pleroma/pull/600)の実PostgreSQL合成行の反例を区別。World fingerprint一致では行Claimや可視範囲を再利用しない。現試験は**誤再利用の抑制を示したが、選択的再読取の費用節約を示していない**。
+4. **価値の判定は最後に独立実験**：同じJob/Source/権限/独立Expectedで「既存Toolだけ」「必要Product＋Skill」「用途別TAI追加」を比較し、誤成功・不必要な保留・実Consumer受領・本人の選択と成果・時間/Token/人手を別評価する。初回は既存#422/#488/#127の手順を利用し、新規評価エンジンや全製品同時実装を必須にしない。
+
+**本追補は作業順と証拠の適用範囲の提案**。2026-11-11のmain `2a8fd9fa11a082c28e634ec3412aa88354bc4e63` と、列挙した固定PR/Issueの記録を照合した。前のPhase 0〜3や既存Ownerの判断・実証状態を上書きしない。初回のSCN-001実物Owner受理、人間のOutcome、H2/H3の適格比較、実Source/Host権限の確認は本変更ではNOT RUN。
+
+
 ## Phase 0 — 利用者の課題と検証条件を定める
 
 - 対象を[SCN-001](../scenarios/SCN-001-shared-space-guidance.md)に限定する。
