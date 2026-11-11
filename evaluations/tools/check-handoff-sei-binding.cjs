@@ -29,6 +29,12 @@ const DIAGNOSTICS = {
   incomplete: 'reference-incomplete',
   ambiguous: 'reference-ambiguous',
   unsupported: 'reference-profile-unsupported',
+  // 票が要求する3つの語彙。SEI側に閉じた探索範囲が無いため、**このツールは
+  // これらを断定できない**。呼び出し側が期待する場合は `insufficient-evidence`
+  // 等の語彙を別途実装する必要がある（未実装）。
+  insufficientEvidence: 'insufficient-evidence',
+  evidenceMismatch: 'evidence-mismatch',
+  staleOrDifferentBinding: 'stale-or-different-binding',
 };
 
 const PROFILE_ID = 'sei.jcs+sha256/v1alpha1';
@@ -45,6 +51,14 @@ const DIGEST_PATTERN = /^sha256:[0-9a-f]{64}$/;
  *   **確認できない**。したがって成功しても `reference-linked-unverified` に
  *   留め、`verified` にしない。
  * - 同じ `locator` に複数の参照がある場合は `reference-ambiguous`（一意に選ばない）。
+ *
+ * **この照合ができないこと**（票の G6-N1〜N3）:
+ * - 母集団・Predicate・coverage を持たないので、「global 不存在」も
+ *   「部分取得を全件と報告」も判定できない。→ `insufficient-evidence` 相当
+ * - Source-only 移動（同 bytes 別 path・引用 locator が旧版）を検出する術が
+ *   ない。→ `stale-or-different-binding` 相当
+ * これらは Product 自身の Oracle（TEI #2586 等）の責務であり、本ツールは
+ * **やらない**。やろうとすると read closure を持たない断定になる。
  */
 function reconcile(references, expectedProfileId = PROFILE_ID) {
   if (!Array.isArray(references)) {
@@ -88,6 +102,17 @@ function reconcile(references, expectedProfileId = PROFILE_ID) {
   return {
     subjects,
     note: 'a linked reference is NOT a conformance assertion, a meaning acceptance, or a current-source proof',
+    // 票の G6-N1〜N3 が要求する語彙を、このツールが出せないことを明示する。
+    // 「出せない」を黙って通すと、呼び出し側がこれらを確認済みと読む。
+    notDeterminable: {
+      'insufficient-evidence':
+        'this tool has no population, predicate or coverage, so it cannot judge global absence or a partial-as-complete report',
+      'evidence-mismatch':
+        'this tool compares reference shapes only; it does not read the referenced content',
+      'stale-or-different-binding':
+        'this tool has no way to detect a source-only move (same bytes, different path, or an outdated citation locator)',
+      owner: 'the Product that holds the source (TEI #2586 closure, SEI read closure)',
+    },
   };
 }
 
@@ -95,7 +120,9 @@ function reconcile(references, expectedProfileId = PROFILE_ID) {
 function exactBindingShape(digest, profileId = PROFILE_ID) {
   if (typeof digest !== 'string' || !DIGEST_PATTERN.test(digest)) return null;
   return {
-    logical_ref: { kind: 'handoff-reference', id: 'unspecified' },
+    // A test-fixture identifier. Never present this shape as a real binding:
+    // `id` here names nothing that exists.
+    logical_ref: { kind: 'handoff-reference', id: '<test-fixture>' },
     content_digest: digest,
     representation_profile: { profile_id: profileId, version: 'v1alpha1' },
   };

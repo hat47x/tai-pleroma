@@ -12,7 +12,7 @@
 | G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
 | G4 | **observed-pass** | 別プロセス・別Sessionラベルでの再受領（`session-resumed`） | Host再起動・日跨ぎの実Session永続 |
 | G5 | **observed-pass** | DeepSeek Harness と Claude Code の実CLIで切替（別Runner・7観測） | 両HarnessのSkill実ロード・MCP経路・実Host Grant/egress |
-| G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3、別Source検出 |
+| G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3（正式に閉じた）、別Source検出 |
 
 **全票の共通する未達**：実Host Grant／OS egress（TAI #232・TEI #2515）、意味受理（各Owner）、原本Source読取。いずれも `not-run` のまま。
 
@@ -478,14 +478,17 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 
 | ID | 注入 | 期待 | 実測 |
 | --- | --- | --- | --- |
-| G6-N1 | 空配列 `[]` を「global不存在」と結論づけるConsumer | `insufficient-evidence`。母集団・Predicate・coverageの確認を要求 | **`not-run`**。実装した対照は「空配列は照合対象が無いというだけで、不存在の証明ではない」（reconciler 側の自己試験）。票が要求する `insufficient-evidence` の診断語彙は**未実装** |
-| G6-N2 | 部分取得を「全件」として報告 | `evidence-mismatch` | **`not-run`**。実装した対照は「digest 欠落は `reference-incomplete`」。`evidence-mismatch` の語彙は未実装 |
-| G6-N3 | Source-only移動後にWorldFPのみ一致、引用locatorは旧版 | `stale-or-different-binding` | **`not-run`**。未実装。`DIAGNOSTICS.stale` は定義済みだが一度も emit されない |
+| G6-N1 | 空配列 `[]` を「global不存在」と結論づけるConsumer | `insufficient-evidence`。母集団・Predicate・coverageの確認を要求 | **`not-run`（正式に閉じた）**。このツールは母集団・Predicate・coverageを持たないため断定できない。出力の `notDeterminable['insufficient-evidence']` に理由と責任者（TEI #2586 closure）を明示する |
+| G6-N2 | 部分取得を「全件」として報告 | `evidence-mismatch` | **`not-run`（正式に閉じた）**。このツールは参照の形だけを照合し、参照先の内容を読まない。`notDeterminable['evidence-mismatch']` に理由を明示 |
+| G6-N3 | Source-only移動後にWorldFPのみ一致、引用locatorは旧版 | `stale-or-different-binding` | **`not-run`（正式に閉じた）**。同bytes別path・旧版locatorの検出手段がない。`notDeterminable['stale-or-different-binding']` に理由を明示 |
 | G6-N4 | 同じdigestの別Source | 同一視しない。所在とdigestを別列で確認 | **`observed-pass`**（一部）。同一 `locator` の複数参照は `reference-ambiguous`。ただし「同digestの別Source」の検出は `locator` でしか区別できないため、**別Sourceの検出そのものは未実装** |
 | G6-N5（追加） | 票でないJSON／`schema` 不一致／`references` が配列でない | exit 2（fail-closed） | **`observed-pass`** |
 | G6-N6（追加） | `representation_profile` を票が宣言しない | `matched=false`・`declaredByTicket=null` を明示 | **`observed-pass`** |
 
 **ID の使い回しに関する注意**：self-test の `G6-N1`〜`G6-N4` は**票の負例とは別のシナリオ**に使っている。票の G6-N1〜N3 は未実装であり、**通ったわけではない**。混同を避けるため、self-test 側の ID は `ST-N1`〜`ST-N4` に改名すべきである（後続作業）。
+
+
+**「正式に閉じた」の意味**：G6-N1〜N3 は**実装しない**と決め、その理由と責任者をツールの出力（`notDeterminable`）に載せた。黙って通す（「確認済み」と読ませる）のではない。断定には Product 自身の read closure が必要で、それを持たないツールが判定すると read closure を持たない断定になる。
 
 ---
 
