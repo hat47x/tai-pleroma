@@ -1,0 +1,227 @@
+{
+  "schema": "tai.reference.yi-artifact-digest/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 recomputing the recorded digests",
+  "command": "python integrations/tools/yi_artifact_digest_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-artifact-digest-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receipts": 29,
+    "receiptsWithoutArtifactDigest": [],
+    "mismatched": [],
+    "rows": [
+      {
+        "receipt": "YI-acceptance-authority-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-candidate-fields-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-centre-handoff-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-centre-key-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-citation-check-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-context-handoff-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-cross-receipt-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-csw-return-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-danger-units-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-deck-figures-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-doc-integrity-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-eki-measurement-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-empty-reference-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-fold-dissent-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-g1-evidence-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-g1-status-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-g2-landing-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-landing-paths-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-naming-radius-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-overreach-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-publication-refusal-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-receipt-auditability-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-scope-halves-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-sho-actual-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-stage3-inventory-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-staleness-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-state-classification-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-unreferenced-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "yi-constellation-structure-2026-11-11.json",
+        "artifact": "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
+        "agrees": true,
+        "recorded": "sha256:751b746743b5",
+        "current": "sha256:751b746743b5"
+      }
+    ],
+    "everyArtifactDigestStillMatches": true,
+    "everyReceiptRecordsAnArtifact": true
+  },
+  "scope": "Recomputes the artifact digest each YI receipt records and compares it with the file as it stands now. A match shows the file has not changed since the receipt was written; it does not show the receipt measured that file correctly, and a receipt whose artifact is a stable fixture can match while its own logic has aged."
+}
