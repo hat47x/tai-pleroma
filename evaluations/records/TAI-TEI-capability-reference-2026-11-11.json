@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "tai.tei-capability-reference/scenario-record/v0",
+  "date": "2026-11-11T04:49:00Z",
+  "activity": {
+    "id": "TAI-ACT-TEI-CAPABILITY-REFERENCE-01",
+    "purpose": "activity-continuation-reference"
+  },
+  "command": "python integrations/pilot-tei-capability-reference/run_scenarios.py --tei <tei> --workspace <workspace> --out evaluations/records/TAI-TEI-capability-reference-2026-11-11.json",
+  "target": {
+    "tei": {
+      "path": "<tei>",
+      "identity": {
+        "schemaVersion": "tei.cli.version/v0",
+        "effect": "read-only",
+        "goVersion": "go1.27.0",
+        "goos": "windows",
+        "goarch": "amd64",
+        "vcsRevision": "b8cbd432aae22ccf3fa75b0119e1d90d87ef0d11",
+        "buildSettings": [
+          "-buildmode=exe",
+          "-compiler=gc"
+        ],
+        "source": "build-info"
+      }
+    },
+    "workspace": {
+      "path": "<workspace>",
+      "name": "tei_reference",
+      "manifestSha256": "sha256:8e367b05de26a715ced16e384d273c983ac612dd2ff980d4310886d4f471af74"
+    },
+    "subject": "semantic-capability:sales.order.submit",
+    "disclosureScope": [
+      "definition",
+      "source",
+      "dependencies"
+    ],
+    "mutation": "semantic/sales/order.tei に data OrderNote { attribute noteId type std.text } を追記（コピー上）"
+  },
+  "scenarios": [
+    {
+      "id": "R1",
+      "title": "TEI参照が成功する",
+      "result": "PASS",
+      "observed": {
+        "productCapability": "declared",
+        "canonical": {
+          "id": "sales.order.submit",
+          "symbol": "submit",
+          "inputs": [
+            {
+              "name": "order",
+              "type": "sales.order"
+            }
+          ],
+          "output": "sales.order"
+        },
+        "capabilityListTotal": 3,
+        "compositionSections": 5,
+        "revision": {
+          "worldFingerprint": "sha256:c92de09f9595b1f46bfc18e6f99260d8391113b6d2639357d372abf634a1d65a",
+          "sourceIndexFingerprint": "sha256:1827f4b46169710cbe26179498bf30ef775aecba858c3beff8e2e0d53ca23531",
+          "modelRevision": "sha256:f414e2b09d2f6ea5d0f5f282aea55612985c0e8155877ad8d310250633cf3fd2"
+        }
+      }
+    },
+    {
+      "id": "H1",
+      "title": "Handoffは選択・Source・Revision・Disclosure Scopeだけを運ぶ",
+      "result": "PASS",
+      "observed": {
+        "keys": [
+          "activity",
+          "authority",
+          "capabilities",
+          "consumer",
+          "createdAt",
+          "envelopeDigest",
+          "limits",
+          "schemaVersion",
+          "selection",
+          "source"
+        ],
+        "selection": {
+          "subjects": [
+            {
+              "kind": "semantic-capability",
+              "id": "sales.order.submit"
+            }
+          ],
+          "disclosureScope": [
+            "definition",
+            "source"
+          ]
+        },
+        "revision": {
+          "worldFingerprint": "sha256:c92de09f9595b1f46bfc18e6f99260d8391113b6d2639357d372abf634a1d65a",
+          "sourceIndexFingerprint": "sha256:1827f4b46169710cbe26179498bf30ef775aecba858c3beff8e2e0d53ca23531",
+          "modelRevision": "sha256:f414e2b09d2f6ea5d0f5f282aea55612985c0e8155877ad8d310250633cf3fd2"
+        },
+        "emptyScopeRejected": true,
+        "tamperedEnvelopeRejected": true,
+        "wrongConsumerRejected": true
+      }
+    },
+    {
+      "id": "R2",
+      "title": "対象が見つからない",
+      "result": "PASS",
+      "observed": {
+        "productCapability": "not-found",
+        "diagnostic": {
+          "code": "SUBJECT_NOT_FOUND",
+          "message": "canonical subject semantic-capability:sales.order.missing not found"
+        },
+        "compositionStillObserved": true,
+        "capabilityListTotal": 3
+      }
+    },
+    {
+      "id": "R3",
+      "title": "Sourceが更新された",
+      "result": "PASS",
+      "observed": {
+        "state": "source-updated",
+        "changed": [
+          "worldFingerprint",
+          "sourceIndexFingerprint",
+          "modelRevision",
+          "artifacts"
+        ],
+        "requalificationRequired": true,
+        "before": {
+          "worldFingerprint": "sha256:c92de09f9595b1f46bfc18e6f99260d8391113b6d2639357d372abf634a1d65a",
+          "sourceIndexFingerprint": "sha256:1827f4b46169710cbe26179498bf30ef775aecba858c3beff8e2e0d53ca23531",
+          "modelRevision": "sha256:f414e2b09d2f6ea5d0f5f282aea55612985c0e8155877ad8d310250633cf3fd2"
+        },
+        "after": {
+          "worldFingerprint": "sha256:816f4cf3e21886fa279a713895eb53eb2cc76300d62963c7f70ab4c6379a3502",
+          "sourceIndexFingerprint": "sha256:2959f2bdb9fbe558f534d1741560e2cd9e193692fe7e5feaee3b31ca450cc67b",
+          "modelRevision": "sha256:c1a677eb7af73988afacad098bfc3929ff205f3b5caafc0b9084b0f3c2b0f6e6"
+        }
+      }
+    },
+    {
+      "id": "R4",
+      "title": "Consumerが古い結果を受け取る",
+      "result": "PASS",
+      "observed": {
+        "state": "stale",
+        "teiDiagnostics": [
+          {
+            "command": "trace",
+            "subject": {
+              "kind": "semantic-capability",
+              "id": "sales.order.submit"
+            },
+            "error": "STALE_SNAPSHOT"
+          }
+        ],
+        "consumerAction": "requalification-required",
+        "freshControl": "fresh"
+      }
+    },
+    {
+      "id": "N1",
+      "title": "Tool不在はProduct Capability不在ではない",
+      "result": "PASS",
+      "observed": {
+        "toolAvailability": "unavailable",
+        "productCapability": "unknown",
+        "diagnostic": "[WinError 2] 指定されたファイルが見つかりません。"
+      }
+    }
+  ],
+  "result": "PASS",
+  "notRun": [
+    "外部Harness SessionでのProduct Skill実Load",
+    "実Tool実行・意味受理・実行権限",
+    "実Consumer（別製品）への配送と受領",
+    "実Workspace以外のSource、権限、OS隔離"
+  ],
+  "limits": [
+    "PASSは読み取り参照と次元分離の範囲だけを示す。",
+    "TEIのinspect/model overviewは派生物であり、活動判断や操作許可ではない。",
+    "この記録は単一の公開Reference Workspaceと1つのActivityに対する観測である。"
+  ]
+}
