@@ -1,8 +1,8 @@
 {
   "contract": "yi.harness-adapter/v0",
   "taskId": "real-pilot-step-typed-mcp",
-  "startedAt": "2026-11-11T09:53:50Z",
-  "finishedAt": "2026-11-11T09:54:23Z",
+  "startedAt": "2026-11-11T16:06:51Z",
+  "finishedAt": "2026-11-11T16:07:27Z",
   "taskPins": {
     "source": {
       "repo": "tei-platform",
@@ -52,13 +52,17 @@
         "run": "completed",
         "session": {
           "adapter": "step-cli",
-          "externalId": "01a1ca07-3322-78e3-ad64-fc5be8b35d49",
+          "externalId": "01a1cb5c-c3db-7b6b-977d-c7c7f6f33118",
           "state": "created"
         },
-        "finalText": "World fingerprint: `sha256:c92de09f9595b1f46bfc18e6f99260d8391113b6d2639357d372abf634a1d65a`\n\nSource-index fingerprint: `sha256:1827f4b46169710cbe26179498bf30ef775aecba858c3beff8e2e0d53ca23531`\n\nModel revision: `sha256:f414e2b09d2f6ea5d0f5f282aea55612985c0e8155877ad8d310250633cf3fd2`\n\n## Validation result\n\n- `ok: true`\n- Errors: `0`\n- Warnings: `3`\n\n| Code | Severity | Message |\n|------|----------|---------|\n| `DATABASE_RELEASE_CONTRACT_NOT_CURRENT` | warning | database `sales_core` release 4.0.0 provides historical contract `sales_core.order_legacy` which has no current definition |\n| `DATABASE_RELEASE_CONTRACT_NOT_CURRENT` | warning | database `sales_core` release 4.1.0 provides historical contract `sales_core.order_legacy` which has no current definition |\n| `APPLICATION_RELEASE_CONTRACT_NOT_CURRENT` | warning | application release `order_entry@3.7.0` requires historical contract `sales_core.order_legacy` which has no current definition |\n\nAll three warnings concern the historical contract `sales_core.order_legacy`; none are errors, so the model validates successfully.",
+        "finalText": {
+          "_reduced": "body over 1500 bytes; full report kept in the trial directory",
+          "bytes": 1617,
+          "sha256": "sha256:d7f99420bce1269865a7ab18eeb06917a81c63bc774e766836d78e16b4a7ab7f"
+        },
         "toolCalls": [
           {
-            "callId": "chatcmpl-tool-80ea2be7f30b7196",
+            "callId": "chatcmpl-tool-bd38be846678d1aa",
             "tool": "yi-harness-adapter-mcp__tei__tei_model_catalog",
             "inputJson": "{}",
             "resultText": {
@@ -71,7 +75,7 @@
             "note": "harness-reported status; not a product verdict"
           },
           {
-            "callId": "chatcmpl-tool-afc6b029bb467e7f",
+            "callId": "chatcmpl-tool-8880852ef7176dad",
             "tool": "yi-harness-adapter-mcp__tei__tei_validate",
             "inputJson": "{}",
             "resultText": {
@@ -108,13 +112,14 @@
           "route": "step-cli-json"
         },
         "observations": {
+          "skill-history": "discovered",
           "skill-stages": "discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered,discovered"
         },
         "exitCode": 0,
-        "startedAt": "2026-11-11T09:53:51Z",
-        "finishedAt": "2026-11-11T09:54:22Z"
+        "startedAt": "2026-11-11T16:06:54Z",
+        "finishedAt": "2026-11-11T16:07:26Z"
       },
-      "elapsedMs": 32236
+      "elapsedMs": 35040
     },
     {
       "adapter": "direct-control",
@@ -161,10 +166,10 @@
             "inputJson": "{}",
             "resultText": {
               "_reduced": "body over 1500 bytes; full report kept in the trial directory",
-              "bytes": 5300,
-              "sha256": "sha256:4373f7250caad9cf322c28754990459ec5c0af07e510cf8626be7015b83bdc0a"
+              "bytes": 5446,
+              "sha256": "sha256:65d6118635737db449e1783269c2d69b73d111ef2ecc3b1ee8b23c3903e4b91c"
             },
-            "resultBytes": 5300,
+            "resultBytes": 5446,
             "harnessStatus": "not-a-harness",
             "exitCode": 0,
             "productVerdict": {
@@ -211,7 +216,7 @@
             "callId": "control-tei.version-5",
             "tool": "tei.version",
             "inputJson": "{}",
-            "resultText": "tei tei.cli.version/v0 windows/amd64 go=go1.27.0 revision=7b0ab6b63c0f277441aff59f451f79c9a0f1b1ec (modified)\nbuild settings: -buildmode=exe -compiler=gc\n",
+            "resultText": "tei tei.cli.version/v0 windows/amd64 go=go1.27.0 revision=e094212614ad85ae4af2f92d2667184ba9edca38 (modified)\nbuild settings: -buildmode=exe -compiler=gc\n",
             "resultBytes": 154,
             "harnessStatus": "not-a-harness",
             "exitCode": 0,
@@ -296,10 +301,10 @@
           "note": "control arm output is local; consumer receipt is a separate observation"
         },
         "observedModel": {},
-        "startedAt": "2026-11-11T09:54:22Z",
-        "finishedAt": "2026-11-11T09:54:23Z"
+        "startedAt": "2026-11-11T16:07:26Z",
+        "finishedAt": "2026-11-11T16:07:27Z"
       },
-      "elapsedMs": 698
+      "elapsedMs": 1254
     }
   ],
   "divergences": [
