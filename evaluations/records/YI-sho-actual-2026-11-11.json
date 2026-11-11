@@ -1,0 +1,54 @@
+{
+  "schema": "tai.reference.yi-sho-actual-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with git reading the sho-composer checkout",
+  "command": "python integrations/tools/yi_sho_actual_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-sho-actual-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "repository": "D:\\GIT\\hat47x\\sho-composer",
+    "commitCount": 135,
+    "firstDate": "2026-10-31",
+    "latestDate": "2026-11-11",
+    "initialCommitFiles": [
+      "LICENSE"
+    ],
+    "initialCommitHadOnlyLicence": true,
+    "trackedFileCount": 72,
+    "topLevelEntries": [
+      ".gitattributes",
+      ".github",
+      ".gitignore",
+      "LICENSE",
+      "README.md",
+      "bin",
+      "docs",
+      "evaluations",
+      "experiments",
+      "package-lock.json",
+      "package.json",
+      "plan",
+      "scripts",
+      "skills",
+      "src",
+      "test"
+    ],
+    "productArtefactsPresent": {
+      "README.md": true,
+      "plan": true,
+      "src": true,
+      "test": true
+    },
+    "requirementsOrPlanPresent": true,
+    "doc21PremiseHolds": false,
+    "doc21Premise": "LICENSEと初期コミットしかない",
+    "finding": "doc 21の前提（LICENSEと初期コミットしかない）は現在は成り立たない。sho-composerは追跡72ファイル・135コミットを持ち、2026-10-31から2026-11-11まで更新されている。D3とD6は、この前提を更新してから判断する必要がある。"
+  },
+  "scope": "Measures the sho-composer repository as it stands: commits, dates, tracked files and the presence of the artefacts doc 21 says are absent. It records that the doc's premise no longer holds; it does not read the code, does not judge whether the product definition is adequate, and does not decide D3 or D6."
+}
