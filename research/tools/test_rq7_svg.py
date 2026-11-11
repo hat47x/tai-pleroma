@@ -63,6 +63,49 @@ class SvgTextStructuralParity(unittest.TestCase):
         ns, _ = rq7_svg.svg_semantics(svg)
         self.assertEqual(ns[case["declared"]["nodes"][0]["id"]], '<script>alert("x")</script>')
 
+    def test_accessible_description_contains_every_node_and_directed_edge(self):
+        for dataset, cases in self.cases.items():
+            for case in cases:
+                with self.subTest(dataset=dataset, case=case["id"]):
+                    svg = rq7_svg.render_svg(case)
+                    root = ET.fromstring(svg)
+                    self.assertEqual(root.get("aria-labelledby"), "graph-title")
+                    self.assertEqual(root.get("aria-describedby"), "graph-description")
+                    desc = root.find(rq7_svg.tag("desc")).text
+                    self.assertEqual(desc, rq7_svg.accessible_graph_description(case))
+                    for src, dst in case["declared"]["edges"]:
+                        self.assertIn(f"{src} to {dst}", desc)
+                    for node in case["declared"]["nodes"]:
+                        self.assertIn(f'{node["id"]} ({node["label"]})', desc)
+                    rq7_svg.check_accessible_graph_description(case, svg)
+
+    def test_accessible_description_mutations_are_rejected(self):
+        case = self.cases["v1"][0]
+        original = rq7_svg.render_svg(case)
+        root = ET.fromstring(original)
+        desc = root.find(rq7_svg.tag("desc"))
+        source, target = case["declared"]["edges"][0]
+        desc.text = desc.text.replace(f"{source} to {target}", "missing edge", 1)
+        with self.assertRaisesRegex(ValueError, "topology description mismatch"):
+            rq7_svg.check_accessible_graph_description(case, ET.tostring(root, encoding="unicode"))
+        root = ET.fromstring(original)
+        root.attrib["aria-labelledby"] = "graph-title graph-description"
+        with self.assertRaisesRegex(ValueError, "short name"):
+            rq7_svg.check_accessible_graph_description(case, ET.tostring(root, encoding="unicode"))
+        root = ET.fromstring(original)
+        root.attrib.pop("aria-describedby")
+        with self.assertRaisesRegex(ValueError, "reference missing"):
+            rq7_svg.check_accessible_graph_description(case, ET.tostring(root, encoding="unicode"))
+
+    def test_accessible_description_escapes_untrusted_node_label(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        case["declared"]["nodes"][0]["label"] = '<script>alert("x")</script>'
+        svg = rq7_svg.render_svg(case)
+        self.assertNotIn("<script", svg)
+        root = ET.fromstring(svg)
+        self.assertIn('<script>alert("x")</script>', root.find(rq7_svg.tag("desc")).text)
+        rq7_svg.check_accessible_graph_description(case, svg)
+
     def test_cycle_rejected_not_silently_drawn(self):
         case = copy.deepcopy(self.cases["v1"][0])
         case["declared"]["edges"].append(["package", "src"])
