@@ -145,19 +145,55 @@ def check_route_clearance(case: dict, positions: dict) -> None:
                     )
 
 
+def accessible_graph_description(case: dict) -> str:
+    """Textual alternative for the *declared* graph; no runtime or Gold claims.
+
+    The image name remains short. This description exposes each directed
+    edge (not transitive reachability), including the original node labels.
+    Chromium AX-tree checks are not a substitute for screen-reader trials.
+    """
+    nodes = case["declared"]["nodes"]
+    edges = case["declared"]["edges"]
+    node_text = "; ".join(f'{n["id"]} ({n["label"]})' for n in nodes)
+    edge_text = "; ".join(f"{src} to {dst}" for src, dst in edges)
+    return (
+        "Public synthetic declaration only. "
+        f"Declared nodes ({len(nodes)}): {node_text}. "
+        f"Declared directed edges ({len(edges)}): {edge_text}. "
+        "No runtime observation, source closure, policy permission, or Owner acceptance is proven."
+    )
+
+
+def check_accessible_graph_description(case: dict, payload: str) -> None:
+    """Fail if the image's textual topology omits or substitutes any relation."""
+    root = ET.fromstring(payload)
+    if root.get("role") != "img" or root.get("aria-labelledby") != "graph-title":
+        raise ValueError("SVG accessible image role or short name missing")
+    if root.get("aria-describedby") != "graph-description":
+        raise ValueError("SVG accessible description reference missing")
+    title = root.find(tag("title"))
+    desc = root.find(tag("desc"))
+    if title is None or title.get("id") != "graph-title" or title.text != f"Declared graph for {case['id']}":
+        raise ValueError("SVG accessible title mismatch")
+    if desc is None or desc.get("id") != "graph-description":
+        raise ValueError("SVG accessible description missing")
+    if desc.text != accessible_graph_description(case):
+        raise ValueError("SVG accessible topology description mismatch")
+
+
 def render_svg(case: dict) -> str:
     labels, pos, width, height = graph_layout(case)
     root = ET.Element(tag("svg"), {
         "version": "1.1", "viewBox": f"0 0 {width} {height}",
         "width": str(width), "height": str(height), "role": "img",
-        "aria-labelledby": "graph-title graph-description",
+        "aria-labelledby": "graph-title",
+        "aria-describedby": "graph-description",
     })
     ET.SubElement(root, tag("title"), {"id": "graph-title"}).text = (
         f"Declared graph for {case['id']}"
     )
     ET.SubElement(root, tag("desc"), {"id": "graph-description"}).text = (
-        "Public synthetic declaration only. Nodes are labelled with their IDs and names; "
-        "arrows show all declared directed edges. No actual runtime observation is depicted."
+        accessible_graph_description(case)
     )
     defs = ET.SubElement(root, tag("defs"))
     marker = ET.SubElement(defs, tag("marker"), {
@@ -260,8 +296,8 @@ def check_svg_geometry(case: dict, payload: str) -> None:
     labels, positions, width, height = graph_layout(case)
     if root.get("viewBox") != f"0 0 {width} {height}" or root.get("role") != "img":
         raise ValueError("SVG viewport or role mismatch")
-    if root.get("aria-labelledby") != "graph-title graph-description":
-        raise ValueError("SVG accessible name missing")
+    if root.get("aria-labelledby") != "graph-title" or root.get("aria-describedby") != "graph-description":
+        raise ValueError("SVG accessible name or description reference missing")
     if root.find(tag("title")) is None or root.find(tag("desc")) is None:
         raise ValueError("SVG title or description missing")
     groups = [g for g in root.findall(tag("g")) if g.get("class") == "declared-node"]
@@ -314,6 +350,7 @@ def check_public_pair(case: dict) -> None:
     if svg_semantics(svg) != expected:
         raise ValueError(f"{case['id']}: SVG semantic mismatch")
     check_svg_geometry(case, svg)
+    check_accessible_graph_description(case, svg)
     if text_semantics(rq7_pilot.declared_text(case)) != expected:
         raise ValueError(f"{case['id']}: text semantic mismatch")
 
