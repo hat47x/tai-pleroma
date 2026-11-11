@@ -149,11 +149,13 @@ function main(argv) {
   }
   if (options.ticket !== null) {
     if (!path.isAbsolute(options.ticket)) return fail('--ticket must be an absolute path');
-    const ticket = JSON.parse(fs.readFileSync(options.ticket, 'utf8').replace(/^\uFEFF/, ''));
-    // Fail closed, not open. An input that is not a v1 handoff ticket, or that
-    // has no `references` array, must NOT produce a "reconciled with nothing"
-    // exit 0 -- that would read as "I checked and found nothing" when in fact
-    // nothing was checkable.
+    const rawText = fs.readFileSync(options.ticket, 'utf8').replace(/^﻿/, '');
+    let ticket;
+    try {
+      ticket = JSON.parse(rawText);
+    } catch (error) {
+      return fail('the input is not valid JSON: ' + String(error && error.message || error));
+    }
     if (ticket === null || typeof ticket !== 'object' || Array.isArray(ticket)) {
       return fail('the input is not a JSON object');
     }
@@ -163,12 +165,16 @@ function main(argv) {
     if (!Array.isArray(ticket.references)) {
       return fail('the ticket has no references array; there is nothing to reconcile');
     }
+    if (ticket.references.length === 0) {
+      // An empty array must not read as "checked and found nothing". There is
+      // nothing to check, which is a different statement.
+      return fail('the ticket has no references to reconcile');
+    }
     const report = reconcile(ticket.references);
     process.stdout.write(JSON.stringify({
       schema: 'yi.handoff.sei-binding-review/v1',
       ticket: options.ticket,
-      ticketSha256: 'sha256:' + crypto.createHash('sha256')
-        .update(fs.readFileSync(options.ticket)).digest('hex'),
+      ticketSha256: 'sha256:' + crypto.createHash('sha256').update(rawText, 'utf8').digest('hex'),
       ...report,
     }, null, 2) + '\n');
   }
