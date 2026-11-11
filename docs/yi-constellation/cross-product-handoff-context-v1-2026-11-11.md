@@ -108,14 +108,16 @@ Producer側はI/Oを行わない純関数モジュールとする。書き出し
 
 ## 5. 実装と検証の結果
 
+> **本書は G1（二製品Handoff）時点の設計・契約の記録である。** その後の G2〜G6 の実装と実測結果は [後続実行票 G2〜G6](cross-product-handoff-execution-tickets-2026-11-11.md) の「実行状況」表にまとめてあり、**数値と状態はそちらが現在の正**。本書の §5・§6 は初期スナップショットとして残す。
+
 | リポジトリ | 変更 | 検証 |
 | --- | --- | --- |
-| sui-sensemaking | `src/export/handoff_context_envelope.ts`（Producer、純関数）、`handoff_context_envelope.test.ts`、`handoff_context_emit.test.ts`（単一操作の書出）、`01_Plans/adr/ADR-0117` | `vitest run src/export` 201 passed（新規17含む）、`tsc --noEmit` exit 0 |
-| sho-composer | `src/handoff_envelope.cjs`（Consumer、独立実装）、`bin/sho-inspect.cjs handoff`、`test/handoff-envelope.test.cjs`（17件）、`scripts/handoff-cross-product.cjs`（二製品検証Runner）、`.github/workflows/sho-handoff-consumer.yml`、試験記録2ファイル | `node --test test/handoff-envelope.test.cjs` 17 passed、`test/g1b-reader.test.cjs` 20 passed/2 skip、Runner 実exit 0（9観測すべてok） |
+| sui-sensemaking | `src/export/handoff_context_envelope.ts`（Producer、純関数）、`handoff_context_envelope.test.ts`、`handoff_context_emit.test.ts`（単一操作の書出）、`handoff_receipt_review.ts`、`handoff_tei_observation_emit.test.ts`、`01_Plans/adr/ADR-0117` | `vitest run src/export` 238 passed/4 skip、`tsc --noEmit` exit 0 |
+| sho-composer | `src/handoff_envelope.cjs`（Consumer、独立実装）、`bin/sho-inspect.cjs handoff`、`test/handoff-envelope.test.cjs`、`scripts/handoff-cross-product.cjs`、`scripts/handoff-harness-switch.cjs`、`.github/workflows/sho-handoff-consumer.yml`、試験記録 | `node --test test/handoff-envelope.test.cjs` 29 passed、`test/g1b-reader.test.cjs` 20 passed/2 skip、Runner 実exit 0 |
 
 ### 5.1 二製品実受領で確認したこと（実製品E2E）
 
-Runner は**SUIの実Producerテスト**と**SHOの実CLI**を呼ぶ。9件の観測すべてok。
+Runner は**SUIの実Producerテスト**と**SHOの実CLI**を呼ぶ。2製品モードで10観測、3製品モード（`--tei-root`）で12観測すべてok。
 
 1. `producer-emit`：354 bytes、独立期待SHA一致。
 2. `consumer-receive`：実CLI exit 0、parser 14.3.3、`revision=unknown`、coverage全false、未解決3件・義務2件・依存2件が運ばれる。
@@ -126,10 +128,15 @@ Runner は**SUIの実Producerテスト**と**SHOの実CLI**を呼ぶ。9件の�
 7. `tampered-authority`：`producer.grant` を足すと `handoff-authority-field`。
 8. `conversation-replay`：`conversationHistory.included=true` は `handoff-conversation-history`。
 9. `disclosure-scope-widened`：`disclosure.scope=public` は `handoff-disclosure-scope-unknown`。
+10. `receipt-returned-and-reviewed`：受領Receiptを書出し、Producerが票digestで独立照合（G2）。
+11. `tei-readonly-observation-cited`：実TEI read-only CLIの観測を票へ引用し受領（G3）。
+12. `new-process-rereceive`：別プロセス・別ラベルで再受領。payload・checks・carriedForwardが完全一致（G4）。
 
-**資格の上限**：合成データ・ローカル一時ファイル・二製品の実入口による限定試験。実SUIランタイムUI、実ネットワーク、実SHO Writer、原本Source、OKF/SEI意味受理、TEI受領、別Harnessの実実行は含まない。RunnerのCI（`--sui-frontend` を与えない）ではProducerを実行しない。**通常CIのPASSをlive handoffのPASSに数えない。**
+**資格の上限**：合成データ・ローカル一時ファイル・実製品の入口による限定試験。実SUIランタイムUI、実ネットワーク、実SHO Writer、原本Source、OKF/SEI意味受理は含まない。RunnerのCI（`--sui-frontend` を与えない）ではProducerを実行しない。**通常CIのPASSをlive handoffのPASSに数えない。**
 
 **来歴ゲート**：Runner はrepo全体のHEAD一致ではなく、**Producer入力3ファイルのgit blob SHA**をピン留めする。無関係な開発中のcommitで試験が不成立にならない一方、Producerコードが変わると崩れる。ピンは独立にProducer差分を確認したときだけ更新する。
+
+**削除確認の順序**：`fileDeletedAfterTrial` は Receipt の組み立て・出力**より前**に、実際の `rmSync` と存在確認から確定させる。確認できなければ Receipt を出さず失敗する（未実行の確認を合格として記録しない）。
 
 ## 6. 段階的検証計画（二製品成立後）
 
@@ -142,17 +149,23 @@ Runner は**SUIの実Producerテスト**と**SHOの実CLI**を呼ぶ。9件の�
 | **G5** | 別Harnessへの移行。実Harness（DSH/Codex/Claude Code等）での実呼出し | NOT RUN。票はHarness非依存であることを構造で示したのみ |
 | **G6** | Source Provenance・Evidenceの Product Oracle。TEI #2586/#2516、SEI contracts への接続 | 各Owner |
 
+> 上の表は**本書執筆時点（G1直後）のスナップショット**。G2〜G6 はその後すべて実装・実測され、状態は [後続実行票](cross-product-handoff-execution-tickets-2026-11-11.md) の「実行状況」表が現在の正。
+
 G2〜G6 の**実行票**（目的・非目的・前提・変更ファイル・契約差分・機械確認可能な受入条件・必須負例・撤退条件・Ownerゲート）は [後続実行票 G2〜G6](cross-product-handoff-execution-tickets-2026-11-11.md) に具体化済み。G3は**新しい契約を一つも作らず**、TEIのread-only CLI観測を票の `evidence[]`/`references[]` として引用する形で実装できる。
 
 G3以降は**新しい契約を増やさず**、既存Ownerの試験へ接続する。第二のDispatcher・共通Context JSON正本・自動Schedulerは、実不足が示された場合にのみ具体案として検討する。
 
-## 7. Owner判断が必要な項目
+## 7. Owner判断
 
-1. **開示Scope語彙**：`synthetic-only`／`reviewed-projection-only` は候補。確定はOwner。
-2. **`source.status` と文書単位の開示宣言**：TEI側artifact生成契約にまだ無い（ADR-0116）。無い場合は`unknown`として動く。
-3. **本文・題名の公開**：SUI #3369。本経路は本文を返さない。
-4. **共通実行基盤の新設・権限境界の変更**：本書は行わない。必要とされる場合は別途判断。
-5. **受領Receiptの返送と監査**：G2。SUI/SEI側の記録契約と合わせて判断。
+**2026-11-11 に OG-1〜OG-8 を代行決定済み。** 一覧と理由は [後続実行票 §7](cross-product-handoff-execution-tickets-2026-11-11.md) に記載。実 Owner は各決定を覆せる（覆す場合は Issue/PR に理由を残す）。
+
+代行決定の要点：
+
+1. **開示Scope語彙**：v1 の閉集合（`synthetic-only`／`reviewed-projection-only`）のまま。新增しない。
+2. **`source.status` と文書単位の開示宣言**：TEI側契約に追加しない。無いまま `unknown` として動かす。
+3. **本文・題名の公開**：しない。既定は SafeMode ON、構造のみ（SUI #3369 は据え置き）。
+4. **共通実行基盤の新設・権限境界の変更**：却下。作らない・変えない。
+5. **受領Receiptの返送と監査**：Receipt は一時作業物。保持義務を課さず、監査・コンプライアンス用途に使わない。
 
 ## 8. 安全不変条件（緩和しない）
 

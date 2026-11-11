@@ -12,7 +12,7 @@
 | G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
 | G4 | **observed-pass** | 別プロセス・別Sessionラベルでの再受領（`session-resumed`） | Host再起動・日跨ぎの実Session永続 |
 | G5 | **observed-pass** | DeepSeek Harness と Claude Code の実CLIで切替（別Runner・7観測） | 両HarnessのSkill実ロード・MCP経路・実Host Grant/egress |
-| G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | SEI Go runtime・SEI fixture・TEI #2586 Claim closure・発行Authority |
+| G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3、別Source検出 |
 
 **全票の共通する未達**：実Host Grant／OS egress（TAI #232・TEI #2515）、意味受理（各Owner）、原本Source読取。いずれも `not-run` のまま。
 
@@ -451,9 +451,12 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 
 | repo | path | 内容 |
 | --- | --- | --- |
-| tei-platform | `plan/` | TEI #2586（Query→Context→Claim）・#2516（用途別Projection）の既存Laneに接続 |
-| sei-cognition | `contracts/` | `sei.semantic-reference` の Exact Binding を `references[]` の参照形式として照合 |
-| tai-pleroma | `docs/yi-constellation/` | 照合結果の記録。**採否は各Owner** |
+| tai-pleroma | `evaluations/tools/check-handoff-sei-binding.cjs` | 照合ツール（test-only）。診断名は TEI E9 の語彙を再利用 |
+| tai-pleroma | `evaluations/records/G6-handoff-sei-binding-observation-2026-11-11.json` | 実票での照合結果と self-test の記録 |
+| tei-platform | `plan/` | TEI #2586（Query→Context→Claim）・#2516（用途別Projection）の既存Laneに接続。**本票では未着手** |
+| sei-cognition | `contracts/` | `sei.semantic-reference` の Exact Binding の形を照合の基準として読む。**変更しない** |
+
+ツールの出力に `yi.handoff.sei-binding-review/v1` と `yi.handoff.sei-binding-self-test/v1` という識別子が現れるが、**これらは本ツールの出力形式であり、新しい交換契約ではない**。Handoff 票の契約は `yi.handoff.context/v1` のまま。
 
 ### 受入条件（機械確認可能）
 
@@ -461,14 +464,28 @@ RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md
 2. TEI #2586の実Read closureが実証された範囲**だけ**、否定Claimを適合判定する。未実装の範囲は `insufficient-evidence`。
 3. 照合結果は `reference-linked-unverified` にとどめる。`verified` へ自動昇格させない（TEI E9の既存診断名を再利用）。
 
+**実行結果（2026-11-11）**：1・3 は `observed-pass`、2 は `not-run`。
+
+| 受入条件 | 実測 |
+| --- | --- |
+| 1 | 実票（TEI観測引用）で3参照の状態を区別して返した。`tei:…:application:order_entry` と payload が `reference-linked-unverified`、`producer-source` が `reference-incomplete`（digest 欠落）。`--schema` 指定時は SEI schema の `exactBinding` 必須欄が期待どおりかも確認 |
+| 2 | **`not-run`**。TEI #2586 の Claim closure は未接続。否定Claimの適合判定はしていない |
+| 3 | `reference-linked-unverified` に留めている。`profile.matched=false`・`declaredByTicket=null` を明示して返す |
+
+**fail-closed（追加）**：票でないJSON・`schema` が `yi.handoff.context/v1` でないもの・`references` が配列でないものは exit 2。空配列や references 欠落を「照合して何も見つからなかった」として exit 0 で返さない。
+
 ### 必須負例
 
-| ID | 注入 | 期待 |
-| --- | --- | --- |
-| G6-N1 | 空配列 `[]` を「global不存在」と結論づけるConsumer | `insufficient-evidence`。母集団・Predicate・coverageの確認を要求 |
-| G6-N2 | 部分取得を「全件」として報告 | `evidence-mismatch` |
-| G6-N3 | Source-only移動後にWorldFPのみ一致、引用locatorは旧版 | `stale-or-different-binding` |
-| G6-N4 | 同じdigestの別Source | 同一視しない。所在とdigestを別列で確認 |
+| ID | 注入 | 期待 | 実測 |
+| --- | --- | --- | --- |
+| G6-N1 | 空配列 `[]` を「global不存在」と結論づけるConsumer | `insufficient-evidence`。母集団・Predicate・coverageの確認を要求 | **`not-run`**。実装した対照は「空配列は照合対象が無いというだけで、不存在の証明ではない」（reconciler 側の自己試験）。票が要求する `insufficient-evidence` の診断語彙は**未実装** |
+| G6-N2 | 部分取得を「全件」として報告 | `evidence-mismatch` | **`not-run`**。実装した対照は「digest 欠落は `reference-incomplete`」。`evidence-mismatch` の語彙は未実装 |
+| G6-N3 | Source-only移動後にWorldFPのみ一致、引用locatorは旧版 | `stale-or-different-binding` | **`not-run`**。未実装。`DIAGNOSTICS.stale` は定義済みだが一度も emit されない |
+| G6-N4 | 同じdigestの別Source | 同一視しない。所在とdigestを別列で確認 | **`observed-pass`**（一部）。同一 `locator` の複数参照は `reference-ambiguous`。ただし「同digestの別Source」の検出は `locator` でしか区別できないため、**別Sourceの検出そのものは未実装** |
+| G6-N5（追加） | 票でないJSON／`schema` 不一致／`references` が配列でない | exit 2（fail-closed） | **`observed-pass`** |
+| G6-N6（追加） | `representation_profile` を票が宣言しない | `matched=false`・`declaredByTicket=null` を明示 | **`observed-pass`** |
+
+**ID の使い回しに関する注意**：self-test の `G6-N1`〜`G6-N4` は**票の負例とは別のシナリオ**に使っている。票の G6-N1〜N3 は未実装であり、**通ったわけではない**。混同を避けるため、self-test 側の ID は `ST-N1`〜`ST-N4` に改名すべきである（後続作業）。
 
 ---
 
@@ -530,14 +547,26 @@ OG-1・OG-5 は現状維持。既存の実装を変えない。
 | 条件 | 状態 |
 | --- | --- |
 | G2〜G6 の状態語での記録 | **達成**（§実行状況の表） |
-| 受入条件の機械確認 | **達成**（G2・G3・G4・G5の主要条件。G5-受入3・G4-N2/N3・G5-N4 は `not-run`） |
-| 必須負例の実注入 | **一部**。G2・G3は実注入済み。G4は1件、G5は3件が `not-run`（理由を表に明記） |
+| 受入条件の機械確認 | **一部**。G2・G3・G4・G5の主要条件は達成。G6-受入2、G5-受入3、G4-N2/N3、G5-N4、G6-N1〜N3 は `not-run` |
+| 必須負例の実注入 | **一部**。G2・G3は実注入済み。G4は1件、G5は3件、G6は3件が `not-run`（理由を各表に明記） |
 | 合成試験と実製品E2Eの区別 | **達成**。Receiptの `scope` と `claims` で区別。CIのPASSをlive handoffのPASSに数えない |
 | 未実行の `not-run` 保持 | **達成**（§実行状況・各負例表） |
 
 **Owner判断**：§7 の OG-1〜OG-8 は **2026-11-11 に代行決定済み**。実 Owner は覆せる。
 
 **まだ完了ではない理由**：上の「一部」「not-run」が残る。ただし OG-2・OG-3・OG-4・OG-6・OG-7・OG-8 は「実装しない」が確定したため、これらの `not-run` は**努力不足ではなく決定の結果**である。残る `not-run` は外部条件（実Host Grant/egress、意味受理、SEI runtime、TEI Claim closure）に依存する。
+
+### 8.4 独立監査の結果（2026-11-11）
+
+実装者とは別コンテキストの3エージェントで、SUI/SHO/TAI の差分を決定と不変条件に対して監査した。
+
+- **blocking: 0件**
+- **non-blocking: 16件**（主なもの：票への本文除外 assert 欠落、TEI modelRevision の `revision.digest` 誤帰属、`readBoundedRegularFile` の check-then-use、`fileDeletedAfterTrial` の事前記録、G6 負例 ID の使い回し、2文書の数値不整合）
+- **question: 8件**（主なもの：OG-3 の「本文」の適用範囲、repo 横断の開示Scope語彙、committed receipt ファイルの位置づけ）
+
+**監査後に修正したもの**：`revision.digest` の誤帰属、`readBoundedRegularFile` の fd ベース読み、`fileDeletedAfterTrial` の事前記録、G6 の fail-open、2文書の数値不整合、G6 負例 ID の対応明記。
+
+**監査後に修正していないもの**：票への本文除外 assert の欠落（ fixture はメタ記述のみで現状は遵守。将来の編集に対する guard として別途検討）、未知のトップレベルフィールドの黙って落とす挙動（OG-4 の連鎖方針と絡む。v1 のまま運用し、破綻が実測されたら対応）。
 
 ---
 

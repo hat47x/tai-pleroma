@@ -19,6 +19,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 
 const DIAGNOSTICS = {
   linked: 'reference-linked-unverified',
@@ -122,10 +123,25 @@ function main(argv) {
   if (options.ticket !== null) {
     if (!path.isAbsolute(options.ticket)) return fail('--ticket must be an absolute path');
     const ticket = JSON.parse(fs.readFileSync(options.ticket, 'utf8').replace(/^\uFEFF/, ''));
+    // Fail closed, not open. An input that is not a v1 handoff ticket, or that
+    // has no `references` array, must NOT produce a "reconciled with nothing"
+    // exit 0 -- that would read as "I checked and found nothing" when in fact
+    // nothing was checkable.
+    if (ticket === null || typeof ticket !== 'object' || Array.isArray(ticket)) {
+      return fail('the input is not a JSON object');
+    }
+    if (ticket.schema !== 'yi.handoff.context/v1') {
+      return fail(`the input schema is ${JSON.stringify(ticket.schema)}, not yi.handoff.context/v1`);
+    }
+    if (!Array.isArray(ticket.references)) {
+      return fail('the ticket has no references array; there is nothing to reconcile');
+    }
     const report = reconcile(ticket.references);
     process.stdout.write(JSON.stringify({
       schema: 'yi.handoff.sei-binding-review/v1',
       ticket: options.ticket,
+      ticketSha256: 'sha256:' + crypto.createHash('sha256')
+        .update(fs.readFileSync(options.ticket)).digest('hex'),
       ...report,
     }, null, 2) + '\n');
   }
@@ -155,6 +171,9 @@ function selfTest() {
 
   // G6-N1: 空配列を「グローバル不存在」と結論づけない。ここでは母集団が無いこと
   // 自体を「照合対象が無い」と記録し、不存在の証明にはしない。
+  // NOTE: this case is about the RECONCILER, not about the CLI. A ticket with no
+  // `references` array is rejected by main() before reconcile() is reached, so
+  // it can never be read as "checked and found nothing".
   const empty = reconcile([]);
   cases.push({
     id: 'G6-N1-empty-is-not-absent',
@@ -162,7 +181,6 @@ function selfTest() {
     expected: 'no subjects, no absence claim',
     actual: empty.subjects.length,
   });
-
   // G6-N2: 部分取得を全件として扱わない。digest欠落は incomplete。
   check('G6-N2-missing-digest-is-incomplete', [ref({ digest: null })], DIAGNOSTICS.incomplete);
 
