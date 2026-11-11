@@ -59,13 +59,13 @@ func TestObserveSkillUseUnknownWhenNotPlaced(t *testing.T) {
 
 // TestObserveSkillPairEligibleOnlyOnRealContrast checks the H2/H3 pairing rule.
 func TestObserveSkillPairEligibleOnlyOnRealContrast(t *testing.T) {
-	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`, BytesSHA256: "sha256:a"}
+	h3Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`, BytesSHA256: "sha256:a"}
 	h2 := &Result{Adapter: "h2", Transport: TransportDelivered, Run: RunCompleted, FinalText: "a"}
 	h3 := &Result{
 		Adapter: "h3", Transport: TransportDelivered, Run: RunCompleted, FinalText: "b",
 		ToolCalls: []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"s"}`}},
 	}
-	pair := ObserveSkillPair("task-1", pin, h2, h3)
+	pair := ObserveSkillPair("task-1", SkillPin{ID: "s"}, h3Pin, h2, h3)
 	if !pair.Eligible {
 		t.Fatalf("a real contrast was judged ineligible: %v", pair.IneligibleReasons)
 	}
@@ -77,10 +77,10 @@ func TestObserveSkillPairEligibleOnlyOnRealContrast(t *testing.T) {
 // TestObserveSkillPairRejectsH2ThatLoaded is the mislabelled-arm case: an "H2"
 // that loaded the Skill is an H3 under the wrong name.
 func TestObserveSkillPairRejectsH2ThatLoaded(t *testing.T) {
-	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
+	h3Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
 	h2 := &Result{Adapter: "h2", Transport: TransportDelivered, ToolCalls: []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"s"}`}}}
 	h3 := &Result{Adapter: "h3", Transport: TransportDelivered, ToolCalls: []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"s"}`}}}
-	pair := ObserveSkillPair("t", pin, h2, h3)
+	pair := ObserveSkillPair("t", SkillPin{ID: "s"}, h3Pin, h2, h3)
 	if pair.Eligible {
 		t.Fatal("a pair where H2 loaded the Skill was judged eligible")
 	}
@@ -93,10 +93,10 @@ func TestObserveSkillPairRejectsH2ThatLoaded(t *testing.T) {
 // an H3 that failed to load is an ineligible trial, not evidence that the Skill
 // made no difference.
 func TestObserveSkillPairFailedLoadIsNotNoEffect(t *testing.T) {
-	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
+	h3Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
 	h2 := &Result{Adapter: "h2", Transport: TransportDelivered, FinalText: "a"}
 	h3 := &Result{Adapter: "h3", Transport: TransportDelivered, FinalText: "b"} // no loader call
-	pair := ObserveSkillPair("t", pin, h2, h3)
+	pair := ObserveSkillPair("t", SkillPin{ID: "s"}, h3Pin, h2, h3)
 	if pair.Eligible {
 		t.Fatal("a pair whose H3 never loaded was judged eligible")
 	}
@@ -115,8 +115,8 @@ func TestObserveSkillPairFailedLoadIsNotNoEffect(t *testing.T) {
 // TestObserveSkillPairMissingArmIsIneligible keeps a half-run pair from being
 // scored as a zero.
 func TestObserveSkillPairMissingArmIsIneligible(t *testing.T) {
-	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
-	pair := ObserveSkillPair("t", pin, nil, &Result{Adapter: "h3"})
+	h3Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
+	pair := ObserveSkillPair("t", SkillPin{ID: "s"}, h3Pin, nil, &Result{Adapter: "h3"})
 	if pair.Eligible {
 		t.Fatal("a pair with no H2 arm was judged eligible")
 	}
@@ -127,10 +127,10 @@ func TestObserveSkillPairMissingArmIsIneligible(t *testing.T) {
 
 // TestSkillObservationJSONShape keeps the sheet a stable artifact.
 func TestSkillObservationJSONShape(t *testing.T) {
-	pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`, BytesSHA256: "sha256:a"}
+	h3Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`, BytesSHA256: "sha256:a"}
 	h2 := &Result{Adapter: "h2", Transport: TransportDelivered, FinalText: "a"}
 	h3 := &Result{Adapter: "h3", Transport: TransportDelivered, FinalText: "b", ToolCalls: []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"s"}`}}}
-	b, err := SkillObservationJSON([]SkillPairObservation{ObserveSkillPair("t", pin, h2, h3)})
+	b, err := SkillObservationJSON([]SkillPairObservation{ObserveSkillPair("t", SkillPin{ID: "s"}, h3Pin, h2, h3)})
 	if err != nil {
 		t.Fatalf("marshal: %v", err)
 	}
@@ -154,5 +154,57 @@ func TestSkillCostIsVendorVocabularyNotSummed(t *testing.T) {
 	}
 	if ObserveSkillUse(pin, dsh).Cost != "" {
 		t.Fatal("a cost was invented for a harness that reports none")
+	}
+}
+
+// TestObserveSkillPairRejectsH2WithPlacement is the bug the real H2/H3 run
+// exposed: passing one shared pin recorded `placed=true` for the H2 arm whose
+// Skill directory had been removed. Placement is per-arm.
+func TestObserveSkillPairRejectsH2WithPlacement(t *testing.T) {
+	h3Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`}
+	h2Pin := SkillPin{ID: "s", PlacedPath: `C:\ws\s\SKILL.md`} // wrongly shared
+	h2 := &Result{Adapter: "h2", Transport: TransportDelivered, FinalText: "a"}
+	h3 := &Result{Adapter: "h3", Transport: TransportDelivered, FinalText: "b",
+		ToolCalls: []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"s"}`}}}
+	pair := ObserveSkillPair("t", h2Pin, h3Pin, h2, h3)
+	if pair.Eligible {
+		t.Fatal("an H2 arm with a placed Skill was judged a valid contrast")
+	}
+	if !containsStr(pair.IneligibleReasons, "H2 arm had the Skill placed; the pair is not a contrast") {
+		t.Fatalf("reason not recorded: %v", pair.IneligibleReasons)
+	}
+}
+
+// TestObserveSkillPairRejectsDifferentSkillIDs keeps a pair that names two
+// different Skills from being read as a contrast of one variable.
+func TestObserveSkillPairRejectsDifferentSkillIDs(t *testing.T) {
+	h2Pin := SkillPin{ID: "s"}
+	h3Pin := SkillPin{ID: "other", PlacedPath: `C:\ws\s\SKILL.md`}
+	h2 := &Result{Adapter: "h2", Transport: TransportDelivered}
+	h3 := &Result{Adapter: "h3", Transport: TransportDelivered,
+		ToolCalls: []ToolCallRecord{{Tool: "skill", InputJSON: `{"name":"other"}`}}}
+	pair := ObserveSkillPair("t", h2Pin, h3Pin, h2, h3)
+	if pair.Eligible {
+		t.Fatal("a pair naming two different Skills was judged eligible")
+	}
+	joined := strings.Join(pair.IneligibleReasons, " ")
+	if !strings.Contains(joined, "different Skills") {
+		t.Fatalf("the mismatch was not named: %v", pair.IneligibleReasons)
+	}
+}
+
+// TestObserveSkillPairRejectsUnplacedH3 keeps an H3 that never placed the Skill
+// from being scored as an H3.
+func TestObserveSkillPairRejectsUnplacedH3(t *testing.T) {
+	h2Pin := SkillPin{ID: "s"}
+	h3Pin := SkillPin{ID: "s"}
+	h2 := &Result{Adapter: "h2", Transport: TransportDelivered, FinalText: "a"}
+	h3 := &Result{Adapter: "h3", Transport: TransportDelivered, FinalText: "b"}
+	pair := ObserveSkillPair("t", h2Pin, h3Pin, h2, h3)
+	if pair.Eligible {
+		t.Fatal("an H3 arm that never placed the Skill was judged eligible")
+	}
+	if !containsStr(pair.IneligibleReasons, "H3 arm did not place the Skill") {
+		t.Fatalf("reason not recorded: %v", pair.IneligibleReasons)
 	}
 }

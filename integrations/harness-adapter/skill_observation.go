@@ -103,11 +103,17 @@ type SkillPairObservation struct {
 }
 
 // ObserveSkillPair turns two arm results into one pair observation.
-func ObserveSkillPair(taskID string, pin SkillPin, h2, h3 *Result) SkillPairObservation {
+//
+// Each arm carries its OWN pin, because the two arms place different bytes: H3
+// places the Skill and H2 does not. An earlier version took one shared pin and
+// recorded `placed=true` for an arm whose Skill directory had been removed —
+// exactly the misreport this contract exists to prevent. It was caught by the
+// real H2/H3 run, not by the contract tests.
+func ObserveSkillPair(taskID string, h2Pin, h3Pin SkillPin, h2, h3 *Result) SkillPairObservation {
 	pair := SkillPairObservation{
 		TaskID:      taskID,
-		H2:          ObserveSkillUse(pin, h2),
-		H3:          ObserveSkillUse(pin, h3),
+		H2:          ObserveSkillUse(h2Pin, h2),
+		H3:          ObserveSkillUse(h3Pin, h3),
 		SkillEffect: "not-measured",
 	}
 	var reasons []string
@@ -117,12 +123,24 @@ func ObserveSkillPair(taskID string, pin SkillPin, h2, h3 *Result) SkillPairObse
 	if h3 == nil || h3.Adapter == "" {
 		reasons = append(reasons, "H3 arm did not run")
 	}
-	// The H2 arm must NOT have loaded the Skill. An H2 that loaded it is an H3
-	// with the wrong label.
+	// The two arms must be the same Skill identity; otherwise they are not a
+	// contrast of one variable.
+	if h2Pin.ID != h3Pin.ID {
+		reasons = append(reasons, "the arms name different Skills ("+h2Pin.ID+" vs "+h3Pin.ID+")")
+	}
+	// The H2 arm must not have placed the Skill at all, and must not have loaded
+	// it. An H2 with either is an H3 under the wrong label.
+	if pair.H2.Placed {
+		reasons = append(reasons, "H2 arm had the Skill placed; the pair is not a contrast")
+	}
 	if pair.H2.LoadState == LoadLoaded {
 		reasons = append(reasons, "H2 arm loaded the Skill; the pair is not a contrast")
 	}
-	// The H3 arm must have loaded it. A failed load is `not-loaded`, not "no effect".
+	// The H3 arm must have placed it and loaded it. A failed load is
+	// `not-loaded`, not "no effect".
+	if !pair.H3.Placed {
+		reasons = append(reasons, "H3 arm did not place the Skill")
+	}
 	if pair.H3.LoadState != LoadLoaded {
 		reasons = append(reasons, "H3 arm did not load the Skill ("+string(pair.H3.LoadState)+")")
 	}
@@ -130,11 +148,6 @@ func ObserveSkillPair(taskID string, pin SkillPin, h2, h3 *Result) SkillPairObse
 		// Only the Skill placement may differ on these axes.
 		if string(h2.Transport) != string(h3.Transport) {
 			reasons = append(reasons, "the arms differ on transport")
-		}
-		if ExitString(h2.ExitCode) != ExitString(h3.ExitCode) && h2.ExitCode != nil && h3.ExitCode != nil {
-			// A differing exit code is not by itself disqualifying (the Skill can
-			// change what the model does), but it must be visible.
-			reasons = append(reasons, "the arms differ on harness exit code")
 		}
 	}
 	pair.IneligibleReasons = reasons

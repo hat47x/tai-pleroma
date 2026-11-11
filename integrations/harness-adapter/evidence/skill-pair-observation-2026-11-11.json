@@ -1,0 +1,26 @@
+[
+  {
+    "taskId": "real-skill-pair",
+    "h2": {
+      "arm": "dsh-headless",
+      "skillId": "yi-tei-modeling",
+      "placed": false,
+      "loadState": "unknown",
+      "toolCallsAfterLoad": 1,
+      "answerPresent": true,
+      "note": "the adapter did not place the Skill for this arm"
+    },
+    "h3": {
+      "arm": "dsh-headless",
+      "skillId": "yi-tei-modeling",
+      "placed": true,
+      "placedBytesSha256": "sha256:aa3068dfbb2370414539851d0d33b63b0ce976a872aa5f6c302a63171d811764",
+      "loadState": "loaded",
+      "loadedVia": "skill",
+      "toolCallsAfterLoad": 2,
+      "answerPresent": true
+    },
+    "eligible": true,
+    "skillEffect": "eligibility-confirmed; accuracy not measured"
+  }
+]
