@@ -22,8 +22,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
-	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -302,7 +300,7 @@ func TestRealPilotDSHHeadlessRunsTEIReadOnly(t *testing.T) {
 		// declared root is a finding about the harness's confinement, not a test
 		// failure, and it must survive into the report.
 		for _, c := range res.ToolCalls {
-			for _, p := range outOfRootPaths(c, wsRoot) {
+			for _, p := range OutOfRootPaths(c, wsRoot) {
 				t.Logf("harness %q touched a path outside the declared root: %s (tool %s)", want, p, c.Tool)
 			}
 		}
@@ -342,35 +340,6 @@ func findArm(rep *PilotReport, name string) *PilotOutcome {
 		}
 	}
 	return nil
-}
-
-// outOfRootPaths lists absolute Windows paths in a tool call that fall outside
-// the declared root. It is an observation helper for the evidence log, not an
-// enforcement check: the adapter cannot confine a harness, only record what it
-// reached for.
-//
-// The blobs are JSON-encoded text, so a single backslash appears as two. They
-// are unescaped before matching; otherwise every in-root path looks like an
-// out-of-root one and the log becomes noise.
-func outOfRootPaths(c ToolCallRecord, root string) []string {
-	var out []string
-	seen := map[string]bool{}
-	re := regexp.MustCompile(`[A-Za-z]:\\[^"\s]+`)
-	lowerRoot := strings.ToLower(root)
-	for _, blob := range []string{c.InputJSON, c.ResultText} {
-		unescaped := strings.ReplaceAll(blob, `\\`, `\`)
-		for _, m := range re.FindAllString(unescaped, -1) {
-			p := strings.TrimRight(m, `.,;:)\]'"`)
-			lp := strings.ToLower(p)
-			if seen[p] || strings.HasPrefix(lp, lowerRoot) || strings.HasPrefix(lowerRoot, lp) {
-				continue
-			}
-			seen[p] = true
-			out = append(out, p)
-		}
-	}
-	sort.Strings(out)
-	return out
 }
 
 // copyFile copies one regular file.
