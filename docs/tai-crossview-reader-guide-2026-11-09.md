@@ -96,7 +96,7 @@ flowchart TB
 | --- | --- | --- |
 | [TAI Draft #601](https://github.com/hat47x/tai-pleroma/pull/601)：公開TEI実CLI、固定TEI `0600cc2adc383efb38651b59105498193c640e41`。単独read-only調査B0は3コマンド、30,362出力bytesで対象へ到達 | **単独JobではTAI・Product Skillなしでも目的が成立する**例が存在する。Skillの `entries[]` と実CLIの `result.entries[]` 不一致を観測（修正OwnerはTEI #2605） | B1の逐語的なSkill追従で候補0件は**モデルのSkill利用失敗**の証拠ではない。B0/B1/B2のモデル・費用・人手比較はNOT RUN。TAI横断Skillの文脈38,517 bytesは当該Jobでは不要な追加候補であり、時間・Token損失の測定値ではない |
 | [TAI PR #594](https://github.com/hat47x/tai-pleroma/pull/594)（merged）：TEI CLIから限定的に能力参照・Revision・Handoff・旧Receiptのstaleを区別 | 同一Activityの参照で「旧Sourceと現Sourceが違う」を検知する最小経路の成立 | 実Product Consumerの受領、現在Grant、意味受理、Skill実Load、横断的な継続価値は未証明 |
-| [TAI PR #602](https://github.com/hat47x/tai-pleroma/pull/602)（2026-11-11取得時点open）：SUI実Producerテスト→SHO実CLIによる**合成入力の限定Product間受領**、Receipt返送、TEIのread-only証拠の引用、別プロセス再受領を記録。実Harness CLI切替の観測も同PRの実行票にある | Handoff票がSource参照・未決・用途制限を落とさずに運び、Consumerが独立再読取する候補は**抽象構想だけではない**。現在の詳細な状態は同PRの[後続実行票](https://github.com/hat47x/tai-pleroma/blob/14a5076ce516d9e066747fc401e28dec400b1ad3/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)を正とする | G6は`reference-linked-unverified`まで、Claim closure/負例が残る。実Sourceの意味、実UI/Host永続Session、Grant/OS egress、実業務成果・Owner受理、別HarnessのSkill/MCP適格は未証明。「G2〜G6の票が記録された」を全必須条件PASSと読まない |
+| [TAI PR #602](https://github.com/hat47x/tai-pleroma/pull/602)（2026-11-11 merged、merge `c9817b016440810d3d5ed29b229b9d1640e29fb1`）：SUI実Producerテスト→SHO実CLIによる**合成入力の限定Product間受領**、Receipt返送、TEIのread-only証拠の引用、別プロセス再受領を記録。実Harness CLI切替の観測も同PRの実行票にある | Handoff票がSource参照・未決・用途制限を落とさずに運び、Consumerが独立再読取する候補は**抽象構想だけではない**。現在の詳細な状態は同PRの[後続実行票](https://github.com/hat47x/tai-pleroma/blob/14a5076ce516d9e066747fc401e28dec400b1ad3/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)を正とする | G6は`reference-linked-unverified`まで、Claim closure/負例が残る。実Sourceの意味、実UI/Host永続Session、Grant/OS egress、実業務成果・Owner受理、別HarnessのSkill/MCP適格は未証明。「G2〜G6の票が記録された」を全必須条件PASSと読まない |
 | [TAI Draft #600](https://github.com/hat47x/tai-pleroma/pull/600)／[#271](https://github.com/hat47x/tai-pleroma/issues/271)：未統合TEI Draft #4076と隔離した実PostgreSQL 16.15・**合成行33件**で、同じWorld fingerprintのまま実行行・Provider・RLS可視範囲が変わる例を観測 | **モデル定義の同一性だけではデータ行Claimを再利用できない**。定義D／行R／不在Zの違いを受入時に保つ必要がある | TEI mainの一般的な実Read機能、Provider現行Grant、同一Session保証、本番データ、SHO/SEI実受領は未確認。J1pは観測ケースで不正な再利用0だが、**必要なReadの節約は未達**。選択的再確認が低コストと主張しない |
 
 上記から、横断製品の仕事を増やす際の**必要性の境界**を、次のように定める（設計仮説）。
@@ -122,3 +122,46 @@ flowchart TB
 **優先順（提案）**：①既存#601の「不要な追加を避ける」反例を維持 → ②#602の既存実受領で未検証のProduct Oracleと独立Consumerを埋める → ③#271/#600のD/R/ZとGrantの用途別再資格化を実Providerに接続 → ④同条件でTAI任意追加の人間価値と費用を対照。G1 Product分類（#73）、統合配布（#74）、TEIセルフビルド/Studio固有受入、CSW探索Methodの採否を、この順序のために新しく全製品必須条件へ昇格しない。
 
 **反証・撤退**：単独JobでTAI追加が出力品質・確認負担・継続性を改善しなければ当該Jobでは追加しない。複数Product経路でも、既存ファイルやProduct固有APIで同等なら横断の必須Coreを増やさない。逆に、必要なAuthority／Source／Consumerの資格が欠ければ、便利さを理由に安全な確認を削らない。これらは利用価値の判別方針であり、#422・#127の実利用価値受理を**達成済みとするものではない**。
+
+## 9. 2026-11-11追補：活動の継続・表示の完全性・成果の達成は別の契約
+
+**追加の照合基準**：TAI main `2d44d82583354ec46dc8e4241c01d49c8c20d67d`（2026-11-11確認）。前節のmain `2a8fd9fa...` は当時の固定Snapshotであり、過去の観測版を現在の実証へ黙って差し替えない。[PR #602](https://github.com/hat47x/tai-pleroma/pull/602)は**merged**、[PR #624](https://github.com/hat47x/tai-pleroma/pull/624)（SCN-001成果の主張別観測）と[PR #622](https://github.com/hat47x/tai-pleroma/pull/622)（SVG/AXの関係再構成）は**Draft**。本追補ではProduct/Providerの新たな実行やOwner受理を行っていない。
+
+### 9.1 三つの別の性質
+
+| 性質 | 適切な質問 | 最小の裏付け・既存Owner | 否定する短絡 |
+| --- | --- | --- | --- |
+| **Activity continuity** | 次の人・Product・Harnessが、何をしようとしていて何が未決かを再開できるか | 固定された対象・Source・未完の義務・用途と開示Scope・Consumerの独立再読取。[#271](https://github.com/hat47x/tai-pleroma/issues/271)／merged [#602](https://github.com/hat47x/tai-pleroma/pull/602) | 同一Session/票の存在＝現在Grant、Meaning、Product受理 |
+| **Capability usability** | 今の対象・環境で、必要なTool/Skillが正しく使えるか。そもそも追加が必要か | 既存Product CLI/契約と独立Expectedを対照。可用性・Tool実Load・Disclosure/Host Grantは別。[#488](https://github.com/hat47x/tai-pleroma/issues/488)／Draft [#601](https://github.com/hat47x/tai-pleroma/pull/601) | Tool一覧・Skill説明＝現在利用資格。追加Product＝必ず増分価値 |
+| **Outcome attainment** | 誰のGoalのどの部分が、受取先・実Effect・本人評価まで達したか | `T-Draft`／`R-Deliver`／`S-NoUnauthorizedPublish`／`P-Publish`／`Effect`／`Value`を別Claimとして読む。[SCN-001 #624](https://github.com/hat47x/tai-pleroma/pull/624)（Draft）、[#127](https://github.com/hat47x/tai-pleroma/issues/127) | `passed: true`＝成果／適切な停止＝公開達成／Artifact一致＝本来の受取先が受領 |
+
+`#624`の2026-11-11合成記録で、D-04のbytes一致＋別実装SHOの限定Reader一致と、公開gateの拒否は同時に観測されている。**「無断公開を防いだ」は制約の充足であり、公開というGoalは未達。人間の受理・利用者ValueはNOT RUN**。比較なしでも`passed:true`となる場合、また別Attemptの同bytesを今回のGoal達成に流用する場合を負例にしている。これは本書で新しいOutcome Engineを作る理由ではなく、既存#624のClaim別観測を正しく読む理由である。
+
+### 9.2 「図中にない」の意味は閉じた対象範囲を確かめた場合だけ成立する
+
+図は**対象の母集団と閉包条件**が先に明示された場合に限り、「見えないものは（その範囲で）存在しない」と言える。図の完成度や見た目でClosed-Worldを仮定しない。既存[View Contract](product-landscape-view-contract.md)のV1〜V5を追加・統合せず、各図を読むときの注意とする。
+
+| 図・実行証拠の種類 | その図で確かめられること | 「ない」と断言できないこと |
+| --- | --- | --- |
+| TAI **Portfolio**（V1） | 収集・開示されたProduct/Role候補と未分類 | 未登録、未収集、非公開のProductや関係。公開Projectionの0件は世界の0件でない |
+| TAI **Capability / Integration**（V2/V3） | 主張される能力、固定対象の実接続／実Read | 発見されないToolの実不存在、全ての必要Consumerの利用、現行Grant |
+| TEI **閉じた実効Pipeline／Self-buildの宣言・実行図** | 定義済みの入力・Node/Edgeと、個々の検査が観測した閉包範囲 | 宣言外の子プロセス作用、暗黙のI/O、自己申告したstateやProvider使用、実行時の未観測枝。TEI [#4299](https://github.com/hat47x/tei-platform/issues/4299)では、childの自己申告だけを用いたstate分離のClaimが、実際には共通state使用でも成立する反例を報告 |
+| **Render/A11y** | 表示されたノード・直接Edgeが図の読み手へ伝達されたか | SVG/Accessibility Treeの一致＝Pipeline実行完全性、全Product/Consumerに対する可視化。TAI Draft [#622](https://github.com/hat47x/tai-pleroma/pull/622)は関係のAX再構成を対象にし、Screen Reader操作や実Source整合は別 |
+| **Effect/Outcome** | 具体的なAttempt、保存物、独立Read、受領・結果のうち実観測したClaim | Digest一致から実Attemptの同一性、`queued`からEffect、適切な拒否からGoal達成、少数の実測から本人の価値 |
+
+**閉包を主張する最小条件（説明用チェック、独立Schema/Gateではない）**： (a) 問い・対象母集団・用途・観測時間を定義、(b) 実際に読まれ／実行された範囲と、省略された範囲を別表示、(c) 証拠の発行者・Source Revision・Attempt/環境・Consumerを追跡、(d) hidden/unknown・失効・到達不能を「不存在」とせず、(e) 実行を示す観測と子プロセス自身の申告を区別する。**TEIの有効Pipelineの可視化目標は尊重するが、TAIの部分的な横断Catalogへ閉世界を誤適用しない。**
+
+### 9.3 CSW三役・TEIセルフビルドとTAI全体像の関係
+
+- **CSWの生成者／批評者／媒介者**は、候補を広げ、別視点で反証し、適切な探究手順を調整する*任意Method*として扱う。媒介者は製品Owner・外部Host Grant・社会的合意の代行者ではない。TAI側で三役の常駐Agent/中央Decisionを義務化しない。[#422](https://github.com/hat47x/tai-pleroma/issues/422)の通常手段B0／汎用発想・批評B1／CSW B2の比較とCSW自身のOwner判断に接続し、独立Oracleで新規性・探索の幅・修正負担・費用を検証するまで「CSW採用で優れる」と主張しない。
+- **TEIのSelf-build**はDeclared Graph／Actual Execution／Artifact Evidence／Qualificationを分離する。自己申告をもとに`qualified`へ昇格できないことは[#4299](https://github.com/hat47x/tei-platform/issues/4299)の反例に現れている。TAIがTEI内のBuild/Generator/Stateを監査正本として再実装せず、実Buildで誰がどの出力を観測したかの資格を用途限定で参照する。
+- **Diagram completeness**と**実用成果**は別。Product内の有効Topologyが再構成できること、図のEdgeが閲覧者へ正確に伝わること、Product間Handoff/Consumerが正しく成立すること、ユーザーのGoalが達成することは、それぞれ別の試験である。
+
+### 9.4 次に何を比較するか（既存Ownerへの引渡し）
+
+1. **単独Jobを壊さない**：TEIのread-only B0を維持。B1 Product Skill、B2 TAI横断Skillの追加便益と失敗を同一Source/Tool/Profile/独立Expectedで比較。#601/#488が所有。
+2. **実Handoffを過大計上しない**：merged #602の合成資料・実SUI/SHO Consumer観測を参照し、未実証の実対象・現行Grant・Product Oracleを#271／各Productへ。新しいTAI共同正本は作らない。
+3. **成果のClaimを省略しない**：#624の`passed:true`でもT-Draft保留、別Attempt、公開拒否とGoal未達の反例を既存#28/#127/#422の評価にリンク。新しいOutcome Storeや第二Runnerは作らない。
+4. **閉包・自己申告の反例はOwned Productで直す**：#4299はTEIセルフビルド、#622はTAI図のAX再構成、#232は外部送出と実OS境界であり、TAI全体像ガイドには**「何が実証で、何が読めないか」**だけを残す。
+
+**反証可能な価値仮説**：局所JobでTAIが介在してもGoalの正しさ、再開容易性、必要な判断の減少、総費用に差が出ないなら、そのJobにTAIを必須にしない。多Productでの継続も、普通のファイルとProductの正本参照で同等なら、新しい共有Runtimeを要求しない。安全性・開示・意味・Authorityを削って速度を稼ぐ比較を認めない。
