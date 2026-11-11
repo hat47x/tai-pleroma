@@ -52,3 +52,10 @@ GitHub ActionsはPublic Syntheticに限定した別JobでPlaywright + Chromium�
 ## 4. 実行結果（exact HEADで確認して追記）
 
 GitHub Actionsの実行結果、変更head、Chromium version、成功ジョブ数、スクリーンショットの存在、残るFailを確認した後に**初めて**「G-Cal1b-geometry限定PASS」と記録する。設計プロトコルに記載しただけで実施済み扱いにはしない。
+
+
+## 5. 2026-11-11 実行資格の確定とAX別Gate
+
+- **統合済み**: [TAI #556](https://github.com/hat47x/tai-pleroma/pull/556)は2026-11-09 UTCにmerged（merge `452fa178158ef534598811fcedb17514e8c7d23a`）。最終head `84aa9ec39be932dcc44a5c4aa831d519c35195eb`の[研究限定CI #42622616788](https://github.com/hat47x/tai-pleroma/actions/runs/42622616788)で、Python **54/54 PASS**、Chromium **3種Graph×2画面=6条件 PASS**。TAI通常Referenceも成功。
+- **統合後の再検査**: [main側研究限定CI #42682440655](https://github.com/hat47x/tai-pleroma/actions/runs/42682440655)で同じ公開合成限定スコープの54テスト・Chromium幾何検査が成功。Long-labelは**検出できるが未対応**という負例のまま維持。
+- **補完すべき別境界**: 現行SVGの静的`desc`が全Node/Edgeを具体的に説明していなかったため、[G-Cal1b-AX研究](RQ7_CHROMIUM_AX_TOPOLOGY_2026-11-11.md)で公開合成の**可視SVGとChromium Accessibility TreeのRelation説明**を照合する。この検査も実スクリーンリーダーの操作性、視覚認知、人間/AIの理解改善を保証しない。
