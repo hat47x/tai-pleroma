@@ -11,7 +11,7 @@ TEIによるプロダクト構築のフィージビリティ検証について�
 | 条件 | 状態 | 根拠 |
 | --- | --- | --- |
 | 生成単位が生成器 | **示せた**。5契約を意味から再生成でき、生成コードの手修正は3回の意味変更でいずれも0行 | [任意の追加](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[必須の追加](../evaluations/records/TEI-meaning-change-required-2026-11-06.json)、[任意→必須](../evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json) |
-| 証拠が版に束縛される | **示せた**。契約digest・sourceDigest・TEIのcommitを含む実実行receiptが210件。全receiptに必須項目と限界記述があり、登録漏れも検査している | [status](status.md)、[体裁](../evaluations/records/TEI-receipt-scope-2026-11-06.json) |
+| 証拠が版に束縛される | **示せた**。契約digest・sourceDigest・TEIのcommitを含む実実行receiptが211件。全receiptに必須項目と限界記述があり、登録漏れも検査している | [status](status.md)、[体裁](../evaluations/records/TEI-receipt-scope-2026-11-06.json) |
 | 意味が版付きで存在する | **部分**。契約とfixturesは版付きで、生成物とdigestで対応する。ただし製品への写像は手書き | [写像](../evaluations/records/SUI-consumer-mapping-2026-11-06.json) |
 | 適合試験がある | **部分**。1回の意味変更は25ケースで確認できる。ただし試験は被覆に依存し、被覆の無い変更は緑のまま通る | [被覆](../evaluations/records/TEI-fixture-coverage-2026-11-06.json) |
 | 実行先が交換できる | **反例あり**。one-shotでは通るが、long-runningでは生成候補が応答し続けられない | [record](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[text](../evaluations/records/TEI-target-profile-compare-text-2026-11-06.json) |
