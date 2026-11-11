@@ -12,12 +12,36 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receipts": 20,
+    "receipts": 27,
     "excludedAsHistorical": [
       "yi-constellation-structure-2026-11-01.json"
     ],
     "excludedOwnOutput": "YI-receipt-auditability-2026-11-11.json",
     "perReceipt": [
+      {
+        "receipt": "YI-acceptance-authority-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-candidate-fields-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
       {
         "receipt": "YI-centre-handoff-2026-11-11.json",
         "result": "PASS",
@@ -56,6 +80,18 @@
       },
       {
         "receipt": "YI-context-handoff-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-csw-return-2026-11-11.json",
         "result": "PASS",
         "fields": {
           "version": true,
@@ -139,6 +175,18 @@
         }
       },
       {
+        "receipt": "YI-g1-evidence-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
         "receipt": "YI-g1-status-2026-11-11.json",
         "result": "PASS",
         "fields": {
@@ -175,6 +223,18 @@
         }
       },
       {
+        "receipt": "YI-naming-radius-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
         "receipt": "YI-overreach-2026-11-11.json",
         "result": "PASS",
         "fields": {
@@ -188,6 +248,30 @@
       },
       {
         "receipt": "YI-publication-refusal-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-scope-halves-2026-11-11.json",
+        "result": "FAIL",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-sho-actual-2026-11-11.json",
         "result": "PASS",
         "fields": {
           "version": true,
@@ -260,10 +344,10 @@
       }
     ],
     "missingByField": {},
-    "completeReceipts": 20,
+    "completeReceipts": 27,
     "incompleteReceipts": [],
     "everyReceiptIsAuditable": true,
     "finding": "YIのreceiptは、対象の版・実行コマンド・期待結果・観測結果・未実施項目を持つかを一枚ずつ確かめた。欠けている欄があれば、後から読む人はその実行を監査できない。"
   },
-  "scope": "Walks the YI receipts and records, per receipt, whether it carries a version, a command, an expected result, an observed result and a stated limit. One 2026-11-01 receipt predates the convention and is excluded by name rather than judged; its absent fields are recorded in the 19-document instead. It checks presence only: a receipt with all five can still be wrong, and the limit test is lexical."
+  "scope": "Walks the YI receipts and records, per receipt, whether it carries a version, a command, an expected result, an observed result and a stated limit. One 2026-11-01 receipt predates the convention and is excluded by name rather than judged; its absent fields are recorded in the 19-document instead. It checks presence only and cannot tell whether a receipt is right, and the limit test is lexical, so a scope that names the wrong limit passes here. It does not check whether five carried fields are internally consistent."
 }
