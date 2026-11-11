@@ -1,0 +1,52 @@
+{
+  "schema": "tai.reference.yi-deck-proposal-figures/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the proposal and the receipts",
+  "command": "python integrations/tools/yi_deck_proposal_figures_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-deck-figures-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "claims": [
+      {
+        "name": "candidateClassification",
+        "statedInDeckProposal": true,
+        "expected": 7,
+        "measured": 7,
+        "agrees": true
+      },
+      {
+        "name": "extensionCount",
+        "statedInDeckProposal": true,
+        "expected": 8,
+        "measured": 8,
+        "agrees": true
+      },
+      {
+        "name": "keptAsRequirements",
+        "statedInDeckProposal": true,
+        "expected": 15,
+        "measured": 15,
+        "agrees": true
+      },
+      {
+        "name": "movedToExisting",
+        "statedInDeckProposal": true,
+        "expected": 10,
+        "measured": 10,
+        "agrees": true
+      }
+    ],
+    "claimsChecked": 4,
+    "drifted": [],
+    "missingFromProposal": [],
+    "everyClaimStillStated": true,
+    "everyClaimAgreesWithReceipt": true
+  },
+  "scope": "Compares four figures stated in the deck proposal against the receipts that measured them, and records whether they still agree. It checks figures only: whether the deck should be updated at all is governed by the proposal's own rule that the analysis must be accepted first, and this does not decide that."
+}
