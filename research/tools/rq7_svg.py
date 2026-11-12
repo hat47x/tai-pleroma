@@ -115,7 +115,7 @@ def graph_layout(case: dict) -> tuple[dict, dict, int, int]:
 
 
 
-def route_points(positions: dict, source: str, target: str, card_width: int = NODE_MIN_WIDTH) -> list[tuple[int, int]]:
+def route_points(positions: dict, source: str, target: str, card_width: int) -> list[tuple[int, int]]:
     """A narrow, explicit DAG-only route. Long edges use the upper corridor.
 
     This is not a general edge routing algorithm: the fixture currently has
@@ -171,7 +171,7 @@ def intersects_interior(a: tuple[int, int], b: tuple[int, int],
     return True
 
 
-def check_route_clearance(case: dict, positions: dict, card_width: int = NODE_MIN_WIDTH) -> None:
+def check_route_clearance(case: dict, positions: dict, card_width: int) -> None:
     """Reject any arrow segment cutting through unrelated rendered nodes."""
     for source, target in case["declared"]["edges"]:
         points = route_points(positions, source, target, card_width)
