@@ -382,6 +382,6 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 | 機密Boundaryを跨ぐUI移動・実操作がある | 各Productの現在Projection/Disclosure、Host Grant/Effect、必要時分離Session | 旧Sessionに残るContextは新しい送信だけ制限しても消えない。分離・再確認を先に行う |
 | 複数Productの実作業を途切れず支援したい | Productの限定Context→外部Harness Adapterと現在のCapability | 実際の二UI attach・遅延Reply・Authority切替を検証する前に独自Loopへ進まない |
 
-**反証可能な最初の評価**：[main Skill計画 §48](harness-skill-plugin-plan-2026-11-02.md)のR0〜R2（実Product Target/Qualified Projection→既存Handoff実Consumer独立Read）を再現可能な公開1 Taskで成立させ、**A：Product Tool-only、B：＋Product Skill、C：＋TAI Skill**の比較は対象となる実Jobでだけ追加する。費用や実作業効果がB/Cで改善しない場合は採用を強制しない。Model/Harness/Skillの効果を同一試行で一度に変更しない。
+**反証可能な最初の評価**：[本DraftのSkill計画 §48](harness-skill-plugin-plan-2026-11-02.md)のR0〜R2（実Product Target/Qualified Projection→既存Handoff実Consumer独立Read）を再現可能な公開1 Taskで成立させ、**A：Product Tool-only、B：＋Product Skill、C：＋TAI Skill**の比較は対象となる実Jobでだけ追加する。費用や実作業効果がB/Cで改善しない場合は採用を強制しない。Model/Harness/Skillの効果を同一試行で一度に変更しない。
 
 **現状の上限**：TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)の独立H2/H3比較は依然**適格0/4**。SHO/TEI Handoff v1・Draft/再投影は限定実績、Pinned GUI/CUI→外部AI Harness→同じ実Session→複数UI復帰は**NOT RUN**。この差が残る限り、HV-4独自Harnessの採用を正当化しない。新共通Runtime/Policy/Runner/Storeは作らず、TCO・公開Toolの実Callback・OS隔離・Consumer完全受領は既存Ownerで確認する。
