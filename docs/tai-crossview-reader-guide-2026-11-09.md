@@ -246,3 +246,42 @@ Hが成立した過去の記録は、現在UやAが不明になっても**消さ
 **終了・撤回条件**：既存のProduct-local Read/Tool-only/通常Markdownでこの区別を同じ正確さで維持できるなら、TAI Skill・新共通Validator/Storeを採用しない。正しく保留できたこと、追加のProductが不要だったことを成功候補として評価する。ただし人手修正時間・利用者Goal・費用の便益は別に測り、現時点では証明しない。
 
 **現在の証拠上限**（照合TAI main `eb2900df05bad75c51a740d5010aa03f9e8dcca7`、TEI main `8c3d1a5582cf3e9a40b52b3a2ebaa041739b4fd2`）：SHO #47・TAI #640のReceipt再利用負例は既存mainに統合済み。TEI #4504/#4510/#4516/#4487はDraftで、ここに書いたR-B/R-Cの横断独立試験は**新たに実行していない**。CSWの独立モデルR-D比較はNOT RUN。初回外部Harness [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G2および独立H2/H3四Slotの適格性を上書きしない。
+
+## 12. 2026-11-12追補：投影・引継ぎでの根拠の非増幅（Claim preservation）
+
+この節は、前節のH/U/A（履歴・現在利用・実Attempt）を「**Product内→表示→Handoff→外部Harness/他Product**」の変換にも適用する読解規則である。[TEI Draft #4522](https://github.com/hat47x/tei-platform/pull/4522)がMeaning/Contract/Realization/Evidenceの層間非昇格を**TEI Ownerの設計**として検討しているため、TAIが同じ新Core Schema/共通Verifier/正式Contractを所有しない。[TAI Draft #642](https://github.com/hat47x/tai-pleroma/pull/642)は同Kind同IDの局所診断→派生表示→Pinned Targetの三層試験の**Owner**であり、本書では境界の読み方だけを残す。
+
+### 12.1 非増幅の規則：変換された情報から、根拠のない強いClaimを作らない
+
+ある用途・時点・Scopeでの出力Claimは、**現在資格のある入力Evidenceと、正当な変換規則、独立の追加Witness**から導ける範囲までとする。新たな実観測が無いのに、投影・集約・転送・再表示・同じ文字列の一致だけで、対象の一意性、全件性、現在権限、実行、意味受理を強めない。
+
+- **情報を省くことはできるが、「省かれた＝存在しない」は言えない**。元のCoverage/Unknown/Conflictを隠すなら、表示が部分的であることを読者に知らせる。閲覧上の簡略化とデータ／意味の不存在を混同しない。
+- **曖昧さは解消できるが、そのためには根拠がいる**。元の同Kind同ID衝突を非一意のまま示すか、Productが許可Scope/Sourceと一意に束縛できた根拠を新たに提示する。UI/AI/Handoff側で勝手に先勝ち・後勝ちを決めない。
+- **新たな論理推論は可能だが、前提の資格を保存する**。一つの実反例で限定母集団の全称を否定できる。一方、合格11セルで未カバー21セルまで全件合格にはならない。演繹的な必然性と実Providerの履行証拠も別。
+- **現在資格は履歴から派生しない**。ArtifactやReceiptのbyte一致・構造FP一致は歴史Witnessとして有用だが、実Host Grant、現在Recipient、Workspace Root、実Consumer Read、今回Tool実行を保証しない。権限が取り消されても過去のReceiptを歴史から削除しない。
+- **不適格な選択を「ゼロ件」に正規化しない**。検索0件、非公開で不可視、読取失敗、衝突により一意に決められない、未取得、明示的に不存在を確認、は違う。見せる数値の粒度・Scopeと実Read coverageを合わせる。
+
+これは厳密な普遍公理・新しい権限制御ではなく、**根拠を失う操作でClaimが不当に強くなっていないか**を点検する反証可能な規則である。独立OracleやOwner判断をTAIが自動発行するものではない。
+
+### 12.2 層ごとの「できたこと」と「できていないこと」
+
+| Product側の変化・実績 | この範囲で言えること | 次層で別に要るもの |
+| --- | --- | --- |
+| **TEI 同Kind同ID局所修正候補**：Draft [#4524](https://github.com/hat47x/tei-platform/pull/4524)はValidateのduplicate errorとIndexの曖昧Subject除外を実装候補として保持 | Model内で衝突を検出し、曖昧IDをIndex一件へ縮約しない設計・テストが存在する（main採用・exact-head CIは別確認） | 派生CRUD/Graph/Docsの診断・欠落・関連ジャンプ、Studio Pin/AI送信/Writerの拒否。[TAI Draft #642](https://github.com/hat47x/tai-pleroma/pull/642)のQH-02へ |
+| **TEI ETL複数Source**：Draft [#4516](https://github.com/hat47x/tei-platform/pull/4516) §18〜20はSource/Population/Temporal Cut、意味保存Rewrite・Data/Control/Effect/Observationの投影を設計 | 二Sourceの物理Read成功、それぞれの版・結果の履歴。限定的なSQLite JOIN反例はTEI実Providerではない | 共通Tx・Owner承認のas-of cutが無いと、`orders@r2`と`customers@r1`のJOINは同一業務時点とは言えない。LEFT JOIN ON/WHERE変更、Filter/Validate順序変更、Effectful Retryは意味保存を別Expectedで判定 |
+| **TEI 投影Matrix**：Draft [#4464](https://github.com/hat47x/tei-platform/pull/4464)の11セル限定判定 | Representation別にpreserved/lossy/refused/uncoveredを分ける候補 | 未カバー21セルを安全扱いしない。表示が可能でも逆編集・実Provider/Owner意味受理は別 |
+| **TAI/SHO Handoff G5**：merged [#640](https://github.com/hat47x/tai-pleroma/pull/640)・SHO #47がReceipt replay負例を実回帰 | 旧Receipt JSONの再出力でも同内容一致が成立し得る | 今回B側Consumer起動/実Source Read、実Agent Loader/Tool Reply、Host Grant、実Sessionは別Witness |
+| **TEI セルフビルド/CI**：merged [#4456](https://github.com/hat47x/tei-platform/pull/4456)はmainのorphan test（未統合`rea-evidence`コマンド前提）を事実として切分け | 失敗CIの原因が、未統合実装を要求する試験であるという履歴の診断 | 赤をスタブの「緑」で隠さず、実装を採用するか試験の契約を改めるかはOwner判断。CI全体PASSを未実装コマンドの稼働資格と取り違えない |
+
+### 12.3 これ以上Engineを作らずに検証できる四つの負例
+
+| Case | 操作・観測点 | 独立Expected・引渡先 |
+| --- | --- | --- |
+| **CP-1 一意性消失** | 同Kind同IDを二件宣言し、Model Index、派生CRUD/Graph、QH Pinの各出力を読む | Model局所のエラーをConsumer成功へ自動昇格せず、曖昧Subjectの実ジャンプ/編集/送出は拒否または不適格。TEI #4524／TAI Draft #642／Studio #4515 |
+| **CP-2 一貫性のないJoin** | 別時点でordersとcustomersを物理読取完了し、一つのJOINに表示。ON/WHEREを変える | 物理的Read完了は業務共通Snapshotの証拠でない。変更で出力母集団が変われば等価最適化を拒否。TEI Draft #4516/#1130 |
+| **CP-3 投影の損失と逆操作** | ordered/多重GraphをTree・要約へ投影し、見えないRelationへ逆編集を試す | 未表示・lost粒度から不存在や単一意味を推論しない。安全な逆写像が無ければ拒否。TEI #4464/#4510 |
+| **CP-4 CI/Receiptの外観一致** | 未統合CLIを試験だけが要求する世界、またはBが旧Receiptを返す世界を「PASS表示」しようとする | 実装／実Consumerの当該実行を別に観測できなければ未資格のまま。TAI #640／TEI #4456／TAI #168 |
+
+**優先の位置づけ**：CP-1〜4は横断共通の新Gateを起こすためではなく、各Ownerの既存テストへ割り当てて**単純な誤成功を防ぐ**ための設計レビュー用索引である。特にQH実Product再解決と初回G0実OS拒否→G1送出→G2完全Tool Reply→独立H2/H3四Slotを入れ替えない。CSWの批評者はこの種の反証観点を探索できるが、独立Expected・Owner採否・実Agent Testの代行者ではない。
+
+**証拠の時点**：TAI main `eb2900df05bad75c51a740d5010aa03f9e8dcca7`、TEI main `487f1235e39341091a3f9d415afd7803fea20293`（2026-11-12）。#4524/#4516/#4464/#642は参照時にDraft／未統合。TAI/SHO #640の負例はmain統合済み。**この追補では実Go/CLI/GUI/DB/Harness/OS/ScreenReader、正式Owner意味受理、利用者価値を新たに実行・測定していない。**
