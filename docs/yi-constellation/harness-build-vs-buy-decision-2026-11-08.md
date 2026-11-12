@@ -368,7 +368,7 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 
 **最小負例の解像度（#629 ASV、SHO E0、TEI Modeler既存Testへ委譲）**：①同端点2 Edgeの片方だけをPin、②同名別IDとView非単射、③UTF-16/UTF-8の絵文字・日本語・BOM/混合EOL、④dirty BufferとDiskの別版、⑤相対Refを含むSave As、⑥動的Predicate実再評価で集合/可視数変化、⑦A/E補正と追加した非公開Card、⑧送信前後のRecipient/Grant失効、⑨二UIの競合Reply、⑩Source A→B→A、⑪Host Actionがunknown、⑫AI OFF/ライブSession非対応時の縮退。**各ケースが実Source/実Tool/実Consumerで到達したか**を独立Expectedで区別し、単にテスト用JSONや文書が存在することをPASSと呼ばない。
 
-**設計実施順・Owner**：#629はSelection構成と後続評価方法、#630は各Product別Pin実現と再解決・応答の適用条件、TEI #1124/#1824はModeler/Studio、SHO #29/#37/#38はReader/Buffer/Writer、SUI #3400/#3437はKJ/Canvas、TAI #271/#168はHandoff/Harness資格。初回H2/H3のG0/G1/G2と新4 Slot（適格0/4）は依然最優先で、上記12観点は**P0後の別実験**。共通Selection Store/Agent Loop、永続Document Occurrence ID、新認可/Runnerを本書だけで採用しない。実UI↔外部Harness E2E、複数Product実操作、正式Owner受理はNOT RUN。
+**設計実施順・Owner**：#629はSelection構成と後続評価方法、#633は各Product別Pin実現と再解決・応答の適用条件、TEI #1124/#1824はModeler/Studio、SHO #29/#37/#38はReader/Buffer/Writer、SUI #3400/#3437はKJ/Canvas、TAI #271/#168はHandoff/Harness資格。初回H2/H3のG0/G1/G2と新4 Slot（適格0/4）は依然最優先で、上記12観点は**P0後の別実験**。共通Selection Store/Agent Loop、永続Document Occurrence ID、新認可/Runnerを本書だけで採用しない。実UI↔外部Harness E2E、複数Product実操作、正式Owner受理はNOT RUN。
 
 ### 19.5 能力の起動とHandoffは、UI固定対象と別の資格である
 
