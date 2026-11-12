@@ -429,7 +429,7 @@ SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-compose
 
 ### 2026-11-12 Machine ReceiptのClaim Ceilingを実Runnerへ固定する（後続実験の資格）
 
-[SHO G5実Runner修正 PR #45](https://github.com/hat47x/sho-composer/pull/45)は、[TAI #635](https://github.com/hat47x/tai-pleroma/pull/635)／[SHO #43](https://github.com/hat47x/sho-composer/pull/43)の**記述上の訂正を実際のMachine Receiptへ反映する候補**。2026-11-11の固定Receiptは履歴のまま変更しない。現行の受領一致の範囲を超えて`noAuthorityAmplification=true`／`noUnapprovedSourceAutoSend=true`を新しいReceiptへ出さないようにする。
+[SHO G5実Runner修正 merged PR #45](https://github.com/hat47x/sho-composer/pull/45)は、[TAI #635](https://github.com/hat47x/tai-pleroma/pull/635)／[SHO #43](https://github.com/hat47x/sho-composer/pull/43)の**記述上の訂正を実際のMachine Receiptへ反映してmainに統合済み**。2026-11-11の固定Receiptは履歴のまま変更しない。現行の受領一致の範囲を超えて`noAuthorityAmplification=true`／`noUnapprovedSourceAutoSend=true`を新しいReceiptへ出さないようにする。
 
 | Receiptの軸 | 新Runnerが表す範囲 | まだ実証していないこと |
 | --- | --- | --- |
@@ -439,7 +439,7 @@ SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-compose
 | `claims.widenedScopeRejected`／`externalBWidenedScopeRejected` | `local-a-only`／`not-run`。旧観測ID`widened-scope-rejected`は新Receiptでは`local-a-widened-scope-rejected` | B側Agent経由で同じ改変票を投入して拒否させること |
 | `claims.realProductConsumerInBothHarnesses` | `not-proven`。実Consumer 2経路のJSON一致とは別 | A/B二つの実Agent Sessionが対等に同じTaskを実行 |
 
-**反例の再利用**：G5-N2/N3、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X04/X05/X06、[同実行票§10](#10-後続の最小実証qualified-targethandoffconsumerを同じ対象と言えるか2026-11-12新試験not-run) QHのI/R/P/T/C/Hを用い、**旧`observations[].id`と新Runnerの同名風IDを同じ資格へ自動集計しない**。新回帰はSHO側の`test/handoff-harness-switch-claims.test.cjs`とUbuntu/Windows Handoff CIへ統合する方針。これはTest-only Receiptの厳格化であり、`yi.handoff.context/v1`、正式Authority/Skill Loader、全製品共通のEvidence Registryや第二Verifierは変更しない。TAI #168のH2/H3比較適格0/4・G0→G2を優先し、二Agentの実ログ/外部送信/B不正票は独立した**NOT RUN**の次段階。
+**反例の再利用**：G5-N2/N3、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X04/X05/X06、同実行票§10のQH（I/R/P/T/C/H）を用い、**旧`observations[].id`と新Runnerの同名風IDを同じ資格へ自動集計しない**。新回帰`test/handoff-harness-switch-claims.test.cjs`は**SHO main統合済み**で、Ubuntu/Windows双方のHandoff CIで実行・成功。ただし検証したのは**新Receiptの宣言範囲とCLI入力拒否**であり、実二Agent・Host/OS/egressをこのCIで試したわけではない。これはTest-only Receiptの厳格化であり、`yi.handoff.context/v1`、正式Authority/Skill Loader、全製品共通のEvidence Registryや第二Verifierは変更しない。TAI #168のH2/H3比較適格0/4・G0→G2を優先し、二Agentの実ログ/外部送信/B不正票は独立した**NOT RUN**の次段階。
 
 ### 必須負例
 
