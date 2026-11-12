@@ -446,7 +446,7 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 
 ---
 <!-- sk03-20261106-real-sho-eki-milestones-conditional -->
-### 16.5 2026-11-06 実行資格の更新：SHO G1b／EKI TaskRequestを条件付き実証として登録
+### 16.6 2026-11-06 実行資格の更新：SHO G1b／EKI TaskRequestを条件付き実証として登録
 
 **SHOは候補実装まで進んだ**。[SHO Draft #17](https://github.com/hat47x/sho-composer/pull/17)のHEAD `b4176b0df6ac62b02b40108391d024336ed71d7b`に実Reader/CLIがあり、[push CI #42109343155](https://github.com/hat47x/sho-composer/actions/runs/42109343155)・[PR CI #42109414161](https://github.com/hat47x/sho-composer/actions/runs/42109414161)のNode22 Ubuntu/Windowsで各14/14 PASS。§16.1〜16.4の「未実装」は起票時点のmain状態として残すが、現在の評価列は**`candidate reader executed in CI`**。Baseであるfixture-only Draft #12は未mergeであり、`main shipped`、`released`、`Tool installed`、`Skill loaded`、`Harness invoked`、`Owner accepted`ではない。未定義参照とUTF-8 BOMの説明被覆は[SHO #16 R17-01/02](https://github.com/hat47x/sho-composer/issues/16)が別査読。`link_open`だけのReader結果を全引用の不存在へ昇格させない。
 
@@ -455,3 +455,29 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 **初回Skill比較での新しい拒否例**：[TEI merged #2894](https://github.com/hat47x/tei-platform/pull/2894)の`tei dbcheck`はDSNがあれば`CREATE TEMPORARY TABLE`と`DROP TABLE`を実行するため、たとえ表がセッション限りでも初回read-only Tool Profileには含めない。既存[SK-02 Checker](../../evaluations/tools/check-sk02-pair-eligibility.cjs)のCommand Family whitelistは`dbcheck`を初期read-only profile外として扱う。DSN無しexit 2は未接続・未実施の診断であり、実DB/read-only能力の証拠にはならない。DB-ready確認はTEI #2555の実PG/Owner laneのみで行う。
 
 **進行順**：TAI #168の最初のH2一Session→H3実Loader→四Session採点は変更しない。SHO G1b正式採用とEKI Test Profileから先のHandoffが必要になったときだけSC-01/04/09の後続試験へ。ここでは新Adapter、第二Runner、共通Capability Registryを設けない。実二Harness Handoff／SHO Skill／本番EKI Worker／TEI migration read/write／Owner正式受理は**NOT RUN**。
+
+---
+
+## 17. 2026-11-12：Product Skill実配布資格とHandoff現状の再基線化（履歴§16を上書きしない）
+
+### 17.1 製品main・Skill手順・Harness実利用を別列で判定する
+
+§16.1〜16.6は2026-11-06の歴史的観測であり、当時の「SHO Readerがmain未統合」は**現在の状態ではない**。特に[SHO #17](https://github.com/hat47x/sho-composer/pull/17)は**closed/unmerged**だが、現在の製品mainには`src/g1b-reader.cjs`／`bin/sho-inspect.cjs`、`skills/yi-sho-compose/SKILL.md`が実在する。この区別を消して旧PRがmergeされたと書かない。
+
+| 製品／経路 | 現行mainで確認できる実物・限定資格 | 未成立の資格とSkillの停止線 |
+| --- | --- | --- |
+| **TEI** | [`yi-tei-modeling` Product Skill](https://github.com/hat47x/tei-platform/blob/main/skills/yi-tei-modeling/SKILL.md)とGo CLIのread-only Source/Subject観測。[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)でDSH H3のSkill root/reference実Readも限定観測 | H2/H3比較適格**0/4**。実OS Read-deny/egress/全Tool Reply・独立回答評価、意味受理と本番業務Effectを合算しない |
+| **SHO** | mainの[`yi-sho-compose`](https://github.com/hat47x/sho-composer/blob/main/skills/yi-sho-compose/SKILL.md)は**read-only Research Index手順**。[#25/#30/#36 merged](https://github.com/hat47x/sho-composer/pull/36)で別経路のWorking Copy/Raw Draft保存・再開/TEI由来Draft編集が実在。[#41 merged](https://github.com/hat47x/sho-composer/pull/41)でSkill説明の旧状態を修正 | **Product Writerが実在する≠read-only SkillがWriterをInvokeできる**。外部HarnessでのSHO Skill実Load/Tool-only比較、現在Host Grant、正式納品・Owner採用は未検証 |
+| **SUI→SHO／TEI観測引用** | [SUI Producer](https://github.com/hat47x/sui-sensemaking/pull/3432)／[SHO Consumer](https://github.com/hat47x/sho-composer/pull/34)／[#39](https://github.com/hat47x/sho-composer/pull/39)による`yi.handoff.context/v1`の限定実受領、Receipt照合、別Process再受領。[G2〜G6実行票](cross-product-handoff-execution-tickets-2026-11-11.md)に個別のobserved-passと未実施を記録 | **Markdown payloadの独立再Read≠TEI Qualified TargetをSHO自身が独立再解決**（[同実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md) QH）。G5の二Harness実CLI切替≠同一Live Session復帰/各Product Skill実Load |
+| **TAI/EKI/CSW** | [TAI Activity Skill例](../../examples/skills/yi-tai-activity/SKILL.md)は単一Productで足りない作業向けの任意手順。EKI Task Requestの試験ProfileとCSW認知Methodはそれぞれ別ProductのOwner | TAI SkillをすべてのTaskの依存にしない。EKI Skill本番Task/Grant、CSW×SUIの方法価値、共通Harness Session GUI接続は未実証 |
+
+**パッケージと実利用の状態列**は、実製品にread-only入口が`present`か／配布版に実Memberが`packaged`か／実Hostに`installed`か／実Harnessがrootとreferencesを`loaded`したか／実Toolを`invoked`したか／独立Consumerが結果を`observed`したか、を**別観測**する。ProductにWriter機能が追加されてもSkillのTool Profile/権限を無断で拡張しない。単一ProductのTool-onlyで完結するTaskならTAI Skillを呼ばない。実Capabilityの有無は古いSkill説明よりも現在の実Product Reader/CLIで検査し、その上で専門手順としてのSkillが価値を増やすか評価する。
+
+### 17.2 既存受入への接続・追加Engine不要
+
+- [§16.3 QSB-01〜05](#163-独立反証-qsb-01〜05新runnerparser-registryを作らない)を**閉じず、履歴の判断を現在版へ再評価する**。QSB-01は「main Readerも存在しない」ではなく**現行Reader/Skillの存在と実Load適格の差**、QSB-02/03は選択Parser・Plugin依存の変化、QSB-04は実Raw byteとAuthoring Buffer/Source occurrence、QSB-05はPackaged/Installed/Loaded/Invoked/Consumer observedの不一致として判別する。
+- [Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)の**I/P/R/T/C/H六つの観測列**は「固定された対象の同一性」まで言えるかを検査する追加後段の入力。TEI [#4475](https://github.com/hat47x/tei-platform/issues/4475)の同Kind同ID/Fingerprint純粋性と[#4472](https://github.com/hat47x/tei-platform/issues/4472)の三要素分析法モデルにおけるCRUD/横断参照の懸念はProduct Ownerの未修正負例であり、TAI Skillに新しいID Resolverを作らない。
+- 同一公開Taskを**A：Product Tool-only、B：＋Product Skill、C：用途上必要な場合だけ＋TAI Skill**で比較する。ただし実Source・実Tool Profile・Harness version・Target/Disclosure/独立Expectedを事前固定し、Skillの`installed`／`loaded`／`used`の実証を個別に記録。成功回答・必要な保留・誤対象・操作数/再説明・Token/費用と副作用を混ぜて一つの「Skill有効」にはしない。Cが増分価値を示さなければ任意のまま。
+- **Gateの前倒し禁止**：最優先はTAI #168のG0物理Read-deny／G1実Egress／G2全Tool Reply→事前割付H2→H3→H3→H2（現適格0/4）。その後は既存Handoff v1と§10のHeadless Qualified Target→独立Consumerを再利用。[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)のAI/GUI相互選択と[置換Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)のProduct別Pin→返答先は**まだDraft**であり、本書から新共通Store/Router/Runner/Hostを増やさない。
+
+**実施資格**：本節はmainのProduct/Skill実在と各PRの履歴の**Source-static照合**であり、TAIの新しいSkill/OS/外部Harness/二製品End-to-End Trialをここで走らせていない。TAI #74は配布物と版固定、TAI #168は実Harness比較、TAI #488は資格照合、各Product OwnerはSource/実Tool/Disclosure/Meaning/Effectを引き続き所有する。
