@@ -369,3 +369,19 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 **最小負例の解像度（#629 ASV、SHO E0、TEI Modeler既存Testへ委譲）**：①同端点2 Edgeの片方だけをPin、②同名別IDとView非単射、③UTF-16/UTF-8の絵文字・日本語・BOM/混合EOL、④dirty BufferとDiskの別版、⑤相対Refを含むSave As、⑥動的Predicate実再評価で集合/可視数変化、⑦A/E補正と追加した非公開Card、⑧送信前後のRecipient/Grant失効、⑨二UIの競合Reply、⑩Source A→B→A、⑪Host Actionがunknown、⑫AI OFF/ライブSession非対応時の縮退。**各ケースが実Source/実Tool/実Consumerで到達したか**を独立Expectedで区別し、単にテスト用JSONや文書が存在することをPASSと呼ばない。
 
 **設計実施順・Owner**：#629はSelection構成と後続評価方法、#630は各Product別Pin実現と再解決・応答の適用条件、TEI #1124/#1824はModeler/Studio、SHO #29/#37/#38はReader/Buffer/Writer、SUI #3400/#3437はKJ/Canvas、TAI #271/#168はHandoff/Harness資格。初回H2/H3のG0/G1/G2と新4 Slot（適格0/4）は依然最優先で、上記12観点は**P0後の別実験**。共通Selection Store/Agent Loop、永続Document Occurrence ID、新認可/Runnerを本書だけで採用しない。実UI↔外部Harness E2E、複数Product実操作、正式Owner受理はNOT RUN。
+
+### 19.5 能力の起動とHandoffは、UI固定対象と別の資格である
+
+**最新の実績への調整**：[TAI merged #631](https://github.com/hat47x/tai-pleroma/pull/631)によってmain[Skill計画 §47](harness-skill-plugin-plan-2026-11-02.md)はTool-only→必要なProduct Skill→複数Product時に条件付きTAI Skillの選択と実Product Handoffの限定Evidenceを既に整理している。今後の投資判断ではこれを「Skill配置の構想」ではなく、**実在するProduct API/Consumerの差とAI Harnessの独自価値を切り分ける基線**として使う。既存SHO/TEIのCLI別Process Handoff合格を、同じ実Harness Sessionの復元やSkill自動Loadへ昇格しない。
+
+| 問い | 先に使う実証可能な構成 | 独自Harness/専門Pluginが必要だと早合点しない条件 |
+| --- | --- | --- |
+| 1つのFunctionや文書範囲を調べたい | 実TEI/SHO CLI、Source/Target/Pinの限定Read | Tool-onlyで必要な説明と根拠が得られたら、TAI Skillや中央Agentは不要 |
+| 文書化・モデル診断を安定して再利用したい | 実Product API＋実Product Skill（実Load/Tool Callを別観測） | Skill説明と現Commandがずれたら説明を採択せず、実Command/Sourceと必要なSkill文面を更新 |
+| TEI→SHOなど製品間で根拠と未決を渡したい | [既存Handoff v1](cross-product-handoff-context-v1-2026-11-11.md)＋実Producer/Consumer独立Read＋必要時だけTAI Activity Skill | Receiptを理解・意味受理・ライブSession継続の証拠にしない。Live attach非対応ならActivity Handoffを別資格とする |
+| 機密Boundaryを跨ぐUI移動・実操作がある | 各Productの現在Projection/Disclosure、Host Grant/Effect、必要時分離Session | 旧Sessionに残るContextは新しい送信だけ制限しても消えない。分離・再確認を先に行う |
+| 複数Productの実作業を途切れず支援したい | Productの限定Context→外部Harness Adapterと現在のCapability | 実際の二UI attach・遅延Reply・Authority切替を検証する前に独自Loopへ進まない |
+
+**反証可能な最初の評価**：[main Skill計画 §48](harness-skill-plugin-plan-2026-11-02.md)のR0〜R2（実Product Target/Qualified Projection→既存Handoff実Consumer独立Read）を再現可能な公開1 Taskで成立させ、**A：Product Tool-only、B：＋Product Skill、C：＋TAI Skill**の比較は対象となる実Jobでだけ追加する。費用や実作業効果がB/Cで改善しない場合は採用を強制しない。Model/Harness/Skillの効果を同一試行で一度に変更しない。
+
+**現状の上限**：TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)の独立H2/H3比較は依然**適格0/4**。SHO/TEI Handoff v1・Draft/再投影は限定実績、Pinned GUI/CUI→外部AI Harness→同じ実Session→複数UI復帰は**NOT RUN**。この差が残る限り、HV-4独自Harnessの採用を正当化しない。新共通Runtime/Policy/Runner/Storeは作らず、TCO・公開Toolの実Callback・OS隔離・Consumer完全受領は既存Ownerで確認する。
