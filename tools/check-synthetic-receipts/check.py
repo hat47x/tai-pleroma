@@ -234,6 +234,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-artifact-digest-2026-11-11.json",
     "evaluations/records/YI-pass-consistency-2026-11-11.json",
     "evaluations/records/SCN-001-outcome-2026-11-11.json",
+    "evaluations/records/EKI-lost-acknowledgement-2026-11-12.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -648,6 +649,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyClaimStillStated") is not True
             ):
                 errors.append(f"a deck figure no longer matches its receipt: {relative}")
+        if "EKI-lost-acknowledgement" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("commandRanTwice") is not False
+                or observed.get("sameIdentityRetryIsDeduplicated") is not True
+                or observed.get("businessSideEffectExercised") is not False
+                or observed.get("taskReachedTerminalState") is not False
+            ):
+                errors.append(f"the lost-acknowledgement observation overclaims: {relative}")
         if "SCN-001-outcome" in relative:
             observed = data.get("observed", {})
             positive = observed.get("cases", {}).get("positive", {}).get("claims", {})

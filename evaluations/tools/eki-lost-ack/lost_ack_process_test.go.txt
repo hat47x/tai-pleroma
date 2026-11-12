@@ -1,0 +1,358 @@
+package process
+
+// Throwaway experiment (not part of EKI): what an outside observer can and
+// cannot conclude when the acknowledgement of a ResultClaim is lost between a
+// real eki-agent and a real eki-control, and which recovery is safe.
+//
+// The fault is injected outside both binaries: a TCP pass-through proxy sits
+// between the Agent and the mTLS Worker listener. It cannot read the traffic.
+// In drop mode it forwards every request to the Control Plane and discards
+// what the Control Plane sends back after the TLS handshake, then closes the
+// Agent's side. So the Control Plane commits, and the Agent never learns.
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"io"
+	"net"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+	"sync/atomic"
+	"testing"
+	"time"
+
+	"github.com/hat47x/eki-fabric/conformance/signedchain"
+	artifactfile "github.com/hat47x/eki-fabric/internal/adapters/reference/artifactstore/file"
+	agentservice "github.com/hat47x/eki-fabric/internal/agent/service"
+	"github.com/hat47x/eki-fabric/internal/core/decisionpayload"
+	"github.com/hat47x/eki-fabric/internal/core/ids"
+	"github.com/hat47x/eki-fabric/internal/core/taskstate"
+)
+
+type faultProxy struct {
+	ln      net.Listener
+	target  string
+	drop    atomic.Bool
+	dropped atomic.Int64 // connections whose post-handshake replies were discarded
+	wg      sync.WaitGroup
+}
+
+func newFaultProxy(t *testing.T, target string) *faultProxy {
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	must(t, err)
+	p := &faultProxy{ln: ln, target: target}
+	go func() {
+		for {
+			c, err := ln.Accept()
+			if err != nil {
+				return
+			}
+			go p.serve(c)
+		}
+	}()
+	t.Cleanup(func() { ln.Close() })
+	return p
+}
+
+// readRecord reads one TLS record (5-byte plaintext header plus body).
+func readRecord(r io.Reader) (typ byte, raw []byte, err error) {
+	head := make([]byte, 5)
+	if _, err = io.ReadFull(r, head); err != nil {
+		return 0, nil, err
+	}
+	body := make([]byte, int(head[3])<<8|int(head[4]))
+	if _, err = io.ReadFull(r, body); err != nil {
+		return 0, nil, err
+	}
+	return head[0], append(head, body...), nil
+}
+
+func (p *faultProxy) serve(client net.Conn) {
+	server, err := net.Dial("tcp", p.target)
+	if err != nil {
+		client.Close()
+		return
+	}
+	var clientSentEncrypted atomic.Bool // the client's Finished flight has gone out
+	go func() {                        // client -> server: always forwarded
+		defer server.Close()
+		for {
+			typ, raw, err := readRecord(client)
+			if err != nil {
+				return
+			}
+			if typ == 23 {
+				clientSentEncrypted.Store(true)
+			}
+			if _, err := server.Write(raw); err != nil {
+				return
+			}
+		}
+	}()
+	doomed := false
+	for { // server -> client
+		_, raw, err := readRecord(server)
+		if err != nil {
+			client.Close()
+			return
+		}
+		if doomed || (p.drop.Load() && clientSentEncrypted.Load()) {
+			if !doomed {
+				doomed = true
+				p.dropped.Add(1)
+				// Give the Control Plane time to finish the request it was
+				// sent, then cut the Agent off without an answer.
+				time.AfterFunc(300*time.Millisecond, func() { client.Close() })
+			}
+			continue
+		}
+		if _, err := client.Write(raw); err != nil {
+			server.Close()
+			return
+		}
+	}
+}
+
+type effectObservation struct {
+	Variant string `json:"variant"`
+	// While the acknowledgement is lost.
+	ClaimRecordedByControl   bool   `json:"claimRecordedByControl"`
+	AgentSawAcknowledgement  bool   `json:"agentSawAcknowledgement"`
+	AgentDeliveryFailures    int    `json:"agentDeliveryFailures"`
+	BodyKeptWhileUnknown     bool   `json:"bodyKeptWhileUnknown"`
+	TaskStatusWhileUnknown   string `json:"taskStatusWhileUnknown"`
+	ResultStatusWhileUnknown int    `json:"resultStatusWhileUnknown"`
+	RepliesDroppedConns      int64  `json:"repliesDroppedConnections"`
+	// After the path is restored.
+	RetryDecision     string `json:"retryDecision"`
+	BodyKeptAfter     bool   `json:"bodyKeptAfter"`
+	BodySendFailed    bool   `json:"bodySendFailedEvent"`
+	BodySentEvent     bool   `json:"bodySentEvent"`
+	CommandRuns       int    `json:"commandRuns"`
+	AttemptsForTask   int    `json:"attemptsForTask"`
+	TaskStatusAfter   string `json:"taskStatusAfter"`
+	AttemptCountAfter int    `json:"attemptCountAfter"`
+	ResultStatusAfter int    `json:"resultStatusAfter"`
+	// Client-side retries of the submission.
+	SameKeyStatus     int    `json:"sameKeyStatus"`
+	SameKeyReplayed   bool   `json:"sameKeyReplayed"`
+	SameKeySameTask   bool   `json:"sameKeySameTask"`
+	NewKeyStatus      int    `json:"newKeyStatus"`
+	NewKeyCreatesTask bool   `json:"newKeyCreatesAnotherTask"`
+	OutputDigest      string `json:"claimOutputDigest"`
+}
+
+func clientDo(t *testing.T, method, url, key string, body []byte) (int, map[string]any) {
+	t.Helper()
+	req, err := http.NewRequest(method, url, bytes.NewReader(body))
+	must(t, err)
+	req.Header.Set("Authorization", "Bearer "+clientToken)
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	if key != "" {
+		req.Header.Set("Idempotency-Key", key)
+	}
+	resp, err := http.DefaultClient.Do(req)
+	must(t, err)
+	defer resp.Body.Close()
+	raw, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	must(t, err)
+	out := map[string]any{}
+	_ = json.Unmarshal(raw, &out)
+	return resp.StatusCode, out
+}
+
+func countLines(path string) int {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return 0
+	}
+	return strings.Count(string(raw), "\n")
+}
+
+func runLostAcknowledgement(t *testing.T, variant string, seed byte, restartAgent bool) {
+	e := newMTLSEnv(t, 0)
+	e.seedPolicyNow(t)
+	oldLimits, oldSandbox := signedchain.Limits, signedchain.Sandbox
+	signedchain.Limits = decisionpayload.ResourceLimits{
+		CPUMillis: 1000, MemoryBytes: 1 << 28, WallTimeMillis: 300_000, OutputBytesMaximum: 1 << 20,
+	}
+	signedchain.Sandbox = decisionpayload.SandboxPolicy{Profile: "native-fixed-spike"}
+	defer func() { signedchain.Limits, signedchain.Sandbox = oldLimits, oldSandbox }()
+
+	e.writeConfig(t)
+	keyFile, controlKeys := controlSigningKeys(t, e)
+	e.enableDispatch(t, keyFile)
+	control := e.startControl(t)
+
+	now := time.Now().UTC()
+	auth := signedchain.New(t, now.Add(-2*time.Hour), seed)
+	counter := filepath.Join(e.dir, "command-runs.txt")
+	side := e.assignmentAgentWithSigningKeys(t, "lostack", auth, now, controlKeys,
+		&agentservice.ExecutionConfig{Command: "/bin/sh", Args: []string{"-c", "echo run >> " + counter + "; sleep 1; echo hello"}})
+
+	// Route the enrolled Agent through the proxy. Enrollment used the real port.
+	proxy := newFaultProxy(t, strings.TrimPrefix(e.workerURL, "https://"))
+	raw, err := os.ReadFile(side.cfgPath)
+	must(t, err)
+	proxyURL := "https://" + proxy.ln.Addr().String()
+	if !bytes.Contains(raw, []byte(e.workerURL)) {
+		t.Fatalf("agent config does not name the control URL: %s", raw)
+	}
+	must(t, os.WriteFile(side.cfgPath, bytes.ReplaceAll(raw, []byte(e.workerURL), []byte(proxyURL)), 0o600))
+	agent := side.start(t)
+
+	base := "http://" + e.clientAddr
+	status, accepted := clientDo(t, http.MethodPost, base+"/v1/tasks", "lost-ack-"+variant+"-0001", []byte(httpTaskRequest))
+	if status != http.StatusAccepted {
+		t.Fatalf("submit = %d: %v", status, accepted)
+	}
+	taskIDText, _ := accepted["task_id"].(string)
+	taskID, err := ids.ParseTaskID(taskIDText)
+	must(t, err)
+
+	store := openState(t, e.controlDB)
+	released := false
+	for i := 0; i < 10 && !released; i++ {
+		task, err := store.LoadTask(context.Background(), taskID)
+		must(t, err)
+		switch task.Phase {
+		case taskstate.TaskPhaseAdmitted:
+			next := task
+			next.Phase, next.UpdatedAt = taskstate.TaskPhaseReady, time.Now().UTC()
+			next.Revision = task.Revision + 1
+			if err := store.CompareAndSwapTask(context.Background(), taskID, task.Revision, next); err == nil {
+				released = true
+			} else {
+				time.Sleep(10 * time.Millisecond)
+			}
+		default:
+			released = true
+		}
+	}
+	store.Close()
+	attemptID := e.assignedAttempt(t, taskID).ID
+
+	// The command has started: from here the Control Plane's replies are lost.
+	waitFor(t, "command start", func() (bool, string) {
+		return countLines(counter) > 0, agent.out.String() + "\n" + control.out.String()
+	})
+	proxy.drop.Store(true)
+
+	obs := effectObservation{Variant: variant}
+	eventsFor := func() (failures int, submitted, bodySent, bodyFailed bool, decision string) {
+		for _, ev := range readEvents(t, side.events) {
+			if ev.AttemptID != attemptID.String() {
+				continue
+			}
+			switch ev.Outcome {
+			case "result_claim_delivery_failed":
+				failures++
+			case "result_claim_submitted":
+				submitted, decision = true, ev.ClaimDecision
+			case "claim_body_sent":
+				bodySent = true
+			case "claim_body_send_failed":
+				bodyFailed = true
+			}
+		}
+		return
+	}
+	claimRecorded := func() (bool, string) {
+		s := openState(t, e.controlDB)
+		defer s.Close()
+		claim, found, err := s.LoadResultClaim(context.Background(), attemptID)
+		must(t, err)
+		if !found {
+			return false, ""
+		}
+		return true, claim.OutputDigest().Hex()
+	}
+	bodyKept := func(digest string) bool {
+		bodies, err := artifactfile.New(e.artifactsDir)
+		must(t, err)
+		f, _, err := bodies.Open(digest)
+		if err != nil {
+			return false
+		}
+		f.Close()
+		return true
+	}
+	waitFor(t, "claim committed while the agent is told nothing", func() (bool, string) {
+		recorded, _ := claimRecorded()
+		failures, _, _, _, _ := eventsFor()
+		return recorded && failures > 0, agent.out.String() + "\n" + control.out.String()
+	})
+	var digest string
+	obs.ClaimRecordedByControl, digest = claimRecorded()
+	obs.OutputDigest = digest
+	obs.AgentDeliveryFailures, obs.AgentSawAcknowledgement, _, _, _ = eventsFor()
+	obs.BodyKeptWhileUnknown = bodyKept(digest)
+	obs.RepliesDroppedConns = proxy.dropped.Load()
+	st, task := clientDo(t, http.MethodGet, base+"/v1/tasks/"+taskIDText, "", nil)
+	if st == http.StatusOK {
+		obs.TaskStatusWhileUnknown, _ = task["status"].(string)
+	}
+	obs.ResultStatusWhileUnknown, _ = clientDo(t, http.MethodGet, base+"/v1/tasks/"+taskIDText+"/result", "", nil)
+
+	if restartAgent {
+		agent.kill()
+		proxy.drop.Store(false)
+		agent = side.start(t)
+	} else {
+		proxy.drop.Store(false)
+	}
+	waitFor(t, "the same claim acknowledged on retry", func() (bool, string) {
+		_, submitted, _, _, _ := eventsFor()
+		return submitted, agent.out.String() + "\n" + control.out.String()
+	})
+	time.Sleep(4 * time.Second) // let a body send, a re-dispatch or a re-run show itself
+	var bodySent, bodyFailed bool
+	_, _, bodySent, bodyFailed, obs.RetryDecision = eventsFor()
+	obs.BodySentEvent, obs.BodySendFailed = bodySent, bodyFailed
+	obs.BodyKeptAfter = bodyKept(digest)
+	obs.CommandRuns = countLines(counter)
+	final := openState(t, e.controlDB)
+	attempts, err := final.ListAttemptsByTask(context.Background(), taskID)
+	must(t, err)
+	final.Close()
+	obs.AttemptsForTask = len(attempts)
+	st, task = clientDo(t, http.MethodGet, base+"/v1/tasks/"+taskIDText, "", nil)
+	if st == http.StatusOK {
+		obs.TaskStatusAfter, _ = task["status"].(string)
+		if n, ok := task["attempt_count"].(float64); ok {
+			obs.AttemptCountAfter = int(n)
+		}
+	}
+	obs.ResultStatusAfter, _ = clientDo(t, http.MethodGet, base+"/v1/tasks/"+taskIDText+"/result", "", nil)
+
+	// A client that did not hear back either: same key, then a fresh key.
+	var again map[string]any
+	obs.SameKeyStatus, again = clientDo(t, http.MethodPost, base+"/v1/tasks", "lost-ack-"+variant+"-0001", []byte(httpTaskRequest))
+	obs.SameKeyReplayed, _ = again["replayed"].(bool)
+	obs.SameKeySameTask = again["task_id"] == taskIDText
+	var fresh map[string]any
+	obs.NewKeyStatus, fresh = clientDo(t, http.MethodPost, base+"/v1/tasks", "lost-ack-"+variant+"-0002", []byte(httpTaskRequest))
+	other, _ := fresh["task_id"].(string)
+	obs.NewKeyCreatesTask = other != "" && other != taskIDText
+
+	out, err := json.Marshal(obs)
+	must(t, err)
+	t.Logf("TASK6_OBS %s", out)
+	if dir := os.Getenv("TASK6_OUT"); dir != "" {
+		must(t, os.WriteFile(filepath.Join(dir, variant+".json"), out, 0o600))
+	}
+}
+
+func TestLostAcknowledgementThenSameAgentRetries(t *testing.T) {
+	runLostAcknowledgement(t, "same-agent-retry", 41, false)
+}
+
+func TestLostAcknowledgementThenAgentRestarts(t *testing.T) {
+	runLostAcknowledgement(t, "agent-restart", 42, true)
+}

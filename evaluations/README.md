@@ -14,6 +14,7 @@
 
 - [SCN-001実物ベース再レビュー](SCN-001-real-object-review.md): 合成後に行う公開用実物レビューの計画。R-06/R-07は未実施。
 - [SCN-001合成施設文書による工程欠陥検査](SCN-001-synthetic-facility-review.md): 創作文書で工程欠陥を検出する検証。実物レビューではない。
+- [応答を失ったあとの回復判断：実EKIでの1件](EKI-effect-unknown-recovery-2026-11-12.md): ResultClaimの受理確認を失わせた実プロセス観測。同じ識別子の再送は重複排除、Agent再起動では出力本体が失われ、Client APIからは区別できない。業務上の外部作用は未実施。
 - [SCN-001 成果の観測](SCN-001-outcome-observation-2026-11-11.md): 技術的成果・受取先の受領・公開権限・公開というGoal・価値を別々に判定した記録。T-Draftは成立、公開は未達、価値は未評価。
 - [SCN-001実物レビュー要求の変更](SCN-001-owner-decision-2026-10-29.md): 合成文書によるdevelopment acceptedと、生成AI評価・人間レビュー後置のOwner判断。
 - [SCN-001生成AI development reviewの観点](SCN-001-ai-development-review-rubric.md): D-04を確認する5観点。
