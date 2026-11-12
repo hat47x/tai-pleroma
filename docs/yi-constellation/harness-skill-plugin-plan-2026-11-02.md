@@ -883,3 +883,30 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **費用・遅延の観測Owner**：[TEI #3520](https://github.com/hat47x/tei-platform/pull/3520)のAI Tuning Observation Referenceの19合成負例はDesign/Provider/Statistics/Delivery/Disclosureの検査**のみ限定PASS**。実生成AI改善やDB性能改善はNOT RUN。横断H2/H3のTask比較は、Model Token/Tool read・Transfer/Product実処理/隔離Setup/人の修正・確認/非適格再実行を区別し、必要なSource/Provider/Scope/Revisionと実Consumer受領を結び付ける。TEI [#3479](https://github.com/hat47x/tei-platform/pull/3479)のProvider原文のみ改訂でConsumer World/Indexが変わらない反例を考慮し、Source不一致を「同一条件のコスト改善」に含めない。最初の4 Slotでは分位点や改善率の一般化をしない。これは**独自Harness要否の後段投資比較**であり、既存[SK-02 G0〜G2実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)の新Hard Gateではない。
 
 **直近の行動は一本化**：TAI #168のG0実Read許可・拒否の正負対を同一OS identityで示し、G1/G2の全実Tool Replyと送出を確認してから、新規H2→H3→H3→H2を割付・独立採点する。SEI Method、CSW、Tuning、実Provider、二Harness横断とHV-4は、結果に応じた別試行。必要性未確認のProduct Skill/専門Pluginは標準セットへ無条件に含めない。
+
+## 46. 2026-11-12：固定対象を持つ共有Harness導線を既存Product接続計画へ組み込む
+
+**方式の判断**：[Build-vs-Buy判断書 §19](harness-build-vs-buy-decision-2026-11-08.md)のPinned Target Set/Send Preview/Live Session/Activity/Attemptを区別する。11月9日[PR #270](https://github.com/hat47x/tai-pleroma/pull/270)はmain統合済み。11月11日の[共有Session旧PR #578](https://github.com/hat47x/tai-pleroma/pull/578)は未マージ終了のため、追加節を既存main採用済みと扱わず、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)と[#271](https://github.com/hat47x/tai-pleroma/issues/271)に既にあるActivity/Session分離をOwnerとする。独自Harness Engine・新永続Session Store・万能Prompt Routerの採用ではない。
+
+**UIの核**：Focus/一時Selectionとは別に、利用者が複数対象を役割付きで固定する**Pinned Context Shelf（仮称、UI設計候補）**を設ける。CUIもTarget ID/Source/Revisionに基づく同等の固定操作を持つ。PinはTab/IME/Escape/別ウィンドウで消えず、明示解除・Undoを持つ。Source改版後はPinを残し stale と表示、別対象への自動再束縛を禁止。送信時には現在Sourceの許可Projection、Scope/欠落、実Session/Recipient、Intentを提示して利用者が確認し、未確認Rawは出さない。選択は利用者とAIが候補を共同編集できるが、AI提案による追加/解除は実際のユーザー編集と混ぜない。
+
+### 46.1 最小実装線（既存API/UIを利用）
+
+| 順序 | Product Ownerと先に使う能力 | 実際に確認すること | 追加で作らないもの |
+| --- | --- | --- | --- |
+| P0 不変 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/TEI #2509、既存[実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md) | G0実OS Read拒否、G1送出、G2 Tool Reply、H2→H3→H3→H2を独立採点（最後の確認時点で適格0/4） | Pin UIや二製品の実行を初回4 Slotの追加Gateにしない |
+| P1-a Selection | TEI [#1124](https://github.com/hat47x/tei-platform/issues/1124)/[#1824](https://github.com/hat47x/tei-platform/issues/1824)、[ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)、SUI [#3368](https://github.com/hat47x/sui-sensemaking/issues/3368) | 公開/合成の1 Function/Relation＋2 CardのPin、Role/ID/Source/Revision/除外保持、Focusと独立したUndo、CUI同値。生成したSnapshotは実Product値に束縛 | 第二Graph/Source Store、HTML座標を意味正本にする変更 |
+| P1-b Scoped Dispatch | 各Productの既存read-only Projection＋[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232) | 誰へ何を送るかPreview、現在Disclosure/Source照合、実送信byte/Result/受信者で観測。No-op/denyと非開示を確認 | UIのPinだけで現在権限取得、別共通Authorization |
+| P1-c 同じSession | [TAI #168/#271](https://github.com/hat47x/tai-pleroma/issues/271)の実外部Harness Adapter | SUI→TEIのUI切替でも同一実Sessionへ戻り、二Productの限定Tool/ReplyとActivity参照を照合。非対応なら別SessionへのHandoffを別結果 | Agent Loop/Session DBをProductごとに実装 |
+| P2 探索・文書 | SUI [#3400](https://github.com/hat47x/sui-sensemaking/issues/3400)/[#3391](https://github.com/hat47x/sui-sensemaking/issues/3391)、CSW、SHO [#19](https://github.com/hat47x/sho-composer/issues/19)、SEI [#677](https://github.com/hat47x/sei-cognition/issues/677) | SUI Canvasの限定選択→任意CSWの複数提案→SUI位置/IslandのPreview・Undo→人間の採否→SHO文書化候補（損失/異論/保留保持） | CSW案をTEI正式Relation、SEI決定、SHO保存成功に自動昇格 |
+| P3 業務作用 | EKIと実Provider、TEIの型付きOperation | 大量Network/TaskのPreview、現在Grant、部分成功/unknown Receipt、再Read、Undo不可の実Effectの停止線 | Session継続だけでGrant/Receiptを継承 |
+
+### 46.2 設計評価の単位・反例
+
+**最初のUser Job**：TEI Studioで選んだ公開Functionと関連RuleをPin→選択した一部のみ外部Harnessの同じ実Sessionへ提示→SUIで関連する2 Cardを別役割で追加して再Preview→Harnessへ「比較し、未解決の関係を示す」と依頼→TEI/SUIで提示元のPin/Sourceを確認。初回は**read-only**、Product固有の意味受理・Source変更・外部Effectはしない。AIが不在でもTEI/SUIの標準操作は可能。
+
+**独立Expected**：[判断書 §19 PX-01〜08](harness-build-vs-buy-decision-2026-11-08.md)をそのまま反証の見出しとして扱い、正式Scenario/Checker番号は既存[TAI #271 ASV-01〜07](https://github.com/hat47x/tai-pleroma/issues/271)と各Productの受入に残す。成功時は実Session ID／Product/Tool呼出／Source/Revision/Scoped Projection／Prompt前Preview／送出byte/受信Reply／Pin不変／利用者の採否とUndoを一Attemptで追跡する。Unknown、部分配送、Target不一致、旧Grant、暗黙Context送信は失格または未資格。**Session ID一致・UI表示・AIの文章だけではPASSしない**。
+
+**価値比較**：B0独立Product UI、B1既存Harness＋Pin/限定Adapter（同一実Sessionが可能なとき）、B2別Sessionへ用途限定Handoffの縮退を同じTaskとSourceで比較。製品ごとに内蔵したAgent Loopの実装は比較のために新規開発しない。再説明回数、対象の誤指定・消失、Unsupported時の継続、開示/権限事故、根拠と異論保持、操作負荷・時間・費用を確認。B1で実測改善がなくても不採用・B0維持を許す。
+
+**現在**：設計/試験案とIssueへの接続のみ。TEI #3863はStudio選択とHarnessの性能境界の計画を、#3866は型付きModel Mapの限定実装をそれぞれmainへ統合したが、このP1-a〜cの実Product UI Pin、DSH/Codex等のLive Session再接続、SUI/CSW、Undo、Owner受理は**NOT RUN**。DSHはEverything is Pluginとの技術的親和性で実証順のみ僅かに優先し、他の主要Harnessを機能的に下位扱いしない。
