@@ -352,7 +352,7 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 <!-- tai-harness-20261112-identity-coverage-qualification -->
 #### 11.8.5 「選択できた」を「対象の一意性・意味・現在性が確認された」としない
 
-§11.8.1〜4と[TAI Draft #630 §19.4/§46.3](https://github.com/hat47x/tai-pleroma/pull/630)は、**Pin後の再解決・送信・遅着返信・適用**を扱う。再解決の前提である**選択元のIdentity/Projection自体が適格か**は別に判別する。これは新しい全製品共通ID・状態Enum・Verifierを採用する提案ではない。現在のProduct診断・Source/型付き参照・Receiptを正本のまま用いる。
+§11.8.1〜4と[TAI Draft #633 §19.4/§19.5・§48](https://github.com/hat47x/tai-pleroma/pull/633)が、**Pin後の製品別再解決・送信・遅着返信・適用の受入順**を担当する。旧[#630](https://github.com/hat47x/tai-pleroma/pull/630)は§46/47の重複を避けて未マージ終了したため、現行の実施計画には用いない。再解決の前提である**選択元のIdentity/Projection自体が適格か**は別に判別する。これは新しい全製品共通ID・状態Enum・Verifierを採用する提案ではない。現在のProduct診断・Source/型付き参照・Receiptを正本のまま用いる。
 
 | 判断すべき点 | 反例と既存Owner | 独立Expected・必要観測 |
 | --- | --- | --- |
@@ -366,7 +366,7 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 
 **初回の判別試験（後続、NOT RUN）**：TEIの同Kind同IDと多重Edge、SUIの同Card別Canvas表示と非公開Island、SHOの同文字列別Occurrenceを、それぞれのProductのread-only Operationで観測する。期待結果は (a)型と位置・版によって一意に解決、(b)曖昧性が残るため保留、(c)許可Projectionが不足するためUnknown、のいずれか。**曖昧でも最初の1件へ黙って束縛しない**。現ProductのRead/CLIの到達有無と、設計書の想定を分ける。
 
-**Owner分担**：TEIのIndex/Fingerprint不具合の修正と回帰は#4475、SUI安全投影は#3368、SHO Buffer/Occurrenceの実再解決は#29/#38、UIでのPin再束縛/非同期返信の実用条件は[TAI Draft #630](https://github.com/hat47x/tai-pleroma/pull/630)、実Hostの非漏えいは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。本§11.8.5は**横断での適格性比較・禁止推論**のみを扱い、第二のId Store/Parser/Checkerを実装しない。
+**Owner分担**：TEIのIndex/Fingerprint不具合の修正と回帰は#4475、SUI安全投影は#3368、SHO Buffer/Occurrenceの実再解決は#29/#38、UIでのPin再束縛/非同期返信の実用条件は[TAI Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)、実Hostの非漏えいは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。本§11.8.5は**横断での適格性比較・禁止推論**のみを扱い、第二のId Store/Parser/Checkerを実装しない。
 
 **既存順序**：§11.8.4 P0でstable IDの取得だけでなく、実Productの曖昧性・Coverageの確認を加える。P1のQ/E/Aは許可済み解決候補だけを対象とする。P2のHandoffでは意味対応と現在資格を別に判断する。P3のCSW候補をAccepted Meaningへ昇格せず、EKIの選択を配置権限と同一視しない。初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のH2/H3実隔離・Tool完全受領は新規Blockingを設けず最優先のまま。
 
@@ -379,10 +379,12 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 
 | 経路 | 実装・独立Expected | 他経路を待つ必要／停止線 |
 | --- | --- | --- |
-| **S：Product-local** | SUIの公開合成Cardでread-onlyのQ→人によるE/A補正→結果S、TEIのQualified Kind/ID/Source revisionの一意/曖昧診断、CUI/GUIのPin保持/Undoを、まずAI OFFまたは合成Selectorで評価。[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)/[TEI #1124](https://github.com/hat47x/tei-platform/issues/1124)/[Draft #630](https://github.com/hat47x/tai-pleroma/pull/630)のOwnerに帰属 | 外部HarnessやSkillの資格は**不要**。未実装のSUI外部Selection APIを偽装しない。未レビュー情報の公開と本番保存/実Effectは対象外 |
+| **S：Product-local** | SUIの公開合成Cardでread-onlyのQ→人によるE/A補正→結果S、TEIのQualified Kind/ID/Source revisionの一意/曖昧診断、CUI/GUIのPin保持/Undoを、まずAI OFFまたは合成Selectorで評価。[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)/[TEI #1124](https://github.com/hat47x/tei-platform/issues/1124)/[Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)のOwnerに帰属 | 外部HarnessやSkillの資格は**不要**。未実装のSUI外部Selection APIを偽装しない。未レビュー情報の公開と本番保存/実Effectは対象外 |
 | **H：Harness／実開示** | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の現G0 OS Read-deny、G1実送出、G2 Tool request/reply完全性、事前PinしたH2/H3四独立Session・独立Expected。実Tool-onlyとProduct Skill配信を別に判別 | UI/CUIのPin完成は**不要**。G0未達のHarnessへ非公開Sourceを渡さない。H2/H3比較適格0/4を別のGUI成功で上書きしない |
-| **J：接合（初回実E2E）** | 公開・合成1 ProductのPin/Selection→現在Audience/Hostが許可したProjection/Recipientの送出Preview→実Harness Tool request/reply/終端→元Pinへの結果表示を**同一Attempt**で確認。実送出byte、許可対象集合とSource revision、実Session ID、Request/Response IDを束縛 | **SとHの対象機能ごとの資格が両方必要**。旧Pinへ後着したReplyを現在の別対象へ適用しない。同一Session attach未対応ならunsupportedを明示、別Session Activity Handoffは別評価 |
+| **J：接合（実Harness E2E）** | 公開・合成1 ProductのPin/Selection→現在Audience/Hostが許可したProjection/Recipientの送出Preview→実Harness Tool request/reply/終端→元Pinへの結果表示を**同一Attempt**で確認。実送出byte、許可対象集合とSource revision、実Session ID、Request/Response IDを束縛 | **SとHの対象機能ごとの資格が両方必要**。後述の既存Handoff v1受領テストがPASSしていても実Harness受領と同一Session共有は別資格。旧Pinへ後着したReplyを現在の別対象へ適用しない。同一Session attach未対応ならunsupportedを明示、別Session Activity Handoffは別評価 |
 | **C：創造的方法の増分価値** | CSWあり/なしで、同じ材料からSUIの仮の束/表札/未統合Cardを再構成する効果を、まずProduct-localで比較。外部Harness共有の価値はJの後に別測定 | [TAI Skill計画§47](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)に従いTool-onlyで足りる場合はSkillを自動投入しない。CSW利用時も原典・異論・保留を保持し、採用済みMeaningとしない |
+
+**接合より前に実行する既存Product Handoff（Hの前提ではない）**：[mainのHandoff実行票 §10 QH-P0](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)で、公開TEIの実 `model catalog` 読取と既存SUI→SHO Handoff v1の実受領を使う。追加のTarget/Schemaを作らず、**I=対象選択の由来、R=実Consumerが元対象を一意に再解決したか、P=許可済みProjection、T=実Transport/Receipt、C=実Consumerの意味利用、H=Harness/Skill/Effect**を既存票の列に記録する。例えばSHOがMarkdown bytesを再ReadしてもTEIのSourceを自分で読み直していなければ、Tの限定PASSをR/CのPASSへ昇格させない。必要なProduct Capabilityが未提供ならその列をunsupported/not-runとする。このProduct Handoffは**Sに続けてHと独立に実施できる**が、Jの代替ではない。具体的なOwner/実行順は[後継Draft #633 §48](https://github.com/hat47x/tai-pleroma/pull/633)を参照する。旧PR #632の設計票はmain §10へ到達済みであり、本書に第二のQH Test/Runnerを作らない。
 
 **小さな独立Expectedの例（合成／設計のみ・NOT RUN）**：SUI内部の合成資料には8件のCardを置くが、外部へ公開可能な範囲は権限により制限する。許可済み検索結果Qが3件（仮ID A・B・D）なら、人がBを除外し許可済みFを追加した後のSは**A・D・F**である。実際にProductが読めない隠れたCardはQ/Aへ自動追加されず、外部Harnessに隠れたCardのID・件数・検索差を公開しない。元Source r1→r2の改版、表示上同名別Card、二Canvasの同Card occurrence、別Recipient、同一Sessionへの後着を一因子ずつ変化させる。各例で「Pin済み／現在一意に再解決済み／許可ProjectionでRead済み／実Toolへ配送済み／Consumerで受領済み」を**異なる観測**として記録する。
 
