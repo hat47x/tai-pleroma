@@ -349,3 +349,25 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 
 **次の判断ゲート**：既存Product read-only CapabilityとUIのTarget/Selection Pinの実経路を1件ずつ確認し、P1に必要な実Read/Highlight/Selectionの欠落だけをOwner Issueへ返す。実験で複数Adapterが必要とした場合に限り、共通Adapter契約を追加検討する。現時点で**共通Selection ABI、共有Session Server、常設CSW Agent、横断E2E、本番Write権限、Owner受理は未採用／未実証**。
 
+<!-- tai-harness-20261112-identity-coverage-qualification -->
+#### 11.8.5 「選択できた」を「対象の一意性・意味・現在性が確認された」としない
+
+§11.8.1〜4と[TAI Draft #630 §19.4/§46.3](https://github.com/hat47x/tai-pleroma/pull/630)は、**Pin後の再解決・送信・遅着返信・適用**を扱う。再解決の前提である**選択元のIdentity/Projection自体が適格か**は別に判別する。これは新しい全製品共通ID・状態Enum・Verifierを採用する提案ではない。現在のProduct診断・Source/型付き参照・Receiptを正本のまま用いる。
+
+| 判断すべき点 | 反例と既存Owner | 独立Expected・必要観測 |
+| --- | --- | --- |
+| **参照の単射性と一意性** | [TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)：ThreeElementModelの**同Kind同ID**でIndexが後勝ち縮約するという静的コード指摘。異Kind同ID・同名別IDも別 | Qualified Kind/ID、Source/Workspace/Revision、重複・競合診断をProductに照合。**Index結果1件を唯一のSource要素の証拠としない**。実修正とテストは別途確認 |
+| **資格確認の純粋性** | [TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)：ModelFingerprintの入力Slice破壊・自己参照を静的に指摘 | Pin/再資格化のためのFingerprint確認が元Model/AuthorityLimitsを変えないことをProduct側の独立Read/純粋性試験で確認。Fingerprint一致を現在GrantやProvider Dataの証明にしない |
+| **View表示と意味Identityの違い** | TEI同端点多重Edge/CRUD交点、SUI同Card別Canvas occurrence/二Island所属/非階層Relation、SHO同一文字列の異なる二Occurrence | 同名・同座標・同文字列でも別Targetを混ぜない。同Cardの複数表示を独立Evidenceとして二重計上しない。SUIは[#3430](https://github.com/hat47x/sui-sensemaking/issues/3430)/[#3431](https://github.com/hat47x/sui-sensemaking/issues/3431)、SHOは[#29/#38](https://github.com/hat47x/sho-composer/pull/38)を参照 |
+| **開示と意味上の完全性** | [SUI #3368](https://github.com/hat47x/sui-sensemaking/issues/3368)：実context-projection.v1は許可済みCard/Island/Relation/Countのみ。原Source Revisionや全構造は投影外で、同じ公開投影が複数の内部Worldに対応し得る | 実取得集合と未取得/partial/unknownを区別。非公開ID/件数・関係をTool args、診断文、差分で漏らさない。外部Harnessは「これ以外に存在しない」と推論しない |
+| **定義とProvider Dataの現在性** | [TAI #271の2026-11-11実PostgreSQL試験](https://github.com/hat47x/tai-pleroma/issues/271)：World Fingerprint同一でも行とRLS可視範囲が変化 | 用途・時点に合う対象集合を必要に応じて再Readし、実Provider/Scope/Query completenessを観測。可視0件や部分取得を不存在へ昇格しない |
+| **跨製品の意味対応** | CSWの着想→SUIのIsland仮説→SEIのRecommendation→TEIのData/Function/Business。用語や見た目が同じでも意味は未受理 | 各ProductのQualified Refを別々に保持し、**対応関係自体をProposal**として提示。意味差・Source Loss・非開示を示し、Owner受理と実Host Grantを自動的に継承しない |
+
+**初回の判別試験（後続、NOT RUN）**：TEIの同Kind同IDと多重Edge、SUIの同Card別Canvas表示と非公開Island、SHOの同文字列別Occurrenceを、それぞれのProductのread-only Operationで観測する。期待結果は (a)型と位置・版によって一意に解決、(b)曖昧性が残るため保留、(c)許可Projectionが不足するためUnknown、のいずれか。**曖昧でも最初の1件へ黙って束縛しない**。現ProductのRead/CLIの到達有無と、設計書の想定を分ける。
+
+**Owner分担**：TEIのIndex/Fingerprint不具合の修正と回帰は#4475、SUI安全投影は#3368、SHO Buffer/Occurrenceの実再解決は#29/#38、UIでのPin再束縛/非同期返信の実用条件は[TAI Draft #630](https://github.com/hat47x/tai-pleroma/pull/630)、実Hostの非漏えいは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)。本§11.8.5は**横断での適格性比較・禁止推論**のみを扱い、第二のId Store/Parser/Checkerを実装しない。
+
+**既存順序**：§11.8.4 P0でstable IDの取得だけでなく、実Productの曖昧性・Coverageの確認を加える。P1のQ/E/Aは許可済み解決候補だけを対象とする。P2のHandoffでは意味対応と現在資格を別に判断する。P3のCSW候補をAccepted Meaningへ昇格せず、EKIの選択を配置権限と同一視しない。初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のH2/H3実隔離・Tool完全受領は新規Blockingを設けず最優先のまま。
+
+**状態**：設計・受入条件のみ。TEI #4475の修正、SUI/SHO/TEI/EKIの実UI一往復、跨製品Meaning Mappingの受理、Live Session共有、外部Harnessの対応製品間E2EはNOT RUN。
+
