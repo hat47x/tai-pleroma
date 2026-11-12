@@ -402,4 +402,7 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 | Replay Receiptで今実Consumerを動かしていないのに成功表示 | Handoff Trial/Consumer実Readと独立Expected | **ならない**。証拠の取得経路と評価方法を直す |
 | G0実OS Read拒否・G1外部Egress・G2実Tool完全Replyや、外部Harness複数UI再接続が実際に不可 | TAI #168/#232の実Harness/Host、Capability Adapter | 外部Harness・薄いAdapter・分離Sessionで解けない残差を**実比較後に限り**独自方式の候補にする |
 
+
+**追加の投資判断：必要なものだけ再確認し、製品側の実Readを優先する**。[TEI merged #4530](https://github.com/hat47x/tei-platform/pull/4530)の限定Reference修正は、今回のRequired/変更経路に無関係な未知情報まで全て失効させると、利用者の正常な調査を妨げることを示す。逆に必要な未解決関係を無視して「影響なし」と判定するのも誤り。共有Activityの再開時は**Pin Intentの保持**と**問い相対のSource/依存再資格化**を分け、Productがread-onlyで確証できる部分は継続する。[TEI Draft #4539](https://github.com/hat47x/tei-platform/pull/4539)の実PostgreSQL→Function Data Context→別プロセスの限定ツール受領は、Environment/Provider Readerを製品側で前進させた例だが、正式`tei` CLI・外部Harness・Host Grantは未接続。**実Readerがないことを中央Harnessの独自推論や大規模Runtimeで補うのではなく、各Productの実取得能力を先に完成・検証する**。同様にCRUDの構造OKとレビューを分離する[TAI main QH §10.6](cross-product-handoff-execution-tickets-2026-11-11.md)／[TEI Draft #4534](https://github.com/hat47x/tei-platform/pull/4534)を流用し、意味受理や適用許可の第二正本をTAIに作らない。
+
 **後続の最小確認**：[本DraftのSkill計画 §48.4](harness-skill-plugin-plan-2026-11-02.md)で、別Root同内容とBのReceipt再生を同じ「主張の上限」表へ採用し、Product現在SourceのRead／Consumer実Read／実Agent Tool／実Host Effectを別列で扱う。初回の独立H2/H3は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G1/G2→新4 Slot（適格0/4）を変更しない。製品側の限定実証は独立レーン。**新しいUI/外部Harness実往復・二Agent比較はNOT RUN**。
