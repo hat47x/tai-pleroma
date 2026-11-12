@@ -385,3 +385,19 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 **反証可能な最初の評価**：[本DraftのSkill計画 §48](harness-skill-plugin-plan-2026-11-02.md)のR0〜R2（実Product Target/Qualified Projection→既存Handoff実Consumer独立Read）を再現可能な公開1 Taskで成立させ、**A：Product Tool-only、B：＋Product Skill、C：＋TAI Skill**の比較は対象となる実Jobでだけ追加する。費用や実作業効果がB/Cで改善しない場合は採用を強制しない。Model/Harness/Skillの効果を同一試行で一度に変更しない。
 
 **現状の上限**：TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)の独立H2/H3比較は依然**適格0/4**。SHO/TEI Handoff v1・Draft/再投影は限定実績、Pinned GUI/CUI→外部AI Harness→同じ実Session→複数UI復帰は**NOT RUN**。この差が残る限り、HV-4独自Harnessの採用を正当化しない。新共通Runtime/Policy/Runner/Storeは作らず、TCO・公開Toolの実Callback・OS隔離・Consumer完全受領は既存Ownerで確認する。
+
+### 19.6 実Receipt一致と対象同一性の反例を独自Harness投資判定へ戻す
+
+**11月12日の実装進展**：[SHO merged #47](https://github.com/hat47x/sho-composer/pull/47)／[TAI merged #640](https://github.com/hat47x/tai-pleroma/pull/640)では、B外部ARGVが**過去のReceipt JSONを再出力するだけ**でもG5のA/B受領内容は一致した。したがって「別プロセスで同じJSONを受領」は証拠の一致であり、当該AttemptでB Consumerが起動し、Sourceを読んでToolを実行したという証拠ではない。TAIの資格を高めるには、実Harness Tool/Consumer自身の当該Invocation・Read Closureを、そのProduct/Hostの実経路から独立観測する必要がある。新しい中央AttesterやNonce/時刻自己申告を設けることが解決策ではない。これは**外部Harnessの構造的欠陥を実証したのではなく、既存G5の評価方法にある偽陽性**である。
+
+また[TEI Draft #4504](https://github.com/hat47x/tei-platform/pull/4504)／[TEI Workbench #4515](https://github.com/hat47x/tei-platform/issues/4515)は、完全に同じManifestとSourceを別のWorkspace Rootに置いた際、Workspace名・Manifest SHA・World/SourceIndex/Model FP・Subject IDが一致しても利用者のPinは別対象になる負例を扱う。**対象同一性の基準はProductが現在保持するWorkspaceRef/rootと解決済みSubjectであり、外部Harnessに見えている値の一致ではない**。Scope・Realpath・現在Grantは当該Product/Hostで確かめ、外部へRaw Rootを無条件送出しない。実Workbench Pin/実Audience変更は未実施。
+
+**投資判断を三つの欠落原因へ切り分ける**：
+
+| 観測した失敗 | 先に帰属するOwner | 独自YI Harness Loopの採用理由になるか |
+| --- | --- | --- |
+| 同じ値でも別Workspaceに誤Pin／派生Viewの曖昧性 | Product Model/StudioのIdentity解決・Projection | **ならない**。Product Reader/Contextの資格問題 |
+| Replay Receiptで今実Consumerを動かしていないのに成功表示 | Handoff Trial/Consumer実Readと独立Expected | **ならない**。証拠の取得経路と評価方法を直す |
+| G0実OS Read拒否・G1外部Egress・G2実Tool完全Replyや、外部Harness複数UI再接続が実際に不可 | TAI #168/#232の実Harness/Host、Capability Adapter | 外部Harness・薄いAdapter・分離Sessionで解けない残差を**実比較後に限り**独自方式の候補にする |
+
+**後続の最小確認**：[本DraftのSkill計画 §48.4](harness-skill-plugin-plan-2026-11-02.md)で、別Root同内容とBのReceipt再生を同じ「主張の上限」表へ採用し、Product現在SourceのRead／Consumer実Read／実Agent Tool／実Host Effectを別列で扱う。初回の独立H2/H3は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G1/G2→新4 Slot（適格0/4）を変更しない。製品側の限定実証は独立レーン。**新しいUI/外部Harness実往復・二Agent比較はNOT RUN**。
