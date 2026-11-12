@@ -1050,7 +1050,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 **最初の実装を肥大化させない**：TEI [#4515](https://github.com/hat47x/tei-platform/issues/4515)は現Workbenchの既存Inspectに対する**read-only Subject Pin**だけを先行し、同IssueへTable/Widget/Schema Writer・Relation Pinを持ち込まない。UI/Mapping/Schemaの負例実装は[#1124](https://github.com/hat47x/tei-platform/issues/1124)、[#1143](https://github.com/hat47x/tei-platform/issues/1143)、[#4478](https://github.com/hat47x/tei-platform/pull/4478)、[#4125](https://github.com/hat47x/tei-platform/issues/4125)、[#2514](https://github.com/hat47x/tei-platform/issues/2514)の既存Source/Expectedを参照し、適格になってからR5へ渡す。通常の開発相当の意味確認で足りる場合に新Owner承認Engineを要求しない。OKF等による出典/版管理は任意の既存手段とする。
 
-**参照・被参照を用いた作業対象の確認**：[TEI #4525](https://github.com/hat47x/tei-platform/pull/4525)はScript/Entry/TriggerやModelerの参照元へ高速に移動し、参照数0の要素を発見するGUI/CUI計画を具体化した。ただし参照数0は**調査できたSource/Plugin/Role/Consumer範囲内の0件**に限り、未読込・動的参照・部分取得・非開示があれば`partial/unknown`を維持する。選択時は元のQualified Target/Source Revision/WorkspaceRefを保持し、索引結果を実Read/現在Grant/Source Writerの証拠にしない。参照逆引き・Keyboard操作・Plugin非干渉の性能計測はTEI #1124/#4515/Script Launch既存Ownerの次段であり、**QH-P0やTAI #168初回Gateには追加しない**。
+**参照・被参照を用いた作業対象の確認**：通常Editor/Workbenchの参照移動・逆参照・未使用候補の受入Ownerは[TEI Issue #3788](https://github.com/hat47x/tei-platform/issues/3788)と[#1124](https://github.com/hat47x/tei-platform/issues/1124)。Script/Entry公開とDSL近傍直接テストを結び付ける設計は[新Draft #4543](https://github.com/hat47x/tei-platform/pull/4543)に移管済みで、旧[Draft #4525](https://github.com/hat47x/tei-platform/pull/4525)は**差分0でクローズ・未統合**。現在の主張はScript/Entry/TriggerやModelerの参照元への移動、参照数0の候補表示、同じ対象への戻り操作の**計画**に留まり、実Workbenchの横断動作や現在のFunction起動資格を証明しない。ただし参照数0は**調査できたSource/Plugin/Role/Consumer範囲内の0件**に限り、未読込・動的参照・部分取得・非開示があれば`partial/unknown`を維持する。選択時は元のQualified Target/Source Revision/WorkspaceRefを保持し、索引結果を実Read/現在Grant/Source Writerの証拠にしない。参照逆引き・Keyboard操作・Plugin非干渉の性能計測はTEI #1124/#4515/Script Launch既存Ownerの次段であり、**QH-P0やTAI #168初回Gateには追加しない**。
 
 **現在資格**：本節は他レーンの**Draft設計と後段受入条件の接続のみ**。Workbench実Pin、DMU-01〜15、DB Apply、Host Effect、AI変更提案の実Product再現、外部Harness→GUI→DBのE2EはNOT RUN。先行R0〜R2のread-only／TAI #168の実OS G0→G2・独立H2/H3 4 Slot（比較適格0/4）には追加Hard Gateを設けない。
 
@@ -1069,6 +1069,8 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | 一意のFunction/Sourceだが、DBで0行／RLS／Masked NULL | 観測したConnection/SQL/Scopeでの結果だけを説明し、全体不存在や完備を主張しない | TEI #4539の独立実PG試験（Draft）、正式CLI・二Product ConsumerはNOT RUN |
 | 構造OKだが矛盾CRUDが残る | 診断閲覧と固定Intentは維持可能。適用候補は現在のSource/Meaning/レビュー・Host Grantの確認まで保留 | TEI #4534 Draft、QH §10.6はTAI main |
 | SUI→SHOのReceiverがTEI Catalogを引用しただけ | Handoffの実受領(T)を限定表示し、元TEI Subject再Read(R/C)や実Agent(H)を未実施と表示 | SHO #49／TAI #643はmain。QH-P0新3製品実試行はNOT RUN |
+
+**生成AIによるGenerator生成との接続（新P0 Gateにしない）**：[TEI #1063](https://github.com/hat47x/tei-platform/issues/1063#issuecomment-6837967224)には、Generatorの仕様・AI候補実装・生成物・実Targetの観測を分離し、既存Operator/Builderによる合成案と限定Generator差分案を独立Expected/Mutantで比較する受入候補を追補した。**Tool/Generatorが実在することと、そのProduct Skillが実Loaderで使われたこと、現在のModel/Hostを変更する資格は別**。実Go Generator・生成AIへの委任・Plugin ABIは未検証であり、TAIは結果を運ぶ場合もTEIのBuilder/Conformance/Source/Owner判断を再定義しない。最初のHarness H2/H3・QH-P0を新Generator開発の待ちにしない。
 
 **次の実装の優先順位**：TAIが第二のReader/Query/CRUD Judgeを作らず、(a) TEIの実Product Reader／Studio #4515、(b) SUI #3438の現在Source再読込、(c) SHOの実Consumer、(d) TAI #168の外部Harness G0→G2を独立に前進させる。各Productで独立Expectedと実Version/Attempt/Read Closureが得られて初めて既存QH §10のR/C/Hを実証する。未接続なら `not-run/unsupported/partial` を残し、回避のためにRaw Sourceを外部Agentへ一括送出しない。新しいHandoff v2・中央Registry・Agent Loop・一律の新Hard Gateは追加しない。
 
