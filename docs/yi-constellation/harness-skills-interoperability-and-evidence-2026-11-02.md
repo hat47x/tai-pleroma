@@ -300,3 +300,52 @@ SHO [Draft #25](https://github.com/hat47x/sho-composer/pull/25)では、新規�
 
 **実装Owner/停止線**：各UI/Source/Grantは各Product Owner、TAIは薄いSkill/Handoffと比較方法、Harnessは既存DSH等の交換可能な外部実行器。まずTEI↔SUIのread-only選択参照で同一Sessionを再開できるか検証し、その後CSW↔SUIのCard/Island Preview、最後にTEI書込やSEI判断へ段階拡張する。新しい全製品共通Session DB/AuthorityやYI独自Agent Loopを先行しない。**実Product間Session共有、SUI実Canvas連携、CSW認知比較、Owner受理はNOT RUN**。初回TAI #168のH2/H3固定4 Sessionには混入しない。
 
+<!-- tai-harness-20261112-selection-and-session-qualification -->
+### 11.8 複数UIにまたがる選択・補正・再資格化を実装に落とす（2026-11-12：設計と受入案）
+
+**結論**：前節の「外部Harnessを製品UIで共有」を、全Productで同一Agent Loop／同一画面／同一意味Storeを持つ構成に解釈しない。各UIは**精密な対象選択を生成・表示・補正できる独立したProduct Client**であり、外部Harnessは現在のActivityを扱う*交換可能な実行器*。利用者がプロンプトで対象を選びGUIで補正する場合も、GUIで先に範囲選択しプロンプトで絞る場合も、最終的には各Productが解決した**型付きの現在対象参照**を用いる。CLI/CUI・AI OFF経路を第二級にしない。
+
+**今回の成熟差分**はSelectionの正本/状態機械や新共有Schemaを発明することではなく、既存の[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)（Activity、再資格化）、[#168](https://github.com/hat47x/tai-pleroma/issues/168)（Harness実Tool/Skill、Capability）、[#232](https://github.com/hat47x/tai-pleroma/issues/232)（Host隔離・Disclosure）と各Productの既存Projectionに、実装時に検証すべき**対象束縛・再解決・同時性・送出・結果**を接続すること。前段H2/H3の実Source/Tool/隔離検証は優先のまま、UI案を初回4 Sessionの追加Blockingにしない。
+
+#### 11.8.1 活動と選択の五つの非同一性
+
+| 対象 | 保持する情報の最小候補 | 同一視してはいけないもの |
+| --- | --- | --- |
+| **Activity / Task** | 利用者が進めたい目的、用途、未決、必要なProduct参照 | 会話履歴、独立の実施権限 |
+| **Harness Session** | Harness/Version、実Session ID、Tool/Skill実受領、実送出範囲 | Activity全体、他製品の現在Grant |
+| **Product Focus / Pinned Selection** | Product/Workspace/Document、View occurrence、Element kind/安定ID、SourceとViewの版、明示選択条件と補正、対象を固定した意図 | フォーカス、画面XY、同名ラベル、現在存在するという保証 |
+| **Context Projection / Disclosure** | 用途/相手/許可済み範囲、取得した項目と未取得、送出予定byte/参照、Source/鮮度/可視性 | 元World全体、Sourceにない根拠、全件完全性 |
+| **Operation / Result** | Product/Hostが実行したRequest/Attempt、現在認可、実Receipt/独立観測またはUnknown | Selection、AI案、Tool ACK、実業務Effect |
+
+Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別ウィンドウ・編集カーソル移動・Chat入力で誤って解除しない。Pinと表示Highlightは別、Unpin/再束縛は明示操作。Pin後のSource移動、同名別対象、削除、A→B→A、Role/Grant変更では、古い参照と新Candidateを提示して現在版で再解決する。Pinそのものが永続的な資料IdentityやMeaning受理とはならない。TEI Studioの所有計画は[TEI #1824](https://github.com/hat47x/tei-platform/issues/1824)/[#1124](https://github.com/hat47x/tei-platform/issues/1124)、構造を跨ぐUI制御は[#2391](https://github.com/hat47x/tei-platform/issues/2391)に委譲。
+
+#### 11.8.2 自然言語選択と空間補正は、同じ操作結果で比較する
+
+- **自然言語→GUI**：Productが許可済み範囲で解決した候補集合Qと、検索条件・取得Coverageを示す。人はCanvasの囲み、追加A、除外E、関係/比較役割を補正し、最終候補集合 \`S=(Q−E)∪A\` を次の指示へ渡す。Qは可視・実取得範囲に限り、非公開/未探索を「候補なし」と言わない。
+- **GUI→自然言語**：人の明示的な囲み/複数選択をRefとして固定し、「この範囲で、時点が異なるものだけ」等の追加条件をProduct側のread-only解決で評価する。LLMの内部推測やCanvasの座標だけで隠れたObject IDを発明しない。
+- **動的条件と固定集合**：\`Predicate\`を次に実行した場合の集合と、時点rで実解決した安定ID集合を区別する。人が修正したE/Aを無断で動的集合へ再適用しない。編集・大量操作時は対象候補を固定し、現在Grant/Source/対象存在を実行直前に再確認する。
+- **多様な関係**：SUIのCard/Island/affiliation/Canvas x,y/非階層Relation/仮Tree、TEIの三視点Model/CRUD交点、SEIのClaim/Decision、EKIのWorker/Grant/Taskは固有の意味で扱う。SUI [#3430](https://github.com/hat47x/sui-sensemaking/issues/3430)/[#3431](https://github.com/hat47x/sui-sensemaking/issues/3431)の構造Draftの区別をSelection共通型で潰さない。近接＝因果、CSW仮の束＝採用済みMeaning、SUI Island＝TEI組織Membershipを禁止推論とする。
+- **提案と作用**：AI/CSWの分類・表札・配置は複数候補としてPreview。選択・提示・利用者補正・明示保存・人のReview・実Host Action/Receiptは別。undoは未保存UI操作と、保存済みCAS条件付き逆変更を分ける（SUI #3399）。人の修正理由をAIが後付けしない。
+
+#### 11.8.3 同一Sessionの二画面接続と、別Sessionへの再開の判定
+
+- **Live shared Session**：Harnessが*実際に*複数Clientによる同一Sessionのattach/復帰を許すかを版・Transport単位で確認。二画面から同時指示を送る場合、Task/Message/Selection/Source revisionに返答を束縛し、遅着を別画面の現在状態へ貼り付けない。多重Writer不対応ならunsupportedと表示し、強制的な偽Session共有をしない。
+- **Activity Handoff**：Live attach不能なら、既存TAI #271の用途限定Ref/未決/Unknownを別Sessionへ渡す。Task再開は可能でも、**同じ会話Sessionを継続した証拠ではない**。Handoffは旧Tool Resultや旧Grantを承認済み・現在利用可能へ格上げしない。
+- **機密境界**：同一Sessionの過去Contextに別製品の秘密があれば、後続画面で「限定投影しか送らない」だけではモデル内に残った秘密を隔離できない。Audience/Principal/Host trust boundaryが変わる場合は適切な隔離Sessionへ分岐し、許可Refのみを新Sessionで取得する。共有Session優先は権限分離より下位。OS/Host読取拒否、Tool args/Reply、Session Log、送信先Networkまで[#232](https://github.com/hat47x/tai-pleroma/issues/232)で評価する。
+- **過去と現在**：TEI Sourceのworld fingerprint一致はDB Rowset/RLS/current Grantの不変証拠ではない。[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の2026-11-11の実PG試験は、同worldで行・可視0件が変化し得ることを示した。Provider実Read/Source Snapshot/Coverageが取れないときの「0件」は不在Claimへ昇格しない。
+
+#### 11.8.4 初期1枚の実験票（後続の受入。実施は全てNOT RUN）
+
+既存[TAI #271 ASV-08〜12](https://github.com/hat47x/tai-pleroma/issues/271#issuecomment-6784691025)／[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)の独立Expectedを再利用し、新しい巨大共通Schemaや中央Session Runnerを追加しない。
+
+| 段階 | 実際に固定するもの／期待結果 | 不適格・停止条件 |
+| --- | --- | --- |
+| **P0 公開Source・read-only** | 一つの許可済み公開SUI投影＋TEI read-only SubjectについてSource/Version/Disclosure/Tool実能力を確定。実際のSUI \`context-projection.v1\`は許可済みCard/Island/Relation/Countまでで、元Source rev/全Document完全性は読み取れない（SUI #3368）。 | Tool未存在、隠れたCard/Edge/件数漏れ、Tool reply欠落、実OS read-deny不成立。内部世界全体のClaimをしない |
+| **P1 単一UI・Selection補正** | 公開合成Card 6〜12枚、曖昧・孤立・多重所属を含む。AI生成候補Q→人が1件除外/1件追加→次のread-only QueryがSを対象にしたことを実ID/版で検証。AI OFF手動操作を対照。 | レンダラXY/ラベルだけをIdentityにする、修正理由の捏造、Source/Grantの変化を無視 |
+| **P2 二UI・Session切替** | SUI UIとTEIまたはSHO UIの間で、同一Session attach実験と用途限定Activity Handoffを分ける。実SelectionRef/Source/Revision、Request→Tool Reply→Consumer表示を同一Attemptで観測。二画面同時操作・後着応答も確認。 | Native attach非対応を同一Session PASSにする、他Productの旧Audience/秘密を再送出する、返信を異なるFocus/Pinに誤適用 |
+| **P3 CSW・SEI・EKI後続** | CSW親和図法はSUIで仮の束/表札/関係を複数案としてPreviewし、元材料の具体・反証・孤立を保持。SEIは根拠・未決を再調査。EKIは多数Worker/Grantのread-only SelectionとPreviewまでを先に比較。 | KJ法の強制工程化、提案をMeaning確定、EKIのClient側Worker指定を実Authorityとする、Task ACKを業務完了とする |
+
+比較指標は**対象同定誤り、再説明回数、補正Undo/Recovery、許可済み送出byte、実Toolの完全受領、実再開率、実Action前後の誤完了、追加費用**。CSWの認知方法の増分（通常探索vs一般的発想vsCSW）は、Canvas UIの増分・Harness transport/Skill loadの増分から別に測る。初回のDSH H2/H3固定四Session（比較適格0/4）を後続P0〜P3で事後的に合格へ変更しない。
+
+**次の判断ゲート**：既存Product read-only CapabilityとUIのTarget/Selection Pinの実経路を1件ずつ確認し、P1に必要な実Read/Highlight/Selectionの欠落だけをOwner Issueへ返す。実験で複数Adapterが必要とした場合に限り、共通Adapter契約を追加検討する。現時点で**共通Selection ABI、共有Session Server、常設CSW Agent、横断E2E、本番Write権限、Owner受理は未採用／未実証**。
+
