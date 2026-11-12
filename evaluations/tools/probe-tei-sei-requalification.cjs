@@ -182,11 +182,18 @@ function judgeL(H, rd, required) {
   return { verdict: "reuse", why: [] };
 }
 
+// Owner decision E2 (proxy, 2026-11-11, TEI #2586): a world that TEI's own `validate` rejects does not qualify
+// a "reuse" of meaning (M) or of the validation id set (K). A refutation (stale) still wins; locators (L) are
+// compared literally and are not affected. The cost is over-caution when the failure is unrelated to the Claim.
+function validWorld(j, v) {
+  if (j.verdict !== "reuse" || v.exit === 0) return j;
+  return { verdict: "unknown", why: [`product validate exit=${v.exit}: current world is not accepted by the product`] };
+}
 // ---------------------------------------------------------------- the three methods
 function J0(H, rd, store, extra) {
   const c = consumerRead(store); const required = c.required.concat(extra);
   const v = rd.validate();
-  return { M: judgeM(H, rd, required), L: judgeL(H, rd, required), K: judgeK(H, rd), note: `validate exit=${v.exit}` };
+  return { M: validWorld(judgeM(H, rd, required), v), L: judgeL(H, rd, required), K: validWorld(judgeK(H, rd), v), note: `validate exit=${v.exit}` };
 }
 function J1(H, rd, store, extra) {
   const c = consumerRead(store); const required = c.required.concat(extra);
@@ -196,7 +203,7 @@ function J1(H, rd, store, extra) {
   const uncovered = required.filter(id => !H.subjects[id]);
   if (sameWorld && uncovered.length === 0) { out.M = { verdict: "reuse", why: ["same product world fingerprint and manifest"] }; out.K = { verdict: "reuse", why: ["same world"] }; }
   else if (sameWorld) { out.M = { verdict: "stale", why: uncovered.map(id => `${id}: required now, never observed`) }; out.K = { verdict: "reuse", why: ["same world"] }; }
-  else { out.M = judgeM(H, rd, required); out.K = judgeK(H, rd); }
+  else { const v = rd.validate(); out.M = validWorld(judgeM(H, rd, required), v); out.K = validWorld(judgeK(H, rd), v); }
   if (uncovered.length === 0 && ok(probe) && probe.json.result.sourceIndexFingerprint === H.sourceIndex) out.L = { verdict: "reuse", why: ["same source index fingerprint"] };
   else out.L = judgeL(H, rd, required);
   out.note = sameWorld ? "short path" : "deep path";
