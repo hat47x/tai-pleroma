@@ -910,3 +910,21 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **価値比較**：B0独立Product UI、B1既存Harness＋Pin/限定Adapter（同一実Sessionが可能なとき）、B2別Sessionへ用途限定Handoffの縮退を同じTaskとSourceで比較。製品ごとに内蔵したAgent Loopの実装は比較のために新規開発しない。再説明回数、対象の誤指定・消失、Unsupported時の継続、開示/権限事故、根拠と異論保持、操作負荷・時間・費用を確認。B1で実測改善がなくても不採用・B0維持を許す。
 
 **現在**：設計/試験案とIssueへの接続のみ。TEI #3863はStudio選択とHarnessの性能境界の計画を、#3866は型付きModel Mapの限定実装をそれぞれmainへ統合したが、このP1-a〜cの実Product UI Pin、DSH/Codex等のLive Session再接続、SUI/CSW、Undo、Owner受理は**NOT RUN**。DSHはEverything is Pluginとの技術的親和性で実証順のみ僅かに優先し、他の主要Harnessを機能的に下位扱いしない。
+
+### 46.3 最初の実装担当へ渡す「対象を固定してから実利用する」最小票
+
+**重複しないOwner**：[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629) §11.8はQ/E/A集合の構成・Predicate/Snapshot・両方向選択と実験P0〜P3を担当。本§46.3は**Productの現行実装を使って何を試し、いつ止めるか**だけを具体化し、別のSelection ABI/Checker/中央永続Pin Storeは作らない。前節§46 P1-a〜cの補足であり、初回TAI #168 SK-02のGate追加ではない。
+
+| 最初の受入スライス | 実施と既存担当 | 誤認定を防ぐ必須観測 | 実証前の制約 |
+| --- | --- | --- | --- |
+| A：CUI/TEI Modelの固定1件 | [TEI #1124](https://github.com/hat47x/tei-platform/issues/1124)/[#1824](https://github.com/hat47x/tei-platform/issues/1824)/[main #4476](https://github.com/hat47x/tei-platform/pull/4476) | 同名別Node、2 Edge、多画面OccurrenceをRefに解決しPin後Tab/IME/Focusで保持。Source/Rev変更でstale。GUIより先にHeadlessのTarget/Role/Revision/Read Scopeを検査してよい | UI座標/表示Label・同一EndPointsから意味IDを推測しない |
+| B：SHOの文書範囲 | [SHO #29](https://github.com/hat47x/sho-composer/pull/29)/[#37](https://github.com/hat47x/sho-composer/pull/37)/[#38](https://github.com/hat47x/sho-composer/pull/38) | Editor UTF-16 Selection→原文UTF-8 byte、Buffer/Disk別版、同文字列2 Occurrence、Origin/realpath/Save Asを再解決 | SHOは永続Occurrence IDを採用しない。合成Version tokenは実Storage fenceでない |
+| C：SUIの集合補正 | [SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)/[Draft #3437](https://github.com/hat47x/sui-sensemaking/pull/3437) と TAI #629 | read-only公開Qから人がE除外・A追加し、送出予定のSと実Read IDを照合。部分集合/非開示/Unknownを区別 | Hiddenや未取得を0件と断定しない。SUIのIslandをTEIの正式Relationにしない |
+| D：異Product同一Session | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/[#271](https://github.com/hat47x/tai-pleroma/issues/271) | Product Pin revision、送出前許可ProjectionとRecipient、実Harness Session ID、実Request/Reply全部/終端、遅着の適用可否を同一Attemptで記録。Source/権限/相手変更を途中で注入 | 同一Sessionが非対応なら別SessionへのActivity Handoffとして別PASS。旧ScopeをSessionで継承しない |
+| E：実適用は後段 | TEI ADR-0048/Host／SHO Writer／EKI Task/Effect | Proposalと現在のTarget/Host Grant/Selected Provider/actual Invocation/Receipt/再Readを別々に確認 | UI Pin、Prompt確認、Tool ACK、未保存Undoから業務Effectを推測しない |
+
+**小さな一往復**：許可済みTEI 1 Subjectを固定→同じ対象へのCUI/GUI表示を確認→Productが現在送れるProjectionだけをPreview→外部Harnessへread-only依頼→返答をPinの意図版とSource/Recipientへ照合→元Productの該当Targetに**変更提案としてのみ**戻す。次にSUIのQ/E/A補正とSHO 1範囲を加える。実Action、CSW Method、再起動後のPin復元は**別Target条件付き試験**であり、最初の一往復に必須化しない。
+
+**UIの実装と検収を分ける**：固定対象の操作はマウス/キーボード/CLIでも明示的に解除・再選択ができることを最低契約にするが、既存Editorのショートカットを勝手に置換しない。AIが候補を追加・解除した場合、人の確定前はProposalとして表示する。非同期返信にはRequest/Pin意図版/Source Revision/Recipientを照合し、古い応答は履歴として保持しても現在のInspector/修正ボタンを上書きしない。SourceがA→B→Aに戻っても古いHost Grantを復活させない。
+
+**次の作業者の出口**：まず実在するProduct UI/Headless APIがTarget/Source/Buffer/Revision/Disclosureの何を返せるかSourceと一件の実Readで確認し、不足する単一Bindingだけを該当Product Issueへ返す。続いてA→C→Dを小さい合成・公開Fixtureで接続し、B（SHO）は独立開始可能。実Product Releaseや未マージ他PRのテストPASSを横断E2EのPASSへ合算しない。計画・引渡しのみ、**A〜Eの新しい実GUI/外部Harness試験はNOT RUN／Owner未受理**。
