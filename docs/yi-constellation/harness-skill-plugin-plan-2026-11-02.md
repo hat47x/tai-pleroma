@@ -998,10 +998,11 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | --- | --- | --- |
 | [SHO merged #45/#46/#47](https://github.com/hat47x/sho-composer/pull/47)、[TAI merged #635/#636/#638/#640](https://github.com/hat47x/tai-pleroma/pull/640) | G5のAローカルConsumer実呼出とB外部ARGVのReceipt JSON取得・照合。**Bが事前Receiptを再生しても一致する負例**をUbuntu/Windowsで確認 | B実Consumer呼出、今回のPayload再Read、Replay排除はnot-proven。実Agent/同一Live Session、現在Tool/Grant・全Sink送出・実Effectも未証明 |
 | SHO #46のProducer Skill宣言引継ぎ試験 | Skill名を未知の付随情報として保持し、Consumerの権限・Writer結果に転用しない | 実HarnessによるSkill Loader Read、Tool Invocation、専門Skillの改善 |
+| [SHO merged #48](https://github.com/hat47x/sho-composer/pull/48) | 同じMarkdown実byteを持つTEI Source A／別Source B／別Target IDの3票を実SHO Consumer/CLIが受領し、Payload SHA同一・independentReread=trueを確認。Ubuntu/Windows CI成功 | 元TEI WorkspaceのSource/TargetをSHOが独立再解決したわけではなく、originalSourcesRead=false／sourceRevisionCurrent=false／meaningAccepted=falseを維持 |
 | [SHO #42](https://github.com/hat47x/sho-composer/pull/42)、[TAI #637](https://github.com/hat47x/tai-pleroma/pull/637) | Audienceを拡大した現在Ticketを実Consumerが再読取。自動権限継承は申告しない | 拡大先Recipientの実Host認可・拒否。縮小例G4-N2Rは別試験 |
-| [TEI merged #4507](https://github.com/hat47x/tei-platform/pull/4507) | Fingerprintの入力破壊/自己参照の修正と図NodeのAuthorityLimits保持 | 同Kind同IDの一意性、Source-only drift [#4514](https://github.com/hat47x/tei-platform/pull/4514)、CRUD Data索引 [#4513](https://github.com/hat47x/tei-platform/pull/4513)、別Workspace・別Subjectの再解決 [#4504](https://github.com/hat47x/tei-platform/pull/4504)は別Draft |
+| [TEI merged #4507](https://github.com/hat47x/tei-platform/pull/4507)／[merged #4524](https://github.com/hat47x/tei-platform/pull/4524) | Fingerprint非破壊・図NodeのAuthorityLimits保持に加え、三要素モデルの同Kind同ID重複をerror診断し、重複要素をIndexから除外。#4524 exact HEADのGo/Health CI成功を確認 | Derived CRUD/図/文書のすべてのConsumerがValidate結果を尊重する保証、Workspace/Occurrenceの現在再解決は別。Source-only drift [#4514](https://github.com/hat47x/tei-platform/pull/4514)、CRUD索引 [#4513](https://github.com/hat47x/tei-platform/pull/4513)、Product Reader追加回帰 [#4504](https://github.com/hat47x/tei-platform/pull/4504)はDraft（#4504 exact HEAD CIは成功） |
 
-**次の1件の実証**：既存QH-P0の公開TEI 1 Subject→SUI Handoff v1→SHO実Consumerを利用し、①Source/Workspace/Kind+ID・Revision、②Productで実Readした対象とConsumerで実際に再Readした対象、③Audience/Scopeと送出Body、④Tool/Skill実Loaderの有無、⑤最新Receiptの主張範囲を別列に残す。SHOが元TEI Subjectを再Readしていなければ、R/Cを未観測として保持しTの受領成功と混同しない。既存v1に必要な束縛が表現できない場合はGapをOwnerへ返し、新v2や第二Resolverを先に開発しない。
+**次の1件の実証**：既存[QH §10](cross-product-handoff-execution-tickets-2026-11-11.md)のRunnerをそのまま用いて公開TEI 1 Subject→SUI Handoff v1→SHO実Consumerを利用し、①Source/Workspace/Kind+ID・Revision、②Productで実Readした対象とConsumerで実際に再Readした対象、③Audience/Scopeと送出Body、④Tool/Skill実Loaderの有無、⑤最新Receiptの主張範囲を別列に残す。SHOが元TEI Subjectを再Readしていなければ、R/Cを未観測として保持しTの受領成功と混同しない。 [SHO #48](https://github.com/hat47x/sho-composer/pull/48)の3票を現在のQH-07の負例基線とし、Payload一致／票に記されたSource・Targetの違い／実Consumerが読んだ原Sourceを別観測にする。既存v1に必要な束縛が表現できない場合はGapをOwnerへ返し、新v2や第二Resolverを先に開発しない。
 
 **独立負例**：同じSource位置でも異なるSubject、同じWorld Fingerprintでも異なるWorkspace、Producerが宣言したSkill名と実Loadの不一致、Audience拡大のHost認可未確認、外部Nodeの起動を実Agent Sessionと誤称、実ConsumerがしていないTEI再Readの成功表示。正しく未資格と停止することも合格対象とする。
 
@@ -1024,9 +1025,9 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | C Consumer実利用 | 当該Attemptにおける実Consumer自身のSource Open/Read Closureと実Target・Revisionの照合 | 過去Receipt、申告Nonce/日時、外部exit0、モデル発話だけで現在Reader資格を認定 |
 | H Agent/Effect | 実Harness Session、Tool/Skill Loader・Invoke/全Reply、Host Grant/OS送出・Effectの各独立観測 | A/BのLabel、Receipt一致で二Agent・同一Session・送出安全を認定 |
 
-**次の検証**：①公開・合成Sourceの同Root正例／別Root同内容負例／同offset別SubjectをTEI Product Readerで観測、②既存G5-N5を実Consumer未実行でもJSON一致する対照として再利用、③実Consumerの当該Attempt再Readを独立に観測できない場合はC=not-provenを維持、④実外部Agent Tool経路とG0/G1/G2はTAI #168の別Gate。Receiptの自己申告時刻・Nonceを加えるだけで実実行/Replay除去が証明されたとは言わず、新Attester/中央ID Store/Handoff v2/Runnerを導入しない。
+**次の検証**：①[TEI #4504](https://github.com/hat47x/tei-platform/pull/4504)の同Root正例／別Root同内容負例／同offset別Subjectはexact HEADの全11 CI成功・Draft未マージと区別してProduct Readerで観測、②既存G5-N5を実Consumer未実行でもJSON一致する対照として再利用、③実Consumerの当該Attempt再Readを独立に観測できない場合はC=not-provenを維持、④実外部Agent Tool経路とG0/G1/G2はTAI #168の別Gate。Receiptの自己申告時刻・Nonceを加えるだけで実実行/Replay除去が証明されたとは言わず、新Attester/中央ID Store/Handoff v2/Runnerを導入しない。
 
-**資格**：SHO #47のReplay負例とそのCIは限定PASS。TEI #4504はDraft、B Consumerの当該再Read・実Agent/Live Session・現在Host Grant・GUI Pin→Harness→Product UI復帰、QH-P0新TrialはNOT RUN/not-proven。Product局所試行はTAI #168の固定H2/H3初回4 Slot（比較適格0/4）の追加Blockingではない。
+**資格**：SHO #47のReplay負例、#48の同一Payload異Source/Target受領負例と各CIは限定PASS。TEI #4524はmain修正済み、#4504はCI成功のDraft、B Consumerの当該再Read・実Agent/Live Session・現在Host Grant・GUI Pin→Harness→Product UI復帰、QH-P0新TrialはNOT RUN/not-proven。Product局所試行はTAI #168の固定H2/H3初回4 Slot（比較適格0/4）の追加Blockingではない。
 
 ### 48.5 Pinを持つAI変更提案から、Modeler／DBの明示操作へ進む条件
 
@@ -1047,5 +1048,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 - **YIC-UI-04**：AIが元Source上の実ColumnやAuthoritative Tableの変更を示唆しても、UI/モデルSourceのPreview→選ばれた明示Patch→実保存Receipt→必要時DB Migration Plan/Apply/Readbackを別々に記録。ローカルUndoと実DBロールバックは同一視しない。
 
 **最初の実装を肥大化させない**：TEI [#4515](https://github.com/hat47x/tei-platform/issues/4515)は現Workbenchの既存Inspectに対する**read-only Subject Pin**だけを先行し、同IssueへTable/Widget/Schema Writer・Relation Pinを持ち込まない。UI/Mapping/Schemaの負例実装は[#1124](https://github.com/hat47x/tei-platform/issues/1124)、[#1143](https://github.com/hat47x/tei-platform/issues/1143)、[#4478](https://github.com/hat47x/tei-platform/pull/4478)、[#4125](https://github.com/hat47x/tei-platform/issues/4125)、[#2514](https://github.com/hat47x/tei-platform/issues/2514)の既存Source/Expectedを参照し、適格になってからR5へ渡す。通常の開発相当の意味確認で足りる場合に新Owner承認Engineを要求しない。OKF等による出典/版管理は任意の既存手段とする。
+
+**参照・被参照を用いた作業対象の確認**：[TEI #4525](https://github.com/hat47x/tei-platform/pull/4525)はScript/Entry/TriggerやModelerの参照元へ高速に移動し、参照数0の要素を発見するGUI/CUI計画を具体化した。ただし参照数0は**調査できたSource/Plugin/Role/Consumer範囲内の0件**に限り、未読込・動的参照・部分取得・非開示があれば`partial/unknown`を維持する。選択時は元のQualified Target/Source Revision/WorkspaceRefを保持し、索引結果を実Read/現在Grant/Source Writerの証拠にしない。参照逆引き・Keyboard操作・Plugin非干渉の性能計測はTEI #1124/#4515/Script Launch既存Ownerの次段であり、**QH-P0やTAI #168初回Gateには追加しない**。
 
 **現在資格**：本節は他レーンの**Draft設計と後段受入条件の接続のみ**。Workbench実Pin、DMU-01〜15、DB Apply、Host Effect、AI変更提案の実Product再現、外部Harness→GUI→DBのE2EはNOT RUN。先行R0〜R2のread-only／TAI #168の実OS G0→G2・独立H2/H3 4 Slot（比較適格0/4）には追加Hard Gateを設けない。
