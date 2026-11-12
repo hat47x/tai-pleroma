@@ -709,7 +709,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 **並列・接合順**：S＝各Product内の対象選択・再解決（#1124/#4475）、H＝外部HarnessのG0/G1/G2・Tool実証（TAI #168）は独立に進めてよい。J＝実Productで固定した同一対象を**実Harness Sessionを介して**戻す接合TrialはS/H双方の必要資格後。C＝CSW×SUIの方法寄与・KJ型補正はJとは別Armで評価し、初回を遅らせない。これは追加の共有Runtimeや全製品共通Gateを設けることではない。
 
-| Case | 独立Expected（新Trial、すべてNOT RUN） |
+| Case | 独立Expected（QH-P0全体はNOT RUN。QH-07の局所Consumer負例のみ実行済み） |
 | --- | --- |
 | **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
 | **QH-02** 同Kind同ID重複・別Scope同名 | TEI #4475の問題を静的負例として固定し、自動的に後勝ちの1件を選ばない。実修正済みと主張しない |
@@ -717,8 +717,20 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | **QH-04** CRUD明示のみ・矛盾/誤索引 | [#4513 Draft](https://github.com/hat47x/tei-platform/pull/4513)のData索引修正がまだmain未統合。仮に索引修正済みでも、#4472の明示CRUD-only／矛盾後勝ち／`ok=true`の整合判定は別の独立Expectedが必要 |
 | **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
 | **QH-06** 部分取得・0件・Resolver不在 | complete emptyとpartial/not-found/unknown/unsupportedを区別し、無取得を「存在しない」と断定しない |
-| **QH-07** Handoff受領は成功だがTEI Source再解決なし | `T=pass, R/C=not-run`。独立Reader証拠が無ければ同一対象意味引継ぎをPASSとしない |
+| **QH-07** Handoff受領は成功だがTEI Source再解決なし | [SHO merged #48](https://github.com/hat47x/sho-composer/pull/48)で**局所合成負例を実Consumer/CLI・Ubuntu/Windows CIで実行済み**：同一PayloadでもSource/Revision/対象IDが異なる3票を受領し、`independentReread=true`でも`originalSourcesRead=false`・`sourceRevisionCurrent=false`。**実TEI Source再解決とQH-P0製品横断試験はNOT RUN**。`T`の局所観測と`R/C`現在資格を合算しない |
 | **QH-08** Skill名付き票/G5別Harness CLI/B事前Receipt再利用/後着GUI結果 | Skill文字列≠実Loader、B JSON一致≠実Consumerの再Read（[SHO #47](https://github.com/hat47x/sho-composer/pull/47) G5-N5）、旧結果≠新Pinの資格。実Session継続、対象再束縛、業務Effectはそれぞれ独立観測が必要 |
+
+### 10.4 最初の実Consumer反例：同じPayloadと異なるSource／対象ID（2026-11-12、局所試験のみ）
+
+[SHO main PR #48](https://github.com/hat47x/sho-composer/pull/48)で、既存`yi.handoff.context/v1`の合成・read-only票に`target.product=tei-platform`／`kind=data`を宣言し、**同じ実Markdown bytes**について次の3ケースを独立Expected付きNode試験に追加した。
+
+- **A**：`target.id=sales.order`、`source-a`、そのSource Revision digest／Source locator。
+- **B**：同じ`target.id=sales.order`、しかし`source-b`と異なるRevision digest／Source locator。
+- **C**：同じ`source-b`と同じPayload、しかし`target.id=sales.order.other`。
+
+3票とも実SHO Consumerが`status=received`でPayloadを独立に再Readし、Payload SHA/長さは一致。Bでは票SHA・Source locator・宣言Revision digestがAと異なり、Cではtarget IDだけがBと異なる。**それでも`claims.independentReread=true`と`payloadMatchesTicket=true`になり得る**ため、これらは元のTEI Source/Kind/IDの再束縛成功を示さない。実際のConsumerは`originalSourcesRead=false`、`sourceRevisionCurrent=false`、`meaningAccepted=false`を保持する。最終ケースを実`bin/sho-inspect.cjs handoff` CLIでも検査。Ubuntu/Windows Handoff CI成功。
+
+**局所成功の上限**：本試験のSource locatorは合成文字列で、TEI実`reference/workspace`へ接続していない。SUI実Producerとの一往復、TEI Source位置/改版/Grantの現在再照合、TEI同Kind同IDの衝突解消、GUIで固定したSelectionの再資格は引き続き`not-run`。新しいTEI ResolverやHandoff v2をSHOのReaderへ組み込むのではなく、次のQH-P0で**TEI Product Readerが当該Qualified Subjectを実Readしたか**を別列で確認する。SHOによるMarkdown独立再Readの証拠をTEI Sourceへ流用しない。
 
 **終了/撤退条件**：P0の成功は`I`合成・`T`既存限定・`R/C`当該実Consumerが本当に行った範囲でのみ宣言。Kind/ID一意性、対象の元Source Binding、Disclosure Producer、Consumer Resolverのいずれかを実証できなければ、特定の列を`not-run/unsupported/insufficient-evidence`として残す。新UI/第二Resolver/Authorizer/Session Store・新`yi.handoff.context/v2`を要する設計なら実装を停止して各OwnerへFit/Gapを返す。初回TAI #168 H2/H3の新Blockingにしない。
 
