@@ -921,3 +921,45 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **順序**：最初の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のTEI固定H2/H3（G0実OS Read拒否→G1/G2→新独立4 Slot、比較適格0/4）へFC群を追加Blockingしない。次の別TrialでFC-01〜04を**TEI/SHOの既存公開合成Source・CLI/UI**でread-only検証し、FC-05〜07をSUI含む共有SessionとDisclosureで、FC-08をEKI/TEIのMockと実Host Ownerで検証する。CUIとGUIの差・誤解除率・誤対象・再説明/Undo・Token/Tool/人手を記録し、Skillなし・Product Skill・TAI Skillの価値を別比較。未提供のProduct機能はunsupported/NOT RUNとする。
 
 **状態**：本節はユーザー体験/Owner境界/反証条件の計画化のみ。実UI Pin、Harness受領、共有Session、実OS/Network拒否、実Product保存・Effect、Owner採用は**NOT RUN**。新Session Server、TEI/SHO共通Agent Runtime、全製品強制起動、第二Context/Policy/Source正本を先行採用しない。
+
+## 47. 2026-11-12：実Product Handoffに接続したSkill起動条件と現在資格（設計・限定Evidence）
+
+### 47.1 基本判断：Skillの数ではなく、実在Capabilityと作業意図で選ぶ
+
+§46のTransient Focus／Pinned Work Set／Shared Qualified Projectionに、**実Product Capability・必要なMethod・Harness実Load**を接続する。ただしPinやTool DiscoveryそのものをSkill自動実行・現在Grant・Meaning受理へ昇格しない。**選択の順序**は、①作業の目的と固定対象/版・Audienceを確認、②Product単独の実CLI/APIが満たせるか発見、③不足が「操作手順・専門Method」なら該当Product Skillを必要部分だけ読み込み、④複数Productで出典・未決・受領の継続が必要な場合だけTAI Activity Skill、⑤Tool/Hostで現在資格・Disclosure/Effectを独立検査、⑥実回答・結果をProductへ返し必要な根拠だけ再確認、である。
+
+**別の選択軸**：開発向けModel→Role→Issue/PR dispatcher（[TEI #4218](https://github.com/hat47x/tei-platform/issues/4218)、Step Code/DSH等のWorkerを選ぶ）はProduct Skillの自動Routerではない。ユーザー向けHarnessはDSHだけに固定せず、実Skill Loader/Tool Profile/Session復帰の差は現在のHarnessごとに扱う。モデル名・料金・Skill説明は権限や実操作の証拠にならない。探索の自由を残し、Skill内では説明のために全Source/全参照を毎回ロードしない。
+
+| 作業の実条件 | 選択候補 | 選択の停止線 |
+| --- | --- | --- |
+| 単一Productのread-only調査・索引、実Toolのみで十分 | Product Tool/CLIのみ（Skill不要でもよい） | Read範囲、実Version/Command、現在開示、Sourceの欠落を確認 |
+| 専門手順・文書/モデルの診断・認知Methodに追加価値がある | そのProduct/CSWのSkillを**必要時だけ** | Skillファイルの存在≠Loader実Read/Tool実呼出、CSW案≠Source事実 |
+| SUI→SHO・TEI→SHO等の出典・未決・Consumer受領をまたぐ | 実Product API＋必要なProduct Skills、条件付きTAI Activity Skill | Handoff受領≠Harness Live Session継続≠Authority/Owner受理 |
+| EKIのTask/Attempt/Grant・Provider等に実Effectが関係 | 実EKI/Host Capability、明示Actionの前はread-only Preview | Skill/Task ACK/Receiptだけでは業務Effect成功・不存在を確定しない |
+| 実Capability不在、現在Source/Scope/Read資格不明 | unsupported / unknown / not-runを正しく返す | 架空のTool/Skill/新Routerを生成せず、許可された独立作業のみ続ける |
+
+### 47.2 2026-11-12に確認できる製品実績をSkillの案内へ接続
+
+| 範囲 | 実際に確認できる限定Evidence | Skill/Harnessへ拡張できない結論 |
+| --- | --- | --- |
+| **TEI** | [Product Skill main](https://github.com/hat47x/tei-platform/blob/main/skills/yi-tei-modeling/SKILL.md)と実CLI read-only。外部DSH H3のSkill本文・参照実Readは[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)で限定観測 | H2/H3四Slot比較適格は**0/4**。OS実隔離/全送出/独立効果は未資格 |
+| **SHO単独** | [SHO #30 merged](https://github.com/hat47x/sho-composer/pull/30)でRaw Draft保存/再開/競合、[read-only Product Skill main](https://github.com/hat47x/sho-composer/blob/main/skills/yi-sho-compose/SKILL.md)でResearch Index手順を提供 | SHO Skillが保存/編集/納品を実行可能と書き換えない。現在のSkill本文には旧「正式Writerなし」等の歴史記述が残るため[SHO #10](https://github.com/hat47x/sho-composer/issues/10) Ownerで実Product状況と分離して同期 |
+| **TEI→SHO Draft** | [TEI #4317 merged](https://github.com/hat47x/tei-platform/pull/4317)、[SHO #36 merged](https://github.com/hat47x/sho-composer/pull/36)で限定モデル→文書Draft→著者編集/保存/再開。[TEI #4467 merged](https://github.com/hat47x/tei-platform/pull/4467)で再投影時の著者文保護・候補差分を整備 | GUI上の固定対象→HarnessからWriter→意味受理/正式納品が成立したわけではない。文書競合/Author ReviewはSHOが持つ |
+| **SUI→SHO、TEI観測の引用** | [SHO #34 merged](https://github.com/hat47x/sho-composer/pull/34)と[#39 merged](https://github.com/hat47x/sho-composer/pull/39)、[TAIの実行票](cross-product-handoff-execution-tickets-2026-11-11.md)で実Producer/Consumer/TEI read-only引用、別Process再受領・Receipt照合と**DeepSeek Harness→Claude Code実CLI切替（G5）**を**限定observed-pass** | 独立監査で旧「Harness Session再開PASS」を訂正済み。**G5実CLI切替≠同一Live Session継続/Skill実Load**。Host再起動後の実Session再開、現在Grant/egress、全Sourceの意味、正式Owner採用は**NOT RUN** |
+
+**Handoffの既存正本を再利用**：[yi.handoff.context/v1計画](cross-product-handoff-context-v1-2026-11-11.md)とその[後続実行票](cross-product-handoff-execution-tickets-2026-11-11.md)。票を非信頼入力としてConsumerが実byte/digest/Sourceを独立再Readし、受領Receiptを意味受理や効果の承認へ昇格しない。Owner判断により**新しいv2/chainや中央Ledgerを先行追加しない**。元票の未知フィールドは消さず未知のまま保持し、Product Skill実Loadの有無をHandoff文面だけで「実証済み」としない。実施済みG2/G3等の限定PASSと、同じ実Harness Sessionの再開／外部OS送出／各Product GUI未実施を別票で管理する。
+
+### 47.3 後続の受入ケース（既存TAI #488／#271に還元・全て新Trial NOT RUN）
+
+| Case | 判別する負例 | Expected |
+| --- | --- | --- |
+| **YS-01** | 実Toolのみで十分な単独SHO/TEI調査なのにTAI Skill/他Productを強制Load | Product Tool-onlyで完結可能、過剰Tool/Token/準備負担を増やさない |
+| **YS-02** | SHOのProduct Skillがread-only記述のままなのに、SHO Writer main統合を理由にSkillが自動Saveすると宣言 | ToolとSkillの実Capabilityを再発見し、read-only Skillの境界・対象/実CLI/Host Grantを保つ |
+| **YS-03** | Handoff票の`productSkill`欄が存在する、あるいはUnknown欄が転送されたことをSkill実Load・受理の証拠へ昇格 | 実Loader read／Tool invocation／Consumer readbackを独立ログで確認。UnknownはUnknown |
+| **YS-04** | 別Process再受領Receiptを同一Harness Live Sessionの復元成功と誤記 | 同一実Session ID/再開時のTool/Source資格が実証されない限り`not-run` |
+| **YS-05** | SUI UIで動的検索QをPinした後、AIが追加A/除外Eを提案、実Source改版／RLS可視範囲変更 | [TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)の集合選択案は参照のみ。固定ID/動的Predicate、取得範囲、現在Source/Data/Grantを再Read。改版時の対象すり替えを防ぐ |
+| **YS-06** | TEI→SHO再投影が著者の文章や引用Occurrenceを暗黙上書き | 元Source/文書Revision/明示Patchと差分・競合をProductへ返し、著者文の保全・採否をSHOで確認 |
+| **YS-07** | CSWの探索案をSUI Canvasへ映したことから意味確定・Skill寄与を主張 | 手動KJ/一般AI/CSW Skill（別のMethod）とUI/Harness効果を別Armで評価し、反証/保留を保持 |
+| **YS-08** | 匿名/期限切れ/部分SourceでもTool/Skill選択説明だけでEKI業務作用を許可 | Product/Hostの現在Grant・対象の一致・Receipt/独立Readを確認できないならActionを止める |
+
+**順序・責務**：最優先の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) H2/H3固定TEI read-only比較（G0実Read隔離、G1外部送出、G2 Tool Reply、独立4Slot）は変更しない。次に既存の実Handoff v1を使い、**固定対象→許可Projection→独立Consumer実Read**を**同じ公開Task/Source**で接続し、Tool-only／Product Skill／必要時TAI Skillを対照する。実製品UI・Canvas/CSW・別Harness Live Session・書込み/Effectは別Trial。実行・独立ExpectedはTAI #168/#271と各Product Owner、横断照合表だけTAI #488。Skill配布は#74。現在の追加部分は計画・実証資格の整理であり、独自Harness/中央Router・Policy Engine・第二Product Storeは作らない。
