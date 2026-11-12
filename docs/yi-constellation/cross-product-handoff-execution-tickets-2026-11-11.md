@@ -732,7 +732,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
 | **QH-02** 同Kind同ID重複・別Scope同名 | [TEI #4524](https://github.com/hat47x/tei-platform/pull/4524)で**モデル配列内の同Kind同ID重複**をerror診断し、曖昧IDを`Index()`の唯一の対象として返さず、異Kind同IDの正例を保持する実装・独立Expectedを追加（**2026-11-12 exact HEAD `abc23a610` の5件のGitHub Actions成功、main統合済み**）。**別Source/Scopeの同名**は、同一モデル配列内の重複とは異なる：Source/Scope/Occurrence/Revisionを絞ったProduct実Resolver、GUI固定対象からの再解決、CRUD/図面/外部Harnessの不適格停止は引き続きNOT RUN。 |
 | **QH-03** 構造FingerprintとSource/Authority変化・A→B→A | [merged #4507](https://github.com/hat47x/tei-platform/pull/4507)の**計算純粋性・自己参照排除は修正済み**として別記録。一方、Authorityのみ変更・Source-only変更・A→B→Aで構造Digestが同じでもSource/current Grant/意味資格を復元しない（#4514はDraft、別実試行NOT RUN） |
-| **QH-04** CRUD明示のみ・矛盾/誤索引 | [#4513 Draft](https://github.com/hat47x/tei-platform/pull/4513)のData索引修正がまだmain未統合。仮に索引修正済みでも、#4472の明示CRUD-only／矛盾後勝ち／`ok=true`の整合判定は別の独立Expectedが必要 |
+| **QH-04** CRUD明示のみ・矛盾/誤索引 | [TEI #4534](https://github.com/hat47x/tei-platform/pull/4534)で、同一Function×Dataに異なるCRUDフラグを持つ定義を複数追加すると`ValidateModel.OK=true`のまま・最初の矛盾しか返さない問題を修正する候補を実装・独立Expected追加（CIとmain統合は別確認）。[Data索引修正 #4513](https://github.com/hat47x/tei-platform/pull/4513)は並行Draft。**明示CRUD-only行の脱落、矛盾を持つ入力からの直接Derived生成/Studio利用停止、実Source現在性**は別試験 |
 | **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
 | **QH-06** 部分取得・0件・Resolver不在 | complete emptyとpartial/not-found/unknown/unsupportedを区別し、無取得を「存在しない」と断定しない |
 | **QH-07** Handoff受領は成功だがTEI Source再解決なし | [SHO merged #48](https://github.com/hat47x/sho-composer/pull/48)で**局所合成負例を実Consumer/CLI・Ubuntu/Windows CIで実行済み**：同一PayloadでもSource/Revision/対象IDが異なる3票を受領し、`independentReread=true`でも`originalSourcesRead=false`・`sourceRevisionCurrent=false`。**実TEI Source再解決とQH-P0製品横断試験はNOT RUN**。`T`の局所観測と`R/C`現在資格を合算しない |
@@ -757,6 +757,14 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 この限定修正から次の3層を区別する。**第一層：モデル局所**＝ValidateModel.OK=falseと曖昧な同Kind IDの索引除外（#4524の対象）。**第二層：Product派生**＝CRUD表・図面・モデル参照/ナビゲーションが不適格対象に黙って結び付かない（TEI #4472/#1124・後段独立Expected）。**第三層：選択・実利用**＝Studio/CUIから固定した対象がSource/Scope/Occurrence/Revision改版後に一意でなければAI送出・編集適用を止め、人間へ複数候補と参照位置を提示する（TAI #629/#633・TEI #1124／未実装）。**第一層のPASSで第二・第三層を自動PASSへ昇格しない**。
 
 後段の小さな負例は、同Kind同IDでName/属性の異なる2件、異Kind同IDの正例、別Workspace/Scopeの同名、Source移動とA→B→A、Pin後の削除・再定義をそれぞれ独立Expectedとする。参照件数0や関係ジャンプを表示するときも**一意に解決した対象だけ**を基準にし、曖昧な候補の参照数を1要素の統計へ黙って合算しない。選択Shelf/Pin自体はUI上で保持しても、資格が失効した場合は表示を維持して適用・送出前に再解決する。新中央Identity Registry、共通Permission Engine、二重Source Storeは導入しない。
+
+### 10.6 CRUDの「診断がある」と「採用可能」を分離する（TEI #4472、2026-11-12）
+
+[TEI PR #4534](https://github.com/hat47x/tei-platform/pull/4534)は、三要素モデルの同じFunction/Data組にある矛盾する明示CRUD定義について、補助一覧`ContradictoryCRUDs`にだけ値が載り`ValidateModel.OK`が`true`となり得る問題を扱う。独立Expectedは2組・合計3件の後続矛盾をすべて検出し、`CONTRADICTORY_CRUD_DEFINITION`のerror診断にCRUD/Function/Data IDを結び、`ErrorCount=3`かつ`OK=false`となること。同一組でもフラグが同じ定義や、異なる組は**今回の矛盾検査だけで**拒否しない。モデルの元Sourceは変更しない。PRのコードとCI成功、mainへの適用はそれぞれ別の実績として記録する。
+
+**境界**：①[TEI #4524](https://github.com/hat47x/tei-platform/pull/4524)の同Kind同ID重複は既にmain修正済み、②#4534は矛盾を正常と判定しない局所検証、③[TEI #4513](https://github.com/hat47x/tei-platform/pull/4513)はCRUD表のData索引誤用（別Draft）、④**明示CRUD-only**（Function.Operationsに同組がないのに明示CRUDDefinitionsにはある）を図・表に載せる要件、⑤Invalid Modelを渡してもDerived CRUD/図面やGUIが「確定した有効モデル」として結果を利用しないGate、を個別の受入項目にする。②が通っても③〜⑤を合格とは扱わない。
+
+**次の小さな受入順**：Product側の実`ValidateModel`出力を一度固定→矛盾あり/なし・明示-only・異Kind同IDの4対照を独立Expectedで検査→既存CRUD/Document/Studio Consumerで`OK=false`時の扱いと、invalid/partialの診断伝達を観測→必要なRead-only Source/Revisionを再解決。**モデルエラーの不存在を確認できない限り、AI Harnessへ「編集適用可能な一意対象」として送出しない**。ただしUI表示・調査目的のread-only診断は保持する。QH-P0の本物TEI→SUI→SHO一往復、TAI #168の実Harness G0/G1/G2→H2/H3四Slotは別Laneのまま。
 
 **終了/撤退条件**：P0の成功は`I`合成・`T`既存限定・`R/C`当該実Consumerが本当に行った範囲でのみ宣言。Kind/ID一意性、対象の元Source Binding、Disclosure Producer、Consumer Resolverのいずれかを実証できなければ、特定の列を`not-run/unsupported/insufficient-evidence`として残す。新UI/第二Resolver/Authorizer/Session Store・新`yi.handoff.context/v2`を要する設計なら実装を停止して各OwnerへFit/Gapを返す。初回TAI #168 H2/H3の新Blockingにしない。
 
