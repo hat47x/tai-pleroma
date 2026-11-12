@@ -208,3 +208,41 @@ flowchart TB
 | Q-GOAL | SCN-001でD-04を作成し、公開gateに拒否させる | T-Draft限定成立、無断公開禁止の制約成立。公開Goal未達・利用者Value未評価。TAI Draft #624／#127 |
 
 **後続の順序（提案）**：①既存Receipt/実Readの誤ったClaim昇格を止める（#636/#638はmain統合済み）→②各Ownerの既存独立Expectedで上記未実施だけを反証→③局所Tool-only／Product Skill／必要時TAI Skillの価値・人手・総コストを測る（#488/#422）→④人間による意味とOutcomeのレビュー（#127）。これまでの実装が埋めた「観測あり」と残る「未観測」を同列に扱わず、TAIに第二Evidence台帳／統一Workflowを作らない。
+
+## 11. 2026-11-12追加：歴史証拠と現在用途の適格性を別々に判断する
+
+この追補の問いは、**「過去の証拠を消さずに、今どこまで使えるか」**である。前節§10のClaim型とTAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)のProduct別再資格化を読者向けに接続する。**TEI Draft [#4487](https://github.com/hat47x/tei-platform/pull/4487)のRequired/Consumed Closure・L/D/T、TAI Draft [#633](https://github.com/hat47x/tai-pleroma/pull/633)のPin/再解決、TAI merged [#640](https://github.com/hat47x/tai-pleroma/pull/640)のReceipt replayを新しいTAI Evidence Engineへ複製しない。**
+
+### 11.1 履歴・現在・今回の試行は三つの異なる主張
+
+| 問い | 言えるための証拠 | 他の問いへ昇格させないもの |
+| --- | --- | --- |
+| **H: 歴史**：過去Attempt Aで何が確かめられたか | 当時のSource・観測範囲・対象・消費した根拠・実出力と、それを実際に観測した主体／環境を固定 | 同じDigest/Receiptは現在のTarget/権限・今回の実Tool呼出を意味しない |
+| **U: 現在用途**：履歴Claimを現在の問いUへ利用できるか | 現在Productが再解決したSubject/Workspace Root、Required Source closureと実Consumed Readの関係、Provider Row/Temporal Cut、Disclosure/Grant、現在のConsumer用途を必要に応じ再照合 | World/Source FP一致・同名・同offset・同Manifest/同Root文字列・Skill名の宣言だけで現在資格を付与しない |
+| **A: 当該Attempt**：今回のTool/Consumer/Providerが実行されたか | 当該Attemptの実Tool/Consumer起動と現在Read、Provider/Hostが観測したOperation/Effect、独立Expected（必要な場合） | B側が**過去の同ラベルReceipt JSONを再出力**してもA/B Receipt一致を満たす、というSHO [#47](https://github.com/hat47x/sho-composer/pull/47)・TAI merged [#640](https://github.com/hat47x/tai-pleroma/pull/640)の実回帰がある |
+
+Hが成立した過去の記録は、現在UやAが不明になっても**消さない**。ただし現在の公開、編集、外部送出、実行、Owner Meaning受理にはU/Aの該当観測を別途要求する。Claimを一つの`fresh=true`や「緑のReceipt」に畳まず、**何を証明していないか**を用途ごとに明示する。これは既存Receiptへの読解指針であり、新しい正本・署名・Nonceプロトコルの提案ではない。
+
+### 11.2 変更の種類ごとに保持できる根拠が違う
+
+| 変更 | 履歴として残るもの | 今の用途で再判断するもの |
+| --- | --- | --- |
+| **行の追加・削除・RLS/可視範囲変更** | 固定Snapshotの陽性Witness・反例・旧Rowset | 現在の不存在／全称／Aggregate／Consumer受領。構造FP同値でも実Provider Readを確認。TAI Draft [#600](https://github.com/hat47x/tai-pleroma/pull/600)、TEI #2586 |
+| **Source byteだけ変更、Source A→B→A、別Rootへ複製** | 当時のByte/Subject/Revisionと読取証拠 | Current Subject・物理Root/許可Scope・選択の再束縛を確認。別Rootが同Manifest/World/SourceIndex FPでも同じ編集対象ではない。TEI Draft [#4504](https://github.com/hat47x/tei-platform/pull/4504)／TAI Draft [#633](https://github.com/hat47x/tai-pleroma/pull/633) |
+| **Definition・Rule・Accepted Meaningが変わる** | 旧定義の検査結果、旧意味での受理の存在 | 現在のOwner-accepted Desired Meaningと実Target Observationを別比較。Legacy Observed（L）≠Target Observed（T）が意図的差分の場合、一律失敗にせずDに対する適合を測る。TEI Draft [#4487](https://github.com/hat47x/tei-platform/pull/4487) |
+| **UIへの非可逆Projection・部分Coverage** | 実際に表示できたNode/Edge、提示された範囲 | 隠れたRelation/順序/Occurrenceや逆編集の同一性を推測しない。表示可能・問いに答えられる・安全に操作できるは独立。TEI Draft [#4464](https://github.com/hat47x/tei-platform/pull/4464)／[#4510](https://github.com/hat47x/tei-platform/pull/4510) |
+| **Batch/ETLのlate event・補正・再集計** | 旧Run/Generationと当時のChunk/Artifact | Physical Read Complete・必要Source閉包・業務対象母集団・Temporal Cut・公開/受領を分離。同じRunのResume、別Delta Run、Restatementは別。TEI Draft [#4516](https://github.com/hat47x/tei-platform/pull/4516) |
+| **Recipient・Skill・Sessionが変わる／Receipt再掲** | 旧Handoff票・旧Consumer受領・旧Operationの限定観測 | 現在Host Grant、実Skill Loader/Tool、当該Consumerの今の再Read、実Session接合。Receipt一致を今回のConsumer呼出証明へ転用しない。TAI merged #636/#637/#638/[#640](https://github.com/hat47x/tai-pleroma/pull/640) |
+| **CSWで着想やMethodを変える** | 出典と方法が明示された候補・反例・採否の履歴 | 新たな生成物を検証済み事実や正式意味へ昇格しない。CSWの現行3 Skillは単独利用可能で、MAGI三役の独立効果は研究中。CSW [README](https://github.com/hat47x/cultural-substrate-weaving/blob/main/README.md) |
+
+**必要な閉包（Required）**と**実際に読んだ閉包（Consumed）**を分ける。前者が正しく宣言されていない、後者が一部だけ、または実行ごとに変わるとき、構造Fingerprintsの一致では全称・不存在・同一Current Subjectを断言できない。閉包の定義と実Readの実装は各Productにあり、TAIは用途・未確認・反証先の索引のみ保持する。
+
+### 11.3 実験の最小三対照：既存Ownerに返す
+
+- **R-A Replay**：G5のBを新しい実Consumer起動から旧Receipt JSON再出力へ差し替え、Digest/Label一致は残し、`attempt-consumed`だけを`not-proven`に保つ。SHO merged #47・TAI merged #640を**既にある負例**として利用し、新しいHarnessをこのガイドでは実装しない。
+- **R-B Same-Content, Different-Target**：同じSource/Manifestを異なるRootへ複製する／同offsetを別Subjectへ変える。過去の証拠はHとして残すが、Current Pin・Writer/Host Grantがそのまま適用できるとはしない。TEI Draft #4504・TAI Draft #633がOwner。
+- **R-C Different-Population, Same-Definition**：同じ定義FPでRLSと実データを変え、0行／全称／ETL合計の再利用を対照。必要なReader/Provider・Temporal Cut・Audienceの証拠が不足すれば`unknown`。TAI Draft #600／TEI Draft #4516／TEI #2586がOwner。
+
+**終了・撤回条件**：既存のProduct-local Read/Tool-only/通常Markdownでこの区別を同じ正確さで維持できるなら、TAI Skill・新共通Validator/Storeを採用しない。正しく保留できたこと、追加のProductが不要だったことを成功候補として評価する。ただし人手修正時間・利用者Goal・費用の便益は別に測り、現時点では証明しない。
+
+**現在の証拠上限**（照合TAI main `eb2900df05bad75c51a740d5010aa03f9e8dcca7`、TEI main `8c3d1a5582cf3e9a40b52b3a2ebaa041739b4fd2`）：SHO #47・TAI #640のReceipt再利用負例は既存mainに統合済み。TEI #4504/#4510/#4516/#4487はDraftで、ここに書いたR-B/R-Cの横断独立試験は**新たに実行していない**。CSWの独立モデルR-D比較はNOT RUN。初回外部Harness [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G2および独立H2/H3四Slotの適格性を上書きしない。
