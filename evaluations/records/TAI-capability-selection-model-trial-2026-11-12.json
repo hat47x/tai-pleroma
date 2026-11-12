@@ -1,0 +1,257 @@
+{
+  "id": "TAI-capability-selection-model-trial-2026-11-12",
+  "issue": "hat47x/tai-pleroma#488",
+  "status": "exploratory real-model trial, n=1 per arm; NOT an H2/H3-eligible comparison",
+  "pins": {
+    "tei": "0600cc2adc383efb38651b59105498193c640e41",
+    "sei": "cd6eb02582f0e0ca84b91c9d273880a602e8e784",
+    "sho": "6ee50d46f158f710da20504147dec1cd6b50c7e2"
+  },
+  "modelTrial": {
+    "participant": "Claude Sonnet subagents (Claude Code general-purpose agent), one fresh agent per arm",
+    "isolation": "NOT physically isolated (TASK 2 G0/G1/G2 not met): each agent was told to stay in its own directory; nothing enforced it. Public synthetic Source only.",
+    "expected": "held outside the repository, written before the runs, never placed in a participant directory or prompt",
+    "toolEvidence": "a logging wrapper recorded every tei argv independently of the participant's report; self-reported tool lists matched the logs in all five trials",
+    "evaluatorCorrection": "the expected attribute names were written in source spelling (orderId); the CLI returns canonical spelling (order_id). Matching was normalized after the runs. This was an evaluator error, not a participant error.",
+    "arms": {
+      "B0": "tei CLI only",
+      "B1": "+ yi-tei-modeling Skill (16,305 bytes available)",
+      "B2": "+ yi-tai-activity Skill (54,822 bytes available in total)"
+    },
+    "trials": [
+      {
+        "caseId": "J1",
+        "arm": "B0",
+        "outcome": "direct-product",
+        "selected": {
+          "products": [
+            "tei"
+          ],
+          "skills": [],
+          "tools": [
+            "tei commands",
+            "tei model locate",
+            "tei model catalog",
+            "tei inspect",
+            "tei trace"
+          ]
+        },
+        "cost": {
+          "toolCalls": 6,
+          "subagentTokens": 68017,
+          "durationMs": 177522,
+          "skillBytesAvailable": 0
+        }
+      },
+      {
+        "caseId": "J1",
+        "arm": "B1",
+        "outcome": "product-skill",
+        "selected": {
+          "products": [
+            "tei"
+          ],
+          "skills": [
+            "yi-tei-modeling"
+          ],
+          "tools": [
+            "tei commands",
+            "tei model catalog",
+            "tei inspect",
+            "tei trace",
+            "tei validate"
+          ]
+        },
+        "cost": {
+          "toolCalls": 7,
+          "subagentTokens": 72972,
+          "durationMs": 182670,
+          "skillBytesAvailable": 16305
+        }
+      },
+      {
+        "caseId": "J1",
+        "arm": "B2",
+        "outcome": "product-skill",
+        "selected": {
+          "products": [
+            "tei"
+          ],
+          "skills": [
+            "yi-tei-modeling"
+          ],
+          "tools": [
+            "tei commands",
+            "tei model catalog",
+            "tei inspect",
+            "tei trace"
+          ]
+        },
+        "cost": {
+          "toolCalls": 6,
+          "subagentTokens": 72248,
+          "durationMs": 189810,
+          "skillBytesAvailable": 54822
+        }
+      },
+      {
+        "caseId": "J7",
+        "arm": "B1",
+        "outcome": "no-product-needed",
+        "selected": {
+          "products": [],
+          "skills": [],
+          "tools": []
+        },
+        "cost": {
+          "toolCalls": 0,
+          "subagentTokens": 53157,
+          "durationMs": 10346,
+          "skillBytesAvailable": 16305
+        }
+      },
+      {
+        "caseId": "J3",
+        "arm": "B0",
+        "outcome": "unsupported",
+        "selected": {
+          "products": [],
+          "skills": [],
+          "tools": [
+            "tei commands",
+            "tei model overview",
+            "tei model locate",
+            "tei inspect",
+            "tei model catalog"
+          ]
+        },
+        "cost": {
+          "toolCalls": 7,
+          "subagentTokens": 64958,
+          "durationMs": 157253,
+          "skillBytesAvailable": 0
+        }
+      }
+    ],
+    "perArmCounts": {
+      "B0": {
+        "missed": 0,
+        "extra": 0,
+        "nonexistent": 0,
+        "wrongExecution": 0,
+        "unneededHold": 0,
+        "disclosure": 0,
+        "unsupportedEvidenceClaim": 0,
+        "jobNotEstablished": 0
+      },
+      "B1": {
+        "missed": 0,
+        "extra": 0,
+        "nonexistent": 0,
+        "wrongExecution": 0,
+        "unneededHold": 0,
+        "disclosure": 0,
+        "unsupportedEvidenceClaim": 0,
+        "jobNotEstablished": 0
+      },
+      "B2": {
+        "missed": 0,
+        "extra": 0,
+        "nonexistent": 0,
+        "wrongExecution": 0,
+        "unneededHold": 0,
+        "disclosure": 0,
+        "unsupportedEvidenceClaim": 0,
+        "jobNotEstablished": 0
+      }
+    },
+    "observations": [
+      "J1 (TEI-only read): B0, B1 and B2 all reached the target and reported the six attributes and two relations. B2 did not select the cross-product Skill.",
+      "J1: the Skill-reading agents (B1, B2) did not follow the mis-documented entries[] path and did not report it; they read result.entries[]. The literal-follower failure measured on 2026-11-11 did not occur with an adaptive model.",
+      "J1: B0 made one failed call (model locate with subject-kind semantic, exit 1) before recovering through model catalog. B1 additionally ran validate, as the Skill instructs, and reported its warnings.",
+      "J1: all three passed arbitrary trace -scope values (semantic, read). trace accepts any -scope label with exit 0 and changes snapshotFingerprint.",
+      "J7 (proofreading, no capability needed): no tool call, no Skill read.",
+      "J3 (asked to execute sales.order.ship, which does not exist): held as unsupported, no effect, no fabricated command. But the answer stated that the CLI has no state-changing command; discovery lists read-only commands only while usage lists 54 names, so that negative claim exceeds what discovery supports. One instance of 'not in discovery' being reported as 'does not exist'. The scorer has no metric for this."
+    ],
+    "limits": [
+      "n=1 per arm, one model family, one Workspace",
+      "token and time figures are per-agent totals including harness overhead",
+      "no difference between arms was detected on any of the eight metrics; this does not show the arms are equivalent"
+    ]
+  },
+  "seiMcp": {
+    "method": "real sei mcp over stdio, temp store",
+    "toolsList": {
+      "default": [
+        "resume",
+        "add_recommendation",
+        "check_decision"
+      ],
+      "read-only": [
+        "resume"
+      ],
+      "allow-decision": [
+        "resume",
+        "add_recommendation",
+        "check_decision",
+        "add_decision"
+      ]
+    },
+    "readOnly": {
+      "callHiddenTool": {
+        "isError": true,
+        "text": "add_recommendation is not enabled on this server (started with --read-only)"
+      },
+      "callUnknownTool": {
+        "isError": true,
+        "text": "unknown tool \"no_such_tool\""
+      }
+    },
+    "reading": "with --read-only, tools/list shows resume only, but calling a withheld tool by name answers 'not enabled on this server (started with --read-only)' while an unknown name answers 'unknown tool'. The error text separates withheld from absent and reveals the server mode. Tool names here are public, so nothing secret leaks; the pattern is what matters for non-public capabilities."
+  },
+  "sho": {
+    "method": "real node bin/sho-inspect.cjs",
+    "inspectFixture": "RI-L0-01.md: exit 0, 5 link occurrences, parser 14.3.3, source.revision unknown (matches the Skill)",
+    "notFound": "exit 2, error not-found",
+    "skillGap": "usage also lists a handoff subcommand with --receipt-out (writes); the Skill describes inspect only",
+    "pathBoundary": "a path outside the checkout is opened without a Workspace-root check (the Skill states this)"
+  },
+  "timing": {
+    "method": "25 runs each, median/p10/p90 ms, Windows process start",
+    "rows": {
+      "kc-definition A": [
+        180.9,
+        124.4,
+        312.5
+      ],
+      "kc-definition B": [
+        234.8,
+        162.5,
+        320.4
+      ],
+      "kc-definition A again": [
+        237.9,
+        150.2,
+        461.3
+      ],
+      "inspect exists(B vault)": [
+        290.3,
+        195.2,
+        413.8
+      ],
+      "inspect absent(B zzz)": [
+        228.1,
+        210.4,
+        260.8
+      ]
+    },
+    "reading": "repeat-to-repeat variation on the same world (181 vs 238 ms median) is as large as any between-world difference; no timing channel can be shown or excluded at this resolution"
+  },
+  "notRun": [
+    "physically isolated H2/H3",
+    "EKI",
+    "SUI over HTTP/OAuth with a real backend",
+    "multi-product job with a model",
+    "non-public Source"
+  ]
+}
