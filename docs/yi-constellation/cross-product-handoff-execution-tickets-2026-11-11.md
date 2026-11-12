@@ -450,6 +450,21 @@ SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-compose
 
 **資格の段階**：値を返す関数の単体試験→実CLI/Consumer同士の一往復（今回到達）→実AgentのLoader/Tool呼出と完全Reply→実OS/Host Grant/全Sink/業務Effect（後二者NOT RUN）を異なる結果列とする。既存QHのI/R/P/T/C/Hと[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/[#488](https://github.com/hat47x/tai-pleroma/issues/488)を利用し、新しい共通Runner・第二Evidence Store/Verifier・Handoff v2を導入しない。初回H2/H3比較適格0/4を変更しない。
 
+### 2026-11-12 B側Receiptの再利用反例を実Runnerで確認（SHO merged #47）
+
+[SHO main PR #47](https://github.com/hat47x/sho-composer/pull/47)で、G5-Bが**現在のAttemptで実Consumerを起動しなくても**、過去に作ったBラベル付き受領JSONを外部ARGVから再出力するだけで、現Runnerの内容一致を満たす反例を追加した。事前Receiptの作成は実Consumer、G5のB argvは**保存済みJSONの出力のみ**。これは実Harness二Agent試験でなく、実Node/CLIによる**Runnerの観測限界の回帰**。Ubuntu/WindowsのSHO Handoff CIで正常経路と当該再利用負例がともに成功した。
+
+| 判定 | 実Runner出力の修正範囲 | 証明できないこと |
+| --- | --- | --- |
+| `scope/claim` | `synthetic-local-consumer-external-json-receipt`／`local-consumer-vs-external-json-consistency-only` | Bが実Consumerを呼んだこと |
+| `observations[].id` | `external-b-receipt-json-observed`・`receipt-declared-bytes-match`。返却JSONの一致だけを観測 | Bが今回のPayload bytesを自ら再Readしたこと |
+| `claims.localAConsumerAndExternalBReceiptJsonObserved` | Aで実Consumerを直接起動／Bで外部JSONを受領したことに限って`true` | BのHost/Tool、Skillの実ロード、他Sinkの送出 |
+| `claims/executionPaths.externalBConsumerInvocationVerified`、`externalBPayloadRereadVerified`、`externalBReceiptReplayExcluded` | いずれも`not-proven`。保存済みB Receiptが通る負例を回帰 | Bの実Tool起動、現在Source/Revision・Disclosure/Grantの再評価 |
+
+**以前のG5 #34/#43/#45/#46の固定Receipt・観測IDは歴史記録として変更しない。** 当時のB実Claude Code argv起動記録は保持するが、B側の実Consumer起動・Payloadの新鮮な再Read・外部送出を実ToolログやHost evidenceなしに証明済みへ上げない。「実行時刻欄だけ追加」「票を再署名した」といった宣言系の改変は、任意BプログラムがJSONを返せる限り実行証明の代わりにはならない。
+
+**実施順**：既定[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0読取隔離／G1外部送出／G2全Tool Reply→固定独立4Session H2/H3を優先。その後、実Host/AgentのTool呼出開始・終了、入力Ticket/Source bytes、Consumer Process/結果と現在Grantの独立ログを既存実行環境で採取する。TAIは新しいReceipt Attester・Agent Runtime・共通Verifierを作らず、Consumer/Host/Harness各Ownerの記録を照合するだけ。G5-N5はこの`NOT PROVEN`を実行中に勝手に`PASS`へ上げないための負例。
+
 ### 必須負例
 
 | ID | 注入 | 期待 | 実測 |
@@ -458,6 +473,7 @@ SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-compose
 | G5-N2 | Harness B に広いshell権限がある環境で実行 | 書込み・送出が実際に起きない | **Receiptの宣言値だけ一致**。Claude Codeに `--allowedTools Bash` を与え、返ったReceiptの `writerInvoked=false`・`externalDisclosure=false` は確認したが、OS/Network実副作用・送出全Sinkは**not-run** |
 | G5-N3 | Harness A で開示Scopeを広げた履歴がある | Harness B は**現在の** `disclosure.scope` だけを見る | **AローカルCLIでのみ `observed-pass`**（`widened-scope-rejected`）。Bの外部Harness経由では不正拡大票を実行しておらず**not-run** |
 | G5-N4 | Harness B がMCP経由で接続する | CLI-only経路のPASSをMCPのPASSに読み替えない | `not-run`（MCP経路は実行していない。`otherHarnessMcpPath: not-run`） |
+| G5-N5 | Bに**保存済みRecipient受領JSON**を再出力させる（B実Consumerは実行しない） | 内容一致の成功とB実Consumer/Source再読取/Replay排除の成功を別資格とする | [SHO #47](https://github.com/hat47x/sho-composer/pull/47)の実Runner回帰で**再利用成立を観測**。三つの実行資格はいずれも`not-proven`。実二Agent/Host egressは`not-run` |
 
 ### 撤退条件
 
@@ -702,7 +718,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
 | **QH-06** 部分取得・0件・Resolver不在 | complete emptyとpartial/not-found/unknown/unsupportedを区別し、無取得を「存在しない」と断定しない |
 | **QH-07** Handoff受領は成功だがTEI Source再解決なし | `T=pass, R/C=not-run`。独立Reader証拠が無ければ同一対象意味引継ぎをPASSとしない |
-| **QH-08** Skill名付き票/G5別Harness CLI/後着GUI結果 | 実Loaderと実Session継続、対象再束縛と業務Effectはそれぞれ未実証。旧結果が新Pinに自動適用されない |
+| **QH-08** Skill名付き票/G5別Harness CLI/B事前Receipt再利用/後着GUI結果 | Skill文字列≠実Loader、B JSON一致≠実Consumerの再Read（[SHO #47](https://github.com/hat47x/sho-composer/pull/47) G5-N5）、旧結果≠新Pinの資格。実Session継続、対象再束縛、業務Effectはそれぞれ独立観測が必要 |
 
 **終了/撤退条件**：P0の成功は`I`合成・`T`既存限定・`R/C`当該実Consumerが本当に行った範囲でのみ宣言。Kind/ID一意性、対象の元Source Binding、Disclosure Producer、Consumer Resolverのいずれかを実証できなければ、特定の列を`not-run/unsupported/insufficient-evidence`として残す。新UI/第二Resolver/Authorizer/Session Store・新`yi.handoff.context/v2`を要する設計なら実装を停止して各OwnerへFit/Gapを返す。初回TAI #168 H2/H3の新Blockingにしない。
 
