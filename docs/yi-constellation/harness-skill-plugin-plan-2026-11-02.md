@@ -945,7 +945,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | **TEI** | [Product Skill main](https://github.com/hat47x/tei-platform/blob/main/skills/yi-tei-modeling/SKILL.md)と実CLI read-only。外部DSH H3のSkill本文・参照実Readは[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)で限定観測 | H2/H3四Slot比較適格は**0/4**。OS実隔離/全送出/独立効果は未資格 |
 | **SHO単独** | [SHO #30 merged](https://github.com/hat47x/sho-composer/pull/30)でRaw Draft保存/再開/競合、[read-only Product Skill main](https://github.com/hat47x/sho-composer/blob/main/skills/yi-sho-compose/SKILL.md)でResearch Index手順を提供 | SHO Skillが保存/編集/納品を実行可能と書き換えない。現在のSkill本文には旧「正式Writerなし」等の歴史記述が残るため[SHO #10](https://github.com/hat47x/sho-composer/issues/10) Ownerで実Product状況と分離して同期 |
 | **TEI→SHO Draft** | [TEI #4317 merged](https://github.com/hat47x/tei-platform/pull/4317)、[SHO #36 merged](https://github.com/hat47x/sho-composer/pull/36)で限定モデル→文書Draft→著者編集/保存/再開。[TEI #4467 merged](https://github.com/hat47x/tei-platform/pull/4467)で再投影時の著者文保護・候補差分を整備 | GUI上の固定対象→HarnessからWriter→意味受理/正式納品が成立したわけではない。文書競合/Author ReviewはSHOが持つ |
-| **SUI→SHO、TEI観測の引用** | [SHO #34 merged](https://github.com/hat47x/sho-composer/pull/34)と[#39 merged](https://github.com/hat47x/sho-composer/pull/39)、[TAIの実行票](cross-product-handoff-execution-tickets-2026-11-11.md)で実Producer/Consumer/TEI read-only引用、別Process再受領・Receipt照合、およびG5の**A=ローカルNode直接起動／B=外部ARGV経由Consumer起動**を限定observed-passとして確認（[SHO main #45/#46](https://github.com/hat47x/sho-composer/pull/46)、[TAI main #635/#638](https://github.com/hat47x/tai-pleroma/pull/638)） | [#46](https://github.com/hat47x/sho-composer/pull/46)の新しい実Runner回帰ではBは外部**Node**。歴史的なClaude Codeの起動記録やSessionラベルを現在の二Agent実試験と呼ばない。Receipt一致≠同一Live Session継続/Skill実Load/現在Host Grant。OS/全Sink Egress・実Product横断UI・Owner採用は**NOT RUN** |
+| **SUI→SHO、TEI観測の引用** | [SHO #34 merged](https://github.com/hat47x/sho-composer/pull/34)と[#39 merged](https://github.com/hat47x/sho-composer/pull/39)、[TAIの実行票](cross-product-handoff-execution-tickets-2026-11-11.md)で実Producer/Consumer/TEI read-only引用、別Processでの実SHO Consumer再Readは限定PASS。一方、G5は**A=ローカルNode実Consumer／B=外部ARGVのReceipt形式JSON申告が一致**したのみ（[SHO main #47](https://github.com/hat47x/sho-composer/pull/47)、[TAI main #640](https://github.com/hat47x/tai-pleroma/pull/640)） | **Bが過去Receiptを再出力するだけでも一致した実負例あり**。B Consumer当該実行・Payload再Read・Replay排除はnot-proven。二Agent/同一Live Session・実Skill Load・現在Grant/全Sink Egressは未実証 |
 
 **Handoffの既存正本を再利用**：[yi.handoff.context/v1計画](cross-product-handoff-context-v1-2026-11-11.md)とその[後続実行票](cross-product-handoff-execution-tickets-2026-11-11.md)。票を非信頼入力としてConsumerが実byte/digest/Sourceを独立再Readし、受領Receiptを意味受理や効果の承認へ昇格しない。Owner判断により**新しいv2/chainや中央Ledgerを先行追加しない**。元票の未知フィールドは消さず未知のまま保持し、Product Skill実Loadの有無をHandoff文面だけで「実証済み」としない。実施済みG2/G3等の限定PASSと、同じ実Harness Sessionの再開／外部OS送出／各Product GUI未実施を別票で管理する。
 
@@ -996,7 +996,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 | 現在確認できる成果 | 成立する限定的な結果 | 未実証の資格 |
 | --- | --- | --- |
-| [SHO merged #45/#46](https://github.com/hat47x/sho-composer/pull/46)、[TAI merged #635/#636/#638](https://github.com/hat47x/tai-pleroma/pull/638) | G5実RunnerでAローカルNode、B外部Node ARGVの両Consumerを起動し、7観測ID・Payload byte/SHA・Claim Ceilingを独立検査 | 二つの実Agent、同一Live Session、現在Tool Profile/Grant、全Sinkの送出禁止と業務Effect |
+| [SHO merged #45/#46/#47](https://github.com/hat47x/sho-composer/pull/47)、[TAI merged #635/#636/#638/#640](https://github.com/hat47x/tai-pleroma/pull/640) | G5のAローカルConsumer実呼出とB外部ARGVのReceipt JSON取得・照合。**Bが事前Receiptを再生しても一致する負例**をUbuntu/Windowsで確認 | B実Consumer呼出、今回のPayload再Read、Replay排除はnot-proven。実Agent/同一Live Session、現在Tool/Grant・全Sink送出・実Effectも未証明 |
 | SHO #46のProducer Skill宣言引継ぎ試験 | Skill名を未知の付随情報として保持し、Consumerの権限・Writer結果に転用しない | 実HarnessによるSkill Loader Read、Tool Invocation、専門Skillの改善 |
 | [SHO #42](https://github.com/hat47x/sho-composer/pull/42)、[TAI #637](https://github.com/hat47x/tai-pleroma/pull/637) | Audienceを拡大した現在Ticketを実Consumerが再読取。自動権限継承は申告しない | 拡大先Recipientの実Host認可・拒否。縮小例G4-N2Rは別試験 |
 | [TEI merged #4507](https://github.com/hat47x/tei-platform/pull/4507) | Fingerprintの入力破壊/自己参照の修正と図NodeのAuthorityLimits保持 | 同Kind同IDの一意性、Source-only drift [#4514](https://github.com/hat47x/tei-platform/pull/4514)、CRUD Data索引 [#4513](https://github.com/hat47x/tei-platform/pull/4513)、別Workspace・別Subjectの再解決 [#4504](https://github.com/hat47x/tei-platform/pull/4504)は別Draft |
@@ -1006,6 +1006,24 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **独立負例**：同じSource位置でも異なるSubject、同じWorld Fingerprintでも異なるWorkspace、Producerが宣言したSkill名と実Loadの不一致、Audience拡大のHost認可未確認、外部Nodeの起動を実Agent Sessionと誤称、実ConsumerがしていないTEI再Readの成功表示。正しく未資格と停止することも合格対象とする。
 
 **優先順位**：QH-P0は実Product側のread-only試験として並行できるが、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read拒否→G1送出→G2完全Tool Reply→新H2/H3独立4 Slot（比較適格0/4）の追加条件としない。二製品GUI固定Pin、実Agent Live Session、CSW方法の寄与、実Provider EffectはNOT RUN。新中央Runtime/Policy/Storeは追加しない。
+
+
+### 48.4 実Receipt再生と同内容別Workspaceの対象再確認（11月12日）
+
+[SHO main #47](https://github.com/hat47x/sho-composer/pull/47)のG5-N5は、B側で当該AttemptのConsumerを起動せず、事前作成Receipt JSONを再出力するだけでも一致する負例を実Runner/Ubuntu・Windows CIで示した。[TAI main #640](https://github.com/hat47x/tai-pleroma/pull/640)のG5-N5/QH-08も、この範囲の成功に主張を限定している。**旧G5の履歴Receiptを消さず**、現在の実証は「A実Consumerの応答とB外部ARGVが申告したJSONの整合」までとする。
+
+[TEI Draft #4504](https://github.com/hat47x/tei-platform/pull/4504)と[Workbench Owner #4515](https://github.com/hat47x/tei-platform/issues/4515)では、完全に同じManifest/Sourceを別Workspace Rootへ複製すると、Workspace Name/Manifest SHA/Kind・ID/Canonical/World/SourceIndex/Model Fingerprintが**すべて同じ**になっても、利用者がPinしたWorkspaceは別であると対照した。PinはProduct内部でユーザーが選んだ**WorkspaceRef/root**とQualified Subjectを保持し、別Rootへ無言で再束縛しない。Rootの現在の許可や実Host Grantも再確認が必要で、Raw path/機微情報を外部Harnessへそのまま送らない。TEI #4504は未マージDraftであり、実Studio固定PinやHarness送出を実証していない。
+
+| 判別対象 | 最小限必要な独立観測 | 認定してはならないもの |
+| --- | --- | --- |
+| I/R 対象選択・再Read | ユーザーのWorkspaceRef/root、Qualified Kind・ID、Source/Scope/Revision/Occurrence、候補一意性 | 別Root同内容・同offset別Subject・同Kind同IDのHash一致だけから同一編集対象と推論 |
+| T 配送 | 実Ticket byte、許可Audience、外部ARGVからのJSONと申告Digest/byte数 | JSON一致をB実Consumer起動・今回のTool Deliveryと認定 |
+| C Consumer実利用 | 当該Attemptにおける実Consumer自身のSource Open/Read Closureと実Target・Revisionの照合 | 過去Receipt、申告Nonce/日時、外部exit0、モデル発話だけで現在Reader資格を認定 |
+| H Agent/Effect | 実Harness Session、Tool/Skill Loader・Invoke/全Reply、Host Grant/OS送出・Effectの各独立観測 | A/BのLabel、Receipt一致で二Agent・同一Session・送出安全を認定 |
+
+**次の検証**：①公開・合成Sourceの同Root正例／別Root同内容負例／同offset別SubjectをTEI Product Readerで観測、②既存G5-N5を実Consumer未実行でもJSON一致する対照として再利用、③実Consumerの当該Attempt再Readを独立に観測できない場合はC=not-provenを維持、④実外部Agent Tool経路とG0/G1/G2はTAI #168の別Gate。Receiptの自己申告時刻・Nonceを加えるだけで実実行/Replay除去が証明されたとは言わず、新Attester/中央ID Store/Handoff v2/Runnerを導入しない。
+
+**資格**：SHO #47のReplay負例とそのCIは限定PASS。TEI #4504はDraft、B Consumerの当該再Read・実Agent/Live Session・現在Host Grant・GUI Pin→Harness→Product UI復帰、QH-P0新TrialはNOT RUN/not-proven。Product局所試行はTAI #168の固定H2/H3初回4 Slot（比較適格0/4）の追加Blockingではない。
 
 **着手順**：最初の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) G0実OS Read-deny→G1送出→G2完全Tool Reply→新独立H2→H3→H3→H2（適格0/4）のBlockingは**変更しない**。その後の最小Product横断はR0→R1→R2（read-only）であり、実UI Pinned Context・Live Session・CSW Canvas・EKI Effectの実試験は段階的に分離。各Product Ownerの独立Expected/Scenarioを利用し、新共通Selection ABI、中央Handoff v2/Registry/Runnerや既存Productの意味受理正本を作らない。
 
