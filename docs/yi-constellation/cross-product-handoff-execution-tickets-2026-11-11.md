@@ -11,7 +11,7 @@
 | G2 | **observed-pass** | Receipt返送＋Producer側照合を実製品E2Eで確認（`receipt-returned-and-reviewed`） | Receiptの保持期間・監査利用（OG-5） |
 | G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
 | G4 | **observed-pass** | 別プロセス・別Sessionラベルでの再受領（`session-resumed`） | Host再起動・日跨ぎの実Session永続 |
-| G5 | **observed-pass** | DeepSeek Harness と Claude Code の実CLIで切替（別Runner・7観測） | 両HarnessのSkill実ロード・MCP経路・実Host Grant/egress |
+| G5 | **observed-pass（Receipt一致の限定範囲）** | A=ローカルNodeからSHO Consumer CLIを直接実行（`deepseek-harness`はラベル）、B=外部ARGV指定でClaude Codeを起動しSHO CLIのJSON Receiptを回収（7観測）。Aの実DSH Agent経由起動はこのRunner/Receipt単独では未証明 | 両Harnessの実Agent経由Invoke・Skill実ロード・MCP経路・現在Host Grant/外部egress |
 | G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3（正式に閉じた）、別Source検出 |
 
 **全票の共通する未達**：実Host Grant／OS egress（TAI #232・TEI #2515）、意味受理（各Owner）、原本Source読取。いずれも `not-run` のまま。
@@ -51,7 +51,7 @@ node scripts/handoff-cross-product.cjs --sui-frontend '<ABSOLUTE_SUI>\03_Impleme
   --tei-root '<ABSOLUTE_TEI>'
 # exit 0。2製品なら10観測、3製品なら12観測がすべて ok の JSON Receipt が標準出力に出る。
 
-# 4. G5 実Harness切替（票を先に用意してから）
+# 4. G5 ローカルCLI(A)と外部Harness CLI(B)の比較（票を先に用意してから）
 cd <SHO>
 node scripts/handoff-harness-switch.cjs --ticket '<票の絶対パス>' `
   --harness-a deepseek-harness --harness-b claude-code `
@@ -393,14 +393,14 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 3. Harness B の実行前に、Harness A のSessionで見えていたTool・権限・Sourceが、Harness B では**独立に再確認**される。再確認の記録がRunbookに残る。
 4. Harness A で「可用」と確認したToolを、Harness B で**無条件に可用としない**。未知のものは `unknown` として記録する。
 
-**実行結果（2026-11-11）**：1・2・4 は `observed-pass`、3 は `not-run`。
+**実行結果（2026-11-11、2026-11-12資格監査）**：1はAローカル/B外部ARGVのConsumer Receipt一致、2はReceiptの宣言値がすべて`false`、4は票内`transport.authority=none`と実Tool可用性の**非継承（宣言面のみ）**として限定`observed-pass`。3のB側実Tool/権限/Source現在再確認は`not-run`。
 
 実際の構成：
-- Harness A = DeepSeek Harness 0.2.2-rc.1（このプロセスの実CLI）
+- Harness A = **このRunnerが直接起動したローカルNode/SHO Consumer CLI**（`--harness-a deepseek-harness`はReceipt用ラベル。外側の実DSH Agent起動・Sessionは別の一次ログがない限り未資格）
 - Harness B = Claude Code 2.1.302（`--harness-b-argv` で **ARGV 起動**。`-p` のプロンプトで実Consumerを実行させ、標準出力のJSONを回収）
 - 票 `sha256:d0c3c588…`／payload `sha256:7fd6fde2…`（354 bytes）
 
-**再実行の可否（2026-11-11 追記）**：異なるHarness間の実測は、Claude Code のセッション上限に達したため**当日は再実行できない**（`unrecognized_model`／`session limit`）。これは外部クォータの制約であり、機構の故障ではない。異なるHarnessが使えない環境では、**同一Harnessの別Session**を対照として走らせることができる（`docs/handoff-harness-switch-control-receipt-2026-11-11.json`）。**対照が通っても「異なるHarness間で増幅しない」ことの証拠にはならない**。対照が通らなければ機構側のbugである。
+**再実行の可否（2026-11-11 追記）**：異なるHarness間の実測は、Claude Code のセッション上限に達したため**当日は再実行できない**（`unrecognized_model`／`session limit`）。これは外部クォータの制約であり、機構の故障ではない。異なるHarnessが使えない環境では、**異なるHarness/Session風のラベルを付けて同じSHO Consumer受領を比較する対照**を実行できる（`docs/handoff-harness-switch-control-receipt-2026-11-11.json`）。ただしそのReceiptの`sessionLabels.a/b`はともに`g5-switch`であり、**二つの実DSH SessionのID・再開を示さない**。対照が通っても「異なるHarness間で増幅しない」ことや「別Sessionを実装した」ことの証拠にはならない。対照が通らなければ機構側のbugである。
 
 | 受入条件 | 実測 |
 | --- | --- |
@@ -409,17 +409,31 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 | 3 | **`not-run`**。Harness B のTool・権限・Sourceの独立再確認は記録していない。Runbookの手順として残す |
 | 4 | 票の `transport.authority="none"` を両Harnessが読む（`ticket-transport-authority-none`）。Skill実ロード・MCP経路は `not-run` |
 
-追加で確認：両Harnessが同じpayload bytesを観測（暗黙の差し替えなし）。`disclosure.scope` を広げた票は両Harnessで `handoff-disclosure-scope-unknown`。
+追加で確認：A/Bの実SHO Consumerが同じpayload bytesを観測（暗黙の差し替えなし）。`disclosure.scope` を広げた票への拒否は**A側ローカルCLIでのみ実注入**されており、B側Claude Code経由は未注入。
 
 RunbookとReceipt: `sho-composer:docs/handoff-harness-switch-trial-2026-11-11.md` と `handoff-harness-switch-trial-receipt-2026-11-11.json`。
+
+### 2026-11-12 Source/Receipt照合：G5観測の資格上限と次の実行条件
+
+SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-composer/blob/main/scripts/handoff-harness-switch.cjs)の現mainは、**Aで`spawnSync(process.execPath, [...sho-inspect, '--harness', harnessA])`、Bで`spawnSync(program, argv)`**を実行する。Aの`--harness-a`は**記録ラベル**でありDSH CLIの起動コマンドではない。Bは2026-11-11の一次記録でClaude Codeを外部ARGV起動したとされるが、受領JSON内の`consumer.harness`文字列だけではBのAgent版・外部Provider送信・Skill Loaderを検証できない。外側DSH SessionからNode Runnerを起動した別の一次ログが存在するなら、その観測を別列で連結し、**現RunnerのA側がDSH経由だったと推定で補完しない**。
+
+| 項目 | 今回のコード/Receiptで確認できる範囲 | まだ必要な独立観測 |
+| --- | --- | --- |
+| G5-A local | 実SHO CLIのexit 0とReceipt readback、`--harness-a`文字列の記録 | **実DSH Agent→Tool→このRunner**のSession/Invocation/実引数・Tool全応答、実OS Read/egress |
+| G5-B external | B指定実プログラムからJSON Receiptを得て、Aのpayload/checks/claimsと比較 | Bの現Grant・Tool/Skill実LoadとProvider全送出、後着/部分結果・CLI外副作用 |
+| G5 N3 expanded scope | 現Runnerで`widenedA = runConsumer(widenedPath, harnessA)`を一度実行 | **Bにも変更票を入力して実拒否させる**。現状の`widened-scope-rejected`はAのPASSに限る |
+| `no-amplification`・`noUnapprovedSourceAutoSend` | 両Consumer Receipt内の`claims.*===false`と`transport.authority='none'`、JSON比較 | Host Grant/OS効果/Network egress/全Sinkの非発生は**NOT RUN**。Receiptの宣言だけで外部漏えい・副作用ゼロを証明しない |
+| Harness/Activity/Skill | G5は同じ票・payloadの再受領 | 同一Live Session継続、H3 Skill実Load、Activity再開・対象のSource/Scope再資格はそれぞれ別試験（TAI #168/#271/#488、QH §10） |
+
+**扱い**：既存7観測の履歴ReceiptやB側の実CLI起動を取り消さない。G5の`observed-pass`は**ローカルCLI Aと外部ARGV BにおけるConsumer結果一致**に限って維持する。既存Runner/Schema/歴史Receiptをこの文書で改変せず、次の独立G5-A/B Trialで本当に二つの外部Harnessを明示的に起動し、それぞれの入口とCurrent Grant/Tool/Skill/外部送出を実観測したときに限って、主張を上げる。TAI #168の初回H2/H3（適格0/4）のBlockingは変更しない。
 
 ### 必須負例
 
 | ID | 注入 | 期待 | 実測 |
 | --- | --- | --- | --- |
 | G5-N1 | Harness A のSession Logに票の内容が残っている状態でHarness Bを起動 | Harness B は票を**ファイルから独立に再読取**する | `observed-pass`（Harness B は `bin/sho-inspect.cjs handoff <票>` を実行し、ファイルから読む。Session履歴の復元経路は無い） |
-| G5-N2 | Harness B に広いshell権限がある環境で実行 | 書込み・送出は起きない | `observed-pass`（Claude Code に `--allowedTools Bash` を与えても `writerInvoked=false`・`externalDisclosure=false`） |
-| G5-N3 | Harness A で開示Scopeを広げた履歴がある | Harness B は**現在の** `disclosure.scope` だけを見る | `observed-pass`（`widened-scope-rejected`。票を広げると両Harnessで拒否） |
+| G5-N2 | Harness B に広いshell権限がある環境で実行 | 書込み・送出が実際に起きない | **Receiptの宣言値だけ一致**。Claude Codeに `--allowedTools Bash` を与え、返ったReceiptの `writerInvoked=false`・`externalDisclosure=false` は確認したが、OS/Network実副作用・送出全Sinkは**not-run** |
+| G5-N3 | Harness A で開示Scopeを広げた履歴がある | Harness B は**現在の** `disclosure.scope` だけを見る | **AローカルCLIでのみ `observed-pass`**（`widened-scope-rejected`）。Bの外部Harness経由では不正拡大票を実行しておらず**not-run** |
 | G5-N4 | Harness B がMCP経由で接続する | CLI-only経路のPASSをMCPのPASSに読み替えない | `not-run`（MCP経路は実行していない。`otherHarnessMcpPath: not-run`） |
 
 ### 撤退条件
