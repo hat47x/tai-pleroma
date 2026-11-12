@@ -475,7 +475,7 @@ HarnessやSkillが結果を「0件」「存在しない」「問題なし」「�
 
 ### 17.2 既存受入への接続・追加Engine不要
 
-- [§16.3 QSB-01〜05](#163-独立反証-qsb-01〜05新runnerparser-registryを作らない)を**閉じず、履歴の判断を現在版へ再評価する**。QSB-01は「main Readerも存在しない」ではなく**現行Reader/Skillの存在と実Load適格の差**、QSB-02/03は選択Parser・Plugin依存の変化、QSB-04は実Raw byteとAuthoring Buffer/Source occurrence、QSB-05はPackaged/Installed/Loaded/Invoked/Consumer observedの不一致として判別する。
+- §16.3のQSB-01〜05を**閉じず、履歴の判断を現在版へ再評価する**。QSB-01は「main Readerも存在しない」ではなく**現行Reader/Skillの存在と実Load適格の差**、QSB-02/03は選択Parser・Plugin依存の変化、QSB-04は実Raw byteとAuthoring Buffer/Source occurrence、QSB-05はPackaged/Installed/Loaded/Invoked/Consumer observedの不一致として判別する。
 - [Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)の**I/P/R/T/C/H六つの観測列**は「固定された対象の同一性」まで言えるかを検査する追加後段の入力。TEI [#4475](https://github.com/hat47x/tei-platform/issues/4475)の同Kind同ID/Fingerprint純粋性と[#4472](https://github.com/hat47x/tei-platform/issues/4472)の三要素分析法モデルにおけるCRUD/横断参照の懸念はProduct Ownerの未修正負例であり、TAI Skillに新しいID Resolverを作らない。
 - 同一公開Taskを**A：Product Tool-only、B：＋Product Skill、C：用途上必要な場合だけ＋TAI Skill**で比較する。ただし実Source・実Tool Profile・Harness version・Target/Disclosure/独立Expectedを事前固定し、Skillの`installed`／`loaded`／`used`の実証を個別に記録。成功回答・必要な保留・誤対象・操作数/再説明・Token/費用と副作用を混ぜて一つの「Skill有効」にはしない。Cが増分価値を示さなければ任意のまま。
 - **Gateの前倒し禁止**：最優先はTAI #168のG0物理Read-deny／G1実Egress／G2全Tool Reply→事前割付H2→H3→H3→H2（現適格0/4）。その後は既存Handoff v1と§10のHeadless Qualified Target→独立Consumerを再利用。[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)のAI/GUI相互選択と[置換Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)のProduct別Pin→返答先は**まだDraft**であり、本書から新共通Store/Router/Runner/Hostを増やさない。
