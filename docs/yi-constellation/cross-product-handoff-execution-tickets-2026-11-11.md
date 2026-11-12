@@ -9,7 +9,7 @@
 | 票 | 状態 | 実測 | 残り（NOT RUN） |
 | --- | --- | --- | --- |
 | G2 | **observed-pass** | Receipt返送＋Producer側照合を実製品E2Eで確認（`receipt-returned-and-reviewed`） | Receiptの保持期間・監査利用（OG-5） |
-| G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
+| G3 | **observed-pass（TEI CLI引用・SHO受領に限定）** | 実TEI read-only Catalog観測をSUI票へ引用し、SHO実CLIがPayloadと引用を受領。元TEI SubjectはSHO側で再解決していない | 元Source/Workspace/ScopeのConsumer独立解決、現在Grant、第二Hop実証 |
 | G4 | **observed-pass（新プロセスでの受領に限定）** | 別プロセス・別Sessionラベルでの再受領（歴史観測ID=`session-resumed`）、Audience拡大票の再読取もSHO #42で回帰 | 実Harness Session永続、現在Host Recipient Grant・Audience拡大拒否、縮小試験 |
 | G5 | **observed-pass（Receipt一致の限定範囲）** | A=ローカルNodeからSHO Consumer CLIを直接実行（`deepseek-harness`はラベル）、B=外部ARGV指定でClaude Codeを起動しSHO CLIのJSON Receiptを回収（7観測）。Aの実DSH Agent経由起動はこのRunner/Receipt単独では未証明 | 両Harnessの実Agent経由Invoke・Skill実ロード・MCP経路・現在Host Grant/外部egress |
 | G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3（正式に閉じた）、別Source検出 |
@@ -264,7 +264,7 @@ go run ./cmd/tei model catalog -workspace reference/workspace     # 実観測
 5. Receiptの `claims.originalSourcesRead` は `false` のまま。
 6. RunnerのObservationsに `tei-readonly-observation-cited` が `ok:true` で加わる。
 
-**実行結果（2026-11-11）**：1〜6 すべて `observed-pass`（`scope: synthetic-three-product-one-handoff`、12観測すべてok）。
+**歴史的実行結果（2026-11-11）**：1〜6は**TEI CLI観測を引用してSHOが再読取した範囲に限り**`observed-pass`。当時の不変Receiptは`scope: synthetic-three-product-one-handoff`、12観測すべてokと記録するが、この文字列はTEI元Subjectの独立再解決・三製品での意味受理を証明しない。SHOの後続Machine Claim Ceilingではスコープを限定し、歴史Receiptのbytesは書き換えない。
 
 | 受入条件 | 実測 |
 | --- | --- |
@@ -273,7 +273,25 @@ go run ./cmd/tei model catalog -workspace reference/workspace     # 実観測
 | 3 | 実SHO CLIで受領。`limitation` に4件の `authorityLimits` が**全て**残る |
 | 4 | `claims.meaningAccepted=false` |
 | 5 | `claims.originalSourcesRead=false` |
-| 6 | `tei-readonly-observation-cited` が `ok:true`、`threeProductCoordination="observed-pass"` |
+| 6 | 当時の観測ID `tei-readonly-observation-cited` は `ok:true`。歴史Receiptの `threeProductCoordination="observed-pass"` は**引用の受領**を超えて資格化しない。後続Runnerでは全Productの元対象再解決を示す真偽とは分離 |
+
+### 2026-11-12 G3 Machine Receipt資格上限：歴史観測と現在の実装を分離
+
+[SHO merged #47](https://github.com/hat47x/sho-composer/pull/47)では外部Bが過去のJSON Receiptを再出力するだけでも内容比較が一致し得る負例、[SHO merged #48](https://github.com/hat47x/sho-composer/pull/48)では**同じMarkdown Byteで元TEI Source/Target宣言の異なる三票をSHO実Consumerが受領できる**負例を確認した。これらをG3/固定対象QHの独立Expectedへ反映する。
+
+[SHO PR #49](https://github.com/hat47x/sho-composer/pull/49)は、G3にも使われる`scripts/handoff-cross-product.cjs`の**現在の出力**について、`scope=synthetic-two-product-handoff-with-tei-catalog-citation`、`claim=producer-consumer-receipt-consistency-only`に限定する実装変更。歴史的なG3初回Receiptと、今後のRunner SchemaなしJSONのClaimを混同しない。
+
+| 観測／Machine Claim | このRunnerで成功にできる範囲 | 保留する独立資格 |
+| --- | --- | --- |
+| SUI Producer・SHO Consumer | Pinned Producerの実Vitest＋実SHO CLI・Payload byte/Digest＋SUI側Ticket Digest review | TEI原本のSource/Qualified Target再解決、実Owner意味受理 |
+| `harness-switch` | 同一Node/SHO CLIの`--harness`表示値だけを変えてReceipt宣言が一致する | **二つの実Agent Session・OS/Host Grant/egress**は`not-run/not-proven` |
+| `second-session`／G4再開 | 別CLIプロセス・新Session**ラベル**で再受領 | 同一Live Sessionの復元、旧Grant移植 |
+| G3のTEI read-only `tei-readonly-observation-cited` | 実TEI Catalog観測をTicketの`evidence/references`へ引用した事実 | 元TEI Source/Workspace/Scope/対象の独立再解決（QH-R/C） |
+| TicketへのGrant/History注入拒否 | **票のSchema禁止欄**の拒否 | HarnessのTool Grant・会話履歴が別経路で移らないこと |
+| 部分Payload切詰め | サイズ・Digestの不一致拒否 | 部分Tool Reply/欠落Invocationの拒否 |
+| G4-N3の旧Receipt編集 | **新しいConsumerは旧Receiptを入力に使わない** | 再利用経路でのReplay拒否。未実施で`not-run` |
+
+SHO #49の純粋なClaim CeilingテストがCI成功しても、**実SUI/TEI別checkoutを用いたフルRunner再実行にはならない**。実TEI→SUI→SHO QH-P0はまだNOT RUNであり、元TEI対象をSHOではなくDriverが読んだ場合もConsumer資格へ昇格させない。TAI #168 G0→G1→G2／H2/H3四Slot適格0/4の先行順を変えず、新しい共通Host・Selection Registry・Evidence Verifier・Handoff v2を追加しない。
 
 ### 3.4 必須負例
 
@@ -712,7 +730,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | Case | 独立Expected（QH-P0全体はNOT RUN。QH-07の局所Consumer負例のみ実行済み） |
 | --- | --- |
 | **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
-| **QH-02** 同Kind同ID重複・別Scope同名 | [TEI #4524](https://github.com/hat47x/tei-platform/pull/4524)で**モデル配列内の同Kind同ID重複**をerror診断し、曖昧IDを`Index()`の唯一の対象として返さず、異Kind同IDの正例を保持する実装・独立Expectedを追加（exact HEAD CI／main統合状況は別確認）。**別Source/Scopeの同名**は、同一モデル配列内の重複とは異なる：Source/Scope/Occurrence/Revisionを絞ったProduct実Resolver、GUI固定対象からの再解決、CRUD/図面/外部Harnessの不適格停止は引き続きNOT RUN。 |
+| **QH-02** 同Kind同ID重複・別Scope同名 | [TEI #4524](https://github.com/hat47x/tei-platform/pull/4524)で**モデル配列内の同Kind同ID重複**をerror診断し、曖昧IDを`Index()`の唯一の対象として返さず、異Kind同IDの正例を保持する実装・独立Expectedを追加（**2026-11-12 exact HEAD `abc23a610` の5件のGitHub Actions成功、main統合済み**）。**別Source/Scopeの同名**は、同一モデル配列内の重複とは異なる：Source/Scope/Occurrence/Revisionを絞ったProduct実Resolver、GUI固定対象からの再解決、CRUD/図面/外部Harnessの不適格停止は引き続きNOT RUN。 |
 | **QH-03** 構造FingerprintとSource/Authority変化・A→B→A | [merged #4507](https://github.com/hat47x/tei-platform/pull/4507)の**計算純粋性・自己参照排除は修正済み**として別記録。一方、Authorityのみ変更・Source-only変更・A→B→Aで構造Digestが同じでもSource/current Grant/意味資格を復元しない（#4514はDraft、別実試行NOT RUN） |
 | **QH-04** CRUD明示のみ・矛盾/誤索引 | [#4513 Draft](https://github.com/hat47x/tei-platform/pull/4513)のData索引修正がまだmain未統合。仮に索引修正済みでも、#4472の明示CRUD-only／矛盾後勝ち／`ok=true`の整合判定は別の独立Expectedが必要 |
 | **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
@@ -734,7 +752,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 ### 10.5 Model Identityの最小修正から、実Productの固定対象へ（2026-11-12）
 
-[TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)の残課題に対応する[PR #4524](https://github.com/hat47x/tei-platform/pull/4524)は、三要素モデルの**同じ種類内で同じIDを複数宣言した**状態をDUPLICATE_DATA_ID／DUPLICATE_FUNCTION_ID／DUPLICATE_BUSINESS_ID（error）で診断し、Data/Function/BusinessそれぞれのIndexがそのIDを後勝ち・先勝ちで一意に扱うことを防ぐ。手書きExpectedは各種類の重複、3件目の重複、重複しない要素の保持、異Kind同IDの正例、空ID、入力非破壊を分離する。
+[TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)の残課題に対応して**main統合済み**の[PR #4524](https://github.com/hat47x/tei-platform/pull/4524)（exact HEAD Go/Go vet/計画検査等5 CI成功）は、三要素モデルの**同じ種類内で同じIDを複数宣言した**状態をDUPLICATE_DATA_ID／DUPLICATE_FUNCTION_ID／DUPLICATE_BUSINESS_ID（error）で診断し、Data/Function/BusinessそれぞれのIndexがそのIDを後勝ち・先勝ちで一意に扱うことを防ぐ。手書きExpectedは各種類の重複、3件目の重複、重複しない要素の保持、異Kind同IDの正例、空ID、入力非破壊を分離する。
 
 この限定修正から次の3層を区別する。**第一層：モデル局所**＝ValidateModel.OK=falseと曖昧な同Kind IDの索引除外（#4524の対象）。**第二層：Product派生**＝CRUD表・図面・モデル参照/ナビゲーションが不適格対象に黙って結び付かない（TEI #4472/#1124・後段独立Expected）。**第三層：選択・実利用**＝Studio/CUIから固定した対象がSource/Scope/Occurrence/Revision改版後に一意でなければAI送出・編集適用を止め、人間へ複数候補と参照位置を提示する（TAI #629/#633・TEI #1124／未実装）。**第一層のPASSで第二・第三層を自動PASSへ昇格しない**。
 
