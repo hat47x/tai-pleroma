@@ -1027,3 +1027,25 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **次の検証**：①公開・合成Sourceの同Root正例／別Root同内容負例／同offset別SubjectをTEI Product Readerで観測、②既存G5-N5を実Consumer未実行でもJSON一致する対照として再利用、③実Consumerの当該Attempt再Readを独立に観測できない場合はC=not-provenを維持、④実外部Agent Tool経路とG0/G1/G2はTAI #168の別Gate。Receiptの自己申告時刻・Nonceを加えるだけで実実行/Replay除去が証明されたとは言わず、新Attester/中央ID Store/Handoff v2/Runnerを導入しない。
 
 **資格**：SHO #47のReplay負例とそのCIは限定PASS。TEI #4504はDraft、B Consumerの当該再Read・実Agent/Live Session・現在Host Grant・GUI Pin→Harness→Product UI復帰、QH-P0新TrialはNOT RUN/not-proven。Product局所試行はTAI #168の固定H2/H3初回4 Slot（比較適格0/4）の追加Blockingではない。
+
+### 48.5 Pinを持つAI変更提案から、Modeler／DBの明示操作へ進む条件
+
+**接続する他レーンの判断**：[TEI 三要素モデル Draft #4478 §27/§28](https://github.com/hat47x/tei-platform/pull/4478)、[Studio実装Owner #4515](https://github.com/hat47x/tei-platform/issues/4515)、[REA横断 Draft #4508](https://github.com/hat47x/tei-platform/pull/4508)、[組織モデリング Draft #4500](https://github.com/hat47x/tei-platform/pull/4500)が共通して区別したのは、画面上の項目、TEIのData/Function/Business各モデルにある意味要素、Declared/Desired Source、実DBのObserved Schema、実Migration/Host Effectである。AIがUI上のPinから「この項目を追加・削除」と答えても、どのレベルへの提案かを**Product側で再解決してから**適用候補にする。YICはこの業務意味やTable Writerを新たに定義せず、既存ProductのOperation/Previewに案内する。
+
+| 作業対象・変更指示 | Pinから先に確認すること | 禁止する暗黙操作 |
+| --- | --- | --- |
+| UI Widgetを1件追加・配置変更 | UI Occurrenceと対応するMapping、未結合なら未結合と表示 | UI要素の作成をTable Column生成・実DB DDL・Accepted Meaningの自動変更にしない |
+| 既存TableのFieldを削除・改名 | Declared Sourceの現Revision、Data Model/CRUD/Query/Rule/画面の被参照、部分取得か全量か | 画面Widgetを無断削除、同名別Fieldへ自動結合、依存未観測を「影響なし」、実DB Applyを完了扱いしない |
+| Raw DBでColumnが増減して見える | Observed DB SchemaとDesired/Declaredの差、接続先/Scope、現在取得の完全性 | 観測差や権限不足からTEI Sourceを書換えず、部分取得や不可視をColumn不存在にしない |
+| AIが構造化Patchを提案 | 元のWorkspaceRef/root、Qualified Target、Source Revision、写像の解決、Proposalの目的と差分 | Pin/Prompt承認だけでHost Grant、Source Commit、Migration実行、Business Effectを認定しない |
+| 三要素分析法のModel/図・CRUDを選択 | 原典のデータモデル・機能モデル・業務モデルと正式なSource上のRelationを確認 | 描画用parent Edgeや汎用Roleだけで原典のモデル/業務Flow/Relation意味が確定したとしない |
+
+**R5の最小負例を既存Ownerで検収する**：
+- **YIC-UI-01**（[TEI DMU-01](https://github.com/hat47x/tei-platform/pull/4478)）：AIが「画面へ項目追加」を提案し人がUI操作だけ選んだ場合、UI Occurrence +1／Declared Column +0／実DB Apply 0。別途「列を作り関連付ける」と明示した操作は別Proposal・影響Previewを要する。
+- **YIC-UI-02**（DMU-03/04/07）：Field Cを参照する画面2件でDeclared Field Cを削除。UI2件は残すが、有効Mapping 0・警告2・旧CへのWrite 0。Query/Rule/CRUDの依存が部分取得ならunknownを残す。
+- **YIC-UI-03**（[PIN-S0-02/03/04](https://github.com/hat47x/tei-platform/issues/4515)）：別Rootに複製した同Manifest/同Source、A→B→A、描画用のparent Edgeを混在。元Pin Intentは保持しても別Workspace/別Column/別Relationへ無音Rebind 0。実Source/Host資格を再Readできなければ送出とApplyを停止。
+- **YIC-UI-04**：AIが元Source上の実ColumnやAuthoritative Tableの変更を示唆しても、UI/モデルSourceのPreview→選ばれた明示Patch→実保存Receipt→必要時DB Migration Plan/Apply/Readbackを別々に記録。ローカルUndoと実DBロールバックは同一視しない。
+
+**最初の実装を肥大化させない**：TEI [#4515](https://github.com/hat47x/tei-platform/issues/4515)は現Workbenchの既存Inspectに対する**read-only Subject Pin**だけを先行し、同IssueへTable/Widget/Schema Writer・Relation Pinを持ち込まない。UI/Mapping/Schemaの負例実装は[#1124](https://github.com/hat47x/tei-platform/issues/1124)、[#1143](https://github.com/hat47x/tei-platform/issues/1143)、[#4478](https://github.com/hat47x/tei-platform/pull/4478)、[#4125](https://github.com/hat47x/tei-platform/issues/4125)、[#2514](https://github.com/hat47x/tei-platform/issues/2514)の既存Source/Expectedを参照し、適格になってからR5へ渡す。通常の開発相当の意味確認で足りる場合に新Owner承認Engineを要求しない。OKF等による出典/版管理は任意の既存手段とする。
+
+**現在資格**：本節は他レーンの**Draft設計と後段受入条件の接続のみ**。Workbench実Pin、DMU-01〜15、DB Apply、Host Effect、AI変更提案の実Product再現、外部Harness→GUI→DBのE2EはNOT RUN。先行R0〜R2のread-only／TAI #168の実OS G0→G2・独立H2/H3 4 Slot（比較適格0/4）には追加Hard Gateを設けない。
