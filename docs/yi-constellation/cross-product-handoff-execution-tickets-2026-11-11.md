@@ -730,7 +730,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | Case | 独立Expected（QH-P0全体はNOT RUN。QH-07の局所Consumer負例のみ実行済み） |
 | --- | --- |
 | **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
-| **QH-02** 同Kind同ID重複・別Scope同名 | [TEI #4524](https://github.com/hat47x/tei-platform/pull/4524)で**モデル配列内の同Kind同ID重複**をerror診断し、曖昧IDを`Index()`の唯一の対象として返さず、異Kind同IDの正例を保持する実装・独立Expectedを追加（exact HEAD CI／main統合状況は別確認）。**別Source/Scopeの同名**は、同一モデル配列内の重複とは異なる：Source/Scope/Occurrence/Revisionを絞ったProduct実Resolver、GUI固定対象からの再解決、CRUD/図面/外部Harnessの不適格停止は引き続きNOT RUN。 |
+| **QH-02** 同Kind同ID重複・別Scope同名 | [TEI #4524](https://github.com/hat47x/tei-platform/pull/4524)で**モデル配列内の同Kind同ID重複**をerror診断し、曖昧IDを`Index()`の唯一の対象として返さず、異Kind同IDの正例を保持する実装・独立Expectedを追加（**2026-11-12 exact HEAD `abc23a610` の5件のGitHub Actions成功、main統合済み**）。**別Source/Scopeの同名**は、同一モデル配列内の重複とは異なる：Source/Scope/Occurrence/Revisionを絞ったProduct実Resolver、GUI固定対象からの再解決、CRUD/図面/外部Harnessの不適格停止は引き続きNOT RUN。 |
 | **QH-03** 構造FingerprintとSource/Authority変化・A→B→A | [merged #4507](https://github.com/hat47x/tei-platform/pull/4507)の**計算純粋性・自己参照排除は修正済み**として別記録。一方、Authorityのみ変更・Source-only変更・A→B→Aで構造Digestが同じでもSource/current Grant/意味資格を復元しない（#4514はDraft、別実試行NOT RUN） |
 | **QH-04** CRUD明示のみ・矛盾/誤索引 | [#4513 Draft](https://github.com/hat47x/tei-platform/pull/4513)のData索引修正がまだmain未統合。仮に索引修正済みでも、#4472の明示CRUD-only／矛盾後勝ち／`ok=true`の整合判定は別の独立Expectedが必要 |
 | **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
@@ -752,7 +752,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 ### 10.5 Model Identityの最小修正から、実Productの固定対象へ（2026-11-12）
 
-[TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)の残課題に対応する[PR #4524](https://github.com/hat47x/tei-platform/pull/4524)は、三要素モデルの**同じ種類内で同じIDを複数宣言した**状態をDUPLICATE_DATA_ID／DUPLICATE_FUNCTION_ID／DUPLICATE_BUSINESS_ID（error）で診断し、Data/Function/BusinessそれぞれのIndexがそのIDを後勝ち・先勝ちで一意に扱うことを防ぐ。手書きExpectedは各種類の重複、3件目の重複、重複しない要素の保持、異Kind同IDの正例、空ID、入力非破壊を分離する。
+[TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)の残課題に対応して**main統合済み**の[PR #4524](https://github.com/hat47x/tei-platform/pull/4524)（exact HEAD Go/Go vet/計画検査等5 CI成功）は、三要素モデルの**同じ種類内で同じIDを複数宣言した**状態をDUPLICATE_DATA_ID／DUPLICATE_FUNCTION_ID／DUPLICATE_BUSINESS_ID（error）で診断し、Data/Function/BusinessそれぞれのIndexがそのIDを後勝ち・先勝ちで一意に扱うことを防ぐ。手書きExpectedは各種類の重複、3件目の重複、重複しない要素の保持、異Kind同IDの正例、空ID、入力非破壊を分離する。
 
 この限定修正から次の3層を区別する。**第一層：モデル局所**＝ValidateModel.OK=falseと曖昧な同Kind IDの索引除外（#4524の対象）。**第二層：Product派生**＝CRUD表・図面・モデル参照/ナビゲーションが不適格対象に黙って結び付かない（TEI #4472/#1124・後段独立Expected）。**第三層：選択・実利用**＝Studio/CUIから固定した対象がSource/Scope/Occurrence/Revision改版後に一意でなければAI送出・編集適用を止め、人間へ複数候補と参照位置を提示する（TAI #629/#633・TEI #1124／未実装）。**第一層のPASSで第二・第三層を自動PASSへ昇格しない**。
 
