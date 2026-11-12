@@ -125,14 +125,14 @@ flowchart TB
 
 ## 9. 2026-11-11追補：活動の継続・表示の完全性・成果の達成は別の契約
 
-**追加の照合基準**：TAI main `2d44d82583354ec46dc8e4241c01d49c8c20d67d`（2026-11-11確認）。前節のmain `2a8fd9fa...` は当時の固定Snapshotであり、過去の観測版を現在の実証へ黙って差し替えない。[PR #602](https://github.com/hat47x/tai-pleroma/pull/602)は**merged**、[PR #624](https://github.com/hat47x/tai-pleroma/pull/624)（SCN-001成果の主張別観測）と[PR #622](https://github.com/hat47x/tai-pleroma/pull/622)（SVG/AXの関係再構成）は**Draft**。本追補ではProduct/Providerの新たな実行やOwner受理を行っていない。
+**追加の照合基準**：TAI main `2d44d82583354ec46dc8e4241c01d49c8c20d67d`（2026-11-11確認）。前節のmain `2a8fd9fa...` は当時の固定Snapshotであり、過去の観測版を現在の実証へ黙って差し替えない。[PR #602](https://github.com/hat47x/tai-pleroma/pull/602)は**merged**、[PR #624](https://github.com/hat47x/tai-pleroma/pull/624)（SCN-001成果の主張別観測）と[PR #622](https://github.com/hat47x/tai-pleroma/pull/622)（SVG/AXの関係再構成）は**merged**。本追補ではProduct/Providerの新たな実行やOwner受理を行っていない。
 
 ### 9.1 三つの別の性質
 
 | 性質 | 適切な質問 | 最小の裏付け・既存Owner | 否定する短絡 |
 | --- | --- | --- | --- |
 | **Activity continuity** | 次の人・Product・Harnessが、何をしようとしていて何が未決かを再開できるか | 固定された対象・Source・未完の義務・用途と開示Scope・Consumerの独立再読取。[#271](https://github.com/hat47x/tai-pleroma/issues/271)／merged [#602](https://github.com/hat47x/tai-pleroma/pull/602) | 同一Session/票の存在＝現在Grant、Meaning、Product受理 |
-| **Capability usability** | 今の対象・環境で、必要なTool/Skillが正しく使えるか。そもそも追加が必要か | 既存Product CLI/契約と独立Expectedを対照。可用性・Tool実Load・Disclosure/Host Grantは別。[#488](https://github.com/hat47x/tai-pleroma/issues/488)／Draft [#601](https://github.com/hat47x/tai-pleroma/pull/601) | Tool一覧・Skill説明＝現在利用資格。追加Product＝必ず増分価値 |
+| **Capability usability** | 今の対象・環境で、必要なTool/Skillが正しく使えるか。そもそも追加が必要か | 既存Product CLI/契約と独立Expectedを対照。可用性・Tool実Load・Disclosure/Host Grantは別。[#488](https://github.com/hat47x/tai-pleroma/issues/488)／merged [#601](https://github.com/hat47x/tai-pleroma/pull/601) | Tool一覧・Skill説明＝現在利用資格。追加Product＝必ず増分価値 |
 | **Outcome attainment** | 誰のGoalのどの部分が、受取先・実Effect・本人評価まで達したか | `T-Draft`／`R-Deliver`／`S-NoUnauthorizedPublish`／`P-Publish`／`Effect`／`Value`を別Claimとして読む。[SCN-001 #624](https://github.com/hat47x/tai-pleroma/pull/624)（Draft）、[#127](https://github.com/hat47x/tai-pleroma/issues/127) | `passed: true`＝成果／適切な停止＝公開達成／Artifact一致＝本来の受取先が受領 |
 
 `#624`の2026-11-11合成記録で、D-04のbytes一致＋別実装SHOの限定Reader一致と、公開gateの拒否は同時に観測されている。**「無断公開を防いだ」は制約の充足であり、公開というGoalは未達。人間の受理・利用者ValueはNOT RUN**。比較なしでも`passed:true`となる場合、また別Attemptの同bytesを今回のGoal達成に流用する場合を負例にしている。これは本書で新しいOutcome Engineを作る理由ではなく、既存#624のClaim別観測を正しく読む理由である。
@@ -146,7 +146,7 @@ flowchart TB
 | TAI **Portfolio**（V1） | 収集・開示されたProduct/Role候補と未分類 | 未登録、未収集、非公開のProductや関係。公開Projectionの0件は世界の0件でない |
 | TAI **Capability / Integration**（V2/V3） | 主張される能力、固定対象の実接続／実Read | 発見されないToolの実不存在、全ての必要Consumerの利用、現行Grant |
 | TEI **閉じた実効Pipeline／Self-buildの宣言・実行図** | 定義済みの入力・Node/Edgeと、個々の検査が観測した閉包範囲 | 宣言外の子プロセス作用、暗黙のI/O、自己申告したstateやProvider使用、実行時の未観測枝。TEI [#4299](https://github.com/hat47x/tei-platform/issues/4299)では、childの自己申告だけを用いたstate分離のClaimが、実際には共通state使用でも成立する反例を報告 |
-| **Render/A11y** | 表示されたノード・直接Edgeが図の読み手へ伝達されたか | SVG/Accessibility Treeの一致＝Pipeline実行完全性、全Product/Consumerに対する可視化。TAI Draft [#622](https://github.com/hat47x/tai-pleroma/pull/622)は関係のAX再構成を対象にし、Screen Reader操作や実Source整合は別 |
+| **Render/A11y** | 表示されたノード・直接Edgeが図の読み手へ伝達されたか | SVG/Accessibility Treeの一致＝Pipeline実行完全性、全Product/Consumerに対する可視化。TAI merged [#622](https://github.com/hat47x/tai-pleroma/pull/622)は関係のAX再構成を対象にし、Screen Reader操作や実Source整合は別 |
 | **Effect/Outcome** | 具体的なAttempt、保存物、独立Read、受領・結果のうち実観測したClaim | Digest一致から実Attemptの同一性、`queued`からEffect、適切な拒否からGoal達成、少数の実測から本人の価値 |
 
 **閉包を主張する最小条件（説明用チェック、独立Schema/Gateではない）**： (a) 問い・対象母集団・用途・観測時間を定義、(b) 実際に読まれ／実行された範囲と、省略された範囲を別表示、(c) 証拠の発行者・Source Revision・Attempt/環境・Consumerを追跡、(d) hidden/unknown・失効・到達不能を「不存在」とせず、(e) 実行を示す観測と子プロセス自身の申告を区別する。**TEIの有効Pipelineの可視化目標は尊重するが、TAIの部分的な横断Catalogへ閉世界を誤適用しない。**
@@ -162,6 +162,49 @@ flowchart TB
 1. **単独Jobを壊さない**：TEIのread-only B0を維持。B1 Product Skill、B2 TAI横断Skillの追加便益と失敗を同一Source/Tool/Profile/独立Expectedで比較。#601/#488が所有。
 2. **実Handoffを過大計上しない**：merged #602の合成資料・実SUI/SHO Consumer観測を参照し、未実証の実対象・現行Grant・Product Oracleを#271／各Productへ。新しいTAI共同正本は作らない。
 3. **成果のClaimを省略しない**：#624の`passed:true`でもT-Draft保留、別Attempt、公開拒否とGoal未達の反例を既存#28/#127/#422の評価にリンク。新しいOutcome Storeや第二Runnerは作らない。
-4. **閉包・自己申告の反例はOwned Productで直す**：#4299はTEIセルフビルド、#622はTAI図のAX再構成、#232は外部送出と実OS境界であり、TAI全体像ガイドには**「何が実証で、何が読めないか」**だけを残す。
+4. **閉包・自己申告の反例はOwned Productで直す**：#4299はTEIセルフビルド、#622はTAI図のAX再構成（merged）、#232は外部送出と実OS境界であり、TAI全体像ガイドには**「何が実証で、何が読めないか」**だけを残す。
 
 **反証可能な価値仮説**：局所JobでTAIが介在してもGoalの正しさ、再開容易性、必要な判断の減少、総費用に差が出ないなら、そのJobにTAIを必須にしない。多Productでの継続も、普通のファイルとProductの正本参照で同等なら、新しい共有Runtimeを要求しない。安全性・開示・意味・Authorityを削って速度を稼ぐ比較を認めない。
+
+## 10. 2026-11-12追補：量化された主張・証拠閉包・回復を別々に読む
+
+**証拠の固定点**：TAI main \`ec9089a8874f7972fd481d62eb11af855f606b14\`（2026-11-12照合）、TEI main \`ea9e4560a835323c1d6d748486216b9ea011a965\`。既存のTAI merged #601（CLI/Skill drift）、#602（SUI→SHO Handoff）、#622（RQ7 AX）、#636/#637/#638（G5/G4 Claims補正）とTAI Draft #600/#624、TEI merged #4409（ETL設計）、Draft #4487（TEA証拠量化）、#4464（表現の可逆性）を**各々の固定観測範囲で読む**。この文書での新CLI/Provider/実Agent試験、Product Owner受理、利用者の価値測定は実施していない。
+
+### 10.1 Claimを「同じsuccess」にせず、問いごとの閉包を示す
+
+| 問いの形 | 正例の最小根拠 | 否定・全称・完了を主張するのに不足し得る根拠 | 既存のOwner／反例 |
+| --- | --- | --- | --- |
+| **存在**：「特定の対象／行／成果物がある」 | Productの具体的なPositive Witness、Source・Scope・Attempt・位置/内容の照合 | ある対象の発見を、別Audience/時点/母集団の存在へ昇格しない | TEI #2586／TAI #271。実PGではWorld FP一致でもRowsetが変わる |
+| **不存在**：「ある条件の対象が一件もない」 | 特定範囲を実Readしたという限定観測までは可能 | Source集合、Query/Filter、Snapshot/期間、RLS/Disclosure、全ページ/全Chunkの**必要閉包**がない0行から、世界全体の不存在は言えない | TAI Draft [#600](https://github.com/hat47x/tai-pleroma/pull/600)のRLS下の0行／実削除後0行の同値 |
+| **全称**：「全ての対象が条件を満たす」 | 1反例で全称は否定可能 | いくつかの合格Sample・一部Stage・限られたGraph Edgeでは全母集団の合格を証明しない。宣言Invariantと実履行の観測も別 | TEI TEA Draft [#4487](https://github.com/hat47x/tei-platform/pull/4487)の存在／全称／不存在、TEI [#4464](https://github.com/hat47x/tei-platform/pull/4464)の投影Matrix 11セル判定・未カバー21組 |
+| **処理完了**：「Batch/ETLを終えた」 | 固定入力、受理したRun、限定出力Artifactの実記録 | Chunkの部分成功、Stage完了、\`exit 0\`、Artifact存在から、全入力処理／Publish／Consumer受領／業務受理を一括で導かない。再実行と訂正Runは別 | TEI merged [#4409](https://github.com/hat47x/tei-platform/pull/4409)は設計のみ・実ETL未実装、初回TSV縦断は計画 |
+| **同一Task／Attempt**：「同じ操作を再開した」 | Producer/実HostのTask ID・Attempt・Operation Identity、結果の参照 | 同じArtifact digest、同じSessionラベル、同じHandoff票、\`duplicate\`応答は実結果の完全受領や同一Live Sessionを証明しない | TAI [#624](https://github.com/hat47x/tai-pleroma/pull/624)のEKI実lost-ACK（Draft）。同じTaskの再送は二重実行を抑制したが、Agent再起動後は出力本体が失われた |
+| **現在の利用許可**：「この相手へこの情報を渡してよい」 | Productの現在Disclosure/対象と、実Host/Providerの現在Grant、実Recipient/Sinkでの観測 | TicketのAudience・Skill文字列、Source Fingerprint、\`noUnapprovedSourceAutoSend:true\`等の宣言では外部拒否・非送信を証明しない | TAI merged [#636](https://github.com/hat47x/tai-pleroma/pull/636)／[#637](https://github.com/hat47x/tai-pleroma/pull/637)／[#638](https://github.com/hat47x/tai-pleroma/pull/638)、[#232](https://github.com/hat47x/tai-pleroma/issues/232) |
+| **Effect／Outcome**：「作業・業務・人の目的を達した」 | 実Provider独立Readback、業務Ownerの受理、影響を受けた本人の評価を**該当する主張ごとに**観測 | Tool ACK、\`queued\`、Receipt、別実装のbytes一致、正しい公開拒否、\`passed:true\`を実業務Goalの合格へ自動昇格できない | TAI Draft [#624](https://github.com/hat47x/tai-pleroma/pull/624)／[#127](https://github.com/hat47x/tai-pleroma/issues/127)、EKI #829 |
+
+**この表は交換Schemaや新しいProof Engineではない。** 既存のTEI/SHO/SUI/SEI/EKIのRead、Handoff、Receipt、Model/Source Revision、Claim、Provider/Host観測を**問いごとに参照して読むための案内**である。閉包の判定・業務意味・Owner受理の責任は各Productに残す。
+
+### 10.2 受け渡した情報を「現在使える」と言うための五つの独立した観点
+
+一つのActivityを製品間で継続する際、次の五つの質問を併記する。強い合否一つに統合せず、該当しない条件は\`not-applicable\`、知らないものは\`unknown\`、未試験は\`not-run\`と区別する（状態語を新しい横断Contractとして強制するものではない）。
+
+1. **Identity / Scope**：元の対象・Occurrence/Edge・Source Revision・Audience・Purposeを特定できるか。Pinned SelectionとSourceを無条件で再束縛しない（[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)、[TAI Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)）。
+2. **Observed Delivery / Consumption**：誰が、どの実行経路で、どのbytes・根拠を実読取したか。G5のAはLocal Node→SHO、BはExternal ARGV→SHOであり、**実二Harness Agent/Live Sessionではない**。Product Skill名の引継ぎは実Loaderを証明しない（merged #636/#638）。
+3. **Availability / Current Eligibility**：元のProductが同じ版・必要なSource/Provider/Grantで現在も参照可能か。Source差分とProviderの行差分、Audience変更とHost Recipient許可、Session継続とSource資格は別（[#271](https://github.com/hat47x/tai-pleroma/issues/271)、[#232](https://github.com/hat47x/tai-pleroma/issues/232)）。
+4. **Effect / Recovery**：同じTask・Attempt・Idempotency Keyに対する実Providerの状態、結果本体の保存と再取得可否、外部副作用を別に把握したか。ACK喪失時に新しいTask keyで無条件に再実行しない。EKI #829の出力本体喪失とTask状態の差異はEKI Ownerへ戻す。
+5. **Human Goal / Meaning**：成果物ができた、公開を正しく止めた、第三者が実受領した、本人が目的を達した、を別Claimにできるか。CSWの媒介者・TEIのValidator・AIがOwner判断を代行したという一般化をしない。
+
+この五つは**完全な直列パイプラインではなく、異なる観測責務**を並べたもの。局所TEI read-only Jobでは一部だけで足りる。実Actionでは現在GrantとEffectの根拠が不可欠。実Harnessの初回資格は従来どおり[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS read-deny→G1送出→G2完全Tool Reply→独立H2/H3四Slot（現時点0/4）を優先し、この表によって新Hard Gateを追加しない。
+
+### 10.3 既存実験へ還元する、誤って「完了」と読みやすい六つのケース
+
+| Case | 注入・観測 | 正しい限定結果、次のOwner |
+| --- | --- | --- |
+| Q-ABS | 同じ定義FPの実PGでRLS可視制限と実削除を作り、両方とも0行にする | \`visible-rowset=0\`。世界で不存在は**unknown**。Provider可視範囲／独立OracleはTEI #2586・TAI #271、Draft #600 |
+| Q-BATCH | 固定TSVのChunk 1だけ成功、Chunk 2は未読／遅延／削除訂正 | Stage限定。処理母集団と時点のClosureが無ければ完了とせず、再実行のEffect級別。TEI #1130／merged #4409設計 |
+| Q-PROJ | Ordered Collection→Tree、Graph→Tree、Aggregate→詳細の逆方向を試す | 表示ができても順序・Occurrence・多重Edgeや粒度が失われる場合がある。逆写像を勝手に許可しない。TEI #4351／Draft #4464 |
+| Q-HANDOFF | TicketのSkill宣言あり／なし、Audience追加、G5 A/B受領 | Product受領≠Skill実Loader、TicketのAudience拡大≠Host Recipient Grant、A/B Receipt一致≠二Agent。TAI merged #636/#637/#638 |
+| Q-ACK | EKI実Taskで受領ACKを落とし、同じkey再送、Agent再起動後の本体を別確認 | Duplicate防止と本体取得・Task終端・Effectは別。後者は未達・未知を維持。TAI Draft #624／EKI #829 |
+| Q-GOAL | SCN-001でD-04を作成し、公開gateに拒否させる | T-Draft限定成立、無断公開禁止の制約成立。公開Goal未達・利用者Value未評価。TAI Draft #624／#127 |
+
+**後続の順序（提案）**：①既存Receipt/実Readの誤ったClaim昇格を止める（#636/#638はmain統合済み）→②各Ownerの既存独立Expectedで上記未実施だけを反証→③局所Tool-only／Product Skill／必要時TAI Skillの価値・人手・総コストを測る（#488/#422）→④人間による意味とOutcomeのレビュー（#127）。これまでの実装が埋めた「観測あり」と残る「未観測」を同列に扱わず、TAIに第二Evidence台帳／統一Workflowを作らない。
