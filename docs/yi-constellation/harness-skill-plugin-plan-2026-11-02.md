@@ -896,14 +896,14 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | **Pinned Work Set** | 利用者が明示的に固定した対象・含める/除外する要素・意図・関連文脈への参照 | Product/Workspace/Qualified ID/Source・View Revision/Occurrence/Scopeを区別。画面移動で自動解除しない。実Sourceの失効や対象不在でも意図の履歴を保持し、適格性は unknown/stale 等で示す |
 | **Shared Qualified Projection** | 今回のAudience・目的・操作に向けて実際にHarnessへ渡す限定Context | Product/Hostの現在のRead/Disclosureで再構成し、Preview後に明示送出。Pin内容・全画面・会話履歴・未公開関係が丸ごと送出されたとは見なさない。実送出byteとHarness受領を別に記録 |
 
-標準的な**認知順**は「一時選択 → 対象を固定 → 含める文脈と対象版を確認 → 現在のSource/Grant/Disclosureを照合 → 送出内容をPreview → 明示Share → Harnessで実受領 → 候補を元ProductでReview/適用」。CUIでも同じ意味を持つ操作を提供するが、ここで具体的なコマンド名・ホットキー・実APIを固定しない。固定操作・解除操作は明示し、Undo/再固定を可能にする。編集Draft・未保存Bufferの存在、対象の現在性、共有の許可はそれぞれ独立に表示する。
+標準的な**認知順**は「一時選択 → 対象を固定 → 含める文脈と対象版を確認 → 現在のSource/Grant/Disclosureを照合 → 送出内容をPreview → 明示Share → Harnessで実受領 → 候補を元ProductでReview/適用」。CUIでも同じ意味を持つ操作を提供するが、ここで具体的なコマンド名・ホットキー・実APIを固定しない。固定操作・解除操作は明示し、Undo/再固定を可能にする。**画面遷移中のPin保持**と**アプリ再起動・別Harness Session後の復元**は別機能であり、後者は実Productの保存/再解決が観測された範囲に限る。一度の明示Shareが、同一目的・対象・許可範囲内での毎Tool呼出しごとの重複確認を必須化するものでもない。対象拡大・Audience変更・再資格不足時は送出前に再Preview/確認する。編集Draft・未保存Bufferの存在、対象の現在性、共有の許可はそれぞれ独立に表示する。
 
 ### 46.2 Skill／Harness／Productの境界
 
 - **Product**はQualified Targetの実解決、Source/Revision、編集可能範囲、Preview/Undo/Acceptanceと現在のDisclosureを担う。[TEI #1124](https://github.com/hat47x/tei-platform/issues/1124)の三視点/Source編集、[#2516](https://github.com/hat47x/tei-platform/issues/2516)の用途相対Construction Context、[SHO #19](https://github.com/hat47x/sho-composer/issues/19)の文書編集、[SUI #3368](https://github.com/hat47x/sui-sensemaking/issues/3368)の許可Projectionを再利用。CUI/GUIの同一意味はTEI [#3420](https://github.com/hat47x/tei-platform/issues/3420)など既存入口の実契約で確認する。
 - **Product Skill**は「今固定されている対象をどう調査・操作し、何を確認するか」の再利用手順を案内する。固定対象やTool名だけで依頼を広げず、実Tool/Profileを再発見する。**TAI横断Skill**は複数Product間で必要なときだけ許可済み参照・未決・作業目的をつなぎ、現在Grantは移送しない。
 - **Harness Session**は会話とTool利用の実単位。Pinned Work SetはSessionの同一性に依存しない利用者の作業意図であり、別Sessionへ持ち込む際は再解決・再開示確認する。モデル/ロール/開発Workerの割当は[TEI #4218](https://github.com/hat47x/tei-platform/issues/4218)の別責務であり、このSkill選択を上書きしない。
-- **Evidenceと配布**：Rawログ/非公開Source/高容量エビデンスを、Skill bundleやGitHubへ無条件にコピーしない。参照先・digest・取得可能性・Retention・送出範囲の区別を[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)／[#74](https://github.com/hat47x/tai-pleroma/issues/74)と各Productの保存Ownerへ委譲。URI/Digestは新しい認可権でも読取成功の証拠でもない。
+- **Evidenceと配布**：Rawログ/非公開Source/高容量エビデンスを、Skill bundleやGitHubへ無条件にコピーしない。**GitHubにEvidence実体だけでなく存在情報・Digest・Locatorを一切送らないlocal-only運用**も許容し、[TEI #4307](https://github.com/hat47x/tei-platform/issues/4307)のGit連動（任意）・Local CAS/NAS/S3の保管Profileと責務を再利用する。参照先・digest・取得可能性・Retention・送出範囲の区別を[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)／[#74](https://github.com/hat47x/tai-pleroma/issues/74)と各Productの保存Ownerへ委譲。保存済み≠取得済み≠現在利用可能であり、URI/Digestは新しい認可権でも読取成功の証拠でもない。
 
 ### 46.3 後続の独立反証（YIC-FC-01〜08）
 
