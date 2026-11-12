@@ -392,6 +392,8 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 
 また[TEI Draft #4504](https://github.com/hat47x/tei-platform/pull/4504)／[TEI Workbench #4515](https://github.com/hat47x/tei-platform/issues/4515)は、完全に同じManifestとSourceを別のWorkspace Rootに置いた際、Workspace名・Manifest SHA・World/SourceIndex/Model FP・Subject IDが一致しても利用者のPinは別対象になる負例を扱う。**対象同一性の基準はProductが現在保持するWorkspaceRef/rootと解決済みSubjectであり、外部Harnessに見えている値の一致ではない**。Scope・Realpath・現在Grantは当該Product/Hostで確かめ、外部へRaw Rootを無条件送出しない。実Workbench Pin/実Audience変更は未実施。
 
+**実装進展を踏まえた投資判断の更新**：[TEI merged #4524](https://github.com/hat47x/tei-platform/pull/4524)は、三要素モデルの同Kind同IDを診断し曖昧な要素を索引から除外する局所的な製品修正を実現した。[SHO merged #48](https://github.com/hat47x/sho-composer/pull/48)は、同一Markdownでも別TEI Source/Targetの票が実Consumerで受領される反例を確認した。どちらも**実Productの対象検査・受信内容の適格判定を強化する根拠**であり、新たな全製品共通Agent Loopの必要性を示すものではない。TEI #4524がすべての派生Consumerの再解決を保証するわけでも、SHO #48が元TEIを独立Readしたわけでもない。次の実証は既存[QH §10](cross-product-handoff-execution-tickets-2026-11-11.md)に集め、別の試験票を新設しない。
+
 **投資判断を三つの欠落原因へ切り分ける**：
 
 | 観測した失敗 | 先に帰属するOwner | 独自YI Harness Loopの採用理由になるか |
