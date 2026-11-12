@@ -389,6 +389,24 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 <!-- tai-20261112-audience-declaration-vs-host-grant -->
 **実RunnerのClaim Ceiling（G4 N2／Audience）**：[SHOの既存Runner](https://github.com/hat47x/sho-composer/blob/main/scripts/handoff-cross-product.cjs)の2026-11-12時点のコードでは、元SUI票のAudience [sho-composer]を[sho-composer, other-consumer]へ変更する操作があり、コメントでは「狭めた／拡大を拒否」と説明されていた。実際には受信者の**宣言を拡大**し、SHO Consumerが新しい票を再Readしたことの確認である。**Hostが拡大を認可した／拒否した証拠ではない**。訂正案は[SHO Draft #42](https://github.com/hat47x/sho-composer/pull/42)（実Runner試験はNOT RUN）。初回QH-P0はこのG4 N2を「現在の宣言票の受領」とだけ記録し、実Audience Grant/送出可能性は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の別資格で検証する。Handoffのdisclosure.audienceという**データ**を認可Token/Host Policyの代用品にしない。
 
+<!-- tai-20261112-qhp0-repro-and-claim-ceilings -->
+**QH-P0の実実行カード（新Runnerは作らない）**：既存の[TAI Handoff実行票§10](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)を唯一の記録先とし、[SHO mainの実Runner](https://github.com/hat47x/sho-composer/blob/main/scripts/handoff-cross-product.cjs)をSHO checkoutで、絶対パスを渡して起動する（例：`node scripts/handoff-cross-product.cjs --sui-frontend <absolute-SUI-frontend> --tei-root <absolute-TEI-repo>`。山括弧は実パスへ置換）。実行前に(1) SHO/SUI/TEIのHEADとSHA、SUI Producer対象3ファイルのGit blob、対象ファイルの未変更状態、SUIの`node_modules/vitest/vitest.mjs`、Go/Node版を確認する。(2) Runnerが固定する**354-byte payload、独立SHA256、Product Producer Blob**を後追いで最新へ書換えない。Pin不適格ならfail/unsupportedのままSource差分レビューへ戻す。(3) Runnerの`TEI model catalog`が実際に行われ、`effect=read-only`・WorldFP・ModelRevision・AuthorityLimitsが受領Ticketに残ることを確認。(4) Consumerの別Process実Read、実Receipt・欠落/改変の拒否を記録。失敗しても別の合成RunnerでPASSを代用しない。
+
+**QH-P0のClaim Ceiling（独立Expected例、次回実行まではNOT RUN）**：
+
+| 観測列 | 実測で採用できる範囲 | この実行からは採用しない範囲 |
+| --- | --- | --- |
+| `I` | Driverが明示した合成選択 | 実GUI/CUIのPinned Target操作 |
+| `R` | TEI CLIが自身のCatalogを読んだ場合は**Driver由来の観測** | SHO Consumerが元TEI Qualified Subjectを同Workspace/Scope/Revisionで独立再解決したという主張 |
+| `P` | 公開・合成票とTicketに記録されたAudienceの**宣言** | 実OS/Host Grant/Recipient追加拒否、全Source完全性 |
+| `T` | SUI実Producer→SHO実ConsumerのTicket/Payloadの実byte受領と限界付きReceipt | 外部Harnessの実Network egress、同じLive Sessionへのattach |
+| `C` | SHOが受信Markdownと制約を保持したこと | TEI元Meaning/Owner受理、Source現在性、別Consumerの完全理解 |
+| `H` | 本RunnerのHarness名はラベル。別Process再受領は別Processとしてのみ記録 | Harness Skill実ロード、実共有Session、実業務Effect |
+
+**G4 N3のClaim Ceiling**：[SHO Runner](https://github.com/hat47x/sho-composer/blob/main/scripts/handoff-cross-product.cjs)の2026-11-12時点の`g4-n3-edited-receipt-not-adopted`は、過去のReceiptを改変した後に**新たにConsumerを呼び出し、そこで発行されたreceivedAtが改変した日時と違う**ことをassertしている。しかし、当該N3区間は**改変された旧ReceiptをProducerの実Review機能へ入力して拒否結果を得る試験ではない**。従って「新規受領で旧日時を採用しない」の限定PASS候補に留め、「改変旧Receiptが独立Verifierで必ず拒否された」とは主張しない。G2で実施するReceipt一致Reviewの証拠は別票で扱う。修正範囲と真正性CheckerのOwnerは[SHO #42](https://github.com/hat47x/sho-composer/pull/42)および現行SUI/SHO Producer/Consumerに返す（改変受領を扱うべきかもOwnerが判断）。これを外部HarnessのOS認可やSession継続の証明へ昇格しない。
+
+**モデル識別の追加対照（TEI現行Draft）**：[TEI #4504](https://github.com/hat47x/tei-platform/pull/4504)では、同じSource byte offsetに別Subjectが置かれる負例、同じSemantic Source/WorldFPでも**別Workspace**になる対照の回帰コードが追加された。旧Pinが一致するラベル・Span・Fingerprintだけで再束縛されないことを、TEI Productの既存read-only `ReadWorkspaceSubject`で先に評価し、結果/CI exact HEADが未確認なら判定はNOT RUNのまま。QH-P0のHandoff v1には独立Consumer Resolverが無いのに`workspaceId`の新正式Fieldを作ったことにはしない。Scope/Workspaceを現Schemaで無損失に渡せない場合は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)/[後継 #633](https://github.com/hat47x/tai-pleroma/pull/633)へFit/Gapを返す。
+
 **小さな独立Expectedの例（合成／設計のみ・NOT RUN）**：SUI内部の合成資料には8件のCardを置くが、外部へ公開可能な範囲は権限により制限する。許可済み検索結果Qが3件（仮ID A・B・D）なら、人がBを除外し許可済みFを追加した後のSは**A・D・F**である。実際にProductが読めない隠れたCardはQ/Aへ自動追加されず、外部Harnessに隠れたCardのID・件数・検索差を公開しない。元Source r1→r2の改版、表示上同名別Card、二Canvasの同Card occurrence、別Recipient、同一Sessionへの後着を一因子ずつ変化させる。各例で「Pin済み／現在一意に再解決済み／許可ProjectionでRead済み／実Toolへ配送済み／Consumerで受領済み」を**異なる観測**として記録する。
 
 **新たなHarness能力を選択条件にしない**：同一実Sessionの複数Client attach・並列Writer・Skill loaderを、代表Harnessすべてが提供するとは推定しない。実Support表で受信者Capabilityを確認し、Product側は1本の外部Sessionの利用または用途限定Activity Handoffに縮退する。外部HarnessのModel/provider切替、セッションのCancel、旧Grantの残留はProductの実Operation取消・情報消去の証拠にならない。
