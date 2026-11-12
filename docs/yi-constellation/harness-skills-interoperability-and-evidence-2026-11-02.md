@@ -372,3 +372,21 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 
 **状態**：設計・受入条件のみ。TEI #4475の修正、SUI/SHO/TEI/EKIの実UI一往復、跨製品Meaning Mappingの受理、Live Session共有、外部Harnessの対応製品間E2EはNOT RUN。
 
+<!-- tai-harness-20261112-parallel-lanes-first-real-job -->
+#### 11.8.6 独立開発経路を並走させ、外部送出の接合点だけを資格化する（2026-11-12）
+
+**前節P0〜P3は横断E2Eの証拠を積む順序であって、Product内部のread-only選択/Pinの開発を、外部HarnessのH2/H3全試験完了まで止める理由ではない。** 反対に、UIで選択/Pinができたことを、外部Harnessの実OS隔離・完全Tool Reply・Skill実Loadの代用品にしてはならない。二つの並列経路を**接合点でのみAND条件**にする。
+
+| 経路 | 実装・独立Expected | 他経路を待つ必要／停止線 |
+| --- | --- | --- |
+| **S：Product-local** | SUIの公開合成Cardでread-onlyのQ→人によるE/A補正→結果S、TEIのQualified Kind/ID/Source revisionの一意/曖昧診断、CUI/GUIのPin保持/Undoを、まずAI OFFまたは合成Selectorで評価。[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)/[TEI #1124](https://github.com/hat47x/tei-platform/issues/1124)/[Draft #630](https://github.com/hat47x/tai-pleroma/pull/630)のOwnerに帰属 | 外部HarnessやSkillの資格は**不要**。未実装のSUI外部Selection APIを偽装しない。未レビュー情報の公開と本番保存/実Effectは対象外 |
+| **H：Harness／実開示** | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の現G0 OS Read-deny、G1実送出、G2 Tool request/reply完全性、事前PinしたH2/H3四独立Session・独立Expected。実Tool-onlyとProduct Skill配信を別に判別 | UI/CUIのPin完成は**不要**。G0未達のHarnessへ非公開Sourceを渡さない。H2/H3比較適格0/4を別のGUI成功で上書きしない |
+| **J：接合（初回実E2E）** | 公開・合成1 ProductのPin/Selection→現在Audience/Hostが許可したProjection/Recipientの送出Preview→実Harness Tool request/reply/終端→元Pinへの結果表示を**同一Attempt**で確認。実送出byte、許可対象集合とSource revision、実Session ID、Request/Response IDを束縛 | **SとHの対象機能ごとの資格が両方必要**。旧Pinへ後着したReplyを現在の別対象へ適用しない。同一Session attach未対応ならunsupportedを明示、別Session Activity Handoffは別評価 |
+| **C：創造的方法の増分価値** | CSWあり/なしで、同じ材料からSUIの仮の束/表札/未統合Cardを再構成する効果を、まずProduct-localで比較。外部Harness共有の価値はJの後に別測定 | [TAI Skill計画§47](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)に従いTool-onlyで足りる場合はSkillを自動投入しない。CSW利用時も原典・異論・保留を保持し、採用済みMeaningとしない |
+
+**小さな独立Expectedの例（合成／設計のみ・NOT RUN）**：SUI内部の合成資料には8件のCardを置くが、外部へ公開可能な範囲は権限により制限する。許可済み検索結果Qが3件（仮ID A・B・D）なら、人がBを除外し許可済みFを追加した後のSは**A・D・F**である。実際にProductが読めない隠れたCardはQ/Aへ自動追加されず、外部Harnessに隠れたCardのID・件数・検索差を公開しない。元Source r1→r2の改版、表示上同名別Card、二Canvasの同Card occurrence、別Recipient、同一Sessionへの後着を一因子ずつ変化させる。各例で「Pin済み／現在一意に再解決済み／許可ProjectionでRead済み／実Toolへ配送済み／Consumerで受領済み」を**異なる観測**として記録する。
+
+**新たなHarness能力を選択条件にしない**：同一実Sessionの複数Client attach・並列Writer・Skill loaderを、代表Harnessすべてが提供するとは推定しない。実Support表で受信者Capabilityを確認し、Product側は1本の外部Sessionの利用または用途限定Activity Handoffに縮退する。外部HarnessのModel/provider切替、セッションのCancel、旧Grantの残留はProductの実Operation取消・情報消去の証拠にならない。
+
+**Go/No-Go**：Sの単独成果はProduct UX/型付き参照だけの資格。Hの単独成果はHarness Transport/OS隔離だけの資格。Jで実Receiptが無ければ横断E2E成功を主張しない。Cの追加価値が確認できなければCSW Skill常用化も新UI機能の必須化もしない。実現しなかった能力の一覧・再説明回数・Context byte・人間の補正手数・誤対象率・未知のResultを、既存[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)と[#422](https://github.com/hat47x/tai-pleroma/issues/422)の結果票で測る。新しい共通Runner/Checker/Selection Storeの事前導入は不要。
+
