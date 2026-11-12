@@ -267,7 +267,7 @@ Hが成立した過去の記録は、現在UやAが不明になっても**消さ
 
 | Product側の変化・実績 | この範囲で言えること | 次層で別に要るもの |
 | --- | --- | --- |
-| **TEI 同Kind同ID局所修正候補**：Draft [#4524](https://github.com/hat47x/tei-platform/pull/4524)はValidateのduplicate errorとIndexの曖昧Subject除外を実装候補として保持 | Model内で衝突を検出し、曖昧IDをIndex一件へ縮約しない設計・テストが存在する（main採用・exact-head CIは別確認） | 派生CRUD/Graph/Docsの診断・欠落・関連ジャンプ、Studio Pin/AI送信/Writerの拒否。[TAI Draft #642](https://github.com/hat47x/tai-pleroma/pull/642)のQH-02へ |
+| **TEI 同Kind同ID局所修正**：2026-11-13再照合ではmerged [#4524](https://github.com/hat47x/tei-platform/pull/4524)でValidateのduplicate errorとIndexの曖昧Subject除外を統合済み | Model内で衝突を検出し、曖昧IDをIndex一件へ縮約しない限定実装・試験 | 派生CRUD/Graph/Docsの表示とStudio Pin/AI送信/Writerの拒否は別。TAI merged [#642](https://github.com/hat47x/tai-pleroma/pull/642)のQH-02は受入条件の文書化であり実GUI試験ではない |
 | **TEI ETL複数Source**：Draft [#4516](https://github.com/hat47x/tei-platform/pull/4516) §18〜20はSource/Population/Temporal Cut、意味保存Rewrite・Data/Control/Effect/Observationの投影を設計 | 二Sourceの物理Read成功、それぞれの版・結果の履歴。限定的なSQLite JOIN反例はTEI実Providerではない | 共通Tx・Owner承認のas-of cutが無いと、`orders@r2`と`customers@r1`のJOINは同一業務時点とは言えない。LEFT JOIN ON/WHERE変更、Filter/Validate順序変更、Effectful Retryは意味保存を別Expectedで判定 |
 | **TEI 投影Matrix**：Draft [#4464](https://github.com/hat47x/tei-platform/pull/4464)の11セル限定判定 | Representation別にpreserved/lossy/refused/uncoveredを分ける候補 | 未カバー21セルを安全扱いしない。表示が可能でも逆編集・実Provider/Owner意味受理は別 |
 | **TAI/SHO Handoff G5**：merged [#640](https://github.com/hat47x/tai-pleroma/pull/640)・SHO #47がReceipt replay負例を実回帰 | 旧Receipt JSONの再出力でも同内容一致が成立し得る | 今回B側Consumer起動/実Source Read、実Agent Loader/Tool Reply、Host Grant、実Sessionは別Witness |
@@ -285,3 +285,39 @@ Hが成立した過去の記録は、現在UやAが不明になっても**消さ
 **優先の位置づけ**：CP-1〜4は横断共通の新Gateを起こすためではなく、各Ownerの既存テストへ割り当てて**単純な誤成功を防ぐ**ための設計レビュー用索引である。特にQH実Product再解決と初回G0実OS拒否→G1送出→G2完全Tool Reply→独立H2/H3四Slotを入れ替えない。CSWの批評者はこの種の反証観点を探索できるが、独立Expected・Owner採否・実Agent Testの代行者ではない。
 
 **証拠の時点**：TAI main `eb2900df05bad75c51a740d5010aa03f9e8dcca7`、TEI main `487f1235e39341091a3f9d415afd7803fea20293`（2026-11-12）。#4524/#4516/#4464/#642は参照時にDraft／未統合。TAI/SHO #640の負例はmain統合済み。**この追補では実Go/CLI/GUI/DB/Harness/OS/ScreenReader、正式Owner意味受理、利用者価値を新たに実行・測定していない。**
+
+## 13. 2026-11-13追補：部分証拠の積極利用と、確定・公開・実行の分離
+
+§10〜12では「根拠を失ってClaimを強くしない」ことを確認した。次の課題は逆向きである。**未取得や未受理が一つあっても、既に観測した有用な事実まで無効化する必要はない**。これは[TEI ETL Draft #4516 §21](https://github.com/hat47x/tei-platform/pull/4516)の部分入力に対するWitness／Bound／Final、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の過剰介在回避、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の用途相対の再資格化を**読者の選択肢**へ結ぶもの。TAI共通のClaim型／演算器／受理Gateを新設する提案ではない。
+
+### 13.1 未完了入力から何を限定的に言えるか
+
+| 主張の使い方（説明上の区別） | 成立に必要な前提 | 不当に強めてはいけないこと |
+| --- | --- | --- |
+| **陽性Witness**（例：特定の行/Relation/成果物を実見した） | 実Source/実Read・Subject/Scope・時点・独立性の適用範囲が明らか | 「観測時点にこの行がある」→「現在もある」「全Audienceから見える」「全件取得済み」。後の削除は歴史Witnessを消さない |
+| **安全な下界／上界**（例：取得済み分だけで合計は少なくとも800円） | 同じ固定業務母集団の確かな部分集合、重複しないFact identity、演算に必要な単位/型、時間Cutと寄与の符号・法則が確認できる。下界は未取得寄与が**非負**等の条件つき | 返品・負の訂正・JOIN重複・RLS/別Cut・Snapshot変更があり得るなら部分SUMを下界にしない。上界にはさらに未取得分の最大寄与など独立の制限が必要 |
+| **限定的に読めるProjection**（例：図に表示された関係だけを確認する） | その表示に関するSource/Relation/Revision、Coverage・損失・非開示・未解決の印が保持される | 表示可能→逆編集可能、既表示Edge→実実行、非表示Relation→不存在。TEI Draft [#4464](https://github.com/hat47x/tei-platform/pull/4464)の未カバー21セルも「不可」でなく未判定 |
+| **Final/全称/不存在**（例：全件OK、他に該当データなし） | 必要Source・母集団・Query/Predicate・全ページ/Chunk・Provider可視範囲・Temporal Cutの閉包と、用途に応じた独立Oracle/Owner受理 | 0行、EOF、一件の成功、構造`ok`、Receipt一致、部分集計のValueから導かない |
+| **限定結果の受領／公開／実作用** | 作成/Delivery/Consumer Readは各々当該AttemptのWitness。**公開と操作**には現在のProduct/Host Grant、Owner Meaning、Effect/Readbackがさらに必要 | 「下界が数学的に正しい」→「その下界を外部に公表してよい」「実DBを更新してよい」ではない |
+
+**簡単な反例**：対象が同じで観測済みの正の売上が800円であっても、未取得の返品が−200円なら最終SUMは600円になり得る。したがって「少なくとも800円」と言えるのは、未取得分に負の寄与がないと確認できた場合だけ。逆に、同じSnapshot・適格なFact IDのもと実見した一件の存在Witnessは、全件未取得でも**その観測時点の限定事実**として利用できる。数式の正しさと業務のTruth、公開資格、実Effectは別。
+
+### 13.2 新しい実Product成果のClaim ceilingを正しく更新する
+
+- **実Provider**：[TEI merged #4539](https://github.com/hat47x/tei-platform/pull/4539)は `reference/workspace` の `order_entry.recent_orders` を、Environment→選択Executor→使い捨てPostgreSQL 16.15→Raw Rows→非永続Function Data Context→別プロセスの`tools/reference-browse-read`で限定実証。実PGの手書きExpected＋独立Reader一致、NULL/境界/列権限/RLS/Source変更負例、拒否時Executor呼出0を区別。**正式`tei` CLIやStudio・他Product Consumerの実Readは未結線**。Connectionのhost-asserted束縛は実Host Grantではなく、RLS0行/行数不足でも`coverage=unestablished`、`EmptyJustified=false`。以前の「mainに実Provider Read入口なし」は、TAI Draft #600が参照した**当時のTEI未統合#4076**の記録に限定し、2026-11-13現在のmain全体へ延長しない。
+- **モデル解決とレビュー**：TEI merged [#4513](https://github.com/hat47x/tei-platform/pull/4513)（Data索引）、[#4514](https://github.com/hat47x/tei-platform/pull/4514)（図面Source-only stale）、[#4524](https://github.com/hat47x/tei-platform/pull/4524)（同Kind重複の曖昧Index拒否）、[#4534](https://github.com/hat47x/tei-platform/pull/4534)（構造`okScope`とCRUD`conflicts-require-review`の分離）、[#4551](https://github.com/hat47x/tei-platform/pull/4551)（明示CRUD-onlyの派生表・UnusedData修正）を**それぞれ局所Product実装として**読む。モデルの矛盾を可視化できることはread-only調査の進歩だが、Ownerの意味受理、Studio Apply/Writeの現在権限ではない。[TAI merged #642](https://github.com/hat47x/tai-pleroma/pull/642)と[#646](https://github.com/hat47x/tai-pleroma/pull/646)がQH §10.5〜10.7の既存受入票を更新済み。
+- **Handoff**：[SHO merged #48](https://github.com/hat47x/sho-composer/pull/48)で同じMarkdown byte・異なるTEI Source/Targetの3票をSHO実Consumerが受領したが、元TEI Sourceは再読していない。Payload/Receipt一致はTransportation/Contentの限定証拠であり、現在のTarget/Source/Meaningは不適格のまま。実TEI→SUI→SHOの一AttemptでのQH-P0は[既存実行票 §10](yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)のOwnerに残る。票のSourceを消して「同じ内容だから同じ対象」にしてはならない。
+- **研究と製品利用**：CSWの生成者/批評者/媒介者は、陽性Witness・反例・条件付き下界の発想と反証に使い得るが、正式な独立Oracleや権限主体ではない。SUI探索・TEI三要素表示・SHO資料化が改善しても、TAIの新しい共同正本や強制三Agent構成を必要条件にしない。
+
+### 13.3 小さい反証で「安全な保留」と「無用な拒否」を両方測る
+
+| 独立比較候補（新しいScenario正本ではない） | 合格する限定主張 | 防ぐべき偽成功・過剰拒否 | Owner |
+| --- | --- | --- | --- |
+| **PB-1 正のFact／負の遅着** | 同Cut/重複なし/非負が確認された部分SUMなら限定下界 | 後着返品・訂正を無視した偽下界、または陽性Witnessまで全拒否 | TEI ETL [#1130](https://github.com/hat47x/tei-platform/issues/1130)／Draft #4516、独立Expected #2514 |
+| **PB-2 実PGのRLS/0行** | 当該実Readerと実Readの行/型/Connection観測を限定利用 | `0 rows`から世界不存在、`host-asserted`から現在Host Grantへ飛躍 | TEI #2586／merged #4539、TAI #271／Draft #600 |
+| **PB-3 構造OK・CRUD要レビュー** | 衝突を出典つきread-onlyで表示し、比較・修正案を検討 | `ok=true`から意味受理／Writer実行、逆に要レビューだから全Read拒否 | TEI merged #4534/#4551、Studio #1124、TAI merged #646 |
+| **PB-4 Source/Receipt同内容** | SHOによる今回のMarkdown bytes受領を認める | TEI元Source/Targetの現在再解決・実二Agent/Effectを偽認定 | SHO merged #48／TAI merged #640、TAI #271/#168 |
+
+**評価手順**：同じUser JobのB0（元のTool/ファイル）、B1（必要時Productの有資格Read）、B2（用途に必要な場合だけTAI Skill/Handoff）を、**安全な有用情報の回収量／偽成功／不要な保留／人間の確認負担／費用**で別々に比較。部分的に正しい情報を得ても公開Goalを満たしたとは判定しないし、不要な追加機構が無ければB0/B1を採用する。[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)／[#488](https://github.com/hat47x/tai-pleroma/issues/488)／[#127](https://github.com/hat47x/tai-pleroma/issues/127)が評価Owner。B0/B1/B2モデル比較・人間Valueは**NOT RUN**。
+
+**固定版・未実証**：2026-11-13照合 TAI main `32ffba1232cd9b3e73309ba782d58e89efcb726b`、TEI main `1a2271d8c8586e928a8ed90fb516ec573118c9f9`。#4539は実PG限定Read、#4516は設計Draft。実QH-P0全Product/正式`tei` CLI/Studio・Wails、実外部Harness/現在Host Grant、業務Effect/Owner受理・認知負荷/Valueは新たに**実行していない**。#168の実OS G0→G1→G2と独立H2/H3四Slotの優先度・比較適格0/4を変更しない。
