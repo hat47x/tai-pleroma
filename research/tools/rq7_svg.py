@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from pathlib import Path
@@ -20,6 +21,43 @@ import rq7_pilot
 SVG_NS = "http://www.w3.org/2000/svg"
 ET.register_namespace("", SVG_NS)
 SAFE_ID = re.compile(r"^[a-z][a-z0-9_]*$")
+NODE_MIN_WIDTH = 180
+NODE_MAX_WIDTH = 2048
+NODE_HEIGHT = 60
+NODE_COLUMN_GAP = 50
+
+
+def node_panel_width(labels: dict[str, str]) -> int:
+    """Conservative one-line glyph budget, checked against actual Chromium bounds.
+
+    Width is *never* used to cut or abbreviate the original label. Unsupported
+    extreme strings fail closed; the structured text table remains a separate
+    research alternative, not a license to truncate the visible Graph.
+    """
+    def estimate(label: str) -> int:
+        total = 0
+        for char in label:
+            if unicodedata.combining(char):
+                continue
+            if char.isspace():
+                total += 5
+            elif unicodedata.east_asian_width(char) in ("W", "F"):
+                total += 18
+            elif ord(char) < 128 and char.isupper():
+                total += 11
+            elif ord(char) < 128 and char.islower():
+                total += 9
+            elif ord(char) < 128:
+                total += 12
+            else:
+                total += 16
+        return total + 28
+
+    required = max((estimate(label) for label in labels.values()), default=NODE_MIN_WIDTH)
+    if required > NODE_MAX_WIDTH:
+        raise ValueError("label exceeds supported single-line SVG width")
+    return max(NODE_MIN_WIDTH, required)
+
 
 
 def tag(name: str) -> str:
@@ -66,16 +104,18 @@ def graph_layout(case: dict) -> tuple[dict, dict, int, int]:
     for node in labels:
         layer[depth[node]].append(node)
     rows = max(len(x) for x in layer.values())
-    width, height = 90 + 230 * (max(depth.values()) + 1), 80 + 110 * rows
+    card_width = node_panel_width(labels)
+    step = card_width + NODE_COLUMN_GAP
+    width, height = 90 + step * (max(depth.values()) + 1), 80 + 110 * rows
     positions: dict[str, tuple[int, int]] = {}
     for rank, nodes in sorted(layer.items()):
         for index, node in enumerate(nodes):
-            positions[node] = (30 + 230 * rank, 30 + 110 * index + 55 * (rows - len(nodes)))
+            positions[node] = (30 + step * rank, 30 + 110 * index + 55 * (rows - len(nodes)))
     return labels, positions, width, height
 
 
 
-def route_points(positions: dict, source: str, target: str) -> list[tuple[int, int]]:
+def route_points(positions: dict, source: str, target: str, card_width: int = NODE_MIN_WIDTH) -> list[tuple[int, int]]:
     """A narrow, explicit DAG-only route. Long edges use the upper corridor.
 
     This is not a general edge routing algorithm: the fixture currently has
@@ -83,10 +123,10 @@ def route_points(positions: dict, source: str, target: str) -> list[tuple[int, i
     """
     x1, y1 = positions[source]
     x2, y2 = positions[target]
-    if x2 - x1 > 230:
+    if x2 - x1 > card_width + NODE_COLUMN_GAP:
         # Separate this shortcut's arrow port from any adjacent edge that
         # enters the same target at its midline (avoids visually merged arrows).
-        start, end = (x1 + 180, y1 + 15), (x2 - 9, y2 + 15)
+        start, end = (x1 + card_width, y1 + 15), (x2 - 9, y2 + 15)
         corridor = min(y for _, y in positions.values()) - 18
         return [
             start,
@@ -96,7 +136,7 @@ def route_points(positions: dict, source: str, target: str) -> list[tuple[int, i
             (end[0] - 18, end[1]),
             end,
         ]
-    return [(x1 + 180, y1 + 30), (x2 - 9, y2 + 30)]
+    return [(x1 + card_width, y1 + 30), (x2 - 9, y2 + 30)]
 
 
 def route_path_data(points: list[tuple[int, int]]) -> str:
@@ -131,15 +171,15 @@ def intersects_interior(a: tuple[int, int], b: tuple[int, int],
     return True
 
 
-def check_route_clearance(case: dict, positions: dict) -> None:
+def check_route_clearance(case: dict, positions: dict, card_width: int = NODE_MIN_WIDTH) -> None:
     """Reject any arrow segment cutting through unrelated rendered nodes."""
     for source, target in case["declared"]["edges"]:
-        points = route_points(positions, source, target)
+        points = route_points(positions, source, target, card_width)
         for node, (x, y) in positions.items():
             if node in (source, target):
                 continue
             for a, b in zip(points, points[1:]):
-                if intersects_interior(a, b, x, y):
+                if intersects_interior(a, b, x, y, w=card_width):
                     raise ValueError(
                         f"edge {source}->{target} crosses unrelated node {node}"
                     )
@@ -183,6 +223,7 @@ def check_accessible_graph_description(case: dict, payload: str) -> None:
 
 def render_svg(case: dict) -> str:
     labels, pos, width, height = graph_layout(case)
+    card_width = node_panel_width(labels)
     root = ET.Element(tag("svg"), {
         "version": "1.1", "viewBox": f"0 0 {width} {height}",
         "width": str(width), "height": str(height), "role": "img",
@@ -204,9 +245,9 @@ def render_svg(case: dict) -> str:
     ET.SubElement(marker, tag("path"), {
         "d": "M 0 0 L 10 5 L 0 10 z", "fill": "#333333"
     })
-    check_route_clearance(case, pos)
+    check_route_clearance(case, pos, card_width)
     for src, dst in case["declared"]["edges"]:
-        points = route_points(pos, src, dst)
+        points = route_points(pos, src, dst, card_width)
         attrs = {
             "class": "declared-edge", "data-from": src, "data-to": dst,
             "stroke": "#333333", "stroke-width": "2",
@@ -227,7 +268,7 @@ def render_svg(case: dict) -> str:
             "data-label": label, "transform": f"translate({x},{y})",
         })
         ET.SubElement(elem, tag("rect"), {
-            "width": "180", "height": "60", "rx": "7",
+            "width": str(card_width), "height": str(NODE_HEIGHT), "rx": "7",
             "fill": "#ffffff", "stroke": "#333333", "stroke-width": "2",
         })
         ET.SubElement(elem, tag("title")).text = f"{node}: {label}"
@@ -294,6 +335,7 @@ def check_svg_geometry(case: dict, payload: str) -> None:
     """
     root = ET.fromstring(payload)
     labels, positions, width, height = graph_layout(case)
+    card_width = node_panel_width(labels)
     if root.get("viewBox") != f"0 0 {width} {height}" or root.get("role") != "img":
         raise ValueError("SVG viewport or role mismatch")
     if root.get("aria-labelledby") != "graph-title" or root.get("aria-describedby") != "graph-description":
@@ -313,7 +355,7 @@ def check_svg_geometry(case: dict, payload: str) -> None:
         if g.get("transform") != f"translate({x},{y})":
             raise ValueError("SVG node moved without identity change")
         rect = g.find(tag("rect"))
-        if rect is None or rect.get("width") != "180" or rect.get("height") != "60":
+        if rect is None or rect.get("width") != str(card_width) or rect.get("height") != str(NODE_HEIGHT):
             raise ValueError("SVG node outline altered")
         texts = g.findall(tag("text"))
         if len(texts) != 2 or texts[0].get("fill") != "#111111" or texts[1].get("fill") != "#111111":
@@ -322,7 +364,7 @@ def check_svg_geometry(case: dict, payload: str) -> None:
         src, dst = edge.get("data-from"), edge.get("data-to")
         if src not in positions or dst not in positions:
             raise ValueError("SVG edge endpoints unidentified")
-        points = route_points(positions, src, dst)
+        points = route_points(positions, src, dst, card_width)
         expected = {
             "marker-end": "url(#arrowhead)",
             "stroke": "#333333",
@@ -339,7 +381,7 @@ def check_svg_geometry(case: dict, payload: str) -> None:
             expected["d"] = route_path_data(points)
         if any(edge.get(key) != value for key, value in expected.items()):
             raise ValueError("SVG arrow geometry changed without edge identity change")
-    check_route_clearance(case, positions)
+    check_route_clearance(case, positions, card_width)
 
 
 def check_public_pair(case: dict) -> None:
