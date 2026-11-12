@@ -321,9 +321,9 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 
 #### 11.8.2 自然言語選択と空間補正は、同じ操作結果で比較する
 
-- **自然言語→GUI**：Productが許可済み範囲で解決した候補集合Qと、検索条件・取得Coverageを示す。人はCanvasの囲み、追加A、除外E、関係/比較役割を補正し、最終候補集合 \`S=(Q−E)∪A\` を次の指示へ渡す。Qは可視・実取得範囲に限り、非公開/未探索を「候補なし」と言わない。
+- **自然言語→GUI**：Productが許可済み範囲で解決した候補集合Qと、検索条件・取得Coverageを示す。人はCanvasの囲み、追加A、除外E、関係/比較役割を補正し、最終候補集合 `S=(Q−E)∪A` を次の指示へ渡す。Qは可視・実取得範囲に限り、非公開/未探索を「候補なし」と言わない。
 - **GUI→自然言語**：人の明示的な囲み/複数選択をRefとして固定し、「この範囲で、時点が異なるものだけ」等の追加条件をProduct側のread-only解決で評価する。LLMの内部推測やCanvasの座標だけで隠れたObject IDを発明しない。
-- **動的条件と固定集合**：\`Predicate\`を次に実行した場合の集合と、時点rで実解決した安定ID集合を区別する。人が修正したE/Aを無断で動的集合へ再適用しない。編集・大量操作時は対象候補を固定し、現在Grant/Source/対象存在を実行直前に再確認する。
+- **動的条件と固定集合**：`Predicate`を次に実行した場合の集合と、時点rで実解決した安定ID集合を区別する。人が修正したE/Aを無断で動的集合へ再適用しない。編集・大量操作時は対象候補を固定し、現在Grant/Source/対象存在を実行直前に再確認する。
 - **多様な関係**：SUIのCard/Island/affiliation/Canvas x,y/非階層Relation/仮Tree、TEIの三視点Model/CRUD交点、SEIのClaim/Decision、EKIのWorker/Grant/Taskは固有の意味で扱う。SUI [#3430](https://github.com/hat47x/sui-sensemaking/issues/3430)/[#3431](https://github.com/hat47x/sui-sensemaking/issues/3431)の構造Draftの区別をSelection共通型で潰さない。近接＝因果、CSW仮の束＝採用済みMeaning、SUI Island＝TEI組織Membershipを禁止推論とする。
 - **提案と作用**：AI/CSWの分類・表札・配置は複数候補としてPreview。選択・提示・利用者補正・明示保存・人のReview・実Host Action/Receiptは別。undoは未保存UI操作と、保存済みCAS条件付き逆変更を分ける（SUI #3399）。人の修正理由をAIが後付けしない。
 
@@ -340,7 +340,7 @@ Pinned Selectionは**入力操作中のUI focusから独立**する。Esc・別�
 
 | 段階 | 実際に固定するもの／期待結果 | 不適格・停止条件 |
 | --- | --- | --- |
-| **P0 公開Source・read-only** | 一つの許可済み公開SUI投影＋TEI read-only SubjectについてSource/Version/Disclosure/Tool実能力を確定。実際のSUI \`context-projection.v1\`は許可済みCard/Island/Relation/Countまでで、元Source rev/全Document完全性は読み取れない（SUI #3368）。 | Tool未存在、隠れたCard/Edge/件数漏れ、Tool reply欠落、実OS read-deny不成立。内部世界全体のClaimをしない |
+| **P0 公開Source・read-only** | 一つの許可済み公開SUI投影＋TEI read-only SubjectについてSource/Version/Disclosure/Tool実能力を確定。実際のSUI `context-projection.v1`は許可済みCard/Island/Relation/Countまでで、元Source rev/全Document完全性は読み取れない（SUI #3368）。 | Tool未存在、隠れたCard/Edge/件数漏れ、Tool reply欠落、実OS read-deny不成立。内部世界全体のClaimをしない |
 | **P1 単一UI・Selection補正** | 公開合成Card 6〜12枚、曖昧・孤立・多重所属を含む。AI生成候補Q→人が1件除外/1件追加→次のread-only QueryがSを対象にしたことを実ID/版で検証。AI OFF手動操作を対照。 | レンダラXY/ラベルだけをIdentityにする、修正理由の捏造、Source/Grantの変化を無視 |
 | **P2 二UI・Session切替** | SUI UIとTEIまたはSHO UIの間で、同一Session attach実験と用途限定Activity Handoffを分ける。実SelectionRef/Source/Revision、Request→Tool Reply→Consumer表示を同一Attemptで観測。二画面同時操作・後着応答も確認。 | Native attach非対応を同一Session PASSにする、他Productの旧Audience/秘密を再送出する、返信を異なるFocus/Pinに誤適用 |
 | **P3 CSW・SEI・EKI後続** | CSW親和図法はSUIで仮の束/表札/関係を複数案としてPreviewし、元材料の具体・反証・孤立を保持。SEIは根拠・未決を再調査。EKIは多数Worker/Grantのread-only SelectionとPreviewまでを先に比較。 | KJ法の強制工程化、提案をMeaning確定、EKIのClient側Worker指定を実Authorityとする、Task ACKを業務完了とする |
