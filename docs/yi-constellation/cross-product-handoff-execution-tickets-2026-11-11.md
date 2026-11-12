@@ -427,6 +427,20 @@ SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-compose
 
 **扱い**：既存7観測の履歴ReceiptやB側の実CLI起動を取り消さない。G5の`observed-pass`は**ローカルCLI Aと外部ARGV BにおけるConsumer結果一致**に限って維持する。既存Runner/Schema/歴史Receiptをこの文書で改変せず、次の独立G5-A/B Trialで本当に二つの外部Harnessを明示的に起動し、それぞれの入口とCurrent Grant/Tool/Skill/外部送出を実観測したときに限って、主張を上げる。TAI #168の初回H2/H3（適格0/4）のBlockingは変更しない。
 
+### 2026-11-12 Machine ReceiptのClaim Ceilingを実Runnerへ固定する（後続実験の資格）
+
+[SHO G5実Runner修正 PR #45](https://github.com/hat47x/sho-composer/pull/45)は、[TAI #635](https://github.com/hat47x/tai-pleroma/pull/635)／[SHO #43](https://github.com/hat47x/sho-composer/pull/43)の**記述上の訂正を実際のMachine Receiptへ反映する候補**。2026-11-11の固定Receiptは履歴のまま変更しない。現行の受領一致の範囲を超えて`noAuthorityAmplification=true`／`noUnapprovedSourceAutoSend=true`を新しいReceiptへ出さないようにする。
+
+| Receiptの軸 | 新Runnerが表す範囲 | まだ実証していないこと |
+| --- | --- | --- |
+| `executionPaths` | A=`local-node-direct-consumer`、B=`external-argv-program`を明記。表示ラベルをAgent証拠にしない | Aの実DSH Session Tool呼出、Bの現在Tool Profile/Grant |
+| `claims.receiptDeclaresAuthorityAndWriterFalse` | **両SHO Consumerの宣言値**がfalseであることだけをtrueにできる | 実Host Authority、OS write、Provider/Network送出の0 |
+| `claims.noAuthorityAmplification`／`noUnapprovedSourceAutoSend` | `not-proven`、外側実送出は`not-run` | 実OS/Network Egress全Sink・業務Effect |
+| `claims.widenedScopeRejected`／`externalBWidenedScopeRejected` | `local-a-only`／`not-run`。旧観測ID`widened-scope-rejected`は新Receiptでは`local-a-widened-scope-rejected` | B側Agent経由で同じ改変票を投入して拒否させること |
+| `claims.realProductConsumerInBothHarnesses` | `not-proven`。実Consumer 2経路のJSON一致とは別 | A/B二つの実Agent Sessionが対等に同じTaskを実行 |
+
+**反例の再利用**：G5-N2/N3、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X04/X05/X06、[同実行票§10](#10-後続の最小実証qualified-targethandoffconsumerを同じ対象と言えるか2026-11-12新試験not-run) QHのI/R/P/T/C/Hを用い、**旧`observations[].id`と新Runnerの同名風IDを同じ資格へ自動集計しない**。新回帰はSHO側の`test/handoff-harness-switch-claims.test.cjs`とUbuntu/Windows Handoff CIへ統合する方針。これはTest-only Receiptの厳格化であり、`yi.handoff.context/v1`、正式Authority/Skill Loader、全製品共通のEvidence Registryや第二Verifierは変更しない。TAI #168のH2/H3比較適格0/4・G0→G2を優先し、二Agentの実ログ/外部送信/B不正票は独立した**NOT RUN**の次段階。
+
 ### 必須負例
 
 | ID | 注入 | 期待 | 実測 |
