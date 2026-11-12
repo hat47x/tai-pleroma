@@ -622,3 +622,51 @@ OG-1・OG-5 は現状維持。既存の実装を変えない。
 - [設計・契約文書](cross-product-handoff-context-v1-2026-11-11.md)
 - SUI ADR-0117、SHO `docs/handoff-cross-product-trial-2026-11-11.md`
 - TAI #168 / #271 / #232 / #74、TEI #2515 / #2516 / #2586 / #2605、SUI #3369 / #3397、SHO #4 / #21、SEI contracts
+
+---
+
+## 10. 後続の最小実証：Qualified Target→Handoff→Consumerを「同じ対象」と言えるか（2026-11-12／新試験NOT RUN）
+
+### 10.1 なぜ追加するか、既存G1〜G6で保証できていないこと
+
+実[SUI Producer](https://github.com/hat47x/sui-sensemaking/blob/main/03_Implement/frontend/src/export/handoff_context_envelope.ts)の`yi.handoff.context/v1`には`target.{product,kind,id}`、`revision`、`references[]`、`evidence[]`等がある。[SHO Consumer](https://github.com/hat47x/sho-composer/blob/main/src/handoff_envelope.cjs)はHandoff票を非信頼入力として検査し、**Markdown payloadの実byteを独立に再Read**する。G3ではTEI read-onlyの観測を**引用**した。しかし**SHO側がTEIの対象IDを同じSource/Workspace/Scopeで独立解決した証拠はない**。この差を、単なる`target.id`一致や全体`worldFingerprint`一致で埋めない。
+
+TEIでは[同Kind・同ID後勝ちとFingerprint入力副作用/自己参照 #4475](https://github.com/hat47x/tei-platform/issues/4475)、[CRUD Data索引誤用/明示定義脱落/矛盾OK #4472](https://github.com/hat47x/tei-platform/issues/4472)が静的に指摘され、正負の実回帰は別Ownerで未実証。現時点でDerived CRUD Cellや同名Relationを一意のMeaning/編集対象とみなす経路は**負例扱い**にする。さらに[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)のProvider実Rowsetは未接続であり、Model WorldFPが変わらなくてもDB Rowset/RLS/Grantの現在資格は変わり得る。
+
+**追加するのは後段Trialの独立Expectedと判定票のみ**であり、既存P0の354 byte/SHA、G2〜G6の受入・Receipt、`yi.handoff.context/v1`のSchemaやDisclosure閉集合、TAI #168のH2/H3初回4Slot、旧G5の実CLI切替の証拠を変更しない。TAI #629/#630はUI選択・Pin/再解決設計の並行Draftであり、本書ではその第二の状態機械を実装しない。
+
+### 10.2 同じ対象・同じ根拠・同じ現在資格の判定を分割する
+
+| 評価列 | 実観測のOwner | 成功とみなす最小証拠／成功でないもの |
+| --- | --- | --- |
+| **I：Intent/Pin** | 将来のTEI Studio/CUI Product UI（#1124） | 利用者が指定したQualified Kind+ID/Workspace/Source/Occurrence/Scopeと意図を固定した観測。試験Driver内の明示選択は*合成Pin*でありGUI Pinの実証でない |
+| **R：Resolve/Uniqueness** | TEI実Catalog/Inspect/Source Readerと別Expected（#1124/#4475） | 当該Source/Scope/版で対象を再発見し、候補複数・失効/部分取得を別判定。`target.product/kind/id`・ラベル・Fingerprintの一致**だけ**では不十分 |
+| **P：Projection/Disclosure** | Product/Host（TEI #2516／TAI #232） | 今回のAudience/目的/Current Grantに許可された範囲だけを生成した証拠。Driverが公開合成資料だけを使った場合、実OS外部送出禁止をPASSとしない |
+| **T：Transport/Receipt** | SUI Producer→SHO実CLI、既存G1〜G5 | 票・payload exact byte/Source・Receiptの実受領。これ単独でTEI対象の独立解決や現行Source/Meaning受理を示さない |
+| **C：Consumer meaning/use** | SHO/TEI/SEI各Consumer（TAI #271） | 当該Consumerが用途相対の根拠・未決を再照合した範囲でのみ限定説明。未知のReference/Source未Readなら`unknown`を保持 |
+| **H：Harness/Skill/Effect** | TAI #168/#488、実Host/Provider | 実Tool/Skill Loader/Session/Effectを各実証で区別。G5で別Harness実CLIを切替えられたこと≠同一Live Session再開、Handoffの`productSkill`文字列≠実Load |
+
+### 10.3 最初の実行カード（Ownerの既存Runnerを再利用する）
+
+**QH-P0（read-only / Headless）**：①公開可能なTEI `reference/workspace`を固定し、現行`go run ./cmd/tei model catalog -workspace reference/workspace`の実Source/HEAD/CLI argv/Tool profile、選択候補1件のkind/id/取得Scopeを実観測する。②`I`はGUIを使わない**明示テストDriverの合成選択**と記録し、対象に対する独立Expectedを先に固定。③既存SUI Handoff v1の`target/revision/references/evidence/limitations`に適合する公開内容だけを通し、現行SHO `bin/sho-inspect.cjs handoff`の実受領/別Process再Readを[既存Runner](https://github.com/hat47x/sho-composer/blob/main/scripts/handoff-cross-product.cjs)で観測。④**TEI対象の再解決が実行されていないなら**`T=observed-pass`と`R/C=not-run/insufficient-evidence`を並記。v1票に入らないQualified Scopeを空想のFieldで補完せず、既存Productの公開Referenceで束縛を表せない場合は適合性GapとしてOwnerへ返す。テスト用のTEI CLIが実Consumerに代わって再Readしたなら「DriverによるR」と明示し「SHO ConsumerがR」としない。
+
+**QH-P1（GUI/CUI比較、後段）**：TEI Studioで同じ対象を固定→無関係な画面/Canvas/AI入力へ移動→再度同じ対象へ戻り、CUIでの指定とIdentity/Scope/時点が一致するかを確認。まだPin操作が実装されていない場合は`unsupported/not-run`。実外部Harness受領・現在Policy・書込み/Effectは別Gateにする。
+
+**評価する利用者価値（今は測定計画）**：同じ許可済みTaskでAIなしのProduct/CUIと、固定対象→Handoff→復帰する経路を対照。対象へ戻る操作数/再説明文量、誤対象の回答・誤付替え件数、元根拠と未決の保持率、訂正・Undo/不適格時停止の成否、実Tool/転送/人手費用を別々に記録する。誤対象・秘密開示・黙ったSource再束縛は合格させず、**従来経路と比べて改善が観測されなければ既存Product単独UIを維持**する。生成AIによる評価しかない場合は利用者実測を偽装せず、独立Expected付きシナリオと操作イベント観測に限定する。
+
+**並列・接合順**：S＝各Product内の対象選択・再解決（#1124/#4475）、H＝外部HarnessのG0/G1/G2・Tool実証（TAI #168）は独立に進めてよい。J＝実Productで固定した同一対象を**実Harness Sessionを介して**戻す接合TrialはS/H双方の必要資格後。C＝CSW×SUIの方法寄与・KJ型補正はJとは別Armで評価し、初回を遅らせない。これは追加の共有Runtimeや全製品共通Gateを設けることではない。
+
+| Case | 独立Expected（新Trial、すべてNOT RUN） |
+| --- | --- |
+| **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
+| **QH-02** 同Kind同ID重複・別Scope同名 | TEI #4475の問題を静的負例として固定し、自動的に後勝ちの1件を選ばない。実修正済みと主張しない |
+| **QH-03** Fingerprint計算後のAuthorityLimits変化・A→B→A | #4475の独立回帰を参照。以前の`worldFingerprint`からSource/Grant/current eligibilityを復元しない |
+| **QH-04** CRUD明示のみ・矛盾/誤索引 | #4472に従い派生表の`ok=true`をCRUD全体整合・編集資格と扱わない |
+| **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
+| **QH-06** 部分取得・0件・Resolver不在 | complete emptyとpartial/not-found/unknown/unsupportedを区別し、無取得を「存在しない」と断定しない |
+| **QH-07** Handoff受領は成功だがTEI Source再解決なし | `T=pass, R/C=not-run`。独立Reader証拠が無ければ同一対象意味引継ぎをPASSとしない |
+| **QH-08** Skill名付き票/G5別Harness CLI/後着GUI結果 | 実Loaderと実Session継続、対象再束縛と業務Effectはそれぞれ未実証。旧結果が新Pinに自動適用されない |
+
+**終了/撤退条件**：P0の成功は`I`合成・`T`既存限定・`R/C`当該実Consumerが本当に行った範囲でのみ宣言。Kind/ID一意性、対象の元Source Binding、Disclosure Producer、Consumer Resolverのいずれかを実証できなければ、特定の列を`not-run/unsupported/insufficient-evidence`として残す。新UI/第二Resolver/Authorizer/Session Store・新`yi.handoff.context/v2`を要する設計なら実装を停止して各OwnerへFit/Gapを返す。初回TAI #168 H2/H3の新Blockingにしない。
+
+**責務**：対象解決と#4472/#4475修正＝TEI #1124/#4472/#4475、用途別開示＝TEI #2516/TAI #232、Handoff/実Consumer＝SUI/SHO既存Owner、Activity現在資格＝TAI #271、Skill有効性＝TAI #488、実Harness比較＝TAI #168。既存のG1〜G6の歴史実測をこの未実施のQHで上書きしない。
