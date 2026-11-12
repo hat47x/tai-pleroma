@@ -1007,6 +1007,9 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 **優先順位**：QH-P0は実Product側のread-only試験として並行できるが、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read拒否→G1送出→G2完全Tool Reply→新H2/H3独立4 Slot（比較適格0/4）の追加条件としない。二製品GUI固定Pin、実Agent Live Session、CSW方法の寄与、実Provider EffectはNOT RUN。新中央Runtime/Policy/Storeは追加しない。
 
+**着手順**：最初の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) G0実OS Read-deny→G1送出→G2完全Tool Reply→新独立H2→H3→H3→H2（適格0/4）のBlockingは**変更しない**。その後の最小Product横断はR0→R1→R2（read-only）であり、実UI Pinned Context・Live Session・CSW Canvas・EKI Effectの実試験は段階的に分離。各Product Ownerの独立Expected/Scenarioを利用し、新共通Selection ABI、中央Handoff v2/Registry/Runnerや既存Productの意味受理正本を作らない。
+
+**資格**：main統合済みSHO/TEIの限定Handoff/文書Draftは実績だが、ここに示す**Pin→Handoff→Harness→Product UI一往復、Tool-only/Product Skill/TAI Skillの比較、実Live Session attach、横断Owner受理はNOT RUN**。本節は実行手順候補とOwner接続の追加である。
 
 ### 48.4 実Receipt再生と同内容別Workspaceの対象再確認（11月12日）
 
@@ -1024,7 +1027,3 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **次の検証**：①公開・合成Sourceの同Root正例／別Root同内容負例／同offset別SubjectをTEI Product Readerで観測、②既存G5-N5を実Consumer未実行でもJSON一致する対照として再利用、③実Consumerの当該Attempt再Readを独立に観測できない場合はC=not-provenを維持、④実外部Agent Tool経路とG0/G1/G2はTAI #168の別Gate。Receiptの自己申告時刻・Nonceを加えるだけで実実行/Replay除去が証明されたとは言わず、新Attester/中央ID Store/Handoff v2/Runnerを導入しない。
 
 **資格**：SHO #47のReplay負例とそのCIは限定PASS。TEI #4504はDraft、B Consumerの当該再Read・実Agent/Live Session・現在Host Grant・GUI Pin→Harness→Product UI復帰、QH-P0新TrialはNOT RUN/not-proven。Product局所試行はTAI #168の固定H2/H3初回4 Slot（比較適格0/4）の追加Blockingではない。
-
-**着手順**：最初の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) G0実OS Read-deny→G1送出→G2完全Tool Reply→新独立H2→H3→H3→H2（適格0/4）のBlockingは**変更しない**。その後の最小Product横断はR0→R1→R2（read-only）であり、実UI Pinned Context・Live Session・CSW Canvas・EKI Effectの実試験は段階的に分離。各Product Ownerの独立Expected/Scenarioを利用し、新共通Selection ABI、中央Handoff v2/Registry/Runnerや既存Productの意味受理正本を作らない。
-
-**資格**：main統合済みSHO/TEIの限定Handoff/文書Draftは実績だが、ここに示す**Pin→Handoff→Harness→Product UI一往復、Tool-only/Product Skill/TAI Skillの比較、実Live Session attach、横断Owner受理はNOT RUN**。本節は実行手順候補とOwner接続の追加である。
