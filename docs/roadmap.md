@@ -2,9 +2,9 @@
 
 状態: **Proposed（Owner受理待ち）**。直近の計画案であり、導入済み機能やコミット済みの実行結果を示さない。
 
-## 2026-11-11 現行証拠からの着手順（既存Phase・Gateへの索引）
+## 2026-11-11〜12 現行証拠からの着手順（既存Phase・Gateへの索引）
 
-[TAI横断読解ガイド §7〜9](tai-crossview-reader-guide-2026-11-09.md)に、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値・要件適正化、[#488](https://github.com/hat47x/tai-pleroma/issues/488)のSkill選択、[#168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness適格、[#271](https://github.com/hat47x/tai-pleroma/issues/271)の再資格化、[#127](https://github.com/hat47x/tai-pleroma/issues/127)の実利用価値評価を**重複させず**接続した。新しい中央Agent/Runtime/Registry・共通Gate・Product正本は作らない。
+[TAI横断読解ガイド §7〜10](tai-crossview-reader-guide-2026-11-09.md)に、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の価値・要件適正化、[#488](https://github.com/hat47x/tai-pleroma/issues/488)のSkill選択、[#168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness適格、[#271](https://github.com/hat47x/tai-pleroma/issues/271)の再資格化、[#127](https://github.com/hat47x/tai-pleroma/issues/127)の実利用価値評価を**重複させず**接続した。新しい中央Agent/Runtime/Registry・共通Gate・Product正本は作らない。
 
 1. **まず「追加しない」基準を保存**：[merged #601](https://github.com/hat47x/tai-pleroma/pull/601)のTEI単独CLI（3コマンドでread-only調査成立）をB0の限定証拠として使用する。SkillのJSON Path driftはTEI #2605へ戻す。**モデルによるB0/B1/B2比較、費用・時間の増分は未実施**。
 2. **横断連携の最初の実物は既存作業へ**：2026-11-11 merged [PR #602](https://github.com/hat47x/tai-pleroma/pull/602)のSUI→SHO実Producer/Consumer・TEI read-only根拠引用・別Harness CLI観測を独立の限定証拠として扱う。G6は`reference-linked-unverified`までで、ProductのClaim closure、実Source/Host Grant/OS egress、実業務Outcomeは**未成立**。同PRのOwner境界・未実施を保ち、第二のHandoff実装を作らない。
