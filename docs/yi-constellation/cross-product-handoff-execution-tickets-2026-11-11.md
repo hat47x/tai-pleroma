@@ -442,6 +442,14 @@ SHO [`scripts/handoff-harness-switch.cjs`](https://github.com/hat47x/sho-compose
 
 **反例の再利用**：G5-N2/N3、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488) X04/X05/X06、同実行票§10のQH（I/R/P/T/C/H）を用い、**旧`observations[].id`と新Runnerの同名風IDを同じ資格へ自動集計しない**。新回帰`test/handoff-harness-switch-claims.test.cjs`は**SHO main統合済み**で、Ubuntu/Windows双方のHandoff CIで実行・成功。ただし検証したのは**新Receiptの宣言範囲とCLI入力拒否**であり、実二Agent・Host/OS/egressをこのCIで試したわけではない。これはTest-only Receiptの厳格化であり、`yi.handoff.context/v1`、正式Authority/Skill Loader、全製品共通のEvidence Registryや第二Verifierは変更しない。TAI #168のH2/H3比較適格0/4・G0→G2を優先し、二Agentの実ログ/外部送信/B不正票は独立した**NOT RUN**の次段階。
 
+### 2026-11-12 実CLI Runner出力とProduct Skill宣言の独立回帰（SHO main #46）
+
+[SHO merged PR #46](https://github.com/hat47x/sho-composer/pull/46)は、前節の**純粋なClaim Ceiling関数のテスト**に加え、実`scripts/handoff-harness-switch.cjs`を起動するNode回帰を追加。合成・公開可能な`yi.handoff.context/v1`票を使い、A=ローカルNode→実SHO Consumer、B=別Nodeを`--harness-b-argv`で起動→同じ実SHO Consumerの**二経路を明示的に通す**。最終Machine Receiptの7観測ID・payload byteLength/SHA・`scope/claim/executionPaths`・`not-proven/not-run/local-a-only`を独立Expectedと照合し、Ubuntu/Windows Handoff CIで成功。これは**実外部Harness二Agentや同一Live Sessionの実証ではない**。当該Bは外部ARGVのNodeプロセスであり、DSH/Claude等のAgent Loader・Tool Permission/OS・Provider送出を実行していない。
+
+さらに、SHO Consumerで未知の`producer.productSkill`を`ticket.producerSkill`へ表示する仕様について、**Productが宣言した値を落とさず運ぶことと、Harnessが本当にSkillをロードしたことを区別**した。Skill宣言あり／なしで`receipt.claims`が変わらず、`authorityCarried`・`writerInvoked`がfalseである合成回帰を追加した。元Sourceや現在Permission、実Tool Replyの証明はProducerのmetadata欄から復元しない。旧2026-11-11固定Receiptは変更しない。
+
+**資格の段階**：値を返す関数の単体試験→実CLI/Consumer同士の一往復（今回到達）→実AgentのLoader/Tool呼出と完全Reply→実OS/Host Grant/全Sink/業務Effect（後二者NOT RUN）を異なる結果列とする。既存QHのI/R/P/T/C/Hと[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/[#488](https://github.com/hat47x/tai-pleroma/issues/488)を利用し、新しい共通Runner・第二Evidence Store/Verifier・Handoff v2を導入しない。初回H2/H3比較適格0/4を変更しない。
+
 ### 必須負例
 
 | ID | 注入 | 期待 | 実測 |
@@ -673,7 +681,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | **P：Projection/Disclosure** | Product/Host（TEI #2516／TAI #232） | 今回のAudience/目的/Current Grantに許可された範囲だけを生成した証拠。Driverが公開合成資料だけを使った場合、実OS外部送出禁止をPASSとしない |
 | **T：Transport/Receipt** | SUI Producer→SHO実CLI、既存G1〜G5 | 票・payload exact byte/Source・Receiptの実受領。これ単独でTEI対象の独立解決や現行Source/Meaning受理を示さない |
 | **C：Consumer meaning/use** | SHO/TEI/SEI各Consumer（TAI #271） | 当該Consumerが用途相対の根拠・未決を再照合した範囲でのみ限定説明。未知のReference/Source未Readなら`unknown`を保持 |
-| **H：Harness/Skill/Effect** | TAI #168/#488、実Host/Provider | 実Tool/Skill Loader/Session/Effectを各実証で区別。G5で別Harness実CLIを切替えられたこと≠同一Live Session再開、Handoffの`productSkill`文字列≠実Load |
+| **H：Harness/Skill/Effect** | TAI #168/#488、実Host/Provider | 実Tool/Skill Loader/Session/Effectを各実証で区別。G5でAローカルNode・B外部ARGV受領が一致したこと≠二Agent実呼出・同一Live Session再開、Handoffの`productSkill`文字列≠実Load |
 
 ### 10.3 最初の実行カード（Ownerの既存Runnerを再利用する）
 
