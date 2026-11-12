@@ -652,6 +652,10 @@ TEIでは[同Kind・同ID後勝ちとFingerprint入力副作用/自己参照 #44
 
 **QH-P1（GUI/CUI比較、後段）**：TEI Studioで同じ対象を固定→無関係な画面/Canvas/AI入力へ移動→再度同じ対象へ戻り、CUIでの指定とIdentity/Scope/時点が一致するかを確認。まだPin操作が実装されていない場合は`unsupported/not-run`。実外部Harness受領・現在Policy・書込み/Effectは別Gateにする。
 
+**評価する利用者価値（今は測定計画）**：同じ許可済みTaskでAIなしのProduct/CUIと、固定対象→Handoff→復帰する経路を対照。対象へ戻る操作数/再説明文量、誤対象の回答・誤付替え件数、元根拠と未決の保持率、訂正・Undo/不適格時停止の成否、実Tool/転送/人手費用を別々に記録する。誤対象・秘密開示・黙ったSource再束縛は合格させず、**従来経路と比べて改善が観測されなければ既存Product単独UIを維持**する。生成AIによる評価しかない場合は利用者実測を偽装せず、独立Expected付きシナリオと操作イベント観測に限定する。
+
+**並列・接合順**：S＝各Product内の対象選択・再解決（#1124/#4475）、H＝外部HarnessのG0/G1/G2・Tool実証（TAI #168）は独立に進めてよい。J＝実Productで固定した同一対象を**実Harness Sessionを介して**戻す接合TrialはS/H双方の必要資格後。C＝CSW×SUIの方法寄与・KJ型補正はJとは別Armで評価し、初回を遅らせない。これは追加の共有Runtimeや全製品共通Gateを設けることではない。
+
 | Case | 独立Expected（新Trial、すべてNOT RUN） |
 | --- | --- |
 | **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
