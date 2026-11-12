@@ -9,7 +9,7 @@
 | 票 | 状態 | 実測 | 残り（NOT RUN） |
 | --- | --- | --- | --- |
 | G2 | **observed-pass** | Receipt返送＋Producer側照合を実製品E2Eで確認（`receipt-returned-and-reviewed`） | Receiptの保持期間・監査利用（OG-5） |
-| G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
+| G3 | **observed-pass（TEI CLI引用・SHO受領に限定）** | 実TEI read-only Catalog観測をSUI票へ引用し、SHO実CLIがPayloadと引用を受領。元TEI SubjectはSHO側で再解決していない | 元Source/Workspace/ScopeのConsumer独立解決、現在Grant、第二Hop実証 |
 | G4 | **observed-pass（新プロセスでの受領に限定）** | 別プロセス・別Sessionラベルでの再受領（歴史観測ID=`session-resumed`）、Audience拡大票の再読取もSHO #42で回帰 | 実Harness Session永続、現在Host Recipient Grant・Audience拡大拒否、縮小試験 |
 | G5 | **observed-pass（Receipt一致の限定範囲）** | A=ローカルNodeからSHO Consumer CLIを直接実行（`deepseek-harness`はラベル）、B=外部ARGV指定でClaude Codeを起動しSHO CLIのJSON Receiptを回収（7観測）。Aの実DSH Agent経由起動はこのRunner/Receipt単独では未証明 | 両Harnessの実Agent経由Invoke・Skill実ロード・MCP経路・現在Host Grant/外部egress |
 | G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3（正式に閉じた）、別Source検出 |
@@ -264,7 +264,7 @@ go run ./cmd/tei model catalog -workspace reference/workspace     # 実観測
 5. Receiptの `claims.originalSourcesRead` は `false` のまま。
 6. RunnerのObservationsに `tei-readonly-observation-cited` が `ok:true` で加わる。
 
-**実行結果（2026-11-11）**：1〜6 すべて `observed-pass`（`scope: synthetic-three-product-one-handoff`、12観測すべてok）。
+**歴史的実行結果（2026-11-11）**：1〜6は**TEI CLI観測を引用してSHOが再読取した範囲に限り**`observed-pass`。当時の不変Receiptは`scope: synthetic-three-product-one-handoff`、12観測すべてokと記録するが、この文字列はTEI元Subjectの独立再解決・三製品での意味受理を証明しない。SHOの後続Machine Claim Ceilingではスコープを限定し、歴史Receiptのbytesは書き換えない。
 
 | 受入条件 | 実測 |
 | --- | --- |
@@ -273,7 +273,25 @@ go run ./cmd/tei model catalog -workspace reference/workspace     # 実観測
 | 3 | 実SHO CLIで受領。`limitation` に4件の `authorityLimits` が**全て**残る |
 | 4 | `claims.meaningAccepted=false` |
 | 5 | `claims.originalSourcesRead=false` |
-| 6 | `tei-readonly-observation-cited` が `ok:true`、`threeProductCoordination="observed-pass"` |
+| 6 | 当時の観測ID `tei-readonly-observation-cited` は `ok:true`。歴史Receiptの `threeProductCoordination="observed-pass"` は**引用の受領**を超えて資格化しない。後続Runnerでは全Productの元対象再解決を示す真偽とは分離 |
+
+### 2026-11-12 G3 Machine Receipt資格上限：歴史観測と現在の実装を分離
+
+[SHO merged #47](https://github.com/hat47x/sho-composer/pull/47)では外部Bが過去のJSON Receiptを再出力するだけでも内容比較が一致し得る負例、[SHO merged #48](https://github.com/hat47x/sho-composer/pull/48)では**同じMarkdown Byteで元TEI Source/Target宣言の異なる三票をSHO実Consumerが受領できる**負例を確認した。これらをG3/固定対象QHの独立Expectedへ反映する。
+
+[SHO PR #49](https://github.com/hat47x/sho-composer/pull/49)は、G3にも使われる`scripts/handoff-cross-product.cjs`の**現在の出力**について、`scope=synthetic-two-product-handoff-with-tei-catalog-citation`、`claim=producer-consumer-receipt-consistency-only`に限定する実装変更。歴史的なG3初回Receiptと、今後のRunner SchemaなしJSONのClaimを混同しない。
+
+| 観測／Machine Claim | このRunnerで成功にできる範囲 | 保留する独立資格 |
+| --- | --- | --- |
+| SUI Producer・SHO Consumer | Pinned Producerの実Vitest＋実SHO CLI・Payload byte/Digest＋SUI側Ticket Digest review | TEI原本のSource/Qualified Target再解決、実Owner意味受理 |
+| `harness-switch` | 同一Node/SHO CLIの`--harness`表示値だけを変えてReceipt宣言が一致する | **二つの実Agent Session・OS/Host Grant/egress**は`not-run/not-proven` |
+| `second-session`／G4再開 | 別CLIプロセス・新Session**ラベル**で再受領 | 同一Live Sessionの復元、旧Grant移植 |
+| G3のTEI read-only `tei-readonly-observation-cited` | 実TEI Catalog観測をTicketの`evidence/references`へ引用した事実 | 元TEI Source/Workspace/Scope/対象の独立再解決（QH-R/C） |
+| TicketへのGrant/History注入拒否 | **票のSchema禁止欄**の拒否 | HarnessのTool Grant・会話履歴が別経路で移らないこと |
+| 部分Payload切詰め | サイズ・Digestの不一致拒否 | 部分Tool Reply/欠落Invocationの拒否 |
+| G4-N3の旧Receipt編集 | **新しいConsumerは旧Receiptを入力に使わない** | 再利用経路でのReplay拒否。未実施で`not-run` |
+
+SHO #49の純粋なClaim CeilingテストがCI成功しても、**実SUI/TEI別checkoutを用いたフルRunner再実行にはならない**。実TEI→SUI→SHO QH-P0はまだNOT RUNであり、元TEI対象をSHOではなくDriverが読んだ場合もConsumer資格へ昇格させない。TAI #168 G0→G1→G2／H2/H3四Slot適格0/4の先行順を変えず、新しい共通Host・Selection Registry・Evidence Verifier・Handoff v2を追加しない。
 
 ### 3.4 必須負例
 
