@@ -10,7 +10,7 @@
 | --- | --- | --- | --- |
 | G2 | **observed-pass** | Receipt返送＋Producer側照合を実製品E2Eで確認（`receipt-returned-and-reviewed`） | Receiptの保持期間・監査利用（OG-5） |
 | G3 | **observed-pass** | 実TEI read-only CLI観測を票へ引用し、実SHO CLIが受領（3製品・負例5件） | 第二のHop（`chain`v2）、`source.status`契約（OG-2） |
-| G4 | **observed-pass** | 別プロセス・別Sessionラベルでの再受領（`session-resumed`） | Host再起動・日跨ぎの実Session永続 |
+| G4 | **observed-pass（新プロセスでの受領に限定）** | 別プロセス・別Sessionラベルでの再受領（歴史観測ID=`session-resumed`）、Audience拡大票の再読取もSHO #42で回帰 | 実Harness Session永続、現在Host Recipient Grant・Audience拡大拒否、縮小試験 |
 | G5 | **observed-pass（Receipt一致の限定範囲）** | A=ローカルNodeからSHO Consumer CLIを直接実行（`deepseek-harness`はラベル）、B=外部ARGV指定でClaude Codeを起動しSHO CLIのJSON Receiptを回収（7観測）。Aの実DSH Agent経由起動はこのRunner/Receipt単独では未証明 | 両Harnessの実Agent経由Invoke・Skill実ロード・MCP経路・現在Host Grant/外部egress |
 | G6 | **observed-pass（限定）** | 票のreferencesをSEI exact_binding形と照合（`reference-linked-unverified`に留める・self-test 8件） | 受入2（TEI #2586 Claim closure）、負例N1〜N3（正式に閉じた）、別Source検出 |
 
@@ -341,7 +341,7 @@ Goal Roundをまたぐ・Hostを再起動する・日をまたぐ**Session再開
 3. 再開時のReceiptに `claims.sessionInheritedAuthority=false` が立つ。前Sessionの資格を継承しない。
 4. `transport.sessionLabel` は新Sessionのラベルで記録され、旧Sessionのラベルが復活しない。
 
-**実行結果（2026-11-11）**：1〜4 すべて `observed-pass`。Runnerの観測 `session-resumed`。
+**実行結果（2026-11-11）**：1〜4は**別プロセスのSHO CLI受領として**限定`observed-pass`。Runnerの歴史観測ID `session-resumed`は実Harness Sessionの継続・復元を意味しない。
 - 別プロセス（`spawnSync` で新規起動）・別ラベル（`session-resumed`）で再受領。
 - `payload`・`checks`・`carriedForward` は初回と完全一致。`consumer.sessionLabel` のみが変わる。
 - `claims.sessionInheritedAuthority=false`、`claims.independentReread=true`。
@@ -354,7 +354,8 @@ Goal Roundをまたぐ・Hostを再起動する・日をまたぐ**Session再開
 | ID | 注入 | 期待 | 実測 |
 | --- | --- | --- | --- |
 | G4-N1 | 再開前にpayloadを変更 | fail-closed | `observed-pass`（`handoff-payload-size-mismatch`） |
-| G4-N2 | 再開前に票の `disclosure.audience` を狭める | 新しいAudienceで受領。旧Audienceを「覚えている」ことにしない | `not-run`（票の作り直しが要る。Runner未実装） |
+| G4-N2 | 既存 `['sho-composer']` を `['sho-composer','other-consumer']` へ**拡大**した票を別プロセスで受領 | **現在票に記載されたAudienceを再読取**する。追加RecipientへのHost許可・送出拒否は別結果 | [SHO merged #42](https://github.com/hat47x/sho-composer/pull/42)で実Consumerのreadbackと非継承をNode回帰し、Ubuntu/Windows Handoff CI成功。`g4-n2-current-audience`の`hostRecipientAuthorization`／`audienceExpansionDenied`は**`not-run`**。外部Harnessによる追加送出・Host拒否は未実証 |
+| G4-N2R | 再開前にAudienceを本当に**縮小**する | 現在票を再読取し、旧Recipientを許可済みとして復元しない | **`not-run`**（元のG4-N2の意図した縮小反例は新しい拡大試験では実証されない） |
 | G4-N3 | Receiptを手で編集して `receivedAt` を過去にする | 受領は新Attemptとして記録。編集を現在の受領として扱わない | `not-run`（Receiptは受領時に生成するため、編集済みReceiptを読み戻す経路が未実装） |
 
 ### 撤退条件
@@ -659,9 +660,9 @@ OG-1・OG-5 は現状維持。既存の実装を変えない。
 
 実[SUI Producer](https://github.com/hat47x/sui-sensemaking/blob/main/03_Implement/frontend/src/export/handoff_context_envelope.ts)の`yi.handoff.context/v1`には`target.{product,kind,id}`、`revision`、`references[]`、`evidence[]`等がある。[SHO Consumer](https://github.com/hat47x/sho-composer/blob/main/src/handoff_envelope.cjs)はHandoff票を非信頼入力として検査し、**Markdown payloadの実byteを独立に再Read**する。G3ではTEI read-onlyの観測を**引用**した。しかし**SHO側がTEIの対象IDを同じSource/Workspace/Scopeで独立解決した証拠はない**。この差を、単なる`target.id`一致や全体`worldFingerprint`一致で埋めない。
 
-TEIでは[同Kind・同ID後勝ちとFingerprint入力副作用/自己参照 #4475](https://github.com/hat47x/tei-platform/issues/4475)、[CRUD Data索引誤用/明示定義脱落/矛盾OK #4472](https://github.com/hat47x/tei-platform/issues/4472)が静的に指摘され、正負の実回帰は別Ownerで未実証。現時点でDerived CRUD Cellや同名Relationを一意のMeaning/編集対象とみなす経路は**負例扱い**にする。さらに[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)のProvider実Rowsetは未接続であり、Model WorldFPが変わらなくてもDB Rowset/RLS/Grantの現在資格は変わり得る。
+TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**Fingerprint計算が元モデルのAuthorityLimitsを書き換える／自分自身のFingerprintをハッシュする問題は[merged #4507](https://github.com/hat47x/tei-platform/pull/4507)で実コード・正負テストを追加して修正**された。一方、同Kind・同IDの後勝ち衝突とConsumerでの曖昧対象判定は残る。[#4472](https://github.com/hat47x/tei-platform/issues/4472)のCRUD Data索引修正は[Draft #4513](https://github.com/hat47x/tei-platform/pull/4513)が未統合であり、明示定義のみの脱落・矛盾OKは別問題。[Draft #4514](https://github.com/hat47x/tei-platform/pull/4514)は図面Source-only driftを既存`sourceFingerprint`で再評価する候補で未統合。**構造Fingerprintが同じでも、元Sourceの移動・原文改版・現在Grant・Owner受理の資格は別**。Derived CRUD Cellや同名RelationをID/構造Digest一致だけで編集対象とみなさない。さらに[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)のProvider実Rowsetは未接続であり、Model WorldFPが変わらなくてもDB Rowset/RLS/Grantの現在資格は変わり得る。
 
-**追加するのは後段Trialの独立Expectedと判定票のみ**であり、既存P0の354 byte/SHA、G2〜G6の受入・Receipt、`yi.handoff.context/v1`のSchemaやDisclosure閉集合、TAI #168のH2/H3初回4Slot、旧G5の実CLI切替の証拠を変更しない。TAI #629/#630はUI選択・Pin/再解決設計の並行Draftであり、本書ではその第二の状態機械を実装しない。
+**追加するのは後段Trialの独立Expectedと判定票のみ**であり、既存P0の354 byte/SHA、G2〜G6の受入・Receipt、`yi.handoff.context/v1`のSchemaやDisclosure閉集合、TAI #168のH2/H3初回4Slot、旧G5の実CLI切替の証拠を変更しない。TAI #629/#633はUI選択・Pin/製品別再解決設計の並行Draftであり、本書ではその第二の状態機械を実装しない。
 
 ### 10.2 同じ対象・同じ根拠・同じ現在資格の判定を分割する
 
@@ -688,8 +689,8 @@ TEIでは[同Kind・同ID後勝ちとFingerprint入力副作用/自己参照 #44
 | --- | --- |
 | **QH-01** 正常な一意対象 | kind/idだけでなくSource/Scope/実Read revision/当該Consumerの再Readを列別記録。実Consumerが未実装なら列は未実施 |
 | **QH-02** 同Kind同ID重複・別Scope同名 | TEI #4475の問題を静的負例として固定し、自動的に後勝ちの1件を選ばない。実修正済みと主張しない |
-| **QH-03** Fingerprint計算後のAuthorityLimits変化・A→B→A | #4475の独立回帰を参照。以前の`worldFingerprint`からSource/Grant/current eligibilityを復元しない |
-| **QH-04** CRUD明示のみ・矛盾/誤索引 | #4472に従い派生表の`ok=true`をCRUD全体整合・編集資格と扱わない |
+| **QH-03** 構造FingerprintとSource/Authority変化・A→B→A | [merged #4507](https://github.com/hat47x/tei-platform/pull/4507)の**計算純粋性・自己参照排除は修正済み**として別記録。一方、Authorityのみ変更・Source-only変更・A→B→Aで構造Digestが同じでもSource/current Grant/意味資格を復元しない（#4514はDraft、別実試行NOT RUN） |
+| **QH-04** CRUD明示のみ・矛盾/誤索引 | [#4513 Draft](https://github.com/hat47x/tei-platform/pull/4513)のData索引修正がまだmain未統合。仮に索引修正済みでも、#4472の明示CRUD-only／矛盾後勝ち／`ok=true`の整合判定は別の独立Expectedが必要 |
 | **QH-05** 非公開Peerあり/なし、許可Projection同じ二世界 | Handoff票/Body/Receipt/diagnosticsに未許可ID/件数/Location/Roleが漏れない。Host外部egressは別実観測 |
 | **QH-06** 部分取得・0件・Resolver不在 | complete emptyとpartial/not-found/unknown/unsupportedを区別し、無取得を「存在しない」と断定しない |
 | **QH-07** Handoff受領は成功だがTEI Source再解決なし | `T=pass, R/C=not-run`。独立Reader証拠が無ければ同一対象意味引継ぎをPASSとしない |
