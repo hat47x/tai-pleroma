@@ -393,14 +393,14 @@ Harness A（例: DSH）で開始したHandoffを、Harness B（例: Codex・Clau
 3. Harness B の実行前に、Harness A のSessionで見えていたTool・権限・Sourceが、Harness B では**独立に再確認**される。再確認の記録がRunbookに残る。
 4. Harness A で「可用」と確認したToolを、Harness B で**無条件に可用としない**。未知のものは `unknown` として記録する。
 
-**実行結果（2026-11-11）**：1・2・4 は `observed-pass`、3 は `not-run`。
+**実行結果（2026-11-11、2026-11-12資格監査）**：1はAローカル/B外部ARGVのConsumer Receipt一致、2はReceiptの宣言値がすべて`false`、4は票内`transport.authority=none`と実Tool可用性の**非継承（宣言面のみ）**として限定`observed-pass`。3のB側実Tool/権限/Source現在再確認は`not-run`。
 
 実際の構成：
 - Harness A = **このRunnerが直接起動したローカルNode/SHO Consumer CLI**（`--harness-a deepseek-harness`はReceipt用ラベル。外側の実DSH Agent起動・Sessionは別の一次ログがない限り未資格）
 - Harness B = Claude Code 2.1.302（`--harness-b-argv` で **ARGV 起動**。`-p` のプロンプトで実Consumerを実行させ、標準出力のJSONを回収）
 - 票 `sha256:d0c3c588…`／payload `sha256:7fd6fde2…`（354 bytes）
 
-**再実行の可否（2026-11-11 追記）**：異なるHarness間の実測は、Claude Code のセッション上限に達したため**当日は再実行できない**（`unrecognized_model`／`session limit`）。これは外部クォータの制約であり、機構の故障ではない。異なるHarnessが使えない環境では、**同一Harnessの別Session**を対照として走らせることができる（`docs/handoff-harness-switch-control-receipt-2026-11-11.json`）。**対照が通っても「異なるHarness間で増幅しない」ことの証拠にはならない**。対照が通らなければ機構側のbugである。
+**再実行の可否（2026-11-11 追記）**：異なるHarness間の実測は、Claude Code のセッション上限に達したため**当日は再実行できない**（`unrecognized_model`／`session limit`）。これは外部クォータの制約であり、機構の故障ではない。異なるHarnessが使えない環境では、**異なるHarness/Session風のラベルを付けて同じSHO Consumer受領を比較する対照**を実行できる（`docs/handoff-harness-switch-control-receipt-2026-11-11.json`）。ただしそのReceiptの`sessionLabels.a/b`はともに`g5-switch`であり、**二つの実DSH SessionのID・再開を示さない**。対照が通っても「異なるHarness間で増幅しない」ことや「別Sessionを実装した」ことの証拠にはならない。対照が通らなければ機構側のbugである。
 
 | 受入条件 | 実測 |
 | --- | --- |
