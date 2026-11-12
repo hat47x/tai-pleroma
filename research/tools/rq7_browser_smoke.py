@@ -67,7 +67,8 @@ MEASURE_JS = r"""() => {
         text: t.textContent,
         x: b.x, y: b.y, w: b.width, h: b.height,
         overflow: b.x < -0.1 || b.y < -0.1 ||
-          b.x + b.width > 180.1 || b.y + b.height > 60.1,
+          b.x + b.width > (+r.getAttribute('width')) - 7.9 ||
+          b.y + b.height > (+r.getAttribute('height')) + 0.1,
       });
     }
   }
@@ -287,15 +288,50 @@ def main() -> None:
                         raise AssertionError(
                             "Chromium accessibility-tree description mutation was not detected"
                         )
+            for long_label in (
+                "A deliberately long synthetic label that must stay fully visible inside its widened card",
+                "業務期間確定と訂正イベントの参照関係を表示する長い日本語ラベル",
+            ):
+                variant = copy.deepcopy(cases[0])
+                variant["declared"]["nodes"][0]["label"] = long_label
+                rq7_svg.check_public_pair(variant)
+                page.set_content(document(variant), wait_until="load")
+                page.evaluate("document.fonts.ready")
+                enlarged = page.evaluate(MEASURE_JS)
+                if enlarged["labelOverflows"] or enlarged["edgeHits"]:
+                    raise AssertionError(
+                        f"{viewport_name}: long-label Graph has clipping or edge occlusion: {enlarged}"
+                    )
+                if enlarged["svgWidth"] <= rq7_svg.NODE_MIN_WIDTH:
+                    raise AssertionError("long-label panel was not expanded")
+                chromium_accessible_image(page, accessibility_session, variant)
+                verify_keyboard_structured_alternative(page, accessibility_session, variant)
+                if width < enlarged["svgWidth"]:
+                    if enlarged["contentWidth"] <= enlarged["viewportWidth"]:
+                        raise AssertionError("long-label Graph not horizontally scrollable")
+                    page.evaluate("document.querySelector('#diagram').scrollLeft = 10000")
+                    if page.evaluate("document.querySelector('#diagram').scrollLeft") <= 0:
+                        raise AssertionError("long-label horizontal scroll has no effect")
+                if viewport_name == "desktop" and long_label.startswith("A deliberately"):
+                    # Mutation proves the browser really detects clipped text:
+                    # keep the full text/graph IDs but shrink all node outlines.
+                    page.evaluate(
+                        "document.querySelectorAll('g.declared-node rect')"
+                        ".forEach(r => r.setAttribute('width', '180'))"
+                    )
+                    negative = page.evaluate(MEASURE_JS)
+                    if not negative["labelOverflows"]:
+                        raise AssertionError("narrow-node label-clipping mutation was not detected")
             if viewport_name == "desktop":
-                # A deliberately long label exposes the known single-line
-                # layout limitation. Detect it, never count it as a PASS.
-                mutant = copy.deepcopy(cases[0])
-                mutant["declared"]["nodes"][0]["label"] = "A deliberately long synthetic label that should be outside the narrow card"
-                page.set_content(document(mutant))
-                negative = page.evaluate(MEASURE_JS)
-                if not negative["labelOverflows"]:
-                    raise AssertionError("long-label overflow negative control was not detected")
+                excessive = copy.deepcopy(cases[0])
+                excessive["declared"]["nodes"][0]["label"] = "漢" * 150
+                try:
+                    rq7_svg.render_svg(excessive)
+                except ValueError as exc:
+                    if "exceeds supported single-line SVG width" not in str(exc):
+                        raise
+                else:
+                    raise AssertionError("unsupported extremely long label was not rejected")
             context.close()
         browser.close()
 
@@ -305,7 +341,9 @@ def main() -> None:
         "viewport_checks": len(checked),
         "edge_crossing_checks": "sampled actual SVG paths/lines via Chromium screen CTM",
         "label_overflows_in_original_three_graphs": 0,
-        "known_long_label_limitation": "DETECTED_NEGATIVE_CONTROL_NOT_SUPPORTED",
+        "bounded_long_english_and_japanese_labels": "CHECKED_AT_DESKTOP_AND_MOBILE",
+        "overlimit_label": "REJECTED_NOT_SILENTLY_CLIPPED",
+        "narrow_node_clipping_negative": "DETECTED",
         "real_browser_dom_geometry": "CHECKED",
         "chromium_accessibility_tree_name_and_topology": "CHECKED",
         "structured_node_edge_tables_and_keyboard_disclosure": "CHECKED",

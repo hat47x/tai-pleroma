@@ -106,6 +106,50 @@ class SvgTextStructuralParity(unittest.TestCase):
         self.assertIn('<script>alert("x")</script>', root.find(rq7_svg.tag("desc")).text)
         rq7_svg.check_accessible_graph_description(case, svg)
 
+    def test_long_english_label_gets_full_width_without_abbreviation(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        label = "A deliberately long synthetic label that should stay fully visible in Chromium"
+        case["declared"]["nodes"][0]["label"] = label
+        nodes = {n["id"]: n["label"] for n in case["declared"]["nodes"]}
+        card_width = rq7_svg.node_panel_width(nodes)
+        self.assertGreater(card_width, rq7_svg.NODE_MIN_WIDTH)
+        root = ET.fromstring(rq7_svg.render_svg(case))
+        self.assertTrue(all(g.find(rq7_svg.tag("rect")).get("width") == str(card_width)
+                            for g in root.findall(rq7_svg.tag("g"))))
+        self.assertEqual(
+            rq7_svg.svg_semantics(ET.tostring(root, encoding="unicode"))[0][case["declared"]["nodes"][0]["id"]],
+            label,
+        )
+        rq7_svg.check_public_pair(case)
+
+    def test_japanese_label_expands_width_and_preserves_exact_text(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        label = "業務期間確定と訂正イベントの参照関係を表示する長いラベル"
+        case["declared"]["nodes"][0]["label"] = label
+        nodes, pos, _, _ = rq7_svg.graph_layout(case)
+        width = rq7_svg.node_panel_width(nodes)
+        self.assertGreater(width, rq7_svg.NODE_MIN_WIDTH)
+        self.assertGreater(pos["test"][0], pos["compile"][0] + width)
+        rq7_svg.check_public_pair(case)
+        self.assertIn(label, rq7_svg.accessible_graph_description(case))
+
+    def test_label_beyond_supported_single_line_width_fails_closed(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        case["declared"]["nodes"][0]["label"] = "漢" * 150
+        with self.assertRaisesRegex(ValueError, "exceeds supported single-line SVG width"):
+            rq7_svg.render_svg(case)
+
+    def test_long_label_does_not_hide_edges_or_corrupt_ports(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        case["declared"]["nodes"][0]["label"] = "A very long declared node that causes the entire rank spacing to expand safely"
+        labels, pos, _, _ = rq7_svg.graph_layout(case)
+        card_width = rq7_svg.node_panel_width(labels)
+        routed = rq7_svg.route_points(pos, "compile", "package", card_width)
+        self.assertEqual(routed[0][0], pos["compile"][0] + card_width)
+        self.assertEqual(routed[-1][0], pos["package"][0] - 9)
+        rq7_svg.check_route_clearance(case, pos, card_width)
+        rq7_svg.check_svg_geometry(case, rq7_svg.render_svg(case))
+
     def test_cycle_rejected_not_silently_drawn(self):
         case = copy.deepcopy(self.cases["v1"][0])
         case["declared"]["edges"].append(["package", "src"])
@@ -137,23 +181,24 @@ class SvgTextStructuralParity(unittest.TestCase):
     def test_long_edge_no_longer_crosses_middle_node(self):
         case = self.cases["v1"][0]
         labels, positions, _, _ = rq7_svg.graph_layout(case)
+        card_width = rq7_svg.node_panel_width(labels)
         self.assertIn("test", labels)
         self.assertTrue(rq7_svg.intersects_interior(
-            (positions["compile"][0] + 180, positions["compile"][1] + 30),
+            (positions["compile"][0] + card_width, positions["compile"][1] + 30),
             (positions["package"][0] - 9, positions["package"][1] + 30),
             *positions["test"],
         ), "pre-fix straight line should cross test node")
-        routed = rq7_svg.route_points(positions, "compile", "package")
-        adjacent = rq7_svg.route_points(positions, "test", "package")
+        routed = rq7_svg.route_points(positions, "compile", "package", card_width)
+        adjacent = rq7_svg.route_points(positions, "test", "package", card_width)
         self.assertEqual(len(routed), 6)
         self.assertEqual(len(adjacent), 2)
         self.assertEqual(routed[-1][0], adjacent[-1][0])
         self.assertNotEqual(routed[-1][1], adjacent[-1][1],
                             "two different incoming arrows must not merge at one port")
-        self.assertNotEqual(routed[0][1], rq7_svg.route_points(positions, "compile", "test")[0][1],
+        self.assertNotEqual(routed[0][1], rq7_svg.route_points(positions, "compile", "test", card_width)[0][1],
                             "long and adjacent outgoing edges must have different ports")
         for a, b in zip(routed, routed[1:]):
-            self.assertFalse(rq7_svg.intersects_interior(a, b, *positions["test"]))
+            self.assertFalse(rq7_svg.intersects_interior(a, b, *positions["test"], w=card_width))
         svg = ET.fromstring(rq7_svg.render_svg(case))
         matches = [p for p in svg.findall(rq7_svg.tag("path"))
                    if p.get("class") == "declared-edge"
@@ -161,7 +206,7 @@ class SvgTextStructuralParity(unittest.TestCase):
                    and p.get("data-to") == "package"]
         self.assertEqual(len(matches), 1)
         self.assertTrue(matches[0].get("d").startswith("M "))
-        rq7_svg.check_route_clearance(case, positions)
+        rq7_svg.check_route_clearance(case, positions, card_width)
 
     def test_old_straight_shortcut_is_rejected_as_visual_wrong_connection(self):
         case = self.cases["v1"][0]
@@ -171,10 +216,11 @@ class SvgTextStructuralParity(unittest.TestCase):
                          and p.get("data-to") == "package")
         root.remove(long_edge)
         labels, pos, _, _ = rq7_svg.graph_layout(case)
+        card_width = rq7_svg.node_panel_width(labels)
         # Data IDs remain exactly right; only routing is visually misleading.
         ET.SubElement(root, rq7_svg.tag("line"), {
             "class": "declared-edge", "data-from": "compile", "data-to": "package",
-            "x1": str(pos["compile"][0] + 180), "y1": str(pos["compile"][1] + 30),
+            "x1": str(pos["compile"][0] + card_width), "y1": str(pos["compile"][1] + 30),
             "x2": str(pos["package"][0] - 9), "y2": str(pos["package"][1] + 30),
             "stroke": "#333333", "stroke-width": "2",
             "marker-end": "url(#arrowhead)",
