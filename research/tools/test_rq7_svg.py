@@ -106,6 +106,50 @@ class SvgTextStructuralParity(unittest.TestCase):
         self.assertIn('<script>alert("x")</script>', root.find(rq7_svg.tag("desc")).text)
         rq7_svg.check_accessible_graph_description(case, svg)
 
+    def test_long_english_label_gets_full_width_without_abbreviation(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        label = "A deliberately long synthetic label that should stay fully visible in Chromium"
+        case["declared"]["nodes"][0]["label"] = label
+        nodes = {n["id"]: n["label"] for n in case["declared"]["nodes"]}
+        card_width = rq7_svg.node_panel_width(nodes)
+        self.assertGreater(card_width, rq7_svg.NODE_MIN_WIDTH)
+        root = ET.fromstring(rq7_svg.render_svg(case))
+        self.assertTrue(all(g.find(rq7_svg.tag("rect")).get("width") == str(card_width)
+                            for g in root.findall(rq7_svg.tag("g"))))
+        self.assertEqual(
+            rq7_svg.svg_semantics(ET.tostring(root, encoding="unicode"))[0][case["declared"]["nodes"][0]["id"]],
+            label,
+        )
+        rq7_svg.check_public_pair(case)
+
+    def test_japanese_label_expands_width_and_preserves_exact_text(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        label = "業務期間確定と訂正イベントの参照関係を表示する長いラベル"
+        case["declared"]["nodes"][0]["label"] = label
+        nodes, pos, _, _ = rq7_svg.graph_layout(case)
+        width = rq7_svg.node_panel_width(nodes)
+        self.assertGreater(width, rq7_svg.NODE_MIN_WIDTH)
+        self.assertGreater(pos["test"][0], pos["compile"][0] + width)
+        rq7_svg.check_public_pair(case)
+        self.assertIn(label, rq7_svg.accessible_graph_description(case))
+
+    def test_label_beyond_supported_single_line_width_fails_closed(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        case["declared"]["nodes"][0]["label"] = "漢" * 150
+        with self.assertRaisesRegex(ValueError, "exceeds supported single-line SVG width"):
+            rq7_svg.render_svg(case)
+
+    def test_long_label_does_not_hide_edges_or_corrupt_ports(self):
+        case = copy.deepcopy(self.cases["v1"][0])
+        case["declared"]["nodes"][0]["label"] = "A very long declared node that causes the entire rank spacing to expand safely"
+        labels, pos, _, _ = rq7_svg.graph_layout(case)
+        card_width = rq7_svg.node_panel_width(labels)
+        routed = rq7_svg.route_points(pos, "compile", "package", card_width)
+        self.assertEqual(routed[0][0], pos["compile"][0] + card_width)
+        self.assertEqual(routed[-1][0], pos["package"][0] - 9)
+        rq7_svg.check_route_clearance(case, pos, card_width)
+        rq7_svg.check_svg_geometry(case, rq7_svg.render_svg(case))
+
     def test_cycle_rejected_not_silently_drawn(self):
         case = copy.deepcopy(self.cases["v1"][0])
         case["declared"]["edges"].append(["package", "src"])
