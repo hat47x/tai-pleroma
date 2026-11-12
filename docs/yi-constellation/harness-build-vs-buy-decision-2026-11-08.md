@@ -346,3 +346,26 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 **順序と所有**：最優先は[TAI #168の既存G0→G1/G2→新独立H2/H3四Slot](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)であり（最後に確認できた比較適格0/4）、新PXは初回SK-02のHard Gateではない。後続でまず公開/合成Sourceのread-only **二Product UI/CUIのPin→限定送信Preview→外部Harness同SessionのTool Reply→元Selection照合**を一Attemptで観測。次いでSUI×CSWのAI提案→人のCanvas修正→Undo、EKIの大量操作Preview/Grant/Receiptを別試験。TAI #271/#168はActivity/Session/適格評価、UI/Pinは各Product、SUI/CSWの探索はそのOwner、Hostの実開示/隔離は#232、TEI実OperationはADR-0048がOwner。新Agent Runner/認可Engine/Session Server/中央Registryは作らない。
 
 **現在の資格**：設計と試験提案のみ。Live Sessionの製品間共用、実Pin/Undo→外部Harness受信、SUI×CSW Canvas、実Operation Effect、Ownerの正式採用はNOT RUN。独自Loopを開発する前に**この外部Harness＋Product UIの方法で何が本当に欠けるか**を独立Expectedで確かめる。
+
+### 19.4 既存の選択設計との収束：対象を保持する契約と、実利用を許す契約を分ける
+
+**重複防止**：[TAI Draft #629 §11.8](https://github.com/hat47x/tai-pleroma/pull/629)がすでに**自然言語→GUI／GUI→自然言語の両経路、検索候補Q・明示除外E・明示追加Aから成る S=(Q−E)∪A、Snapshotと動的Predicate、複数Session/後着、Audience越境**の設計と実験順序を担う。本節はその第二の正本や共通IDLを作らず、**具体的Product IDの再解決、二段階確認、非同期結果がUIへ反映される条件**という未実証の受入境界に絞る。#629のOpen/Draftを採用済みとせず、両PRのOwnerレビューで同じ内容を重複してmainへ統合しない。
+
+| Product・対象型 | Pinで保持する識別の根拠 | Re-resolveで必要な確認／誤認定 |
+| --- | --- | --- |
+| TEI Model/Function/Relation/Graph Edge | Subject/Relation/Edgeの意味ID、対象Workspace、Source/Model Revision、View Occurrence（同じ意味要素の表示位置） | 非単射Viewや同端点多重Edgeから別のTargetへ付け替えない。[TEI main #4476](https://github.com/hat47x/tei-platform/pull/4476)の固定Selection設計は統合済みだが、実GUI Pinは未資格 |
+| SUI Card/Island/Canvas/Tree | Native Card/RelationとIsland所属/Canvas配置・多重所属を区別、対象時点の読取範囲 | Canvas座標・近接・ラベルから正式Relationを推定しない。[SUI Draft #3437](https://github.com/hat47x/sui-sensemaking/pull/3437)のreadSet/writeSet/Occurrenceは提案であり実共有能力ではない |
+| SHO 文書のOccurrence/選択範囲 | **安定Occurrence IDを強制しない**。Document Origin、実Buffer、原文Digest/Revision、選択UTF-8 byte spanと内容/文脈から再解決。[SHO #38](https://github.com/hat47x/sho-composer/pull/38)はOccurrence/Document永続IDなし・span都度解決を選択 | UTF-16 Editor Selection→UTF-8 byte範囲は[SHO #29](https://github.com/hat47x/sho-composer/pull/29)の17件/OS限定PASSを利用。ただし未保存Buffer≠Disk、別Origin同Byte、Save Asで相対Refが移る、BOM/改行/同じURLの二出現は再検査。spanは強い保存fenceではない |
+| EKI Worker/Grant/Task | Product固有のWorker/Task/Grant、実Host/Lease/Attempt | UI選択されたWorkerが現在実行可能とは限らない。EKI Lease/結果/部分EffectとTAI Activityは別 |
+
+**対象固定の二種類**：Snapshotは特定時点に実解決済みのIdentity集合、Predicateは評価条件であって、結果集合はRe-queryの時点やScope/RLSで変わる。最終候補Sの人手追加/除外はその時点の選択履歴であり、将来のPredicateの恒久例外と勝手に読み替えない。0件・一部取得・全件・非開示は別の状態とし、対象数だけで漏洩の有無や完全性を判断しない。**動的集合から実Operationへ進む前に、今回作用する対象集合を具体的にMaterializeし、現在Grant/対象版/Effect条件を再確認する**。read-onlyの検索Previewには不要な強いEffect Gateを課さない。
+
+**二段階のユーザー操作と検査**：
+1. **Pin/修正は意図の保存**：一時選択から複数対象を固定し、AI/自然言語が候補Qを生成しても人のA/E補正をPreviewする。UndoはまずUI Pinへの取り消しであり、Product保存や外部Effectの逆操作ではない。
+2. **送出は別資格**：Pin revision/対象Scope/根拠/現在Disclosure・実Recipient・実ToolをProductが解決して提示。最初の許可済み同用途内では不要な再確認を繰り返さず、**対象追加、用途・Recipient拡張、Source/Grant/Disclosure改版時**は差分を再提示する。実送出byte/Tool Result全部/終端/Consumer受領を記録する。
+3. **非同期返信は照合後の提案**：Requestを受けたHarness Session、Product/Activity、Pinの意図版、Source/Buffer Revision、許可Projection・Recipient/Toolの範囲を返信の照合元として保持する（試験票の欄であり新公開Protocolではない）。別UIでPinをBへ変えた後にAへの遅延Replyが到着しても、現在のBのInspector/変更提案/実行ボタンを上書きしない。古い結果は過去の提案として表示・明示再評価し、**A→B→Aと見た目が戻っても旧Grant/旧確認を復活させない**。
+4. **Source編集・実Effectはさらに別資格**：Proposal→現Source再Read→影響/競合Preview→各Product Ownerが既存Patch/意味受理/Host Grantと実Provider Receiptを確認。旧いTool ACKを適用の証拠にしない。[SHO Draft #37/#38](https://github.com/hat47x/sho-composer/pull/37)の合成Version tokenは強いStorage CASを保証せず、root/realpath変化なら既存Ownerの拒否条件を優先する。
+
+**最小負例の解像度（#629 ASV、SHO E0、TEI Modeler既存Testへ委譲）**：①同端点2 Edgeの片方だけをPin、②同名別IDとView非単射、③UTF-16/UTF-8の絵文字・日本語・BOM/混合EOL、④dirty BufferとDiskの別版、⑤相対Refを含むSave As、⑥動的Predicate実再評価で集合/可視数変化、⑦A/E補正と追加した非公開Card、⑧送信前後のRecipient/Grant失効、⑨二UIの競合Reply、⑩Source A→B→A、⑪Host Actionがunknown、⑫AI OFF/ライブSession非対応時の縮退。**各ケースが実Source/実Tool/実Consumerで到達したか**を独立Expectedで区別し、単にテスト用JSONや文書が存在することをPASSと呼ばない。
+
+**設計実施順・Owner**：#629はSelection構成と後続評価方法、#630は各Product別Pin実現と再解決・応答の適用条件、TEI #1124/#1824はModeler/Studio、SHO #29/#37/#38はReader/Buffer/Writer、SUI #3400/#3437はKJ/Canvas、TAI #271/#168はHandoff/Harness資格。初回H2/H3のG0/G1/G2と新4 Slot（適格0/4）は依然最優先で、上記12観点は**P0後の別実験**。共通Selection Store/Agent Loop、永続Document Occurrence ID、新認可/Runnerを本書だけで採用しない。実UI↔外部Harness E2E、複数Product実操作、正式Owner受理はNOT RUN。
