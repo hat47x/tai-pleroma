@@ -255,3 +255,12 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 今回の研究用HTMLは、公開合成DAGの**Node(ID/Label)**と**直接Edge(from/to)**を別々の表へ投影し、ネイティブ`details/summary`で開閉する。全行の意味・方向を検査するほか、同じEdge件数のまま向きを取り違えた負例、ChromiumでのTab/Enterによる到達とAccessibility Treeの構造を検査対象とする。これを実TEIのSource Reader、Studio Editor、S01 Source Acceptanceや認可機構へ転用しない。
 
 **保証の追加区分**: Source/Goldの正本性、可視SVGの幾何、AXの全文説明、構造化表の個別関係への到達、スクリーンリーダー実使用、Human/AIの認知負担、Current Authority、実Consumer/Owner Acceptanceは各々別のClaim。今回の小規模合成表示の成功から、一般の大規模Graph・非公開Relation・実ETL/Self-buildを完全に描けるとは主張しない。
+
+
+## 18. 2026-11-12：長文ラベルの可視性と実装／観測保証を分離
+
+[公開合成Graphの長文ラベル可視性・対応上限](RQ7_LONG_LABEL_VISIBILITY_2026-11-12.md)を、RQ7 **G-Cal1b-Label**の独立Gateとして追加した。従来は短いNodeの`data-label`・AX説明・構造化表にラベルが完全に残っていても、固定180px矩形のSVG上で1行ラベルが欠ける反例が存在した。公開3種DAGに限り、ノード幅を元の全ラベルから保守的に推定・拡大し、Node/Rank・Edge routing/遮蔽判定を同じ幅へ連動させる。2048pxを超える推定幅は、画像出力の切詰めではなく**明示的な拒否**とする。
+
+英語・日本語の長文変更、実Chromiumでの可視矩形と文字BBox、狭画面の横スクロール、元180pxに戻す「欠落の変異」、過大文字列の拒否を別々に検査する。長文の構造化表が存在するだけでSVGの表示欠落を修復済みとは扱わない。なお狭画面での横スクロール増加は利用上の負担であり、複数行折返し・ズーム・実Screen Reader・人間/AI認知効率は未実証である。
+
+[TEI #4464](https://github.com/hat47x/tei-platform/pull/4464)の表現変換行列や[TEA Draft #4487](https://github.com/hat47x/tei-platform/pull/4487)の量化別証拠条件は研究上の関連候補であるが、いずれも当該時点で未統合のDraft/PRであり、このRQ7変更からProduct投影の意味受理・Source不存在・Writerの不存在は証明できない。
