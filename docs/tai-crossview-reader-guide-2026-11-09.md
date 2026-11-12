@@ -189,7 +189,7 @@ flowchart TB
 一つのActivityを製品間で継続する際、次の五つの質問を併記する。強い合否一つに統合せず、該当しない条件は`not-applicable`、知らないものは`unknown`、未試験は`not-run`と区別する（状態語を新しい横断Contractとして強制するものではない）。
 
 1. **Identity / Scope**：元の対象・Occurrence/Edge・Source Revision・Audience・Purposeを特定できるか。Pinned SelectionとSourceを無条件で再束縛しない（[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)、[TAI Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)）。
-2. **Observed Delivery / Consumption**：誰が、どの実行経路で、どのbytes・根拠を実読取したか。G5のAはLocal Node→SHO、BはExternal ARGV→SHOであり、**実二Harness Agent/Live Sessionではない**。Product Skill名の引継ぎは実Loaderを証明しない（merged #636/#638）。
+2. **Observed Delivery / Consumption**：誰が、どの実行経路で、どのbytes・根拠を実読取したか。G5のAはLocal Node→SHO、BはExternal ARGVからのReceipt返却であり、**Bの当該Attempt実Consumer起動も実二Harness Agent/Live Sessionも未証明**（#640の旧Receipt再掲反例）。Product Skill名の引継ぎは実Loaderを証明しない（merged #636/#638）。
 3. **Availability / Current Eligibility**：元のProductが同じ版・必要なSource/Provider/Grantで現在も参照可能か。Source差分とProviderの行差分、Audience変更とHost Recipient許可、Session継続とSource資格は別（[#271](https://github.com/hat47x/tai-pleroma/issues/271)、[#232](https://github.com/hat47x/tai-pleroma/issues/232)）。
 4. **Effect / Recovery**：同じTask・Attempt・Idempotency Keyに対する実Providerの状態、結果本体の保存と再取得可否、外部副作用を別に把握したか。ACK喪失時に新しいTask keyで無条件に再実行しない。EKI #829の出力本体喪失とTask状態の差異はEKI Ownerへ戻す。
 5. **Human Goal / Meaning**：成果物ができた、公開を正しく止めた、第三者が実受領した、本人が目的を達した、を別Claimにできるか。CSWの媒介者・TEIのValidator・AIがOwner判断を代行したという一般化をしない。
