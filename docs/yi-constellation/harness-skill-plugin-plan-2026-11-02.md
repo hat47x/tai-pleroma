@@ -999,6 +999,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | [SHO merged #45/#46/#47](https://github.com/hat47x/sho-composer/pull/47)、[TAI merged #635/#636/#638/#640](https://github.com/hat47x/tai-pleroma/pull/640) | G5のAローカルConsumer実呼出とB外部ARGVのReceipt JSON取得・照合。**Bが事前Receiptを再生しても一致する負例**をUbuntu/Windowsで確認 | B実Consumer呼出、今回のPayload再Read、Replay排除はnot-proven。実Agent/同一Live Session、現在Tool/Grant・全Sink送出・実Effectも未証明 |
 | SHO #46のProducer Skill宣言引継ぎ試験 | Skill名を未知の付随情報として保持し、Consumerの権限・Writer結果に転用しない | 実HarnessによるSkill Loader Read、Tool Invocation、専門Skillの改善 |
 | [SHO merged #48](https://github.com/hat47x/sho-composer/pull/48) | 同じMarkdown実byteを持つTEI Source A／別Source B／別Target IDの3票を実SHO Consumer/CLIが受領し、Payload SHA同一・independentReread=trueを確認。Ubuntu/Windows CI成功 | 元TEI WorkspaceのSource/TargetをSHOが独立再解決したわけではなく、originalSourcesRead=false／sourceRevisionCurrent=false／meaningAccepted=falseを維持 |
+| [SHO merged #49](https://github.com/hat47x/sho-composer/pull/49)、[TAI merged #643](https://github.com/hat47x/tai-pleroma/pull/643) | 既存SUI→SHO RunnerのMachine Receiptで、TEI Catalogを**引用**した事実とSHOのPayload再Readを分離。SHO #49はexact HEADの全7 CI成功後にmain統合 | 同一NodeでのHarnessラベル変更を実二Agent・権限非増幅へ昇格しない。TEIの元SubjectをSHOが実Readしたか、実Host Grant・全送出は未実証 |
 | [SHO #42](https://github.com/hat47x/sho-composer/pull/42)、[TAI #637](https://github.com/hat47x/tai-pleroma/pull/637) | Audienceを拡大した現在Ticketを実Consumerが再読取。自動権限継承は申告しない | 拡大先Recipientの実Host認可・拒否。縮小例G4-N2Rは別試験 |
 | [TEI merged #4507](https://github.com/hat47x/tei-platform/pull/4507)／[merged #4524](https://github.com/hat47x/tei-platform/pull/4524) | Fingerprint非破壊・図NodeのAuthorityLimits保持に加え、三要素モデルの同Kind同ID重複をerror診断し、重複要素をIndexから除外。#4524 exact HEADのGo/Health CI成功を確認 | Derived CRUD/図/文書のすべてのConsumerがValidate結果を尊重する保証、Workspace/Occurrenceの現在再解決は別。Source-only drift [#4514](https://github.com/hat47x/tei-platform/pull/4514)、CRUD索引 [#4513](https://github.com/hat47x/tei-platform/pull/4513)、Product Reader追加回帰 [#4504](https://github.com/hat47x/tei-platform/pull/4504)はDraft（#4504 exact HEAD CIは成功） |
 
@@ -1052,3 +1053,22 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **参照・被参照を用いた作業対象の確認**：[TEI #4525](https://github.com/hat47x/tei-platform/pull/4525)はScript/Entry/TriggerやModelerの参照元へ高速に移動し、参照数0の要素を発見するGUI/CUI計画を具体化した。ただし参照数0は**調査できたSource/Plugin/Role/Consumer範囲内の0件**に限り、未読込・動的参照・部分取得・非開示があれば`partial/unknown`を維持する。選択時は元のQualified Target/Source Revision/WorkspaceRefを保持し、索引結果を実Read/現在Grant/Source Writerの証拠にしない。参照逆引き・Keyboard操作・Plugin非干渉の性能計測はTEI #1124/#4515/Script Launch既存Ownerの次段であり、**QH-P0やTAI #168初回Gateには追加しない**。
 
 **現在資格**：本節は他レーンの**Draft設計と後段受入条件の接続のみ**。Workbench実Pin、DMU-01〜15、DB Apply、Host Effect、AI変更提案の実Product再現、外部Harness→GUI→DBのE2EはNOT RUN。先行R0〜R2のread-only／TAI #168の実OS G0→G2・独立H2/H3 4 Slot（比較適格0/4）には追加Hard Gateを設けない。
+
+### 48.6 Productの現在資格を、局所的な必要条件と実Readで判定する（11月12日夜）
+
+**成熟した実装結果を再利用する**：[TEI merged #4530](https://github.com/hat47x/tei-platform/pull/4530)は、独立した変更・問いと無関係なunknownを全体失効へ拡大しない修正を限定Referenceへ実装した。Required（今回の問いに必要な対象）とChanged（変更元から到達する依存経路）を区別し、関係する未解決端点はunknownのまま残す。**関連するunknownを見逃さないことと、無関係なunknownで全Productの読取を停止しないことの両立**が重要。#4530は合成Referenceの局所修正で、実Provider/外部Disclosureの認証ではない。
+
+**実データは別の資格**：[TEI Draft #4539](https://github.com/hat47x/tei-platform/pull/4539)では、公開ReferenceのFunction `order_entry.recent_orders` を、Environment→一意のDB Instance/Provider→実PostgreSQL 16.15→Raw Rows→Function Data Context→別プロセスの `tools/reference-browse-read` まで到達させた実試験が記録された。0行・RLS・JOINでの重複・NULL・列権限・別DBによる行変化も独立Expectedと照合済み。ただし**正式な製品 `tei` CLIには未接続、Draft未マージ**であり、Reader自身が正しく取得した行と「許可対象の全行」「元Sourceが現在」「Host Disclosureが許可」「SHO/TAIで受領した」を区別する。特に `coverage=unestablished`／`EmptyJustified=false`／`visibility=unobserved` を省略しない。
+
+**CRUDの構造OKとレビュー**：[TAI main QH §10.6](cross-product-handoff-execution-tickets-2026-11-11.md)を唯一のQH検収正本とする。[TEI Draft #4534](https://github.com/hat47x/tei-platform/pull/4534)の最新版では、矛盾CRUDを無条件hard errorにする初回案を撤回し、`okScope=structural-diagnostics-only` と `crudConflictStatus=conflicts-require-review` を分離する。矛盾のあるモデルはread-onlyで表示・診断可能にしても、モデルの構造 `OK=true`、CRUD投影の生成、変更適用許可を同一視しない。Severityと業務意味はTEI Ownerが判断する。矛盾全件収集とCLI表示の実CI・main統合は別検収であり、現時点ではDraft。
+
+| 最小判別 | 利用者への正しい挙動 | Owner／結果の現在地 |
+| --- | --- | --- |
+| Required外の無関係なunknownが残る | その問いで確認できたread-only調査を継続し、全作業を一律失効させない | TEI #4530は限定main修正。実Product/Disclosureは別 |
+| Requiredまたは変更経路に未解決端点がある | 関係する選択・AI送信・Applyだけを再確認し、未観測を「未使用・0件・変更影響なし」にしない | TEI #3262/#2516、TAI #271の現在資格 |
+| 一意のFunction/Sourceだが、DBで0行／RLS／Masked NULL | 観測したConnection/SQL/Scopeでの結果だけを説明し、全体不存在や完備を主張しない | TEI #4539の独立実PG試験（Draft）、正式CLI・二Product ConsumerはNOT RUN |
+| 構造OKだが矛盾CRUDが残る | 診断閲覧と固定Intentは維持可能。適用候補は現在のSource/Meaning/レビュー・Host Grantの確認まで保留 | TEI #4534 Draft、QH §10.6はTAI main |
+| SUI→SHOのReceiverがTEI Catalogを引用しただけ | Handoffの実受領(T)を限定表示し、元TEI Subject再Read(R/C)や実Agent(H)を未実施と表示 | SHO #49／TAI #643はmain。QH-P0新3製品実試行はNOT RUN |
+
+**次の実装の優先順位**：TAIが第二のReader/Query/CRUD Judgeを作らず、(a) TEIの実Product Reader／Studio #4515、(b) SUI #3438の現在Source再読込、(c) SHOの実Consumer、(d) TAI #168の外部Harness G0→G2を独立に前進させる。各Productで独立Expectedと実Version/Attempt/Read Closureが得られて初めて既存QH §10のR/C/Hを実証する。未接続なら `not-run/unsupported/partial` を残し、回避のためにRaw Sourceを外部Agentへ一括送出しない。新しいHandoff v2・中央Registry・Agent Loop・一律の新Hard Gateは追加しない。
+
