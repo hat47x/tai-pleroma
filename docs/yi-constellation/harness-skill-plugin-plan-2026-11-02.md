@@ -963,3 +963,32 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | **YS-08** | 匿名/期限切れ/部分SourceでもTool/Skill選択説明だけでEKI業務作用を許可 | Product/Hostの現在Grant・対象の一致・Receipt/独立Readを確認できないならActionを止める |
 
 **順序・責務**：最優先の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) H2/H3固定TEI read-only比較（G0実Read隔離、G1外部送出、G2 Tool Reply、独立4Slot）は変更しない。次に既存の実Handoff v1を使い、**固定対象→許可Projection→独立Consumer実Read**を**同じ公開Task/Source**で接続し、Tool-only／Product Skill／必要時TAI Skillを対照する。実製品UI・Canvas/CSW・別Harness Live Session・書込み/Effectは別Trial。実行・独立ExpectedはTAI #168/#271と各Product Owner、横断照合表だけTAI #488。Skill配布は#74。現在の追加部分は計画・実証資格の整理であり、独自Harness/中央Router・Policy Engine・第二Product Storeは作らない。
+
+## 48. 2026-11-12：固定対象から実Product Handoffへ進む1往復の受入票
+
+**統合判断**：本mainは[PR #628](https://github.com/hat47x/tai-pleroma/pull/628)の§46「一時Focus／Pinned Work Set／許可済Projection」と[merged PR #631](https://github.com/hat47x/tai-pleroma/pull/631)の§47「Tool-only→必要なProduct Skill→条件付きTAI Skill」の**採用済み計画**を持つ。本節は同内容を別§46として重複させず、[Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)のQ/E/A・識別一意性、[本Draft #630](https://github.com/hat47x/tai-pleroma/pull/630)のProduct別再解決、既存[Handoff v1実行票](cross-product-handoff-execution-tickets-2026-11-11.md)を**一件の実行資格**へ接続する後続試験の優先順のみ追加する。
+
+### 48.1 まず確認する唯一の実線：Product限定ContextのProducer→Consumer往復
+
+**ユーザーJob**：許可済みのTEI 1 Subject（またはSHO 1選択範囲）をHeadlessで実Readし、用途・Source Revision・役割・開示Audienceを固定する。現Productの許可ProjectionからHandoff v1へ表せる範囲だけを既存Consumerへ渡し、**別Processで実Body/digestと受領Replyを再照合**する。返り値は元Productの現在のPin/Taskに「根拠付き候補」として関連付け、実Sourceへの書込みや正式Meaning受理をしない。GUI Pinが現行APIに無ければHeadlessの固定対象Refから開始し、GUI成功を装わない。SHOでは永続Occurrence IDを要求せず、原文Buffer/byte spanをSourceの現在値で再解決する。
+
+| 実行順 | 参照する既存Owner/Capability | 必須の独立観測と停止条件 |
+| --- | --- | --- |
+| **R0：Productの現実** | TEI #1124/#1824/#3262、SHO #29/#30、SUI #3368 | 実Tool/Command、型付きTarget、Source/Buffer RevisionとRead Scopeを**コード/実Replyで確認**。未実装はunsupported。TEI同Kind同ID/CRUD脱落問題は[TEI #4475](https://github.com/hat47x/tei-platform/issues/4475)/[#4472](https://github.com/hat47x/tei-platform/issues/4472)へ返しIndex1件を一意性の証拠にしない |
+| **R1：意図と現在対象** | main §46、TAI #629 §11.8.5、各Product UI | Focus≠Pin。ID/Origin/Source span/Rev/role、実解決集合とCoverageを対比。同名・多重Edge/異OccurrenceやRLS変更は曖昧・partialのまま停止。単一UI/CUIの実操作を初期実証にしてよい |
+| **R2：Handoff実受領** | [SHO merged #34/#39](https://github.com/hat47x/sho-composer/pull/39)、[TEI merged #4317/#4467](https://github.com/hat47x/tei-platform/pull/4467)、[既存Handoff v1](cross-product-handoff-context-v1-2026-11-11.md) | Sourceで許されたProjection/digest/範囲だけ。実Producer→Consumerの独立Byte/Receipt/再Readは同一Attemptで評価。別Process受領やDeepSeek→Claude CodeのCLI引継ぎは、Live Harness同一Session復帰ではない |
+| **R3：必要な能力の起動** | main §47、TAI #488、各Product Skill正本 | Tool-onlyで十分ならSkill/TAIを不必要に起動しない。必要なProduct Skillの実LoadとTool実Callを別々に記録。Product横断の継続が本当に必要な場合だけTAI Skill。Skill説明と現在CLI/Scopeが矛盾したら説明を優先せず再発見・保留 |
+| **R4：UI/Harness戻り先** | TAI #271/#168、TEI #1824、SUI #3400、SHO #19 | Replyには実Task/Session/Source/Pin意図版と受信Contentを照合。二画面遅着やPin A→B→A、Audience/Grant変更で現UIを黙って上書きしない。Native Session attach非対応は別Session Handoffの結果に分類 |
+| **R5：書込み/Effect（後続のみ）** | TEI ADR-0048、SHO Writer、EKI/Host | Proposal→Preview/独立再Read→現在Grant/Provider→実Receiptの順。Handoff ACK、Pin、Tool exit0、文書Draft保存は業務EffectやOwner意味受理の証拠ではない |
+
+### 48.2 最小独立Expectedと費用比較
+
+- **SR-01 一意性**：TEI同Kind同ID/同端点別Edge、SHO同文字列別Occurrenceを使い、現在Sourceで一意に選べないときに勝手に最初の1件を採らない。Product修正前は失格原因を対象のProvider/Index/Projectionへ帰属させる。
+- **SR-02 保存と送出**：Pin意図が維持されても、追加した隠れたCard、未探索Relation、Reviewer Expected、Secret、旧RawはPrompt/Tool/Logに漏らさない。GitHubへのEvidence物理配置/Locatorも任意のlocal-only Profileに従う（TEI #4307）。
+- **SR-03 HandoffとSession**：実Handoff v1 Reader/ReceiptがPASSしても外部Harness同Session継続はnot-run。Live attachの対応を別Probeで測り、非対応は明示Handoff縮退で区別。
+- **SR-04 作業方法の比較**：同Task/Source/Target/開示制約で A=Product Tool-only、B=＋Product Skill、C=＋TAI Activity Skillを必要な場合のみ比較する。Skill文面・User Prompt・Harness/Modelを同時変更して因果効果を断定しない。正答/必要保留/対象誤指定/人間の再説明/実Tool数/Token/費用を区別し、AI OFF Productも維持。
+- **SR-05 消失・古さ**：CUI→GUI切替、dirty Buffer、Source改版、二画面後着とRead-only Consumer欠落を注入。古い候補は履歴と再評価可能なRefを保持しても現在操作に自動適用しない。
+
+**着手順**：最初の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) G0実OS Read-deny→G1送出→G2完全Tool Reply→新独立H2→H3→H3→H2（適格0/4）のBlockingは**変更しない**。その後の最小Product横断はR0→R1→R2（read-only）であり、実UI Pinned Context・Live Session・CSW Canvas・EKI Effectの実試験は段階的に分離。各Product Ownerの独立Expected/Scenarioを利用し、新共通Selection ABI、中央Handoff v2/Registry/Runnerや既存Productの意味受理正本を作らない。
+
+**資格**：main統合済みSHO/TEIの限定Handoff/文書Draftは実績だが、ここに示す**Pin→Handoff→Harness→Product UI一往復、Tool-only/Product Skill/TAI Skillの比較、実Live Session attach、横断Owner受理はNOT RUN**。本節は実行手順候補とOwner接続の追加である。
