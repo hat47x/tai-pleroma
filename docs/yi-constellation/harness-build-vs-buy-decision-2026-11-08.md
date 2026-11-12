@@ -306,3 +306,43 @@ D/T/Q/Eが独立であることが核心。**DがPASSでもT未資格なら外�
 **次の選択（別レーン）**：A1は[SEI #767](https://github.com/hat47x/sei-cognition/issues/767)/[#711](https://github.com/hat47x/sei-cognition/issues/711)の問相対Methodを、同じ問いQ・予算・許可Read・Blind ExpectedのD0（無介入）／D1（決定論的Probe）／M1（Method支援）で比較する。**D1で十分ならM1の追加価値なし**と判定し、未知Questionの保存方式はA2に留保。M1が選んだReadの一部が偶然正答に見えても、Required Source範囲と実Read byte/Consumer受領を分ける。この手順はCSWのCX比較とも外部H2/H3とも別の評価体系であり、異質なArmの結果を混合しない。
 
 **投資上の帰結**：TEIとSEIの局所連携は、新しいYI Harness Runtimeを導入せずに既存CLIで一部成立した。一方で外部Harnessの独立Skill増分、Unknownを保持した適応活動の継続、実Providerの副作用検証は未資格。機能の不足箇所がProduct/Transport/認知Methodで解けるうちは、HV-4の独自Loopではなく該当Ownerの狭い改善を先に測る。
+
+## 19. 2026-11-12：共有Harness Sessionと安定した対象指定を独自Loop投資の反証にする
+
+### 19.1 最新の方針と証拠の現在地
+
+[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)/[#271](https://github.com/hat47x/tai-pleroma/issues/271)の11月10日追補と[TEI Studio #1824](https://github.com/hat47x/tei-platform/issues/1824)、[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)の構想を合わせると、製品UIそれぞれにAgent Loopを埋め込まず、**外部Harnessの既存Sessionと各Productの限定Projectionを、薄いAdapterを介して関連付ける**方式を先に評価すべきである。Activity継続とLive Session継続は異なり、Productの意味/現在Grant/実Effectの正本を共有Sessionへ移さない。
+
+**現状更新**：[TAI #270](https://github.com/hat47x/tai-pleroma/pull/270)は11月9日にmainへマージ済み。[TAI #578](https://github.com/hat47x/tai-pleroma/pull/578)は11月11日に**未マージで終了**。その旧ブランチの追加節を採用済みmainと推定しない。[TEI #3863](https://github.com/hat47x/tei-platform/pull/3863)はStudio選択→外部Harnessの性能設計境界をmainへ統合、[#3866](https://github.com/hat47x/tei-platform/pull/3866)は型付きModel Mapの限定実装をmainへ統合したが、**選択対象の永続Pin/GUI→Harness→別製品UIの実接続ではない**。[TAI #601](https://github.com/hat47x/tai-pleroma/pull/601)のSkill説明とCLI不一致の検査もmainへ統合済みだが、外部Harnessの実理解や共有Sessionを実証するものではない。
+
+### 19.2 対話UIの選択を明示的な「固定された作業対象」へ昇格する
+
+| 区分 | Owner・保持する意味 | 自動的に成立しないもの |
+| --- | --- | --- |
+| Focus / Temporary Selection | 各Product UI。現在のCursor・Canvas範囲・一時選択 | AIへの送出と編集対象の受理 |
+| **Pinned Target Set** | 各Product UI/Activity参照。利用者が明示Pinした対象ID・Source位置/観測Revision・主対象/関連/比較/根拠/除外の役割・未解決 | Focus移動、Tab、Escape、IMEで勝手に解除しない。Pin＝現在Grantではない |
+| Send Preview / Scoped Projection | 各Productと実Hostが現在Disclosureで解決した内容、除外/省略/unknown、Recipient・予定Tool、送信前確認 | Hidden Card・Raw・Reviewer Expected・秘密の暗黙開示 |
+| Harness Live Session | 外部Harnessの実Session ID・実対応Capability/Loader/Tool配送 | ActivityやProduct権限・Source鮮度・Effectの継承 |
+| Activity/Handoff | TAI #271のGoal、未決、根拠と変更後の再確認条件 | 別Sessionへの再開＝同一Live Sessionの再開 |
+| Operation Attempt | 各Productの型付きIntent、実Provider、現在Grant、Receipt/Readback | Agentの回答文や旧確認による完了認定 |
+
+**Pinの不変条件**：複数Card/Node/Edge/図のOccurrence/文書Span/Fieldを、同名でも識別できるID＋Source＋Revisionとして保持する。CUIにも同じ論理対象を固定する経路を用意する。AIによる対象追加・Pin解除は候補としてPreviewし、利用者が明示した変更をUndo可能にする。Sourceが改版されたときは旧Pinを表示したまま stale を示し、**現在対象への無言の再束縛・再送をしない**。「Pin解除しない」ことと「旧版へ書き込んでよい」ことは別。Recipient/Disclosure/Grantは送出または実行時点に再確認する。
+
+**共有Sessionの二つの比較**：H-S1は同一実Harness SessionをProduct UIをまたいで継続し、実Session IDとTool/Consumer受信を観測する。H-S2は再接続非対応のHarnessで、用途限定Activity Contextを**別Session**に渡して安全に再開する。H-S2をH-S1の成功と記録しない。単独Product UI/通常操作（H-S0）も価値比較の対照とする。これらは試験上の仮ラベルであり、新公開Session ABIや中央Storeではない。DSHを実装順で僅かに優先するのはTEI Everything is Pluginとの技術的親和性のみであり、Codex/Claude Code/OpenCode等も標準では等価な候補として扱う。
+
+### 19.3 受入候補と後続の最小縦切り（TAI #271 ASV-01〜07を再利用）
+
+| 反証 | 確認する操作 | 失格例 |
+| --- | --- | --- |
+| PX-01 Pin安定 | TEI複数Field/RelationとSUI複数CardをPin後、Tab/IME/Escape/別Panel | 意図しない消去、Focus先へ誤移動 |
+| PX-02 Identity | 同名Nodeと多重Edge、同じSourceの別Canvas occurrenceを比較 | 表示名や座標のみで別Targetへ誤Binding |
+| PX-03 変更と権限 | Pin後にSource Revision、Target、Grantを変更 | staleを無表示、旧Grantで送出/実行、旧版へ暗黙書込 |
+| PX-04 Scopeと開示 | 非公開Card、除外対象、別Product RawがPinに混在 | 未承認Data/存在・件数/OracleがPrompt・Tool・Logへ露出 |
+| PX-05 Session実連続 | SUI→TEIで実Harness Sessionを引継ぎ、同Sessionの実Replyを照合 | UI描画の継続だけで実Session共用をPASS |
+| PX-06 縮退/再開 | Live Session再接続が非対応なら別SessionのActivity Contextへ限定再開 | 別Sessionを同Sessionと表示、AI OFF時にProductが使えない |
+| PX-07 KJ法協調 | SUI Card/Island→任意CSW探索→SUI配置Preview→人の採否/Undo | 解釈案を元資料の事実/TEI正式Meaning/実Grantへ自動昇格 |
+| PX-08 効果不明 | AgentがOperationを提案後、Tool Reply切断やGrant失効 | ACK＝業務成功、unknown＝effect 0、無条件再送 |
+
+**順序と所有**：最優先は[TAI #168の既存G0→G1/G2→新独立H2/H3四Slot](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)であり（最後に確認できた比較適格0/4）、新PXは初回SK-02のHard Gateではない。後続でまず公開/合成Sourceのread-only **二Product UI/CUIのPin→限定送信Preview→外部Harness同SessionのTool Reply→元Selection照合**を一Attemptで観測。次いでSUI×CSWのAI提案→人のCanvas修正→Undo、EKIの大量操作Preview/Grant/Receiptを別試験。TAI #271/#168はActivity/Session/適格評価、UI/Pinは各Product、SUI/CSWの探索はそのOwner、Hostの実開示/隔離は#232、TEI実OperationはADR-0048がOwner。新Agent Runner/認可Engine/Session Server/中央Registryは作らない。
+
+**現在の資格**：設計と試験提案のみ。Live Sessionの製品間共用、実Pin/Undo→外部Harness受信、SUI×CSW Canvas、実Operation Effect、Ownerの正式採用はNOT RUN。独自Loopを開発する前に**この外部Harness＋Product UIの方法で何が本当に欠けるか**を独立Expectedで確かめる。
