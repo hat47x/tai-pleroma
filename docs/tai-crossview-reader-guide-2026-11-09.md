@@ -370,4 +370,6 @@ A3には、特定版の成果物への束縛、作成者と承認者の資格分
 
 **測定の原則**：偽成功率、必要な安全停止、不必要な保留、正しい限定情報の回収、当該Consumer受領、利用者Goal、人手、操作回数、Token/費用を**別の指標**で記録。安全を費用と相殺した総得点だけで採否を決めない。モデル・必要な権限・公開Source・試行順・中断/再試行、独立Expectedと採点者を事前固定。現TAI #168の適格四Sessionを後から探索試行で埋めない。
 
+**CSWとの接合**：CSWの現在の3執筆Skillと研究段階のMAGI三役（生成者・批評者・媒介者）は、反証や探索の*任意の方法*であり、新たな承認主体／独立採点者ではない。TAIの価値比較にCSWを追加する際は、通常の一人/一Agentの検討で同じ結果を得られるB0を残し、初回R-D独立モデル比較が未実施であることを明示する。SUI Canvasでの案の配置・AIの推薦・人間の採用・業務Ownerの意味受理を別の観測として扱い、方法を増やしたこと自体を価値の証拠としない。[CSW main](https://github.com/hat47x/cultural-substrate-weaving/blob/main/README.md) の単独Skill利用を変更しない。
+
 **今回の固定点**：2026-11-13照合 TAI main `76ddd583d01dd8cb90b6d4d62018e0fcba0b9e0c`、TEI main `f3b58e7b580f0ecbea1d2feb156f52c2147f63a7`。#647 J2と#624 ApprovalのProduct局所Probeは実施済みだが、AV-1〜4新比較、実QH-P0三Product同一Attempt、実Owner承認、Stage1→Stage2 Desktop、H2/H3四Slotは**この追補ではNOT RUN**。本書は受入済みSchemaや本番許可ではなくOwner別の読解・計画案。
