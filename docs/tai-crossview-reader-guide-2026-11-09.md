@@ -356,6 +356,7 @@ A3には、特定版の成果物への束縛、作成者と承認者の資格分
 ### 14.3 「一つのProduct成功」と「横断価値」を足し算しない
 
 - TEI [merged #4539](https://github.com/hat47x/tei-platform/pull/4539)の実PostgreSQL読取はProduct単独の限定read-only成果で、TAIを追加しなければ未完成になるわけではない。
+- **不適格を明示したままの限定閲覧も成果**：TEI [merged #4557](https://github.com/hat47x/tei-platform/pull/4557)（exact HEAD 18/18 CI成功、merge `3b3fa7c`）では、TypeRef不正／宣言Source Root欠落時も、Catalog/Map/Locateのread-only閲覧とValidation NG・partial coverage・Relation未導出を両立させる局所回帰が成立した。**検査失敗を黙って正常化せず、閲覧をすべて停止もしない**。これは実Studio/Owner意味受理・現在Grant・Source閉包を保証せず、TAIのProduct-local成果として扱う。
 - TEI Studio [Draft #4587](https://github.com/hat47x/tei-platform/pull/4587)は同じWindows Jobで生成Inspectorから配信Bundle・実WebView2を観測した限定成功。X-TEA三視点[Draft #4570](https://github.com/hat47x/tei-platform/pull/4570)は**別Draft・別Fixture**で合成Desktop Pluginを観測。これらを一つの実Source E2E・Stage1→Stage2 Desktop・Handoff受入へ合算しない。
 - 今後のTAI横断の最小一辺は、Productが現在のTEI Subjectを一意に再解決した根拠と許可Projectionを、[既存QH §10](yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)の当該Handoff Consumerへ結ぶこと。Selection形成は[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)、再解決・復帰は[Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)。実Subjectの再読・SHO受領・Host Grant・実Effectは別観測で、スタンプ・同名・Digest一致から一括承認しない。
 
