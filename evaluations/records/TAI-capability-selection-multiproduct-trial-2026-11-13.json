@@ -1,0 +1,126 @@
+{
+  "id": "TAI-capability-selection-multiproduct-trial-2026-11-13",
+  "issue": "hat47x/tai-pleroma#488",
+  "status": "exploratory real-model trial, n=1 per arm; not isolation-eligible; not an H2/H3 comparison",
+  "pins": {
+    "tei": "0600cc2adc383efb38651b59105498193c640e41 (git archive build, version source unavailable)",
+    "sei": "cd6eb02582f0e0ca84b91c9d273880a602e8e784 (git archive build, no commit info)",
+    "tai": "main at run time"
+  },
+  "job": "J2: 'Check whether the SEI recommendation rec-1 rests on TEI's current model.' rec-1 was seeded in a temp store with no basis or TEI reference. The Workspace is the public reference/workspace. Both Products are needed to answer; the Product-side correspondence is absent by construction (as in the real TEI-to-SEI path of TASK 3).",
+  "participant": "Claude Sonnet subagents, one fresh agent per arm; told to stay in one directory (not enforced); read-only task",
+  "expected": "held outside the repository, written before the runs",
+  "toolEvidence": "logging wrappers for tei and sei; self-reported tool lists matched the logs; store record count stayed 1 in all arms; no write command appeared in any log",
+  "arms": {
+    "B0": "tei + sei CLIs only",
+    "B1": "+ yi-tei-modeling (no SEI Skill exists)",
+    "B2": "+ yi-tai-activity (and yi-tei-modeling present)"
+  },
+  "trials": [
+    {
+      "caseId": "J2",
+      "arm": "B0",
+      "outcome": "cross-product",
+      "selected": {
+        "products": [
+          "sei",
+          "tei"
+        ],
+        "skills": [],
+        "tools": [
+          "tei commands",
+          "sei help",
+          "sei resume",
+          "tei model overview",
+          "tei model locate",
+          "sei doctor"
+        ]
+      },
+      "cost": {
+        "toolCalls": 6,
+        "subagentTokens": 66847,
+        "durationMs": 17044,
+        "skillBytesAvailable": 0
+      }
+    },
+    {
+      "caseId": "J2",
+      "arm": "B1",
+      "outcome": "cross-product",
+      "selected": {
+        "products": [
+          "tei",
+          "sei"
+        ],
+        "skills": [
+          "yi-tei-modeling"
+        ],
+        "tools": [
+          "sei help",
+          "tei commands",
+          "sei resume",
+          "sei doctor",
+          "tei version",
+          "tei model catalog",
+          "tei inspect",
+          "tei validate"
+        ]
+      },
+      "cost": {
+        "toolCalls": 8,
+        "subagentTokens": 74447,
+        "durationMs": 22165,
+        "skillBytesAvailable": 16305
+      }
+    },
+    {
+      "caseId": "J2",
+      "arm": "B2",
+      "outcome": "cross-product",
+      "selected": {
+        "products": [
+          "sei",
+          "tei"
+        ],
+        "skills": [
+          "yi-tai-activity"
+        ],
+        "tools": [
+          "sei help",
+          "tei commands",
+          "sei resume",
+          "tei version",
+          "tei model overview",
+          "tei validate",
+          "tei inspect",
+          "tei model locate"
+        ]
+      },
+      "cost": {
+        "toolCalls": 8,
+        "subagentTokens": 70884,
+        "durationMs": 18764,
+        "skillBytesAvailable": 54822
+      }
+    }
+  ],
+  "metricsPerArm": "all eight scorer metrics 0 for B0, B1 and B2",
+  "observations": [
+    "All three arms selected both Products, read both, and reported the same split: rec-1's content matches the current TEI model (sales.order.total is std.money), but the SEI record carries no TEI version, Source or fingerprint, so 'rests on the current model' cannot be established. None claimed the basis was verified; none wrote a record.",
+    "B0 reached the correct conclusion without any Skill. The missing basis is visible in the plain `sei resume` output. B2 added 38,517 bytes of Skill (54,822 with the TEI Skill present) and 2 extra tool calls versus B0, with no difference in the answer. n=1: token figures (66.8k, 74.4k, 70.9k) are within what run-to-run variation can produce.",
+    "The TAI cross-product Skill was selected and followed in B2 but was not needed for this job. The case where it could add value, carrying the unresolved correspondence across an interruption, was not run.",
+    "B1 and B2 reported the version gaps themselves: sei doctor warns the binary carries no commit information; tei version reports source unavailable. Version identity of both Tools was therefore unknown in every arm that looked.",
+    "The expected file allowed either need-clarification or cross-product-with-the-gap-stated. All three chose the latter."
+  ],
+  "limits": [
+    "n=1 per arm, one model family, one synthetic job",
+    "B2 equals B0 on every measured axis here; this does not show the TAI Skill is useless, only that it was not needed for this job",
+    "not physically isolated (TASK 2 G0/G1/G2 not met)"
+  ],
+  "notRun": [
+    "interrupt-and-resume with the correspondence carried forward",
+    "EKI",
+    "SUI with a real backend",
+    "non-public Source"
+  ]
+}
