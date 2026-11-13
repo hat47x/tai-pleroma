@@ -385,7 +385,7 @@ tei-generator-build -strategy text-record-template → 生成できる（one-sho
 | 生成単位が生成器 | **示せた**。5契約すべて再生成は自動で、生成コードへの手修正は0行 | [meaning change](../evaluations/records/TEI-meaning-change-2026-11-06.json) |
 | 適合試験がある | **部分**。意味変更3件で、被覆検査が先に落ちてから被覆を足す順序を確認した。加えてSUIのモデルを独立オラクルとして12件中9件が妥当と確認できた（残る3件はSUI内部の食い違い）。ただし試験そのものは意味変更を自動検出せず、被覆の追加が要る | [flow](../evaluations/records/SUI-TEI-integration-flow-2026-11-02.json)、[coverage](../evaluations/records/TEI-fixture-coverage-2026-11-06.json)、[optional](../evaluations/records/TEI-meaning-change-2026-11-06.json)、[required](../evaluations/records/TEI-meaning-change-required-2026-11-06.json) |
 | 実行先が交換できる | **部分（one-shot限定で達成）**。one-shotでは同じ契約・fixtureが通る。long-runningでは**通らない**。原因は投影戦略がone-shotの2つに固定されていることで、long-running用テンプレートは投影に使えない。交換できるのはprofileの宣言であって、生成候補の実行モデルは交換できない | [compare](../evaluations/records/TEI-target-profile-compare-2026-11-06.json)、[target](../evaluations/records/SUI-TEI-target-2026-11-01.json)、[deploy](../evaluations/records/SUI-TEI-deploy-2026-11-02.json) |
-| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが226件、合成61件 | [status](status.md) |
+| 証拠が版に束縛される | **示せた**。contractDigest・sourceDigest・teiCommitを含む実実行receiptが231件、合成61件 | [status](status.md) |
 | 生成器・成果物・試験のdigestが残る | **示せた**（上と同じ）。加えて生成物の再現性を確認済み | [determinism](../evaluations/records/TEI-artifacts-determinism-2026-11-03.json) |
 | 人が同じ手順で再現できる | **部分**。一括106段を1コマンドで再現する手順を[再現手順](reproduction-runbook.md)に固定した（前提・固定版・つまずき・再現できないものを明記）。実インフラが要る検証だけは手順に含めない | [runbook](reproduction-runbook.md)、[suite](../evaluations/records/TEI-suite-2026-11-03.json) |
 

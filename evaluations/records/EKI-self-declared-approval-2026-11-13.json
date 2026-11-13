@@ -1,0 +1,103 @@
+{
+  "schema": "tai.reference.eki-self-declared-approval/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-13",
+  "host": "WSL2 Ubuntu with Go 1.27.0; eki-control built from EKI 72f4a1842fa60380b8c0ae3eb91e8914de224676 (modified=false)",
+  "command": "cp evaluations/tools/eki-lost-ack/self_declared_approval_test.go.txt <EKI>/conformance/process/zz_authority_test.go && (cd <EKI> && go test ./conformance/process -run TestSelfDeclaredApprovalAtAdmission -count=1 -v)",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/tools/eki-lost-ack/self_declared_approval_test.go.txt",
+    "digest": "sha256:47caf8addf9d475283ee0d196fa53439e4eac9e969b39615ed4ef38e20e638bb"
+  },
+  "ekiCommit": "72f4a1842fa60380b8c0ae3eb91e8914de224676",
+  "observed": {
+    "probes": [
+      {
+        "probe": "valid request",
+        "status": 202,
+        "detail": null,
+        "problemType": "eki.task-accepted/v1"
+      },
+      {
+        "probe": "no token",
+        "status": 401,
+        "code": "AUTHENTICATION_REQUIRED",
+        "detail": null
+      },
+      {
+        "probe": "wrong token",
+        "status": 401,
+        "code": "AUTHENTICATION_REQUIRED",
+        "detail": null
+      },
+      {
+        "probe": "worker session token on the client API",
+        "status": 401,
+        "code": "AUTHENTICATION_REQUIRED",
+        "detail": null
+      },
+      {
+        "probe": "executor not approved by policy",
+        "status": 422,
+        "detail": "the requested executo",
+        "problemType": "urn:eki:problem:executor-not-approved"
+      },
+      {
+        "probe": "effect_mode external",
+        "status": 400,
+        "detail": "reliability.effect_mode must be \\",
+        "problemType": "urn:eki:problem:invalid-task-request"
+      },
+      {
+        "probe": "effect_mode write",
+        "status": 400,
+        "detail": "reliability.effect_mode must be \\",
+        "problemType": "urn:eki:problem:invalid-task-request"
+      },
+      {
+        "probe": "effect_mode none plus self-declared approval field",
+        "status": 400,
+        "detail": "unknown or malformed field: json: unknown fi",
+        "problemType": "urn:eki:problem:invalid-task-request"
+      },
+      {
+        "probe": "self-declared approval object",
+        "status": 400,
+        "detail": "unknown or malformed field: json: unknown fi",
+        "problemType": "urn:eki:problem:invalid-task-request"
+      },
+      {
+        "probe": "approval claimed inside parameters",
+        "status": 202,
+        "detail": null,
+        "problemType": "eki.task-accepted/v1"
+      },
+      {
+        "probe": "resources above the per-task policy",
+        "status": 400,
+        "detail": "resources.cpu_millis must be between 1 and 2",
+        "problemType": "urn:eki:problem:invalid-task-request"
+      },
+      {
+        "probe": "invalid priority",
+        "status": 400,
+        "detail": "priority must be background, normal or high",
+        "problemType": "urn:eki:problem:invalid-task-request"
+      }
+    ],
+    "runs": 1,
+    "acceptedProbes": [
+      "valid request",
+      "approval claimed inside parameters"
+    ],
+    "selfDeclaredApprovalAsStructureRefused": true,
+    "selfDeclaredApprovalInFreeFormParametersAccepted": true,
+    "authorityDecidedBy": "bearer token principal and the operator's policy (approved executors, resource limits, effect_mode none)",
+    "humanApprovalConceptInAdmission": false,
+    "agentExecutedAnything": false,
+    "finding": "実eki-controlは、トークンを持たない要求・Workerのトークン・未承認のexecutor・effect_mode none以外・方針を超える資源・未知の項目（approved、approval）を、401・422・400で拒否した。一方、自由形式のparametersの中に「approved_by: owner」と書いた要求は202で受理された。EKIはそれを権限として扱わない（不活性なデータ）が、受理されたこと自体は承認の証拠ではない。EKIの受付で権限を決めるのは、トークンの主体とoperatorが設定した方針だけで、人間の承認という概念はこの経路に無い。したがって、SCN-001の「公開の承認」に相当する実Productの観測は、EKIからは得られない。"
+  },
+  "scope": "Only the Client API of one real eki-control was used, with one request per probe and no Agent, so nothing was executed. The refusals show what EKI's admission checks, not that an owner approved or refused anything. Free-form parameters were accepted as inert data; whether any downstream executor would read them was not tested. No publication approval, human review or production authority was involved."
+}
