@@ -1076,3 +1076,21 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 **次の実装の優先順位**：TAIが第二のReader/Query/CRUD Judgeを作らず、(a) TEIの実Product Reader／Studio #4515、(b) SUI #3438の現在Source再読込、(c) SHOの実Consumer、(d) TAI #168の外部Harness G0→G2を独立に前進させる。各Productで独立Expectedと実Version/Attempt/Read Closureが得られて初めて既存QH §10のR/C/Hを実証する。未接続なら `not-run/unsupported/partial` を残し、回避のためにRaw Sourceを外部Agentへ一括送出しない。新しいHandoff v2・中央Registry・Agent Loop・一律の新Hard Gateは追加しない。
 
+### 48.7 2026-11-13：実装済みの対象確認と、まだ接続していないUI・Buildを区別する
+
+<!-- yic-48-7-exact-ci-and-product-requalification-20261113 -->
+
+この追補は、§48.1のR0〜R2を**既存Productの実Readerで一件通す**ための最新基線である。各製品の実装Ownerと、#1180/#2514の独立Expected、QH §10の実行票を維持する。TEI Studio Desktopの再構築を最優先とし、TAIの追加Harness機構をその先行条件にはしない。
+
+| 接続点 | 確認した実装・検証 | 現時点では主張しないこと／次に検証すること |
+| --- | --- | --- |
+| **R0：Subjectの存在** | [TEI #4584](https://github.com/hat47x/tei-platform/pull/4584)は**main統合済み**。source-indexのsubjectモードは、Canonical Subjectが存在しなければ空配列の成功にせず、既存Inspectを用いてSUBJECT_NOT_FOUND等を区別する。HEAD dcfe1d69の対象8 CIはsuccess | references:[]は、存在するSubjectの参照0件かどうかを**実Subject確認と組み合わせて**判断する。Source一意性・現在Root/Scope・外部送出Grantまでは自動で得られない |
+| **R1：固定意図の状態** | [TEI Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) HEAD 247a6baの[Pin専用CI #43394212153](https://github.com/hat47x/tei-platform/actions/runs/43394212153)はsuccess。Pin/Unpin/Undo、世代とWorkspace A→B→Aに対する局所状態遷移を検査 | 同HEADの[Workbench embed CI #43394213664](https://github.com/hat47x/tei-platform/actions/runs/43394213664)はfailure。Pinは実main.ts・Inspector/Graph/AI送信へ未配線。専用CI成功をNative UI/配布済みBundleの資格にしない |
+| **Desktopへの読取部品** | [TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD d7ad13ceの[Windows Run #43388804188](https://github.com/hat47x/tei-platform/actions/runs/43388804188)でN0〜N3の**指定ファイル**のSHA目録、生成/通常WebView2、実配信JS照合が限定success。次HEAD 7babc6adはN0生成TSを実esbuild入力位置に配置する差分を追加 | 目録は工程後のファイル再読取を含み、qualifiedBuildIntent=false／dependencyClosure=unknown。次HEADのWindows Jobの結果はこの追補時点で未確定。BuildIntent全工程実駆動B1-B、Stage1→Stage2 Desktop B2、Stage2実WebView2 B3は[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)で別実証 |
+| **X-TEAの三要素分析法** | [TEI Draft #4570](https://github.com/hat47x/tei-platform/pull/4570)は通常Studio Hostと同じBridgeを使うread-only三視点Pluginを実装し、WSL/serverのGo/Node/ブラウザによる限定ローカル試験成功を報告 | 同PR exact HEADのRepository Health/Studio Wails Host CIはfailure、Native Windowsの通常/生成Studio両版での実Plugin呼出し、原典Sourceの再読取、Stage2実収録は未検証。[#4601](https://github.com/hat47x/tei-platform/pull/4601)のRuntime Role整理はdocs-only。X-TEA全機能をB1-Bの必須Gateにしない |
+
+**まず実行する最小往復**：現在のWorkspaceと一意なSubjectをinspectで確認し、source-indexで参照を調べ、現在Source Revision/Scopeとともにread-only Projectionを作る。そこから既存Handoff v1→実SHO Consumerまで**当該Attemptで再Readした内容**を照合する。不存在の旧ID、同Byte別Workspace Root、後着Reply、Pin A→B→Aを個別の拒否対照にする。Pin状態遷移テストの成功だけで、この製品横断経路が実行済みとはしない。送出・実Consumer・Host Grantは各Ownerで別確認し、秘密のRaw Rootを外部へ渡さない。
+
+**BuilderとAIの判断境界**：N0の生成物がN2にインストールされたこと、N3 exeがWebView2で起動したこと、Product Skillが実Loaderで使われたことは、それぞれ別の観測である。Build ArtifactやHandoff票のHash、Skill名、AIによる「確認済み」という発話を現在のProduct Subject・受理済みMeaning・実Tool送出の代わりにしない。TAI #488の中断後の別Session比較（Tool-only／Product Skill／TAI Skill）はこの再資格化が実際に行われたかを測り、独立H2/H3四Slotの成功数へ転用しない。
+
+**進捗区分**：上表は各PRの限定実験とmain統合状態の照合であり、**本節のTEI→SHO新往復、実UI Pin、B1-B〜B3、外部Harness OS G0〜G2、H2/H3はNOT RUN**。追加Runner、中央Registry、Handoff v2、第二Meaning/Expected正本は設けない。
