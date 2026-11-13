@@ -373,3 +373,28 @@ A3には、特定版の成果物への束縛、作成者と承認者の資格分
 **CSWとの接合**：CSWの現在の3執筆Skillと研究段階のMAGI三役（生成者・批評者・媒介者）は、反証や探索の*任意の方法*であり、新たな承認主体／独立採点者ではない。TAIの価値比較にCSWを追加する際は、通常の一人/一Agentの検討で同じ結果を得られるB0を残し、初回R-D独立モデル比較が未実施であることを明示する。SUI Canvasでの案の配置・AIの推薦・人間の採用・業務Ownerの意味受理を別の観測として扱い、方法を増やしたこと自体を価値の証拠としない。[CSW main](https://github.com/hat47x/cultural-substrate-weaving/blob/main/README.md) の単独Skill利用を変更しない。
 
 **今回の固定点**：2026-11-13照合 TAI main `76ddd583d01dd8cb90b6d4d62018e0fcba0b9e0c`、TEI main `f3b58e7b580f0ecbea1d2feb156f52c2147f63a7`。#647 J2と#624 ApprovalのProduct局所Probeは実施済みだが、AV-1〜4新比較、実QH-P0三Product同一Attempt、実Owner承認、Stage1→Stage2 Desktop、H2/H3四Slotは**この追補ではNOT RUN**。本書は受入済みSchemaや本番許可ではなくOwner別の読解・計画案。
+
+### 14.5 中断・再開の因果分離：Packetの効果とSkillの効果
+
+§14.1のJ2はB0/B1/B2各1回で全Armが正しく保留した。次は§14.4 AV-2の**情報が残ること**と**TAI Skillがその情報を使うこと**を分けて評価する。Product Skillの有無まで同時に変えると交絡するため、初回は**TEI/SEI実CLI・Model/Tool profile・実行条件・Product Skillの有無を全セル同一**に固定する。既存#488の評価に接続し、TAIに新Runner/Scenario正本/Activity Store/採点Serviceを作らない。
+
+**固定Job**：公開TEI `reference/workspace` とSEIの`rec-1`。T0の独立観測は「推薦文は現モデル内容に合うが、SEIの版/Source/fingerprintがなく、根拠関係は未確認」。ここでSessionを終了し、T1の**新しいSession**で同じ質問に再回答する。T0の会話全文・外部隠れメモリ・独立Expectedを参加Agentへ自動投入しない。各セルのT1 Source/Workspace/可視範囲・Role/Tool権限・回答制約は一致させる。引継ぎPacketは既存Activityの**許可済み参照と未解決事項だけ**から事前に作り、同じbyteを再利用する。現在のRead/Grant・元のSEI根拠の成立をPacketの自己申告で偽装しない。
+
+| セル（新規実験用ラベル） | T1へ渡す許可済みPacket | TAI Activity Skill | この比較で判別すること |
+| --- | --- | --- | --- |
+| **M00** | なし | なし | CLIと現在Sourceを自分で再発見する基準 |
+| **M10** | あり（同一固定byte） | なし | Packetだけの情報・再説明削減効果：M10対M00 |
+| **M01** | なし | あり | Packetが無い時のSkill効果：M01対M00 |
+| **M11** | あり（M10とbyte同一） | あり | **Packetを同条件にしたSkill増分**：M11対M10。交互作用も別に調べる |
+
+Packetは**同じ根拠を持つための条件**であり、秘密Source、旧Host Grant、独立Expected、承認済みという推測を含めない。SkillがPacket以外の保存記録を自動読取する場合、各セルの情報条件が揃っていないため、その取得・内容・権限を記録し、交絡のままなら比較不適格とする。M01に「実は隠れPacketがある」ときは四セル効果を推定しない。モデル・Tool呼出・Recorder・外部送出の実行範囲は既存Ownerの実記録に基づき判定し、AIの自己申告だけで完了扱いしない。
+
+**二つの初回世界**（4セル×2世界は初回の器の点検であり、独立反復数=8とは数えない）。(W0) T0→T1でSource内容は不変だが、SEIに版Basisがない状態は維持。(W1) T0→T1でTEI Sourceだけを変更する、または同内容の別Workspace Rootへ移す。いずれも**T0のClaimは歴史事実**、現在の根拠同一性は独立再Readまで未資格。W1でA→B→Aの同digest復帰があっても古いPin/Grantを復活させない。W0/W1の違いを片方のArmに偏らせない。初回のW1種類をSource-onlyまたは別Rootのどちらにするかは#271/TEI Ownerが固定し、実験後に選ばない。
+
+**評価者の事前固定Expectedと観測列**：①根拠未成立を「検証済み」にしない、②存在・Source/Scope/Revision・必要Readの現在資格、③未解決事項がPacketや応答で保持される、④漏洩・別Root誤束縛・旧Receipt再生・承認自己申告を成功扱いしない、⑤本当に必要な再Readと不必要な再Read、⑥人間の再説明/修正・手数、⑦実Tool呼出/Token/経過時間。**必要な安全停止と過剰保留、利用者の最終Outcome**を別列にする。実人の介入がないケースの「人間負担」を測定済みと呼ばない。独立Expectedを参加者のSkill/Prompt/Packet/Tool到達可能域に置かず、根拠となる版と評価者を試行前に固定する。
+
+**採否の停止線**：M11がM10に対して正答率・誤昇格回避・再調査負担などの有効な改善を反復観測で示さなければ、少なくとも**このJobについてTAI Skill投資は見送る**。M10がM00より改善しM11がM10と同等なら、まず**簡単な引継ぎメモ／既存Handoff**を採る。いずれかのArmで未確認のRoot/Grant/承認を確定扱いすれば、コストが低くても安全性の不合格を別に残す。一件の探索では因果効果や統計的優位性を確定せず、以後の独立反復・順序の割当は#488/#422のOwnerが承認する。#168のOS G0→G1→G2/H2-H3四Slotの適格分母と混ぜない。
+
+**CSW・TEIとの意味接合**：[CSW Draft #600](https://github.com/hat47x/cultural-substrate-weaving/pull/600)は、元AI案の出典・著者の実質改稿・採用/却下を区別する研究案。これに従い、T0のAI生成Packet、T1で人が修正したPacket、実Ownerが選択した内容を**一つの著者/意味/Authority**へ縮約しない。文面が一致しても書き手の資格は推論せず、改稿された新稿を元案の単なるbyteコピー扱いにしない。CSWのR-D→R-A→R-B、三役の独立効果はまだNOT RUNであり、TAI Skillの価値比較の予備条件にしない。[TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587)のN2選択入力／N3 Go選択ファイルは**Builder申告・ビルド前後観測**であって、完全依存閉包/Stage1→Stage2 Desktopではない。こちらのAV-2も輸送・保持の成功を実Consumer/現在Authority/Valueの成功へ足し合わせない。
+
+**実験状態**：M00/M10/M01/M11のT1新Session、W0/W1、独立反復・人間負担計測は**NOT RUN**。ここで成熟したのは**何を対照すれば情報の効果とSkillの効果を混同しないか**という試験手順・撤退条件であり、効果量、正式採用、認可を主張しない。適用OwnerはTAI #488（Skill ArmとTool/Token）、#271（根拠の再資格化）、#422/#127（価値と人間のOutcome）、TEI Product Owner（実Source/Scope）、TAI #168（独立Harness隔離）。
