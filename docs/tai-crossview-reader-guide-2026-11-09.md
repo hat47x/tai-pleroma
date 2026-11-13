@@ -420,4 +420,23 @@ Packetは**同じ根拠を持つための条件**であり、秘密Source、旧H
 
 **停止線／未実施**：ここでの表は採用判断の事前ルール案であり、測定閾値・人間の価値判断・実業務採用は未決。M00〜M11のLifecycle実計測／独立反復／配布履歴／Human Reviewは**NOT RUN**。TAI #488/#422/#271/#127の既存Owner・Expectedを使用し、共通Approval/Cost Serviceや二重Runner/Scenario Storeを作らない。#168の実OS G0/G1/G2／H2-H3適格0/4は変更しない。
 
+### 14.7 判断の識別力：未根拠の保留と、根拠付きの選択的再利用
+
+**今回の方法論上の欠落**：§14.5の`rec-1`（[TAI merged #647](https://github.com/hat47x/tai-pleroma/pull/647)）はSEI側にTEIの版/Source/fingerprint **Basisを持たないよう作られた**。同じSourceでも現在の根拠成立を肯定できず、全Armが安全に保留することは重要だが、これ一件では**必要な再資格化後に正しく再利用できるか**、または過剰な拒否を減らせるかを識別できない。Packet有無×Skill有無の4条件を増やす前に、異なる期待結論を持つJobを用意する。これは試験の識別力の改善であり、TAI Skillの実測優位性を意味しない。
+
+既存[TAI Draft #585](https://github.com/hat47x/tai-pleroma/pull/585)には、実TEI CLIの`inspect`/`trace`/`source-index`/`validate`で過去と現在の観測を取り、実SEI CLIの`add recommendation --basis`→`resume`へつなぐ**使い捨てWorkspace／13変種＋Consumer要求変更R1／旧Tool版T1**のread-only Probeがある。M（意味）、L（Source位置）、K（列挙集合）を別に評価するJ0（都度Product再確認）/J1（選択的）/J2（旧記録の無検査転用）は、**本ガイドM00〜M11のモデル処置Armとは別ラベル**。この既存Probeの観測方法を再利用し、第二の判定器・第二のSEI履歴Storeを作らない。Probeの`--basis`は記録した参照であって、Productの現在利用資格やOwnerの承認そのものではない。
+
+| 識別ケース（試験候補） | 独立Expectedの下限 | 不合格にする誤推論 |
+| --- | --- | --- |
+| **D0 未根拠の推薦**：#647の`rec-1` | TEIの内容一致は答えてよいが、SEIが当該Sourceを根拠にしたかは未確定 | 内容一致から「根拠検証済み」と肯定する |
+| **D1 根拠参照あり、局所Source不変**：#585の固定3 Validationと実SEI `--basis` | 事前独立Expectedが固定したM/L/KのClaimについて、**実TEI再読・対象存在・現在適格を満たす範囲で**限定再利用できる。意味受理や現在Grantは含めない | `--basis`文字列やWorkspace fingerprintだけで全Claim/Authorityを自動肯定する。逆に根拠のある局所Readまで全拒否する |
+| **D2 局所変更／追加義務**：#585 B1/B2/B3/N1/R1等 | 変更された意味M、位置L、集合K、Consumer Requiredを独立判定し、変化のなかったClaimは用途相対に再確認 | 古いSEI Receiptだけで全再利用、または1件の変更から全てを一律staleにする |
+| **D3 非意味的差分・対象外不備**：#585 A1/A5/C1/C2とTEI merged [#4557](https://github.com/hat47x/tei-platform/pull/4557)の検証NG/Map・Locate可能性 | Source位置・構造・閲覧可能性・意味の資格を混同しない。局所read-only利用とValidation NGを両方報告。J0のglobal validate保守的停止も費用/過剰保留の候補として明示 | コメント変更で受理済み意味を必ず失効させたと決めつける／逆に検証NGを消しOwner Meaningや全Source閉包へ昇格させる |
+
+**接続と実施順**：(1) 実Product＋独立ExpectedでD0〜D3を**AIなし**に先に区別できるかを確認（#585試験器はDraftのため実行済みとしない）。(2) まずD0/D1の二つでM00/M10/M01/M11を探索し、同じPacket bytes・根拠の現在Read条件を固定する。(3) D2/D3で変更特定・過剰保留の反例を追加する。(4) 判別力が見えた場合のみW0/W1・独立反復・人手・全Lifecycle費用へ拡張する。増やすJobとArmの積を先に全部必須Gate化しない。D0/D1が同じ保留しか許さない実契約なら**実験の識別力不足を先に報告**し、差の無い結果をSkill不要の実証へ変換しない。
+
+**評価の順序**：安全性（旧根拠・Grant・Approvalの誤昇格0を要求）、Claimごとの再利用／stale／unknownの適切さ、不必要な再Read・過剰保留、最後に§14.6のT0 Packet準備を含む費用。Source行・RLS・外部ProviderのClaimまでM/L/Kを一般化しない（実行されたReadに関する別Ownerは[TAI Draft #600](https://github.com/hat47x/tai-pleroma/pull/600)／TEI #2586）。独立Expectedを参加モデル/Packet/Skillから隔離する。**GitHub SHA・Tool version・Temp Root・Source Revisionは各Attemptで実観測**し、過去の記録を新Attemptへ転用しない。D0〜D3とM00〜M11を組み合わせる新しい実モデル比較、J0/J1/J2の実再実行、独立期待採点、現在Host/OS拒否、Owner受理はこの追補では**NOT RUN**。
+
+**非重複Owner**：Product実再解決はTEI、SEI記録と`--basis`はSEI、参照比較はTAI #271／既存Draft #585、Skill増分は#488、費用と利用者価値は#422/#127、OS/Toolの実隔離と比較資格は#168、Studio/Source ReaderのUI接続はTEI #1124。#168のH2/H3既定4試行（適格0/4）をD0〜D3で改変しない。
+
 **実験状態**：M00/M10/M01/M11のT1新Session、W0/W1、独立反復・人間負担計測は**NOT RUN**。ここで成熟したのは**何を対照すれば情報の効果とSkillの効果を混同しないか**という試験手順・撤退条件であり、効果量、正式採用、認可を主張しない。適用OwnerはTAI #488（Skill ArmとTool/Token）、#271（根拠の再資格化）、#422/#127（価値と人間のOutcome）、TEI Product Owner（実Source/Scope）、TAI #168（独立Harness隔離）。
