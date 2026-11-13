@@ -397,4 +397,26 @@ Packetは**同じ根拠を持つための条件**であり、秘密Source、旧H
 
 **CSW・TEIとの意味接合**：[CSW Draft #600](https://github.com/hat47x/cultural-substrate-weaving/pull/600)は、元AI案の出典・著者の実質改稿・採用/却下を区別する研究案。これに従い、T0のAI生成Packet、T1で人が修正したPacket、実Ownerが選択した内容を**一つの著者/意味/Authority**へ縮約しない。文面が一致しても書き手の資格は推論せず、改稿された新稿を元案の単なるbyteコピー扱いにしない。CSWのR-D→R-A→R-B、三役の独立効果はまだNOT RUNであり、TAI Skillの価値比較の予備条件にしない。[TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587)のN2選択入力／N3 Go選択ファイルは**Builder申告・ビルド前後観測**であって、完全依存閉包/Stage1→Stage2 Desktopではない。こちらのAV-2も輸送・保持の成功を実Consumer/現在Authority/Valueの成功へ足し合わせない。
 
+### 14.6 比較結果を採否に接続する前の検収規則（総費用・失敗・再現性）
+
+前節のM00/M10/M01/M11は、PacketとSkillの**T1時点の処置割付**を分ける最小実験である。ただし「Skill追加でT1の操作が2回減った」だけでは、T0でPacketを作成・Redact・修正・配布する作業が無視される。**導入の意思決定はT0からT1のLifecycle全体で評価**し、単純なToken合計を権限違反や偽成功と相殺しない。
+
+**費用の境界（既存Recorder・人手記録の再利用）**：`Ctotal = Cprepare(T0) + Cdeliver + Cresume(T1) + Crequalify + Crepair`と説明上分解する。ただし異種単位を雑に加算した1点数にはせず、(a)人の作業分・レビュー/再説明分、(b)モデルToken/費用、(c)実Tool呼出と経過時間、(d)失敗・手戻り・不正な受理、を**別ベクトル**で出す。`Cprepare`には根拠/未解決事項の調査・Packet作成・Source/Scope/Disclosure検査・Redactionを含める。M00/M01のPacketなし条件にPacket生成費用を課さず、M10/M11の**同一Packet作成費用を勝手に0扱いしない**。一度作ったPacketを何回利用したかによる償却は、初回1回の費用と別シナリオとして計測。T0共通Jobは全Armへ同じ条件で計上し、現実に発生した追加準備だけを区別する。
+
+**割付・観測の最小成立条件**：各W0/W1世界のT1 Source/Root/Tool profile/公開範囲、モデル版・設定、固定独立ExpectedとSkill bytes/digestを試験前にPinする。Source-only変更と別Rootを事後に選択して都合の良い結果を残さない。新Sessionの情報露出経路（System/Session Memory/Skill Loader/Tool/Packet）とPacket digest、実読取・応答・途中失敗を記録する。SkillがLoaderに存在することと、実モデルがSkill記述を利用したことは別Witness。Source/Root/Grantを再ReadせずPacketだけで現在資格と答えれば、回答内容が偶然一致してもそのClaimは不適格。独立採点者が何を見たかを固定し、AgentにExpectedを見せない。
+
+**分母と停止を先に宣言**：割り当てた全Attemptを失敗・開始不能・timeout・中断・安全停止まで保持するITTと、事前固定の条件を満たした適格AttemptのPPを**別集計**する。成功した再開のみでTokenや正答率を出さない。モデル揺らぎとArm順の影響を切り分ける反復・順序の割付・必要試行数は#488/#422のOwnerが事前に定める。4セル×2世界は**8条件の探索**であって、8独立反復や有意差の根拠ではない。T0 Packetsを人が実際に確認しない場合、確認作業の見積りを実測値と称しない。
+
+| 観測されたパターン（安全性と用途適格が最低条件） | 優先する処遇・次に確かめること |
+| --- | --- |
+| M10がM00より改善し、M11がM10と同等 | **薄いメモ・既存Handoffを優先**。Packet生成と再資格化の全費用を含め、それでも改善するか確認 |
+| M11がM10を反復して上回る | **TAI Skill追加の用途限定候補**。同一Packet/現在Sourceでの差か、隠れTool・追加情報・採点漏洩でないか反証してからOwner採否へ |
+| M01がM00を改善し、M11の追加Packetが有効でない | Skill単独の効果候補。Packetの保存・配送を義務化する根拠にはしない |
+| いずれも実質的改善がない、または追加機構で不要な失敗が増える | **既存Tool/通常作業を維持**。将来の他Jobや中断期間まで無用と一般化はしない |
+| 源泉の誤束縛、Expected漏洩、旧Grant/承認の偽昇格がある | 正確性・権限資格は別途不合格／比較不適格を記録。総費用が小さいことでは相殺しない |
+
+**CSW/TEI研究との共通境界**：[CSW Draft #600](https://github.com/hat47x/cultural-substrate-weaving/pull/600)のSolo/Review/Triadic比較も、役割の多さではなく**著者の実作へ届いた改稿・選択と、その費用**を要する。異なる役割の内部合意を独立根拠に数えない。[TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587)のBuild選択入力/生成Assetの一致も、実Builder全依存・Stage2実消費の資格と別。TAIにおいても、Packet生成とPacketの実Readが同じであることと、**内容が現在のDecisionの正当な根拠であること**を独立に確認する。
+
+**停止線／未実施**：ここでの表は採用判断の事前ルール案であり、測定閾値・人間の価値判断・実業務採用は未決。M00〜M11のLifecycle実計測／独立反復／配布履歴／Human Reviewは**NOT RUN**。TAI #488/#422/#271/#127の既存Owner・Expectedを使用し、共通Approval/Cost Serviceや二重Runner/Scenario Storeを作らない。#168の実OS G0/G1/G2／H2-H3適格0/4は変更しない。
+
 **実験状態**：M00/M10/M01/M11のT1新Session、W0/W1、独立反復・人間負担計測は**NOT RUN**。ここで成熟したのは**何を対照すれば情報の効果とSkillの効果を混同しないか**という試験手順・撤退条件であり、効果量、正式採用、認可を主張しない。適用OwnerはTAI #488（Skill ArmとTool/Token）、#271（根拠の再資格化）、#422/#127（価値と人間のOutcome）、TEI Product Owner（実Source/Scope）、TAI #168（独立Harness隔離）。
