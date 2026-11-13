@@ -321,3 +321,53 @@ Hが成立した過去の記録は、現在UやAが不明になっても**消さ
 **評価手順**：同じUser JobのB0（元のTool/ファイル）、B1（必要時Productの有資格Read）、B2（用途に必要な場合だけTAI Skill/Handoff）を、**安全な有用情報の回収量／偽成功／不要な保留／人間の確認負担／費用**で別々に比較。部分的に正しい情報を得ても公開Goalを満たしたとは判定しないし、不要な追加機構が無ければB0/B1を採用する。[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)／[#488](https://github.com/hat47x/tai-pleroma/issues/488)／[#127](https://github.com/hat47x/tai-pleroma/issues/127)が評価Owner。B0/B1/B2モデル比較・人間Valueは**NOT RUN**。
 
 **固定版・未実証**：2026-11-13照合 TAI main `32ffba1232cd9b3e73309ba782d58e89efcb726b`、TEI main `1a2271d8c8586e928a8ed90fb516ec573118c9f9`。#4539は実PG限定Read、#4516は設計Draft。実QH-P0全Product/正式`tei` CLI/Studio・Wails、実外部Harness/現在Host Grant、業務Effect/Owner受理・認知負荷/Valueは新たに**実行していない**。#168の実OS G0→G1→G2と独立H2/H3四Slotの優先度・比較適格0/4を変更しない。
+
+## 14. 2026-11-13追補：増分価値と承認の独立評価
+
+§7〜13では証拠の非増幅・部分的な有用性を分離した。今回さらに、**「TAIを追加したから仕事が改善した」**と**「AIが承認の記録を見たから公開できる」**という二つの偽の昇格を実Productの反例へ結ぶ。TAIの価値判定は既存[#422](https://github.com/hat47x/tai-pleroma/issues/422)/[#488](https://github.com/hat47x/tai-pleroma/issues/488)、公開Outcomeは[#127](https://github.com/hat47x/tai-pleroma/issues/127)/Draft [#624](https://github.com/hat47x/tai-pleroma/pull/624)、現在資格は[#271](https://github.com/hat47x/tai-pleroma/issues/271)がOwner。新Skill Router・Approval Registry・Agent Loop・共通Outcome Engineは作らない。
+
+### 14.1 初回の実モデルB0/B1/B2対照から言えること
+
+TAI [merged #647](https://github.com/hat47x/tai-pleroma/pull/647)のJ2は、実TEI＋実SEI CLIとClaude Sonnet subagentを使い、「SEIの推薦`rec-1`が現在のTEIモデルに根拠を持つか」を調べた**各Arm1回、隔離未資格の探索実験**。独立Expectedは事前にリポジトリ外へ固定。`rec-1`の記述内容は現在のモデルと合うが、SEIにTEI版・Source・fingerprintが無く、**根拠として成立したとは断定できない**という結論が全Armで一致した。
+
+| Arm | 使用構成 | 実Tool呼出数 | 記録Token | 観測できた限定結果 |
+| --- | --- | ---: | ---: | --- |
+| B0 | 実TEI/SEI CLIのみ・Skillなし | 6 | 66,847 | 両Productを読取、版の根拠不足を適切に説明 |
+| B1 | B0＋TEI Product Skill | 8 | 74,447 | 結論同じ |
+| B2 | B1＋TAI Activity Skill | 8 | 70,884 | 結論同じ |
+
+B2のTAI Skillは実選択・使用され、B1に対して38,517 bytesのSkill入力が増加。B0対B2ではTool呼出が2回多い。ただしn=1でToken・時間の揺らぎもあるため**統計的な費用増、TAI Skill全般の無用性を証明しない**。このJobについてはB0のTool-onlyで十分だった。B2の価値が現れ得る「中断後の再開で未解決根拠を失わない」は未試験。記録：[PR #647保存JSON](https://github.com/hat47x/tai-pleroma/blob/main/evaluations/records/TAI-capability-selection-multiproduct-trial-2026-11-13.json)。この探索は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS G0/G1/G2→独立H2/H3四試行（比較適格0/4）へ算入しない。
+
+**能力選択の読解規則**：B0が安全・十分な場合は製品の既存Toolを使う。B1は実Product固有のSource復帰・誤読抑止の改善が観測された場合、B2は複数の試行や中断再開で根拠・人の再説明・作業費用の増分改善を独立Expectedで確認した場合にだけ候補へ上げる。Productの数が2以上、SkillがLoaderで読まれた、Contextが長くなったというだけではB2を採用しない。逆に一試行の無差から将来の用途も一律不採用としない。
+
+### 14.2 承認の四段階はProduct実観測の限界であってTAI権限階層ではない
+
+[TAI Draft #624の実SEI/SUI/EKI/TEI承認調査](https://github.com/hat47x/tai-pleroma/blob/a345b9fde693624b900924bc41e09d50e332c6c2/evaluations/approval-as-observation-2026-11-13.md)のA0〜A3区分を**証拠の読み方**として援用する。新たな認可/承認方式をTAIが定義したことにはしない。
+
+| 資格 | 何が実際に観測できたか | 主張してはいけないこと |
+| --- | --- | --- |
+| A0 文言 | Parametersや自由記述に「承認済み」とある | 本人や権限を確定しない |
+| A1 自己申告の記録 | 実SEIでagentがowner承認と書いたDecisionをgateがallow。TAI `provisionalApproved`も参照Tool自身が記したSEI Decision由来 | 記録の存在からOwnerの独立承認に昇格しない |
+| A2 資格区別のあるProduct記録 | 実SUIではagent資格によるProposal判定が403・記録0、member判定は記録。ただしテスト構成はheader由来主体 | member資格を持つAIと人を区別できず、外部成果物D-04の公開承認や実在の人の判断を証明しない |
+| A3 権限あるOwnerによる承認 | 実Product Probeでは**該当する独立観測0件** | SCN-001の公開P-Publish達成を宣言しない |
+
+A3には、特定版の成果物への束縛、作成者と承認者の資格分離、当該行為を許可するOwner権限、実Consumerからの確認が必要。GitHub等でOwner名義の操作が存在しても、AIが同じ資格を用いた可能性を排除しなければ独立した人の承認とは言えない。**承認が未証明のまま公開を止められたこと**は制約充足の限定成果であり、公開Goal未達と両立する。TAIが別のAuthorityを創設して解決したことにしない。
+
+### 14.3 「一つのProduct成功」と「横断価値」を足し算しない
+
+- TEI [merged #4539](https://github.com/hat47x/tei-platform/pull/4539)の実PostgreSQL読取はProduct単独の限定read-only成果で、TAIを追加しなければ未完成になるわけではない。
+- TEI Studio [Draft #4587](https://github.com/hat47x/tei-platform/pull/4587)は同じWindows Jobで生成Inspectorから配信Bundle・実WebView2を観測した限定成功。X-TEA三視点[Draft #4570](https://github.com/hat47x/tei-platform/pull/4570)は**別Draft・別Fixture**で合成Desktop Pluginを観測。これらを一つの実Source E2E・Stage1→Stage2 Desktop・Handoff受入へ合算しない。
+- 今後のTAI横断の最小一辺は、Productが現在のTEI Subjectを一意に再解決した根拠と許可Projectionを、[既存QH §10](yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)の当該Handoff Consumerへ結ぶこと。Selection形成は[TAI Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)、再解決・復帰は[Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)。実Subjectの再読・SHO受領・Host Grant・実Effectは別観測で、スタンプ・同名・Digest一致から一括承認しない。
+
+### 14.4 独立に評価する最小の四ケース（追加試験はNOT RUN）
+
+| Case | 比較の固定条件 | 合格に必要な観測と、結論を保留する条件 | Owner |
+| --- | --- | --- | --- |
+| AV-1 J2再現 | rec-1の内容一致／版根拠欠落を独立Expectedで先に固定。同じSource/Tool Profile・実行条件でB0/B1/B2を比較 | 正しい保留、偽の根拠付与、Tool/Token・人の負担を分離。n=1の差を一般化しない | TAI #488/#422 |
+| AV-2 中断・再開 | rec-1の未解決根拠を保ったまま別Sessionへ移行。新しいSource Readと旧Receiptを区別 | 根拠喪失と不要な再説明をB0/必要時Skill/TAIで対照。今のGrant/Subjectを過去Sessionから推定しない | TAI #271/#488 |
+| AV-3 公開承認 | D-04の版、承認者資格、作成者資格、Ownerからの委譲、Consumer Readを別に固定 | A1/A2で公開を進めず、A3を実観測できた場合のみP-Publish評価へ。人の正式承認は現時点0 | TAI #127/#624・Product Owner |
+| AV-4 TEI→SHO | TEI元Subjectを実Readし、対象/Scope/Revisionを固定。SHOは当該Attemptの許可bytesを実Read | Delivery PASSとSource再解決/Meaning/Host適用の未達を分ける。新Handoff v2・Agent Loop不要 | TAI QH §10／Product Owner |
+
+**測定の原則**：偽成功率、必要な安全停止、不必要な保留、正しい限定情報の回収、当該Consumer受領、利用者Goal、人手、操作回数、Token/費用を**別の指標**で記録。安全を費用と相殺した総得点だけで採否を決めない。モデル・必要な権限・公開Source・試行順・中断/再試行、独立Expectedと採点者を事前固定。現TAI #168の適格四Sessionを後から探索試行で埋めない。
+
+**今回の固定点**：2026-11-13照合 TAI main `76ddd583d01dd8cb90b6d4d62018e0fcba0b9e0c`、TEI main `f3b58e7b580f0ecbea1d2feb156f52c2147f63a7`。#647 J2と#624 ApprovalのProduct局所Probeは実施済みだが、AV-1〜4新比較、実QH-P0三Product同一Attempt、実Owner承認、Stage1→Stage2 Desktop、H2/H3四Slotは**この追補ではNOT RUN**。本書は受入済みSchemaや本番許可ではなくOwner別の読解・計画案。
