@@ -966,7 +966,7 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 
 ## 48. 2026-11-12：固定対象から実Product Handoffへ進む1往復の受入票
 
-**統合判断**：本mainは[PR #628](https://github.com/hat47x/tai-pleroma/pull/628)の§46「一時Focus／Pinned Work Set／許可済Projection」と[merged PR #631](https://github.com/hat47x/tai-pleroma/pull/631)の§47「Tool-only→必要なProduct Skill→条件付きTAI Skill」の**採用済み計画**を持つ。本節は同内容を別§46として重複させず、[Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)のQ/E/A・識別一意性、[本Draft #630](https://github.com/hat47x/tai-pleroma/pull/630)のProduct別再解決、既存[Handoff v1実行票](cross-product-handoff-execution-tickets-2026-11-11.md)を**一件の実行資格**へ接続する後続試験の優先順のみ追加する。
+**統合判断**：本mainは[PR #628](https://github.com/hat47x/tai-pleroma/pull/628)の§46「一時Focus／Pinned Work Set／許可済Projection」と[merged PR #631](https://github.com/hat47x/tai-pleroma/pull/631)の§47「Tool-only→必要なProduct Skill→条件付きTAI Skill」の**採用済み計画**を持つ。本節は同内容を別§46として重複させず、[Draft #629](https://github.com/hat47x/tai-pleroma/pull/629)のQ/E/A・識別一意性、[本Draft #633](https://github.com/hat47x/tai-pleroma/pull/633)のProduct別再解決、既存[Handoff v1実行票](cross-product-handoff-execution-tickets-2026-11-11.md)を**一件の実行資格**へ接続する後続試験の優先順のみ追加する。
 
 ### 48.1 まず確認する唯一の実線：Product限定ContextのProducer→Consumer往復
 
