@@ -235,6 +235,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-pass-consistency-2026-11-11.json",
     "evaluations/records/SCN-001-outcome-2026-11-11.json",
     "evaluations/records/EKI-lost-acknowledgement-2026-11-12.json",
+    "evaluations/records/EKI-self-declared-approval-2026-11-13.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -649,6 +650,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyClaimStillStated") is not True
             ):
                 errors.append(f"a deck figure no longer matches its receipt: {relative}")
+        if "EKI-self-declared-approval" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("agentExecutedAnything") is not False
+                or observed.get("humanApprovalConceptInAdmission") is not False
+                or observed.get("selfDeclaredApprovalAsStructureRefused") is not True
+            ):
+                errors.append(f"the self-declared approval observation overclaims: {relative}")
         if "EKI-lost-acknowledgement" in relative:
             observed = data.get("observed", {})
             if (

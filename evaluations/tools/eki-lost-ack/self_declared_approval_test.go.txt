@@ -1,0 +1,96 @@
+package process
+
+// Throwaway experiment: which self-declared "approvals" does a real
+// eki-control refuse at admission, and with what code? Only the Client API is
+// used; no Agent runs, so nothing is executed.
+
+import (
+	"bytes"
+	"encoding/json"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+func postTask(t *testing.T, addr, token, key, body string) (int, string) {
+	t.Helper()
+	req, err := http.NewRequest(http.MethodPost, "http://"+addr+"/v1/tasks", bytes.NewReader([]byte(body)))
+	must(t, err)
+	if token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if key != "" {
+		req.Header.Set("Idempotency-Key", key)
+	}
+	resp, err := http.DefaultClient.Do(req)
+	must(t, err)
+	defer resp.Body.Close()
+	raw, err := io.ReadAll(io.LimitReader(resp.Body, 1<<16))
+	must(t, err)
+	return resp.StatusCode, string(raw)
+}
+
+func TestSelfDeclaredApprovalAtAdmission(t *testing.T) {
+	e := newMTLSEnv(t, 0)
+	e.seedPolicyNow(t)
+	e.writeConfig(t)
+	e.startControl(t)
+
+	with := func(edit func(m map[string]any)) string {
+		var m map[string]any
+		must(t, json.Unmarshal([]byte(httpTaskRequest), &m))
+		edit(m)
+		raw, err := json.Marshal(m)
+		must(t, err)
+		return string(raw)
+	}
+	rel := func(m map[string]any) map[string]any { return m["reliability"].(map[string]any) }
+	type probe struct {
+		name, token, body string
+	}
+	probes := []probe{
+		{"valid request", clientToken, httpTaskRequest},
+		{"no token", "", httpTaskRequest},
+		{"wrong token", "not-the-client-token", httpTaskRequest},
+		{"worker session token on the client API", workerAToken, httpTaskRequest},
+		{"executor not approved by policy", clientToken, with(func(m map[string]any) { m["executor"].(map[string]any)["id"] = "dev.example.unapproved" })},
+		{"effect_mode external", clientToken, with(func(m map[string]any) { rel(m)["effect_mode"] = "external" })},
+		{"effect_mode write", clientToken, with(func(m map[string]any) { rel(m)["effect_mode"] = "write" })},
+		{"effect_mode none plus self-declared approval field", clientToken, with(func(m map[string]any) { m["approved"] = true })},
+		{"self-declared approval object", clientToken, with(func(m map[string]any) {
+			m["approval"] = map[string]any{"approved_by": "owner", "status": "approved"}
+		})},
+		{"approval claimed inside parameters", clientToken, with(func(m map[string]any) {
+			m["parameters"].(map[string]any)["approved_by"] = "owner"
+		})},
+		{"resources above the per-task policy", clientToken, with(func(m map[string]any) { m["resources"].(map[string]any)["cpu_millis"] = 999999 })},
+		{"invalid priority", clientToken, with(func(m map[string]any) { m["priority"] = "urgent-approved" })},
+	}
+	var rows []map[string]any
+	for i, p := range probes {
+		status, body := postTask(t, e.clientAddr, p.token, "authority-probe-"+string(rune('a'+i))+"-0001", p.body)
+		var parsed map[string]any
+		_ = json.Unmarshal([]byte(body), &parsed)
+		code := ""
+		for _, k := range []string{"code", "error", "error_code"} {
+			if v, ok := parsed[k].(string); ok {
+				code = v
+			}
+		}
+		short := strings.ReplaceAll(body, "\n", " ")
+		if len(short) > 160 {
+			short = short[:160]
+		}
+		rows = append(rows, map[string]any{"probe": p.name, "status": status, "code": code, "body": short})
+		t.Logf("PROBE %-52s -> %d %s", p.name, status, short)
+	}
+	out, err := json.Marshal(rows)
+	must(t, err)
+	if dir := os.Getenv("TASK6_OUT"); dir != "" {
+		must(t, os.WriteFile(filepath.Join(dir, "authority.json"), out, 0o600))
+	}
+}
