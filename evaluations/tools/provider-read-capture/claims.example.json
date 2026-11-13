@@ -1,0 +1,1 @@
+[{"id":"R-open-p1","read":"OPEN|eq|0","kind":"R"},{"id":"R-open-ne","read":"OPEN|ne|0","kind":"R"},{"id":"Z-nope","read":"NOPE|eq|0","kind":"Z"},{"id":"Z-hold","read":"HOLD|eq|0","kind":"Z"}]
