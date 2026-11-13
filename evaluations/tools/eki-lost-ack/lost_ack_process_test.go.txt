@@ -37,6 +37,8 @@ type faultProxy struct {
 	ln      net.Listener
 	target  string
 	drop    atomic.Bool
+	blackhole atomic.Bool // swallow the Agent's bytes and forward nothing
+	delayNs atomic.Int64  // hold the Control Plane's replies this long
 	dropped atomic.Int64 // connections whose post-handshake replies were discarded
 	wg      sync.WaitGroup
 }
@@ -72,6 +74,11 @@ func readRecord(r io.Reader) (typ byte, raw []byte, err error) {
 }
 
 func (p *faultProxy) serve(client net.Conn) {
+	if p.blackhole.Load() {
+		_, _ = io.Copy(io.Discard, client) // the request never reaches the Control Plane
+		client.Close()
+		return
+	}
 	server, err := net.Dial("tcp", p.target)
 	if err != nil {
 		client.Close()
@@ -87,6 +94,9 @@ func (p *faultProxy) serve(client net.Conn) {
 			}
 			if typ == 23 {
 				clientSentEncrypted.Store(true)
+				if p.blackhole.Load() {
+					continue // on a kept-alive connection: swallow the request
+				}
 			}
 			if _, err := server.Write(raw); err != nil {
 				return
@@ -109,6 +119,9 @@ func (p *faultProxy) serve(client net.Conn) {
 				time.AfterFunc(300*time.Millisecond, func() { client.Close() })
 			}
 			continue
+		}
+		if d := p.delayNs.Load(); d > 0 && clientSentEncrypted.Load() {
+			time.Sleep(time.Duration(d))
 		}
 		if _, err := client.Write(raw); err != nil {
 			server.Close()
@@ -175,7 +188,22 @@ func countLines(path string) int {
 	return strings.Count(string(raw), "\n")
 }
 
+type faultSpec struct {
+	engage, release func(p *faultProxy)
+	restartAgent    bool
+	restartControl  bool
+	commitExpected  bool // whether the Control Plane should have recorded the claim
+}
+
 func runLostAcknowledgement(t *testing.T, variant string, seed byte, restartAgent bool) {
+	runFault(t, variant, seed, faultSpec{
+		engage:  func(p *faultProxy) { p.drop.Store(true) },
+		release: func(p *faultProxy) { p.drop.Store(false) }, restartAgent: restartAgent, commitExpected: true,
+	})
+}
+
+func runFault(t *testing.T, variant string, seed byte, spec faultSpec) {
+	restartAgent := spec.restartAgent
 	e := newMTLSEnv(t, 0)
 	e.seedPolicyNow(t)
 	oldLimits, oldSandbox := signedchain.Limits, signedchain.Sandbox
@@ -242,7 +270,7 @@ func runLostAcknowledgement(t *testing.T, variant string, seed byte, restartAgen
 	waitFor(t, "command start", func() (bool, string) {
 		return countLines(counter) > 0, agent.out.String() + "\n" + control.out.String()
 	})
-	proxy.drop.Store(true)
+	spec.engage(proxy)
 
 	obs := effectObservation{Variant: variant}
 	eventsFor := func() (failures int, submitted, bodySent, bodyFailed bool, decision string) {
@@ -283,11 +311,15 @@ func runLostAcknowledgement(t *testing.T, variant string, seed byte, restartAgen
 		f.Close()
 		return true
 	}
-	waitFor(t, "claim committed while the agent is told nothing", func() (bool, string) {
-		recorded, _ := claimRecorded()
-		failures, _, _, _, _ := eventsFor()
-		return recorded && failures > 0, agent.out.String() + "\n" + control.out.String()
-	})
+	if spec.commitExpected {
+		waitFor(t, "claim committed while the agent is told nothing", func() (bool, string) {
+			recorded, _ := claimRecorded()
+			failures, _, _, _, _ := eventsFor()
+			return recorded && failures > 0, agent.out.String() + "\n" + control.out.String()
+		})
+	} else {
+		time.Sleep(10 * time.Second) // observe without waiting for an outcome that may never come
+	}
 	var digest string
 	obs.ClaimRecordedByControl, digest = claimRecorded()
 	obs.OutputDigest = digest
@@ -300,18 +332,22 @@ func runLostAcknowledgement(t *testing.T, variant string, seed byte, restartAgen
 	}
 	obs.ResultStatusWhileUnknown, _ = clientDo(t, http.MethodGet, base+"/v1/tasks/"+taskIDText+"/result", "", nil)
 
+	if spec.restartControl {
+		control.kill()
+		control = e.startControl(t)
+	}
 	if restartAgent {
 		agent.kill()
-		proxy.drop.Store(false)
+		spec.release(proxy)
 		agent = side.start(t)
 	} else {
-		proxy.drop.Store(false)
+		spec.release(proxy)
 	}
 	waitFor(t, "the same claim acknowledged on retry", func() (bool, string) {
 		_, submitted, _, _, _ := eventsFor()
 		return submitted, agent.out.String() + "\n" + control.out.String()
 	})
-	time.Sleep(4 * time.Second) // let a body send, a re-dispatch or a re-run show itself
+	time.Sleep(5 * time.Second) // let a body send, a re-dispatch or a re-run show itself
 	var bodySent, bodyFailed bool
 	_, _, bodySent, bodyFailed, obs.RetryDecision = eventsFor()
 	obs.BodySentEvent, obs.BodySendFailed = bodySent, bodyFailed
@@ -355,4 +391,25 @@ func TestLostAcknowledgementThenSameAgentRetries(t *testing.T) {
 
 func TestLostAcknowledgementThenAgentRestarts(t *testing.T) {
 	runLostAcknowledgement(t, "agent-restart", 42, true)
+}
+
+func TestLostAcknowledgementThenControlRestarts(t *testing.T) {
+	runFault(t, "control-restart", 43, faultSpec{
+		engage:  func(p *faultProxy) { p.drop.Store(true) },
+		release: func(p *faultProxy) { p.drop.Store(false) }, restartControl: true, commitExpected: true,
+	})
+}
+
+func TestRequestNeverReachesControl(t *testing.T) {
+	runFault(t, "request-never-arrives", 44, faultSpec{
+		engage:  func(p *faultProxy) { p.blackhole.Store(true) },
+		release: func(p *faultProxy) { p.blackhole.Store(false) }, commitExpected: false,
+	})
+}
+
+func TestAcknowledgementArrivesLate(t *testing.T) {
+	runFault(t, "late-acknowledgement", 45, faultSpec{
+		engage:  func(p *faultProxy) { p.delayNs.Store(int64(20 * time.Second)) },
+		release: func(p *faultProxy) { p.delayNs.Store(0) }, commitExpected: false,
+	})
 }
