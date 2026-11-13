@@ -77,7 +77,7 @@ SHOのReaderが読む範囲は、bytesとMarkdownリンクである。D-04の根
 | O1 Tool成功、成果物なし | 規則1 | 実行（欠落、比較なし） |
 | O2 記録は成功、Readerは別bytes | 規則2 | 実行（差替え） |
 | O3 成果物は正しい、受取先が未受領 | T-DraftとR-Deliverを別の行にする | 実行（本来の受取先は未実施のまま）＋自己試験 |
-| O4 承認済みの自己申告 | AuthorityはOwnerの判断だけ（N-02、OX-02） | **自己試験のみ**。敵対的な実試験は未実施 |
+| O4 承認済みの自己申告 | AuthorityはOwnerの判断だけ（N-02、OX-02） | **自己試験のみ**。敵対的な実試験は未実施。実ProductでのSEI・SUI・EKIの観測は[承認を観測として受け取れるか](approval-as-observation-2026-11-13.md)（2026-11-13追加） |
 | O5 適切に止めたDraftを全面失敗とする | 規則3 | 実行（T-Draft成立とP-Publish未達が同時に出る） |
 | O6 停止を理由にGoalまで成功とする | 規則3 | 実行（同上） |
 | O7 Commit後に応答喪失 | 規則4（OX-04） | SCN-001では**自己試験のみ**（外部Providerが無い）。実EKIでの1件は[応答を失ったあとの回復判断](EKI-effect-unknown-recovery-2026-11-12.md)（2026-11-12追加） |

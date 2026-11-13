@@ -236,6 +236,8 @@ REAL_RECORDS = (
     "evaluations/records/SCN-001-outcome-2026-11-11.json",
     "evaluations/records/EKI-lost-acknowledgement-2026-11-12.json",
     "evaluations/records/EKI-self-declared-approval-2026-11-13.json",
+    "evaluations/records/SEI-self-declared-approval-2026-11-13.json",
+    "evaluations/records/SUI-proposal-decision-authority-2026-11-13.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -650,6 +652,23 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyClaimStillStated") is not True
             ):
                 errors.append(f"a deck figure no longer matches its receipt: {relative}")
+        if "SEI-self-declared-approval" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("gateDistinguishesOwnerFromAgent") is not False
+                or observed.get("gateBindsDecisionToArtifactDigest") is not False
+            ):
+                errors.append(f"an SEI decision is read as owner authority: {relative}")
+        if "SUI-proposal-decision-authority" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("agentCredentialClassCanDecide") is not False
+                or observed.get("productProvesTheReviewerIsHuman") is not False
+                or observed.get("decisionSubjectIsAnExternalArtifact") is not False
+            ):
+                errors.append(f"the SUI decision observation overclaims: {relative}")
         if "EKI-self-declared-approval" in relative:
             observed = data.get("observed", {})
             if (

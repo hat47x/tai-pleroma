@@ -1,0 +1,95 @@
+# SEI probe (throwaway). Set SEI=<built sei binary>, D=<empty dir>, W=<scratch dir> first.
+$SEI version 2>&1 | head -1
+$SEI init --data-root $D >/dev/null
+$SEI add recommendation --data-root $D --id R1 --statement "D-04 sha256:0600ddbe を公開する" --source agent-a >/dev/null
+g() { name=$1; shift; $SEI gate check --data-root $D "$@" > $W/$name.out 2>$W/$name.err; echo "$name exit=$?"; python3 -c "
+import json,sys
+t=open('$W/$name.out').read()
+try:
+    d=json.loads(t); print('  ',json.dumps({k:d.get(k) for k in ('verdict','reasons','not_verified')},ensure_ascii=False)[:420])
+except Exception: print('  ',(t or open('$W/$name.err').read())[:300].replace(chr(10),' | '))"; }
+$SEI add decision --data-root $D --id D-forged --statement "D-04 sha256:0600ddbe の公開を承認" --recommendation R1 --responsible person:owner --source person:owner >/dev/null; echo "add forged=$?"
+g E1-forged-owner --decision D-forged
+$SEI add decision --data-root $D --id D-agent --statement "D-04 の公開を承認" --recommendation R1 --responsible agent:claude --source agent-a >/dev/null; echo "add agent=$?"
+g E2-honest-agent --decision D-agent
+$SEI add decision --data-root $D --id D-orphan --statement "公開を承認" >/dev/null; echo "add orphan=$?"
+g E3-no-responsible --decision D-orphan
+g E4-unknown --decision D-none
+g E5-strict --decision D-forged --require-recommendation --deny-unresolved
+g E5b-basis-rationale --decision D-forged --require-basis --require-rationale
+echo "== E6 direct file edit"
+$SEI verify --data-root $D > $W/v1.txt 2>&1; echo "verify-before=$?"; head -c 300 $W/v1.txt | tr '\n' ' '; echo
+python3 - "$D" <<'PY'
+import sys,json
+f=sys.argv[1]+'/semantic.bundle.json'
+t=open(f,encoding='utf-8').read()
+i=t.find('D-agent'); print('snippet:',t[max(0,i-200):i+500].replace('\n',' ')[:700])
+PY
+
+F=$D/semantic.bundle.json
+echo "== E5c forged with basis and rationale"
+$SEI add decision --data-root $D --id D-forged2 --statement "D-04 sha256:0600ddbe の公開を承認" --recommendation R1 --responsible person:owner --source person:owner --basis evidence:owner-mail --rationale "Ownerが口頭で承認" >/dev/null; echo "add=$?"
+$SEI gate check --data-root $D --decision D-forged2 --require-recommendation --deny-unresolved --require-basis --require-rationale | python3 -c "import json,sys;d=json.load(sys.stdin);print('  verdict',d['verdict'],d.get('reasons'))"; echo "exit=${PIPESTATUS[0]}"
+echo "== E6 edit the store file directly"
+$SEI verify --input $F > $W/v1.txt 2>&1; echo "verify-before=$?"; head -c 260 $W/v1.txt | tr '\n' ' '; echo
+sha256sum $F | cut -c1-16
+python3 - "$F" <<'PY'
+import sys,json
+f=sys.argv[1]; d=json.load(open(f,encoding='utf-8'))
+n=0
+def walk(o):
+    global n
+    if isinstance(o,dict):
+        if o.get('record_id')=='D-agent':
+            dec=o['payload']['decision']
+            dec['responsibility_refs']=[{"kind":"person","id":"owner"}]
+            dec['statement']="D-04 の公開をOwnerが承認"
+            o['provenance_refs']=[{"kind":"source","id":"person:owner"}]; n+=1
+        for v in o.values(): walk(v)
+    elif isinstance(o,list):
+        for v in o: walk(v)
+walk(d); json.dump(d,open(f,'w',encoding='utf-8'),ensure_ascii=False,indent=2); print('records rewritten:',n)
+PY
+$SEI verify --input $F > $W/v2.txt 2>&1; echo "verify-after=$?"; head -c 260 $W/v2.txt | tr '\n' ' '; echo
+sha256sum $F | cut -c1-16
+$SEI gate check --data-root $D --decision D-agent | python3 -c "import json,sys;d=json.load(sys.stdin);print('  gate after edit:',d['verdict'],d.get('reasons'))"
+echo "== MCP"
+python3 - "$SEI" "$D" <<'PY'
+import subprocess,json,sys
+SEI,D=sys.argv[1],sys.argv[2]
+def session(args,name,calls,schema=False):
+    p=subprocess.Popen([SEI,'mcp','--data-root',D]+args,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    msgs=[{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":name,"version":"0"}}},
+          {"jsonrpc":"2.0","method":"notifications/initialized"},{"jsonrpc":"2.0","id":2,"method":"tools/list"}]
+    for i,(tool,a) in enumerate(calls): msgs.append({"jsonrpc":"2.0","id":10+i,"method":"tools/call","params":{"name":tool,"arguments":a}})
+    out,err=p.communicate("\n".join(json.dumps(m) for m in msgs)+"\n",timeout=30)
+    res={}
+    for l in out.splitlines():
+        try: m=json.loads(l)
+        except: continue
+        if m.get('id')==2:
+            res['tools']=[t['name'] for t in m['result']['tools']]
+            if schema:
+                for t in m['result']['tools']:
+                    if t['name']=='add_decision': print('add_decision args:',list(t['inputSchema'].get('properties',{}).keys()),'required',t['inputSchema'].get('required'))
+        elif m.get('id',0)>=10:
+            r=m.get('result',{}); res[m['id']]={'isError':r.get('isError'),'text':(r.get('content') or [{}])[0].get('text','')[:200]}
+    return res
+session(['--allow-decision'],'x',[],schema=True)
+dec={"id":"D-mcp","statement":"D-04 の公開を承認","responsible":["person:owner"]}
+for label,args in [('default',[]),('read-only',['--read-only']),('allow-decision',['--allow-decision'])]:
+    r=session(args,'person:owner',[('add_decision',dec),('check_decision',{"decision":"D-mcp"})])
+    print(label,'|',r.get('tools'),'| add:',r[10],'| check:',r[11]['isError'],r[11]['text'][:70])
+PY
+python3 - "$F" <<'PY'
+import sys,json
+d=json.load(open(sys.argv[1],encoding='utf-8'))
+def walk(o):
+    if isinstance(o,dict):
+        if o.get('record_id')=='D-mcp': print('D-mcp provenance:',o.get('provenance_refs'),'responsible:',o['payload']['decision'].get('responsibility_refs'))
+        for v in o.values(): walk(v)
+    elif isinstance(o,list):
+        for v in o: walk(v)
+walk(d)
+PY
+wc -l < $D/gate-checks.jsonl

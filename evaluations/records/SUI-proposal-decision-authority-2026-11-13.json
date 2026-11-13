@@ -1,0 +1,83 @@
+{
+  "schema": "tai.reference.sui-proposal-decision-authority/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-13",
+  "host": "WSL2 Ubuntu with Python 3.12.3; SUI backend 5d2348921dbdb6598feab7b7d27310a4e040f4a8 run in-process through its own FastAPI test fixtures on SQLite",
+  "command": "cp evaluations/tools/approval-probes/sui_proposal_decision_probe.py.txt <SUI>/03_Implement/backend/tests/test_zz_approval_probe.py && (cd <SUI>/03_Implement/backend && python -m pytest tests/test_zz_approval_probe.py -q -s --import-mode=importlib --rootdir=.)",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/tools/approval-probes/sui_proposal_decision_probe.py.txt",
+    "digest": "sha256:7cf02bde002385379f71b01f4409efd2a9d1d312ff14014fbaf5a15be9dbd4d7"
+  },
+  "suiCommit": "5d2348921dbdb6598feab7b7d27310a4e040f4a8",
+  "observed": {
+    "runs": 2,
+    "baseline": "tests/test_agent_credential_http.py and tests/test_ce2_proposal_api.py: 40 passed",
+    "fullApp": {
+      "agentCredentialRecordsDecision": {
+        "status": 403,
+        "code": "agent_write_not_enabled"
+      },
+      "agentCredentialPlusMemberHeaders": {
+        "status": 403,
+        "code": "agent_write_not_enabled"
+      },
+      "eventsRecordedByAgentAttempts": 0,
+      "memberRecordsDecision": {
+        "status": 200,
+        "result": "accepted"
+      },
+      "agentReadsStatusAfter": {
+        "status": "accepted",
+        "decidedAtPresent": true,
+        "reviewerExposed": false
+      },
+      "statusItemKeys": [
+        "createdAt",
+        "decidedAt",
+        "origin",
+        "proposalId",
+        "proposalKind",
+        "sourceBundleHash",
+        "status"
+      ]
+    },
+    "memberPath": {
+      "wrongSourceBundleHash": {
+        "status": 409,
+        "detail": "proposal source bundle does not match"
+      },
+      "bodyNamesAnotherReviewer": {
+        "status": 422,
+        "detail": "extra_forbidden"
+      },
+      "emptyIdentity": {
+        "status": 401,
+        "detail": "Authenticated reviewer is required"
+      },
+      "anotherForwardedUserHeader": {
+        "status": 200,
+        "result": "rejected",
+        "storedReviewerRef": "user:<uuid>"
+      }
+    },
+    "agentOnlyTestApp": {
+      "agentRecordsDecision": {
+        "status": 503,
+        "code": "runtime_policy_unavailable"
+      },
+      "note": "refused before the agent guard; not counted as evidence for the guard"
+    },
+    "reviewerTakenFromAuthenticatedSession": true,
+    "agentCredentialClassCanDecide": false,
+    "decisionBoundToProposalSourceBundleHash": true,
+    "decisionReadableByAgentCredential": true,
+    "reviewerIdentityReadableFromOutside": false,
+    "productProvesTheReviewerIsHuman": false,
+    "decisionSubjectIsAnExternalArtifact": false,
+    "finding": "SUIのProposal判定は、agent資格では記録できなかった（403 agent_write_not_enabled、member用のheaderを併せて付けても同じ、event 0件）。判定者は認証済みのsessionから取られ、本文で別人を名乗る要求は422、proposalのsourceBundleHashと合わない要求は409で拒否された。agent資格は、判定後の状態（accepted、decidedAt）を読めるが、判定者は読めない。ただしSUIが区別するのは資格の種類（agent資格か、それ以外か）であり、判定者が人であることは証明しない。試験構成ではx-forwarded-userの値がそのまま主体になり、member sessionを持つAIは人と区別できない。判定の対象はSUI内のAI Proposalであり、D-04の公開のような外部の成果物ではない。"
+  },
+  "scope": "SUI's backend ran in-process through its own test fixtures with SQLite and header-based identity with JIT provisioning; no real identity provider, no deployed service and no browser session were used. The agent credential was registered by the probe itself. The result shows what the credential classes can do, not that a human reviewed anything. Document-revision binding and stale decisions after an edit were not tested."
+}

@@ -1,0 +1,109 @@
+"""Throwaway probe (not part of SUI): who can record a proposal decision, and
+what an outside reader can see of it. Uses SUI's own test fixtures."""
+import json
+
+from sqlalchemy import select
+
+from sui_sensemaking_api.models import AIProposalDecisionEventRow
+from tests.test_agent_credential_http import _h, env  # noqa: F401
+from tests.test_ce2_proposal_api import _decision_payload, sqlite_client  # noqa: F401
+
+OBS = {}
+
+
+def _note(key, value):
+    OBS[key] = value
+    print("TASK7_OBS " + json.dumps({key: value}, ensure_ascii=False))
+
+
+def _short(response):
+    try:
+        body = response.json()
+    except Exception:
+        body = response.text[:120]
+    detail = body.get("detail") if isinstance(body, dict) else None
+    code = detail.get("code") if isinstance(detail, dict) else detail
+    return {"status": response.status_code, "code": code}
+
+
+def test_agent_credential_cannot_record_a_decision(env):
+    client, headers = env["client"], _h(env["token_a"])
+    payload = {"docId": "shared-doc", "proposalId": "p-1", "sourceBundleHash": "a" * 64,
+               "idempotencyKey": "k-1", "decision": "adopt"}
+    _note("agentAudit", _short(client.post("/ai/proposals/audit", headers=headers, json=payload)))
+    _note("agentExternalAudit", _short(client.post("/ai/external-proposals/audit", headers=headers, json=payload)))
+    status = client.get("/ai/proposals/status", headers=headers, params={"docId": "shared-doc"})
+    _note("agentStatusRead", {"status": status.status_code,
+                              "keys": sorted(status.json().keys()) if status.status_code == 200 else None})
+    _note("noCredentialAudit", _short(client.post("/ai/proposals/audit", json=payload)))
+
+
+def test_member_decision_and_what_a_reader_sees(sqlite_client):
+    client, session_local = sqlite_client
+    # A wrong source bundle hash is refused before anything is recorded.
+    wrong = dict(_decision_payload(decision="adopt", key="wrong-hash"), sourceBundleHash="b" * 64)
+    _note("wrongBundleHash", _short(client.post("/ai/proposals/audit", json=wrong)))
+    # The body tries to name another reviewer; the server must ignore it.
+    forged = dict(_decision_payload(decision="adopt", key="op-forged"),
+                  reviewerRef="owner", reviewer_ref="owner", actorRef="owner")
+    response = client.post("/ai/proposals/audit", json=forged)
+    _note("memberAdoptWithForgedReviewerField", {"status": response.status_code,
+          "body": {k: response.json().get(k) for k in ("recorded", "status", "reviewState")} if response.status_code == 200 else _short(response)})
+    with session_local() as db:
+        rows = db.execute(select(AIProposalDecisionEventRow)).scalars().all()
+        _note("storedEvents", [{"decision": r.decision, "reviewer_ref": r.reviewer_ref,
+                                "source_bundle_hash": r.source_bundle_hash[:8]} for r in rows])
+    status = client.get("/ai/proposals/status", params={"docId": "doc-1"}).json()
+    item = next(p for p in status["proposals"] if p["proposalId"] == "proposal-1")
+    _note("statusItemKeys", sorted(item.keys()))
+    _note("statusItem", {k: item.get(k) for k in ("status", "sourceBundleHash", "decidedAt") if k != "decidedAt"} | {"decidedAtPresent": item.get("decidedAt") is not None})
+    # The identity is whatever the fronting auth layer asserts.
+    other = client.post("/ai/proposals/audit", headers={"x-forwarded-user": "an-ai-agent-with-a-member-session"},
+                        json=_decision_payload(decision="reject", key="op-other"))
+    _note("otherHeaderIdentity", _short(other) | ({"status_field": other.json().get("status")} if other.status_code == 200 else {}))
+    with session_local() as db:
+        rows = db.execute(select(AIProposalDecisionEventRow)).scalars().all()
+        _note("reviewersAfter", sorted({r.reviewer_ref for r in rows}))
+    anonymous = client.post("/ai/proposals/audit", headers={"x-forwarded-user": "", "x-auth-provider": ""},
+                            json=_decision_payload(decision="hold", key="op-anon"))
+    _note("emptyIdentity", _short(anonymous))
+
+
+def test_agent_credential_in_the_full_app(sqlite_client):
+    from sui_sensemaking_api.agent_credentials import AGENT_CREDENTIAL_HEADER, AgentCredentialRepository
+    from sui_sensemaking_api.main import app
+    from tests.test_agent_credential_http import FUTURE, HASH_KEY, NOW
+
+    client, session_local = sqlite_client
+    previous = getattr(app.state, "agent_credential_hash_key", None)
+    app.state.agent_credential_hash_key = HASH_KEY
+    try:
+        with session_local() as db:
+            token = AgentCredentialRepository(db, tenant_id="local-default").register(
+                agent_id="agent-x", label="Agent X", created_by="tenant-admin", expires_at=FUTURE,
+                doc_ids=("doc-1",), hash_key=HASH_KEY, now=NOW)
+            db.commit()
+        member = dict(client.headers)
+        for key in ("x-forwarded-user", "x-auth-provider"):
+            client.headers.pop(key, None)
+        agent = {AGENT_CREDENTIAL_HEADER: token}
+        _note("fullAppAgentAudit", _short(client.post(
+            "/ai/proposals/audit", headers=agent, json=_decision_payload(decision="adopt", key="agent-op"))))
+        both = dict(agent, **{"x-forwarded-user": "ce2-reviewer", "x-auth-provider": "oidc"})
+        _note("fullAppAgentPlusMemberHeaders", _short(client.post(
+            "/ai/proposals/audit", headers=both, json=_decision_payload(decision="adopt", key="agent-op-2"))))
+        read = client.get("/ai/proposals/status", headers=agent, params={"docId": "doc-1"})
+        _note("fullAppAgentStatusRead", {"status": read.status_code,
+              "proposal": [p["status"] for p in read.json().get("proposals", [])] if read.status_code == 200 else _short(read)})
+        with session_local() as db:
+            rows = db.execute(select(AIProposalDecisionEventRow)).scalars().all()
+            _note("fullAppEventsAfterAgentAttempts", [{"decision": r.decision, "reviewer_ref": r.reviewer_ref} for r in rows])
+        client.headers.update({k: v for k, v in member.items() if k in ("x-forwarded-user", "x-auth-provider")})
+        ok = client.post("/ai/proposals/audit", json=_decision_payload(decision="adopt", key="member-op"))
+        _note("fullAppMemberAdopt", {"status": ok.status_code, "result": ok.json().get("status") if ok.status_code == 200 else _short(ok)})
+        after = client.get("/ai/proposals/status", headers=agent, params={"docId": "doc-1"})
+        _note("fullAppAgentReadsDecision", [{"status": p["status"], "decided": p["decidedAt"] is not None,
+              "hasReviewer": any("review" in k.lower() for k in p)} for p in after.json().get("proposals", [])]
+              if after.status_code == 200 else _short(after))
+    finally:
+        app.state.agent_credential_hash_key = previous
