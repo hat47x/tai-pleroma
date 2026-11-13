@@ -84,6 +84,8 @@ TAIのActivity継続を、前のAgentの「成功」文章を再利用する処�
 
 2026-11-02、GitHubから取得した保存済みJS（shebangのみ除外）・Fixtureを、V8＋`fs`/pathの限定Shimで実行し、**公開Expectedとの整合15/15、mutation検出4/4**を確認。**Node.js実ランタイム、TEI/SEI/SHO/EKI/TAI実Product、OS/Network/Harness、実Dependency Graph抽出、実Owner受理・独立sealed OracleはNOT RUN**。GraphとOutcomeは公開の架空条件なので、真の最小再検査範囲や製品保証は未成立。
 
+**2026-11-11追記（実行の更新のみ）**：Node.js v24.21.0（Windows）で同じ`check-sk-c-fixture.cjs`を実行し、15/15・mutation検出4/4を再確認した。これは自己整合の合成Referenceで、実Product成功ではない。実TEI/SEI CLIを呼ぶ別経路の読み取り試験は[probe-tei-sei-requalification.cjs](../../evaluations/tools/probe-tei-sei-requalification.cjs)と[score-requalification-probe.cjs](../../evaluations/tools/score-requalification-probe.cjs)に分け、結果は[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)へ記録する。SK-Cの期待とGraphは置き換えていない。
+
 ## 7. 製品別の実施順序
 
 - **P0**：TAI SK-Cの限定構造と既存SK-J/TB/Fとの重複・不足をレビュー。Evidence/変化の所有者を明示した公開Sourceを用意する。
