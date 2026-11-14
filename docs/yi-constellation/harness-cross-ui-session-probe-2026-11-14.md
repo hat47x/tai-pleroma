@@ -794,7 +794,7 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 | [TEI Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) **旧HEAD** `170f9be` 12/12成功。子OS Process試験を加えた `f9e355d5` は[gofmtによるHealth失敗](https://github.com/hat47x/tei-platform/actions/runs/43556801954)、書式修正HEAD `f38117dc`で再CI実行中 | Host固定Selectorによる bounded Source実Readに加え、**Go test専用の別OS子Process**がSource/Resultを独立に実取得したPID・型付きReceiptを親が検査する試験を追加 | その子は製品Studio/Wails/MCPとは異なる**テスト専用**。Web/Harnessへの実Invocation・Current Principal/Grant/Disclosure・真正な別Consumer受領は未実施 |
 | [TEI main統合済み #4636](https://github.com/hat47x/tei-platform/pull/4636) HEAD `da807abc` の9/9 Workflow成功、main squash `18470e69`。計画更新[#4639](https://github.com/hat47x/tei-platform/pull/4639)もmerged | Capability Input/Effect宣言不備とnil ContextをGo Adapter Call前に構造拒否 | Owner Meaning、公開Script Entry、actual Selected Provider/Result/Effect・実CLIは別試験。PRの統合状態と実main適用は別に確認 |
 | [TEI Server Surface #4627](https://github.com/hat47x/tei-platform/pull/4627) HEAD b9cf5447のMethod/Service Inventory・局所ブラウザCI、#4620が5/5成功と報告 | 非read methodを含む現在のServer公開面を静的棚卸しできる | 実二Principal×二WorkspaceのHTTP/AuthZ、WS Recipient別秘密配送拒否はNOT RUN |
-| [TEI #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD `357345d7` の[Windows Workflow #43554075677](https://github.com/hat47x/tei-platform/actions/runs/43554075677)は11/12 success、**全体FAIL** | 同Workflowの**generated Desktop JobはSUCCESS**で、N0→N2→N3の生成バンドル・実exe・WebView2のEditor/ObserveXead受領を確認 | **従来Desktopの別JobがWindows OS版取得のPowerShell 15秒TimeoutでFAIL**。環境再試験・当該HEADの総合結果を別に判断。Stage1がStage2を生成した意味ではない（Job記録 `stage1GeneratedTeiInvoker=false`） |
+| [TEI #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD `357345d7` の[Windows Workflow #43554075677](https://github.com/hat47x/tei-platform/actions/runs/43554075677)は11/12 success、**全体FAIL** | 同Workflowの**generated Desktop JobはSUCCESS**で、N0→N2→N3の生成バンドル・実exe・WebView2のEditor／生成バンドルの実受領を確認 | **従来Desktopの別JobがWindows OS版取得のPowerShell 15秒TimeoutでFAIL**。環境再試験・当該HEADの総合結果を別に判断。Stage1がStage2を生成した意味ではない（Job記録 `stage1GeneratedTeiInvoker=false`） |
 | [SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443) HEAD `6eed48ba` の[CI #43557030239](https://github.com/hat47x/sui-sensemaking/actions/runs/43557030239) completed/success。実StartPanel File API→Raw UTF-8 Text→DOM選択→原byte範囲→明示破棄の**Chromium E2E 13件PASS** | UIが**一時的な原文プレビュー**を許可されたFile入力から構築し、後方重複文 `[38,57)` の位置と同一Snapshot Checkpointを表示・破棄できる | **unqualified-local-file-preview**のみ。Source Root/Revision/Current Grant、Card/Document Save、別Process GETと正式Source再Read、共有Harness送出は未実証。[SUI #3441](https://github.com/hat47x/sui-sensemaking/issues/3441) Owner |
 | [TEI #4635](https://github.com/hat47x/tei-platform/issues/4635)四配置比較 | 正負試験・比較方式のOwner/順序が計画化された | B0/B1/B2の新実Process/IPC/Perf/Crash/配布はNOT RUN |
 
@@ -812,6 +812,29 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 | **J-S** Harness実Handoff | 現Hostが明示公開したtyped Toolで許可Projection→Native Tool Reply→元Pin Candidate/Consumer | 生Path/Raw/旧Grant/旧SessionをTool経由へ持ち込まない。未対応は限定Packet新Sessionへ |
 | **P1 Desktop実行形態** TEI #4635／#1824 LPC-01〜08 | A/B0/B1/B2を同一Jobで小RPC/MB Graph/Build＋Crash/IPC/Memory/配布の実比較 | Aを正常基線として維持。B0とserver-tag Serverを混同せず、性能の勝ちを推定しない |
 | **P2 Web/複数Workspace** TEI #3421/#1824/#2516 | 別Principal/Workspace/Branch/DB Instanceとread-only Service/WS Audience/現在Grantを実拒否で確認 | local no-authをWebへfallbackしない。共有Web HA/CRDTを初期P0へ追加しない |
+
+<!-- yic-product-tool-use-claim-one-real-consumer-slice-20261114 -->
+### 36.1 「製品Toolが利用可能」という案内を、実Consumerまでの証拠で限定する
+
+[TEI #4636](https://github.com/hat47x/tei-platform/pull/4636)のCapability宣言preflightと[TEI #4617](https://github.com/hat47x/tei-platform/pull/4617)の署名付きRelease HTTP独立Readerは**main統合済みの実装**。しかし両者とも、任意のTEI Product Toolが実際に外部Harnessへ提供され、現在の許可Sourceを扱えたことの証明ではない。[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)の子ProcessはGo test専用であり、Studio/MCP/外部Toolの真正なProduct Consumerではない。この差分を、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、[#74](https://github.com/hat47x/tai-pleroma/issues/74)、[#488](https://github.com/hat47x/tai-pleroma/issues/488)、[TEI #4503](https://github.com/hat47x/tei-platform/issues/4503)の**既存資格列**へ引き継ぐ。
+
+| 元の実証・判断順 | 何を現在版で確認するか | 案内できる上限・失敗時の扱い |
+| --- | --- | --- |
+| **0：正式なProduct入口** | 対象Productの現在mainまたは正当な固定候補版、実CLI/API/Entryの有無、Source実Read・Source Root/Required/Consumedを確認 | Release/Source/Skill説明にだけ名前があるなら未対応。正式Tool名・経路を作ったふりをしない |
+| **1：Product局所機能とテスト** | Source読取・Host構造拒否・選択Provider・実Result/Failureを別観測。#4637は新HEADの全CIが必要 | Go test子Processが同じProjectionを返しても、Studio/CLIの登録・呼出し・権限は別。11/12を12/12に丸めない |
+| **2：実配布・実Load** | [TEI #4617](https://github.com/hat47x/tei-platform/pull/4617)の固定署名Fixture受領と、本当に配布するBinary/Package/Tool/Skillの現在版・権利・Target/Hostを区別 | test-only loopback signed Releaseの正常1・拒否9は、実GitHub Release・Publisherの現在Trust・撤回・実Installの保証にならない |
+| **3：許可Projectionの実Product Consumer** | 同じ公開合成REA一Sourceを、実Product CLI/Studio等の**利用する予定の入口**から呼び、現在Grant/Source/Recipientと返るbyte・Failure/unknownを別観測 | Local Reader成功・Raw digest一致だけで外部公開不可。現在のHost入口が存在しないならProduct-onlyに留める |
+| **4：外部Harnessの実Tool/Skill** | TAI #168既存G0実OS Read-deny→G1実送出→G2完全Replyを確認したうえで、固定H2→H3→H3→H2四独立Sessionと独立Expectedを評価 | 初回適格数は現Issueで0/4。Skill列挙/モデルの完了回答/過去Receiptは実Tool Invocation・実Consumer受領と異なる |
+
+**最初の一仕事**：公開・許可済みの単一REAまたはTEI Subjectを固定し、「Productのみで現在Sourceを実Readする→独立のProduct入口が同じ対象の現在Projectionを受け取る→存在が確認された実ToolでHarnessが完全Replyを受領する」を別Attempt・別観測として試す。Source/根拠が不足した段階で、以降は未実行とする。異種Consumerに渡す場合は元のSource Revision／Root／Audienceと送達実byteを固定し、単にtest-onlyの別PIDだったことを「製品横断成功」と数えない。
+
+**最小負例**：同hash別Root、Source A→B→A、旧Grant、未選択Provider/Reader、Tool Reply 8192B切断とstderr混入、公開不許可Rawを含むReceipt、固定test署名と現Publisher Trustの違い、GitHub/CI旧HEADの成功を新HEADへ流用、AI回答だけで意味・Commitを受理する誤判定。TEI #4503 EC-01〜14／TAI #168/#488／Product独立Expectedに割り付け、新しい別Oracleや実行器は作らない。
+
+**現在の実CIスナップショット**：TEI #4634のmain-based統合HEAD 7d6a1238は[8系統完了・成功](https://github.com/hat47x/tei-platform/pull/4634)だがPlugin主体Builderの限定資格。TEI #4637の子Process追加HEAD f9e355d5は[Healthのgofmt不一致](https://github.com/hat47x/tei-platform/actions/runs/43556801954)で**11/12**、修正HEAD f38117dcは確認時点**CI再実行中**。TEI #4587のHEAD 357345d7は[Windows #43554075677](https://github.com/hat47x/tei-platform/actions/runs/43554075677)でgenerated DesktopのJob成功と従来Desktop Job失敗が同居し、全体11/12。三者ともStage1→Stage2自己再構築・公開Product Tool/外部Harness実配送の成功ではない。現在版のCIは採用時に再取得する。
+
+**最優先レーンは変更しない**：TEI #4583のA Native非Plugin Desktop Stage1→Stage2と、TAI #168のG0/G1/G2→適格な独立四SlotをP0として独立させる。SHO/SUIの保存・Consumer・未レビューEvidence、署名付きReleaseの正式公開は各Product/配布Ownerの別判断。Product-only/Tool-onlyで用が足りる場合、YIC Skill・中央Router・Agent Loop・第二Registryを増やさない。
+
+**本節のClaim ceiling**：実装・旧/新HEADのGitHub CIを再照合したDocs-onlyの作業入口／採否の再整理。新規CLI/Studio/外部Harnessの実呼出・二Principal/Web/DB Effect/Owner受理は本変更ではNOT RUN。
 
 **採否の中心**は「利用者が同じProduct情報を、元Sourceの意味と現在資格を保持したまま、別の実行面でも読み、必要なときだけ候補・実操作を返せるか」。各配置方式の性能が向上しても、非公開Evidenceの送出・現在Grant・Result不明時の再試行が不適格ならYIC経由の公開をしない。A＋既存CLI/MCPで目的を達成する場合、追加Agent Loop・中央Auth/Session Store・共通ローカルServerは不要。
 
