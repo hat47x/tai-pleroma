@@ -1267,6 +1267,8 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 | **3独立開発Workstreamの引継ぎ** | [TEI #2017](https://github.com/hat47x/tei-platform/issues/2017)の既存A0〜A4作業票にIssue・base/HEAD・許可Path・Source/Builder/Tool版・独立Test・未決・開示制限を紐付ける。次HarnessはSourceを再Readし、候補だけをProduct Ownerへ返す | Transcript丸ごと移植、Git merge＝意味受理、別BranchのCI Greenを統合HEADのBuild証拠とする |
 | **Evidenceを別Agent/PRへ渡す** | TAI #232／TEI #2515の既存Disclosure条件で公開可能な結果・unknownのみ配る。保護されたTool argv/Raw/Stderr/Private Path/秘密由来Digestは別Audienceの検査結果と分離 | 安全試験で取得した秘密RawのCI/Issueへの転載、Sourceの存在/件数の漏洩 |
 
+**どこから起動したかと、何が完了したかは別に確かめる。** [TAIの実行・セッション横断計画 Draft #648 §26・§41〜44](https://github.com/hat47x/tai-pleroma/pull/648)では、手動操作、予定時刻、イベント、CLI、AI Tool要求を、共通する処理の入口として整理した。Skillが引き継ぐのは「入力のきっかけ→対象と入力→現在のHost・Product権限→実Operation/Attempt→Result・Reply→副作用のReceipt→Consumerの受領」という確認順序であり、すべての入口を動かす新しいイベントループではない。予定が実行時刻に達したこと、イベントが届いたこと、AIが操作を要求したことは、業務処理の着手許可や完了を意味しない。不許可の操作はProvider呼出し0回で止め、Replyが欠落した作用は元Operationを照会するまで再送しない。処理の起動と業務上の意味はTEI・各Product Owner、Sessionと作業の引継ぎはTAI、実Attemptと結果は元の実行基盤が管理する。初回H2/H3の実験条件は変更しない。
+
 **次の小実験**は、TAI #234／#422の**許可された公開read-only 3独立Workstream**を Product-only→Tool-only→必要時限定Handoffの順に比較すること。ただしPacket×Skill四群(M00/M01/M10/M11)の独立Expected・実CostはTAI #621/#488へ戻し、Workstream数とSkill群を一度に増やさない。統合の受入はGit Scope、Subject/Meaning、Build/Runtime、独立Review、Product/Owner Acceptanceを**別票**として判定する。A2隔離Branch/A3既存Git/CI/A4人間判断の順は適格時だけ進め、初回H2/H3比較とDesktopセルフビルドP0には加えない。
 
 **具体的な停止線**：前回はSkill/Toolの三閉包I/S/Cだけを更新すれば済む場合と、元Product OperationのEffect unknownで再実行できない場合が異なる。Skillの再LoadやActivity再開が成功してもProductの自動再Submitには移らない。ここに記載したGoal/3 Workstream/二Harness/Native Resume/Result Bodyの新実験は今回NOT RUN。既存Draft #648の手順・Expectedをそのまま参照する。
@@ -1388,6 +1390,10 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 | [TEI Go toolchain観測 Draft #4648](https://github.com/hat47x/tei-platform/pull/4648) HEAD `64fb0f9a` **8/8**、[State観測 Draft #4537](https://github.com/hat47x/tei-platform/pull/4537) HEAD `cb7faf8d` **8/8 CI成功** | 同じPlanでも異Go Compilerで別Binaryが生じる。`toolchainObservation.matched`は指定Pathのbyte照合で実起動確認ではない。`stateObservation.effect-observed`は旧StateのcopyやOS隔離を保証しない。二Draftの共通Self-buildファイルが競合し得るため、Owner #2831で同一HEAD再テストが必要。Stage2完成/生成物Skill実行許可へ昇格しない |
 | [TEI Studio #4587](https://github.com/hat47x/tei-platform/pull/4587) **最新HEAD `9b58533d`で12/12 CI成功**、[Windows #43572235468](https://github.com/hat47x/tei-platform/actions/runs/43572235468)も成功。生成bundle N0→N2→N3・実Desktop WebView2受領の限定B0。旧`357345d7`は通常DesktopのOS probe timeoutで11/12だった履歴。[Builder #4634](https://github.com/hat47x/tei-platform/pull/4634) `7d6a1238` 8/8は別HEADのPlugin主体のResolver/Child pin | **別HEAD／別Attemptの成功を足さない**。TEI #4583/#2831で非Plugin BuildIntent N0〜N3実ArtifactSet→生成Stage1→Stage2→当該Stage2のWindows WebView2を同一Attemptで確認。未完了のWindows WorkflowをH1/B2/B3合格としない |
 
+**生成器を選ぶSkillと、生成物を使うProductは別の責任を持つ。** [TEI Draft #4554](https://github.com/hat47x/tei-platform/pull/4554)は、WorkspaceのValidation契約を読み、Transform SourceによるGo生成器の出力を**手書きの独立Expected 15ケース**で照合する実装候補である。正常生成器は15ケースで一致し、0の誤受理、欠損・NULLの誤判定、浮動小数点への丸め、型不一致の誤判定を含む4種類の変異生成器は不一致を検出した。Windows/Goの局所試験は生成器選抜用165件を含めて成功したが、PRのexact HEAD CI、実AIによる生成器作成、他Targetへの適合、Hostの実Grant・実Consumer受領は別確認である。Skillが提案できるのは、**契約と独立Expectedを先に決め、候補を生成・照合し、未適格な出力を採用しない手順**まで。生成AIが書いたこと自体を意味受理や実行許可へ置き換えない。TEI #4544/#951とTAI #488が既存の検収を担当する。
+
+**生成されたアプリケーションの初期化・移行を、通常の業務操作へ混ぜない。** [TEI Draft #4662](https://github.com/hat47x/tei-platform/pull/4662) HEAD 095c5a11は[同一HEADの3 Workflow成功](https://github.com/hat47x/tei-platform/actions/runs/43576908564)を確認した。単一SQLite Provider向けの生成アプリで、存在しないDBに対する通常のQuery/Commandがファイルを暗黙作成せず、既存DBへの操作でもSchemaを勝手に変更しないための限定検査である。これを「明示的なInit/Upgradeが実行できる」「全ProviderのMigrationが安全」「現在のSchema/Historyが適格」の証拠にはしない。Skillと外部Harnessは、通常操作に便乗したDB作成・移行を提案・自動再試行せず、必要な場合はProduct Ownerが承認した**別の明示的な保守操作**へ案内する。実PG、複数DB、旧新Clientの適合はTEI #4657/#4234/#4125の別検収である。
+
 **新しいProduct成果をSkillに昇格させる前の4つの否定条件**（現行§51.6、2026-11-14）。以下は既存Ownerへの受入索引であり、初回SK-02のTask/Skillを変更しない。
 
 | Product側で成立した限定検査 | Skillが守る説明・実行上の停止線 |
@@ -1417,7 +1423,7 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 [TAI Draft #648 §37〜38](https://github.com/hat47x/tai-pleroma/pull/648)のJ-R0（二Root局所Read）→J-R1（送信前拒否）→J-R2（正式Source保存・別Process再Read）→J-S（Harness受領）を、**実Productの現在資格に従ってSkillが使うか保留するか**という採否へ結び付ける。新しい共通YIC Resolver・AuthZ・Store・Runnerや二重のExpected正本は設けない。
 
-[SUI Draft #3444](https://github.com/hat47x/sui-sensemaking/pull/3444) exact HEAD 6f864beの[3 Workflow成功](https://github.com/hat47x/sui-sensemaking/pull/3444/checks)は、未採用Source Binding予約欄に限り、FrontendのHTTP送信前拒否、緩いImportの明示拒否、Backend PUT 422、Agent投影の純粋関数負例を確認した（Backend 323件／Frontend 1,943件）。**送信前拒否はBackend拒否と別の保証**であり、正式Source保存Schema・Source別Grant・実Agent/Guest HTTP開示やDocument全属性の非漏洩は未実装。 加えて後続HEAD 88dd09f5では、未採用Bindingを保存済みDocument行に混入させた場合の**GET非反射422と閲覧監査0件**を試験に追加した。修復後の正常GET 200／閲覧1件とは区別する。現HEADのCI成功は旧HEAD 6f864beの3/3から継承せず、独立に判定する。
+[SUI Draft #3444](https://github.com/hat47x/sui-sensemaking/pull/3444)では、未採用のSource Binding欄を送信前・Import時・Backend PUT時に拒否する検査に加え、**取得を拒否した場合には閲覧済みと記録しない**検査が進んだ。最新HEAD a572dd89の[単体検証CI](https://github.com/hat47x/sui-sensemaking/actions/runs/43579792062)は成功し、Backend 325件、Frontendと代表E2E、Native Action・MCP/Agentの対象Workflowも成功した。実際に分かったのは、二つの異なる拒否の理由である。保存内容とRevisionの整合性が保たれたまま未採用の出典欄がある場合は、秘密Locatorを反射せず**HTTP 422・閲覧監査0件**で拒否する。一方、DBの投影行だけを書き換えてContent StoreのRevisionと食い違わせた場合は、既存のRevision検査が先に**HTTP 503・閲覧監査0件**で拒否する。整合したDocumentに戻した後の正常GETは200・閲覧監査1件となる。旧HEAD 88dd09f5の失敗は、422を期待したFixture自身がRevisionを壊していたためであり、適切な検査を迂回して422へ寄せてはいない。いずれも**元Sourceの現在Grantを検証した結果ではない**。正式Source保存Schema・別Process原文再読・利用者別開示はSUI #3441で未受理のままにする。
 
 | 既存Expectedを使う反証 | Skill／Activityができることと停止線 | 所有者 |
 | --- | --- | --- |
@@ -1425,10 +1431,10 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 | Root Aは許可、Root Bは不許可。二Rootに同Producer ID・同Revision申告があり、Raw byteまたは保存場所が異なる | 元Hostが選んだWorkspace Root・Selector・Producer Pin・読取Attemptを現在Productで照合。Root Aの成功をRoot Bへ転用しない。BのRaw Digestを再Pinしても元Producer deliveryが更新されたとは解釈しない | TEI #4503/#4637、TAI #271 |
 | SUI一時File Previewは成功したが、出典保存A/B/Cは未採用 | Previewは未資格の候補にとどめる。Source Binding予約欄を黙ってCardへ保存せず、Client送信前に拒否し、元Card・held・異論・ETagを保つ。正式CAS Save→別Process GET→現在Source再Readが未成立なら出典確定と呼ばない | SUI #3441/#3444、SHO #48 |
 | Local Source Readerは成功したが、外部Recipient／Tool Replyは未資格 | 実HostのAudience/Recipient許可Projection、Egress、完全Tool Replyと独立Consumerを別々に照合。テスト用OS子ProcessやAgent投影純粋関数を製品Studio／外部Harness受領へ昇格しない | TEI #4503/#3421、TAI #168/#488 |
-| 未採用Source Bindingを保存済みDocumentのDB行へ混入し、GETが拒否された | SUI Draft #3444の後続HEAD 88dd09f5は、型不適合のGETを**422かつ非反射**で拒否し、拒否時の閲覧監査イベントを0件、修復後の正常GETを200かつ閲覧1件とする負例を追加。拒否された取得を「閲覧成功」「元Source受領」と数えない。後続HEADのCIと正式Source Grantは別検収 | SUI #3441/#3444、TAI #271/#488 |
+| 保存済みDocumentに未採用Source Bindingがある／DB投影とContent StoreのRevisionが不整合 | SUI #3444の最新HEAD a572dd89では、**整合したRevisionで未採用欄がある場合は422**、**Revision自体が不整合なら503**。いずれも秘密非反射・閲覧監査0件。修復後の正常GET 200・閲覧1件と区別する。SkillはエラーをSource権限拒否に読み替えず、拒否を受領済みとして数えない | SUI #3441/#3444、TAI #271/#488 |
 | QueryはNULL・0行・一部Rowsだけ返した | [TEI Draft #4647](https://github.com/hat47x/tei-platform/pull/4647)のpartial／unestablishedを保持し、native SQLの閉じていない関数述語やRLSを無視して全件検索・不存在・EmptyJustifiedを案内しない | TEI #2586/#2506、TAI #488 |
 
-**後続の一仕事の観測票**：既存Productの公開・許可済み一Subjectについて、①出典候補と元Root/Revision、②Document閲覧・元Source Read・送信Audienceの別々の現在Grant、③送信前の拒否と実Wireで開示された内容、④拒否したHTTP GET／Tool Invokeに成功した閲覧・配送・Consumer Receiptを誤記録していないこと、⑤実Operation・Tool Reply全体の受領、⑥別Consumerによる元Sourceの再読取を、Product/TAI各Ownerの既存試験へ記録する。Sourceの存在・拒否理由自体が秘密なら、別Audienceへ詳細を漏らさずunqualifiedとする。Source bytes一致・SHA・過去Receipt・Client許可リストをHost認可へ昇格しない。
+**後続の一仕事の観測票**：既存Productの公開・許可済み一Subjectについて、①出典候補と元Root/Revision、②Document閲覧・元Source Read・送信Audienceの別々の現在Grant、③送信前の拒否と実Wireで開示された内容、④**Revision不整合による拒否、未採用Source欄による拒否、現在Grantによる拒否**を区別し、どの拒否にも成功した閲覧・配送・Consumer Receiptを記録していないこと、⑤実Operation・完全Tool Replyの受領、⑥別Consumerによる元Sourceの再読取を、Product/TAI各Ownerの既存試験へ記録する。Sourceの存在・拒否理由自体が秘密なら、別Audienceへ詳細を漏らさずunqualifiedとする。Source bytes一致・SHA・過去Receipt・Client許可リストをHost認可へ昇格しない。
 
 **優先順位は不変**：このJ-R0〜J-Sは後続のProduct/Skill適合検査。初回TAI #168 G0実OS拒否→G1実Egress→G2完全Reply→新規H2/H3四Slot（現適格0/4）、TEI #4583 Native Stage1→Stage2 Desktopセルフビルドは別P0のまま。現行Product-only／Tool-onlyで許可された仕事は継続する。本節はDocs-onlyで、横断実E2E・実二Principal開示・意味Owner受理を新たに実証していない。
 
