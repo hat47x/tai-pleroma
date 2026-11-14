@@ -1001,3 +1001,58 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 **実証の現状と資格上限（2026-11-14確認）**：[TEI #4647](https://github.com/hat47x/tei-platform/pull/4647) exact HEAD a962a3f6は**CI 7/7 completed/success**、[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648) exact HEAD 64fb0f9aは**CI 8/8 completed/success**。#4647の実PG16・7 Mutation／#4648のWSL2 Go二系統の実測は**局所試験**であり、外部Harnessへの実Query/Build Result送達・正式SQL Entryの現在Grant・非Plugin Stage1→Stage2 Windows実再Buildは**未確認**。[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)二Root追加HEAD 9b8f5ca9では確認時**12/12 completed/success**を確認した。ただし、Go test専用子Process・二Root局所Readerの資格に限り、Studio/CLI・外部Harnessの現在Grant・配送の合格とはしない。
 
 **採用判断**：新しい回答Status Schema、跨ぎCache Engine、強制同一Binaryルール、常駐自前Harnessはここで採用しない。TEI #4583とTAI #168の独立P0を維持し、Q-1/B-1が実務の誤断定・誤再利用を防いだ効果を独立Expectedと人レビュー負荷で評価する。今回の§39〜40は既存実装・CIの照合に基づく**Docs-onlyの後続実証計画**。新Product/Harness E2E、二Harness切替、Owner正式受理はNOT RUN。
+
+
+<!-- yic-process-event-graph-harness-decision-20261114 -->
+## 41. プロセス実行の共通構造を、独自Agent LoopではなくProduct操作の観察図として使う
+
+別チャットの「TEIプロセス実行モデル図解」「Script起動」「標準データ構造」「REA/外部Evidence」の議論をYICの判断に接続する。Webのリクエスト、Desktopの操作、CLI、タイマー、外部AI Tool Callは、**起動するきっかけが異なる**だけで、Host準備→イベント受理→入口解決→Function実行→結果／作用の観測→応答または継続、という共通の骨格で読める。ただし、同じ骨格を持つことは、同じRuntime・認可・Effect・意味受理を持つことではない。
+
+| 共有できる観察段階 | YICが扱うこと | 正本・実行主体／ここから推論できないこと |
+| --- | --- | --- |
+| 0. 起動・待受 | 利用可能なUI/CLI/外部Harnessの検出、利用者のActivity目的と対象候補を関連付ける | 実Process・Web Server・Schedulerの起動と隔離はHost/外部Harness。発見済みは実利用可能を意味しない |
+| 1. イベント到着 | UI操作、CLI要求、Tool Call、期限到来を**発生源とAttemptを分けて記録**する | Web Request・Timer・外部Harness Turnは同種の業務指示ではない。単なる受信で委任成立としない |
+| 2. 入口の選択 | Productが公開したFunction/Entry/Capabilityの中から**候補**を選び、Source/Pin/Contextを再解決する | 意味契約、引数型、選択ProviderはProduct（TEI #4502/#4495、#951、ADR-0048）。説明文・Skill名から入口を生成しない |
+| 3. 現在の資格 | 実行前にPrincipal/Grant、Audience、必要なSource、開示予定byteを検査する | 認可・秘密分離は実Host/各Productが判断。Harnessの「read-only」申告はOS拒否・外部非送信の証拠にならない |
+| 4. 実Invocation | 既存の型付き操作をCLI/MCP/Wails/Webまたは外部Harness Adapterから呼ぶ | Tool Call発行、実Tool Reply、Product Consumerでの受領は別観測。呼出し成功と結果完全性も別 |
+| 5. 計算・作用 | 応答／候補／参照、Commitや副作用があるときは実Operation・Receiptを別に追う | TEIの計算・生成とHost/EKIの実Effect/回復は独立。AIが「完了」と答えてもCommit済みとはしない |
+| 6. 表示・引継ぎ | 許可された結果とunknown/partialを元の対象・Activityへ戻し、別Consumerの実Readを照合する | 一時選択・表示・保存・別Process取得は別Claim。別Rootや過去のTranscriptへ現在権限を流用しない |
+| 7. 再開 | Goal、Schedule Delivery、Native Session、TAI Activity、Product Attemptをそれぞれ照会する | 再開できないNative Sessionは**同一Session**と称さず新Sessionへ限定Packetを渡す。Effect unknownは盲目的に再実行しない |
+
+この表は**観察と受入のための見取り図**であり、新しい中央イベントバス、汎用Scheduler、Task Engine、Agent Loop、標準Runtime、第二Authorityを採用するものではない。Pure/read-only Functionと副作用を持つOperationは同じ線で描いても同じ再試行規則を適用しない。対象の実行方式はTEI #4502／#4194、EKI #57/#829、TAI #234/#271のOwner判断を尊重する。
+
+## 42. 人とAIが共通に読む「図」と、実行可能な契約の境界
+
+TEI StudioやSHOにおける説明生成・異言語移植のため、次の**同一モデルからの複数View**を評価する。入口別（HTTP／CLI／UI／Timer／Tool）、処理別（Entry→Function→Provider）、結果別（Response／Candidate／Effect／Receipt）、依存別（Source・Context・Grant・Consumer）の四つの表示を、必要に応じて重ね合わせる。図面・Markdown・Graphviz・DSL上の表現は、標準データ構造／関係の表示形式として扱い、構文の糖衣を新しい意味の正本にしない。
+
+- **ノードと辺の根拠**：Node/Relation occurrence ID、向き・多重性・意味属性・Source VersionはProductの意味モデルから得る。描画用edge IDや同名ノードを実Function/Entry/Effectの識別子へ昇格させない（TEI #4515、#4661）。未解決の参照は「候補」のままにする。
+- **矢印の区別**：「起動を要求」「実行した」「結果を受領」「副作用を確認」「意味を受理した」は異なる関係。Control Flowの線一本からAuthorityや正当性を推定しない。図解からの説明文章は原則として業務意味モデルを参照して生成し、モデルにない内容を補わない。
+- **SourceとCoverage**：REAの観測結果やDBのpartial/unestablishedは、受領後もそのまま示す。図がきれいにつながっても、Sourceの根拠閉包やGraphの全件性は成立しない（TEI #3394/#2586/#4647）。
+- **Provider／Target独立**：同じFunction図からWeb・Desktop・CLI等へ投影できても、接続先Hostの認可・Plugin版・言語別生成物・Build Attemptは再資格化する。Go単一バイナリを基本とするTEIの配布方針と、YICがハーネスを自作しない方針は矛盾しない。
+
+**最初の図解検収**は「固定したread-only一Functionについて、公開された実Entry、Source、選択Provider、返却Result/unknownをStudioとCLIから追えること」。図だけが一巡していてProductの実Invocationがなければ図解限定PASSとし、AI Harness実行・製品配布・生成アプリのセルフビルド達成とは数えない。
+
+## 43. 次の小さな実行カード：独立P0を妨げず、一つの業務結果へ近づける
+
+新しい試験器やExpectedの正本を増やさず、既存のOwner票を次の順に使う。
+
+| カード・優先 | 実際に確認する一仕事 | 独立Expected・次の対応 |
+| --- | --- | --- |
+| **P0-A（変更なし）** | TEI Studio非PluginのA Native Stage1→Stage2を同じBuild Intent、生成物byte、実Windows Consumerで検収 | TEI #4583。BuildPlan/Toolchain報告と実Compiler/Artifactの同一性は別 |
+| **P0-B（変更なし）** | 外部DSH実OS Read-deny G0→送出G1→完全Reply G2→事前独立H2/H3四Slotを評価 | TAI #168。現在の比較適格数は0/4。既存Taskや固定Skillを途中で入れ替えない |
+| **J-E1 Product-only** | 公開read-only一Functionを実CLI（後段でNative Studio）から呼び、入出力型・Source Root・Version・Provider・Coverage・Resultを独立読取 | TEI #4502/#4495/#4503/#4661。テスト専用子Processは正式Consumerではない。Native Entryが未実装ならunsupported |
+| **J-E2 Tool-only** | J-E1とは別Attemptで、実Productが許可したProjectionだけを外部Harnessに配送し、Call/Replyの対応・byte完全性・Recipientを照合 | TAI #168/#232/#271。G0/G1/G2が未成立なら送出せずread-only Product-onlyへ縮退 |
+| **J-E3 提案→適用（後続）** | 同じ対象へAIが変更候補を返す場合、元Source/Pinと差分を画面上に保ち、Ownerのレビュー・現在Grant・実Effect Receiptを分ける | TEI #4515/#4502、SHO/SUI各Owner、EKI #57。候補表示・Preview成功をCommitと数えない |
+| **J-V 比較** | 同じ許可済みTaskでProduct-only→Tool-only→Product Skill→必要時TAI Activity Skillの差分を測定し、二種類の外部Harnessで再現性を確認 | TAI #234/#422/#488。実行時間、再開成功、モデル・Token/Quota実費、修正回数、人間のレビュー負荷、Outcomeの質を別々に測る |
+
+**最小負例**：HTTP 200でもProvider未到達、二Root同ID別byte、旧Grant/異Audience、Tool Reply欠落・切断、空行の全件誤認、Native Session再開不能、Goal Delivery ACKだけの成功、外部Harness切替後に古いEffect unknownを再実行。すべて既存TEI/TAI/EKIのExpectedへ割り当て、YICに横断的な新Validatorを作らない。
+
+**成功の扱い**：一カードがPASSしても次カードを自動PASSにしない。J-E1は正式な入口と実Consumerを検収できて初めてProduct操作の実績、J-E2は独立した実Tool受領がそろって初めて接続の実績、J-E3は実Effectが観測されて初めて操作結果の実績である。QH §10のI/R/P/T/C/Hと三閉包（Instruction/Package、Subject/Information、Capability/Authority）を横断して確認する。
+
+## 44. 独自Harnessを「作るか」を決めるための保留条件を明文化する
+
+**当面採用するもの**は、既存Product Skill、型付きApplication API、薄い外部Harness Adapter、TAI Activityの限定引継ぎ、UIの固定対象/候補差分表示、必要十分なEvidence参照である。Go/TypeScript・Wails・CLI・Webの共通化はProduct/Application層で進め、外部HarnessのNative Session/Tool/Model制御を持つ中央Runtimeへ広げない。
+
+**独自Agent Loopを再審査する条件**は、(1) 適格な実試験で少なくとも二つの外部Harness/Host構成を比較し、(2) 実際に必要な継続・並列・復旧・権限上の欠落を再現し、(3) Product API/Host/Adapter/運用改善では解消しない理由とユーザーへの影響を示し、(4) 新Loopが負うOS隔離・認可・Tool結果完全性・課金/Quota・障害回復・モデル移植・保守費用を見積もり、(5) 既存案より総費用・品質・再現性が明確に優れる場合に限る。現時点でこの五条件は**未達**。DSHはOSSとしてPlugin設計の比較を始めやすいことから先行するだけで、YIC仕様の唯一の基準にはしない。
+
+この追補は他チャットのプロセス図解・TEI Script/Plugin/標準構造・REA・Desktop・Harness統合の**設計上の収束を既存後続計画へ追記したDocs-only差分**。新しい実Harness Trial、Native Studio/CLI共通一Functionの実呼出、二Harness比較、業務Effect、Ownerの正式受理は**NOT RUN**。Draftを維持し、Ownerレビュー前にmainへ自動mergeしない。
