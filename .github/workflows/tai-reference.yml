@@ -213,3 +213,13 @@ jobs:
             --out "$RUNNER_TEMP/sui-context-live-stub-receipt.json"
       # Do not upload the receipt automatically. The observer prints aggregate
       # counts only and never certifies disclosure rights or source identity.
+
+  requalification-probe-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify isolated scratch and scoring outcomes
+        run: node --test evaluations/tools/requalification-probe.test.cjs

@@ -2,12 +2,14 @@
 "use strict";
 // Read-only probe: does a past TEI observation held by SEI still qualify for current use?
 // Calls ONLY actual product CLIs (tei: source-index/inspect/trace/validate/world; sei: init/add/resume).
-// It copies a TEI workspace into a throwaway directory for each variant. It never writes to a product repo.
+// It copies a TEI workspace into a unique directory under the caller-selected --work directory.
+// The caller selects --out and --dump-observations; existing output files are never overwritten.
 // It does not own a dependency graph, a meaning, or an expected result. Expected results are read only by
 // score-requalification-probe.cjs from a path the evaluator supplies (not stored in this repository).
 //
 // usage: node probe-tei-sei-requalification.cjs --tei-bin A --sei-bin B --workspace DIR --work DIR --out FILE
 //        [--tei-old-bin C] [--tei-source-revision SHA] [--dump-observations FILE]
+// --work must exist outside --workspace; each run creates a unique subdirectory.
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
@@ -22,13 +24,28 @@ const WORK = arg("work", true), OUT = arg("out", true), TEI_OLD = arg("tei-old-b
 const TEI_REV = arg("tei-source-revision") || "unspecified";
 const TEI_OLD_REV = arg("tei-old-source-revision") || "unspecified-old";
 const DUMP = arg("dump-observations");
+if (fs.existsSync(OUT) || (DUMP && fs.existsSync(DUMP))) {
+  throw new Error("output path already exists");
+}
+if (DUMP && path.resolve(OUT) === path.resolve(DUMP)) {
+  throw new Error("output and observations paths must differ");
+}
 const KIND = "semantic-validation";
 const REQUIRED = ["sales.order_line.quantity_positive", "sales.order.lines.line_number_unique", "sales.order_line.line_number_positive"];
 const EXTRA_REQUIRED = "sales.order.total_positive"; // Synthetic Consumer requirement (R1); never observed
 const MAX_DEPTH = 8;
 
 // ---------------------------------------------------------------- variants (throwaway copies)
-const V = path.join(WORK, "variants");
+// Never remove or reuse a caller-owned directory. A workspace inside itself
+// would recursively copy the new scratch directory, so refuse it first.
+const sourceRoot = fs.realpathSync(SRC_WS);
+const workRoot = fs.realpathSync(WORK);
+const relativeWork = path.relative(sourceRoot, workRoot);
+if (relativeWork === "" || (relativeWork !== ".." && !relativeWork.startsWith(".." + path.sep) && !path.isAbsolute(relativeWork))) {
+  throw new Error("--work must be outside --workspace");
+}
+const runWork = fs.mkdtempSync(path.join(workRoot, "tei-sei-probe-"));
+const V = path.join(runWork, "variants");
 function copyTree(from, to) { fs.cpSync(from, to, { recursive: true }); }
 function edit(root, rel, fn) {
   const f = path.join(root, rel); const before = fs.readFileSync(f, "utf8"); const after = fn(before);
@@ -116,7 +133,7 @@ function captureHistory(rd) {
 
 // ---------------------------------------------------------------- Consumer: SEI holds the recommendation and basis pointers
 function seiStore(H) {
-  const store = path.join(WORK, "sei-store"); fs.rmSync(store, { recursive: true, force: true });
+  const store = path.join(runWork, "sei-store");
   run(SEI, ["init", "--data-root", store]);
   const basis = [];
   for (const id of REQUIRED) basis.push("--basis", `tei-${KIND}:${id}`);
@@ -221,7 +238,7 @@ function dumpObs(rd) { // raw product replies for every required member; no verd
   return { world: top && top.world, manifest: top && top.manifest, sourceIndex: top && top.sourceIndex, nodes, problems, validationIds: c.ids, validateExit: v.exit, validateErrors: v.stdout.split("\n").filter(x => /\terror\t/.test(x)) };
 }
 // ---------------------------------------------------------------- main
-fs.rmSync(V, { recursive: true, force: true }); fs.mkdirSync(V, { recursive: true });
+fs.mkdirSync(V);
 const BASE = path.join(V, "base"); copyTree(SRC_WS, BASE);
 for (const [name, mk] of Object.entries(VARIANTS)) { const d = path.join(V, name); copyTree(SRC_WS, d); mk(d); }
 const baseRd = new Reader(TEI, BASE, TEI_REV);
@@ -242,9 +259,9 @@ for (const name of CASES) {
     dump[name] = dumpObs(rd);
   }
 }
-fs.writeFileSync(OUT, JSON.stringify({ scope: "ACTUAL TEI+SEI CLI on throwaway workspace copies; Consumer requirement R1 is Synthetic", teiBin: TEI, seiBin: SEI, teiSourceRevision: TEI_REV, history: { world: H.world, manifest: H.manifest, cohort: H.cohort }, results }, null, 1));
+fs.writeFileSync(OUT, JSON.stringify({ scope: "ACTUAL TEI+SEI CLI on throwaway workspace copies; Consumer requirement R1 is Synthetic", teiBin: TEI, seiBin: SEI, teiSourceRevision: TEI_REV, history: { world: H.world, manifest: H.manifest, cohort: H.cohort }, results }, null, 1), { flag: "wx" });
 if (DUMP) {
   dump.base = dumpObs(baseRd);
-  fs.writeFileSync(DUMP, JSON.stringify(dump, null, 1));
+  fs.writeFileSync(DUMP, JSON.stringify(dump, null, 1), { flag: "wx" });
 }
 console.log("written", OUT);
