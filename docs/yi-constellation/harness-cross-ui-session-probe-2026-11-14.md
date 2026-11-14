@@ -742,56 +742,68 @@ Mock/Proxyに到達しなかったことは、別Socket、child Process、Teleme
 
 **今回の証拠上限**：本§30〜32は既存Issue/他チャット設計のDocs-only統合。実3 Native Session、実A2 Branch/統合後CI、SUI二Client CAS、二Harness Resume、実OS/Wire/Evidence公開、TEI Stage2 Desktop、TAI H2/H3新4 Slot、Owner意味受理はNOT RUN。過去CI/Agentの自己申告を新E2Eへ昇格しない。
 
-<!-- yic-local-worker-desktop-a-b-c-harness-interface-20261114 -->
-## 33. Desktop内部実行のA/B/Cと、外部Harnessの接続面を直交化する（2026-11-14）
+<!-- yic-desktop-four-modes-local-evidence-entry-qualification-20261114 -->
+## 33. Desktop配置4方式とYIC外部Harness入口を分けて選定する（#4635更新）
 
-[TEI Studio #1824 LPC-01〜08](https://github.com/hat47x/tei-platform/issues/1824#issuecomment-6870456170)、[TEI Plugin計画 Draft #4620](https://github.com/hat47x/tei-platform/pull/4620)、[TEI #4634](https://github.com/hat47x/tei-platform/pull/4634)に反映された他チャットの成熟判断を**YIC接合条件だけ**として引き取る。A/B/Cの実装・速度・OS受理のOwnerはTEI #1824/#3421/#4583、YICはProduct操作がどの経路で外部Harnessに提供されるかを評価する。**外部HarnessのAgent Sessionと、Studioが起動するローカル子Workerは異なる**。
+[TEI Studio #4635](https://github.com/hat47x/tei-platform/issues/4635)の最新製品計画で、前版§33の三方式A/B/Cは、**A・B0・B1・B2の四候補**に明確化された。この節は旧三方式表を置換する。TEIのセルフビルド工程にもB0/B1/B2/B3という表記があるが、**配置方式B0/B1/B2とは別概念**であり、試験票では「配置」と「Build段階」を必ず併記する。
 
-### 33.1 三方式の正確な違い
-
-| Desktop実行方式 | 実プロセス・配布物 | 共通化するもの／新たに確かめるもの | 外部Harnessからの利用 |
+| 配置案（未採用） | 配布／Process／内部Transport | TEIが実証すること | YICが追加で検査すること |
 | --- | --- | --- | --- |
-| **A：現在の基線** | Wails Desktop＋Go Applicationを同じプロセス内で接続する単一GUI exe | TypeScript Workbenchと型付きGo Operation。Native Bridgeの実Method/WorkspaceとHost Grant | Harnessは**Productが明示公開したTool/CLI/MCP/Entry**を使う。Native BridgeやWindow IDを直接の権限入口としない |
-| **B：self-spawn**（未採用） | GUI exe自身を従属Go Worker modeで起動。**単一配布exe候補だが二プロセス**。Windows Named Pipe／Unix Domain Socket等のlocal IPC候補 | 同じ型付きOperation。Worker実Image/entry・Peer/IPC ACL・Workspace・世代・生存/停止/再接続・Effectの証拠は別 | **local IPCはGUI↔Worker内部Transport**。外部Harness Toolへ任意Pipe/OS Path/Process起動を直結しない |
-| **C：Wails Server child**（未採用） | GUI exe＋別のWails `-tags server` exeの**二Build Artifact**。loopback HTTP/WS等 | Go Sourceは共有できても、実Binary/BuildIntent/Plugin世代・起動監督・Server Service/WS Recipientは別 | local child Serverへ接続できても**Public WebやAI Tool公開の認可成立ではない**。実HTTP Host/Principal/Disclosureを別に受理 |
-| **将来Web共有Server**（別レーン） | Remote ServerのHost/Principal/Workspace/Session/Tenantを伴う配置 | 共通Operation/契約のみ。read-only facade、Current Grant、WS Event Audience、実Source/DB InstanceをHostが束縛 | 任意local Path/SHO子Process/Reference ExecuteCommand/旧Transcriptを無審査で公開しない |
+| **A：Native in-process** | 現行Wails Desktop JS→Go Bridge→studiohost。同一Go Process／単一Desktop exe | 現在のCLI/Studio共通Operation、実WebView2、Source-backed read、GUI入力の応答 | 外部Harness ToolからNative Window/Bridgeを権限入口とせず、公開済みProduct Operationだけ利用 |
+| **B0：同じexeをself-spawn** | GUI exeが従属Worker modeで自身を起動。単一**配布ファイル候補**でも二Go Process・二Runtime／local IPC | 実Worker entry/image、起動前Handshake、Named Pipe/UDS peer/ACL、復旧、配布size/合計memory。Wails Server buildとは別 | 子Workerのlocal IPCを外部Harnessへ無認可公開しない。GUI停止と実Operation取消を同一視しない |
+| **B1：別Wails Server＋HTTP/WS** | Desktop GUI exe＋server-tag別exeの従属Process／loopback HTTP/WS | GUI/Serverの二Artifact、Serviceの実公開面、Host Context、Progress、Process supervision | loopbackで届くことは実Web利用者認証/Tool適格ではない。機密の全Browser broadcastは禁止 |
+| **B2：別Server＋Named Pipe/UDS** | Desktop GUI exe＋別Wails Server成果物。Native Bridge→Go IPC Client→子Serviceを候補として検証 | server-tag実Serviceをlocal OS IPCへ接続する実装可能性自体、peer、protocol、reply/event、二Artifact | Browser JSからOS pipeへの直接接続を前提にせず、Custom Transport/Adapterの実動作を測る |
 
-[Wails v3公式Server Build](https://v3.wails.io/guides/server-build/)はserver build tagのHTTP/WS Serviceと全接続Browser向け標準Event broadcastを定義するが、B self-spawnはそのbuild modeではない。**「同じGoコードを利用できる」「単一配布バイナリ」「単一プロセス」「Webへ同じ権限で公開」は互いに別の資格**。Cはソースを重複実装しない方法でも、別Artifactの互換・更新と配布一貫性が必要になる。
+**型付き共通Operationの正本**は[TEI #1158](https://github.com/hat47x/tei-platform/issues/1158)/[ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)。配置ごとにSource/Contract/Meaning/Resultの第二正本を作らない。一方、実Peer/Process/Workspace・Provider/Plugin Load世代・現在Grant・入出力byte・Effect/Receiptは配置ごとに実観測する。B0が単一配布ファイルを保てても「単一Process」「同じRuntime State」「Studio/Web同一認可」を意味しない。B1/B2は別exeを必要とし、build tag差・配布同期を明示して検査する。
 
-### 33.2 TransportよりHostの実行責任を優先して判定する
+**Web共有Serverはさらに別の利用形態**。Browser/Nativeの同一Operationが呼べても、認証済Principal・Workspace・DB Instance・Audience・Current Grantの実Host受理は未成立。現Wails Serverの[公開Method監査 #4627](https://github.com/hat47x/tei-platform/pull/4627)に含まれるReference ExecuteCommand/SHO子Processをそのまま公開しない。Actor名・Window名・Origin・Host Profile文面を権限の正本としない。
 
-- **入場前**：Product Source/Subject/Workspace Root/Target/Entry/Providerの現在性をHostの信頼済みContextで確認。GUIから渡されたActor名/Workspace path、AIの要求、既存Tool説明をAuthorityにしない。read-onlyでもSource/ScopeのDisclosureが必要。
-- **Peer/IPC**：Windows Named Pipeの**既定DACLを十分な制限と仮定しない**。[Microsoft公式](https://learn.microsoft.com/en-us/windows/win32/ipc/named-pipe-security-and-access-rights)にはEveryone/Anonymous read権限を含む既定descriptorの説明がある。local限定なら[PIPE_REJECT_REMOTE_CLIENTS](https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createnamedpipew)・適切なDACL/Logon SID・非許可Peer拒否を実確認。Unix socketもdirectory/peer permissionを別に検証。接続に成功したことをOperation権限に昇格しない。
-- **Process/Effect**：子Workerの起動完了・readiness・Session/Workspace bind・実Tool/Provider呼出しは別Observation。親GUIのCrash、子Processの停止・孤児・Worker再起動、Tool timeout/Cancelの後は**旧Operation/Attempt/Receiptをlookup-first**。Go [os.Process.Kill](https://pkg.go.dev/os#Process.Kill)はそのProcessを終了するだけで子孫全体を止めない。GUI停止を実Build/DB Effect rollbackとしない。
-- **Event/Response**：実Turn/ToolのProgress・Reader Result・Source/AI履歴は元Audience/Scope/Targetにだけ提供。Wails Serverの標準broadcastへ機微情報を載せない。旧Workerからの後着Reply、同Source byte別Root、Plugin A→B→Aは現在のPin/Provider/Grant再確認へ。
-- **配布とSelf-build**：A/B/C各々、生成されたStage1→Stage2・実Worker image・N0〜N3 Artifact/実Consumerを**同じ適格Attempt**で照合する。Bの同一exeでもGUI Process/Worker実Loadが同じことは未確認、Cの二exe CIを別HEADで合算しない。既存TEI #4583/#4634がOwnerであり、YIC Build Engineは作らない。
+### 33.1 local IPCの高速化より実利用者Jobを優先する
 
-## 34. 「同じ一仕事」をA/B/Cで比較してから採否を決める
+Windows Named Pipeの既定DACLやremote client許容を安全な設定とみなさない（[Microsoft Named Pipe Security](https://learn.microsoft.com/en-us/windows/win32/ipc/named-pipe-security-and-access-rights)）。Unix SocketもDirectory permission/peer資格を別確認する。Go Process Killは子孫Process全体の終了と同義でなく、親Window終了後のBuild/Provider/AI Effectの残留を調べる。実Pipe/UDSがloopback HTTP/WSより速い可能性はあるが、**AのNative in-memory Bridgeを超える速度は保証されない**。
 
-[TEI #1824 LPC-01〜08](https://github.com/hat47x/tei-platform/issues/1824#issuecomment-6870456170)の**既存Expectedを使う受入索引**であり、TAIに第二Benchmark/Fixture/OS Runnerを設けない。将来採用する通信方式を先に固定しない。
+[TEI #1824 LPC-01〜08](https://github.com/hat47x/tei-platform/issues/1824#issuecomment-6870456170)および#4635の試験を再利用する。数百byte RPC、数十KB一覧、MB級Graph、Build Progressという同じFixtureをA/B0/B1/B2で比較し、cold/warm起動、p50/p95/p99、serialization、CPU/合計memory、Editor IME/Typing遅延、Endpoint/Processの再起動、UI dirty buffer、配布Artifactを測る。実測前に通信方式を標準採用しない。新しいAgent/Process SupervisorをYICの共通Hostとして作らない。
 
-| 一仕事で観測する境界 | A/B/C比較で必要な正例・負例 | 結果の評価先 |
+## 34. ローカルEvidence取得と外部Harnessへの送出を別Operationとして検証する
+
+ここは前版§34の「同じ一仕事」比較を、最新[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)・[#4503](https://github.com/hat47x/tei-platform/issues/4503)へ接合して具体化する。REA Local Readerと公開AI Toolの間を**直結済みとは扱わない**。
+
+| 操作・資格段階 | 現状と実Owner | 守る停止線 |
 | --- | --- | --- |
-| Tiny Product Read | 同じ公開WorkspaceのCatalog/Inspectとtyped output、実Source/Scope。異Root/別User/偽Peerを拒否 | LPC-01/02、TEI #1158/#3421 |
-| まとまったRead | 多数Diagnostic/約1MBのread-only Projection、Partial Reply/Backpressure、既存Source完全性 | LPC-06/07、#1180/#2514 |
-| 長時間Build | Progress/Cancel/親子Crash/Worker orphan/旧Reply、実Builder選択B→子AとPlugin A→B→A | LPC-03〜05/08、TEI #4583/#1174 |
-| UI応答 | cold/warm起動、p50/p95/p99、CPU/heap、Typing/IME/GUI frame delay、Process数、配布bytes、実復旧手間 | LPC-07/08、TEI #1824/#2018 |
-| Harness実接合 | Productが明示公開したread-only Toolから同じSourceをRead。Desktop内部方式変更後にもScope/Grant/Output/Consumerが保持される | TAI #168/#234、QH §10／本書§18・§21 |
+| **選択意図** | TEI #4515のSubject Pin／#4503 Stable Selection。Viewer FocusやGraph描画IDは別 | PinがあるだけでSource実在・Root・公開権限やEvidence内容を保証しない |
+| **Host-owned local Read** | #4637の起動時固定Selector→Workspace内bounded bytes→R2 read-only Projection。実Go局所CI 12/12 | Callerから生File Path・任意読取時刻を受け取らない。Workspace Root差替え、誤digest、4MiB超過を拒否 |
+| **現在利用資格** | TEI #2516／#4503／各Host Owner。Source/Root/Plugin/GrantとAudience別の許可 | ローカルでのbyte一致は現在Source/Principal/Disclosure受理ではない。A→B→Aでも旧資格は自動復帰しない |
+| **計画・取得** | #4503 inspect→plan→fetch/materialize→verifyの設計。正式CLI/API・NAS/S3実Providerは別Gate | read-only説明でもlocal cache書込・network fetchを生じ得る。操作前にEffectと対象byte/資源予算を区別 |
+| **Projection・Share** | #4503許可Projection、TAI #232、#168 G1／QH §10 | 予定Byteと実送出Byte、実Egress、Tool Reply complete、Consumer受領は別。送出先・URL/Token・Digestは秘匿 |
+| **Product Apply/Effect** | TEI #4495/#3421/#1174、必要時EKI #829 | AIが「完了」と回答・CLI exit=0でもDB Commit/Result body/Owner採用とは別。Effect unknownでblind retry禁止 |
 
-**速度に関する扱い**：Named Pipe/UDSはHTTP/WS loopbackより小さなオーバーヘッドとなる可能性があるが、Native in-process Bridgeより高速とは推定しない。HTTP keep-alive/WSも通知・Streamingに使える。Serializer/Message size/コール数・接続再利用とCPUを含む同一Fixtureの実測前に「Bが最速」「Cが標準」と決めない。数値閾値は実ベースライン取得と製品UX条件からOwnerが決める。
+**具体的な後続Job**：許可された公開合成REAの1 Workspace/1 Selector/1 Relationを固定し、（1）#4637ローカルHost Readの実Input/bytes/Receiptを確認、（2）現在Source/Workspace/Root/Required/Consumedの適格をProductが再照合、（3）実HostがAudienceに許す限定ProjectionだけをPreview、（4）正式なProduct Tool/Transportがあれば外部HarnessへDelivery、（5）完全Tool Replyと独立Consumer Readを検証する。**(1)のGoテスト成功だけから(4)(5)を達成済みとしない**。共有WebやRemote Agentへ#4637の固定Raw digest/Local path/内部Selectorを無審査で出さない。外部Toolが現在存在しなければ、Product-onlyの(1)を合格可能な独立成果として残し、送出はNOT RUN。
 
-**方式選択の停止条件**：BまたはCが性能で優れていても、偽Peerや秘密Audience、unknown Effect、旧Provider/Source使用、Build Artifactの不一致、Worker orphan後の非観測作用を拒否できないなら導入しない。性能・復旧・配布の増分価値を示さない方式はAのまま維持する。CのHTTPをローカルで使うことと、公開Webサービスとして使えることを混同しない。
+**否定的ケース**：[TEI #4503 EC-01〜14](https://github.com/hat47x/tei-platform/issues/4503)にある同byte別Location、Pin後Grant撤回、fetch=local書込だけ、Raw非公開・派生だけshare、未取得Memberを全件と誤認、8192B Tool Reply切断、Share前のGrant失効／送信ACK消失をそのまま使う。新しいEvidence Store、公開URLの共有標準、YIC独自Uploader、Proof Engineは導入しない。
 
-## 35. 開発順・ハーネス計画への反映と現時点のEvidence
+## 35. 最新の限定CI証拠と、まだ接続されていないProductの一辺
 
-| 優先順位 | Owner／進める内容 | この計画に追加しないHard Gate |
+| 実装候補と確認できた限定証拠 | どこまで実際に言えるか | 次の不足／Owner |
 | --- | --- | --- |
-| **P0-A継続** | TEI #4583/#4634：**A**でDesktop Stage1→Stage2の実再Build／当該Stage2 WebView2・非Plugin ArtifactSet/実Builder資格 | B/C IPCの実装・Benchmark・外部Harness Skill・共有Web認可を待たない |
-| **P0-B継続** | TAI #168：G0実OS Read-deny→G1実Egress→G2完全Tool Reply→独立H2/H3四Slot（現Issue観測0/4） | Desktop Worker/Core配置・Wails Serverを初回比較用の新たな必須条件にしない |
-| **P1ローカル配置比較** | TEI #1824 LPC-01〜08、#4620：A/B/C同Jobの実Windows/Linux Peer/Perf/Crash/Build/配布 | Aから移行する採用判断は測定結果と独立Reviewer後 |
-| **P1外部接合** | TEI #3421/#4627、TAI #234/#271／QH §10：同じ型付きread-only Product OperationのHost別経路とAudienceを確認 | 公開Web・二Principal/二Workspace資格は別レーン。local Serverをそのまま公開しない |
-| **P2選択的拡張** | Go/WASM pure投影、共有Web/多Tenant/HA、必要時の外部Harness接続を各Ownerで比較 | 自作Agent Loop、中央Auth/Session DB、第二Plugin Resolver/Build Engineは前提にしない |
+| [TEI Draft #4634](https://github.com/hat47x/tei-platform/pull/4634) exact HEAD 653d0d9、8/8 Workflow completed/success（Self-build・Healthを含む） | Plugin主体Build宣言→Resolver→選択Builder起動前pinの同一HEAD局所検証 | 非Plugin BuildExecution/ArtifactSet→生成Stage1→Stage2→当該実Windows WebView2は[#4583](https://github.com/hat47x/tei-platform/issues/4583)。旧別HEADのDesktop H1結果は足せない |
+| [TEI Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) HEAD 170f9be、12/12 Workflow成功 | Host固定Selector/Workspace内の有界Local Evidence Reader→既存R2 byte-only ProjectionのGo局所実Read | Wails/外部Harnessでの実Invocation、Source Currentness、Grant/Disclosure、Consumer受領は未実施 |
+| [TEI #4636](https://github.com/hat47x/tei-platform/pull/4636) HEAD da807abc、9/9 Workflow成功 | Capability Input/Effect宣言不備とnil ContextをGo Adapter Call前に構造拒否 | Owner Meaning、公開Script Entry、actual Selected Provider/Result/Effect・実CLIは別試験。PRの統合状態と実main適用は別に確認 |
+| [TEI Server Surface #4627](https://github.com/hat47x/tei-platform/pull/4627) HEAD b9cf5447のMethod/Service Inventory・局所ブラウザCI、#4620が5/5成功と報告 | 非read methodを含む現在のServer公開面を静的棚卸しできる | 実二Principal×二WorkspaceのHTTP/AuthZ、WS Recipient別秘密配送拒否はNOT RUN |
+| [TEI #4635](https://github.com/hat47x/tei-platform/issues/4635)四配置比較 | 正負試験・比較方式のOwner/順序が計画化された | B0/B1/B2の新実Process/IPC/Perf/Crash/配布はNOT RUN |
 
-[TEI PR #4634](https://github.com/hat47x/tei-platform/pull/4634)が宣言→Resolver→選択Builder実Child pinを一つのmain-based HEADに接合する局所候補となった一方、**生成Stage1→Stage2→実WebView2の同一Attempt完成とは別**。[TEI #4627](https://github.com/hat47x/tei-platform/pull/4627)のServer登録Method Inventory/局所Browser試験も**Public Web Host認可/WS秘密分離を証明しない**。各PRの現在CI・Headは採用時に再取得し、以前の別HEAD成功を合算しない。
+**資格の取り扱い**：ここに記載した各CIは、そのPR本文／同HEADで確認された時点の限定結果。単に成功数を加えた横断E2EのPASSはない。特に#4637 local Go Reader＋#4627 Wails Service inventoryの別HEAD成功から「Web/HarnessでREA Evidenceを読める」を導かない。#4636の構造拒否から公開Entry/Host grant/業務Effectを推定しない。
 
-**今回の変更範囲**：TEI #1824のLPC-01〜08と#4620/#4634、Wails/Microsoft/Go公式仕様を、TAI #648の外部Harness接合/縮退/適格性に整理したDocs-only計画。B/C child/IPC/Process Supervisor、Windows ACL/Peer、実性能・Effect recovery、二exe Build、外部Harness Tool経由の実A/B/C、Owner採用の新E2Eは**NOT RUN**。新しい実行器・共通Host・ローカルServer必須依存を作らない。
+## 36. 受入順の更新：実行面を増やすより一つのConsumerにつなぐ
+
+| レーンと位置づけ | 次に確かめる一辺 | 停止・縮退 |
+| --- | --- | --- |
+| **P0-A不変** TEI #4583／#4634 | A Native基線で実Source・非Plugin BuildIntent/ArtifactSetとN0→N2→N3→Stage1→Stage2実Windows WebView2の同一Attempt | Plugin Builder限定8/8をStage2完成と誤表示しない。B0/B1/B2を先行Hard Gateにしない |
+| **P0-B不変** TAI #168 | 実OS G0 Read-deny→G1 actual Egress→G2 full Tool Reply→独立H2/H3四Slot（比較適格0/4） | #4637の別Owner local Reader成功でH2/H3受験資格を代替しない |
+| **J-R** Product Source/Local Evidence | #4637 Local Readerと#4625 CLIを**同じ一つの公開Evidence Source**で別Consumerとして受領・Source/Scope/Disclosure照合 | Local Select/Read成功ならProductのみ継続。Remote/Web公開は不可 |
+| **J-S** Harness実Handoff | 現Hostが明示公開したtyped Toolで許可Projection→Native Tool Reply→元Pin Candidate/Consumer | 生Path/Raw/旧Grant/旧SessionをTool経由へ持ち込まない。未対応は限定Packet新Sessionへ |
+| **P1 Desktop実行形態** TEI #4635／#1824 LPC-01〜08 | A/B0/B1/B2を同一Jobで小RPC/MB Graph/Build＋Crash/IPC/Memory/配布の実比較 | Aを正常基線として維持。B0とserver-tag Serverを混同せず、性能の勝ちを推定しない |
+| **P2 Web/複数Workspace** TEI #3421/#1824/#2516 | 別Principal/Workspace/Branch/DB Instanceとread-only Service/WS Audience/現在Grantを実拒否で確認 | local no-authをWebへfallbackしない。共有Web HA/CRDTを初期P0へ追加しない |
+
+**採否の中心**は「利用者が同じProduct情報を、元Sourceの意味と現在資格を保持したまま、別の実行面でも読み、必要なときだけ候補・実操作を返せるか」。各配置方式の性能が向上しても、非公開Evidenceの送出・現在Grant・Result不明時の再試行が不適格ならYIC経由の公開をしない。A＋既存CLI/MCPで目的を達成する場合、追加Agent Loop・中央Auth/Session Store・共通ローカルServerは不要。
+
+**今回の作業状態**：#4635・#4620・#4634・#4637・#4636・#4627・#4503の設計と限定CI証拠を再確認し、旧§33〜35の三方式表を四候補に更新するとともに、Productの実Reader→外部Harness受領を別Gateとして組み込んだDocs-only計画。新しいHost/HTTP/IPC/WASM/OS/外部Harness/二Principal E2EやOwner意味受理を実行したわけではない。
