@@ -886,7 +886,7 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 | **J-R2実Product受領** | 現Root/Scope/Grant・Owner選定のSchemaで、正式Reader→明示Document CAS Save→別Process GET→元Source再Readを検証 | Productの保存/復旧/Source同一性を独立に判定。既存TEI #4503 EC-01〜14、SUI #3441 R2-SRC-01〜08を使用 |
 | **J-S外部Harness** | Root-A許可/Root-B拒否、Host送信前・Recipient・Tool complete Replyと旧Grantの負例 | TAI #168 G0→G1→G2後の適格H2/H3へ。四Slot 0/4は変えない |
 
-**CI証拠の上限**：TEI #4637の前HEAD f38117dc は12/12成功だが、2026-11-14 07:36 UTC頃の最新確認HEAD 9b8f5ca9b50d34040cfa0682f026f4fc29090f01 は12 Workflow中9成功、残3はin_progress。CI終了後に同HEADを再照合し、前HEADの成功を足さない。SUI #3444の限定成功と合算して横断E2E達成としない。
+**CI証拠の上限**：TEI #4637の前HEAD f38117dc は12/12成功だが、2026-11-14の二Root追補HEAD 9b8f5ca9b50d34040cfa0682f026f4fc29090f01 は当初12 Workflow中9成功・3進行中だったが、後続の**同一HEAD再照合で12/12 completed/success**を確認。Host-local二Root読取の限定CIであり、Source別現在Grant・実Studio/CLI/外部Harness Consumerとは別。SUI #3444の限定成功と合算して横断E2E達成としない。
 
 **優先順位は不変**：P0-A TEI #4583のA Native非Plugin Stage1→Stage2 Windows Desktopセルフビルドと、P0-B TAI #168の実OS G0/G1/G2→独立H2/H3四Slotは別々に先行。J-R0/J-R1をJ-R2/J-Sの必要条件として評価しても、新しい全製品共通Hard Gateにはしない。Product-only/Tool-onlyの利用を阻害せず、新Agent Loop、中央Auth/Session DB、共通CASは作らない。
 
@@ -931,6 +931,6 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 この比較は独立の新Run Planを増やすものではなく、**TEI #4647/#4648の現行Expected、TEI #4583 Build実Consumer、TAI #168 H2/H3、TAI #271のASV**に対するYIC側の利用者観測列である。まずProduct-only／Tool-onlyで表示・回答の誤昇格を検査し、必要性が確認できた場合だけProduct Skill/TAI Activity Skillや第二Harnessの比較へ拡張する。初回TAI #168の固定H2/H3四Slot（現0/4）には新Query/Toolchainケースを**追加Blockingしない**。
 
-**実証の現状と資格上限（2026-11-14確認）**：[TEI #4647](https://github.com/hat47x/tei-platform/pull/4647) exact HEAD a962a3f6は**CI 7/7 completed/success**、[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648) exact HEAD 64fb0f9aは**CI 8/8 completed/success**。#4647の実PG16・7 Mutation／#4648のWSL2 Go二系統の実測は**局所試験**であり、外部Harnessへの実Query/Build Result送達・正式SQL Entryの現在Grant・非Plugin Stage1→Stage2 Windows実再Buildは**未確認**。[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)二Root追加HEAD 9b8f5ca9では確認時**12中11成功、Healthがin_progress**で、最終合格を宣言しない。
+**実証の現状と資格上限（2026-11-14確認）**：[TEI #4647](https://github.com/hat47x/tei-platform/pull/4647) exact HEAD a962a3f6は**CI 7/7 completed/success**、[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648) exact HEAD 64fb0f9aは**CI 8/8 completed/success**。#4647の実PG16・7 Mutation／#4648のWSL2 Go二系統の実測は**局所試験**であり、外部Harnessへの実Query/Build Result送達・正式SQL Entryの現在Grant・非Plugin Stage1→Stage2 Windows実再Buildは**未確認**。[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)二Root追加HEAD 9b8f5ca9では確認時**12/12 completed/success**を確認した。ただし、Go test専用子Process・二Root局所Readerの資格に限り、Studio/CLI・外部Harnessの現在Grant・配送の合格とはしない。
 
 **採用判断**：新しい回答Status Schema、跨ぎCache Engine、強制同一Binaryルール、常駐自前Harnessはここで採用しない。TEI #4583とTAI #168の独立P0を維持し、Q-1/B-1が実務の誤断定・誤再利用を防いだ効果を独立Expectedと人レビュー負荷で評価する。今回の§39〜40は既存実装・CIの照合に基づく**Docs-onlyの後続実証計画**。新Product/Harness E2E、二Harness切替、Owner正式受理はNOT RUN。
