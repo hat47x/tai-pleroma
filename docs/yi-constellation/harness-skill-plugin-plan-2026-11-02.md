@@ -1217,6 +1217,27 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **優先順の不変**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1送出→G2完全Tool Reply→独立H2→H3→H3→H2（比較適格0/4）と、TEI #1824/#4583の実Studio Desktop／Stage1→Stage2セルフビルドは独立P0。追加するWeb/Skill横断検証をこれらのHard Gateにしない。本節は**Docs-only Draft**。実Web共同編集、実異Principal Grant、外部Harness完全受領、Studio→Harness→Product E2E、Owner受理は今回**NOT RUN**。
 
+
+<!-- yic-web-skill-surface-qualification-20261114 -->
+### 50.4 2026-11-14：実Wails ServerのMethod分類とSkill公開資格を区別する
+
+**実装から確かめた境界**：[TEI Draft #4627](https://github.com/hat47x/tei-platform/pull/4627) exact HEAD 9491bf9eは、StudioBridgeのWails Service登録と、実Go exported method setの**15件**をserver build-tagテストで検査する。分類は read projection 7、bounded source read 1、command plan 1、reference command 4（in-memory effectあり）、external child process／file path 2。新しいmethodや登録変更ではレビューが必要となる。ただしこれは**露出候補の棚卸し**であり、Public Webの認可、Wailsの全HTTP Route、WebSocket配送、外部Tool/Skill実操作を許可する証明ではない。
+
+同HEADの[Wails Host CI #43544229895](https://github.com/hat47x/tei-platform/actions/runs/43544229895)ではnested Go module／server tagの実試験と、loopback Server／Chromium二BrowserContextsの表示分離・後着Catalog処理が限定成功した。**二つのBrowserContexts＝別Principalの現在Grant・Workspace分離・WS機密情報の非配送ではない。** 利用者向けのJS Viewから機能を隠したこともGo Serviceでの呼出拒否を意味しない。
+
+| 既存試験Ownerに戻す負例 | 独立Expected／縮退条件 | 担当 |
+| --- | --- | --- |
+| WS-SK-01 実Service面とSkill案内の差 | Product/Hostが当該Audienceへ許した実read-only ToolだけをSkill/Tool discoveryで案内。exported methodを全件公開済みCapabilityと誤認しない。Hostで拒否を測れなければShared Web公開を保留 | TEI #1824/#3421/#4627、TAI #488 X03 |
+| WS-SK-02 二Principal・二Workspace | 二つの実Actor/Grantで同じ公開Subjectを閲覧しても、非公開Source/件数/Path/旧TranscriptやWS Tool Eventの越境到達を実拒否できること。UI表示分離だけならM0 Product-only／限定M1とし、M2/M3 Live共有は未資格 | TEI #1043/#2515/#1824、TAI #232／#234 HC-15 |
+| WS-SK-03 Command／Path入口 | ExecuteCommand系、OpenShoDocument／ResumeShoDocument、REA local-only Evidence PathなどをWeb/外部Harnessから任意Command/PathでInvokeできないことをHostで検証。必要ならActor/Root/Scopeを持つProductの許可入口へ限定 | TEI #3421/#3394/#4625、TAI #488 |
+| WS-SK-04 後着結果とProduct Apply | 二Browser Tab、旧Pin／別Root同digest、切断したTool ReplyをNative TurnとProduct Source epochへ別々に帰属。画面表示は成立しても現在Productへの無断Apply 0。Native多Writer保証が不明ならM2/M1へ縮退 | TEI #4515、TAI #234 HC-16〜18／Draft #648 |
+
+**最小の接続順**：①現loopback Wails Serverの実method inventoryとProduct Inspectを限定観測、②TEI Ownerがread-only公開面／実Actor・Workspace拒否を独立試験、③適格な実Web Capability Discoveryが得られたときだけSkillへ当該read-only手順を提示。Product Skill名・共通UIコンポーネント・表示結果をWeb認可のIssuerにしない。公開用Facade/Hostの判断はTEI、TAIは既存X/HC票の比較欄のみを所有する。
+
+**Buildという別の実到達**：[TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD 0fcb7b6／[Windows CI #43542664470](https://github.com/hat47x/tei-platform/actions/runs/43542664470)では、同一AttemptのN2生成bundle→N3 Go EmbedFilesのmember/byte digest照合、改変コピー拒否、native WebView2受領を限定確認。実Consumer選択の良い独立証拠だが、Web Actor認可、Tool/Skill配布、compiler read-time依存全閉包、非Plugin BuildIntent、Stage1→Stage2 Desktop完了ではない。DesktopセルフビルドとTAI #168のH2/H3比較（適格0/4）の二P0へ追加Hard Gateを設けない。
+
+**状態**：本節はDocs-onlyの追補。新たな二Principal実Grant/WS隔離・公開Web Host拒否・外部Harness Skill実Load・Stage2 Desktop・Owner受理は今回NOT RUN。
+
 <!-- yic-real-product-command-skill-promotion-20261114 -->
 ## 51. 2026-11-14：新Product機能をSkillの案内へ昇格する条件（後続計画）
 
