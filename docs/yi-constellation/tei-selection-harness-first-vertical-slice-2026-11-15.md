@@ -116,6 +116,18 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 **Evidenceの状態**：GitHub SourceとUIのID対応を読戻し済み。新HEADのActions合格、生成Asset一致、実DOM/Windows Host、外部Harness受領、Source再読取、Owner意味受理はこの時点で**未確認**。実装が前進しても、TEI #4583の非Plugin Stage1→Stage2 DesktopとTAI #168の独立H2/H3四Slotを新しい順序制約で妨げない。
 
+
+<!-- yic-pin-test-evidence-levels-20261115 -->
+## PIN-R0検収票の補正：テスト名で実UI成功を先取りしない
+
+[TEI Subject Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597)の最新実装に対し、追加Unitテスト「閲覧Bが変わらない」の検査対象が実際のWorkbenchと結線されていない単なる固定値だったため、**Product ReaderのPin対象・版照合**を検証する名称と内容に訂正した（[commit 22d771a6](https://github.com/hat47x/tei-platform/commit/22d771a65249367ae2975e647ad69f231f486f8a)）。閲覧Bの非干渉は既存PIN-LANE-01の局所非同期レーン試験と、今回追加した**Workbench Source配線回帰**で補助的に確認する。
+
+[pin-wiring.contract.test.mjs](https://github.com/hat47x/tei-platform/blob/feat/studio-pin-intent-state-20261113/reference/tei-studio-workbench/pin-wiring.contract.test.mjs)（[commit 5b4eeae0](https://github.com/hat47x/tei-platform/commit/5b4eeae0668d99e7f32a8e2bfd35b95b3edff664)）を通常のnpm testに登録（[commit aa3557d8](https://github.com/hat47x/tei-platform/commit/aa3557d8fba2e99c42e1ac7f6c5111c5802f2cee)）。内容は、実main.tsの独立 pinned-inspection／既存Host InspectSubject／readInspection経路、選択表示・Editor/Graph/Noticeを**直接**変更しないこと、6つのUI IDと3操作の結線を静的に監視する。GitHub上の現Sourceに対し、これらに対応する静的14項目を確認（14/14）。**この静的合格はNode24/npmテスト合格、間接副作用なし、実DOM/Windows WebView2、最新Source/Grantの実再確認を証明しない**。
+
+検収を四段に固定する。①単体状態/Source配線の回帰、②同一HEAD・ツールチェーンで生成／Desktop埋込みbyte一致、③実Host/DOMでA背景読み込み中もBのEditor/Graph/Focus/Noticeが不変（Unpin・遅延・Root/Source変更の負例）、④許可済みProjectionの外部実送受信・完全Reply・元Task/Pin帰属。①のGitHub Source追補だけから②〜④を合格にしない。
+
+後継UX計画は最新main基点の[TEI Draft #4721](https://github.com/hat47x/tei-platform/pull/4721)、StudioのCLI/AI接続設計は[Draft #4696](https://github.com/hat47x/tei-platform/pull/4696)を参照。旧協業UX Draft #4605は未mergeでclosed。いずれもPin実装の新しい第二正本にはせず、実コードは#4515/#4597の既存Ownerへ集約する。P0はTEI #4583とTAI #168のまま。現HEADの実Node24/生成/Windows/Harness試験・Owner受理は引続き未確認。
+
 ## 優先順位と停止線
 
 - **独立P0-A**：TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の非Plugin Studio Stage1→Stage2実Windows Desktop。#4597のPin純粋testや旧生成WebView CIとは別。
