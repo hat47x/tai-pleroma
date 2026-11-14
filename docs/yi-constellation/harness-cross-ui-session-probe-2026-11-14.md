@@ -613,7 +613,7 @@ YICで一晩〜複数日にわたり複数Issueを進める場合も、**一つ�
 | 後続J-S/J-V | 再接続・限定Packet Handoff・並列3 Workstream・費用／再説明 | TAI #271/#234/#621/#422 | Native Session実復帰と新Session Activity再開を別採点。Goal/Schedule実運用能力は各Provider/Profileで評価 |
 | 後続UI | Resume/Cancel/Retry/受理の別表示 | TEI Studio #1824/#3421、TAI #234 HC-15〜18 | UIで表示できてもHost/Effectが復旧したとは扱わない。Web機密Eventと二Writerは§23/24の別試験 |
 
-**現在のCIの資格**：#4634 `653d0d9`の検証は本節更新時点で8 Workflow中、Cache/Studio read-only/Issue-to-Designの3件success、Self-build・Health等はin_progress。**8/8 PASSではない**。#4623 8/8と#4624 5/5の旧別HEAD成功を、この統合HEADの検査結果として書き換えない。#4627 Wails Server method inventoryは公開Webの現Host/AuthZを証明せず、`a0850047`のRepository Healthは[実Jobのgofmt不一致](https://github.com/hat47x/tei-platform/actions/runs/43547953342)でfailureを確認。実Service A/B/C選定・共同Web実Principal分離も未実施。
+**現在のCIの資格**：#4634 `653d0d9`の検証は本節更新時点で8 Workflow中、Issue-to-Design／Cache／依存脆弱性／Studio参照編集／Action Surface／E1-Aの6件completed/success、Self-buildとRepository Healthの2件がin_progress。**8/8 PASSではない**。#4623 8/8と#4624 5/5の旧別HEAD成功を、この統合HEADの検査結果として書き換えない。#4627 Wails Server method inventoryは公開Webの現Host/AuthZを証明せず、`a0850047`のRepository Healthは[実Jobのgofmt不一致](https://github.com/hat47x/tei-platform/actions/runs/43547953342)でfailureを確認。実Service A/B/C選定・共同Web実Principal分離も未実施。
 
 **Owner受理の停止線**：本章で採用したのは設計上の区分・実証順・失敗時縮退であり、DSH/Codex/Claude Code実Resume、Scheduleの再配送、EKI Artifact/Result body、Control Plane failover、TEI Stage2 Self-build、実Product Commit/Owner承認、多Workstreamの実効果を新たに観測・採用したわけではない。DSHの公式機能表・各Issueの既存局所Evidenceはあっても、今の実Host/Principalでの利用資格は別。B4独自Agent Loopへの投資判断は[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の既定条件（複数代表Harnessの適格比較、代替可能性、重大固有欠落、費用、Owner受理）が成立するまで保留する。
 
