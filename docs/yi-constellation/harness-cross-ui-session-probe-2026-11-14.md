@@ -341,3 +341,31 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 **反証と停止線**：同名別Workspace、Source A→B→A、Rev同一でもGrant変更、履歴への過剰開示、8KiBで切れたTool Reply、並行Turn/二重Writer、Interrupt後の実Build/Effect不明。合格不能な機能はunsupported/unknown/NOT RUNとして示す。Claim、Tool exit、実Consumer、Host Effect、Owner意味受理を分離し、実験を増やすための第二Authority/Agent Loop/Source Storeは作らない。
 
 **今回の資格**：Wails公式資料と既存Product/TAI計画の照合を追加したDocs-only追補。Go/WASMベンチマーク、実Web共同開発、実二Harness互換、4 Slot新比較、Stage2 Desktop実合格、Owner正式受理はいずれもNOT RUN。
+
+
+## 19. 並行Draftの収束：実装Owner・統合順序・レビュー条件（2026-11-14）
+
+これまでの議論を新しい標準Schemaや第三の総合文書として統合せず、**既存Draftの責務・正本・採否順序**として再整理する。2026-11-14照合時のGitHub Compare `main...PR head` は、TAI #629がahead 13/behind 18（1ファイル）、#633がahead 29/behind 16（2ファイル）、#621がahead 26/behind 39（2ファイル）、本#648がahead 6/behind 0（新規1ファイル）。すべてOpen Draft／未マージ・当該確認時はmergeable。**異なるファイルであることと、Owner受理／意味整合／今後の無競合統合は別**。
+
+| 統合対象の実Owner | 確定的に残す範囲・参照する唯一の編集先 | 他Draftから持ち込まずに参照すること |
+| --- | --- | --- |
+| [TAI #629](https://github.com/hat47x/tai-pleroma/pull/629) | Product-local Q/E/A集合、Subject Pin意図、Qualified Source/根拠・Selection再資格。[Interop計画](https://github.com/hat47x/tai-pleroma/blob/docs/shared-harness-selection-requalification-20261112/docs/yi-constellation/harness-skills-interoperability-and-evidence-2026-11-02.md)を正本候補とする | #648のSession接続やWeb Focusを第二Resolver・Global Pin Storeにしない |
+| [TAI #633](https://github.com/hat47x/tai-pleroma/pull/633) | Tool-only→必要なProduct Skill→TAI Skill、Product実Handoff/Consumer、Skill三閉包、CLI/Desktop/Webへの適格性。既存[Skill計画 §48〜50](https://github.com/hat47x/tai-pleroma/blob/docs/yic-pinned-handoff-main-reconcile-20261112/docs/yi-constellation/harness-skill-plugin-plan-2026-11-02.md)を実装順の正本候補とする | #648 §17/18のAdapter候補をSkill必須Loaderや全環境共通Host ABIにしない |
+| [TAI #621](https://github.com/hat47x/tai-pleroma/pull/621) | Activity引継ぎの価値、Packet×Skill 2×2、D0〜D3の肯定/否定、全Lifecycle工数とITT/PPの判別。[Crossview ReaderとRoadmap](https://github.com/hat47x/tai-pleroma/pull/621)を評価の正本候補とする | #648のM0〜M4 Adapter段階とM00/M10/M01/M11モデル試験を混同しない。初回H2/H3四Slotの母数にも加えない |
+| **本[TAI #648](https://github.com/hat47x/tai-pleroma/pull/648)** | Activity≠Native Session≠Product Attempt、二UI接続の履歴開示・Turn帰属・縮退、TEI Studio Desktop/Web/WASMの**評価上の境界**、read-only Product→Host→Consumerの後続試験順。本書は**接合の読解・受入計画** | Pin/Skill/Source/実Build/現Grant/独立Expectedの実装正本を本書へ移さない |
+
+### 19.1 マージ順ではなく、受入に必要な証拠の依存順を固定する
+
+- **P0-A（TEI製品）**：[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583) のBuilderの宣言→Resolver回答→選択実Invoker→非Plugin ArtifactSet実Read→生成Stage1→Stage2 Windows Desktop→そのStage2 WebView2。既存[TEI Draft #4624](https://github.com/hat47x/tei-platform/pull/4624)（Resolver整合、限定CI）、[#4623](https://github.com/hat47x/tei-platform/pull/4623)（pre-start child pin、別HEAD限定CI）、[#4587](https://github.com/hat47x/tei-platform/pull/4587)（過去Windows B0/primitive N0）は別Attempt。**三つのGreenを一つのL3成功に足さない**。TEI独自Host・YIC Build Engineは新設しない。
+- **P0-B（TAI実Harness）**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) 実OS禁止Read／Egress／完全Tool Reply→事前割付の独立H2/H3四Slot（現0/4）。WASM・SUI Canvas・複数UI・Native forkを初回Hard Gateへ加えない。
+- **後続read-only**：Product Source/Root/Subjectを実Read→Pinの現在性→Tool-only→必要時Skill→Host許可Projection→既存Handoff v1→実Consumer再Read。TEI [#4625](https://github.com/hat47x/tei-platform/pull/4625) のREA `external-candidates`は**local Pathを受けるCLI**の限定候補であり、Studio Webや外部Harnessに任意Pathを公開するToolにはしない。R3-B/Cは[TEI #3394](https://github.com/hat47x/tei-platform/issues/3394)／QH §10の別Consumer資格。
+- **後続ユーザー価値**：Native SessionのView-only・一Writer・限定Packet新Session縮退の実測をTAI #234 HC-15〜18/#271 ASVへ委譲。その後TAI #621/#488の同Source・同HostでPacket単独とSkill増分の仕事単位比較を実行。再説明、誤対象、根拠喪失、過剰保留、開示違反、Undo・作成・再資格化・配送費用を別々に記録する。
+
+### 19.2 Draft統合時のレビューチェック（共通の実行器ではない）
+
+1. **差分再確認**：各PRのhead SHAとその時点の`main`を比較し、重複段落や並行追記、他Branchの成功を写し込んでいないか確認。#621/#629/#633にはbehindがあるので、古いmainの段落を復元せずOwnerが必要箇所だけ追従させる。並行Draftを機械的に全部結合しない。
+2. **唯一のSource/Expected/Owner**：PinはProduct/TAI #629、SkillとHandoffは#633、Activityの実利は#621、Session Adapterの異質Consumer受入は#648。実Source・Grant・業務意味はTEI/SUI/SHO/SEI/EKI各ProductのOwner、Host/OS強制はTAI #168/#232。独立ExpectedとFixtureの複製禁止。
+3. **実績の境界**：docs-onlyで確定できるのは非重複・依存順・停止条件まで。実Tool/Source/Skill Loader/Session/OS隔離/実Consumerの達成は各Jobのexact HEAD・Attempt・Receipt・独立Expectedで判断。現状態のunknown/partial/unsupported/NOT RUNを「計画反映済み」を理由にGreenへ変更しない。
+4. **導入と撤退**：最初のUIはProduct-onlyと限定Handoffに縮退できる。採否を判定するのは各製品の業務成果であり、Wails Web/WASM化や外部HarnessのSession API数ではない。B4独自Agent Loopは外部Harness＋既存Adapterで解消できない重大欠落とOwnerの費用・撤退判断が実測で揃うまで保留。
+
+**本節の実施事実**：TAI 4 Draftの現GitHub Compare（changed files/ahead/behind/mergeable）と既存TEI実装PR・他チャット設計の再照合、文書への受入順の反映のみ。Draft再base/merge、Windows Stage2、実OS H2/H3、二UI実Session、WASMの同一Fixture計測、実Handoff Consumer、Product Owner正式受理は**NOT RUN**。本節が承認済みの合意・追加Hard Gateであるとは主張しない。
