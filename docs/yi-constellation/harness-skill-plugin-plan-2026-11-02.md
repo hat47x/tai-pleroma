@@ -1178,6 +1178,13 @@ Product UIとCLIの認知順は、**対象と意図 → 現在のSource/欠損 �
 
 **比較のOwnerを重複させない**：[Draft #648 §11](https://github.com/hat47x/tai-pleroma/pull/648)のM00（Packetなし/Skillなし）、M01（Skillだけ）、M10（Packetだけ）、M11（両方）を利用し、M10−M00はPacket寄与、M11−M10はPacket固定のSkill追加寄与として判定する。[TAI #647](https://github.com/hat47x/tai-pleroma/pull/647)のrec-1はSkillなしでも適切な結論で、TAI Skill追加の回答差はなく、約38KBと2 Tool Callが増えた**n=1かつG0不適格の限定結果**。これを普遍的なSkill無効論にしない。根拠が有効なときの適切な限定再利用、意味変更時の停止、無関係変更時の過剰保留も試験前の独立Expectedで評価する。
 
+### 49.5 実装順序とClaim上限
+最優先は独立した二つのP0：①[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS Read-deny G0→実Egress G1→完全Tool Reply G2→新規独立H2→H3→H3→H2（比較適格**0/4**）；②[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)／#1824の選択Builder→実Invoker/ArtifactSet→Stage1自身のStage2 Desktop再構築→Stage2実WebView2。TEI [Draft #4623](https://github.com/hat47x/tei-platform/pull/4623)の起動前Builder digest／Resolve-to-pinの局所実装は、非Plugin Desktopの全工程BuildIntent受理、OS LoaderのTOCTOU排除、B2/B3成功とは分離する。どちらのP0も他方の新Hard Gateにしない。
+
+後続は、各Product単独のSubject/Raw実Read → 既存Handoff v1の独立Consumer再Read → Tool-onlyとProduct Skillの実比較 → 中断再開におけるPacket×SkillのJ-V四群比較 → 用途／Harness／開示Profileごとの条件付き配布の順。UIの同一Session閲覧・同時Turn／Interrupt・実Product反映は[Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)にある別資格のままとする。
+
+**状態：本節はDocs-onlyの計画更新**。新しい外部Harness試験、OS/Network、J-V四群、複数UI同一Live Session、元Source Consumer E2E、TEI B2/B3、実業務Effect、Owner正式受理は今回**NOT RUN**。Draftのままレビューを待つ。
+
 ### 49.6 Native Sessionの独立性を番号でなく実Context系譜で判定（2026-11-14）
 
 <!-- yic-sk02-native-lineage-h2h3-20261114 -->
@@ -1188,13 +1195,6 @@ Product UIとCLIの認知順は、**対象と意図 → 現在のSource/欠損 �
 **最初の一手**は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)と既存RunbookのG0実OS許可Source Read正例＋Reviewer/親Root/他Lane/旧Session実Read拒否（負例）。G1実際のRecipient・Egress、G2 stdout/stderr・完全Tool Reply、その後に初めてH2→H3→H3→H2の**新規4独立Session**。DSHなどのNative実ログでroot/session/thread・seeded/event継承とOS/Contextを確かめる。Skill有無の比較Arm、固定Task/CLI/Tool/Expected、ITT/PPは変更しない。G0が不適格なら新Skill/Providerへ逃げずenvironment-ineligibleで停止。評価上の適格は**現時点0/4**。
 
 **実証状態**：#649の合成CheckerとWorkflowは限定候補であり、ここで新しいNode実自己試験・GitHub exact-HEAD CIを実行したわけではない。新実DSH四Session、実OS/Network隔離、独立Expected採点、Skill効果とOwner受理はNOT RUN。
-
-### 49.5 実装順序とClaim上限
-最優先は独立した二つのP0：①[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS Read-deny G0→実Egress G1→完全Tool Reply G2→新規独立H2→H3→H3→H2（比較適格**0/4**）；②[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)／#1824の選択Builder→実Invoker/ArtifactSet→Stage1自身のStage2 Desktop再構築→Stage2実WebView2。TEI [Draft #4623](https://github.com/hat47x/tei-platform/pull/4623)の起動前Builder digest／Resolve-to-pinの局所実装は、非Plugin Desktopの全工程BuildIntent受理、OS LoaderのTOCTOU排除、B2/B3成功とは分離する。どちらのP0も他方の新Hard Gateにしない。
-
-後続は、各Product単独のSubject/Raw実Read → 既存Handoff v1の独立Consumer再Read → Tool-onlyとProduct Skillの実比較 → 中断再開におけるPacket×SkillのJ-V四群比較 → 用途／Harness／開示Profileごとの条件付き配布の順。UIの同一Session閲覧・同時Turn／Interrupt・実Product反映は[Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)にある別資格のままとする。
-
-**状態：本節はDocs-onlyの計画更新**。新しい外部Harness試験、OS/Network、J-V四群、複数UI同一Live Session、元Source Consumer E2E、TEI B2/B3、実業務Effect、Owner正式受理は今回**NOT RUN**。Draftのままレビューを待つ。
 
 <!-- yic-cross-client-context-delivery-20261114 -->
 ## 50. 2026-11-14：CLI／Studio Desktop／Studio Web／外部Harness間のSkillと情報の実適格性（後続計画）
