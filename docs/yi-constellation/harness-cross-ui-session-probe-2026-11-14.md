@@ -839,3 +839,35 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 **採否の中心**は「利用者が同じProduct情報を、元Sourceの意味と現在資格を保持したまま、別の実行面でも読み、必要なときだけ候補・実操作を返せるか」。各配置方式の性能が向上しても、非公開Evidenceの送出・現在Grant・Result不明時の再試行が不適格ならYIC経由の公開をしない。A＋既存CLI/MCPで目的を達成する場合、追加Agent Loop・中央Auth/Session Store・共通ローカルServerは不要。
 
 **今回の作業状態**：#4635・#4620・#4634・#4637・#4636・#4627・#4503の設計と限定CI証拠を再確認し、旧§33〜35の三方式表を四候補に更新するとともに、Productの実Reader→外部Harness受領を別Gateとして組み込んだDocs-only計画。新しいHost/HTTP/IPC/WASM/OS/外部Harness/二Principal E2EやOwner意味受理を実行したわけではない。
+
+<!-- yic-crossroot-pretransport-disclosure-20261114 -->
+## 37. Evidenceの同一性と送信前の開示を、別の実証関門にする
+
+[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)の新しい二Root負例は、同じProducer Evidence ID・Node/Relation・申告SourceRevisionであっても、二つのHost固定Rootの保存byte/digestが異なり得ることを扱う。片Rootでの保存byte入替やRoot実体変更を、もう片Rootへ無条件に波及させない。**ID/ハッシュ/申告Revisionの一致はRoot・Worktree・時点・Principal・現在Grantの一致ではない。**
+
+[SUI #3444](https://github.com/hat47x/sui-sensemaking/pull/3444)では、未採用Source Binding欄を保存RequestのHTTP送信前に拒否し、Backend 422拒否、緩いImportの黙った出典欠落拒否、Agent向け限定投影の純粋関数負例を実装。HEAD 6f864be6361b0d3f8f3dc2cf343e8fe524c64023 の[CI #43571702321](https://github.com/hat47x/sui-sensemaking/actions/runs/43571702321)は成功（Backend 323件／Frontend 1,943件）。ただし**正式Source Schema・現在Source別Grant・実Agent/Guest HTTP投影・Card保存後のSource実再Readは未受理**。通常Documentの閲覧許可は、元資料を閲覧する許可と同じではない。
+
+| 判定面 | Product/TAIの既存Owner | 最初に拒否すべき反例 |
+| --- | --- | --- |
+| Pinと実Source | TEI #4515/#4503、SUI #3441 | 同名/同Producer ID、同byte別Root、異byte同ID、A→B→A、取得Member不足 |
+| Clientの送信予定 | SUI #3441/#3444、TEI #2516 | 非公開Locator/ID/digest/count・未採用Source欄を**HTTP・Tool Request送信前**に拒否。Backendの422だけで送信0を証明しない |
+| HostのAdmit | TEI #3421/#1174、TAI #232 | Product Documentを読めるPrincipalでも、元Source・別Workspace・別Recipientへの開示を認めない |
+| 実Egressと投影 | TEI #2515/#4503、TAI #168 G0/G1/G2 | Client送信0だけで子Process/Session Log/Telemetryの非送信を宣言しない。Wailsの全Browser向けEventへ秘密を載せない |
+| 別Consumerの受領 | TEI #4503、TAI #271/#488、SHO/SUI各Owner | Go test用子Process、Agent投影純粋関数、HTTP 422、Tool exitを本物のProduct／外部Harness受領にしない |
+
+YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、実Tool Reply、Owner意味受理**を別々の証拠として扱う。SUIの出典保存案A/B/CやCurrent Grantの方式はSUI Ownerの未決判断であり、Client/Backendの局所GuardだけでA案を採用しない。第二Source Store、統一AuthZ/Disclosure Engine、YIC専用Resolverを作らない。
+
+## 38. 二Rootと不送信を最小の後続試験に結ぶ
+
+| 後続段階 | 同じ公開合成Fixtureでの実証 | 成立範囲／停止線 |
+| --- | --- | --- |
+| **J-R0局所Reader** | TEI #4637の二Root同ID・異byte、片Root置換、byte入替拒否 | bounded local readのみ。実Studio/CLI ConsumerやSource別Grantではない |
+| **J-R1送信前拒否** | SUI #3443一時Raw Preview、#3444の未採用Source欄をfetch前拒否・Backend 422・保存済Card/Hold/異論/ETag保持 | 一時Contentと予約欄のHTTP送信0のみ。永続出典・Document再読取は別 |
+| **J-R2実Product受領** | 現Root/Scope/Grant・Owner選定のSchemaで、正式Reader→明示Document CAS Save→別Process GET→元Source再Readを検証 | Productの保存/復旧/Source同一性を独立に判定。既存TEI #4503 EC-01〜14、SUI #3441 R2-SRC-01〜08を使用 |
+| **J-S外部Harness** | Root-A許可/Root-B拒否、Host送信前・Recipient・Tool complete Replyと旧Grantの負例 | TAI #168 G0→G1→G2後の適格H2/H3へ。四Slot 0/4は変えない |
+
+**CI証拠の上限**：TEI #4637の前HEAD f38117dc は12/12成功だが、2026-11-14 07:36 UTC頃の最新確認HEAD 9b8f5ca9b50d34040cfa0682f026f4fc29090f01 は12 Workflow中9成功、残3はin_progress。CI終了後に同HEADを再照合し、前HEADの成功を足さない。SUI #3444の限定成功と合算して横断E2E達成としない。
+
+**優先順位は不変**：P0-A TEI #4583のA Native非Plugin Stage1→Stage2 Windows Desktopセルフビルドと、P0-B TAI #168の実OS G0/G1/G2→独立H2/H3四Slotは別々に先行。J-R0/J-R1をJ-R2/J-Sの必要条件として評価しても、新しい全製品共通Hard Gateにはしない。Product-only/Tool-onlyの利用を阻害せず、新Agent Loop、中央Auth/Session DB、共通CASは作らない。
+
+**本追補はDocs-only**。新二Principal実HTTP/WS、TEI正式別Consumer、SUI Card出典保存/別Process Source復帰、外部Harness送受信、Owner正式受理はNOT RUN。
