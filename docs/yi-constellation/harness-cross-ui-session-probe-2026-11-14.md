@@ -13,6 +13,16 @@
 
 本文の「確認済み」は**その対象版・実行環境・試験範囲内での確認**を意味する。Sourceの現在性、操作権限、実Provider、外部作用、結果の受領、業務上の受理を、CIの成功や資料上の説明だけから補わない。
 
+<!-- yic-current-decision-index-20261114 -->
+**いま優先して判断すること**
+
+| 位置づけ | 実行上の最短目標 | 先取りしないこと |
+| --- | --- | --- |
+| **P0：Studio** | 現行Wails A方式で非Plugin BuildIntent→生成Stage1→Stage2 Desktop→実WebView2を一つのAttemptで確認 | 外部Harnessや新Worker方式をセルフビルドの前提にしない |
+| **P0：外部Harness** | TAI #168の実OS拒否G0→送出G1→完全Reply G2→独立H2/H3四試行 | Product-only／Tool-onlyとSkillの実効差を測る前に独自Agent Loopを作らない |
+| **次の製品接合** | 実Entry・Source/DBを**起動時の副作用まで**調べ、別Consumerが結果を実受領する | 読み取り名目の暗黙DB更新、Go test子Process、固定署名Fixtureを正式製品資格へ昇格させない |
+| **後続のUIとAI** | 現在のPin・Source・Grantに基づく限定Projectionと、回答候補からProductへの安全な復帰 | 旧Session/Transcript/Receiptから実操作や現時点の認可を推定しない |
+
 ## 0. 関連Ownerと変えない先行条件
 
 - [TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)：B0〜B4投資比較、Goal/Schedule/並列、[HC-01〜14](https://github.com/hat47x/tai-pleroma/issues/234#issuecomment-6844475381)、[HC-15〜18](https://github.com/hat47x/tai-pleroma/issues/234#issuecomment-6856979920)の後続判断。B4独自Agent Loopは未採用。
@@ -928,6 +938,27 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 **今回の作業状態**：#4635・#4620・#4634・#4637・#4636・#4627・#4503の設計と限定CI証拠を再確認し、旧§33〜35の三方式表を四候補に更新するとともに、Productの実Reader→外部Harness受領を別Gateとして組み込んだDocs-only計画。新しいHost/HTTP/IPC/WASM/OS/外部Harness/二Principal E2EやOwner意味受理を実行したわけではない。
 
 <!-- yic-crossroot-pretransport-disclosure-20261114 -->
+<!-- yic-generated-read-initialization-and-native-consumer-20261114 -->
+### 36.3 「読むだけ」の仕事でも、起動時の変更を見逃さない
+
+[TEI #4657](https://github.com/hat47x/tei-platform/issues/4657)の現行Source確認では、生成**参照アプリケーション**の`query/command/validate`が通常起動時に`applyMigrations`へ進む経路が見つかった。参照アプリの実装上の問題であり、一般のすべてのTEI CLIやAI Toolが同じ副作用を持つと断定しない。しかし、YICの「Tool-onlyで読み取りを依頼する」試験では、**Toolの名称、HTTP Method、DSL上のpure宣言、SQLがSELECTであることだけでは、プロセス起動時の無副作用を証明できない**。検査するのは実際に選んだバイナリ・Host・対象DBと、その操作の前後である。
+
+[修正Draft #4662](https://github.com/hat47x/tei-platform/pull/4662) HEAD `095c5a11`のGitHub Actionsは、Repository Health／Cache／依存監査の**3/3 completed/success**（[Health #43576908564](https://github.com/hat47x/tei-platform/actions/runs/43576908564)）。このPRは生成参照バイナリで、暗黙Migrationを通常起動から外し、`validate`をDB非依存にし、`query`は既存SQLiteを`mode=ro`、`command`は`mode=rw`で開く。未存在SQLiteを作らず、既存Schemaを変えないことを**生成→Build→別Process→独立DB再読取**のGo回帰で確認する範囲。正式なDB Migration機能、Current Grant、実PG、複数DB・Windows、製品全体のHost資格は証明していない。**Commandの本来の業務更新は別Effect**であり、暗黙DDLを止めたこととCommandをread-only化したことを混同しない。
+
+| 対象と時点 | 最初に確かめる事実 | 不合格とする振る舞い・担当 |
+| --- | --- | --- |
+| **実Product入口の準備** | 選択した実Binary/Version、Application required DB・Alias→Instance・SQL方言・実Provider、接続前のDBファイルとSchema/History | 説明文に「read-only」とあるだけで現在のProduct入口やDB資格を推定する。TEI #4657/#4234 |
+| **通常の読取／純粋診断** | 実起動から終了までのファイル生成0、Migration由来DDL/DML 0、読取範囲、結果と不明点。DB不要のvalidateはDB接続0 | `Ping`による未存在SQLite生成、無条件Apply、`sql postgres`をSQLiteへ実行。既存RBM-01/01b/provider／TEI #4657 |
+| **業務Command／明示Migration** | Commandが業務上更新した行とReceipt、DB管理ActionのPlan/現在Target/History/Grantを別観測 | 読取でも勝手にSchema更新。Commandの本来のEffectとMigrationを合算。明示Init/Upgrade未実装を暗黙Applyで代用。TEI #4234/#4125/#1174 |
+| **独立した製品の受け手** | Native Studioと通常CLIが同じProducer Evidenceを**それぞれ本物の入口から呼び**、実受領したNode/有向Relation/Scopeを照合 | Go test子Processの成功をWails/CLI受領と数える。Native方法がServerの公開面を勝手に増やす。[TEI #4661](https://github.com/hat47x/tei-platform/issues/4661)／#4630/#4637/#4625 |
+| **外部Harnessへの受渡し** | 実OS G0→実送出G1→完全Reply G2の下で、許可されたProjectionだけを送出。元操作が実際に無作用かを再確認 | 実Productで未受理の機能をSkillから呼んだことにする。生Path・秘密Receipt・旧Grantを配送。TAI #168/#232/#271 |
+
+**次の実行上の変更**：§43のJ-E1では、（A）現在の実製品CLIで一つのread-only Entry/Sourceを確認すること、（B）**その入口が使用する実Processの初期化・DB接続まで含めて無作用条件を確認すること**、（C）後続のREAなら[TEI #4661](https://github.com/hat47x/tei-platform/issues/4661)に従って通常CLIとNative Wailsの異なる実Consumerを検収することを**用途別の別票**にする。（B）は生成参照アプリを選択した場合に[RBM-01/01b](https://github.com/hat47x/tei-platform/issues/4657)を流用し、すべてのTEI Core Operationに新しいSchema/History合格を要求しない。（C）はNative用Readerの実Service/JS/Windows Receiptが必要で、Go Testの別PIDだけで代用しない。
+
+正式な読取Entryが存在しない場合は`unsupported`、初期化時のEffectが不明なら`unknown`とし、**外部Harnessへ「安全なread-only Tool」として公開しない**。公開済みの別のProduct-only経路を中断せず、実施可能な既存Taskだけ進める。こうしてProductの無副作用確認と外部Harnessの現在開示・OS分離を別の関門として保つ。
+
+**採用・実装の範囲**：この節は[TEI #4657/#4662](https://github.com/hat47x/tei-platform/issues/4657)の実Source/限定CIと[#4661](https://github.com/hat47x/tei-platform/issues/4661)の新しい第二Consumer実装計画を既存YIC受入順へ接続した**Docs-only**の更新。#4662と#4637はDraft・未main統合、#4661の製品E2EはNOT RUN。YIC独自Migration Engine、公開Tool API、中央Host、追加の初回H2/H3 Blocking Gateを設けない。TEI Studio Stage1→Stage2とTAI #168四Slotの独立P0は不変。
+
 ## 37. Evidenceの同一性と送信前の開示を、別の実証関門にする
 
 [TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)の新しい二Root負例は、同じProducer Evidence ID・Node/Relation・申告SourceRevisionであっても、二つのHost固定Rootの保存byte/digestが異なり得ることを扱う。片Rootでの保存byte入替やRoot実体変更を、もう片Rootへ無条件に波及させない。**ID/ハッシュ/申告Revisionの一致はRoot・Worktree・時点・Principal・現在Grantの一致ではない。**
@@ -1040,7 +1071,7 @@ TEI StudioやSHOにおける説明生成・異言語移植のため、次の**�
 | --- | --- | --- |
 | **P0-A（変更なし）** | TEI Studio非PluginのA Native Stage1→Stage2を同じBuild Intent、生成物byte、実Windows Consumerで検収 | TEI #4583。BuildPlan/Toolchain報告と実Compiler/Artifactの同一性は別 |
 | **P0-B（変更なし）** | 外部DSH実OS Read-deny G0→送出G1→完全Reply G2→事前独立H2/H3四Slotを評価 | TAI #168。現在の比較適格数は0/4。既存Taskや固定Skillを途中で入れ替えない |
-| **J-E1 Product-only** | 公開read-only一Functionを実CLI（後段でNative Studio）から呼び、入出力型・Source Root・Version・Provider・Coverage・Resultを独立読取 | TEI #4502/#4495/#4503/#4661。テスト専用子Processは正式Consumerではない。Native Entryが未実装ならunsupported |
+| **J-E1 Product-only** | 実CLIの公開read-only一FunctionでSource/Provider/Coverage/Resultを確認。**当該Binaryの起動時初期化とDB接続による暗黙DDL/ファイル生成も調べる**。REAが対象ならNative Studioの別実Consumerで受領 | TEI #4502/#4495/#4503、生成参照アプリ#4657/#4662、REA #4661。用途別に既存RBMとR3-C票を利用。未実装Entryはunsupported、作用不明はunknown。テスト用子PIDは正式Consumerでない |
 | **J-E2 Tool-only** | J-E1とは別Attemptで、実Productが許可したProjectionだけを外部Harnessに配送し、Call/Replyの対応・byte完全性・Recipientを照合 | TAI #168/#232/#271。G0/G1/G2が未成立なら送出せずread-only Product-onlyへ縮退 |
 | **J-E3 提案→適用（後続）** | 同じ対象へAIが変更候補を返す場合、元Source/Pinと差分を画面上に保ち、Ownerのレビュー・現在Grant・実Effect Receiptを分ける | TEI #4515/#4502、SHO/SUI各Owner、EKI #57。候補表示・Preview成功をCommitと数えない |
 | **J-V 比較** | 同じ許可済みTaskでProduct-only→Tool-only→Product Skill→必要時TAI Activity Skillの差分を測定し、二種類の外部Harnessで再現性を確認 | TAI #234/#422/#488。実行時間、再開成功、モデル・Token/Quota実費、修正回数、人間のレビュー負荷、Outcomeの質を別々に測る |
