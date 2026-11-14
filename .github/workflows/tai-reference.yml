@@ -222,4 +222,4 @@ jobs:
         with:
           node-version: "22"
       - name: Verify isolated scratch and scoring outcomes
-        run: node --test evaluations/tools/requalification-probe.test.cjs
+        run: node --test evaluations/tools/requalification-probe.test.cjs evaluations/tools/provider-read-qualification.test.cjs
