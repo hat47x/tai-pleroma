@@ -373,7 +373,7 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 <!-- yic-harness-activity-causality-qhp0-consumer-matrix-20261114 -->
 ## 20. Activity→Harness→Productの因果帰属を、一つのSession状態に畳まない（後続設計）
 
-### 21.1 操作の順序でなく、出典と実Observationの辺を照合する
+### 20.1 操作の順序でなく、出典と実Observationの辺を照合する
 
 他チャットのTEI設計Build/Evidence、SUIのRaw/Item/Occurrence、SHOのSource/文書Consumer、SEIの判断Basis、EKIのTask/Attempt/Effectを照合すると、YICで本当に共有したいのは**任意のSession全履歴**でなく、当該仕事に必要な次の因果辺である。ただし新しい中央Event Graph/Schemaを設けるのではなく、既存QH-P0のI/R/P/T/C/H、TEI Pin/Operation、TAI Activity、Harness Native Log、EKI/SHO Receiptで実際に追える範囲だけを記録する。
 
@@ -393,7 +393,7 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 
 **権限の時間方向**：後からGrantを撤回できても、外部Harness/旧Sessionにすでに渡したRaw/Tool結果を取り戻せたとは言わない。新しいAudienceが同じSessionへattachする際には、**今後のProjection**と**すでにSessionに存在するTranscript/履歴Tool Result**を別々に判定。履歴資格が確認できなければM2/M3へ進まず、M1の新Session限定Handoffへ縮退する（TAI #234 HC-15）。
 
-### 21.2 成立した辺だけ残す選択的再資格化
+### 20.2 成立した辺だけ残す選択的再資格化
 
 次の変化はすべて「過去のObservationは履歴として残し、現在用途の資格を再判定する」候補。新Watcherや強制Global Invalidationではなく、既存Productが実際に確認できるRead/Validation/Grantを用途ごとに参照する。
 
@@ -410,7 +410,7 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 
 ## 21. 最初の一仕事の実行カード：QH-P0をHarness接続へ接合する前のProduct実縦切り
 
-### 20.1 既存の実証を使う順序
+### 21.1 既存の実証を使う順序
 
 **最初の適用対象は公開・read-onlyのTEI一Subject**。新しいHarness Runtime/中央Store/Schema/総合Oracleを先に実装せず、既存[QH-P0 §10.3](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)および実Product CIと同じFixture/Expectedを再利用する。
 
@@ -421,7 +421,7 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 5. **外部Harness試行（H、後続）**：ここまでのProduct基線を保存したうえで、TAI #168 G0実OS Read-deny→G1 actual Egress→G2 complete Tool Replyが成立した公開Profileのみ、独立H2/H3 4 Slotとは**別の後続Job**に接続する。まずTool-only。SkillはJob固有の改善が必要な場合だけ、I/S/C三閉包で実Loadを確認して追加する。生PathをRemote CLI/MCP引数として任意開放しない。
 6. **結果を元対象へ戻す（J-P/後続）**：外部Answerは元Pin・Root・Source時点・Native Turnの候補として保持し、現在Productで再Read/Preview。AIが使った対象と今のFocus/Workspaceが変わっていれば自動Apply 0。read-onlyの完了判定ではBuild/Effectを要求せず、後日のWriteは既存TEI/SHO/EKI Operationに引き渡す。
 
-### 20.2 一試行の採点欄を統合しない
+### 21.2 一試行の採点欄を統合しない
 
 | QH列 | 最小実Observation | 不成立時の限定結果 |
 | --- | --- | --- |
@@ -453,3 +453,57 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 **採否**：Tool-only＋既存Handoff v1が足りるJobではTAI Skillを配布標準にしない。B0〜B3の実適格試験で必要なUser Jobが実現できる限り、B4独自Agent Loopを投資対象にしない。B4再検討には、複数代表Harnessの実適格比較、Product API/薄いAdapterで解消できない重大欠落、実運用費用・復旧・Owner受理をすべて要求する（TAI #234）。
 
 **今回の証拠上限**：本§20〜22は既存[QH-P0](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)、TEI #4616/#4625、SHO #48、TAI #168/#234/#271/#488の限定記録を照合した**Docs-only実装・検収計画**。新しいTEI実CLI→SUI→SHOの同一Job、同一SessionのDesktop/Web、二Harnessの対照、実WASMベンチマーク、Stage2 Native Desktop、OS/Network適格H2/H3四Slot、Product/Owner正式受理は**NOT RUN**。別HEAD・別AttemptのCI成功を一つのE2Eへ合算しない。
+
+<!-- yic-harness-surface-web-exposure-typed-entry-gate-20261114 -->
+## 23. Web/Native/CLI/Harnessの実行面を区別し、秘密Eventと操作Entryを明示審査する（設計案／実公開NOT RUN）
+
+他チャット[TEI Plugin Contract Draft #4621](https://github.com/hat47x/tei-platform/pull/4621) §17、[Wails Server Surface Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)、[TEI Script Launch Draft #4618](https://github.com/hat47x/tei-platform/pull/4618)の限定成果を、既存TAI #232/#168・HC-15〜18・Product #3421の**実行面資格**へ接続する。これはYIC用第二Gateway/共通HTTP/認証器/ランチャーを新設する提案ではない。
+
+### 23.1 Productの型付き意味と、実行面への公開は独立
+
+| 実行面 | 今できること／検証できている範囲 | 必ず別に確認すること・禁止する昇格 |
+| --- | --- | --- |
+| Product-local CLI | TEIの既存read-only/Local Evidence CLI等をそのOS Principalの実Processとして試験可能 | ローカルPath引数・内部ErrorをRemote Web/MCPへ転送しない。CLIのhelp/一覧≠Entry実選択≠実Invoker |
+| Wails Desktop Native | Go Application/StudioBridgeと生成Workbenchを実WebView2で利用する限定H1/B0実証がある | Native UIの表示＝現在のSource/Owner意味/Build/Grant受理ではない。Web公開にそのまま流用しない |
+| Wails Server / Web | Wails v3 Server BuildでGo ServiceがBrowserへBindingされ、標準Go→Browser Eventは接続Browserへbroadcastする | 実Trusted Principal・Workspace・Audienceでサービス/Tool/Transcript/WS payloadを制限。Origin/Host/Tab名≠AuthN/AuthZ/現在Grant |
+| 外部Harness/MCP/Skill | 実Tool/Skill Loaderと現在Host Profileに合う用途限定Projectionだけを使う | Skill説明≠Provider実収録/CLI実動作。ローカル生Path/実Secret、未許可Raw/Metadataを渡さない |
+| Go→WASM Client候補 | pure/read-only検証・表示補助の速度比較候補 | 権限確認、DB/Provider、秘密の現在Source、Build/Effect/Host実操作のAuthorityにしない |
+
+Wails v3公式[Server Build](https://v3.wails.io/guides/server-build/)はServer Service Bindingの利用と、Goから接続全Browserへの標準Event broadcastを記載する。従って、**個別Audienceにだけ許されたSession/Tool/Raw/Rowset/TranscriptをGlobal Eventへ載せる実装はWebの採用条件を満たさない**。Browserで受信後に非表示とするだけでは遅い。秘密Eventの個別配信方式がProduct/Hostで適格化できない場合は、Server上の対象イベントを送らず、現在Grantで再取得するread-only Query/限定Viewに縮退する。必要なAudience別Deliveryの実装方式の採否はTEI #1824/#3421/Host Ownerに残す。
+
+[TEI #4627](https://github.com/hat47x/tei-platform/pull/4627)はGo Server登録・反射Methodの15件をread・plan・reference command・external child等へ分類し、漏れた新公開面をレビュー要求にする限定テスト。HEAD 9491bf9 のWails Server Jobの成功は**static method inventory＋local loopback/2 browser contextsの表示分離**に限る。Web認証済み2 Principal×2 Workspace×2 Tabの実HTTP/WS拒否、Actorに対する現在Grant、Web実公開適格は未実証。既存Command/SHO external process entryを含むStudioBridgeをそのままPublic Webへ公開しない。
+
+### 23.2 実行面への公開は明示Entry/Selection/Invocationを経由
+
+[TEI #4495](https://github.com/hat47x/tei-platform/issues/4495)の既存区分をそのまま利用する。Function/Script Sourceが存在しても、CLI/Web/Harnessへ公開可能なEntryではない。Trigger（UI、Harness、Schedule等）は起動要求の契機にすぎず、選択済みProvider/Artifact、typed input、対象Revision、Operation identity、現在Host Principal/Grantと実Invocationを別に確認する。
+
+**YICからの利用者操作の認知順**は「目的と固定対象 → 実Product/Tool発見 → 現在のSource・Required/Consumed・開示状態 → 明示Entry/型付き要求 → Preview → Host admit／Provider実invoke → Reply/Consumer/Effectの独立観測」。read-onlyの場合Effectはnot-applicableとする。Tool-onlyで充分なJobにProduct SkillやTAI Skillを常時ロードせず、必要な場合だけ[Draft #633 §49〜51](https://github.com/hat47x/tai-pleroma/pull/633)のInstruction / Subject / Capability閉包を照合する。
+
+**Agentが作成した命令、旧Grant、UI Actor文字列、Role名、Tool descriptionは実Authorityではない**。Prepare段階で表示されたInvoke可能候補と、Admit/Invoke直前のProduct現在資格が異なったら自動切替や実行をしない。Script/Builder/Pluginの選択と実起動が同一Attemptで一致するかは各Product/Host Ownerが実観測する。YICのSession Resume・Goal Armed・Schedule ACKは入場許可でない。中断・timeoutは実Effectのrollbackを意味しない。
+
+## 24. Web×Harness接合の小さな反証と製品ごとの停止線（既存Expected再利用）
+
+**この章は新試験番号/第二Oracleではない**。既存[TAI #234 HC-15〜18](https://github.com/hat47x/tai-pleroma/issues/234)、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、[TEI #3421](https://github.com/hat47x/tei-platform/issues/3421)、[TEI #4495 EL-01〜12](https://github.com/hat47x/tei-platform/issues/4495)、[TEI #4621 WSP-02](https://github.com/hat47x/tei-platform/pull/4621)の独立Expectedを組み合わせる**受入観点の索引**。
+
+| 観測する小試験 | 既存Owner／入力・実証ポイント | 守る停止線と正常な縮退 |
+| --- | --- | --- |
+| Serverの公開面と二利用者の閲覧 | TEI #4627の登録Method Inventoryを固定→#3421 WSP-02bの2 Workspace×2 Principal×2 Tabで実HTTP/WSを観測 | 許可外のCommand/SHO子Process、別Audience向けEvent/Rowset/Tool履歴は**実受領0**。Originのみで合格不可。失敗なら共有WebでM2/M3を提供しない |
+| Transcriptを含む旧Sessionへのattach | HC-15とTAI #232。新User/Workspaceで現在Projectionは見えても、過去Raw/Tool結果を含むNative Sessionを購読 | 旧履歴が読めてはいけない場合はattachを拒否し、M1用途限定Handoffから新Sessionへ。外部に既送の平文撤回を保証しない |
+| Product Functionの存在と実行可能性 | TEI #4495 EL-01/02/04/06、Draft #4618。FunctionはあるがEntry非公開、Provider未収録、選択B/実Call A、Actor偽装 | いずれも新Toolに自動fallback/権限拡張0。実Hostのtyped App/Entry検査に委譲。結果値が同じでも誤Invokerは不合格 |
+| Web/CUI/Harness間での障害・再送 | TEI #4495 EL-09/10/12、TAI HC-17/18。Reply途中切断、同Operation ID異Input再送、Host効果中にAgent Interrupt | 欠けたReply/Effectはunknown。元Operation/Attemptの観測なしに新IDで二重実行0。AI Turn閉鎖はBuild/Effect取消でない |
+| Skill宣言と実在Provider | TAI #488／Draft #633 §51、TEI #4625。SkillにはLocal CLIが記載されるが現Hostは未導入、またはLocal Evidence PathをRemote要求へ流用 | Tool-onlyの適格な安全機能だけ利用継続。現在Productの有効Entryと実Load/実Invocationが無いSkillは候補として表示しても利用可能と記さない |
+
+### 24.1 提供面の縮退を一律停止にしない
+
+M0 Product-onlyは常に独立評価する。Web Serverの現在のHost境界が不適格なら、**Web上の機密Session共有・遠隔Command実行のみ非提供**とし、ローカルDesktop/CLIの正当なread-only調査やSUIのAI OFF作業を止めない。外部HarnessがM3操作非対応でもM1新Session Handoffが安全に成立するなら、そのモードの利便性を比較する。できない場合はM0へ戻る。
+
+初回固定H2/H3四Slot用の公開TEI実験を、Web共有Server/再開Event/新Skillの要求で汚染しない。Webの別Principal/Audience受入は**P1**、純粋Go/WASM比較は後続**P2**、共有Webの共同編集・HAはProductの必要性に応じる**P3**。独立P0はTEI #4583セルフビルドとTAI #168 G0→G2→比較資格4 Slotのまま維持。
+
+## 25. 今回のレビューで反映する差分と未成立資格
+
+- **設計上確定できる差分**：WebにおけるProduct/Host現在資格、Native Transcript旧情報、Global Event、Function Entry/Trigger/Invoker、Skill案内の非同一性と、用途ごとの縮退・既存Owner割付。実装採否／Public Webサービス許可には別実測が必要。
+- **局所的な実測**：[TEI #4627](https://github.com/hat47x/tei-platform/pull/4627)のGo method inventoryとloopback/2 BrowserContexts試験は限定CI成功。[TEI #4587](https://github.com/hat47x/tei-platform/pull/4587)のH1 N2→N3生成物byte照合は別HEAD・別Attemptの限定成功。互いの証拠を一つの本番Web/Stage2 Build結果と合算しない。
+- **未実施・保留**：認証済み2 Principal×2 Workspace実HTTP/WS・実Audience別Event拒否、Wails Public Webの安全なread-only facade、実外部Harness→Web Serviceの同一Attempt、実Script公開Entry→Product CLI実Invoke、A→B→A／現在Grant/Owner意味受理、二Writer Native保証、H2/H3の新4適格Slot、TEI生成Stage1→Stage2 WebView2、WASM性能比較はNOT RUN。
+- **Ownerと重複排除**：実Web/API/Command適格はTEI #1824/#3421/#4495/#4627、Skill導入と実CapabilityはTAI #488/Draft #633、ActivityとTranscriptはTAI #271/#234、OS/LLM送出はTAI #232/#168、Handoff/ConsumerはQH §10。TAI #648は接合の判断/計画のみであり、Webの認証器、Builder、Registry、Session Server、Run Engine、Script Runtimeを実装しない。
+
+本追補は既存Product PRとWails公式資料の仕様・限定CIの照合による**Docs-only設計**。新OS/Web/Browser/Service/Script/Harness/WASMの実験を本作業で実行・受理したわけではない。
