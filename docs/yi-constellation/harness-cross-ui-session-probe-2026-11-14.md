@@ -446,6 +446,8 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 
 **P0を変更しない**：A=TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の実Stage1→Stage2 Desktop/同Attempt BuildIntent+Native WebView2、B=TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G1→G2→独立H2/H3四Slot（比較適格0/4）。いずれも独立Owner/独立証拠で進め、C=Product-local Pin/R3-A、D=QH-P0、E=M1/M2/M3、F=J-Vを後続の必要な用途にのみ接続する。SUIのAI OFF Raw→Card→原文復帰、SHO単独Writer、SEIの局所判断、TEI Studio単独操作はHarness不適格でも維持する。
 
+**SK-02 Native fork独立性の負例（既存Checkerの局所実装修正）**：[TAI Draft #649](https://github.com/hat47x/tai-pleroma/pull/649)では、従来の4件の`session_id`一意性だけでは見逃す**共通root、fork親、fork深度、resume**を、実Native記録がある場合に比較不適格として分類する。DSHの通常forkは親IDを残さず`isSeeded`や`inheritedEventCount`で継承履歴を表す場合があるため、親IDのみを資格判定にしない。新しいSK-02 Checker/Host/Runnerは追加せず、既存の合成E73〜E82とCIの必須ケース一覧を補強する。**観測されないNative lineageを自己申告の`independent_session_observed=true`から保証したとは言わず、実OS/Host隔離・G1/G2・独立Expectedは#168/#232のOwnerに残す**。初回H2/H3四SlotのTask/Tool/独立割付を変更しない。コードPRのCI成功は外部DSH実資格0/4を変更しない。
+
 **UI/Go/WASMの検証方法**：前§17のWASM案は、Productに既存の現在Source/Grant・実Operation正本を残した状態で、UIに必要な**純粋な局所計算だけ**をTypeScript／Go Service／WASM三条件で比較。最初のQH-P0やH2/H3へWASMを必須にせず、実Studio Desktopの基線取得後に必要な処理だけ測る。再生成後に同じWebViewに表示できたことと、同じSource/Required/Consumed/AuthorityのConsumer資格を得たことは別。
 
 **価値比較の評価者と母数**：B0 Product単独、B1 Tool-only/必要時Product Skill、B2薄いAdapter、B3統合UIの比較は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)/[#488](https://github.com/hat47x/tai-pleroma/issues/488)・既存J-V/M00/M01/M10/M11を使用。追加すべき観測は「正しく確認済みの局所Claimを保持したか」「本当に変更・失効した必要辺だけを保留したか」の両方向であり、通知件数・Token節約だけで安全性を相殺しない。Packetの準備・配送・再Read・失効修復コストも増分価値へ算入。小標本の参考比較を一般的効果量とは呼ばない。
