@@ -10,7 +10,7 @@ TEIで公開Reference Workspaceの一つの設計要素（例：semantic-data / 
 
 | 順番 | 現在利用するProduct／Harnessの入口 | 合否と停止線 |
 | --- | --- | --- |
-| 1. 対象を指定 | TEI CUIの実CatalogでSubject KindとCanonical IDを取得。Studioは#4515の明示Pinを後続利用 | Focusや表示ラベルで代用しない。Workspace/RootとSourceを区別。GUI Pin未実装ならCUI固定入力で続行 |
+| 1. 対象を指定 | TEI CUIの実CatalogでSubject KindとCanonical IDを取得。Studioは#4515の明示Pinを後続利用 | Focusや表示ラベルで代用しない。Workspace/RootとSourceを区別。Studio PinはDraftに実装済みだが実Host未検収。C0の実証はCUI固定入力で独立に続行 |
 | 2. TEIで再確認 | 現行Inspect、Locate、Trace、Validate、Host-owned Reader | 実Subject存在、版、Source位置、診断、関連の取得範囲を保持。空Indexを不存在としない |
 | 3. 送信前に準備 | Product/Hostが用途・Audience別に許可した短いProjectionをPreview | 受信先、送信予定内容、除外・unknownを確認。生File Path・秘密のID/件数/Digest等を既定で送らない |
 | 4. 外部へ配送 | 実在するProduct CLI/MCP等のTool、または当該Harnessの適格Native Session | 実Tool Call、送出byte、実Reply終端、受信者、Current Grantを別観測。準備・ログ出力だけを実送信としない |
@@ -50,7 +50,7 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 - TEIの reference/tei-studio-workbench/main.ts にある現行 inspect(subject) は、selected、タイトル、editor.setDocument、graph.update、Graph選択、noticeをまとめて更新する。したがってBを閲覧している間に、Pin Aをこの関数で裏から再検査すると**Bの画面を変更してしまう**。
 - 既存 pin-state.ts（Pin／Unpin／Undo／Invalidate／pinRequest／acceptPinObservation）と responses.ts の**独立レーン pinned-inspection**を実Workbenchへ接続する。通常の inspection レーンには触れず、対象を固定したときだけHost-ownedの client.inspectSubject(workspaceID, kind, id) へ問い合わせる。呼出し前に inspectEligibility、応答後に readInspection で対象・Catalogueとの一致を確認する。これらの検査が成功しても現在のGrant、Disclosure、Owner意味受理まで自動的に成立したことにはしない。
-- 要求発行時のPin世代、Workspace epoch、Kind/IDを保持し、遅着時には acceptPinObservation で厳密に照合する。Pin解除／再Pin／Workspace切替／A→B→A／同一レーンの後続要求で旧結果を失効。Pin状態の変更が、現在のBのEditor・Graph・Focus・Noticeを変更しないことを実DOM/Consumerで確かめる。
+- 要求発行時のPin世代、Workspace epoch、Kind/IDを保持し、遅着時には acceptPinObservation で厳密に照合する。Pin解除／再Pin／Workspace切替／A→B→A／同一レーンの後続要求で旧結果を失効。元Workspaceへ戻っても自動復活はさせず、現在のCatalogで同じSubjectが一意に確認できた場合に限り、利用者が「固定対象を再確認」を押して新世代に再束縛する。Pin状態の変更が、現在のBのEditor・Graph・Focus・Noticeを変更しないことを実DOM/Consumerで確かめる。
 - 初回は明示Pin/Unpinの一Subjectだけ。FocusやEsc/IMEによって勝手に解除せず、Relation描画用の parent: Edge IDは意味Relation occurrenceと見なさない。外部HarnessへのContext共有ボタンやWriterを、PinのProduct Reader実配線より先に合格扱いしない。
 
 ### 現行の実CI失敗は二つの別原因
@@ -111,7 +111,7 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 1. **Source/Node契約**：最新HEADで Pin/Reader 既存・追加テスト、型チェック、通常のWorkbench Buildが成功すること。失敗時は対象SourceとToolchain/正規生成入力を固定し、原因を切り分ける。
 2. **配布の同一性**：生成JSとDesktop収録JSを正規生成・同一HEADでbyte照合すること。以前から存在するBundle不一致は、本UIコード追加だけで修復されたと扱わない。異BranchのJS/Artifactを流用しない。
-3. **実DOM/Hostの非干渉**：B表示中にAを固定して裏で再取得し、BのEditor/Graph/選択/Noticeが変化しないことを実WebView/Host Consumerで観測。Unpin、Pin A→B→A、Workspace A→B→A、返信の遅着、Catalog/Source改版、Host拒否、同名異Rootを負例として残す。現在のread-only UIでDirty/Undo/IMEの編集安全を実証したとしない。
+3. **実DOM/Hostの非干渉**：B表示中にAを固定して裏で再取得し、BのEditor/Graph/選択/Noticeが変化しないことを実WebView/Host Consumerで観測。Unpin、Pin A→B→A、Workspace A→B→Aで明示再確認した後の旧応答拒否、返信の遅着、Catalog/Source改版、Host拒否、同名異Rootを負例として残す。現在のread-only UIでDirty/Undo/IMEの編集安全を実証したとしない。
 4. **外部YIC接続**：上記の実Product Pinと現在のHost Disclosureの別審査を経た後、既存の実Tool/Native Sessionが限定Contextを完全受領し、元Task/PinへReplyを返したことをTAI #168/#271・QH §10のI/R/P/T/C/Hで記録する。手元のPin状態やTool一覧、AI説明だけを送信成功にしない。
 
 **Evidenceの状態**：GitHub SourceとUIのID対応を読戻し済み。新HEADのActions合格、生成Asset一致、実DOM/Windows Host、外部Harness受領、Source再読取、Owner意味受理はこの時点で**未確認**。実装が前進しても、TEI #4583の非Plugin Stage1→Stage2 DesktopとTAI #168の独立H2/H3四Slotを新しい順序制約で妨げない。
@@ -139,6 +139,9 @@ TEI [Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) の専�
 修正後は既存のWorkflow内で、Node24上のnpm ci→npm test（Product Reader／配線回帰を含む全Workbench標準テスト）→TypeScript typecheck→正規Workbench buildを連続実行する。pull_request/pushの変更対象も、既存の数ファイル列挙から **reference/tei-studio-workbench/** 全体へ拡張した。新Host・新Runner・新テスト格納先は設けない。
 
 この変更は**テストを実際に実行する経路の是正**であり、[commit ca172a1b](https://github.com/hat47x/tei-platform/commit/ca172a1b5ca89b311b1c8460f9ea9cad8f5754ea)に対応するGitHub Actions結果は確認時点で未取得。npm buildは配布先へのコピーやbyte比較を行わないため、既知のDesktop埋込Bundle不一致は、別Workflowと実Hostで引き続き検収する。
+
+<!-- pin-return-to-workspace-20261115 -->
+**実装更新（11月15日）**：[TEI Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) で、A→B→AのWorkspace切替後に固定対象の再確認ボタンが使えない問題を修正した（[実UI修正 12118cb5](https://github.com/hat47x/tei-platform/commit/12118cb511f59944460285789f137289c7965b96)）。固定の意図は残し、元Workspaceへ戻ってCatalogが同Subjectを一意に解決した場合に限り、利用者が明示的に再確認することで新しい世代とWorkspace epochに結び直す。**旧観測の自動復活は認めない**。[状態の負例 d5d53849](https://github.com/hat47x/tei-platform/commit/d5d53849fea01bd1a8b95f5e338a0a04f464660b)と[Workbench配線回帰 5bcfaa2f](https://github.com/hat47x/tei-platform/commit/5bcfaa2fecfc684d1bb21763f622e2c93b5b990b)を標準npm test対象に追加。実Sourceの静的9/9、実Pin状態処理のV8隔離実行7/7は期待どおりであり、**Node24/npm・実DOM/Wails/WebView2・Current Grant/Disclosureの検収とは別**。受入に追加する負例：別Workspaceでは再確認無効、元Workspace復帰時に対象不在・曖昧なら再確認無効、明示再確認前・後の旧応答を不採用、現在の閲覧Bを変更しない。
 
 ## 優先順位と停止線
 
