@@ -3,6 +3,9 @@
 > **Status: Proposed / Docs-only / 新しい実Harness・実Product E2Eは NOT RUN。** 本文は既存Ownerの受入票へ実行順と記録方法を接続する補助計画であり、Handoff v2、公開API/ABI、第二Expected/Authority、中央Runner/Session Store/Lock/Registryを定義しない。Ownerの正式採用・外部送出・業務実行を意味しない。
 
 <!-- yic-executive-reading-guide-20261114 -->
+<!-- yic-short-execution-ticket-index-20261115 -->
+**最初の着手先**：[TEIの設計要素を外部Harnessへ渡す最初の実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)。CLI実Read、Pin Aの背景再確認と画面B非干渉、短い許可Projection、Tool-only実受領、元対象への候補帰着を**二つの独立レーン**に絞っている。本文§49は根拠と拡張条件の参照用とし、実装者はまず短い実行票から着手する。
+
 ### この計画を読む前に
 
 目指すのは、利用者がTEI Studioなどで選んだ対象について、必要なときだけ外部AIに相談し、別の画面やHarnessへ移っても**対象・根拠・未決事項を取り違えずに作業を続けられること**である。AIを使わない通常の製品操作は、そのまま成立させる。
