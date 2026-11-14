@@ -1246,7 +1246,7 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 **その後の同一Ownerの進展**：[Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)はexact HEAD f2f49a7でService登録検査を実 application.Options.Services のASTへ寄せ、未知Service差込・二重登録・登録式の変更を含む**6件の合成負例**を追加。[Wails Host Workflow #43545456013](https://github.com/hat47x/tei-platform/actions/runs/43545456013)のnested server-tag Go testはcompleted/success。Browser由来の allowed string list は**Host Grantではない**と分類。これでも静的Inventoryとloopback二BrowserContextsの証拠に限られ、異PrincipalのHTTP/WS拒否は未実施。旧HEAD 9491bf9eの実績は履歴として残し、新HEADの別CIと混ぜない。
 
 <!-- yic-wails-4627-gofmt-recheck-20261114 -->
-**後続CI差分の注意**：TEI #4627のHEAD f2f49a7はserver-tagテストとChromiumの限定成功があっても、[Repository Health #43545455990](https://github.com/hat47x/tei-platform/actions/runs/43545455990)で**本PR追加Go testのgofmt不一致によりFAIL**。次HEAD a0850047は整形を修正した候補だが、**当該HEADのHealth完了結果を確認するまで成功としない**。Inventoryの技術的意味・Public Web未適格性は不変。
+**後続CI差分の注意**：TEI #4627のHEAD f2f49a7はserver-tagテストとChromiumの限定成功があっても[Repository Health #43545455990](https://github.com/hat47x/tei-platform/actions/runs/43545455990)のgofmt不一致でFAIL。次のHEAD a0850047も[Health #43547953342](https://github.com/hat47x/tei-platform/actions/runs/43547953342)の同ファイルgofmt不一致でFAILした。余分な空行を修正した現HEAD **b9cf5447** は[Wails Host #43549001431](https://github.com/hat47x/tei-platform/actions/runs/43549001431)／Windows Desktop WebViewの限定成功が確認された一方、**Repository Health #43549001517の完了結果は未確認**。前HEAD成功と併合して全Workflow PASSとはしない。15 Method Inventory＋6合成負例はPublic Webの実Principal/Workspace HTTP/WS認可・Tool拒否を証明しない。
 
 **最小の接続順**：①現loopback Wails Serverの実method inventoryとProduct Inspectを限定観測、②TEI Ownerがread-only公開面／実Actor・Workspace拒否を独立試験、③適格な実Web Capability Discoveryが得られたときだけSkillへ当該read-only手順を提示。Product Skill名・共通UIコンポーネント・表示結果をWeb認可のIssuerにしない。公開用Facade/Hostの判断はTEI、TAIは既存X/HC票の比較欄のみを所有する。
 
@@ -1270,6 +1270,28 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 **次の小実験**は、TAI #234／#422の**許可された公開read-only 3独立Workstream**を Product-only→Tool-only→必要時限定Handoffの順に比較すること。ただしPacket×Skill四群(M00/M01/M10/M11)の独立Expected・実CostはTAI #621/#488へ戻し、Workstream数とSkill群を一度に増やさない。統合の受入はGit Scope、Subject/Meaning、Build/Runtime、独立Review、Product/Owner Acceptanceを**別票**として判定する。A2隔離Branch/A3既存Git/CI/A4人間判断の順は適格時だけ進め、初回H2/H3比較とDesktopセルフビルドP0には加えない。
 
 **具体的な停止線**：前回はSkill/Toolの三閉包I/S/Cだけを更新すれば済む場合と、元Product OperationのEffect unknownで再実行できない場合が異なる。Skillの再LoadやActivity再開が成功してもProductの自動再Submitには移らない。ここに記載したGoal/3 Workstream/二Harness/Native Resume/Result Bodyの新実験は今回NOT RUN。既存Draft #648の手順・Expectedをそのまま参照する。
+
+<!-- yic-real-host-role-tool-route-qualification-20261114 -->
+### 50.6 Skill採用を「仕事→役割→実行経路」で判断する（Hostと契約の交差点）
+
+[TAI Draft #648 §18.1／§28.1〜28.3](https://github.com/hat47x/tai-pleroma/pull/648)の**モデル→役割→仕事の二段割当**、Native Capabilityと利用権限、契約／Quota／費用／復旧の区別を、前§49のSkill起動判断へ接続する。モデル・Harness・Host・Product Tool・Subscription／API・Skillは、一つの「利用可能」フラグにまとめない。新しいYIC Model Router、Quota Server、共通Execution ABIは作らない。
+
+| 実Jobの判断順 | その場で必要な実観測 | 不成立時の縮退・禁止する昇格 |
+| --- | --- | --- |
+| 1. 目的・Task・独立Expected | Product Subject/Source/Root、純粋ReadかEffectか、必要Precision・期間・公開Audience | Task自体が不確定ならAI Roleや高額Modelを先に固定しない。重要なEffectはOwnerへ |
+| 2. 役割と推論の候補 | 探索／実装／独立反証／Reviewの役割、同条件で必要なContext・推論品質 | Model名を能力の証明、複数Sessionを独立Reviewerの証明にしない |
+| 3. 当該Harness/Hostでの実Capabilities | Native Session・CLI/MCP Toolの**実Discovery/Invoke/完全Reply**、Skill root＋参照の**実Load**、Product実Version/Schema、OS/Grant/Disclosure | Package installed・Model available・Tool listedだけでLoaded/Invokedとしない。未対応なら正当なTool-only／Product-onlyへ |
+| 4. 正規利用経路と資源 | 公式CLI認証／公式APIの別権利／第三者Gateway契約／ローカル実行のうち、今回の**正規Host/Plan/Rate Limit/Quota/予算** | 定額App枠をAPI/Gatewayへ流用できると推定しない。GatewayのOpenAI-compatible応答を同一Toolや価格保証としない |
+| 5. Skillの増分効用と現在のSubject資格 | 同じ公開Task/Source/Expected・実Tool/Host条件でTool-only対照、追加Load/失効再確認/費用/誤判断を測る | Tool-onlyで足りるならSkillを標準Loadしない。古いSkillやContextを現在Product権限へ昇格させない |
+| 6. 途中変更・失敗時の復旧 | NativeのQuota/Tool/Reply、元Product Operation/Attempt/Result、Source・Recipientの現在資格 | 失敗した応答やEffect unknownを成功・Rollback扱いにせず、別Model/Hostへ権限と秘密を無断移送しない |
+
+**配布の判断は利用時とは別**：[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)は当該HarnessへPackageを配置できるか、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)は実Loader/Toolと増分品質、[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)はNative Session/Goal／Quota、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)と[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)は実仕事の費用・Reviewer工数を判定する。Skill内容はProductの読取手順・停止条件へ限定し、Quotaや料金を版の変わるSkill本文へ埋込み固定しない。Tierの名称や公式経路の可用性は利用者Account/時点ごとの実確認事項。
+
+**Studioの実行境界をSkill Capabilityに混ぜない**：[TEI #1824 LPC-01〜08](https://github.com/hat47x/tei-platform/issues/1824)／[Draft #4634](https://github.com/hat47x/tei-platform/pull/4634)が比較する A＝現Wailsの同一Go Process、B＝同一GUI実行ファイルから起動するWorker子Process＋局所IPC、C＝別のserver-tag Wails Server子Process＋loopback HTTP/WSは、実対象を扱うProduct Host/Process/Principalが異なる。特にCのserver-tagは別Build Artifactで、同じGUIバイナリ内蔵ともPublic Web認可済みとも断定できない。A/B/CはProductの同一公開Operationを維持しつつ、起動/停止/異常時・実identity/ACL・Protocol/Reply終端・Sourceアクセス・P50/P95の待ち時間/メモリ・配布/Receiptを**同条件**で検査して選定する。ローカルIPCがHTTPより速いとの採用判断を測定前に固定しない。UI/JS側のallowed-listや可視Command一覧はGo/OS Host Grantではない。
+
+**小さい実験と実装位置**：既存公開TEI一Subjectで①Product-only CLI、②同じHostのHarness Tool-only、③必要なProduct Skillの実Loadの順に観測する。正規利用経路・追加費用・Quota・Capability欠落とCurrent Grantを別記録。初回H2/H3四SlotはG0/G1/G2と独立Source/Tool Profileを固定したままで、本§の第二Harness/別課金経路/Studio B,Cを初回比較に混ぜない。後続J-S/J-Vでだけ、利用可能な第二HarnessまたはDesktopトポロジーを一つずつ対照する。
+
+**状態**：本節は既存TAI Draft #648・TEI Draft #4634・Product Owner票を結ぶDocs-only採否／受入計画。新しい実Quota/課金観測、三トポロジー性能・安全性の同条件Benchmark、実第二Harness、Web Authority、実Stage2、Owner意味受理はNOT RUN。TAI #168適格0/4とTEI #4583 P0は独立継続。
 
 <!-- yic-real-product-command-skill-promotion-20261114 -->
 ## 51. 2026-11-14：新Product機能をSkillの案内へ昇格する条件（後続計画）
@@ -1339,7 +1361,7 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 - [TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625) HEAD 24863bd6の**9/9 GitHub Workflow成功**は、ローカルEvidence Pathを用いた実CLI子Process／commands/catalog/JSON/Pinの限定技術検証。**Draft・未merge**。Tool自体は存在する候補だが、現行TEI main/公開Profileの機能とは宣伝しない。Web/Remote/MCPへ任意Pathを外部入力させない。
 - [TEI Draft #4630](https://github.com/hat47x/tei-platform/pull/4630) HEAD 1ad749fcの**12/12 Workflow成功**（Windows Smokeは初回Timeout FAIL→当該JobのAttempt 2でPASS）は、R2 Candidate解釈を**Host管理byte列から受け取るProduct内部境界**へ分離する小実装候補。**Draft・未merge**。Hostが実Principal/Root/現在Sourceを確認してbounded Readし、同じ受信byteを実Consumerへ投影したことまでは保証しない。
 - <!-- yic-r3b-local-reader-stacked-20261114 -->
-- [TEI stacked Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) HEAD c5f0075aは#4630のbyte-only Operationを受け、Studio Host起動時にだけ固定したWorkspace/Selector→Workspace相対のEvidence Pathを内部で解決し、既存ReadOnly.workspaceとworkspace.ReadSourceの**4MiB bounded single Read**から解析する局所Reader候補。呼出側はWorkspace/Selector/Observation/Relationを渡すだけで任意Pathを指定できない。同Rootの重複Selector、unknown Workspace、path脱出、symlink、Raw Pin不一致、Root差替えなどを負例にする。内部Path/秘密Edgeを含み得る失敗は一般化し、Host内部の原因と外部応答を分ける。**#4630をbaseとする積上げDraftで、最新HEADのGo/Windows/Host CIは未確認**。Readerは現状Wails/HTTP/MCP/外部Harnessへ公開されず、Current Principal/Grant・Audience別Disclosure・A→B→A履歴・別Consumerは未適格。Skill説明に「遠隔REAの読取り対応」を追加しない。
+- [TEI stacked Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) HEAD 170f9be5は#4630のbyte-only Operationを受け、Studio Host起動時にだけ固定したWorkspace/Selector→Workspace相対のEvidence Pathを内部で解決し、既存ReadOnly.workspaceとworkspace.ReadSourceの**4MiB bounded single Read**から解析する局所Reader候補。呼出側はWorkspace/Selector/Observation/Relationを渡すだけで任意Pathを指定できない。同Rootの重複Selector、unknown Workspace、path脱出、symlink、Raw Pin不一致、Root差替えなどを負例にする。内部Path/秘密Edgeを含み得る失敗は一般化し、Host内部の原因と外部応答を分ける。**#4630をbaseとする積上げDraftで、新HEAD 170f9be5のGo/Windows/Host CIは進行中。全体の完了と合格は未確認**。Readerは現状Wails/HTTP/MCP/外部Harnessへ公開されず、Current Principal/Grant・Audience別Disclosure・A→B→A履歴・別Consumerは未適格。Skill説明に「遠隔REAの読取り対応」を追加しない。
 
 **次の実用昇格条件**は、TEI #3394/#4503/#2516側で既存Studio Hostの許可Selector→一度だけ限定byte実Read→既存Operation→許可Projection→第二Consumer実Readをつなぎ、同名別Root／Symlink／改版／内部Error Pathの外部非開示をProduct Ownerが検査すること。REAの実解析・保存Evidence・現在原資料の資格も別。YIC Skillは実CLI/Hostで提供済み・許可済みの**read-only受領手順**のみを案内し、新File ServerやPath Resolverを構築しない。
 
