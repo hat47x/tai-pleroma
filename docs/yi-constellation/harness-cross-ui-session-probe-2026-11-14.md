@@ -1061,6 +1061,25 @@ TEI StudioやSHOにおける説明生成・異言語移植のため、次の**�
 - **SourceとCoverage**：REAの観測結果やDBのpartial/unestablishedは、受領後もそのまま示す。図がきれいにつながっても、Sourceの根拠閉包やGraphの全件性は成立しない（TEI #3394/#2586/#4647）。
 - **Provider／Target独立**：同じFunction図からWeb・Desktop・CLI等へ投影できても、接続先Hostの認可・Plugin版・言語別生成物・Build Attemptは再資格化する。Go単一バイナリを基本とするTEIの配布方針と、YICがハーネスを自作しない方針は矛盾しない。
 
+<!-- yic-meaning-diagram-cross-target-view-trace-20261114 -->
+### 42.1 一つの意味から複数の図を作り、実行記録とは区別する
+
+[TEIの実行モデル図解計画（main統合済み #4665）](https://github.com/hat47x/tei-platform/blob/main/plan/design/PROGRAM_EXECUTION_MODEL_PROJECTIONS_2026-11.md)は、Lifecycle、Control Flow・判断、Interaction、Data・Effect、State、Trace・Evidence、Build・Artifactの図を、同じ意味モデルから別々に投影する方向を整理した。**mainに入ったのは設計文書**であり、図の自動生成器・編集器・異言語Targetの実装が完成したわけではない。
+
+YICでは、利用者が選択した**一つのFunction／Entry**を起点にして、図と実観測を次の三つの目的へ結び付ける。すべての情報を一枚の図に重ねない。
+
+| 見たいこと | 優先する表示と根拠 | YIC・AIがしてはいけないこと |
+| --- | --- | --- |
+| 仕事の仕組みを理解する | Source位置・意味Subject・型付きEntryから、起動条件・入力・計算・状態・結果を図示 | 同名ノードや描画用Edge IDを意味上のIDとして推定する。図に無いProvider/分岐をAIの説明で補う |
+| 実行状況を確かめる | Hostが実観測したTurn/Operation/Attempt・Provider・Result・Effect Receipt・実ConsumerのTrace | 設計図に矢印があるだけで「実行済み」「通知済み」「受理済み」と表示する |
+| 改修・移植の差を調べる | 元Source→候補の意味対応→不足する保証→Target実装→実Consumerという段階別の照合 | 同じ画面・同じ戻り値から、実Read範囲・権限・イベント順序・丸め・外部Effectまで同等と推定する |
+
+**図を編集するときの順序**：対象のSource occurrence/Revisionと可編集範囲を確定→意味上の変更案をPreview→既存ProductのResolve/Admit/Accept→生成物と実Consumerで確認。読み取り専用のProjectionや、元Sourceへ一意に戻れない図は、その場で編集確定しない。配置・色・折れ線の変更は表示の変更として扱い、業務意味やBuildの改訂へ自動昇格させない。元のMarkdown/Graphviz/DSLの糖衣は可能な限り保持する。
+
+**移植に必要な検査**：[TEI #4665](https://github.com/hat47x/tei-platform/pull/4665)のPX-01〜22は[TEI #4198](https://github.com/hat47x/tei-platform/issues/4198)・[#2514](https://github.com/hat47x/tei-platform/issues/2514)等の既存Expected候補とする。まずpure Function一件について、元コード・意味モデル上の評価・実Go CLIの値と前提条件を対照する。次に、同じ値でもRead Footprintが違う、Commit前に通知する、ACK喪失後に再送する、旧Artifactを使う負例を分ける。Targetで必要な保証が表現できなければ`unsupported`／Gapを明示し、暗黙の代替処理を生成しない。Runtime間移植・Graph Editor・独立Graph CompilerはP0の条件ではない。
+
+**StudioとHarnessの接続**：PinされたSource・Functionと、利用者に見せる説明用Projection、外部AIへ実送信してよい限定Projection、実行Traceの開示資格をそれぞれ判定する。AIが生成した「分かりやすい流れ図」はProductの現在の実行記録ではない。新しいDiagram Storeや共通Meaning Authorityを設けず、既存TEI #4515/#1124/#4502とTAI QH-P0の受領票へ割り付ける。
+
 **最初の図解検収**は「固定したread-only一Functionについて、公開された実Entry、Source、選択Provider、返却Result/unknownをStudioとCLIから追えること」。図だけが一巡していてProductの実Invocationがなければ図解限定PASSとし、AI Harness実行・製品配布・生成アプリのセルフビルド達成とは数えない。
 
 ## 43. 次の小さな実行カード：独立P0を妨げず、一つの業務結果へ近づける
@@ -1075,6 +1094,24 @@ TEI StudioやSHOにおける説明生成・異言語移植のため、次の**�
 | **J-E2 Tool-only** | J-E1とは別Attemptで、実Productが許可したProjectionだけを外部Harnessに配送し、Call/Replyの対応・byte完全性・Recipientを照合 | TAI #168/#232/#271。G0/G1/G2が未成立なら送出せずread-only Product-onlyへ縮退 |
 | **J-E3 提案→適用（後続）** | 同じ対象へAIが変更候補を返す場合、元Source/Pinと差分を画面上に保ち、Ownerのレビュー・現在Grant・実Effect Receiptを分ける | TEI #4515/#4502、SHO/SUI各Owner、EKI #57。候補表示・Preview成功をCommitと数えない |
 | **J-V 比較** | 同じ許可済みTaskでProduct-only→Tool-only→Product Skill→必要時TAI Activity Skillの差分を測定し、二種類の外部Harnessで再現性を確認 | TAI #234/#422/#488。実行時間、再開成功、モデル・Token/Quota実費、修正回数、人間のレビュー負荷、Outcomeの質を別々に測る |
+
+<!-- yic-domain-workload-independent-harness-validation-20261114 -->
+### 43.1 後続のHarness比較には、正解だけでなく意味上の取り違えを検出できる仕事を選ぶ
+
+[TEIの数理・統計・計画向け設計（main統合済み #4663）](https://github.com/hat47x/tei-platform/blob/main/plan/design/CROSS_DOMAIN_MATH_STATISTICS_PLANNING_TOOLKITS_2026-11.md)には、外部モデル・ライブラリ・DBを使わなくても**事前に独立Expectedを固定できる**小さな検証例がある。TAI #422/#488のHarness・Product Skill比較では、初回#168のH2/H3四試行を**完了した後の追加候補**として活用できる。まだYICの実Trialとして実行したものではない。
+
+| 後続の比較候補 | 事前に固定できるExpected | AI・Toolを比較する際の反証 |
+| --- | --- | --- |
+| **移動平均（TA-01a）** | 入力10、20、30、40。現在行と直前2行の平均は**10、15、20、30** | 行順・ROWS/RANGE・欠測・取得範囲が不明なのに、たまたま合った数値だけで完全な結果とする |
+| **WBSとCPM（TA-02a）** | A=2、B=3、C=4、D=2、依存A→B/C→D。CPM最短**8**、クリティカルパスA→C→D。B/Cの共有専有資源を制約すると最短**11** | WBSの親子関係を依存と取り違える。資源制約を入れても8を再利用する |
+| **整数最適化（TA-03a）** | 既定制約下で**(x,y)=(0,2)、目的値2** | 値が出たことを最適性の証明とみなす。未解決・Timeout・infeasibleを混同する |
+| **数式の前提条件（TA-05a）** | 実数では`√(x²)=|x|`。x=-3なら結果3 | 根拠のない`√(x²)=x`への単純化を正解として扱う |
+
+比較を行う場合は、**入力・制約・独立Expected・判定者・Source/Tool/Model/Harness版を試行前に固定**し、AIの回答、Productの実計算、採点、実Consumerの結果を分ける。Expectedを渡さない試験と、Expectedを教材として与える操作案内は別の条件にする。人間による答えの見直しが必要なら、その作業時間も計る。正答率だけでなく、条件不足を正しく`unknown`とした割合、誤った断言、再実行・修正、Token/費用と人手を別々に評価する。
+
+**実務とのつながり**：これらは「モデルが算数を解けるか」だけを測る試験ではない。同じMeaningを表・図・説明文・将来の生成アプリへ渡したとき、制約・時点・単位・順序・不確実性が保たれるかを試す。TEI側の実Provider、実Studio、生成Targetの適合は[TEI #4660](https://github.com/hat47x/tei-platform/issues/4660)と[#1180](https://github.com/hat47x/tei-platform/issues/1180)/[#2514](https://github.com/hat47x/tei-platform/issues/2514)がOwnerであり、YICのモデル比較成功から専門Toolkitや新DSLの採用を自動決定しない。
+
+**優先順と現在の証拠**：初回TAI #168の固定H2→H3→H3→H2、実OS G0→G1→G2、TEI #4583のStage1→Stage2セルフビルドは従来どおり独立P0。追加の数理・計画例は**後続J-Vの任意の圧力試験**であり、初回四試行のTask/Expected変更や新Blocking条件にしない。#4663でmainへ統合されたのは**手計算Expectedを含む設計文書**で、新しいSolver・R/Python/SQL計算、Native Studio二Consumer、外部Harnessの実比較はこの変更ではNOT RUN。新しい評価Runner/Oracle/Model Routerを作らず、既存TAI #422/#488／TEI #2514の判定票を使う。
 
 **最小負例**：HTTP 200でもProvider未到達、二Root同ID別byte、旧Grant/異Audience、Tool Reply欠落・切断、空行の全件誤認、Native Session再開不能、Goal Delivery ACKだけの成功、外部Harness切替後に古いEffect unknownを再実行。すべて既存TEI/TAI/EKIのExpectedへ割り当て、YICに横断的な新Validatorを作らない。
 
