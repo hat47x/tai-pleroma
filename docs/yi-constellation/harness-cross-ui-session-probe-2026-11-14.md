@@ -891,3 +891,46 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 **優先順位は不変**：P0-A TEI #4583のA Native非Plugin Stage1→Stage2 Windows Desktopセルフビルドと、P0-B TAI #168の実OS G0/G1/G2→独立H2/H3四Slotは別々に先行。J-R0/J-R1をJ-R2/J-Sの必要条件として評価しても、新しい全製品共通Hard Gateにはしない。Product-only/Tool-onlyの利用を阻害せず、新Agent Loop、中央Auth/Session DB、共通CASは作らない。
 
 **本追補はDocs-only**。新二Principal実HTTP/WS、TEI正式別Consumer、SUI Card出典保存/別Process Source復帰、外部Harness送受信、Owner正式受理はNOT RUN。
+
+<!-- yic-query-completeness-and-toolchain-consumer-20261114 -->
+## 39. AIが返す「結果の確からしさ」と、実行済み成果物の再利用資格を分離する
+
+他チャットの新しい**実装＋実測**は、[TEI #4647](https://github.com/hat47x/tei-platform/pull/4647)のnative SQL取得被覆と、[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648)のGo self-build toolchain差異。両者の限定成果は前§36.2に索引済みなので、ここでは**YICの外部Harness／UIが誤った判断を返さない利用者向け出口**だけを具体化する。新Result Schema/Build Registry/Oracleを定義するものではない。
+
+### 39.1 「見つからなかった」より先に、何を調べ終えていないかを表示する
+
+| Productが実際に観測したこと | UI／外部Harnessが言えること | 言ってはいけないこと・次のOwner |
+| --- | --- | --- |
+| native SQLでRLS/Limit/Join/宣言外Relationなど制限を観測し、`coverage=partial` | 「条件・アクセス権・取得上限のため、取得範囲は一部」。実行Role・Scope・理由と返った行は**許可された範囲だけ**示す | 全件、完全一覧、関係する案件が存在しない、NULLが保存値だと断言しない。TEI #4647/#2586 |
+| 既知制限が見えなくても、STABLE関数の隠れた述語があり得る `unestablished` と `native-sql-predicate-not-closed` | 「観測した結果」であって「完全性の確定ではない」。ゼロ行でも`EmptyJustified=true`としない | `partial`の理由が空だから`complete`、データなし、Source不存在へ昇格しない。TEI #4647 |
+| 実Column lineage/NULL originを取得していない（W4未実装） | NULL由来・entity粒度は未確認とする。粒度は実Scan形状と宣言キーで確認した範囲まで | `nullOrigin=stored`や`entity`を他Provider/Modelの推測から補わない。TEI #4647/#1121 |
+| Source/DB Version/Worktree/現在Role・Grantが`unknown` | Product自身の現在性・開示確認待ちを明示し、外部送出しない | 行数・SQL文字列・古いResultだけで全社・全Tenantの判断を出さない。TEI #2516/#4503 |
+
+**AI提示に関する提案（新ABIではない）**：画面とToolの利用説明には「取得された行」「取得範囲（complete/partial/unestablished/unknownのうちProductが実返した語だけ）」「未観測の条件」「次の検査・受理者」を分けて示す。Productが返さない区分をYICが埋めない。情報が足りない場合は回答の断定性を下げ、適格なSourceを実Readできる次の操作を案内する。秘密の行数・関係名・理由はDisclosureの対象なので、表示文に無条件に含めない。前§37の**送信前拒否**を先に適用する。
+
+### 39.2 同じBuildPlanでも同じArtifactではない
+
+[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648)は、同一のself-build計画に対してGo 1.26.11と1.27.0で**生成Binaryのbyteが実際に変わる**ことをWSL2/linux-amd64で観測した。旧計画の`l2b.claimed=true`はいずれも成立し、`toolchainObservation.namedByPlan=false`。新しい`matched`はBuilder申告Pathのbyte再読一致であり**そのCompilerを実際に使ったことの独立実証でも、Seed TrustやG4受理でもない**。
+
+| 仕事の境界 | YICが引き継げる情報 | Cache／Handoff／Owner判断 |
+| --- | --- | --- |
+| 宣言・World | Source/モデル版、要求BuildIntent、選択Generator/Builder/Plugin/Target、予定Artifact role | World Fingerprint/Model Revision/Artifact Revisionは別。Source byte一致でも選択Dependency/Toolchain不明なら再利用を保証しない |
+| 実Build Attempt | 実OS/arch、Compiler・Go version/実image digest、Toolchain observation state、実Provider/Child、入力/出力byte、Run ID | 計画がcompilerを名指していなければ`matched`を`plan-pinned`へ昇格しない。同Plan＝同Binaryとはしない |
+| Artifact/Consumer | 生成物digest、Target/Role、実Reader/Embed/OS Consumer、独立Handoff/Result | 先行HEADのN0/N2/N3成功を別HEAD Stage1→Stage2へ転記しない。実Consumerの読取byte確認を要する |
+| 失敗／再試行 | 中断した旧Attempt、未知Effect、必要な再評価列、Source/Grant再確認 | Harness Session切替・Cache hit・Hash再一致だけで既存Effectを自動再実行しない。TEI #4583/#2831、TAI #271 |
+
+**実装判断はOwnerに残す**：Go toolchainをBuildPlanの必須入力にするか、その固定粒度はTEI #2831/#4648のOwner判断。YICは`Toolchain reported`／`Plan names toolchain`／`Actual compiler independently observed`／`Artifact bytes independently consumed`を試験観測として**別Claim**にし、共通Artifact Key・強制Pin/Build Engineは作らない。現時点のself-build観測が出たからといって、異なるHost/OSのバイナリを同値とも、意味が不正とも即断しない。
+
+## 40. 二つの既存Product Owner実験をYICの回答・引継ぎ試験へ写像する
+
+| 既存実験・反例 | YIC側で次に観測する利用者価値 | 不合格とする誤動作 |
+| --- | --- | --- |
+| **Q-1 検索・照会の不完全性**：TEI #4647 のRLS、Limit、JOIN、STABLE関数の隠れた述語、0行、NULL由来W4未観測 | Product-only画面・Tool-only Harnessが**同一Product Result**から、観測された行・`partial`/ `unestablished`・未確認理由を区別して説明できるか。必要な行名/件数も現在Audienceで許可する | 見えた行で全件確定、0行を「対象なし」、`unestablished`を`complete`、非公開制限理由をAgentへの説明で漏洩 |
+| **B-1 Artifactの再利用資格**：TEI #4648 の同Plan・異Compiler／同Compiler・異seed、別Artifact SHA、`namedByPlan=false` | Harness A→B切替後、同Planから生成された候補Artifactを**同じバイナリとして流用せず**、実Compiler/実Build Attempt/Consumerを再照合するか | `l2b.claimed`だけで再利用、Toolchain申告`matched`を実起動Proofに昇格、別OS/旧HEADのArtifactを黙って採用 |
+| **Q+B複合Handoff**：Q-1が`partial`または`unestablished`のまま、B-1のToolchainが変更される | Activity Packetには**許可されたSource参照、未解決の被覆、旧Attempt/実Artifact参照**だけを引継ぐ。再開先のHostが現在Grant/実Tool可用/Build資格を再照合 | AIが旧不完全Resultを補完して全件回答、旧ToolchainのArtifactを無条件採用、元Effect unknownを新IDで再実行 |
+
+この比較は独立の新Run Planを増やすものではなく、**TEI #4647/#4648の現行Expected、TEI #4583 Build実Consumer、TAI #168 H2/H3、TAI #271のASV**に対するYIC側の利用者観測列である。まずProduct-only／Tool-onlyで表示・回答の誤昇格を検査し、必要性が確認できた場合だけProduct Skill/TAI Activity Skillや第二Harnessの比較へ拡張する。初回TAI #168の固定H2/H3四Slot（現0/4）には新Query/Toolchainケースを**追加Blockingしない**。
+
+**実証の現状と資格上限（2026-11-14確認）**：[TEI #4647](https://github.com/hat47x/tei-platform/pull/4647) exact HEAD a962a3f6は**CI 7/7 completed/success**、[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648) exact HEAD 64fb0f9aは**CI 8/8 completed/success**。#4647の実PG16・7 Mutation／#4648のWSL2 Go二系統の実測は**局所試験**であり、外部Harnessへの実Query/Build Result送達・正式SQL Entryの現在Grant・非Plugin Stage1→Stage2 Windows実再Buildは**未確認**。[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637)二Root追加HEAD 9b8f5ca9では確認時**12中11成功、Healthがin_progress**で、最終合格を宣言しない。
+
+**採用判断**：新しい回答Status Schema、跨ぎCache Engine、強制同一Binaryルール、常駐自前Harnessはここで採用しない。TEI #4583とTAI #168の独立P0を維持し、Q-1/B-1が実務の誤断定・誤再利用を防いだ効果を独立Expectedと人レビュー負荷で評価する。今回の§39〜40は既存実装・CIの照合に基づく**Docs-onlyの後続実証計画**。新Product/Harness E2E、二Harness切替、Owner正式受理はNOT RUN。
