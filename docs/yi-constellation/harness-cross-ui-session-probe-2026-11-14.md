@@ -446,7 +446,7 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 
 **P0を変更しない**：A=TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の実Stage1→Stage2 Desktop/同Attempt BuildIntent+Native WebView2、B=TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G1→G2→独立H2/H3四Slot（比較適格0/4）。いずれも独立Owner/独立証拠で進め、C=Product-local Pin/R3-A、D=QH-P0、E=M1/M2/M3、F=J-Vを後続の必要な用途にのみ接続する。SUIのAI OFF Raw→Card→原文復帰、SHO単独Writer、SEIの局所判断、TEI Studio単独操作はHarness不適格でも維持する。
 
-**SK-02 Native fork独立性の負例（既存Checkerの局所実装修正）**：[TAI Draft #649](https://github.com/hat47x/tai-pleroma/pull/649)では、従来の4件の`session_id`一意性だけでは見逃す**共通root、fork親、fork深度、resume**を、実Native記録がある場合に比較不適格として分類する。DSHの通常forkは親IDを残さず`isSeeded`や`inheritedEventCount`で継承履歴を表す場合があるため、親IDのみを資格判定にしない。新しいSK-02 Checker/Host/Runnerは追加せず、既存の合成E73〜E82とCIの必須ケース一覧を補強する。**観測されないNative lineageを自己申告の`independent_session_observed=true`から保証したとは言わず、実OS/Host隔離・G1/G2・独立Expectedは#168/#232のOwnerに残す**。初回H2/H3四SlotのTask/Tool/独立割付を変更しない。コードPRのCI成功は外部DSH実資格0/4を変更しない。
+**SK-02 Native fork独立性の負例（既存Checkerの局所実装修正）**：[TAI Draft #649](https://github.com/hat47x/tai-pleroma/pull/649)では、従来の4件の`session_id`一意性だけでは見逃す**共通root、fork親、fork深度、resume**を、実Native記録がある場合に比較不適格として分類する。DSHの通常forkは親IDを残さず`isSeeded`や`inheritedEventCount`で継承履歴を表す場合があるため、親IDのみを資格判定にしない。新しいSK-02 Checker/Host/Runnerは追加せず、既存の合成E73〜E82とCIの必須ケース一覧を補強する。**観測されないNative lineageを自己申告の`independent_session_observed=true`から保証したとは言わず、実OS/Host隔離・G1/G2・独立Expectedは#168/#232のOwnerに残す**。初回H2/H3四SlotのTask/Tool/独立割付を変更しない。コードPR [#649](https://github.com/hat47x/tai-pleroma/pull/649) HEAD `bac29b0f37e53981fc93bb03d0303bfa1cb29131` の[SK-02 CI #43545823209](https://github.com/hat47x/tai-pleroma/actions/runs/43545823209)は、**合成82/82件の必須ケース・重複/不正JSON・既存SK-03自己試験までcompleted/success**。同HEADのTAI S1 Product-onlyとtai-referenceもsuccess。ただしこれらは外部DSH実資格0/4を変更しない。
 
 **UI/Go/WASMの検証方法**：前§17のWASM案は、Productに既存の現在Source/Grant・実Operation正本を残した状態で、UIに必要な**純粋な局所計算だけ**をTypeScript／Go Service／WASM三条件で比較。最初のQH-P0やH2/H3へWASMを必須にせず、実Studio Desktopの基線取得後に必要な処理だけ測る。再生成後に同じWebViewに表示できたことと、同じSource/Required/Consumed/AuthorityのConsumer資格を得たことは別。
 
@@ -482,6 +482,21 @@ Wails v3公式[Server Build](https://v3.wails.io/guides/server-build/)はServer 
 **YICからの利用者操作の認知順**は「目的と固定対象 → 実Product/Tool発見 → 現在のSource・Required/Consumed・開示状態 → 明示Entry/型付き要求 → Preview → Host admit／Provider実invoke → Reply/Consumer/Effectの独立観測」。read-onlyの場合Effectはnot-applicableとする。Tool-onlyで充分なJobにProduct SkillやTAI Skillを常時ロードせず、必要な場合だけ[Draft #633 §49〜51](https://github.com/hat47x/tai-pleroma/pull/633)のInstruction / Subject / Capability閉包を照合する。
 
 **Agentが作成した命令、旧Grant、UI Actor文字列、Role名、Tool descriptionは実Authorityではない**。Prepare段階で表示されたInvoke可能候補と、Admit/Invoke直前のProduct現在資格が異なったら自動切替や実行をしない。Script/Builder/Pluginの選択と実起動が同一Attemptで一致するかは各Product/Host Ownerが実観測する。YICのSession Resume・Goal Armed・Schedule ACKは入場許可でない。中断・timeoutは実Effectのrollbackを意味しない。
+
+### 23.3 Hostが所有するbyte読取りと、Clientが見えるEntryの境界を同じ受入で確認する
+
+他チャットで進んだ[TEI Draft #4630](https://github.com/hat47x/tei-platform/pull/4630)、[TEI Draft #4629](https://github.com/hat47x/tei-platform/pull/4629)、[SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443)を、実Product CLI/Hostが持つ意味とYICの薄いConnectionへ接続する。**三つは別Product/別HEAD・別Attempt**であり、合成CIを全体のConsumer E2Eへ合算しない。
+
+| 既存実装側の新しい一辺 | この時点で独立に確認できた範囲 | 外部Harness・Studio Webへ公開するためにまだ必要な証拠 |
+| --- | --- | --- |
+| **TEI R3-A Local CLI** [#4625](https://github.com/hat47x/tei-platform/pull/4625) | Evidence Pathを受け、保存REA byteからtyped Observation/Directed Relation/Unknown/Unselectedを出す局所入口 | Local PathはHost権限を意味しない。Remoteから任意絶対Path・内部Error Pathを受け取らない |
+| **TEI R3-B byte seam** [#4630](https://github.com/hat47x/tei-platform/pull/4630) HEAD `1ad749fc` | `ExternalCandidatesFromBytes(request,raw,at)`がPathなしのbyteを既存R2解析へ渡し、Path版との同一View・Pin一致/誤り・明示Path注入拒否を局所Go Test。既存CIのREA Candidate Contractはsuccess | **実Hostが現在Audience/Root/Grantに基づきSelectorを選び一度だけbounded rawを取得した**というEvidenceと、Disclosure/非公開エラー伏せ、別Consumerの独立受領。FromBytes自体はInputの取得許可を証明しない |
+| **TEI Script Launch前段** [#4629](https://github.com/hat47x/tei-platform/pull/4629) HEAD `00ea852` | 不正なCapability Result契約（重複Outcome等）をAdapter実Invoke**前**に拒否しcall=0とする局所Go回帰。確認したHEADの9 Workflowはcompleted/success | Entry公開・選択したProviderの現在資格・許可Host・意味受理・実Child/実Operation Effect。Result契約が正しいだけではInvoke許可にならない |
+| **SUI Raw選択位置** [#3443](https://github.com/hat47x/sui-sensemaking/pull/3443) HEAD `08a4aa5` | 1 Text RunでUTF-16画面選択→元UTF-8 byte境界、BOM/CRLF/日本語/非BMP/同文重複/不正境界を局所Referenceで検査。SUI単体検証CI success | R1 Host管理Raw、実DOM複数Node、Card保存→別Process再GET→同Source byteへ復帰、現在Reader/Disclosure。文字位置一致≠元Source Revision/Permission/意味受理 |
+
+**後続に移せる単一read-only Journey**：許可したTEI/SUIのQualified Subjectを人が明示選択→Product/Hostが元Raw/Scope/Requiredを実証→その場のRecipientに対して開示可能なbyte／Locatorだけを生成→外部Harnessから実Toolで取得→完全Replyを確認→別Consumerが自身のProduct APIで現時点Root/Revision/Grantを再Readする。SUIからの引用は実byte位置/Root/Source Revisionを必要に応じて照合する。**このJourneyを動かす新しいYIC Gateway/Reader/Host/全製品共通Raw Schemaは作らない**。R3-B Host実Selector、SUI R1保存、H2/H3 G0/G1/G2、SHO第二Consumerは独立Ownerの未完了試験。
+
+**Web Serverの一つの停止線**：[TEI #4627](https://github.com/hat47x/tei-platform/pull/4627)は現在のWails Server `StudioBridge` 15 exported methodsにreference command/SHO外部子Processも含まれることを可視化した。Client入力の`allowed []string`はHost grantではない。Wailsの全Client broadcast EventにRaw/Transcriptを載せた後、Browser側で隠すことは許可制御でない。共有Webにする前にProduct/Hostが登録Serviceと実受信者別HTTP/WSの**事前拒否**を受入れ、未成立ならM2/M3とRemote Executionを非提供としてM0/M1へ縮退する。静的Inventory・二BrowserContext成功は現在Grant/WS非漏えいの証拠ではない。
 
 ## 24. Web×Harness接合の小さな反証と製品ごとの停止線（既存Expected再利用）
 
