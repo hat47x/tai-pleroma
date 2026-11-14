@@ -36,10 +36,10 @@ type t3aWitness struct {
 	Error       string `json:"error,omitempty"`
 }
 
-// witness is taken on the SAME single connection the product Executor uses (MaxOpenConns=1).
-func t3aWitness1(ctx context.Context, db *sql.DB) t3aWitness {
+// The witness and the Executor use the same explicit read-only transaction.
+func t3aWitness1(ctx context.Context, tx *sql.Tx) t3aWitness {
 	var w t3aWitness
-	err := db.QueryRowContext(ctx, `select (select system_identifier::text from pg_control_system()), current_database(),
+	err := tx.QueryRowContext(ctx, `select (select system_identifier::text from pg_control_system()), current_database(),
  (select oid::text from pg_database where datname=current_database()), current_user,
  (select rolbypassrls or rolsuper from pg_roles where rolname=current_user),
  (select relrowsecurity from pg_class where oid='sales."order"'::regclass)`).
@@ -51,9 +51,10 @@ func t3aWitness1(ctx context.Context, db *sql.DB) t3aWitness {
 }
 
 type t3aFile struct {
-	WitnessBefore t3aWitness `json:"witnessBefore"`
-	WitnessAfter  t3aWitness `json:"witnessAfter"`
-	Reads         []t3aOut   `json:"reads"`
+	SessionBinding string     `json:"sessionBinding"`
+	WitnessBefore  t3aWitness `json:"witnessBefore"`
+	WitnessAfter   t3aWitness `json:"witnessAfter"`
+	Reads          []t3aOut   `json:"reads"`
 }
 
 type t3aOut struct {
@@ -83,18 +84,19 @@ func TestT3AProbe(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	db.SetMaxOpenConns(1)
-	if _, err := db.ExecContext(ctx, "SET default_transaction_read_only = on"); err != nil {
-		t.Fatalf("cannot force read-only session: %v", err)
+	tx, err := db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true, Isolation: sql.LevelRepeatableRead})
+	if err != nil {
+		t.Fatalf("cannot begin read-only transaction: %v", err)
 	}
+	defer tx.Rollback()
 	results := []t3aOut{}
-	before := t3aWitness1(ctx, db)
+	before := t3aWitness1(ctx, tx)
 	loaded, err := workspace.Load(ws)
 	if err != nil {
 		results = append(results, t3aOut{Error: "workspace load: " + err.Error()})
 	} else {
 		resolver := driver.NewResolver(loaded.World)
-		executor := postgresquery.Executor{DB: db, Database: "sales_core"}
+		executor := postgresquery.Executor{DB: tx, Database: "sales_core"}
 		for _, r := range reads {
 			o := t3aOut{Read: r, Rows: [][]string{}}
 			got, err := resolver.ExecuteBrowseQueryInEnvironment(ctx, "development", "order_entry",
@@ -123,12 +125,23 @@ func TestT3AProbe(t *testing.T) {
 			}
 			o.RowCount = len(o.Rows)
 			b, _ := json.Marshal(o.Rows)
-			o.RowsSHA = fmt.Sprintf("%x", sha256.Sum256(b))[:12]
+			o.RowsSHA = fmt.Sprintf("%x", sha256.Sum256(b))
 			results = append(results, o)
 		}
 	}
-	body, _ := json.MarshalIndent(t3aFile{WitnessBefore: before, WitnessAfter: t3aWitness1(ctx, db), Reads: results}, "", " ")
-	if err := os.WriteFile(out, body, 0o644); err != nil {
+	body, err := json.MarshalIndent(t3aFile{SessionBinding: "single-read-only-transaction/v1", WitnessBefore: before, WitnessAfter: t3aWitness1(ctx, tx), Reads: results}, "", " ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	f, err := os.OpenFile(out, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := f.Write(body); err != nil {
+		f.Close()
+		t.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
 		t.Fatal(err)
 	}
 }
