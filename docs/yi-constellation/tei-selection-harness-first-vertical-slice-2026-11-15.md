@@ -131,6 +131,15 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 後継UX計画は最新main基点の[TEI Draft #4721](https://github.com/hat47x/tei-platform/pull/4721)、StudioのCLI/AI接続設計は[Draft #4696](https://github.com/hat47x/tei-platform/pull/4696)を参照。旧協業UX Draft #4605は未mergeでclosed。いずれもPin実装の新しい第二正本にはせず、実コードは#4515/#4597の既存Ownerへ集約する。P0はTEI #4583とTAI #168のまま。現HEADの実Node24/生成/Windows/Harness試験・Owner受理は引続き未確認。
 
+<!-- pin-ci-full-test-coverage-20261115 -->
+### CIの実行対象を修正した（2026年11月15日）
+
+TEI [Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) の専用Workflowを[commit ca172a1b](https://github.com/hat47x/tei-platform/commit/ca172a1b5ca89b311b1c8460f9ea9cad8f5754ea)で変更。従来のNode24 Jobは、旧Pin状態テスト2ファイルだけを実行しており、追加したProduct Reader（Fake Host 5件）とWorkbenchのUI配線テストが**標準npm testへ登録済みでもCIの対象外**だった。
+
+修正後は既存のWorkflow内で、Node24上のnpm ci→npm test（Product Reader／配線回帰を含む全Workbench標準テスト）→TypeScript typecheck→正規Workbench buildを連続実行する。pull_request/pushの変更対象も、既存の数ファイル列挙から **reference/tei-studio-workbench/** 全体へ拡張した。新Host・新Runner・新テスト格納先は設けない。
+
+この変更は**テストを実際に実行する経路の是正**であり、[commit ca172a1b](https://github.com/hat47x/tei-platform/commit/ca172a1b5ca89b311b1c8460f9ea9cad8f5754ea)に対応するGitHub Actions結果は確認時点で未取得。npm buildは配布先へのコピーやbyte比較を行わないため、既知のDesktop埋込Bundle不一致は、別Workflowと実Hostで引き続き検収する。
+
 ## 優先順位と停止線
 
 - **独立P0-A**：TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の非Plugin Studio Stage1→Stage2実Windows Desktop。#4597のPin純粋testや旧生成WebView CIとは別。
