@@ -1,0 +1,47 @@
+// Scratch differential test. To reproduce: copy to sui-sensemaking 03_Implement/mcp/src/zz_diff.test.ts, `npm ci`, `npx vitest run src/zz_diff.test.ts`.
+// Uses the in-repo agent_view_contract.json fixture and an in-memory MCP client; no backend, no network.
+import { afterEach, it, vi } from "vitest";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { readFileSync, writeFileSync } from "node:fs";
+import { createServer } from "./server.js";
+const base = JSON.parse(readFileSync(new URL("./fixtures/agent_view_contract.json", import.meta.url), "utf-8")).agentView;
+const clone = () => JSON.parse(JSON.stringify(base));
+async function call(doc: any, constraint: string) {
+  vi.stubGlobal("fetch", vi.fn(async () => ({ status: 200, ok: true, json: async () => doc }) as Response));
+  const server = createServer({ baseUrl: "http://127.0.0.1:8000" });
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  const client = new Client({ name: "t", version: "0" });
+  await Promise.all([client.connect(a), server.connect(b)]);
+  const r: any = await client.callTool({ name: "get_context_projection", arguments: { docId: "doc_agent_contract", constraint, safeMode: true } });
+  return JSON.parse(r.content[0].text);
+}
+function leaves(x: any, p = "", o: Record<string, any> = {}) {
+  if (Array.isArray(x)) { o[p + "#len"] = x.length; x.forEach(v => leaves(v, p + "[]", o)); }
+  else if (x && typeof x === "object") Object.keys(x).forEach(k => leaves(x[k], p + "." + k, o));
+  else o[p] = x;
+  return o;
+}
+const unrev = (id: string, text: string) => ({ id, x: 5, y: 5, claimType: "claim", textReviewed: false, text });
+const variants: Record<string, (d: any) => void> = {
+  V1_unreviewed_card_isolated: d => d.cards.push(unrev("c9", "secret A")),
+  V1b_same_but_other_text: d => d.cards.push(unrev("c9", "secret BBBBBBBB different")),
+  V2_unreviewed_in_island: d => { d.cards.push(unrev("c9", "secret A")); d.islands[0].cardIds.push("c9"); },
+  V3_edge_to_unreviewed: d => { d.cards.push(unrev("c9", "secret A")); d.edges.push({ id: "ed9", fromId: "c1", toId: "c9", type: "related" }); },
+  V4_evidence_to_unreviewed: d => { d.cards.push(unrev("c9", "secret A")); d.evidenceLinks.push({ id: "e9", type: "supports", fromCardId: "c9", toCardId: "c1" }); },
+  V5_only_updatedAt: d => { d.updatedAt = "2026-10-30T00:00:00+00:00"; },
+};
+afterEach(() => vi.unstubAllGlobals());
+it("diff", async () => {
+  const out: any = {};
+  for (const constraint of ["reviewed-only", "summary", "contradiction"]) {
+    const b = leaves(await call(clone(), constraint));
+    for (const [name, f] of Object.entries(variants)) {
+      const d = clone(); f(d);
+      const v = leaves(await call(d, constraint));
+      const keys = [...new Set([...Object.keys(b), ...Object.keys(v)])].filter(k => JSON.stringify(b[k]) !== JSON.stringify(v[k]));
+      out[constraint + "|" + name] = keys.map(k => `${k}: ${JSON.stringify(b[k])} -> ${JSON.stringify(v[k])}`.slice(0, 120));
+    }
+  }
+  writeFileSync("diff_sui.json", JSON.stringify(out, null, 1));
+});

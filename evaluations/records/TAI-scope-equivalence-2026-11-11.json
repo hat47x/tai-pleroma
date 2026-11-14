@@ -1,0 +1,154 @@
+{
+  "id": "TAI-scope-equivalence-2026-11-11",
+  "issue": "hat47x/tai-pleroma#488",
+  "status": "limited real-CLI and in-memory observation; no Principal/Grant model tested",
+  "pins": {
+    "tei": "0600cc2adc383efb38651b59105498193c640e41",
+    "sui": "eafd4d368b87aff926db97d4e28defd35adb1940",
+    "tai": "f1a7abdd008dc92e82fc60a0e732e5acd102d703"
+  },
+  "tei": {
+    "tool": "integrations/tools/scope_equivalence_probe.py",
+    "worlds": "A=public reference/workspace; B=+unrelated namespace; C=+declaration referencing sales.order",
+    "rows": {
+      "inspect": {
+        "B": 2,
+        "C": 2,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "knowledge-context definition": {
+        "B": 0,
+        "C": 0,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "knowledge-context definition+dependencies": {
+        "B": 0,
+        "C": 6,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "source-index subject": {
+        "B": 0,
+        "C": 0,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "knowledge-review-plan": {
+        "B": 0,
+        "C": 0,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "trace outgoing": {
+        "B": 5,
+        "C": 5,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "trace both": {
+        "B": 5,
+        "C": 6,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "model locate": {
+        "B": 3,
+        "C": 7,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "model catalog -namespace sales": {
+        "B": 9,
+        "C": 8,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      },
+      "validate": {
+        "B": 9,
+        "C": 8,
+        "exits": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "namedProbe": "inspect semantic-capability:vault.payout.approve: A and C exit 1 SUBJECT_NOT_FOUND; B exit 0 with full definition (existence is decidable by naming)"
+  },
+  "sui": {
+    "method": "in-memory MCP client over the in-repo agent_view_contract.json fixture; constraints reviewed-only, summary, contradiction; safeMode true (see integrations/tools/sui_unreviewed_diff.test.ts.txt)",
+    "existingTests": "context_projection_digest_contract and context_projection_tool: 24 passed",
+    "variants": {
+      "V1_unreviewed_card_isolated": [
+        ".counts.unreviewed: 0 -> 1",
+        ".counts.redacted: 2 -> 3",
+        ".bundleHash: \"ab4024999e4c8cb92ccbc3ff7d3d28c2466aa5702e7d04117507fa231b9c4877\" -> \"4bc855a2b0b08a74926f0c0327b975fc95ac"
+      ],
+      "V1b_same_but_other_text": [
+        ".counts.unreviewed: 0 -> 1",
+        ".counts.redacted: 2 -> 3",
+        ".bundleHash: \"ab4024999e4c8cb92ccbc3ff7d3d28c2466aa5702e7d04117507fa231b9c4877\" -> \"4bc855a2b0b08a74926f0c0327b975fc95ac"
+      ],
+      "V2_unreviewed_in_island": [
+        ".counts.unreviewed: 0 -> 1",
+        ".counts.redacted: 2 -> 3",
+        ".bundleHash: \"ab4024999e4c8cb92ccbc3ff7d3d28c2466aa5702e7d04117507fa231b9c4877\" -> \"4bc855a2b0b08a74926f0c0327b975fc95ac"
+      ],
+      "V3_edge_to_unreviewed": [
+        ".counts.unreviewed: 0 -> 1",
+        ".counts.redacted: 2 -> 3",
+        ".bundleHash: \"ab4024999e4c8cb92ccbc3ff7d3d28c2466aa5702e7d04117507fa231b9c4877\" -> \"4bc855a2b0b08a74926f0c0327b975fc95ac"
+      ],
+      "V4_evidence_to_unreviewed": [
+        ".counts.unreviewed: 0 -> 1",
+        ".counts.redacted: 2 -> 3",
+        ".bundleHash: \"ab4024999e4c8cb92ccbc3ff7d3d28c2466aa5702e7d04117507fa231b9c4877\" -> \"4bc855a2b0b08a74926f0c0327b975fc95ac"
+      ],
+      "V5_only_updatedAt": [
+        ".baseDocSignature: \"doc_agent_contract:2026-10-29T00:00:00+00:00\" -> \"doc_agent_contract:2026-10-30T00:00:00+00:00\"",
+        ".bundleHash: \"ab4024999e4c8cb92ccbc3ff7d3d28c2466aa5702e7d04117507fa231b9c4877\" -> \"ff4f7247a7c55a78dc9d6b16c74c7cc4be2e"
+      ]
+    },
+    "reading": "text, island membership, edges and evidence of an unreviewed card add no change beyond counts.unreviewed/counts.redacted and bundleHash; bundleHash is identical across variants that differ in unreviewed text or structure; the count is a documented disclosure (README). A change of updatedAt alone changes baseDocSignature and bundleHash."
+  },
+  "consumers": {
+    "pr594": "verify-consumer on a receipt taken in A: A fresh; B stale (STALE_SNAPSHOT, requalification-required); C stale. Binds worldFingerprint, sourceIndexFingerprint, modelRevision.",
+    "pr600": "judge-provider-read-requalification.cjs reads q.result.worldFingerprint (static read only; not executed)"
+  },
+  "notRun": [
+    "Principal/Grant visibility difference in TEI (no such concept in the CLI)",
+    "timing channel",
+    "SEI, SHO, EKI",
+    "external Harness",
+    "SUI over HTTP/OAuth with a real backend"
+  ]
+}

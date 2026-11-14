@@ -217,6 +217,22 @@ REAL_RECORDS = (
     "evaluations/records/YI-state-classification-2026-11-11.json",
     "evaluations/records/YI-unreferenced-2026-11-11.json",
     "evaluations/records/YI-fold-dissent-2026-11-11.json",
+    "evaluations/records/YI-overreach-2026-11-11.json",
+    "evaluations/records/YI-eki-measurement-2026-11-11.json",
+    "evaluations/records/YI-danger-units-2026-11-11.json",
+    "evaluations/records/YI-publication-refusal-2026-11-11.json",
+    "evaluations/records/YI-deck-figures-2026-11-11.json",
+    "evaluations/records/YI-receipt-auditability-2026-11-11.json",
+    "evaluations/records/YI-csw-return-2026-11-11.json",
+    "evaluations/records/YI-g1-evidence-2026-11-11.json",
+    "evaluations/records/YI-sho-actual-2026-11-11.json",
+    "evaluations/records/YI-naming-radius-2026-11-11.json",
+    "evaluations/records/YI-acceptance-authority-2026-11-11.json",
+    "evaluations/records/YI-candidate-fields-2026-11-11.json",
+    "evaluations/records/YI-scope-halves-2026-11-11.json",
+    "evaluations/records/YI-cross-receipt-2026-11-11.json",
+    "evaluations/records/YI-artifact-digest-2026-11-11.json",
+    "evaluations/records/YI-pass-consistency-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -538,6 +554,131 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-pass-consistency" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyPassExplainsItsGaps") is not True
+            ):
+                errors.append(f"a PASS receipt hides a gap: {relative}")
+        if "YI-artifact-digest" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyArtifactDigestStillMatches") is not True
+                or observed.get("everyReceiptRecordsAnArtifact") is not True
+            ):
+                errors.append(f"a receipt's artifact digest went stale: {relative}")
+        if "YI-cross-receipt" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyOverlappingFactAgrees") is not True
+                or observed.get("keptPlusMovedEqualsTotal") is not True
+            ):
+                errors.append(f"two receipts now disagree on one fact: {relative}")
+        if "YI-scope-halves" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyScopeStatesBothHalves") is not True
+                or observed.get("selfTestDetectsBothHalves") is not True
+            ):
+                errors.append(f"a YI scope stopped naming its limit: {relative}")
+        if "YI-candidate-fields" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyCandidateStatesItsFields") is not True
+                or observed.get("candidates") != 25
+            ):
+                errors.append(f"a candidate lost a field or the count moved: {relative}")
+        if "YI-acceptance-authority" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or not observed.get("acceptedWithoutARole")
+                or not observed.get("productsWithoutAnAcceptanceRole")
+            ):
+                errors.append(f"the acceptance-role gap closed or moved; re-measure: {relative}")
+        if "YI-naming-radius" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("blastRadius", 0) < 3
+            ):
+                errors.append(f"the naming blast radius was re-measured as smaller: {relative}")
+        if "YI-sho-actual" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("doc21PremiseHolds") is not False
+            ):
+                errors.append(f"sho-composer no longer contradicts doc 21; re-measure: {relative}")
+        if "YI-g1-evidence" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyCitedPathExists") is not True
+                or not observed.get("decisionsWithNoObservation")
+            ):
+                errors.append(f"G1 evidence lost a gap or a citation: {relative}")
+        if "YI-csw-return" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyReturnedEditIsStillPresent") is not True
+                or observed.get("editsRecorded") != 9
+            ):
+                errors.append(f"a recorded CSW return edit is missing: {relative}")
+        if "YI-receipt-auditability" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyReceiptIsAuditable") is not True
+                or observed.get("receipts") < 15
+            ):
+                errors.append(f"a YI receipt lost its audit fields: {relative}")
+        if "YI-deck-figures" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyClaimAgreesWithReceipt") is not True
+                or observed.get("everyClaimStillStated") is not True
+            ):
+                errors.append(f"a deck figure no longer matches its receipt: {relative}")
+        if "YI-publication-refusal" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("refusalObserved") is not True
+                or observed.get("allowed") is not False
+            ):
+                errors.append(f"the publication refusal changed shape: {relative}")
+        if "YI-danger-units" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyUnitHasEvidence") is not True
+                or observed.get("receiptsDeclaringPublicationHeld", 0) < 100
+            ):
+                errors.append(f"danger-unit evidence changed shape: {relative}")
+        if "YI-eki-measurement" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("hasCountedSection") is not True
+                or observed.get("hasNotCountedSection") is not True
+            ):
+                errors.append(f"EKI measurement ADR changed shape: {relative}")
+        if "YI-overreach" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("control", {}).get("refusesAnUnknownPrimitive") is not True
+                or observed.get("overreachRefusedAtDesignTime") is not False
+            ):
+                errors.append(f"the design-time refusal changed; re-measure: {relative}")
         if "YI-fold-dissent" in relative:
             observed = data.get("observed", {})
             if (

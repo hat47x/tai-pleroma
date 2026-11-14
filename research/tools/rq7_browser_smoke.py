@@ -14,6 +14,7 @@ import json
 from pathlib import Path
 
 import rq7_pilot
+import rq7_structured_alt
 import rq7_svg
 
 
@@ -42,6 +43,7 @@ def document(case: dict) -> str:
         'border-bottom:1px solid #bbb;}#diagram svg{display:block;max-width:none;}'
         'pre{white-space:pre-wrap;padding:8px;}</style></head><body>'
         f'<main><div id="diagram">{svg}</div>'
+        f'{rq7_structured_alt.structured_graph_html(case)}'
         f'<pre id="declared-text">{text}</pre></main></body></html>'
     )
 
@@ -65,7 +67,8 @@ MEASURE_JS = r"""() => {
         text: t.textContent,
         x: b.x, y: b.y, w: b.width, h: b.height,
         overflow: b.x < -0.1 || b.y < -0.1 ||
-          b.x + b.width > 180.1 || b.y + b.height > 60.1,
+          b.x + b.width > (+r.getAttribute('width')) - 7.9 ||
+          b.y + b.height > (+r.getAttribute('height')) + 0.1,
       });
     }
   }
@@ -112,6 +115,88 @@ MEASURE_JS = r"""() => {
 }"""
 
 
+
+def chromium_accessible_image(page, session, case: dict) -> dict:
+    """Fetch the real Chromium accessibility tree; NOT an AT/screen-reader trial."""
+    nodes = session.send("Accessibility.getFullAXTree")["nodes"]
+    expected_name = f"Declared graph for {case['id']}"
+    images = [
+        node for node in nodes
+        if node.get("role", {}).get("value") == "image"
+        and node.get("name", {}).get("value") == expected_name
+    ]
+    if len(images) != 1:
+        raise AssertionError(
+            f"{case['id']}: expected one named Chromium accessible SVG image, got {len(images)}"
+        )
+    actual = images[0].get("description", {}).get("value")
+    expected = rq7_svg.accessible_graph_description(case)
+    if actual != expected:
+        raise AssertionError(
+            f"{case['id']}: Chromium accessibility description does not match declared Graph"
+        )
+    return {"name": expected_name, "description_matches": True}
+
+
+
+
+def verify_visible_structured_rows(page, case: dict) -> None:
+    """Compare actual Chromium DOM cells to source identities, not just counts."""
+    actual = page.evaluate(r"""() => {
+      const extract = id => [...document.querySelectorAll('#' + id + ' tbody tr')]
+        .map(tr => [...tr.querySelectorAll('th, td')].map(cell => cell.textContent));
+      return {
+        nodes: extract('declared-nodes'),
+        edges: extract('declared-direct-edges'),
+        captions: [...document.querySelectorAll('#graph-data table caption')]
+          .map(c => c.textContent),
+      };
+    }""")
+    expected_nodes = [[n["id"], n["label"]] for n in case["declared"]["nodes"]]
+    expected_edges = [[a, b] for a, b in case["declared"]["edges"]]
+    if actual["nodes"] != expected_nodes:
+        raise AssertionError(f"{case['id']}: browser's table node identities differ")
+    if actual["edges"] != expected_edges:
+        raise AssertionError(f"{case['id']}: browser's table direct-edge identities differ")
+    if actual["captions"] != [
+        "Declared nodes", "Declared directed edges, not transitive paths"
+    ]:
+        raise AssertionError(f"{case['id']}: browser's table captions differ")
+
+
+def verify_keyboard_structured_alternative(page, session, case: dict) -> None:
+    """Keyboard disclosure + native tables in Chromium AX; NOT an SR test."""
+    rq7_structured_alt.check_structured_graph(
+        case, rq7_structured_alt.structured_graph_html(case)
+    )
+    if page.locator("#graph-data").evaluate("(el) => el.open"):
+        raise AssertionError("graph disclosure unexpectedly expanded at load")
+    # Do not inject focus on the summary: verify it is reachable by Tab.
+    page.evaluate("document.activeElement.blur()")
+    focus_reached = False
+    for _ in range(8):
+        page.keyboard.press("Tab")
+        if page.evaluate("document.activeElement.matches('#graph-data summary')"):
+            focus_reached = True
+            break
+    if not focus_reached:
+        raise AssertionError(f"{case['id']}: native disclosure not reachable by keyboard")
+    page.keyboard.press("Enter")
+    if not page.locator("#graph-data").evaluate("(el) => el.open"):
+        raise AssertionError(f"{case['id']}: Enter did not expand native disclosure")
+    verify_visible_structured_rows(page, case)
+    ax = session.send("Accessibility.getFullAXTree")["nodes"]
+    tables = [n for n in ax if n.get("role", {}).get("value") == "table"]
+    if len(tables) != 2:
+        raise AssertionError(f"{case['id']}: Chromium AX tree lacks two semantic tables")
+    if not any(n.get("role", {}).get("value") == "columnheader" for n in ax):
+        raise AssertionError(f"{case['id']}: Chromium AX tree lacks column headers")
+    page.keyboard.press("Enter")
+    if page.locator("#graph-data").evaluate("(el) => el.open"):
+        raise AssertionError(f"{case['id']}: Enter did not collapse native disclosure")
+
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--screenshots", type=Path, help="optional output directory for public synthetic PNGs")
@@ -139,6 +224,8 @@ def main() -> None:
                 reduced_motion="reduce",
             )
             page = context.new_page()
+            accessibility_session = context.new_cdp_session(page)
+            accessibility_session.send("Accessibility.enable")
             requests = []
             page.on("request", lambda r: requests.append(r.url) if r.url.startswith(("http:", "https:")) else None)
             for case in cases:
@@ -146,6 +233,8 @@ def main() -> None:
                 page.set_content(document(case), wait_until="load")
                 page.evaluate("document.fonts.ready")
                 result = page.evaluate(MEASURE_JS)
+                ax_image = chromium_accessible_image(page, accessibility_session, case)
+                verify_keyboard_structured_alternative(page, accessibility_session, case)
                 expected = case["declared"]
                 if result["nodeCount"] != len(expected["nodes"]) or result["edgeCount"] != len(expected["edges"]):
                     raise AssertionError(f"{case['id']} {viewport_name}: browser rendered wrong graph: {result}")
@@ -168,16 +257,81 @@ def main() -> None:
                     page.locator("#diagram").screenshot(
                         path=str(args.screenshots / f"{case['id']}-{viewport_name}.png")
                     )
-                checked.append({"case": case["id"], "viewport": viewport_name, **result})
+                checked.append({"case": case["id"], "viewport": viewport_name, **result,
+                                "chromium_accessible_image": ax_image})
+                if viewport_name == "desktop" and case is cases[0]:
+                    # Same visual graph and metadata, but tampered accessible
+                    # topology: the Chromium AX tree must reject the missing edge.
+                    # Same table row count, but a different physical relation:
+                    # text/graph count equality must not be accepted.
+                    page.evaluate(
+                        "document.querySelector('#declared-direct-edges tbody tr td').textContent = 'wrong_target'"
+                    )
+                    try:
+                        verify_visible_structured_rows(page, case)
+                    except AssertionError as exc:
+                        if "table direct-edge identities differ" not in str(exc):
+                            raise
+                    else:
+                        raise AssertionError(
+                            "browser structured table wrong-edge mutation was not detected"
+                        )
+                    page.evaluate(
+                        "document.querySelector('#diagram svg desc').textContent = 'Declared nodes only; no edges'"
+                    )
+                    try:
+                        chromium_accessible_image(page, accessibility_session, case)
+                    except AssertionError as exc:
+                        if "description does not match" not in str(exc):
+                            raise
+                    else:
+                        raise AssertionError(
+                            "Chromium accessibility-tree description mutation was not detected"
+                        )
+            for long_label in (
+                "A deliberately long synthetic label that must stay fully visible inside its widened card",
+                "業務期間確定と訂正イベントの参照関係を表示する長い日本語ラベル",
+            ):
+                variant = copy.deepcopy(cases[0])
+                variant["declared"]["nodes"][0]["label"] = long_label
+                rq7_svg.check_public_pair(variant)
+                page.set_content(document(variant), wait_until="load")
+                page.evaluate("document.fonts.ready")
+                enlarged = page.evaluate(MEASURE_JS)
+                if enlarged["labelOverflows"] or enlarged["edgeHits"]:
+                    raise AssertionError(
+                        f"{viewport_name}: long-label Graph has clipping or edge occlusion: {enlarged}"
+                    )
+                if enlarged["svgWidth"] <= rq7_svg.NODE_MIN_WIDTH:
+                    raise AssertionError("long-label panel was not expanded")
+                chromium_accessible_image(page, accessibility_session, variant)
+                verify_keyboard_structured_alternative(page, accessibility_session, variant)
+                if width < enlarged["svgWidth"]:
+                    if enlarged["contentWidth"] <= enlarged["viewportWidth"]:
+                        raise AssertionError("long-label Graph not horizontally scrollable")
+                    page.evaluate("document.querySelector('#diagram').scrollLeft = 10000")
+                    if page.evaluate("document.querySelector('#diagram').scrollLeft") <= 0:
+                        raise AssertionError("long-label horizontal scroll has no effect")
+                if viewport_name == "desktop" and long_label.startswith("A deliberately"):
+                    # Mutation proves the browser really detects clipped text:
+                    # keep the full text/graph IDs but shrink all node outlines.
+                    page.evaluate(
+                        "document.querySelectorAll('g.declared-node rect')"
+                        ".forEach(r => r.setAttribute('width', '180'))"
+                    )
+                    negative = page.evaluate(MEASURE_JS)
+                    if not negative["labelOverflows"]:
+                        raise AssertionError("narrow-node label-clipping mutation was not detected")
             if viewport_name == "desktop":
-                # A deliberately long label exposes the known single-line
-                # layout limitation. Detect it, never count it as a PASS.
-                mutant = copy.deepcopy(cases[0])
-                mutant["declared"]["nodes"][0]["label"] = "A deliberately long synthetic label that should be outside the narrow card"
-                page.set_content(document(mutant))
-                negative = page.evaluate(MEASURE_JS)
-                if not negative["labelOverflows"]:
-                    raise AssertionError("long-label overflow negative control was not detected")
+                excessive = copy.deepcopy(cases[0])
+                excessive["declared"]["nodes"][0]["label"] = "漢" * 150
+                try:
+                    rq7_svg.render_svg(excessive)
+                except ValueError as exc:
+                    if "exceeds supported single-line SVG width" not in str(exc):
+                        raise
+                else:
+                    raise AssertionError("unsupported extremely long label was not rejected")
             context.close()
         browser.close()
 
@@ -187,8 +341,14 @@ def main() -> None:
         "viewport_checks": len(checked),
         "edge_crossing_checks": "sampled actual SVG paths/lines via Chromium screen CTM",
         "label_overflows_in_original_three_graphs": 0,
-        "known_long_label_limitation": "DETECTED_NEGATIVE_CONTROL_NOT_SUPPORTED",
+        "bounded_long_english_and_japanese_labels": "CHECKED_AT_DESKTOP_AND_MOBILE",
+        "overlimit_label": "REJECTED_NOT_SILENTLY_CLIPPED",
+        "narrow_node_clipping_negative": "DETECTED",
         "real_browser_dom_geometry": "CHECKED",
+        "chromium_accessibility_tree_name_and_topology": "CHECKED",
+        "structured_node_edge_tables_and_keyboard_disclosure": "CHECKED",
+        "structured_table_same_count_wrong_edge_negative": "DETECTED",
+        "real_screen_reader_interaction": "NOT_RUN",
         "independent_visual_human_review": "NOT_RUN",
         "screen_reader_and_keyboard_a11y": "NOT_RUN",
         "human_ai_cognition": "NOT_RUN",

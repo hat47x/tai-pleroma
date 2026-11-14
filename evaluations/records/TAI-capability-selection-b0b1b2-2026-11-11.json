@@ -1,0 +1,118 @@
+{
+  "id": "TAI-capability-selection-b0b1b2-2026-11-11",
+  "issue": "hat47x/tai-pleroma#488",
+  "status": "limited real-CLI observation; model selection NOT RUN",
+  "pins": {
+    "tai": "f1a7abdd008dc92e82fc60a0e732e5acd102d703",
+    "tei": "0600cc2adc383efb38651b59105498193c640e41",
+    "teiBuild": "git archive of that commit, go1.27.0 cross-build to windows/amd64; `version -json` source=unavailable (no VCS identity)",
+    "workspace": "reference/workspace of the same commit (public)"
+  },
+  "selector": "scripted reference path and literal Skill follower, NOT a model. Selection accuracy of any model is not measured. No expected file was held, so `score` was not run on real trials.",
+  "jobs": {
+    "J1 TEI-only read of sales.order definition": {
+      "B0": {
+        "toolCalls": 3,
+        "outputBytes": 30362,
+        "exits": [
+          0,
+          0,
+          0
+        ],
+        "targetFound": true,
+        "selectedProducts": [
+          "tei"
+        ],
+        "taiInvolved": false,
+        "observation": "commands -> model catalog (result.entries, 72 entries, 1 hit) -> inspect; inspect returned ok:true",
+        "independentReread": "not performed"
+      },
+      "B1": {
+        "addedContextBytes": 16305,
+        "literalSkillPath": "entries[].subject.kind/id",
+        "candidatesFromLiteralPath": 0,
+        "drift": "SKILL_PATH_ABSENT_AT_DOCUMENTED_LOCATION; actual location result.entries[]",
+        "note": "a literal follower finds no target; an adaptive model might recover, not measured. Skill documents `go run`; the call used a built binary."
+      },
+      "B2": {
+        "addedContextBytes": 38517,
+        "taiToolCalls": 0,
+        "verdict": "not required for this job (extra intervention if selected)",
+        "note": "yi-tai-activity has no executable Tool; PR #594 pilot not run for this job"
+      }
+    },
+    "J2 job needing TEI and SEI evidence": {
+      "B0": "NOT RUN",
+      "B1": "NOT RUN",
+      "B2": "NOT RUN",
+      "basis": "TASK 3 record: SEI did not read TEI bytes; no TEI-to-SEI correspondence edge exists in the product. Expected decision: cross-product composition not established -> need evidence, not tested with a model."
+    },
+    "J3 tool discovered but not usable": {
+      "discoveryIdenticalInEmptyDirectory": true,
+      "emptyWorkspace": {
+        "exit": 2,
+        "code": "WORKSPACE_LOAD_FAILED"
+      },
+      "discoveredButMissingRequiredInput": {
+        "command": "knowledge-qualify",
+        "exit": 2,
+        "code": "INVALID_ARGUMENT"
+      },
+      "staleRevision": {
+        "command": "trace",
+        "exit": 1,
+        "code": "STALE_SNAPSHOT"
+      }
+    },
+    "J4 non-public capability changes the right choice": {
+      "real": "NOT RUN (no real Product with a non-public capability available)",
+      "synthetic": "check-sk-m-fixture (SK-M08), check-sk-tb-fixture (SK-TB09), check-sk-f-fixture exit 0; synthetic self-checks, not Product or Harness evidence"
+    },
+    "J5 Skill makes it worse": {
+      "result": "observed on J1 B1 (path drift) and by drift probe on current main; B0 succeeded without the Skill"
+    },
+    "J6 Skill-less lower burden": {
+      "B0AddedContextBytes": 0,
+      "B1AddedContextBytes": 16305,
+      "B2AddedContextBytes": 38517,
+      "note": "bytes of Skill files only; tokens, time and human review not measured. YIC-ROUTE-07 (no product capability needed) has no fixture: NOT RUN"
+    },
+    "J7 read-only investigation vs external export/effect": {
+      "real": "TEI discovery: 21 commands, all effect=read-only; usage lists 54 names against 21 discovered, so the two differ. SEI --read-only MCP exposure read from source only.",
+      "run": "NOT RUN for effects; no Grant observation, no export attempted"
+    }
+  },
+  "driftProbe": {
+    "tool": "integrations/tools/skill_selection_check.py drift",
+    "skill": "tei-platform skills/yi-tei-modeling (SKILL.md + references)",
+    "discovery": {
+      "commands": 21,
+      "usageCommands": 54,
+      "scope": "selected-read-only-commands",
+      "sha256": "1df4b1f84e8ac09cce2c15d1ea4e90ca655342d664ab8dcce2fe3bc1e5df5c14"
+    },
+    "skillMentionsDiscovered": [
+      "inspect",
+      "model catalog",
+      "trace",
+      "validate",
+      "version"
+    ],
+    "discoveredNotCoveredBySkill": 16,
+    "findings": [
+      "DRIFT SKILL_PATH_ABSENT_AT_DOCUMENTED_LOCATION entries[].subject.kind/id -> result.entries[]",
+      "GAP SKILL_USES_GO_RUN (x2)"
+    ]
+  },
+  "notes": [
+    "inspect fingerprints (worldFingerprint, sourceIndexFingerprint) are under result, not top level.",
+    "The Skill drift is already listed as a known defect in TAI #488 and owned by TEI #2605; not fixed here, Skill bytes untouched.",
+    "Local self-test: python -I integrations/tools/skill_selection_check.py --self-test (18 synthetic checks PASS)."
+  ],
+  "notRun": [
+    "model selection under B0/B1/B2",
+    "H2/H3 real Harness",
+    "SEI/SUI/SHO/EKI tools",
+    "non-public Source trials (TASK 2 G0/G1/G2 not met)"
+  ]
+}

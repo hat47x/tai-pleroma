@@ -3,10 +3,14 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows with Python 3.12 reading the analysis documents",
   "command": "python evaluations/audit-yi-constellation.py --json evaluations/records/yi-constellation-structure-<date>.json",
-  "checkedAt": "2026-11-10T16:23:24.751021+00:00",
+  "checkedAt": "2026-11-11T09:45:00.927890+00:00",
+  "artifact": {
+    "path": "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
+    "digest": "sha256:751b746743b58bbb3c9e7e1d2709577b12bcb63a0b90f476755839ba43f99591"
+  },
   "documents": [
     "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
     "docs/yi-constellation/analysis/09-変爻の分析.md"

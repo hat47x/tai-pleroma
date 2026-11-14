@@ -13,6 +13,7 @@ docs/yi-constellation/analysis/09-変爻の分析.md である。番号、卦名
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from datetime import datetime, timezone
@@ -50,6 +51,8 @@ PRODUCTS = {"TAI": "泰", "SUI": "萃", "SHO": "升", "SEI": "井", "TEI": "鼎"
 SHADOWS = {12, 41, 47, 49}
 LINE_POSITIONS = ["初", "二", "三", "四", "五", "上"]
 
+
+ROOT = Path(__file__).resolve().parents[1]
 
 def trigrams(bits: str) -> tuple[str, str]:
     return TRIGRAM[bits[0:3]], TRIGRAM[bits[3:6]]
@@ -310,6 +313,16 @@ def main() -> int:
         "host": "Windows with Python 3.12 reading the analysis documents",
         "command": "python evaluations/audit-yi-constellation.py --json evaluations/records/yi-constellation-structure-<date>.json",
         "checkedAt": datetime.now(timezone.utc).isoformat(),
+        # The audit reads two documents rather than one artifact; it records the
+        # primary document's digest so a later reader can tell whether the text
+        # it read has changed.
+        "artifact": {
+            "path": "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
+            "digest": "sha256:"
+            + hashlib.sha256(
+                (ROOT / "docs/yi-constellation/analysis/01-64卦のシステム地図.md").read_bytes()
+            ).hexdigest(),
+        },
         "documents": [
             "docs/yi-constellation/analysis/01-64卦のシステム地図.md",
             "docs/yi-constellation/analysis/09-変爻の分析.md",

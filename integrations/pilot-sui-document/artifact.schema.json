@@ -19,6 +19,14 @@
       "required": ["teiCommit", "contracts"],
       "properties": {
         "teiCommit": {"type": "string", "minLength": 1},
+        "status": {
+          "type": "string",
+          "enum": ["active", "revoked", "expired"],
+          "description": "Source lifecycle as declared by the producer. Absent or unknown means the consumer treats it as unknown, never as active."
+        },
+        "statusReason": {"type": "string", "minLength": 1},
+        "documentRevision": {"type": "string", "minLength": 1},
+        "observedAt": {"type": "string", "format": "date-time"},
         "contracts": {
           "type": "object",
           "minProperties": 1,
@@ -40,6 +48,17 @@
             }
           }
         }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "description": "Document-level disclosure declared by the producer. Absent means the consumer applies no document-level restriction; restricted means it returns nothing at all (not even entity kind or count).",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": ["public", "internal", "restricted"]
+        },
+        "policyRef": {"type": "string", "minLength": 1}
       }
     },
     "document": {
