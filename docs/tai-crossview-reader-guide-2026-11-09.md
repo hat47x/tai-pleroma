@@ -390,6 +390,8 @@ A3には、特定版の成果物への束縛、作成者と承認者の資格分
 
 Packetは**同じ根拠を持つための条件**であり、秘密Source、旧Host Grant、独立Expected、承認済みという推測を含めない。SkillがPacket以外の保存記録を自動読取する場合、各セルの情報条件が揃っていないため、その取得・内容・権限を記録し、交絡のままなら比較不適格とする。M01に「実は隠れPacketがある」ときは四セル効果を推定しない。モデル・Tool呼出・Recorder・外部送出の実行範囲は既存Ownerの実記録に基づき判定し、AIの自己申告だけで完了扱いしない。
 
+**Native forkの継承はPacketとは別の処置**：[TAI Draft #649](https://github.com/hat47x/tai-pleroma/pull/649)は、異なるNative Session IDでも、同一root・parent/fork depth・明示resumeに加え、**親IDがなくてもseeded/inherited eventが存在するfork**を独立試行から除く合成判定負例を追加（exact HEAD `bac29b0f`、合成CI 82件completed/success）。これは実OS隔離の成功ではない。AV-2の4セルでは、各ArmがPacket以外の過去Turn・前回答・採点条件を**Native fork/再開で継承したら、Packet×Skillの純粋な比較にならない**。独立比較用のT1は実際のroot開始と送信内容を確認し、root/parent/seed/inherited-event/Tool履歴の取得可能な値を保存する。未提供の欄は「無継承」と仮定せず比較資格を保留する。一方、実利用で「forkによる会話継承」自体の価値を測る場合は**別の明示的な処置**とし、M00〜M11のPacket効果に混入させない。[CSW Draft #600](https://github.com/hat47x/cultural-substrate-weaving/pull/600)の独立R-D試行も同じ区別を必要とする。既存#168のG0/G1/G2→H2/H3物理隔離・適格0/4は継続する。
+
 **二つの初回世界**（4セル×2世界は初回の器の点検であり、独立反復数=8とは数えない）。(W0) T0→T1でSource内容は不変だが、SEIに版Basisがない状態は維持。(W1) T0→T1でTEI Sourceだけを変更する、または同内容の別Workspace Rootへ移す。いずれも**T0のClaimは歴史事実**、現在の根拠同一性は独立再Readまで未資格。W1でA→B→Aの同digest復帰があっても古いPin/Grantを復活させない。W0/W1の違いを片方のArmに偏らせない。初回のW1種類をSource-onlyまたは別Rootのどちらにするかは#271/TEI Ownerが固定し、実験後に選ばない。
 
 **評価者の事前固定Expectedと観測列**：①根拠未成立を「検証済み」にしない、②存在・Source/Scope/Revision・必要Readの現在資格、③未解決事項がPacketや応答で保持される、④漏洩・別Root誤束縛・旧Receipt再生・承認自己申告を成功扱いしない、⑤本当に必要な再Readと不必要な再Read、⑥人間の再説明/修正・手数、⑦実Tool呼出/Token/経過時間。**必要な安全停止と過剰保留、利用者の最終Outcome**を別列にする。実人の介入がないケースの「人間負担」を測定済みと呼ばない。独立Expectedを参加者のSkill/Prompt/Packet/Tool到達可能域に置かず、根拠となる版と評価者を試行前に固定する。
@@ -440,3 +442,40 @@ Packetは**同じ根拠を持つための条件**であり、秘密Source、旧H
 **非重複Owner**：Product実再解決はTEI、SEI記録と`--basis`はSEI、参照比較はTAI #271／既存Draft #585、Skill増分は#488、費用と利用者価値は#422/#127、OS/Toolの実隔離と比較資格は#168、Studio/Source ReaderのUI接続はTEI #1124。#168のH2/H3既定4試行（適格0/4）をD0〜D3で改変しない。
 
 **実験状態**：M00/M10/M01/M11のT1新Session、W0/W1、独立反復・人間負担計測は**NOT RUN**。ここで成熟したのは**何を対照すれば情報の効果とSkillの効果を混同しないか**という試験手順・撤退条件であり、効果量、正式採用、認可を主張しない。適用OwnerはTAI #488（Skill ArmとTool/Token）、#271（根拠の再資格化）、#422/#127（価値と人間のOutcome）、TEI Product Owner（実Source/Scope）、TAI #168（独立Harness隔離）。
+
+## 15. 業務的失敗許容と横断Activity：約束・結果不明・回復義務を分ける（2026-11-14提案）
+
+### 15.1 分割の自由度は「どの約束を維持するか」によって変わる
+
+[TEI #3250のRequirement Pressure Case/SP-R01〜07・SP-N01〜09・Failure Acceptance Envelope SP-FE01〜09](https://github.com/hat47x/tei-platform/issues/3250)では、サブシステム分割を単なるCRUD越境数の最小化でなく、**Data/Function/Businessの要件が衝突する場所を発見し、設計者に選択肢を提示する作業**として整理した。本ガイドは業務要件を新たに採用せず、**TAIがActivityを跨Productへ引き継ぐときに、その衝突をGoal達成と誤読しない**規則を取り込む。TEIの論理Subsystem、更新/Commit境界、物理DB/Target、Business Handling Unit、現在Principal/Grantは別軸である。同一DB・同一Txで論理Subsystemを区別する余地があり、「原子性が必要なら必ず論理Subystemを統合」は一般法則ではない。
+
+受注/在庫の概念例は説明用の合成Jobであり、実EC事業者の要件・顧客への実約束・採用方式を示さない。たとえば業務Ownerが**確定注文には有効な在庫予約が必要**と受理しているなら、受注の`Confirmed`と在庫の`Reserved`を個別更新できるだけでは要件を満たさない。相手SubsystemへのCommand委譲で越境Direct CUD=0となっても、処理結果・Commit/Retry・回復義務は消えない。逆に、Ownerが`Received`/`Pending`と`Confirmed`の業務状態を正式に分ければ、引当前のPendingを許容しつつ、Confirmedだけに強い条件を課せる。要件を緩和する別案は、取消・返金・顧客通知・手作業/窓口・期限・最大負荷を**新しい義務**として引き受ける。いずれもAI/TAIの推測ではAccepted要件へ昇格しない。
+
+| 選択肢（既存TEI #3250の業務比較を参照） | 業務的に確認すべき条件 | TAIが言ってよい限定結果／言ってはいけない結果 |
+| --- | --- | --- |
+| **K 強いCommit条件を維持** | `Confirmed`と必要なReservationをどう実際に同一整合条件で成立させるか | 各Productから得た個別Receiptや注文表示だけで「確定の業務保証済み」と言わない。実Tx/Providerと有効予約の独立観測がなければUnknown |
+| **S 受付と確定を分離** | `Received/Pending`の期限、Confirm条件、引当失敗時の取消/エスカレーション | `受付した`は肯定できても`引当済み`/`確定済み`へ昇格しない。Escalatedは解決の代わりではない |
+| **L 失敗を業務上許容** | 許す故障種と許さないSafety違反、業務Ownerが受理した期限・例外対応・Handling Unit能力 | 技術的結合が減った可能性は報告できるが、補償・負担・顧客損失を含めた総複雑性削減は未実証。未受理L提案を実要件にしない |
+
+### 15.2 Activityの「継続」と、Productの「完了」は異なる
+
+TAI Activityは**どの仕事を目指したか、Productがどこまで観測し、どこが不明か**を、公開許可された範囲で引き継ぐ。しかし、TAI自身はOrder/InventoryのTx coordinator、EKIのTask/Lease/Result Owner、TEIのEffect/Provider Owner、SEI/SUIの意味受理・公開権限主体にはならない。既存[TAI Draft #648 §26〜29](https://github.com/hat47x/tai-pleroma/pull/648)のGoal/Schedule/Native Session/Activity/Product Operation/EKI Task境界と整合させ、新たなScheduler/Outcome Engine/中央Saga Orchestratorは追加しない。
+
+**最小の状態の読み分け（新Enum/Schemaではない）**：User/Business Promise（何を約束したか）／Instruction・受付（今回のRequestを受理したか）／Product Operation/Attempt（何を実行したか）／Actual Effect（実際に何が変わったか）／Recovery Obligation（残った処理・期限・責任者）／Goal・Human Meaning（成果物が目的を満たしたか、誰が判断したか）。運ばれたEvent/Receiptは別段階の代用にならない。Readerが見えていないProduct・秘密のConsumerや業務例外を「存在しない」と扱わず、Unknown/非開示を分ける。
+
+**結果不明の実反例**：[TAI Draft #624](https://github.com/hat47x/tai-pleroma/pull/624)が実EKI `eki-control`/`eki-agent`（mTLS）で確認したlost-ACK試験では、再送時の`duplicate`と同一Task/コマンド実行1回は限定観測できた。一方、Agent再起動後に**結果本文が失われる**変種、Control Plane再起動試験の一部待機失敗が報告されている。しかも当該試験は`effect_mode: none`であり、在庫更新・返金・外部業務Effectの一度限り実行や回復を立証しない。応答喪失の直後にTAIが「未実行」と推定して再送・取消・補償を命じず、**Productの既存Task/Attempt/Resultと独立Provider Readbackを先に照合**する。照会不能ならEffect unknownを保ち、業務Ownerが定めた回復手順へ送る。新しい再試行権限を創設しない。
+
+### 15.3 小さな反証と、判定が意味する範囲
+
+| 合成Trace（未実行） | 導出できる限定判定 | Ownerの次の仕事 |
+| --- | --- | --- |
+| `Order=Confirmed` → `Reservation=failed`（Accepted Kは有効予約を要求） | **要件違反を示す反例候補**。表面上の`Order write success`や越境CUD=0で成功にしない | TEI #3250が元Source/業務意味へ逆引きし、#1129/#1174が実Tx/Effectの別資格を調査 |
+| `Order=Pending` → 引当結果Unknown → 応答/処理期限未受理 | 保留可能な状態でも**期限内に解決したとは言えない**。PendingやEscalatedを完了としない | Product/Business Ownerが時間起算点、再照会、通知/担当者/期限を決定 |
+| 在庫引当`Accepted` → lost ACK → EKI Task重複検出 | **Task識別/再受付の限定結果**。Reservationや返金等の業務Effect実行回数は不明 | EKI Ownerの実Task照会、当該Providerの独立Effect Reader、回復Ownerの決定 |
+| 文書候補が生成/受領 → 公開Owner判断は自己申告のみ | Artifact生成・制約上の公開停止は肯定できても**公開Goalは未達** | TAI #127/#624、実権限Ownerの独立受理と本来のConsumerのRead |
+
+**可用性の主張を別に測る**：Safety（禁じる状態を生まないこと）、Bounded Progress（受理した期限内の処理・解決）、Operation/Resultのunknown、Recovery実施、運用余力、利用者の体験・費用は**異なる条件**。仮の失敗率・T_decide・手作業CapacityをTAIが設定しない。平均負担が小さくても相関障害で担当者が処理不能になる場合があり、計画上のL/Sの優位性を数値に捏造しない。局所の正常系だけでは同時注文の全在庫容量制約も証明しない。
+
+**適用順と停止線**：まず既存[TEI #3250 SP-R/SP-FE](https://github.com/hat47x/tei-platform/issues/3250)の小さいread-only在庫引当Fixture・独立Expectedを、**TAIのUser Job観測項目を説明する例として参照**する。次に既存[TAI Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)／[QH §10](yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)で、実ProductのSourceとCurrent Grant、配送/Consumer、Effect unknown、Ownerの受理を同一Attemptとは限らない独立証拠として照合する。実業務の状態変更/人の承認が実際に必要になった段階でのみ、既存TAI #127/#271、EKI #57/#829とTEI #1129/#1174のOwnerが実試験を設計する。TAI #168のG0/G1/G2→H2/H3四SlotとTEI #4583のStage1→Stage2 Desktopは**独立P0**であり、在庫/業務Effectを初回Blockingにしない。
+
+**今回の資格**：TEIの設計Issue/既存PR・EKIの限定実Probeを照合した、TAIの**読解・投資判断用の設計案**である。業務Ownerの失敗許容/期限/採用済み変更、実在庫/注文DB、Task本番副作用、独立Consumer業務完了、Human Value、Native Session再開・G0〜G2隔離は**NOT RUN / NOT ACCEPTED**。TEIの第二Modeler、TAI共通業務状態機械、Transaction/Compensation Engine、Session DB、新規Hard Gateは作らない。
