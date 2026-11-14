@@ -1318,11 +1318,9 @@ D1でも実Adapter利用やCurrent Grantが未観測なら、その分はNOT RUN
 ### 47.4 開発順と採用判断への帰結
 
 <!-- yic-cli-first-plugin-selfbuild-two-revisions-20261114 -->
-**CLIを先に使うセルフビルド実証を、§47の比較A/B/Cへ対応付ける。** [TEI #4675](https://github.com/hat47x/tei-platform/pull/4675)はPlugin自身をTEIの図表・Rule・意味モデルから生成する**S0原Source→S1意味を伴う生成→S2 Plugin実呼出し→S3次Stageでの実利用→S4 Source改訂**を、[TEI #4676](https://github.com/hat47x/tei-platform/pull/4676)は固定Seed→意味を持つ最小`*.tei.md`→実Go生成→Stage1 CLI自身によるStage2 CLI再構築→後続Studio/Windowsへ進む順を提案している。GUIの完成を最初の実証の条件にはしないが、**Stage1 CLIが実際にStage2を生成した証拠と、Stage1 Studio自身がStage2 Desktopを生成した証拠は別**に記録する。
+**CLIからの部品セルフビルドを、正式Desktop再構築と区別して育てる。** [TEI #4675](https://github.com/hat47x/tei-platform/pull/4675)は、モデル・図表・Ruleが実際のPlugin生成に寄与するS0〜S4を、[TEI #4676](https://github.com/hat47x/tei-platform/pull/4676)は固定Seed→意味を持つ`*.tei.md`→実Go生成→Stage1 CLI自身によるStage2 CLI再構築→後続StudioのSB-0〜4を、それぞれ設計上の実証順とした。Studio完成は初期の必須条件ではないが、**CLIの部品自己再構築とStudio Desktop全体のStage1→Stage2は別成果**である。
 
-§47のAはProduct-only／手書きAdapterの基線、Bは契約が型・入力拒否・分岐・出力・図表の意味を実生成コードへ反映するD1/D2の試験、Cは生成したPlugin／Builderが**次のBuild Attemptで実際に使われる**D3の試験とする。同じ固定Job、独立Expected、Source/Target/OS/Toolchain、選択Provider、実呼出し、実Consumerで比較する。**最初の二改訂**では（1）受理した表の一行・Rule一条件を変えて生成ロジックとConsumer結果が変わる、（2）図の見た目だけを変えて意味・生成ロジックは変わらない、という対照を置く。図表が実処理と無関係な装飾、Go wrapperのdelegateのみ、別Launcherの二回Build、生成Goの手修正、未選択Pluginが使われる、同名別Edgeの欠落、A→B→Aの旧資格復活は不合格または未資格とする。
-
-**測定を四つに分ける**：TEI由来の実Contract義務の割合／実Build工程でTEIが選択・追跡できた範囲／Plugin自身を次Stageで再生成した範囲／二改訂での重複定義・補助Go・手修正・診断・人手の減り方。それぞれ**分母を先に固定**し、単なる生成Go行数や`*.tei.md`の短さを達成率にしない。契約の意味をTEIが実装できない場合は外部Go Providerに残してGapを示し、機能を実現したと偽らない。CLI-firstは全体P0 #4583の代替達成でも、TAI #168四Slotの新しいBlocking条件でもない。正式Codegen/CLI再入/Plugin自己構築/定義削減効果の実測は**NOT RUN**。
+YICでは§47のA（既存Product-only／手書きAdapter）、B（TEIが実際に意味・診断・生成を担ったAdapter）、C（生成Pluginが次Stageで実使用された再構築）の区別を維持する。実行するJob、現在の`*.tei.md` Readerの未結線、Y0〜Y3の作業カード、二改訂によるGo委譲と定義簡素化の比較、負例と停止条件は**§48の既存実証計画を唯一の手順参照先**にする。結果値の一致、短い宣言、二度のLauncher起動、別HEADの成功をD2/D3と数えない。TEI由来の実Contract義務／Build工程／Plugin自身の再生成／保守負担は事前に分母を固定して別々に測る。
 
 最優先P0は不変：**TEI #4583の非Plugin Stage1→Stage2 Studio Desktop**と、**TAI #168の実OS G0→G1→G2→適格な独立H2/H3四Slot（現0/4）**を互いに待たせない。次に既存Product-onlyの一件を成立させ（TEI #4495/#2586）、薄いTool-only Adapter（TAI #168/#488）、TEI生成Adapter（TEI #2620/#2831）、部品の自己再構築、必要時だけ二Harness・Activity Skillへ進む。
 
