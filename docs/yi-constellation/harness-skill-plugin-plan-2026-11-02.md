@@ -1216,3 +1216,40 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 独立負例は、(a)同Kind/IDでも別Workspace Root、(b)分割取得途中のSource/Grant変更、(c)切断Replyを全件0として結論、(d)UI FocusとPinの混同、(e)Toolの実未提供／Skill references未Load、(f)二利用者のDirty BufferとAI Candidateの暗黙上書き。各Productが実現していない経路はunsupported/NOT RUNとする。TAIは実QueryやOS Policyを複製せず、評価票で異なるConsumer間のClaim上限を照合するだけ。
 
 **優先順の不変**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1送出→G2完全Tool Reply→独立H2→H3→H3→H2（比較適格0/4）と、TEI #1824/#4583の実Studio Desktop／Stage1→Stage2セルフビルドは独立P0。追加するWeb/Skill横断検証をこれらのHard Gateにしない。本節は**Docs-only Draft**。実Web共同編集、実異Principal Grant、外部Harness完全受領、Studio→Harness→Product E2E、Owner受理は今回**NOT RUN**。
+
+<!-- yic-real-product-command-skill-promotion-20261114 -->
+## 51. 2026-11-14：新Product機能をSkillの案内へ昇格する条件（後続計画）
+
+### 51.1 Productコマンドの存在・束縛・実使用を分ける
+
+[TEI mainのyi-tei-modeling](https://github.com/hat47x/tei-platform/blob/main/skills/yi-tei-modeling/SKILL.md)の**正式な案内範囲はread-onlyモデル調査**であり、新しいREA/Build/Studio/GraphなどのProduct機能が開発されたときもSkillの対応機能を自動拡張しない。Skillの説明が現在のCLI/API/Plugin実能力と乖離しないため、具体的な入口ごとに**発見 → 対象の実束縛 → 実呼出し → 完全Reply・独立Consumer確認 → 現在用途への採用**を分ける。この列は新しい共通ABIやRegistryではなく既存Product/TAIの評価票である。
+
+| Product入口の具体例 | 確認した実装・実証段階 | Product Skillの昇格条件 |
+| --- | --- | --- |
+| TEI catalog／inspect／trace／validate | mainの既存read-only入口と限定DSH H3実Loader Read。H2/H3比較適格は0/4 | 実CLI/Source版・Root・Tool Replyの観測範囲で従来案内を維持。Skill参照の遅延Loadは必要時のみ |
+| REA Evidenceのlocal-only型付き外部候補 | [TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625)は、保存済みREA Evidenceを既存Operationで読むlocal-only external-candidates入口の候補。外部REA実Processは起動しない | **未配布／未採用**。正式Product入口の採否と当該バイナリcommands/help/実Invocation/正負試験を確認して初めて、read-onlyの追加reference候補とする。ローカルPath引数や内部Pathを含み得る診断をStudio Web/MCP/Remoteへ転用禁止 |
+| Source/Builder/Dependencyの宣言とResolver出力照合 | [TEI Draft #4624](https://github.com/hat47x/tei-platform/pull/4624)は不一致拒否のProduct内部候補。Go局所試験とWindows/外部Hostは別 | Resolver契約が正しいだけでSkillに任意BuildやPlugin呼出権限を追加しない |
+| Resolver選択Builderと実子Imageの実行前digest照合 | [TEI Draft #4623](https://github.com/hat47x/tei-platform/pull/4623) exact HEAD f1e219aの8系統CI成功は**限定したPlugin主体の選択→実子起動前照合** | 非Plugin Desktop N0〜N3全Build、Stage1→Stage2 Windows、OS Loaderまでの差替え、実Current Grantは未証明。read-only Skillをセルフビルド実行Skillへ自動拡張しない |
+| SUI Raw・SHO Writer・TEI Studio Desktop/Web・EKI Effect | 各Product/Hostの実装と受入Owner。TAI [Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)のNative Session/Capability対応は後続 | Skillは用途限定で実Providerの能力を案内する。UI Focus/Handoff/Tool exitは元Source読取、Author Review、Write／Effectと独立 |
+
+### 51.2 Product Skillを改訂する実際の順序
+
+**Step A：まずProduct本体を確認する。** RepoのSkill説明文でなく、選択した実Executable/Serverのcommands/help、実schemaVersion/result shape、argv/subject/root/Source、実Read Scope、失敗分類を確認。利用者用に公開できない情報はProduct/Host側で必要部分だけ投影し、Toolの発見情報だけから現在Grant/配布資格を作らない。
+
+**Step B：必要な専門手順だけを増やす。** 現Skillのread-only入口が足りない具体Taskを固定する。新機能がProduct main/対象配布Profileで実利用でき、独立Expectedの成功・失敗・Tool完全受領が観測できた場合だけ、Owner判断でSkillの該当referencesへ小さく手順を加える。Skillルートの名称/descriptionで未実装Capabilityを先行宣伝しない。既存H2/H3固定比較のSkill byteを途中差し替えない。
+
+**Step C：ローカルとRemoteの境界を保持する。** #4625のEvidence Path入力はローカル専用のProduct境界。実元SourceやProviderの現在資格、Current Grant/Disclosureは保存Evidenceのdigestからは導けない。Web・外部Harnessで使う場合は別のHost許可済Reader/Projectionと実Consumer受領の検証が必要であり、その機能が無ければunsupportedとする。非公開のPath・Object名・存在や内部診断を出力から漏らさない。
+
+**Step D：選択と実行を同一Attemptにする。** #4624のIntent/Resolver一致と#4623のBuilder実子起動前チェックは別PRの限定Evidence。正式な非Plugin Studio Desktopセルフビルドを主張するには[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)でBuilder Catalog→実Invoker→N2/N3 Artifact→Stage1→Stage2 Desktop→実WebView2を各Ownerが同一Attemptで検証。Skillは実Build/Meaning受理のIssuerにも、実Host権限の代行者にもならない。
+
+### 51.3 判別する最小の負例・後続Owner
+
+| 負例 | 独立に拒否・保留すること | 既存Owner |
+| --- | --- | --- |
+| Skill説明に新commandがあるが選択CLIには無い／出力shape・実versionが違う | 架空Tool呼出や旧結果shapeの自己補完をしない | TEI #2605、TAI #488 X01/X03 |
+| Local CLIで保存REA Evidenceを読めるがWeb経由で任意Evidence Pathが渡された | Host許可Byte Reader未提供ならunsupported。内部Path診断を外部送出しない | TEI #3394/#4625、#2516、TAI #232 |
+| Resolverが宣言と違うBuilderを返す／Builder digest一致でも実Role/Authorityが違う | 宣言・選択・実Invoker・Host GrantのどのClaimまで成立したか区別 | TEI #4624/#4623/#4583 |
+| Product Scopeは部分取得、Tool Reply欠損、別Workspace同byte | 完全性／現在Subject同一性／不存在への過大Claimを拒否 | TEI #3262/#4515、TAI #271/#488 |
+| TAI Skillが不要な単独Product Taskで追加Loadだけ増える | Tool-onlyの成功を維持。Skill価値は既存M00/M01/M10/M11で別測定 | TAI #488/#621/#648、配布#74 |
+
+**実行順は維持**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1送出→G2完全Reply→独立H2→H3→H3→H2（適格0/4）と、TEI Desktop #1824/#4583のStage1→Stage2を独立P0。新Product ToolのSkill案内更新やREA remote化、WASM/Web適合を初回比較・セルフビルドのHard Gateにしない。§51は既存Source/Issue/局所CIの照合から作った**Docs-only Draft**。新実CLI/OS/Harness/REA二Consumer/Studio/EKI Effectの横断E2E・Owner正式受理は今回NOT RUN。
