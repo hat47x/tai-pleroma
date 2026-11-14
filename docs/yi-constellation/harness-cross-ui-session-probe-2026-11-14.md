@@ -1208,9 +1208,14 @@ YICのTool/Skill利用資格は、用途ごとに次の**実観測できる段�
 
 **変更に応じて失効させる範囲を変える。** 文書の説明・表示変更、構文／意味規則変更、Provider/Builder版変更、Host Grantや送信先変更を同じ「再ビルド」と見なさず、Source/Meaning/Artifact/実Consumer/開示資格を必要な範囲で再照合する。一方、同名Provider、同じ結果値、同じBinary digestだけでは過去の意味受理・現在のGrant・実Tool利用を再利用しない。DSLの自己記述についても、固定Seedで読めたこと→Language選択→意味候補→Ownerの意味受理→生成物の実Consumer受領を区別する。**自己Parseは自己承認ではない**。適格な選択を行う製品側の契約を使い、YICに第二Plugin ManagerやDependency/Authority正本を追加しない。
 
+<!-- yic-upstream-contract-diagram-projection-reuse-20261114 -->
+**依存先が契約で公開した図解を、下流Pluginの設計・表示に再利用する。** 例えば上位のPlugin AがDiagram／Graph／TableなどのProjectionを契約として公開し、Plugin Bがそれに依存するとき、Bは公開された意味ID・有向Relation ID・Source由来・Version・Coverage・表示上のLossを保持しながら、自身の関係・説明・操作を重ねられることが望ましい。**公開されていないAの内部Graph、Provider実装、秘密のSource Locator、実行権限は継承しない**。Aの図をコピーして独立した意味正本へ作り直すのではなく、Aの公開ContractとBの拡張Contributionとの参照関係を既存のPlugin Dependency／Mapping／Projectionへ結ぶ。公開するContractと実際に含めるTarget Memberは別資格とし、表示できることを実Provider呼出しや業務意味受理の証拠にしない。
+
+**最小受入例（提案・未実行）**：①Aの同名二Node・同端点間の多重有向RelationをBの図へ表示しても、ID／向き／意味属性を失わない。②Aの契約外の辺・秘密属性・権限のないSource参照は、Bの図とAI向けProjectionへ現れない。存在／件数／Digestの漏洩も避ける。③AのContract/Plugin版変更、Source A→B→A、現在Grant失効ではBの参照と開示資格を用途別に再照合する。④レイアウトだけの変更では意味Revision・不要な実Builder再実行を発生させない。⑤上流のProjectionに可逆性がなく、Bから編集するSource occurrenceを一意に特定できない場合はread-onlyに留める。これらはTEI #951/#1016/#2497/#2600/#3267/#2514とYIC QH-P0の既存Expectedへ渡す。**汎用の図解継承Runtime／別Graph Registry／第二の認可Engineは作らない。**
+
 **実証順**：P0の正式非Plugin Studio Build・通常製品Entry/Provider実Callを先に進める。P1では未知のPlugin／外部Schemaをまずread-onlyで調べ、Source/Graph/表の変換に伴う意味の欠落と編集可能範囲を表示する。次に限定した一つの貢献が実Builderまたは実Providerへ収録・選択・呼出しされ、独立Consumerへ届くまでを測る。YICがPluginを実行する新Hostになるのではなく、各Productの**確かめた能力だけを外部Harnessから使えるようにする**。
 
-**現在の資格（exact HEADのCI）**：[TEI #4671](https://github.com/hat47x/tei-platform/pull/4671) HEAD `a03c127b`はRepository Health／Cacheの**2/2成功**。[TEI Draft #4667](https://github.com/hat47x/tei-platform/pull/4667) HEAD `a00186d1`はCache成功・Repository Health失敗（[実行 #43584614885](https://github.com/hat47x/tei-platform/actions/runs/43584614885)の`repository-plan-check`が設計書214行の不要なescape付きバッククォートを拒否）。修正後の同一HEAD再CIが必要。[Script Launch Draft #4672](https://github.com/hat47x/tei-platform/pull/4672) HEAD `9341b2fd`はHealth／Cache **2/2成功**だが**文書・計画だけの合格**であり、通常`tei` CLI・型付きApplication APIの別々の実Call Witnessを保証しない。以上の成果から、新たなPlugin Build/Load/Call、JSON Schema逆編集、Host Grant、外部Harness Tool実受領、Ownerの正式Meaning受理を完成扱いしない。採用時は各PRの現在HEADとCIを再取得する。
+**現況（2026-11-14、確認した版に限定）**：Plugin構成設計[TEI #4671](https://github.com/hat47x/tei-platform/pull/4671)は**mainに統合済み**（統合されたのは設計文書）。[Script Launch Draft #4672](https://github.com/hat47x/tei-platform/pull/4672)は新HEAD `f06644ad`でCache success／Health実行中。[構造・Schema Draft #4667](https://github.com/hat47x/tei-platform/pull/4667)は旧HEAD `a00186d1`のHealth失敗（設計書214行のescape-backtick）を経て新HEAD `24ae2cc1`でCache success／Health実行中。旧失敗を新HEADの失敗・成功へ転用しない。[Plugin自己生成設計 #4675](https://github.com/hat47x/tei-platform/pull/4675) HEAD `d7383d94`と[CLI-first設計 #4676](https://github.com/hat47x/tei-platform/pull/4676) HEAD `e940a4ed`も、いずれもCache success／Health実行中。これらの成功は設計・CIの限定資格であり、新しい実Plugin Build/Load/Call、正式CLI Stage1→Stage2、実Host Grant、外部Harness Tool受領、Owner意味受理は**未確認**。採用時は現行HEADとCIを再確認する。
 
 **YIC独自Agent Loopは引き続き保留**。二つ以上の外部Harnessを適格に比較し、Product/Host/Adapterの改善では解消できない実害が示され、安全性・保守・費用を含む自作案の優位性を確認できてからTAI #234で再審査する。新しい中央Runner、Agent Host、権限判定器、Expected正本は増設しない。
 
@@ -1311,6 +1316,13 @@ D1でも実Adapter利用やCurrent Grantが未観測なら、その分はNOT RUN
 **変更試験の例**：正式に受理したread-only Functionの一つの明示Input・結果投影条件を変更し、Source→診断→生成→実Provider/Consumerの変化を確かめる。Agentが生成コードを直接手修正して成功した場合は、TEIによる変更の成果と数えない。Provider/API/Host側の修正が不可避なら、その理由と範囲を明記し、TEIへ吸収することを一律に要求しない。
 
 ### 47.4 開発順と採用判断への帰結
+
+<!-- yic-cli-first-plugin-selfbuild-two-revisions-20261114 -->
+**CLIを先に使うセルフビルド実証を、§47の比較A/B/Cへ対応付ける。** [TEI #4675](https://github.com/hat47x/tei-platform/pull/4675)はPlugin自身をTEIの図表・Rule・意味モデルから生成する**S0原Source→S1意味を伴う生成→S2 Plugin実呼出し→S3次Stageでの実利用→S4 Source改訂**を、[TEI #4676](https://github.com/hat47x/tei-platform/pull/4676)は固定Seed→意味を持つ最小`*.tei.md`→実Go生成→Stage1 CLI自身によるStage2 CLI再構築→後続Studio/Windowsへ進む順を提案している。GUIの完成を最初の実証の条件にはしないが、**Stage1 CLIが実際にStage2を生成した証拠と、Stage1 Studio自身がStage2 Desktopを生成した証拠は別**に記録する。
+
+§47のAはProduct-only／手書きAdapterの基線、Bは契約が型・入力拒否・分岐・出力・図表の意味を実生成コードへ反映するD1/D2の試験、Cは生成したPlugin／Builderが**次のBuild Attemptで実際に使われる**D3の試験とする。同じ固定Job、独立Expected、Source/Target/OS/Toolchain、選択Provider、実呼出し、実Consumerで比較する。**最初の二改訂**では（1）受理した表の一行・Rule一条件を変えて生成ロジックとConsumer結果が変わる、（2）図の見た目だけを変えて意味・生成ロジックは変わらない、という対照を置く。図表が実処理と無関係な装飾、Go wrapperのdelegateのみ、別Launcherの二回Build、生成Goの手修正、未選択Pluginが使われる、同名別Edgeの欠落、A→B→Aの旧資格復活は不合格または未資格とする。
+
+**測定を四つに分ける**：TEI由来の実Contract義務の割合／実Build工程でTEIが選択・追跡できた範囲／Plugin自身を次Stageで再生成した範囲／二改訂での重複定義・補助Go・手修正・診断・人手の減り方。それぞれ**分母を先に固定**し、単なる生成Go行数や`*.tei.md`の短さを達成率にしない。契約の意味をTEIが実装できない場合は外部Go Providerに残してGapを示し、機能を実現したと偽らない。CLI-firstは全体P0 #4583の代替達成でも、TAI #168四Slotの新しいBlocking条件でもない。正式Codegen/CLI再入/Plugin自己構築/定義削減効果の実測は**NOT RUN**。
 
 最優先P0は不変：**TEI #4583の非Plugin Stage1→Stage2 Studio Desktop**と、**TAI #168の実OS G0→G1→G2→適格な独立H2/H3四Slot（現0/4）**を互いに待たせない。次に既存Product-onlyの一件を成立させ（TEI #4495/#2586）、薄いTool-only Adapter（TAI #168/#488）、TEI生成Adapter（TEI #2620/#2831）、部品の自己再構築、必要時だけ二Harness・Activity Skillへ進む。
 
