@@ -96,6 +96,26 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 **観測範囲**：上の修正はGitHub上で一行のSource修正を実施した事実。CI結果の差分確認、生成実行、Node/Windows実E2E、Pin UIと外部Harnessの実受領はこの追補時点では新規実行していない。GitHub Draftは未マージであり、Owner正式受理を意味しない。
 
+
+<!-- yic-pin-readonly-actual-implementation-20261115 -->
+## 実装追補：Pinの背景読み取りをWorkbenchへ接続（新HEADの実機検収は未完了）
+
+[TEI Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597)の専用ブランチで、対象を固定・解除・再確認するUIと背景のHost-owned Inspect呼出しを追加した。実装Sourceコミットは[背景Reader 2eee5fbf](https://github.com/hat47x/tei-platform/commit/2eee5fbf86371d83f7f7ced21eaa7e596991b7fc)、[UI 94f196d8](https://github.com/hat47x/tei-platform/commit/94f196d8231ac979e893e7f8fb9bf4553d0641e2)、[Style df79b1ad](https://github.com/hat47x/tei-platform/commit/df79b1ad2fe70e2a759b24601518cecfd16c502e)、[投影テスト 52fa6b64](https://github.com/hat47x/tei-platform/commit/52fa6b64999d7804b543c43000fee509df0de91b)（Draft・未merge）。
+
+- 一時選択と固定対象を独立させたまま、固定Aの再確認は専用の pinned-inspection 応答レーンで実行する。Aの非同期結果から閲覧中BのEditor、Graph、Focus、Noticeを書き換えるコードを置かない。
+- 呼出し前は既存Catalogで対象の一意性を検査し、実Hostの InspectSubject 応答に既存 readInspection のSubject/World/Source Index Fingerprint検査を通す。固定要求のWorkspace epoch/Pin generationが変わった旧応答は採用しない。これは**read-only Product観測**であってCurrent Grant/外部Disclosure/編集資格の証明ではない。
+- Unitテスト PIN-READER-01/02を既存 responses.pin.test.mjs へ追加。対象Aと結果Bの不一致、World/Source Index Fingerprintの旧版を含めて検査する。テストはSourceとして追加した段階であり、**新HEADでの実行合格は未確認**。
+- この時点のUIは現在read-only Editorに接続された一Subjectだけ。モデルのSource本文/診断全量やRelation occurrenceを新しいHarness Schemaで送る機能、AI受信結果のReview/Applyは**実装していない**。
+
+### 次の検収順と棄却条件
+
+1. **Source/Node契約**：最新HEADで Pin/Reader 既存・追加テスト、型チェック、通常のWorkbench Buildが成功すること。失敗時は対象SourceとToolchain/正規生成入力を固定し、原因を切り分ける。
+2. **配布の同一性**：生成JSとDesktop収録JSを正規生成・同一HEADでbyte照合すること。以前から存在するBundle不一致は、本UIコード追加だけで修復されたと扱わない。異BranchのJS/Artifactを流用しない。
+3. **実DOM/Hostの非干渉**：B表示中にAを固定して裏で再取得し、BのEditor/Graph/選択/Noticeが変化しないことを実WebView/Host Consumerで観測。Unpin、Pin A→B→A、Workspace A→B→A、返信の遅着、Catalog/Source改版、Host拒否、同名異Rootを負例として残す。現在のread-only UIでDirty/Undo/IMEの編集安全を実証したとしない。
+4. **外部YIC接続**：上記の実Product Pinと現在のHost Disclosureの別審査を経た後、既存の実Tool/Native Sessionが限定Contextを完全受領し、元Task/PinへReplyを返したことをTAI #168/#271・QH §10のI/R/P/T/C/Hで記録する。手元のPin状態やTool一覧、AI説明だけを送信成功にしない。
+
+**Evidenceの状態**：GitHub SourceとUIのID対応を読戻し済み。新HEADのActions合格、生成Asset一致、実DOM/Windows Host、外部Harness受領、Source再読取、Owner意味受理はこの時点で**未確認**。実装が前進しても、TEI #4583の非Plugin Stage1→Stage2 DesktopとTAI #168の独立H2/H3四Slotを新しい順序制約で妨げない。
+
 ## 優先順位と停止線
 
 - **独立P0-A**：TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の非Plugin Studio Stage1→Stage2実Windows Desktop。#4597のPin純粋testや旧生成WebView CIとは別。
