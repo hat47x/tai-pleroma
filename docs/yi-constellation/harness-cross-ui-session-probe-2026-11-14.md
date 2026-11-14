@@ -2,6 +2,17 @@
 
 > **Status: Proposed / Docs-only / 新しい実Harness・実Product E2Eは NOT RUN。** 本文は既存Ownerの受入票へ実行順と記録方法を接続する補助計画であり、Handoff v2、公開API/ABI、第二Expected/Authority、中央Runner/Session Store/Lock/Registryを定義しない。Ownerの正式採用・外部送出・業務実行を意味しない。
 
+<!-- yic-executive-reading-guide-20261114 -->
+### この計画を読む前に
+
+目指すのは、利用者がTEI Studioなどで選んだ対象について、必要なときだけ外部AIに相談し、別の画面やHarnessへ移っても**対象・根拠・未決事項を取り違えずに作業を続けられること**である。AIを使わない通常の製品操作は、そのまま成立させる。
+
+そのため、**仕事の継続（Activity）、AIとの対話（Native Session）、実際の製品操作（Product Operation）、表示や編集（View）**をそれぞれの担当で管理する。イベントを受け取ったこと、AIが回答したこと、製品が実行したこと、利用者や別の受け手が結果を確認したことは、別々の事実として扱う。
+
+実装順も分ける。最優先はTEI StudioのStage1→Stage2実セルフビルドと、TAI #168のOS隔離・送受信・独立四試行である。外部Harness間のSession共有、Desktop内部Workerの配置変更、Webの複数利用者対応、汎用Lifecycle Graphは、必要性と実証結果が揃ってから判断する。
+
+本文の「確認済み」は**その対象版・実行環境・試験範囲内での確認**を意味する。Sourceの現在性、操作権限、実Provider、外部作用、結果の受領、業務上の受理を、CIの成功や資料上の説明だけから補わない。
+
 ## 0. 関連Ownerと変えない先行条件
 
 - [TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)：B0〜B4投資比較、Goal/Schedule/並列、[HC-01〜14](https://github.com/hat47x/tai-pleroma/issues/234#issuecomment-6844475381)、[HC-15〜18](https://github.com/hat47x/tai-pleroma/issues/234#issuecomment-6856979920)の後続判断。B4独自Agent Loopは未採用。
@@ -605,6 +616,56 @@ M0 Product-onlyは常に独立評価する。Web Serverの現在のHost境界が
 
 この順序は単一の横断状態機械や中央Coordinatorの導入ではない。**どのOwnerの現時点Observationを問い合わせるかの利用手順**。Productの既存Idempotency/Effect/Trigger契約とHarness Native APIをそのまま利用する。
 
+<!-- yic-process-event-lifecycle-semantic-map-20261114 -->
+### 26.3 起動とイベント処理を、実行環境に依存しない意味構造として図解する
+
+Webアプリケーション、CLI、バッチ、デスクトップアプリケーション、SaaS上のワーカーは、待受け方やプロセスの寿命が違っても、**何が処理を起こし、どの機能を選び、どこで実行を許可し、結果と外部作用を誰が確認したか**という観点では比較できる。[TEI #4198](https://github.com/hat47x/tei-platform/issues/4198)の型付きLifecycle Graphと、[#4497](https://github.com/hat47x/tei-platform/issues/4497)のTrigger契約、[#4502](https://github.com/hat47x/tei-platform/issues/4502)のScript起動契約を、その共通の読み方に用いる。
+
+これは**TEI独自のイベントループや共通実行Hostの実装計画ではない**。起動・待受け・イベント配送は既存のOS、Webサーバー、Wails、外部SaaS、Scheduler、Harnessが担い、TEIは意味を持つEntry/Function/Operationと検証・生成に必要な契約を表す。CLIには常時待受けがなくてもよいし、定時実行には呼出し元へ返すHTTP応答がなくてもよい。
+
+```mermaid
+flowchart LR
+    A["既存Hostの準備・待受け（必要な形態のみ）"] --> B["入力契機・イベントの実受信"]
+    B --> C["対象Entryと型付き入力の準備"]
+    C --> D{"現在の対象・権限・期限を確認"}
+    D -->|拒否・未確認| X["実行せず、理由と未決を残す"]
+    D -->|実行可| E["選択したProviderの実呼出し"]
+    E --> R["必要な応答・結果の配送"]
+    E --> F["作用があればEffect／Receiptの照合"]
+    R --> G["受け手の実受領・現在資格を確認"]
+    F --> G
+```
+
+図の並列経路は**観測を分けるための表現**で、すべての処理に応答と外部作用の両方があるという意味ではない。処理結果が返っても更新は未確定の場合があり、更新済みでも応答ACKが失われる場合がある。グラフの配置や矢印を変更しただけではSourceの意味や実行許可を変更しない。Source-backedな定義と図解Projectionを分離する。
+
+| 入力契機 | Hostが実際に観測するもの | TEI／YICが同一視しないもの |
+| --- | --- | --- |
+| **CLI・手動操作** | プロセス起動や画面操作による対象Entryへの要求 | UI Focus・コマンド文字列と、Productの現在Grant・実Effect |
+| **HTTP/API・Web UI** | 実Request、認証済み呼出元、必要に応じた応答 | HTTP 200／画面更新と、DB Commit・別Consumerの受理 |
+| **Timer・Schedule・Batch** | 定時Occurrence、配送、Hostが受領した時刻 | Goal保存、予定時刻、配送ACKと、実Job開始・完了。TZ/DSTや未配達はProvider判断 |
+| **外部Event・EKI Task** | Event/Task/Attempt/Lease/実Resultを担当Providerから観測 | Queue投入・Task completedと、出力本文の取得・外部作用・独立検証 |
+| **AI HarnessのTool要求** | Native Session/Turn/Toolの実要求、Productへ届いた入力 | モデルの回答・再試行指示・過去の承認と、Product Entry公開・現在権限・実呼出し |
+
+意味上は、**TriggerDefinition（起動の定義）→Occurrence（発生事実）→PreparedInvocation（入力と対象の候補）→Hostによる実行可否の判断→Operation/Attempt→Result/ResponseとEffect/Receipt→受け手の確認**をたどる。必要な相関情報（発生元、時刻、correlation/causation、Source/Schema版、実行者、送達先）は既存Providerが発行した識別子と証拠を参照する。概念としてのEventEnvelopeを直ちに新しい公開ABI・永続テーブルへ固定しない。
+
+入力の評価を、概念上の純粋な変換（現在状態と入力から、次の状態候補・戻り値・作用要求・診断を得る処理）と、実Hostによる作用の許可・実行に分ければ、CLIからのシミュレーションや異なる言語への移植を比較しやすい。ただし、**作用要求は実行済み作用ではない**。実DB Commit、Hostの許可、ACK喪失時の照会と再実行可否は[#1174](https://github.com/hat47x/tei-platform/issues/1174)など既存Ownerのままとする。
+
+**図解の用途**は、①どこで待受け・分岐・検証・応答するかの説明、②DSL/標準Graph/Studio表示と実コードの対応、③Web・バッチ・CLIやGo/.NET/Java等への移植時の意味差分、④AIが提案した変更の影響範囲のPreviewである。図を保存するための第二DSL・Graph Runnerを作らず、意味構造とそのSource位置から図・表・設計書を生成する方向で比較する。モデル変更はTEI既存のPreview/Review/Acceptを通す。
+
+### 26.4 既存の試験へ割り付ける最小の反証
+
+| 確かめる差 | 既存Ownerと試験 | 不合格とする解釈 |
+| --- | --- | --- |
+| 同じFunctionを手動／定時／Eventで起動候補化 | [TEI #4497 TR-01〜04](https://github.com/hat47x/tei-platform/issues/4497)、#4502 | Triggerが違うだけでFunctionの意味・Entry資格が変わったことにする。Tick到着を実起動とみなす |
+| Eventからの更新と応答がずれる | #4497 TR-05〜12、[TEI #1174](https://github.com/hat47x/tei-platform/issues/1174)、[EKI #57](https://github.com/hat47x/eki-fabric/issues/57) | post-commit前配信、ACK喪失の無条件再実行、Task完了をResult本文受領へ昇格 |
+| Lifecycle Graphと実Providerの対応 | [TEI #4198 R0〜R4](https://github.com/hat47x/tei-platform/issues/4198)、[#1129](https://github.com/hat47x/tei-platform/issues/1129) | Guard拒否でもProviderが呼ばれる、Effectを二重に呼ぶ、Diagramのレイアウトだけで意味・Buildが失効 |
+| AIのTool起動とProduct実行 | [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、[#271](https://github.com/hat47x/tai-pleroma/issues/271)、[TEI #4653のConsumer受入設計](https://github.com/hat47x/tei-platform/blob/main/plan/design/CONSUMER_QUALIFIED_CROSS_LANE_ACCEPTANCE_2026-11-14.md) | Native Turn成功・Tool Reply・実Consumer受領・Product Effect・Owner受理を一つの「完了」と表示 |
+| DSLの不正宣言が実行側まで流れる | [TEI #4652](https://github.com/hat47x/tei-platform/pull/4652)のA Parser／B Workspace Validator／C Runtime preflight／D Entry・Host・Consumer | AのParse成功をB/C/Dの合格にしない。実Adapter呼出し前の拒否があっても公開Entryや権限を保証しない |
+
+**実装への接続順**：最初は既存Functionを用い、手動・定時・Eventの定義をread-onlyに比較する（TR-01〜04、#4198 R0）。次に許可されないEntry・失効Grant・重複配送・ACK喪失を各Providerの既存試験で検証する。CLIと別Consumerの実受領が成立した段階で、同じ意味モデルから生成した図と実行結果の一致を評価する。異なる言語の自動変換、Graph Patch、Chat/Voiceの多段やり直し、全Eventを解釈するRuntimeは後続研究に留める。
+
+**今回の資格**：既存のTEI/TAI/EKI契約と他チャットの実行モデルの整理を結んだ設計・検証計画であり、実Timer/Queue/DB、Graph生成、他言語移植、外部Harnessの新E2EはNOT RUN。P0のStudio Stage1→Stage2とTAI #168 G0/G1/G2→H2/H3四Slot（適格0/4）を遅らせない。
+
 ## 27. Schedule・Lease・Resultの最小反証を後続J-Aへ接続（既存Expectedを再利用）
 
 | 観測対象 | 固定する反例と既存Owner | 受入・縮退条件 |
@@ -806,6 +867,11 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 **生成器を先に偽装しない**：[TEI #4641](https://github.com/hat47x/tei-platform/pull/4641)はSelected Generator→実Builder→Artifact→ConsumerをGCX-01〜08で整理した**docs-only Draft**。実装済みのPlugin主体BuildPlanを非Plugin Desktop N0〜N3へ名称変更して代用しない。非Plugin実InvokerとArtifactSetはTEI #4583/#1080/#1097がOwnerであり、YICに第二Build Engineを置かない。
 
 **資格の取り扱い**：ここに記載した各CIは、そのPR本文／同HEADで確認された時点の限定結果。単に成功数を加えた横断E2EのPASSはない。特に#4637 local Go Reader＋#4627 Wails Service inventoryの別HEAD成功から「Web/HarnessでREA Evidenceを読める」を導かない。#4636の構造拒否から公開Entry/Host grant/業務Effectを推定しない。
+
+<!-- yic-windows-dsl-ci-currentness-20261114 -->
+**2026-11-14の新しい実証状況**：[TEI Desktop Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD `9b58533d`のGitHub Actionsは**12/12 completed/success**（[Windows #43572235468](https://github.com/hat47x/tei-platform/actions/runs/43572235468)のgenerated／通常Desktop双方の実WebView2 Jobを含む）。旧HEAD `357345d7`の11/12（PowerShell OS版取得timeout）は歴史的な不合格として残し、最新HEADの資格をそちらに固定しない。**この12/12はStudio生成Stage1自身がStage2 Desktop exeを再生成した証拠ではない**。
+
+**DSL起動前の四層**：[TEI #4652](https://github.com/hat47x/tei-platform/pull/4652)のA Parser・B Workspace Validator・C Runtime preflight・D Entry/Host/Consumerの診断境界と、[Consumer受入設計 #4653](https://github.com/hat47x/tei-platform/pull/4653)の資料はmain統合済み。[索引・計画修正 #4659](https://github.com/hat47x/tei-platform/pull/4659)もmainに反映された。一方、実Go試験の[#4654](https://github.com/hat47x/tei-platform/pull/4654)・[#4655](https://github.com/hat47x/tei-platform/pull/4655)は確認した固定HEADで**各7/8 CI、Health失敗**であり、Workspace実Validatorと公開Entryを完成扱いしない。これらは[TEI #4502](https://github.com/hat47x/tei-platform/issues/4502)/[#4495](https://github.com/hat47x/tei-platform/issues/4495)の実行前診断と、実Provider/Resultまでを別に検証する順序へ引き継ぐ。
 
 ## 36. 受入順の更新：実行面を増やすより一つのConsumerにつなぐ
 
