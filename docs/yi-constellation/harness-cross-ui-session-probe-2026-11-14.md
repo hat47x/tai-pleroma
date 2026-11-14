@@ -1317,3 +1317,55 @@ D1でも実Adapter利用やCurrent Grantが未観測なら、その分はNOT RUN
 YICが評価するのは、**TEIの宣言が実際の製品機能と外部Harness連携に寄与したか**、そして改訂が進むほど「同じ仕事をより少ない重複定義と手作業で実現できるか」である。TEIの適用領域が広がることと、YICのAgent Loopを内製することは別の判断。既存Harness＋Product Skill＋薄型Adapterで十分ならB4自作Loopは引き続き保留する（TAI #234）。
 
 本節は**Docs-onlyの後続検証計画**。TEI生成Adapter、Plugin再構築、同一改訂の実Product/Harness E2E、D1〜D3の独立合格、費用・工数測定、Owner正式受理は**NOT RUN**。Draftを維持し、mainへ自動mergeしない。
+
+
+<!-- yic-cli-first-teimd-vertical-slice-20261114 -->
+## 48. CLI/MCP-firstでTEI-native Adapterを育てる最初の縦断実証
+
+§47で定めたD0（Go委譲）→D1（型付き契約）→D2（意味のある生成）→D3（部品自己再構築）を、**一つの利用者Jobと二つの定義改訂**で比べる。実際にTEIの意味記述が生成・診断・実Consumerの振る舞いを決めたかを検証し、宣言が短いこと、Go関数を包んだこと、AIが実行を報告したことをセルフビルドの成果に数えない。最初の操作とBuildの起点はCLI／適格なMCP Adapterでよい。TEI Studio GUI完成を初期のHard Gateにしない。
+
+### 48.1 最初の仕事は既存の公開モデル調査から始める
+
+対象は[TEI Product Skill #2605](https://github.com/hat47x/tei-platform/issues/2605)のread-only一件。既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) S1の公開Reference Workspace・Subject（例：semantic-data:sales.order）を固定し、実Binaryのコマンド発見→Catalog→Inspect／Trace→Validateを現行CLIで再確認する。SubjectのRoot、Kind/ID、Source位置/byte、Version、Source Index/World Fingerprint、Exit/OK/Warning/unknown、実CLI version、実際に受領したResultを記録する。
+
+このCLI基線は既存のSource調査機能の試験であって、Function/Providerの新しい公開Entryを実行した証拠でも、外部AI Harness経由の適格試験でもない。YICの新Skillや専用Toolを先に実装せず、[TEI #1158](https://github.com/hat47x/tei-platform/issues/1158)の既存Application APIと#2605のProduct Skillを再利用する。初回固定H2/H3 Task・Skill byte・四Slot条件は変えない。
+
+**現行Readerの断線**：[TEI #4359](https://github.com/hat47x/tei-platform/issues/4359)の実装調査ではWorkspace Loaderは *.tei.md を TEI_MD_PARSER_UNBOUND として停止する。Markdown表・Graphviz・関数チェーンの表示だけでTEIの意味解決・Source anchor・コード生成ができたとは言えない。正式な .tei Source＋CLIで先に基線を成立させ、*.tei.mdは[TEI #2621](https://github.com/hat47x/tei-platform/issues/2621)／#4359／[#1018](https://github.com/hat47x/tei-platform/issues/1018)／[#2620](https://github.com/hat47x/tei-platform/issues/2620)／[#1121](https://github.com/hat47x/tei-platform/issues/1121)の**既存Reader/Role/GeneratorへのFit/Gap**として別記録する。手作業の変換が必要なら、実Product Readerへの接続と区別して明示する。
+
+### 48.2 四つの作業カード
+
+| カード | 実行内容 | 受入条件と停止線 | Owner |
+| --- | --- | --- | --- |
+| **Y0：既存CLI実行** | 一Subjectの実Catalog/Inspect/Trace/Validate、Source/Warning/unknownを固定 | 同じRoot/Subject/Versionの実受領が条件。Skill無でも成立。正式Function Entry・外部Harness適格は未証明 | TEI #2605/#1158、TAI #168のS1 |
+| **Y1：図表・表現Reader** | *.tei.mdの一表または有向Relationを、既存Canonical/Source位置へ結べるか調べ、意味一条件を変更 | 現状Reader未接続ならunsupportedとする。意味を持たないレイアウト変更と意味変更を区別。Parser仮実装を正式採用としない | TEI #2621/#4359/#1018/#2620 |
+| **Y2：生成・Plugin** | Y1の受理可能な部分から実Generator/Builderへ渡し、Go等の生成Adapter、実Builder/Toolchain、実Artifact byte、実Consumer利用を追跡。次にGenerator/Plugin自身のTEI記述可能範囲を測定 | 単なるGo delegate・生成物を置いただけ・別HEAD合算はD2/D3不合格。実Sourceの意味変更が結果/検査に及ぶ部分だけ計上 | TEI #2831/#951/#2390/#1121 |
+| **Y3：Harnessと結果** | 正規Productから許可したread-only Projectionだけを外部Harnessへ渡し、実Tool Reply・元Subjectへの結果対応・独立Consumerの再読取を確認 | OS/Host Current Grant・Raw送出・完全Reply・Consumer受領は別Claim。初回H2/H3四Slotの新Blocking条件にしない | TAI #168/#232/#271、TEI #2516 |
+
+**実行順は硬直させない。** Y0は既存実装で先行でき、Y1/Y2はTEIの自己記述・Generator開発の独立レーンで並走できる。Y3のTool-only基線はY2の完成を待たせない。Y2の部品単位D3はTEI #4583の非Plugin Stage1→Stage2 Windowsや全体G4を合格にしない。
+
+### 48.3 独立Expectedへ渡す最小の反例
+
+| 故障を一つ注入する | 合格となる挙動 |
+| --- | --- |
+| Reader未接続の*.tei.mdを実Workspaceに置く | 未対応・Reader未結線を診断。生成済み・意味受理済みと偽称しない |
+| 一つの表項目/Relation意味を変更し、旧Artifactを指定する | 正しい失効/再生成/診断。実Consumerで変化を観測できなければD2を保留 |
+| 同じ図の配置だけを変更する | 業務意味や実結果を変えない。糖衣表現と原位置を不用意に書き換えない |
+| Provider Bを選んで実Child Aを起動する | Resultの値が偶然一致しても選択・実Invocationの不一致を拒否 |
+| 空のSource Index、0行、partial/unknown、Warningを返す | 空=不存在／完全、Exit0=無警告、という昇格を拒否 |
+| read-onlyの操作で非公開SourceやTool結果を外部送信する | Tool/Skill名ではなく実Host/OSで拒否し、適格なProjectionだけ送信 |
+| 同じSessionからforkした四つのIDを独立Trialとして登録する | 実Native系譜/隔離を確認。未知なら独立性未確認、TAI #168の適格0/4は据置き |
+| Stage1を経ず同じLauncherで二回Buildし、D3達成と報告する | 実Stage1 image/BuildIntent/Builder/Stage2 Artifact/Consumerの因果関係がなければD3不合格 |
+
+期待値の正本はTEI #1180/#2514、製品の意味・BuildはTEI Owner、実Harnessの試験票はTAI #168。ここに新Runner・第二Validator・共有Expected台帳を作らない。
+
+### 48.4 「記述が簡単になった」を二つの改訂で測る
+
+初版と、**受理済みの意味条件を一つだけ変えた版**を固定し、同じFunction/Artifact範囲で比較する。記録するのは(1) TEIが意味・選択・Rule・処理/生成を決めた実要素とGo/Host/手作業に残る要素、(2) 重複した契約、変更した手書きファイル数・作業時間・レビュー工数、(3) 実Source/Generator/Builder/Toolchain/Artifact/Consumerの対応、(4) 誤Provider・旧Artifact・partial・unknown等の負例に対する診断、(5) Product-onlyからSkill付きHarnessへ進んだときの正答・再説明・修正・総費用。
+
+TEIが実装した要素の比率は、まず**一Function/一Adapter/一Pluginの固定した要素集合**について示し、変更による集合の増減やGenerated Goの行数を成果の代用品にしない。単純委譲が多い場合はその実数を残す。D1/D2/D3の達成と「重複定義・変更負担が減ったか」は別々に評価する。CLI/MCP-firstで効果的な一部品の再生成ができた後、必要に応じてStudio Source表示・図編集とTEI全体のセルフビルドに接続する。
+
+### 48.5 優先順位と資格の不変条件
+
+独立P0は、**TEI #4583：非Plugin Stage1→Stage2 Native Desktop**と、**TAI #168：G0実OS Read-deny→G1実送出→G2完全Reply→新規独立H2/H3四Slot（現0/4）**の二本を維持。初回Y0やY1の結果でP0の合否を変更しない。Y1/Y2の意味ある生成が有効と確認できても、独自Agent Loopを自動採用せず、TAI #234の外部Harness二構成比較・代替不能性・総費用評価へ戻す。
+
+**本更新はDocs-only・Draft・Owner未受理。** Y0の新実CLI再試行、正式*.tei.md Reader、図表→Generator/Plugin→別Process Consumer、二Harness比較、業務EffectはNOT RUN。既存局所CIや過去のS1結果を新試験のPASSとして扱わず、mainへ自動mergeしない。
