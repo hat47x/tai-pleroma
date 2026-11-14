@@ -22,6 +22,7 @@
 | **P0：外部Harness** | TAI #168の実OS拒否G0→送出G1→完全Reply G2→独立H2/H3四試行 | Product-only／Tool-onlyとSkillの実効差を測る前に独自Agent Loopを作らない |
 | **次の製品接合** | 実Entry・Source/DBを**起動時の副作用まで**調べ、別Consumerが結果を実受領する | 読み取り名目の暗黙DB更新、Go test子Process、固定署名Fixtureを正式製品資格へ昇格させない |
 | **後続のUIとAI** | 一時選択→明示Pin→Source再読取→限定Activity引継ぎを**別々に検収**し、回答候補を元Productへ戻す | 選択位置や表示だけで保存・認可・実Consumer受領を主張しない。旧Session/Receiptも再利用資格ではない |
+| **後続のTEI活用度評価** | 実証済みの一つのProduct Adapter/Skillについて、*.tei.mdが実際に担う意味・生成・Plugin部分を測り、改訂時の定義体簡素化を検証（§47） | Goへの単純委譲や宣言だけをセルフビルド成功とせず、初回H2/H3の追加条件にしない |
 
 ## 0. 関連Ownerと変えない先行条件
 
@@ -1254,3 +1255,55 @@ YICが実務で解決すべき問題は、複数のAgentが作業できること
 **次に引き渡す具体的な仕事**は、(A) TEI #4583の非Plugin Stage1→Stage2実Desktopセルフビルド、(B) TAI #168のG0実OS拒否→G1送信→G2完全Tool Reply→独立H2/H3四Slot、(C) 両者とは別にread-only一Functionの正式CLI→実Consumer受領を先行する三レーンである。続いて既存Handoff v1での限定Activity再開を検証し、必要になって初めてSkill・第二Harness・共同編集を比較する。各試行の失敗は原因Ownerへ返し、独自Agent Loopに起因すると早合点しない。
 
 **実施状態**：本節は既存の局所実行結果とDraft設計を照合したDocs-onlyの計画更新。新規の実3レーン同時作業、実公開承認、実Effect、外部Harness/TEI横断Consumer、Native二UI・新H2/H3適格四試行、Owner正式受理は**NOT RUN**。P0の優先順位を変更せず、Draft維持・mainへ自動mergeしない。
+
+
+<!-- yic-tei-native-adapter-dogfood-20261114 -->
+## 47. YICの接続部品をTEI自身で育てる：宣言による実装の比率と簡素化を検証する
+
+TEIセルフビルドの別チャットで確認した重点は、Studioの一度きりの再構築だけでなく、**実際に動く部品とPluginのうち、TEIの宣言・図表・生成器が意味ある部分をどれだけ担えるようになるか**を段階的に確かめることである。これをYICへ接続する。ただし、YICの目的は特定言語やTEI Runtimeへの依存を強めることではない。外部HarnessとProductの間にある薄いAdapterを、まず現在のCLI/APIで成立させ、その後TEIによる記述・生成への置換が実際に有利かを比較する。
+
+### 47.1 最初の対象を一つに限定する
+
+最初の検証対象は、既存[TEI Product Skill #2605](https://github.com/hat47x/tei-platform/issues/2605)と[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)が扱う**公開read-onlyの固定TEI Subjectを調べる操作**とする。新しいYIC専用操作・Providerを生やさず、まず実在する「Sourceを調べ、構造化した結果と失敗・unknownを返す」Application API／製品CLIに接続する。現在の正式Entry/Selected Provider/Tool配布が未成立なら、その段階をunsupported/NOT RUNと記す。
+
+同じ対象に対し、次の三つを比較する。
+
+| 方式 | 確かめること | 認める結論 |
+| --- | --- | --- |
+| **A：既存Product-only / 手書き薄型Adapter** | 正式CLI/APIで実Sourceを読み、実結果を受領する。実Product、外部Harness、現在開示の資格を別々に確かめる | 接続の基線。YICの必須機能をTEIセルフビルドが終わるまで止めない |
+| **B：TEI宣言からAdapterを生成** | *.tei.mdなどでFunction/Entry/型/Result/Failure/Target固有Mappingを表し、実Generator/BuilderがGo等の部品を生成。外側のCLI/Tool入口は薄く保持 | 宣言によって実際に生成した部分に限る到達。TEIが選択Provider/入力検証/Outputの意味をどこまで決定したか記録 |
+| **C：生成した部品・Pluginの再構築** | 実際に生成された部品が次の生成・検証に使用されるか、Stage1/Stage2の実Processと生成物を区別して確かめる | 部品単位のセルフビルド。TEI全体のG4やStudio #4583の完全自己再構築とは別 |
+
+この比較は[TEI #2831](https://github.com/hat47x/tei-platform/issues/2831)の全体セルフビルドと、[#2390](https://github.com/hat47x/tei-platform/issues/2390)のTEI製Pluginを外部Hostから使う検証の**利用者側の試験観点**として扱う。各Issueの意味/Provider/Build/配布契約は移動させず、YICに第二のBuilder、Language Plugin Runtime、共通Plugin ABI、独自Hostを作らない。
+
+### 47.2 Goへの委譲を成果に数えないための判別
+
+宣言が単に「既存のGo関数を呼ぶ」と書いてある場合、宣言ファイルの行数が短くても、TEI側で業務意味・データ流・制御・診断・生成を実現した証拠としては弱い。進捗は次の四段階に分けて読む。これは**実装・評価のための分類**であり、新しい公開Skill/Plugin Capability Enumではない。
+
+| 観察段階 | 何ができたか | 次の段階へ進める独立反例 |
+| --- | --- | --- |
+| **D0：単純委譲** | 宣言が既存Go処理の名前や起動方法を包む。実処理の意味はGo内部に残る | Go側だけ変更すると振る舞いが変わり、TEI Sourceや意味診断では差を検出できない |
+| **D1：型付き契約** | TEI SourceのInput/Output/Failure、Source identity、利用するFunction/Entryを解析・検査し、生成Adapterへ渡す | 必須Input欠落、型不一致、同名Input、未選択Providerを実呼出し前に拒否できる |
+| **D2：意味のある生成** | TEI内の標準構造・図・関数/Query・Plugin設定の変更が、選択・変換・検証・結果投影の実生成物とテストへ反映される | 受理済みSourceを一か所変更→再生成→実Consumer結果が対応して変わり、旧生成物／無関係箇所の変更を拒否できる |
+| **D3：構成部品の自己再構築** | TEIで記述された生成器/Pluginが、その実Buildに用いられ、生成された成果物が別実Process/Consumerで利用される | Stage1実Process image→Stage2実生成物／消費byteを独立照合。Launcherを二度呼ぶだけ、旧Artifact使い回し、別HEADのCI合算は不合格 |
+
+D1でも実Adapter利用やCurrent Grantが未観測なら、その分はNOT RUNとする。D2/D3は宣言があるだけで成立しない。TEIの*.tei.mdは専門家が読める順序を優先し、Goのstruct/func/型引数を表層へ露出させない。Markdown表・Graphviz・関数チェーン等の表記差は、既存意味構造の糖衣として扱い、複数の業務正本を作らない（TEI #2620/#2621/#4359）。
+
+### 47.3 「簡単になった」をコード行数だけで判断しない
+
+二つの改訂（初期定義と、同一受理手順で一つの条件を変更した版）を固定し、次の**実観測値**を比較する。閾値を恣意的に先に置かず、同じ利用者Jobと受入条件でA/B/Cを測る。
+
+- **表現できた範囲**：Source/Function/Input/Selection/Output/Failure/検査/Plugin結合のうち、TEI Sourceが意味や振る舞いを決めている箇所。Go・Host・手作業の残存範囲を明示。
+- **保守の負担**：手書き処理や重複した意味定義、生成物の手修正、変更に必要なファイル数とレビュー工数。生成コード総行数の削減だけを目標にしない。
+- **生成の確かさ**：同一Source/Toolchain/Builder/Worldでの生成物、変更後に失効すべきArtifact/依存、実Consumer受領、別Provider選択の拒否、前後のSource位置と診断。
+- **実利用価値**：Product-onlyとHarness経由の同一Jobで、回答の正確さ、未知の保持、誤対象への回答、元情報の再確認回数、費用と時間が改善するか。TEI生成割合の増大が品質低下やHost依存を生むなら採用しない。
+
+**変更試験の例**：正式に受理したread-only Functionの一つの明示Input・結果投影条件を変更し、Source→診断→生成→実Provider/Consumerの変化を確かめる。Agentが生成コードを直接手修正して成功した場合は、TEIによる変更の成果と数えない。Provider/API/Host側の修正が不可避なら、その理由と範囲を明記し、TEIへ吸収することを一律に要求しない。
+
+### 47.4 開発順と採用判断への帰結
+
+最優先P0は不変：**TEI #4583の非Plugin Stage1→Stage2 Studio Desktop**と、**TAI #168の実OS G0→G1→G2→適格な独立H2/H3四Slot（現0/4）**を互いに待たせない。次に既存Product-onlyの一件を成立させ（TEI #4495/#2586）、薄いTool-only Adapter（TAI #168/#488）、TEI生成Adapter（TEI #2620/#2831）、部品の自己再構築、必要時だけ二Harness・Activity Skillへ進む。
+
+YICが評価するのは、**TEIの宣言が実際の製品機能と外部Harness連携に寄与したか**、そして改訂が進むほど「同じ仕事をより少ない重複定義と手作業で実現できるか」である。TEIの適用領域が広がることと、YICのAgent Loopを内製することは別の判断。既存Harness＋Product Skill＋薄型Adapterで十分ならB4自作Loopは引き続き保留する（TAI #234）。
+
+本節は**Docs-onlyの後続検証計画**。TEI生成Adapter、Plugin再構築、同一改訂の実Product/Harness E2E、D1〜D3の独立合格、費用・工数測定、Owner正式受理は**NOT RUN**。Draftを維持し、mainへ自動mergeしない。
