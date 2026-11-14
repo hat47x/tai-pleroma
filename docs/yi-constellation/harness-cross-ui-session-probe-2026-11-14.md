@@ -509,3 +509,81 @@ M0 Product-onlyは常に独立評価する。Web Serverの現在のHost境界が
 - **Ownerと重複排除**：実Web/API/Command適格はTEI #1824/#3421/#4495/#4627、Skill導入と実CapabilityはTAI #488/Draft #633、ActivityとTranscriptはTAI #271/#234、OS/LLM送出はTAI #232/#168、Handoff/ConsumerはQH §10。TAI #648は接合の判断/計画のみであり、Webの認証器、Builder、Registry、Session Server、Run Engine、Script Runtimeを実装しない。
 
 本追補は既存Product PRとWails公式資料の仕様・限定CIの照合による**Docs-only設計**。新OS/Web/Browser/Service/Script/Harness/WASMの実験を本作業で実行・受理したわけではない。
+
+<!-- yic-longrun-goal-schedule-operation-recovery-20261114 -->
+## 26. 長時間作業の復旧をHarness Goal/DeliveryとProduct結果の独立照会に分ける（設計／新実Trial NOT RUN）
+
+[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)のGoal/Schedule/多Session比較、前§13の公開実装調査、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のActivity継続、[TEI #4497](https://github.com/hat47x/tei-platform/issues/4497)のTrigger Binding、[EKI #57](https://github.com/hat47x/eki-fabric/issues/57)/[#829](https://github.com/hat47x/eki-fabric/issues/829)のTask/Attempt/Resultを、**YIC独自Schedulerを新設せず**実際の1 Jobの復旧判断へ結び付ける。
+
+### 26.1 段階を一つのrunning/completedにしない
+
+| 状態・識別子 | 実際のOwnerと観測点 | 何を保証しないか |
+| --- | --- | --- |
+| Goal phase、revision、armed/disarmed、round | 外部Harness/DSH等のGoal Host。実Host/Version/Profile別にProbe | active/completeがTool開始・Product Effect・Owner受理の証拠ではない。再起動・fork後の自律再開を自動推定しない |
+| Schedule Definition／due Occurrence | 実Harness Schedule ProviderまたはTEI Trigger Provider | 予定時刻・Task保存はInbox配送でも実Model消費でもない。TZ/DST/missed-run規則は明示 |
+| Schedule Delivery／Inbox ACK | 実Hostと実Session/Turn受領 | 配送ACKが実Product Operation入場・Effect・独立Consumerの証拠ではない |
+| Native Session／Turn／Tool ID | 外部Harnessの実Native記録 | 同名Session、fork root ID、回答「完了」から同じLive Thread/Writer・Tool Reply終端は推論不可 |
+| Activity intent／許可Packet | TAI #271の目的・根拠・未決と現在開示資格 | Session全履歴/過去Grantの継承、業務操作のAuthorityにはならない |
+| PreparedInvocation／Entry／Operation identity | TEIなどProductの現在Source/Entry、実Host Admit／既存Operation | HarnessのTool要求・Schedule tickだけでは実行不可。再送前に元Operation確認 |
+| EKI Task／Attempt／Lease／ResultClaim（選択時のみ） | EKI #57/#829がOwnerの実Execution/Lease/Verifier/Artifact | Task completed、Worker exit 0、Result metadataだけでは出力本文・Verifier・Product Consumer受理にならない |
+| Effect／Consumer／Owner Acceptance | Product/外部Hostの実Commit/Receipt、SHO/TEI等の実Consumer | Native Tool exit、Cancel ACK、過去Receiptの再生から現在Effect/意味受理を推定不可 |
+
+**時間・IDの最小持ち方（新Schemaではない）**：実Jobの既存票へ「Goal/Session/Turn/Occurrence/Operation/Task/Attemptの各Issuer名前空間とNative ID」、「UTCの発生/配送/受信/入場/完了の実観測時刻」、「業務as-of/TZ/DST」、「固定Product Source/Required/Consumed・現在Grant」、「Result body実受領/Verifier/Consumer」を記録。実Hostが発行していないIDをYICで生成したふりをせず、実観測できない列はunknown/not-runとする。単純な同値IDや同timestampだけで横断結合せず、元Product側のRequest・実受領Receipt・Native Tool/Attemptの因果参照を照合する。
+
+### 26.2 再起動時の判断順（適格な既存Providerの利用のみ）
+
+1. **停止時の事実を再取得**：Harnessが中断したときのGoal/Task/Inbox/Native Turnの現在状態と、Product/EKIの元Operation/Attemptを別照会。接続先、Host Principal、Workspace、Source/Artifact選択、Recipientの現在資格を再確認する。旧Transcriptを別UIへ無審査でattachしない。
+2. **配送と作用を分ける**：予定発火なし／配送なし／配送済み未受信／受信済みTool不完全／Product開始済み結果不明／独立Result受理済み、を観測できるところまで分ける。最後のreplyが欠落している場合、成功・失敗を想像しない。
+3. **結果の既存Owner照会**：元Operation/Task/Attempt/Leaseと出力bodyの所在・digest、Verifier/Consumer・Effect ReceiptをProduct/EKI/実Hostへ確認する。既存Result bodyが読めずMetadataだけならverified/completedにしない。
+4. **再開の許可をやり直す**：外部Harness側でGoalのrearmが必要なら、実Host/利用者の明示手順で実施。Goal再開≠旧Operationの再発行。期限・missed-run・再試行予算・Principal/Grant・Source/Selected Providerをその時点で再評価する。
+5. **再実行可否**：読み取り/純粋処理で再実行が明示許可され、旧Operationが二重作用しないことを実Ownerが照会できた場合だけ既存のretry契約へ進む。外部Effectがunknown、旧Attemptがin-flight、旧Leaseのfencingが不明、異Input/Artifactで同一OperationIDが再来した場合は**自動再実行しない**。Ownerへpending/unknownで戻す。
+6. **UIへ投影**：Activity自体は保存・参照できても、Native Session復元／Agent自律再開／Product再開／成果物受理を別結果として表示。復旧不可なら許可済み限定Packetによる新SessionのActivity再開へ縮退し、同一Live Sessionの復帰とは呼ばない。
+
+この順序は単一の横断状態機械や中央Coordinatorの導入ではない。**どのOwnerの現時点Observationを問い合わせるかの利用手順**。Productの既存Idempotency/Effect/Trigger契約とHarness Native APIをそのまま利用する。
+
+## 27. Schedule・Lease・Resultの最小反証を後続J-Aへ接続（既存Expectedを再利用）
+
+| 観測対象 | 固定する反例と既存Owner | 受入・縮退条件 |
+| --- | --- | --- |
+| Host停止中の予定3回欠落 | TAI #234 Schedule G2／HC-06・TEI #4497 TR-08/09。明示TZ/発火Window、missed-run=skip/catch-up候補を区別 | due／Host Inbox／Model受領／実Tool／Product結果を別記録。Providerが復旧配送を保証しなければ、未実施と表示。catch-up自動三重実行禁止 |
+| Queue時許可、start前のGrant撤回・Script改版 | TEI #4497 TR-03/04、TEI #4495 EL-07 | Queueの古いGrantやProvider版を再利用せず、実Admit前に再資格化。拒否はそのEntryだけであり安全read-onlyを止めない |
+| 重複Event、ACK loss、Deadline超過 | TEI #4497 TR-05/07/09、TAI #234 HC-18 | Occurrence、Operation、Attemptと業務as-ofを分離。遅延受信が期限内開始/完了を意味しない。元Operationを照会してblind retry 0 |
+| 旧Workerから遅着Result、Lease失効、Control Plane再起動 | EKI #57 V2/V3/V6、#829 E1/E2 | 古いLease/AttemptからAcceptedResultを復活させない。Task/revision/Worker/Artifact/Lease/ResultClaim/Verifier一致までE2E資格を保留 |
+| Output metadataだけあるが実bodyは取得不能 | EKI #829 E2、TEI #4497 TR-12、TEI #4194 | Task completed文字列やexit 0は業務結果に不十分。body実byte/readback＋digest＋独立Verifier/Consumerが必要 |
+| AI Turn cancel後もBuild/DB Effectが進む | HC-18、TEI #4495 EL-09/10、EKI #829 | Turn InterruptとProduct Operation取消を分ける。Effect unknownのまま再実行・成功表示しない |
+| External Tool Reply切断／履歴の別Audience表示 | TAI #168 G2・HC-15/17 | 完全なTool Reply/現在Audienceがなければ回答確定・旧Transcript共有を止めるが、許可済みM0/M1の作業は継続 |
+
+**現実装の適用上限**：[EKI #829](https://github.com/hat47x/eki-fabric/issues/829)の現状評価にはArtifact ingestionの422、Result body retrievalの501、effect mode none限定などの未接続点が残る。これらはIssueの観測時点の報告であり、今この文書で現行バイナリを再実行した確認ではない。T1 EKI Nativeの実Attempt→body→Verifierに必要なものがない場合、**T0 Product/Host Directのpure Jobへ戻す**。T2 Managed Providerは実Delegation Profile/ExecutionRef/独立Resultが成立するまで保留。TEI [#4194](https://github.com/hat47x/tei-platform/issues/4194)のW-1/T0・T1・T2を比較先とし、成功件数を異なるルートで合算しない。
+
+## 28. 複数Session／多モデル開発の最小運用単位と実価値を分ける
+
+YICで一晩〜複数日にわたり複数Issueを進める場合も、**一つの中央Agent Loopが全作業を再実行・統合する構成を前提にしない**。[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の3 Workstream以上の比較案に沿い、DSHをPlugin親和性により実証順で僅かに優先しながら、Codex/Claude Code/OpenCodeと同じ利用者Jobの適格な比較を設計する。
+
+**最小の作業票（既存GitHub Issue/PR・Product/EKI Evidenceの参照を束ねるだけ）**：
+
+| 何を固定するか | 誰が持つか | 統合時の反証 |
+| --- | --- | --- |
+| Task goal／対象Issue／Owner／完了の独立Expected | GitHub Issue/各Product Owner、TAI Activityはその参照 | Agentの自己申告Complete/PR作成はOwner Acceptでない |
+| Repository/branch/worktree/対象path/Source＋Model revision | 実Git・Product Reader／Build Owner | 別BranchのGreen、Source移動/A→B→A、同じファイルの競合を一つのAttemptへ寄せない |
+| 使用Harness/Provider/Model、実Tool/Skill/Host Profile／予算／権限 | 実Native Harness/Host、TAI #168/#488比較票 | Session名、同一Model名、サブスク画面表示を実Quota/Tool資格へ昇格しない |
+| 実Invocation/Source Read/生成Artifact/テスト/出力/受理 | Product Build/Script Owner、EKIは選択時のみ | commit SHAやTool exitだけでは独立Test・元Source/Evidence・Consumer受理でない |
+| 停止理由/期限/Lease/Result unknown/人による判定 | Native Host/Operation Owner/TAI Activity参照 | 結果不明を新Sessionから自動再実行・自動mergeしない |
+
+**最初に実行する比較**：公開または許可済みread-onlyの独立3 Issue/3 Workstreamを用い、(a) Product-only＋手動Issue運用、(b) 代表Harness各独立Session＋Product CLI、(c) 必要な用途だけTAI Activity Packetによる再開、の順に比較。実Writer／PR merge／本番Effectを比較の初期必須条件にしない。Skill増分のM00/M10/M01/M11はTAI #621/#488のOwnerに残し、Workstream数×Skill条件を一度に増やして因果効果を不明にしない。
+
+**測るべき増分価値**は、実Independent Expectedを満たした仕事数／利用者が再開時に必要とした説明量／重複実行・修復コスト／間違ったSource・Targetへの候補戻し／有効な根拠を失わず再利用できた割合／正しくunknownに留めた割合／修正・Review・Undoの人手／Token・料金・Quotas・失敗・待ち時間をそれぞれ記録する。高い並列度や低いToken数だけを製品価値の代理としない。IT T/PPの母数と独立ExpectedはTAI #621/#422の既存案に従い、新しい総合スコアを作らない。
+
+## 29. ロードマップの接続先・採否・検証状態
+
+| レーン | 今回の追加成果 | 接続先の実Owner | 次に要求する実証／非目標 |
+| --- | --- | --- | --- |
+| 独立P0-A | Build途中のHarness/Session停止でもTEI Stage1/Stage2実Attemptを正本とする | TEI #4583/#1824 | 同一Attempt BuildIntent→実Builder/Artifact→生成Stage2 WebView2。Harness rearmをセルフビルドの前提にしない |
+| 独立P0-B | 外部HarnessのTool Reply/OS隔離資格なしに長時間自律運用を合格へ昇格させない | TAI #168/#232 | G0 real Read-deny→G1 egress→G2 complete Reply→独立H2/H3四Slot。最新Issue観測で比較適格0/4 |
+| 後続J-A1 | Goal armed／Schedule配送／Product開始／結果の別Claim | TAI #234、TEI #4497 | 公開pure/read-only JobでHost再起動・予定3回欠落・ACK lossを段階観測 |
+| 後続J-A2 | 外部効果・再送・Lease・Result body復旧を現Ownerへ委譲 | TEI #4495/#4194、EKI #57/#829 | T0 Direct基線の次にT1条件付き。T2はManaged Provider実Delegation Profile後。Effect unknownは自動再試行しない |
+| 後続J-S/J-V | 再接続・限定Packet Handoff・並列3 Workstream・費用／再説明 | TAI #271/#234/#621/#422 | Native Session実復帰と新Session Activity再開を別採点。Goal/Schedule実運用能力は各Provider/Profileで評価 |
+| 後続UI | Resume/Cancel/Retry/受理の別表示 | TEI Studio #1824/#3421、TAI #234 HC-15〜18 | UIで表示できてもHost/Effectが復旧したとは扱わない。Web機密Eventと二Writerは§23/24の別試験 |
+
+**Owner受理の停止線**：本章で採用したのは設計上の区分・実証順・失敗時縮退であり、DSH/Codex/Claude Code実Resume、Scheduleの再配送、EKI Artifact/Result body、Control Plane failover、TEI Stage2 Self-build、実Product Commit/Owner承認、多Workstreamの実効果を新たに観測・採用したわけではない。DSHの公式機能表・各Issueの既存局所Evidenceはあっても、今の実Host/Principalでの利用資格は別。B4独自Agent Loopへの投資判断は[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の既定条件（複数代表Harnessの適格比較、代替可能性、重大固有欠落、費用、Owner受理）が成立するまで保留する。
+
+**実施内容**：TAI #234/#168/#271、TEI #4495/#4497/#4194、EKI #57/#829と前§13/§18/§20〜25の文書・Issueを照合し、既存Ownerへ次の1 Jobの復旧実験を割り当てたDocs-only計画追補。新しいTrigger schema、中央Scheduler、Agent Host、Session Store、Task Engine、Result Verifier、Cost Registry、Handoff v2、第二Expected正本は増やさない。
