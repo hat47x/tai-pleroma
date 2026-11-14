@@ -79,6 +79,23 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 記録先は既存[QH §10](cross-product-handoff-execution-tickets-2026-11-11.md)の**I（Intent）／R（Product再解決）／P（Disclosure）／T（Transport）／C（Consumer）／H（Harness）**。各列に実Source/HEAD/Attempt、Input、期待/実結果、欠落、受信側の再読取、Ownerを残す。価値比較は送信byte/Token、追加Fetch数、Tool往復、誤対象、確認工数を測り、長いSkill全文ロードを必須にしない。
 
+
+<!-- yic-pin-bundle-current-status-20261115 -->
+## 11月15日の再照合：PinのCI是正と生成Bundleの再現性
+
+**索引漏れについて実際に修正したこと**：[TEI Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) の plan/design/README.md に、現行mainに存在する CONSUMER_QUALIFIED_CROSS_LANE_ACCEPTANCE_2026-11-14.md の参照を**一行だけ**復元した（[commit c8f90425](https://github.com/hat47x/tei-platform/commit/c8f904258257e7f1f1e1f4436bca71fc4e2c1a3e)）。これは失敗ログに現れた欠落への修正であって、GitHub Actionsの新HEAD合格・PR全体合格は**未確認**。
+
+**Bundle不一致について新たに確認できたこと**：固定した比較対象はPin Draft #4597の旧HEAD a9c91e56...と、Windows検証Draft [#4587](https://github.com/hat47x/tei-platform/pull/4587)のHEAD 9b58533d...。両者の reference/tei-studio-workbench/main.ts、build.mjs、package-lock.json のGit blobは一致する。一方、同じmain.tsがimportする presentation.ts はそれぞれ 06d329bd...／cd4319a6... で異なり、Desktopに埋め込まれた main.js も 27b2b9a4...／7c3225ee... で異なる。**同じEntry Sourceでも推移依存が違えば生成物を流用できない**。この事実だけで旧HEADのbyte 649340不一致の真因が確定したわけではない。成功した#4587の生成JSを#4597へコピーする対応は採らない。
+
+### 残る修復と合格条件
+
+1. **#4597の最新HEADでCI再確認**：索引漏れのテストとPin契約テストを別に記録し、Healthが本当に通ったか確認する。旧HEAD a9c91e56 のCI結果を新commit c8f90425 の結果と取り違えない。
+2. **Bundle生成の原因特定**：実際に使用されたNode/esbuild・lockfile・全推移Source・build script・Outputを同一HEAD・同一Attemptで固定し、dist/main.js と cmd/tei-studio/assets/workbench/main.js の最初のbyte差と原因を確認する。正規生成から配布Assetへ反映して再比較。Sourceファイルが同じでも依存presentation.tsが違えば別Build Closureとして記録する。手書きJSや他PR生成物の横流しで見かけのPASSを作らない。
+3. **Pinを画面へ接続**：PIN-R0の最初の実装は、main.tsの現行inspect(subject)を背景Pinから呼ばず、既存pin-state.tsと独立pinned-inspection laneからHost-owned Readerを読む。閲覧中Bの表示・Graph・Focus・Noticeが不変、AのPin世代・Source版が一致しなければ旧Resultが表示されない、をDOM/実Hostで独立検証。
+4. **送出・編集は別**：PinのProduct-local成功から外部Tool受領やCurrent Disclosureを推定せず、AIの候補を未保存Bufferへ無音Applyしない。TEI #4583非Plugin Desktop B2/B3、TAI #168のG0/G1/G2・独立H2/H3四Slotは並行独立P0のまま。
+
+**観測範囲**：上の修正はGitHub上で一行のSource修正を実施した事実。CI結果の差分確認、生成実行、Node/Windows実E2E、Pin UIと外部Harnessの実受領はこの追補時点では新規実行していない。GitHub Draftは未マージであり、Owner正式受理を意味しない。
+
 ## 優先順位と停止線
 
 - **独立P0-A**：TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の非Plugin Studio Stage1→Stage2実Windows Desktop。#4597のPin純粋testや旧生成WebView CIとは別。
