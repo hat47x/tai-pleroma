@@ -1178,6 +1178,17 @@ Product UIとCLIの認知順は、**対象と意図 → 現在のSource/欠損 �
 
 **比較のOwnerを重複させない**：[Draft #648 §11](https://github.com/hat47x/tai-pleroma/pull/648)のM00（Packetなし/Skillなし）、M01（Skillだけ）、M10（Packetだけ）、M11（両方）を利用し、M10−M00はPacket寄与、M11−M10はPacket固定のSkill追加寄与として判定する。[TAI #647](https://github.com/hat47x/tai-pleroma/pull/647)のrec-1はSkillなしでも適切な結論で、TAI Skill追加の回答差はなく、約38KBと2 Tool Callが増えた**n=1かつG0不適格の限定結果**。これを普遍的なSkill無効論にしない。根拠が有効なときの適切な限定再利用、意味変更時の停止、無関係変更時の過剰保留も試験前の独立Expectedで評価する。
 
+### 49.6 Native Sessionの独立性を番号でなく実Context系譜で判定（2026-11-14）
+
+<!-- yic-sk02-native-lineage-h2h3-20261114 -->
+[TAI Draft #649](https://github.com/hat47x/tai-pleroma/pull/649)の既存SK-02比較Checker変更を、H2/H3の**実行前適格条件を判別する具体的な候補**として採る。実装対象は既存 check-sk02-pair-eligibility.cjs とSynthetic CI Workflowだけ。元Sessionからfork/resumeされた子は、新しいNative Session IDを持っていても独立試行とは認めない。**実測で継承が陽性ならineligible、不完全・不正な系譜情報ならinsufficient-evidence**。root IDが重複、親IDが非空、fork depth>0、session_start_modeがfork/resume、session_is_seeded=true、inherited_event_count>0を反証として扱う。通常forkで親IDが消えてもseed/event継承が残り得るため、親IDの不在を独立の肯定証拠にしない。
+
+**合成ケースの範囲**：E73〜E82の10件を追加し、既存72件と合わせ**82件のSelf-test候補**。Checkerに追加されたroot/parent/depth/seed等は**観測できる場合の任意診断**であり、既存Trial Schemaや初回4 Slotの必須入力を変更しない。既存のindependent_session_observed=true、4 IDの相違、Checkerでeligible-to-scoreを返すこと自体は、OS物理Read-deny／真正な完全Native履歴／Raw遮断／実外部Trial成立を証明しない。PR #649はDraft・未mergeのため、**本計画へChecker採用規則を反映しても現行main適用とは呼ばない**。
+
+**最初の一手**は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)と既存RunbookのG0実OS許可Source Read正例＋Reviewer/親Root/他Lane/旧Session実Read拒否（負例）。G1実際のRecipient・Egress、G2 stdout/stderr・完全Tool Reply、その後に初めてH2→H3→H3→H2の**新規4独立Session**。DSHなどのNative実ログでroot/session/thread・seeded/event継承とOS/Contextを確かめる。Skill有無の比較Arm、固定Task/CLI/Tool/Expected、ITT/PPは変更しない。G0が不適格なら新Skill/Providerへ逃げずenvironment-ineligibleで停止。評価上の適格は**現時点0/4**。
+
+**実証状態**：#649の合成CheckerとWorkflowは限定候補であり、ここで新しいNode実自己試験・GitHub exact-HEAD CIを実行したわけではない。新実DSH四Session、実OS/Network隔離、独立Expected採点、Skill効果とOwner受理はNOT RUN。
+
 ### 49.5 実装順序とClaim上限
 最優先は独立した二つのP0：①[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS Read-deny G0→実Egress G1→完全Tool Reply G2→新規独立H2→H3→H3→H2（比較適格**0/4**）；②[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)／#1824の選択Builder→実Invoker/ArtifactSet→Stage1自身のStage2 Desktop再構築→Stage2実WebView2。TEI [Draft #4623](https://github.com/hat47x/tei-platform/pull/4623)の起動前Builder digest／Resolve-to-pinの局所実装は、非Plugin Desktopの全工程BuildIntent受理、OS LoaderのTOCTOU排除、B2/B3成功とは分離する。どちらのP0も他方の新Hard Gateにしない。
 
@@ -1234,6 +1245,9 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **その後の同一Ownerの進展**：[Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)はexact HEAD f2f49a7でService登録検査を実 application.Options.Services のASTへ寄せ、未知Service差込・二重登録・登録式の変更を含む**6件の合成負例**を追加。[Wails Host Workflow #43545456013](https://github.com/hat47x/tei-platform/actions/runs/43545456013)のnested server-tag Go testはcompleted/success。Browser由来の allowed string list は**Host Grantではない**と分類。これでも静的Inventoryとloopback二BrowserContextsの証拠に限られ、異PrincipalのHTTP/WS拒否は未実施。旧HEAD 9491bf9eの実績は履歴として残し、新HEADの別CIと混ぜない。
 
+<!-- yic-wails-4627-gofmt-recheck-20261114 -->
+**後続CI差分の注意**：TEI #4627のHEAD f2f49a7はserver-tagテストとChromiumの限定成功があっても、[Repository Health #43545455990](https://github.com/hat47x/tei-platform/actions/runs/43545455990)で**本PR追加Go testのgofmt不一致によりFAIL**。次HEAD a0850047は整形を修正した候補だが、**当該HEADのHealth完了結果を確認するまで成功としない**。Inventoryの技術的意味・Public Web未適格性は不変。
+
 **最小の接続順**：①現loopback Wails Serverの実method inventoryとProduct Inspectを限定観測、②TEI Ownerがread-only公開面／実Actor・Workspace拒否を独立試験、③適格な実Web Capability Discoveryが得られたときだけSkillへ当該read-only手順を提示。Product Skill名・共通UIコンポーネント・表示結果をWeb認可のIssuerにしない。公開用Facade/Hostの判断はTEI、TAIは既存X/HC票の比較欄のみを所有する。
 
 **Buildという別の実到達**：[TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD 0fcb7b6／[Windows CI #43542664470](https://github.com/hat47x/tei-platform/actions/runs/43542664470)では、同一AttemptのN2生成bundle→N3 Go EmbedFilesのmember/byte digest照合、改変コピー拒否、native WebView2受領を限定確認。実Consumer選択の良い独立証拠だが、Web Actor認可、Tool/Skill配布、compiler read-time依存全閉包、非Plugin BuildIntent、Stage1→Stage2 Desktop完了ではない。DesktopセルフビルドとTAI #168のH2/H3比較（適格0/4）の二P0へ追加Hard Gateを設けない。
@@ -1284,7 +1298,7 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **A. Source-selection境界**：[SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443) の単一Text Run限定Referenceは、許可されたRaw byteを与えた場合に、BOM・混在改行・日本語・非BMP文字を保持した**UTF-16表示選択 → UTF-8半開byte範囲**を写像し、surrogate内位置やRenderer不一致を拒否する。固定57-byte Referenceでは同一表記の前方/後方をそれぞれ[11,30)／[38,57)へ分離する。**ローカルTypeScript strict検査とNode Assert smokeの限定観測**があり、exact-head Vitest/Browser DOM/Root・Grant/別Process Card GET/現Source実再読は未資格。SUI #3441/#3438がOwner。見た目の文字列一致、同じ相対PathとRaw digestだけで選択したSource occurrence／Rootを同一としない。選択位置を持つCardやSHO文書は、保存後に元資料を再解決できた場合だけ該当出典Claimを再利用する。
 
-**B. Product-operation境界**：[TEI Draft #4629](https://github.com/hat47x/tei-platform/pull/4629) は既存Capability Invokeに、Adapter実呼出し**前**の不正Result契約拒否を追加したコード候補。空Capability ID、単一Outputとnamed Outcomesの矛盾、Result未宣言、重複Outcome名、Outcome名/型参照欠落ではAdapter Call=0を独立試験で求める。Goコードに事前検査はあるが、**当該PRのexact-head go test/CIは未確認**。正しいResult形でも、実公開Entry／選択Providerの真正性、現在Host Grant／Effect、nullable値・意味受理は未証明。TEI #4495/#3421／Draft #4618がOwnerであり、Skill/外部Harnessは実Capabilityを認可する主体ではない。
+**B. Product-operation境界**：[TEI merged #4629](https://github.com/hat47x/tei-platform/pull/4629) は既存Capability Invokeに、Adapter実呼出し**前**の不正Result契約拒否を実装・main統合済み。HEAD 00ea8523のGitHub Actions **9/9 completed/success**。空Capability ID、単一Outputとnamed Outcomesの矛盾、Result未宣言、重複Outcome名、Outcome名/型参照欠落の**6不正契約でAdapter Call=0**を回帰検証する。Go内部の限定PreflightはProduct実装済みだが、正しいResult形でも実公開Entry／選択Providerの真正性、現在Host Grant／Effect、nullable値・意味受理は未証明。TEI #4495/#3421／Draft #4618が後続Ownerであり、Skill/外部Harnessは実Capabilityを認可する主体ではない。
 
 **C. 公開Host境界**：[TEI Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)のServer Service Inventoryと6つのmutation-negativeは、公開し得るService面が意図せず増えることを検出する**静的レビューガード**。二つのBrowserContextsの画面分離と異PrincipalのHTTP/WS認可・秘密配送遮断は別。Web Client由来allowed list、Skillのread-only宣言、外部HarnessのTool DiscoveryをCurrent Host Admitに変換しない。TEI #1824/#3421/#1043、TAI #232/#488を使用する。
 
@@ -1297,5 +1311,14 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **最小の実装投資先**はProduct側の既存ReferenceとAdapter前の拒否・現在Host側の実Method/Principal拒否である。YICはSkillの専門手順・限定Projection・Activity Handoff・比較結果を管理するにとどめる。Sourceの写像器、Capability Runner、公開Web Authorization、二Consumer/二Principal試験の正本を新設しない。
 
-**実行順と証拠上限**：初回P0は引き続きTEI #4583 Desktop Stage1→Stage2、およびTAI #168 G0→G1→G2→独立H2→H3→H3→H2（比較適格0/4）。この追加のSUI/Script/Web検証は後続・並行でありBlockingにしない。#3443の限定smoke、#4629の実コード差分、#4627の限定CIを**一つのProduct横断E2Eに合算しない**。本節はDocs-only・新しい実ブラウザーSource再読／Provider呼出／Web二Principal認可／外部Harness Skill比較・Owner受理は今回NOT RUN。
+**実行順と証拠上限**：初回P0は引き続きTEI #4583 Desktop Stage1→Stage2、およびTAI #168 G0→G1→G2→独立H2→H3→H3→H2（比較適格0/4）。この追加のSUI/Script/Web検証は後続・並行でありBlockingにしない。#3443の限定smoke、**main統合済み#4629の内部Call=0**、#4627の限定CIを**一つのProduct横断E2Eに合算しない**。本節はDocs-only・新しい実ブラウザーSource再読／Provider呼出／Web二Principal認可／外部Harness Skill比較・Owner受理は今回NOT RUN。
+
+<!-- yic-reabytehost-observed-ci-20261114 -->
+### 51.5 REAの実CLIとHost byte-only入力を別段階としてSkill案内へ取り込む
+
+- [TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625) HEAD 24863bd6の**9/9 GitHub Workflow成功**は、ローカルEvidence Pathを用いた実CLI子Process／commands/catalog/JSON/Pinの限定技術検証。**Draft・未merge**。Tool自体は存在する候補だが、現行TEI main/公開Profileの機能とは宣伝しない。Web/Remote/MCPへ任意Pathを外部入力させない。
+- [TEI Draft #4630](https://github.com/hat47x/tei-platform/pull/4630) HEAD 1ad749fcの**12/12 Workflow成功**（Windows Smokeは初回Timeout FAIL→当該JobのAttempt 2でPASS）は、R2 Candidate解釈を**Host管理byte列から受け取るProduct内部境界**へ分離する小実装候補。**Draft・未merge**。Hostが実Principal/Root/現在Sourceを確認してbounded Readし、同じ受信byteを実Consumerへ投影したことまでは保証しない。
+- **次の実用昇格条件**は、TEI #3394/#4503/#2516側で既存Studio Hostの許可Selector→一度だけ限定byte実Read→既存Operation→許可Projection→第二Consumer実Readをつなぎ、同名別Root／Symlink／改版／内部Error Pathの外部非開示をProduct Ownerが検査すること。REAの実解析・保存Evidence・現在原資料の資格も別。YIC Skillは実CLI/Hostで提供済み・許可済みの**read-only受領手順**のみを案内し、新File ServerやPath Resolverを構築しない。
+
+**状態**：両PRの局所Workflow結果は当該HEADの履歴Evidence。新R3-B Host許可Byte Reader/二Consumer/実External Agent・Meaning受理は未実証。初回H2/H3とDesktop Stage1→Stage2の追加Blockingにはしない。
 
