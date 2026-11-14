@@ -27,6 +27,11 @@ EXPECTED_NEGATIVE = {
         "comparisonPassed is false on purpose: the text template shows the same "
         "asymmetry as the record template."
     ),
+    "YI-overreach-2026-11-11.json": (
+        "control/receiptPassed is false on purpose: the control workspace is the "
+        "one the TEI validator is expected to refuse, so its receipt passing would "
+        "mean the control failed."
+    ),
 }
 
 SUCCESS_KEYS = {

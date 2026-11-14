@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receipts": 29,
+    "receipts": 31,
     "receiptsWithoutArtifactDigest": [],
     "mismatched": [],
     "rows": [
@@ -157,6 +157,13 @@
         "current": "sha256:4d688e78aa72"
       },
       {
+        "receipt": "YI-pass-consistency-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
         "receipt": "YI-publication-refusal-2026-11-11.json",
         "artifact": "evaluations/artifacts/scn-003-document.json",
         "agrees": true,
@@ -165,6 +172,13 @@
       },
       {
         "receipt": "YI-receipt-auditability-2026-11-11.json",
+        "artifact": "evaluations/artifacts/scn-003-document.json",
+        "agrees": true,
+        "recorded": "sha256:4d688e78aa72",
+        "current": "sha256:4d688e78aa72"
+      },
+      {
+        "receipt": "YI-receipt-quality-2026-11-11.json",
         "artifact": "evaluations/artifacts/scn-003-document.json",
         "agrees": true,
         "recorded": "sha256:4d688e78aa72",

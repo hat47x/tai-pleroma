@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receipts": 27,
+    "receipts": 31,
     "excludedAsHistorical": [
       "yi-constellation-structure-2026-11-01.json"
     ],
@@ -20,6 +20,18 @@
     "perReceipt": [
       {
         "receipt": "YI-acceptance-authority-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-artifact-digest-2026-11-11.json",
         "result": "PASS",
         "fields": {
           "version": true,
@@ -80,6 +92,18 @@
       },
       {
         "receipt": "YI-context-handoff-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
+        "receipt": "YI-cross-receipt-2026-11-11.json",
         "result": "PASS",
         "fields": {
           "version": true,
@@ -247,6 +271,18 @@
         }
       },
       {
+        "receipt": "YI-pass-consistency-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
         "receipt": "YI-publication-refusal-2026-11-11.json",
         "result": "PASS",
         "fields": {
@@ -259,8 +295,20 @@
         }
       },
       {
+        "receipt": "YI-receipt-quality-2026-11-11.json",
+        "result": "PASS",
+        "fields": {
+          "version": true,
+          "command": true,
+          "expected": true,
+          "observed": true,
+          "notDone": true,
+          "scopeNamesALimit": true
+        }
+      },
+      {
         "receipt": "YI-scope-halves-2026-11-11.json",
-        "result": "FAIL",
+        "result": "PASS",
         "fields": {
           "version": true,
           "command": true,
@@ -344,7 +392,7 @@
       }
     ],
     "missingByField": {},
-    "completeReceipts": 27,
+    "completeReceipts": 31,
     "incompleteReceipts": [],
     "everyReceiptIsAuditable": true,
     "finding": "YIのreceiptは、対象の版・実行コマンド・期待結果・観測結果・未実施項目を持つかを一枚ずつ確かめた。欠けている欄があれば、後から読む人はその実行を監査できない。"

@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows with Python 3.12 and jsonschema",
   "command": "python integrations/tools/validate_artifacts.py",
   "result": "PASS",

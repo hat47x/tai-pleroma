@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows with the EKI checkout, its conformance harness, and a temporary test file",
   "command": "python integrations/tools/eki_projection_execution.py",
   "result": "PASS",
@@ -17,15 +17,15 @@
     "projectedSubmissionRejected": false,
     "firstExitCode": 0,
     "secondExitCode": null,
-    "taskId": "tsk_5984b6bb5ff72b8127b718560946e588",
-    "attemptId": "atm_4ba8f3099eb209e4afd4b9545a0a1611",
+    "taskId": "tsk_5106cf1b19ee7de02682d74937a915d7",
+    "attemptId": "atm_d810b43773cfac0f2378a0986e75d884",
     "claimDigest": "cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
     "logTail": [
       "=== RUN   TestTAIProjectedTaskExecution",
-      "    zz_tai_projection_e2e_test.go:134: TAI_RESULT task=tsk_5984b6bb5ff72b8127b718560946e588 attempt=atm_4ba8f3099eb209e4afd4b9545a0a1611 claim=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
-      "--- PASS: TestTAIProjectedTaskExecution (2.92s)",
+      "    zz_tai_projection_e2e_test.go:134: TAI_RESULT task=tsk_5106cf1b19ee7de02682d74937a915d7 attempt=atm_d810b43773cfac0f2378a0986e75d884 claim=cd2eca3535741f27a8ae40c31b0c41d4057a7a7b912b33b9aed86485d1c84676",
+      "--- PASS: TestTAIProjectedTaskExecution (1.53s)",
       "PASS",
-      "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t12.234s"
+      "ok  \tgithub.com/hat47x/eki-fabric/conformance/process\t9.072s"
     ]
   },
   "scope": "Submits TAI's projected TaskRequest through EKI's Client API. The policy-aligned first submission completed without a retry. The test uses EKI's TEST PROFILE; a ResultClaim in this test does not establish real resource consumption/cost, delivered Consumer Body, production authority, or Worker Protocol compatibility."

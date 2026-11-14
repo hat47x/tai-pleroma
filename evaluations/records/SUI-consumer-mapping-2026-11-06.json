@@ -3,17 +3,19 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows with Python 3.12 and SUI's reference consumer",
-  "command": "python integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-r2 --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-consumer-mapping-2026-11-06.json",
-  "result": "PASS",
+  "command": "python integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py --sui-repo D:\\GIT\\hat47x\\sui-wt-tenant --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-consumer-mapping-2026-11-06.json",
+  "result": "FAIL",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
     "valid": true,
-    "documentDropped": [],
+    "documentDropped": [
+      "readingOrder"
+    ],
     "collections": {
       "cards": {
         "sourceKeys": [
@@ -82,12 +84,12 @@
     },
     "collectionsWithLoss": [],
     "modelAffiliations": 1,
-    "modelReadingOrder": 2,
+    "modelReadingOrder": 0,
     "sourceAffiliations": 1,
     "sourceReadingOrder": 2,
-    "everyProjectedFieldSurvives": true,
+    "everyProjectedFieldSurvives": false,
     "affiliationsKept": true,
-    "readingOrderKept": true
+    "readingOrderKept": false
   },
   "scope": "Builds DocumentV1 through SUI's own consumer and compares the payload with the artifact, per collection and per document field. It records that every projected field that the consumer knows about survives (including readingOrder and affiliations), which contrasts with the meaning-change finding that a field the consumer does not know is dropped while validation still passes. It does not change SUI."
 }
