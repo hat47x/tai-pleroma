@@ -1184,3 +1184,35 @@ Product UIとCLIの認知順は、**対象と意図 → 現在のSource/欠損 �
 後続は、各Product単独のSubject/Raw実Read → 既存Handoff v1の独立Consumer再Read → Tool-onlyとProduct Skillの実比較 → 中断再開におけるPacket×SkillのJ-V四群比較 → 用途／Harness／開示Profileごとの条件付き配布の順。UIの同一Session閲覧・同時Turn／Interrupt・実Product反映は[Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)にある別資格のままとする。
 
 **状態：本節はDocs-onlyの計画更新**。新しい外部Harness試験、OS/Network、J-V四群、複数UI同一Live Session、元Source Consumer E2E、TEI B2/B3、実業務Effect、Owner正式受理は今回**NOT RUN**。Draftのままレビューを待つ。
+
+<!-- yic-cross-client-context-delivery-20261114 -->
+## 50. 2026-11-14：CLI／Studio Desktop／Studio Web／外部Harness間のSkillと情報の実適格性（後続計画）
+
+### 50.1 Skill可搬性と実行環境の資格を分離する
+
+[TEI Studio #1824](https://github.com/hat47x/tei-platform/issues/1824)の共通Go Service・TypeScript WorkbenchとWails Desktop／Web候補、[TAI Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)のActivity引継ぎ・Session閲覧・同時操作の分離を接続する。**同じProduct Skill本文を配置できること**と、当該環境の対象Source／実Tool／Host権限を使えることは別資格。Tool-only→必要時Product Skill→必要なTAI Activity Skillの選択原則（§47/49）は維持する。
+
+| Consumer候補 | 対象と実権限のOwner | Skillが仮定してはならないこと |
+| --- | --- | --- |
+| 単独CLI | Product Process/Workspace Root/実CLI・OS Principal | CLI存在＝Skill Loader成功・Source全体取得 |
+| Studio Desktop | Wails/Studio Host・許可Root・Host Inspect・UI Pin Intent | GUI Focus/描画Edge ID＝意味対象ID、同一OS利用者＝プロセス間Raw隔離 |
+| Studio Web（将来構想） | 認証済み利用者とチームServer・Workspace/Branch/Revision・現在Grant | 同じURL/Document/Session＝同じ権限、DesktopのローカルFile APIをそのままWebで利用可能 |
+| 外部Harness／別Product | 実Harness Loader/ToolとProduct/Hostが許可したProjection/Recipient | Handoff/Transcript＝現在Raw・Grant・同一Live Session・業務Effect |
+
+Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理／L3 Git・PRによる正式版確定**はTEI Studio側の設計・実装判断。SkillがL1の文字列同期をL2のMeaning MergeやL3の正式受理へ昇格させず、AI変更案は各ProductのCandidate Review／明示Applyを介する。別ユーザーのDirty BufferやPinの状態を無断上書きしない。Webの中央Serverが必要でも、YIC専用の共通Skill Runtime/中央Agent Hostの新設理由にはしない。
+
+### 50.2 取得されたContextの完全性をSkill説明から推定しない
+
+[TEI Design Context Query #3262](https://github.com/hat47x/tei-platform/issues/3262)の**required／declared／discovered／loaded／parsed／bound／returned**と、Page／Continuation／End・Tool Reply完全性はProduct Queryの実資格として参照する。Skillは当該Subject・Workspace Root・Source Revision・Required Scope・取得Coverage・対象Audience/Grantを確認し、観測できた範囲だけを説明する。
+
+- 8,192 byte等の途中切断、RequestとReplyの不一致、分割取得中のSource/Grant変更、Source Index参照0、空Catalogや成功validateから**完全取得／不存在／現在意味受理を推定しない**。対応済みのProduct Readerがある場合だけ同対象・同Snapshot条件で再Queryし、未提供ならunknown/partialのまま保持する。
+- Skill rootの短い案内と必要referencesの遅延LoadはModel Contextの節約であり、元のProduct Source／必要な依存がすべて取得済みであるという主張ではない。**Instructionの実Load／Subject情報の十分性／Tool Replyの完全受領／独立Consumer Read**は別列。
+- PermissionとDisclosureは実Product/Hostが判断する。非公開のObject名、Hidden ID、件数、Digest、内部Pathやログ、Cursor等の情報も開示対象に含まれる場合があり、Productが許す範囲以外は外部Prompt/公開Manifestへ移送しない。
+
+### 50.3 先に実施する小さい適合実験（追加の巨大E2Eなし）
+
+[TEI #3262](https://github.com/hat47x/tei-platform/issues/3262)、[#4515](https://github.com/hat47x/tei-platform/issues/4515)、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)の**既存Expected/Ownerを再利用**し、公開許可された1 Subjectについて①実CLIのQualified Subject/必要集合/出典/欠損、②実Studio Hostで同じ対象をInspectした結果、③実提供できる場合だけHarness Tool-onlyとProduct Skill実Loaderを対照する。Web共同編集やNative Session共有を最初の検証に必須としない。
+
+独立負例は、(a)同Kind/IDでも別Workspace Root、(b)分割取得途中のSource/Grant変更、(c)切断Replyを全件0として結論、(d)UI FocusとPinの混同、(e)Toolの実未提供／Skill references未Load、(f)二利用者のDirty BufferとAI Candidateの暗黙上書き。各Productが実現していない経路はunsupported/NOT RUNとする。TAIは実QueryやOS Policyを複製せず、評価票で異なるConsumer間のClaim上限を照合するだけ。
+
+**優先順の不変**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1送出→G2完全Tool Reply→独立H2→H3→H3→H2（比較適格0/4）と、TEI #1824/#4583の実Studio Desktop／Stage1→Stage2セルフビルドは独立P0。追加するWeb/Skill横断検証をこれらのHard Gateにしない。本節は**Docs-only Draft**。実Web共同編集、実異Principal Grant、外部Harness完全受領、Studio→Harness→Product E2E、Owner受理は今回**NOT RUN**。
