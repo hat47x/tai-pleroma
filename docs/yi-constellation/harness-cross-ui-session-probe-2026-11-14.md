@@ -316,6 +316,20 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 
 採否は起動・download byte・Memory・編集直後の応答・Buildサイズ・実SourceとNULL/Bag/同名多重Relation/ABAの挙動一致・debug負担を**同一Fixture・独立Expected**で比べた後とする。初回のTEI Studio Desktop SelfBuild [#4583](https://github.com/hat47x/tei-platform/issues/4583)に新Hard Gateを追加しない。決定Ownerは[TEI #1824](https://github.com/hat47x/tei-platform/issues/1824)/[#3422](https://github.com/hat47x/tei-platform/issues/3422)。
 
+### UI部品とサービス配置をYICの実行方式へ固定しない（2026-11-14 P1）
+
+[TEI Studio Owner #1824](https://github.com/hat47x/tei-platform/issues/1824)と[BuildIntent統合Draft #4634](https://github.com/hat47x/tei-platform/pull/4634)に反映された**配置3案**を、YICでは次の接続条件として扱う。これは新しいYIC Host設計や選定済みプロセス方式ではない。
+
+| TEI側の候補（選定はTEI Owner） | YICから使う共通の境界 | 異なる実証と停止線 |
+| --- | --- | --- |
+| **A 現行**：Wails Native BridgeとGo Operationが同一Process | Product自身が型付きSource Read/Entry/Attempt/Resultを所有。YICは許可済みContext・候補だけを受渡し | Desktop H1の基線。Process内呼出しを実OS隔離やNative Harness Sessionとの同一Principal保証へ拡張しない |
+| **B 候補**：同一GUI exeをself-spawnした従属Go Worker＋Named Pipe/UDS等のlocal IPC | Aと**同じGo Application意味/Operation契約**。IPC identityはProduct/Hostが検証し、UI Task/Native Turn IDとProduct Attemptを区別 | 1 binary配布候補だが別Processの起動・死亡、peer ACL、cancel/ACK loss、Result lookup、メモリ/応答の実測が必要。新YIC Worker Managerを導入しない |
+| **C 候補**：別Wails `-tags server`実行物をGUI子Processで監督し、loopback HTTP/WSで接続 | Aと同じProduct Application APIの**限定選択された面**だけ公開する | DesktopとServerは別Artifact/別配備。現`StudioBridge`のCommand/SHO外部Processや全Browser broadcastはそのままWebへ公開不可。Current Grant/Recipient/過去Transcript閲覧をHostが検査する |
+
+A/B/Cの選択は同一Fixture・同じ実Operationで、warm/cold起動、短いCatalog・大きいGraph、編集連続更新、ビルド進捗、p50/p95/p99・メモリ・Serialization、Crash/RestartとWindow close、Receipt回復を比較する[TEI #1824 LPC-01〜08](https://github.com/hat47x/tei-platform/issues/1824#issuecomment-6870456170)のOwner決定であり、**IPCはHTTPより必ず速い／別Processは必ず有利とは仮定しない**。Aの完成をB/Cの実同等性にすり替えず、B/CはP0 Desktopセルフビルドの新Blockingにしない。
+
+UI部品は現行plain TypeScript/CodeMirror/esbuildを基線として再利用可能に設計し、**Web Components/LitとReact等の選択は未採用**。代表PaneでIME/Caret/Pin・遅延応答・Graph/アクセシビリティ・生成後の回帰・Bundleサイズを比較する。Product生成TargetにもWails固有制約や特定UI Frameworkを強制しない。将来SaaSの複数Git/DB環境とServer Buildは発展先であり、現時点のYIC初回G0/G1/G2やStage1→Stage2の検証を待たせない。
+
 ### Stateとイベント帰属
 一時Focus、Pinned Target intent、Product Source identity/current Revision、Activity、Native Session/Thread/Turn、Product Operation/Attemptは独立した概念。Web同一Workspace・同じSessionの表示・同一Model Revisionを、現在Grant/Transcript閲覧許可/Sourceの連続同一性の根拠としない。Streamの遅着・欠落・別UIでの受信時も、実Native IDと元Pin/Activity/Attemptを対応づけ、確定不能なら候補保留／unknownとする。Productへの自動Applyは行わない。
 
@@ -592,12 +606,14 @@ YICで一晩〜複数日にわたり複数Issueを進める場合も、**一つ�
 
 | レーン | 今回の追加成果 | 接続先の実Owner | 次に要求する実証／非目標 |
 | --- | --- | --- | --- |
-| 独立P0-A | Build途中のHarness/Session停止でもTEI Stage1/Stage2実Attemptを正本とする | TEI #4583/#1824 | 同一Attempt BuildIntent→実Builder/Artifact→生成Stage2 WebView2。Harness rearmをセルフビルドの前提にしない |
+| 独立P0-A | [TEI Draft #4634](https://github.com/hat47x/tei-platform/pull/4634)が別HEADの#4623/#4624修正を同一main-based HEAD `653d0d9`に集約。宣言→Resolver→Builder起動前pinを同じCheckoutで検証する段階へ進んだ | TEI #4583/#1824 | 当該HEADのGo/Self-build/Health CIを独立検収→非Plugin N0〜N3 BuildExecution/ArtifactSet→生成Stage1→Stage2 Windows WebView2。同一HEADの局所成功もStage2完成にはしない。Harness rearmは前提外 |
 | 独立P0-B | 外部HarnessのTool Reply/OS隔離資格なしに長時間自律運用を合格へ昇格させない | TAI #168/#232 | G0 real Read-deny→G1 egress→G2 complete Reply→独立H2/H3四Slot。最新Issue観測で比較適格0/4 |
 | 後続J-A1 | Goal armed／Schedule配送／Product開始／結果の別Claim | TAI #234、TEI #4497 | 公開pure/read-only JobでHost再起動・予定3回欠落・ACK lossを段階観測 |
 | 後続J-A2 | 外部効果・再送・Lease・Result body復旧を現Ownerへ委譲 | TEI #4495/#4194、EKI #57/#829 | T0 Direct基線の次にT1条件付き。T2はManaged Provider実Delegation Profile後。Effect unknownは自動再試行しない |
 | 後続J-S/J-V | 再接続・限定Packet Handoff・並列3 Workstream・費用／再説明 | TAI #271/#234/#621/#422 | Native Session実復帰と新Session Activity再開を別採点。Goal/Schedule実運用能力は各Provider/Profileで評価 |
 | 後続UI | Resume/Cancel/Retry/受理の別表示 | TEI Studio #1824/#3421、TAI #234 HC-15〜18 | UIで表示できてもHost/Effectが復旧したとは扱わない。Web機密Eventと二Writerは§23/24の別試験 |
+
+**現在のCIの資格**：#4634 `653d0d9`の検証は本節更新時点で8 Workflow中、Cache/Studio read-only/Issue-to-Designの3件success、Self-build・Health等はin_progress。**8/8 PASSではない**。#4623 8/8と#4624 5/5の旧別HEAD成功を、この統合HEADの検査結果として書き換えない。#4627 Wails Server method inventoryは公開Webの現Host/AuthZを証明せず、`a0850047`のRepository Healthは[実Jobのgofmt不一致](https://github.com/hat47x/tei-platform/actions/runs/43547953342)でfailureを確認。実Service A/B/C選定・共同Web実Principal分離も未実施。
 
 **Owner受理の停止線**：本章で採用したのは設計上の区分・実証順・失敗時縮退であり、DSH/Codex/Claude Code実Resume、Scheduleの再配送、EKI Artifact/Result body、Control Plane failover、TEI Stage2 Self-build、実Product Commit/Owner承認、多Workstreamの実効果を新たに観測・採用したわけではない。DSHの公式機能表・各Issueの既存局所Evidenceはあっても、今の実Host/Principalでの利用資格は別。B4独自Agent Loopへの投資判断は[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の既定条件（複数代表Harnessの適格比較、代替可能性、重大固有欠落、費用、Owner受理）が成立するまで保留する。
 
