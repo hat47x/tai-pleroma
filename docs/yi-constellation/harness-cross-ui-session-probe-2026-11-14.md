@@ -345,6 +345,23 @@ UI部品は現行plain TypeScript/CodeMirror/esbuildを基線として再利用�
 | Turn/Event/Interrupt | Native Turn/Tool ID、欠落/切断/順序、操作元、cancel受領 | UI局所queueは別端末のWriter排他ではない。InterruptはBuild/Effect取消の証拠ではない |
 | Candidate Return | 元Pin、Source/Revision、Activity参照、AI候補の実到着 | Productが現在再資格化してPreviewへ渡す。回答=Apply/Owner受理ではない |
 
+<!-- yic-capability-profile-route-qualification-20261114 -->
+### 18.1 Native Capabilityの発見と、このHostで使える資格を別票にする
+
+[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234) HC-01〜09・HC-15〜18、[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)の配布/Install/Load/Invoke資格、[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)のTool/Skill試験を再利用する。**Harnessの公開仕様や互換APIから、現在の契約・Host・Versionにおける利用可能性を推定しない**。
+
+| 区分 | 具体的な判別対象 | 応答と停止線 |
+| --- | --- | --- |
+| Native Session面 | Start/Resume/Fork、History Read、同時Turn Writer、Stream/Interrupt、Goal/Schedule | できると明記された機能でも実Hostで未試行ならunknown。Live Session共有不可は限定Handoff新Sessionへ縮退 |
+| Native Tool面 | Product CLI/MCP/Skillの発見・選択・実Load/Invoke、引数/出力Schema、実返信終端 | Installed/Listed/Loaded/Invoked/Reply complete/Consumerを別記録。Tool Reply切断は成功にしない |
+| Host/OS面 | 送出先/Recipient、実OS Read deny、Workspace/Principal、Network/Log、出力上限 | G0/G1/G2を満たさない実試験を適格なH2/H3四Slotへ入れない |
+| Product面 | 現在Source/Subject/Root、明示Entry/Provider、許可Projection、実Operation/Result | 高性能Modelでも未公開Entry・旧Grant・元Source不明は補えない |
+| Distribution面 | 対象Harnessに適した配布形式・実インストール・参照Skill閉包・License | 配布Packageがあることと、当該Hostでの実利用を区別。必要Toolだけ使えるならTool-only継続 |
+
+各観測の状態は現行Ownerの語彙（observed / unsupported / unknown / not-run / permission-denied等）を参照し、YICで新Capability Registryや統一ABIを決定しない。明示ToolやFeatureが不足する際、別Provider・Remote API・より広いHost権限への**黙った切替を禁止**する。予定していない追加のSkill/Tool経由で秘密Sourceがモデルへ見える場合、比較の環境・Disclosure不適格を先に記録する。
+
+**実証順**：最初のTAI #168 G0/G1/G2→固定DSH H2/H3四Slot（適格0/4）には別Harness/追加Toolを混ぜない。その後のJ-S/J-Vで、実接続できる第二Harnessを一つ選び、同じ公開Product Taskについて実NativeのCapability/失敗/限定Handoffを比較する。
+
 **実装・受入の順序（既存計画を置換しない）**
 1. **独立P0-A** TEI #4583：Builder→実Child→Stage1→Stage2→WebView2の同一Attempt検証。別HEADの成功を合算しない。
 2. **独立P0-B** TAI #168：G0物理Read-deny→G1実送出→G2完全Tool Reply→独立H2/H3 4 Slot（現適格0/4）。Session UI/WASMを追加Blockingにしない。
@@ -601,6 +618,38 @@ YICで一晩〜複数日にわたり複数Issueを進める場合も、**一つ�
 **最初に実行する比較**：公開または許可済みread-onlyの独立3 Issue/3 Workstreamを用い、(a) Product-only＋手動Issue運用、(b) 代表Harness各独立Session＋Product CLI、(c) 必要な用途だけTAI Activity Packetによる再開、の順に比較。実Writer／PR merge／本番Effectを比較の初期必須条件にしない。Skill増分のM00/M10/M01/M11はTAI #621/#488のOwnerに残し、Workstream数×Skill条件を一度に増やして因果効果を不明にしない。
 
 **測るべき増分価値**は、実Independent Expectedを満たした仕事数／利用者が再開時に必要とした説明量／重複実行・修復コスト／間違ったSource・Targetへの候補戻し／有効な根拠を失わず再利用できた割合／正しくunknownに留めた割合／修正・Review・Undoの人手／Token・料金・Quotas・失敗・待ち時間をそれぞれ記録する。高い並列度や低いToken数だけを製品価値の代理としない。ITT/PPの母数と独立ExpectedはTAI #621/#422の既存案に従い、新しい総合スコアを作らない。
+
+<!-- yic-model-role-budget-routing-20261114 -->
+### 28.1 モデル→役割→仕事の二段割当を、実行資格と分離して評価する
+
+YICの候補ロールは「探索・要件整理／高度な設計判断／実装とTool操作／反復・テスト／独立反証／Evidence Review／Owner採否」であり、これらを固定のModel名・Provider・価格Tierへ結び付けない。人間Ownerは目的・A4の意味/権限/本番判断を保持し、[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017)のA0〜A4開発作業票を現在の変更範囲へ適用する。
+
+**割当の認知順**：①Taskの重要度・必要Output/独立Expected・期限・機密/Effect → ②必要Role（単一Agent/独立Challenger） → ③Roleを実現するModel候補 → ④そのModelを正当に使えるHarness/Account/Host/Tool/Skill実経路 → ⑤Product現在Source/Grant/Recipient適格 → ⑥実Attempt/結果・費用・人手の別観測。高推論モデルは重要な不確実性に限定投入、安価なモデルは反復へ、独立Reviewerは可能なら別Context/Modelで行う。ただし同Provider・別Sessionだけをモデル独立と呼ばず、品質と使用可否を実Jobで判断する。
+
+### 28.2 定額・API・第三者サービスを、契約と実用量の別経路として扱う
+
+| 利用経路の候補 | 確認する条件 | 誤認してはいけないこと |
+| --- | --- | --- |
+| 正規アプリ/CLIのログイン・定額契約 | 当該製品/Planの公式なHarness経路で認証され、実Tool/Model利用と残枠を確認できること | サブスク契約が別の任意API endpoint/DSHからも利用可能とは限らない |
+| 正式APIの従量課金 | 実AccountのAPI entitlement、実キーのHost内保護、価格/Rate Limit/予算上限/モデル対応を確認 | APIキーの存在や互換Protocolを定額枠の継承としない。費用推定だけで無断請求を発生させない |
+| 第三者Model Gateway/定額枠 | 実規約で外部Harness接続・再販/転送が許され、実Model/Tool/Contextと制限が確認できること | 公式Provider同名モデルやOpenAI-compatible URLだけで権利/同一機能/枠の継承を保証しない |
+| オフライン/ローカル実行 | 実Machine、配備Model、Tool/OS権限、Source保持と結果独立検査 | Localだから常に安全/同等性能、実効果の入場権限ありとはしない |
+
+**作業単位の費用票**は既存[TAI #234 G5](https://github.com/hat47x/tai-pleroma/issues/234)・[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)・[TEI #2018](https://github.com/hat47x/tei-platform/issues/2018)・[TAI #621](https://github.com/hat47x/tai-pleroma/pull/621)を再利用する。記録するのは実際のRole/Model/Host/Plan経路、利用枠の観測有無、利用量/Tool実Call、Rate Limit/Quotaや失敗、直接課金と定額費用の扱い、Session/Packetの作成・修復・人レビュー時間、独立Expectedを満たした成果数。Token数が少ないことと総費用/正確さが優れることは異なる。定額枠にAPI換算単価を当てる場合は参考値として区別し、実請求額にしない。変動する市販プランの金額やモデル対応は実時点の確認なしに採用しない。
+
+### 28.3 切替時に守る縮退と、後続の小さな比較
+
+| きっかけ | 次に確認すること | 正常な縮退／禁止推論 |
+| --- | --- | --- |
+| Quota/Rate Limit/契約枠到達 | 実Providerの応答、再試行可能時刻、別経路の正式権利と同じProduct Source/Host適格 | 利用できる別Harnessが無ければPause/Hand off。認可外Gatewayへの自動Proxy化禁止 |
+| 特定Tool/Skill/Modelが未対応 | 現Native Tool/Schema/実Loadと必要Product Entry | Tool-onlyで成立するJobだけ継続。不適格なProviderの実Toolを説明文から捏造しない |
+| ContextやTool Replyが切断 | 受信済み範囲、欠落部、元Turn/Tool/Source/Required/Consumed | Partialを完全回答としない。許可Packet＋新Sessionで再確認 |
+| 実Tool/Build/DB Effectがin-flightまたはunknown | Product/Host/EKIの元Operation ID・Receiptと現在結果 | 旧Session停止をEffect取消とせず、無条件二重実行・新ID再送0 |
+| AI回答不安定・難問化 | 仕事の未解決点と独立Expected、別Reviewerの入力独立性 | 上位モデルへは**問題と根拠**を引き継ぎ、未許可Raw/Tool Logや以前のGrantまで渡さない |
+
+**最初の後続実験**：TAI #168の固定4 Slotと混ぜず、適格な別Harnessを一つだけ選び、同じ公開TEI read-only Jobについて、(a)利用可能Capability、(b)正規モデル経路/Quota、(c)Tool-onlyでの独立根拠付き回答、(d)中断・Limit時に限定Activity Packetを渡した新Sessionの再開を比較。性能/費用/資格のどれかが未観測なら各列をunknownにし、第二Harness成功やSkill効果を先取りしない。モデルとRoleは実験前に固定し、試験後に都合良く組替えない。Plugin追加・自作Routing Server・常駐Quota Managerは不要なら作らない。
+
+**採否の帰結**：Product-only/Tool-only＋公式Harnessで達成でき、追加Adapterが明確な利用者価値を生まなければ追加層を採用しない。独自Agent Loop/B4はTAI #234の条件、実OS/Network G0/G1/G2の資格はTAI #168、Provider/Tool Skill配布はTAI #74/#488、Product意味/Host Grantは各Product Ownerの判断を優先する。本§28.1〜28.3は既存Issue・公開製品契約の区分に基づく**Docs-onlyの選択/費用/縮退計画**。新しい二Harness実試行、利用枠/課金の実契約確認、Quota故障注入、Role切替の効果、Owner受理はNOT RUN。
 
 ## 29. ロードマップの接続先・採否・検証状態
 
