@@ -369,3 +369,87 @@ Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い�
 4. **導入と撤退**：最初のUIはProduct-onlyと限定Handoffに縮退できる。採否を判定するのは各製品の業務成果であり、Wails Web/WASM化や外部HarnessのSession API数ではない。B4独自Agent Loopは外部Harness＋既存Adapterで解消できない重大欠落とOwnerの費用・撤退判断が実測で揃うまで保留。
 
 **本節の実施事実**：TAI 4 Draftの現GitHub Compare（changed files/ahead/behind/mergeable）と既存TEI実装PR・他チャット設計の再照合、文書への受入順の反映のみ。Draft再base/merge、Windows Stage2、実OS H2/H3、二UI実Session、WASMの同一Fixture計測、実Handoff Consumer、Product Owner正式受理は**NOT RUN**。本節が承認済みの合意・追加Hard Gateであるとは主張しない。
+
+<!-- yic-harness-activity-causality-qhp0-consumer-matrix-20261114 -->
+## 19. Activity→Harness→Productの因果帰属を、一つのSession状態に畳まない（後続設計）
+
+### 19.1 操作の順序でなく、出典と実Observationの辺を照合する
+
+他チャットのTEI設計Build/Evidence、SUIのRaw/Item/Occurrence、SHOのSource/文書Consumer、SEIの判断Basis、EKIのTask/Attempt/Effectを照合すると、YICで本当に共有したいのは**任意のSession全履歴**でなく、当該仕事に必要な次の因果辺である。ただし新しい中央Event Graph/Schemaを設けるのではなく、既存QH-P0のI/R/P/T/C/H、TEI Pin/Operation、TAI Activity、Harness Native Log、EKI/SHO Receiptで実際に追える範囲だけを記録する。
+
+| 辺／問い | Source-of-truthと観測場所 | 成立しても保証しないもの |
+| --- | --- | --- |
+| Activity intent → Product Pin | TAI #271の目的、TEI #4515のWorkbench/CLIで人が明示したWorkspace+Kind+ID/Scope | FocusやGraph描画IDだけから対象の一意性を推認しない |
+| Pin → qualified current Product Read | TEI #1124/#3422、SUI/SHO各Readerの原Source/Root/Revision/Required/Consumed/Validationの実読取り | 同じWorld/Model FP、Digest、表示結果があっても現在Grant・完全閉包・原子的Snapshotではない |
+| Product Read → disclosure projection | Source保持Product/Hostの現在Audience/目的/Grant、送信予定byteとRedaction | 取得できたSourceの全件開示可を意味しない。Meta/件数/Path/エラー自体が秘密となり得る |
+| Projection → actual external delivery | TAI #168 G1、既存QH Transport Receipt、実Tool argv/egressの観測 | Prepared≠Delivered。Transport受付≠Model実利用 |
+| Native Session/Turn → actual Tool Reply | Harness Native実Session/Thread/Turn/Tool ID・実Host Profile・G2 complete stdout/stderr/body | Session名、final answer、Tool exit 0だけで完全受領・意味正答・Product実Readを認めない |
+| Tool Reply → Consumer claim | Product/SHO/SEIによる用途相対の実Readと現在Basis、unknown/partialの保持 | SHOが票のMarkdown payloadを再Readしても元TEI Sourceを独立再Readしたとは言えない（QH-07） |
+| Candidate → Product Preview/Apply | 元Pin/現在Source/Grant・Acceptance/BuildIntent・Product Operation ID | Agent「完了」、Turn中断、古いReceiptで最新の保存・生成・業務Effectを保証しない |
+
+**観測の接着単位**：実Harnessが発行したNative IDと、送信元のProductが生成/保持したRequest/Pin intent参照、実Tool Invocation/Response、およびProduct側の元Attemptを、同一試行の証拠票に対応付ける。「外部Harness sessionIdとProduct subjectIdが等しい」など別名前空間のID値一致で結合しない。Cross-UIの画面名・Git branch名・Session labelも、実対象のBindingではない。
+
+**不完全取得の停止線**：TEI #3262のrequired/declared/discovered/loaded/parsed/bound/returned、page/continuation/end、Root/Validationの現在性を当該Claimに必要なところまで検査する。複数Readerが別時点でSourceを読んだとき、一致したModelRevisionをもってatomic snapshotとは扱わない。Scope/epochまたは当該必要集合が未確認なら、確認済みの局所Claimを残したまま、横断Claimをunknownにして必要辺だけ再確認する。
+
+**権限の時間方向**：後からGrantを撤回できても、外部Harness/旧Sessionにすでに渡したRaw/Tool結果を取り戻せたとは言わない。新しいAudienceが同じSessionへattachする際には、**今後のProjection**と**すでにSessionに存在するTranscript/履歴Tool Result**を別々に判定。履歴資格が確認できなければM2/M3へ進まず、M1の新Session限定Handoffへ縮退する（TAI #234 HC-15）。
+
+### 19.2 成立した辺だけ残す選択的再資格化
+
+次の変化はすべて「過去のObservationは履歴として残し、現在用途の資格を再判定する」候補。新Watcherや強制Global Invalidationではなく、既存Productが実際に確認できるRead/Validation/Grantを用途ごとに参照する。
+
+| 変化 | 維持可能なもの | 改めて確認するもの | 既存Expected |
+| --- | --- | --- | --- |
+| 同一Source byte/同じModelRevisionでRoot実在だけ変更 | Pinの意図、過去構造Observation | Current Root/Validation、今回のProduct Reader | TEI #4616、#4515 PIN-S0 |
+| Source A→B→A、同名別Scope/別Root | 過去の選択履歴・候補 | 実Origin/Identity/必要Source、現在Grant | QH-02/03、PIN-S0、HC-10〜14 |
+| Skill本文不変だが参照Script/Tool更新 | 影響しないTool-only用途、旧Skill使用履歴 | 当該Instruction packageのLoad、実Tool版と必要Skill範囲 | TAI #488、Draft #633 §49/50 |
+| Harness転送中にReply切断、Stream後着 | 送出試行・取得済み局所Event | Reply終端/Consumer受領、元TurnとPinの帰属 | TAI #168 G2、HC-17、YH-04 |
+| 旧Session/別UserへのAudience変化 | TAI Activity目的の許可可能な限定参照 | 過去Transcript閲覧、現在Projection、実Native Writer権利 | HC-15/16、TAI #271 |
+| Interrupt/Host再起動中のProduct Operation | 起動済みOperation/Attemptのidentity | 現Hostでの実Result/Effect、再実行の冪等性・受理 | HC-18、EKI既存Owner |
+
+確認できない属性を「変化なし」と埋めず、既存票のunknown/unsupported/insufficient-evidenceに残す。安全に続けられるProduct単独read-onlyまで一律停止しない。
+
+## 20. 最初の一仕事の実行カード：QH-P0をHarness接続へ接合する前のProduct実縦切り
+
+### 20.1 既存の実証を使う順序
+
+**最初の適用対象は公開・read-onlyのTEI一Subject**。新しいHarness Runtime/中央Store/Schema/総合Oracleを先に実装せず、既存[QH-P0 §10.3](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)および実Product CIと同じFixture/Expectedを再利用する。
+
+1. **Product実存在の確認（I/R）**：公開TEI reference/workspace、実CLI binary/commitとworkspace contentを固定。現行QH票の例である go run ./cmd/tei model catalog -workspace reference/workspace を出発点にし、実Discovery・Inspect・必要Readから**今回存在する一意Subject**を決める。CLI/Workspaceの実構文が変われば現行ProductのUsage/Helpに従い、旧Commandを成功扱いしない。GUI未実装時の選択は「合成Pin」であり、実GUI Pin合格ではない。
+2. **Current Product/Disclosure（R/P）**：Source/Root/Origin/Subject Kind+ID/Scope、Required-Consumed/partial/Validation、今回の受信先への開示可能なbyteをProduct/Hostで確認。公開Fixtureでの正例を実OSの秘密Raw拒否と混同しない。Root/Scopeが一意に表せない場合は送出せずFit/Gap票へ。
+3. **既存Handoff v1の実Transport（T）**：実SUI Producerが供給した許可票、または実Driverが作った合成票であることを明示して区別。既存 yi.handoff.context/v1 の target/revision/references/evidence/limitations だけを使い、相手SHOの既存Consumer/Node CLIを**別Process**で呼んでpayload原byte/Receipt/exitを観測。Qualified Scopeがv1に表現できなければ、存在しないFieldを捏造せずOwnerへ非適合Gapを戻す。
+4. **Consumerが実際に利用した根拠（C）**：SHOによるPayload再Readと、TEI Productが元Subjectを実再Readしたかは別の列。既存[SHO #48](https://github.com/hat47x/sho-composer/pull/48)の同Markdown byte/異Source・異対象3票を対照として再利用。TEI元Source未読ならR/Cの当該Claimはnot-run/insufficient-evidenceであり、Tの成功から補完しない。
+5. **外部Harness試行（H、後続）**：ここまでのProduct基線を保存したうえで、TAI #168 G0実OS Read-deny→G1 actual Egress→G2 complete Tool Replyが成立した公開Profileのみ、独立H2/H3 4 Slotとは**別の後続Job**に接続する。まずTool-only。SkillはJob固有の改善が必要な場合だけ、I/S/C三閉包で実Loadを確認して追加する。生PathをRemote CLI/MCP引数として任意開放しない。
+6. **結果を元対象へ戻す（J-P/後続）**：外部Answerは元Pin・Root・Source時点・Native Turnの候補として保持し、現在Productで再Read/Preview。AIが使った対象と今のFocus/Workspaceが変わっていれば自動Apply 0。read-onlyの完了判定ではBuild/Effectを要求せず、後日のWriteは既存TEI/SHO/EKI Operationに引き渡す。
+
+### 20.2 一試行の採点欄を統合しない
+
+| QH列 | 最小実Observation | 不成立時の限定結果 |
+| --- | --- | --- |
+| I / Intent | 誰がどのRoot/Kind+ID/用途を指定したか。合成か実GUI操作か | Synthesized selection / GUI NOT RUN |
+| R / Resolution | 実TEI Product Readerが当該Qualified Subjectを実Sourceから読んだか、Coverage/unknown | Product Read不足ならnot-run/unknown |
+| P / Projection | 現在Audienceへの許可と実Preview byte/非開示範囲 | Host承認・実Policy未観測なら限定公開Fixtureのみ |
+| T / Transport | 既存Handoff v1 payload exact bytes、別Process受領、Receipt | 元Source再解決/現在性には昇格しない |
+| C / Consumer | SHO等が実際に何をReadし、何をBasisとしたか | Payload Readのみなら元TEI Source claimはunknown |
+| H / Harness | Native Session/Turn/Tool ID、実送出・完全Reply・実受領 | Product-only試験ならnot-run。Skill名はLoader証拠でない |
+
+**受入の切り方**：実CLIでRが成立してもSHOでRが成立したとは表示しない。公開合成Pが成立しても、機密P・OS G0/G1をPASSにしない。Tの局所実証から今回のHをPASSにしない。実HarnessのHが成立しても同じActivityの別UI継続・Product ApplyをPASSへ加算しない。各結果のHEAD/Attempt/Owner/Expectedを記録する。
+
+### 20.3 後続UI・Web・第二Harnessへの伸長条件
+
+- **QH-P1**：実GUI Pinが実装されたら同じ公開SubjectをStudio/CUIで指定し、Focus移動・同Kind同ID別Root・同RevisionのValidation変更・後着Eventを検査。Wails WebViewの画面上の表示一致だけでCLIと同じApplication Operationを消費したと宣言しない（TEI #1824/#3422）。
+- **Web/二User**：Browser Tabが共有Workspaceを見ていても、Dirty Buffer/CASとAI Candidate・旧Transcriptは異なる資格。Web Go ServerでCurrent Grantを再検査、Native実Writer保証が不明ならM3を公開せずM1/M2へ縮退（HC-15〜18）。
+- **第二Harness**：同一Task・公開Source/Host Disclosure・独立Expectedを保存し、DSHと実接続可能なCodex/Claude Code/OpenCodeの一つでTool実到達/Resume/Reply完全性を比較。Native差はAdapterのCapabilityとして表し、失敗時の代替Harnessが勝手に広いGrantへ昇格しないことを評価。
+
+**撤退／Fit-Gap判定**：Product Source Locator/Scopeを既存v1と既存Product APIだけで安全に結べない、OS Read-denyや実Egressが不適格、Consumerが元Sourceを再Readできない、Native履歴Audience/Writerを判別できない場合は、影響する列と現在の実モードだけを不適格とする。新 Handoff v2/第二Registry/Host/Agent Loop/分散Lockを応急作成せず、既存Product・TAI Ownerに不足する契約を戻す。
+
+## 21. 開発・価値評価への統合：先行二P0を止めず、誤昇格と過剰停止を両方測る
+
+**P0を変更しない**：A=TEI [#4583](https://github.com/hat47x/tei-platform/issues/4583)の実Stage1→Stage2 Desktop/同Attempt BuildIntent+Native WebView2、B=TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G1→G2→独立H2/H3四Slot（比較適格0/4）。いずれも独立Owner/独立証拠で進め、C=Product-local Pin/R3-A、D=QH-P0、E=M1/M2/M3、F=J-Vを後続の必要な用途にのみ接続する。SUIのAI OFF Raw→Card→原文復帰、SHO単独Writer、SEIの局所判断、TEI Studio単独操作はHarness不適格でも維持する。
+
+**UI/Go/WASMの検証方法**：前§17のWASM案は、Productに既存の現在Source/Grant・実Operation正本を残した状態で、UIに必要な**純粋な局所計算だけ**をTypeScript／Go Service／WASM三条件で比較。最初のQH-P0やH2/H3へWASMを必須にせず、実Studio Desktopの基線取得後に必要な処理だけ測る。再生成後に同じWebViewに表示できたことと、同じSource/Required/Consumed/AuthorityのConsumer資格を得たことは別。
+
+**価値比較の評価者と母数**：B0 Product単独、B1 Tool-only/必要時Product Skill、B2薄いAdapter、B3統合UIの比較は[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)/[#488](https://github.com/hat47x/tai-pleroma/issues/488)・既存J-V/M00/M01/M10/M11を使用。追加すべき観測は「正しく確認済みの局所Claimを保持したか」「本当に変更・失効した必要辺だけを保留したか」の両方向であり、通知件数・Token節約だけで安全性を相殺しない。Packetの準備・配送・再Read・失効修復コストも増分価値へ算入。小標本の参考比較を一般的効果量とは呼ばない。
+
+**採否**：Tool-only＋既存Handoff v1が足りるJobではTAI Skillを配布標準にしない。B0〜B3の実適格試験で必要なUser Jobが実現できる限り、B4独自Agent Loopを投資対象にしない。B4再検討には、複数代表Harnessの実適格比較、Product API/薄いAdapterで解消できない重大欠落、実運用費用・復旧・Owner受理をすべて要求する（TAI #234）。
+
+**今回の証拠上限**：本§19〜21は既存[QH-P0](https://github.com/hat47x/tai-pleroma/blob/main/docs/yi-constellation/cross-product-handoff-execution-tickets-2026-11-11.md)、TEI #4616/#4625、SHO #48、TAI #168/#234/#271/#488の限定記録を照合した**Docs-only実装・検収計画**。新しいTEI実CLI→SUI→SHOの同一Job、同一SessionのDesktop/Web、二Harnessの対照、実WASMベンチマーク、Stage2 Native Desktop、OS/Network適格H2/H3四Slot、Product/Owner正式受理は**NOT RUN**。別HEAD・別AttemptのCI成功を一つのE2Eへ合算しない。
