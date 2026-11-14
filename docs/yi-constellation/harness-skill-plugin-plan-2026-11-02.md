@@ -1190,11 +1190,11 @@ Product UIとCLIの認知順は、**対象と意図 → 現在のSource/欠損 �
 <!-- yic-sk02-native-lineage-h2h3-20261114 -->
 [TAI Draft #649](https://github.com/hat47x/tai-pleroma/pull/649)の既存SK-02比較Checker変更を、H2/H3の**実行前適格条件を判別する具体的な候補**として採る。実装対象は既存 check-sk02-pair-eligibility.cjs とSynthetic CI Workflowだけ。元Sessionからfork/resumeされた子は、新しいNative Session IDを持っていても独立試行とは認めない。**実測で継承が陽性ならineligible、不完全・不正な系譜情報ならinsufficient-evidence**。root IDが重複、親IDが非空、fork depth>0、session_start_modeがfork/resume、session_is_seeded=true、inherited_event_count>0を反証として扱う。通常forkで親IDが消えてもseed/event継承が残り得るため、親IDの不在を独立の肯定証拠にしない。
 
-**合成ケースの範囲**：E73〜E82の10件を追加し、既存72件と合わせ**82件のSelf-test候補**。Checkerに追加されたroot/parent/depth/seed等は**観測できる場合の任意診断**であり、既存Trial Schemaや初回4 Slotの必須入力を変更しない。既存のindependent_session_observed=true、4 IDの相違、Checkerでeligible-to-scoreを返すこと自体は、OS物理Read-deny／真正な完全Native履歴／Raw遮断／実外部Trial成立を証明しない。PR #649はDraft・未mergeのため、**本計画へChecker採用規則を反映しても現行main適用とは呼ばない**。
+**合成ケースの範囲**：E73〜E82の10件を追加し、既存72件と合わせた**82件のSelf-testはTAI Draft #649 exact HEAD bac29b0fでCI成功**（[SK-02 Run #43545823209](https://github.com/hat47x/tai-pleroma/actions/runs/43545823209)、同HEAD S1 Product-only・tai-referenceも成功）。Checkerに追加されたroot/parent/depth/seed等は**観測できる場合の任意診断**であり、既存Trial Schemaや初回4 Slotの必須入力を変更しない。既存のindependent_session_observed=true、4 IDの相違、Checkerでeligible-to-scoreを返すこと自体は、OS物理Read-deny／真正な完全Native履歴／Raw遮断／実外部Trial成立を証明しない。PR #649はDraft・未mergeのため、**本計画へChecker採用規則を反映しても現行main適用とは呼ばない**。
 
 **最初の一手**は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)と既存RunbookのG0実OS許可Source Read正例＋Reviewer/親Root/他Lane/旧Session実Read拒否（負例）。G1実際のRecipient・Egress、G2 stdout/stderr・完全Tool Reply、その後に初めてH2→H3→H3→H2の**新規4独立Session**。DSHなどのNative実ログでroot/session/thread・seeded/event継承とOS/Contextを確かめる。Skill有無の比較Arm、固定Task/CLI/Tool/Expected、ITT/PPは変更しない。G0が不適格なら新Skill/Providerへ逃げずenvironment-ineligibleで停止。評価上の適格は**現時点0/4**。
 
-**実証状態**：#649の合成CheckerとWorkflowは限定候補であり、ここで新しいNode実自己試験・GitHub exact-HEAD CIを実行したわけではない。新実DSH四Session、実OS/Network隔離、独立Expected採点、Skill効果とOwner受理はNOT RUN。
+**実証状態**：#649の合成82件・CI成功は既存PRの限定証拠であり、今回TAI計画側でNode自己試験やOS/Harness実験を再実行したわけではない。新実DSH四Session、実OS/Network隔離、独立Expected採点、Skill効果とOwner受理はNOT RUN。
 
 <!-- yic-cross-client-context-delivery-20261114 -->
 ## 50. 2026-11-14：CLI／Studio Desktop／Studio Web／外部Harness間のSkillと情報の実適格性（後続計画）
@@ -1254,6 +1254,23 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **状態**：本節はDocs-onlyの追補。新たな二Principal実Grant/WS隔離・公開Web Host拒否・外部Harness Skill実Load・Stage2 Desktop・Owner受理は今回NOT RUN。
 
+<!-- yic-skill-resume-evidence-promotion-20261114 -->
+### 50.5 再開するSkillの適用可否は、履歴を引き継ぐ前に現在のProductとHostへ照会する
+
+[TAI Draft #648 §26〜32](https://github.com/hat47x/tai-pleroma/pull/648)は長時間Goal/Schedule/Native Session/Turn/Activity、Product Operation、EKI Task/Attempt/Lease/Result、および複数Harnessの開発作業票の**既存Owner別の実証順**を担当。本Skill計画はその参照を利用し、**新Scheduler・Agent Loop・Work Package Schema・Session Store・Git Merge Engineを作らない**。
+
+| 再開時に確認すること | Skill／Harnessが実行できること | 誤って昇格しないClaim |
+| --- | --- | --- |
+| **Session fork／Context継承** | 実Native root・parent・seed・inherited events・Source/Current Grantを実確認。実比較SK-02では継承陽性のSessionを不適格とし、作業再開用途では必要な履歴だけ許可Projectionとして新Sessionへ明示引継ぎ | 異Session ID＝独立Trial、fork＝同じLive Writer、過去Session Grant＝現Granted Capability |
+| **Goal再起動・予定欠落・Delivery ACK** | 外部Harness/Providerの現在Goal/Occurrence/Inboxと元Product Operation/Taskを**別照会**し、公開pure/read-only Jobに限る再実行許可を確認 | Goal armed／配送ACK／Tool Response＝Product開始・Effect・Owner承認 |
+| **Reply/Effect不明・Lease失効** | 元Operation ID/Attempt/Lease/Receipt/Result BodyとConsumerをProduct/EKIに再照会。実Body未取得・旧Effect unknownなら保留し人に戻す | Blind retry、別Native Sessionでの無条件重複作用、旧Worker結果の復活 |
+| **3独立開発Workstreamの引継ぎ** | [TEI #2017](https://github.com/hat47x/tei-platform/issues/2017)の既存A0〜A4作業票にIssue・base/HEAD・許可Path・Source/Builder/Tool版・独立Test・未決・開示制限を紐付ける。次HarnessはSourceを再Readし、候補だけをProduct Ownerへ返す | Transcript丸ごと移植、Git merge＝意味受理、別BranchのCI Greenを統合HEADのBuild証拠とする |
+| **Evidenceを別Agent/PRへ渡す** | TAI #232／TEI #2515の既存Disclosure条件で公開可能な結果・unknownのみ配る。保護されたTool argv/Raw/Stderr/Private Path/秘密由来Digestは別Audienceの検査結果と分離 | 安全試験で取得した秘密RawのCI/Issueへの転載、Sourceの存在/件数の漏洩 |
+
+**次の小実験**は、TAI #234／#422の**許可された公開read-only 3独立Workstream**を Product-only→Tool-only→必要時限定Handoffの順に比較すること。ただしPacket×Skill四群(M00/M01/M10/M11)の独立Expected・実CostはTAI #621/#488へ戻し、Workstream数とSkill群を一度に増やさない。統合の受入はGit Scope、Subject/Meaning、Build/Runtime、独立Review、Product/Owner Acceptanceを**別票**として判定する。A2隔離Branch/A3既存Git/CI/A4人間判断の順は適格時だけ進め、初回H2/H3比較とDesktopセルフビルドP0には加えない。
+
+**具体的な停止線**：前回はSkill/Toolの三閉包I/S/Cだけを更新すれば済む場合と、元Product OperationのEffect unknownで再実行できない場合が異なる。Skillの再LoadやActivity再開が成功してもProductの自動再Submitには移らない。ここに記載したGoal/3 Workstream/二Harness/Native Resume/Result Bodyの新実験は今回NOT RUN。既存Draft #648の手順・Expectedをそのまま参照する。
+
 <!-- yic-real-product-command-skill-promotion-20261114 -->
 ## 51. 2026-11-14：新Product機能をSkillの案内へ昇格する条件（後続計画）
 
@@ -1298,6 +1315,9 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **A. Source-selection境界**：[SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443) の単一Text Run限定Referenceは、許可されたRaw byteを与えた場合に、BOM・混在改行・日本語・非BMP文字を保持した**UTF-16表示選択 → UTF-8半開byte範囲**を写像し、surrogate内位置やRenderer不一致を拒否する。固定57-byte Referenceでは同一表記の前方/後方をそれぞれ[11,30)／[38,57)へ分離する。**ローカルTypeScript strict検査とNode Assert smokeの限定観測**があり、exact-head Vitest/Browser DOM/Root・Grant/別Process Card GET/現Source実再読は未資格。SUI #3441/#3438がOwner。見た目の文字列一致、同じ相対PathとRaw digestだけで選択したSource occurrence／Rootを同一としない。選択位置を持つCardやSHO文書は、保存後に元資料を再解決できた場合だけ該当出典Claimを再利用する。
 
+<!-- yic-sui-content-snapshot-20261114 -->
+**SUIの同一Snapshot補正**：[SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443)の現HEAD 7665442では、DOM選択のRaw byte位置とselectedText、全Raw/選択byte SHA-256用の入力を**非同期WebCrypto前に同一コピーとして固定**し、途中で呼出元がバイト列を書き換えても混合時点のCheckpointを作らないよう改善した。中間HEAD dd11826の実Chromium 11 E2E成功は単一の合成Text Nodeの範囲であり、**現HEAD 7665442のCIは確認時点pending**。返るのはcontent-match-only／stale-contentで、Root/Grant/Source Revisionの連続性・A→B→A・Cardの別Process保存再読は未証明。Skill/Handoffが受領したSource位置の信頼をContent Hashだけで現在Source資格へ拡張しない。
+
 **B. Product-operation境界**：[TEI merged #4629](https://github.com/hat47x/tei-platform/pull/4629) は既存Capability Invokeに、Adapter実呼出し**前**の不正Result契約拒否を実装・main統合済み。HEAD 00ea8523のGitHub Actions **9/9 completed/success**。空Capability ID、単一Outputとnamed Outcomesの矛盾、Result未宣言、重複Outcome名、Outcome名/型参照欠落の**6不正契約でAdapter Call=0**を回帰検証する。Go内部の限定PreflightはProduct実装済みだが、正しいResult形でも実公開Entry／選択Providerの真正性、現在Host Grant／Effect、nullable値・意味受理は未証明。TEI #4495/#3421／Draft #4618が後続Ownerであり、Skill/外部Harnessは実Capabilityを認可する主体ではない。
 
 **C. 公開Host境界**：[TEI Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)のServer Service Inventoryと6つのmutation-negativeは、公開し得るService面が意図せず増えることを検出する**静的レビューガード**。二つのBrowserContextsの画面分離と異PrincipalのHTTP/WS認可・秘密配送遮断は別。Web Client由来allowed list、Skillのread-only宣言、外部HarnessのTool DiscoveryをCurrent Host Admitに変換しない。TEI #1824/#3421/#1043、TAI #232/#488を使用する。
@@ -1318,7 +1338,10 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 - [TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625) HEAD 24863bd6の**9/9 GitHub Workflow成功**は、ローカルEvidence Pathを用いた実CLI子Process／commands/catalog/JSON/Pinの限定技術検証。**Draft・未merge**。Tool自体は存在する候補だが、現行TEI main/公開Profileの機能とは宣伝しない。Web/Remote/MCPへ任意Pathを外部入力させない。
 - [TEI Draft #4630](https://github.com/hat47x/tei-platform/pull/4630) HEAD 1ad749fcの**12/12 Workflow成功**（Windows Smokeは初回Timeout FAIL→当該JobのAttempt 2でPASS）は、R2 Candidate解釈を**Host管理byte列から受け取るProduct内部境界**へ分離する小実装候補。**Draft・未merge**。Hostが実Principal/Root/現在Sourceを確認してbounded Readし、同じ受信byteを実Consumerへ投影したことまでは保証しない。
-- **次の実用昇格条件**は、TEI #3394/#4503/#2516側で既存Studio Hostの許可Selector→一度だけ限定byte実Read→既存Operation→許可Projection→第二Consumer実Readをつなぎ、同名別Root／Symlink／改版／内部Error Pathの外部非開示をProduct Ownerが検査すること。REAの実解析・保存Evidence・現在原資料の資格も別。YIC Skillは実CLI/Hostで提供済み・許可済みの**read-only受領手順**のみを案内し、新File ServerやPath Resolverを構築しない。
+- <!-- yic-r3b-local-reader-stacked-20261114 -->
+- [TEI stacked Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) HEAD c5f0075aは#4630のbyte-only Operationを受け、Studio Host起動時にだけ固定したWorkspace/Selector→Workspace相対のEvidence Pathを内部で解決し、既存ReadOnly.workspaceとworkspace.ReadSourceの**4MiB bounded single Read**から解析する局所Reader候補。呼出側はWorkspace/Selector/Observation/Relationを渡すだけで任意Pathを指定できない。同Rootの重複Selector、unknown Workspace、path脱出、symlink、Raw Pin不一致、Root差替えなどを負例にする。内部Path/秘密Edgeを含み得る失敗は一般化し、Host内部の原因と外部応答を分ける。**#4630をbaseとする積上げDraftで、最新HEADのGo/Windows/Host CIは未確認**。Readerは現状Wails/HTTP/MCP/外部Harnessへ公開されず、Current Principal/Grant・Audience別Disclosure・A→B→A履歴・別Consumerは未適格。Skill説明に「遠隔REAの読取り対応」を追加しない。
+
+**次の実用昇格条件**は、TEI #3394/#4503/#2516側で既存Studio Hostの許可Selector→一度だけ限定byte実Read→既存Operation→許可Projection→第二Consumer実Readをつなぎ、同名別Root／Symlink／改版／内部Error Pathの外部非開示をProduct Ownerが検査すること。REAの実解析・保存Evidence・現在原資料の資格も別。YIC Skillは実CLI/Hostで提供済み・許可済みの**read-only受領手順**のみを案内し、新File ServerやPath Resolverを構築しない。
 
 **状態**：両PRの局所Workflow結果は当該HEADの履歴Evidence。新R3-B Host許可Byte Reader/二Consumer/実External Agent・Meaning受理は未実証。初回H2/H3とDesktop Stage1→Stage2の追加Blockingにはしない。
 
