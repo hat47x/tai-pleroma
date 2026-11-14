@@ -21,7 +21,7 @@
 | **P0：Studio** | 現行Wails A方式で非Plugin BuildIntent→生成Stage1→Stage2 Desktop→実WebView2を一つのAttemptで確認 | 外部Harnessや新Worker方式をセルフビルドの前提にしない |
 | **P0：外部Harness** | TAI #168の実OS拒否G0→送出G1→完全Reply G2→独立H2/H3四試行 | Product-only／Tool-onlyとSkillの実効差を測る前に独自Agent Loopを作らない |
 | **次の製品接合** | 実Entry・Source/DBを**起動時の副作用まで**調べ、別Consumerが結果を実受領する | 読み取り名目の暗黙DB更新、Go test子Process、固定署名Fixtureを正式製品資格へ昇格させない |
-| **後続のUIとAI** | 現在のPin・Source・Grantに基づく限定Projectionと、回答候補からProductへの安全な復帰 | 旧Session/Transcript/Receiptから実操作や現時点の認可を推定しない |
+| **後続のUIとAI** | 一時選択→明示Pin→Source再読取→限定Activity引継ぎを**別々に検収**し、回答候補を元Productへ戻す | 選択位置や表示だけで保存・認可・実Consumer受領を主張しない。旧Session/Receiptも再利用資格ではない |
 
 ## 0. 関連Ownerと変えない先行条件
 
@@ -1163,6 +1163,43 @@ P0-A **TEI #4583の非Plugin Stage1→Stage2セルフビルド**と、P0-B **TAI
 ### 45.4 採用済みの限定成果と未検証を区別する
 
 TEI main統合PR #4653はConsumer横断の**設計**、#4652はDSL四層診断の**計画**、#4659は関連文書の**索引**。Go実装Draft #4654/#4655は各HEADのHealth・実Parser/Validationを別検収し、正式CLI/Studio Entry→Current Grant→実Provider→別Consumerの製品一巡は未成立である。TEI Draft #4623の選択Builder起動前PinとDraft #4587のWindows通常／生成WebView2試験は限定実績であり、非Plugin Stage1 Desktop自身がStage2を生成し、そのStage2を実GUIで受領した証拠にはならない。TAI Draft #649の82合成ケースも、初回H2/H3四Slotの実比較PASSには算入しない。
+
+<!-- yic-selection-pin-activity-lifetime-20261114 -->
+### 45.5 画面の選択、対象の固定、別のAIへの引継ぎは別々に扱う
+
+画面上で文字を選んだとき、その位置は**いま開いている画面の一時的な状態**である。利用者が作業対象を明示的に固定した状態や、別のHarnessへ渡せる根拠とは異なる。この区別をTEI・SUI・SHOの共通UX判断に用いるが、保存先・権限判定・Source Readerは各製品の既存契約に任せる。
+
+| 段階 | 保持するもの・寿命 | 先取りしないこと・既存Owner |
+| --- | --- | --- |
+| **一時選択（Focus/Selection）** | 今のDOM・File・Text Rangeと、表示のための一時byte位置。別箇所選択・File交換・画面を閉じたときに失効する | SUI [#3443](https://github.com/hat47x/sui-sensemaking/pull/3443)：これを保存済みSource、明示Pin、現在Grantと呼ばない |
+| **明示的な対象固定（Product Pin）** | 利用者が固定したSubject kind/id、Source Root/Revision、必要なScopeと元画面の意図。利用時に現在状態を再照合する | TEI [#4515](https://github.com/hat47x/tei-platform/issues/4515)：表示Focusを固定意図へ自動昇格しない。現GUI正式Pinは未実装 |
+| **保存後のSource再取得** | Productが認可したSource Binding・元位置と、保存・再読取した実Result。別Processからの読取を独立に検証する | SUI [#3441](https://github.com/hat47x/sui-sensemaking/issues/3441)／SHO Owner：Documentが読めても原資料まで読めるとは限らない |
+| **AIへの作業引継ぎ（Activity）** | 目的、必要な許可済み参照、未決、元Operation/Attemptと返却先。新Harnessが自分のHostで再資格化する | TAI [#271](https://github.com/hat47x/tai-pleroma/issues/271)・Handoff v1：古いRaw/Secret/Grant/Transcriptを暗黙に引き継がない |
+| **実際の受領（Consumer）** | 該当Consumer自身の実Invocation・取得byte・受領時点のScopeとResult | TEI [#4661](https://github.com/hat47x/tei-platform/issues/4661)：同じGo Readerをテストで二度呼んだことをCLIとStudioの実受領と数えない |
+
+**確認済みの限定成果**：SUI [Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443) HEAD `3b27d865`は、同じ文章が二か所にある原文で、後方の選択位置`[38,57)`→選択変更時の破棄→前方`[11,30)`での再確認→同名別内容File・画面閉鎖時の破棄を実StartPanelに組み込み、[Chromium代表E2E 13件を含むCI](https://github.com/hat47x/sui-sensemaking/actions/runs/43583154802)に成功した。**これは一時Selection表示の成功**であり、Source保存・Cardから原文への再復帰・現在Grant・TEI Pinの実装ではない。
+
+**次の利用者操作の試験**は、いま選んでいる原文を読む→別箇所を選んだら古い位置を使わない→利用者が固定対象を選ぶ→Sourceを改版またはRoot変更したら現在資格を再照合→許可できる範囲だけを別Consumerへ渡す、という順に分割する。最初の二つはSUI #3443の既存試験を再利用し、Pin・保存後の原文復帰・Harness送信はTEI #4515／SUI #3441／TAI QH §10の**別Attempt・別Expected**とする。GUIの再描画やAIの「これを見ています」という文章だけで、実Rootの読取・認可・対象受理を推定しない。
+
+<!-- yic-plugin-contribution-real-consumer-gates-20261114 -->
+### 45.6 Pluginの宣言から、実際に使われた機能までをつなぐ
+
+他チャットで進んだPluginの設計は、「一つのPackageに入っている機能をすべて有効とみなす」のではなく、**必要なContract/Roleの貢献を選び、実際のTargetに組み込んで使う**方向へ収束している。現在の正しい設計参照は[TEI #4671](https://github.com/hat47x/tei-platform/pull/4671)（旧[#4664](https://github.com/hat47x/tei-platform/pull/4664)は競合により未マージで閉じられ引継ぎ済み）。標準データ構造と構文・表示の意味保持は[Draft #4667](https://github.com/hat47x/tei-platform/pull/4667)が検証案を所有する。どちらもまだProductの実Provider使用を合格としたものではない。
+
+YICのTool/Skill利用資格は、用途ごとに次の**実観測できる段階**までに限定する。
+
+| 段階 | 確認するもの | 不足していれば |
+| --- | --- | --- |
+| **定義・意味** | 元Source/Revision、Contract、必要Role、選べる貢献と元の構文・意味の対応 | 説明だけのFeatureは未実装候補。JSON Schemaや図に表示できるだけで、意味も実行能力も受理しない |
+| **選択と収録** | 実際に選択した貢献、Provider/Generator版、Build対象、実収録された成果物と必要Dependency | 未選択のPlugin全体を同梱済み・利用可能と表示しない。Build時限定のGeneratorをRuntimeに必要と決めつけない |
+| **実ロード・呼出し** | CLI/Studioなどの実Hostで選択したProvider/Toolがロードされ、同一Attemptで実Callした記録 | `uses`やTool一覧に名前があるだけなら「利用可」と案内しない |
+| **現在の権限と受領** | Productの現在Scope/Grant/Source、出力の許可Projection、実Consumerが取得したResult・unknown・Effect/Receipt | Artifactを作ったこと、Go単体CI、Agentの自己報告を、開示可能性や業務完了へ昇格しない |
+
+**最小の反証**は、Provider Bを選んだのに実CallがA、対象のSourceは同じでもRootが変わった、同名二ノード／多重有向辺の一部が図で消えた、宣言のみのPluginがSkill一覧に載った、表示位置だけの変更で意味・生成物が失効した、の五種類とする。既存TEI #951/#1016/#1251/#2497/#2600/#1180/#2514のScenarioへ割り付け、YICに第二Plugin ResolverやRegistryを追加しない。
+
+**実証順**：P0の正式非Plugin Studio Build・通常製品Entry/Provider実Callを先に進める。P1では未知のPlugin／外部Schemaをまずread-onlyで調べ、Source/Graph/表の変換に伴う意味の欠落と編集可能範囲を表示する。次に限定した一つの貢献が実Builderまたは実Providerへ収録・選択・呼出しされ、独立Consumerへ届くまでを測る。YICがPluginを実行する新Hostになるのではなく、各Productの**確かめた能力だけを外部Harnessから使えるようにする**。
+
+**現在の資格**：[TEI #4671](https://github.com/hat47x/tei-platform/pull/4671) HEAD `efce38e6`は確認時点Cache CIが成功、Repository Healthは実行中。[#4667](https://github.com/hat47x/tei-platform/pull/4667) HEAD `d5039dd0`もCache成功／Health実行中。旧#4664の別HEADの結果は転用しない。上記は設計・受入条件の引渡しであり、新たなPlugin Build/Load/Call、構文逆編集、Harness Tool受領、意味Owner受理は**NOT RUN**。両PRの最新Head/CI/統合状態は採用時に再確認する。
 
 **YIC独自Agent Loopは引き続き保留**。二つ以上の外部Harnessを適格に比較し、Product/Host/Adapterの改善では解消できない実害が示され、安全性・保守・費用を含む自作案の優位性を確認できてからTAI #234で再審査する。新しい中央Runner、Agent Host、権限判定器、Expected正本は増設しない。
 
