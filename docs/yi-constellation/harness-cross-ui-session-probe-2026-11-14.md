@@ -243,3 +243,57 @@ SHOがHandoff Markdownを実Read・保存したことは、元SUI Rawまたは�
 **実施順と非採用**：本ProbeはTAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1実Egress→G2全Tool Reply→独立H2/H3四Slot（比較適格0/4）の**後続**。TEI #4583のセルフビルドも独立P0。既存HarnessのGoal/Session/Schedule＋Product Typed Application API＋許可Handoff v1で用途を満たす間は、YIC独自の常駐Agent Loop、中央Scheduler、Session DB、分散Lock、第二Authorityを導入しない。
 
 **状態**：公開公式資料照合と既存Ownerへの受入手順の接続だけ。DSH再起動、Codex fork、Claude SDK再開、実二UI、Tool受領、Product実作用は本追補ではすべて**NOT RUN**。
+
+
+## 14. Product Adapterの受渡し：Capability宣言と実行資格の間の具体的な二辺
+
+本節は[TEI Draft #4624](https://github.com/hat47x/tei-platform/pull/4624)（BuildIntent宣言とResolver回答の一致）、[TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625)（REA保存Evidenceの実CLI入口）、既存[TEI #3422](https://github.com/hat47x/tei-platform/issues/3422)（CLI/Web/Desktop/IPC共通Application操作境界）、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)（機密開示）をJ-R/J-Pに**既存Product Ownerのまま**接続する。YIC用の第二Resolver/Reader/Host/CLI/Authorityは作らない。
+
+### 14.1 宣言→選択→実到達のClaimを実装途中で混ぜない
+
+- **宣言とResolver回答の整合**：TEI #4624のDraft HEAD `2d403f4996c205514dc57d5fc1237127c6bd994b`ではSource Kind/ID、Builder Contract/major・明示Provider/Implementation・Artifact pin/Pinned、Dependency Kind/ID/majorについて、宣言と異なるResolver応答を拒否する。**確認したGitHub Actions 5/5 completed/success**、PR本文にLinux focused/race・Windows GoとNode20件の局所結果。ただし**Resolver整合≠受理済み意味≠実Builder Invoke≠完全Read Closure/Stage2**。同HEADの実験範囲だけを証拠にする。
+- **選択と実Invokerの整合**：TEI #4623 HEAD `f1e219a`の**8/8 CI success**は、opt-inのBuildIntent ResolveによるBuilder digest→実Child開始前SHA一致・不一致拒否までの局所証拠。#4624と#4623の別HEAD Greenを**統合End-to-End PASSに合算しない**。共通ResolverとLauncherを同じ実Build Attemptで接続し、非Plugin N0/N2/N3・ArtifactSetの実Consumed byteを別に確認するのは[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)のP0。
+- **実CLI読取りの到達**：[TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625) は既存`operations.ExternalCandidates`を呼ぶ `tei external-candidates` のローカルread-only入口。実CLIバイナリをGoでbuildし子Processで実行するテストを含む。`evidence-path`/producer Tool version/Observation ID/Directed Relation ID、および任意のEvidence ID・Received Digest・Source Revision pinを使う。正例では選択対象だけでなく**Unselected、Coverage unknown、AuthorityLimits**も落とさない。外部のREA実Processを再実行するのではなく、保存されたEvidenceを解釈する入口である。
+- **実ローカルPathの禁止境界**：#4625は意図的なlocal-file CLI。ローカルPathをStudio Webや遠隔MCP/別Userの自由入力へそのまま渡さない。失敗時診断が内部Pathを含む可能性、`rea`の`Present`が実producer起動証拠でないこと、Digestが同じでもSource Scope/現在Grant/意味受理でないことを保持。[TEI #3394](https://github.com/hat47x/tei-platform/issues/3394) R3-Bでは**Product/Hostが許可済みbyteを取得**するReaderを、R3-Cでは別Consumer実Readを独立に検収する。
+
+### 14.2 最初のYIC読取り協業の実行カード（既存Expected/Fixtureを利用）
+
+| 手順 | 実行・記録の最小単位 | 合否を決める既存Owner |
+| --- | --- | --- |
+| **P-A Discovery** | Product `tei commands`で実存在を確認。実バイナリ/Tool version/CLI envelopeと`external-candidates`の実Responseを保持 | TEI #4625 R3-A／#3422。DiscoverだけでCLI Invocation PASSとしない |
+| **P-B Product-local Reader** | Productが許可した一つの保存Evidenceを、実CLI子ProcessでObservation/Relation ID・pin一致・unknown/unselectedを含めRead | TEI #3394 R3-A。原REA観測時刻と現在Read時刻、byte/raw digestとScopeを区別 |
+| **P-C Host boundary** | 外部Harnessへ生Path/原Evidence/内部Errorを直接与えず、Hostが選択済みProjectionだけを開示。秘密または許可不明では拒否・ローカル閲覧のみ | TEI #3394 R3-B／TAI #232 C0～C3・#168 G0～G2。新YIC Readerなし |
+| **P-D Handoff consumer** | 現行`yi.handoff.context/v1`に許可済み参照・unknownを限定送出→別Productが**自身のReader**で現在資格を再確認 | TAI QH §10／TEI #3394 R3-C／SHO既存Owner。Receipt replay/見かけの一致では不可 |
+
+**拒否の焦点**：Path traversal・別Root同内容・古いSourceRevision・同名異Evidence、Source存在不明、Relation ID/向き混同、`Coverage unknown`→全件肯定、内部Pathがエラーへ漏れるケース。P-Cは実OS Read-deny/egress資格がない環境では合格にしない。局所CLI成功を公開Remote Tool適格性へ昇格しない。
+
+## 15. DesktopとWeb版の協業境界：同じUI構成でも同じ作業単位ではない
+
+他チャットの[TEI Studio GUI/Web版の構想]を、既存[TEI #1824](https://github.com/hat47x/tei-platform/issues/1824)のWails共通UI/Go Service/接続分離と、[TEI #3422](https://github.com/hat47x/tei-platform/issues/3422)共通Application APIの**後続圧力ケース**として扱う。Webチーム開発の採用済み実装を主張するものではなく、最優先[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583) DesktopセルフビルドのHard Gateに追加しない。
+
+| 意味の単位 | Desktop（既定：独立ローカル開発→Git共有） | 将来Web（候補：単一またはHA開発Server上の共同開発） | YICの境界 |
+| --- | --- | --- | --- |
+| Workspace/Source | ローカルRoot/Worktree/Branchと実Binary、個人の保存・Commit | Server上の共同Workspaceと共有Revision、複数Userの同時保存・競合 | **同じRepoや同じ画面名≠同じSource Snapshot**。Workspace identity/Revisionの調停はTEI側 |
+| Viewer/Audience | Desktop使用者＋選択した外部Harness Recipient | 利用者ごとにログインSession・Tenant/Team・Grant/Disclosureが異なる | 同じ共同Workspace≠同じTranscript閲覧資格。過去Prompt/Tool履歴は再開時に別審査 |
+| AI Session/Turn | 外部Harness Native Sessionまたは限定Activity Handoff | 複数User/Browser Tabが同じActivityを見ても、同じLive Native Turnを書けるとは限らない | NativeのWriter/Turn起源が不確定なら一Writer・他は閲覧限定、または新Session |
+| Product Operation | 個人がPreview/Pin/typed APIを操作し、保存/Build/Commitの実Attemptを観測 | 共有Sourceへ複数の編集意図、If-Match/CAS競合、他者更新・Grant撤回 | Agent Resultと本番保存/Build/Effectは別。Apply直前にProductが現在Version/Grant再検査 |
+| Build/Artifact | ローカルGo/Wails実行とStage1→Stage2のNative証拠 | ServerのJob/Artifact/Host運用は別配備。結果の表示はClient | Web Server内のBuild成功をWindows Desktop Stage2セルフビルドへ流用しない |
+
+**共通UIの実装方針**：Product意味/型付き操作・モデルのSource identityは共有し、表示・Projection・Interaction componentを可能な限り共通化。DesktopではWails IPC、WebではHostが許可したAdapterを選び、**Client UIが直接Host CredentialやRaw Pathを生成しない**。新しいYIC Webサーバ、Session Registry、Lock、共同編集Engine、常駐Agent Loopを先行設計しない。共同SourceのCAS/CRDT/Git運用方式は実際の同時編集要求と[TEI #1824](https://github.com/hat47x/tei-platform/issues/1824) Owner判断へ残す。
+
+**後続最小の四反例**（既存TEI #3422 T08～T13、TAI #234 HC-15～18／TAI #271 ASV-02～07に割り当て、新Oracle/試験Harnessは作らない）：
+
+1. 同一Web Workspaceを共有する2 Userの可視Projectionは一致、過去Harness Transcriptには非公開Tool結果を含む。**新AudienceのView権限だけでは過去Transcript全文を返さない**。
+2. 旧Workspace/旧Source RevisionでAgentが変更案を生成中に他Userが保存。画面上は同じSubject IDでも、Apply前にTEI現在Version/必要Grantを照合し、staleなら**Draftは保持・Commit 0**。
+3. 二つのBrowser Tabが同時Turnを送る。Nativeが実Turn ordering/actor帰属を証明できない場合は**View-only・新Session縮退**、UI-local mutexをCross-Host Lockと偽らない。
+4. Browser切断・再接続と同時に非冪等Operationが進行する。Turn cancel、Session閉鎖、HTTP ACK lossを実Effect/rollbackへ変換しない。元Operation ID/AttemptをProductで照会し、unknownのまま無条件再送しない。
+
+**設計採否**：TEI Studio Web共同作業は将来のProduct受入課題であり、初回YIC H2/H3（0/4）やStage1→Stage2 Desktopをブロックしない。YICが提供する価値は複数画面における限定選択・Activity継続・履歴開示と実操作の透明性であって、Git履歴／共有Workspaceの正本やAgent Loopの中央運用権限ではない。
+
+## 16. 今回の統合変更・未成立の証拠
+
+本節までの§14～15は**Product Owner実装PR・Issueおよび他チャット設計を照合した受入計画の追加**。#4624の既存Workflow 5/5 completed/successは確認したHEADだけの事実。#4625の確認時HEAD `aa86e15e7cf1978d505303151bb6d3b765006a2c`はGitHub Actions **9件中7件completed/success、2件in_progress**であり、本Draftはそれらの結果を追認する実試験ではない。
+
+**NOT RUN/NOT ACCEPTED**：#4624と#4623を同一Desktop Attemptで接続した受入、#4625外部Harness公開利用・Host限定Byte取得・SHO第二Consumer、Webチーム同時編集/権限撤回/旧Reply、TAI #168 G0～G2およびH2/H3新4 Slot（現在比較適格0/4）、TEI #4583 B2/B3 Windows Stage2実行、業務書込み/Owner意味受理。
+
+**次の着手は二つの既存P0を維持**：TEI #4583 Builder/非Plugin ArtifactSet→Stage2 WebView2、TAI #168実OS隔離→送出→完全Reply→独立4 Slot。P-A～P-DとWeb反例は後続のread-only横断実験であり、先行条件を無断で増やさない。新共通API、Egress代替、Session Server、Plugin/Skill Registry、第二受理正本、TEI独自Host、Native Agent Loopの開発判断を本Draftでは行わない。
