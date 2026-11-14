@@ -1379,3 +1379,66 @@ TEIが実装した要素の比率は、まず**一Function/一Adapter/一Plugin�
 独立P0は、**TEI #4583：非Plugin Stage1→Stage2 Native Desktop**と、**TAI #168：G0実OS Read-deny→G1実送出→G2完全Reply→新規独立H2/H3四Slot（現0/4）**の二本を維持。初回Y0やY1の結果でP0の合否を変更しない。Y1/Y2の意味ある生成が有効と確認できても、独自Agent Loopを自動採用せず、TAI #234の外部Harness二構成比較・代替不能性・総費用評価へ戻す。
 
 **本更新はDocs-only・Draft・Owner未受理。** Y0の新実CLI再試行、正式*.tei.md Reader、図表→Generator/Plugin→別Process Consumer、二Harness比較、業務EffectはNOT RUN。既存局所CIや過去のS1結果を新試験のPASSとして扱わず、mainへ自動mergeしない。
+
+
+<!-- yic-tei-selection-to-harness-transport-route-20261114 -->
+## 49. TEI CUI/GUIで選択した設計要素を、外部Harnessへ正しく渡す具体的な経路
+
+本節は、利用者が「このFunctionと関連するRuleを調べてほしい」「この二つのRelationを比較したい」と指示したとき、**どの実Product操作で対象を固定し、何を送信し、AIの返答をどこへ戻すか**を実装担当が迷わず説明できるようにする。§3／§18／§21の受入順を置き換えず、[TEI #4515](https://github.com/hat47x/tei-platform/issues/4515)の最小Subject Pin、[#4479](https://github.com/hat47x/tei-platform/issues/4479)の高度選択、[#3419](https://github.com/hat47x/tei-platform/issues/3419)の共通Application API、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のActivityと既存QH §10を**同じ利用者操作でつなぐ後続の接合設計**である。特定Harness固有のSession/Tool APIをYICの共通正本にしない。
+
+### 49.1 三つの情報を分ける
+
+1. **Selection Intent（選択意図）**：利用者が作業対象として指定したもの。TEI内部でWorkspaceRef、Source Scope、Kind/Canonical ID、関係なら方向を持つRelation occurrence ID、Source span/版、Pinされた対象集合、Task/質問、除外・追加・比較対象などを持つ。画面のFocus/描画ID/行番号だけではない。局所状態で十分な場合は永続化しない。現時点で意味上の実体がない選択はpending/unsupportedとする。
+2. **Qualified Product Context（現在のProductで実確認した内容）**：Host-owned Catalog/Inspect/Trace/必要なReaderでSource実在、対象とRoot/Manifestの一致、Dependency/Required/Consumed、Coverage/unknown、出典位置、Source/World/Tool版を再読取した結果。Intentが存在することと、現在読めることは別。
+3. **Disclosure Projection（その受け手へ渡せるもの）**：Taskと受信先に必要な文・図の意味表現・関係・制約・診断・限定Source参照だけを、実Product/Hostが許可する形に変換した送信予定情報。元Workspaceの生Path、Credential、内部ログ、非開示Node数・ID・digestすら無条件には出さない。送出前Previewで予定Byteと受信先を明示し、実送出Byteと受信Receiptは別に記録する。
+
+この三層をYICの新公開Schemaとして増やさない。既存TEIのWorkspace/Subject/Source Index/Operation/Result、TAI Activity、用途が一致するときだけ既存 yi.handoff.context/v1 の producer／target／revision／references／evidence／limitations／transport を利用する。Handoff v1でWorkspaceの複合Identity/同名異RootやRelation occurrenceを忠実に表現できない場合は、別の項目を黙って捏造せず**外部Handoff不適格**としてProduct内参照へ縮退し、元契約OwnerへFit/Gapを戻す。実現のために共通の第二正本・公開Ticket ABI・万能Context Storeを新設しない。
+
+### 49.2 実装を検討する四つの接続経路
+
+| 経路 | 実際の開始点・渡し方 | 使いどころ | 現状の資格・縮退 |
+| --- | --- | --- | --- |
+| **A. CUI → 現行Product Tool** | 実CLIでWorkspace/Kind/IDを明示して Catalog/Inspect/Trace。ハーネスに許可されたread-only Tool/CLIだけを提供し、実Host側でBound Rootから再解決 | AI主導のCLI開発・最初のHeadless試験 | Product単独CLIとS1限定観測を再利用。特定Selectionを自動送信する統一CUI commandは**未採用**。Tool-onlyの実OS G0/G1/G2はTAI #168 |
+| **B. Studio GUI → Local Pin → Product API** | Graph/一覧/設計書で要素を選択→明示Pin→Host IPCでInspect→送信前Preview→許可済みProjection→Harness Adapter | 人が画面で対象を指定して「AIで調査」する | 現Workbenchの一時選択と実Inspectはあるが明示Subject Pinは未完成（TEI #4515）。Relation描画IDは業務Relation IDでない。実Wails GUI→Harness送出はNOT RUN |
+| **C. Native Sessionへ限定Contextを追加** | 実HarnessのCapability Probeが許す場合だけ、既存Session/Turnへ送信用Text/Tool Requestを載せ、元Selection/Requestと実Replyを対応付ける | 同じ仕事の対話を継続したいとき | Session再利用/Tool導線・同時Turn可否はHarness固有。native Live Session共有を前提にしない。不可ならDへ縮退 |
+| **D. Activity Handoff → 新Session** | Task・許可済みSource参照・未決/unknown・過去Receipt参照・返却先を既存Activity/Handoff v1に限定して別Harnessへ渡す。受信先が元Productへ再問い合わせ | Session共有ができないHarnessや別UIへの切替 | 同一Live Sessionの復元ではない。旧Grant・旧Transcript・秘密Rawは持ち越さない。現在Product/Host/Recipient資格を再審査 |
+
+A/Bは**選択とProductからの取得の入口**、C/Dは**Harnessへの運搬・継続方式**。両者は独立に組み合わせられる。たとえばGUIでPin→BでProduct Inspect→Cで同一Native Sessionへ送信、またはCが使えない場合B→Dで新Sessionへ引継ぎ。CUIではA→C／A→D。どの経路でもProductがSourceとDisclosureを最終判断し、AIの自由なText/argv入力を新しい実行Grantに変換しない。
+
+### 49.3 利用者から見た操作を、一つの仕事で通す
+
+**例：StudioのFunctionを選び、関連するValidationと依存をAIに説明させる。**
+
+1. ユーザーがModeler/一覧でFunction Aを選び、明示「対象を固定」。一時Focusは移ってよい。Pin棚にはFunction AのKind/IDとWorkspaceの手掛かり、現在の資格（要再確認含む）を表示。現時点ではGUI Subject Pinは後続実装なので、初回はCUIで実Subject kind/idを明示した固定Fixtureを代替し、**実GUI選択成功とは呼ばない**。
+2. 「AIに相談」→「依存とValidationを説明」を選ぶ。TEI側は選択意図を受け取り、既存Typed Application API/Host ReaderからSource/関連Relation/Validation/unknownを再取得。FunctionとRelationの意味Occurrence、方向、Multiplicityが実Readできない場合は、見た目のedgeを送らずunsupported/partialを示す。
+3. 送信前Previewで**何を渡すか**（例：Function説明、選択済みRelation、必要なConstraint、許可した引用元）と**何を渡さないか**を明示する。送信する対話指示文と構造化Contextは役割を分け、後者には現在のProduct資格付き参照と明示Unknownを残す。巨大グラフでは無制限に全ノードを埋め込まず、Scope/上限/Required/Consumedを確定して分割し、閉包が未成立なら「完全な関係集合」と表現しない。
+4. Product/Hostが現在Audience/Recipient/権限を確認し、許可されたPayloadを選択したHarness AdapterのTool入力/Contextとして配送。**Prepared → 送信実行 → Native受領/Tool Reply complete → 実Consumer Read**を別記録する。CLI stdoutやClipboardへ表示しただけでは外部LLM実送出ではない。
+5. Harnessは引用されたProductのContext/Tool結果をもとに説明・候補を返す。返答には元Task/Selectionの対応を保存し、元のWorkspace/Subject・送信時の版・Request/Native Turn/Deliveryを記録する。AI回答が同じSubjectを実Readしたことは、文字列の一致では証明できない。
+6. TEIが回答を**元のPin/Activity側へ**届け、現在のFocusやDirty Bufferには自動反映しない。元Sourceが改版／Grant失効していれば古い回答を履歴候補として保ち、Productで再読取→Diff/Validation→必要時Owner Acceptanceと実Operationへ進む。最初の一往復ではread-only説明・差分候補までを受入対象とする。
+
+CUI向けには「今回のWorkspace/Kind/ID/質問/希望するHarness/送信範囲/返却先」を明示した同じ意味の操作を**既存Product CLI呼出しとHost側Adapterの組合せ**で実現する。現時点でない新CLI名を発明せず、将来の使い勝手改善として[TEI #1158](https://github.com/hat47x/tei-platform/issues/1158)と[#4479](https://github.com/hat47x/tei-platform/issues/4479)が必要な薄型起動Projectionを判断する。
+
+### 49.4 高度な複数選択を扱う際の拡張条件
+
+最初の単一Subjectから、Relation occurrence（同じ両端でも異なる多重辺/方向）、Source Span、CRUD表のセル、Graph上の複数Node、SHO文書Occurrenceへ広げるときは、**見た目の選択ID→元の意味・Source occurrenceを逆引きできる実Product Contract**が必要である（TEI #4479/#4515、SHO Owner）。Queryによる動的対象集合Q、明示除外E、手動追加A、A/B比較は、選択意図として保持し、物理的に取得した集合とその完全性を別に示す。0件・部分取得・同名異Scope・ABA・Subject移動で黙って対象を変更しない。曖昧な集合の全件を外部へ送る代わりに、局所Preview/選択見直しを先に返す。
+
+送出されるContentは**一つの巨大なContext Blobに限らない**。①短い許可済み要約/出典参照から開始し、②Toolで対象の限定詳細を取得し、③必要に応じて別の関連SubjectをProduct/Hostが再資格化して追加する方式を比較する。小さい初回Packetが「必要な元Sourceを自動取得する権限」にならないよう、二回目以降のFetchもScope・Audience・予算・現在Grantを確認する。すべての設計情報を外部LLMに先送りするのは既定にしない。
+
+### 49.5 実装の境界と受入試験を固定する
+
+| ケース | 正例と失敗させる誤動作 | Owner／検収先 |
+| --- | --- | --- |
+| **HX-01 CUI/GUI同一対象** | 同じ公開Workspace/Kind/IDの実Product Inspect結果を再確認。GUIのselectedとPinを取り違えない | TEI #4515/#3419、#1158 |
+| **HX-02 関係の誤識別** | 同一Node対の有向多重Relationと描画IDを区別。意味ID未対応なら送信対象に含めずunsupported | TEI #4479/#4515/#1124 |
+| **HX-03 固定対象とFocus移動** | Pin A→Focus B→AI遅着のとき、返答・候補はAへ戻り、BのEditor/Graph/Dirty Bufferを変更しない | TEI #4515、TAI #271 |
+| **HX-04 Source/Root/Grant変化** | 同名別Workspace、同hash別Root、A→B→A、送出直前Grant撤回でPreview/再審査。旧資格復活や別Root付替えなし | TEI #4503/#2516、TAI #232 |
+| **HX-05 送信の観測** | 予定Projection・実Egress・Native Tool Reply・独立Consumer受領を分離。CLI print/Clipboard/ACKだけでは送信や利用をPASSにしない | TAI #168/QH §10 |
+| **HX-06 機密漏えい** | Content/Metadata/件数/Path/ログを送出前に審査。実OS deny、別Process/Session Log/Telemetryまで反証 | TAI #232/#168、TEI #2516 |
+| **HX-07 Native継続の縮退** | 同一Native Sessionへ復帰できる場合のみC。非対応ならDで限定Handoff、同一Sessionと偽称しない | TAI #168/#271、#234 |
+| **HX-08 範囲と依存** | Q/E/A・partial/unknown、遅延Fetch、許可された追加Refを明示。図に見える全関係を暗黙で送らない | TEI #4503/#4479、TAI #629 |
+| **HX-09 回答の戻し先** | Request→Pin/Activity/Sourceの対応を保持し、別TargetへのApply、旧Revisionへの暗黙保存を拒否 | TEI #4515/#3421、TAI #271 |
+| **HX-10 運搬と正本の区別** | Handoff v1に表現できないComposite Root/Occurrenceがあれば失敗として報告。新しい必須Schemaや第二Ownerを作らない | TAI QH §10/#271、各Product |
+
+**初回実証の合格上限**：固定した公開read-only一SubjectをCUIで選択→Productが実Sourceを再読取→許可投影→既存Tool/Handoff Consumerの実受領→元Subjectへのread-only候補復帰までを、Source/Tool/Consumer同一Attemptで確認する。GUI Pin・有向Relation・同一Native Session多UI・本番Secret・write Applyは**別資格**。既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS拒否→G1送出→G2完全Reply→独立H2/H3四Slot（確認時比較適格0/4）と、[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)の非Plugin Stage1→Stage2 Desktopは独立P0として保持し、本節を新Hard Gateにしない。
+
+**本節の実施状態**：既存契約・実Productコード/Issueと照合したDocs-onlyの接合案。GUI選択→Harness Context送信、CUI専用の送信コマンド、Native Session再利用、完全なScoped Projection、複数Relation/CRUD選択、独立Answer帰属の製品E2E、Owner正式受理はNOT RUN。Draft・未マージ。外部Harnessが実際に連携できるまでは、Product-onlyの読み取りと限定Handoffの資格をそのまま報告する。
