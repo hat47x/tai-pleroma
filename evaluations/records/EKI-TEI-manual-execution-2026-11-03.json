@@ -11,17 +11,35 @@
     "attempts": [
       {
         "submit": 202,
-        "task": "tsk_2ab3ccd1fd2719cfc70d931bcafbeb41",
-        "worker": "wrk_2a344a6f66d0dee701e2d8b779a80eac",
+        "task": "tsk_d7abcaf390646ab8fca09e6ed97fd643",
+        "worker": "wrk_1f9130c94bb4d69b8717400176ac2d2b",
         "executed": true,
-        "claimed": true
+        "claimed": true,
+        "resultStatus": 409,
+        "resultBody": {
+          "type": "urn:eki:problem:result-not-ready",
+          "title": "The task has not produced an accepted result yet",
+          "status": 409,
+          "code": "RESULT_NOT_READY",
+          "retryable": true,
+          "task_id": "tsk_d7abcaf390646ab8fca09e6ed97fd643"
+        }
       }
     ],
     "submitStatus": 202,
-    "taskId": "tsk_2ab3ccd1fd2719cfc70d931bcafbeb41",
-    "workerId": "wrk_2a344a6f66d0dee701e2d8b779a80eac",
+    "taskId": "tsk_d7abcaf390646ab8fca09e6ed97fd643",
+    "workerId": "wrk_1f9130c94bb4d69b8717400176ac2d2b",
     "executed": true,
-    "claimed": true
+    "claimed": true,
+    "resultStatus": 409,
+    "resultBody": {
+      "type": "urn:eki:problem:result-not-ready",
+      "title": "The task has not produced an accepted result yet",
+      "status": 409,
+      "code": "RESULT_NOT_READY",
+      "retryable": true,
+      "task_id": "tsk_d7abcaf390646ab8fca09e6ed97fd643"
+    }
   },
   "scope": "Builds the Control Plane configuration, Trust Anchor and Agent configuration by hand, submits TAI's policy-aligned TaskRequest and lets the Agent execute the fixed command. It uses EKI's TEST PROFILE and one host."
 }
