@@ -1442,3 +1442,49 @@ CUI向けには「今回のWorkspace/Kind/ID/質問/希望するHarness/送信�
 **初回実証の合格上限**：固定した公開read-only一SubjectをCUIで選択→Productが実Sourceを再読取→許可投影→既存Tool/Handoff Consumerの実受領→元Subjectへのread-only候補復帰までを、Source/Tool/Consumer同一Attemptで確認する。GUI Pin・有向Relation・同一Native Session多UI・本番Secret・write Applyは**別資格**。既存[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS拒否→G1送出→G2完全Reply→独立H2/H3四Slot（確認時比較適格0/4）と、[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)の非Plugin Stage1→Stage2 Desktopは独立P0として保持し、本節を新Hard Gateにしない。
 
 **本節の実施状態**：既存契約・実Productコード/Issueと照合したDocs-onlyの接合案。GUI選択→Harness Context送信、CUI専用の送信コマンド、Native Session再利用、完全なScoped Projection、複数Relation/CRUD選択、独立Answer帰属の製品E2E、Owner正式受理はNOT RUN。Draft・未マージ。外部Harnessが実際に連携できるまでは、Product-onlyの読み取りと限定Handoffの資格をそのまま報告する。
+
+
+<!-- yic-selection-transfer-minimum-contract-20261114 -->
+### 49.6 送信を軽くするために「短い対象参照」と「必要時の実取得」を分ける
+
+実際の作業で毎回、選択した設計要素の全文・全依存Graph・全Plugin manual・長いSkillをモデルへ投入すると、Token/Tool時間が膨らみ、開示境界も曖昧になる。そこで最初の一往復は次の**二段階の取得**で試す。これは新しい公開Protocolではなく、既存Product操作とHarness Adapterを結ぶ実装内の手順である。
+
+- **段階1：短い作業入口**。User Task、元のUI/CUI選択意図、限定されたSubject種別と識別子、現在のProductが確認したSource/Revision/Scope・欠落/Unknown、用途、返却先、実際に公開可能な短い概要だけを準備する。秘匿対象では識別子や存在自体も外部へ送らない。Workspaceの実Path、UIの表示座標、Graph描画Edge ID、未保存Dirty Buffer、長期Credential、過去のSession Transcriptは送信既定値にしない。
+- **段階2：必要になったものだけ追加取得**。AIが「このValidationの定義」「直接依存Pluginの公開図」「関連FunctionのSource片」「診断の詳細」を必要としたとき、元Product/Hostに用途・Subject・取得範囲・予算付きで再問い合わせる。都度現在のSource/Grant/Recipientを確認し、partial/unknown/unavailableを返せる範囲の読取結果のみ渡す。一度の短いContext受領を以後の無制限取得許可にしない。
+
+[TEI #4679](https://github.com/hat47x/tei-platform/issues/4679)のPlugin Documentation Surface／短いProduct Skill＋必要時に上位Plugin manualを読む方針をここに接続する。Pluginの直接・推移依存は**選択された版と公開契約**を経由し、上位を依存するだけで非公開Graphや文書が外部送出可能になるとしない。技能文書の全文常時読込は避け、実在するCLI能力発見と、現在参照可能なManual/図の限定読取を使う。未実装の plugin docs 相当のコマンドを実在する入口として記載しない。
+
+**同一Hostと遠隔Hostの違い**：同一許可Host内のCLI/MCP Toolなら、Host内部に保持した対象参照を使って実際のTEI Readerへ再問い合わせられる。Remote Harness/Cloud LLMには**そのHostだけで通用するopaqueな参照を無条件に送信しても、元Sourceが読めるわけではない**。Remote側はHostで許可されたText/Projectionと、実際に到達可能・認証されたToolだけを受け取る。ファイルPathを遠隔から自由指定するToolや公開HTTP endpointを増設しない。Locator/handleが表現・到達できなければ限定Textで止めてunsupportedとする。
+
+### 49.7 UI・CUI・Harness間で揃える最小操作と寿命
+
+| 操作（設計上の呼称） | 呼出元→実Owner | 確認する入力・結果 | 保持と失効 |
+| --- | --- | --- | --- |
+| **Select / Pin** | CLIで指定したSubjectまたはWorkbenchの明示Pin→TEI Product-local Selection | WorkspaceRef、Kind/Stable ID、必要時Source/Relation occurrence、元のUI View、局所Pin世代 | Focusと分離。Pin解除・Workspace切替・ABAで旧Reader Replyを現在に再利用しない |
+| **Inspect / Resolve** | TEI CLI/Wails Bridge→共通Application Operation/Host Reader | 実Source/Subject existence、Revision、診断、必要なRelation・取得Coverage/Unknown、Productの実Result | Source/Plugin/Root変更・未保存Bufferと保存Sourceの違いを記録。過去のInspectを現在資格にしない |
+| **Prepare / Preview** | TEI Product/Host→利用者 | 目的・Audience・受信先・対象範囲・送信予定の実Byte/除外理由、費用/容量目安 | Preparedは送信ではない。Preview中に権限・Sourceが変われば再生成し、旧Projectionを送らない |
+| **Send / Deliver** | Hostの許可済みProjection→Harness Adapter（Tool/Session） | 実送出したContent/宛先、Native Session/Turn/Tool、配送結果・終端 | CLI標準出力/Clipboardは外部送信の証拠ではない。ReceiptはAI理解やSource再読取ではない |
+| **Receive / Reconcile** | Harness Native Result→TEIの元Pin/Activity | 発行時のTask/Pin世代/Source・Request ID、結果本文の実受領・完全性・unknown | 後着・重複・別Sessionの回答を現在Focusや別Subjectへ書き込まない。Result body不明なら未受領 |
+| **Review / Apply** | TEIの候補表示/Source Diff→既存Acceptance/Operation | 変更対象・変更内容・Source/Dirty Buffer/Expected revision、影響・診断・独立試験 | 回答・Diff・診断が出たことは保存/Build/Commit/Owner受理でない。Effect不明時に盲目的再試行しない |
+
+これらはTEI #1158/#3419・#4515/#4479、TAI #271/#168、既存Handoff v1/QH §10に**実装上で対応付ける操作名**であり、新しい正式CLI command、Go公開API、共通RPC名を制定するものではない。Product内にあるPin世代やRequest対応はそのProduct/実Hostが管理し、YICで第二の永続Selection/Activity正本を作らない。
+
+### 49.8 もう一つの重要な入口：診断からAIへ、AIからQuick Fixへ
+
+[TEI #3788](https://github.com/hat47x/tei-platform/issues/3788)の保存前診断/参照移動・安全な改名と、[協業UX Draft #4605](https://github.com/hat47x/tei-platform/pull/4605)のLocate→Observe→Propose→Review→Apply/Observeを、§49.3の「Functionを選択して説明させる」に加える。
+
+**具体例**：CUI/StudioでValidationの診断を選択→診断Code・Source occurrence/byte span・Stable Subject・観測した版を元Productで再解決→AIへ用途に必要なRule・参照・診断の許可部分を共有→AIから「修正候補＋対象＋修正理由＋未確認」を受領→TEIのSource差分/影響/検証結果として表示→利用者の明示操作があった場合だけ既存の適用/保存経路へ進む→再診断結果を受領。AIの説明文を直接Sourceへ書く操作とは区別する。
+
+**未保存Bufferと保存Sourceを混ぜない**。Buffer R1が未保存で、AIは保存版R0を読んだ場合、AIのCandidateはR0基準と明記し、R1に無音適用しない。UIのPin Aを背景Inspectしても、閲覧中のBのEditor/Graph/Dirty Bufferを変えない。Pin状態の局所実装[TEI Draft #4597](https://github.com/hat47x/tei-platform/pull/4597)はPin/Unpin/Undo/ABA・遅着応答の純粋状態遷移に限定され、実UI/Reader/Windows配送を実証していない。したがってUI経由のEnd-to-Endと外部Harness受領は別の実験とする。
+
+Source Indexのbyte offsetとEditor/LSPの文字位置（UTF-16等）が一致しない場合は、同名異Subject・多バイト文字・CRLFの負例で誤位置編集を拒否する。候補に含まれる「これを実行せよ」という外部文書やTool本文の命令をHostのExecution Grantへ昇格しない。
+
+### 49.9 次の実装依頼は、2つの独立レーンだけに絞る
+
+**Lane S（TEI Product/Workbench）**：固定した公開一Subjectと一Diagnosticについて、(S1) CUI既存ReaderがSource位置/診断/版を返す、(S2) Workbench Pin Aを背景Inspectしても閲覧中のBやDirty Bufferは変わらない、(S3) 同じ意味の結果をCLIとGUIの別Consumerで照合する。#4515/#3788/#4605の既存Ownerへ結果を返す。未実装のGUI送信CommandやEditor Applyを先取りしない。
+
+**Lane H（YIC Harness）**：Lane Sとは別に、既存Product Readerが準備した**公開read-onlyの限定Projection**で、(H1) Tool-onlyの実送受信とNative Tool Reply完全性、(H2) そのReplyが元Task/Pin/Sourceに紐付いて受信されること、(H3) 追加詳細はHostを通じて必要時だけ取得、(H4) 回答Candidateの返却先が古ければ再確認要求になることを順に試す。対象・Tool・OwnerはTAI #168/#271、QH §10の既存実験票を再利用する。初回の固定H2/H3四Slotと混ぜず、別の後続Trial Groupとする。
+
+**独立負例（追補）**：(a) Pin Aの背景検査がBのEditorを変える、(b) Skill/Plugin manual全文を常時送信し無関係な秘密/Tokenを増やす、(c) Plugin Aの非公開上位文書をB経由で漏らす、(d) Remote側に読めないlocal Path/opaque IDを渡して取得成功と報告、(e) Prepare後にGrant失効して旧Payloadを送る、(f) 回答がPin再指定/Workspace移動の後に遅延到着し誤対象へApply、(g) R0基準AI Diffが未保存Buffer R1に無音適用、(h) partialな参照集合で全件RenameのQuick Fixを実行。いずれも既存TEI #1180/#2514・TAI #168/#271の期待値として扱い、YIC専用の新Testerを作らない。
+
+**現在の判断**：§49の具体化はDocs-only・Draft、実HostによるTEI GUI→外部Harness→候補帰着、上位Plugin manual必要時取得、診断→実Quick Fix・元Source適用はNOT RUN。最優先のTEI #4583非Plugin Desktop Stage1→Stage2とTAI #168 G0/G1/G2→比較適格な四Slot（最後の確認0/4）を独立に維持し、これら後続Laneを新Hard Gateにしない。
