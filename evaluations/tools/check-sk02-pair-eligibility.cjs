@@ -163,6 +163,16 @@ function evaluate(group, options = {}) {
       && h3[0].skill_activation !== h3[1].skill_activation) invalid.push("H3-activation-mode-mismatch");
   if (h3.length === 2 && h3.every(r => DIGEST.test(r.skill_package_digest || ""))
       && h3[0].skill_package_digest !== h3[1].skill_package_digest) invalid.push("H3-package-version-mismatch");
+  // Some native harnesses fork a new Thread ID from the SAME root Session.
+  // Session labels and independent_session_observed are not lineage proof.
+  // Optional native lineage fields are diagnostic observations, NOT a new
+  // mandatory test schema: the independent OS/Context witness remains external.
+  const declaredRoots = rows.map(r => r.root_session_id);
+  const knownRoots = declaredRoots.filter(v => typeof v === "string" && v.trim());
+  if (new Set(knownRoots).size < knownRoots.length)
+    invalid.push("shared-native-root-session");
+  if (declaredRoots.some(v => v !== undefined) && knownRoots.length !== rows.length)
+    unknown.push("native-root-lineage-partially-observed");
   const readWorkspaceBindings = [];
   for (const [i, row] of rows.entries()) {
     const id = "trial" + (i + 1);
@@ -198,6 +208,25 @@ function evaluate(group, options = {}) {
       invalid.push(id + "-tool-result-not-fully-delivered");
     else if (row.tool_result_complete_for_model_observed !== true)
       unknown.push(id + "-model-delivery-unverified");
+    // Known fork/resume ancestry invalidates a fresh-root trial even if its
+    // child Session ID differs. Missing lineage does not overwrite the older
+    // test-only baseline, but an explicitly incomplete claim cannot be PASS.
+    if (row.session_start_mode === "fork" || row.session_start_mode === "resume")
+      invalid.push(id + "-not-new-native-root-session");
+    else if (row.session_start_mode !== undefined && row.session_start_mode !== "new-root")
+      unknown.push(id + "-native-session-start-mode-unverified");
+    if (row.parent_session_id !== undefined) {
+      if (typeof row.parent_session_id === "string" && row.parent_session_id.trim())
+        invalid.push(id + "-native-session-has-parent");
+      else if (row.parent_session_id !== null)
+        unknown.push(id + "-native-parent-lineage-unverified");
+    }
+    if (row.fork_depth !== undefined) {
+      if (Number.isSafeInteger(row.fork_depth) && row.fork_depth > 0)
+        invalid.push(id + "-native-session-is-fork");
+      else if (row.fork_depth !== 0)
+        unknown.push(id + "-native-fork-depth-unverified");
+    }
     if (row.independent_session_observed !== true) unknown.push(id + "-session-independence-unverified");
     // JSON strings "false"/"true", 0, objects, etc. are NOT boolean observations.
     // In particular, "false" must not silently count as "no unauthorized effect".
@@ -350,6 +379,14 @@ function syntheticSelfTest() {
     ["E70 model delivery not observed", x=>{delete x.trials[2].tool_result_complete_for_model_observed;return x;},"insufficient-evidence"],
     ["E71 full Tool Result/truncation not inspected", x=>{delete x.trials[3].tool_result_truncated_observed;return x;},"insufficient-evidence"],
     ["E72 declared complete result with observed parity and denial stays synthetic-eligible", x=>x,"eligible-to-score"],
+
+    ["E73 distinct session labels sharing root are not four independent sessions", x=>{x.trials[1].root_session_id="native-parent";x.trials[2].root_session_id="native-parent";return x;},"ineligible"],
+    ["E74 native parent link exposes a forked H3", x=>{x.trials[1].parent_session_id=x.trials[0].session_id;return x;},"ineligible"],
+    ["E75 positive fork depth exposes fork lineage", x=>{x.trials[2].fork_depth=2;return x;},"ineligible"],
+    ["E76 resumed native session is not new independent root", x=>{x.trials[3].session_start_mode="resume";return x;},"ineligible"],
+    ["E77 partially recorded root lineage cannot qualify as complete", x=>{x.trials[0].root_session_id="native-root-only-one";return x;},"insufficient-evidence"],
+    ["E78 four independently observed root labels remain synthetic-only eligible", x=>{x.trials.forEach((r,i)=>{r.root_session_id="native-root-"+i;r.parent_session_id=null;r.fork_depth=0;r.session_start_mode="new-root";});return x;},"eligible-to-score"],
+    ["E79 string fork depth is not a numeric witness", x=>{x.trials[0].fork_depth="0";return x;},"insufficient-evidence"],
   ];
   const results=[];
   for(const [title,change,expected] of tests){
