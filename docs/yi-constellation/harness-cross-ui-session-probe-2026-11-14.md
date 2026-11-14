@@ -1167,3 +1167,53 @@ TEI main統合PR #4653はConsumer横断の**設計**、#4652はDSL四層診断�
 **YIC独自Agent Loopは引き続き保留**。二つ以上の外部Harnessを適格に比較し、Product/Host/Adapterの改善では解消できない実害が示され、安全性・保守・費用を含む自作案の優位性を確認できてからTAI #234で再審査する。新しい中央Runner、Agent Host、権限判定器、Expected正本は増設しない。
 
 本追補はDocs-only。新実Harness試験、実Product二Consumer、二Harness切替、実Effect、Owner正式受理は **NOT RUN**。Draftを維持し、mainへ自動mergeしない。
+
+<!-- yic-outcome-recovery-parallel-work-20261114 -->
+## 46. 並行開発と長時間実行を、作業完了の実証へ接続する
+
+YICが実務で解決すべき問題は、複数のAgentが作業できること自体ではない。**中断・引継ぎ・レビュー・再開を経ても、同じ対象について何が終わり、何が未確認なのかを取り違えないこと**である。§28〜29の多Session運用、§45のConsumer受入に対し、本節では実行担当が使える最小の作業票と、障害時に止める場所を定める。設計・実装・比較評価の正本は従来どおり[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)、[#271](https://github.com/hat47x/tai-pleroma/issues/271)、[#422](https://github.com/hat47x/tai-pleroma/issues/422)と各Product Issueに残す。
+
+### 46.1 作業を三つの並行レーンに分け、最後に結果を照合する
+
+| レーン | 依頼する仕事と引渡し | 受け入れずに残すもの |
+| --- | --- | --- |
+| **調査・設計** | 一つの公開read-only対象について、Source・選択範囲・実Read可能性・未決と反証をまとめる。Ownerの既存Issue/Expectedへ参照を返す | AIの説明文をSourceの完全な取得や業務Meaning受理にしない |
+| **実装・試験** | 一つの隔離されたBranch/WorktreeでProductの既存Application API/CLIを修正し、対象HEADでテスト。変更ファイル・Build入力・実Resultと失敗を残す | 旧HEADのCIや別Worktreeの成果を合算せず、PR作成をmerge/製品利用可能と呼ばない |
+| **独立レビュー** | 元Source/独立Expectedを参照し、実装側の自己申告に依存せず反例と受入範囲を評価する | 同じNative fork/seedから生じたSessionや同じ検査器の自己試験を、独立した実証・人の受理にしない |
+
+三レーンが同時に進められるかよりも、**統合時に同じRevision・対象・予定されたConsumerへ帰着できるか**を先に調べる。Issue番号、元SourceとRoot、Branch/HEAD、実HarnessとNative系譜、固定Task/Expected、実Product Operation、実受領したArtifact/Receipt、未解決事項を既存GitHub/Evidenceの**参照**として扱う。新しい共通Job DBやBranch Merge Engine、YIC専用Receipt Storeを作らない。Concurrent Writerが同じSourceを変更する場合、Gitのconflictなしだけでは意味受理とせずProduct Ownerへ戻す（TEI #2017、TAI #422）。
+
+### 46.2 『成功』を一つの状態にしない
+
+[TAI Draft #624](https://github.com/hat47x/tai-pleroma/pull/624)のSCN-001は、矛盾する施設案内資料からの暫定文書について、保存した成果物のbyte一致が確認されても、公開の判断や本来の受け手の受領が未成立になり得ることを実験した。公開Gateでは許可されず、公開は行われていない。また、Agent自身が書いた「Owner承認」をSEI経由の判定で許可と読める反例と、SUIのAgent資格による提案判定403を別々に観測している。これは単なるモデルの精度問題ではなく、**承認の出所を誰が確認するか**という実Host/Ownerの問題である。TAIに第二の承認機構を作る根拠とはしない。
+
+| 仕事の判定 | 表示できること | それだけでは主張できないこと |
+| --- | --- | --- |
+| 技術的に出力した | 指定Attemptの実出力byte、Source/Model/Tool版、テスト結果 | 独立Consumer受領、元資料の完全性、Ownerの受理 |
+| 別の受け手が読んだ | 許可された対象版と実受領byte、Consumerの読み取り結果 | 元Sourceの再解決、第三者への開示許可、業務的な完了 |
+| 提案が評価された | 現在の対象に対する候補・差分・反証・必要な決裁者 | AI自身の承認文、SEI Decisionの文字列を実Owner承認へ昇格 |
+| 実際の業務が完了した | 必要なHost/Owner判断、実Operation/Effect Receipt、結果の独立再読取がそろった範囲 | Tool exit 0、Delivery ACK、画面の完了表示、保存済み旧Receiptだけによる完了 |
+
+この区分は[TAI Draft #621](https://github.com/hat47x/tai-pleroma/pull/621)の失敗許容・Packet/Skill比較と整合する。**業務が許容する失敗率、期限、回復義務、手作業への移管条件はYICが決めない。** TEIの業務要件とOperation契約、EKI/実Hostの実行・回復、Ownerの受理をそれぞれ確認する。TEI #3250のSubsystem分割案も、論理上の担当・実Commit/Transaction・物理DB・Host Principalを一つにしない。
+
+### 46.3 途中失敗では『再開』より前に元Attemptを調べる
+
+同じ[TAI Draft #624](https://github.com/hat47x/tai-pleroma/pull/624)の実EKI試験では、応答だけを失った後にAgentが再送するとControl Planeが重複を検出し、Commandを1回に抑えた例がある。一方、Agentを再起動して再送した場合は、重複判定が成立しても**結果本文が失われた**。実行開始時に要求が届かなかった例、遅延応答、Control Plane再起動の例も記録された。これは実行結果の再取得・保存が未解決であることを示し、業務側のEffectを検証したものではない。実試験で許されたeffect_modeはnoneに限られ、外部更新のexactly-once性を証明しない。
+
+この観測を§26の復旧順へ適用すると、画面・Harnessがタイムアウトしても**元Operation/Attempt/Lease/Result bodyの実状態をProduct/EKI/Hostに問い合わせる**のが先となる。Task/ResultClaimがduplicateでも本文が読めなければ、結果の受理はunknown。Effectがunknownなら、新Session・別モデル・別Workerへの切替を理由に同じ更新を再発行しない。公開pure/read-onlyの処理だけ、Ownerの再実行条件を満たす場合に限定して再試行する。EKI自身のTask/Result body回復はEKI #57/#829、TEIのOperation/TriggerはTEI #4194/#4495/#4497が担当する。
+
+### 46.4 最小の受入試験を、既存の評価へ割り当てる
+
+| ケース | 正常と確認すること | 失敗と判断する誤昇格 | 既存の検証先 |
+| --- | --- | --- | --- |
+| **P-1 隔離Worktree** | 調査・実装・レビューの三レーンがそれぞれのHEAD/Source/Attemptを記録し、統合時に正しい版へ戻せる | 別HEADのGreenを足す、同名Sourceを取り違える | TEI #2017/#4583、TAI #422 |
+| **P-2 Session継承** | Native系譜を観測し、fork/seededな試行を独立サンプルから除外する | IDが違うだけで独立4試行達成 | TAI #168、Draft #649 |
+| **P-3 Goalと承認** | 公開許可のない資料はDraftまでで止め、実Ownerの承認根拠を別に記録する | Agentの自己申告承認と公開Gateのallowを同じものにする | TAI #28/#422、Draft #624、SUI/SEI Owner |
+| **P-4 応答喪失と本文** | 元Attemptの重複・結果本文・実Consumerの再取得を分けて照会する | duplicateだから本文取得済み、Delivery ACKだから業務Effect完了 | EKI #57/#829、TAI #271 |
+| **P-5 Activity引継ぎ** | 新Harnessに許可Packetだけを渡し、必要なSource/Grantを現在Hostで再確認する | 過去Transcript・Grant・Resultをそのまま現在の資格にする | TAI #271/#232、QH §10 |
+
+試験は公開または合成のread-only対象から始め、P-3/P-4の失敗モードは当初は記録の照合とOwner既存の負例で評価する。新しい実外部作用、公開承認、複数UIから同一Native Sessionへの同時書込みは初回の必須条件にしない。比較の母数・判定器・採点基準はTAI #168/#621/#422を使い、今回のP-1〜5を新しい共通Expected台帳にしない。
+
+**次に引き渡す具体的な仕事**は、(A) TEI #4583の非Plugin Stage1→Stage2実Desktopセルフビルド、(B) TAI #168のG0実OS拒否→G1送信→G2完全Tool Reply→独立H2/H3四Slot、(C) 両者とは別にread-only一Functionの正式CLI→実Consumer受領を先行する三レーンである。続いて既存Handoff v1での限定Activity再開を検証し、必要になって初めてSkill・第二Harness・共同編集を比較する。各試行の失敗は原因Ownerへ返し、独自Agent Loopに起因すると早合点しない。
+
+**実施状態**：本節は既存の局所実行結果とDraft設計を照合したDocs-onlyの計画更新。新規の実3レーン同時作業、実公開承認、実Effect、外部Harness/TEI横断Consumer、Native二UI・新H2/H3適格四試行、Owner正式受理は**NOT RUN**。P0の優先順位を変更せず、Draft維持・mainへ自動mergeしない。
