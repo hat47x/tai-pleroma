@@ -1,0 +1,44 @@
+{
+  "schema": "tai.reference.yi-centre-key-options/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading SEI's JSON Schema documents",
+  "command": "python integrations/tools/yi_centre_key_options.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-centre-key-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "schema": "sei-cognition\\contracts\\schemas\\v1alpha1\\decision-memory.schema.json",
+    "referenceSchema": "sei-cognition\\contracts\\schemas\\v1alpha1\\semantic-reference.schema.json",
+    "logicalReferenceFields": [
+      "id",
+      "kind",
+      "scope"
+    ],
+    "exactBindingFields": [
+      "content_digest",
+      "logical_ref",
+      "representation_profile"
+    ],
+    "neededUnits": [
+      "artifactDigest",
+      "source",
+      "sheet",
+      "range",
+      "sourceDigest"
+    ],
+    "guidance": {
+      "basis_refs": "SEIの参照として型が決まっている。持てるのは content_digest, logical_ref, representation_profile だけなので、成果物のシート・範囲は入らない",
+      "extensions": "追加の項目を自由に持てる。ただし契約上は拡張であり、検証つきの第一級の項目ではない"
+    },
+    "basisRefsCanCarryTheUnits": false,
+    "extensionsCanCarryTheUnits": true,
+    "exactlyOneTypedPlaceExists": true,
+    "neitherTypedNorOpen": false
+  },
+  "scope": "Reads SEI's decision-memory and semantic-reference JSON Schemas and records what its basis_refs and extensions can hold, so that adding a key is a choice about permitted shape rather than an invention. It does not add anything, does not validate a real record, and does not decide which side should carry the key."
+}

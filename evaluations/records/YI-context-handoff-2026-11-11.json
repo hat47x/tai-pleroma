@@ -1,0 +1,58 @@
+{
+  "schema": "tai.reference.yi-context-handoff-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Go running the harness boundary reference",
+  "command": "python integrations/tools/yi_context_handoff_probe.py --tai-root . --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-context-handoff-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "referencePassed": true,
+    "handoffRecorded": true,
+    "deferredRecorded": true,
+    "handoffFields": [
+      "ContextID",
+      "Version",
+      "Task",
+      "Deferred"
+    ],
+    "handoffJsonFields": [
+      "contextId",
+      "version",
+      "task",
+      "deferred"
+    ],
+    "units": {
+      "task": {
+        "field": "Task",
+        "label": "課題",
+        "present": true
+      },
+      "decision": {
+        "field": null,
+        "label": "判断",
+        "present": false
+      },
+      "unresolved": {
+        "field": null,
+        "label": "未解決",
+        "present": false
+      }
+    },
+    "unitsCarried": [
+      "task"
+    ],
+    "unitsMissing": [
+      "decision",
+      "unresolved"
+    ],
+    "carriesAllThreeUnits": false,
+    "finding": "参照実装は、文脈の上限の後に渡せなかったことをdeferredとして記録する。しかしHandoffが持つのはContextID・Version・Task・Deferredであり、RQ-YI-024が求める三つの単位のうち、課題だけを運ぶ。判断と未解決を運ぶ欄が無い。"
+  },
+  "scope": "Runs the harness boundary reference and reads the handoff type it writes, then records which of RQ-YI-024's three units the handoff carries. The product and the harness are synthetic; real products, real context limits and real sessions are not exercised, and the recorded units are read from the reference's own type rather than from a live harness."
+}

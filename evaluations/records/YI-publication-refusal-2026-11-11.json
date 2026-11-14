@@ -1,0 +1,42 @@
+{
+  "schema": "tai.reference.yi-publication-refusal/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Go running the SCN-001 publication gate",
+  "command": "python integrations/tools/yi_publication_refusal_probe.py --tai-root . --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-publication-refusal-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "gateSchema": "tai.reference.scn001-publication-gate/v0",
+    "allowed": false,
+    "exitCode": 1,
+    "blockerCount": 7,
+    "blockers": [
+      "R-01: synthetic development review; real-object required for publication",
+      "R-02: synthetic development review; real-object required for publication",
+      "R-03: synthetic development review; real-object required for publication",
+      "R-04: synthetic development review; real-object required for publication",
+      "R-05: synthetic development review; real-object required for publication",
+      "R-06: status=pending",
+      "R-07: status=pending"
+    ],
+    "accepted": [],
+    "developmentAccepted": [
+      "R-01",
+      "R-02",
+      "R-03",
+      "R-04",
+      "R-05"
+    ],
+    "syntheticAcceptancesBlockPublication": true,
+    "pendingReviewsBlockPublication": true,
+    "refusalObserved": true,
+    "finding": "公開gateは、公開を実行せずに拒否だけを返す。今回のstatusでは、R-01〜R-05がsyntheticのdevelopmentAccepted、R-06/R-07がpendingであるため、allowed=falseで拒否された。これは公開が実際に拒否された観測であり、receiptの宣言（publicationAllowed:false）とは別の種類の記録である。"
+  },
+  "scope": "Runs the publication gate on the SCN-001 review status and records the refusal it produces, with the blockers that caused it. The gate decides; it does not publish. The status file is TAI's own review record, and whether a real publication would be refused by an external system is not established."
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "tai.reference.yi-centre-handoff-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Node.js running MMI's provenance CLI on a synthetic artifact",
+  "command": "python integrations/tools/yi_centre_handoff_probe.py --mmi-repo <MMI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-centre-handoff-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "provenanceSchema": "mmi.provenance-report/v1",
+    "linkedCount": 1,
+    "fieldsPresent": {
+      "artifactDigest": "sha256:6ac60dd2579a2c95eded46a54f7f6972612219c0010ba66473106800559bf0b0",
+      "source": "data.csv",
+      "sheet": "Sheet1",
+      "range": "A1:B2",
+      "sourceDigest": "sha256:939d4afb9cb0a0f90c82696e356eeabb8bf8b2a9f2eba3d8f2be762a52dcf4f1"
+    },
+    "fieldsMissing": {},
+    "seiSideUnits": {
+      "recordId": "SEIのDecisionRecordのID",
+      "jsonPointer": "SEIのrecord内の位置",
+      "basisRefs": "SEIが根拠として指す参照"
+    },
+    "joinKeys": {
+      "reportNamesADecision": false,
+      "reportNamesASeiRecord": false,
+      "seiRecordNamesAnArtifact": false
+    },
+    "shoCanExpressWhatItRestsOn": true,
+    "handoffJoinExists": false,
+    "handoffIsImplemented": false,
+    "finding": "SHO側は、成果が何に依拠するかを5つの単位で表現できる。しかしSEI側の記録と結ぶ鍵（DecisionRecordのIDや成果への参照）がどちらの記録にも無いため、中心の受け渡しは成立していない。"
+  },
+  "scope": "Runs MMI's provenance report on a synthetic Markdown artifact with one spreadsheet embed and records which handoff units the SHO side can supply. It reads the SEI side from the reference tool's record shape rather than executing it. The artifact, the spreadsheet and the document are synthetic; no real SHO or SEI store is involved, and the handoff itself is not implemented."
+}

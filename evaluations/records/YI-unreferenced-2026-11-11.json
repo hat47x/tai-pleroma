@@ -1,0 +1,42 @@
+{
+  "schema": "tai.reference.yi-unreferenced-probe/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Go running the SEI decision reference against the SEI checkout",
+  "command": "python integrations/tools/yi_unreferenced_probe.py --tai-root . --sei-root <SEI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-unreferenced-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "decisionFields": [
+      "id",
+      "recommendations",
+      "responsible",
+      "statement"
+    ],
+    "unresolvedFields": [
+      "left_open_by_decision",
+      "ref"
+    ],
+    "wanted": {
+      "decisionId": "判断のID",
+      "lastReadAt": "最後に参照された時刻",
+      "readCount": "参照された回数",
+      "leftOpenBy": "未解決を残した判断"
+    },
+    "present": {
+      "decisionId": true,
+      "lastReadAt": false,
+      "readCount": false,
+      "leftOpenBy": true
+    },
+    "presentCount": 2,
+    "canShowUnreferenced": false,
+    "finding": "判断の記録は、ID・文言・依拠したrecommendation・責任を持つ。しかし、いつ・何回参照されたかの欄が無い。「長く参照されていない記録」を状態として示すには、参照の記録を別に持つ必要がある。"
+  },
+  "scope": "Runs the SEI decision reference against a real SEI checkout, using a temporary store, and records that the decision projection has an identifier and a responsible party but no last-read time or read count. The fixture is synthetic and the store is temporary; whether SEI records reads elsewhere is not established here."
+}

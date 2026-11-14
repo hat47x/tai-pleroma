@@ -1,0 +1,106 @@
+{
+  "schema": "tai.reference.yi-state-classification/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Go running the SCN-001 reference",
+  "command": "python integrations/tools/yi_state_classification.py --tai-root . --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-state-classification-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "states": {
+      "notConnected": {
+        "label": "未接続",
+        "meaning": "接続そのものが無い",
+        "checks": [],
+        "checkStatuses": {}
+      },
+      "notAccepted": {
+        "label": "不受理",
+        "meaning": "製品が受け取らない",
+        "checks": [],
+        "checkStatuses": {}
+      },
+      "notDecided": {
+        "label": "未受理",
+        "meaning": "記録はあるが、判断として受理されていない",
+        "checks": [
+          "N-02"
+        ],
+        "checkStatuses": {
+          "N-02": "pass"
+        }
+      },
+      "notExecuted": {
+        "label": "未実行",
+        "meaning": "判断はあるが実行されていない",
+        "checks": [
+          "N-05"
+        ],
+        "checkStatuses": {
+          "N-05": "not-run"
+        }
+      },
+      "unconfirmed": {
+        "label": "未確認",
+        "meaning": "根拠が取得できない、または権限が確認できない",
+        "checks": [
+          "N-03",
+          "P-04"
+        ],
+        "checkStatuses": {
+          "N-03": "pass",
+          "P-04": "pass"
+        }
+      },
+      "refused": {
+        "label": "拒否",
+        "meaning": "構造の検査が拒否する",
+        "checks": [
+          "N-01",
+          "N-04",
+          "N-06",
+          "N-07",
+          "N-08",
+          "N-09",
+          "N-10"
+        ],
+        "checkStatuses": {
+          "N-01": "pass",
+          "N-04": "pass",
+          "N-06": "pass",
+          "N-07": "pass",
+          "N-08": "pass",
+          "N-09": "pass",
+          "N-10": "pass"
+        }
+      }
+    },
+    "referencePassed": true,
+    "negativeChecksInReference": [
+      "N-01",
+      "N-02",
+      "N-03",
+      "N-04",
+      "N-05",
+      "N-06",
+      "N-07",
+      "N-08",
+      "N-09",
+      "N-10"
+    ],
+    "unclassifiedChecks": [],
+    "statesWithoutAnExample": [
+      "notConnected",
+      "notAccepted"
+    ],
+    "everyStateHasAnExample": false,
+    "everyNegativeCheckIsClassified": true,
+    "finding": "SCN-001の負例は、拒否（構造の検査）・未確認（取得できない根拠）・未受理（判断が未受理のまま）・未実行（委任が対象外）に分かれる。未接続と不受理には、対応する例が無い。この二つは、SCN-001の検査が製品間の接続を扱わないために例を持てない。"
+  },
+  "scope": "Runs SCN-001 and maps its negative checks onto the six states named in the design note, recording which states have an example and which do not. The mapping is the author's reading of each check's text, not something the reference declares; the fixture is synthetic and no real product is involved."
+}

@@ -235,3 +235,32 @@ V0〜V3で`undetermined`を回答したとき、採点者は「どのscope/Relat
 - **評価資格の区分**: `G-Cal1b-geometry`は実ブラウザーの幾何検査に限る。長文のラベル・Screen Reader・キーボード・人間/AIの意味理解、実TEI複合Graph・多項Relationは別の未実証Gate。見た目の改善をS01 Source Accepted/Authoritative/Owner受理へ転用しない。
 
 研究上の本質は、`semantic source parity`、`SVG metadata parity`、`rendered geometry`、`human/AI comprehension`を区別すること。先行研究のGraph edge routing自体は既知であり、本変更は小規模刺激の信頼性改善であって、新規アルゴリズムの発明を主張しない。
+
+
+## 16. 2026-11-11：Chromium AX Treeで描画の関係が読めるかを別Gate化
+
+[公開合成GraphのAX情報等価性と負例](RQ7_CHROMIUM_AX_TOPOLOGY_2026-11-11.md)を、実幾何検査とは別の**G-Cal1b-AX**へ追加する。前回の[PR #556](https://github.com/hat47x/tai-pleroma/pull/556)はmainへ統合済みで、当該最終headと統合後mainの研究限定CI/TAI Referenceは成功（Python 54/54、公開3DAG×PC/モバイル6描画）。ただし従来SVGの`desc`は具体的なNode/Edgeを列挙せず、`aria-labelledby`へ説明まで含めていた。
+
+**新しい実験対象**は、同じ宣言Graphから（a）可視SVGのNode/Edge/Label、（b）機械的な代替説明内の全Node ID・Label・直接有向Edge、（c）Chromium Accessibility Treeの短いimage nameと詳細descriptionを対応させること。可視SVGを変更せず説明からEdgeを削る**a11y-only mutation**を拒否し、表示件数のみで同値と判断しない。
+
+この研究Gateの成功は実スクリーンリーダーの理解、キーボードでの個別Relation選択、人間/AI認知効率、Source完全性、実権限、Owner Meaning Acceptanceではない。特に[TEI #4382](https://github.com/hat47x/tei-platform/pull/4382)のApplication投影でclose-requires/correctionが欠落していた例と、[TAI #619](https://github.com/hat47x/tai-pleroma/pull/619)の同じ件数でも集合の意味が違い得る例を踏まえ、**宣言 → 可視投影 → AX投影**を独立Claimとして扱う。TEI #3321の同一Fingerprintで別物理Rootという例、#4240のABA/TOCTOU、#4299の子プロセス自己申告の限界をこの可視検査で解消したとは扱わない。
+
+**同一Sourceから構成した三表示が一致**してもSource本体の全関係の閉包や非開示Policyの正しさは導けない。実ProductのSource/Owner/Authorityを第2正本としてTAIに作らず、公開合成22ケース・3種DAGの範囲だけを研究機材の資格として記録する。
+
+
+## 17. 2026-11-11：AX説明だけでなく構造化された関係への到達を分離
+
+[公開Graphの構造化テキスト代替表示・キーボード到達研究](RQ7_STRUCTURED_GRAPH_ALT_2026-11-11.md)を独立した**G-Cal1b-Nav**として設ける。W3C WAI [Complex Images](https://www.w3.org/WAI/tutorials/images/complex/)は、複雑な図のテキスト表現において、単一の`aria-describedby`説明だけでは見出しや表の構造・ナビゲーションが伝わらない点を注意している。
+
+今回の研究用HTMLは、公開合成DAGの**Node(ID/Label)**と**直接Edge(from/to)**を別々の表へ投影し、ネイティブ`details/summary`で開閉する。全行の意味・方向を検査するほか、同じEdge件数のまま向きを取り違えた負例、ChromiumでのTab/Enterによる到達とAccessibility Treeの構造を検査対象とする。これを実TEIのSource Reader、Studio Editor、S01 Source Acceptanceや認可機構へ転用しない。
+
+**保証の追加区分**: Source/Goldの正本性、可視SVGの幾何、AXの全文説明、構造化表の個別関係への到達、スクリーンリーダー実使用、Human/AIの認知負担、Current Authority、実Consumer/Owner Acceptanceは各々別のClaim。今回の小規模合成表示の成功から、一般の大規模Graph・非公開Relation・実ETL/Self-buildを完全に描けるとは主張しない。
+
+
+## 18. 2026-11-12：長文ラベルの可視性と実装／観測保証を分離
+
+[公開合成Graphの長文ラベル可視性・対応上限](RQ7_LONG_LABEL_VISIBILITY_2026-11-12.md)を、RQ7 **G-Cal1b-Label**の独立Gateとして追加した。従来は短いNodeの`data-label`・AX説明・構造化表にラベルが完全に残っていても、固定180px矩形のSVG上で1行ラベルが欠ける反例が存在した。公開3種DAGに限り、ノード幅を元の全ラベルから保守的に推定・拡大し、Node/Rank・Edge routing/遮蔽判定を同じ幅へ連動させる。2048pxを超える推定幅は、画像出力の切詰めではなく**明示的な拒否**とする。
+
+英語・日本語の長文変更、実Chromiumでの可視矩形と文字BBox、狭画面の横スクロール、元180pxに戻す「欠落の変異」、過大文字列の拒否を別々に検査する。長文の構造化表が存在するだけでSVGの表示欠落を修復済みとは扱わない。なお狭画面での横スクロール増加は利用上の負担であり、複数行折返し・ズーム・実Screen Reader・人間/AI認知効率は未実証である。
+
+[TEI #4464](https://github.com/hat47x/tei-platform/pull/4464)の表現変換行列や[TEA Draft #4487](https://github.com/hat47x/tei-platform/pull/4487)の量化別証拠条件は研究上の関連候補であるが、いずれも当該時点で未統合のDraft/PRであり、このRQ7変更からProduct投影の意味受理・Source不存在・Writerの不存在は証明できない。

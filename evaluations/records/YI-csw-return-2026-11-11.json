@@ -1,0 +1,76 @@
+{
+  "schema": "tai.reference.yi-csw-return-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 reading the CSW checkout",
+  "command": "python integrations/tools/yi_csw_return_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-csw-return-2026-11-11.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "editsRecorded": 9,
+    "results": [
+      {
+        "edit": 1,
+        "what": "変爻を局面の転換として読む節",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 2,
+        "what": "易の行への追記",
+        "file": "skills\\cultural-substrate-weaving\\references\\framework-selection.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 3,
+        "what": "技法の一覧への追加",
+        "file": "skills\\cultural-substrate-weaving\\SKILL.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 4,
+        "what": "価値の交差の節",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 5,
+        "what": "価値の生剋の節",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 6,
+        "what": "経験の味わいの節",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 7,
+        "what": "場と身体の価値の節",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 8,
+        "what": "一日の物語へ織る節",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      },
+      {
+        "edit": 9,
+        "what": "一枚紙の形",
+        "file": "skills\\cultural-substrate-weaving\\references\\writing-techniques.md",
+        "stillPresent": true
+      }
+    ],
+    "missing": [],
+    "everyReturnedEditIsStillPresent": true
+  },
+  "scope": "Reads the nine edits doc 12 records and checks that each heading or phrase is still present in CSW's current files. It checks presence only: it does not read the prose, does not check whether the technique is any good, and does not run CSW's own review."
+}

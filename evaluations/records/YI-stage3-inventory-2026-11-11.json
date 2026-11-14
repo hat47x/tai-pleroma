@@ -1,0 +1,120 @@
+{
+  "schema": "tai.reference.yi-stage3-inventory/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-11",
+  "host": "Windows with Python 3.12 and Go, reading the analysis and running the reference suites",
+  "command": "python integrations/tools/yi_stage3_inventory.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-stage3-inventory-2026-11-11.json --run",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "items": {
+      "changeLineInspection": {
+        "requirement": "RQ-YI-019",
+        "what": "変爻の前後で何が観測できるかを、SCN-001の参照評価で試した",
+        "evidencePresent": [
+          "docs/yi-constellation/analysis/16-変爻の検査記録.md"
+        ],
+        "evidenceMissing": [],
+        "suite": "tools/reference-scn001",
+        "state": "executed",
+        "suiteResult": {
+          "ok": true,
+          "tail": "ok  \ttai/reference-scn001\t2.268s"
+        }
+      },
+      "usabilityConditions": {
+        "requirement": "RQ-YI-019（四条件）",
+        "what": "意味の使用可能性の四条件（13の6節）の設計。実行は四条件のうち構造の二つだけ",
+        "evidencePresent": [
+          "docs/yi-constellation/analysis/13-設計ノート.md"
+        ],
+        "evidenceMissing": [],
+        "suite": null,
+        "state": "evidence-only"
+      },
+      "entranceJoin": {
+        "requirement": "RQ-YI-021",
+        "what": "MMIの inspect/select を呼ぶ参照接続",
+        "evidencePresent": [
+          "docs/yi-constellation/analysis/13-設計ノート.md"
+        ],
+        "evidenceMissing": [],
+        "suite": "tools/reference-mmi-readonly",
+        "state": "executed",
+        "suiteResult": {
+          "ok": true,
+          "tail": "ok  \ttai/reference-mmi-readonly\t174.752s"
+        }
+      },
+      "harnessBoundary": {
+        "requirement": "RQ-YI-023",
+        "what": "読み取り専用・書き込み拒否・文脈の受け渡し・提供元の交換",
+        "evidencePresent": [
+          "docs/yi-constellation/analysis/13-設計ノート.md"
+        ],
+        "evidenceMissing": [],
+        "suite": "tools/reference-harness-boundary",
+        "state": "executed",
+        "suiteResult": {
+          "ok": true,
+          "tail": "ok  \ttai/reference-harness-boundary\t10.121s"
+        }
+      },
+      "centreHandoff": {
+        "requirement": "RQ-YI-020",
+        "what": "SHOとSEIの中心の受け渡し。接続も要求も無い",
+        "evidencePresent": [],
+        "evidenceMissing": [],
+        "suite": null,
+        "state": "not-run"
+      },
+      "thinPhaseExpansion": {
+        "requirement": "相の拡充",
+        "what": "一製品につき一つを要求と検証の形にする。下書きのみ",
+        "evidencePresent": [
+          "docs/yi-constellation/analysis/13-設計ノート.md"
+        ],
+        "evidenceMissing": [],
+        "suite": null,
+        "state": "not-run"
+      },
+      "contextHandoff": {
+        "requirement": "RQ-YI-024",
+        "what": "長いセッションの合成例。未実施",
+        "evidencePresent": [
+          "docs/yi-constellation/analysis/13-設計ノート.md"
+        ],
+        "evidenceMissing": [],
+        "suite": null,
+        "state": "not-run"
+      }
+    },
+    "executed": [
+      "changeLineInspection",
+      "entranceJoin",
+      "harnessBoundary"
+    ],
+    "evidenceOnly": [
+      "usabilityConditions"
+    ],
+    "notRun": [
+      "centreHandoff",
+      "thinPhaseExpansion",
+      "contextHandoff"
+    ],
+    "suitesRun": [
+      "tools/reference-harness-boundary",
+      "tools/reference-mmi-readonly",
+      "tools/reference-scn001"
+    ],
+    "suitesPassed": true,
+    "everyEvidenceFileExists": true,
+    "notRunIsDeclared": true
+  },
+  "scope": "Records, per stage-3 item, whether its evidence document exists and whether the reference go suite that backs it passes. Three items (the centre handoff, the thin-phase expansion, the long-session context handoff) are declared not-run because no implementation exists. Passing reference suites are synthetic reference evaluation, not behaviour of the real products."
+}
