@@ -227,6 +227,18 @@ function evaluate(group, options = {}) {
       else if (row.fork_depth !== 0)
         unknown.push(id + "-native-fork-depth-unverified");
     }
+    // DSH ordinary forks can be parentless in persisted metadata. A seeded
+    // session (or positive inherited event count) still carries old context.
+    if (row.session_is_seeded === true)
+      invalid.push(id + "-native-session-inherits-history");
+    else if (row.session_is_seeded !== undefined && row.session_is_seeded !== false)
+      unknown.push(id + "-native-seed-status-unverified");
+    if (row.inherited_event_count !== undefined) {
+      if (Number.isSafeInteger(row.inherited_event_count) && row.inherited_event_count > 0)
+        invalid.push(id + "-native-inherited-events-present");
+      else if (row.inherited_event_count !== 0)
+        unknown.push(id + "-native-inherited-event-count-unverified");
+    }
     if (row.independent_session_observed !== true) unknown.push(id + "-session-independence-unverified");
     // JSON strings "false"/"true", 0, objects, etc. are NOT boolean observations.
     // In particular, "false" must not silently count as "no unauthorized effect".
@@ -387,6 +399,10 @@ function syntheticSelfTest() {
     ["E77 partially recorded root lineage cannot qualify as complete", x=>{x.trials[0].root_session_id="native-root-only-one";return x;},"insufficient-evidence"],
     ["E78 four independently observed root labels remain synthetic-only eligible", x=>{x.trials.forEach((r,i)=>{r.root_session_id="native-root-"+i;r.parent_session_id=null;r.fork_depth=0;r.session_start_mode="new-root";});return x;},"eligible-to-score"],
     ["E79 string fork depth is not a numeric witness", x=>{x.trials[0].fork_depth="0";return x;},"insufficient-evidence"],
+
+    ["E80 parentless ordinary fork with isSeeded still inherits history", x=>{x.trials[1].parent_session_id=null;x.trials[1].session_is_seeded=true;return x;},"ineligible"],
+    ["E81 positive inherited event count exposes shared history without parent ID", x=>{x.trials[2].inherited_event_count=5;return x;},"ineligible"],
+    ["E82 malformed seeded flag is not a negative observation", x=>{x.trials[0].session_is_seeded="false";return x;},"insufficient-evidence"],
   ];
   const results=[];
   for(const [title,change,expected] of tests){
