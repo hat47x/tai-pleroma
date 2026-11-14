@@ -790,11 +790,14 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 
 | 実装候補と確認できた限定証拠 | どこまで実際に言えるか | 次の不足／Owner |
 | --- | --- | --- |
-| [TEI Draft #4634](https://github.com/hat47x/tei-platform/pull/4634) exact HEAD 653d0d9、8/8 Workflow completed/success（Self-build・Healthを含む） | Plugin主体Build宣言→Resolver→選択Builder起動前pinの同一HEAD局所検証 | 非Plugin BuildExecution/ArtifactSet→生成Stage1→Stage2→当該実Windows WebView2は[#4583](https://github.com/hat47x/tei-platform/issues/4583)。旧別HEADのDesktop H1結果は足せない |
+| [TEI Draft #4634](https://github.com/hat47x/tei-platform/pull/4634) 現HEAD `7d6a1238e6efbd83fb2bd4cfda9667c181567920`、8/8 Workflow completed/success（Self-build・Healthを含む）。旧HEAD `653d0d9`も8/8だが別Attempt | Plugin主体Build宣言→Resolver→選択Builder起動前pinの同一HEAD局所検証 | 非Plugin BuildExecution/ArtifactSet→生成Stage1→Stage2→当該実Windows WebView2は[#4583](https://github.com/hat47x/tei-platform/issues/4583)。旧別HEADのDesktop H1結果は足せない |
 | [TEI Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) HEAD 170f9be、12/12 Workflow成功 | Host固定Selector/Workspace内の有界Local Evidence Reader→既存R2 byte-only ProjectionのGo局所実Read | Wails/外部Harnessでの実Invocation、Source Currentness、Grant/Disclosure、Consumer受領は未実施 |
-| [TEI #4636](https://github.com/hat47x/tei-platform/pull/4636) HEAD da807abc、9/9 Workflow成功 | Capability Input/Effect宣言不備とnil ContextをGo Adapter Call前に構造拒否 | Owner Meaning、公開Script Entry、actual Selected Provider/Result/Effect・実CLIは別試験。PRの統合状態と実main適用は別に確認 |
+| [TEI main統合済み #4636](https://github.com/hat47x/tei-platform/pull/4636) HEAD `da807abc` の9/9 Workflow成功、main squash `18470e69`。計画更新[#4639](https://github.com/hat47x/tei-platform/pull/4639)もmerged | Capability Input/Effect宣言不備とnil ContextをGo Adapter Call前に構造拒否 | Owner Meaning、公開Script Entry、actual Selected Provider/Result/Effect・実CLIは別試験。PRの統合状態と実main適用は別に確認 |
 | [TEI Server Surface #4627](https://github.com/hat47x/tei-platform/pull/4627) HEAD b9cf5447のMethod/Service Inventory・局所ブラウザCI、#4620が5/5成功と報告 | 非read methodを含む現在のServer公開面を静的棚卸しできる | 実二Principal×二WorkspaceのHTTP/AuthZ、WS Recipient別秘密配送拒否はNOT RUN |
+| [TEI #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD `357345d7` の[Windows Workflow #43554075677](https://github.com/hat47x/tei-platform/actions/runs/43554075677)は11/12 success、**全体FAIL** | 同Workflowの**generated Desktop JobはSUCCESS**で、N0→N2→N3の生成バンドル・実exe・WebView2のEditor/ObserveXead受領を確認 | **従来Desktopの別JobがWindows OS版取得のPowerShell 15秒TimeoutでFAIL**。環境再試験・当該HEADの総合結果を別に判断。Stage1がStage2を生成した意味ではない（Job記録 `stage1GeneratedTeiInvoker=false`） |
 | [TEI #4635](https://github.com/hat47x/tei-platform/issues/4635)四配置比較 | 正負試験・比較方式のOwner/順序が計画化された | B0/B1/B2の新実Process/IPC/Perf/Crash/配布はNOT RUN |
+
+**生成器を先に偽装しない**：[TEI #4641](https://github.com/hat47x/tei-platform/pull/4641)はSelected Generator→実Builder→Artifact→ConsumerをGCX-01〜08で整理した**docs-only Draft**。実装済みのPlugin主体BuildPlanを非Plugin Desktop N0〜N3へ名称変更して代用しない。非Plugin実InvokerとArtifactSetはTEI #4583/#1080/#1097がOwnerであり、YICに第二Build Engineを置かない。
 
 **資格の取り扱い**：ここに記載した各CIは、そのPR本文／同HEADで確認された時点の限定結果。単に成功数を加えた横断E2EのPASSはない。特に#4637 local Go Reader＋#4627 Wails Service inventoryの別HEAD成功から「Web/HarnessでREA Evidenceを読める」を導かない。#4636の構造拒否から公開Entry/Host grant/業務Effectを推定しない。
 
