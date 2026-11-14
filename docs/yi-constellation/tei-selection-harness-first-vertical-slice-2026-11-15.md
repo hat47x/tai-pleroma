@@ -124,6 +124,9 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 
 [pin-wiring.contract.test.mjs](https://github.com/hat47x/tei-platform/blob/feat/studio-pin-intent-state-20261113/reference/tei-studio-workbench/pin-wiring.contract.test.mjs)（[commit 5b4eeae0](https://github.com/hat47x/tei-platform/commit/5b4eeae0668d99e7f32a8e2bfd35b95b3edff664)）を通常のnpm testに登録（[commit aa3557d8](https://github.com/hat47x/tei-platform/commit/aa3557d8fba2e99c42e1ac7f6c5111c5802f2cee)）。内容は、実main.tsの独立 pinned-inspection／既存Host InspectSubject／readInspection経路、選択表示・Editor/Graph/Noticeを**直接**変更しないこと、6つのUI IDと3操作の結線を静的に監視する。背景読取から呼ぶ renderPin() の間接的な表示変更も回帰検査の対象とした（[追加修正 d3abbf57](https://github.com/hat47x/tei-platform/commit/d3abbf572e3672dfa2158f4508ecc5f75a1297d8)）。GitHub上の現Sourceに対し、直接・間接経路の静的15項目を確認（15/15）。**この静的合格はNode24/npmテスト合格、間接副作用なし、実DOM/Windows WebView2、最新Source/Grantの実再確認を証明しない**。
 
+<!-- pin-product-reader-unit-test-20261115 -->
+**PinのHost読取を実装から直接テスト可能にした。** TEIの[Pin PR #4597](https://github.com/hat47x/tei-platform/pull/4597)で、Workbenchの背景読取処理から、既存Host InspectSubject／Catalog一意性確認／readInspectionによるSubject・World・Source Index照合を独立した小さな `readPinnedSubject` 関数へ抽出（[commit 00467778](https://github.com/hat47x/tei-platform/commit/00467778f708d90d80d91aea3000f094cb415c22)、[呼出し配線 9d2c2480](https://github.com/hat47x/tei-platform/commit/9d2c2480a2442b9058331cd237b743eab302706e)）。結果は検証した版のみを返し、Canonical全文の外部送信を暗黙に許可しない。[Fake Hostによる5ケースのUnitテスト](https://github.com/hat47x/tei-platform/commit/a85568e02bfddbc616e41305ca65a683081d00ae)を[標準npm testへ登録](https://github.com/hat47x/tei-platform/commit/9a8c0f3ae9e271d715cb79691c565e04cf0394b0)。正常な元Workspace/Kind/IDと版、Catalog曖昧・不在でのHost呼出し0、誤Subject・旧版、Host拒否を対象とする。実Sourceの静的照合は18/18一致したが、Node24/npm testと型検査、実Native Host、Root/Grant/Disclosure、外部Harness送受信は**未検収**。Pinの意図を保持しても、旧応答から現在性・権限を再付与しない。
+
 検収を四段に固定する。①単体状態/Source配線の回帰、②同一HEAD・ツールチェーンで生成／Desktop埋込みbyte一致、③実Host/DOMでA背景読み込み中もBのEditor/Graph/Focus/Noticeが不変（Unpin・遅延・Root/Source変更の負例）、④許可済みProjectionの外部実送受信・完全Reply・元Task/Pin帰属。①のGitHub Source追補だけから②〜④を合格にしない。
 
 後継UX計画は最新main基点の[TEI Draft #4721](https://github.com/hat47x/tei-platform/pull/4721)、StudioのCLI/AI接続設計は[Draft #4696](https://github.com/hat47x/tei-platform/pull/4696)を参照。旧協業UX Draft #4605は未mergeでclosed。いずれもPin実装の新しい第二正本にはせず、実コードは#4515/#4597の既存Ownerへ集約する。P0はTEI #4583とTAI #168のまま。現HEADの実Node24/生成/Windows/Harness試験・Owner受理は引続き未確認。
@@ -134,4 +137,4 @@ H0：S0の公開Resultから許可された短い作業Contextを生成。Task�
 - **独立P0-B**：TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)のG0→G1→G2→物理的に独立したH2/H3四Slot（直近比較適格0/4）。
 - **後続接合**：S0→S1とH0→H1の二レーンを独立に進め、S1/H1が各自合格してから同一Subjectの一往復を試す。正式なRelation Pin、Writable Editor、Quick Fix、二Harness比較は別の採用判断。
 
-**完了したこと**：着手順・実入口・別Owner・負例・観測列を一つの短い実行票にしたことのみ。**未実行**：新TEI CLI検証、Workbench Pinの実UI結線、実Harness、外部詳細Fetch、AI回答の元Subject実帰着、正式Owner受理。mainへ自動Mergeしない。
+**完了したこと**：実行票、Pinの実Workbench Source配線、既存Hostの背景読取を分離した関数・Fake Host単体テストの追加、静的Source照合。**未検収**：新HEADのNode24テスト・型検査、生成/埋込JS一致、実DOM/Windows Host、Root/Grant/Disclosure、外部Harnessの完全Replyと元Subject帰着、Owner意味受理。両PRはDraft・未マージで、既存P0を変更しない。
