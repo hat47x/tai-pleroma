@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   synthetic-sk02-only:
-    name: JavaScript syntax and 79 synthetic cases
+    name: JavaScript syntax and 82 synthetic cases
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -78,13 +78,13 @@ jobs:
           node -e '
             const fs=require("fs");
             const v=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
-            const required=Array.from({length:79},(_,i)=>"E"+String(i+1).padStart(2,"0"));
+            const required=Array.from({length:82},(_,i)=>"E"+String(i+1).padStart(2,"0"));
             const seen=Array.isArray(v.results)?v.results.map(r=>r?.case):[];
             const unique=new Set(seen);
             const missing=required.filter(id=>!unique.has(id));
             const unexpected=seen.filter(id=>!required.includes(id));
-            const ok=v.passed===79 && v.total===79 && seen.length===79 &&
-              unique.size===79 && missing.length===0 && unexpected.length===0 &&
+            const ok=v.passed===82 && v.total===82 && seen.length===82 &&
+              unique.size===82 && missing.length===0 && unexpected.length===0 &&
               typeof v.scope==="string" && v.scope.includes("NO harness trial");
             console.log(JSON.stringify({
               kind:"SK-02 synthetic required-case inventory (not actual Product/Harness)",
