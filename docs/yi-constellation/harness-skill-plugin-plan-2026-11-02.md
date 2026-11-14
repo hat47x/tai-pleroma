@@ -1232,6 +1232,8 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 | WS-SK-03 Command／Path入口 | ExecuteCommand系、OpenShoDocument／ResumeShoDocument、REA local-only Evidence PathなどをWeb/外部Harnessから任意Command/PathでInvokeできないことをHostで検証。必要ならActor/Root/Scopeを持つProductの許可入口へ限定 | TEI #3421/#3394/#4625、TAI #488 |
 | WS-SK-04 後着結果とProduct Apply | 二Browser Tab、旧Pin／別Root同digest、切断したTool ReplyをNative TurnとProduct Source epochへ別々に帰属。画面表示は成立しても現在Productへの無断Apply 0。Native多Writer保証が不明ならM2/M1へ縮退 | TEI #4515、TAI #234 HC-16〜18／Draft #648 |
 
+**その後の同一Ownerの進展**：[Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)はexact HEAD f2f49a7でService登録検査を実 application.Options.Services のASTへ寄せ、未知Service差込・二重登録・登録式の変更を含む**6件の合成負例**を追加。[Wails Host Workflow #43545456013](https://github.com/hat47x/tei-platform/actions/runs/43545456013)のnested server-tag Go testはcompleted/success。Browser由来の allowed string list は**Host Grantではない**と分類。これでも静的Inventoryとloopback二BrowserContextsの証拠に限られ、異PrincipalのHTTP/WS拒否は未実施。旧HEAD 9491bf9eの実績は履歴として残し、新HEADの別CIと混ぜない。
+
 **最小の接続順**：①現loopback Wails Serverの実method inventoryとProduct Inspectを限定観測、②TEI Ownerがread-only公開面／実Actor・Workspace拒否を独立試験、③適格な実Web Capability Discoveryが得られたときだけSkillへ当該read-only手順を提示。Product Skill名・共通UIコンポーネント・表示結果をWeb認可のIssuerにしない。公開用Facade/Hostの判断はTEI、TAIは既存X/HC票の比較欄のみを所有する。
 
 **Buildという別の実到達**：[TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD 0fcb7b6／[Windows CI #43542664470](https://github.com/hat47x/tei-platform/actions/runs/43542664470)では、同一AttemptのN2生成bundle→N3 Go EmbedFilesのmember/byte digest照合、改変コピー拒否、native WebView2受領を限定確認。実Consumer選択の良い独立証拠だが、Web Actor認可、Tool/Skill配布、compiler read-time依存全閉包、非Plugin BuildIntent、Stage1→Stage2 Desktop完了ではない。DesktopセルフビルドとTAI #168のH2/H3比較（適格0/4）の二P0へ追加Hard Gateを設けない。
@@ -1274,3 +1276,26 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 | TAI Skillが不要な単独Product Taskで追加Loadだけ増える | Tool-onlyの成功を維持。Skill価値は既存M00/M01/M10/M11で別測定 | TAI #488/#621/#648、配布#74 |
 
 **実行順は維持**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1送出→G2完全Reply→独立H2→H3→H3→H2（適格0/4）と、TEI Desktop #1824/#4583のStage1→Stage2を独立P0。新Product ToolのSkill案内更新やREA remote化、WASM/Web適合を初回比較・セルフビルドのHard Gateにしない。§51は既存Source/Issue/局所CIの照合から作った**Docs-only Draft**。新実CLI/OS/Harness/REA二Consumer/Studio/EKI Effectの横断E2E・Owner正式受理は今回NOT RUN。
+
+<!-- yic-source-selection-to-operation-admission-20261114 -->
+### 51.4 2026-11-14：AIが選んだ出典からProduct実Operationまで、飛び越せない二つのProduct境界
+
+[Draft #648 §20〜25](https://github.com/hat47x/tai-pleroma/pull/648)がActivity→Product→Harnessの因果帰属を扱う。本節はさらに、**選択された原資料の位置**と**呼び出されるCapabilityの結果契約**を、実コードで進展した個別Ownerに還元する。両者を新しい共通YIC操作Schemaへ統合せず、Skillは既存Product API/受入票にだけ案内する。
+
+**A. Source-selection境界**：[SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443) の単一Text Run限定Referenceは、許可されたRaw byteを与えた場合に、BOM・混在改行・日本語・非BMP文字を保持した**UTF-16表示選択 → UTF-8半開byte範囲**を写像し、surrogate内位置やRenderer不一致を拒否する。固定57-byte Referenceでは同一表記の前方/後方をそれぞれ[11,30)／[38,57)へ分離する。**ローカルTypeScript strict検査とNode Assert smokeの限定観測**があり、exact-head Vitest/Browser DOM/Root・Grant/別Process Card GET/現Source実再読は未資格。SUI #3441/#3438がOwner。見た目の文字列一致、同じ相対PathとRaw digestだけで選択したSource occurrence／Rootを同一としない。選択位置を持つCardやSHO文書は、保存後に元資料を再解決できた場合だけ該当出典Claimを再利用する。
+
+**B. Product-operation境界**：[TEI Draft #4629](https://github.com/hat47x/tei-platform/pull/4629) は既存Capability Invokeに、Adapter実呼出し**前**の不正Result契約拒否を追加したコード候補。空Capability ID、単一Outputとnamed Outcomesの矛盾、Result未宣言、重複Outcome名、Outcome名/型参照欠落ではAdapter Call=0を独立試験で求める。Goコードに事前検査はあるが、**当該PRのexact-head go test/CIは未確認**。正しいResult形でも、実公開Entry／選択Providerの真正性、現在Host Grant／Effect、nullable値・意味受理は未証明。TEI #4495/#3421／Draft #4618がOwnerであり、Skill/外部Harnessは実Capabilityを認可する主体ではない。
+
+**C. 公開Host境界**：[TEI Draft #4627](https://github.com/hat47x/tei-platform/pull/4627)のServer Service Inventoryと6つのmutation-negativeは、公開し得るService面が意図せず増えることを検出する**静的レビューガード**。二つのBrowserContextsの画面分離と異PrincipalのHTTP/WS認可・秘密配送遮断は別。Web Client由来allowed list、Skillのread-only宣言、外部HarnessのTool DiscoveryをCurrent Host Admitに変換しない。TEI #1824/#3421/#1043、TAI #232/#488を使用する。
+
+| 最小の後続実験（既存Expectedを使う） | Product/TAIで残す合否と禁止する飛躍 | Owner |
+| --- | --- | --- |
+| **出典候補**：同じ日本語が2回、BOM/改行/非BMP、同内容別Root | Raw UTF-8 byte範囲の正負を検査。実DOM複数Text RunやRoot未解決なら候補のまま。別Process ProductのRaw実ReadなしにSource確定としない | SUI #3441/#3438、SHO #48、TAI #271 |
+| **操作候補**：不正なCapability結果契約／valid Outcome | 不正時Adapter Call=0と実errorを確認。正常な結果宣言でも実Provider Invocation/Host許可と区別。Ownerの意味・Effectへ昇格しない | TEI #4629/#4495、TAI #488 |
+| **Web受領**：Browser supplied allowed／二Principal異Workspace／旧Reply | 実Hostで不許可Method/Path/HTTP/WSの拒否を確認。Inventoryや表示だけの成功ではWeb公開を保留。旧Pin/Turnへの後着ReplyはProduct Apply 0 | TEI #4627/#1824/#3421、TAI #234 HC-15〜18 |
+| **Skillに必要な案内**：SUI Card→TEI検証→SHO候補文書 | 各ProductのCurrent Source/Scope/Disclosure/Toolをその都度再発見。未実装操作をunsupportedとし、配布/ロード済みSkillでも非認可機能を推測して実行しない | Product各Owner、TAI #488/#74 |
+
+**最小の実装投資先**はProduct側の既存ReferenceとAdapter前の拒否・現在Host側の実Method/Principal拒否である。YICはSkillの専門手順・限定Projection・Activity Handoff・比較結果を管理するにとどめる。Sourceの写像器、Capability Runner、公開Web Authorization、二Consumer/二Principal試験の正本を新設しない。
+
+**実行順と証拠上限**：初回P0は引き続きTEI #4583 Desktop Stage1→Stage2、およびTAI #168 G0→G1→G2→独立H2→H3→H3→H2（比較適格0/4）。この追加のSUI/Script/Web検証は後続・並行でありBlockingにしない。#3443の限定smoke、#4629の実コード差分、#4627の限定CIを**一つのProduct横断E2Eに合算しない**。本節はDocs-only・新しい実ブラウザーSource再読／Provider呼出／Web二Principal認可／外部Harness Skill比較・Owner受理は今回NOT RUN。
+
