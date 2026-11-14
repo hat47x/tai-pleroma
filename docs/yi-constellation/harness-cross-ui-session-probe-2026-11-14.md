@@ -529,6 +529,22 @@ Wails v3公式[Server Build](https://v3.wails.io/guides/server-build/)はServer 
 
 **Web Serverの一つの停止線**：[TEI #4627](https://github.com/hat47x/tei-platform/pull/4627)は現在のWails Server `StudioBridge` 15 exported methodsにreference command/SHO外部子Processも含まれることを可視化した。Client入力の`allowed []string`はHost grantではない。Wailsの全Client broadcast EventにRaw/Transcriptを載せた後、Browser側で隠すことは許可制御でない。共有Webにする前にProduct/Hostが登録Serviceと実受信者別HTTP/WSの**事前拒否**を受入れ、未成立ならM2/M3とRemote Executionを非提供としてM0/M1へ縮退する。静的Inventory・二BrowserContext成功は現在Grant/WS非漏えいの証拠ではない。
 
+### 23.4 REA Host Selectorから実Consumerへ：機能入口の実装とRemote開示資格を分ける（2026-11-14）
+
+[TEI #4637](https://github.com/hat47x/tei-platform/pull/4637) は、[#4630](https://github.com/hat47x/tei-platform/pull/4630) `ExternalCandidatesFromBytes` の後ろへ**既存Studio Hostが起動時に固定したSelector→Workspace実Root照合→`workspace.ReadSource` 上限4MiBの一回取得→byte-only R2/REA Projection**を接続するGo Draft。Caller入力は`workspaceID/selector/observationID/relationID`のみで、`File`/絶対Pathを指定できない。実Captured REA 6.8.0の局所正負例ではRoot交換・symlink脱出・サイズ上限・Raw変更・誤Relation・Selector重複/誤Digest・Error診断の抑制を対象とする。**この実装はWails/HTTP/MCP/外部Harnessに未登録**であり、現在Principal/Grant/Recipient相対Disclosure、Source Revision/RootのA→B→A、別Transportの実Consumerとは独立に受理する。
+
+**Reviewと合流の停止線**：当初の#4637は#4630をbaseにしたStacked Draft。2026-11-14の再照合時は`main`をbaseとする**4ファイル差分**で、#4630由来のbyte-only Operation＋試験2ファイルと、#4637固有Host Reader＋試験2ファイルを含む。既存mainには同時点で`ExternalCandidatesFromBytes`が未存在。従って「#4637だけで追加2ファイルの独立完成」「#4630が既にmain採用」とは言わず、#4630 Ownerがmain統合した後に重複差分を落として**新base/HEADでGo・Host・Windows CIを再検収**する。#4637のHEAD/CIは高速に更新されるため、実試験結果は個別のexact SHA・Workflow Attemptで記録する。初期HEAD `c5f0075`はIssue-to-Designのみで、Go/Studio/Windowsの完了証拠でなかった。後続HEADにはWorkflowが起動しているが、旧HEADの局所Greenを移植しない。
+
+**次の一つの実Product受入順（既存[TEI #3394](https://github.com/hat47x/tei-platform/issues/3394)／#4503／#2516 Expectedを用いる）**：
+1. **L0：Local** 同じ実Hostの許可Workspace＋Host固定Selectorから、Raw byte取得・R2 Observation/Directed Relation・Unselected/Unknown/AuthorityLimits・Evidence pinを実Callで照合。Path指定をCallerへ増やさない。
+2. **L1：Host Grant/Current Root** Hostの現在Principal/Workspace/Worktree/必要Scope・Granted Readを実取得**直前**に確かめる。Root置換/失効・Private変更・A→B→A・別Principalの拒否を同じProduct Receiptに束縛。保存Evidenceのdigestは現在のSource Revision/Owner意味受理の代替にしない。
+3. **L2：Disclosure** その時点のAudience/Recipientへ許されたObservation/Relation/Source位置/Raw Digest/Unknownだけを用途限定Projectionにする。成功PayloadにもSource名/非選択情報が含まれ得るため、Local ResponseをそのままBroadcast/Event/MCP Replyしない。
+4. **L3：Independent Consumer** 公開可能なHandoff参照→SHO等別実Processが実Received byteと現在Root/Grantで元TEI Sourceを独立再Readし、異Scope・未承認・取得不能を`unknown/denied`とする。Receipt一致・同byteの引用だけでSource独立受理とは認めない。
+
+**Script Entryとの別線**：[TEI #4636](https://github.com/hat47x/tei-platform/pull/4636)はmain受入済み#4629のResult契約preflightに加えて、Input宣言/Effect Kind/Data参照の欠落・重複を**Adapter call0**で拒否する局所Draft。宣言が正常でも実入力値/NULL・公開Entry・Current Host Grant・選択Provider・Effect成功は未確認。REAのread-only Readerを、公開Script/非冪等Functionの一般Invoke資格として再利用しない。Script受入はTEI #4495、REA Source/Readerは#3394とOwnerを分離する。
+
+**YICの役割**は、Productが許可したSubject/Projectionを薄いAdapterで外部Harnessへ受渡し、実Tool Reply完全性と別Consumer再資格化を見えるようにすることだけ。新Source Store/REA Reader、Host認可・Public Gateway、万能Skill Loader、Agent Loopは作らない。L0〜L3の実E2EとWeb二Principalは**NOT RUN**、このレーンを既存二P0の追加Hard Gateにしない。
+
 ## 24. Web×Harness接合の小さな反証と製品ごとの停止線（既存Expected再利用）
 
 **この章は新試験番号/第二Oracleではない**。既存[TAI #234 HC-15〜18](https://github.com/hat47x/tai-pleroma/issues/234)、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、[TEI #3421](https://github.com/hat47x/tei-platform/issues/3421)、[TEI #4495 EL-01〜12](https://github.com/hat47x/tei-platform/issues/4495)、[TEI #4621 WSP-02](https://github.com/hat47x/tei-platform/pull/4621)の独立Expectedを組み合わせる**受入観点の索引**。
@@ -662,7 +678,7 @@ YICの候補ロールは「探索・要件整理／高度な設計判断／実�
 | 後続J-S/J-V | 再接続・限定Packet Handoff・並列3 Workstream・費用／再説明 | TAI #271/#234/#621/#422 | Native Session実復帰と新Session Activity再開を別採点。Goal/Schedule実運用能力は各Provider/Profileで評価 |
 | 後続UI | Resume/Cancel/Retry/受理の別表示 | TEI Studio #1824/#3421、TAI #234 HC-15〜18 | UIで表示できてもHost/Effectが復旧したとは扱わない。Web機密Eventと二Writerは§23/24の別試験 |
 
-**現在のCIの資格**：#4634 `653d0d9`の検証は本節更新時点で8 Workflow中、Issue-to-Design／Cache／依存脆弱性／Studio参照編集／Action Surface／E1-Aの6件completed/success、Self-buildとRepository Healthの2件がin_progress。**8/8 PASSではない**。#4623 8/8と#4624 5/5の旧別HEAD成功を、この統合HEADの検査結果として書き換えない。#4627 Wails Server method inventoryは公開Webの現Host/AuthZを証明せず、`a0850047`のRepository Healthは[実Jobのgofmt不一致](https://github.com/hat47x/tei-platform/actions/runs/43547953342)でfailureを確認。実Service A/B/C選定・共同Web実Principal分離も未実施。
+**現在のCIの資格（2026-11-14再検収）**：#4634 `653d0d9a1d0125631aec4379550d2bce20364207` の**8 Workflowがすべてcompleted/success**。統合Checkout上のBuildIntent/選択Builder起動前pinの限定正負試験とSelf-build・Repository Healthを同じHEADで検査できた。ただし非Plugin N0〜N3／生成Stage1→Stage2／そのStage2実Windows WebView2は未実証。#4623 8/8と#4624 5/5の旧別HEAD成功を、この統合HEADの検査結果として書き換えない。#4627 Wails Server method inventoryは公開Webの現Host/AuthZを証明せず、`a0850047`のRepository Healthは[実Jobのgofmt不一致](https://github.com/hat47x/tei-platform/actions/runs/43547953342)でfailureを確認。実Service A/B/C選定・共同Web実Principal分離も未実施。
 
 **Owner受理の停止線**：本章で採用したのは設計上の区分・実証順・失敗時縮退であり、DSH/Codex/Claude Code実Resume、Scheduleの再配送、EKI Artifact/Result body、Control Plane failover、TEI Stage2 Self-build、実Product Commit/Owner承認、多Workstreamの実効果を新たに観測・採用したわけではない。DSHの公式機能表・各Issueの既存局所Evidenceはあっても、今の実Host/Principalでの利用資格は別。B4独自Agent Loopへの投資判断は[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の既定条件（複数代表Harnessの適格比較、代替可能性、重大固有欠落、費用、Owner受理）が成立するまで保留する。
 
