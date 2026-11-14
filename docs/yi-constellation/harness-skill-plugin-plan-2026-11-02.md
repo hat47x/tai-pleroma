@@ -1115,3 +1115,24 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **最小反証の持帰り先**：N0が正しいTSを生成してもCatalogから実Builderが選ばれていなければB1-B合格0（TEI #4583 BD-13）。Activityだけ届いてTranscriptが取得できなければNative Session閲覧合格0（TAI #234）。同じRaw digestでRootだけ変化した場合は旧Validation/Pin利用資格を復元しない（TEI #4616/#4515）。SUI Cardが描画されても元Rawへ別Processで戻れなければIG1未達（SUI #3442）。これらは各Ownerの独立Expectedを使用し、**新たな横断E2E試験は本追補ではNOT RUN**。
 
 **この節の限界**：既存CIと他のDraftの証拠を照合したdocs更新のみ。TEI BuildIntent B1-B/B2/B3、外部HarnessのOS境界と同一Session多UI、SUI IG1製品E2E、SHO独立Writer、Current Grant/Owner意味受理は未実施。#4587、#4570、#4617、TAI #648、SUI #3442の個別CI/契約を本TAI Draftの製品適合へ加算しない。
+
+### 48.9 2026-11-14：Builderの起動前同一性検査を、Catalogによる正式選択と分ける
+
+<!-- yic-20261114-builder-pin-qualified-exact-head-8of8 -->
+
+**新たに成立した限定実装**：[TEIセルフビルド共有CLI Draft #4623](https://github.com/hat47x/tei-platform/pull/4623) exact HEAD `929fcf857cd0f6a792a69fb23cadfb5eccc05e90`で、既存`tei self-build -child`のCallerに`-expected-child-digest sha256:<64 lowercase hex>`を許容し、実子ファイルのSHA-256が違えば`exec.Command/Start`前に停止する。明示pinが一致したときだけ`selectedChildDigest/childPinChecked/childPinMatched`をReceiptに記録。元mainのOS境界`selfBuildBoundary`／`driveSelfBuildIn`を維持し、不正pin／選択B→実A／Launcher経由の拒否・一致pinでも虚偽Artifact digestを合格にしないGo回帰を加えた。差分2ファイル。**[Self-build CI #43537292107](https://github.com/hat47x/tei-platform/actions/runs/43537292107)と[Repository Health #43537292191](https://github.com/hat47x/tei-platform/actions/runs/43537292191)を含む同HEAD 8/8 Workflowがcompleted/success**。
+
+| 独立する資格 | 今の到達点 | 次の未成立Edge |
+| --- | --- | --- |
+| **Caller pinの起動前照合** | #4623／HEAD `929fcf85`のGo/CLI回帰とSelf-build／Health含む8 CI success。実Childが選択SHAと異なればChild起動と出力作成を禁止 | Callerの選択文字列自体が現在Authorized Builderであること、OS Loaderが開いた同一byte、full dependency closureは未資格 |
+| **正式Builder選択→実Child** | `internal/buildintent`の`Resolve`／Builder Catalogは既存契約として存在。#4623の引数はこのResolved receiptから自動供給していない | `BuilderIdentity.ArtifactDigest`を、同じBuild Attempt内の実Child Pinに接合。Subject/Contract/Target/Artifact→実image/argvを独立検査。次Owner [TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)／#2831 |
+| **N0→Windows Consumer** | [TEI #4587](https://github.com/hat47x/tei-platform/pull/4587)のpin追加前HEAD `24bfaed8`でTEI CLI実N0 Child→esbuild→Wails→Windows実WebView2が[CI #43450255223](https://github.com/hat47x/tei-platform/actions/runs/43450255223)成功 | #4587の新pin追加HEAD `12bd80bf03f24092f7947e0c9395dada552a3cbc`は**mainと競合（mergeable=false）**し、当該HEADのWindows Workflowはこの確認時点で未観測。#4623のGo 8/8と#4587旧Windows Greenを合算して新pinのWindows PASSとしない |
+| **非Plugin Desktop/多工程セルフビルド** | `go-command` Source分岐はあるが`BuildIntent.Validate`は`plugin` Subject限定、出力`plugin.BuildPlan`にもPlugin IDがある | Desktop.exeをPluginへ偽装せず#1080/#1097のBuildExecution/ArtifactSetと実N2/N3 Target Adapterを薄く接続→B2 Stage1自身のStage2 Windows Desktop Build→B3当該Stage2実WebView2。**NOT RUN** |
+
+**採用条件の追加圧力**：Callerの明示pinが成功しても、同内容別Provider ID／Authorityの混同、Expected Builder Bなのに別Artifact Pinを渡す混同、検査後OS LoaderまでのPath差替え（TOCTOU/ABA）、N2の実JSとN3のEmbed違い、別HEADの成功合算を拒否する。独立Expectedは#4583 BD-03/09/10/11/13と既存[#1180](https://github.com/hat47x/tei-platform/issues/1180)/[#2514](https://github.com/hat47x/tei-platform/issues/2514)へ差分帰属し、新たなTest正本は作らない。
+
+**Plugin／Script／Harnessとの非混同**：[Plugin Contract→Actual Use Draft #4621](https://github.com/hat47x/tei-platform/pull/4621)、[主線反映 Draft #4620](https://github.com/hat47x/tei-platform/pull/4620)が提案するContract/Build/Invocation/Effect/Disclosureの区分は評価欄として再利用可能だが、実Buildで子を拒否した証拠をProductのRuntime Provider・現在Grant・Business Effect受理には使わない。[Script Entry Draft #4618](https://github.com/hat47x/tei-platform/pull/4618)のSelected Provider→Actual Invoker照合も独立Runの責務。AI Skillや外部HarnessはBuilder IdentityのIssuer/承認者ではない。TAI #168のG0/G1/G2・H2/H3独立4 Slot（適格0/4）を別P0に保つ。
+
+**計画の実装順**：まずTEI #4623をmain Ownerが受理できる狭いGo/CLI共通機構として検討（Draft・未統合）、次に#4583でResolve→pin実Childを同一Attempt接続、N2/N3のProduct Artifact消費→B2→B3へ進む。#4587のmain競合は実Desktop試験を復旧してから厳密に検収。TAI側は本体Builder/Resolver/Stage Ownerの資格を代行しない。
+
+**状態**：本節は製品ソース差分・exact-head GitHub CIの再確認に基づく**docs-only更新**。新たなTEI Go/Node/Windows E2E、Loader実byte、正式BuildIntent実Builder接続、Stage1→Stage2、外部Harness実Session/OS送出、SHO/SUI独立Consumerの今回の実行は**NOT RUN**。すべてのPRは個別のDraftとOwnerレビューであり、本TAI Draftも未merge。新Runner・Host・Registry・第二Acceptance正本を導入しない。
