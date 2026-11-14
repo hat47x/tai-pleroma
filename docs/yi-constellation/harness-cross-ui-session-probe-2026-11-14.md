@@ -297,3 +297,47 @@ SHOがHandoff Markdownを実Read・保存したことは、元SUI Rawまたは�
 **NOT RUN/NOT ACCEPTED**：#4624と#4623を同一Desktop Attemptで接続した受入、#4625外部Harness公開利用・Host限定Byte取得・SHO第二Consumer、Webチーム同時編集/権限撤回/旧Reply、TAI #168 G0～G2およびH2/H3新4 Slot（現在比較適格0/4）、TEI #4583 B2/B3 Windows Stage2実行、業務書込み/Owner意味受理。
 
 **次の着手は二つの既存P0を維持**：TEI #4583 Builder/非Plugin ArtifactSet→Stage2 WebView2、TAI #168実OS隔離→送出→完全Reply→独立4 Slot。P-A～P-DとWeb反例は後続のread-only横断実験であり、先行条件を無断で増やさない。新共通API、Egress代替、Session Server、Plugin/Skill Registry、第二受理正本、TEI独自Host、Native Agent Loopの開発判断を本Draftでは行わない。
+
+<!-- yic-harness-web-wasm-substrate-and-port-20261114 -->
+## 17. Web/Desktop共通Core・WASMの責務境界（2026-11-14設計候補／実装NOT RUN）
+
+### Wailsの共有可能範囲
+Wails v3はDesktopではGo native backend＋OS WebView＋Native Bridgeを用い、Web配信用Server Buildも提供する。したがって「Web版にもWails」を**Go ApplicationとUI資産の再利用**として検討するが、通常ブラウザーでDesktop WebView IPCをそのまま使えるとは扱わない。公式参照：[Technical Overview](https://v3.wails.io/contributing/overview/)／[Architecture](https://v3.wails.io/contributing/architecture/)／[FAQ](https://v3.wails.io/faq/)。
+
+| 状態・処理 | Desktop | Web | Owner/共有範囲 |
+| --- | --- | --- | --- |
+| UI View/Focus/一時Draft | TypeScript in WebView | TypeScript in Browser | UI部品は共用。Focusを意味的Pinと混同しない |
+| Product Action/Current Source/Grant | Wails Bridge→Go Application | AuthZ付きWeb transport→Go Application | TEI #3422の型付きApplication API。Goが正本、transportは別 |
+| Activity/用途限定Handoff | Product UIの参照 | Product UIの参照 | TAI #271。Native Session IDと別 |
+| Harness Session/Turn/Tool Event | Host側Native Adapter | 実到達可能なHost側Adapter | Native実ID、閲覧Audience、Writerを検証。新Session Storeなし |
+| Build/Provider/Effect | 実OS Process/Artifact | 実Server Process/Artifact | Product/Host Ownerの実Attempt。Desktop Stage1→Stage2とWeb Jobは別証拠 |
+
+**WASMは必須共通Runtimeではない。** 同一データから同一結果を得る純粋な検証・型変換・Graph/差分処理・表示補助についてのみ、TypeScript処理／Go native service／Go→WASM実装を比較する。Source/Grant/Disclosure、秘密のHost Credential、外部Harnessの実操作、Build/EffectはWASMの権威にしない。Client計算値は候補であり、Productの現在確認を置換しない。
+
+採否は起動・download byte・Memory・編集直後の応答・Buildサイズ・実SourceとNULL/Bag/同名多重Relation/ABAの挙動一致・debug負担を**同一Fixture・独立Expected**で比べた後とする。初回のTEI Studio Desktop SelfBuild [#4583](https://github.com/hat47x/tei-platform/issues/4583)に新Hard Gateを追加しない。決定Ownerは[TEI #1824](https://github.com/hat47x/tei-platform/issues/1824)/[#3422](https://github.com/hat47x/tei-platform/issues/3422)。
+
+### Stateとイベント帰属
+一時Focus、Pinned Target intent、Product Source identity/current Revision、Activity、Native Session/Thread/Turn、Product Operation/Attemptは独立した概念。Web同一Workspace・同じSessionの表示・同一Model Revisionを、現在Grant/Transcript閲覧許可/Sourceの連続同一性の根拠としない。Streamの遅着・欠落・別UIでの受信時も、実Native IDと元Pin/Activity/Attemptを対応づけ、確定不能なら候補保留／unknownとする。Productへの自動Applyは行わない。
+
+## 18. 薄いHarness Adapterを実装するための最小受渡し（計画／NOT RUN）
+
+本節の名前は設計用の説明語彙であり、全Harnessに実装を要求する新共通ABI/Registry/Runnerではない。既存TAI #168/#234 HC-01〜18/#271、Draft #648 §§3–16の実証とOwnerを再利用する。
+
+| Adapter操作候補 | 観測しなければならないこと | 縮退・禁止する推論 |
+| --- | --- | --- |
+| Capability Probe | Native仕様、実Host/Provider/Model/Profile、現在read/session/stream/interrupt可否 | 公開APIの存在から実資格を推定しない。unknown/unsupportedを残す |
+| Open/Resume/Fork | 実Session/Thread ID、fork関係、Audience、履歴の開示範囲 | Live継続不可ならTAI Activityから新Sessionへ限定Handoff。過去Grant/Transcriptは移さない |
+| Context Delivery | Product許可Projection、Prepared/Actual Delivered、実受領、送出範囲 | Modelが理解した証拠にはしない。Raw Path・秘密資料は送り込まない |
+| Turn/Event/Interrupt | Native Turn/Tool ID、欠落/切断/順序、操作元、cancel受領 | UI局所queueは別端末のWriter排他ではない。InterruptはBuild/Effect取消の証拠ではない |
+| Candidate Return | 元Pin、Source/Revision、Activity参照、AI候補の実到着 | Productが現在再資格化してPreviewへ渡す。回答=Apply/Owner受理ではない |
+
+**実装・受入の順序（既存計画を置換しない）**
+1. **独立P0-A** TEI #4583：Builder→実Child→Stage1→Stage2→WebView2の同一Attempt検証。別HEADの成功を合算しない。
+2. **独立P0-B** TAI #168：G0物理Read-deny→G1実送出→G2完全Tool Reply→独立H2/H3 4 Slot（現適格0/4）。Session UI/WASMを追加Blockingにしない。
+3. **後続J-R/J-P** TEI #4515のSubject Pin、#4625局所read-only CLI、#3394 Host許可Projectionから、各ProductのReaderと実Consumerを照合する。
+4. **後続J-S** DSHでActivity→Native Sessionの限定閲覧/Resumeを実験し、HC-15〜18で履歴開示、別UI同時Turn、遅着、Interrupt後のOperationを検査する。Native未対応なら閲覧限定/新Sessionへ縮退。
+5. **後続J-V** B0 Product-only、B1 Tool/Skill、B2 Adapter、B3統合UIを同じ公開Task/Source/Disclosure/独立Expectedで比較。別Harnessを追加してProduct Coreが変わるならAdapter境界の失敗として記録。B4独自LoopはB0〜B3で解消不能な実測欠落がある場合のみ再検討。
+
+**反証と停止線**：同名別Workspace、Source A→B→A、Rev同一でもGrant変更、履歴への過剰開示、8KiBで切れたTool Reply、並行Turn/二重Writer、Interrupt後の実Build/Effect不明。合格不能な機能はunsupported/unknown/NOT RUNとして示す。Claim、Tool exit、実Consumer、Host Effect、Owner意味受理を分離し、実験を増やすための第二Authority/Agent Loop/Source Storeは作らない。
+
+**今回の資格**：Wails公式資料と既存Product/TAI計画の照合を追加したDocs-only追補。Go/WASMベンチマーク、実Web共同開発、実二Harness互換、4 Slot新比較、Stage2 Desktop実合格、Owner正式受理はいずれもNOT RUN。
