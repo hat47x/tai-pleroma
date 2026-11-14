@@ -1079,6 +1079,11 @@ YICでは、利用者が選択した**一つのFunction／Entry**を起点にし
 
 **移植に必要な検査**：[TEI #4665](https://github.com/hat47x/tei-platform/pull/4665)のPX-01〜22は[TEI #4198](https://github.com/hat47x/tei-platform/issues/4198)・[#2514](https://github.com/hat47x/tei-platform/issues/2514)等の既存Expected候補とする。まずpure Function一件について、元コード・意味モデル上の評価・実Go CLIの値と前提条件を対照する。次に、同じ値でもRead Footprintが違う、Commit前に通知する、ACK喪失後に再送する、旧Artifactを使う負例を分ける。Targetで必要な保証が表現できなければ`unsupported`／Gapを明示し、暗黙の代替処理を生成しない。Runtime間移植・Graph Editor・独立Graph CompilerはP0の条件ではない。
 
+<!-- yic-transform-category-structure-meaning-qualifications-20261114 -->
+**変更の種類によって再検証を選ぶ。** [TEI #4673](https://github.com/hat47x/tei-platform/pull/4673)でmainに統合された実行モデルの後続設計を受け、図の編集やAIのリファクタリング案を、①**配置・表示のみ**、②**記法・糖衣の往復**、③**処理の抽出・共通化**、④**Target／実行配置の移行**、⑤**意図的な仕様変更**に分類する。①は元Subjectへの参照と表示差、②はSource occurrence・原文の非対象byteと意味対応、③はInput/Output・動的依存・評価順・NULL/精度・実Read/Effect、④はHostの時間・再送・Grant・実Artifact/Consumer、⑤は変更された契約とOwnerの新規受理をそれぞれ確認する。値が同じでも読取範囲が広がる、Commit後の通知がCommit前になる、SourceがA→B→Aの間にProvider/Grantが変わる場合は旧Evidenceを自動再利用しない。PX-23〜29はTEI #4198/#2514/#1180の**未実行の反例候補**であり、YICの新しいGraph Compilerや変更承認器ではない。
+
+**構造を表示できることと意味を保存できることも別である。** [TEI Draft #4667](https://github.com/hat47x/tei-platform/pull/4667)のGraph/Tree/Table・JSON Schema検討では、同じ見かけの構造であってもGraphの多重有向辺、Tableのbag/NULL、QueryのJOIN粒度・RLS・部分取得、外部SchemaのDialect／動的参照／複合制約によって意味が変わる。StudioやYICから最初に提供するのは**原Sourceへ戻れる読み取り専用Projectionと、表せなかった制約の明示**である。編集の逆写像が一意に決まらない、共有参照を壊す、導出した集計Viewを元Sourceへ書き戻す場合はProposalすら自動Commitしない。JSON SchemaのDraft/Vocabularyなどを選定・評価するのはTEI既存Ownerであり、YICは未対応を`unknown/unsupported`と伝える。
+
 **StudioとHarnessの接続**：PinされたSource・Functionと、利用者に見せる説明用Projection、外部AIへ実送信してよい限定Projection、実行Traceの開示資格をそれぞれ判定する。AIが生成した「分かりやすい流れ図」はProductの現在の実行記録ではない。新しいDiagram Storeや共通Meaning Authorityを設けず、既存TEI #4515/#1124/#4502とTAI QH-P0の受領票へ割り付ける。
 
 **最初の図解検収**は「固定したread-only一Functionについて、公開された実Entry、Source、選択Provider、返却Result/unknownをStudioとCLIから追えること」。図だけが一巡していてProductの実Invocationがなければ図解限定PASSとし、AI Harness実行・製品配布・生成アプリのセルフビルド達成とは数えない。
@@ -1198,9 +1203,14 @@ YICのTool/Skill利用資格は、用途ごとに次の**実観測できる段�
 
 **最小の反証**は、Provider Bを選んだのに実CallがA、対象のSourceは同じでもRootが変わった、同名二ノード／多重有向辺の一部が図で消えた、宣言のみのPluginがSkill一覧に載った、表示位置だけの変更で意味・生成物が失効した、の五種類とする。既存TEI #951/#1016/#1251/#2497/#2600/#1180/#2514のScenarioへ割り付け、YICに第二Plugin ResolverやRegistryを追加しない。
 
+<!-- yic-contribution-phase-closure-verified-bom-20261114 -->
+**一つのPackageと、実際に必要な機能集合は一致しない。** [TEI Plugin設計 #4671](https://github.com/hat47x/tei-platform/pull/4671)の§14は、Applicationの必要Contract/Roleから実Providerと履行するTraitを選び、**Authoring／Build／Runtime／Delivery**という使用段階ごとに必要な貢献・依存を確認して、実Build成果物・実Provider・実受領へつなぐ方針を明確にした。検証対象は「Pluginが宣言されている」「Builderが選択された」「Artifactへ実収録された」「実Hostがロードした」「現在Grantで呼び出した」「対象Consumerが結果を受領した」という異なる事実である。[RQ-037 Verified Composition BOM（TEI #3267）](https://github.com/hat47x/tei-platform/issues/3267)を既存の構成・配布の正本として用い、**個別PluginのPASSを組合せ全体のPASSにしない**。Build時だけ必要なLanguage GeneratorをRuntime依存としない。TEIはGo単一バイナリの静的合成を基本にし、別Process/Wasm/外部HostはTargetの能力・隔離・更新要求があって初めて評価する。MCP／VUIをPlugin共通ABIとして固定しない。
+
+**変更に応じて失効させる範囲を変える。** 文書の説明・表示変更、構文／意味規則変更、Provider/Builder版変更、Host Grantや送信先変更を同じ「再ビルド」と見なさず、Source/Meaning/Artifact/実Consumer/開示資格を必要な範囲で再照合する。一方、同名Provider、同じ結果値、同じBinary digestだけでは過去の意味受理・現在のGrant・実Tool利用を再利用しない。DSLの自己記述についても、固定Seedで読めたこと→Language選択→意味候補→Ownerの意味受理→生成物の実Consumer受領を区別する。**自己Parseは自己承認ではない**。適格な選択を行う製品側の契約を使い、YICに第二Plugin ManagerやDependency/Authority正本を追加しない。
+
 **実証順**：P0の正式非Plugin Studio Build・通常製品Entry/Provider実Callを先に進める。P1では未知のPlugin／外部Schemaをまずread-onlyで調べ、Source/Graph/表の変換に伴う意味の欠落と編集可能範囲を表示する。次に限定した一つの貢献が実Builderまたは実Providerへ収録・選択・呼出しされ、独立Consumerへ届くまでを測る。YICがPluginを実行する新Hostになるのではなく、各Productの**確かめた能力だけを外部Harnessから使えるようにする**。
 
-**現在の資格**：[TEI #4671](https://github.com/hat47x/tei-platform/pull/4671) HEAD `efce38e6`は確認時点Cache CIが成功、Repository Healthは実行中。[#4667](https://github.com/hat47x/tei-platform/pull/4667) HEAD `d5039dd0`もCache成功／Health実行中。旧#4664の別HEADの結果は転用しない。上記は設計・受入条件の引渡しであり、新たなPlugin Build/Load/Call、構文逆編集、Harness Tool受領、意味Owner受理は**NOT RUN**。両PRの最新Head/CI/統合状態は採用時に再確認する。
+**現在の資格（exact HEADのCI）**：[TEI #4671](https://github.com/hat47x/tei-platform/pull/4671) HEAD `a03c127b`はRepository Health／Cacheの**2/2成功**。[TEI Draft #4667](https://github.com/hat47x/tei-platform/pull/4667) HEAD `a00186d1`はCache成功・Repository Health失敗（[実行 #43584614885](https://github.com/hat47x/tei-platform/actions/runs/43584614885)の`repository-plan-check`が設計書214行の不要なescape付きバッククォートを拒否）。修正後の同一HEAD再CIが必要。[Script Launch Draft #4672](https://github.com/hat47x/tei-platform/pull/4672) HEAD `9341b2fd`はHealth／Cache **2/2成功**だが**文書・計画だけの合格**であり、通常`tei` CLI・型付きApplication APIの別々の実Call Witnessを保証しない。以上の成果から、新たなPlugin Build/Load/Call、JSON Schema逆編集、Host Grant、外部Harness Tool実受領、Ownerの正式Meaning受理を完成扱いしない。採用時は各PRの現在HEADとCIを再取得する。
 
 **YIC独自Agent Loopは引き続き保留**。二つ以上の外部Harnessを適格に比較し、Product/Host/Adapterの改善では解消できない実害が示され、安全性・保守・費用を含む自作案の優位性を確認できてからTAI #234で再審査する。新しい中央Runner、Agent Host、権限判定器、Expected正本は増設しない。
 
