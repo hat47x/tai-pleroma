@@ -1094,3 +1094,24 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 **BuilderとAIの判断境界**：N0の生成物がN2にインストールされたこと、N3 exeがWebView2で起動したこと、Product Skillが実Loaderで使われたことは、それぞれ別の観測である。Build ArtifactやHandoff票のHash、Skill名、AIによる「確認済み」という発話を現在のProduct Subject・受理済みMeaning・実Tool送出の代わりにしない。TAI #488の中断後の別Session比較（Tool-only／Product Skill／TAI Skill）はこの再資格化が実際に行われたかを測り、独立H2/H3四Slotの成功数へ転用しない。
 
 **進捗区分**：上表は各PRの限定実験とmain統合状態の照合であり、**本節のTEI→SHO新往復、実UI Pin、B1-B〜B3、外部Harness OS G0〜G2、H2/H3はNOT RUN**。追加Runner、中央Registry、Handoff v2、第二Meaning/Expected正本は設けない。
+
+### 48.8 2026-11-14：実TEI起動が加わった現在の受入境界と横断実行順
+
+<!-- yic-20261114-real-pr-head-n0-crosslane-qualification -->
+
+§48.7は11月13日時点のSnapshotとして維持する。以降のPR／CIで進んだ事実を**同じHeadの現在実装と誤認せず**更新する。TEI Studio DesktopをTEI自身でセルフビルドする目標は不変。横断HarnessとSUIの機能をその前提条件に追加しない。
+
+| 接続先 | 最新の確認済み範囲 | 次の停止線・実装Owner |
+| --- | --- | --- |
+| **TEI N0→N3 Windows** | [TEI Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) exact HEAD `24bfaed8fadcce5687fb7f02a121a21fd70f2861`／[Windows CI #43450255223](https://github.com/hat47x/tei-platform/actions/runs/43450255223)は生成版・通常版WebView2 Jobを含む**同Head 7 Workflow成功**。TEI通常CLI自身が`self-build -child/-child-arg-file/-artifact`でN0生成器の実Processを起動。親子image SHA・実argv・exit・子の報告とディスク再読TS byteを照合、二重生成no-clobber拒否も実施。N0実出力をN2 esbuild選択入力へ渡し、N2 **24件**、N3 Go選択**303件**、native exe SHA `f7acb50feb74f9e93afe61ff60fc14718b5ffaf7cf6a88c38f837a6a8f757209`、実WebView2配信JS SHA `755e5e85f8487d4e5361fe4262c77595c3ebc048068f2647b0b27862de804299`を一Jobで確認 | **N0はprimitive `-child`起動**。Builder Catalog/BuildIntent選択なし、TEI CLIは通常`go build`版、N1〜N3の起動者はCI Workflow。`qualifiedBuildIntent=false`／`dependencyClosure=unknown`。既存[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583) B1-Bで選択Builder→実Invoker→Artifact、次B2実Stage1→Stage2 Windows、B3そのStage2実WebView2を別検収 |
+| **X-TEA三要素モデル** | [TEI Draft #4570](https://github.com/hat47x/tei-platform/pull/4570)は合成Workspaceの三視点/CRUD/Sourceへの移動・固定意図保持を**実Windows WebView2**で限定確認（[CI #43419938104](https://github.com/hat47x/tei-platform/actions/runs/43419938104)）。`tei-studio -three-view` Headlessも同一Bridgeで実呼出し | 人によるDesktop受入、原典`.xead/.xeaf`、正式`tei` CLI入口、Pin保存、Profileに沿うPlugin選択/収録は[TEI #4611〜#4615](https://github.com/hat47x/tei-platform/issues/4611)等へ。Studio B1のHard Gateにしない |
+| **Rawから独立Recipientへの資格** | [TEI Registry Draft #4617](https://github.com/hat47x/tei-platform/pull/4617)の[CI #43438531175](https://github.com/hat47x/tei-platform/actions/runs/43438531175)では別Node OS Processがlocalhost HTTPで未信頼signed Releaseを取得し独立検証、Required Memberの実byteを別GET。正常1・拒否9成功 | 固定テスト鍵・同一マシンのReference。実配布/現在Publisher Trust・Origin・失効・Plugin実Load、TAIのHandoff受領資格へ昇格しない。TEI #2589がOwner |
+| **現在Product Context** | [TEI #4616](https://github.com/hat47x/tei-platform/pull/4616)のexact HEAD `80bf742`は同Source/Model Revisionで**宣言済Rootの実在だけが変わるとValidation結果が変わる**回帰試験を[CI #43441013751](https://github.com/hat47x/tei-platform/actions/runs/43441013751)等で成功。#4584の不存在Subjectと参照0件の区別はmainに統合済 | Source byteやModel Revision同値で現在Root/Validation・Scope/Grantを省略しない。TEI #4515のPinとTAI Product Handoffの再Readで確認。GUI自動検知・実開示/送出は未証明 |
+
+**実装の接続順を三系統へ分ける。** (1) **Build**：TEI #4583のB1-B（N0 primitiveから正式Catalog/Intent実選択へ）→N2/N3の各Invoker/Artifactを同一Attemptで束縛→B2→B3。(2) **Harness**：[TAI Draft #648](https://github.com/hat47x/tai-pleroma/pull/648)のProduct-only→限定Activity Handoff→Native Transcript閲覧→実Turn操作→Product候補Applyを別段階で検証。Activityの受領をTranscript閲覧資格、UI局所操作の排他をHostの実同時実行保証と呼ばない。既存TAI #234/#271、#168 G0/G1/G2→H2/H3適格4 Slot（**0/4**）を維持。(3) **情報統合**：[SUI Draft #3442](https://github.com/hat47x/sui-sensemaking/pull/3442)のIG0 AI OFF→IG1 Raw→Card→別Process/Browser原文復帰→IG2二資料照合→IG5 SHO等RecipientのLoss付き受領を既存Ownerで順に検収。SUI Cardの表示だけでRaw再取得・Meaning/Permission・SHO実受領を合格にしない。
+
+**横断で共有するのは採点原則だけ**：Build Attempt（実Builder/Output）、Product Context（Workspace/Qualified Subject/Source Revision/Root/現在Disclosure）、Harness Session（Activity/Turn/Transcript）、SUI Raw→Occurrence→Card/SHO Draftを一つのAuthority・継続Session・汎用`verified`状態にしない。既存Handoff v1の許可済Projectionだけを渡し、別Recipientは当該Read/受領を独立確認する。新Handoff v2/Host/Runner/Lock/Selection Registry/Meaning正本を追加しない。
+
+**最小反証の持帰り先**：N0が正しいTSを生成してもCatalogから実Builderが選ばれていなければB1-B合格0（TEI #4583 BD-13）。Activityだけ届いてTranscriptが取得できなければNative Session閲覧合格0（TAI #234）。同じRaw digestでRootだけ変化した場合は旧Validation/Pin利用資格を復元しない（TEI #4616/#4515）。SUI Cardが描画されても元Rawへ別Processで戻れなければIG1未達（SUI #3442）。これらは各Ownerの独立Expectedを使用し、**新たな横断E2E試験は本追補ではNOT RUN**。
+
+**この節の限界**：既存CIと他のDraftの証拠を照合したdocs更新のみ。TEI BuildIntent B1-B/B2/B3、外部HarnessのOS境界と同一Session多UI、SUI IG1製品E2E、SHO独立Writer、Current Grant/Owner意味受理は未実施。#4587、#4570、#4617、TAI #648、SUI #3442の個別CI/契約を本TAI Draftの製品適合へ加算しない。
