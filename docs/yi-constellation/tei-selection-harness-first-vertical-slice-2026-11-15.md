@@ -41,6 +41,29 @@ S0：一つの公開Subjectについて、実CLIでKind/ID・Source・版・診�
 **H：YIC外部Harness接続（TAI #168、#271、#232、QH §10）**  
 H0：S0の公開Resultから許可された短い作業Contextを生成。Task・対象・Source/Scope・unknown・返却先を区別し、詳細は必要時にHostへ再問合せ。Pluginの上位公開図・Manualは[TEI #4679](https://github.com/hat47x/tei-platform/issues/4679)の短いProduct Skill＋Document Indexから必要時だけ取得。全Manual/生Source/Session全文を常時注入しない。H1：TAI #168のG0 OS Read-deny→G1実Egress→G2完全Tool Replyの適格実装を確認した**別の後続Trial**で、Tool-onlyの実送受信・完全Reply・元Requestへの帰属を検証。固定H2/H3四Slotに新しい条件を増やさない。H2：Session継続できないときはActivityから現在資格を再確認して新Sessionへ。H3：返却候補を元Subjectへ結び、現在Sourceで差分・再診断。Source write/Build/Owner Acceptanceは別のProduct検収。
 
+
+## 現行Workbenchへの接合点とCI停止要因（2026-11-15照合）
+
+次の実装担当が迷わないよう、[Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) の固定HEAD a9c91e56eecdb6b588064188490fc3de950c1744、同HEADのGitHub Actionsログ、現mainを照合した断線を記録する。これは**既存コード・CIの読取り**であり、今回新たにGo／Node／Windowsを実行したものではない。
+
+### 背景Pinの再取得に、現在のInspectをそのまま使わない
+
+- TEIの reference/tei-studio-workbench/main.ts にある現行 inspect(subject) は、selected、タイトル、editor.setDocument、graph.update、Graph選択、noticeをまとめて更新する。したがってBを閲覧している間に、Pin Aをこの関数で裏から再検査すると**Bの画面を変更してしまう**。
+- 既存 pin-state.ts（Pin／Unpin／Undo／Invalidate／pinRequest／acceptPinObservation）と responses.ts の**独立レーン pinned-inspection**を実Workbenchへ接続する。通常の inspection レーンには触れず、対象を固定したときだけHost-ownedの client.inspectSubject(workspaceID, kind, id) へ問い合わせる。呼出し前に inspectEligibility、応答後に readInspection で対象・Catalogueとの一致を確認する。これらの検査が成功しても現在のGrant、Disclosure、Owner意味受理まで自動的に成立したことにはしない。
+- 要求発行時のPin世代、Workspace epoch、Kind/IDを保持し、遅着時には acceptPinObservation で厳密に照合する。Pin解除／再Pin／Workspace切替／A→B→A／同一レーンの後続要求で旧結果を失効。Pin状態の変更が、現在のBのEditor・Graph・Focus・Noticeを変更しないことを実DOM/Consumerで確かめる。
+- 初回は明示Pin/Unpinの一Subjectだけ。FocusやEsc/IMEによって勝手に解除せず、Relation描画用の parent: Edge IDは意味Relation occurrenceと見なさない。外部HarnessへのContext共有ボタンやWriterを、PinのProduct Reader実配線より先に合格扱いしない。
+
+### 現行の実CI失敗は二つの別原因
+
+| 固定HEAD a9c91e56 の観測 | 結果と次の対処 |
+| --- | --- |
+| Studio Pin intent state contract | **completed/success**。局所状態と非同期レーンのテストは合格。ただし実main.ts、Wails WebView、外部Harnessの成功ではない |
+| [TEI PR・main 健全性確認 run 43574298349](https://github.com/hat47x/tei-platform/actions/runs/43574298349) | **failure**。TestPlanReadmesMentionEveryEntry が CONSUMER_QUALIFIED_CROSS_LANE_ACCEPTANCE_2026-11-14.md の索引漏れを指摘。現mainの plan/design/README.md には該当リンクがあり、このPin Draftブランチにはない。まずmainとの整合を取り、独立に再テストする。Pinの機能不具合と混同しない |
+| [Workbench embedded bundle run 43574298492](https://github.com/hat47x/tei-platform/actions/runs/43574298492) | **failure**。Node test／typecheck／buildの後、生成 dist/main.js とDesktop収録 cmd/tei-studio/assets/workbench/main.js はbyte 649340、line 18643で不一致。同じHEAD/Toolchainで正規の生成元から再ビルドし、実埋込byteとの一致を検査する。生成済みJSだけを手修正してPASSとしない |
+| [生成Desktop Draft #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD 9b58533d | そのHEADの12 Workflowは成功。ただし別PR/別HEADのWindows B0限定結果。#4597のPin UIや、非Plugin Stage1→Stage2実再構築、外部Harness実接続の受入には流用しない |
+
+**現時点の次の実装仕事**：正規の main.ts に明示Pinと背景Readerを配線→現WorkbenchでBの表示/Graph/Focus/Notice非干渉を実DOM/Clientで確認→同一HEADのPin test・型検査・生成/埋込byte一致を確認→必要な範囲で実Windows Wails/WebView2のHost InspectSubjectを観測。各段階は独立したEvidenceとして記録し、実Source/Grant/外部送信/Owner採用を勝手に合算しない。TEI #4583のP0とTAI #168のG0/G1/G2・独立H2/H3四Slotは、どちらも追加のBlocking条件なく継続する。
+
 ## 初回の独立Expectedへ回す反例
 
 | 入力・故障 | 成立してほしい結果 |
