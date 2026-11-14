@@ -842,6 +842,20 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 
 **本節のClaim ceiling**：実装・旧/新HEADのGitHub CIを再照合したDocs-onlyの作業入口／採否の再整理。新規CLI/Studio/外部Harnessの実呼出・二Principal/Web/DB Effect/Owner受理は本変更ではNOT RUN。
 
+### 36.2 取得・保存・生成の「成立したように見える」四つの反証（2026-11-14）
+
+他チャットで進んだ**実装済みの限定技術結果**を、§36.1の「正式入口→実Product Read→許可Projection→実Tool Reply→別Consumer」へ接続する。これらはYICに新しいSchema／Oracle／Runnerを増やす追加Hard Gateではなく、当該用途を必要とするときの**既存Product Ownerの拒否条件**である。
+
+| Productの新しい実成果とexact HEAD CI | 成立した限定Claim | 外部Skill/Consumerへ誤って昇格させないこと・次のOwner |
+| --- | --- | --- |
+| [TEI #4644](https://github.com/hat47x/tei-platform/pull/4644) `b5c23044` **3/3成功**。修復したRA-0 `:from`宣言＋RA-1 Executor前の型検査＋RA-2実PG16 Reference Readを**同一仮統合HEAD**で再検収 | 未宣言/NULL/誤型ならExecutor call0、正例では実Read。隔離DBの親＋7ケースは非SKIP | 参照CLI成功≠現在の製品`tei` CLIが実Provider→Function Context→独立Native Consumerへ同一結果を渡した。基底RA-0側のBrowser/API `sqlgen` 依存E1失敗も未解消。[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)／#1182 |
+| [TEI #4647](https://github.com/hat47x/tei-platform/pull/4647) `a962a3f6` **7/7成功**。実PGのRLS/Limit/JOIN/別Relation/partitionとロック先行を観測し、見えた限定を`partial`へ伝える | Native SQLについては常に`native-sql-predicate-not-closed`を残し、`complete`・`EmptyJustified=true`にしない。実NULL列由来はW4未観測 | **空行／見えた行だけで「注文なし」「完全な一覧」と説明しない**。観測不能な関数フィルターは`unestablished`のまま。Current Role/Grant/Source Revisionの意味資格は別。[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)／#2506/#2516 |
+| [TEI #4559](https://github.com/hat47x/tei-platform/pull/4559) `e328f223` **3/3成功**。Source束縛した`recent_orders` read-only生成CLI、SQL/Manifest/生成Binary digest照合、実PGの限定Read | 生成したCLIは**文字列の`:from`** を受け、Sourceにはまだ正式Input宣言がなく`inputDeclaration=undeclared`。READ ONLYのDB実拒否とWindows Nativeは未確認 | 生成BinaryにSource SQLが埋込済みでも、RA-1の型付き`time.Time`／正式Entry/Host Grantを得たわけではない。別HEAD生成物とRA-0/1/2を同一実Product Attemptへ足さない。[TEI #1121](https://github.com/hat47x/tei-platform/issues/1121)／#2586 |
+| [SUI #3444](https://github.com/hat47x/sui-sensemaking/pull/3444) `6f864be6` **3/3成功**。Document/Card/Metaの未採用Source Binding予約欄をBackend PUT 422＋Frontend Import/APIの送信前拒否で遮断し、既存Card/ETagとAgent用Projection非反射を局所回帰 | 未採用の出典参照が`extra=ignore`で黙って消え、HTTP 200で保存済みに見える経路を**予約項目だけ**塞いだ | 422は正式Source Binding保存の完成ではない。Document read≠Source read。A/B/Cの採用、Source別Grant、Card Save→別Process GET→元Raw復帰は[ SUI #3441](https://github.com/hat47x/sui-sensemaking/issues/3441)／#3438の未実証レーン |
+| [TEI #4648](https://github.com/hat47x/tei-platform/pull/4648) `64fb0f9a` **8/8成功**（並行[#4537](https://github.com/hat47x/tei-platform/pull/4537)も8/8）。実self-buildのtoolchain申告・再読Digest照合とState書込/Process Image観測 | 同一BuildPlanでもGo compilerが異なるとBinary byteが変わり得る。現在`toolchainObservation.namedByPlan=false`、State `effect-observed`は報告のみ | **報告digestの一致≠実Childがそのtoolchainを使用／状態が隔離されたことの証明**。BuildIntentへtoolchainを正式Inputとするか・独立Seed Trust・非Plugin N0〜N3は[TEI #2831](https://github.com/hat47x/tei-platform/issues/2831)／#4583がOwner |
+
+**共通の実引継ぎ**：SK-02最初のH2/H3四独立Sessionは公開TEI mainの固定read-onlyモデル調査のままとし、新Query/Source Binding/生成CLIをその前提に追加しない（適格0/4）。後続の一仕事では、対象Source・現在Grant・Rowsetの`partial/unestablished`・正式Tool配布・実Reply/Recipient・別Consumerの読戻しを**各々別Claim**で記録し、無い入口は`unsupported`、取得不明は`unknown`に保つ。TEI/SUIへ二つ目のPolicyや意味正本を作らず、各PRはDraft/未merge、Script設計の[main統合済み #4649](https://github.com/hat47x/tei-platform/pull/4649)はこれらの依存を**docs-only**で索引したものと区別する。
+
 **採否の中心**は「利用者が同じProduct情報を、元Sourceの意味と現在資格を保持したまま、別の実行面でも読み、必要なときだけ候補・実操作を返せるか」。各配置方式の性能が向上しても、非公開Evidenceの送出・現在Grant・Result不明時の再試行が不適格ならYIC経由の公開をしない。A＋既存CLI/MCPで目的を達成する場合、追加Agent Loop・中央Auth/Session Store・共通ローカルServerは不要。
 
 **今回の作業状態**：#4635・#4620・#4634・#4637・#4636・#4627・#4503の設計と限定CI証拠を再確認し、旧§33〜35の三方式表を四候補に更新するとともに、Productの実Reader→外部Harness受領を別Gateとして組み込んだDocs-only計画。新しいHost/HTTP/IPC/WASM/OS/外部Harness/二Principal E2EやOwner意味受理を実行したわけではない。
