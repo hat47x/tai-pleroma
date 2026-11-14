@@ -1325,6 +1325,8 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **Step D：選択と実行を同一Attemptにする。** #4624のIntent/Resolver一致と#4623のBuilder実子起動前チェックは別PRの限定Evidence。正式な非Plugin Studio Desktopセルフビルドを主張するには[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)でBuilder Catalog→実Invoker→N2/N3 Artifact→Stage1→Stage2 Desktop→実WebView2を各Ownerが同一Attemptで検証。Skillは実Build/Meaning受理のIssuerにも、実Host権限の代行者にもならない。
 
+**Step E：CLIから自己構築を確かめ、Skillは実証済みの工程だけ案内する。** [TEIのCLI-first計画 Draft #4676](https://github.com/hat47x/tei-platform/pull/4676)に従い、固定Seedから意味を持つ図・表・Ruleを含む定義を読み、実Goコードを生成し、生成されたStage1 CLIがStage2 CLIと必要なPluginを再構築できたかを同じ試行で確かめる。CLIでの成功はStudio Desktopの成功ではない。逆にStudioの完成を待たなければCLIとPluginの実験ができない構成にもせず、正式なDesktop Stage1→Stage2はTEI #4583の最優先課題として維持する。新しいコマンド名やPlugin利用資格をSkillが先行して宣言しない。
+
 ### 51.3 判別する最小の負例・後続Owner
 
 | 負例 | 独立に拒否・保留すること | 既存Owner |
@@ -1333,6 +1335,9 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 | Local CLIで保存REA Evidenceを読めるがWeb経由で任意Evidence Pathが渡された | Host許可Byte Reader未提供ならunsupported。内部Path診断を外部送出しない | TEI #3394/#4625、#2516、TAI #232 |
 | Resolverが宣言と違うBuilderを返す／Builder digest一致でも実Role/Authorityが違う | 宣言・選択・実Invoker・Host GrantのどのClaimまで成立したか区別 | TEI #4624/#4623/#4583 |
 | Product Scopeは部分取得、Tool Reply欠損、別Workspace同byte | 完全性／現在Subject同一性／不存在への過大Claimを拒否 | TEI #3262/#4515、TAI #271/#488 |
+| 図の配置だけを変えたのに生成コードが変わる／表の業務条件を変えたのに生成ロジックが変わらない | 意味と表示の変更を区別。図表が飾りである定義をTEIによる実装と数えず、同じ独立Expectedで再検証 | TEI #4676 SBX-01〜02、#1180/#2514 |
+| *.tei.mdがGoの既存関数を呼ぶだけ／生成物を手編集／Plugin Aを選択してBを起動する | 委譲部分をTEI実装に算入しない。Source→生成Go→実Builder→Plugin Call→Consumerを同じ対象とAttemptで照合し、不一致なら自己構築は未達 | TEI #4675 PSB-01〜10、#2831/#951、TAI #488 |
+| 定義を短縮する途中でNULL・Effectの意味が変わる／評価対象を分母から外して割合だけ上がる | 機能集合と独立Expectedを先に固定し、削減した定義量だけでなく補助Go・重複設定・手修正・意味保存を比較する | TEI #4675/#4676、#1180/#2514、TAI #488 |
 | TAI Skillが不要な単独Product Taskで追加Loadだけ増える | Tool-onlyの成功を維持。Skill価値は既存M00/M01/M10/M11で別測定 | TAI #488/#621/#648、配布#74 |
 
 **実行順は維持**：[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0実OS Read-deny→G1送出→G2完全Reply→独立H2→H3→H3→H2（適格0/4）と、TEI Desktop #1824/#4583のStage1→Stage2を独立P0。新Product ToolのSkill案内更新やREA remote化、WASM/Web適合を初回比較・セルフビルドのHard Gateにしない。§51は既存Source/Issue/局所CIの照合から作った**Docs-only Draft**。新実CLI/OS/Harness/REA二Consumer/Studio/EKI Effectの横断E2E・Owner正式受理は今回NOT RUN。
@@ -1418,7 +1423,18 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 **Skill利用時のClaim設計**：実Source/Rowset/Score/引用/出典を表示する場合は、`coverage=partial`と`coverage=unestablished`、`unknown`・`not-run`を入力の現時点/受信者のScopeとともにそのまま伝える。Product Ownerが完全性を独立検証していないNative SQLでは、0行に対して「該当しない」「購入していない」「全件検索済み」と断定しない。読み込めないSource BindingをSkillが本文・Card・Receiptへ黙って保存しない。失効・未対応時はread-only限定の`unsupported`/`unknown`へ縮退する。これらは**案内の制限**でありYICが新しいQuery Planner/認可/Raw Storeを持つ決定ではない。
 
-**Tool／Pluginを利用できるかは、宣言だけで判断しない。** [TEI Plugin合成設計 PR #4671](https://github.com/hat47x/tei-platform/pull/4671)は、構文・意味・演算・データ・表示・実行・検証の貢献を区別し、選択されたContract／ProviderがAuthoring・Build・Runtime・Deliveryのどの段階で必要か、実成果物と実Consumerまで辿る設計案である。YIC Skillは、そのProduct／Hostの実Discovery・実Provider選択・実Load／Call・現在Grant・完全Replyを確認できる機能だけ案内する。署名済み配布物、宣言上のRole、CIでのPlugin単体成功を、組合せの受入やHostの実行権限へ昇格しない。必要な貢献の組合せはTEI既存のVerified Composition BOMと各Product Ownerが検査し、YICには新Resolver／Builder／Plugin Registryを追加しない。PR #4671は設計文書の段階であり、正式なPlugin ABIや実Target適合は未受理。
+**Tool／Pluginを利用できるかは、宣言だけで判断しない。** [TEI Plugin合成設計 PR #4671](https://github.com/hat47x/tei-platform/pull/4671)は、構文・意味・演算・データ・表示・実行・検証の貢献を区別し、選択されたContract／ProviderがAuthoring・Build・Runtime・Deliveryのどの段階で必要か、実成果物と実Consumerまで辿る設計案である。YIC Skillは、そのProduct／Hostの実Discovery・実Provider選択・実Load／Call・現在Grant・完全Replyを確認できる機能だけ案内する。署名済み配布物、宣言上のRole、CIでのPlugin単体成功を、組合せの受入やHostの実行権限へ昇格しない。必要な貢献の組合せはTEI既存のVerified Composition BOMと各Product Ownerが検査し、YICには新Resolver／Builder／Plugin Registryを追加しない。#4671の設計本文はmainへ統合済み。ただし正式なPlugin ABI、実Targetでの適合、Plugin自身の自己構築は未受理。
+
+**TEIによる実装の広がりと、定義の簡素化を実測する。** [TEI Plugin自己構築計画 #4675](https://github.com/hat47x/tei-platform/pull/4675)と[CLI-firstセルフビルド計画 #4676](https://github.com/hat47x/tei-platform/pull/4676)を、YICの公開read-only Tool／薄型Adapterを使う後続のdogfoodingへ接続する。単に *.tei.md がGoコードを委譲するのではなく、**図・表・Ruleが意味ある入力となり、実コード・型・契約へ生成され、生成されたPluginが実際に呼び出される**ことを対象とする。まず純粋なGraph／Rule系Plugin、次にread-only Data／Inspector系Pluginを取り上げ、同じ意味をCLIと別Consumerから使えるか確認する。
+
+| 同じ仕事で独立に測る軸 | 先に固定する証拠と判定方法 |
+| --- | --- |
+| **実装のTEI寄与** | Function・条件・Plugin Roleの対象集合を固定し、TEI生成／外部Goへ委譲／Goのみ／未対応に分ける。委譲ラッパーはTEI実装に算入しない |
+| **Build工程へのTEI寄与** | 選択したBuilder、Source、Toolchain、生成物、実Child、実Providerを対応付け、TEIが制御・照合した工程だけを数える |
+| **Plugin自身の再構築** | Pluginの実Sourceから生成・Build・実Invokeしたうえで、Stage1に生成された部品を次のStageで使えるかを同じAttemptで確認する。外側からGo Buildを二度行うだけでは不合格 |
+| **定義の簡素化** | 同じ独立Expectedを維持し、TEI定義、補助Go、重複設定、手修正、改訂時の変更箇所と読み戻しやすさを比較する。初期段階では恣意的な削減率目標を置かない |
+
+**YICが受け取るもの**は、実験の説明と限定的なread-only手順、実Source／Artifact／Consumerの照合結果、Product-only／Tool-only／生成Adapter／Skillの増分価値である。TEIの生成・Builder・Plugin適合の受理はTEI #2831/#951/#1180/#2514、YICの比較はTAI #488/#422に残す。通常CLIでのPlugin再構築が成功しても、配布済みProduct Toolの現在Grantや別Hostの利用許可を自動付与しない。両計画PRは現段階で文書だけの提案であり、**実CLI再入・Plugin自己構築・簡素化効果は未実測**。初回TAI #168の四Slot（適格0/4）とTEI Studio Desktop Stage1→Stage2のP0には追加のHard Gateを設けない。
 
 **Script Launchの起動と実受領も同じ順序で確かめる。** [TEI Draft #4669](https://github.com/hat47x/tei-platform/pull/4669)が整理したFunction／Entry／Trigger／Execution Bindingを、[main統合済みConsumer横断設計 #4653](https://github.com/hat47x/tei-platform/pull/4653)の実行・取得・受領へ対応付ける。Manual、Schedule、Event、AI Toolという入口が異なっても、Sourceと必須Inputの確定、現在のHost権限、実Providerの呼出し、ResultとEffect Receipt、受け手への配送は省略しない。同じFunctionを指定していても別の入口のGrantやAudienceは継承しない。入力や権限に欠落があればProduct Ownerが`unsupported`／`not-representable`などを判断し、Skillは未実装の起動方法を補って実行したことにしない。#4669自体は設計Draftであり、通常`tei` CLIの新Function Verbや実Schedule/AI Tool統合は未実装・未受理である。
 
