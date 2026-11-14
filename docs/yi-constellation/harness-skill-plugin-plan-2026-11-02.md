@@ -1407,6 +1407,7 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 | 対象・確認済みの実成果 | 残るProduct受入とSkillでの停止線 |
 | --- | --- |
+| [TEI Direct実行試作 #4710](https://github.com/hat47x/tei-platform/pull/4710) HEAD `e051e9da`：`internal/directexecution`のWindows/Linux Goテストで、実子PID・観測出力byteのSHA-256・事前既存出力／起動失敗／非zero終了中間出力／Digest不一致を区別。期待Digestが無ければverifiedにしない | 局所Direct ProcessのOutput Witnessであり、Source／Function／Toolchain固定、OS競合防止、正式BuildIntent/Plugin Provider／EKI Effect・Lease／Consumer受領やOwner Meaningは未検証。Product Toolやself-build資格をSkillに追加しない |
 | [TEI merged #4629](https://github.com/hat47x/tei-platform/pull/4629)と[merged #4636](https://github.com/hat47x/tei-platform/pull/4636)：各9/9 exact HEAD CI。ResultだけでなくInput名・型／Effect宣言の不整合／nil Contextを**Go Adapter呼出し0回**で拒否 | TEI #4495/#3422：受理済みpure Entry→Host選択の**実Go Provider**→通常CLI/Studioの実Result、Current Grant/Owner Meaning。静的宣言の検査だけでEntry公開・業務EffectをSkillから案内しない |
 | [TEI Draft #4625](https://github.com/hat47x/tei-platform/pull/4625) 9/9、[Draft #4630](https://github.com/hat47x/tei-platform/pull/4630) 12/12、[Draft #4637](https://github.com/hat47x/tei-platform/pull/4637)の子Process追加HEAD f9e355d5はHealth gofmt FAIL（11/12）、修正HEAD f38117dcは12/12成功。二Root・同Producer ID／異byte／再Pin拒否を加えたHEAD 9b8f5caは**12/12 Workflow成功**（11/12は完了前の中間観測） | ローカルCLI保存Evidence／byte-only Operation／Host固定Selectorの**4MiB bounded実Read**は局所技術実績。TEI #3394/#4503/#2516がCurrent Root/Grant/Disclosure、同一Producer→独立Reader/第二Consumerを検収するまでは、Wails/MCP/Remote Skillの「REA利用可能」と宣言しない |
 | [TEI Workspace Validation #4655](https://github.com/hat47x/tei-platform/pull/4655) HEAD `3261d172` は7/8 CI success・[Repository Health FAIL](https://github.com/hat47x/tei-platform/actions/runs/43572997113)。同名/空Capability Inputを既存DSL Parser→World→Validatorで発見し、main統合済み#4636のAdapter前Call0拒否と比較するDraft | Runtimeで不正構造を拒否できてもStudioのSource診断／正式Entry公開・実Provider利用は別。Healthの**gofmt未整形**とmainのConsumer設計README索引漏れ（[小修正 #4658](https://github.com/hat47x/tei-platform/pull/4658)）を解消し、**新HEADで再CI**するまで本機能の完全適合やSkill案内は保留 |
@@ -1428,10 +1429,6 @@ Web共同開発の**L1テキスト同時編集／L2意味変更と競合処理�
 
 | Product側で成立した限定検査 | Skillが守る説明・実行上の停止線 |
 | --- | --- |
-| [TEI #4644](https://github.com/hat47x/tei-platform/pull/4644) HEAD `b5c23044`：RA-0/1/2仮統合Checkoutの3/3 CI成功＋隔離PG16実参照Read | 製品通常`tei` CLI／正式Context／Native別Consumerとは未接続。RA-0単独にはBrowser/API E1 `sqlgen`違反が残る。Type宣言なしの生成CLI [#4559](https://github.com/hat47x/tei-platform/pull/4559) の文字列`:from`をTyped Provider入力として案内しない |
-| [TEI #4647](https://github.com/hat47x/tei-platform/pull/4647) HEAD `a962a3f6`：実PGでRLS・LIMIT・JOIN等の`partial`を観測、CI 7/7 | native SQLは不可視関数述語を含み得るため`complete`／`EmptyJustified=true`を案内しない。0行を「該当注文なし」とせず、`native-sql-predicate-not-closed`と`partial/unestablished`を独立Claimに維持 |
-| [SUI #3444](https://github.com/hat47x/sui-sensemaking/pull/3444) HEAD `6f864be`：未採用Source Binding欄をFrontend送信前・緩いImport・Backend PUTで明示拒否、CI 3/3 | HTTP 422は正式Source/出典保存の完了ではない。旧Card/held/異論/ETagを保ちながら、Document readとSource readのGrantを分離。Card→Save→別Process GET→元Raw復帰は#3441 Ownerへ |
-| [TEI #4648](https://github.com/hat47x/tei-platform/pull/4648) `64fb0f9a`／[#4537](https://github.com/hat47x/tei-platform/pull/4537) `cb7faf8`：各8/8 CI。異Go toolchainで同一Plan・異Artifact byte、State Effect/Process Imageの限定観測 | `l2b.claimed=true`、報告されたToolchain Digest一致、`stateObservation=effect-observed`は、Builder実起動物／State隔離／Seed Trustを証明しない。実Product ToolやSkillの「再現可能」宣言には#2831 Ownerの正式BuildIntent入力・現Runtime検証が必要 |
 
 **昇格条件**：使用先Productの実Version/Root/Host/Scopeで`selected→actually invoked→received`を測定し、Source/Provider/Coverage/Artifact/Toolchainが問合せ・用途・受信者に十分かを判定する。任意の一面のCI成功やダイジェスト一致から`complete`、実Grant、Skill Load、業務意味受理を推定しない。未提供の機能は`unsupported`、被覆不明は`unestablished`／`unknown`とする。非Plugin Stage1→Stage2とTAI #168の実H2/H3 0/4はP0として不変。
 
