@@ -776,7 +776,7 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 | 操作・資格段階 | 現状と実Owner | 守る停止線 |
 | --- | --- | --- |
 | **選択意図** | TEI #4515のSubject Pin／#4503 Stable Selection。Viewer FocusやGraph描画IDは別 | PinがあるだけでSource実在・Root・公開権限やEvidence内容を保証しない |
-| **Host-owned local Read** | #4637の起動時固定Selector→Workspace内bounded bytes→R2 read-only Projection。実Go局所CI 12/12 | Callerから生File Path・任意読取時刻を受け取らない。Workspace Root差替え、誤digest、4MiB超過を拒否 |
+| **Host-owned local Read** | #4637の起動時固定Selector→Workspace内bounded bytes→R2 read-only Projection。旧HEAD `170f9be5`の実Go局所CI **12/12**。追加した別OS子Process Receiptの新HEAD `f38117dc`は**別AttemptでCI実行中**（直前 `f9e355d5` はgofmt不一致でHealth FAIL） | Callerから生File Path・任意読取時刻を受け取らない。Workspace Root差替え、誤digest、4MiB超過を拒否 |
 | **現在利用資格** | TEI #2516／#4503／各Host Owner。Source/Root/Plugin/GrantとAudience別の許可 | ローカルでのbyte一致は現在Source/Principal/Disclosure受理ではない。A→B→Aでも旧資格は自動復帰しない |
 | **計画・取得** | #4503 inspect→plan→fetch/materialize→verifyの設計。正式CLI/API・NAS/S3実Providerは別Gate | read-only説明でもlocal cache書込・network fetchを生じ得る。操作前にEffectと対象byte/資源予算を区別 |
 | **Projection・Share** | #4503許可Projection、TAI #232、#168 G1／QH §10 | 予定Byteと実送出Byte、実Egress、Tool Reply complete、Consumer受領は別。送出先・URL/Token・Digestは秘匿 |
@@ -791,10 +791,11 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 | 実装候補と確認できた限定証拠 | どこまで実際に言えるか | 次の不足／Owner |
 | --- | --- | --- |
 | [TEI Draft #4634](https://github.com/hat47x/tei-platform/pull/4634) 現HEAD `7d6a1238e6efbd83fb2bd4cfda9667c181567920`、8/8 Workflow completed/success（Self-build・Healthを含む）。旧HEAD `653d0d9`も8/8だが別Attempt | Plugin主体Build宣言→Resolver→選択Builder起動前pinの同一HEAD局所検証 | 非Plugin BuildExecution/ArtifactSet→生成Stage1→Stage2→当該実Windows WebView2は[#4583](https://github.com/hat47x/tei-platform/issues/4583)。旧別HEADのDesktop H1結果は足せない |
-| [TEI Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) HEAD 170f9be、12/12 Workflow成功 | Host固定Selector/Workspace内の有界Local Evidence Reader→既存R2 byte-only ProjectionのGo局所実Read | Wails/外部Harnessでの実Invocation、Source Currentness、Grant/Disclosure、Consumer受領は未実施 |
+| [TEI Draft #4637](https://github.com/hat47x/tei-platform/pull/4637) **旧HEAD** `170f9be` 12/12成功。子OS Process試験を加えた `f9e355d5` は[gofmtによるHealth失敗](https://github.com/hat47x/tei-platform/actions/runs/43556801954)、書式修正HEAD `f38117dc`で再CI実行中 | Host固定Selectorによる bounded Source実Readに加え、**Go test専用の別OS子Process**がSource/Resultを独立に実取得したPID・型付きReceiptを親が検査する試験を追加 | その子は製品Studio/Wails/MCPとは異なる**テスト専用**。Web/Harnessへの実Invocation・Current Principal/Grant/Disclosure・真正な別Consumer受領は未実施 |
 | [TEI main統合済み #4636](https://github.com/hat47x/tei-platform/pull/4636) HEAD `da807abc` の9/9 Workflow成功、main squash `18470e69`。計画更新[#4639](https://github.com/hat47x/tei-platform/pull/4639)もmerged | Capability Input/Effect宣言不備とnil ContextをGo Adapter Call前に構造拒否 | Owner Meaning、公開Script Entry、actual Selected Provider/Result/Effect・実CLIは別試験。PRの統合状態と実main適用は別に確認 |
 | [TEI Server Surface #4627](https://github.com/hat47x/tei-platform/pull/4627) HEAD b9cf5447のMethod/Service Inventory・局所ブラウザCI、#4620が5/5成功と報告 | 非read methodを含む現在のServer公開面を静的棚卸しできる | 実二Principal×二WorkspaceのHTTP/AuthZ、WS Recipient別秘密配送拒否はNOT RUN |
 | [TEI #4587](https://github.com/hat47x/tei-platform/pull/4587) HEAD `357345d7` の[Windows Workflow #43554075677](https://github.com/hat47x/tei-platform/actions/runs/43554075677)は11/12 success、**全体FAIL** | 同Workflowの**generated Desktop JobはSUCCESS**で、N0→N2→N3の生成バンドル・実exe・WebView2のEditor/ObserveXead受領を確認 | **従来Desktopの別JobがWindows OS版取得のPowerShell 15秒TimeoutでFAIL**。環境再試験・当該HEADの総合結果を別に判断。Stage1がStage2を生成した意味ではない（Job記録 `stage1GeneratedTeiInvoker=false`） |
+| [SUI Draft #3443](https://github.com/hat47x/sui-sensemaking/pull/3443) HEAD `6eed48ba` の[CI #43557030239](https://github.com/hat47x/sui-sensemaking/actions/runs/43557030239) completed/success。実StartPanel File API→Raw UTF-8 Text→DOM選択→原byte範囲→明示破棄の**Chromium E2E 13件PASS** | UIが**一時的な原文プレビュー**を許可されたFile入力から構築し、後方重複文 `[38,57)` の位置と同一Snapshot Checkpointを表示・破棄できる | **unqualified-local-file-preview**のみ。Source Root/Revision/Current Grant、Card/Document Save、別Process GETと正式Source再Read、共有Harness送出は未実証。[SUI #3441](https://github.com/hat47x/sui-sensemaking/issues/3441) Owner |
 | [TEI #4635](https://github.com/hat47x/tei-platform/issues/4635)四配置比較 | 正負試験・比較方式のOwner/順序が計画化された | B0/B1/B2の新実Process/IPC/Perf/Crash/配布はNOT RUN |
 
 **生成器を先に偽装しない**：[TEI #4641](https://github.com/hat47x/tei-platform/pull/4641)はSelected Generator→実Builder→Artifact→ConsumerをGCX-01〜08で整理した**docs-only Draft**。実装済みのPlugin主体BuildPlanを非Plugin Desktop N0〜N3へ名称変更して代用しない。非Plugin実InvokerとArtifactSetはTEI #4583/#1080/#1097がOwnerであり、YICに第二Build Engineを置かない。
@@ -807,7 +808,7 @@ Windows Named Pipeの既定DACLやremote client許容を安全な設定とみな
 | --- | --- | --- |
 | **P0-A不変** TEI #4583／#4634 | A Native基線で実Source・非Plugin BuildIntent/ArtifactSetとN0→N2→N3→Stage1→Stage2実Windows WebView2の同一Attempt | Plugin Builder限定8/8をStage2完成と誤表示しない。B0/B1/B2を先行Hard Gateにしない |
 | **P0-B不変** TAI #168 | 実OS G0 Read-deny→G1 actual Egress→G2 full Tool Reply→独立H2/H3四Slot（比較適格0/4） | #4637の別Owner local Reader成功でH2/H3受験資格を代替しない |
-| **J-R** Product Source/Local Evidence | #4637 Local Readerと#4625 CLIを**同じ一つの公開Evidence Source**で別Consumerとして受領・Source/Scope/Disclosure照合 | Local Select/Read成功ならProductのみ継続。Remote/Web公開は不可 |
+| **J-R** Product Source/Local Evidence | #4637 Local Readerと#4625 CLIを**同じ一つの公開Evidence Source**で別Consumerとして受領・Source/Scope/Disclosure照合。SUI #3443の既存StartPanelは**原文選択→非保存プレビュー**の局所基線に限り、後続の正式Source/Root→Card Save→別Process GET→元Raw byte範囲再解決を[SUI #3441](https://github.com/hat47x/sui-sensemaking/issues/3441)へ返す | Local Select/Readや一時File Previewの成功ならProductのみ継続。Remote/Web/Harness公開や永続出典確定は不可 |
 | **J-S** Harness実Handoff | 現Hostが明示公開したtyped Toolで許可Projection→Native Tool Reply→元Pin Candidate/Consumer | 生Path/Raw/旧Grant/旧SessionをTool経由へ持ち込まない。未対応は限定Packet新Sessionへ |
 | **P1 Desktop実行形態** TEI #4635／#1824 LPC-01〜08 | A/B0/B1/B2を同一Jobで小RPC/MB Graph/Build＋Crash/IPC/Memory/配布の実比較 | Aを正常基線として維持。B0とserver-tag Serverを混同せず、性能の勝ちを推定しない |
 | **P2 Web/複数Workspace** TEI #3421/#1824/#2516 | 別Principal/Workspace/Branch/DB Instanceとread-only Service/WS Audience/現在Grantを実拒否で確認 | local no-authをWebへfallbackしない。共有Web HA/CRDTを初期P0へ追加しない |
