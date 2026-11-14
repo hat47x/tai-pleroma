@@ -447,7 +447,7 @@ Packetは**同じ根拠を持つための条件**であり、秘密Source、旧H
 
 ### 15.1 分割の自由度は「どの約束を維持するか」によって変わる
 
-[TEI #3250のRequirement Pressure Case/SP-R01〜07・SP-N01〜09・Failure Acceptance Envelope SP-FE01〜09](https://github.com/hat47x/tei-platform/issues/3250)では、サブシステム分割を単なるCRUD越境数の最小化でなく、**Data/Function/Businessの要件が衝突する場所を発見し、設計者に選択肢を提示する作業**として整理した。本ガイドは業務要件を新たに採用せず、**TAIがActivityを跨Productへ引き継ぐときに、その衝突をGoal達成と誤読しない**規則を取り込む。TEIの論理Subsystem、更新/Commit境界、物理DB/Target、Business Handling Unit、現在Principal/Grantは別軸である。同一DB・同一Txで論理Subsystemを区別する余地があり、「原子性が必要なら必ず論理Subystemを統合」は一般法則ではない。
+[TEI #3250のRequirement Pressure Case/SP-R01〜07・SP-N01〜09・Failure Acceptance Envelope SP-FE01〜09](https://github.com/hat47x/tei-platform/issues/3250)では、サブシステム分割を単なるCRUD越境数の最小化でなく、**Data/Function/Businessの要件が衝突する場所を発見し、設計者に選択肢を提示する作業**として整理した。本ガイドは業務要件を新たに採用せず、**TAIがActivityを跨Productへ引き継ぐときに、その衝突をGoal達成と誤読しない**規則を取り込む。TEIの論理Subsystem、更新/Commit境界、物理DB/Target、Business Handling Unit、現在Principal/Grantは別軸である。同一DB・同一Txで論理Subsystemを区別する余地があり、「原子性が必要なら必ず論理Subsystemを統合」は一般法則ではない。
 
 受注/在庫の概念例は説明用の合成Jobであり、実EC事業者の要件・顧客への実約束・採用方式を示さない。たとえば業務Ownerが**確定注文には有効な在庫予約が必要**と受理しているなら、受注の`Confirmed`と在庫の`Reserved`を個別更新できるだけでは要件を満たさない。相手SubsystemへのCommand委譲で越境Direct CUD=0となっても、処理結果・Commit/Retry・回復義務は消えない。逆に、Ownerが`Received`/`Pending`と`Confirmed`の業務状態を正式に分ければ、引当前のPendingを許容しつつ、Confirmedだけに強い条件を課せる。要件を緩和する別案は、取消・返金・顧客通知・手作業/窓口・期限・最大負荷を**新しい義務**として引き受ける。いずれもAI/TAIの推測ではAccepted要件へ昇格しない。
 
