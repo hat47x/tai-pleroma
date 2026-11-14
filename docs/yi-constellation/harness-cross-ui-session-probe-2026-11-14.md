@@ -618,3 +618,59 @@ YICで一晩〜複数日にわたり複数Issueを進める場合も、**一つ�
 **Owner受理の停止線**：本章で採用したのは設計上の区分・実証順・失敗時縮退であり、DSH/Codex/Claude Code実Resume、Scheduleの再配送、EKI Artifact/Result body、Control Plane failover、TEI Stage2 Self-build、実Product Commit/Owner承認、多Workstreamの実効果を新たに観測・採用したわけではない。DSHの公式機能表・各Issueの既存局所Evidenceはあっても、今の実Host/Principalでの利用資格は別。B4独自Agent Loopへの投資判断は[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の既定条件（複数代表Harnessの適格比較、代替可能性、重大固有欠落、費用、Owner受理）が成立するまで保留する。
 
 **実施内容**：TAI #234/#168/#271、TEI #4495/#4497/#4194、EKI #57/#829と前§13/§18/§20〜25の文書・Issueを照合し、既存Ownerへ次の1 Jobの復旧実験を割り当てたDocs-only計画追補。新しいTrigger schema、中央Scheduler、Agent Host、Session Store、Task Engine、Result Verifier、Cost Registry、Handoff v2、第二Expected正本は増やさない。
+
+<!-- yic-multi-harness-workpackage-evidence-integration-20261114 -->
+## 30. 複数Harnessの引継ぎ単位を、既存開発作業票と実Product Sourceへ限定する
+
+[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017)のA0〜A4開発作業票、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)のActivity再資格化、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)のVA-X/VA-E/VA-I独立レビューを接続する。YICで新Work Package Schema、中央Agent Queue、Git Merge Engine、第二のSource/Authorityを作らず、既存Issue/PR/Source/Operationを正本として参照する。
+
+| 開発作業区分 | Harnessへ許せる範囲の候補 | 切替・統合時の停止線 |
+| --- | --- | --- |
+| A0 読取・分析 | 許可Sourceの実Readと仮説 | 元Root/Source/現在Grantを再解決。Summaryは全Source読取でない |
+| A1 決定的派生 | 受理済みMeaningから設計・生成候補 | 元Meaning・Generator版・実byteを保持。新意味の受理ではない |
+| A2 隔離Branch編集 | base/allowed path/独立Expected付きで修正 | 新Harnessは旧HostのTool/OS/Writer権限を引き継がない |
+| A3 低リスク統合 | Ownerが事前に認めた範囲で既存Git/CIとReview | 別PRのGreenを足さず統合後HEADで必要な実Consumer/Buildを確認 |
+| A4 意味・権限・秘密・本番等 | 人間Ownerによる判断が必要 | Agent多数決やPR MergeをOwner Acceptanceとしない |
+
+受渡しに必要なのは目的・対象Issue/Owner、Git base/branch/実HEAD、許可・禁止Path、元Product Subject/Scope/Root/Revision、Source/Builder/Toolの実資格、実Testとunknown、未決、停止/人へ返す条件、現在Disclosure。既存TEI #2017作業票・TAI Activity・QH-P0票を利用する。**Native Transcriptや秘密Rawをコピーして同一Live Session復旧と呼ばない**。新HarnessはProduct/Gitの現在版を許可された入口で実Readし、候補を元ProductにPreviewしてから返す。
+
+### 30.1 Mergeの衝突を5つの別Claimとして判定する
+
+| 関門 | 独立に照合すること |
+| --- | --- |
+| Git Scope | Repo・Branch・base・Diff/許可Path。Stale base、範囲外変更は止める |
+| Subject / Meaning | 同名・同Kind ID別Scope、A→B→A、Relation/CRUD、Required/Consumed。テキスト差分なしでも意味衝突あり |
+| Build / Runtime | Builder・Artifact・実Invoker・生成物・実Consumer。別HEAD/別AttemptのCI成功を合算しない |
+| Review | 提案者≠VA-X反証者≠VA-E Evidence Reviewer≠VA-I Integrator。複数AIの賛成を独立証拠としない |
+| Product Acceptance | A3条件とA4意味/本番/Grant、人による受理。AIの「完了」とGit mergeは別 |
+
+SUIの共同編集については[SUI #3399](https://github.com/hat47x/sui-sensemaking/issues/3399)のUI Undo、保存Revision/ETag CAS、意味的判断履歴を区別。A/B二Clientで片方の保存後に他方が409になった場合、他者の確定内容・保留/異論と自分のdirty bufferを保持し、AIの旧CandidateやUndoで巻き戻さない。共有LockやCRDTをYICの初期必須要件にしない。
+
+## 31. 検証Evidenceそのものの開示を、実Harness引継ぎとは別に審査する
+
+[TEI #2515](https://github.com/hat47x/tei-platform/issues/2515) H6-E13〜15の指摘を、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)、TAI #168 G0/G1/G2、QH-P0へ接続する。OS/Networkの秘密非送出を検証するために保存したMock Receiver body、Tool argv、stderr、CI Log、private Pathを次のHarness/PRへ無審査でコピーすると、**安全確認の証拠自身が二次漏洩経路になる**。
+
+| 面 | 保持/公開の役割と限界 |
+| --- | --- |
+| Protected Raw | Source/Hostが許可したObserverにだけ実wire byte・拒否点・Session Eventを保全。GitHub/外部Modelへの既定複製なし |
+| Disclosable Evidence | Product/Hostの現在Audience/Recipientへ許された試験ID、結果、限定Fixture、unknown/未計測出口のみ |
+| Activity Handoff | 目的・対象参照・未決・許可済み局所Claim。過去のTranscript、OS権限、Raw全体は持ち込まない |
+| PR/CI Review | 公開可能と確認された結果のみ。秘密由来のDigest・件数・ID・拒否理由でも漏洩し得る |
+
+Mock/Proxyに到達しなかったことは、別Socket、child Process、Telemetry、Session Logの全てを止めた証明にはならない。合成Canaryの実Read正負、OS拒否、実Egressの範囲と、**保護Rawから公開投影へ変換する時点の開示許可**を独立試験とする。TAIに新DLP/Proof Engine/Evidence Registryを設けない。
+
+## 32. 小さい実証へ分割したロードマップと反証条件
+
+| 後続試験 | 既存Expected/Owner | 成立と撤退 |
+| --- | --- | --- |
+| 公開TEI Sourceの3独立read-only Workstream | TAI #234 G3、TEI #2017 A0、TAI #422 VA-E | Source/Root/実Tool/Native Session/独立Expectedを分離し、Product-onlyとHarness Tool-onlyを比較。未知は未知 |
+| 別Branchの同Pathまたは共有依存変更 | TEI #2017 A2/A3、TEI #4583/#4634、TAI #422 VA-I | 統合後HEADの必要Build/Consumer確認。別AgentのCI成功から自動mergeしない |
+| 二Browserの保存後UndoとACK消失 | SUI #3399 CU-02/03/09 | CAS 409・dirty bufferと他者の確定意味/保留を守り、無条件Undo/再適用しない |
+| 異HarnessへのActivity引継ぎと旧Turn後着 | TAI #271 ASV、TAI #234 HC-15〜18、TEI #4515 | 現在Grant/対象・履歴Audienceを確認。不明時は限定Packet新Session。誤対象自動Apply 0 |
+| Evidenceを別Agent/公開PRへ渡す | TEI #2515 H6-E13〜15、TAI #232/#168 | 保護Rawを送らず公開可能な合成検査結果だけ受領。未観測の出口はunknown |
+
+**優先順は不変**：TEI #4583のStage1→Stage2 Native DesktopセルフビルドとTAI #168のOS G0→Egress G1→Reply G2→独立4 Slot（既存観測0/4）を別P0に維持。初回は3 read-only LaneのProduct基線、次にA2隔離Branch/独立Review、後続で共同編集と二Harness継続を用途ごとに検証する。
+
+**価値・投資の停止線**：独立Expectedを満たした成果数、誤対象/開示違反、根拠や保留の保持、手戻り・Reviewer工数、Token/実費用を別測定。Packet×Skill効果はTAI #621/#488へ委譲し、Skillの常時LoadやB4独自Agent Loopを事前採用しない。Tool-only＋既存Git/CI/Review＋限定Handoffで足りるJobならその構成を維持する。
+
+**今回の証拠上限**：本§30〜32は既存Issue/他チャット設計のDocs-only統合。実3 Native Session、実A2 Branch/統合後CI、SUI二Client CAS、二Harness Resume、実OS/Wire/Evidence公開、TEI Stage2 Desktop、TAI H2/H3新4 Slot、Owner意味受理はNOT RUN。過去CI/Agentの自己申告を新E2Eへ昇格しない。
