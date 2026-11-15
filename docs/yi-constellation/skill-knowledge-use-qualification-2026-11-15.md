@@ -359,3 +359,22 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 | **YK-44**：TEIのRule評価で合成Sourceが値・集合を返し、Skillが実DB/Provider読取済みと説明する | 合成Evaluatorの検証と実ProviderのSource/Scope/完全性・Effectを分離。TEI #4495／TAI #271 |
 
 **実行順は据え置く**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Stage1→Stage2 Windowsを独立P0とし、TEI #4714の公開Manual一件Readを並行検収する。新規実Product/Harness E2EやOwner意味受理は**NOT RUN**。
+
+### 15.5 機能発見そのものの失敗を、Skillの成功根拠にしない
+
+先行[TAI main #665](https://github.com/hat47x/tai-pleroma/pull/665)の§15.4／D13・D14は、「発見済みの親Commandで未知の子Commandを代用しない」修正として保持する。これと別に、`tei commands`自体が終了コード0で`ok: false`を返す場合や、不正な一覧／矛盾する同名Commandを返す場合がある。**発見の入口が不適格なら、SkillのPathが一致するか、Commandが存在しないかを判定してはいけない。**
+
+既存[Skillドリフト検査器](../../integrations/tools/skill_selection_check.py)の`discover()`に、JSON objectと`commands`配列、非空のCommand名、`requiredFlags`の型、同名重複なし、明示`ok: false`拒否を追加する。不適格なら既存の`tool-unavailable`／未判定で停止し、応答本文から成功したToolやSourceを推定しない。独立Checkerや新Router、Score指標の増設は行わない。
+
+| 追加する合成反例 | 期待結果 | 既存Owner |
+| --- | --- | --- |
+| **YK-45／D15**：Exit 0の`commands`応答に`ok: false`ともっともらしいCommand一覧 | Discovery未成立。SkillのPath検証なし | TAI #488 |
+| **YK-46／D16**：`commands`が配列でない | Python例外やCommand成功の偽認定をせず保留 | TAI #488 |
+| **YK-47／D17**：同名Commandが二件あり`requiredFlags`が矛盾 | 後勝ちで一件に見せず保留 | TAI #488 |
+
+**既存成果と限界**：[TEI main #4911](https://github.com/hat47x/tei-platform/pull/4911)では、内蔵Ruleから正値判断を含むGo Sourceを生成し、別Processで実行する局所R1コードが統合された。正値・0・負値・NULL・未取得を試す`TestSelectedMarkdownPositiveRuleGeneratesExecutableGo`もmainに存在する。ただし実Builderへの収録、正式Plugin/Provider・通常CLI、外部Harness実受領、Owner意味受理を証明しない。また[SUI main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)にはSource Memberと実PDP Adapter型の取り違え拒否が入ったが、正式Hostの現在Grantや二次開示とは別資格である。
+
+この追補は**既存D13・D14の合格を上書きしない、増分の失敗側検査**である。現在mainへの再適用はPR #666の古いHEADを直マージせず、最新mainから作り直す。後継の新HEADについても`tai-reference` CIを再確認してから採用する。TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（適格0/4）とTEI #4583の実Windows Stage1→Stage2は独立P0のままとする。実Product/OS/外部Harness E2E・Owner受理は**NOT RUN**。
+
+**現行mainとの追加照合**：先行[TAI main #668](https://github.com/hat47x/tai-pleroma/pull/668)は、Skillの一行に複数CLIがあってPathの帰属が曖昧な場合、`PATH_CLAIM_COMMAND_AMBIGUOUS`（`UNJUDGED`）として実CLIを代行起動しない。既存D20/D21と今回のDiscovery失敗D15〜D17は対象が異なり、両方を保持する。TEI [main #4930](https://github.com/hat47x/tei-platform/pull/4930)のGoバイナリ二本の対照は局所R1.5だが、[参照Builder試験 #4934](https://github.com/hat47x/tei-platform/pull/4934)は未マージで閉じた。SUI [main #3458](https://github.com/hat47x/sui-sensemaking/pull/3458)は、Source内部Gateと既存NAS・保存表のFit/Gapを整理した**文書**であって、正式Raw Providerの接続ではない。これらの進捗を、YIC側のPlugin/Provider/Host資格へ自動的に転用しない。
+
