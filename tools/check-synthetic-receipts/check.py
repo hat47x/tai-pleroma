@@ -82,6 +82,9 @@ REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
 # evidence that today's SUI consumer still loses the field.
 SUI_CONSUMER_MAPPING_NEGATIVE = "evaluations/records/SUI-consumer-mapping-2026-11-06.json"
 SUI_CONSUMER_MAPPING_ARTIFACT = "evaluations/artifacts/scn-003-document.json"
+SUI_CONSUMER_MAPPING_ORIGINAL_DIGEST = (
+    "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+)
 
 # Real-execution receipts are kept separate from synthetic ones so that a test
 # run on a host is never counted as synthetic evidence.
@@ -360,7 +363,10 @@ def _is_pinned_sui_consumer_mapping_negative(
         source = json.loads(raw, object_pairs_hook=_unique_object)
     except (OSError, ValueError, UnicodeError):
         return False
-    if artifact.get("digest") != "sha256:" + hashlib.sha256(raw).hexdigest():
+    if (artifact.get("digest") != SUI_CONSUMER_MAPPING_ORIGINAL_DIGEST
+            or artifact["digest"] != "sha256:" + hashlib.sha256(raw).hexdigest()):
+        # Checking only the digest stored in the same editable receipt would
+        # allow both artifact bytes and the receipt's digest to drift together.
         return False
     if not isinstance(source, dict) or not isinstance(source.get("document"), dict):
         return False
