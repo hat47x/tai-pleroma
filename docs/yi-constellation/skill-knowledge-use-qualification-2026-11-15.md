@@ -184,3 +184,52 @@ K0〜K3だけで正確なread-only回答が出せるなら、それを成果と�
 **不変の独立P0**はTAI #168の実OS G0→G1→G2→独立H2/H3四Slot（現在比較適格0/4）と、TEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルド。PDC-1／SUI Raw／TEI-EKI／Studio参照制限の検収を、それらの初回Blocking要件へ追加しない。
 
 **今回の状態**：実Productに統合された一部の事前検査と限定Referenceの到達点を、Skill・受入順序へ反映したDocs-only。Source-backed公開Doc一件のProduct読取、実Audience別送信、外部Harness四Slotの新規適格実証、TEI-EKI実Provider／Result Body、Studioの最新配布UI・Owner意味受理は本変更では**NOT RUN**。
+
+## 12. 2026-11-15：現在の読取資格を、Skill選択と利用者への説明につなぐ
+
+前節までで、Skillが案内する機能とProductが実際に受け入れる操作を分けた。今回の追加は、**Productが拒否した原資料をSkillが別経路で探し直さないこと**、そして**作業が止まった理由と次にできることを、確認済みの事実だけで説明すること**を実行条件にする。[TAIの横断UI／Session計画§50](harness-cross-ui-session-probe-2026-11-14.md)には利用者向けの停止・再開・縮退の案内がmain統合済み（[TAI #655](https://github.com/hat47x/tai-pleroma/pull/655)）。本節ではその表示文言を複製せず、Tool／Skillを選ぶ手前の資格と、渡せる根拠の上限だけを扱う。
+
+### 12.1 共通認可の到達点：SUI Source Snapshot
+
+[SUI #3453](https://github.com/hat47x/sui-sensemaking/pull/3453)はmain統合済み。実コード`03_Implement/backend/src/sui_sensemaking_api/access_control.py`の共通`resolve_access_decision`では、`resource.kind="source_snapshot"`ならTenant範囲を必須とし、失敗時は拒否する。read以外の操作、認証情報の必要項目／Source用Policy参照の欠落、noop/mock Adapterは、Policy判断へ進む前に拒否する。Documentに適用する`read_only`の継続動作をSourceへ引き継がない。PRの正確なHEADでSUI単体・MCP/Agent認証CIが成功した。
+
+ただし、**呼出元のPrincipalが本当に認証されていること、Policy参照が信頼できるHostから発行されたこと、外部PDPの実許可は別問題**。現在の共通ガードを突破できたというだけで、Source本文の取得・外部送出を認可されたとは言わない。先行[SUI #3452](https://github.com/hat47x/sui-sensemaking/pull/3452)のHTTP PDPはlocalhostのテストダブルであり、実組織のSource Grantではない。
+
+YICでは、Document表示とRaw Source確認を分ける。Documentを許可済みの範囲で使うことはできても、原資料が拒否された場合、Skillが別のTool・Plugin・保存済みReceiptで同じRawを取り直して拒否を回避することはしない。逆に、Sourceを読めないだけで、認可されたDocumentの表示まで一律に失敗としない。拒否の内部理由・隠れたSource名・Path・件数・Digestを、無権限のUIや外部Harnessに移さない。
+
+### 12.2 SkillとUIの回答を組み立てる最小判断
+
+この表は実装済みの共通Status型ではなく、既存Product／Hostの返答と[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)の比較記録を読むための確認順である。「次の操作」は**実行権限を新たに与える指示ではない**。
+
+| 当該Attemptで確かめた事実 | B0/B1/B2の扱い | 利用者へ示せる内容と停止条件 |
+| --- | --- | --- |
+| TEIの`plugin-inventory`は`exact-version-pinned`だが、`sourceBinding=unbound` | B0で実選択を説明できる。B1のManual読取は未成立、B2も補えない | 「Pluginの版は確認できました。公開文書の取得先はまだ確定していません」。[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の正式Doc帰属まで本文取得を主張しない |
+| SUIのDocument readは許可、同じ仕事のSource Snapshot readは拒否 | 許可済みDocumentの範囲でB0を継続。B1/B2で拒否を回避しない | 「文書は確認できましたが、原資料の照合はできていません」。隠れたSourceの存在や拒否理由は表示しない |
+| Skill文面やTool一覧はあるが実Loader／Tool受領が未確認 | 確認済みのProduct Toolで足りるならB0。実LoadしないB1/B2を数えない | 「手順はありますが、この環境で使えることは確認できていません」。未実装コマンドは呼ばない |
+| 元Source/Grantが変化、またはRead結果がpartial | 旧根拠は履歴として保持。B2を使う場合も現在のProduct資格を再照合 | 「確認済みの範囲と、再確認が必要な部分」を分ける。0件・不存在・全件完了を推測しない |
+| Tool配送ACKはあるが完全ReplyやConsumer実読取がない | B0/B1/B2のいずれも完了とはしない | 「結果を最後まで確認できていません」。既存Native Session/Operationの状態を照会し、Effect不明のまま再実行しない |
+| 前のNative Sessionに戻れないが、限定Activityの引継ぎは可能 | 中断・再開が実際に必要な場合に限りB2を候補にする | 「作業の情報を引き継いで別の対話で続ける」ことと「元Sessionが復元した」ことを区別する。新SessionのGrantを再確認 |
+
+**成功の表現を必要以上に狭めない。** Sourceが拒否されたTaskでも、許可済みのDocumentを引用して「原典未照合」と明記できたなら、その用途に対する正しい部分回答として評価してよい。独立Expectedは「必要な根拠を正しく確保したか」「無許可データへ到達しなかったか」「未知を保ったか」を分けて採点する。Skillが多いほど正答率が高いという採否にはしない。
+
+### 12.3 現在のCIと統合状況から推測してはいけないこと
+
+- [TEI #4812](https://github.com/hat47x/tei-platform/pull/4812)の最終HEADではWorkbench配布Bundle／WebView等の関連CIが成功したが、PRは**closed／not merged**。参照画面で制限を表示できること、別ブランチの生成済みJSが揃うこと、現行mainの配布Desktopが更新済みであることは同一の事実ではない。正式な出荷受入には、当該main由来の実Bundle・Windows Host・現在のDisclosureを改めて確かめる。
+- [TEI自作境界 #4582](https://github.com/hat47x/tei-platform/pull/4582)は**closed／not merged**の実測記録。Linux mount namespaceで一部書込境界を設けても、外部Rootの読取や別SessionのSource読取を防げるとは限らない。TAI #168のG0に必要な**実OS read-deny**の代替証拠にはしない。
+- [TAI #654](https://github.com/hat47x/tai-pleroma/pull/654)の`tai-reference`は対象HEADの実行が**completed/success**と確認できた。これは前回の文書差分のCI成功であり、PDC-1 Product Doc Read、SUI実Host、適格H2/H3四Session、製品の意味受理を示さない。
+
+### 12.4 既存Ownerへ渡す次の反証
+
+| ID | 状況 | 期待される判断・検証先 |
+| --- | --- | --- |
+| **YK-25** | SUIでSource Snapshotを共通認可処理へ直接渡し、Document用`read_only`縮退を指定 | Sourceは失敗時拒否、Raw取得・外部公開なし。Documentの許可済み読取とは区別（SUI #3453／TAI #232） |
+| **YK-26** | Sourceの読取が拒否され、追加Product Skillが非公開Rawへの別経路を案内する | 追加Skillで資格は拡張されない。正しい部分回答か保留へ縮退（SUI #3441／TAI #488） |
+| **YK-27** | TEIの参照Workbenchが正常でも、配布Bundleは別HEAD／PR未統合 | 現行mainの実Desktop成功と扱わず、正規生成物から実Consumerを再検収（TEI #4812/#4583） |
+| **YK-28** | Linuxの書込境界が成功し、読取Canaryは引き続き取得可能 | H2/H3のG0 read-deny不適格として扱う。別Root・別Native Sessionも検査（TAI #168／TEI #4582） |
+| **YK-29** | 中断後に古いSourceを持つActivityを別Native Sessionへ引き継ぐ | Activityの引継ぎとLive Session復元を区別。元Productの現在Source・Scope・Grantを再評価（TAI #271／TAI #655） |
+
+YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**である。SUIの認可回帰、TEIの配布試験、TAIのSK-02とQHはそれぞれの既存Ownerを使い、新しい共通Policy Engineや重複Checkerを作らない。
+
+**次の実装優先度は不変**。TAI #168 G0→G1→G2→新たな独立H2/H3四Slot（比較適格0/4）とTEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルドを独立P0として続ける。[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の一Plugin・一Doc Source-backed Readは並行実装し、別TrialのB0/B1比較へ引き渡す。SUI正式Source Provider、元TEI Source再束縛、EKI実Effect、Owner受理を初回四Slotに抱き合わせない。
+
+**本追補の資格**：main統合済みのSUI認可ガードとTAI利用者向け設計、未統合TEI試験枝を再照合したDocs-only。実Product Host／外部Harnessの新たなRead/送出、Browserからの実操作、独立比較の新実走、正式なDoc本文取得・Owner受理は**NOT RUN**。
