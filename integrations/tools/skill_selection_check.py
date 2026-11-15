@@ -306,6 +306,11 @@ def trial_input_error(t):
         return "caseId is not a nonempty string"
     if not isinstance(t.get("arm"), str) or not t["arm"].strip():
         return "arm is not a nonempty string"
+    # Unknown but nonempty outcome labels remain eligible for evaluation;
+    # an absent, empty or non-string outcome cannot establish a hold or
+    # an attempted execution and can crash set membership for list/dict.
+    if not isinstance(t.get("outcome"), str) or not t["outcome"].strip():
+        return "outcome is not a nonempty string"
     selected = t.get("selected", {})
     if not isinstance(selected, dict):
         return "selected is not an object"
@@ -605,6 +610,31 @@ else:
     direct_text = r(trial("hold", "B0", outcome="withhold", executedEffect="false"))
     check("S23 direct scoring cannot treat textual false as an affirmative effect",
           not direct_text["wrongExecution"])
+    list_outcome = score([trial("hold", "B0", outcome=["withhold"])], exp)
+    check("S24 list outcome cannot crash scoring or count as an explicit hold",
+          "outcome" in list_outcome["rows"][0].get("unscored", "")
+          and not list_outcome["perArmCounts"])
+    object_outcome = score([trial("hold", "B0", outcome={"status": "withhold"})], exp)
+    check("S25 object outcome cannot crash scoring or count as a hold",
+          "outcome" in object_outcome["rows"][0].get("unscored", "")
+          and not object_outcome["perArmCounts"])
+    missing_outcome = score([{"caseId": "direct", "arm": "B1", "selected": {}}], exp)
+    check("S26 missing outcome cannot be counted as execution",
+          "outcome" in missing_outcome["rows"][0].get("unscored", "")
+          and not missing_outcome["perArmCounts"])
+    empty_outcome = score([trial("direct", "B1", outcome="  ")], exp)
+    check("S27 blank outcome cannot be counted as execution",
+          "outcome" in empty_outcome["rows"][0].get("unscored", "")
+          and not empty_outcome["perArmCounts"])
+    mixed_outcomes = score([
+        trial("hold", "B0", outcome=["withhold"]),
+        trial("hold", "B1", outcome="withhold", executedEffect=False)], exp)
+    check("S28 invalid outcome does not block or inflate another valid arm",
+          len(mixed_outcomes["rows"]) == 2
+          and "outcome" in mixed_outcomes["rows"][0].get("unscored", "")
+          and "metrics" in mixed_outcomes["rows"][1]
+          and "B0" not in mixed_outcomes["perArmCounts"]
+          and mixed_outcomes["perArmCounts"]["B1"]["wrongExecution"] == 0)
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
