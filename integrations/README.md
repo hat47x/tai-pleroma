@@ -4,6 +4,7 @@
 
 実装先の責務と実行権限を確認し、製品固有の機能は元のリポジトリに保持します。接続先・版・認証情報の扱い、失敗時の振る舞いを明記してください。秘密情報は含めません。
 
+- [共通Harness Adapter](harness-adapter/README.md)（外部AIハーネスへProduct能力を交換可能な形で提供する最小実装）
 - [SUI DocumentV1投影のTEIパイロット](pilot-sui-document/README.md)
 - [SEI Decision投影の参照パイロット](pilot-sei-decision/README.md)
 - [MMI Format Profile投影の参照パイロット](pilot-mmi-format-profile/README.md)
