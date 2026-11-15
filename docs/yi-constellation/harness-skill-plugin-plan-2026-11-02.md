@@ -1118,3 +1118,13 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 次の反証は、**YK-52**：Evidenceに文字列`"true"`・`"false"`や数値を与えても、Tool到達と独立観測を合格にしない（TAI #488）。**YK-53**：申告`true`と旧PRの成功CIだけがあるが、現在Attemptの独立Consumer受領がない場合、H2/H3の比較適格としない（TAI #168/#271）。この二件は既存Owner/Checkerへの入力例であり、第二の採点器・権限正本・共通Registryを作るものではない。
 
 **優先度・停止線**：TAI #168の実OS read-deny→実Egress→完全Tool Reply→独立H2/H3、TEI #4583のWindows Stage1→Stage2を独立P0として維持。TEI #4714の公開Manual一件のSource-backed Read、TEI #4544/#4495のBuilder／実Provider、SUI #3441の正式Source用Host/Grantは並行するOwnerの仕事に留める。今回の修正・文書は合成採点器の検査であり、実Product/Host/外部Harness・Owner意味受理は**NOT RUN**。
+
+### 55.4 限定Discoveryの範囲を確認し、製品間のSource同一性を推測しない
+
+[Skill実行票§15.6](skill-knowledge-use-qualification-2026-11-15.md)に、限定`tei commands`の構造検査だけでは残る二つの失敗を追加した。一つは`scope`欠落・別範囲の一覧やread-only以外の`effect`を掲載した一覧を安全な候補として扱う誤り、もう一つは`-world`が必要なCommandに検査器の`-workspace`を代用する誤りである。既存`skill_selection_check.py`はD18/D19/D23/D24で不適格な発見を未判定に、D22で実行不能な引数を`PATH_CLAIM_NEEDS_ARGUMENTS`に保留する。CLI側の実認可・副作用まで証明するものではなく、独立ExpectedやB0/B1/B2の採点指標はそのまま維持する。
+
+**他チャットの成熟した成果との接続**：[TEI main #4945](https://github.com/hat47x/tei-platform/pull/4945)で、Pinを含む参照Workbench Sourceから製品埋込Assetを正規生成し、Embedded Bundleの対象HEAD CIが成功した。これは以前の「配布Asset未同期」を一段進めた実績だが、同HEADのWindows WebView2 Smokeはfailureであり、実Wails画面／非Plugin Stage1→Stage2の合格ではない。[TEI main #4941](https://github.com/hat47x/tei-platform/pull/4941)では、Rule由来のR2-P製品Builderと、別途受理されたpure FunctionのR3公開Entry/Providerを並列に進め、成立後に結合する検収順が計画へ統合された。**Rule IDは公開Function Entry IDではない。** [SUI main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)のSource選択範囲・元byte再読は内部readとして成功しても、同じ文言が二箇所ある場合は選択DigestではOccurrenceを区別できない。
+
+この三点は、YICが実Consumerへ渡す際の共通の停止線になる。**Toolを発見できたこと**、**Sourceの選択Byteが現在読めたこと**、**そのSourceが一意のOccurrenceに属すること**、**生成Artifactを正式Builderが消費したこと**、**実Consumerが現在Grantで受け取ったこと**は別の証拠である。SUI/TEI/SHOの各Sourceと公開資格の正本は各Productが保持し、YIC側には新しい共通Source Registry、Grantサービス、Binder、Runnerを置かない。Plugin間配線や標準FlowのNode Viewは既存の型付きNode/Edge投影として検討するが、図上で線が結べたことを実Provider選択や認可済みの呼出しに昇格しない（[TEI #4957](https://github.com/hat47x/tei-platform/pull/4957)、確認時点では未マージ）。
+
+**実行順**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583の実Windows Stage1→Stage2は独立P0のまま。R2/R3実製品利用、SUI正式Source Provider/Current Grant、公開Manualの一件Readは別Ownerに留める。今回の新OS/Harness/Windows/DB E2EとOwner受理は**NOT RUN**。
