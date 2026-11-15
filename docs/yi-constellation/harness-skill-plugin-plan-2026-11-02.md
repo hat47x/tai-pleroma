@@ -1162,3 +1162,13 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **横断の受入規則**：Skillの合成自己試験成功、Source位置の再確認、製品によるGo Build Intentの実消費、Windowsの通常DOM操作、現在のDocument/Source認可、別Productへの開示、外部Harnessの完全Replyは異なる検証結果として保持する。未実証の段階を先行する成功で補わず、製品固有のOwnerに戻す。
 
 **次の一件**：YK-64は「先行Receiptの失敗によるSkill自己試験の未実行」を「Skillテスト失敗／成功」と混同しない反証（TAI #680/#488）。YK-65は「通常Windows Pinの成功をStage2生成Desktop成功と取り違える」反証（TEI #4583）。YK-66は「Document readとSource readの片方だけの許可でCardのRawを外部開示する」反証（SUI #3441／TAI #232）。優先度はTAI #168の実OS G0→G1→G2・独立H2/H3四Slot（比較適格**0/4**）とTEI #4583の実Windows Stage1→Stage2を独立P0として維持する。新しい実OS/DB/外部Harness/Owner意味受理は**NOT RUN**。
+
+### 55.8 実行失敗の歴史的Receiptを、Product成功ではなく負例として検収する
+
+[Issue #680](https://github.com/hat47x/tai-pleroma/issues/680)で`python-reference`の失敗原因となった`SUI-consumer-mapping-2026-11-06.json`は、**実行記録そのものが`result: FAIL`**であり、古いSUI Consumerが`readingOrder`を落としたことを正確に記録している。入力Artifactには`readingOrder: ["card-1","card-2"]`があり、Consumer側`modelReadingOrder: 0`、`documentDropped: ["readingOrder"]`、`readingOrderKept: false`。ほかのCollectionは当該観測の範囲では欠落していない。これをCIのために`PASS`へ書き換えることも、全実行Receiptに`FAIL`を許すことも誤りである。
+
+既存[Receipt Checker](../../tools/check-synthetic-receipts/check.py)に、**このファイルだけ**を元Artifact byteのSHA-256、元`readingOrder`、失敗結果、観測された欠落位置・件数、Collectionごとのキー照合で限定受理する分岐を加える。監査結果は`knownNegativeReceipts`にファイル名を別掲する。意味は「既知の損失を観測した履歴Receiptとして正しく保存されている」であり、**SUI Productの投影が成功したという意味ではない**。不正な`PASS`への改竄、別の欠落、Artifact byte変更、別の実Receiptの失敗は引き続き検査失敗にする。既存の受入テストへ負例を加え、監査用Expectedの別正本を作らない。
+
+[SUIの現行`documentv1_projection.py`](https://github.com/hat47x/sui-sensemaking/blob/main/03_Implement/backend/src/sui_sensemaking_api/documentv1_projection.py)には、`from_artifact`で`readingOrder`を取り込み、`to_documentv1_payload`で明示的に出力する処理が存在する。しかし**別リポジトリの現行Sourceの存在は、過去のWindows Consumer Receiptを置き換える現在の実行結果ではない**。次のSUI Owner検収は、入力ArtifactのByteとSUI commit／Consumerバイナリ・依存環境を固定し、現行Consumerを別Processで再実行すること。元の`FAIL`記録を残したまま、新たな`PASS`または新たな損失の実Receiptを別のAttemptとして保存し、元資料と同じ`readingOrder`・全Collectionで対照する。これを初めて実Consumer改善の証拠とする。
+
+**横断の意味**：Receipt Checkerの成功は「保存した証拠の整合性」、SUI現行Consumerの実測成功は「Product投影の正確性」、Document/Sourceの現在認可は「現在読める資格」、AI・SHO・TEIへの二次開示と完全受領は各Ownerの別資格である。SUI [#3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Head照合は当該時点ではopenであり、実Card保存／CAS／正式Providerの完成とはしない。TEIのRule→通常CLI生成とWebView2実Consumerの限定実績、TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（適格**0/4**）、TEI #4583 Windows Stage1→Stage2は従来の別Owner／独立P0を維持する。今回の外部Product／実OS／Windows実再実行・Owner意味受理は**NOT RUN**。

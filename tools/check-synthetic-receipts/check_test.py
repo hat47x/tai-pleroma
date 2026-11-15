@@ -1,10 +1,12 @@
+import hashlib
 import json
 import pathlib
 import shutil
 import tempfile
 import unittest
 
-from check import REAL_RECORDS, RECORDS, REVIEW_STATUS, check
+from check import (REAL_RECORDS, RECORDS, REVIEW_STATUS,
+                   SUI_CONSUMER_MAPPING_NEGATIVE, SUI_CONSUMER_MAPPING_ARTIFACT, check)
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
@@ -14,9 +16,14 @@ class CheckTest(unittest.TestCase):
         receipt = check(ROOT)
         self.assertTrue(receipt["passed"], receipt)
         self.assertEqual(receipt["recordCount"], len(RECORDS))
+        self.assertEqual(receipt["knownNegativeReceipts"], [SUI_CONSUMER_MAPPING_NEGATIVE])
+        self.assertEqual(
+            json.loads((ROOT / SUI_CONSUMER_MAPPING_NEGATIVE).read_text(encoding="utf-8"))["result"],
+            "FAIL",  # This is a known historical field loss, not a successful SUI consumer.
+        )
 
     def _copy_fixture(self, root):
-        for relative in (*RECORDS, *REAL_RECORDS, REVIEW_STATUS):
+        for relative in (*RECORDS, *REAL_RECORDS, REVIEW_STATUS, SUI_CONSUMER_MAPPING_ARTIFACT):
             source = ROOT / relative
             destination = root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -101,6 +108,68 @@ class CheckTest(unittest.TestCase):
             self.assertFalse(receipt["passed"])
             self.assertTrue(any("R-07 declares evidence" in e for e in receipt["errors"]))
 
+
+    def test_archived_sui_consumer_loss_cannot_be_relabelled_pass(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            path = root / SUI_CONSUMER_MAPPING_NEGATIVE
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data["result"] = "PASS"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            result = check(root)
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["knownNegativeReceipts"], [])
+            self.assertTrue(any("archived SUI consumer negative" in e for e in result["errors"]))
+
+    def test_archived_sui_consumer_loss_must_match_the_exact_negative(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            path = root / SUI_CONSUMER_MAPPING_NEGATIVE
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data["observed"]["documentDropped"] = []
+            path.write_text(json.dumps(data), encoding="utf-8")
+            result = check(root)
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["knownNegativeReceipts"], [])
+
+    def test_archived_sui_consumer_loss_is_tied_to_original_artifact_bytes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            artifact = root / SUI_CONSUMER_MAPPING_ARTIFACT
+            artifact.write_bytes(artifact.read_bytes() + b" ")
+            result = check(root)
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["knownNegativeReceipts"], [])
+
+    def test_artifact_and_receipt_digest_cannot_be_rewritten_together(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            artifact = root / SUI_CONSUMER_MAPPING_ARTIFACT
+            artifact.write_bytes(artifact.read_bytes() + b" ")
+            path = root / SUI_CONSUMER_MAPPING_NEGATIVE
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data["artifact"]["digest"] = "sha256:" + hashlib.sha256(artifact.read_bytes()).hexdigest()
+            path.write_text(json.dumps(data), encoding="utf-8")
+            result = check(root)
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["knownNegativeReceipts"], [])
+
+    def test_other_real_receipt_failure_is_not_admitted_as_negative(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            path = root / REAL_RECORDS[0]
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data["result"] = "FAIL"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            result = check(root)
+            self.assertFalse(result["passed"])
+            self.assertTrue(any("real-execution receipt is not PASS" in e for e in result["errors"]))
+            self.assertEqual(result["knownNegativeReceipts"], [SUI_CONSUMER_MAPPING_NEGATIVE])
 
     def test_real_execution_receipt_claiming_synthetic_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
