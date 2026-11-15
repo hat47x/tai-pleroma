@@ -251,7 +251,7 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 
 ### 13.1 製品側の最新実装をどう受け取るか
 
-[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)では、先行するJSONLの二重定義解消[TEI #4844](https://github.com/hat47x/tei-platform/pull/4844)のmain統合後、**実ビルドした一つのteiバイナリ**で公開Manual候補と`tei commands`、実選択PluginのLock前段検査を交差照合する試験が進んでいる。これはPDC-1 D1-0/D1-4の製品内確認であり、正規Doc Binding／Source-backed Read／Audience/Disclosureに当たるD1-1〜3を満たさない。#4845が進行中の間はProduct実装の完了に数えず、新HEAD CIとOwner判断を確認する。
+[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)は、先行するJSONLの二重定義解消[TEI #4844](https://github.com/hat47x/tei-platform/pull/4844)のmain統合後、**実ビルドした一つのteiバイナリ**で公開Manual候補と`tei commands`、実選択PluginのLock前段検査を交差照合する試験を提案した。ただし、このPRは**closed／not merged**であり、当該HEADの複数CIはfailureだった。PDC-1 D1-0/D1-4の受入実績としてmainへ加算しない。正規Doc Binding／Source-backed Read／Audience/Disclosureに当たるD1-1〜3も引き続き未成立である。
 
 [SUI #3454](https://github.com/hat47x/sui-sensemaking/pull/3454)はmain統合済みで、Source用の**認証済みMemberと現行Tenant Sessionの前段確認**を既存SaaS認証から再利用した。Guest／Agent資格や旧SessionをMember扱いしない。対象HEADのbackend-contract 396件はPASSと報告されている。ただし内部Preflightは実ProductのHTTP Routeに未配線で、テストでは認証Session解決の一部を差替えている。信頼済みPrincipal、Source Policy Binding、実PDP許可、Raw Reader、外部AIへの再開示は未受理である。
 
@@ -269,3 +269,39 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 **維持する優先度**：独立P0はTAI #168の実OS G0→G1→G2→新しい独立H2/H3四Slot（直近比較適格0/4）とTEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルド。TEI #4714の一Plugin・一公開ManualのProduct実Readは並走し、旧固定Skill bytesの比較には混ぜない。新しい共通Router、Agent Loop、中央AuthZや独立Expectedは追加しない。
 
 **この節の資格**：既存Checkerへの小さな修正、合成自己試験とそのCI配線、他製品で確認した前段を対応付けた段階。実TEI PDC-1公開文書Read、SUI本番Source Read、外部Harness適格比較、Owner意味受理は**NOT RUN**。
+
+## 14. 2026-11-15：階層Commandの存在と、Product Source証拠の到達点を分ける
+
+[Skillドリフト検査器](../../integrations/tools/skill_selection_check.py)の§13修正には、なお反例があった。例えば、CLIのusageに`model`という親コマンドがあるだけで、Skillが記した`tei model imagined`を「usageにはあるが限定Discoveryの外にある」と表示し得る。**親の存在から未確認の子コマンドの存在は推論できない。**
+
+既存`check_skill`に、限定`commands`で実発見できなかった複合名について、①usageに**複合名が正確にある**、②usageに**親名しかない**、③双方にない、の区別を設けた。新しい分類`SKILL_SUBCOMMAND_NOT_ESTABLISHED`は`UNJUDGED`であり、完全な試行コマンド列を残し、実行も許可もしない。既存`SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE`はusageの完全一致があるときだけ用いる。どちらにもなければ`SKILL_COMMAND_NOT_DISCOVERED`だが、全版・全Profileでの不存在を断定しない。
+
+| 事前に観測したもの | `tei model imagined`に対する扱い |
+| --- | --- |
+| 実`commands`に正規の完全名がある | そのCLI Discoveryに掲載された入口として確認済み。ただし権限や実呼出し成功とは別 |
+| `commands`に無く、usageに完全名がある | `SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE`・`UNJUDGED`。現在の限定読取Toolからの呼出しは未確認 |
+| `commands`に無く、usageに親`model`のみ | `SKILL_SUBCOMMAND_NOT_ESTABLISHED`・`UNJUDGED`。親の存在では子の実在を保証しない |
+| いずれも完全名・親名を示さない | `SKILL_COMMAND_NOT_DISCOVERED`。記載手順と現在の観測結果の不一致として調査し、製品全体の不存在とは呼ばない |
+
+追加した合成自己試験D8〜D10は、存在しない子、usageの親のみ、実Discoveryの既存子を対照にする。[既存`tai-reference` CI](https://github.com/hat47x/tai-pleroma/blob/main/.github/workflows/tai-reference.yml)の`--self-test`で実行する。前回[TAI #658](https://github.com/hat47x/tai-pleroma/pull/658)のexact HEADは`tai-reference` completed/successだが、**今回の追加ケースの合格は今回HEADのCIでのみ判断**する。自由文全体にある「機能はない」という自然言語断定を理解する検査器ではない。
+
+### 14.1 他Productで「元Sourceに到達した」と言える範囲
+
+[TEI #4853](https://github.com/hat47x/tei-platform/pull/4853)はmainへ統合済み。実Workspaceの`semantic-capability:sales.order.submit`について、既存`InspectSubject`／Source Index／`TraceSubjectSources`を使い、Canonical IDと`semantic/sales/order.tei`の原byte位置を照合する**read-only Headless Go回帰**を追加した。非存在Subjectの空Traceと`SUBJECT_NOT_FOUND`を区別する。ただし当該PR exact HEADの多くのWorkflowはfailureであり、この結果を全体健全性の合格として扱わない。Inspector/TraceのSource対応は、業務意味受理や実Provider作用、正式Markdown Readerの存在証明ではない。
+
+[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)の公開Manualと実CLIの交差試験、および[TEI #4857](https://github.com/hat47x/tei-platform/pull/4857)のReference Language候補と正式Markdown Loaderの未束縛拒否の試験は、**いずれもclosed／not merged**。試験案や別HEADでの観測を、mainに入った製品Reader／正式Doc取得の成果へ加算しない。TEI #4714は実公開Manual一件のSource-backed Read、#2621は正式`*.tei.md` Reader、#4583はStage1→Stage2をそれぞれ別の受入として維持する。
+
+[TAI #659](https://github.com/hat47x/tai-pleroma/pull/659)はmain統合済みで、モデル→役割→作業→実Harness経路のAI委任について、作業意図・Native Session・Git/CI・Product Operation/Effectを分け、既存Ownerへ戻す計画を追加した。今回のTool/Skillの限定Discoveryはその**作業前の現行Capability確認**に使えるが、他モデルへの引継ぎの正しさやNative Session継続を自動的に認定しない。
+
+### 14.2 反証と次の実装出口
+
+| ID | 入力の違い | 検査・Owner |
+| --- | --- | --- |
+| **YK-34** | usageに親`model`があるが`model imagined`は無い | 子の実在を認定しない`UNJUDGED`。TAI #488 |
+| **YK-35** | 実`commands`に正規の`model catalog`があり、同じくusageにもある | 正規の発見を保ち、親の存在を理由に余計な保留へ落とさない。TAI #488 |
+| **YK-36** | TEIのInspector/Traceは実byteに到達するが、`*.tei.md` Loaderは未束縛 | Source読取位置の証拠と業務Meaning/正式Readerを別資格とする。TEI #2621/#1180 |
+| **YK-37** | 未マージPRの実Binary試験や旧HEADの成功をSkillが現在の製品機能として引用 | 最新mainと実Tool/Sourceを再照合し、現在能力と歴史的観測を分ける。TAI #488／TEI #4714 |
+
+優先順位は変更しない。**独立P0-A**はTAI #168の実OS G0→G1→G2→新規独立H2/H3四Slot（比較適格0/4）、**独立P0-B**はTEI #4583の非Plugin Studio Stage1→Stage2 Windows実Consumer。公開ManualのProduct一件ReadはTEI #4714に並行して委ね、成功が揃ってからTool-only B0とProduct Skill B1を別Trialで比較する。実際の中断再開利益がある場合だけB2のTAI Skillを使う。新しいCentral Registry/Host/Resolver、第二Expected、独自Agent Loopは追加しない。
+
+**今回の範囲**：既存Checkerの合成負例、製品の公開PR/実コードの再照合、文書への受入差分のみ。実Source-backed公開Doc Read、実OS隔離・新独立四Session、本番Host Grant、外部Provider Effect、正式Ownerの意味受理は**NOT RUN**。
