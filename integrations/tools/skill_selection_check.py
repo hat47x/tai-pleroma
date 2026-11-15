@@ -109,13 +109,17 @@ PATH_RE = re.compile(r"`([A-Za-z_][\w.]*)\[\]\.([\w.]+(?:/\w+)*)`")
 
 
 def match_command(words, names):
-    two = " ".join(words.split()[:2])
-    one = words.split()[0]
-    if two in names:
-        return two
-    if one in names:
-        return one
-    return None
+    """An advertised parent never proves a two-word command.
+
+    CMD_RE captures up to two command words. If the Skill explicitly writes
+    both words, the entire name must occur in scoped discovery; otherwise
+    leave it unjudged. Flags (e.g. -workspace) are outside CMD_RE.
+    """
+    parts = words.split()
+    if not parts:
+        return None
+    full_name = " ".join(parts)
+    return full_name if full_name in names else None
 
 
 def check_skill(tei, workspace, skill_texts):
@@ -149,10 +153,11 @@ def check_skill(tei, workspace, skill_texts):
                         # complete name was advertised outside this scope.
                         findings.append({"class": "UNJUDGED", "code": "SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE",
                                          "doc": label, "detail": claimed, "scope": disc["scope"]})
-                    elif usage_names is not None and " " in claimed and root in usage_names:
-                        # A parent command in usage does NOT establish its
-                        # named subcommand. Keep the entire attempted path
-                        # visible without calling or claiming it is absent.
+                    elif " " in claimed and (root in names or
+                                                 (usage_names is not None and root in usage_names)):
+                        # A parent in scoped discovery OR usage does not
+                        # establish its child. Never silently execute the
+                        # parent when a Skill named an unconfirmed child.
                         findings.append({"class": "UNJUDGED", "code": "SKILL_SUBCOMMAND_NOT_ESTABLISHED",
                                          "doc": label, "detail": claimed, "scope": disc["scope"]})
                     else:
@@ -285,6 +290,7 @@ a = sys.argv[1:]
 if a == ["commands"]:
     print(json.dumps({"scope": "selected-read-only-commands", "commands": [
         {"name": "model catalog", "requiredFlags": ["workspace"]},
+        {"name": "model", "requiredFlags": ["workspace"]},
         {"name": "inspect", "requiredFlags": ["workspace", "subject-kind", "subject-id"]},
         {"name": "source-index", "requiredFlags": ["workspace"]},
         {"name": "read-failed", "requiredFlags": ["workspace"]},
@@ -315,7 +321,7 @@ else:
                                                 and f["class"] == "UNJUDGED"
                                                 for f in usage_only["findings"]))
         check("D7 scoped discovery is not exhaustive",
-              usage_only["discovery"]["discoveredCommands"] == 5
+              usage_only["discovery"]["discoveredCommands"] == 6
               and usage_only["discovery"]["usageCommands"] == 8
               and not [f for f in usage_only["findings"] if f["class"] == "DRIFT"])
         unknown_subcommand = check_skill(tei, tmp, [("S", "Try `tei model imagined`.")])
@@ -326,7 +332,22 @@ else:
                   for f in unknown_subcommand["findings"]))
         check("D9 parent-only usage does not prove an exact child",
               not any(f["code"] == "SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE"
-                      for f in unknown_subcommand["findings"]))
+                      for f in unknown_subcommand["findings"])
+              and "model" not in unknown_subcommand["skillMentionsDiscovered"])
+        unknown_with_path = check_skill(tei, tmp, [
+            ("S", "`tei model imagined -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D13 discovered parent does not validate a child's JSON path",
+              any(f["code"] == "SKILL_SUBCOMMAND_NOT_ESTABLISHED"
+                  for f in unknown_with_path["findings"])
+              and any(f["code"] == "PATH_CLAIM_NEEDS_ARGUMENTS"
+                      for f in unknown_with_path["findings"])
+              and not any(f["code"].startswith("SKILL_PATH_")
+                          or f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
+                          for f in unknown_with_path["findings"]))
+        parent_only = check_skill(tei, tmp, [("S", "`tei model -workspace W`.")])
+        check("D14 explicitly named discovered parent remains available",
+              parent_only["skillMentionsDiscovered"] == ["model"]
+              and not [f for f in parent_only["findings"] if f["class"] == "DRIFT"])
         exact_usage_subcommand = check_skill(tei, tmp, [("S", "Try `tei model catalog`.")])
         check("D10 actual discovered child stays discovered",
               exact_usage_subcommand["skillMentionsDiscovered"] == ["model catalog"]
