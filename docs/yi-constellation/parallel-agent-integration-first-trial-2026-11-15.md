@@ -92,3 +92,12 @@ A0の成果だけで並行開発の成功とはしない。続く別Trialでは�
 4. Sourceも配布も一致して初めてUI Consumerの一段階を検収する。Pin Aの背景確認がFocus Bに影響しないこと、Source/Grantの再確認、外部Harnessへの送信資格、Stage1→Stage2はさらに別の受入とする。
 
 これは[TEI #4879](https://github.com/hat47x/tei-platform/pull/4879)のOwner検収を参照する**統合試験候補**であり、新しいYIC配布BuilderやFrontend Checkerの採用ではない。現mainの二HTMLにPin要素の有無が異なることは**Source-staticで確認済み**。新HEADのNode24/Windows Browser、二Worker並列作業、生成Bundle byte照合、Owner受理は**NOT RUN**。
+
+<!-- yic-overlapping-rule-tests-20261115 -->
+## 現行の重複提案を使った比較：既にmainにある回帰と、新しいDraft
+
+[TEI main #4890](https://github.com/hat47x/tei-platform/pull/4890)の`tei_md_rule_product_read_test.go`は、内蔵Rule Markdownの製品`Workspace.Load`、二Ruleの型付き意味、同一Load原byteのSource Index、説明文改訂による旧Index失効、Language未選択・版不一致拒否を扱う。一方、[TEI Draft #4893](https://github.com/hat47x/tei-platform/pull/4893)は、同じFixtureで同じ機能領域を別テストファイルに実装している（確認時点でopen/draft・未マージ）。**別PR/別テスト名であるだけでは独立した成果件数に数えない**。
+
+このDraftには、**元ファイルの変更後に旧Loadからもう一度Indexを組み立てても、新しいディスク内容を取り込まない**ことなど、既存#4890の旧Index `Validate`失効負例とは区別して確認すべき候補もある。後続の実装担当は、(1)現行mainの正負条件、(2)Draftだけが観測する追加の故障、(3)同一HEADで成立する実結果、(4)その負例を既存のどのOwnerテストへ返すか、を比較する。独自性が確認できた検査だけを最小差分で提案し直し、同じ期待を満たす別Parser/第二Expected/Fixtureを丸ごと増設しない。
+
+ここで行ったのはmainの実GoテストとDraft差分のSource照合。#4893の実CI検収・追加ケースの効果・統合判断は**NOT RUN／Owner未採用**。TAI #233の探索候補を削除・制限する措置ではなく、**候補の幅と採用済み成果の数え方を分ける**運用である。
