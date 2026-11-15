@@ -1179,7 +1179,7 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 
 再実行用の既存[Consumer Mapping Checker](../../integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py)には、過去の`FAIL`記録をそのまま上書きできる危険があった。また実行コマンドを記録するとき、元の旧Receiptの`--out`が固定文字列で埋め込まれ、異なる出力先や利用したコードと一致しない。今回は同じCheckerを次のように限定して改める。**過去Receiptの出力先は拒否**し、別の既存ファイルも上書きしない。新規出力先を指定し、そのファイルを排他的に新規作成する。Sourceの原ArtifactのSHA-256、実際に選択したSUI Consumerの二つのPythonモジュールbyte指紋、Checker自身のbyte指紋、Python実行環境・実行引数を新Receiptに記録する。Consumer実行前後の照合でArtifactまたは二つのSUIモジュールのbyteが一致しなければ保存を拒否する。ただし、途中でA→B→Aと戻った変更や、列挙していない依存ファイルの変更まで検出するものではない。
 
-この検査では、`readingOrder`を**件数だけでなくCard IDの並びも含めて一致**させる。同じ2件でも順序が逆なら`FAIL`であり、1枚目にはない`sources`などの属性も、Collection全件のキー和集合で消失を検出する。**元のPayloadに残っていても、SUIの`DocumentV1`検証後のモデルから消えた項目は不合格**とし、両段階のキーをReceiptに分けて残す。したがってSourceから投影した意味の「要素数が合っている」だけでは受け入れない。Product Consumer自体の正式Schema、現在のDB権限、元データとの保存後CAS、外部開示Grantをこの参照検査が新たに決定するわけではない。
+この検査では、`readingOrder`を**件数だけでなくCard IDの並びも含めて一致**させる。同じ2件でも順序が逆なら`FAIL`であり、1枚目にはない`sources`などの属性も、Collection全件のキー和集合で消失を検出する。**元のPayloadに残っていても、SUIの`DocumentV1`検証後のモデルから消えた項目は不合格**とし、両段階のキーをReceiptに分けて残す。 ただし、**`readingOrder`以外の各フィールド値そのものの同一性は今回比較していない**。全項目の値・関係・時間条件までの意味受理は別に残す。したがってSourceから投影した意味の「要素数が合っている」だけでは受け入れない。Product Consumer自体の正式Schema、現在のDB権限、元データとの保存後CAS、外部開示Grantをこの参照検査が新たに決定するわけではない。
 
 **検収順**：まず既存Python CIで新しいテストのOutput保護・順序逆転・後続Card属性落ち・Payload→DocumentV1での属性落ち・前後Source不一致の**合成負例**をPASSさせる。次にSUI Ownerが実SUI checkout・依存・入力Artifactを固定し、このCheckerを別Processで起動して新しいReceiptを保存する。新Receiptの`result`が`PASS`で全属性・順序が保たれた場合のみ、**その一Attemptの実Consumer投影**を肯定する。出力は旧Receiptとは別のファイルとし、元の`FAIL`を残して対照できるようにする。生成された新ReceiptをTAIが第二のSource正本にすることはない。
 
