@@ -1858,6 +1858,16 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 
 **次の製品側反証**：同じRuleからP/Gで判断が一致しても、G生成Byte/元Sourceだけを改版、Pの読取元を不完全化、Manifest選択Gなのに実CallerがPを呼ぶ、DのGrant拒否でPへ暗黙Fallbackする、という四種類を分けて試す。独立Expected/Ownerは既存TEI #1180/#2514/#4544/#4495とし、受入票は[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)に一本化する。YICはProduct局所の成功からRecipient別Disclosureや外部Harness受領を自動付与しない。
 
+### 55.8 同じ判定結果でも、実際の読取先とBuild時点が違えば受理しない
+
+前節のP（直接評価）／G（生成Go）の比較には、**Resultだけでなく、どのSource属性を何回読んだか**という観測が必要である。[TEI main #5118](https://github.com/hat47x/tei-platform/pull/5118)では、`tei.authoring/v1`の同じMarkdown Data表・Ruleを一度Loadし、既存Evaluator（P）と、隔離`go build`で生成した**実Go Binaryの別Process実行（G）**を同じ入力で比較する局所回帰が追加された。独立Expectedは`2.5`／`0`／`-1`／`-0`／NULL／未取得。生成GoのReaderを`allocation`から`person_id`へ差し替えて結果だけを一致させても、**実Read IDが違うので不適格**とする。論理テストSourceのReadと実DB・組織PDPで許可されたProvider Readは別である。#5118はmainにマージ済みでテストSourceも確認したが、対象HEADのWorkflowは取得時点ではpending/queued。focused PASSとして加算しない。
+
+Gの実行資格はさらに時間を持つ。[TEI main #5109](https://github.com/hat47x/tei-platform/pull/5109)は、`buildintent.Resolve`で**BuildPlanを確定した後**、Builderが読む`generated.go`のbyteだけを変更する。古いPlanを渡して通常`tei self-build`を実行したとき、**L2-bを主張せず、Artifactを残さず拒否**し、元byteへ復元後だけ従来の実Binary判定へ進む。これは配置直後のbyte照合[#5056](https://github.com/hat47x/tei-platform/pull/5056)とは異なる時間差の負例。#5109もmainにマージされているが、対象HEADのWorkflowは確認時点でqueued。正式R2-Pの元Source/Reader/Generator/Toolchainの全閉包、実Plugin/Providerの選択資格やA→B→Aの履歴を自動受理しない。
+
+選択自体の現在性も別である。[TEI PR #5114](https://github.com/hat47x/tei-platform/pull/5114)は**未マージ**で、Canonical World・Scenario・Plugin Lock・Fixtureが同じでも、ManifestのOperator実装選択A→Bを変えたら旧生成コマンドを`operatorSelectionSha256`で拒否する候補。実装選択のFingerprintは`World Fingerprint`や`Plugin Lock`を代替せず、選択された方式が実際にInvokeされたことの証明でもない。main採用とexact HEAD Go試験を確認するまでYICの機能一覧へ昇格させない。
+
+**共通の実行順**：[TEI main #5116](https://github.com/hat47x/tei-platform/pull/5116)の設計に沿い、まずOwnerの業務意味受理・Sourceと実装の選択・現在のGrantを確認し、**副作用のあるInvokeより前に**入出力の型/欠損/完全性/Effect条件を検査する。その後に実Call・Read ID/回数・Builder実入力・Result/Effect/Receiptを照合する。型付きPort全体／Field／Adapterの[main #5101](https://github.com/hat47x/tei-platform/pull/5101)はこの経路への投影であって、型の一致のみで開示許可やInvocationを発行しない。Goの生成メソッド名やUI上のNodeラベルではなく、**Meaning ID・選択した抽象経路・通過時の状態不変条件**で受入を記述する（[main #5112](https://github.com/hat47x/tei-platform/pull/5112)）。この局所証拠を外部HandoffのP/T/C/Hへ勝手に昇格させない。独立受入票は[QH §10.12](cross-product-handoff-execution-tickets-2026-11-11.md)に集約する。
+
 ## 56. 意味・原文の位置・配布物の一致を分けて検証する
 
 同じ文字列やHashが返ったという一事実を、「同じ業務意味」「同じSource箇所」「現在その人が読める」「別Productに開示してよい」「実Consumerが受領した」の五つに拡大解釈しない。これは独立した新しいEvidence形式の提案ではなく、既存[製品間Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)のI（意図）／R（Product再解決）／P（開示許可）／T（送出）／C（Consumer）／H（Harness）の**各欄を埋める前に、何の同一性を確認したかを固定するための条件**である。
@@ -1922,5 +1932,13 @@ SUIでは実Document readとSource readの独立判定がmain済み[#3462](https
 過去の[TEI #4995/#5012/#5025](https://github.com/hat47x/tei-platform/pull/5025)における生成Desktop失敗は、その各HEAD・Attemptの証拠として保持する。「現行の生成Desktopは必ず失敗」とはしないが、後の成功で前の失敗Receiptを書き換えない。さらに[TAI main #684](https://github.com/hat47x/tai-pleroma/pull/684)では、SUI Consumerの`readingOrder`を失った歴史的Receiptを**`result: FAIL`のまま**固定元Artifact byte/digestとの整合を検査する特別な既知負例として扱う。[tai-reference Run 43722453051](https://github.com/hat47x/tai-pleroma/actions/runs/43722453051)の`python-reference`内`synthetic receipts test`はsuccessだが、**Workflow全体は複数のGo Reference job失敗によりfailure**。これは「歴史的失敗を正しく検査できた」証拠であり、「現在のSUI投影で`readingOrder`が保持された」証拠ではない。
 
 **Handoffの区別**：過去の負例・現在の実Windows受領・現行Source/Grantを別Receipt/Attemptとして扱う。元ConsumerごとにProduct/Subject/Source/Artifact/実受信内容と独立Expectedを確認し、過去FAILは過去FAIL、現行未実行は未実行、限定PASSは限定PASSとする。Sourceの出所と現在Grantが揃わなければ、Client UI/CLIの成功だけから別ProductやAIへRawを送信しない。次の消費試験は[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)へ渡す。TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）とTEI #4583の正式Stage1→Stage2は引き続き独立P0。
+
+### 56.7 新しいConsumer Receiptと、元Artifact・実行したSourceの時点を切り離さない
+
+[TAI main #687](https://github.com/hat47x/tai-pleroma/pull/687)では、旧SUI`readingOrder`欠落（歴史的`FAIL`）のReceiptを保全し、Consumerを再試験する際には**上書きできない別Receipt**を作る仕組みが既存Checkerへ入った。出力先が既存なら拒否し、元Artifact、実際に選択したSUIの`documentv1_projection.py`／`models.py`、Checker自身のbyte指紋、実引数とPython環境を残す。Consumer入出力の`readingOrder`は数だけでなくCard IDの順番まで比較し、二枚目だけの`sources`欠落やDocumentV1モデル検証時の項目脱落も拒否する。**ただし全Field値の完全同値、列挙外依存の完全閉包、実行途中のA→B→Aは確認しない。**
+
+#687はmainへ統合済みだが、取得時点のexact HEAD `tai-reference`はqueuedであり**この新合成回帰のCI合格は未確認**。さらにSUI checkout／実依存を伴う**現行Consumerの別Process再試験は未実施**である。新Checkerのコードがあることは現在のSUI Product投影が成功したという意味ではない。歴史的失敗と新試行は同じ`readingOrder`のExpectedで比較できても、同じResult/Receiptに上書きしない。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Head照合はmain未採用で、正式Card/CASや現在の開示Grantも別に受理する。
+
+**横断へ渡す単位**は「どのProduct・Subjectのどの版を、どのOperator/実現方式・Builder/Consumerが、どの独立Expectedに対して実際に使用したか」であり、過去Receiptの整合・現在Product Reader/Consumerの合格・Recipientへの二次開示を**三つの別票**とする。YICは既存I/R/P/T/C/Hを利用し、SUI/TEIの内部Revisionや実装選択を一つの共通Hashへまとめない。TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583の正式非Plugin Stage1→Stage2は引き続き独立P0。
 
 
