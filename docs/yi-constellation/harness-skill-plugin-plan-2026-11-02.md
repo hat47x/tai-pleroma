@@ -1040,3 +1040,17 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **優先度と停止線**：TAI #168のG0実OS隔離→G1外部送出→G2完全Reply→新独立H2/H3四Slot（適格0/4）と、TEI #4583のStage1→Stage2非Plugin Desktop実セルフビルドは**相互に独立のP0**として維持する。Plugin文書取得や他ProductのSource/結果検査は各Ownerの並行作業であり、最初の固定H2/H3の必須条件に加えない。Skill本文変更は旧固定試験へ混ぜず、Tool-only／短いProduct Skill／必要時TAI Skillの後続別Trialで比較する。
 
 **状態**：新たな正式Doc Reader、Provider実Read、Studio配布・外部AI完全受領、実Host別Audience認可、Result Body・Owner意味受理を実行した文書ではない。今回はDocs-onlyで計画と既存受入票の接続を更新した。新E2Eは**NOT RUN**。
+
+## 52. 2026-11-15：Source拒否を迂回しないSkill選択と、利用者への説明の接合
+
+[Skill知識・利用資格実行票§12](skill-knowledge-use-qualification-2026-11-15.md)へ、[SUI #3453](https://github.com/hat47x/sui-sensemaking/pull/3453)でmain統合済みのSource Snapshot共通認可ガードと、[TAI #655](https://github.com/hat47x/tai-pleroma/pull/655)でmain統合済みの利用者向け中断・再開・縮退の設計を取り込んだ。
+
+**何が成熟したか**：SUIの共通`resolve_access_decision`は`source_snapshot`へのDocument用read-only fallbackを許さず、Tenant必須・fail-closed、必要なPrincipal/Provider/Policy参照の欠落、noop/mock、read以外を拒否するようになった。同PRの対象HEADではSUI単体・MCP/Agent回帰CIが成功。ただし実Principalの真正性、Server-owned Policy参照、実PDP・正式Raw Source API・外部送出の受理ではない。YICはこの境界をSkillから迂回しない。「許可済みDocumentを読んだ」「同じRaw Sourceを現在読めた」「外部Harnessに開示してよい」を別の事実として扱う。
+
+**ユーザー体験の接続**：TAI #655の[横断Session計画§50](harness-cross-ui-session-probe-2026-11-14.md)は、Pin/Activity/Native Session/Tool/Consumer/Effectを混同せず、未確認の権限・途中切断・別Session再開時に利用者が次の行動を判断できる説明へ整理した。本節はその表示やSessionを再実装せず、B0 Toolのみで可能な部分回答、B1 Product固有の専門手順を用いる合理性、B2 活動中断・再開の増分価値を判別する前提条件として用いる。Skillの存在・版・LoadだけではSource資格と結果の完全性を付与できない。
+
+**閉じた実証とmainを区別する**：[TEI #4812](https://github.com/hat47x/tei-platform/pull/4812)は最終HEADでWorkbench／Wails関連CIが成功したが**closed／not merged**。その成功をmain配布UIの保証へ流用しない。同様に[TEI #4582](https://github.com/hat47x/tei-platform/pull/4582)のLinux書込境界は**closed／not merged**で、記録上も読取隔離を保証しないため、TAI #168の実OS G0 read-denyを満たしたことにはならない。一方、前回[TAI #654](https://github.com/hat47x/tai-pleroma/pull/654)の`tai-reference`はexact HEADでcompleted/successになった。前回Docs CI成功と実Product／Harness受入を区別する。
+
+**実行順とOwner**：YK-25〜29を既存TAI #488/#271/#168、SUI #3441、TEI #4714/#4583、TAI #232のExpectedへ割り付ける。Productが拒否したSourceを別Plugin・Skillから再取得しない。部分回答／unknown／許可された再確認／作用不明での再試行禁止を、元ProductとHostの実観測に従って表す。独立P0のTAI #168（G0→G1→G2→新H2/H3四Slot、比較適格0/4）とTEI #4583（非Plugin Stage1→Stage2 Windows Desktop）を維持し、通常Markdown一件のPDC-1 Product実ReadはTEI #4714へ並行して委ねる。
+
+**状態**：Docs-onlyのOwner間接続と反証の更新である。新しい共通Schema／Runner／認可正本／Skill自動選択器は設けない。実HostでのSource読取・外部送出、適格四Session、現在Bundleの配布、Owner受理、実Effectの新実行は**NOT RUN**。
