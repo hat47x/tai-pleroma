@@ -382,7 +382,7 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 
 [TAI #672](https://github.com/hat47x/tai-pleroma/pull/672)で、失敗・不正形式・同名重複のCLI発見を判定保留にする修正がmainへ統合された。ただし従来の`discover()`は、構造が正しければ`scope`が欠けていても、あるいは別の範囲を指していても、掲載されたCLIを応答Pathの検査対象にできた。Skill本文の読み取り専用という記述だけでは、別範囲のコマンドを安全な候補とみなせない。
 
-この限定検査器では、発見応答が**`scope: selected-read-only-commands`と明示している場合だけ**次の判定に進める。さらに検査器が実際に供給するのは`-workspace`であるため、`-world`が必須のコマンドを`-workspace`で代行しない。合成D18（別scope）、D19（scope欠落）はDiscovery全体を`tool-unavailable`に保留し、D22（world必須）は`PATH_CLAIM_NEEDS_ARGUMENTS`に留める。既存D15〜17の形式検査、D20/21の複数コマンド帰属、8つの採点指標は変更しない。
+この限定検査器では、発見応答が**`scope: selected-read-only-commands`と明示し、掲載する各コマンドの`effect`が`read-only`である場合だけ**次の判定に進める。さらに検査器が実際に供給するのは`-workspace`であるため、`-world`が必須のコマンドを`-workspace`で代行しない。合成D18（別scope）、D19（scope欠落）、D23（書込みEffect）、D24（Effect欠落）はDiscovery全体を`tool-unavailable`に保留し、D22（world必須）は`PATH_CLAIM_NEEDS_ARGUMENTS`に留める。既存D15〜17の形式検査、D20/21の複数コマンド帰属、8つの採点指標は変更しない。
 
 これは**CLI自身が宣言した範囲と、検査器が持つ入力だけを照合する保守的な制限**であり、実OSの読取隔離やHostの認可を実装するものではない。限定Discoveryの`scope`が一致しても、個々のToolの実副作用、Sourceの現在Grant、外部AIへの開示を保証しない。
 
@@ -391,6 +391,8 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 | **YK-54／D18**：形式の正しい`commands`に`scope: all-commands`がある | read-only限定発見ではないため未判定。TAI #488 |
 | **YK-55／D19**：`commands`に`scope`が無い | 実コマンドを推測・試行せず未判定。TAI #488 |
 | **YK-56／D22**：`-world`必須と広告されたCLIを、検査器の`-workspace`だけで試そうとする | Path検査を保留し、引数の一致を実Product Ownerへ戻す。TAI #488／TEI #2605 |
+| **YK-57／D23**：限定Scopeの一覧に`effect: write`のコマンドが混ざる | 一覧を不適格とし、Path検査のために呼び出さない。TAI #488 |
+| **YK-58／D24**：掲載コマンドに`effect`が無い | 暗黙のread-only扱いをせず、一覧を不適格とする。TAI #488 |
 
 **他製品の現在地**：[TEI #4945](https://github.com/hat47x/tei-platform/pull/4945)はWails配布に含むWorkbench Assetを正規ビルドから更新し、対象HEADのEmbedded Bundle CIは成功。ただしWindows WebView2 Smokeは失敗しており、Stage1→Stage2実セルフビルドを合格としない。[SUI #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)はSource専用の内部認可後に原文を再読し、UTF-8選択バイト範囲とDigestを照合する限定Product内部実装。対象HEADの単体／MCP・Agent回帰CIは成功だが、同文二箇所の選択Digestは同じであり、Occurrenceの一意性・保存後CAS・正式Raw Provider／外部開示は未成立。
 
