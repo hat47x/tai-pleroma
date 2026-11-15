@@ -78,12 +78,25 @@ def list_has_leaves(doc, list_path, prefix, leaves):
 def discover(tei):
     code, out = run_tei(tei, ["commands"])
     doc = parse_json(out) if code == 0 else None
-    if not doc or "commands" not in doc:
+    if not isinstance(doc, dict) or doc.get("ok") is False:
+        return None
+    commands = doc.get("commands")
+    if not isinstance(commands, list):
+        return None
+    if any(not isinstance(c, dict) or not isinstance(c.get("name"), str)
+           or not c["name"].strip()
+           or not isinstance(c.get("requiredFlags", []), list)
+           or any(not isinstance(flag, str) for flag in c.get("requiredFlags", []))
+           for c in commands):
+        return None
+    names = [c["name"] for c in commands]
+    if len(names) != len(set(names)):
+        # Do not silently overwrite contradictory entries in a scoped reply.
         return None
     return {
         "sha256": hashlib.sha256(out.encode("utf-8")).hexdigest(),
         "scope": doc.get("scope"),
-        "commands": {c["name"]: c for c in doc["commands"]},
+        "commands": {c["name"]: c for c in commands},
     }
 
 
@@ -208,6 +221,7 @@ def check_skill(tei, workspace, skill_texts):
         "findings": findings,
         "limits": ["Only explicit command spans and `list[].a.b/c` path claims are parsed.",
                    "A scoped commands response cannot prove that omitted commands do not exist.",
+                    "Failed or malformed discovery cannot establish a command or success path.",
                    "Usage-only commands are not demonstrated callable or authorized.",
                    "A usage parent name alone does not establish its subcommands.",
                    "Nonzero CLI exits and explicit ok=false cannot prove a success-response path.",
@@ -282,7 +296,17 @@ def self_test():
         fake = Path(tmp) / "fake_tei.py"
         fake.write_text('''import json, sys
 a = sys.argv[1:]
-if a == ["commands"]:
+if a == ["--discovery-failed", "commands"]:
+    print(json.dumps({"ok": False, "scope": "selected-read-only-commands",
+                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]}]}))
+elif a == ["--discovery-malformed", "commands"]:
+    print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
+                      "commands": {"name": "model catalog"}}))
+elif a == ["--discovery-duplicate", "commands"]:
+    print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
+                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]},
+                                   {"name": "model catalog", "requiredFlags": []}]}))
+elif a == ["commands"]:
     print(json.dumps({"scope": "selected-read-only-commands", "commands": [
         {"name": "model catalog", "requiredFlags": ["workspace"]},
         {"name": "inspect", "requiredFlags": ["workspace", "subject-kind", "subject-id"]},
@@ -345,6 +369,18 @@ else:
                   and f["exit"] == 0 for f in soft_failure["findings"])
               and not any(f["code"] == "SKILL_PATH_ABSENT_AT_DOCUMENTED_LOCATION"
                           for f in soft_failure["findings"]))
+        failed_discovery = check_skill(tei + ["--discovery-failed"], tmp,
+                                       [("S", "`tei model catalog` gives `result.entries[].subject.kind/id`.")])
+        check("D13 ok=false discovery cannot validate a Skill path",
+              failed_discovery["status"] == "tool-unavailable" and not failed_discovery["findings"])
+        malformed_discovery = check_skill(tei + ["--discovery-malformed"], tmp,
+                                          [("S", "`tei model catalog`.")])
+        check("D14 malformed discovery cannot establish a command",
+              malformed_discovery["status"] == "tool-unavailable" and not malformed_discovery["findings"])
+        duplicate_discovery = check_skill(tei + ["--discovery-duplicate"], tmp,
+                                         [("S", "`tei model catalog`.")])
+        check("D15 duplicate command names cannot overwrite one another",
+              duplicate_discovery["status"] == "tool-unavailable" and not duplicate_discovery["findings"])
         gone = check_skill(["/no/such/tei"], tmp, [("S", "`tei inspect`")])
         check("D4 absent tool judges nothing", gone["status"] == "tool-unavailable" and not gone["findings"])
         need_args = check_skill(tei, tmp, [("S", "`tei inspect -workspace W` gives `entries[].subject.kind/id`.")])
