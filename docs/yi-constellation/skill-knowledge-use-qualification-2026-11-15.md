@@ -38,7 +38,7 @@ Plugin文書一件の取得にTAI横断Skillは不要。Product間の仕事は�
 
 - **B0：Product Toolだけ**。TEIモデルの一要素をSource付きで確認する。読めない情報はunknownとする。
 - **B1：必要なProduct Skill**。TEI Plugin/DSLの読み方やSHOの文書編集手順に、Tool-onlyでは得られない改善があるときだけ使う。SHO Reader/Writerの製品実在はSkillがそれらを実Loadした証拠ではない。
-- **B2：TAI横断Skill**。SEIの未決推薦やTEIの根拠照合を**中断・別Sessionで再開**し、用途変更／Source改版／実Consumerの再受領で記録が途切れる場合に限り選択する。[既存J2記録](../evaluations/records/TAI-capability-selection-multiproduct-trial-2026-11-13.json)では単発TaskでB0/B1/B2の結論に差がなかった。n=1であり、B2の固有価値の有無は未決。
+- **B2：TAI横断Skill**。SEIの未決推薦やTEIの根拠照合を**中断・別Sessionで再開**し、用途変更／Source改版／実Consumerの再受領で記録が途切れる場合に限り選択する。[既存J2記録](../../evaluations/records/TAI-capability-selection-multiproduct-trial-2026-11-13.json)では単発TaskでB0/B1/B2の結論に差がなかった。n=1であり、B2の固有価値の有無は未決。
 - **戻し先はProduct**。一時Focus・Pinned Target・現在公開Projection・TAI Activity・実Harness Native Session/Turn・Product Operation/Attemptを混同しない。Handoff票受領、SHOの過去Receipt再利用、外部CLIの切替、元TEI Sourceの独立Read、同一Live Session継続は別Claim。
 
 二UI間で同じSessionを閲覧できること、同時に操作できること、Context/Grantを引き継げることは独立に評価する。[統合済みTAI #648](https://github.com/hat47x/tai-pleroma/pull/648)の実行順・縮退を用い、新しいSession Server、Lock Engine、Handoff v2は足さない。
