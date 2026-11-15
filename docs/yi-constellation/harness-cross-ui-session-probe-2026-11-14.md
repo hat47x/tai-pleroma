@@ -744,6 +744,8 @@ YICの候補ロールは「探索・要件整理／高度な設計判断／実�
 
 **採否の帰結**：Product-only/Tool-only＋公式Harnessで達成でき、追加Adapterが明確な利用者価値を生まなければ追加層を採用しない。独自Agent Loop/B4はTAI #234の条件、実OS/Network G0/G1/G2の資格はTAI #168、Provider/Tool Skill配布はTAI #74/#488、Product意味/Host Grantは各Product Ownerの判断を優先する。本§28.1〜28.3は既存Issue・公開製品契約の区分に基づく**Docs-onlyの選択/費用/縮退計画**。新しい二Harness実試行、利用枠/課金の実契約確認、Quota故障注入、Role切替の効果、Owner受理はNOT RUN。
 
+**後続の具体的な委任判断**：役割・実契約・Product資格から作業票を組み立て、別モデル／別Harnessへ引き継ぐ際の停止線は[§52](#52-仕事をaiへ委任する際の選択と引継ぎを一つの実作業票で判断する)にまとめる。ここで扱うのは既存Issue/作業票の読み合わせであり、新しいRoutingサービスの導入ではない。
+
 ## 29. ロードマップの接続先・採否・検証状態
 
 | レーン | 今回の追加成果 | 接続先の実Owner | 次に要求する実証／非目標 |
@@ -1614,3 +1616,71 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 **独立P0は変更しない**。TEI #4583の非Plugin Stage1→Stage2実WindowsセルフビルドとTAI #168のG0実Read-deny→G1 Egress→G2完全Reply→新規独立H2/H3四Slot（現在比較適格0/4）は、互いの新Hard Gateにしない。正式 *.tei.md Reader、Plugin公開Doc一件、SUI Rawの実Host Grant、複数UIでの同一Session再接続は各Ownerの並行・後続検収とする。
 
 **今回の確認範囲**：mainにあるTEI #4800/#4806/#4789、SUI #3452、既存TAI Skill計画§50〜51、QH §10、TEI #4597/#4714のIssue/PRと照合した設計追補であり、**Docs-only**。新しいGo/Node/Windows/実Browser/外部Harness実送受信、現在Grant・Effect、Owner意味受理は**NOT RUN**。本節の追加から実行済みの資格を拡張しない。
+
+<!-- yic-work-delegation-selection-20261115 -->
+## 52. 仕事をAIへ委任する際の選択と引継ぎを、一つの実作業票で判断する
+
+§28はモデル→役割→仕事の選択原則と費用経路、§50は途中経過の表示、§51はProductの現在資格を定めた。これらを実際の開発に適用するとき、**どのモデルが賢いか**より先に、**何を依頼し、どこまで変更でき、どの実行経路なら現在利用でき、何を示せば受理されるか**を決める。YICはその判断のために既存Issue・TAI Activity・TEI A0〜A4作業票とHarnessの実情報を読み合わせる。モデルを自動切替する常駐Router、共通Agent Loop、中央Session Storeは導入しない。
+
+### 52.1 作業を先に固定し、モデルとHarnessはその後で選ぶ
+
+次の情報は新しい公開Task Packet仕様ではなく、[TEI #2017](https://github.com/hat47x/tei-platform/issues/2017)と[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)/[#234](https://github.com/hat47x/tai-pleroma/issues/234)の既存作業票に照合する**一仕事の判断順**である。
+
+| 判断順 | 実際に決めること | 未確定なら |
+| --- | --- | --- |
+| 1. 利用者が達成したい結果 | 対象Issue/Source、期待する成果物、独立Expected、完了条件、まだ受理されていない業務意味 | 候補・調査として保持。実装完了や意味受理を宣言しない |
+| 2. 変更してよい範囲 | TEI A0（読取）・A1（決定的派生）・A2（隔離branch変更）・A3（条件付き低リスク統合）・A4（人の判断）の該当区分、許可path/base、禁止操作 | A0で確認できる範囲に縮退。権限のない書込・統合はしない |
+| 3. 必要な役割 | 探索、難しい判断、実装、反復検査、独立Challenger、Evidence Review、Owner採否のうち必要なもの | 不要なAgent/Skillを追加せず、単独で成立する仕事を先に行う |
+| 4. 正当に利用できる実経路 | 実Account/契約・モデル/Provider・Harness版、CLI/Tool/OS、利用枠・費用上限・現在のHost/Recipient | 推定価格やModel名から利用資格を補完せず、別の正規経路を確認する |
+| 5. Productと資料の現在資格 | 選んだSource/Root/版、現在Grant・Disclosure、必要な公開Doc/Skillの実Read、実Consumerへの到達 | 公開read-only Product内で可能な部分だけ続ける |
+| 6. 証拠と統合の出口 | 実Tool/Result本文、exact HEAD/CI、独立Expected、差分と負例、承認が必要なOwner | PR作成・AIの成功報告を「統合済み」「業務受理済み」にしない |
+
+**役割は能力であって権限ではない。** 高推論モデルを設計担当、低コストモデルを実装・反復担当、別モデルをChallengerにしても、Sourceの読取やOS隔離・外部送出・A3/A4の統合権限は増えない。複数モデルの合意も独立Expectedや人の意味受理の代わりにならない。
+
+### 52.2 別モデル・別Harnessへの引継ぎで変えないもの、再確認するもの
+
+例えば「難しい設計判断を上位モデルへ委任→別Harnessの実装担当が隔離branchに変更→独立Challengerが反証→Ownerが採否を判断」という仕事を考える。この場合も、一つのNative Sessionに全責務を持たせず、**作業意図、実対話、実Source、実変更、検証、採用**を別々に扱う。
+
+| 引継ぎ時の扱い | 対象 | 受け手が必ず行うこと |
+| --- | --- | --- |
+| **持ち越してよい作業意図** | 目的、Issue/base/変更許可範囲、独立Expected、既知の未決、公開してよい短いSource参照、回答の戻し先 | 元Product/Repoの現在版へ再束縛。未確定は未確定として保持 |
+| **参照だけ残す実績** | 旧Session/Turn、過去のCI/Tool Reply、過去のModel回答、旧Operation/Receipt | 元Attempt・HEAD・実Consumerを確認。別構成の成功を新Attemptに転用しない |
+| **そのまま引き継がないもの** | Secret、非公開Raw/件数/ID、Reviewer-only Expected、過去Grant、全Transcript、ローカルPathだけでしか解決できないRef | 受け手のProduct/Hostで開示と到達を再判定。表現・到達不能なら限定説明に留める |
+| **引継ぎ後に判断し直すこと** | 実Tool Capability、ModelとQuota、Source・Plugin/Generator版、影響範囲、外部Effectの現在結果 | 足りない機能はunsupported/unknownとし、禁止Toolの別経路迂回をしない |
+| **統合時に別途要求すること** | Git差分、同一HEAD CI、意味・Build・配布・Consumer各Claim、反証、必要なOwnerレビュー | 機械的なA3要件が満たせなければDraft/差戻し。意味/AuthorityはA4に戻す |
+
+ここでの「引継ぎ」はTAI #271と既存Handoff v1の用途に適合するときだけ利用する。必要なRoot/Relation occurrenceやAuthorityをv1が表現できなければ、架空の属性を追加せず、元Product内参照と人による再指定へ縮退する。Native Sessionへ再接続できない場合は新しいSessionで**仕事を再開**するのであり、旧Sessionに復帰したとは呼ばない。
+
+### 52.3 切替・中断を起こす五つの場面と、無断自動化を避ける判断
+
+| きっかけ | 許される対応 | 禁止する誤動作・既存Owner |
+| --- | --- | --- |
+| モデルが難問を解けず、根拠が不足 | 不足箇所を分離し、許可した根拠と独立Expectedを付けて別Role/Modelへ再委任 | 別モデルの自信・合意をMeaning受理にすること。TAI #422、SEI |
+| Quota/Rate Limit到達・Tool不足 | 正規契約と実Host Capabilityを確認し、許された別経路で**別Attempt**として続行、または停止 | 定額プランを他社Gateway/API枠として流用、未許可ツールへの自動迂回。TAI #234/#168 |
+| PRが作られたが新mainと競合／CI未確認 | 現在base/HEADで差分・独立検査をやり直し、必要ならOwnerへ戻す | 別HEADのGreenやレビューコメントを新HEADの受入資格とすること。TEI #2017、TAI #422 |
+| Tool応答・生成物・業務Effectが不完全 | 元Turn・Operation/Attempt・Result本文・Receiptを照会。純粋read-only作業だけを限定継続 | 返信ACKやSession停止を完了/効果なしにし、書込を盲目的に再実行。TAI #271、EKI |
+| 外部送出・Source・Audience資格が変わる | 元Product/Hostで再確認し、実際に渡すByteと受け手を再Previewする | 過去のGrant、Session Log/暗黙Tool入力の送出範囲を継承。TAI #232、TEI #2515 |
+
+失敗が発生したときの最初の操作は**全体を再起動することではなく、元の仕事と現在の実作用を照会すること**である。その一方、影響のない別Issueや公開read-onlyの探索まで一律に止めない。
+
+### 52.4 「安価な大量探索」と「検証済みの成果」を別に測る
+
+大量の候補・Issue・設計案を生み出せることはYICの重要な可能性として保持する。ただし、探索を広げる判断と、標準機能・意味・実装・配布への採用判断は分ける。[TAI #233](https://github.com/hat47x/tai-pleroma/issues/233)のポートフォリオ比較と[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)のVA-X/VA-E独立レビューを再利用し、以下の三種類の実仕事を段階的に比較する。
+
+| 最初の対象 | 比べる方法 | 独立して確かめる結果 |
+| --- | --- | --- |
+| **公開TEI一Subjectのread-only調査** | Product-only→Tool-only→必要なProduct Skill。TAI #168の初回固定四Slotとは別の後続試行 | 元Sourceの一致、実Tool Reply、回答根拠、正しいunknown、追加Token/費用/手数 |
+| **隔離branchでの小規模実装** | 同じIssueと固定Expectedで単独Agent案と、設計担当＋実装担当＋独立Challenger案を比較 | 許可path/base、同一HEADテスト、非干渉、レビュー工数、統合後に残る欠陥 |
+| **中断・Quota到達からの継続** | 同一Session再接続可能な場合と、限定Activity Handoffで新Sessionへ移る場合 | 再説明量、未決の保持、過去Evidenceの誤昇格、二重実行・秘密送出の有無 |
+
+比較条件は試行前に固定し、失敗・中止も元の分母から除かない。独立Challengerには結論と同じ出典から自動生成した正解だけを渡さず、否定例と代替案を評価できるようにする。**候補数、Tokenの安さ、PRの件数、Agentの自己採点を一つの総合点にしない。** 実料金/定額按分、利用枠、待ち、CI、修正・Review、独立Expectedを満たしてmainに採用された成果を別々に記録する。金額・Quota・特定Modelの実利用可否は、その時点のAccountで確認できた場合に限って比較する。
+
+### 52.5 次に実装する範囲と、独自Agent Loopの判断
+
+優先するのは、**利用者が仕事と対象を指定し、既存Harnessの中から現在使える経路を選び、結果を元Productへ安全に返すこと**である。実装は既存CLI・Product API・短いSkill/Adapter・TAI Activity・GitHub Issue/PRと独立CIを使う。Role候補や選択理由はまず既存作業票の説明として残し、利用者が必要なときに修正できるようにする。自動モデル切替や課金・Quota管理の常駐サービスは、実測されていない利点を理由に作らない。
+
+二つの独立P0は不変である。**TEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルド**と、**TAI #168のG0実OS Read-deny→G1実Egress→G2完全Tool Reply→新しい独立H2/H3四Slot（現在比較適格0/4）**を別々に進める。この節の役割分担や複数モデル比較は初回四Slotに新条件を足さない。
+
+独自Agent Loopの再審査は§44・TAI #234に戻す。少なくとも二つの外部Harness構成を同じ必要Jobで適格に比較し、既存Product APIとAdapterでは解消できない実害を再現し、追加のOS隔離・復旧・維持・費用まで含めて優位性を示した場合に限る。
+
+**今回の状態**：他チャットのモデル→役割→仕事、TEI #2017 A0〜A4、TAI #233/#422/#234/#271/#488と§28/§50/§51を統合した**Docs-onlyの作業・評価方針**。新しいモデル選択試験、適格二Harness・三Workstream実行、正規Quota/請求確認、実Source/Consumer、Owner意味受理は**NOT RUN**。本節に書いた作業票の手順は新しい公開Schema、中央Router、第二Authority/Expectedを採用したことを意味しない。
