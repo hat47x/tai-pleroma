@@ -1,6 +1,6 @@
 # TEIで選んだ設計要素をAIへ渡して戻す：最初の実行票
 
-**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–56](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
+**状態：横断Handoffは実行計画／この票からの新しい実送信はNOT RUN。** [横断計画§49–56](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
 
 **途中で止まった場合**：送信ACK・Native Session ID・AIの回答・実Product Effectを同じ「完了」にまとめない。Source/Grantが変わったら送信前に再確認し、Tool Replyが不完全なら未受領、Sessionを再接続できなければ限定Activity Handoffへ縮退する。元ProductのEffectが不明な場合は再実行せず照会する。実際の表示例とOwner別の停止線は[横断計画§50](harness-cross-ui-session-probe-2026-11-14.md)を参照。
 
@@ -226,3 +226,23 @@ TEI [Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) の専�
 既存の[Skill構成計画§55.2](harness-skill-plugin-plan-2026-11-02.md)のD20/D21は、同じ文章に複数CLIが載る場合に各応答Pathの帰属を証明できない反例である。単に`tei`の存在、生成Goファイルの存在、単発`go run`の成功を根拠に、公開された製品CLI入口／外部Harness実Tool Replyを作り出さない。製品側R2/R3のOwnerはTEI #4495、公開文書ReadはTEI #4714、Windows Stage1→Stage2はTEI #4583。TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）は独立P0を維持する。
 
 **今回の確認**：Github mainの`internal/semantic/validationgen/positive.go`と製品Goテストの静的照合。実Builder/Provider/Windows/外部Harness実行、Owner意味受理は**NOT RUN**。
+
+## 現行mainの検収成果を再試験する：CLI Read・限定Build・Windows Pin・SUI現在認可
+
+上の記録は実装を進めた当時の状態を含む。現在、[TEI main #4994](https://github.com/hat47x/tei-platform/pull/4994)では既存`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`が**exact HEADのAction Surface CIで単独PASS**（0.717秒）。同IDのCapabilityや説明用`text` Fenceを実Functionとして扱わない負例まで実製品CLIで通った。一方、[main #5009](https://github.com/hat47x/tei-platform/pull/5009)にはRule由来のGoを**通常`tei self-build`のBuild Intent経路**から実Build・実行するテストが入り、対象HEADのセルフビルドWorkflowはsuccess。Reader/Generator由来Sourceの資格を正式R2-P BuildPlanへすべて束縛したものではない。
+
+次のGoコマンドはTEIのリポジトリRootで実行する。二行目は**Linux/amd64・非Short実行**を前提とし、Go toolchainが無ければSkipする。実行結果には`PASS`と`SKIP`を別欄に記録し、このYIC文書の更新自体では新規に実行していない。
+
+~~~sh
+go test ./cmd/tei -run '^TestProductInspectCLISelectedMarkdownRuleIsNotCapability$' -count=1 -v
+go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
+~~~
+
+| 次の実証欄 | 現行mainと実CIで確認できる結果 | 停止線 |
+| --- | --- | --- |
+| **CLI Reader（A0）** | TEI #4994 focused testは実Binary／Rule正例・偽Capability・text-only負例でPASS | 現在のSource/Recipient GrantやFunction実Providerは未確認 |
+| **限定R2-B** | TEI #5009は生成Go→Build Intent→`tei self-build`→BinaryのテストSourceをmainに追加。対象HEADのself-build Workflowはsuccess | 元Rule byte・Language/Generator実装・正式BuildPlan束縛の全件性と、Focused test単独PASSは別に確認 |
+| **Windows W0-C** | [TEI main #4995](https://github.com/hat47x/tei-platform/pull/4995)の通常Windows WebView2ジョブでPin A→Graph B→A再確認→解除が成功し、B表示を保持（[結果整理 #5002](https://github.com/hat47x/tei-platform/pull/5002)） | 同一runの**生成Desktop PoC Bは失敗**。後着Reply、Workspace切替、Dirty Editor、Stage1→Stage2、外部Grantは未受理 |
+| **SUIの元Card選択（独立Product）** | [SUI main #3462](https://github.com/hat47x/sui-sensemaking/pull/3462)は実SQLite Document Resourceと現在Document PDPを通してからSource PDP・元byte位置を再確認。対象HEADはbackend **452 PASS**／MCP/Agent CI success（[記録 #3463](https://github.com/hat47x/sui-sensemaking/pull/3463)） | Card選択Resolver/Raw Reader・組織PDPは限定Reference。実Card CAS・本番Source Provider・Export Grantは未受理 |
+
+**次の独立Consumer**：TEIの通常CLIとWindowsはそれぞれの製品局所受領に成功した範囲がある。しかし、**TEIで読んだRuleとSUIで読んだCardを同じ外部AIへ送り、元のSubjectへ戻した事実はない**。既存[QH §10.8〜10.9](cross-product-handoff-execution-tickets-2026-11-11.md)のI/R/P/T/C/Hを、現在のRoot/Source/Grant/Recipient/Attemptから新しい一往復だけで埋める。最初のTAI #168実OS G0→G1→G2と独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Stage1→Stage2は独立P0のままとする。
