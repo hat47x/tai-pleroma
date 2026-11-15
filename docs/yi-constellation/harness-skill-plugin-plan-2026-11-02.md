@@ -963,3 +963,46 @@ Checkerの自己検査は8つの公開合成条件（正常、frontmatter欠落�
 | **YS-08** | 匿名/期限切れ/部分SourceでもTool/Skill選択説明だけでEKI業務作用を許可 | Product/Hostの現在Grant・対象の一致・Receipt/独立Readを確認できないならActionを止める |
 
 **順序・責務**：最優先の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168) H2/H3固定TEI read-only比較（G0実Read隔離、G1外部送出、G2 Tool Reply、独立4Slot）は変更しない。次に既存の実Handoff v1を使い、**固定対象→許可Projection→独立Consumer実Read**を**同じ公開Task/Source**で接続し、Tool-only／Product Skill／必要時TAI Skillを対照する。実製品UI・Canvas/CSW・別Harness Live Session・書込み/Effectは別Trial。実行・独立ExpectedはTAI #168/#271と各Product Owner、横断照合表だけTAI #488。Skill配布は#74。現在の追加部分は計画・実証資格の整理であり、独自Harness/中央Router・Policy Engine・第二Product Storeは作らない。
+
+## 48. 2026-11-15：実モデル試験に基づくSkill選択・構成・現在資格の更新
+
+本節は[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)の横断照合票を、統合済み[#601](https://github.com/hat47x/tai-pleroma/pull/601)・[#647](https://github.com/hat47x/tai-pleroma/pull/647)の限定的な実モデル観測に結び付ける。新しい中央Registry、Skill Router、共通Host、Oracle、Checkerは作らない。初回[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定H2/H3比較へBlocking条件を追加しない。
+
+### 48.1 観測した差と、まだ主張できないこと
+
+| 比較 | 2026-11-11〜13の限定結果 | 禁止する一般化 |
+| --- | --- | --- |
+| 単一TEI調査 J1 | B0（Toolのみ）／B1（Product Skill）／B2（TAI Skillも利用可能）はいずれも公開モデル調査に成功。B0でも正答。 | Skill無しが常に最善、三Armは同等、という断定 |
+| Skill不要 J7 | 校正Taskでは追加ToolもSkillも使わなかった。 | すべてのSkillを常時ロードすること |
+| 未実装Action J3 | 実行せず保留。ただし限定Discoveryから「全CLIに変更コマンドがない」と広げた誤った否定Claimが残る。 | Tool一覧の部分集合を全能力の不存在証明にすること |
+| TEI＋SEIの根拠 J2 | 三Armとも推薦rec-1の内容一致と、根拠のTEI版・Source・fingerprint欠落を区別。B0はTool6回、B1/B2は8回で回答差なし。 | n=1の差からTAI横断Skillの無価値を確定すること |
+| Skill文言と実CLI | TEI Skillの entries[] 説明と実際の result.entries[] が一致しない。既存のSkill選択Checkerが検出。 | ドキュメント一致・合成セルフテストを実Harness資格とすること |
+
+根拠は[単一Productの実モデル試験](../../evaluations/records/TAI-capability-selection-model-trial-2026-11-12.json)と[複数Productの実モデル試験](../../evaluations/records/TAI-capability-selection-multiproduct-trial-2026-11-13.json)。各Arm原則n=1、Sonnet subagentと公開合成Source、**物理隔離なし**。#601のSkill選択Checkerの人工セルフテスト18件PASSは実Product/Harnessの安全性の証拠ではない。実Tool版情報が不足した場合も、宣言したGit pinを実BinaryのVersion確認と混同しない。
+
+### 48.2 利用者の仕事に合わせる配置と選択順
+
+| 仕事の条件 | 最初の構成 | Skillを追加する条件 | 受入時に残す負例 |
+| --- | --- | --- | --- |
+| 単一Productのread-only調査 | Product Tool/CLIのみ（B0） | 専門手順で正答・保留・費用に実際の改善があるときProduct Skill（B1） | Tool-only成功と過剰Load・Tool・Token |
+| Product固有の設計、Method、文書生成 | Product Tool＋必要部分だけProduct Skill | Ownerの実CLI／API・SourceとSkillが整合 | Skillの説明と実Tool/Writer/Host作用の差 |
+| 複数Productの根拠・未決・Consumer受領 | 各ProductのToolと必要なSkill | 中断・再開、目的変更、根拠持越しで増分価値があるときTAI Activity Skill（B2） | B0/B1で足りるTaskへの過剰介在 |
+| Source・Grant・Audience・Toolが不明 | 許可されたread-only再確認、unknown／unsupported | Owner/Hostが現在の範囲を確認した後 | 未列挙Toolの不存在、空結果から全件判断 |
+| 書込み、委任、外部送出 | Product/HostがPreview・現在Grant・Effectを検査 | Skillは手順を案内するだけ | 申告・ACK・Receiptから業務完了を推論 |
+
+Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは横断Activityの必要部分だけ所有する。専門Skillの種類・試作数を制限しない一方、常時ロードするSkillは増やさない。ユーザーのSkill選択と開発作業のModel→Role→Issue割当は別軸。Skill記述・Tool annotation・発見済み名称は権限でも実Loadでもない。SHOの実Writerが存在しても、read-only SkillがWriterを実行したとはみなさない。
+
+### 48.3 既存Ownerへ割り付ける、次の実行順序
+
+1. **P0：適格なH2/H3試験を先に成立させる。** [既存の実行票](h2-h3-comparison-first-eligible-session-execution-card-2026-11-08.md)のG0（同じ実OS identityの許可Readと存在するCanaryへのRead-deny）→G1（外部送出・Disclosure）→G2（Tool Callと実CLI argv・完全Reply・モデル受領）を実観測。その後、固定Task／Source／Binary／Tool／Skill bytesで、新しい独立H2→H3→H3→H2を事前割付してITT／PPと独立Expectedで採点する。既存の比較適格 **0/4** を過去の限定Load結果で塗り替えない。OwnerはTAI #168、TAI #232、各HostとTEI #2515/#2509。
+2. **P1：J2の中断・再開でTAI Skillの差を測る。** 根拠が欠けたrec-1を残して中断し、別Sessionで目的・Audience・現行Source/Grantを再確認する。B0/B1/B2の同一公開Taskで、未決の保持、TEI版・Sourceの実再読取、誤った根拠確定をしないこと、Consumerへの実受領、Token/Tool/人手を独立採点。Source改版、Audience変更、旧Receiptは[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の既存Expectedへ割り付ける。これはP0の初回試験を変更するものではない。
+3. **P2：実Product Handoffの限定資格を保つ。** 既存のyi.handoff.context/v1と各OwnerのConsumer再読取を使い、TEI元Sourceの独立再解決、SHO著者編集の保護、同一Attempt実Receiptを区別する。[#634](https://github.com/hat47x/tai-pleroma/pull/634)と[#640](https://github.com/hat47x/tai-pleroma/pull/640)の実観測上限を超えて、別Process受領や実CLI切替を同一Live Session再開に昇格させない。
+4. **P3：用途別の配布を行う。** [TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)のProduct-only／TAI-minimal／用途別composedを維持。Skill root・参照・必要なscriptsの内容閉包、Source revision/digest、実Loader、Product CLI/API版、Tool Profile、現在開示範囲、Harness互換性を別々に記録。第二HarnessはP0の後に別Trialで比較。配布・発見・実Load・実Invoke・現在資格を同一のPASSにしない。
+
+### 48.4 採否と現在の状態
+
+**評価指標を混ぜない。** 正答品質と妥当な保留、Tool/Skill実受領、Source再確認、Consumer独立観測、誤実行/過剰開示、追加Tool・Token・時間・人手は別列で判定する。n=1や単一総合点で標準Skill化しない。B0で十分ならB0を維持し、TAI横断Skillの採用には具体的な活動継続上の利益を要求する。
+
+**責務**：Product Skill/CLIドリフトは各Product（TEI #2605等）、実Harness比較はTAI #168、選択の横断照合はTAI #488、現在資格はTAI #271、機密とHostの強制はTAI #232と各Product、配布はTAI #74、独立レビュー・採否はTAI #422と各Owner。独自Harnessの投資判断はTAI #234に留める。
+
+**状態**：既存の#601/#647実モデル探索結果を計画へ取り込んだ文書更新。G0/G1/G2の新規実証、適格な独立H2/H3四Session、中断再開J2、正式Skill配布、二Harness適合、Owner受理は**NOT RUN**。新たな実Tool、Host、業務Effectの検証を行ったとの主張はしない。
