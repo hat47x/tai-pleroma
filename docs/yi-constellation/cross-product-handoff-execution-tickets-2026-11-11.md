@@ -839,3 +839,18 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 次段ではTEIの**ManifestにGと記述されても実CallerがPを呼ぶ不一致**、P/G差分のEffect/取得完全性、DのProvider拒否後にPへ無断Fallbackする負例を各Ownerの試験として固定する。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のRevision Head拒否はmain合格に加算しない。外部AIへRawを送るP/T/C/H、Owner意味受理、TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583のStage1→Stage2は従来どおり独立P0。今回の製品間送受信は**NOT RUN**。
 
+### 10.12 結果が一致しても、実Read・Builder時点・Consumer再試行が違えば不合格
+
+前節のP/G同値・Build・Windows受領は、**同じ結果から同じ実装経路を推定しない**ところまで進める。[横断§55.8/§56.7](harness-cross-ui-session-probe-2026-11-14.md)の原則を、既存TEI/SUI/YIC Ownerが使う独立Expectedへ下ろす。Go生成メソッド名・UI表示名・共通Hashを新しいSubject正本にせず、**Meaning/Rule Canonical・Mapping ID・選択方式・Read ID/回数・BuildPlan・Consumer出力**を各Productの実証可能な位置で観測する。
+
+| 受入カード | 試験入力・現在確認できる境界 | 期待する拒否／未成立の範囲 |
+| --- | --- | --- |
+| **QH-PG-READ-06：結果一致・異Read** | [TEI main #5118](https://github.com/hat47x/tei-platform/pull/5118)はData表`allocation`＋`allocation_positive`を同一Workspace LoadでP/Gへ渡し、生成Goを隔離`go build`・別Process実Binaryで呼び出す。結果・Error・Read ID/回数をPと独立Expectedの6入力（`2.5`／`0`／`-1`／`-0`／NULL／未取得）で比較 | GoのRead先を`person_id`へ変え、**同じResultでもRead IDが違う**ときに拒否。現行mainにテストSourceあり。ただし対象HEAD CIは取得時点でpending/queued、Focused PASS未確認。物理DB Provider／Audience Grantは別 |
+| **QH-PLAN-TIME-07：Plan確定後の入力変更** | [TEI main #5109](https://github.com/hat47x/tei-platform/pull/5109)は`buildintent.Resolve`後、保存したPlanを保持して実Builderに渡す`generated.go`だけをコメントbyte追加で変更。既存の`TestSelectedRuleGoThroughRealCLISelfBuild`を再利用 | 旧Planの通常`tei self-build`が**L2-b不成立・Artifactなしで拒否**、元byte復元後のみ合格経路へ復帰。#5056のPlan前byte照合とは別の失効。対象HEAD Workflowはqueuedで、成功と書かない。R2-P全Source/Generator閉包は未検収 |
+| **QH-OP-SEL-08：Operator選択・旧Command** | [TEI open #5114](https://github.com/hat47x/tei-platform/pull/5114)はManifestの実装A→BでWorld/Scenario/Fixture/Plugin Lockと最終Resultが同じでも旧生成Scenario Commandの拒否を試す候補。`operatorSelectionSha256`と参照Planの計算規則を共通化する | **PRは未マージ・CI queued**。旧argv/旧Plan拒否は現行mainの製品受入に数えない。外部Plugin実Image・Host Grant・A→B→A履歴は別 |
+| **QH-CONSUMER-REPLAY-09：履歴FAILと新実行の区分** | [TAI main #687](https://github.com/hat47x/tai-pleroma/pull/687)は旧SUI`readingOrder`欠落Receiptの上書きを防ぎ、元Artifact／SUI実モジュール／Checkerのbyteと実引数を新Receiptに記録する参考Checkerを改善。逆順Card ID、後続Cardの`sources`脱落・DocumentV1検証時の欠落を合成負例で検査 | **旧Receiptの`result: FAIL`を保持**する。#687のexact HEAD `tai-reference`は確認時点でqueued、新回帰CI未確認。SUI実checkout＋別Processの新Consumer Attemptも**NOT RUN**。新Receiptの存在だけでは現行SUI投影成功・外部AI受領にしない |
+
+**先に受理する順序**：Ownerによる意味・Law受理→Source/型/Mappingと実装選択の現在性→**副作用前の現在Grant／Audience/Effect条件**→実CallとRead Footprint／Artifact／Result・Effect→Recipient別Disclosureと相手Consumer→Harnessの完全Reply。TEI main [#5116](https://github.com/hat47x/tei-platform/pull/5116)はこの順序を製品計画に整理済みだが、業務OwnerやGrantの実呼出しが追加されたわけではない。抽象経路は[main #5112](https://github.com/hat47x/tei-platform/pull/5112)の安定Meaning/Rule ID・Guard・必須/禁止通過点・状態不変条件で指定し、生成メソッド名を受入IDにはしない。
+
+**横断への加算規則**：QH-PG-READはProduct局所の意味経路、QH-PLAN-TIMEはBuild投入時のbyte、QH-OP-SELは実装選択の時点資格、QH-CONSUMER-REPLAYは旧/新Receiptの証拠整合。各々I/Rの補助または局所C候補であり、P/T/C/Hの外部Product実送受信を代用しない。同じRule ID／同じHash／同じResultで古い資格を再利用せず、単一の外部Attemptに関係のない別HEAD Greenを混ぜない。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Head照合もmain受理前には未実証。TAI #168実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Stage1→Stage2は独立P0。今回の実Product間送受信とOwner意味受理は**NOT RUN**。
+
