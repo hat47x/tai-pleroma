@@ -1748,13 +1748,17 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 
 **二つの誤解を排する**。一つは、`source-locations.ts`がSource位置を表示できれば任意のファイルを開いてよい、という誤解。もう一つは、参照WorkbenchのHTMLやNodeテストが成功すれば、Goに埋め込まれた配布資産も新しい、という誤解である。前者は現在の読取・開示権限、後者は生成物と実Consumerの証拠が欠ける。
 
-### 54.3 Rule Markdown Readerの進展を、外部Plugin全体の完成と混同しない
+### 54.3 内蔵Rule Markdownを、製品の意味と出典を伴う実読取として検証する
 
-TEIの現行製品Source `internal/workspace/rule_authoring_markdown_loader.go` には、内蔵`tei.rule-authoring/v0` Readerが実装されている。定義領域のRuleを既存`semantic.Validation`へ接続し、Load時の宣言範囲をSource Indexのbyte anchorへ渡す。同じSourceを後から独自Parserで読み直して位置を推測する実装ではない。[実装コミット](https://github.com/hat47x/tei-platform/commit/7921b005a44d325983d24ca2b8b58b0737dd778d)と[横断計画の後続PR #4878](https://github.com/hat47x/tei-platform/pull/4878)を区別して読む。
+[TEI main実装 commit 7921b005](https://github.com/hat47x/tei-platform/commit/7921b005a44d325983d24ca2b8b58b0737dd778d)の`tei.rule-authoring/v0`内蔵Readerは、明示選択された`*.tei.md`の`tei`定義領域を、同じ`Workspace.Load`で既存の`semantic.Validation`へ読み込み、Source Indexの宣言byte anchorへ接続している。**前節の「実装はあるが製品回帰が未整備」という上限を更新する**。新しく[TEI main #4890](https://github.com/hat47x/tei-platform/pull/4890)の`internal/workspace/tei_md_rule_product_read_test.go`と[main #4891](https://github.com/hat47x/tei-platform/pull/4891)の`internal/operations/inspect_rule_markdown_source_evidence_test.go`が追加され、現行mainから実ファイルを再取得できる。
 
-**採用する成熟成果**は、選択された一Language Readerが、同じ管理原byteから現行意味モデルとSource位置を作る方向性である。これはYIC Skillの説明が`*.tei.md`等の単なるファイル名から機能を推測することへの反例にもなる。
+二つの正例は`semantic-validation:sales.order_line.quantity_positive`（`positive`／`sales.order_line.quantity`）と`semantic-validation:sales.order.lines.line_number_unique`（`relation-unique`／`sales.order_line.line_number`／`sales.order.lines`）。[固定Fixture](https://github.com/hat47x/tei-platform/blob/main/internal/workspace/testdata/tei-md-rule/semantic/sales/order-line-rules.tei.md)の二つの`tei`コードブロックから、実Load済みの`AuthoringSources`、型付きValidation、原byte/Artifact SHA、各Rule IDのSource範囲、`InspectionFromLoad`と`TraceSubjectSourcesFromIndex`の一致を確認するコードがある。
 
-**独立して残るもの**は、すべてのGraph/Rule構文の正式受理、外部Language Plugin選択/Lockの普遍化、生成Go Plugin自身のTEIによるセルフビルド、実Provider Call/Effect、公開Docの現在Disclosure、Stage1→Stage2 WindowsとOwner業務意味受理である。Readerが元Sourceを意味へ接続しただけで外部Harnessの実Tool/権限も成立したとはしない。最初のHarness H2/H3比較へこのReaderの採用を新Blockingとして追加しない。
+**同時に固定された負例**は、(a) ManifestでLanguageを選ばなければ`TEI_MD_PARSER_UNBOUND`、(b) 対応しない`v99`なら`TEI_LANGUAGE_UNAVAILABLE`、(c) 同一Markdownの`text`コードブロックに引用された`sales.order_line.unit_price_positive`は定義としてIndex/Inspectorへ現れない、(d) 説明文だけを変えても旧Source IndexのFingerprint検査が失効する、である。**単なる文字列検索・拡張子・意味的に同じCanonical値から、実Readerの選択や現在のSourceを推定しない**。
+
+これらは**実製品のテストコードがmainへ統合済み**という事実であり、直ちにGoテスト実行成功を主張するものではない。確認時の#4890のPR HEAD Workflowはqueued/pendingがあり、#4891も一部failure/in-progressがあった。試験対象HEADの実Go/CI結果、失敗原因と本体テストの関係を別途判定する。最初の再試験コマンドと結果欄は[TEI→Harnessの実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)へ集約する。
+
+**今なお独立して残るもの**は、Rule集合の定義全件性と実Providerからの入力集合全件性、OwnerのMeaning受理、Graph/Window等の正式Readerと外部Language Plugin選択/Lock、Ruleを意味付きGoへ生成したArtifact、実Go Provider/通常製品CLIの呼出・Effect、公開Docの現在Disclosure、正規Studio配布・Stage1→Stage2 Windowsである。内蔵Readerのread-only Inspectionは実Function公開・実行Grantではない。最初のTAI #168 H2/H3四SlotへこのRule Readerを新条件として追加しない。
 
 ### 54.4 Product境界を越える場合は、現在のSource利用資格を引き継がない
 
@@ -1764,10 +1768,10 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 
 ### 54.5 現在の実装担当へ返す順序
 
-1. **TEI Product-local基線**：現行`semantic-capability:sales.order.submit`について、Go/CLIの実Source・Trace・版変更を同一Workspace/HEADで取得する。#4853/#4870の既存テストを再利用し、存在しないCLI操作を手引きから作らない。
+1. **TEI Product-local基線を二系列で再現**：既存`semantic-capability:sales.order.submit`の#4853/#4870と、内蔵Rule Markdownの二正例・四負例（#4890/#4891）をそれぞれ現在の固定HEADで実Go検証する。双方にSource/Traceがあっても**CapabilityとValidationを同じKind/公開Entryとして扱わない**。CLIに公開されていないReaderの操作をSkill説明から作らず、実CLIの到達と独立Consumerは別に確認する。
 2. **Studio表示の最小修復**：#4876相当のPin DOM配線を現行mainへ統合し、既存`authorityLimits`の拒否とB非干渉を確認する。次に正式生成→埋込byte→Windows Browserへ進む。実画面が旧い場合は配布未達と報告し、Referenceでの成功を補わない。
 3. **外部Harness側の独立P0**：TAI #168 G0実OS Read-deny→G1 Egress→G2 Tool Reply完全性→新規独立H2/H3四Slot（比較適格**0/4**）を、その試験だけの固定Taskで進める。Product GUIの進捗・Rule Markdownをその四Slotの追加条件にしない。
 4. **後続の接合**：両レーンの適格な部分が確認できたら、公開一Capabilityの許可済みContext送出→完全Reply→元Subjectのread-only候補帰着を**新Trial**として行う。Plugin文書追加Fetch、異Product、二Harnessの可搬性、Source Writerはその後に独立評価する。
 5. **横断の再利用条件**：他の製品やPluginで同様の読取を実証した場合、意味受理/Current Grant/元Source位置/実Consumerを同じ観測票へ並べて比較する。ただし正本のProduct責務と権限をYICへ移転しない。
 
-**今回の資格**：TEIのmain Blob（Go Capabilityテスト、Rule Markdown Loader、S-LOC TypeScript、参照HTMLと埋込HTML）・実装PRの採否・SUI内部ゲートのmain統合済みPRを照合した**Source-staticとDocs-onlyの計画更新**。新Go/Node/Windows/DB/実外部Harness/現在Grant/実Result Consumer/Owner意味受理のE2Eは**NOT RUN**。非Plugin Stage1→Stage2（TEI #4583）も別P0として継続し、どの段階の成功も他段階の合格へ自動昇格しない。
+**今回の資格（§54の追補を含む）**：TEIのmain Blob（Go Capability回帰、Rule Markdownの実Load/Source Index/Inspection回帰、S-LOC TypeScript、参照HTMLと埋込HTML）・実装PRの採否・SUI内部ゲートのmain統合済みPRを照合した**Source-staticとDocs-onlyの計画更新**。新Go/Node/Windows/DB/実外部Harness/現在Grant/実Result Consumer/Owner意味受理のE2Eは**NOT RUN**。非Plugin Stage1→Stage2（TEI #4583）も別P0として継続し、どの段階の成功も他段階の合格へ自動昇格しない。
