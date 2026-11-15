@@ -1,6 +1,8 @@
 # TEIで選んだ設計要素をAIへ渡して戻す：最初の実行票
 
-**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
+**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–50](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
+
+**途中で止まった場合**：送信ACK・Native Session ID・AIの回答・実Product Effectを同じ「完了」にまとめない。Source/Grantが変わったら送信前に再確認し、Tool Replyが不完全なら未受領、Sessionを再接続できなければ限定Activity Handoffへ縮退する。元ProductのEffectが不明な場合は再実行せず照会する。実際の表示例とOwner別の停止線は[横断計画§50](harness-cross-ui-session-probe-2026-11-14.md)を参照。
 
 ## 最初の利用者の仕事
 
