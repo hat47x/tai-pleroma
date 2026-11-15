@@ -1138,3 +1138,15 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 他レーンの[TEI #4983](https://github.com/hat47x/tei-platform/pull/4983)では、Inspector選択イベントを含む正規Workbench JSを再生成して製品埋込Assetへ再同期した。生成用の一時Workflowは成功し、PRはmain統合済み。ただし当該PRの全CIには失敗・進行中もあり、実WindowsのDOM/Host受領とStage1→Stage2は別資格である。[SUI #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)の内部Raw範囲再読は単体・MCP/Agent CIが成功しているが、同じ文面の二OccurrenceをDigestだけでは識別できない。両者をYICへ渡す際も、**生成Assetの一致、原文位置、実Consumerの受領、現在Grant、Owner意味受理**を一つの`true`に畳み込まない。
 
 **反証と担当**：YK-59＝`executedEffect`に文字列`"false"`を提出してEffectの有無を採点する場合、試行自体を未採点にする（TAI #488）。YK-60＝`claimsToolReached`の非booleanや`selected.tools`の文字列を肯定申告・複数Toolと誤認する場合、型不適格を明示し、比較集計から除外する（TAI #488/#271）。独立P0のTAI #168実OS G0→G1→G2→新規独立H2/H3四Slot（適格0/4）とTEI #4583 Windows Stage1→Stage2は変更しない。新採点器・Host・Registry・Expectedを作らず、今回の実Product/Windows/外部Harness/Owner意味受理は**NOT RUN**。
+
+### 55.6 試行Outcomeを実観測と取り違えず、SUIの保存済み位置とTEIの公開入口を区別する
+
+既存[Skill評価器](../../integrations/tools/skill_selection_check.py)は§55.5で提出TrialのBool／選択配列を検査するようになったが、`outcome`が配列・Objectなら`HOLD_OUTCOMES`との照合で例外になり、**他の正常なTrialまで採点できなくなる**。さらに未記入・空文字のOutcomeを「保留ではない」と解釈すると、観測されていない実行を採点してしまう。既存`trial_input_error`に非空文字列の型検査を加え、不適格なOutcomeは`unscored`として集計せず、同じ入力内の正常な試行の評価は継続する。合成S24〜S28は配列／Object／欠落／空白と、異常・正常が混在するB0/B1試行を比較する。Outcomeの**語彙や業務上の成功条件そのものは定義しない**。実到達・独立Consumer・Owner意味受理は元ProductとTAI #168/#271で別に検証する。
+
+**SUIの前進**：[main #3461](https://github.com/hat47x/sui-sensemaking/pull/3461)では、同一文面が二箇所あるCard選択について、**Server側の認可済みCard選択Resolverが保持する位置**を、Clientが再送する別Offsetに差し替えない内部read Gateが統合された。Sourceの現在read許可→Raw全体の再読→選択Digest照合と接続し、対象HEADの単体・MCP/Agent CIは両方成功。ただしResolver、永続Card Revision／Document CAS、正式Source Authority／Host、別Process再読はまだ限定Reference／テストダブル。YICで元Sourceの位置と現在Grantを独自再解決したり、保存済みCardの存在から外部開示許可を推測したりしない。
+
+**TEIの前進**：[main #4984](https://github.com/hat47x/tei-platform/pull/4984)では、実`plugin-inventory`の正式なread-only入口と`commands`発見・使用可能Flagを整合させ、`three-element`の親／子が個別に解析するFlagを区別し、`rea-evidence`のJSON出力契約も明示した。対象HEADには成功CIと失敗CIが混在する。YICのDiscovery合格は「そのScopeに掲載されたコマンドの応答形状の検査が可能」の範囲に留め、実Pluginの選択／実行、外部Source読取やHost Grant、Ownerの意味受理を意味しない。[main #4990](https://github.com/hat47x/tei-platform/pull/4990)のREA検証修正も、保存原本にGraphが無ければReceipt検証を行いつつ候補投影を`NOT RUN`とするものであり、候補不存在や利用拒否と混同しない。
+
+**反証**：YK-61＝`outcome: ["withhold"]`などの不正形式で全採点を停止したり、未記入を実行済みとみなしたりする場合、当該試行のみ未採点、他Trialは継続（TAI #488）。YK-62＝SUIで同文別OccurrenceのClient再送Offsetを保存済み位置より優先する場合、正規Card Resolverを経るまでRaw開示に進めない（SUI #3441／TAI #232）。YK-63＝TEIのCLI発見・REA Receipt受領から、未収録の実Plugin Providerや未取得のGraph候補の存在を推測する場合、それぞれ未実証として保留（TEI #4495/#1180／TAI #271）。
+
+独立P0はTAI #168の実OS G0→G1→G2→H2/H3新独立四Slot（比較適格**0/4**）とTEI #4583の実Windows Stage1→Stage2。今回の修正は既存合成採点器と受入計画に限り、新しいProduct/OS/Windows/Provider/Harness E2E、Owner意味受理は**NOT RUN**。新Runner・Registry・共通Authority・第二Expectedは追加しない。
