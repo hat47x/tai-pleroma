@@ -1498,7 +1498,7 @@ Source Indexのbyte offsetとEditor/LSPの文字位置（UTF-16等）が一致�
 
 ### 50.1 「作業中」を一つの状態にまとめない
 
-例として、TEIのFunction \`sales.order\` を対象に「依存とValidationを説明して」と依頼した後で、利用者が別のFunction Bを閲覧する場合を考える。少なくとも次の事実は別々に扱う。
+例として、TEIのFunction `sales.order` を対象に「依存とValidationを説明して」と依頼した後で、利用者が別のFunction Bを閲覧する場合を考える。少なくとも次の事実は別々に扱う。
 
 | 利用者が知りたいこと | 正本と必要な実観測 | 表示・操作上の帰結 |
 | --- | --- | --- |
