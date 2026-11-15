@@ -80,6 +80,11 @@ def discover(tei):
     doc = parse_json(out) if code == 0 else None
     if not isinstance(doc, dict) or doc.get("ok") is False:
         return None
+    # This small checker may execute discovered commands to inspect a
+    # documented output path. An arbitrary command catalog (even well-formed)
+    # cannot establish the read-only scope promised by this TEI entry point.
+    if doc.get("scope") != "selected-read-only-commands":
+        return None
     commands = doc.get("commands")
     if not isinstance(commands, list):
         return None
@@ -192,7 +197,10 @@ def check_skill(tei, workspace, skill_texts):
                                      "doc": label, "detail": claim})
                     continue
                 meta = disc["commands"].get(line_cmd or "")
-                if not meta or set(meta.get("requiredFlags", [])) - {"workspace", "world"}:
+                if not meta or set(meta.get("requiredFlags", [])) - {"workspace"}:
+                    # This checker supplies -workspace, never -world. A
+                    # world-only command cannot be validated with a substitute
+                    # flag, and a failed invocation is not a JSON-path drift.
                     findings.append({"class": "UNJUDGED", "code": "PATH_CLAIM_NEEDS_ARGUMENTS",
                                      "doc": label, "detail": claim})
                     continue
@@ -236,6 +244,8 @@ def check_skill(tei, workspace, skill_texts):
         "limits": ["Only explicit command spans and `list[].a.b/c` path claims are parsed.",
                    "A scoped commands response cannot prove that omitted commands do not exist.",
                     "Failed or malformed discovery cannot establish a command or success path.",
+                   "A discovery scope other than selected-read-only-commands cannot authorize path probes.",
+                   "Only commands whose required flags are covered by -workspace are probed.",
                    "Usage-only commands are not demonstrated callable or authorized.",
                    "A usage parent name alone does not establish its subcommands.",
                    "Paths on lines with multiple command mentions are unjudged, never bound by order.",
@@ -329,6 +339,15 @@ elif a == ["--discovery-duplicate", "commands"]:
     print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
                       "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]},
                                    {"name": "model catalog", "requiredFlags": []}]}))
+elif a == ["--discovery-other-scope", "commands"]:
+    print(json.dumps({"ok": True, "scope": "all-commands",
+                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]}]}))
+elif a == ["--discovery-no-scope", "commands"]:
+    print(json.dumps({"ok": True, "commands": [
+        {"name": "model catalog", "requiredFlags": ["workspace"]}]}))
+elif a == ["--discovery-world-required", "commands"]:
+    print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
+                      "commands": [{"name": "world-catalog", "requiredFlags": ["world"]}]}))
 elif a == ["commands"]:
     print(json.dumps({"scope": "selected-read-only-commands", "commands": [
         {"name": "model catalog", "requiredFlags": ["workspace"]},
@@ -440,6 +459,22 @@ else:
                                          [("S", "`tei model catalog`.")])
         check("D17 duplicate command names cannot overwrite one another",
               duplicate_discovery["status"] == "tool-unavailable" and not duplicate_discovery["findings"])
+        other_scope = check_skill(tei + ["--discovery-other-scope"], tmp, [
+            ("S", "`tei model catalog -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D18 a broader command scope cannot authorize a path probe",
+              other_scope["status"] == "tool-unavailable" and not other_scope["findings"])
+        missing_scope = check_skill(tei + ["--discovery-no-scope"], tmp, [
+            ("S", "`tei model catalog -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D19 an omitted discovery scope does not establish read-only tools",
+              missing_scope["status"] == "tool-unavailable" and not missing_scope["findings"])
+        world_required = check_skill(tei + ["--discovery-world-required"], tmp, [
+            ("S", "`tei world-catalog -world W` returns `entries[].subject.kind/id`.")])
+        check("D22 a world-required command is not probed with -workspace",
+              any(f["code"] == "PATH_CLAIM_NEEDS_ARGUMENTS" and f["class"] == "UNJUDGED"
+                  for f in world_required["findings"])
+              and not any(f["code"].startswith("SKILL_PATH_")
+                          or f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
+                          for f in world_required["findings"]))
         gone = check_skill(["/no/such/tei"], tmp, [("S", "`tei inspect`")])
         check("D4 absent tool judges nothing", gone["status"] == "tool-unavailable" and not gone["findings"])
         need_args = check_skill(tei, tmp, [("S", "`tei inspect -workspace W` gives `entries[].subject.kind/id`.")])
