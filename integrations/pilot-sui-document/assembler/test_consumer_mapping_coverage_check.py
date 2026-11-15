@@ -42,6 +42,11 @@ class ConsumerMappingReplayTests(unittest.TestCase):
         return {
             "payloadTopLevel": ["id", "cards", "readingOrder", "islands", "edges", "affiliations"],
             "payloadKeys": {
+                "cards": ["id", "sources", "text", "x", "y"],
+                "islands": [], "edges": [], "affiliations": [],
+            },
+            "modelTopLevel": ["id", "cards", "readingOrder", "islands", "edges", "affiliations"],
+            "modelKeys": {
                 "cards": cards if cards is not None else ["id", "sources", "text", "x", "y"],
                 "islands": [], "edges": [], "affiliations": [],
             },
@@ -103,6 +108,17 @@ class ConsumerMappingReplayTests(unittest.TestCase):
         receipt = json.loads(self.out.read_text(encoding="utf-8"))
         self.assertEqual(receipt["result"], "FAIL")
         self.assertEqual(receipt["observed"]["collectionsWithLoss"], ["cards"])
+        self.assertEqual(receipt["observed"]["collections"]["cards"]["dropped"], ["sources"])
+
+    def test_model_loss_after_payload_mapped_is_still_detected(self):
+        observed = self.response(cards=["id", "text", "x", "y"])
+        self.assertIn("sources", observed["payloadKeys"]["cards"])
+        self.assertNotIn("sources", observed["modelKeys"]["cards"])
+        self.assertEqual(self.execute(observed), 1)
+        receipt = json.loads(self.out.read_text(encoding="utf-8"))
+        self.assertEqual(receipt["result"], "FAIL")
+        self.assertEqual(receipt["observed"]["collections"]["cards"]["payloadKeys"],
+                         ["id", "sources", "text", "x", "y"])
         self.assertEqual(receipt["observed"]["collections"]["cards"]["dropped"], ["sources"])
 
     def test_source_change_during_consumer_call_prevents_receipt(self):
