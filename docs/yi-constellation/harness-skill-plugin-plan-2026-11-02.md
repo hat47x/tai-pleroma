@@ -1081,6 +1081,14 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 
 **TEIのReader到達点を更新**：[main `7921b005`](https://github.com/hat47x/tei-platform/commit/7921b005a44d325983d24ca2b8b58b0737dd778d)では、`tei.rule-authoring/v0`を明示選択して`*.tei.md`のRule領域を既存`semantic.Validation`とSource byte anchorへ読み込む、対象限定の**製品内蔵Language Reader**が入った。これは一部の`*.tei.md`に対する実Workspace Loader接続である。一般Graph Reader、外部Language Plugin、意味Owner受理、公開Plugin Doc Reader、実Provider Call／セルフビルドとは別の受入にする。[TEI #4878](https://github.com/hat47x/tei-platform/pull/4878)の設計PRは未マージでも、実main Sourceの到達点は認定する。
 
-**SUI・横断AIの実装境界**：[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)の現在Source Authority→Policy→PDP→Raw再読をつなぐ候補は**未マージ**・認証／Authority／Policyにテストダブルを使う内部readであり、正式本番Host Grantや外部Disclosureへ昇格しない。main統合済み[TAI #661](https://github.com/hat47x/tai-pleroma/pull/661)の並列AI/branch統合試験へは、CLI受入・Source現在性・独立Consumer・mainのCI・Owner判断を独立列として引き渡す。新しい中央Runner/権限正本/第二Checker/自動マージ器は設けない。
+**SUI・横断AIの実装境界**：[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は現在Source Authority→Policy→PDP→Raw再読をつなぐ**内部ゲートとしてmain統合済み**。対象HEADのSUI単体・MCP/Agent CIは成功したが、認証／Authority／Policyにテストダブルを使う限定readであり、正式な本番Host Grantや外部Disclosureへ昇格しない。main統合済み[TAI #661](https://github.com/hat47x/tai-pleroma/pull/661)の並列AI/branch統合試験へは、CLI受入・Source現在性・独立Consumer・mainのCI・Owner判断を独立列として引き渡す。新しい中央Runner/権限正本/第二Checker/自動マージ器は設けない。
 
 **担当と実行順**：YK-38〜42を既存TAI #488/#233/#422、TEI #4714/#2621、SUI #3441/#232へ戻す。独立P0はTAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2実Windows Desktop。公開Manualの一件Product Readは並行するが初回固定比較の新Blockingにはしない。今回の新Product/Harness E2E・実Provider Effect・Owner意味受理は**NOT RUN**。
+
+### 55.1 限定Discoveryに親Commandだけが載る場合の誤判定を解消する
+
+[Skill実行票§15.4](skill-knowledge-use-qualification-2026-11-15.md)の既存検査器に残っていた、`tei model imagined`を発見済み`model`へ短縮する誤判定を修正した。CLIの`commands`とusageのどちらに親だけがあっても、子の存在・受入Path・実行権限は保証しない。合成D13/D14で未確認子の`UNJUDGED`と正規親の発見を対照にし、前回[TAI #662](https://github.com/hat47x/tai-pleroma/pull/662)の全14 CI成功を今回のHEADへ流用せず、今回の`tai-reference`で確認する。旧Skill／8指標／封印Expectedは変更しない。
+
+他製品で成熟した前段として、[TEI #4900](https://github.com/hat47x/tei-platform/pull/4900)の旧Validation対Rule Markdownの型付き意味比較と、[#4901](https://github.com/hat47x/tei-platform/pull/4901)の合成SourceによるEvaluator/Read Footprint照合はmainへ入った。ただし#4900のCIは未完了、#4901は複数failureを含み、Providerの実入力や生成Go・Studio・Owner意味受理を完成扱いしない。既存[横断実証計画§54](harness-cross-ui-session-probe-2026-11-14.md)へ同じRule/Sourceを渡す場合も、**Command発見→現在Source→型付き意味→実入力→独立Consumer**を別々に判定する。
+
+**優先順位**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（適格0/4）とTEI #4583の非Plugin Stage1→Stage2は独立P0。TEI #4714の一件公開Manual ReadとSUI #3441の本番Source Provider/Grantは別Ownerの並行検収であり、初回固定H2/H3比較の条件を変更しない。中央Registry／Host／Runner／第二Expectedは追加しない。新たな外部Harness試験・本番Provider・Owner意味受理は**NOT RUN**。
