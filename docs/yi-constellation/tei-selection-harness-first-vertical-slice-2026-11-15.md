@@ -56,11 +56,17 @@ go test ./internal/operations -run '^TestSelectedMarkdownRulesDriveEvaluatorRead
 
 判定時は、同じ型付き意味になったこと、評価器が想定したAttribute/Relationだけを要求したこと、**実Providerから適格な入力集合を取得できたこと**を別欄に記録する。#4901のSourceは合成であり、最後の項目は今回の試験では**未確認**。実DB・外部Harness・実Effectは追加の独立Consumer試験を要する。
 
-**YICへの受渡し**：Product-local A0で確認できたのは型付き意味・元Source・read-only参照であり、公開CLIが同じRuleを外部Harnessへ配送したことではない。既存`tei commands`の実Discoveryと現在のProduct/Host Reader・開示資格を別に確認する。TAI [#662](https://github.com/hat47x/tai-pleroma/pull/662)がmainへ統合したSkill検査器では、実CLI Exit非0またはJSON `ok=false`の応答に正常そうな`result`形状があっても成功扱いしない。Reader結果・Tool実配送・完全Reply・元Subject Consumerは独立して記録する。
+**実CLIで読めることを追加で確かめる**：[TEI main #4980](https://github.com/hat47x/tei-platform/pull/4980)の`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`は、通常の`tei`をGoで実ビルドし、別Processの`inspect`から選択済み`semantic-validation:sales.order_line.quantity_positive`を取得する回帰Source。期待結果は終了コード0・`tei.cli.inspect/v0`・元Rule IDのMarkdown byte位置／Artifact指紋。**同じIDの`semantic-capability`と、説明用`text` Fence内だけのRuleは終了コード1・`SUBJECT_NOT_FOUND`**。以下はTEIリポジトリRootからの実行候補であり、この文書更新では未実行。#4980の対象HEADでもこのテスト単独のPASSは確認されていない。
+
+~~~sh
+go test ./cmd/tei -run '^TestProductInspectCLISelectedMarkdownRuleIsNotCapability$' -count=1
+~~~
+
+**YICへの受渡し**：Product-local A0で確認するのは型付き意味・元Source・製品CLIによるread-only参照であり、公開Function Entry、実ProviderへのInvocation、現在のExternal Disclosure、外部Harnessへの配送・完全Replyではない。既存`tei commands`の実Discoveryと現在のProduct/Host Reader・開示資格を別に確認する。TAI [#662](https://github.com/hat47x/tai-pleroma/pull/662)がmainへ統合したSkill検査器では、実CLI Exit非0またはJSON `ok=false`の応答に正常そうな`result`形状があっても成功扱いしない。Reader結果・Tool実配送・完全Reply・元Subject Consumerは独立して記録する。
 
 このRule Readerを最初のTAI #168固定H2/H3四Slotに追加せず、同一Sourceの正負例を持つ**後続のTool-only／Product Skill比較候補**として保持する。RuleからGo生成→実Provider/通常CLI実行→Owner受理も別の製品実装である。状態：**実行票の追補のみ／新Go・外部Harness E2EはNOT RUN**。
 
-**Source箇所の取違えを防ぐ追加反例**：SUI [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)では同じUTF-8本文を二箇所から選ぶと選択Digestは一致するが、byte範囲が異なる。同じ内容・Hashを元Occurrenceの同一性とみなさず、SUI Productの現在read、元Raw版と選択範囲、別Productへの開示、最終Consumerを別々に検査する。TEIのMarkdownと従来`.tei`が同じ型付きRuleになった場合も、元Source位置はそれぞれ保つ。初回の独立Expectedと停止線は[横断§56](harness-cross-ui-session-probe-2026-11-14.md)に集約し、この実行票から新Source Providerや第二Identity正本を作らない。
+**Source箇所の取違えを防ぐ追加反例**：SUI [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)では同じUTF-8本文を二箇所から選ぶと選択Digestが一致しても、byte範囲は異なる。[main #3461](https://github.com/hat47x/sui-sensemaking/pull/3461)では認証済みMemberとServer側の保存Card選択Resolver（現段階はテストダブル）で選択位置を再解決し、Clientの別Offsetを採用しない内部回帰が加わった。同じ内容・Hashを元Occurrenceの同一性とみなさず、保存位置・元Raw版・現在read・別Productへの開示・最終Consumerを別々に検査する。TEIのMarkdownと従来`.tei`が同じ型付きRuleになった場合も、元Source位置はそれぞれ保つ。初回の独立Expectedと停止線は[横断§56](harness-cross-ui-session-probe-2026-11-14.md)に集約し、この実行票から新Source Providerや第二Identity正本を作らない。
 
 ## 6つの操作と実行担当
 
