@@ -87,7 +87,8 @@ def discover(tei):
     }
 
 
-def usage_count(tei):
+def usage_commands(tei):
+    """Read command names from CLI usage; this is not a grant or complete discovery."""
     cmd = list(tei) if isinstance(tei, (list, tuple)) else [str(tei)]
     try:
         q = subprocess.run(cmd + ["__no_such_command__"], capture_output=True, timeout=60)
@@ -95,7 +96,12 @@ def usage_count(tei):
         return None
     out = (q.stdout + q.stderr).decode("utf-8", "replace")
     m = re.search(r"<([^>]+)>", out or "")
-    return len(m.group(1).split("|")) if m else None
+    return set(m.group(1).split("|")) if m else None
+
+
+def usage_count(tei):
+    names = usage_commands(tei)
+    return len(names) if names is not None else None
 
 
 CMD_RE = re.compile(r"(?:go run \./cmd/tei|\btei)\s+([a-z][a-z-]*(?:\s+[a-z][a-z-]*)?)")
@@ -119,6 +125,7 @@ def check_skill(tei, workspace, skill_texts):
         return {"status": "tool-unavailable", "findings": [],
                 "note": "discovery did not return; no claim was judged"}
     names = set(disc["commands"])
+    usage_names = usage_commands(tei)
     mentioned = set()
     outputs = {}
     for label, text in skill_texts:
@@ -135,8 +142,18 @@ def check_skill(tei, workspace, skill_texts):
                 elif m.group(1).split()[0] == "commands":
                     continue  # the discovery entry point itself
                 elif not m.group(1).startswith(("-", "<")):
-                    findings.append({"class": "DRIFT", "code": "SKILL_COMMAND_NOT_DISCOVERED",
-                                     "doc": label, "detail": m.group(1).split()[0]})
+                    claimed = m.group(1).strip()
+                    usage_name = claimed if usage_names is not None and claimed in usage_names else claimed.split()[0]
+                    if usage_names is not None and usage_name in usage_names:
+                        # Usage mentions the command, but this session's scoped
+                        # discovery does not expose it. Do not call it or claim
+                        # that the command does not exist.
+                        findings.append({"class": "UNJUDGED", "code": "SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE",
+                                         "doc": label, "detail": usage_name, "scope": disc["scope"]})
+                    else:
+                        findings.append({"class": "DRIFT", "code": "SKILL_COMMAND_NOT_DISCOVERED",
+                                         "doc": label, "detail": usage_name, "scope": disc["scope"],
+                                         "existence": "not-established"})
             for pm in PATH_RE.finditer(line):
                 list_path = pm.group(1)
                 parts = pm.group(2).split(".")
@@ -170,11 +187,14 @@ def check_skill(tei, workspace, skill_texts):
     return {
         "status": "checked",
         "discovery": {"sha256": disc["sha256"], "scope": disc["scope"],
-                      "discoveredCommands": len(names), "usageCommands": usage_count(tei)},
+                      "discoveredCommands": len(names),
+                      "usageCommands": len(usage_names) if usage_names is not None else None},
         "skillMentionsDiscovered": sorted(mentioned),
         "discoveredNotCoveredBySkill": len(uncovered),
         "findings": findings,
         "limits": ["Only explicit command spans and `list[].a.b/c` path claims are parsed.",
+                   "A scoped commands response cannot prove that omitted commands do not exist.",
+                   "Usage-only commands are not demonstrated callable or authorized.",
                    "A PASS here is not a Harness, Loader, Grant or model result."],
     }
 
@@ -254,7 +274,7 @@ if a == ["commands"]:
 elif a[:2] == ["model", "catalog"]:
     print(json.dumps({"ok": True, "result": {"entries": [{"subject": {"kind": "k", "id": "i"}}]}}))
 else:
-    print("usage: tei <commands|inspect|model catalog|source-index>"); sys.exit(2)
+    print("usage: tei <commands|inspect|model catalog|source-index|hidden-example>"); sys.exit(2)
 ''')
         tei = [sys.executable, "-I", str(fake)]
         drift = check_skill(tei, tmp, [("S", "Run `go run ./cmd/tei model catalog -workspace W`; pick `entries[].subject.kind/id`.")])
@@ -264,7 +284,17 @@ else:
         ok = check_skill(tei, tmp, [("S", "Run `tei model catalog -workspace W`; pick `result.entries[].subject.kind/id`.")])
         check("D2 correct doc has no drift", not [f for f in ok["findings"] if f["class"] == "DRIFT"])
         bad = check_skill(tei, tmp, [("S", "Run `tei deploy-everything -workspace W`.")])
-        check("D3 undiscovered command", any(f["code"] == "SKILL_COMMAND_NOT_DISCOVERED" for f in bad["findings"]))
+        check("D3 undiscovered command", any(f["code"] == "SKILL_COMMAND_NOT_DISCOVERED"
+                                             and f.get("existence") == "not-established"
+                                             for f in bad["findings"]))
+        usage_only = check_skill(tei, tmp, [("S", "Try `tei hidden-example`.")])
+        check("D6 usage-only is not absent", any(f["code"] == "SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE"
+                                                and f["class"] == "UNJUDGED"
+                                                for f in usage_only["findings"]))
+        check("D7 scoped discovery is not exhaustive",
+              usage_only["discovery"]["discoveredCommands"] == 3
+              and usage_only["discovery"]["usageCommands"] == 5
+              and not [f for f in usage_only["findings"] if f["class"] == "DRIFT"])
         gone = check_skill(["/no/such/tei"], tmp, [("S", "`tei inspect`")])
         check("D4 absent tool judges nothing", gone["status"] == "tool-unavailable" and not gone["findings"])
         need_args = check_skill(tei, tmp, [("S", "`tei inspect -workspace W` gives `entries[].subject.kind/id`.")])
