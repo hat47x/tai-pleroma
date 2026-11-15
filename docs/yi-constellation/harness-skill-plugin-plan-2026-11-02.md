@@ -1150,3 +1150,15 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **反証**：YK-61＝`outcome: ["withhold"]`などの不正形式で全採点を停止したり、未記入を実行済みとみなしたりする場合、当該試行のみ未採点、他Trialは継続（TAI #488）。YK-62＝SUIで同文別OccurrenceのClient再送Offsetを保存済み位置より優先する場合、正規Card Resolverを経るまでRaw開示に進めない（SUI #3441／TAI #232）。YK-63＝TEIのCLI発見・REA Receipt受領から、未収録の実Plugin Providerや未取得のGraph候補の存在を推測する場合、それぞれ未実証として保留（TEI #4495/#1180／TAI #271）。
 
 独立P0はTAI #168の実OS G0→G1→G2→H2/H3新独立四Slot（比較適格**0/4**）とTEI #4583の実Windows Stage1→Stage2。今回の修正は既存合成採点器と受入計画に限り、新しいProduct/OS/Windows/Provider/Harness E2E、Owner意味受理は**NOT RUN**。新Runner・Registry・共通Authority・第二Expectedは追加しない。
+
+### 55.7 Skill自己試験を他の失敗から独立して観測し、実製品の到達点を更新する
+
+[TAI #677](https://github.com/hat47x/tai-pleroma/pull/677)で入力形式を厳格化したSkill採点器はmainへ入ったが、その対象HEADの`python-reference`では、先行する`synthetic receipts test`が失敗したため、**Skill自己試験S24〜S28が実行されなかった**。[Issue #680](https://github.com/hat47x/tai-pleroma/issues/680)にある実ログでは、`evaluations/records/SUI-consumer-mapping-2026-11-06.json`が`real-execution receipt is not PASS`および`SUI consumer dropped a projected field`として拒否された。これはSkill側の失敗を裏付けるものではなく、Skillの合格も裏付けない。
+
+既存`.github/workflows/tai-reference.yml`の同じ`python-reference`ジョブ内で、**既存のSkill自己試験をPythonセットアップ直後へ移動**する。新しいJobやRunner、独立Expected、中央的な検査器は増設しない。他のReceiptの検査・失敗はそのまま可視化し、記録を便宜的に`PASS`へ変更しない。受入時は対象HEADのStep `YIC Skill selection limited-discovery regression (synthetic)`の完了・成否と、Workflow全体の成否を別々に報告する。後者が失敗しても、前者が実行されていれば「合成自己試験が成功した」という限定した判断ができる。
+
+**他チャットの実装成果**：[TEI #4995](https://github.com/hat47x/tei-platform/pull/4995)は通常のWindows Wails WebView2でPin A固定→B選択→A再確認→解除の実Consumer検査に進み、exact HEADの`desktop-webview2-smoke`は成功。ただし`generated-desktop-webview2-smoke`は失敗し、非Plugin Stage1→Stage2の合格ではない。[TEI #5009](https://github.com/hat47x/tei-platform/pull/5009)は、選択済みRuleから生成した判断Goを通常の`tei self-build`／Build Intent経路でビルド・バイナリ起動するテストをmainへ統合した。元Rule byteと生成器資格の一体束縛、Provider公開Entry・実DB呼出しは別検収であり、対象HEADのCI全体は成功していない。[SUI #3462](https://github.com/hat47x/sui-sensemaking/pull/3462)では、実Document情報・Server側Resource Resolverを経てDocumentとSourceの現在read許可を**別々に判定**する内部経路をmainへ統合。対象HEADの単体・MCP/Agent CIは成功したが、Card選択ResolverやSource Provider、本番PDPと二次開示は未実証である。
+
+**横断の受入規則**：Skillの合成自己試験成功、Source位置の再確認、製品によるGo Build Intentの実消費、Windowsの通常DOM操作、現在のDocument/Source認可、別Productへの開示、外部Harnessの完全Replyは異なる検証結果として保持する。未実証の段階を先行する成功で補わず、製品固有のOwnerに戻す。
+
+**次の一件**：YK-64は「先行Receiptの失敗によるSkill自己試験の未実行」を「Skillテスト失敗／成功」と混同しない反証（TAI #680/#488）。YK-65は「通常Windows Pinの成功をStage2生成Desktop成功と取り違える」反証（TEI #4583）。YK-66は「Document readとSource readの片方だけの許可でCardのRawを外部開示する」反証（SUI #3441／TAI #232）。優先度はTAI #168の実OS G0→G1→G2・独立H2/H3四Slot（比較適格**0/4**）とTEI #4583の実Windows Stage1→Stage2を独立P0として維持する。新しい実OS/DB/外部Harness/Owner意味受理は**NOT RUN**。
