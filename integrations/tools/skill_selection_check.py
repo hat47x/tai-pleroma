@@ -136,7 +136,7 @@ def check_skill(tei, workspace, skill_texts):
     disc = discover(tei)
     if disc is None:
         return {"status": "tool-unavailable", "findings": [],
-                "note": "discovery did not return; no claim was judged"}
+                "note": "discovery unavailable or unqualified; no claim was judged"}
     names = set(disc["commands"])
     usage_names = usage_commands(tei)
     mentioned = set()
