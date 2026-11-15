@@ -305,3 +305,42 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 優先順位は変更しない。**独立P0-A**はTAI #168の実OS G0→G1→G2→新規独立H2/H3四Slot（比較適格0/4）、**独立P0-B**はTEI #4583の非Plugin Studio Stage1→Stage2 Windows実Consumer。公開ManualのProduct一件ReadはTEI #4714に並行して委ね、成功が揃ってからTool-only B0とProduct Skill B1を別Trialで比較する。実際の中断再開利益がある場合だけB2のTAI Skillを使う。新しいCentral Registry/Host/Resolver、第二Expected、独自Agent Loopは追加しない。
 
 **今回の範囲**：既存Checkerの合成負例、製品の公開PR/実コードの再照合、文書への受入差分のみ。実Source-backed公開Doc Read、実OS隔離・新独立四Session、本番Host Grant、外部Provider Effect、正式Ownerの意味受理は**NOT RUN**。
+
+## 15. 2026-11-15：失敗応答のJSONをSkillの成功経路に数えない
+
+前回までの[Skillドリフト検査器](../../integrations/tools/skill_selection_check.py)は、実`tei`のread-onlyコマンドを呼び、返ったJSONからSkillに書かれた`entries[].subject.kind/id`などの位置を照合していた。ただし**終了コードが失敗でもJSONに`result.entries`が残っている場合**や、**終了コード0でも本文が`ok: false`と明示する場合**に、その構造を成功応答と誤認し、`SKILL_PATH_ABSENT_AT_DOCUMENTED_LOCATION`などの位置判定を返し得た。失敗時の情報と正常時の製品応答を混ぜないため、既存検査器を限定修正した。
+
+| 今回の実CLI呼出し | Skillが期待するデータ構造を検査してよいか | 実行票での扱い |
+| --- | --- | --- |
+| 終了コード0、JSONの`ok: true`、想定した`result` | 既存のPath検査へ進む | あくまで当該read-only操作の応答形状の照合。Host権限・Source現在性・意味受理とは別 |
+| **終了コードが0以外**で、JSON内に正常系と似た`result`が残る | **検査しない** | `COMMAND_RESULT_NOT_ACCEPTED`・`UNJUDGED`（`cli-nonzero`）。エラー本文を成功したSource取得の根拠にしない |
+| **終了コード0でも`ok: false`**で、正常系と似た`result`が残る | **検査しない** | 同じ`UNJUDGED`（`response-ok-false`）。単にJSONを解析できたことを受入としない |
+| 終了コード0、JSONが解析不能 | 検査しない | 既存`COMMAND_OUTPUT_NOT_JSON`・`UNJUDGED`を保持 |
+
+検査器は失敗時の本文や拒否理由を診断結果に転載せず、当該Command・Exit・理由区分・検査対象Pathだけを報告する。実験者用Expectedや8つの既存`score`指標は変更しない。合成CLIのD11（失敗終了コード＋正常系に似たJSON）とD12（成功終了コード＋明示的`ok: false`）を既存`--self-test`に追加し、通常の`tai-reference` CIで実行する。**この修正はCLI本文の意味判定や、自由文の虚偽成功の自動検知ではない。**
+
+### 15.1 TEIの一部Markdown Readerが製品に入ったことを受入計画へ反映する
+
+[TEI main commit `7921b005`](https://github.com/hat47x/tei-platform/commit/7921b005a44d325983d24ca2b8b58b0737dd778d)の実Goコードを照合した。`internal/workspace/authoring_language.go`は`languages:`に明示された`tei.rule-authoring/v0`だけに、内蔵`tei.builtin.rule-authoring-markdown`を正確に選び、候補が未実装・複数なら拒否する。`internal/workspace/rule_authoring_markdown_loader.go`では同一Load中の元byteからMarkdownのRule定義領域を読み、既存`semantic.Validation`とSource Indexのbyte anchorを生成する。問題を含む一ファイルの定義を部分的に有効にせず、Rule ID重複を拒否する。
+
+これは**製品Workspaceへの、対象を限定した実Readerの接続**であり、過去の「全`*.tei.md`が未束縛」という記述を、現行mainの全入力に当てはめない。一方、Graphを含む一般`*.tei.md`・外部Language PluginのResolver/Lock・生成Go/Provider・業務MeaningのOwner受理・公開Manual Doc Readerはこの内蔵Rule Readerで成立しない。Doc読取前段のTEI #4714と、より広いReaderのTEI #2621／Stage1→Stage2 #4583は、引き続き**それぞれ別の受入項目**とする。TEIの並行[設計整理 #4878](https://github.com/hat47x/tei-platform/pull/4878)は未マージで、実コード上の到達点と設計PRの状態を混同しない。
+
+### 15.2 SUIのSource読取ゲートとAI並行作業の引渡し
+
+[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は現在未マージで、実装候補はMember/現行Session→Server側Source Authority→現在Policy Binding→Source専用PDP→Raw bytes/digest照合を**一回の内部read**につなぐ。Source Authority・認証Session・Policy Resolverはテストダブルであり、製品HTTP Route／正式DB／組織PDP／外部公開許可は未成立。従って、内部の`read`試験が通ってもSkillから本番Raw Sourceを取得・再開示してよいことにはならない。
+
+[TAI main統合済み #661](https://github.com/hat47x/tai-pleroma/pull/661)の複数AI／branch統合試験計画には、読めたSource・正しく終了したTool操作・実Consumerが受領した成果を**別の証拠**として渡す。終了コード、JSON本文、実Worktree差分、現在HEADのCI、Owner採否を順に確認し、失敗時の`result`や旧PRのReceiptを成功証拠へ昇格しない。Skill評価器の修正は、並行Agentの自動マージ権限や独立Challengerの代わりではない。
+
+### 15.3 既存Ownerへ渡す反証
+
+| ID | 反例 | 期待される判定と担当 |
+| --- | --- | --- |
+| **YK-38** | CLIが失敗終了コードを返したが、JSONに正常系の`result.entries`がある | 成功応答Pathの比較に進まず`UNJUDGED`。TAI #488 |
+| **YK-39** | CLIは終了コード0でも`ok: false`を返し、JSONに正常系の構造が残る | 同じく`UNJUDGED`。失敗本文を採用根拠にしない。TAI #488／TEI #2605 |
+| **YK-40** | 内蔵Rule Markdown Readerが一文書を読めても、一般Graph Markdown/外部Pluginを同じProviderが扱えると推定 | 対象Language/Contract/Source領域を区別。TEI #2621／#1180 |
+| **YK-41** | SUI内部readゲートのHTTP/PDPダブルでRaw一致、現在の正式Hostは未接続 | 実Source Grantと外部Disclosureを未検証として維持。SUI #3441／TAI #232 |
+| **YK-42** | 並行AIの一枝が失敗JSONや旧CI PASSを提出し、現在mainへの適用を要求 | 当該OperationとHEAD・Owner独立Expectedに再照合。TAI #233/#422／#488 |
+
+**実行順は維持**：TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2 Windows Desktopを独立P0として継続。TEI #4714の公開Manual一件の本物のRead、SUI #3441のSource用Host認可を並行で進め、初回固定H2/H3の追加Blocking条件にしない。Skill B0/B1/B2の効果比較は受入可能なProduct Readが得られた別Trialで判定する。
+
+**今回の実証範囲**：TAIの既存合成Checker・自己試験・CI接続、TEI mainの対象を限定したGo Reader、SUI未マージ候補とTAIの統合計画を整理したもの。新しいTEI公開Manual Read、SUI本番Source API、実OS隔離、実四Session、外部Consumer受領、Owner意味受理は**NOT RUN**。
