@@ -88,7 +88,8 @@ def discover(tei):
     commands = doc.get("commands")
     if not isinstance(commands, list):
         return None
-    if any(not isinstance(c, dict) or not isinstance(c.get("name"), str)
+    if any(not isinstance(c, dict) or c.get("effect") != "read-only"
+           or not isinstance(c.get("name"), str)
            or not c["name"].strip()
            or not isinstance(c.get("requiredFlags", []), list)
            or any(not isinstance(flag, str) for flag in c.get("requiredFlags", []))
@@ -245,6 +246,7 @@ def check_skill(tei, workspace, skill_texts):
                    "A scoped commands response cannot prove that omitted commands do not exist.",
                     "Failed or malformed discovery cannot establish a command or success path.",
                    "A discovery scope other than selected-read-only-commands cannot authorize path probes.",
+                   "Each listed command must explicitly advertise effect=read-only before probing.",
                    "Only commands whose required flags are covered by -workspace are probed.",
                    "Usage-only commands are not demonstrated callable or authorized.",
                    "A usage parent name alone does not establish its subcommands.",
@@ -331,31 +333,37 @@ def self_test():
 a = sys.argv[1:]
 if a == ["--discovery-failed", "commands"]:
     print(json.dumps({"ok": False, "scope": "selected-read-only-commands",
-                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]}]}))
+                      "commands": [{"name": "model catalog", "effect": "read-only", "requiredFlags": ["workspace"]}]}))
 elif a == ["--discovery-malformed", "commands"]:
     print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
                       "commands": {"name": "model catalog"}}))
 elif a == ["--discovery-duplicate", "commands"]:
     print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
-                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]},
-                                   {"name": "model catalog", "requiredFlags": []}]}))
+                      "commands": [{"name": "model catalog", "effect": "read-only", "requiredFlags": ["workspace"]},
+                                   {"name": "model catalog", "effect": "read-only", "requiredFlags": []}]}))
 elif a == ["--discovery-other-scope", "commands"]:
     print(json.dumps({"ok": True, "scope": "all-commands",
-                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]}]}))
+                      "commands": [{"name": "model catalog", "effect": "read-only", "requiredFlags": ["workspace"]}]}))
 elif a == ["--discovery-no-scope", "commands"]:
     print(json.dumps({"ok": True, "commands": [
-        {"name": "model catalog", "requiredFlags": ["workspace"]}]}))
+        {"name": "model catalog", "effect": "read-only", "requiredFlags": ["workspace"]}]}))
 elif a == ["--discovery-world-required", "commands"]:
     print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
-                      "commands": [{"name": "world-catalog", "requiredFlags": ["world"]}]}))
+                      "commands": [{"name": "world-catalog", "effect": "read-only", "requiredFlags": ["world"]}]}))
+elif a == ["--discovery-mutating-effect", "commands"]:
+    print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
+                      "commands": [{"name": "model catalog", "effect": "write", "requiredFlags": ["workspace"]}]}))
+elif a == ["--discovery-no-effect", "commands"]:
+    print(json.dumps({"ok": True, "scope": "selected-read-only-commands",
+                      "commands": [{"name": "model catalog", "requiredFlags": ["workspace"]}]}))
 elif a == ["commands"]:
     print(json.dumps({"scope": "selected-read-only-commands", "commands": [
-        {"name": "model catalog", "requiredFlags": ["workspace"]},
-        {"name": "model", "requiredFlags": ["workspace"]},
-        {"name": "inspect", "requiredFlags": ["workspace", "subject-kind", "subject-id"]},
-        {"name": "source-index", "requiredFlags": ["workspace"]},
-        {"name": "read-failed", "requiredFlags": ["workspace"]},
-        {"name": "read-softfail", "requiredFlags": ["workspace"]}]}))
+        {"name": "model catalog", "effect": "read-only", "requiredFlags": ["workspace"]},
+        {"name": "model", "effect": "read-only", "requiredFlags": ["workspace"]},
+        {"name": "inspect", "effect": "read-only", "requiredFlags": ["workspace", "subject-kind", "subject-id"]},
+        {"name": "source-index", "effect": "read-only", "requiredFlags": ["workspace"]},
+        {"name": "read-failed", "effect": "read-only", "requiredFlags": ["workspace"]},
+        {"name": "read-softfail", "effect": "read-only", "requiredFlags": ["workspace"]}]}))
 elif a and a[0] == "read-failed":
     print(json.dumps({"ok": True, "result": {"entries": [{"subject": {"kind": "k", "id": "i"}}]}}))
     sys.exit(3)
@@ -475,6 +483,14 @@ else:
               and not any(f["code"].startswith("SKILL_PATH_")
                           or f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
                           for f in world_required["findings"]))
+        mutating_effect = check_skill(tei + ["--discovery-mutating-effect"], tmp, [
+            ("S", "`tei model catalog -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D23 effectful command advertised in read-only scope is unqualified",
+              mutating_effect["status"] == "tool-unavailable" and not mutating_effect["findings"])
+        missing_effect = check_skill(tei + ["--discovery-no-effect"], tmp, [
+            ("S", "`tei model catalog -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D24 command without an effect declaration is unqualified",
+              missing_effect["status"] == "tool-unavailable" and not missing_effect["findings"])
         gone = check_skill(["/no/such/tei"], tmp, [("S", "`tei inspect`")])
         check("D4 absent tool judges nothing", gone["status"] == "tool-unavailable" and not gone["findings"])
         need_args = check_skill(tei, tmp, [("S", "`tei inspect -workspace W` gives `entries[].subject.kind/id`.")])
