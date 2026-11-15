@@ -378,3 +378,20 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 
 **現行mainとの追加照合**：先行[TAI main #668](https://github.com/hat47x/tai-pleroma/pull/668)は、Skillの一行に複数CLIがあってPathの帰属が曖昧な場合、`PATH_CLAIM_COMMAND_AMBIGUOUS`（`UNJUDGED`）として実CLIを代行起動しない。既存D20/D21と今回のDiscovery失敗D15〜D17は対象が異なり、両方を保持する。TEI [main #4930](https://github.com/hat47x/tei-platform/pull/4930)のGoバイナリ二本の対照は局所R1.5だが、[参照Builder試験 #4934](https://github.com/hat47x/tei-platform/pull/4934)は未マージで閉じた。SUI [main #3458](https://github.com/hat47x/sui-sensemaking/pull/3458)は、Source内部Gateと既存NAS・保存表のFit/Gapを整理した**文書**であって、正式Raw Providerの接続ではない。これらの進捗を、YIC側のPlugin/Provider/Host資格へ自動的に転用しない。
 
+### 15.6 発見応答の読取専用範囲と、実際に渡せる引数を区別する
+
+[TAI #672](https://github.com/hat47x/tai-pleroma/pull/672)で、失敗・不正形式・同名重複のCLI発見を判定保留にする修正がmainへ統合された。ただし従来の`discover()`は、構造が正しければ`scope`が欠けていても、あるいは別の範囲を指していても、掲載されたCLIを応答Pathの検査対象にできた。Skill本文の読み取り専用という記述だけでは、別範囲のコマンドを安全な候補とみなせない。
+
+この限定検査器では、発見応答が**`scope: selected-read-only-commands`と明示している場合だけ**次の判定に進める。さらに検査器が実際に供給するのは`-workspace`であるため、`-world`が必須のコマンドを`-workspace`で代行しない。合成D18（別scope）、D19（scope欠落）はDiscovery全体を`tool-unavailable`に保留し、D22（world必須）は`PATH_CLAIM_NEEDS_ARGUMENTS`に留める。既存D15〜17の形式検査、D20/21の複数コマンド帰属、8つの採点指標は変更しない。
+
+これは**CLI自身が宣言した範囲と、検査器が持つ入力だけを照合する保守的な制限**であり、実OSの読取隔離やHostの認可を実装するものではない。限定Discoveryの`scope`が一致しても、個々のToolの実副作用、Sourceの現在Grant、外部AIへの開示を保証しない。
+
+| 反例 | 判定先 |
+| --- | --- |
+| **YK-54／D18**：形式の正しい`commands`に`scope: all-commands`がある | read-only限定発見ではないため未判定。TAI #488 |
+| **YK-55／D19**：`commands`に`scope`が無い | 実コマンドを推測・試行せず未判定。TAI #488 |
+| **YK-56／D22**：`-world`必須と広告されたCLIを、検査器の`-workspace`だけで試そうとする | Path検査を保留し、引数の一致を実Product Ownerへ戻す。TAI #488／TEI #2605 |
+
+**他製品の現在地**：[TEI #4945](https://github.com/hat47x/tei-platform/pull/4945)はWails配布に含むWorkbench Assetを正規ビルドから更新し、対象HEADのEmbedded Bundle CIは成功。ただしWindows WebView2 Smokeは失敗しており、Stage1→Stage2実セルフビルドを合格としない。[SUI #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)はSource専用の内部認可後に原文を再読し、UTF-8選択バイト範囲とDigestを照合する限定Product内部実装。対象HEADの単体／MCP・Agent回帰CIは成功だが、同文二箇所の選択Digestは同じであり、Occurrenceの一意性・保存後CAS・正式Raw Provider／外部開示は未成立。
+
+**次の受入順**：TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（適格0/4）とTEI #4583の実Windows Stage1→Stage2を独立P0とする。TEI #4714の公開Manual一件Source-backed Read、R2正式BuilderとR3 pure Function/Provider、SUI #3441の正式Host/Source Bindingは別Ownerの並行検収とし、初回固定H2/H3比較の追加必須条件にしない。新しい実Product/Harness E2E、Owner意味受理は**NOT RUN**。
