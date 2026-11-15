@@ -1092,3 +1092,17 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 他製品で成熟した前段として、[TEI #4900](https://github.com/hat47x/tei-platform/pull/4900)の旧Validation対Rule Markdownの型付き意味比較と、[#4901](https://github.com/hat47x/tei-platform/pull/4901)の合成SourceによるEvaluator/Read Footprint照合はmainへ入った。ただし#4900のCIは未完了、#4901は複数failureを含み、Providerの実入力や生成Go・Studio・Owner意味受理を完成扱いしない。既存[横断実証計画§54](harness-cross-ui-session-probe-2026-11-14.md)へ同じRule/Sourceを渡す場合も、**Command発見→現在Source→型付き意味→実入力→独立Consumer**を別々に判定する。
 
 **優先順位**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（適格0/4）とTEI #4583の非Plugin Stage1→Stage2は独立P0。TEI #4714の一件公開Manual ReadとSUI #3441の本番Source Provider/Grantは別Ownerの並行検収であり、初回固定H2/H3比較の条件を変更しない。中央Registry／Host／Runner／第二Expectedは追加しない。新たな外部Harness試験・本番Provider・Owner意味受理は**NOT RUN**。
+
+### 55.2 同じ行に複数のCLIがある場合は、応答Pathをどちらにも帰属させない
+
+既存[Skill検査器](../../integrations/tools/skill_selection_check.py)は、同じ行で複数の`tei`コマンドに言及し、後続に`result.entries[].subject.kind/id`などの応答Pathを書くと、**最後に見つかった既知コマンド**の実行結果を用いてPathを検査し得た。途中に未発見の子コマンドを挟む場合は、先に見つかったコマンドの結果を使うこともある。この結び付けは文書の記述順からは確定しない。
+
+新しい`PATH_CLAIM_COMMAND_AMBIGUOUS`（`UNJUDGED`）では、同じ行にCLIコマンドが二つ以上言及されたとき、その行のPathを**いずれのコマンドでも検査・代行実行しない**。合成D20では発見済みコマンド二つ、D21では既知の`model catalog`と未知の`model imagined`を比較し、後者の子コマンド資格も保留する。既存の実Tool Discovery、8つの選択採点指標、封印Expectedは変えない。これは行単位の保守的な判定であり、自然言語を解析して各Pathの所有者を推定する仕組みではない。
+
+**横断成果との関係**：[TEI #4911](https://github.com/hat47x/tei-platform/pull/4911)は、製品で選択した`tei.rule-authoring/v0`の正値Ruleを既存`semantic.Validation`から**Goの分岐処理として生成**する局所R1実装がmainに入った。`value.Sign() > 0`を含む生成Sourceと別Processの`go run`による確認用テストが存在する。これは固定の出力値や既存Evaluatorの丸投げとは異なるが、PR exact HEADには失敗・取消しのCIもあり、全体Greenは未確認。正式Builderの成果物への組込み、Plugin選択・Lock、実Providerのデータ読取、通常CLI/Studio/Harness Consumer、Owner意味受理は依然別資格である。[TEI→Harness実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)へR0→R1→R2以降の順序を接続する。
+
+[SUI #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)はmain統合済みで、Source内部Readの主体ID不一致と、正規の外部PDP Adapterを偽装した実装の拒否を追加した。当該HEADの二つのCIはsuccessだが、実Host/Policy/Raw Providerの保証ではない。YICのSkillからSource読取・外部開示の認可を補完してはならない。
+
+**追加反例**：YK-50＝同じ行の二つの発見済みToolが一つのJSON Pathを説明する場合、帰属不明として`UNJUDGED`（TAI #488）。YK-51＝発見済みToolと未確認の子Toolが同じ行にあり、前者の成功Pathを後者の成功とみなす場合、帰属不明と子未確認の両方を残す（TAI #488/#271）。
+
+**優先度は不変**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（適格0/4）とTEI #4583のWindows非Plugin Stage1→Stage2を独立P0とする。TEI #4714の公開Manual一件Readと、#4911 R1から正式Builder/Provider/CLIへつなぐR2/R3は別Ownerで並行する。今回は既存検査器の合成負例と計画への反映に限り、外部Harness/実Provider/正式Owner受理は**NOT RUN**。

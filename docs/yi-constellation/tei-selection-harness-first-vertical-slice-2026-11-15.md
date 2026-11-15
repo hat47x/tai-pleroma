@@ -208,3 +208,13 @@ TEI [Pin Draft #4597](https://github.com/hat47x/tei-platform/pull/4597) の専�
 - **後続接合**：S0→S1とH0→H1の二レーンを独立に進め、S1/H1が各自合格してから同一Subjectの一往復を試す。正式なRelation Pin、Writable Editor、Quick Fix、二Harness比較は別の採用判断。
 
 **完了したこと**：実行票、Pinの実Workbench Source配線、既存Hostの背景読取を分離した関数・Fake Host単体テストの追加、静的Source照合。**未検収**：新HEADのNode24テスト・型検査、生成/埋込JS一致、実DOM/Windows Host、Root/Grant/Disclosure、外部Harnessの完全Replyと元Subject帰着、Owner意味受理。両PRはDraft・未マージで、既存P0を変更しない。
+
+## 生成したGoの正値判断を、公開Entry・Provider実読取と混同しない（2026年11月15日）
+
+[TEI #4911](https://github.com/hat47x/tei-platform/pull/4911)で、内蔵Rule Markdownの実`Workspace.Load`から`sales.order_line.quantity_positive`（`std.decimal`）を選択し、同一LoadのSource Indexで元Rule ID位置を照合してから、既存`semantic.Validation`を**独立したGo判断分岐**へLoweringする`validationgen.GeneratePositive`とGoテストがmainに追加された。生成結果には`value.Sign() > 0`があり、正数／0／負数／NULL／入力欠損を別Processの`go run`で確認するテストコードが存在する。単なる`validationeval.Evaluate`呼出しのDelegateとは区別できる。未対応Rule種別・型・Relationは拒否する。対象PRのCIにはfailure/cancelledが残るため、今回の照合は**実コードの存在**であり、対象HEADの全Goテスト成功を意味しない。
+
+次のOwner検収は、**R0** 選択言語と元byte・完全な型付き意味、**R1** 生成Goの判断分岐と固定Expected、**R2** 正式Builderが該当Artifactを同じWorld/Model/Generator Revisionから生成・収録した事実、**R3** 実Provider/DBを使って通常CLIから同じRuleを実行した結果・失敗時の部分作用、**R4** 配布済みStudio/外部Consumerでの元Subject・現在Grantを伴う受領、に分ける。同じ`Rule ID`やテスト用の値一致だけで次段階を合格にしない。
+
+既存の[Skill構成計画§55.2](harness-skill-plugin-plan-2026-11-02.md)のD20/D21は、同じ文章に複数CLIが載る場合に各応答Pathの帰属を証明できない反例である。単に`tei`の存在、生成Goファイルの存在、単発`go run`の成功を根拠に、公開された製品CLI入口／外部Harness実Tool Replyを作り出さない。製品側R2/R3のOwnerはTEI #4495、公開文書ReadはTEI #4714、Windows Stage1→Stage2はTEI #4583。TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）は独立P0を維持する。
+
+**今回の確認**：Github mainの`internal/semantic/validationgen/positive.go`と製品Goテストの静的照合。実Builder/Provider/Windows/外部Harness実行、Owner意味受理は**NOT RUN**。
