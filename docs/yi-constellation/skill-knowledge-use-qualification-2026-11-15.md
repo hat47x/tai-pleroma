@@ -327,7 +327,7 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 
 ### 15.2 SUIのSource読取ゲートとAI並行作業の引渡し
 
-[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は現在未マージで、実装候補はMember/現行Session→Server側Source Authority→現在Policy Binding→Source専用PDP→Raw bytes/digest照合を**一回の内部read**につなぐ。Source Authority・認証Session・Policy Resolverはテストダブルであり、製品HTTP Route／正式DB／組織PDP／外部公開許可は未成立。従って、内部の`read`試験が通ってもSkillから本番Raw Sourceを取得・再開示してよいことにはならない。
+[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)はmain統合済みで、限定内部ゲートはMember/現行Session→Server側Source Authority→現在Policy Binding→Source専用PDP→Raw bytes/digest照合を**一回の内部read**につなぐ。Source Authority・認証Session・Policy Resolverはテストダブルであり、製品HTTP Route／正式DB／組織PDP／外部公開許可は未成立。従って、内部の`read`試験が通ってもSkillから本番Raw Sourceを取得・再開示してよいことにはならない。
 
 [TAI main統合済み #661](https://github.com/hat47x/tai-pleroma/pull/661)の複数AI／branch統合試験計画には、読めたSource・正しく終了したTool操作・実Consumerが受領した成果を**別の証拠**として渡す。終了コード、JSON本文、実Worktree差分、現在HEADのCI、Owner採否を順に確認し、失敗時の`result`や旧PRのReceiptを成功証拠へ昇格しない。Skill評価器の修正は、並行Agentの自動マージ権限や独立Challengerの代わりではない。
 
@@ -343,4 +343,22 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 
 **実行順は維持**：TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2 Windows Desktopを独立P0として継続。TEI #4714の公開Manual一件の本物のRead、SUI #3441のSource用Host認可を並行で進め、初回固定H2/H3の追加Blocking条件にしない。Skill B0/B1/B2の効果比較は受入可能なProduct Readが得られた別Trialで判定する。
 
-**今回の実証範囲**：TAIの既存合成Checker・自己試験・CI接続、TEI mainの対象を限定したGo Reader、SUI未マージ候補とTAIの統合計画を整理したもの。新しいTEI公開Manual Read、SUI本番Source API、実OS隔離、実四Session、外部Consumer受領、Owner意味受理は**NOT RUN**。
+**今回の実証範囲**：TAIの既存合成Checker・自己試験・CI接続、TEI mainの対象を限定したGo Reader、SUI mainの限定内部Source読取ゲートとTAIの統合計画を整理したもの。新しいTEI公開Manual Read、SUI本番Source API、実OS隔離、実四Session、外部Consumer受領、Owner意味受理は**NOT RUN**。
+
+### 15.4 機能一覧の取得に失敗したときは、存在確認も保留する
+
+従来のD11/D12は、Discoveryが成功した後に個別read-onlyコマンドの失敗結果を拒否する。一方、検査器の`discover()`には、`tei commands`が**終了コード0でも`ok: false`を返す**場合や、コマンド一覧が配列でない場合、同じ名前が重複する場合に、それらを発見済みCommandとして数え得る問題があった。最初の発見が不適格なら、後続のSkill記述を「ドリフト」「正常」と断定できない。
+
+既存`integrations/tools/skill_selection_check.py`だけで、Discovery JSONを受け取る際に明示的`ok: false`、不正な一覧形式／名前／必須Flag、コマンド名の重複を拒否する。出力は既存の`tool-unavailable`と「発見不能または不適格／未判定」を維持し、**コマンドの不存在・Toolへの実到達・許可を証明したことにしない**。失敗本文・未知のCommand名・生Sourceを外部モデル向け出力へコピーしない。新しいDiscovery Checker／Agent Routerは作らない。
+
+| 追加した合成負例 | 期待結果 | Owner |
+| --- | --- | --- |
+| **YK-43 / D13**：`tei commands`がExit 0と`ok: false`を返し、もっともらしい`commands`配列が残る | Discoveryは不適格、Skillの成功Pathは未判定 | TAI #488 |
+| **YK-44 / D14**：`commands`が配列でなくObject | Python例外や偽のCommand発見ではなく、未判定 | TAI #488 |
+| **YK-45 / D15**：同名Commandが二件あり必須Flagが互いに矛盾 | 後勝ち上書きせずDiscovery未判定 | TAI #488 |
+
+現行TEIでは、`db-introspect`のCLI宣言・Helpと実Dispatchの不一致が実ビルドを妨げ、[修正候補 #4895](https://github.com/hat47x/tei-platform/pull/4895)と[#4896](https://github.com/hat47x/tei-platform/pull/4896)が並行検討されている（照合時点ではいずれも未マージ）。**発見可能なコマンド名と、実CLIが起動・拒否・正常応答できることは別**であり、候補の一方をYIC側で勝手に選んだり成功とみなしたりしない。
+
+関連する成熟成果として、[TEI main #4900](https://github.com/hat47x/tei-platform/pull/4900)には従来ValidationとMarkdown Ruleの型付き意味同値・同一ID二重宣言拒否の回帰があり、[main #4901](https://github.com/hat47x/tei-platform/pull/4901)には選択Ruleを既存Evaluatorへ渡す合成入力Read FootprintのGo回帰がある。これは**実Providerの入力網羅・実DB・公開Entry/CLI・Owner意味受理ではない**。また、SUI [main #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)の内部readゲートは[#3456](https://github.com/hat47x/sui-sensemaking/pull/3456)で既存CIの限定成功（backend-contract 413 PASS等）が確認されたが、正式Source Provider／Export Grantは未接続。
+
+**検収状態**：今回のYIC差分には合成D13〜D15を既存`--self-test`へ追加する。実TEI BinaryのDiscovery、実DB/Host、外部Harness Egress、現在のSource開示、Owner受理は新規に**NOT RUN**。独立P0のTAI #168 G0/G1/G2とH2/H3比較適格0/4、TEI #4583 Stage1→Stage2実Windowsは変更しない。
