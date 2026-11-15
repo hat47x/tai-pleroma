@@ -1784,7 +1784,7 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 
 他の開発レーンの[TEI main #4911](https://github.com/hat47x/tei-platform/pull/4911)により、前節の「既存Evaluatorへ渡す」に加え、**選択済みの`semantic.Validation`から実際の条件分岐を持つGo Sourceを生成する局所R1**が実装された。`internal/semantic/validationgen/positive.go`の`GeneratePositive`は、解決済み`std.decimal`の`positive`に限って`value.Sign() > 0`を含むGoを出力し、未対応Kind・Relation・型や不完全なRuleを拒否する。既存`validationeval.Source/Result`を使うため、第二の業務Meaning/Runtimeは作らない。
 
-### 55.1 同じRuleの四つの到達点と、次の受入
+### 55.1 同じRuleの各到達点と、次の受入
 
 | 段階 | 現行Sourceから確認できる実績／次の証拠 | まだ成立していないもの |
 | --- | --- | --- |
@@ -1813,14 +1813,6 @@ AIへの最小の仕事は、利用者が選んだ一Ruleの意味・根拠・�
 
 したがって、製品Ownerへ渡すR2の最小受入は、(1) 対象Workspace/World・元Rule Source/Revision・Generator/Toolchainを固定する、(2) 正式Builder選択と実際に消費したGo byte・依存Packageを別々に採る、(3) 未使用/別Builder/一因子Source変更で古いPlanの拒否を確認する、(4) 結果Artifact/Lock/Consumerの同一Attemptを照合する、の順序とする。Builderを参照実装から実製品へ移す前に、新Runner/Artifact Storeを作らない。R3の公開pure Function／実ProviderへのInvocationは別の独立試験にする。`tei self-build`で実Binaryを生成・起動できたことと、選択ProviderがそのRuleの入力を実取得し、現在の権限で公開Entryを実行したことは別証拠である。
 
-### 55.5 Go生成の「同じ出力」と、実Buildの「同じ入力」は別の資格
-
-[TEI mainの異表層Rule回帰](https://github.com/hat47x/tei-platform/blob/main/internal/semantic/validationgen/positive_surface_identity_test.go)は、異なる原Sourceが同一の生成Goへ到達し得ることと、出典の失効が独立することを扱う。[Go AST観測回帰](https://github.com/hat47x/tei-platform/blob/main/internal/semantic/validationgen/positive_ast_projection_test.go)は、生成Functionと評価Functionを分け、Read Attribute・分岐・NULL/エラー処理のGo byte位置を検査する。**これは原DSLの再構成や業務意味の同値を自動証明したものではない**。同じ生成Go byteをBuildに使えることと、現在選択された元Source/Generator/Language契約の資格は切り離す。
-
-[TEI main #5009](https://github.com/hat47x/tei-platform/pull/5009)の試験は、生成Go→製品`tei self-build`→既存Builder→独立Binaryという実経路を検査する。実行条件はLinux/amd64で、`testing.Short()`・Toolchain不在ではSkipするため、**SkippedをPASSに数えない**。次の製品R2-P受入では、同一Attemptで(a)元Markdown byte/Reader契約/Model Revision、(b)Generator実装版とGenerated Go byte、(c)Build Intentが列挙した実Go Package/Dependency Closure、(d)Artifact/Lockと独立Binaryが使った入力を突き合わせる。説明文だけの変更、Generatorだけの変更、元Source A→B→Aを個別に失効反例とし、現在の意味とBuild結果が同じでも古いSource資格を復活させない。
-
-実施先はTEIの既存R2-P Owner #4544/#2595とProduct Build実行票であり、YICではその**受入済みの範囲をread-onlyの短い説明に投影するだけ**とする。R3純粋FunctionのEntry/Provider、Owner Meaning、外部Disclosure、Studio Stage1→Stage2は別の合格欄に残す。初回TAI #168のH2/H3四Slotを増やさない。
-
 ### 55.4 標準Data・Operation・Flowに投影しても、実行可能性を加算しない
 
 [TEI main #4924](https://github.com/hat47x/tei-platform/pull/4924)の設計は、同じRuleをread-only Flow Node・型付きPort・UI Componentとして表示する場合も、**元の標準Data、Operation、Source、独立Expectedを共有し、表示・編集・生成・実行のOwnerを分ける**。採用候補は既存Node/CanvasとProductの型付きOperationへのProjectionであり、YIC側で汎用Node Runtimeや別業務DSLを用意することではない。CLI上のNode候補が表示できても、HTTPサービス公開、実Provider実行、Windows Studio受領を自動的に認めない。
@@ -1828,6 +1820,14 @@ AIへの最小の仕事は、利用者が選んだ一Ruleの意味・根拠・�
 SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSource用本人識別・PDP Adapterのすり替え拒否が実装され、[main #3458](https://github.com/hat47x/sui-sensemaking/pull/3458)は既存保存領域とSourceのRaw Capture/Current Grantを分ける**Fit/Gap文書**を統合した。既存NASの置換可能なBlobと一回の内部Source readを、実Snapshot不変保存・本番Source Provider・二次開示許可へ昇格させない。TEI→SUI/SHO/SEI/EKI/YICのHandoffでは、別Productへ渡す元Sourceの現在資格を再確認する§54.4の停止線を維持する。
 
 **この節の確認範囲**：TEI #4930の製品Go回帰Sourceの存在とPR採否、#4927/#4934の未マージ状態、#4938/#4924の設計統合、SUI #3457/#3458の限定的な進展に基づく**文書上の引渡し**。新しいGo Binary/Builder/CLI/Windows/実Host/外部Harness E2Eは**NOT RUN**。TAI #168実OS G0/G1/G2とH2/H3比較適格0/4、TEI #4583実Windows Stage1→Stage2は引き続き独立P0。
+
+### 55.5 Go生成の「同じ出力」と、実Buildの「同じ入力」は別の資格
+
+[TEI mainの異表層Rule回帰](https://github.com/hat47x/tei-platform/blob/main/internal/semantic/validationgen/positive_surface_identity_test.go)は、異なる原Sourceが同一の生成Goへ到達し得ることと、出典の失効が独立することを扱う。[Go AST観測回帰](https://github.com/hat47x/tei-platform/blob/main/internal/semantic/validationgen/positive_ast_projection_test.go)は、生成Functionと評価Functionを分け、Read Attribute・分岐・NULL/エラー処理のGo byte位置を検査する。**これは原DSLの再構成や業務意味の同値を自動証明したものではない**。同じ生成Go byteをBuildに使えることと、現在選択された元Source/Generator/Language契約の資格は切り離す。
+
+[TEI main #5009](https://github.com/hat47x/tei-platform/pull/5009)の試験は、生成Go→製品`tei self-build`→既存Builder→独立Binaryという実経路を検査する。実行条件はLinux/amd64で、`testing.Short()`・Toolchain不在ではSkipするため、**SkippedをPASSに数えない**。次の製品R2-P受入では、同一Attemptで(a)元Markdown byte/Reader契約/Model Revision、(b)Generator実装版とGenerated Go byte、(c)Build Intentが列挙した実Go Package/Dependency Closure、(d)Artifact/Lockと独立Binaryが使った入力を突き合わせる。説明文だけの変更、Generatorだけの変更、元Source A→B→Aを個別に失効反例とし、現在の意味とBuild結果が同じでも古いSource資格を復活させない。
+
+実施先はTEIの既存R2-P Owner #4544/#2595とProduct Build実行票であり、YICではその**受入済みの範囲をread-onlyの短い説明に投影するだけ**とする。R3純粋FunctionのEntry/Provider、Owner Meaning、外部Disclosure、Studio Stage1→Stage2は別の合格欄に残す。初回TAI #168のH2/H3四Slotを増やさない。
 
 ## 56. 意味・原文の位置・配布物の一致を分けて検証する
 
