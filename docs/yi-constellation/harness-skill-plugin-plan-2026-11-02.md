@@ -1072,3 +1072,15 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **他製品との位置付け**：[TEI #4853](https://github.com/hat47x/tei-platform/pull/4853)はmainへInspector/Source Index/Traceを実byteで照合する限定Go回帰を統合した。ただし当該HEADの多数のCIはfailureで、業務意味受理・正式Markdown Reader・Provider実行・全体HealthのPASSではない。[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)の公開Manual/CLI交差試験、[#4857](https://github.com/hat47x/tei-platform/pull/4857)のLanguage Reference/製品Loader未束縛対照はともにclosed／not mergedであり、現在能力の正本へ繰り上げない。[TAI #659](https://github.com/hat47x/tai-pleroma/pull/659)で追加されたAI委任・別Harness引継ぎの計画には、実Capabilityの事前確認と履歴／現在実行の資格分離として還元する。新しいHarness Routerや中央権限器は設けない。
 
 **次の作業**：YK-34〜37をTAI #488・TEI #4714/#2621へ引き渡し、独立Expectedに対する正しい`UNJUDGED`と正常なCommand発見を比較する。Product一件Manual ReadはTEI #4714のD1-1〜3をOwnerとして並行開発し、成立した後でB0 Tool-onlyとB1 Product Skillを別Trialで比較。実OS read-deny→送出→完全Reply→新独立H2/H3四Slot（TAI #168、適格0/4）とTEI #4583の非Plugin Stage1→Stage2 Windowsは**独立P0のまま**。本追補は実Product Doc Read・Native Harness比較・Owner意味受理を伴わず、その新しいE2Eは**NOT RUN**。
+
+## 55. 2026-11-15：Toolの失敗応答を採用せず、限定Markdown Readerの実績を反映
+
+[Skill実行・受入票§15](skill-knowledge-use-qualification-2026-11-15.md)に、既存`skill_selection_check.py`の**実CLIの失敗応答を成功JSON Pathとして検査し得る問題**と、現在のTEI／SUI／TAIの進展を反映した。
+
+**実装**：終了コード非0、または終了コード0でも明示的`ok: false`なら、JSON中の`result`の形を用いてSkill文書の成功Pathを裏付けない。`COMMAND_RESULT_NOT_ACCEPTED`（`UNJUDGED`）を返し、Exit/理由区分を保持するが、失敗本文や隠れたSourceを診断に転載しない。合成D11/D12を既存`--self-test`へ追加して`tai-reference`へ渡す。前回[TAI #660](https://github.com/hat47x/tai-pleroma/pull/660)のexact HEADは**completed/success**だったが、今回の追加試験の資格は今回HEADのCIでのみ決める。旧8指標／封印Expected／歴史的Trialは不変。
+
+**TEIのReader到達点を更新**：[main `7921b005`](https://github.com/hat47x/tei-platform/commit/7921b005a44d325983d24ca2b8b58b0737dd778d)では、`tei.rule-authoring/v0`を明示選択して`*.tei.md`のRule領域を既存`semantic.Validation`とSource byte anchorへ読み込む、対象限定の**製品内蔵Language Reader**が入った。これは一部の`*.tei.md`に対する実Workspace Loader接続である。一般Graph Reader、外部Language Plugin、意味Owner受理、公開Plugin Doc Reader、実Provider Call／セルフビルドとは別の受入にする。[TEI #4878](https://github.com/hat47x/tei-platform/pull/4878)の設計PRは未マージでも、実main Sourceの到達点は認定する。
+
+**SUI・横断AIの実装境界**：[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)の現在Source Authority→Policy→PDP→Raw再読をつなぐ候補は**未マージ**・認証／Authority／Policyにテストダブルを使う内部readであり、正式本番Host Grantや外部Disclosureへ昇格しない。main統合済み[TAI #661](https://github.com/hat47x/tai-pleroma/pull/661)の並列AI/branch統合試験へは、CLI受入・Source現在性・独立Consumer・mainのCI・Owner判断を独立列として引き渡す。新しい中央Runner/権限正本/第二Checker/自動マージ器は設けない。
+
+**担当と実行順**：YK-38〜42を既存TAI #488/#233/#422、TEI #4714/#2621、SUI #3441/#232へ戻す。独立P0はTAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2実Windows Desktop。公開Manualの一件Product Readは並行するが初回固定比較の新Blockingにはしない。今回の新Product/Harness E2E・実Provider Effect・Owner意味受理は**NOT RUN**。

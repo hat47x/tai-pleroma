@@ -174,6 +174,15 @@ def check_skill(tei, workspace, skill_texts):
                     code, out = run_tei(tei, args)
                     outputs[line_cmd] = (code, parse_json(out))
                 code, doc = outputs[line_cmd]
+                if code != 0 or (isinstance(doc, dict) and doc.get("ok") is False):
+                    # Error responses can retain a result-shaped payload. It
+                    # must not validate a documented success path, even when
+                    # the JSON structure happens to match.
+                    findings.append({"class": "UNJUDGED", "code": "COMMAND_RESULT_NOT_ACCEPTED",
+                                     "doc": label, "command": line_cmd, "claim": claim,
+                                     "exit": code,
+                                     "reason": "cli-nonzero" if code != 0 else "response-ok-false"})
+                    continue
                 if doc is None:
                     findings.append({"class": "UNJUDGED", "code": "COMMAND_OUTPUT_NOT_JSON",
                                      "doc": label, "detail": f"{line_cmd} exit={code}"})
@@ -201,6 +210,7 @@ def check_skill(tei, workspace, skill_texts):
                    "A scoped commands response cannot prove that omitted commands do not exist.",
                    "Usage-only commands are not demonstrated callable or authorized.",
                    "A usage parent name alone does not establish its subcommands.",
+                   "Nonzero CLI exits and explicit ok=false cannot prove a success-response path.",
                    "A PASS here is not a Harness, Loader, Grant or model result."],
     }
 
@@ -276,11 +286,18 @@ if a == ["commands"]:
     print(json.dumps({"scope": "selected-read-only-commands", "commands": [
         {"name": "model catalog", "requiredFlags": ["workspace"]},
         {"name": "inspect", "requiredFlags": ["workspace", "subject-kind", "subject-id"]},
-        {"name": "source-index", "requiredFlags": ["workspace"]}]}))
+        {"name": "source-index", "requiredFlags": ["workspace"]},
+        {"name": "read-failed", "requiredFlags": ["workspace"]},
+        {"name": "read-softfail", "requiredFlags": ["workspace"]}]}))
+elif a and a[0] == "read-failed":
+    print(json.dumps({"ok": True, "result": {"entries": [{"subject": {"kind": "k", "id": "i"}}]}}))
+    sys.exit(3)
+elif a and a[0] == "read-softfail":
+    print(json.dumps({"ok": False, "result": {"entries": [{"subject": {"kind": "k", "id": "i"}}]}}))
 elif a[:2] == ["model", "catalog"]:
     print(json.dumps({"ok": True, "result": {"entries": [{"subject": {"kind": "k", "id": "i"}}]}}))
 else:
-    print("usage: tei <commands|inspect|model|model catalog|source-index|hidden-example>"); sys.exit(2)
+    print("usage: tei <commands|inspect|model|model catalog|source-index|hidden-example|read-failed|read-softfail>"); sys.exit(2)
 ''')
         tei = [sys.executable, "-I", str(fake)]
         drift = check_skill(tei, tmp, [("S", "Run `go run ./cmd/tei model catalog -workspace W`; pick `entries[].subject.kind/id`.")])
@@ -298,8 +315,8 @@ else:
                                                 and f["class"] == "UNJUDGED"
                                                 for f in usage_only["findings"]))
         check("D7 scoped discovery is not exhaustive",
-              usage_only["discovery"]["discoveredCommands"] == 3
-              and usage_only["discovery"]["usageCommands"] == 6
+              usage_only["discovery"]["discoveredCommands"] == 5
+              and usage_only["discovery"]["usageCommands"] == 8
               and not [f for f in usage_only["findings"] if f["class"] == "DRIFT"])
         unknown_subcommand = check_skill(tei, tmp, [("S", "Try `tei model imagined`.")])
         check("D8 usage parent does not prove a subcommand",
@@ -314,6 +331,20 @@ else:
         check("D10 actual discovered child stays discovered",
               exact_usage_subcommand["skillMentionsDiscovered"] == ["model catalog"]
               and not [f for f in exact_usage_subcommand["findings"] if f["class"] == "DRIFT"])
+        bad_exit = check_skill(tei, tmp, [("S", "`tei read-failed -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D11 nonzero result-shaped JSON cannot prove a success path",
+              any(f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
+                  and f["class"] == "UNJUDGED" and f["reason"] == "cli-nonzero"
+                  and f["exit"] == 3 for f in bad_exit["findings"])
+              and not any(f["code"] == "SKILL_PATH_ABSENT_AT_DOCUMENTED_LOCATION"
+                          for f in bad_exit["findings"]))
+        soft_failure = check_skill(tei, tmp, [("S", "`tei read-softfail -workspace W` returns `entries[].subject.kind/id`.")])
+        check("D12 ok=false JSON with exit zero cannot prove a success path",
+              any(f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
+                  and f["class"] == "UNJUDGED" and f["reason"] == "response-ok-false"
+                  and f["exit"] == 0 for f in soft_failure["findings"])
+              and not any(f["code"] == "SKILL_PATH_ABSENT_AT_DOCUMENTED_LOCATION"
+                          for f in soft_failure["findings"]))
         gone = check_skill(["/no/such/tei"], tmp, [("S", "`tei inspect`")])
         check("D4 absent tool judges nothing", gone["status"] == "tool-unavailable" and not gone["findings"])
         need_args = check_skill(tei, tmp, [("S", "`tei inspect -workspace W` gives `entries[].subject.kind/id`.")])
