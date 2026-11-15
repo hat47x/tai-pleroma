@@ -1177,7 +1177,7 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 
 [TAI #684](https://github.com/hat47x/tai-pleroma/pull/684)により、2026年11月の`SUI-consumer-mapping-2026-11-06.json`は、元Artifact `readingOrder` 2件が当時のSUI Consumerで0件になった**履歴上の失敗証拠**として検収されるようになった。対象HEADの既存Python CIではReceipt単体・全件検査が成功し、Checkerの失敗は解消した。ただし当該Productの現行Consumerが修正されたことを示す新Attemptは存在しない。
 
-再実行用の既存[Consumer Mapping Checker](../../integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py)には、過去の`FAIL`記録をそのまま上書きできる危険があった。また実行コマンドを記録するとき、元の旧Receiptの`--out`が固定文字列で埋め込まれ、異なる出力先や利用したコードと一致しない。今回は同じCheckerを次のように限定して改める。**過去Receiptの出力先は拒否**し、別の既存ファイルも上書きしない。新規出力先を指定し、そのファイルを排他的に新規作成する。Sourceの原ArtifactのSHA-256、実際に選択したSUI Consumerの二つのPythonモジュールbyte指紋、Checker自身のbyte指紋、Python実行環境・実行引数を新Receiptに記録する。実行中にArtifactまたは二つのSUIモジュールのbyteが変わったら保存を拒否する。
+再実行用の既存[Consumer Mapping Checker](../../integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py)には、過去の`FAIL`記録をそのまま上書きできる危険があった。また実行コマンドを記録するとき、元の旧Receiptの`--out`が固定文字列で埋め込まれ、異なる出力先や利用したコードと一致しない。今回は同じCheckerを次のように限定して改める。**過去Receiptの出力先は拒否**し、別の既存ファイルも上書きしない。新規出力先を指定し、そのファイルを排他的に新規作成する。Sourceの原ArtifactのSHA-256、実際に選択したSUI Consumerの二つのPythonモジュールbyte指紋、Checker自身のbyte指紋、Python実行環境・実行引数を新Receiptに記録する。Consumer実行前後の照合でArtifactまたは二つのSUIモジュールのbyteが一致しなければ保存を拒否する。ただし、途中でA→B→Aと戻った変更や、列挙していない依存ファイルの変更まで検出するものではない。
 
 この検査では、`readingOrder`を**件数だけでなくCard IDの並びも含めて一致**させる。同じ2件でも順序が逆なら`FAIL`であり、1枚目にはない`sources`などの属性も、Collection全件のキー和集合で消失を検出する。したがってSourceから投影した意味の「要素数が合っている」だけでは受け入れない。Product Consumer自体の正式Schema、現在のDB権限、元データとの保存後CAS、外部開示Grantをこの参照検査が新たに決定するわけではない。
 
