@@ -1741,8 +1741,8 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 | --- | --- | --- |
 | **Productの対象と原文** | Go `internal/operations/inspect_capability_source_evidence_test.go`、`InspectSubject`と`TraceSubjectSources`。実Capabilityと原byte参照の回帰Sourceあり（TEI #4853/#4870） | 固定mainの実Binary/Goで読取と実Resultを取り、元Root・Source現在性とPermissionを別検査 |
 | **WorkbenchのSource位置候補** | `reference/tei-studio-workbench/source-locations.ts`はread-only S-LOC-0。返却されたIndex参照を最大20件に制限し、PathをURLやSource Open権限に変えない | 現行Go Host Replyを実Workbench Consumerで受け、Referenceだけで実Raw Readや完全性を主張しない |
-| **Pinと背景Reader** | Pin状態遷移はmain統合済みTEI #4597。実Host契約の`authorityLimits`をFake Replyに反映した#4869もmain統合済み | [#4876](https://github.com/hat47x/tei-platform/pull/4876)の参照HTMLボタンID一致は未マージ。現在Focus Bに影響を与えずAを背景再確認できる実DOMを別検収 |
-| **配布されたStudio** | 現mainの`reference/tei-studio-workbench/index.html`にはPin UIがあるが、`cmd/tei-studio/assets/workbench/index.html`にはまだ無い。配布Bundleの未同期は[TEI main #4879](https://github.com/hat47x/tei-platform/pull/4879)が検収計画として認識 | 同一HEADでNode24テスト/型検査→正式Build→dist/Embed byte一致→実Windows Wails/WebView2。旧#4812のclosed/unmerged成功を流用しない |
+| **Pinと背景Reader** | Pin状態遷移はmain統合済み#4597、Fake Hostの`authorityLimits`は#4869。さらに[TEI main #4920](https://github.com/hat47x/tei-platform/pull/4920)で旧Controllerとの二重イベント配線を除去し、`pin-current`／`inspect-pinned`／`unpin-current`と版表示のHTML契約を修復済み | 実Windows WebView2でAの背景取得中にFocus BのEditor/Graph/Noticeが不変であること、旧Reply/異Root/Grant拒否を別に検収。参照Node/DOMテストだけで実Host許可へ昇格しない |
+| **配布されたStudio** | [TEI main #4945](https://github.com/hat47x/tei-platform/pull/4945)でNode24/esbuildの正規生成結果をWails埋込へ同期済み。現mainの参照/埋込`index.html`と`style.css`はそれぞれ同一Git Blobで、Pin三操作と版表示を含む。対象HEADのEmbedded Bundle CIは成功 | **実Windows WebView2の表示・Host応答・A/B操作は別Consumer**。同HEADのWindows Smokeは失敗し、[修復候補 #4955](https://github.com/hat47x/tei-platform/pull/4955)は未マージ。Stage1→Stage2の実セルフビルドも別P0 |
 | **外部Harnessへ渡す対象** | Productが返した参照・制限を元に、用途・Audience・Recipient別の短いProjectionを作る設計。実送信を許可するGrantは別 | TAI #168の実OS G0→実送出G1→完全Reply G2が適格な後続Trialでのみ実送信。固定H2/H3四Slotに混ぜない |
 | **AI回答の元対象への帰着** | Pin・Activity・Native Session・Product Operationを別Identityとする既存契約 | 実完全Reply/独立Consumer/現在のPin・Root・Source・Grantを再確認。現在Focusへの自動ApplyやOwner意味受理を先取りしない |
 
@@ -1773,7 +1773,7 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 ### 54.5 現在の実装担当へ返す順序
 
 1. **TEI Product-local基線を二系列で再現**：既存`semantic-capability:sales.order.submit`の#4853/#4870と、内蔵Rule Markdownの二正例・四負例（#4890/#4891）をそれぞれ現在の固定HEADで実Go検証する。双方にSource/Traceがあっても**CapabilityとValidationを同じKind/公開Entryとして扱わない**。CLIに公開されていないReaderの操作をSkill説明から作らず、実CLIの到達と独立Consumerは別に確認する。
-2. **Studio表示の最小修復**：#4876相当のPin DOM配線を現行mainへ統合し、既存`authorityLimits`の拒否とB非干渉を確認する。次に正式生成→埋込byte→Windows Browserへ進む。実画面が旧い場合は配布未達と報告し、Referenceでの成功を補わない。
+2. **Studioの現在到達点から実Consumerへ進める**：#4920のPin配線修復と#4945の正規Bundle同期はmainに統合済み。次に同一HEADの実Windows WebView2でHost Catalog/Inspect、A背景再読中のB非干渉、Root/Grant/旧Reply拒否を別票で観測する。#4945のEmbedded CI成功をWindows SmokeやStage1→Stage2の合格へ流用しない。
 3. **外部Harness側の独立P0**：TAI #168 G0実OS Read-deny→G1 Egress→G2 Tool Reply完全性→新規独立H2/H3四Slot（比較適格**0/4**）を、その試験だけの固定Taskで進める。Product GUIの進捗・Rule Markdownをその四Slotの追加条件にしない。
 4. **後続の接合**：両レーンの適格な部分が確認できたら、公開一Capabilityの許可済みContext送出→完全Reply→元Subjectのread-only候補帰着を**新Trial**として行う。Plugin文書追加Fetch、異Product、二Harnessの可搬性、Source Writerはその後に独立評価する。
 5. **横断の再利用条件**：他の製品やPluginで同様の読取を実証した場合、意味受理/Current Grant/元Source位置/実Consumerを同じ観測票へ並べて比較する。ただし正本のProduct責務と権限をYICへ移転しない。
@@ -1819,3 +1819,28 @@ AIへの最小の仕事は、利用者が選んだ一Ruleの意味・根拠・�
 SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSource用本人識別・PDP Adapterのすり替え拒否が実装され、[main #3458](https://github.com/hat47x/sui-sensemaking/pull/3458)は既存保存領域とSourceのRaw Capture/Current Grantを分ける**Fit/Gap文書**を統合した。既存NASの置換可能なBlobと一回の内部Source readを、実Snapshot不変保存・本番Source Provider・二次開示許可へ昇格させない。TEI→SUI/SHO/SEI/EKI/YICのHandoffでは、別Productへ渡す元Sourceの現在資格を再確認する§54.4の停止線を維持する。
 
 **この節の確認範囲**：TEI #4930の製品Go回帰Sourceの存在とPR採否、#4927/#4934の未マージ状態、#4938/#4924の設計統合、SUI #3457/#3458の限定的な進展に基づく**文書上の引渡し**。新しいGo Binary/Builder/CLI/Windows/実Host/外部Harness E2Eは**NOT RUN**。TAI #168実OS G0/G1/G2とH2/H3比較適格0/4、TEI #4583実Windows Stage1→Stage2は引き続き独立P0。
+
+## 56. 同じ意味・同じ本文・同じ配布物を、それぞれ別の同一性として検収する
+
+同じ文字列やHashが返ったという一事実を、「同じ業務意味」「同じSource箇所」「現在その人が読める」「別Productに開示してよい」「実Consumerが受領した」の五つに拡大解釈しない。これは独立した新しいEvidence形式の提案ではなく、既存[製品間Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)のI（意図）／R（Product再解決）／P（開示許可）／T（送出）／C（Consumer）／H（Harness）の**各欄を埋める前に、何の同一性を確認したかを固定するための条件**である。
+
+### 56.1 三つの実例から確定する同一性の境界
+
+| 対照 | 一致してもよいもの | 取り違えてはいけないもの |
+| --- | --- | --- |
+| **TEIの二つのRule表現** | [main #4900](https://github.com/hat47x/tei-platform/pull/4900)で、明示選択Markdownと従来`.tei`のRuleが同じ型付き`semantic.Validation`になる回帰がある | 元ファイル・byte範囲・Source Revisionは別。さらに同じ生成Go byteと独立したSource失効の併存は[設計main #4972](https://github.com/hat47x/tei-platform/pull/4972)の次の反証で、[Go試験 #4973](https://github.com/hat47x/tei-platform/pull/4973)は**未マージ**。実証済みとして加算しない |
+| **SUIの同文二箇所** | [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)は、現在のSource専用内部read判定後に元UTF-8全体を読み直し、選択byte範囲とDigestを照合する。二箇所が同じ文面なら選択内容Hashも同じ | 選択の場所はbyte開始/終了と元Rawの同一性、現在のRoot/Scope/Grant、保存後CASで区別する。同じDigestからOccurrenceの一意性は導けない。対象HEADのbackend契約**436件PASS**は[main #3460](https://github.com/hat47x/sui-sensemaking/pull/3460)で確認されているが、正式Card Binding・本番Provider・二次開示は未成立 |
+| **Studioの参照/埋込Asset** | [main #4920](https://github.com/hat47x/tei-platform/pull/4920)/[#4945](https://github.com/hat47x/tei-platform/pull/4945)のW0-A/B後、参照と埋込のHTML/CSSは同一Git Blob。正規Embed検証も成功 | 実Windows WebView2がそのAssetを表示したか、実Hostの現在権限で対象を読めたかは別。Windows Smokeは一部失敗し、#4955の候補修復も未採用。W0-DのStage1→Stage2へ昇格しない |
+
+**横断の判断原則**：Product/RootとSubjectの識別、表示・抽出したOccurrence（元byte範囲と元Rawの指紋）、意味・Modelの版、Artifact/Toolchainの版、受領時点の許可と実Consumer Attemptは、**必要な問いに応じて独立に照合**する。全項目を埋めた万能PacketをYICが生成・保存するのではない。正本のSource Locator、Grant、Owner Meaning、Builder ReceiptはそれぞれのProductに残す。
+
+### 56.2 最初の負例を既存Ownerの受入票に渡す
+
+1. **同一文面・別Occurrence**：SUIの同文二箇所について選択Digestだけを渡した場合、どちらのbyte範囲かを特定したことにしない。Root/Sourceと正確な範囲が無ければRを`unqualified`とし、Pで別Productへの送出を認めない。元Sourceの現在readが許可済みでもExport/Disclosureは別判定。
+2. **同一意味・別Source**：TEIのMarkdownと旧Validationは型付き意味が等しくても、片方の説明文だけを変更したらその側のSource位置・版は再検証する。#4973の生成Go同byte・Source独立失効は未検収の期待として保持し、別表現への自動Source付替えや古いGrant再利用を拒否する。
+3. **同一配布byte・別実Consumer**：HTML/CSSのBlob一致またはEmbedded CI成功から、Pin Aを背景で読むときBの画面が不変、Window上のHost権限が有効、現在のRawが読めたと報告しない。実Windowsの画面・Host Reply・Root・Scopeを別に観測する。
+4. **明示的不明のまま縮退**：必要なSource範囲・現在Grant・Consumer受領が欠けたら、AIには許可済みの型付き意味やread-only概要だけを説明させ、Raw抜粋の再送・存在断定・書込提案の自動適用は止める。
+
+**実行順**：TEIの一RuleとSUIの一選択をそれぞれProduct側の固定Source/HE​ADで読む→各Ownerの独立Expected・現在Grant・結果の出所を確認→許可された場合に限りQH §10へ一件だけ接合する。実Productを横断するQH-P0、TAI #168の実OS G0/G1/G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の実Windows Stage1→Stage2は独立P0として維持する。
+
+**今回の資格**：TEI mainのPin/Asset BlobとPR採否、SUI #3459/#3460の実装・限定CI、TEI #4900/#4972と未統合#4973を照合した**計画更新**。新しいSUI/TEI製品間実Read/外部開示、Windows Host E2E、生成Go再実行、実Harness送受信、Owner意味受理は**NOT RUN**。新しいSource Store、同一性Registry、共通Grant/Host/Runnerは導入しない。
