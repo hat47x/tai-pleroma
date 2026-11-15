@@ -1,6 +1,6 @@
 # TEIで選んだ設計要素をAIへ渡して戻す：最初の実行票
 
-**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–51](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
+**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–52](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
 
 **途中で止まった場合**：送信ACK・Native Session ID・AIの回答・実Product Effectを同じ「完了」にまとめない。Source/Grantが変わったら送信前に再確認し、Tool Replyが不完全なら未受領、Sessionを再接続できなければ限定Activity Handoffへ縮退する。元ProductのEffectが不明な場合は再実行せず照会する。実際の表示例とOwner別の停止線は[横断計画§50](harness-cross-ui-session-probe-2026-11-14.md)を参照。
 
@@ -11,6 +11,8 @@ TEIで公開Reference Workspaceの一つの設計要素（例：semantic-data / 
 **実装前に確かめること**：実CLIで入口を発見できたこと、元Sourceの一意性と版が確かめられたこと、現在の共有・利用資格があること、実際にTool Replyを完全受領したこと、元ProductのConsumerが結果を読んだことを**別々に記録**する。Pluginの選択版／Lockが一致してもDocの帰属・Source Read・外部開示は未確認である（[TEI #4800](https://github.com/hat47x/tei-platform/pull/4800)、[#4714](https://github.com/hat47x/tei-platform/issues/4714)）。Workbench参照側の制限表示[TEI #4806](https://github.com/hat47x/tei-platform/pull/4806)は、実Windows配布と外部共有の許可を保証しない。詳細な再確認条件と負例は[横断計画§51](harness-cross-ui-session-probe-2026-11-14.md)に集約する。
 
 **進め方**：公開SubjectのProduct-only読取は、GUI PinやPlugin文書取得が未完成でも現行CUIで検証する。外部送信はTAI #168の適格な実Host・Tool条件が成立するまで保留し、固定H2/H3四Slotに別Task・新Skillを混ぜない。Native Sessionの再接続不能時は現在資格付きActivity情報だけを新Sessionへ引き継ぎ、旧Sessionの復旧と呼ばない。
+
+**AIへ委任する場合の追加判断**：最初に仕事の目的、元Issue/Source、独立Expected、変更可能な範囲を決めてから、必要な役割と実際に利用できるHarness/Model/Tool/契約経路を選ぶ。TEI [#2017](https://github.com/hat47x/tei-platform/issues/2017)のA0〜A4は**開発作業の権限区分**であって、外部AIへの送信やProductの実行Grantではない。最初の公開一Subject調査はA0のProduct-only／Tool-only基線を維持し、複数モデル・別Harnessへの引継ぎやSkillの増分比較は[横断計画§52](harness-cross-ui-session-probe-2026-11-14.md)の後続作業とする。TAI #168の固定H2/H3四試行のTask・モデル構成・独立Expectedは変更しない。
 
 ## 6つの操作と実行担当
 
