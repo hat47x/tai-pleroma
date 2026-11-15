@@ -1828,9 +1828,9 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 
 | 対照 | 一致してもよいもの | 取り違えてはいけないもの |
 | --- | --- | --- |
-| **TEIの二つのRule表現** | [main #4900](https://github.com/hat47x/tei-platform/pull/4900)で、明示選択Markdownと従来`.tei`のRuleが同じ型付き`semantic.Validation`になる回帰がある | 元ファイル・byte範囲・Source Revisionは別。さらに同じ生成Go byteと独立したSource失効の併存は[設計main #4972](https://github.com/hat47x/tei-platform/pull/4972)の次の反証で、[Go試験 #4973](https://github.com/hat47x/tei-platform/pull/4973)は**未マージ**。実証済みとして加算しない |
-| **SUIの同文二箇所** | [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)は、現在のSource専用内部read判定後に元UTF-8全体を読み直し、選択byte範囲とDigestを照合する。二箇所が同じ文面なら選択内容Hashも同じ | 選択の場所はbyte開始/終了と元Rawの同一性、現在のRoot/Scope/Grant、保存後CASで区別する。同じDigestからOccurrenceの一意性は導けない。対象HEADのbackend契約**436件PASS**は[main #3460](https://github.com/hat47x/sui-sensemaking/pull/3460)で確認されているが、正式Card Binding・本番Provider・二次開示は未成立 |
-| **Studioの参照/埋込Asset** | [main #4920](https://github.com/hat47x/tei-platform/pull/4920)/[#4945](https://github.com/hat47x/tei-platform/pull/4945)のW0-A/B後、参照と埋込のHTML/CSSは同一Git Blob。正規Embed検証も成功 | 実Windows WebView2がそのAssetを表示したか、実Hostの現在権限で対象を読めたかは別。Windows Smokeは一部失敗し、#4955の候補修復も未採用。W0-DのStage1→Stage2へ昇格しない |
+| **TEIの二つのRule表現** | [main #4900](https://github.com/hat47x/tei-platform/pull/4900)で、明示選択Markdownと従来`.tei`のRuleが同じ型付き`semantic.Validation`になる回帰がある | 元ファイル・byte範囲・Source Revisionは別。[Go試験 #4973](https://github.com/hat47x/tei-platform/pull/4973)は**未マージでクローズ**され、同じ生成Go byteと独立Source失効の反証は[設計main #4972](https://github.com/hat47x/tei-platform/pull/4972)の受入候補にとどまる。[TEI main #4980](https://github.com/hat47x/tei-platform/pull/4980)の実`tei inspect`別Process試験はRuleのread-only参照とCapability不存在を区別するが、公開Function実行ではない |
+| **SUIの同文二箇所** | [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)は、現在のSource専用内部read後に元UTF-8と選択byte範囲を照合する。さらに[main #3461](https://github.com/hat47x/sui-sensemaking/pull/3461)は、同じ認証済みMemberでServer側の保存Card選択候補を再解決し、Clientが同文の別Offsetへ付け替えても元位置を維持する内部Gateを追加。対象HEADのbackend契約は**448件PASS** | [#3461の`AuthorizedCardSourceSelectionResolver`](https://github.com/hat47x/sui-sensemaking/blob/main/03_Implement/backend/src/sui_sensemaking_api/source_snapshot_read_gate.py)はテストダブルで、正式Document現在read／Card永続Revision・CAS／本番Source Provider・別Process再読・二次開示は未成立。選択Digestだけでは同文二箇所を区別できない |
+| **Studioの参照/埋込Asset** | [main #4920](https://github.com/hat47x/tei-platform/pull/4920)/[#4945](https://github.com/hat47x/tei-platform/pull/4945)でPin配線と正規Embedを同期し、[main #4983](https://github.com/hat47x/tei-platform/pull/4983)で新しいInspector選択Eventの配布JSも再生成・同期。一時生成Workflowは成功 | [main #4955](https://github.com/hat47x/tei-platform/pull/4955)は旧Windows Smokeの未定義Reader要求を修正済み。ただし新しい実Windows Host/DOM・Pin A/B・配布後のStage1→Stage2の同一Attempt受入は別。旧Smoke失敗の修復PRがマージされた事実を新HEADの実機PASSと同一視しない |
 
 **横断の判断原則**：Product/RootとSubjectの識別、表示・抽出したOccurrence（元byte範囲と元Rawの指紋）、意味・Modelの版、Artifact/Toolchainの版、受領時点の許可と実Consumer Attemptは、**必要な問いに応じて独立に照合**する。全項目を埋めた万能PacketをYICが生成・保存するのではない。正本のSource Locator、Grant、Owner Meaning、Builder ReceiptはそれぞれのProductに残す。
 
@@ -1844,3 +1844,14 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 **実行順**：TEIの一RuleとSUIの一選択をそれぞれProduct側の固定SourceとHEADで読む→各Ownerの独立Expected・現在Grant・結果の出所を確認→許可された場合に限りQH §10へ一件だけ接合する。実Productを横断するQH-P0、TAI #168の実OS G0/G1/G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の実Windows Stage1→Stage2は独立P0として維持する。
 
 **今回の資格**：TEI mainのPin/Asset BlobとPR採否、SUI #3459/#3460の実装・限定CI、TEI #4900/#4972と未統合#4973を照合した**計画更新**。新しいSUI/TEI製品間実Read/外部開示、Windows Host E2E、生成Go再実行、実Harness送受信、Owner意味受理は**NOT RUN**。新しいSource Store、同一性Registry、共通Grant/Host/Runnerは導入しない。
+
+### 56.3 Product内部の再解決から、CLIと独立Consumerへの最小実行順
+
+**SUI側の一段階**：main [#3461](https://github.com/hat47x/sui-sensemaking/pull/3461)では`read_pinned_card_source_selection_for_member`が、認証済みMember → Server所有のCard選択候補Resolver（現在Document readと保存位置を確認する責務）→ 現在のSource専用許可／Raw再読 → 元byte範囲・Digest検証の順で処理する。ClientのOffset再送、異Tenant/Card/Capture、現在Grant失効、同文別Occurrenceの付替えを拒否するGo以外の製品内部Python回帰がmainに入った。ただしResolverは**テストダブル**であり、本物のCard保存・Document CAS・正式Hostからの再読は独立P0の未達部分である。
+
+**TEI側の一段階**：main [#4980](https://github.com/hat47x/tei-platform/pull/4980)の`cmd/tei/cli_inspect_rule_markdown_process_test.go`は実`tei`バイナリを別Process起動し、`semantic-validation:sales.order_line.quantity_positive`の`tei.cli.inspect/v0`、元Markdown byte範囲とArtifact Fingerprintを照合するテストSourceを追加した。同じRule IDでも`semantic-capability`は`SUBJECT_NOT_FOUND`、説明用`text`領域だけのRule名も不存在。実Testの単独PASSはそのPRのCIでは確定しておらず、**通常CLIでのread-only参照試験と公開Function／Provider実Callは異なる**。
+
+**横断Ownerへ渡す最小判定**：初回はSUI側の現在認可済みCard選択候補とTEI側の公開可能な一Ruleを**二つの独立Product試行**として固定する。Iで依頼・元Subject、Rで元ProductのOwnerが解決したIdentity・Source位置・現行版、Pで受信者別Disclosure、Tで実送出、Cで完全な実受領、Hで外部Harnessの現在のTool Replyをそれぞれ記録する。両Productのread-only試験が成功しても、**Card SourceのRawをTEIやAIへ送ったことにはしない**。詳しい受入カードと失敗時の縮退は[QH実行票§10.8](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。
+
+**検収の上限**：SUI #3461のexact HEADにはbackend-contract **448 PASS**のCI証拠がある。TEI #4980は対象Goテストファイルをmainで確認したが、該当テスト単独の成功は本計画の確認対象に含めない。TAI [main #676](https://github.com/hat47x/tai-pleroma/pull/676)はHarness/Skill採点時に文字列`"false"`や不正な選択配列を実観測済みとして数えず、対象Trialを`unscored`にする。この**試験入力の資格**と、ProductのRaw/Source資格・外部開示は別の判定とする。TEI #4583実Windows Stage1→Stage2、TAI #168実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）は引き続き独立P0。
+
