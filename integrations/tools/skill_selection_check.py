@@ -138,7 +138,9 @@ def check_skill(tei, workspace, skill_texts):
                              "detail": "documents `go run`; a real Tool Profile calls a built binary"})
         for line in text.splitlines():
             line_cmd = None
+            command_mentions = 0
             for m in CMD_RE.finditer(line):
+                command_mentions += 1
                 cmd = match_command(m.group(1), names)
                 if cmd:
                     mentioned.add(cmd)
@@ -169,6 +171,13 @@ def check_skill(tei, workspace, skill_texts):
                 parts = pm.group(2).split(".")
                 prefix, leaves = parts[:-1], parts[-1].split("/")
                 claim = f"{list_path}[].{pm.group(2)}"
+                if command_mentions > 1:
+                    # A single line can mention several CLI commands; no
+                    # path-to-command association is established by text
+                    # order. Do not execute the last (or first) as a proxy.
+                    findings.append({"class": "UNJUDGED", "code": "PATH_CLAIM_COMMAND_AMBIGUOUS",
+                                     "doc": label, "detail": claim})
+                    continue
                 meta = disc["commands"].get(line_cmd or "")
                 if not meta or set(meta.get("requiredFlags", [])) - {"workspace", "world"}:
                     findings.append({"class": "UNJUDGED", "code": "PATH_CLAIM_NEEDS_ARGUMENTS",
@@ -215,6 +224,7 @@ def check_skill(tei, workspace, skill_texts):
                    "A scoped commands response cannot prove that omitted commands do not exist.",
                    "Usage-only commands are not demonstrated callable or authorized.",
                    "A usage parent name alone does not establish its subcommands.",
+                   "Paths on lines with multiple command mentions are unjudged, never bound by order.",
                    "Nonzero CLI exits and explicit ok=false cannot prove a success-response path.",
                    "A PASS here is not a Harness, Loader, Grant or model result."],
     }
@@ -348,6 +358,26 @@ else:
         check("D14 explicitly named discovered parent remains available",
               parent_only["skillMentionsDiscovered"] == ["model"]
               and not [f for f in parent_only["findings"] if f["class"] == "DRIFT"])
+        multi_commands = check_skill(tei, tmp, [(
+            "S", "Run `tei model catalog -workspace W` and `tei source-index -workspace W`; "
+                 "expect `result.entries[].subject.kind/id`.")])
+        check("D20 two discovered commands cannot inherit one JSON path",
+              any(f["code"] == "PATH_CLAIM_COMMAND_AMBIGUOUS"
+                  and f["class"] == "UNJUDGED" for f in multi_commands["findings"])
+              and not any(f["code"].startswith("SKILL_PATH_")
+                          or f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
+                          for f in multi_commands["findings"]))
+        mixed_commands = check_skill(tei, tmp, [(
+            "S", "Run `tei model catalog -workspace W` and `tei model imagined -workspace W`; "
+                 "expect `result.entries[].subject.kind/id`.")])
+        check("D21 an unknown child cannot borrow a discovered command's JSON path",
+              any(f["code"] == "PATH_CLAIM_COMMAND_AMBIGUOUS"
+                  and f["class"] == "UNJUDGED" for f in mixed_commands["findings"])
+              and any(f["code"] == "SKILL_SUBCOMMAND_NOT_ESTABLISHED"
+                      for f in mixed_commands["findings"])
+              and not any(f["code"].startswith("SKILL_PATH_")
+                          or f["code"] == "COMMAND_RESULT_NOT_ACCEPTED"
+                          for f in mixed_commands["findings"]))
         exact_usage_subcommand = check_skill(tei, tmp, [("S", "Try `tei model catalog`.")])
         check("D10 actual discovered child stays discovered",
               exact_usage_subcommand["skillMentionsDiscovered"] == ["model catalog"]
