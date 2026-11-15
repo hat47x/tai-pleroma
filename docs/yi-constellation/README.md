@@ -192,6 +192,7 @@ TAIを中心とする製品シリーズ YI Constellation について、次の�
 文化的な分析資料とは別に、TEI Studioで選んだ設計要素を既存AIハーネスへ渡し、元の対象に候補として戻す際の検証手順をまとめています。
 
 - [最初の実行票：TEI Subjectの確認から外部Harnessの応答帰着まで](tei-selection-harness-first-vertical-slice-2026-11-15.md)
+- [製品間Handoff実行票：Sourceの再解決・開示許可・実Consumer受領](cross-product-handoff-execution-tickets-2026-11-11.md) — §10.8に、SUIの保存済みCard選択候補とTEIの実`tei inspect`を独立に検証する正負例を整理
 - [YIC Skillから実Plugin文書を取得する縦断実行票](skill-knowledge-use-qualification-2026-11-15.md)
 - [横断計画：複数UIと外部Harness Sessionの接合](harness-cross-ui-session-probe-2026-11-14.md)
 - [並行AI開発の最初の実行票：branch競合・独立検証・main統合](parallel-agent-integration-first-trial-2026-11-15.md)
