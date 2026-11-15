@@ -1742,7 +1742,7 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 | **Productの対象と原文** | Go `internal/operations/inspect_capability_source_evidence_test.go`、`InspectSubject`と`TraceSubjectSources`。実Capabilityと原byte参照の回帰Sourceあり（TEI #4853/#4870） | 固定mainの実Binary/Goで読取と実Resultを取り、元Root・Source現在性とPermissionを別検査 |
 | **WorkbenchのSource位置候補** | `reference/tei-studio-workbench/source-locations.ts`はread-only S-LOC-0。返却されたIndex参照を最大20件に制限し、PathをURLやSource Open権限に変えない | 現行Go Host Replyを実Workbench Consumerで受け、Referenceだけで実Raw Readや完全性を主張しない |
 | **Pinと背景Reader** | Pin状態遷移はmain統合済み#4597、Fake Hostの`authorityLimits`は#4869。さらに[TEI main #4920](https://github.com/hat47x/tei-platform/pull/4920)で旧Controllerとの二重イベント配線を除去し、`pin-current`／`inspect-pinned`／`unpin-current`と版表示のHTML契約を修復済み | 実Windows WebView2でAの背景取得中にFocus BのEditor/Graph/Noticeが不変であること、旧Reply/異Root/Grant拒否を別に検収。参照Node/DOMテストだけで実Host許可へ昇格しない |
-| **配布されたStudio** | [TEI main #4945](https://github.com/hat47x/tei-platform/pull/4945)でNode24/esbuildの正規生成結果をWails埋込へ同期済み。現mainの参照/埋込`index.html`と`style.css`はそれぞれ同一Git Blobで、Pin三操作と版表示を含む。対象HEADのEmbedded Bundle CIは成功 | **実Windows WebView2の表示・Host応答・A/B操作は別Consumer**。同HEADのWindows Smokeは失敗し、[修復候補 #4955](https://github.com/hat47x/tei-platform/pull/4955)は未マージ。Stage1→Stage2の実セルフビルドも別P0 |
+| **配布されたStudio** | [TEI main #4945](https://github.com/hat47x/tei-platform/pull/4945)でNode24/esbuildの正規生成結果をWails埋込へ同期済み。現mainの参照/埋込`index.html`と`style.css`はそれぞれ同一Git Blobで、Pin三操作と版表示を含む。対象HEADのEmbedded Bundle CIは成功 | **実Windows WebView2の表示・Host応答・A/B操作は別Consumer**。旧HEADのWindows Smokeは失敗したが、[main #4955](https://github.com/hat47x/tei-platform/pull/4955)で未束縛Reader要求が除去された。実Windowsでの新HEAD再実行とStage1→Stage2セルフビルドは別P0 |
 | **外部Harnessへ渡す対象** | Productが返した参照・制限を元に、用途・Audience・Recipient別の短いProjectionを作る設計。実送信を許可するGrantは別 | TAI #168の実OS G0→実送出G1→完全Reply G2が適格な後続Trialでのみ実送信。固定H2/H3四Slotに混ぜない |
 | **AI回答の元対象への帰着** | Pin・Activity・Native Session・Product Operationを別Identityとする既存契約 | 実完全Reply/独立Consumer/現在のPin・Root・Source・Grantを再確認。現在Focusへの自動ApplyやOwner意味受理を先取りしない |
 
@@ -1773,7 +1773,7 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 ### 54.5 現在の実装担当へ返す順序
 
 1. **TEI Product-local基線を二系列で再現**：既存`semantic-capability:sales.order.submit`の#4853/#4870と、内蔵Rule Markdownの二正例・四負例（#4890/#4891）をそれぞれ現在の固定HEADで実Go検証する。双方にSource/Traceがあっても**CapabilityとValidationを同じKind/公開Entryとして扱わない**。CLIに公開されていないReaderの操作をSkill説明から作らず、実CLIの到達と独立Consumerは別に確認する。
-2. **Studioの現在到達点から実Consumerへ進める**：#4920のPin配線修復と#4945の正規Bundle同期はmainに統合済み。次に同一HEADの実Windows WebView2でHost Catalog/Inspect、A背景再読中のB非干渉、Root/Grant/旧Reply拒否を別票で観測する。#4945のEmbedded CI成功をWindows SmokeやStage1→Stage2の合格へ流用しない。
+2. **Studioの現在到達点から実Consumerへ進める**：#4920のPin配線修復、#4945の正規Bundle同期、#4983の新Inspector選択Event対応JS再同期はmainに統合済み。次に同一HEADの実Windows WebView2でHost Catalog/Inspect、A背景再読中のB非干渉、Root/Grant/旧Reply拒否を別票で観測する。#4945のEmbedded CI成功をWindows SmokeやStage1→Stage2の合格へ流用しない。
 3. **外部Harness側の独立P0**：TAI #168 G0実OS Read-deny→G1 Egress→G2 Tool Reply完全性→新規独立H2/H3四Slot（比較適格**0/4**）を、その試験だけの固定Taskで進める。Product GUIの進捗・Rule Markdownをその四Slotの追加条件にしない。
 4. **後続の接合**：両レーンの適格な部分が確認できたら、公開一Capabilityの許可済みContext送出→完全Reply→元Subjectのread-only候補帰着を**新Trial**として行う。Plugin文書追加Fetch、異Product、二Harnessの可搬性、Source Writerはその後に独立評価する。
 5. **横断の再利用条件**：他の製品やPluginで同様の読取を実証した場合、意味受理/Current Grant/元Source位置/実Consumerを同じ観測票へ並べて比較する。ただし正本のProduct責務と権限をYICへ移転しない。
