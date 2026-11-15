@@ -246,3 +246,24 @@ go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
 | **SUIの元Card選択（独立Product）** | [SUI main #3462](https://github.com/hat47x/sui-sensemaking/pull/3462)は実SQLite Document Resourceと現在Document PDPを通してからSource PDP・元byte位置を再確認。対象HEADはbackend **452 PASS**／MCP/Agent CI success（[記録 #3463](https://github.com/hat47x/sui-sensemaking/pull/3463)） | Card選択Resolver/Raw Reader・組織PDPは限定Reference。実Card CAS・本番Source Provider・Export Grantは未受理 |
 
 **次の独立Consumer**：TEIの通常CLIとWindowsはそれぞれの製品局所受領に成功した範囲がある。しかし、**TEIで読んだRuleとSUIで読んだCardを同じ外部AIへ送り、元のSubjectへ戻した事実はない**。既存[QH §10.8〜10.9](cross-product-handoff-execution-tickets-2026-11-11.md)のI/R/P/T/C/Hを、現在のRoot/Source/Grant/Recipient/Attemptから新しい一往復だけで埋める。最初のTAI #168実OS G0→G1→G2と独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Stage1→Stage2は独立P0のままとする。
+
+## 実装選択・出典版・Pin再読込の現在性を、同じSubjectでも再検証する
+
+最新のTEI mainでは、[Operator実装選択 #5007](https://github.com/hat47x/tei-platform/pull/5007)が、**同一の型付きWorldに対してManifestで選択した実装だけを呼び、0の評価結果を変えられる**ことを局所回帰で示した。一方、選択だけが変わったときに古い生成済Scenario Commandを失効させる経路は未受理である。[I2M-1 #5020](https://github.com/hat47x/tei-platform/pull/5020)では元DSLのSource Range／生成Go ASTのRead・判断条件とそれぞれのbyte範囲を独立に観測するコードがmainに入った。[Rule専用CI #5021](https://github.com/hat47x/tei-platform/pull/5021)では専用セルフビルドRun 43707249734のFocused Stepが**success**と確認できたが、製品R2-Pで元DSL/Generatorまで正式にArtifactへ束縛したことは証明していない。
+
+~~~sh
+# TEI repository root. どの実装を選んだか・本当に呼んだかを同じWorldと入力0で比較する
+go test ./cmd/tei -run '^TestScenario(DecidesAnOperatorRuleWithTheSelectedImplementation|RefusesAnOperatorRuleWithoutExactlyOneAvailableImplementation)$' -count=1 -v
+
+# 同じRule意味と異なる元Source、生成GoのRead/判断を別の位置として観測する
+go test ./internal/semantic/validationgen -run '^TestSameRuleFromTwoProductSurfacesGeneratesIdenticalGoButDistinctSourceEvidence$' -count=1 -v
+
+# Linux/amd64、非-short、Go toolchainあり。SKIPは成功に数えない
+go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
+~~~
+
+TEI Studioは[main #5012](https://github.com/hat47x/tei-platform/pull/5012)でPin A再確認中のBのCaret/Focus/Graph/ARIA保護が、[main #5025](https://github.com/hat47x/tei-platform/pull/5025)で**同じWorkspace再読込時の旧Pin観測失効**が、それぞれ実Windows通常Desktopジョブでsuccessとなった。生成Desktopジョブは両方failure。別Workspace A→B→A、意図的な後着Reply、Dirty BufferとStage1→Stage2は別に試験する。
+
+SUIの[PR #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は**Draft・未マージ**。保存済Cardの出典候補を実Document Revision HeadのVersion・Revision ID・所属Documentと比較し、無変更再保存やRaw A→B→Aで旧候補を拒否する次の負例として扱う。対象HEADの限定Backend CIはsuccessだが、正式Card保存・Current Source Provider/Export Grant・AI受領の成功ではなく、現行mainの利用可能機能としてSkillに列挙しない。
+
+この3系統の独立Expectedは[QH §10.10](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。各Ownerが一因子試験で再確認した結果だけをI/R/P/T/C/Hへ渡し、未受理のSource/実装選択・現在Grantは`insufficient-evidence`として扱う。**この実行票追補から新Go／Windows／SUI／外部Harness実行はNOT RUN**。TAI #168 H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Windows Stage1→Stage2は独立P0のままとする。
