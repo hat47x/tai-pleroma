@@ -143,16 +143,21 @@ def check_skill(tei, workspace, skill_texts):
                     continue  # the discovery entry point itself
                 elif not m.group(1).startswith(("-", "<")):
                     claimed = m.group(1).strip()
-                    usage_name = claimed if usage_names is not None and claimed in usage_names else claimed.split()[0]
-                    if usage_names is not None and usage_name in usage_names:
-                        # Usage mentions the command, but this session's scoped
-                        # discovery does not expose it. Do not call it or claim
-                        # that the command does not exist.
+                    root = claimed.split()[0]
+                    if usage_names is not None and claimed in usage_names:
+                        # Only an exact usage entry demonstrates that the
+                        # complete name was advertised outside this scope.
                         findings.append({"class": "UNJUDGED", "code": "SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE",
-                                         "doc": label, "detail": usage_name, "scope": disc["scope"]})
+                                         "doc": label, "detail": claimed, "scope": disc["scope"]})
+                    elif usage_names is not None and " " in claimed and root in usage_names:
+                        # A parent command in usage does NOT establish its
+                        # named subcommand. Keep the entire attempted path
+                        # visible without calling or claiming it is absent.
+                        findings.append({"class": "UNJUDGED", "code": "SKILL_SUBCOMMAND_NOT_ESTABLISHED",
+                                         "doc": label, "detail": claimed, "scope": disc["scope"]})
                     else:
                         findings.append({"class": "DRIFT", "code": "SKILL_COMMAND_NOT_DISCOVERED",
-                                         "doc": label, "detail": usage_name, "scope": disc["scope"],
+                                         "doc": label, "detail": claimed, "scope": disc["scope"],
                                          "existence": "not-established"})
             for pm in PATH_RE.finditer(line):
                 list_path = pm.group(1)
@@ -195,6 +200,7 @@ def check_skill(tei, workspace, skill_texts):
         "limits": ["Only explicit command spans and `list[].a.b/c` path claims are parsed.",
                    "A scoped commands response cannot prove that omitted commands do not exist.",
                    "Usage-only commands are not demonstrated callable or authorized.",
+                   "A usage parent name alone does not establish its subcommands.",
                    "A PASS here is not a Harness, Loader, Grant or model result."],
     }
 
@@ -274,7 +280,7 @@ if a == ["commands"]:
 elif a[:2] == ["model", "catalog"]:
     print(json.dumps({"ok": True, "result": {"entries": [{"subject": {"kind": "k", "id": "i"}}]}}))
 else:
-    print("usage: tei <commands|inspect|model catalog|source-index|hidden-example>"); sys.exit(2)
+    print("usage: tei <commands|inspect|model|model catalog|source-index|hidden-example>"); sys.exit(2)
 ''')
         tei = [sys.executable, "-I", str(fake)]
         drift = check_skill(tei, tmp, [("S", "Run `go run ./cmd/tei model catalog -workspace W`; pick `entries[].subject.kind/id`.")])
@@ -293,8 +299,21 @@ else:
                                                 for f in usage_only["findings"]))
         check("D7 scoped discovery is not exhaustive",
               usage_only["discovery"]["discoveredCommands"] == 3
-              and usage_only["discovery"]["usageCommands"] == 5
+              and usage_only["discovery"]["usageCommands"] == 6
               and not [f for f in usage_only["findings"] if f["class"] == "DRIFT"])
+        unknown_subcommand = check_skill(tei, tmp, [("S", "Try `tei model imagined`.")])
+        check("D8 usage parent does not prove a subcommand",
+              any(f["code"] == "SKILL_SUBCOMMAND_NOT_ESTABLISHED"
+                  and f["class"] == "UNJUDGED"
+                  and f["detail"] == "model imagined"
+                  for f in unknown_subcommand["findings"]))
+        check("D9 parent-only usage does not prove an exact child",
+              not any(f["code"] == "SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE"
+                      for f in unknown_subcommand["findings"]))
+        exact_usage_subcommand = check_skill(tei, tmp, [("S", "Try `tei model catalog`.")])
+        check("D10 actual discovered child stays discovered",
+              exact_usage_subcommand["skillMentionsDiscovered"] == ["model catalog"]
+              and not [f for f in exact_usage_subcommand["findings"] if f["class"] == "DRIFT"])
         gone = check_skill(["/no/such/tei"], tmp, [("S", "`tei inspect`")])
         check("D4 absent tool judges nothing", gone["status"] == "tool-unavailable" and not gone["findings"])
         need_args = check_skill(tei, tmp, [("S", "`tei inspect -workspace W` gives `entries[].subject.kind/id`.")])
