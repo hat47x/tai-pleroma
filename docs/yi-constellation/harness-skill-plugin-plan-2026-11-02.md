@@ -1059,6 +1059,16 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 
 [Skill実行票§13](skill-knowledge-use-qualification-2026-11-15.md)に、実モデル試行J3で確認した「read-only `commands`に載らない」から「製品に変更系コマンドが存在しない」と断定した誤りを、**既存Skill検査器の小さな修正**として取り込んだ。`usage`には存在するが限定`commands`に出ない名前を`SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE`（`UNJUDGED`）と区別し、どちらにも見つからない場合も`SKILL_COMMAND_NOT_DISCOVERED`の事実以上に不存在を断定しない。旧`score`の指標・Trial・封印Expectedは変更しない。既存`--self-test`へ合成例を加え、`tai-reference`で毎回動かす。**実Harnessが発言した自然言語全般を採点できるようになったわけではない**。
 
-最新の製品入口については、[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)の実バイナリでのManual記載・CLI Discovery・Lock前段の交差回帰は進行中の製品内試験であり、公開Doc Source-backed取得やDisclosureの完成ではない。[SUI #3454](https://github.com/hat47x/sui-sensemaking/pull/3454)は認証済みMember/現行Tenant Sessionの内部Preflightがmainへ統合されたが、実Host Route・Source Policy Binding・実Raw readは未結合。これらの実績を、Skillの発見／現在の認可／実Consumerの別資格として[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)と各Product Ownerへ返す。第二Resolverや共通Permission/Runnerを作らない。
+最新の製品入口については、[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)が実バイナリでのManual記載・CLI Discovery・Lock前段の交差回帰を提案したが、現在は**closed／not merged**であり、公開Doc Source-backed取得やDisclosureの完成でもmainの受入実績でもない。[SUI #3454](https://github.com/hat47x/sui-sensemaking/pull/3454)は認証済みMember/現行Tenant Sessionの内部Preflightがmainへ統合されたが、実Host Route・Source Policy Binding・実Raw readは未結合。これらの実績を、Skillの発見／現在の認可／実Consumerの別資格として[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)と各Product Ownerへ返す。第二Resolverや共通Permission/Runnerを作らない。
 
 **次の検収**は、①このPRの合成検査器`--self-test`を同一HEADのCIで確認、②TEI #4714の一Plugin一Doc実Read、③公開範囲を固定したB0 Tool-only対B1短いProduct Skillの別Trial。Activity中断再開の実益があるときだけB2を選ぶ。独立P0のTAI #168（実OS G0→G1→G2→新しいH2/H3独立四Slot、適格0/4）とTEI #4583（非Plugin Studio Stage1→Stage2実Windows）に新Blocking条件は追加しない。YICの新Product／Harness適格E2E、Owner意味受理、実External Effectは**NOT RUN**。
+
+## 54. 2026-11-15：親Commandから未確認の子Commandを推測しない
+
+[Skill利用資格実行票§14](skill-knowledge-use-qualification-2026-11-15.md)へ、前回main統合済みのSkillドリフト検査器で残った**複合コマンドの誤分類**と、TEI実Source到達の限定進捗を接続した。
+
+**実装済み変更と検収**：usageに親`model`が載っているだけで`tei model imagined`を「usage掲載のコマンド」としない。`SKILL_SUBCOMMAND_NOT_ESTABLISHED`（`UNJUDGED`）を既存Checkerへ追加し、実Discoveryにある正規の子コマンドと対照する合成D8〜D10を、既存`tai-reference`の`--self-test`に含める。前回[TAI #658](https://github.com/hat47x/tai-pleroma/pull/658)のexact HEADのCIはcompleted/success。今回の追加テストと結果は**今回のHEADで改めて確認する**。採点器の8指標、過去B0/B1/B2のTrial・Expected、実Tool選択・認可のOwnerは変更しない。
+
+**他製品との位置付け**：[TEI #4853](https://github.com/hat47x/tei-platform/pull/4853)はmainへInspector/Source Index/Traceを実byteで照合する限定Go回帰を統合した。ただし当該HEADの多数のCIはfailureで、業務意味受理・正式Markdown Reader・Provider実行・全体HealthのPASSではない。[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)の公開Manual/CLI交差試験、[#4857](https://github.com/hat47x/tei-platform/pull/4857)のLanguage Reference/製品Loader未束縛対照はともにclosed／not mergedであり、現在能力の正本へ繰り上げない。[TAI #659](https://github.com/hat47x/tai-pleroma/pull/659)で追加されたAI委任・別Harness引継ぎの計画には、実Capabilityの事前確認と履歴／現在実行の資格分離として還元する。新しいHarness Routerや中央権限器は設けない。
+
+**次の作業**：YK-34〜37をTAI #488・TEI #4714/#2621へ引き渡し、独立Expectedに対する正しい`UNJUDGED`と正常なCommand発見を比較する。Product一件Manual ReadはTEI #4714のD1-1〜3をOwnerとして並行開発し、成立した後でB0 Tool-onlyとB1 Product Skillを別Trialで比較。実OS read-deny→送出→完全Reply→新独立H2/H3四Slot（TAI #168、適格0/4）とTEI #4583の非Plugin Stage1→Stage2 Windowsは**独立P0のまま**。本追補は実Product Doc Read・Native Harness比較・Owner意味受理を伴わず、その新しいE2Eは**NOT RUN**。
