@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import subprocess
 import sys
 import time
@@ -31,9 +32,8 @@ model = DocumentV1.model_validate(payload)
 
 def keys_of(payload, name):
     value = payload.get(name)
-    if isinstance(value, list) and value:
-        first = value[0]
-        return sorted(first.keys()) if isinstance(first, dict) else []
+    if isinstance(value, list):
+        return sorted({key for item in value if isinstance(item, dict) for key in item})
     if isinstance(value, dict):
         return sorted(value.keys())
     return []
@@ -43,11 +43,33 @@ print(json.dumps({
     "payloadKeys": {name: keys_of(payload, name) for name in ("cards", "islands", "edges", "affiliations")},
     "modelAffiliations": len(model.affiliations or []),
     "modelReadingOrder": len(getattr(model, "readingOrder", []) or []),
+    "modelReadingOrderValues": list(getattr(model, "readingOrder", []) or []),
     "valid": True,
 }))
 """
 
 COLLECTIONS = ("cards", "islands", "edges", "affiliations")
+REPO_ROOT = Path(__file__).resolve().parents[3]
+HISTORICAL_RECEIPT = REPO_ROOT / "evaluations/records/SUI-consumer-mapping-2026-11-06.json"
+CONSUMER_MODULES = (
+    "sui_sensemaking_api/documentv1_projection.py",
+    "sui_sensemaking_api/models.py",
+)
+
+
+def fresh_output_path(path):
+    """A replay is a new attempt; never overwrite an observed historical receipt."""
+    output = Path(path).resolve()
+    if output == HISTORICAL_RECEIPT.resolve():
+        raise ValueError("historical SUI consumer FAIL receipt must remain unchanged")
+    if output.exists():
+        raise FileExistsError(f"replay receipt already exists: {output}")
+    return output
+
+
+def consumer_source_digests(src):
+    """Pin the two SUI Python modules used here; not a full dependency closure."""
+    return {name: digest(src / name) for name in CONSUMER_MODULES}
 
 
 def digest(path):
@@ -57,24 +79,32 @@ def digest(path):
 def element_keys(records):
     if not records:
         return []
-    first = records[0]
-    return sorted(first.keys()) if isinstance(first, dict) else []
+    return sorted({key for item in records if isinstance(item, dict) for key in item})
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--sui-repo", required=True)
     parser.add_argument("--artifact", required=True)
     parser.add_argument("--out", required=True)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    try:
+        output = fresh_output_path(args.out)
+    except (ValueError, FileExistsError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
 
-    artifact = json.loads(Path(args.artifact).read_text(encoding="utf-8"))
+    artifact_path = Path(args.artifact).resolve()
+    src = (Path(args.sui_repo).resolve() / "03_Implement/backend/src")
+    artifact_digest = digest(artifact_path)
+    source_digests = consumer_source_digests(src)
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
     document = artifact["document"]
-    src = Path(args.sui_repo) / "03_Implement/backend/src"
 
     completed = subprocess.run(
-        [sys.executable, "-c", PROBE, str(Path(args.artifact).resolve())],
+        [sys.executable, "-c", PROBE, str(artifact_path)],
         env={**os.environ, "PYTHONPATH": str(src)},
+        cwd=str(Path(args.sui_repo).resolve()),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -85,6 +115,9 @@ def main():
         print((completed.stderr or "")[-600:], file=sys.stderr)
         return 1
     observed = json.loads(lines[-1])
+    if artifact_digest != digest(artifact_path) or source_digests != consumer_source_digests(src):
+        print("artifact or SUI consumer source changed during the replay", file=sys.stderr)
+        return 1
 
     # The composed artifact nests the document record under "document".
     document_record = document.get("document", {})
@@ -119,7 +152,7 @@ def main():
         "sourceReadingOrder": source_reading_order,
         "everyProjectedFieldSurvives": not document_dropped and not dropped_any,
         "affiliationsKept": observed["modelAffiliations"] == source_affiliations,
-        "readingOrderKept": observed["modelReadingOrder"] == source_reading_order,
+        "readingOrderKept": observed["modelReadingOrderValues"] == (document_record.get("readingOrder") or []),
     }
     passed = (
         checks["valid"]
@@ -133,14 +166,29 @@ def main():
         "evidenceKind": "real-execution",
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
-        "host": "Windows with Python 3.12 and SUI's reference consumer",
-        "command": f"python integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py --sui-repo {args.sui_repo} --artifact {args.artifact} --out evaluations/records/SUI-consumer-mapping-2026-11-06.json",
+        "host": platform.platform(),
+        "command": " ".join([sys.executable, __file__, "--sui-repo", args.sui_repo,
+                             "--artifact", args.artifact, "--out", args.out]),
         "result": "PASS" if passed else "FAIL",
-        "artifact": {"path": args.artifact, "digest": digest(args.artifact)},
+        "artifact": {"path": args.artifact, "digest": artifact_digest},
+        "replayProvenance": {
+            "pythonVersion": sys.version,
+            "pythonExecutable": sys.executable,
+            "suiSourceModules": source_digests,
+            "checkerDigest": digest(__file__),
+            "suiSourceRoot": str(src),
+        },
         "observed": checks,
         "scope": "Builds DocumentV1 through SUI's own consumer and compares the payload with the artifact, per collection and per document field. It records that every projected field that the consumer knows about survives (including readingOrder and affiliations), which contrasts with the meaning-change finding that a field the consumer does not know is dropped while validation still passes. It does not change SUI.",
     }
-    Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # Exclusive creation prevents a second replay from overwriting the first
+    # even if the output appeared after fresh_output_path's preflight check.
+    try:
+        with output.open("x", encoding="utf-8") as handle:
+            handle.write(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n")
+    except FileExistsError:
+        print(f"replay receipt already exists: {output}", file=sys.stderr)
+        return 2
     print(json.dumps({
         "documentDropped": document_dropped,
         "collectionsWithLoss": dropped_any,
@@ -149,6 +197,7 @@ def main():
         "valid": observed["valid"],
         "passed": passed,
     }))
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":
