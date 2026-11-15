@@ -1721,3 +1721,53 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 **独立P0は不変**：TEI #4583非Plugin Studio Stage1→Stage2実WindowsとTAI #168実OS G0→実Egress G1→完全Tool Reply G2→新規独立H2/H3四Slot（比較適格0/4）。並行開発の第一実行票はこれらを初回必須条件にしないし、成功を両P0へ加算しない。TAI #233の探索量拡大も禁止せず、**標準採用・main統合の証拠だけを厳格にする**。
 
 現時点の資格は、GitHub mainの実修復PRと既存Owner条件を照合した**Docs-only／実行票作成**。新しい三Workstream実Session、合成Conflict Trial、独立Reviewer実採点、OS/Network隔離、比較実費、TEI Studio実Windowsセルフビルド、Owner意味受理は**NOT RUN**。
+
+<!-- yic-capability-to-consumer-closure-20261115 -->
+## 54. 設計要素の実Sourceから、利用者と外部Harnessの受領までを一つずつつなぐ
+
+§49〜53は、対象固定・送出・Activity引継ぎ・複数Agentの統合を分けた。次に必要なのは、抽象的な「TEIをAIに読ませる」を、**現行mainに実在する一つの設計要素から始め、実際の利用画面と返却先まで確認する**ことだ。この順序を[最初のTEI→Harness実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)へ反映する。ここで新しいReader、Source Store、Harness API、許可判定器、Hostを作らない。
+
+### 54.1 初回の対象を、実コードから確認できるCapabilityにも広げる
+
+従来の公開例`semantic-data:sales.order`を置換するのではなく、**第二の具体例として`semantic-capability:sales.order.submit`**を使う。[TEI main #4853](https://github.com/hat47x/tei-platform/pull/4853)にある実Go回帰は、`reference/workspace`から`InspectSubject`でこのCapabilityを取り、Canonical ID、read-only `authorityLimits`、`semantic/sales/order.tei`の元byte範囲、Source Index Fingerprint、`TraceSubjectSources`の対応を検査する。存在しない`sales.not_declared`については、Traceの観測が空でもInspectorの不存在判定と分けている。
+
+[TEI main #4870](https://github.com/hat47x/tei-platform/pull/4870)の追加回帰では、管理Sourceの末尾改行だけを変更したとき、Canonical/Worldは同じでもSource Revision・Source Index Fingerprint・Artifact byte Fingerprintが変わる。元byteのA→B→Aで指紋が戻っても、**過去の開示GrantやPin観測が復活する根拠にはならない**。このためYICの短いContextは、意味対象の表示名だけでなく元Productが今確認できるSource/Root/版・取得範囲に結び付ける。
+
+ただし、**GoテストのSourceがmainに存在することは、任意のHarness Session・現在のCLI・外部Providerが同一結果を取得したことではない**。実行予定の`go test`、`tei commands`/対応する実Inspector入口の発見、固定Binary/HEAD/Workspaceと実出力を別々に記録する。PR履歴の部分的Greenや別HEADのCIは現在の合格として流用しない。
+
+### 54.2 同じSubjectでも、Product内部・参照UI・配布Desktop・外部AIは別の到達点
+
+| 到達点 | 2026-11-15に現行mainで確認できる内容 | 次に必要な実受領／停止線 |
+| --- | --- | --- |
+| **Productの対象と原文** | Go `internal/operations/inspect_capability_source_evidence_test.go`、`InspectSubject`と`TraceSubjectSources`。実Capabilityと原byte参照の回帰Sourceあり（TEI #4853/#4870） | 固定mainの実Binary/Goで読取と実Resultを取り、元Root・Source現在性とPermissionを別検査 |
+| **WorkbenchのSource位置候補** | `reference/tei-studio-workbench/source-locations.ts`はread-only S-LOC-0。返却されたIndex参照を最大20件に制限し、PathをURLやSource Open権限に変えない | 現行Go Host Replyを実Workbench Consumerで受け、Referenceだけで実Raw Readや完全性を主張しない |
+| **Pinと背景Reader** | Pin状態遷移はmain統合済みTEI #4597。実Host契約の`authorityLimits`をFake Replyに反映した#4869もmain統合済み | [#4876](https://github.com/hat47x/tei-platform/pull/4876)の参照HTMLボタンID一致は未マージ。現在Focus Bに影響を与えずAを背景再確認できる実DOMを別検収 |
+| **配布されたStudio** | 現mainの`reference/tei-studio-workbench/index.html`にはPin UIがあるが、`cmd/tei-studio/assets/workbench/index.html`にはまだ無い。配布Bundleの未同期は[TEI main #4879](https://github.com/hat47x/tei-platform/pull/4879)が検収計画として認識 | 同一HEADでNode24テスト/型検査→正式Build→dist/Embed byte一致→実Windows Wails/WebView2。旧#4812のclosed/unmerged成功を流用しない |
+| **外部Harnessへ渡す対象** | Productが返した参照・制限を元に、用途・Audience・Recipient別の短いProjectionを作る設計。実送信を許可するGrantは別 | TAI #168の実OS G0→実送出G1→完全Reply G2が適格な後続Trialでのみ実送信。固定H2/H3四Slotに混ぜない |
+| **AI回答の元対象への帰着** | Pin・Activity・Native Session・Product Operationを別Identityとする既存契約 | 実完全Reply/独立Consumer/現在のPin・Root・Source・Grantを再確認。現在Focusへの自動ApplyやOwner意味受理を先取りしない |
+
+**二つの誤解を排する**。一つは、`source-locations.ts`がSource位置を表示できれば任意のファイルを開いてよい、という誤解。もう一つは、参照WorkbenchのHTMLやNodeテストが成功すれば、Goに埋め込まれた配布資産も新しい、という誤解である。前者は現在の読取・開示権限、後者は生成物と実Consumerの証拠が欠ける。
+
+### 54.3 Rule Markdown Readerの進展を、外部Plugin全体の完成と混同しない
+
+TEIの現行製品Source `internal/workspace/rule_authoring_markdown_loader.go` には、内蔵`tei.rule-authoring/v0` Readerが実装されている。定義領域のRuleを既存`semantic.Validation`へ接続し、Load時の宣言範囲をSource Indexのbyte anchorへ渡す。同じSourceを後から独自Parserで読み直して位置を推測する実装ではない。[実装コミット](https://github.com/hat47x/tei-platform/commit/7921b005a44d325983d24ca2b8b58b0737dd778d)と[横断計画の後続PR #4878](https://github.com/hat47x/tei-platform/pull/4878)を区別して読む。
+
+**採用する成熟成果**は、選択された一Language Readerが、同じ管理原byteから現行意味モデルとSource位置を作る方向性である。これはYIC Skillの説明が`*.tei.md`等の単なるファイル名から機能を推測することへの反例にもなる。
+
+**独立して残るもの**は、すべてのGraph/Rule構文の正式受理、外部Language Plugin選択/Lockの普遍化、生成Go Plugin自身のTEIによるセルフビルド、実Provider Call/Effect、公開Docの現在Disclosure、Stage1→Stage2 WindowsとOwner業務意味受理である。Readerが元Sourceを意味へ接続しただけで外部Harnessの実Tool/権限も成立したとはしない。最初のHarness H2/H3比較へこのReaderの採用を新Blockingとして追加しない。
+
+### 54.4 Product境界を越える場合は、現在のSource利用資格を引き継がない
+
+SUI [#3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は、Source専用Authority→現在Grant→Raw再読の内部ゲートを検討している**未マージDraft**。そこではClientが任意のLocator/PolicyRef/Digestを指定してRawに到達しないこと、Document閲覧許可だけではSourceを読めないこと、返却byteの長さ・Digestを再照合することが設計・テスト対象となっている。現時点のAuthority/Session/Policy Resolverはテストダブルで、実Product Raw API/本番PDP・Export/Share権限ではない。
+
+この考え方をTEI→SUI/SHO/SEI/EKIの後続Handoffに適用するときは、**元Productで読むことができたSource**と、**別Product/外部Harnessへ開示してよいSource**を分ける。元Sourceを実際に取得していない場合、表示用ラベルやSnapshot Digestから現在Rawを再構成しない。受け手側で現在資格が証明できなければunknown/unsupportedとして保留し、許可されたDocumentやread-only情報の調査だけを継続できるようにする。KON/共有Hostの新設を初回必須にしない。
+
+### 54.5 現在の実装担当へ返す順序
+
+1. **TEI Product-local基線**：現行`semantic-capability:sales.order.submit`について、Go/CLIの実Source・Trace・版変更を同一Workspace/HEADで取得する。#4853/#4870の既存テストを再利用し、存在しないCLI操作を手引きから作らない。
+2. **Studio表示の最小修復**：#4876相当のPin DOM配線を現行mainへ統合し、既存`authorityLimits`の拒否とB非干渉を確認する。次に正式生成→埋込byte→Windows Browserへ進む。実画面が旧い場合は配布未達と報告し、Referenceでの成功を補わない。
+3. **外部Harness側の独立P0**：TAI #168 G0実OS Read-deny→G1 Egress→G2 Tool Reply完全性→新規独立H2/H3四Slot（比較適格**0/4**）を、その試験だけの固定Taskで進める。Product GUIの進捗・Rule Markdownをその四Slotの追加条件にしない。
+4. **後続の接合**：両レーンの適格な部分が確認できたら、公開一Capabilityの許可済みContext送出→完全Reply→元Subjectのread-only候補帰着を**新Trial**として行う。Plugin文書追加Fetch、異Product、二Harnessの可搬性、Source Writerはその後に独立評価する。
+5. **横断の再利用条件**：他の製品やPluginで同様の読取を実証した場合、意味受理/Current Grant/元Source位置/実Consumerを同じ観測票へ並べて比較する。ただし正本のProduct責務と権限をYICへ移転しない。
+
+**今回の資格**：TEIのmain Blob（Go Capabilityテスト、Rule Markdown Loader、S-LOC TypeScript、参照HTMLと埋込HTML）・実装PRの採否・SUI Draftを照合した**Source-staticとDocs-onlyの計画更新**。新Go/Node/Windows/DB/実外部Harness/現在Grant/実Result Consumer/Owner意味受理のE2Eは**NOT RUN**。非Plugin Stage1→Stage2（TEI #4583）も別P0として継続し、どの段階の成功も他段階の合格へ自動昇格しない。
