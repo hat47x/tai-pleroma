@@ -1790,7 +1790,8 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 | --- | --- | --- |
 | **R0 読取** | #4890/#4891：Languageを明示選択→同一Load原byte→型付きValidation/Source Index/Inspector。#4900：旧`validation`との意味同値と二重宣言拒否 | 外部Language PluginのResolver/Lock、Owner業務受理 |
 | **R0-E 評価** | #4901/#4908/#4913：既存Evaluatorへ実Go Callし、合成SourceのRead Footprint・Rule属性変更時の意味/参照変化を確認するコード | 実Providerがその集合を完全に読んだこと、外部DB/業務Effect |
-| **R1 コード生成** | #4911：Product Ruleを選び、解決済み型からGo分岐を生成、別Processで正値/0/負値/NULL/未取得を評価するテストコード。現行mainで`TestSelectedMarkdownPositiveRuleGeneratesExecutableGo`と拒否試験を確認 | その生成Goが正式BuildIntentの入力/Artifactになったこと、Source変更を反映した再生成の一貫性、製品Go Binaryへの収録 |
+| **R1 コード生成** | #4911：Product Ruleを選び、解決済み型からGo分岐を生成、別Processで正値/0/負値/NULL/未取得を評価するテストコード。現行mainで`TestSelectedMarkdownPositiveRuleGeneratesExecutableGo`と拒否試験を確認 | その生成Goが正式BuildIntentの入力/Artifactになったこと、製品Go Binaryへの収録 |
+| **R1.5 変更追随・独立Binary** | [main #4930](https://github.com/hat47x/tei-platform/pull/4930)：二つの`std.decimal`属性を両世界のDataで固定し、Rule参照属性だけを変更。実Load/Source Index→Go再生成→`go build -trimpath`による二つのBinaryを独立起動し、固定Consumer/ExpectedとRead先・判断・SHA差分を検査するGo回帰がmainに存在 | **直接Goツールチェーンの局所検証**。正式Product BuildPlan/BuilderによるGenerated Go実消費の証拠ではない |
 | **R2/R3 実製品利用** | 次のOwner #1121/#1251/#4495：正式Builderの選択・実Input Closure・生成Go byte→actual Provider呼出し→通常`tei` CLIと独立Consumerまで実観測 | 実E2Eは未実証。生成Go単体の成功や選択名一致だけで合格させない |
 
 **次の一因子反証**は、Rule IDと入力Fixtureを固定し、Markdownの参照Attributeを`quantity`から`line_number`へ変更する場合。既存#4908/#4913のReader/Evaluator変更追随を独立Expectedとして再利用する。ただし現行Fixtureの`quantity`は`std.decimal`、`line_number`は`std.integer`で、R1の`GeneratePositive`は**後者を生成可能とせず、型の再解決後に明示拒否すること**が現在の期待結果である。R1の正側は`std.decimal`の元Ruleで実分岐とbyte/Artifactを検証し、別の対応済みDecimal属性を追加する場合だけ生成先の変化も試す。R2/R3では元Rule Source byte、Generator版、Toolchain、実Builderの選択・入力閉包、実Consumerが使ったArtifactの同一Attemptを確認する。**Canonicalが等しい・元byteがA→B→Aへ戻る・別branchのCacheが成功した**だけでは古い許可やBuild成果を復活させない。
@@ -1802,3 +1803,19 @@ AIへの最小の仕事は、利用者が選んだ一Ruleの意味・根拠・�
 **導入判断**：R1の実Generated Goは、TEI自身がGoへの単なるDelegate以上の価値を示す材料として採用する。ただし`*.tei.md`側の定義が短いだけで保守負担や実製品利用の優位が証明されたとは扱わず、同じRuleを「手書きGo」「既存Evaluator」「生成Go」で、変更追随・Source失効・検証工数・実Builder統合まで比較する。再利用するのは既存BuildIntent、Product CLI、CI、Owner Expectedであり、YIC専用Generator/Runnerは新設しない。
 
 **今回の資格**：TEI mainの`validationgen/positive.go`と製品GoテストSource、#4911等のPR統合状態を照合した計画更新。新Go実行・正式Build/Provider・Stage1→Stage2 Windows・外部Harness・実Current Grantは**NOT RUN**。独立P0のTEI #4583とTAI #168 G0→G1→G2→H2/H3四Slot（比較適格**0/4**）の順序は維持し、R1を固定H2/H3の追加必須条件にしない。
+
+### 55.3 R1.5の現行実績を、R2の正本Builder採用と混同しない
+
+[TEI main #4930](https://github.com/hat47x/tei-platform/pull/4930)は、Rule IDと`positive`の判断Kindを維持しつつ、二つの`std.decimal`属性（`quantity`と`secondary_quantity`）の参照先を切り替える**一因子比較**をGo回帰として導入した。同じConsumerのソースを用い、前後それぞれで実Go Binaryをビルド・起動し、読取先・真偽・読取回数・Source Index旧版拒否・生成Source/Binary指紋を検査する。これは§55.1の`line_number:std.integer`が未対応で拒否される負例と**別の正例**である。
+
+次のR2で見たいのは、生成したGoが存在することではなく、**製品が選択したBuilderが、当該Generated Go byteをBuildPlanの入力として受け取り、生成されたArtifactを現在のConsumerが使ったこと**である。参照Builderの試験PR [#4927](https://github.com/hat47x/tei-platform/pull/4927)と後継[#4934](https://github.com/hat47x/tei-platform/pull/4934)は重複を避けて**未マージで終了**した。テストコードの意図は、Source Resolver→BuildPlan→Source Digest/Dependency Closure→隔離Build→Artifact/Lock→独立Binaryの追跡だが、**実際の参照Builder回帰がmainに統合されたとは扱わない**。一方、[main #4938](https://github.com/hat47x/tei-platform/pull/4938)では、この試験の検収境界を既存設計§14.4へ**文書として**統合した。
+
+したがって、製品Ownerへ渡すR2の最小受入は、(1) 対象Workspace/World・元Rule Source/Revision・Generator/Toolchainを固定する、(2) 正式Builder選択と実際に消費したGo byte・依存Packageを別々に採る、(3) 未使用/別Builder/一因子Source変更で古いPlanの拒否を確認する、(4) 結果Artifact/Lock/Consumerの同一Attemptを照合する、の順序とする。Builderを参照実装から実製品へ移す前に、新Runner/Artifact Storeを作らない。R3の実Provider・通常CLIはその次の独立試験にする。
+
+### 55.4 標準Data・Operation・Flowに投影しても、実行可能性を加算しない
+
+[TEI main #4924](https://github.com/hat47x/tei-platform/pull/4924)の設計は、同じRuleをread-only Flow Node・型付きPort・UI Componentとして表示する場合も、**元の標準Data、Operation、Source、独立Expectedを共有し、表示・編集・生成・実行のOwnerを分ける**。採用候補は既存Node/CanvasとProductの型付きOperationへのProjectionであり、YIC側で汎用Node Runtimeや別業務DSLを用意することではない。CLI上のNode候補が表示できても、HTTPサービス公開、実Provider実行、Windows Studio受領を自動的に認めない。
+
+SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSource用本人識別・PDP Adapterのすり替え拒否が実装され、[main #3458](https://github.com/hat47x/sui-sensemaking/pull/3458)は既存保存領域とSourceのRaw Capture/Current Grantを分ける**Fit/Gap文書**を統合した。既存NASの置換可能なBlobと一回の内部Source readを、実Snapshot不変保存・本番Source Provider・二次開示許可へ昇格させない。TEI→SUI/SHO/SEI/EKI/YICのHandoffでは、別Productへ渡す元Sourceの現在資格を再確認する§54.4の停止線を維持する。
+
+**この節の確認範囲**：TEI #4930の製品Go回帰Sourceの存在とPR採否、#4927/#4934の未マージ状態、#4938/#4924の設計統合、SUI #3457/#3458の限定的な進展に基づく**文書上の引渡し**。新しいGo Binary/Builder/CLI/Windows/実Host/外部Harness E2Eは**NOT RUN**。TAI #168実OS G0/G1/G2とH2/H3比較適格0/4、TEI #4583実Windows Stage1→Stage2は引き続き独立P0。
