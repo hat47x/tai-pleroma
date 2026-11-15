@@ -91,7 +91,7 @@ A0の成果だけで並行開発の成功とはしない。続く別Trialでは�
 3. 正規生成した`dist`とWails側の埋込JS/HTML/CSS等をbyteで照合し、**実Windows WebView2が同じ成果物を読んだこと**を別の実Consumerとして確かめる。成功側の古いJS/HTMLを手コピーして合格を演出しない。
 4. Sourceも配布も一致して初めてUI Consumerの一段階を検収する。Pin Aの背景確認がFocus Bに影響しないこと、Source/Grantの再確認、外部Harnessへの送信資格、Stage1→Stage2はさらに別の受入とする。
 
-これは[TEI #4879](https://github.com/hat47x/tei-platform/pull/4879)のOwner検収を参照する**統合試験候補**であり、新しいYIC配布BuilderやFrontend Checkerの採用ではない。現mainの二HTMLにPin要素の有無が異なることは**Source-staticで確認済み**。新HEADのNode24/Windows Browser、二Worker並列作業、生成Bundle byte照合、Owner受理は**NOT RUN**。
+これは[TEI #4879](https://github.com/hat47x/tei-platform/pull/4879)のOwner検収を参照する**並行統合の反例**であり、新しいYIC配布BuilderやFrontend Checkerの採用ではない。**当時**は参照HTMLと配布HTMLでPin要素の有無が異なったが、その後[TEI main #4920](https://github.com/hat47x/tei-platform/pull/4920)でPin配線が修正され、[main #4945](https://github.com/hat47x/tei-platform/pull/4945)で正規Bundleが埋込Assetへ同期された。現mainの両HTML／両CSSはそれぞれ同一Git Blobで、該当HEADのEmbedded CIも成功した。一方、Windows WebView2 Smokeには失敗があり（修復候補[#4955](https://github.com/hat47x/tei-platform/pull/4955)は未マージ）、**配布byteの一致と実Consumerの成功は別**。二Worker並行作業と新YIC Trial、Windows/Owner受理は今回**NOT RUN**。
 
 <!-- yic-overlapping-rule-tests-20261115 -->
 ## 現行の重複提案を使った比較：既にmainにある回帰と、新しいDraft
@@ -101,3 +101,5 @@ A0の成果だけで並行開発の成功とはしない。続く別Trialでは�
 このDraftには、**元ファイルの変更後に旧Loadからもう一度Indexを組み立てても、新しいディスク内容を取り込まない**ことなど、既存#4890の旧Index `Validate`失効負例とは区別して確認すべき候補もある。後続の実装担当は、(1)現行mainの正負条件、(2)Draftだけが観測する追加の故障、(3)同一HEADで成立する実結果、(4)その負例を既存のどのOwnerテストへ返すか、を比較する。独自性が確認できた検査だけを最小差分で提案し直し、同じ期待を満たす別Parser/第二Expected/Fixtureを丸ごと増設しない。
 
 ここで行ったのはmainの実GoテストとDraft差分のSource照合。#4893の実CI検収・追加ケースの効果・統合判断は**NOT RUN／Owner未採用**。TAI #233の探索候補を削除・制限する措置ではなく、**候補の幅と採用済み成果の数え方を分ける**運用である。
+
+**後続に共通化した検収**：実TEIの同じ型付きRuleが別の記述表層にある場合も、元Source位置・Revisionは別である。SUI [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)では同じ文字列が二箇所に存在すると選択Digestは一致しても選択byte位置が異なる。両者を組み合わせた**意味・原文の位置・配布物の一致を分ける反例**と、Ownerへの引渡しは[横断§56](harness-cross-ui-session-probe-2026-11-14.md)へ集約した。この並行作業票では同じ証拠Packet/Runnerを重複定義しない。TAI #168の独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2を、この追加反例の必須条件にしない。

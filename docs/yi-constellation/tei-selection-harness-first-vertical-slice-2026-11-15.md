@@ -1,6 +1,6 @@
 # TEIで選んだ設計要素をAIへ渡して戻す：最初の実行票
 
-**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–54](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
+**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–56](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
 
 **途中で止まった場合**：送信ACK・Native Session ID・AIの回答・実Product Effectを同じ「完了」にまとめない。Source/Grantが変わったら送信前に再確認し、Tool Replyが不完全なら未受領、Sessionを再接続できなければ限定Activity Handoffへ縮退する。元ProductのEffectが不明な場合は再実行せず照会する。実際の表示例とOwner別の停止線は[横断計画§50](harness-cross-ui-session-probe-2026-11-14.md)を参照。
 
@@ -28,7 +28,7 @@ go test ./internal/operations -run '^TestInspectCapabilitySourceEvidenceFromWork
 go test ./internal/operations -run '^TestCapabilitySourceOnlyEditInvalidatesPinnedRevision$' -count=1
 ~~~
 
-現在mainのSource静的照合では、`reference/tei-studio-workbench/source-locations.ts`はS-LOC-0のread-only投影、PinのHost `authorityLimits` FixtureはTEI #4869で修正済み。一方、参照HTMLのボタンIDと現Handlerは未整合で[#4876](https://github.com/hat47x/tei-platform/pull/4876)が**未マージ**、配布`cmd/tei-studio/assets/workbench/index.html`にはPin UIが無い。よって**Nodeの参照テスト成功＝Windows配布画面の成功**とは扱わず、[#4879](https://github.com/hat47x/tei-platform/pull/4879)のSource→Pin→正式Bundle/Embed→実Windowsの独立検収へ引き渡す。
+**現行mainへの更新**：`reference/tei-studio-workbench/source-locations.ts`のS-LOC-0はread-only投影で、Pinの`authorityLimits`は#4869で保守的に検査する。以前の「参照HTMLはPinのDOM未整合／配布HTMLにはPin UIがない」は、[main #4920](https://github.com/hat47x/tei-platform/pull/4920)の配線修復と[main #4945](https://github.com/hat47x/tei-platform/pull/4945)の正規埋込Bundle同期により**現在の状態ではない**。参照HTMLと埋込HTMLは同一Git Blob、埋込Bundleの該当CIは成功した。ただし実Windows WebView2 Smokeは一部失敗し、修復候補[#4955](https://github.com/hat47x/tei-platform/pull/4955)は未マージ。**配布byte一致と実Window/Host/Grantの受領は別**として、[横断§54.2／§56](harness-cross-ui-session-probe-2026-11-14.md)の停止線へ引き渡す。
 
 内蔵`tei.rule-authoring/v0`は現行製品Readerへ接続済みだが、外部Language Pluginや任意`*.tei.md`の完成とみなさない。SUI Sourceの現在Grant/Raw再読も別ProductのOwnerに残す。外部Harnessへの実配送はTAI #168の実OS隔離・現在Disclosure・完全Reply検収が成立した**後続Trial**だけで行い、元Subjectへの候補返却と独立Consumer確認を別々に記録する。各段階の現状と停止線は[横断計画§54](harness-cross-ui-session-probe-2026-11-14.md)に集約する。
 
@@ -60,11 +60,13 @@ go test ./internal/operations -run '^TestSelectedMarkdownRulesDriveEvaluatorRead
 
 このRule Readerを最初のTAI #168固定H2/H3四Slotに追加せず、同一Sourceの正負例を持つ**後続のTool-only／Product Skill比較候補**として保持する。RuleからGo生成→実Provider/通常CLI実行→Owner受理も別の製品実装である。状態：**実行票の追補のみ／新Go・外部Harness E2EはNOT RUN**。
 
+**Source箇所の取違えを防ぐ追加反例**：SUI [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)では同じUTF-8本文を二箇所から選ぶと選択Digestは一致するが、byte範囲が異なる。同じ内容・Hashを元Occurrenceの同一性とみなさず、SUI Productの現在read、元Raw版と選択範囲、別Productへの開示、最終Consumerを別々に検査する。TEIのMarkdownと従来`.tei`が同じ型付きRuleになった場合も、元Source位置はそれぞれ保つ。初回の独立Expectedと停止線は[横断§56](harness-cross-ui-session-probe-2026-11-14.md)に集約し、この実行票から新Source Providerや第二Identity正本を作らない。
+
 ## 6つの操作と実行担当
 
 | 順番 | 現在利用するProduct／Harnessの入口 | 合否と停止線 |
 | --- | --- | --- |
-| 1. 対象を指定 | TEI CUIの実CatalogでSubject KindとCanonical IDを取得。Studioは#4515の明示Pinを後続利用 | Focusや表示ラベルで代用しない。Workspace/RootとSourceを区別。Studio PinはDraftに実装済みだが実Host未検収。C0の実証はCUI固定入力で独立に続行 |
+| 1. 対象を指定 | TEI CUIの実CatalogでSubject KindとCanonical IDを取得。Studioの現行Pinは#4920/#4945でUI／埋込Sourceが更新済み | Focusや表示ラベルで代用しない。Workspace/RootとSourceを区別。実Windows HostでのPin／Grantは未検収。C0の実証はCUI固定入力で独立に続行 |
 | 2. TEIで再確認 | 現行Inspect、Locate、Trace、Validate、Host-owned Reader | 実Subject存在、版、Source位置、診断、関連の取得範囲を保持。空Indexを不存在としない |
 | 3. 送信前に準備 | Product/Hostが用途・Audience別に許可した短いProjectionをPreview | 受信先、送信予定内容、除外・unknownを確認。生File Path・秘密のID/件数/Digest等を既定で送らない |
 | 4. 外部へ配送 | 実在するProduct CLI/MCP等のTool、または当該Harnessの適格Native Session | 実Tool Call、送出byte、実Reply終端、受信者、Current Grantを別観測。準備・ログ出力だけを実送信としない |
