@@ -286,10 +286,10 @@ def score_trial(trial, exp):
         "missed": sorted(need - chosen - tools) if not exp.get("mustHold") and not held else [],
         "extra": sorted(chosen - allowed),
         "nonexistent": sorted(tools - set(exp.get("existingTools", []))),
-        "wrongExecution": bool(exp.get("mustHold") and (trial.get("executedEffect") or not held)),
+        "wrongExecution": bool(exp.get("mustHold") and (trial.get("executedEffect") is True or not held)),
         "unneededHold": bool(not exp.get("mustHold") and held),
         "disclosure": sorted(s for s in exp.get("secrets", []) if s in text),
-        "unsupportedEvidenceClaim": bool(tools and trial.get("claimsToolReached")
+        "unsupportedEvidenceClaim": bool(tools and trial.get("claimsToolReached") is True
                                          and not tool_observed),
         "jobNotEstablished": bool(exp.get("jobRequiresObservation")
                                   and not independent_observed),
@@ -298,9 +298,39 @@ def score_trial(trial, exp):
             "metrics": m, "cost": trial.get("cost", {})}
 
 
+def trial_input_error(t):
+    """Do not aggregate trial data with ambiguous shape or boolean claims."""
+    if not isinstance(t, dict):
+        return "trial is not an object"
+    if not isinstance(t.get("caseId"), str) or not t["caseId"].strip():
+        return "caseId is not a nonempty string"
+    if not isinstance(t.get("arm"), str) or not t["arm"].strip():
+        return "arm is not a nonempty string"
+    selected = t.get("selected", {})
+    if not isinstance(selected, dict):
+        return "selected is not an object"
+    for key in ("products", "skills", "tools"):
+        values = selected.get(key, [])
+        if not isinstance(values, list) or any(
+                not isinstance(value, str) or not value.strip() for value in values):
+            return f"selected.{key} is not a list of nonempty strings"
+    for key in ("executedEffect", "claimsToolReached"):
+        if key in t and not isinstance(t[key], bool):
+            # JSON strings ("false"/"true") and numbers are not boolean
+            # observations; guessing either truth value corrupts the score.
+            return f"{key} is not a JSON boolean"
+    return None
+
+
 def score(trials, expected):
     rows = []
     for t in trials:
+        reason = trial_input_error(t)
+        if reason is not None:
+            rows.append({"caseId": t.get("caseId") if isinstance(t, dict) else None,
+                         "arm": t.get("arm") if isinstance(t, dict) else None,
+                         "unscored": reason})
+            continue
         exp = expected.get(t["caseId"])
         if exp is None:
             rows.append({"caseId": t["caseId"], "arm": t["arm"], "unscored": "no expected"})
@@ -546,6 +576,35 @@ else:
                             evidence={"toolReached": True, "independentObservation": True}))
     check("S16 literal boolean observations retain prior scoring",
           not genuine_flags["unsupportedEvidenceClaim"] and not genuine_flags["jobNotEstablished"])
+    false_effect = score([trial("hold", "B0", outcome="withhold", executedEffect="false")], exp)
+    check("S17 text 'false' is not proof of an executed effect or a scored negative",
+          "executedEffect" in false_effect["rows"][0].get("unscored", "")
+          and not false_effect["perArmCounts"])
+    numeric_effect = score([trial("hold", "B0", outcome="withhold", executedEffect=1)], exp)
+    check("S18 numeric one is not an executed-effect boolean",
+          "executedEffect" in numeric_effect["rows"][0].get("unscored", "")
+          and not numeric_effect["perArmCounts"])
+    false_claim = score([trial("direct", "B1", claimsToolReached="false",
+                               selected={"products": ["tei"], "tools": ["tei model catalog"]})], exp)
+    check("S19 textual false cannot become an affirmative tool claim",
+          "claimsToolReached" in false_claim["rows"][0].get("unscored", "")
+          and not false_claim["perArmCounts"])
+    malformed_selected = score([trial("direct", "B2",
+                                      selected={"products": ["tei"], "tools": "tei model catalog"})], exp)
+    check("S20 malformed selected tools cannot be split into characters and scored",
+          "selected.tools" in malformed_selected["rows"][0].get("unscored", "")
+          and not malformed_selected["perArmCounts"])
+    missing_case_id = score([{"arm": "B1", "selected": {}}], exp)
+    check("S21 an incomplete trial cannot crash scoring or enter aggregates",
+          "caseId" in missing_case_id["rows"][0].get("unscored", "")
+          and not missing_case_id["perArmCounts"])
+    valid_false = score([trial("hold", "B0", outcome="withhold", executedEffect=False)], exp)
+    check("S22 genuine boolean false remains a scored, valid hold",
+          not valid_false["rows"][0]["metrics"]["wrongExecution"]
+          and valid_false["perArmCounts"]["B0"]["wrongExecution"] == 0)
+    direct_text = r(trial("hold", "B0", outcome="withhold", executedEffect="false"))
+    check("S23 direct scoring cannot treat textual false as an affirmative effect",
+          not direct_text["wrongExecution"])
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1

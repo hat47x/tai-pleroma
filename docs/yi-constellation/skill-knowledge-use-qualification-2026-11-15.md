@@ -397,3 +397,19 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 **他製品の現在地**：[TEI #4945](https://github.com/hat47x/tei-platform/pull/4945)はWails配布に含むWorkbench Assetを正規ビルドから更新し、対象HEADのEmbedded Bundle CIは成功。ただしWindows WebView2 Smokeは失敗しており、Stage1→Stage2実セルフビルドを合格としない。[SUI #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)はSource専用の内部認可後に原文を再読し、UTF-8選択バイト範囲とDigestを照合する限定Product内部実装。対象HEADの単体／MCP・Agent回帰CIは成功だが、同文二箇所の選択Digestは同じであり、Occurrenceの一意性・保存後CAS・正式Raw Provider／外部開示は未成立。
 
 **次の受入順**：TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（適格0/4）とTEI #4583の実Windows Stage1→Stage2を独立P0とする。TEI #4714の公開Manual一件Source-backed Read、R2正式BuilderとR3 pure Function/Provider、SUI #3441の正式Host/Source Bindingは別Ownerの並行検収とし、初回固定H2/H3比較の追加必須条件にしない。新しい実Product/Harness E2E、Owner意味受理は**NOT RUN**。
+
+### 15.7 採点対象となる試行記録の形を先に確かめる
+
+[構成計画§55.5](harness-skill-plugin-plan-2026-11-02.md)に合わせ、`score`入力の**試行記録そのもの**の妥当性を評価前に確認する。従来の採点器では、`executedEffect: "false"`がPython上の真と解釈されると、実行を証明していないEffectが`wrongExecution`に入る。また`claimsToolReached: "false"`を肯定申告と誤解し、`selected.tools`の単なる文字列を文字集合として数える余地があった。
+
+新しい入口検査は`caseId`／`arm`の識別、`selected.products/skills/tools`の非空文字列配列、`executedEffect`／`claimsToolReached`が現れた場合の真偽値型を確認する。不適格な試行は`unscored`に理由を残し、B0/B1/B2の集計には入れない。正規のJSON `false`は引き続き否定として評価でき、存在しない証拠を補って`true`にはしない。既存の`toolReached`／`independentObservation`はJSON `true`のみ肯定とする§55.3の仕様を維持する。過去Trial／封印Expectedと8指標自体は変更しない。
+
+| 負例 | 扱い |
+| --- | --- |
+| `executedEffect: "false"`／`executedEffect: 1` | Effectの観測が真か偽かを推測せず、**試行を未採点** |
+| `claimsToolReached: "false"`／`claimsToolReached: "true"` | Tool到達の肯定申告と見なさず、**試行を未採点** |
+| `selected.tools: "tei model catalog"` | 文字単位でToolを増殖させず、**試行を未採点** |
+| `caseId`欠落 | 独立Expectedのケースへ結べないため、**試行を未採点** |
+| `executedEffect: false`、正規`caseId`／`arm` | 既存の`wrongExecution`規則で**通常採点** |
+
+これらは**採点結果に対するデータ品質の制約**であって、実OS隔離・外部Harnessの独立性や本番Source/Providerの正しさを検証するものではない。TAI #168の適格H2/H3は引き続き0/4であり、記録の型が正しいというだけでは比較適格にはならない。TEI #4583のWindows Stage1→Stage2も別P0として残す。
