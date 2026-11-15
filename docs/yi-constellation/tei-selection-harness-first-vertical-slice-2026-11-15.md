@@ -293,3 +293,28 @@ go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
 | **失敗Receipt** | [TAI main #684](https://github.com/hat47x/tai-pleroma/pull/684)はSUI`readingOrder`欠落という過去FAILを維持。対象HEADの`python-reference`内Receipt検査はsuccess | 同じ`tai-reference` Workflow全体はGo系Jobの失敗で**failure**。既知負例の正しい検査は、現在のSUI Consumer成功ではない |
 
 **次のHandoff**：[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)にてP/G/D/Hの候補、実選択、実Caller、元Source/Build/Consumerを別々に固定する。P/Gの共通Resultが一致しても、DのProvider実Grant拒否を迂回したり、生成済みGoを使ったと偽って直接評価したりしない。外部AI/SHOでの実受領は、Owner側の現在許可とRecipient別Disclosureが確認された一件だけ、既存I/R/P/T/C/Hで別の試行とする。TAI #168のG0/G1/G2と独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2は引き続き独立P0。
+
+## 同じ判断値でもRead IDやBuild入力が異なる場合の再資格化
+
+他チャットの[TEI main #5118](https://github.com/hat47x/tei-platform/pull/5118)では、Data項目表`allocation`とRuleを同じWorkspace Load/Source Indexから選び、P（既存Evaluator）とG（実Go Binaryの別Process）の**Result／Error／実Read ID・回数**を独立Expectedで比較するコードがmainへ入った。GのReaderを別Fieldにすり替え、結果だけ同じにする負例も含まれる。前節の「G構造のみ」という記録はその時点の実装範囲であり、現行mainの試験Sourceは一段進んでいる。ただし、この更新時点の#5118 exact HEAD Workflowは**pending/queued**で、局所Go testのPASSは未確認。
+
+[TEI main #5109](https://github.com/hat47x/tei-platform/pull/5109)では、保存したBuildPlanの解決後に`generated.go`のbyteを変更すると、古いPlanで通常`tei self-build`を実行してもL2-b不成立・Artifactなしで拒否するケースが既存Goテストへ入った。同じ判断結果でも**Builderが実際に読んだbyteと固定Planが違う**なら再利用しない。こちらも対象HEAD Workflowは**queued**であり、テストSource実在と単独PASSは別に記録する。
+
+再試験はTEIリポジトリRootで実施し、HEAD・実行環境・Exit・`PASS/SKIP/FAIL`・Read ID/回数・Plan・Artifactの有無をそれぞれ保存する。下のGoテストは**このYIC文書更新では実行していない**。
+
+~~~sh
+# 同一Data/RuleからPと実Go Binaryを比較し、同じ結果でも異Readを拒否
+go test ./internal/operations -run '^TestMarkedDataTableRuleRealGoAndEvaluatorReadParity$' -count=1 -v
+
+# BuildPlan確定後に生成Go byteを変える負例を含む。Linux/amd64・非-short・Go toolchainが必要
+go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
+
+# YICのReference Consumerの合成試験。SUI製品を実再実行したことにはならない
+python -m unittest discover -s integrations/pilot-sui-document/assembler -p 'test_consumer_mapping_coverage_check.py' -v
+~~~
+
+**実装選択の次段**：[TEI #5114](https://github.com/hat47x/tei-platform/pull/5114)はOpen／未マージで、旧Scenario CommandのOperator実装選択Pinを別Processでも検査する候補。正式mainに入るまで再試験手順の成功条件へ含めない。[TEI #5119](https://github.com/hat47x/tei-platform/pull/5119)もDraft／未マージで、CLI別Process・直接Operation・Wails非依存Studio Hostの三入口Inspect同値を検査する候補。CLI/Hostの結果一致をHTTP公開や非Builtin ProviderのGrantへ拡張しない。
+
+**SUI Consumerの次段**：[TAI main #687](https://github.com/hat47x/tai-pleroma/pull/687)で、旧`readingOrder`欠落の`FAIL` Receiptを保持し、上書き不能の新Attempt用Checkerへ進んだ。#687 exact HEADの`tai-reference`は確認時点で**queued**。上記Pythonの合成試験が成功しても、実SUI checkout/依存/Consumerの別Process読取を伴う新Receiptはまだ存在しない。出典のある新Attemptと過去Receiptを区別し、単に`valid: true`や配列件数が等しいだけで全Field/順序の完全受領を報告しない。
+
+この三系統の結果は[QH §10.12](cross-product-handoff-execution-tickets-2026-11-11.md)の別受入票へ渡す。OwnerによるMeaningと現在Grantが確定しない実Effect・外部AI/SHO送信は行わない。TAI #168の独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Windows Stage1→Stage2は独立P0のまま。
