@@ -132,3 +132,55 @@ K0〜K3だけで正確なread-only回答が出せるなら、それを成果と�
 **保留するもの**：新Skill Manifest/Capability ABI、第二のHost/Resolver/Permission/Registry、Plugin全説明のSkill内複製、外部Harness同一Live Sessionの推定復元、全Product強制インストール、独自Agent Loop。各Productの正式契約とHost環境の実利用資格が成立するまで、配布・本番作用・Owner意味受理を一括承認しない。
 
 **本追補の状態**：既存Product main統合済みの限定実績、未統合Draft、未実施検証の区分を文書に反映したのみ。YICの実Product→外部Harness→独立Consumerの新Trial、実OS/Network/多Audience、EKI業務Effect、Owner受理は**NOT RUN**。
+
+## 9. Plugin文書を「選べた」段階から「読めた」段階へ進める
+
+2026-11-15の後続実装を再照合した。[TEI PR #4800](https://github.com/hat47x/tei-platform/pull/4800)はmainに統合済みで、既存の実`plugin-inventory -plugin`詳細出力に`documentReadPreflight`を追加した。実際の`management.Report`と選択Rowを再利用し、Resolverを二重実行せず、選択済みPluginの正確なVersionとLockの状態を調べる。これは[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の**文書取得前の第一段**であり、Product Doc Reader完成ではない。
+
+| 実出力／条件 | 今回観測できる範囲 | Skill／後続処理の扱い |
+| --- | --- | --- |
+| `selectionStatus: "exact-version-pinned"`、`lockPinned: true` | 対象Pluginの選択Versionが提示されたLockと一致 | 文書本文・Document ID・現在Grantは**未判定**。この段階でRead/外部送出しない |
+| `lock-unknown`、`lock-mismatch`、`version-unknown` | 正確な版固定の資格が不足・不一致 | 文書を現行Pluginの手引きと断定せず、Product側の現行Lockを確認 |
+| `not-selected`、`not-declared`、`resolver-unbound`、`scan-incomplete` | 当該Plugin選択の確認に失敗、または対象範囲が未完成 | 同名資料から補完せず、`unknown`または実契約に沿った不適格状態を保持 |
+| `sourceBinding: "unbound"` | 文書の正式な帰属は未解決 | 旧FixtureのDoc IDや同名Markdownを本番の管理Source参照にしない |
+| `disclosure: "not-checked"` | 現在のAudience・Hostによる開示許可を未確認 | Product内の読取成功とも外部公開可ともみなさない |
+| `readEligibility: "not-assessed"` | 文書の読取適格性をまだ判定していない | Skill説明だけで本文取得成功・空文書・拒否のいずれも主張しない |
+
+コードの定数・JSON欄は実`internal/plugin/management/document_preflight.go`と`cmd/tei/cli_plugin_inventory.go`で確認した。ただし`plugin-inventory -plugin`で存在しないIDを指定すると、現CLIは詳細出力でなく引数エラーを返す。内部の`not-in-inventory`診断を、必ず外部JSONで観測できると約束しない。
+
+**PDC-1の次に実装する最小差分**は、[TEI #4679](https://github.com/hat47x/tei-platform/issues/4679)のProduct Ownerが受理する明示Doc帰属（Plugin ID／Contract版／Document ID／管理Source参照）を既存Source-backed Operationへ結び、現Sourceのbyte・位置・版と現在のAudience/Disclosureを確認して、公開Manual**一件**を同一Attemptでread-only受領すること。追加Command名は実装・Discovery完了前にSkillへ記載しない。Plugin説明全文・上位Graphの網羅や正式`*.tei.md`意味Readerを、この通常Markdown一件の新しいHard Gateにしない。
+
+**PDC-0との区別**：[TEI #4804](https://github.com/hat47x/tei-platform/pull/4804)は候補Graph/Rule構造・元Source byte・Manual byte・生成Goの差を参照テストで照合してmain統合済み。これは文書の構造や元byteを確認する限定実績であり、`sourceBinding`や`disclosure`が解決したことにはならない。#4800のexact HEADでは個別Workflowに成功がある一方、Repository Healthはfailureだった。後続の品質確認・原因切分けをProduct Ownerに残し、他Workflowの成功やmain統合だけを「全体CI合格」にしない。
+
+## 10. Sourceから外部受領まで、実装済みの節目と残る断線
+
+| 連携 | 新たに確認したProduct側の進展 | YICで次に検収すべき独立接続 |
+| --- | --- | --- |
+| **TEI Plugin→公開Manual** | #4800：実選択・版・Lockの事前検査。#4804：候補構造と元Sourceの参照回帰 | Docの正式帰属→現在Source byte→Audience/Disclosure→実CLI一件Read→Tool Replyの完全受領 |
+| **SUI Document→Raw Source** | [SUI #3452](https://github.com/hat47x/sui-sensemaking/pull/3452)がmain統合。localhostテストPDP経由で、Document許可・Source拒否、Grant失効後の再試行、PDP異常時の拒否を合成データで検査 | 本物のProduct Host/PrincipalとServer-owned Source Binding、実PDP/Store、許可済み外部Projectionと二次開示を別途確認 |
+| **TEI Studio→利用者／AI** | [TEI #4806](https://github.com/hat47x/tei-platform/pull/4806)がmain統合。Inspectの`authorityLimits`をWorkbenchの参照Sourceで保持・表示 | [TEI #4812](https://github.com/hat47x/tei-platform/pull/4812)の正規配布JS/HTML byte一致と実Wails Browser確認。参照Sourceの表示だけで配布画面・現在のGrantをPASSにしない |
+| **TEI→EKI Task結果** | [TEI #4749](https://github.com/hat47x/tei-platform/pull/4749)がmain統合。ローカルHTTPスタブで409待機→受理メタデータ、型付き失敗、期限と応答制限を確認 | 実EKI送信（当該PRでは未実行）、同Task成果物bytes取得とdigest検証、独立Consumer・Provider Effect。Task ID保持は効果確定ではない |
+
+これらの到達点を「Product内観測済み」「Reference／スタブのみ」「実Host未実証」に分けて記録する。TEI Sourceの選択・Snapshot、SUI Raw、SEI Decision、SHO文書、EKI Resultを別Productへ渡す場合、転送票が指す元Sourceや現在の開示を**受領側が独立に確認できない限り**、到達不能・未検証のまま保つ。既存[Handoff v1実行票](cross-product-handoff-execution-tickets-2026-11-11.md)とTAI #271のOwnerを使い、別の統合ResolverやReceipt Storeは作らない。
+
+### 10.1 後続の反証候補を既存受入へ追加
+
+| ID | 反例 | 判定・還元先 |
+| --- | --- | --- |
+| **YK-20** | TEIの`exact-version-pinned`が真だが、文書の帰属・Source/Grantは未解決 | `not-assessed`を維持し、Doc本文を取得・送出しない（TEI #4714／TAI #488） |
+| **YK-21** | CLIでLock不一致、またはInventoryがpartial。Skillが合成FixtureのDocを見つけた | 実Plugin選択を満たすまでは現行マニュアルとして扱わない（TEI #4800/#4714） |
+| **YK-22** | SUIでDocument read許可、Raw Sourceのみ取り消した直後に同じTaskを再開 | Source readを止め、履歴Sourceの存在・保存byteを現在Grantに昇格しない（SUI #3441／TAI #271） |
+| **YK-23** | TEI Workbench参照Sourceの制限表示は更新したが、Wails配布JS/HTMLは旧版 | 参照UI成功と利用者の実画面を別扱い。Source→生成物→実Browserを照合（TEI #4806/#4812） |
+| **YK-24** | TEIがEKIのTask IDと受理メタデータを得たが、Result Body取得は失敗 | 同Task/Attemptを未決として保持し、自動再送で業務作用を複製しない。実Effectと独立Consumerは別（TEI #4749／EKI #242/#753） |
+
+新YK-20〜24は**既存YK-01〜19に続く差分参照**であり、第二のExpected正本やTester実装を始めるものではない。Productの実コードとScenarioは各Ownerが保持し、TAI #488が受入結果を照合する。
+
+## 11. 直近に進める作業と、完了の判定
+
+最初の実装引渡しを**TEI PDC-1 D1-1「正規のPlugin→Doc帰属と公開Markdown一件の現在Read」**とする。実`documentReadPreflight`が返す選択版・Lockを前提に、Ownerが受理したDocument Ref、Source byte、Source位置、適用Contract、Audienceを読み、実CLIの読取応答へ接続する。正例一件に加え、Lock drift／同名別Doc／Source A→B→A／途中切断／開示拒否の負例を既存PDC-1 Expectedで検査する。実Toolから本文が取得できるまでは「Plugin文書を読めたSkill」と呼ばない。
+
+その後に、**旧版固定のTAI #168 H2/H3と混ぜない独立Trial**として、Tool-onlyの公開Doc調査と、短いTEI Product Skill＋必要時Doc取得を比較する。さらに中断・再開のときだけTAI Activity Skillを第三Armに含める。品質、正しい保留、誤漏洩、元Source照合、実Load、Tool/Token、時間、再開負担を別々に測る。単発n=1でSkill追加価値が確定したとは扱わない。
+
+**不変の独立P0**はTAI #168の実OS G0→G1→G2→独立H2/H3四Slot（現在比較適格0/4）と、TEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルド。PDC-1／SUI Raw／TEI-EKI／Studio参照制限の検収を、それらの初回Blocking要件へ追加しない。
+
+**今回の状態**：実Productに統合された一部の事前検査と限定Referenceの到達点を、Skill・受入順序へ反映したDocs-only。Source-backed公開Doc一件のProduct読取、実Audience別送信、外部Harness四Slotの新規適格実証、TEI-EKI実Provider／Result Body、Studioの最新配布UI・Owner意味受理は本変更では**NOT RUN**。

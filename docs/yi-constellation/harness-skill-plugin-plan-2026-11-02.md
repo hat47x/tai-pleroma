@@ -1028,3 +1028,15 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **Skillの選択原則を具体化**：B0で十分な公開read-only TaskはToolだけ、製品の固有知識・複雑な手順に実増分価値がある場合のみB1、Source/未決の継続・別Sessionへの再開に実増分価値がある場合のみB2。Tool一覧やSkill本文で認可・実Readerや実Effectを推測しない。各Productの実Tool・文書・Scopeが不足する場合は`unsupported`／`unknown`を保持する。新YK-13〜19は既存[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)／[#271](https://github.com/hat47x/tai-pleroma/issues/271)、各Product #2514等の独立Expectedへ割り付け、新Checkerや第二正本にはしない。
 
 **順番は不変**：独立P0の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)実OS G0→G1→G2→独立H2/H3四Slot（比較適格0/4）と[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)のStudioセルフビルドを優先。[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の一Plugin・一Doc実Read、各ProductのSource/Grant/Consumerは**並行可能な別Owner検収**とし、最初のHarness固定比較へ新しいBlocking条件を足さない。正式Owner受理、実二Harness/二UI、外部Provider Effect、実Source-backed PDC-1は**NOT RUN**。本節は計画・反証の統合であり、製品コードや実Hostは変更しない。
+
+## 51. 2026-11-15：Skillの「実際に利用可能」を、前段検査から現在のSource Readへ進める
+
+[公開Plugin文書の実証計画§9〜11](skill-knowledge-use-qualification-2026-11-15.md)に、TEI Productの実Go前進と、別Productの実Read・結果受領の反証を反映した。これまでの「一Plugin・一Docを実読取する」という目標を変更せず、**そこに至る最初の前段検査だけが製品に入った**ことを現在実績として認定する。
+
+**TEIの新しい出発点**：[main統合済み #4800](https://github.com/hat47x/tei-platform/pull/4800)では、実`plugin-inventory -plugin`の`documentReadPreflight`が選択版とLockを既存Resolver結果から提示する。`exact-version-pinned`でも`sourceBinding=unbound`・`disclosure=not-checked`・`readEligibility=not-assessed`を保持し、Doc本文・Grant・Source Refを創作しない。[main統合済み #4804](https://github.com/hat47x/tei-platform/pull/4804)のGraph/Rule/Manual Source参照回帰は別の限定資格。#4800 exact HEADのCIは複数成功したが**Repository Healthはfailure**であり、main統合を全CI合格と同一視しない。次は[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)のOwnerによる明示Doc帰属、現在Audience/Source確認、公開Markdown一件の実CLI受領を最小D1-1とする。新しいDoc Registryや架空の`tei plugin docs`は追加しない。
+
+**Product間への波及**：[SUI #3452](https://github.com/hat47x/sui-sensemaking/pull/3452)はmain統合済みの**ローカルHTTPテストPDP**で、Document許可とSource拒否、Grant撤回後の再確認を限定検査したが、実Product Hostの認可ではない。[TEI #4806](https://github.com/hat47x/tei-platform/pull/4806)ではWorkbench参照SourceにInspectの制限表示を入れたが、[配布UI修復 #4812](https://github.com/hat47x/tei-platform/pull/4812)の実Browser/配布資産一致が別資格。[TEI #4749](https://github.com/hat47x/tei-platform/pull/4749)のEKI Task結果の`409`待機と受理メタデータもローカルHTTPスタブまでで、成果物本文・実Provider Effectを示さない。これらを新YK-20〜24として各既存Product Ownerと[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)へ還元する。
+
+**優先度と停止線**：TAI #168のG0実OS隔離→G1外部送出→G2完全Reply→新独立H2/H3四Slot（適格0/4）と、TEI #4583のStage1→Stage2非Plugin Desktop実セルフビルドは**相互に独立のP0**として維持する。Plugin文書取得や他ProductのSource/結果検査は各Ownerの並行作業であり、最初の固定H2/H3の必須条件に加えない。Skill本文変更は旧固定試験へ混ぜず、Tool-only／短いProduct Skill／必要時TAI Skillの後続別Trialで比較する。
+
+**状態**：新たな正式Doc Reader、Provider実Read、Studio配布・外部AI完全受領、実Host別Audience認可、Result Body・Owner意味受理を実行した文書ではない。今回はDocs-onlyで計画と既存受入票の接続を更新した。新E2Eは**NOT RUN**。
