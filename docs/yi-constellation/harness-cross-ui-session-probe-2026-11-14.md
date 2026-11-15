@@ -1924,3 +1924,14 @@ SUIでは実Document readとSource readの独立判定がmain済み[#3462](https
 **Handoffの区別**：過去の負例・現在の実Windows受領・現行Source/Grantを別Receipt/Attemptとして扱う。元ConsumerごとにProduct/Subject/Source/Artifact/実受信内容と独立Expectedを確認し、過去FAILは過去FAIL、現行未実行は未実行、限定PASSは限定PASSとする。Sourceの出所と現在Grantが揃わなければ、Client UI/CLIの成功だけから別ProductやAIへRawを送信しない。次の消費試験は[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)へ渡す。TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）とTEI #4583の正式Stage1→Stage2は引き続き独立P0。
 
 
+### 56.4 通常の実Consumerと生成側の実Consumerを分け、Productの成功資格を横断に引き渡す
+
+[TEI #4995](https://github.com/hat47x/tei-platform/pull/4995)のWindows WebView2実測により、従来の「Pinの実DOM操作は未検証」という停止線の一部が前進した。exact HEAD `2f7132503dc88229953c45db25b350a78802c5d2`の[Windows Run](https://github.com/hat47x/tei-platform/actions/runs/43703879023)では、**通常の`desktop-webview2-smoke`が成功**した。実Hostの版を基準にAを固定し、BのGraph選択を保ったままAを再確認・旧観測を失効させて再読し、最後に固定を解除した。一方、同じRunの`generated-desktop-webview2-smoke`は失敗しており、生成側の固定Workbench Source Snapshot版が一致しない問題は別Ownerに残る。[TEI #5002](https://github.com/hat47x/tei-platform/pull/5002)の設計・計画にもこの限定結果がmainへ統合済みである。通常のPin操作成功を、Source改版時の後着Reply／Dirty Editor／現在Grant／Stage1→Stage2の合格に拡張しない。
+
+Ruleの生成Goは[TEI #5009](https://github.com/hat47x/tei-platform/pull/5009)で、元の`tei.rule-authoring/v0`の選択から、既存`validationgen.GeneratePositive`を通じて通常の`tei self-build`／Build Intentで実Binaryを作り判定する**製品経路のテスト**がmainに入った。局所Generatorで終わっていたR1より進んだが、原Markdown byte・Generator版を同じArtifactへ正式束縛するR2-Pの完了、正式に公開されたFunction EntryからProviderを実CallするR3、Ownerの業務意味受理は未成立。テストSourceの存在と対象HEAD CI成否も分けて記録する。
+
+[SUI #3462](https://github.com/hat47x/sui-sensemaking/pull/3462)は、実Document行とServer側Document Resource Resolverを通し、**Document readが認められた後に、保存済みCard選択候補とSource readを別途検査**する内部経路へ進んだ。対象HEADの単体CIはbackend 452件成功、MCP/Agent回帰も成功。実Document資格は進展したが、Card選択・Source Authority・Rawの正規Provider、本番PDP、Card CAS、二次開示まで実証されたわけではない。
+
+以上を既存QH §10のI（意図）→R（元Product再解決）→P（開示）→T（送出）→C（Consumer）→H（Harness）の受入へ引き渡す。例えばSUIの内部readが成功した場合でも、Pは未証明のまま保留できる。TEIの通常WebView2が合格しても、生成DesktopのCは失敗として残す。**一つのCIやJSONフラグに複数の受入結果を合算しない**。[TAI #680](https://github.com/hat47x/tai-pleroma/issues/680)で判明した別テスト失敗に遮られたSkill自己試験についても、試験未実行と失敗を分けて記録する。
+
+次の検収は、TEIの生成Desktop版不一致の原因解決→Windows Stage1→Stage2の同一Attempt、SUIの実Card保存・Current Grant／開示→別Consumerでの再読、TAIの実OS G0/G1/G2→独立H2/H3四Slotを**各Ownerで独立に進める**。外部Product間の実送受信、実Provider Effect、Owner意味受理は今回**NOT RUN**。新しい共通Source Store・Grantサービス・Runnerは導入しない。
