@@ -1054,3 +1054,11 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **実行順とOwner**：YK-25〜29を既存TAI #488/#271/#168、SUI #3441、TEI #4714/#4583、TAI #232のExpectedへ割り付ける。Productが拒否したSourceを別Plugin・Skillから再取得しない。部分回答／unknown／許可された再確認／作用不明での再試行禁止を、元ProductとHostの実観測に従って表す。独立P0のTAI #168（G0→G1→G2→新H2/H3四Slot、比較適格0/4）とTEI #4583（非Plugin Stage1→Stage2 Windows Desktop）を維持し、通常Markdown一件のPDC-1 Product実ReadはTEI #4714へ並行して委ねる。
 
 **状態**：Docs-onlyのOwner間接続と反証の更新である。新しい共通Schema／Runner／認可正本／Skill自動選択器は設けない。実HostでのSource読取・外部送出、適格四Session、現在Bundleの配布、Owner受理、実Effectの新実行は**NOT RUN**。
+
+## 53. 2026-11-15：限定Discoveryの誤断定を評価器で検出し、実Productの前段と接続する
+
+[Skill実行票§13](skill-knowledge-use-qualification-2026-11-15.md)に、実モデル試行J3で確認した「read-only `commands`に載らない」から「製品に変更系コマンドが存在しない」と断定した誤りを、**既存Skill検査器の小さな修正**として取り込んだ。`usage`には存在するが限定`commands`に出ない名前を`SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE`（`UNJUDGED`）と区別し、どちらにも見つからない場合も`SKILL_COMMAND_NOT_DISCOVERED`の事実以上に不存在を断定しない。旧`score`の指標・Trial・封印Expectedは変更しない。既存`--self-test`へ合成例を加え、`tai-reference`で毎回動かす。**実Harnessが発言した自然言語全般を採点できるようになったわけではない**。
+
+最新の製品入口については、[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)の実バイナリでのManual記載・CLI Discovery・Lock前段の交差回帰は進行中の製品内試験であり、公開Doc Source-backed取得やDisclosureの完成ではない。[SUI #3454](https://github.com/hat47x/sui-sensemaking/pull/3454)は認証済みMember/現行Tenant Sessionの内部Preflightがmainへ統合されたが、実Host Route・Source Policy Binding・実Raw readは未結合。これらの実績を、Skillの発見／現在の認可／実Consumerの別資格として[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)と各Product Ownerへ返す。第二Resolverや共通Permission/Runnerを作らない。
+
+**次の検収**は、①このPRの合成検査器`--self-test`を同一HEADのCIで確認、②TEI #4714の一Plugin一Doc実Read、③公開範囲を固定したB0 Tool-only対B1短いProduct Skillの別Trial。Activity中断再開の実益があるときだけB2を選ぶ。独立P0のTAI #168（実OS G0→G1→G2→新しいH2/H3独立四Slot、適格0/4）とTEI #4583（非Plugin Studio Stage1→Stage2実Windows）に新Blocking条件は追加しない。YICの新Product／Harness適格E2E、Owner意味受理、実External Effectは**NOT RUN**。
