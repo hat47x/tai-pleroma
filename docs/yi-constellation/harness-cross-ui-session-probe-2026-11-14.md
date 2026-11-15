@@ -1779,3 +1779,26 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 5. **横断の再利用条件**：他の製品やPluginで同様の読取を実証した場合、意味受理/Current Grant/元Source位置/実Consumerを同じ観測票へ並べて比較する。ただし正本のProduct責務と権限をYICへ移転しない。
 
 **今回の資格（§54の追補を含む）**：TEIのmain Blob（Go Capability回帰、Rule Markdownの実Load/Source Index/Inspection回帰、S-LOC TypeScript、参照HTMLと埋込HTML）・実装PRの採否・SUI内部ゲートのmain統合済みPRを照合した**Source-staticとDocs-onlyの計画更新**。新Go/Node/Windows/DB/実外部Harness/現在Grant/実Result Consumer/Owner意味受理のE2Eは**NOT RUN**。非Plugin Stage1→Stage2（TEI #4583）も別P0として継続し、どの段階の成功も他段階の合格へ自動昇格しない。
+
+## 55. Ruleを意味付きGoへ生成してから、実Productが利用するまでを別々に検証する
+
+他の開発レーンの[TEI main #4911](https://github.com/hat47x/tei-platform/pull/4911)により、前節の「既存Evaluatorへ渡す」に加え、**選択済みの`semantic.Validation`から実際の条件分岐を持つGo Sourceを生成する局所R1**が実装された。`internal/semantic/validationgen/positive.go`の`GeneratePositive`は、解決済み`std.decimal`の`positive`に限って`value.Sign() > 0`を含むGoを出力し、未対応Kind・Relation・型や不完全なRuleを拒否する。既存`validationeval.Source/Result`を使うため、第二の業務Meaning/Runtimeは作らない。
+
+### 55.1 同じRuleの四つの到達点と、次の受入
+
+| 段階 | 現行Sourceから確認できる実績／次の証拠 | まだ成立していないもの |
+| --- | --- | --- |
+| **R0 読取** | #4890/#4891：Languageを明示選択→同一Load原byte→型付きValidation/Source Index/Inspector。#4900：旧`validation`との意味同値と二重宣言拒否 | 外部Language PluginのResolver/Lock、Owner業務受理 |
+| **R0-E 評価** | #4901/#4908/#4913：既存Evaluatorへ実Go Callし、合成SourceのRead Footprint・Rule属性変更時の意味/参照変化を確認するコード | 実Providerがその集合を完全に読んだこと、外部DB/業務Effect |
+| **R1 コード生成** | #4911：Product Ruleを選び、解決済み型からGo分岐を生成、別Processで正値/0/負値/NULL/未取得を評価するテストコード。現行mainで`TestSelectedMarkdownPositiveRuleGeneratesExecutableGo`と拒否試験を確認 | その生成Goが正式BuildIntentの入力/Artifactになったこと、Source変更を反映した再生成の一貫性、製品Go Binaryへの収録 |
+| **R2/R3 実製品利用** | 次のOwner #1121/#1251/#4495：正式Builderの選択・実Input Closure・生成Go byte→actual Provider呼出し→通常`tei` CLIと独立Consumerまで実観測 | 実E2Eは未実証。生成Go単体の成功や選択名一致だけで合格させない |
+
+**次の一因子反証**は、Rule IDと入力Fixtureを固定し、Markdownの参照Attributeを`quantity`から`line_number`へ変更する場合。既存#4908/#4913のReader/Evaluator変更追随を独立Expectedとして再利用し、R1では同じ`Workspace.Load`で型を再解決した生成GoのRead先・条件分岐・byte/Artifact失効が変更に追随するかを検査する。R2/R3では元Rule Source byte、Generator版、Toolchain、実Builderの選択・入力閉包、実Consumerが使ったArtifactの同一Attemptを確認する。**Canonicalが等しい・元byteがA→B→Aへ戻る・別branchのCacheが成功した**だけでは古い許可やBuild成果を復活させない。
+
+### 55.2 YICが再利用するのは、検証済みの結果と現在の権限だけ
+
+AIへの最小の仕事は、利用者が選んだ一Ruleの意味・根拠・現在の生成到達点を**read-onlyで説明する**こと。公開Entryや実Providerの実Callが未証明なら、AIがGoの正値判定を見つけても「製品で実行できる」とは言わない。元ProductでのSource再読取、現在Disclosure、受信先Harnessの実Tool Reply完全性、Productの元Subjectへの候補帰着は§50〜54の既存Gateを使う。SUI [main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のPrincipal/PDP Adapter取り違え拒否も現在Source開示の自動許可には使わない。
+
+**導入判断**：R1の実Generated Goは、TEI自身がGoへの単なるDelegate以上の価値を示す材料として採用する。ただし`*.tei.md`側の定義が短いだけで保守負担や実製品利用の優位が証明されたとは扱わず、同じRuleを「手書きGo」「既存Evaluator」「生成Go」で、変更追随・Source失効・検証工数・実Builder統合まで比較する。再利用するのは既存BuildIntent、Product CLI、CI、Owner Expectedであり、YIC専用Generator/Runnerは新設しない。
+
+**今回の資格**：TEI mainの`validationgen/positive.go`と製品GoテストSource、#4911等のPR統合状態を照合した計画更新。新Go実行・正式Build/Provider・Stage1→Stage2 Windows・外部Harness・実Current Grantは**NOT RUN**。独立P0のTEI #4583とTAI #168 G0→G1→G2→H2/H3四Slot（比較適格**0/4**）の順序は維持し、R1を固定H2/H3の追加必須条件にしない。
