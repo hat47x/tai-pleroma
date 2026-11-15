@@ -267,3 +267,29 @@ TEI Studioは[main #5012](https://github.com/hat47x/tei-platform/pull/5012)でPi
 SUIの[PR #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は**Draft・未マージ**。保存済Cardの出典候補を実Document Revision HeadのVersion・Revision ID・所属Documentと比較し、無変更再保存やRaw A→B→Aで旧候補を拒否する次の負例として扱う。対象HEADの限定Backend CIはsuccessだが、正式Card保存・Current Source Provider/Export Grant・AI受領の成功ではなく、現行mainの利用可能機能としてSkillに列挙しない。
 
 この3系統の独立Expectedは[QH §10.10](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。各Ownerが一因子試験で再確認した結果だけをI/R/P/T/C/Hへ渡し、未受理のSource/実装選択・現在Grantは`insufficient-evidence`として扱う。**この実行票追補から新Go／Windows／SUI／外部Harness実行はNOT RUN**。TAI #168 H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Windows Stage1→Stage2は独立P0のままとする。
+
+## 同じRuleの直接評価・生成Go・実Desktop受領を再試験する
+
+他チャットの[TEI main #5073](https://github.com/hat47x/tei-platform/pull/5073)は、一つの型付きRuleから**P：既存Evaluator**と**G：生成Goを別Processで実行**を対照するGo回帰を追加した。[main #5087](https://github.com/hat47x/tei-platform/pull/5087)は、通常`tei self-build`の実Binaryと既存Evaluatorの結果／Number read回数を突き合わせ、対象HEADの[Rule Self-build Run](https://github.com/hat47x/tei-platform/actions/runs/43726106047)にてFocused Step成功。[main #5091](https://github.com/hat47x/tei-platform/pull/5091)はData項目定義表と隣接Ruleを同じLoad/Source Indexで読み、直接評価の5入力と生成Goの判断構造を別々に確認する**局所テスト**を加えた。
+
+次の三系列はTEIリポジトリRootで各自実行し、**その時点のHEAD・Exit・SKIP・実際の呼出し・Expected・原Source位置**をそれぞれ記録する。このYIC更新では新たにGoテストを走らせていない。
+
+~~~sh
+# P vs G: 同一Rule、独立Expected、NULL／未取得／型不適合を含む
+go test ./tools/reference-generator-selection -run '^TestSelectedRuleInterpretedAndGeneratedRealizationsAgree$' -count=1 -v
+
+# Data表＋Rule：P結果とG構造を別検査。Gの実Binary実行を代用しない
+go test ./internal/operations -run '^TestMarkedDataTable(RuleSharesEvaluatorAndGoLoweringMeaning|TypeChangeRefusesPositiveRule)$' -count=1 -v
+
+# 通常製品CLIのRule生成Go実Binary。Linux/amd64・非short・Go toolchainが必要
+go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
+~~~
+
+| 観測レーン | 確定してよい資格 | 継続する停止条件 |
+| --- | --- | --- |
+| **P/G比較** | 共通Result、入力・Read先/回数の**対象Pure Ruleに限定した同値**。InterpreterのGo errorと生成JSON Adapter理由コードは完全一致ではない | 実Provider Input/Effect、Target変更、実現方式の選択→実Call、現在Grant、外部AIへのDisclosureは別 |
+| **G Builder** | #5051で選択元Markdown原byteを実Binaryに同梱し独立Digestを検査、#5056で異Go byteのBuilder受領を拒否。#5087の限定Self-build CI成功を実証として引用できる | 原Locator/Reader/Generator版/Build Intent全閉包の正式R2-P受理、公開FunctionからProvider実Call（R3）は別 |
+| **生成Studio N2** | [TEI main #5059](https://github.com/hat47x/tei-platform/pull/5059) exact HEAD [Windows Run 43724133016](https://github.com/hat47x/tei-platform/actions/runs/43724133016)で**通常・生成Desktop両Job success**。実CLIがpin済みNodeを起動、生成JS/Receiptを照合して実WebView2へ渡した | CLIはCIのGo Seedで作成。正式non-Plugin Builder／生成Stage1によるStage2自己再構築・実Owner受理は未達 |
+| **失敗Receipt** | [TAI main #684](https://github.com/hat47x/tai-pleroma/pull/684)はSUI`readingOrder`欠落という過去FAILを維持。対象HEADの`python-reference`内Receipt検査はsuccess | 同じ`tai-reference` Workflow全体はGo系Jobの失敗で**failure**。既知負例の正しい検査は、現在のSUI Consumer成功ではない |
+
+**次のHandoff**：[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)にてP/G/D/Hの候補、実選択、実Caller、元Source/Build/Consumerを別々に固定する。P/Gの共通Resultが一致しても、DのProvider実Grant拒否を迂回したり、生成済みGoを使ったと偽って直接評価したりしない。外部AI/SHOでの実受領は、Owner側の現在許可とRecipient別Disclosureが確認された一件だけ、既存I/R/P/T/C/Hで別の試行とする。TAI #168のG0/G1/G2と独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2は引き続き独立P0。

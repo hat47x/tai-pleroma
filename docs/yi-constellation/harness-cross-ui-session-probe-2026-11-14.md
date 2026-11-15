@@ -1841,6 +1841,23 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 
 したがって、**意味（World/Rule）・Source（元byte/版）・実装選択（Manifest/Plugin Lock）・生成器/Build/Artifact・現在Grant/実Consumer**を、変更された軸だけでなく影響先ごとに失効・再確認する。Canonicalや生成Go byteが一致する場合にも、別の実装選択で生成した以前のScenario結果は復活させない。次の失効試験とHandoff停止線は[QH §10.10](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。
 
+### 55.7 同じ型付きRuleの実現方式を、観測範囲ごとに比較する
+
+他レーンの議論は「図表から必ずコードを生成する」か「汎用関数で何でも実行する」かの二者択一ではない。[TEI main #5073](https://github.com/hat47x/tei-platform/pull/5073)では、明示選択した同じ`semantic.Validation`を、既存`validationeval.Evaluate`による**直接評価（P）**と、既存TransformerでGoを生成して別ProcessのBinaryで評価する**生成（G）**へ通すGo回帰を追加した。正値・小数・0・負値・負の0・NULL・未取得・型不適合を独立Expectedと対照し、**Interpreterと生成JSON Adapterの理由コードは完全一致を要求していない**。いずれも論理Source境界の証拠であり、物理Provider read・実Effect・Grant同値の証明ではない。
+
+さらに[TEI main #5087](https://github.com/hat47x/tei-platform/pull/5087)では、通常`tei self-build`の実Binaryを利用する既存Ruleテストへ直接Evaluatorの結果とNumber read回数を追加。対象HEADの[セルフビルドCI](https://github.com/hat47x/tei-platform/actions/runs/43726106047)でRule専用Focused Stepが**success**となった。[main #5091](https://github.com/hat47x/tei-platform/pull/5091)は、選択済み`tei.authoring/v1`のData項目表にある`allocation: std.decimal`とRuleを同一Loadで読み、Pの正値判断とGの生成Go構造を検査し、`std.decimal→std.text`を拒否する**局所Go回帰**を追加した。#5091の生成GoをBinary実行したとの証拠ではない。
+
+| 実現候補 | 現段階で検証できること | 別の受入が必要なこと |
+| --- | --- | --- |
+| **P：型付きモデルの直接解釈** | 対象Rule/入力と論理Source境界を固定し、既存Evaluatorを呼んだ結果・read回数を検査 | 実RuntimeでそのPが選択され実Callされたこと、Model改訂/実Provider/Grant/Effect |
+| **G：Targetコード生成** | 同じRuleからGoを生成し、限定`tei self-build`で実Binaryの判断を確認。[main #5051](https://github.com/hat47x/tei-platform/pull/5051)は原MarkdownのbyteをBinaryへ同梱し、説明文改訂でBuildPlanが変わる負例も追加。[main #5056](https://github.com/hat47x/tei-platform/pull/5056)は選択GoとBuilderに渡すGo byteの取り違えを拒否 | 原Source/Reader/Generator/Toolchain/選択Build Intentの**全閉包を正式R2-Pで束縛**したこと。公開Function Entry/実ProviderはR3 |
+| **D：外部Target/Provider委譲** | 標準Data/Operation/型付きPortとSource・実現方式の契約候補を比較 | 対象Providerの実体/Lock/現在認可、通信・副作用・失敗/部分効果の実観測。P/Gのテスト成功は転用不可 |
+| **H：混合** | P/G/Dの分担・生成箇所・Adapter/Hookの記述候補 | 合成境界ごとの入力充足・順序・Effect・実Consumer。実装前に一つのReferenceだけを万能経路としない |
+
+**選択の順序**は適合性（型/NULL/取得完全性/Law/Effect）→実Provider/Targetの存在とAuthority→運用費用の比較。候補が安いという理由で無断Fallbackさせず、`declared`／`selected`／`built`／`invoked`／`observed`を別証拠にする。これは[TEI main #5095](https://github.com/hat47x/tei-platform/pull/5095)の比較・Scope整理に整合するが、YICが新Runtime SelectorやGenerator Registryを導入する判断ではない。
+
+**次の製品側反証**：同じRuleからP/Gで判断が一致しても、G生成Byte/元Sourceだけを改版、Pの読取元を不完全化、Manifest選択Gなのに実CallerがPを呼ぶ、DのGrant拒否でPへ暗黙Fallbackする、という四種類を分けて試す。独立Expected/Ownerは既存TEI #1180/#2514/#4544/#4495とし、受入票は[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)に一本化する。YICはProduct局所の成功からRecipient別Disclosureや外部Harness受領を自動付与しない。
+
 ## 56. 意味・原文の位置・配布物の一致を分けて検証する
 
 同じ文字列やHashが返ったという一事実を、「同じ業務意味」「同じSource箇所」「現在その人が読める」「別Productに開示してよい」「実Consumerが受領した」の五つに拡大解釈しない。これは独立した新しいEvidence形式の提案ではなく、既存[製品間Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)のI（意図）／R（Product再解決）／P（開示許可）／T（送出）／C（Consumer）／H（Harness）の**各欄を埋める前に、何の同一性を確認したかを固定するための条件**である。
@@ -1897,3 +1914,13 @@ SUIでは実Document readとSource readの独立判定がmain済み[#3462](https
 両者に共通するのは、「同じ内容／同じ対象」と「その**時点で観測・実行・配信してよい**」は別の問いということである。ただしWindowのPin状態とSUIのDocument Revisionを一つのバージョン番号に押し込めない。既存Ownerが保存する**Pin意図・Host Reply、Document Head・選択Receipt、Rule/Manifest選択・Build Artifact**をそれぞれ再解決し、必要なときだけ既存I/R/P/T/C/Hで同一Attemptに結び付ける。P（Recipient別開示）が成立しないならT/C/Hを埋めず、Raw送出を停止する。
 
 **次の独立反証**：TEI #5007の実装選択A→B、SUI #3464のDocument Raw A→B→A、Studio #5025の同一Workspace再読込を、各Productで異なる入力とExpectedとして保持する。反証は一つのYIC新Runnerにまとめず、製品OwnerのGo/Python/Windows試験を利用する。実OS G0/G1/G2・H2/H3四Slot（比較適格0/4）と非Plugin Windows Stage1→Stage2は独立P0のまま。
+
+### 56.6 生成Desktopの受領と、歴史的なConsumer失敗を同じ合格へ足さない
+
+[TEI main #5042](https://github.com/hat47x/tei-platform/pull/5042)は11 Source/Lockを固定した生成Workbenchの版不一致拒否を保ったまま、生成Desktop PoC Bの実Windows WebView2が成功する段階へ進んだ。続く[main #5059](https://github.com/hat47x/tei-platform/pull/5059)のexact HEAD [Windows Run 43724133016](https://github.com/hat47x/tei-platform/actions/runs/43724133016)では、**通常Desktop／生成Desktopの両ジョブがsuccess**。実`tei` CLIがpin済みNode子ProcessへN2を発行し、Child Image SHA／Receipt／生成JS disk digestを照合して、N3のWails WebView2/StudioBridge実受領へ進んだ。この限定成功は、CI側Go Seedから作った`tei`を使うN2経路の検証であり、**TEI生成Stage1自身による非Plugin Stage1→Stage2の再構築ではない**。
+
+過去の[TEI #4995/#5012/#5025](https://github.com/hat47x/tei-platform/pull/5025)における生成Desktop失敗は、その各HEAD・Attemptの証拠として保持する。「現行の生成Desktopは必ず失敗」とはしないが、後の成功で前の失敗Receiptを書き換えない。さらに[TAI main #684](https://github.com/hat47x/tai-pleroma/pull/684)では、SUI Consumerの`readingOrder`を失った歴史的Receiptを**`result: FAIL`のまま**固定元Artifact byte/digestとの整合を検査する特別な既知負例として扱う。[tai-reference Run 43722453051](https://github.com/hat47x/tai-pleroma/actions/runs/43722453051)の`python-reference`内`synthetic receipts test`はsuccessだが、**Workflow全体は複数のGo Reference job失敗によりfailure**。これは「歴史的失敗を正しく検査できた」証拠であり、「現在のSUI投影で`readingOrder`が保持された」証拠ではない。
+
+**Handoffの区別**：過去の負例・現在の実Windows受領・現行Source/Grantを別Receipt/Attemptとして扱う。元ConsumerごとにProduct/Subject/Source/Artifact/実受信内容と独立Expectedを確認し、過去FAILは過去FAIL、現行未実行は未実行、限定PASSは限定PASSとする。Sourceの出所と現在Grantが揃わなければ、Client UI/CLIの成功だけから別ProductやAIへRawを送信しない。次の消費試験は[QH §10.11](cross-product-handoff-execution-tickets-2026-11-11.md)へ渡す。TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）とTEI #4583の正式Stage1→Stage2は引き続き独立P0。
+
+
