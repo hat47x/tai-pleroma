@@ -76,3 +76,59 @@ Plugin文書一件の取得にTAI横断Skillは不要。Product間の仕事は�
 **本書の完了条件**は、現在のProduct/Skill/Pluginの責務と限界を誤記なく示し、PDC-1・SK-02・QH-P0・Studio SelfBuildの作業を既存Ownerへ割り付けられること。実製品CLI文書取得、外部Harness、異なるAudienceへの実開示拒否、実複数UI Session、Owner受理まで一括してDoneにはしない。
 
 **今回の変更の上限**：GitHub上で確認した既存mainの限定実績とIssueを根拠に、受入順と反証を整理した**Docs-only**。新しい実OS/Network、実Provider、Product Doc Reader、外部Harness四Slot、実Build/二UI、Owner意味受理は**NOT RUN**。
+
+## 6. 2026-11-15追補：各Productの現実の入口から、Skillが主張できる範囲を決める
+
+前節のD0〜D5はTEI Plugin公開Docを読む**最初の縦断実験**であり、すべてのProductに同じDoc APIやSkill内容を要求するものではない。他チャットで進んだ実装を、YICで使える証拠の上限と並べておく。ここに挙げるGo/Python/Nodeの試験はそれぞれの製品内の限定実績であり、TAIの外部Harness実証として合算しない。
+
+| Product／現在の実績 | Skillから使えると主張できる上限 | まだ必要な別の検収 |
+| --- | --- | --- |
+| **TEI**：[Plugin Doc合成Fixture #4757](https://github.com/hat47x/tei-platform/pull/4757)、[自己記述計画 #4789](https://github.com/hat47x/tei-platform/pull/4789)はmain統合済み | Pluginの公開文書とGraph/Rule Sourceに対する**合成監査**、Reader/生成/Consumerが別資格であるという設計根拠 | [#4714](https://github.com/hat47x/tei-platform/issues/4714)の実CLI一Plugin・一Doc read、正式`*.tei.md` ReaderのLanguage/Parser binding、選択済みBuilder→実Consumer。Source Indexがあっても`TEI_MD_PARSER_UNBOUND`なら意味Readerは未成立 |
+| **SUI**：[未採用Binding拒否 #3444](https://github.com/hat47x/sui-sensemaking/pull/3444)、[不変Raw Snapshot Reference #3450](https://github.com/hat47x/sui-sensemaking/pull/3450)、[Source別read拒否Reference #3451](https://github.com/hat47x/sui-sensemaking/pull/3451)はmain統合済み | 合成Rawの元byteと位置を別Processで再取得する限定Reference、未採用Source Bindingの黙殺防止、**Document readとSource readの独立拒否** | 正式Card/Source Binding、Product実HostのPrincipal/Source Grant、実Source Provider、外部再開時の再認可・二次開示。[実HTTP PDP連結 #3452](https://github.com/hat47x/sui-sensemaking/pull/3452)はDraftでテストダブルに限る |
+| **SEI**：[MCP serverInfo版情報 #846](https://github.com/hat47x/sei-cognition/pull/846)、[basis/rationale警告 #839](https://github.com/hat47x/sei-cognition/pull/839)はmain統合済み | 実MCP `initialize` がcommit・contractsを報告し、CLI `gate check` が根拠や理由の未記載を識別できるという限定機能 | 申告値と実Binaryの照合、根拠内容の十分性、対象Decisionの現在性。CLIの`--require-basis`／`--require-rationale`は既定falseであり、MCP `check_decision`へ同じ強制を提供済みとは扱わない |
+| **SHO**：[Root厳格化 #52](https://github.com/hat47x/sho-composer/pull/52)、[出典再確認の次段計画 #50](https://github.com/hat47x/sho-composer/pull/50)はmain統合済み | 保存対象Rootを要求する**opt-in**のCLI `--require-root`、既存Reader/WriterとHandoffの限定Product操作 | Root要求は既定ではない。保存文書からTEI元Subjectを現在再束縛するQH-08、問い相対の根拠閉包QH-09、旧Receipt再生を拒む当該Consumer実Read QH-10は別。SHOでMarkdownを読んだだけでTEI Source読取にしない |
+| **EKI**：[独立Verifier反例 #838](https://github.com/hat47x/eki-fabric/pull/838)、[Consumer／Effect分離計画 #835](https://github.com/hat47x/eki-fabric/pull/835)はmain統合済み | Verifier ID・Operatorが別でも、同一の信頼Principalなら**独立検証ではない**という実装上の拒否要件。Task/Claim/AcceptedResult/Consumer/Effectの分離 | #838の新テスト実行はPR時点でNOT RUN。実Verifierの真正性、AcceptedResultのBodyとConsumer実受領、外部ProviderのCommit Receipt・Effectは独立の未達資格 |
+
+**重要な違い**：SUIのRaw Snapshotを現在読めることは、外部AIへ送れることではない。SEIのMCPが契約一覧を返すことは、その契約で現在のTaskに必要な機能が動くことではない。SHOのRoot指定とEKIのVerifier情報は、Skillが持ち運べる権限にはならない。TEIのSource byte・構造fingerprintが合っていても、受理済みMeaning／生成ロジック／利用されたArtifactを同一視しない。
+
+## 7. 依頼を一往復で扱う際の確認順
+
+「発見したので使える」という判定をなくし、**同じTaskに対する観測の連鎖**として記録する。これは共通API、状態型、中央Router、第二Validatorの新設案ではない。既存Tool・Product・Host・TAI #271の記録に対する読解順序である。
+
+| 順序 | 確認する問い | 不明・拒否の場合 |
+| --- | --- | --- |
+| K0：目的 | どの問いを、どの時点・対象・用途・必要な深さで解くか | Taskを狭める。単独ProductならTAI Skillを起動しない |
+| K1：実入口 | 当該HostのTool一覧、Product/Plugin/Contract実版、Skill実LoadとRoot/参照のどれを実確認したか | Tool未列挙を全機能の不存在としない。未実装ならunsupported |
+| K2：Source | 読んだData/Doc/Subjectの元Source、版、範囲、Rootと帰属、部分取得・競合・未読を区別できるか | 説明文・Digest・旧ReceiptだけをSourceの現在実Readにしない |
+| K3：公開資格 | Product内読取、現在Hostの許可、外部送出、別Productの受領のどこまで許可されるか | **Doc read可／Raw Source read不可**など用途別に停止し、非公開の存在・件数・理由も漏らさない |
+| K4：実呼出し | 現行の契約・入力・Preflight・Invoker・Provider/Builder・ExitとResultが同じAttemptで結べるか | Tool注釈、Skillの案内、予定やACKから実EffectやBuild成功を推論しない。unknownなら自動再試行しない |
+| K5：独立結果 | Consumerが実byteを受け取ったか、元Productの対象へ帰せるか、成果物・業務結果が別のReaderで確認されたか | 過去Receipt・別Task/別Rootの一致を今回の受領にしない |
+| K6：再開と配布 | 別Session/HarnessやSource変更後、何が履歴として有効で、どの依存だけ現在再確認すべきか | Skill byte/Tool名の同一性からGrant・Source・結果の現在性を自動継承しない |
+
+K0〜K3だけで正確なread-only回答が出せるなら、それを成果として扱う。外部HarnessのLive Session、複数ProductのHandoff、Provider書込みまでを一つの強制ワークフローにしない。必要な実験でのみK4〜K6へ進む。逆に、K2・K3が未証明のとき、Skillが追加した手順でSource/権限を補ったことにはしない。
+
+### 7.1 既存受入票へ割り付ける追加負例
+
+| ID | 反例 | 独立ExpectedとOwner |
+| --- | --- | --- |
+| **YK-13** | SEI MCP serverInfoにcommit/contractsがあり、根拠なしDecisionをSkillが「検証済み」と説明 | 実版と根拠十分性を別確認。CLI既定Policy／MCP機能差を明示（SEI #786/#833、TAI #488） |
+| **YK-14** | SUI Document readが許可され、同じCardのRaw Snapshot readは拒否 | Source Reader呼出0。外部公開も許可と推定しない（SUI #3441、TAI #232） |
+| **YK-15** | SUIの旧Snapshot同byteを取得後、Scopeが変更される | 元byte保全は歴史的成功。現在read・外部送出を独立照合（SUI #3441、TAI #271） |
+| **YK-16** | SHOでroot未指定のまま保存対象が切り替わり、Skillがstrict Rootが既定と誤認 | `--require-root`の実指定とHost/現在Workspaceを別確認。未知の元TEI Sourceを無音再束縛しない（SHO #52/#50） |
+| **YK-17** | EKIの二Verifier IDが異なるが、認証Principalは同一 | 独立審査として加算せず、AcceptedResult／実Consumer受領／Effectを別確認（EKI #838/#242/#753） |
+| **YK-18** | TEI Graph/Rule構造指紋が同じでも、生成Go実ロジックや実Binaryが異なる | Source→候補Meaning→生成物→Buildの実入力→Consumerを別照合。実Binary自己申告を独立Expectedにしない（TEI #4789/#4761/#4583） |
+| **YK-19** | TEI Reader未選択でもPinned Source byteが一致し、Skillが意味モデルを説明 | Source readは保持、意味Reader/診断はunboundとして未成立。実正規Reader→受理Meaningを別検収（TEI #4789/#2621） |
+
+これらは**既存YK-01〜12の後続反証候補**であり、新たな採点Engineや独立Test SSOTではない。Product Ownerが自身の現行入力・Host・Expectedを保有する。[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)は横断照合だけを担い、[TAI #422](https://github.com/hat47x/tai-pleroma/issues/422)の独立Challengerが「正しい保留」と「過剰な保留」「偽成功」を区別して評価する。
+
+## 8. 進め方への反映と、導入を見送る条件
+
+**先に成立させる二つのP0は変えない**。TAI #168のG0実OS読取隔離→G1実送出範囲→G2完全Reply→新規独立H2/H3四Slot（現在比較適格0/4）、TEI #4583の非Plugin Studio Stage1→Stage2／実Builder→実Windows Consumerを並行する。ここへSUI Raw、SEI Method、SHO Writer、EKI本番Verifierを追加の必須条件として抱き合わせない。
+
+**並行できる最小の製品仕事**はTEI #4714の一Plugin・一Doc Product実Read、TEI #2621の正式Reader束縛、SUI #3441の製品Source Grant／Binding、SHO #50の元TEI Source再解決、SEI #833の用途別basis Policy、EKI #242/#753の独立Verifierと実Consumer受領である。各製品の実験はそれぞれのIssue/CIで検収し、TAIへは成功した範囲・unknown・失敗理由だけを返す。
+
+**Skill追加の判定**は、同じ公開Task・Tool/Source/Host Scope・独立Expectedで、B0 Tool-only、B1必要時Product Skill、B2中断再開に必要なTAI Activity Skillを比較する。Source/Scope/Toolが未確定のTaskは、見かけの正答率で順位をつけない。Token/Tool回数だけでなく、必要なSourceの到達、誤公開、偽成功、正しい保留、人の検証工数、再開時の失効漏れを独立に見る。TAI SkillがB0/B1より改善しない用途では、追加導入しない。
+
+**保留するもの**：新Skill Manifest/Capability ABI、第二のHost/Resolver/Permission/Registry、Plugin全説明のSkill内複製、外部Harness同一Live Sessionの推定復元、全Product強制インストール、独自Agent Loop。各Productの正式契約とHost環境の実利用資格が成立するまで、配布・本番作用・Owner意味受理を一括承認しない。
+
+**本追補の状態**：既存Product main統合済みの限定実績、未統合Draft、未実施検証の区分を文書に反映したのみ。YICの実Product→外部Harness→独立Consumerの新Trial、実OS/Network/多Audience、EKI業務Effect、Owner受理は**NOT RUN**。

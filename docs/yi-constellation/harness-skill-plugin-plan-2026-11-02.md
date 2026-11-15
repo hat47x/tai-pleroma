@@ -1018,3 +1018,13 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **実施優先順位は変更しない**：TAI #168のG0実OS Read-deny→G1実Egress→G2完全Reply→事前独立四Slot（比較適格0/4）と、TEI #4583のStage1→Stage2セルフビルドを**独立P0**として継続する。PDC-1の製品内read-only実装は並走可能だが、これを初回H2/H3の追加Blocking条件にしない。Product Skillの改版は旧Trialの固定bytesを書換えず、別版／別Groupで評価する。Host権限、生成Artifact、TEIの意味受理、SHO受領、EKI実EffectをSkill説明から推定しない。
 
 **今回の状態**：実験の順番・反証・Owner引渡しを計画へ追加したDocs-only。新たなPDC-1 Product Read、外部Harness適格比較、異Audienceの実OS拒否、Studio全セルフビルド、実Consumer／Owner受理は**NOT RUN**。
+
+## 50. 2026-11-15：Skill選択を実ProductのSource・認可・結果の資格へ接続
+
+[Skill／Plugin知識取得の実行票 §6〜8](skill-knowledge-use-qualification-2026-11-15.md)に、他Productの実装進捗を踏まえた**能力発見→元Sourceの再束縛→現在の利用・公開資格→実Invoke→Consumer独立読取→活動再開**の確認順を追加した。この順番は既存Tool・Product・Host・Handoffの証拠を読むためのものであり、YIC統一ABI、中央Router/Host、第二Validator、新しい配布Manifestを採用するものではない。
+
+**製品別の現在位置**：[TEI merged #4789](https://github.com/hat47x/tei-platform/pull/4789)は、Source Indexの元byte保持と正式`*.tei.md` Readerの意味受理／生成Go・実Consumerを分離。[SUI merged #3444/#3450/#3451](https://github.com/hat47x/sui-sensemaking/pull/3451)は未採用Source Bindingの拒否、不変Raw Snapshotの限定ReferenceとDocument readとは別のSource read拒否を具体化したが、実Host Source Grant/外部公開は未達。[SEI merged #846/#839](https://github.com/hat47x/sei-cognition/pull/846)はMCP commit/contractsの報告と根拠・理由未記載の識別までであり、報告自体を現Capability/認識十分性へ昇格させない。[SHO merged #52/#50](https://github.com/hat47x/sho-composer/pull/52)は`--require-root`をopt-inで提供するが、TEI元Subjectの現在再解決や旧Receipt再生防止は後続。[EKI merged #838/#835](https://github.com/hat47x/eki-fabric/pull/838)はVerifier ID/Operatorの相違と独立Principalの非同一性を明確にし、AcceptedResult／Consumer受領／外部Effectを分けた（#838新テストのPR時点の実走は未確認）。
+
+**Skillの選択原則を具体化**：B0で十分な公開read-only TaskはToolだけ、製品の固有知識・複雑な手順に実増分価値がある場合のみB1、Source/未決の継続・別Sessionへの再開に実増分価値がある場合のみB2。Tool一覧やSkill本文で認可・実Readerや実Effectを推測しない。各Productの実Tool・文書・Scopeが不足する場合は`unsupported`／`unknown`を保持する。新YK-13〜19は既存[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)／[#271](https://github.com/hat47x/tai-pleroma/issues/271)、各Product #2514等の独立Expectedへ割り付け、新Checkerや第二正本にはしない。
+
+**順番は不変**：独立P0の[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)実OS G0→G1→G2→独立H2/H3四Slot（比較適格0/4）と[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)のStudioセルフビルドを優先。[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の一Plugin・一Doc実Read、各ProductのSource/Grant/Consumerは**並行可能な別Owner検収**とし、最初のHarness固定比較へ新しいBlocking条件を足さない。正式Owner受理、実二Harness/二UI、外部Provider Effect、実Source-backed PDC-1は**NOT RUN**。本節は計画・反証の統合であり、製品コードや実Hostは変更しない。
