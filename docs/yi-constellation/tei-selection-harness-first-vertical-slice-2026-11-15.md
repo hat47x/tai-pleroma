@@ -47,6 +47,15 @@ go test ./internal/operations -run '^TestInspectSelectedRuleMarkdownFromSameLoad
 
 **拒否・失効を同じ試験で扱う**：Language未選択（`TEI_MD_PARSER_UNBOUND`）、未知版（`TEI_LANGUAGE_UNAVAILABLE`）、説明文だけの改訂で旧Source Index失効。試験時には**固定repo HEAD、Go/OS環境、実コマンドと終了コード、失敗時の原因、Fixtureの版、結果の受領先**を既存TEI Ownerの記録へ残す。実Ruleが存在することとRule集合全件性／実Providerの入力集合全件性は別である。
 
+**次に確認できる一段階**：[TEI main #4900](https://github.com/hat47x/tei-platform/pull/4900)で、従来のValidationとMarkdown Ruleの型付き意味同値、および同一Rule IDの二重宣言拒否を検査するコードが追加された。[main #4901](https://github.com/hat47x/tei-platform/pull/4901)では、実Ruleを既存Evaluatorに渡し、合成Sourceで数量・明細番号のRead要求と未取得／空集合／NULLを区別するGo回帰が追加された。次のコマンドは**現行mainでテスト名を照合した実行候補**であり、この文書更新では未実行。
+
+~~~sh
+go test ./internal/workspace -run '^TestRuleMarkdown(AndLegacyValidationHaveIdenticalProductMeaning|RejectsLegacyValidationWithSameIdentity)$' -count=1
+go test ./internal/operations -run '^TestSelectedMarkdownRulesDriveEvaluatorReadFootprint$' -count=1
+~~~
+
+判定時は、同じ型付き意味になったこと、評価器が想定したAttribute/Relationだけを要求したこと、**実Providerから適格な入力集合を取得できたこと**を別欄に記録する。#4901のSourceは合成であり、最後の項目は今回の試験では**未確認**。実DB・外部Harness・実Effectは追加の独立Consumer試験を要する。
+
 **YICへの受渡し**：Product-local A0で確認できたのは型付き意味・元Source・read-only参照であり、公開CLIが同じRuleを外部Harnessへ配送したことではない。既存`tei commands`の実Discoveryと現在のProduct/Host Reader・開示資格を別に確認する。TAI [#662](https://github.com/hat47x/tai-pleroma/pull/662)がmainへ統合したSkill検査器では、実CLI Exit非0またはJSON `ok=false`の応答に正常そうな`result`形状があっても成功扱いしない。Reader結果・Tool実配送・完全Reply・元Subject Consumerは独立して記録する。
 
 このRule Readerを最初のTAI #168固定H2/H3四Slotに追加せず、同一Sourceの正負例を持つ**後続のTool-only／Product Skill比較候補**として保持する。RuleからGo生成→実Provider/通常CLI実行→Owner受理も別の製品実装である。状態：**実行票の追補のみ／新Go・外部Harness E2EはNOT RUN**。
