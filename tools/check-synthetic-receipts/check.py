@@ -77,6 +77,10 @@ RECORDS = (
     "evaluations/records/SCN-001-synthetic-flow-2026-10-29.json",
 )
 REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
+# This archived real execution deliberately records a loss of readingOrder.
+# Do not rewrite it as PASS, admit arbitrary FAIL receipts, or treat it as
+# evidence that today's SUI consumer still loses the field.
+SUI_CONSUMER_MAPPING_NEGATIVE = "evaluations/records/SUI-consumer-mapping-2026-11-06.json"
 
 # Real-execution receipts are kept separate from synthetic ones so that a test
 # run on a host is never counted as synthetic evidence.
@@ -333,8 +337,67 @@ def _read_json(path: pathlib.Path, label: str, errors: list[str]) -> dict[str, A
         return None
     return data
 
+def _is_pinned_sui_consumer_mapping_negative(
+    root: pathlib.Path, data: dict[str, Any]
+) -> bool:
+    """Admit exactly the archived, source-bound negative observation.
+
+    A failed real execution is not a successful consumer. This exception only
+    qualifies the historical evidence of one observed loss. A new or different
+    loss, missing artifact, edited source, or fabricated PASS must fail closed.
+    """
+    artifact = data.get("artifact")
+    observed = data.get("observed")
+    if (data.get("schema") != "tai.reference.sui-consumer-mapping/v0"
+            or data.get("result") != "FAIL"
+            or not isinstance(artifact, dict)
+            or not isinstance(observed, dict)
+            or artifact.get("path") != "evaluations/artifacts/scn-003-document.json"):
+        return False
+    try:
+        raw = (root / artifact["path"]).read_bytes()
+        source = json.loads(raw, object_pairs_hook=_unique_object)
+    except (OSError, ValueError, UnicodeError):
+        return False
+    if artifact.get("digest") != "sha256:" + hashlib.sha256(raw).hexdigest():
+        return False
+    if not isinstance(source, dict) or not isinstance(source.get("document"), dict):
+        return False
+    document = source["document"]
+    if not isinstance(document.get("document"), dict):
+        return False
+    # The source explicitly supplies two ordered cards. The archived SUI
+    # consumer accepted the document but returned zero reading-order entries.
+    if document["document"].get("readingOrder") != ["card-1", "card-2"]:
+        return False
+    if (observed.get("valid") is not True
+            or observed.get("documentDropped") != ["readingOrder"]
+            or observed.get("collectionsWithLoss") != []
+            or observed.get("sourceReadingOrder") != 2
+            or observed.get("modelReadingOrder") != 0
+            or observed.get("readingOrderKept") is not False
+            or observed.get("everyProjectedFieldSurvives") is not False
+            or observed.get("affiliationsKept") is not True
+            or observed.get("sourceAffiliations") != 1
+            or observed.get("modelAffiliations") != 1):
+        return False
+    collections = observed.get("collections")
+    if not isinstance(collections, dict) or set(collections) != {
+            "cards", "islands", "edges", "affiliations"}:
+        return False
+    for name in ("cards", "islands", "edges", "affiliations"):
+        item = collections[name]
+        if not isinstance(item, dict) or item.get("dropped") != []:
+            return False
+        if (item.get("sourceKeys") != item.get("consumerKeys")
+                or item.get("sourceCount") != len(document.get(name, []))):
+            return False
+    return True
+
+
 def check(root: pathlib.Path) -> dict[str, Any]:
     errors: list[str] = []
+    known_negative_receipts: list[str] = []
     for relative in RECORDS:
         path = root / relative
         if not path.is_file():
@@ -380,7 +443,12 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"real-execution receipt allows publication: {relative}")
         if not data.get("host") or not data.get("command"):
             errors.append(f"real-execution receipt lacks host or command: {relative}")
-        if data.get("result") != "PASS":
+        if relative == SUI_CONSUMER_MAPPING_NEGATIVE:
+            if _is_pinned_sui_consumer_mapping_negative(root, data):
+                known_negative_receipts.append(relative)
+            else:
+                errors.append(f"archived SUI consumer negative is not source-bound: {relative}")
+        elif data.get("result") != "PASS":
             errors.append(f"real-execution receipt is not PASS: {relative}")
         if "TEI-EKI-live" in relative:
             accepted = data.get("accepted", {})
@@ -1089,10 +1157,10 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("absentKindsProjectedWithoutThem") is not True:
                 errors.append(f"SUI optional-kind Edge contract behaviour changed: {relative}")
-        if "SUI-consumer-mapping" in relative:
-            observed = data.get("observed", {})
-            if data.get("result") != "PASS" or observed.get("everyProjectedFieldSurvives") is not True:
-                errors.append(f"SUI consumer dropped a projected field: {relative}")
+        if relative == SUI_CONSUMER_MAPPING_NEGATIVE:
+            # Its only qualified outcome is the pinned, explicit field-loss
+            # observation checked above. Never call this consumer a PASS.
+            pass
         if "SUI-TEI-edge-chain" in relative:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("cardToIslandComposes") is not True:
@@ -1594,6 +1662,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         "errors": errors,
         "recordCount": len(RECORDS),
         "realRecordCount": len(REAL_RECORDS),
+        "knownNegativeReceipts": known_negative_receipts,
     }
 
 
