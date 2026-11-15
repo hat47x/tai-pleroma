@@ -187,6 +187,15 @@ TAIを中心とする製品シリーズ YI Constellation について、次の�
 
 製品側の資料は、各製品のリポジトリのREADME、価値文書、状態文書、ADRを参照し、必要な箇所を本文に示しました。製品群の概要資料は、別ファイルの[「YI Constellation 構想と設計」](https://github.com/hat47x/tai-pleroma/blob/main/docs/YI_Constellation.pptx)を参照してください。
 
+## 製品間連携の実行票
+
+文化的な分析資料とは別に、TEI Studioで選んだ設計要素を既存AIハーネスへ渡し、元の対象に候補として戻す際の検証手順をまとめています。
+
+- [最初の実行票：TEI Subjectの確認から外部Harnessの応答帰着まで](tei-selection-harness-first-vertical-slice-2026-11-15.md)
+- [横断計画：複数UIと外部Harness Sessionの接合](harness-cross-ui-session-probe-2026-11-14.md)
+
+いずれも**実行計画**です。TEIの非Pluginセルフビルド、TAIのOS隔離・完全応答・独立Session検収は別の受入条件であり、計画をmainへ統合しただけでは実装や実機検証の完了を意味しません。
+
 ## 提案の扱い
 
 本資料は分析・構想の段階にある。文化的な読みから得た案は、各製品の既存の要求と責務へ照らし、各製品の責任者が採否を判断する。利用例、要件候補、実装、検証、利用者への効果は分けて扱う。
