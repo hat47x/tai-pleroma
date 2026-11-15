@@ -1684,3 +1684,40 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 独自Agent Loopの再審査は§44・TAI #234に戻す。少なくとも二つの外部Harness構成を同じ必要Jobで適格に比較し、既存Product APIとAdapterでは解消できない実害を再現し、追加のOS隔離・復旧・維持・費用まで含めて優位性を示した場合に限る。
 
 **今回の状態**：他チャットのモデル→役割→仕事、TEI #2017 A0〜A4、TAI #233/#422/#234/#271/#488と§28/§50/§51を統合した**Docs-onlyの作業・評価方針**。新しいモデル選択試験、適格二Harness・三Workstream実行、正規Quota/請求確認、実Source/Consumer、Owner意味受理は**NOT RUN**。本節に書いた作業票の手順は新しい公開Schema、中央Router、第二Authority/Expectedを採用したことを意味しない。
+
+<!-- yic-parallel-agent-integration-first-trial-20261115 -->
+## 53. 並行するAIの成果を、現在mainで安全に受け取る実証順
+
+§52の「仕事から担当を選ぶ」を、大量並列探索・別branch実装・独立反証・main統合まで進める。目的は**Agent Sessionを増やすことではなく、互いに独立した変更が同じProductの契約・Source・検証結果へ入る際に起こる失敗を早く検出できること**である。最初の試行手順・評価欄は[並行開発の第一実行票](parallel-agent-integration-first-trial-2026-11-15.md)へ集約する。既存TAI #233 P-A〜P-E、#422 VA-X/VA-E、TEI #2017 A0〜A4の第二正本は作らない。
+
+### 53.1 実際の並行統合で発生した三種類の故障を起点にする
+
+- [TEI main #4844](https://github.com/hat47x/tei-platform/pull/4844)では、異なるファイルに同じ`ReadBytes`が定義され、全体Goビルドが失敗した。個別作業の「機能が必要だから実装した」という判断は、現在mainに既にある宣言を調べる必要を免除しない。
+- [TEI main #4831](https://github.com/hat47x/tei-platform/pull/4831)では、REA比較Statusの重複だけでなく、異なる実装経路が同じNoteを二度追加する問題が生じた。**GitのConflictなし／Compile PASS**であっても、同じ意味の操作・結果が重複しないことを別途調べる必要がある。
+- [TAI main #658](https://github.com/hat47x/tai-pleroma/pull/658)は、限定read-only CLI `commands`にないことを、機能が存在しない証明にしてしまう誤りを既存Skill検査器で区別した。複数Workerの観測が食い違う場合、**取得範囲の異なる観測**を矛盾や不存在へ短絡させない。
+
+これらは現行GitHubで確認できる**歴史的な故障と修復**であり、今もmainが故障しているという主張ではない。また、外部AIを並列に実行して新しい成果を得た証拠でもない。設計・CLI・テストの各Ownerが持つ現行Main Source/Expectedで再確認してから後続Trialに使う。
+
+### 53.2 最小の比較は、順序実行と独立並行を先に分ける
+
+まず公開固定Sourceの三つのA0調査（現行CLIの発見範囲／元SubjectのSource／公開Manualと実CLIの対応）を、逐次Armと各Session独立の並行Armで比較する。**三作業の予備試行はTAI #233が定めた正式P-B四Pressureの代替ではない**。次に、合成fixture上で二つのA2 branchを用い、(a)非競合、(b)同名宣言の二重実装、(c)構文上は通るが意味上は重複するNote、(d)CLI Discoveryの部分範囲の四条件を別Trialとして確認する。本番Sourceに競合を故意に注入しない。
+
+同じモデルや同じHarnessを両Armで利用できないなら、**並行性の効果とモデル能力差を分けられない**と記録する。独立Expected、入力版、許可範囲、実Tool Capability、主要な判定方法は試行前に固定し、Agentの最終回答に合わせて採点条件を修正しない。失敗・途中停止を後から分母から除かず、ITTと事前に定めたPP資格を分ける。
+
+### 53.3 作業の受領からmain統合までの停止線
+
+| 変化・観測 | 必要な再確認 | 不適格なら |
+| --- | --- | --- |
+| 別Workerが同じ契約やFunctionを変更 | 現在mainにある宣言・呼出元・生成物と全Source Closure。変更ファイルだけでなく依存・公開API・同名構造を含める | 重複実装を並存させず、差分をOwnerへ戻す |
+| 単独branchではCI PASS | 統合候補の**同じexact HEAD**で、必要なCompile/Unit/Contract/Consumerと配布byteの検証 | 旧branchのGreenを統合完了にしない |
+| 2つのAgentが同じ結論を出した | Expectedの作成者、受領した根拠・閲覧可能Source、Reviewerの独立Contextと反例 | モデル多数決や同じ誤りを二件の独立Evidenceに数えない |
+| Source/Model/Contract/Grantが途中変更 | 認可されたSource/Host Ownerの現在資格、基準版の再束縛、差分適用先 | 新baseで要検証。必要に応じて未適用Candidateに留める |
+| Tool/Build/Effectがunknown、または旧SessionのResultだけ | 元Attempt・Operation/Receipt・実Consumerを照会し、二重副作用の有無を区別 | 業務実行の自動再送・別Harnessでの暗黙実行をしない |
+
+既存Git worktree/branch/PR、各Productの型付きCLI・CI、OwnerのReview/受理を使い、専用の中央Lock/Agent Loop/新Merge Engineは追加しない。競合処理の自動化は、実測で人手や障害の再発がどこに集中するかを先に測り、既存Git/CIでは代替できない部分だけを後続候補にする。
+
+### 53.4 優先順位と現在の到達点
+
+**独立P0は不変**：TEI #4583非Plugin Studio Stage1→Stage2実WindowsとTAI #168実OS G0→実Egress G1→完全Tool Reply G2→新規独立H2/H3四Slot（比較適格0/4）。並行開発の第一実行票はこれらを初回必須条件にしないし、成功を両P0へ加算しない。TAI #233の探索量拡大も禁止せず、**標準採用・main統合の証拠だけを厳格にする**。
+
+現時点の資格は、GitHub mainの実修復PRと既存Owner条件を照合した**Docs-only／実行票作成**。新しい三Workstream実Session、合成Conflict Trial、独立Reviewer実採点、OS/Network隔離、比較実費、TEI Studio実Windowsセルフビルド、Owner意味受理は**NOT RUN**。
