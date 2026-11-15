@@ -1758,6 +1758,10 @@ TAI #271のActivityには過去の観測を履歴として残せるが、その*
 
 これらは**実製品のテストコードがmainへ統合済み**という事実であり、直ちにGoテスト実行成功を主張するものではない。確認時の#4890のPR HEAD Workflowはqueued/pendingがあり、#4891も一部failure/in-progressがあった。試験対象HEADの実Go/CI結果、失敗原因と本体テストの関係を別途判定する。最初の再試験コマンドと結果欄は[TEI→Harnessの実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)へ集約する。
 
+**型付き意味の同値と評価時の入力要求まで、既存実装を一段進めた**。[TEI main #4900](https://github.com/hat47x/tei-platform/pull/4900)の`internal/workspace/tei_md_rule_surface_equivalence_test.go`は、従来の`validation`宣言と内蔵Markdown Ruleについて、別々の`Workspace.Load`から得た`semantic.Validation`のID・Kind・Attribute・Relation等を照合し、同じWorkspace内で同一Rule IDを二重宣言した場合の拒否を検査する。一方、Sourceの原byte/位置は表層ごとに異なるまま保存される。意味同値は元Sourceや業務Ownerによる受理が同じであることを意味しない。
+
+さらに[TEI main #4901](https://github.com/hat47x/tei-platform/pull/4901)の`internal/operations/selected_rule_markdown_evaluator_read_footprint_test.go`は、選択されたRuleを既存`validationeval.Evaluate`へ実際に渡すGo回帰で、数量2/0/NULL/未取得、明細番号の重複・非重複・明示した空集合・未取得Scopeを**合成Source**で区別する。予期しないAttribute/RelationのReadを拒否する試験用Probeを使い、未取得を空集合に置き換えない。ただし、**Evaluatorへの実Go Callと実Provider/DB・通常CLI・外部Harnessによる受領は別**である。この二つのテストコードがmainに存在することを確認したが、今回そのGo Test/CIや実Product Consumerは実行していない。再試験コマンドは[TEI→Harness実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)に集約する。
+
 **今なお独立して残るもの**は、Rule集合の定義全件性と実Providerからの入力集合全件性、OwnerのMeaning受理、Graph/Window等の正式Readerと外部Language Plugin選択/Lock、Ruleを意味付きGoへ生成したArtifact、実Go Provider/通常製品CLIの呼出・Effect、公開Docの現在Disclosure、正規Studio配布・Stage1→Stage2 Windowsである。内蔵Readerのread-only Inspectionは実Function公開・実行Grantではない。最初のTAI #168 H2/H3四SlotへこのRule Readerを新条件として追加しない。
 
 ### 54.4 Product境界を越える場合は、現在のSource利用資格を引き継がない
