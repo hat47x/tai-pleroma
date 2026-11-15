@@ -1793,7 +1793,7 @@ SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455
 | **R1 コード生成** | #4911：Product Ruleを選び、解決済み型からGo分岐を生成、別Processで正値/0/負値/NULL/未取得を評価するテストコード。現行mainで`TestSelectedMarkdownPositiveRuleGeneratesExecutableGo`と拒否試験を確認 | その生成Goが正式BuildIntentの入力/Artifactになったこと、Source変更を反映した再生成の一貫性、製品Go Binaryへの収録 |
 | **R2/R3 実製品利用** | 次のOwner #1121/#1251/#4495：正式Builderの選択・実Input Closure・生成Go byte→actual Provider呼出し→通常`tei` CLIと独立Consumerまで実観測 | 実E2Eは未実証。生成Go単体の成功や選択名一致だけで合格させない |
 
-**次の一因子反証**は、Rule IDと入力Fixtureを固定し、Markdownの参照Attributeを`quantity`から`line_number`へ変更する場合。既存#4908/#4913のReader/Evaluator変更追随を独立Expectedとして再利用し、R1では同じ`Workspace.Load`で型を再解決した生成GoのRead先・条件分岐・byte/Artifact失効が変更に追随するかを検査する。R2/R3では元Rule Source byte、Generator版、Toolchain、実Builderの選択・入力閉包、実Consumerが使ったArtifactの同一Attemptを確認する。**Canonicalが等しい・元byteがA→B→Aへ戻る・別branchのCacheが成功した**だけでは古い許可やBuild成果を復活させない。
+**次の一因子反証**は、Rule IDと入力Fixtureを固定し、Markdownの参照Attributeを`quantity`から`line_number`へ変更する場合。既存#4908/#4913のReader/Evaluator変更追随を独立Expectedとして再利用する。ただし現行Fixtureの`quantity`は`std.decimal`、`line_number`は`std.integer`で、R1の`GeneratePositive`は**後者を生成可能とせず、型の再解決後に明示拒否すること**が現在の期待結果である。R1の正側は`std.decimal`の元Ruleで実分岐とbyte/Artifactを検証し、別の対応済みDecimal属性を追加する場合だけ生成先の変化も試す。R2/R3では元Rule Source byte、Generator版、Toolchain、実Builderの選択・入力閉包、実Consumerが使ったArtifactの同一Attemptを確認する。**Canonicalが等しい・元byteがA→B→Aへ戻る・別branchのCacheが成功した**だけでは古い許可やBuild成果を復活させない。
 
 ### 55.2 YICが再利用するのは、検証済みの結果と現在の権限だけ
 
