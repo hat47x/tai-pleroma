@@ -233,3 +233,39 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 **次の実装優先度は不変**。TAI #168 G0→G1→G2→新たな独立H2/H3四Slot（比較適格0/4）とTEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルドを独立P0として続ける。[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の一Plugin・一Doc Source-backed Readは並行実装し、別TrialのB0/B1比較へ引き渡す。SUI正式Source Provider、元TEI Source再束縛、EKI実Effect、Owner受理を初回四Slotに抱き合わせない。
 
 **本追補の資格**：main統合済みのSUI認可ガードとTAI利用者向け設計、未統合TEI試験枝を再照合したDocs-only。実Product Host／外部Harnessの新たなRead/送出、Browserからの実操作、独立比較の新実走、正式なDoc本文取得・Owner受理は**NOT RUN**。
+
+## 13. 2026-11-15：限定的なコマンド発見を、機能の不存在と取り違えない
+
+実モデル試行J3（[記録](../../evaluations/records/TAI-capability-selection-model-trial-2026-11-12.json)）では、TEIのread-only `commands`で見つからなかった操作について「変更系コマンドが存在しない」と回答した。CLIのusageにはより多くのコマンド名があり、この断定は**観測した範囲を超えている**。発見されたToolが少ないことと、製品そのものに機能が存在しないことは別である。
+
+[既存のSkill選択検査器](../../integrations/tools/skill_selection_check.py)の`drift`について、次の判別を行う。新しいProduct Capability Registryや共通Checkerを作らず、既存の実CLI発見とusageを比較する限定修正である。
+
+| 検査結果 | 言えること | 言えないこと |
+| --- | --- | --- |
+| `commands`で発見 | 当該CLI/Profileの公開された読取入口として列挙された | 特定のWorkspaceで実行成功、現在のGrant、実ProviderやEffect |
+| `commands`になくusageにある | **SKILL_COMMAND_OUTSIDE_DISCOVERY_SCOPE**：この発見範囲の外。既存検査器では`UNJUDGED` | コマンドが存在しない／現在のHarnessから呼び出せる |
+| 両方に記載がない | **SKILL_COMMAND_NOT_DISCOVERED**：現在の明示Skill記述と調査結果に不一致。存在は`not-established` | 全製品／全Profileに存在しないと確定すること |
+| `commands`自体が取得できない | `tool-unavailable`。存在や正しさは採点しない | ツール不在・スキル無効を実証したこと |
+
+`score`の既存指標や歴史的B0/B1/B2 trialデータは変更しない。今回のコードは**明示的なSkill内CLIコマンド列に対する静的ドリフト判定**に限り、自由文の「存在しない」という主張全般を自動理解しない。合成CLIのusageにあるが`commands`にない名前を加え、存在否定の誤判定をせず`UNJUDGED`とする自己試験を追加した。さらに[既存のtai-reference CI](https://github.com/hat47x/tai-pleroma/blob/main/.github/workflows/tai-reference.yml)に、同検査器の`--self-test`を実行する工程を追加した。実Product／Harnessの検収ではない。
+
+### 13.1 製品側の最新実装をどう受け取るか
+
+[TEI #4845](https://github.com/hat47x/tei-platform/pull/4845)では、先行するJSONLの二重定義解消[TEI #4844](https://github.com/hat47x/tei-platform/pull/4844)のmain統合後、**実ビルドした一つのteiバイナリ**で公開Manual候補と`tei commands`、実選択PluginのLock前段検査を交差照合する試験が進んでいる。これはPDC-1 D1-0/D1-4の製品内確認であり、正規Doc Binding／Source-backed Read／Audience/Disclosureに当たるD1-1〜3を満たさない。#4845が進行中の間はProduct実装の完了に数えず、新HEAD CIとOwner判断を確認する。
+
+[SUI #3454](https://github.com/hat47x/sui-sensemaking/pull/3454)はmain統合済みで、Source用の**認証済みMemberと現行Tenant Sessionの前段確認**を既存SaaS認証から再利用した。Guest／Agent資格や旧SessionをMember扱いしない。対象HEADのbackend-contract 396件はPASSと報告されている。ただし内部Preflightは実ProductのHTTP Routeに未配線で、テストでは認証Session解決の一部を差替えている。信頼済みPrincipal、Source Policy Binding、実PDP許可、Raw Reader、外部AIへの再開示は未受理である。
+
+この二つの前段は互いに異なる。TEIの`exact-version-pinned`はDocの帰属・閲覧資格ではなく、SUIの「Memberの現在Sessionを確認した」こともSource Grantではない。外部Harnessへの送出には、それぞれのProduct/Hostが現在のAudienceと対象Sourceについて認めた事実だけを使う。
+
+### 13.2 次に既存Ownerへ還元する反証
+
+| ID | 反例 | 期待する判定と担当 |
+| --- | --- | --- |
+| **YK-30** | CLIのread-only `commands`にない名前がusageにはある | Skillドリフト検査で`UNJUDGED`。利用可とも不存在とも言わない。TAI #488 |
+| **YK-31** | Skillの架空コマンドが`commands`とusageの双方にない | 当該Tool/Profileとの不一致として報告するが、全製品での不存在は断定しない。TAI #488／TEI #2605 |
+| **YK-32** | SUI Member/Sessionの前段検査が成功し、Source Policy Bindingが未設定 | Raw Reader/外部Disclosureの資格は未成立。Guest/AgentはMemberへ昇格しない。SUI #3441／TAI #232 |
+| **YK-33** | TEI実CLIで公開Manualの記載コマンドを確認できたが、Doc Source Bindingがない | CLI発見とManualの真正性／現在版／読取／公開許可を別欄に保持。TEI #4714／TAI #488 |
+
+**維持する優先度**：独立P0はTAI #168の実OS G0→G1→G2→新しい独立H2/H3四Slot（直近比較適格0/4）とTEI #4583の非Plugin Stage1→Stage2実Windowsセルフビルド。TEI #4714の一Plugin・一公開ManualのProduct実Readは並走し、旧固定Skill bytesの比較には混ぜない。新しい共通Router、Agent Loop、中央AuthZや独立Expectedは追加しない。
+
+**この節の資格**：既存Checkerへの小さな修正、合成自己試験とそのCI配線、他製品で確認した前段を対応付けた段階。実TEI PDC-1公開文書Read、SUI本番Source Read、外部Harness適格比較、Owner意味受理は**NOT RUN**。
