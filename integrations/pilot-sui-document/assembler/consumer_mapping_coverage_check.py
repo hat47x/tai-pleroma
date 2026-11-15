@@ -29,6 +29,8 @@ payload = to_documentv1_payload(
     updated_at="2026-11-03T00:00:00Z",
 )
 model = DocumentV1.model_validate(payload)
+# Report both the mapped payload and what DocumentV1 actually retained.
+normalized = model.model_dump(exclude_none=True)
 
 def keys_of(payload, name):
     value = payload.get(name)
@@ -41,6 +43,8 @@ def keys_of(payload, name):
 print(json.dumps({
     "payloadTopLevel": sorted(payload.keys()),
     "payloadKeys": {name: keys_of(payload, name) for name in ("cards", "islands", "edges", "affiliations")},
+    "modelTopLevel": sorted(normalized.keys()),
+    "modelKeys": {name: keys_of(normalized, name) for name in ("cards", "islands", "edges", "affiliations")},
     "modelAffiliations": len(model.affiliations or []),
     "modelReadingOrder": len(getattr(model, "readingOrder", []) or []),
     "modelReadingOrderValues": list(getattr(model, "readingOrder", []) or []),
@@ -122,16 +126,17 @@ def main(argv=None):
     # The composed artifact nests the document record under "document".
     document_record = document.get("document", {})
     document_dropped = [
-        key for key in document_record.keys() if key not in observed["payloadTopLevel"]
+        key for key in document_record.keys() if key not in observed["modelTopLevel"]
     ]
     per_collection = {}
     dropped_any = []
     for name in COLLECTIONS:
         source_keys = element_keys(document.get(name, []))
-        kept_keys = observed["payloadKeys"][name]
+        kept_keys = observed["modelKeys"][name]
         dropped = [key for key in source_keys if key not in kept_keys]
         per_collection[name] = {
             "sourceKeys": source_keys,
+            "payloadKeys": observed["payloadKeys"][name],
             "consumerKeys": kept_keys,
             "dropped": dropped,
             "sourceCount": len(document.get(name, []) or []),
@@ -179,7 +184,7 @@ def main(argv=None):
             "suiSourceRoot": str(src),
         },
         "observed": checks,
-        "scope": "Builds DocumentV1 through SUI's own consumer and compares the payload with the artifact, per collection and per document field. It records that every projected field that the consumer knows about survives (including readingOrder and affiliations), which contrasts with the meaning-change finding that a field the consumer does not know is dropped while validation still passes. It does not change SUI.",
+        "scope": "Runs SUI's reference projection and inspects both its input payload and the validated DocumentV1 model; every projected field and the exact readingOrder must survive. This is an isolated consumer replay, not SUI's persistent Save/ReRead or a current authorization/Disclosure grant.",
     }
     # Exclusive creation prevents a second replay from overwriting the first
     # even if the output appeared after fresh_output_path's preflight check.
