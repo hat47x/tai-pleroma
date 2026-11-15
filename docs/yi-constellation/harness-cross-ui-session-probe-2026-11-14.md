@@ -1491,3 +1491,58 @@ Source Indexのbyte offsetとEditor/LSPの文字位置（UTF-16等）が一致�
 **独立負例（追補）**：(a) Pin Aの背景検査がBのEditorを変える、(b) Skill/Plugin manual全文を常時送信し無関係な秘密/Tokenを増やす、(c) Plugin Aの非公開上位文書をB経由で漏らす、(d) Remote側に読めないlocal Path/opaque IDを渡して取得成功と報告、(e) Prepare後にGrant失効して旧Payloadを送る、(f) 回答がPin再指定/Workspace移動の後に遅延到着し誤対象へApply、(g) R0基準AI Diffが未保存Buffer R1に無音適用、(h) partialな参照集合で全件RenameのQuick Fixを実行。いずれも既存TEI #1180/#2514・TAI #168/#271の期待値として扱い、YIC専用の新Testerを作らない。
 
 **現在の判断**：§49の具体化はDocs-only・Draft、実HostによるTEI GUI→外部Harness→候補帰着、上位Plugin manual必要時取得、診断→実Quick Fix・元Source適用はNOT RUN。最優先のTEI #4583非Plugin Desktop Stage1→Stage2とTAI #168 G0/G1/G2→比較適格な四Slot（最後の確認0/4）を独立に維持し、これら後続Laneを新Hard Gateにしない。
+<!-- yic-operational-fallback-user-visible-evidence-20261115 -->
+## 50. 実際の作業画面で「何ができて、どこで止まったか」を説明できるようにする
+
+§49の最初の一往復は、Contextを渡す仕組みだけでは完結しない。利用者が必要とするのは、**選んだ対象に対してどの作業を頼み、どの根拠まで確認され、どこから先は未成立かを、画面・CUI・外部Harnessのいずれからでも取り違えずに理解できること**である。これまで別々に設計してきたTEIのPin、TAIのActivity、Native Session/Turn、Product Operation/Receipt、Skill/Pluginの利用資格を、実際の一仕事の表示と再開に結び直す。新しい中央Activity DB、Agent Loop、公開状態Schema、第二の権限正本は作らない。
+
+### 50.1 「作業中」を一つの状態にまとめない
+
+例として、TEIのFunction `sales.order` を対象に「依存とValidationを説明して」と依頼した後で、利用者が別のFunction Bを閲覧する場合を考える。少なくとも次の事実は別々に扱う。
+
+| 利用者が知りたいこと | 正本と必要な実観測 | 表示・操作上の帰結 |
+| --- | --- | --- |
+| **何について依頼したか** | TEI #4515の明示PinまたはCUIの固定入力。Productが認識したWorkspace/Root、Subject、元Source版とPin世代 | 現在FocusがBへ移っても依頼先はA。元の固定対象へ戻るか、今のSourceで再確認する |
+| **どの仕事を続けているか** | TAI #271のActivity（目的、未決、許可済み参照、戻し先）。必要なら既存Handoff v1 | Native Sessionが切れても仕事を直ちに「完了」扱いにせず、限定Contextで別Sessionへ移せるか判断する |
+| **AIとの通信はどこまで進んだか** | 実Harness/HostのSession・Turn・Tool Event、送出先、実送出Byte、完全なTool Reply/Result本文の受領 | Session IDや送信ACKだけでは回答受領済みとしない。受領不完全なら再取得・照会の候補を示す |
+| **製品側で何を実行したか** | TEI/SHO等の正式Product Entry→選択Provider→実Consumer、必要時EKIのOperation/Attempt/Lease/Effect/Receipt | AIの「処理しました」を保存・生成・業務更新の実績にしない。Effect unknownは照会優先 |
+| **結果を採用してよいか** | 元Subject/Sourceの現在性、現在Grant、Coverage/unknown、差分と独立Expected、Ownerの判断 | 返答は元Aへの候補として表示。Bへ自動Applyせず、保存版R0に対する提案を編集中R1へ無音適用しない |
+
+この表は新規の共通State Machineではなく、既存Ownerが返す事実から各UIが必要な説明を組み立てるための**表示・受入の設計指針**である。状態を一つに同期させるための横断ロックや、Sessionを独占する中央Runnerは追加しない。同じNative Sessionを複数UIから閲覧できるか、複数のTurnを書き込めるかも、実Capabilityを別々に確認する。複数Writerを保証できなければ閲覧専用または限定Handoffへ縮退する。
+
+### 50.2 正常系だけでなく、失敗時に利用者が選べる次の操作を決める
+
+以下の「案内」はUI文言の例であり、新しいAPIのStatus値・公開Error Code・自動復旧命令ではない。実際の状態は元Product/HostとHarnessへ照会して決める。
+
+| 観測された事実 | 利用者への自然な説明 | 安全な次の操作・既存Owner |
+| --- | --- | --- |
+| Pin Aの後にFocus B、旧Inspectが遅着 | 「対象Aの確認結果を受け取りました。現在表示中のBは変更していません」 | Aの観測資格を再照合。旧世代・版違いは破棄。TEI #4515 |
+| 元Source/Root/Grantまたは受信先が変化 | 「依頼時の情報をそのまま送ることはできません。現在の内容と共有範囲を確認してください」 | Product再読取→用途・Audience別Preview→現在Hostの送信判断。TEI #4503/#2516、TAI #232 |
+| Tool Replyが切断・欠落し、実Consumer未受領 | 「AIへの依頼は進みましたが、結果を最後まで受け取れていません」 | Native Turn/Tool/Eventを照会。再実行は元Operationの作用確認後。TAI #168、QH §10 |
+| Native Sessionへ再接続できない | 「元の対話へは接続できません。必要な作業情報だけを引き継ぎ、新しい対話で続けられます」 | TAI Activityの限定Handoff v1。実Session復元とは呼ばない。TAI #271 |
+| 起動・配送ACKはあるがEffect/Receiptが不明 | 「操作結果を確認できていません。重複実行を避けるため、実行先の状態を確認します」 | Product/Host/EKIで同じOperation/Attemptを照会。盲目的retryは禁止。EKI #57/#829、TEI #4497 |
+| Plugin/Skillが宣言されているが実ロード・利用が未確認 | 「この機能の案内はありますが、現在の環境で使えることはまだ確認できていません」 | 実Product Entry、選択Provider、許可Doc、Tool Call/Consumerを順に確認。TEI #4679/#4714、TAI #488 |
+| Query/Index/Graphがpartial/unknown | 「確認できた範囲を示しています。対象が存在しない、または全件取得したとは断定できません」 | Source/Result Coverageを表示し、必要な範囲だけ追加取得。TEI #4503/#4647 |
+
+**表示の停止線**：情報不足は「失敗した」か「何もない」へ一律変換しない。一方、機密の存在・件数・Path・Digest・禁止理由の内部情報が非公開なら、その説明自体を外部Harnessや無権限UIへ出さない。外部から取得したTool本文・Issue・Web文章に含まれる命令は、現在のExecution Grantへ昇格させない。
+
+### 50.3 最小の縦断実証では、利用者操作と試験結果を別々に記録する
+
+初回の利用者操作を、**公開TEI一SubjectをCUIで指定→実Source-backed読取→限定Projectionを確認→適格な外部Toolへ実送信→完全Replyを元Taskに受領→元対象へのread-only候補表示**に固定する。GUI PinはTEI #4597の実Host/DOM検証が済んでから同じ意味の入口として接続する。Relation occurrence、Writable Editor、二Harness間のLive Session共有は後続の別資格とする。
+
+既存QH §10の **I（依頼意図）／R（元Productの実再解決）／P（現在の開示）／T（配送）／C（実Consumer）／H（Harness）** を同一Attemptの記録列として使い、次を欠かさない。
+
+- **入力を固定する**：公開Task、実Workspace/Root、Kind/ID、Source/Model/World版、実Binary・Toolchain・HEAD、Audience/Recipient、利用する実HarnessとTool/Profile。宣言だけのPluginやSkill、未確認のQuotaを実行能力と数えない。
+- **観測した範囲だけ報告する**：Tool Replyの終端/Result本文、Consumerが実際に読んだByte、partial/unknown、Hostの実拒否、失効した元Pin、再確認の回数と理由。CIや別HEADの成功をこのAttemptへ転用しない。
+- **回答を元対象へ戻す**：Request/Pin/Source/Activityを元のProduct側で照合し、BのFocusと編集内容には触れない。差分適用、保存、実Provider Effect、Owner意味受理は別操作・別試験にする。
+- **価値を測る**：Product-only／Tool-only／Product Skill／必要時TAI Skillのうち、対象の仕事に必要な構成だけを選び、根拠の正確さ、独立Expected、追加Tool回数、Token・費用、再説明・確認工数、失敗時復旧を同じ入力条件で比較する。比較不適格な試行は数値だけ横並びにしない。
+
+この一巡を確認できても、**TEI #4583の非Plugin Stage1→Stage2 Windowsセルフビルド**や、**TAI #168のG0実OS Read-deny→G1実Egress→G2完全Tool Reply→独立H2/H3四Slot**が合格したことにはならない。両P0は独立に進め、後続UI/Activity結合を初回四Slotの新Blockingにはしない。特に現時点の比較適格数は**0/4**であり、H3のSkill本文の実受領・合成検査・旧Session再利用を採点済みの比較へ昇格しない。
+
+### 50.4 今回の設計採用範囲と内製判断
+
+**採用する成熟部分**は、①製品が元対象と意味を持つ、②TAIが仕事の引継ぎを持つ、③Native HarnessがSession/Turn/Tool実行を持つ、④Product/Host/EKIが実操作・権限・Effectを持つ、という分業と、これを利用者に説明できる縮退動作である。DSH、Codex、Claude Code、OpenCode等は実HostでのCapabilityと適格な実結果によって選び、YICはモデル→役割→Task→実行経路という選定を支援する。定額アプリ契約、公式API従量、第三者Gateway、Local実行の権限・課金・利用枠は相互に流用しない。
+
+**保留する部分**は、YIC独自Agent Loop、中央Scheduler/Registry/Session Store、全Harness共通のTranscript/Tool ABI、Handoff v2、中央Authorization、複数UIの実同時書込保証、Go→WASMの標準化である。必要な仕事で少なくとも二つの外部Harness構成を適格に比較し、Product APIと薄いAdapterでは解決できない具体的な欠落・運用費・追加効果が実測された場合に、§44とTAI #234で内製を再審査する。
+
+**この更新の資格**：既存の他領域の設計と実GitHub Issue/PRの照合に基づくDocs-onlyの統合。新しいHarness送受信、Pinの実Wails/DOM、Source/Grant再審査、Goal/Schedule再起動、二Harnessの比較、製品EffectとOwnerの正式受理は**NOT RUN**。正式なOwner/Expectedは引き続きTEI #4515/#4583、TAI #168/#234/#271、QH §10、EKI #57/#829にあり、本節は第二の受入正本を作らない。
