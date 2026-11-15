@@ -1820,7 +1820,7 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 
 **この節の確認範囲**：TEI #4930の製品Go回帰Sourceの存在とPR採否、#4927/#4934の未マージ状態、#4938/#4924の設計統合、SUI #3457/#3458の限定的な進展に基づく**文書上の引渡し**。新しいGo Binary/Builder/CLI/Windows/実Host/外部Harness E2Eは**NOT RUN**。TAI #168実OS G0/G1/G2とH2/H3比較適格0/4、TEI #4583実Windows Stage1→Stage2は引き続き独立P0。
 
-## 56. 同じ意味・同じ本文・同じ配布物を、それぞれ別の同一性として検収する
+## 56. 意味・原文の位置・配布物の一致を分けて検証する
 
 同じ文字列やHashが返ったという一事実を、「同じ業務意味」「同じSource箇所」「現在その人が読める」「別Productに開示してよい」「実Consumerが受領した」の五つに拡大解釈しない。これは独立した新しいEvidence形式の提案ではなく、既存[製品間Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)のI（意図）／R（Product再解決）／P（開示許可）／T（送出）／C（Consumer）／H（Harness）の**各欄を埋める前に、何の同一性を確認したかを固定するための条件**である。
 
@@ -1836,11 +1836,11 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 
 ### 56.2 最初の負例を既存Ownerの受入票に渡す
 
-1. **同一文面・別Occurrence**：SUIの同文二箇所について選択Digestだけを渡した場合、どちらのbyte範囲かを特定したことにしない。Root/Sourceと正確な範囲が無ければRを`unqualified`とし、Pで別Productへの送出を認めない。元Sourceの現在readが許可済みでもExport/Disclosureは別判定。
+1. **同一文面・別Occurrence**：SUIの同文二箇所について選択Digestだけを渡した場合、どちらのbyte範囲かを特定したことにしない。Root/Sourceと正確な範囲が確認できなければ、R（再解決）は未検証と記録し、P（開示）の許可へ進めない。元Sourceの現在readが許可済みでもExport/Disclosureは別判定。
 2. **同一意味・別Source**：TEIのMarkdownと旧Validationは型付き意味が等しくても、片方の説明文だけを変更したらその側のSource位置・版は再検証する。#4973の生成Go同byte・Source独立失効は未検収の期待として保持し、別表現への自動Source付替えや古いGrant再利用を拒否する。
 3. **同一配布byte・別実Consumer**：HTML/CSSのBlob一致またはEmbedded CI成功から、Pin Aを背景で読むときBの画面が不変、Window上のHost権限が有効、現在のRawが読めたと報告しない。実Windowsの画面・Host Reply・Root・Scopeを別に観測する。
 4. **明示的不明のまま縮退**：必要なSource範囲・現在Grant・Consumer受領が欠けたら、AIには許可済みの型付き意味やread-only概要だけを説明させ、Raw抜粋の再送・存在断定・書込提案の自動適用は止める。
 
-**実行順**：TEIの一RuleとSUIの一選択をそれぞれProduct側の固定Source/HE​ADで読む→各Ownerの独立Expected・現在Grant・結果の出所を確認→許可された場合に限りQH §10へ一件だけ接合する。実Productを横断するQH-P0、TAI #168の実OS G0/G1/G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の実Windows Stage1→Stage2は独立P0として維持する。
+**実行順**：TEIの一RuleとSUIの一選択をそれぞれProduct側の固定SourceとHEADで読む→各Ownerの独立Expected・現在Grant・結果の出所を確認→許可された場合に限りQH §10へ一件だけ接合する。実Productを横断するQH-P0、TAI #168の実OS G0/G1/G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の実Windows Stage1→Stage2は独立P0として維持する。
 
 **今回の資格**：TEI mainのPin/Asset BlobとPR採否、SUI #3459/#3460の実装・限定CI、TEI #4900/#4972と未統合#4973を照合した**計画更新**。新しいSUI/TEI製品間実Read/外部開示、Windows Host E2E、生成Go再実行、実Harness送受信、Owner意味受理は**NOT RUN**。新しいSource Store、同一性Registry、共通Grant/Host/Runnerは導入しない。
