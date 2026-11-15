@@ -1006,3 +1006,15 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **責務**：Product Skill/CLIドリフトは各Product（TEI #2605等）、実Harness比較はTAI #168、選択の横断照合はTAI #488、現在資格はTAI #271、機密とHostの強制はTAI #232と各Product、配布はTAI #74、独立レビュー・採否はTAI #422と各Owner。独自Harnessの投資判断はTAI #234に留める。
 
 **状態**：既存の#601/#647実モデル探索結果を計画へ取り込んだ文書更新。G0/G1/G2の新規実証、適格な独立H2/H3四Session、中断再開J2、正式Skill配布、二Harness適合、Owner受理は**NOT RUN**。新たな実Tool、Host、業務Effectの検証を行ったとの主張はしない。
+
+## 49. 2026-11-15：短いProduct Skillから実Plugin文書を取得する、第一縦断実験
+
+[実行計画：Skill・Plugin知識の発見と実操作の資格](skill-knowledge-use-qualification-2026-11-15.md)に、**Tool-onlyで十分ならSkillを読み込まず、追加価値がある場合だけProduct Skill、活動の中断・複数製品連携が必要な場合だけTAI Skill**とする§48の判断を、実装・独立受入へ接続した。
+
+**前進した実績を区別する**：[TEI #4757](https://github.com/hat47x/tei-platform/pull/4757)の合成Plugin A/B/C・Graph/Rule・公開Doc Fixture監査はmain統合済み。ただし現時点の製品Doc Reader／現在Audienceによる許可Readは未成立。次の製品実装は[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の一Plugin・一Docを、実tei CLI／既存Source-backed操作からread-onlyで取得するPDC-1に限定する。Skillの文面に未実装Doc CLIコマンドを追加しない。[TEI #4679](https://github.com/hat47x/tei-platform/issues/4679)の長いマニュアル・上位Plugin公開資料は、選択契約とSource版・Disclosureを現在解決して必要時に読む。別のDocument Registryは作らない。
+
+**選択と評価の順序**：実Tool/Scopeを固定して、B0 Toolのみ→B1短いProduct Skillと必要時の公開Doc→B2を必要とする中断再開・Product間Handoffを**別Trial**にする。宣言／実Loader／実Tool／実Read／Consumer受領／現在資格を混合しない。[TAI #649](https://github.com/hat47x/tai-pleroma/pull/649)は、継承されたNative Sessionの独立比較誤認を既存SK-02合成82件で検査する限定前進であり、OS強制隔離には代わらない。複数UI/Sessionの計画は[統合済み#648](https://github.com/hat47x/tai-pleroma/pull/648)、Fixed Targetの形成と再解決は並行Draft #629/#633とProduct Ownerに置く。
+
+**実施優先順位は変更しない**：TAI #168のG0実OS Read-deny→G1実Egress→G2完全Reply→事前独立四Slot（比較適格0/4）と、TEI #4583のStage1→Stage2セルフビルドを**独立P0**として継続する。PDC-1の製品内read-only実装は並走可能だが、これを初回H2/H3の追加Blocking条件にしない。Product Skillの改版は旧Trialの固定bytesを書換えず、別版／別Groupで評価する。Host権限、生成Artifact、TEIの意味受理、SHO受領、EKI実EffectをSkill説明から推定しない。
+
+**今回の状態**：実験の順番・反証・Owner引渡しを計画へ追加したDocs-only。新たなPDC-1 Product Read、外部Harness適格比較、異Audienceの実OS拒否、Studio全セルフビルド、実Consumer／Owner受理は**NOT RUN**。
