@@ -1186,3 +1186,9 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **並行実装との関係**：[SUI #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Headを使った古いCard選択失効は、確認時点ではopenであり、本件の別Process Consumer再検証とは独立している。[TEI #5007](https://github.com/hat47x/tei-platform/pull/5007)のOperator実装選択、[TEI #5025](https://github.com/hat47x/tei-platform/pull/5025)のPin再読込時失効も、同じ名前やbyteが戻ったときに旧資格を自動復活させない例である。元Source／選択した実装／実Consumer／現在Grantを別に検収する原則は[横断計画§56.5](harness-cross-ui-session-probe-2026-11-14.md)に接続する。
 
 **停止線**：TAI #168の実OS G0→G1→G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の非Plugin実Windows Stage1→Stage2は独立P0を維持する。今回の実SUI Product実行、外部AI/SHO/TEIへのRaw開示、Owner意味受理は**NOT RUN**。新Host・Runner・Registry・第二Expectedは追加しない。
+
+## 56. 2026-11-16：Skill構成の型付き接続と実行時再確認を具体化する
+
+[新しい受入仕様](skill-composition-typed-binding-2026-11-16.md)は、既存§19の型付きConnection・§23/48の必要最小Skill選択・§55のCLI/Source/Consumer検査を、一件の実Taskについて**手順の接続／型付きデータ接続／証拠と現在資格の接続**に分けて再構成する。Whole構造、Field個別接続、明示Adapterの三方式を同一視せず、型が一致しても業務意味・Source/epoch/Scope・現在Grantが成立したとは主張しない。
+
+確認段階は候補D0→静的接続D1→実Source D2→実行直前D3→実結果D4→Consumer D5。YK-COMP-01〜10をTAI #488/#271とTEI等の既存Owner/Checkerに割り付け、新Router・型Registry・共通Host/Policy・第二Expectedを追加しない。まずTAI #168の独立H2/H3四SlotとTEI Windows Stage1→Stage2の独立P0を維持し、その後Tool-onlyで二製品の一接続を実測する。**本節は設計・実行計画。実Harness、実Provider、実Consumer再実行、Owner受理はNOT RUN。**
