@@ -2,8 +2,8 @@
 
 `validate_against_sui` reports `valid: true` when DocumentV1 accepts the payload.
 That says nothing about whether each projected field reached the document. This
-check compares the artifact with the payload the consumer builds, so a field that
-is silently dropped is visible instead of looking like a success.
+check compares the artifact with the mapped payload and validated DocumentV1
+field names. It checks readingOrder values, but not all other field values.
 """
 
 import argparse
@@ -184,7 +184,7 @@ def main(argv=None):
             "suiSourceRoot": str(src),
         },
         "observed": checks,
-        "scope": "Runs SUI's reference projection and inspects both its input payload and the validated DocumentV1 model; every projected field and the exact readingOrder must survive. This is an isolated consumer replay, not SUI's persistent Save/ReRead or a current authorization/Disclosure grant.",
+        "scope": "Runs SUI's reference projection and inspects both its input payload and the validated DocumentV1 model; projected field names and the exact readingOrder must survive; other field values are not compared. This is an isolated consumer replay, not SUI's persistent Save/ReRead or a current authorization/Disclosure grant.",
     }
     # Exclusive creation prevents a second replay from overwriting the first
     # even if the output appeared after fresh_output_path's preflight check.
