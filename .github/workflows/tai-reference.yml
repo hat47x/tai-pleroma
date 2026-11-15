@@ -53,6 +53,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: YIC Skill selection limited-discovery regression (synthetic)
+        working-directory: .
+        run: python integrations/tools/skill_selection_check.py --self-test
       - name: SUI probe test
         run: python -m unittest -v probe_test.py
       - name: EKI API probe test
@@ -106,9 +109,6 @@ jobs:
       - name: PoC evaluation template
         working-directory: .
         run: python integrations/tools/poc_evaluation_template_check.py
-      - name: YIC Skill selection limited-discovery regression (synthetic)
-        working-directory: .
-        run: python integrations/tools/skill_selection_check.py --self-test
       - name: synthetic flow test
         working-directory: tools/check-synthetic-flow
         run: python -m unittest -v check_test.py
