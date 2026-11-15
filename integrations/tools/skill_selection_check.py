@@ -247,7 +247,15 @@ def score_trial(trial, exp):
     need = set(exp.get("requiredCapabilities", []))
     allowed = need | set(exp.get("optionalCapabilities", []))
     text = json.dumps(trial, ensure_ascii=False)
+    # Evidence is supplied by a recorded trial, not by the evaluator-held
+    # Expected. Only JSON boolean true is an affirmative observation.
+    # Strings such as "false"/"true", integers and malformed shapes cannot
+    # satisfy tool or independent-observer qualifications.
     evidence = trial.get("evidence", {})
+    if not isinstance(evidence, dict):
+        evidence = {}
+    tool_observed = evidence.get("toolReached") is True
+    independent_observed = evidence.get("independentObservation") is True
     m = {
         "missed": sorted(need - chosen - tools) if not exp.get("mustHold") and not held else [],
         "extra": sorted(chosen - allowed),
@@ -256,9 +264,9 @@ def score_trial(trial, exp):
         "unneededHold": bool(not exp.get("mustHold") and held),
         "disclosure": sorted(s for s in exp.get("secrets", []) if s in text),
         "unsupportedEvidenceClaim": bool(tools and trial.get("claimsToolReached")
-                                         and not evidence.get("toolReached")),
+                                         and not tool_observed),
         "jobNotEstablished": bool(exp.get("jobRequiresObservation")
-                                  and not evidence.get("independentObservation")),
+                                  and not independent_observed),
     }
     return {"caseId": trial["caseId"], "arm": trial["arm"], "outcome": outcome,
             "metrics": m, "cost": trial.get("cost", {})}
@@ -428,6 +436,29 @@ else:
     check("S10 no composite", not any(k in res for k in ("total", "score", "composite")))
     check("S11 unscored case", "unscored" in score([trial("zzz", "B0")], exp)["rows"][0])
     check("S12 in-repo expected path detected", in_repo(REPO / "x.json") and not in_repo(Path(tempfile.gettempdir()) / "x.json"))
+    nonboolean_text = r(trial("direct", "B0",
+                              selected={"products": ["tei"], "tools": ["tei model catalog"]},
+                              claimsToolReached=True,
+                              evidence={"toolReached": "false", "independentObservation": "true"}))
+    check("S13 textual booleans cannot establish tool or independent observation",
+          nonboolean_text["unsupportedEvidenceClaim"] and nonboolean_text["jobNotEstablished"])
+    nonboolean_number = r(trial("direct", "B0",
+                                selected={"products": ["tei"], "tools": ["tei model catalog"]},
+                                claimsToolReached=True,
+                                evidence={"toolReached": 1, "independentObservation": 1}))
+    check("S14 numeric truthiness cannot establish observations",
+          nonboolean_number["unsupportedEvidenceClaim"] and nonboolean_number["jobNotEstablished"])
+    malformed_evidence = r(trial("direct", "B0",
+                                 selected={"products": ["tei"], "tools": ["tei model catalog"]},
+                                 claimsToolReached=True, evidence=["toolReached", "independentObservation"]))
+    check("S15 malformed evidence cannot qualify observations or crash scoring",
+          malformed_evidence["unsupportedEvidenceClaim"] and malformed_evidence["jobNotEstablished"])
+    genuine_flags = r(trial("direct", "B0",
+                            selected={"products": ["tei"], "tools": ["tei model catalog"]},
+                            claimsToolReached=True,
+                            evidence={"toolReached": True, "independentObservation": True}))
+    check("S16 literal boolean observations retain prior scoring",
+          not genuine_flags["unsupportedEvidenceClaim"] and not genuine_flags["jobNotEstablished"])
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
