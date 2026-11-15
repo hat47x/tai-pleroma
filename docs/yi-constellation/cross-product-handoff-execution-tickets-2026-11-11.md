@@ -823,3 +823,19 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 **実行順と停止線**：まず各Ownerの固定HEAD／Expectedで正負試験を行い、Source Revision/Manifest実装選択/Pin観測を**それぞれ失効・再資格化**する。次に正式ProviderとGrantのあるProductだけを選び、既存§10のI→R→P→T→C→Hを一件の同一Attemptで通す。SUI #3464はPRがmainに入るまで「計画とDraft CI」にとどめる。TAI #168のG0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2は従来どおり独立P0。**新しい製品間の実送受信・Owner受理は今回NOT RUN**。
 
+### 10.11 実現方式の一致・生成Desktopの受領・歴史的失敗を別々に検収する
+
+元Productで同じ型付きRuleを複数の方式へ実現しても、それだけで**その方式が実Runtimeで選択され、現在のTargetで呼ばれ、相手Consumerが適切な権限で受領した**ことにはならない。TEIでのP（直接評価）／G（生成Go）／D（Provider委譲）／H（混合）の比較は[横断§55.7](harness-cross-ui-session-probe-2026-11-14.md)を唯一の設計入口とし、この節には既存Ownerへ渡すExpectedと停止条件だけを置く。新しいRealization enum・Selector・Evidence Storeは実装しない。
+
+| 独立受入カード | 固定する入力と既存の証拠 | 次の棄却条件と現在の上限 |
+| --- | --- | --- |
+| **QH-PG-01：純粋判定の方式差分** | [TEI main #5073](https://github.com/hat47x/tei-platform/pull/5073)の`TestSelectedRuleInterpretedAndGeneratedRealizationsAgree`で、選択した一Ruleと入力を固定。直接Evaluator／Go生成・別Process Binaryの独立Expectedを比較。正値・小数・0・負の0・NULL・未取得・型不適合を含める | **共通で観測できる結果とRead先・回数**を比較し、Interpreter errorとJSON Adapter理由コードの全byte同値、実DB Provider read・副作用・Grant同値は要求しない。P/G以外のD/H成功はゼロ件 |
+| **QH-PG-DATA-02：表の型・Rule適合** | [TEI main #5091](https://github.com/hat47x/tei-platform/pull/5091)の`tei.authoring/v1` Data項目表`allocation`と同じLoadの`allocation_positive`。Pの5入力／Number read、GのGo AST読取・分岐を比較 | `std.decimal→std.text`なら既存Validator・Gが拒否。**Gの構造を検査する試験から実Go Binaryが走ったとは推定しない**。未検収のD/H、正式Providerや外部Grantには加算しない |
+| **QH-G-BUILD-03：選んだ生成物だけを配布** | [TEI main #5051](https://github.com/hat47x/tei-platform/pull/5051)は選択元Markdown byteをBuild入力へ同梱し実Binary側Digestと突合。[main #5056](https://github.com/hat47x/tei-platform/pull/5056)はコンパイル可能な別Go byteをBuilderへ渡す直前に拒否。[main #5087](https://github.com/hat47x/tei-platform/pull/5087)の対象HEAD Rule Self-build CIはFocused Step success | 元Locator/Reader/Generator/Language/Builder/Toolchain/Artifactの全閉包を正式R2-Pで受理するまでは**限定G-Buildの証拠**。値が合っても違う生成Go/Sourceの受領を拒否。R3公開Functionは別 |
+| **QH-N2-WIN-04：実CLI→生成Windowの限定受領** | [TEI main #5059](https://github.com/hat47x/tei-platform/pull/5059) exact HEAD [Windows Run 43724133016](https://github.com/hat47x/tei-platform/actions/runs/43724133016)は、実`tei self-build`がpin済みNodeを起動し生成JS digest・Receiptを照合、生成Desktopと通常Desktopの両Jobがsuccess | 実TEI CLIはCIがGo Seedから作ったもの。正式非PluginのBuilder選択/Stage1がStage2を自力再生成し実WebView2へ渡す全鎖は**NOT ACCEPTED**。旧失敗Receiptを後の成功で上書きしない |
+| **QH-REC-FAIL-05：歴史的負例の品質** | [TAI main #684](https://github.com/hat47x/tai-pleroma/pull/684)のSUI`readingOrder`欠落Receiptは`result: FAIL`のまま原Artifact byte/digestとの整合を検証。exact HEAD [tai-reference 43722453051](https://github.com/hat47x/tai-pleroma/actions/runs/43722453051)の`python-reference`内`synthetic receipts test`はsuccess | **Workflow全体はGo Referenceの複数失敗でfailure**。既知負例の検査成功は、現行SUI Consumerが`readingOrder`を落とさず投影したことの証拠ではない。別Product実Consumer／Source現在資格で新Attemptが必要 |
+
+**採点と引渡し**：QH-PGは判断結果の**限定同値**、QH-G-BUILDはBuildに取り込んだ実byte、QH-N2は限定Windows実Consumer、QH-REC-FAILは**失敗記録の監査可能性**をそれぞれ数える。合格／失敗／未実行／Skip／既知負例は区別し、一つのWorkflow・Receiptの`passed`だけで相互転用しない。ProductのSource範囲/Revision・実現方式のSelected/Invoked・現在Grant・Audience・Artifact・Replyの適格性は、既存§10の**I/R/P/T/C/H**で必要な範囲だけ再確認する。
+
+次段ではTEIの**ManifestにGと記述されても実CallerがPを呼ぶ不一致**、P/G差分のEffect/取得完全性、DのProvider拒否後にPへ無断Fallbackする負例を各Ownerの試験として固定する。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のRevision Head拒否はmain合格に加算しない。外部AIへRawを送るP/T/C/H、Owner意味受理、TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583のStage1→Stage2は従来どおり独立P0。今回の製品間送受信は**NOT RUN**。
+
