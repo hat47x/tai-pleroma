@@ -13,11 +13,17 @@
   },
   "observed": {
     "selfTestDetectsBothHalves": true,
-    "receipts": 27,
+    "receipts": 31,
     "rows": [
       {
         "receipt": "YI-acceptance-authority-2026-11-11.json",
         "scopeLength": 257,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-artifact-digest-2026-11-11.json",
+        "scopeLength": 320,
         "statesWhatWasMeasured": true,
         "statesALimit": true
       },
@@ -48,6 +54,12 @@
       {
         "receipt": "YI-context-handoff-2026-11-11.json",
         "scopeLength": 350,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-cross-receipt-2026-11-11.json",
+        "scopeLength": 320,
         "statesWhatWasMeasured": true,
         "statesALimit": true
       },
@@ -130,6 +142,12 @@
         "statesALimit": true
       },
       {
+        "receipt": "YI-pass-consistency-2026-11-11.json",
+        "scopeLength": 322,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
         "receipt": "YI-publication-refusal-2026-11-11.json",
         "scopeLength": 298,
         "statesWhatWasMeasured": true,
@@ -138,6 +156,12 @@
       {
         "receipt": "YI-receipt-auditability-2026-11-11.json",
         "scopeLength": 520,
+        "statesWhatWasMeasured": true,
+        "statesALimit": true
+      },
+      {
+        "receipt": "YI-receipt-quality-2026-11-11.json",
+        "scopeLength": 286,
         "statesWhatWasMeasured": true,
         "statesALimit": true
       },
@@ -180,7 +204,7 @@
     ],
     "missingLimit": [],
     "missingMeasured": [],
-    "receiptsStatingBothHalves": 27,
+    "receiptsStatingBothHalves": 31,
     "everyScopeStatesBothHalves": true
   },
   "scope": "Reads each YI receipt's scope and records whether it states both what was measured and what was not. The test is lexical, so a scope that names a limit in passing but leaves the real gap unstated passes here; it does not check that the stated limit is the right one."

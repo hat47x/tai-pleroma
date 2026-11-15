@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receipts": 30,
+    "receipts": 31,
     "rows": [
       {
         "receipt": "YI-acceptance-authority-2026-11-11.json",
@@ -179,6 +179,13 @@
         "result": "PASS",
         "failedInvariants": [],
         "explainsTheGap": true,
+        "consistent": true
+      },
+      {
+        "receipt": "YI-receipt-quality-2026-11-11.json",
+        "result": "PASS",
+        "failedInvariants": [],
+        "explainsTheGap": false,
         "consistent": true
       },
       {

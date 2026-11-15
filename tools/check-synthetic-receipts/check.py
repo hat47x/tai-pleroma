@@ -233,6 +233,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-cross-receipt-2026-11-11.json",
     "evaluations/records/YI-artifact-digest-2026-11-11.json",
     "evaluations/records/YI-pass-consistency-2026-11-11.json",
+    "evaluations/records/YI-receipt-quality-2026-11-11.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -554,6 +555,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
+        if "YI-receipt-quality" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("checksRun") != 5
+                or observed.get("failed")
+                or observed.get("scriptsMissing")
+            ):
+                errors.append(f"a receipt-quality check was skipped: {relative}")
         if "YI-pass-consistency" in relative:
             observed = data.get("observed", {})
             if (

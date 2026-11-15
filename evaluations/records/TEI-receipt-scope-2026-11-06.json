@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows with Python 3.12 reading the receipt directory",
   "command": "python integrations/tools/receipt_scope_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-receipt-scope-2026-11-06.json",
   "result": "PASS",
@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "realRecords": 222,
+    "realRecords": 258,
     "syntheticRecords": 64,
     "missingRequiredFields": {},
     "missingScope": [],
@@ -22,9 +22,10 @@
     "historical": 70,
     "unregisteredReceipts": [],
     "allRealReceiptsStateLimits": true,
-    "registeredCount": 256,
+    "registeredCount": 288,
     "foreignReceipts": [
       "AS-LB-loopback-http-2026-11-02.json",
+      "G6-handoff-sei-binding-observation-2026-11-11.json",
       "SK-C-public-fixture-selfcheck-2026-11-02.json",
       "SK-F-public-fixture-selfcheck-2026-11-02.json",
       "SK-J-public-fixture-selfcheck-2026-11-02.json",
@@ -36,6 +37,7 @@
       "SK03-NC-local-transport-2026-11-03.json",
       "SK03-NC-node-ci-2026-11-04.json",
       "TAI-TEI-S1-real-public-source-2026-11-06.json",
+      "TAI-TEI-capability-reference-2026-11-11.json",
       "TEI-H3-fixed-product-skill-staged-preflight-2026-11-06.json",
       "TEI-PR2649-one-revision-actual-cli-observation-2026-11-03.json"
     ],
@@ -47,7 +49,7 @@
       "missingScope": 0,
       "scopeWithoutLimitation": 0,
       "unregistered": 0,
-      "foreign": 14
+      "foreign": 16
     }
   },
   "scope": "Walks the receipts and records which ones lack the required metadata, are not registered in the checker, or have a scope without a limitation. Receipts that are not registered and do not declare TAI's schema belong to other workstreams; they are listed as foreign rather than judged against TAI's format, so their metadata is not checked here. It does not check whether the claim itself is correct. Auxiliary tool output is listed explicitly instead of being silently skipped. Walks every receipt and records which ones lack the required metadata or a scope that names a limitation. The limitation test is lexical (negations and local/test wording), so it cannot tell whether the named limit is the right one. Run with --strict it becomes a gate; without it the gaps are recorded so they can be repaired in order. It does not judge whether a receipt's claim is correct, and it cannot detect a scope that names the wrong limitation."

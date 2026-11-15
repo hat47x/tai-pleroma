@@ -3,9 +3,9 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows with the TEI reference generator and SUI's DocumentV1 model",
-  "command": "python integrations/tools/tei_independent_oracle_check.py --tei-repo D:\\GIT\\hat47x\\tei-wt-r2 --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-independent-oracle-2026-11-06.json",
+  "command": "python integrations/tools/tei_independent_oracle_check.py --tei-repo D:\\GIT\\hat47x\\tei-platform --workspace integrations/pilot-sui-document --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-independent-oracle-2026-11-06.json",
   "result": "PASS",
   "artifact": {
     "path": "evaluations/artifacts/scn-003-document.json",

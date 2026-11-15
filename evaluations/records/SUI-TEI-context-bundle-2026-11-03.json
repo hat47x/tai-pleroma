@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "host": "Windows / loopback SUI local-dev profile",
   "inputDataKind": "synthetic-A2-minimal-v1-stub",
   "command": "python integrations/pilot-sui-document/assembler/context_bundle_check.py --sui-repo <SUI> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/SUI-TEI-context-bundle-2026-11-03.json",
