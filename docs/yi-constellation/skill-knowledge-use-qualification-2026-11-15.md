@@ -327,7 +327,7 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 
 ### 15.2 SUIのSource読取ゲートとAI並行作業の引渡し
 
-[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は現在未マージで、実装候補はMember/現行Session→Server側Source Authority→現在Policy Binding→Source専用PDP→Raw bytes/digest照合を**一回の内部read**につなぐ。Source Authority・認証Session・Policy Resolverはテストダブルであり、製品HTTP Route／正式DB／組織PDP／外部公開許可は未成立。従って、内部の`read`試験が通ってもSkillから本番Raw Sourceを取得・再開示してよいことにはならない。
+[SUI #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は**main統合済み**となった。Member/現行Session→サーバー側Source Authority→現在Policy Binding→Source専用PDP→Raw bytes/digest照合を**一回の内部read**で行う。対象HEADではbackend-contract 413件を含むSUI単体CIとMCP/Agent CIが成功した。ただしSource Authority・認証Session・Policy Resolverはテストダブルであり、製品HTTP Route／正式DB／組織PDP／外部公開許可は未成立。内部の`read`成功をSkillによる本番Raw Source取得・二次開示の許可に転用しない。
 
 [TAI main統合済み #661](https://github.com/hat47x/tai-pleroma/pull/661)の複数AI／branch統合試験計画には、読めたSource・正しく終了したTool操作・実Consumerが受領した成果を**別の証拠**として渡す。終了コード、JSON本文、実Worktree差分、現在HEADのCI、Owner採否を順に確認し、失敗時の`result`や旧PRのReceiptを成功証拠へ昇格しない。Skill評価器の修正は、並行Agentの自動マージ権限や独立Challengerの代わりではない。
 
@@ -344,3 +344,18 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 **実行順は維持**：TAI #168の実OS G0→G1→G2→新独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2 Windows Desktopを独立P0として継続。TEI #4714の公開Manual一件の本物のRead、SUI #3441のSource用Host認可を並行で進め、初回固定H2/H3の追加Blocking条件にしない。Skill B0/B1/B2の効果比較は受入可能なProduct Readが得られた別Trialで判定する。
 
 **今回の実証範囲**：TAIの既存合成Checker・自己試験・CI接続、TEI mainの対象を限定したGo Reader、SUI未マージ候補とTAIの統合計画を整理したもの。新しいTEI公開Manual Read、SUI本番Source API、実OS隔離、実四Session、外部Consumer受領、Owner意味受理は**NOT RUN**。
+
+### 15.4 発見済みの親コマンドから子コマンドを推定しない
+
+従来の§14は、CLIのusageに親`model`だけがある場合の子コマンド誤認を抑えていた。しかし[既存Skill検査器](../../integrations/tools/skill_selection_check.py)の`match_command`は、**限定`commands`に親`model`が載っているとき**、未発見の`tei model imagined`も親`model`へ短縮して発見済みと判定し得た。その結果、Skillに書かれた子コマンドの応答Pathを親コマンドで代行検査するおそれがある。
+
+この短縮をやめ、二語で明示されたコマンドは**二語の完全一致**で発見した場合だけ既知とする。親だけが発見された場合は`SKILL_SUBCOMMAND_NOT_ESTABLISHED`（`UNJUDGED`）を維持し、親を代わりに実行しない。合成試験D13では、親`model`が実`commands`にあっても、未確認の`model imagined`について応答Pathを検証しないことを確認する。D14では親`model`自体の正規の発見を維持する。既存の8採点指標、歴史的B0/B1/B2結果、独立Expectedは変更しない。この検査はSkillに明記されたコマンド列に限られ、全自然言語の命令や実Host権限を判定するものではない。
+
+**製品側の到達点**：[TEI #4890](https://github.com/hat47x/tei-platform/pull/4890)と[#4891](https://github.com/hat47x/tei-platform/pull/4891)は内蔵Rule Markdown Readerの実Workspace Load・Source位置・Inspector検査をmainへ統合した。さらに[#4900](https://github.com/hat47x/tei-platform/pull/4900)は旧`validation`表記との型付き意味の一致・重複定義拒否、[#4901](https://github.com/hat47x/tei-platform/pull/4901)は既存Evaluatorへの合成入力とRead Footprintの照合をmainへ統合した。ただし#4900の対象HEADのCIは未完了で、#4901は複数のCI failureを含むため、全体PASSや実DB/Provider受入とはしない。定義済みRule／型付き意味／合成Evaluator／実Provider入力集合の完全性を別資格として扱う。
+
+| 反証 | Ownerへ戻す判定 |
+| --- | --- |
+| **YK-43**：発見一覧に親`model`はあるが、Skillが未確認の`tei model imagined`を記す | 子コマンドの実在・成功Path・実行資格を認定せず`UNJUDGED`。TAI #488 |
+| **YK-44**：TEIのRule評価で合成Sourceが値・集合を返し、Skillが実DB/Provider読取済みと説明する | 合成Evaluatorの検証と実ProviderのSource/Scope/完全性・Effectを分離。TEI #4495／TAI #271 |
+
+**実行順は据え置く**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Stage1→Stage2 Windowsを独立P0とし、TEI #4714の公開Manual一件Readを並行検収する。新規実Product/Harness E2EやOwner意味受理は**NOT RUN**。
