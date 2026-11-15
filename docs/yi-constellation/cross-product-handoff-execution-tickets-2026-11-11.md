@@ -784,12 +784,26 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 | 受入カード | 元入力と実装済みの検査対象 | 独立Expected／現状 |
 | --- | --- | --- |
-| **QH-CARD-R0：保存位置を再読** | SUIのテスト用同文二Occurrence。保存対象は二箇所目のUTF-8 byte範囲`[38,57)`。認証済Memberで`AuthorizedCardSourceSelectionResolver`からTenant/Document/Card/Captureと保存済み`RawSelectionContentCheckpoint`候補を取得し、Source専用現在許可とRaw再読に渡す | Clientが一箇所目Offsetに変更しても二箇所目へ束縛。異Tenant/Card/Capture、Resolver欠落、未認証、Grant失効、Raw変更は拒否。テスト用Resolverを含む**内部Reference回帰**であり、実Card DB/CAS・正式Hostではない |
-| **QH-TEI-R0：実CLIでRuleをInspect** | TEIの固定`internal/workspace/testdata/tei-md-rule`と`semantic-validation:sales.order_line.quantity_positive`。同一実Goビルドから別OSプロセス`tei inspect`で`tei.cli.inspect/v0`、read-only、元byte範囲・Artifact指紋を照合するテストSource | 同IDの`semantic-capability`は`SUBJECT_NOT_FOUND`、説明用`text`領域だけのRuleも不存在。mainにテストがあるが、この実行票でのFocused Go Testと実CLI Resultは**NOT RUN**。Function公開／実Provider実行と同一視しない |
+| **QH-CARD-R0：DocumentとSourceの二段資格** | SUIの同文二Occurrence（二箇所目`[38,57)`）。[main #3462](https://github.com/hat47x/sui-sensemaking/pull/3462)では同じ認証済Memberから**実SQLite Document Resource→現在Document read PDP→Server所有の保存Card選択候補→Source read PDP→Raw再読/選択byte範囲**の順で照合する | Documentだけ／Sourceだけの許可、Policy欠落、PDP 503、異Tenant/Card/Capture、Clientの別Offset、Raw変更を拒否。対象HEAD backend **452 PASS**・MCP/Agent CI success。ただしCard選択Resolver・Raw/Source Providerはテストダブル、PDPはlocalhost。本番Card永続化・Revision/CAS・二次開示は未検収 |
+| **QH-TEI-R0：実CLIでRuleをInspect** | TEI固定`tei-md-rule`と`semantic-validation:sales.order_line.quantity_positive`。[main #4994](https://github.com/hat47x/tei-platform/pull/4994) exact HEADの通常`tei inspect`別Process・Source byte/Artifact位置の**Focused Go testはPASS**（0.717秒） | 同IDの`semantic-capability`は`SUBJECT_NOT_FOUND`、説明用`text` FenceだけのRuleも拒否。公開Function／Provider実Callは未証明。新しい現在HEADでの実行はこの横断票ではNOT RUN |
 | **QH-X-01：異Productへ渡す前に止める** | QH-CARD-R0／QH-TEI-R0の両方から、元Sourceと現在受信者への開示資格を別審査。SUI側Checkpoint/DigestやTEI側Canonical ID単体だけを外部AIへ送らない | Source read／型付きInspectだけではP（Recipient別Disclosure）未確認。T実送信・C完全受領・H Harness Tool Replyも**NOT RUN**。許可済みのread-only説明以外は保留 |
 
 実行時の記録は既存の**I/R/P/T/C/H**に限定する。Iでは利用者の問いと元Product、Rでは当該Productの現在Subject/Root・元byte位置・Source Revision・read scope、PではAudience/Recipient別Grant、Tは実送出、Cは実Consumerにおける受領内容と対象の突合、Hは実Tool Replyの完了とResult資格を記録する。**Rを二つのProductで独立に確認しただけで、P/T/C/Hを埋めない**。許可の根拠を別ProductのDigestや静的Plugin構成で代用せず、未知の欄は`not-run`または`insufficient-evidence`とする。
 
-**実行に使う既存の回帰**：SUI `03_Implement/backend/tests/test_r2_source_snapshot_read_gate.py`の`test_pinned_card_*`系は同文二Occurrenceの保存位置・Grant再評価の負例を持つ。TEI `cmd/tei/cli_inspect_rule_markdown_process_test.go`の`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`は別OS Processの正負対照。各Ownerは**試験対象HEAD、該当test caseのExit・結果・実Source byte・資格・実Consumerを同一Attemptに記録**する。SUI #3461 exact HEADのbackend-contractは448件PASSだが本番Card Providerは未接続。TEI #4980の該当Goテスト単独PASSもこの票では未確認。旧Headや別PackageのGreenを根拠に合格を補完しない。
+**実行に使う既存の回帰**：SUI `03_Implement/backend/tests/test_r2_source_snapshot_read_gate.py`の`test_pinned_card_*`系に加え、#3462の**実Document read／Source readの別々の拒否試験**を使う。TEI `cmd/tei/cli_inspect_rule_markdown_process_test.go`の`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`は#4994で対象HEADの独立PASS（0.717秒）。各Ownerは**試験対象HEAD、該当test caseのExit・結果・実Source byte・資格・実Consumerを同一Attemptに記録**する。SUI #3462のbackend-contractは452 PASSだが、本番Card Providerは未接続。別HEADや別PackageのGreenを現在のSource/Grant合格へ流用しない。
 
 **停止線と優先度**：この二つのProduct A0から横断QH-P0へ進むのは、Cardの正式保存・現在Document/Source read・Export Grant、TEIの対象Rule現在Source・開示資格、実受信先の同一性をOwnerが独立に確認できた場合だけ。未確認ならRawの送信を止め、許可された概要だけ扱う。TAI #168のG0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583の非Plugin Windows Stage1→Stage2は独立P0のままで、この二入口を初回四Slotの追加Blocking条件にしない。新しいResolver/Context Store/Runner/Grant正本は採用しない。今回の横断実送信・正式Product保存・実SHO Consumer・Owner意味受理は**NOT RUN**。
+
+### 10.9 Build成果と実Windows受領を、Handoffの自動送信許可にしない
+
+前節のA0と並行して、TEIには**生成Ruleを通常製品`tei self-build`から成果物へ通す限定R2-B**が加わった。[TEI main #5009](https://github.com/hat47x/tei-platform/pull/5009)の`TestSelectedRuleGoThroughRealCLISelfBuild`は、固定Ruleの選択・Go生成・Build Intent・隔離Go Build・実Binary判断を一つの局所回帰に収める。試験はLinux/amd64かつ非`-short`で実行する。対象HEADのセルフビルドWorkflow successは確認できるが、`go test`を別HEADで実行したことや、元Rule byte/Generator資格を正式BuildPlanへ束縛したことまでは証明しない。
+
+[TEI main #4995](https://github.com/hat47x/tei-platform/pull/4995)の実Windows WebView2では、Pin A固定→Graph Bへ移動→A再確認（旧結果失効後、Host再取得）→固定解除という限定Product UI Consumerが**通常Desktopジョブで成功**した。一方、同じrunの生成Desktop PoC Bは固定したWorkbench Snapshotの版不一致で失敗（[結果整理 #5002](https://github.com/hat47x/tei-platform/pull/5002)）。Win UIの部分合格は、Stage1→Stage2の再構築、異Rootの同一性、後着Reply、Writable Editor、外部Context投影のGrantではない。
+
+| 追加する独立判定 | 現在の証拠 | 次に拒否する誤った推論 |
+| --- | --- | --- |
+| **QH-BUILD-R2B** | 選択済みRule→Generated Go→製品`tei self-build`→実BinaryのGo回帰Sourceと対象HEADの限定self-build CI | 生成Sourceだけで正式Builderの全Source/Generator資格を受理したことにする。`go test`のSkipを合格へ加算する |
+| **QH-WIN-W0C** | 実Windows通常Desktop WebView2のPin A/B操作は限定PASS。生成Desktop PoC Bは別FAIL | 参照DOM/正規Bundleの一致だけで、Stage1→Stage2や現在Grant／Raw Read・外部開示が済んだことにする |
+| **QH-DOC-SOURCE-P** | SUIの実Document DB/PDPとSource専用PDPは独立に拒否できる。Card Resolver/Raw/PDP実装は限定 | Product内部のDocument+Source read許可を、別ProductやAIへのAudience/Recipient別Export Grantに流用する |
+
+三行は既存I/R/P/T/C/Hへの**製品内補助証拠**であり、新しいHandoff SchemaやBuilder Receipt正本ではない。公開Operator/Rule・Go生成の進展、Desktopの操作成功を加算しても、Pで実開示が許されたことやT/C/Hの実送受信は未確認。最初の本物のTEI→SUI/SHO Consumer一往復は、その時点のSource/Grant/Recipientを再資格化し、独立Expectedと結果を取得してから別Trialで行う。TAI #168独立H2/H3四Slot（比較適格0/4）を塞がない。
