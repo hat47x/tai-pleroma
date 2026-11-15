@@ -1121,7 +1121,7 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 
 ### 55.4 限定Discoveryの範囲を確認し、製品間のSource同一性を推測しない
 
-[Skill実行票§15.6](skill-knowledge-use-qualification-2026-11-15.md)に、限定`tei commands`の構造検査だけでは残る二つの失敗を追加した。一つは`scope`欠落・別範囲の一覧をread-only候補として扱う誤り、もう一つは`-world`が必要なCommandに検査器の`-workspace`を代用する誤りである。既存`skill_selection_check.py`はD18/D19で不適格な発見を未判定に、D22で実行不能な引数を`PATH_CLAIM_NEEDS_ARGUMENTS`に保留する。CLI側の実認可・副作用まで証明するものではなく、独立ExpectedやB0/B1/B2の採点指標はそのまま維持する。
+[Skill実行票§15.6](skill-knowledge-use-qualification-2026-11-15.md)に、限定`tei commands`の構造検査だけでは残る二つの失敗を追加した。一つは`scope`欠落・別範囲の一覧やread-only以外の`effect`を掲載した一覧を安全な候補として扱う誤り、もう一つは`-world`が必要なCommandに検査器の`-workspace`を代用する誤りである。既存`skill_selection_check.py`はD18/D19/D23/D24で不適格な発見を未判定に、D22で実行不能な引数を`PATH_CLAIM_NEEDS_ARGUMENTS`に保留する。CLI側の実認可・副作用まで証明するものではなく、独立ExpectedやB0/B1/B2の採点指標はそのまま維持する。
 
 **他チャットの成熟した成果との接続**：[TEI main #4945](https://github.com/hat47x/tei-platform/pull/4945)で、Pinを含む参照Workbench Sourceから製品埋込Assetを正規生成し、Embedded Bundleの対象HEAD CIが成功した。これは以前の「配布Asset未同期」を一段進めた実績だが、同HEADのWindows WebView2 Smokeはfailureであり、実Wails画面／非Plugin Stage1→Stage2の合格ではない。[TEI main #4941](https://github.com/hat47x/tei-platform/pull/4941)では、Rule由来のR2-P製品Builderと、別途受理されたpure FunctionのR3公開Entry/Providerを並列に進め、成立後に結合する検収順が計画へ統合された。**Rule IDは公開Function Entry IDではない。** [SUI main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)のSource選択範囲・元byte再読は内部readとして成功しても、同じ文言が二箇所ある場合は選択DigestではOccurrenceを区別できない。
 
