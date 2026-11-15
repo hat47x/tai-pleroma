@@ -32,6 +32,25 @@ go test ./internal/operations -run '^TestCapabilitySourceOnlyEditInvalidatesPinn
 
 内蔵`tei.rule-authoring/v0`は現行製品Readerへ接続済みだが、外部Language Pluginや任意`*.tei.md`の完成とみなさない。SUI Sourceの現在Grant/Raw再読も別ProductのOwnerに残す。外部Harnessへの実配送はTAI #168の実OS隔離・現在Disclosure・完全Reply検収が成立した**後続Trial**だけで行い、元Subjectへの候補返却と独立Consumer確認を別々に記録する。各段階の現状と停止線は[横断計画§54](harness-cross-ui-session-probe-2026-11-14.md)に集約する。
 
+<!-- yic-rule-markdown-a0-product-read-20261115 -->
+## 内蔵Rule Markdownの実製品読取を、追加のA0基線にする
+
+実Capabilityの読取と並行して、**正式に選択されたRule Markdownを製品の同一Loadから読む**試験を独立に実行する。[TEI #4890](https://github.com/hat47x/tei-platform/pull/4890)／[#4891](https://github.com/hat47x/tei-platform/pull/4891)のGo回帰はmain統合済み。次の三つのテスト関数は現行mainのSourceで存在を確認した。**この実行票では未実行**であり、過去HEADのCache成功／別Workflow失敗を合格扱いしない。
+
+~~~sh
+go test ./internal/workspace -run '^TestBuiltinRuleMarkdownProductAdmissionAndSourceIndex$' -count=1
+go test ./internal/workspace -run '^TestBuiltinRuleMarkdownProductAdmissionRejectsUnselectedOrUnknownLanguage$' -count=1
+go test ./internal/operations -run '^TestInspectSelectedRuleMarkdownFromSameLoad$' -count=1
+~~~
+
+**固定対象**：`internal/workspace/testdata/tei-md-rule`のManifest `languages: tei.rule-authoring/v0`、原文 `semantic/sales/order-line-rules.tei.md`。期待するのは二つの`tei`定義領域の二Ruleが`semantic-validation`として型付き取得され、元UTF-8 byte位置・Artifact指紋・Inspector/Traceが同一Loadに一致すること。説明用の`text`領域にだけ現れる`sales.order_line.unit_price_positive`はRuleとして取得されない。
+
+**拒否・失効を同じ試験で扱う**：Language未選択（`TEI_MD_PARSER_UNBOUND`）、未知版（`TEI_LANGUAGE_UNAVAILABLE`）、説明文だけの改訂で旧Source Index失効。試験時には**固定repo HEAD、Go/OS環境、実コマンドと終了コード、失敗時の原因、Fixtureの版、結果の受領先**を既存TEI Ownerの記録へ残す。実Ruleが存在することとRule集合全件性／実Providerの入力集合全件性は別である。
+
+**YICへの受渡し**：Product-local A0で確認できたのは型付き意味・元Source・read-only参照であり、公開CLIが同じRuleを外部Harnessへ配送したことではない。既存`tei commands`の実Discoveryと現在のProduct/Host Reader・開示資格を別に確認する。TAI [#662](https://github.com/hat47x/tai-pleroma/pull/662)がmainへ統合したSkill検査器では、実CLI Exit非0またはJSON `ok=false`の応答に正常そうな`result`形状があっても成功扱いしない。Reader結果・Tool実配送・完全Reply・元Subject Consumerは独立して記録する。
+
+このRule Readerを最初のTAI #168固定H2/H3四Slotに追加せず、同一Sourceの正負例を持つ**後続のTool-only／Product Skill比較候補**として保持する。RuleからGo生成→実Provider/通常CLI実行→Owner受理も別の製品実装である。状態：**実行票の追補のみ／新Go・外部Harness E2EはNOT RUN**。
+
 ## 6つの操作と実行担当
 
 | 順番 | 現在利用するProduct／Harnessの入口 | 合否と停止線 |
