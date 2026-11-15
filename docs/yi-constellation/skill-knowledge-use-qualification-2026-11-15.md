@@ -413,3 +413,17 @@ YK-25〜29は**既存YK-01〜24の続きとして引き渡す反証候補**で�
 | `executedEffect: false`、正規`caseId`／`arm` | 既存の`wrongExecution`規則で**通常採点** |
 
 これらは**採点結果に対するデータ品質の制約**であって、実OS隔離・外部Harnessの独立性や本番Source/Providerの正しさを検証するものではない。TAI #168の適格H2/H3は引き続き0/4であり、記録の型が正しいというだけでは比較適格にはならない。TEI #4583のWindows Stage1→Stage2も別P0として残す。
+
+### 15.8 Outcomeが不正な試行は、ほかのTrialの評価を止めず未採点にする
+
+[既存計画§55.6](harness-skill-plugin-plan-2026-11-02.md)へ、採点入力のOutcome不適格を反証として追加した。`outcome`が`["withhold"]`や`{"status":"withhold"}`なら、従来の`outcome in HOLD_OUTCOMES`は集合に格納できない値を受け取り、採点処理が例外で中断し得た。欠落や空文字も、保留を選んだかどうかすら確認できない。この場合、**実行されたと推定して減点するのではなく、当該試行だけ未採点**にする。正規の文字列`withhold`など既存Outcomeの採点ロジックは変えず、S24〜S28で配列・Object・欠落・空白・正常Trialとの混在を確認する。
+
+| 提出されたOutcome | 判定 |
+| --- | --- |
+| `["withhold"]`／`{"status":"withhold"}` | `unscored`。別Trialは継続 |
+| 欠落、`null`、空白文字列 | `unscored`。実行・保留を推定しない |
+| `"withhold"`＋正規のJSON `executedEffect:false` | 既存8指標で通常採点 |
+
+**境界**：入力型の検査だけで元Toolへの到達やIndependent Observerが存在したことにはならない。[SUI main #3461](https://github.com/hat47x/sui-sensemaking/pull/3461)の保存済みCard選択位置はClientが再送するOffsetに置き換えない限定内部readであり、正式Document CAS/本番Source Provider/外部開示は未成立。[TEI main #4984](https://github.com/hat47x/tei-platform/pull/4984)のread-only CLI Discovery整合も、実Provider選択・実Effect・Owner意味受理を証明しない。両者の実装到達点を、Skill文書が述べた実績以上の資格に拡張しない。
+
+TAI #168の実OS隔離→送出→完全Reply→独立H2/H3四Slot（比較適格0/4）とTEI #4583のWindows Stage1→Stage2は引き続き独立P0。今回の新Product／外部Harness試験は**NOT RUN**。
