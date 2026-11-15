@@ -78,3 +78,17 @@ A0の成果だけで並行開発の成功とはしない。続く別Trialでは�
 - **TAI #168／#232／#271**：Harness実隔離、開示、Activity引継ぎを対象ごとに確認。最初のH2/H3四Slotの資格・分母へ本試行を合算しない。
 
 **本実行票の完了**は、Owner/Expectedへの参照、比較する二Armと競合負例、必要なSource/HEAD/CI/Consumer欄、停止線を定め、実装担当がそのまま試行を開始できる状態まで。**実試行の完了**は、上記の実証欄に実測と独立評価が付いてから別途判断する。現時点では前者のみを設計し、新Agent Session、合成fixture実行、main統合検証の新試行、正式Owner受理は**NOT RUN**。
+
+<!-- yic-frontend-ship-closure-20261115 -->
+## 後続対照：参照画面だけ新しく、配布画面は古い場合
+
+並行開発の競合は、同じGo関数を二度定義する場合だけではない。[TEI main #4879](https://github.com/hat47x/tei-platform/pull/4879)の時点では、参照側`reference/tei-studio-workbench/index.html`のPin操作が、実配布`cmd/tei-studio/assets/workbench/index.html`へ入っていない。この二つのSourceを現行mainから直接読んだところ、参照HTMLには`pin-current`／`pin-check`／`pin-release`があり、配布HTMLにはPinパネルがない。さらに参照TS HandlerのボタンID不一致を直す[#4876](https://github.com/hat47x/tei-platform/pull/4876)は未マージである。
+
+この**別の後続Trial（未実行）**では、二Workerが参照TS/HTMLと生成・埋込資産を別々に変更したケースを扱い、次の四点を分けて判定する。
+
+1. 各変更の元Source/HEAD、依存関係・生成手順・Toolchain/Lockを確認する。両Workerが単独で成功しても、統合前の正しさに留まる。
+2. 統合候補の同一HEADでPin HandlerのID／実DOMのID、Node24テスト・型チェック・正規Buildを再確認する。
+3. 正規生成した`dist`とWails側の埋込JS/HTML/CSS等をbyteで照合し、**実Windows WebView2が同じ成果物を読んだこと**を別の実Consumerとして確かめる。成功側の古いJS/HTMLを手コピーして合格を演出しない。
+4. Sourceも配布も一致して初めてUI Consumerの一段階を検収する。Pin Aの背景確認がFocus Bに影響しないこと、Source/Grantの再確認、外部Harnessへの送信資格、Stage1→Stage2はさらに別の受入とする。
+
+これは[TEI #4879](https://github.com/hat47x/tei-platform/pull/4879)のOwner検収を参照する**統合試験候補**であり、新しいYIC配布BuilderやFrontend Checkerの採用ではない。現mainの二HTMLにPin要素の有無が異なることは**Source-staticで確認済み**。新HEADのNode24/Windows Browser、二Worker並列作業、生成Bundle byte照合、Owner受理は**NOT RUN**。

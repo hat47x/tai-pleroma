@@ -1,6 +1,6 @@
 # TEIで選んだ設計要素をAIへ渡して戻す：最初の実行票
 
-**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–53](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
+**状態：実行計画／新しい実行はNOT RUN。** [横断計画§49–54](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
 
 **途中で止まった場合**：送信ACK・Native Session ID・AIの回答・実Product Effectを同じ「完了」にまとめない。Source/Grantが変わったら送信前に再確認し、Tool Replyが不完全なら未受領、Sessionを再接続できなければ限定Activity Handoffへ縮退する。元ProductのEffectが不明な場合は再実行せず照会する。実際の表示例とOwner別の停止線は[横断計画§50](harness-cross-ui-session-probe-2026-11-14.md)を参照。
 
@@ -15,6 +15,22 @@ TEIで公開Reference Workspaceの一つの設計要素（例：semantic-data / 
 **進め方**：公開SubjectのProduct-only読取は、GUI PinやPlugin文書取得が未完成でも現行CUIで検証する。外部送信はTAI #168の適格な実Host・Tool条件が成立するまで保留し、固定H2/H3四Slotに別Task・新Skillを混ぜない。Native Sessionの再接続不能時は現在資格付きActivity情報だけを新Sessionへ引き継ぎ、旧Sessionの復旧と呼ばない。
 
 **AIへ委任する場合の追加判断**：最初に仕事の目的、元Issue/Source、独立Expected、変更可能な範囲を決めてから、必要な役割と実際に利用できるHarness/Model/Tool/契約経路を選ぶ。TEI [#2017](https://github.com/hat47x/tei-platform/issues/2017)のA0〜A4は**開発作業の権限区分**であって、外部AIへの送信やProductの実行Grantではない。最初の公開一Subject調査はA0のProduct-only／Tool-only基線を維持し、複数モデル・別Harnessへの引継ぎやSkillの増分比較は[横断計画§52](harness-cross-ui-session-probe-2026-11-14.md)の後続作業とする。TAI #168の固定H2/H3四試行のTask・モデル構成・独立Expectedは変更しない。
+
+<!-- yic-real-capability-baseline-20261115 -->
+## 実Capabilityで確かめる追加の最小基線（2026年11月15日）
+
+従来の`semantic-data:sales.order`調査は保持しつつ、**製品mainの実Go回帰にある`semantic-capability:sales.order.submit`**を、もう一つの公開read-only対象にする。[TEI #4853](https://github.com/hat47x/tei-platform/pull/4853)／[#4870](https://github.com/hat47x/tei-platform/pull/4870)では、このSubjectと`semantic/sales/order.tei`の元byte範囲、Inspect/Trace、Source改訂時の失効を確認するコードがmainにある。これは外部AIが読んだことでも、実Provider Entryを実行したことでもない。
+
+**次の実行者が最初に採る証拠**：同一TEI checkout・HEAD・実WorkspaceでCLIが対応するKind/IDを発見できることを先に確認し、既存Go回帰を実行する。参考となるテスト呼出しは次のとおり（ここでは未実行）。
+
+~~~sh
+go test ./internal/operations -run '^TestInspectCapabilitySourceEvidenceFromWorkspace$' -count=1
+go test ./internal/operations -run '^TestCapabilitySourceOnlyEditInvalidatesPinnedRevision$' -count=1
+~~~
+
+現在mainのSource静的照合では、`reference/tei-studio-workbench/source-locations.ts`はS-LOC-0のread-only投影、PinのHost `authorityLimits` FixtureはTEI #4869で修正済み。一方、参照HTMLのボタンIDと現Handlerは未整合で[#4876](https://github.com/hat47x/tei-platform/pull/4876)が**未マージ**、配布`cmd/tei-studio/assets/workbench/index.html`にはPin UIが無い。よって**Nodeの参照テスト成功＝Windows配布画面の成功**とは扱わず、[#4879](https://github.com/hat47x/tei-platform/pull/4879)のSource→Pin→正式Bundle/Embed→実Windowsの独立検収へ引き渡す。
+
+内蔵`tei.rule-authoring/v0`は現行製品Readerへ接続済みだが、外部Language Pluginや任意`*.tei.md`の完成とみなさない。SUI Sourceの現在Grant/Raw再読も別ProductのOwnerに残す。外部Harnessへの実配送はTAI #168の実OS隔離・現在Disclosure・完全Reply検収が成立した**後続Trial**だけで行い、元Subjectへの候補返却と独立Consumer確認を別々に記録する。各段階の現状と停止線は[横断計画§54](harness-cross-ui-session-probe-2026-11-14.md)に集約する。
 
 ## 6つの操作と実行担当
 
