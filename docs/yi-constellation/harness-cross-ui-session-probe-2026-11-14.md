@@ -1758,7 +1758,7 @@ TEIの現行製品Source `internal/workspace/rule_authoring_markdown_loader.go` 
 
 ### 54.4 Product境界を越える場合は、現在のSource利用資格を引き継がない
 
-SUI [#3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は、Source専用Authority→現在Grant→Raw再読の内部ゲートを検討している**未マージDraft**。そこではClientが任意のLocator/PolicyRef/Digestを指定してRawに到達しないこと、Document閲覧許可だけではSourceを読めないこと、返却byteの長さ・Digestを再照合することが設計・テスト対象となっている。現時点のAuthority/Session/Policy Resolverはテストダブルで、実Product Raw API/本番PDP・Export/Share権限ではない。
+SUI [main統合済み #3455](https://github.com/hat47x/sui-sensemaking/pull/3455)では、Source専用Authority→現在Grant→Raw再読の**内部ゲート**が実装・検査対象になった。そこではClientが任意のLocator/PolicyRef/Digestを指定してRawに到達しないこと、Document閲覧許可だけではSourceを読めないこと、返却byteの長さ・Digestを再照合することが設計・テスト対象となっている。現時点のAuthority/Session/Policy Resolverはテストダブルで、実Product Raw API/本番PDP・Export/Share権限ではない。
 
 この考え方をTEI→SUI/SHO/SEI/EKIの後続Handoffに適用するときは、**元Productで読むことができたSource**と、**別Product/外部Harnessへ開示してよいSource**を分ける。元Sourceを実際に取得していない場合、表示用ラベルやSnapshot Digestから現在Rawを再構成しない。受け手側で現在資格が証明できなければunknown/unsupportedとして保留し、許可されたDocumentやread-only情報の調査だけを継続できるようにする。KON/共有Hostの新設を初回必須にしない。
 
@@ -1770,4 +1770,4 @@ SUI [#3455](https://github.com/hat47x/sui-sensemaking/pull/3455)は、Source専�
 4. **後続の接合**：両レーンの適格な部分が確認できたら、公開一Capabilityの許可済みContext送出→完全Reply→元Subjectのread-only候補帰着を**新Trial**として行う。Plugin文書追加Fetch、異Product、二Harnessの可搬性、Source Writerはその後に独立評価する。
 5. **横断の再利用条件**：他の製品やPluginで同様の読取を実証した場合、意味受理/Current Grant/元Source位置/実Consumerを同じ観測票へ並べて比較する。ただし正本のProduct責務と権限をYICへ移転しない。
 
-**今回の資格**：TEIのmain Blob（Go Capabilityテスト、Rule Markdown Loader、S-LOC TypeScript、参照HTMLと埋込HTML）・実装PRの採否・SUI Draftを照合した**Source-staticとDocs-onlyの計画更新**。新Go/Node/Windows/DB/実外部Harness/現在Grant/実Result Consumer/Owner意味受理のE2Eは**NOT RUN**。非Plugin Stage1→Stage2（TEI #4583）も別P0として継続し、どの段階の成功も他段階の合格へ自動昇格しない。
+**今回の資格**：TEIのmain Blob（Go Capabilityテスト、Rule Markdown Loader、S-LOC TypeScript、参照HTMLと埋込HTML）・実装PRの採否・SUI内部ゲートのmain統合済みPRを照合した**Source-staticとDocs-onlyの計画更新**。新Go/Node/Windows/DB/実外部Harness/現在Grant/実Result Consumer/Owner意味受理のE2Eは**NOT RUN**。非Plugin Stage1→Stage2（TEI #4583）も別P0として継続し、どの段階の成功も他段階の合格へ自動昇格しない。
