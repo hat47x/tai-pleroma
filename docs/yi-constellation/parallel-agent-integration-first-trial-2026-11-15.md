@@ -102,4 +102,4 @@ A0の成果だけで並行開発の成功とはしない。続く別Trialでは�
 
 ここで行ったのはmainの実GoテストとDraft差分のSource照合。#4893の実CI検収・追加ケースの効果・統合判断は**NOT RUN／Owner未採用**。TAI #233の探索候補を削除・制限する措置ではなく、**候補の幅と採用済み成果の数え方を分ける**運用である。
 
-**後続に共通化した検収**：実TEIの同じ型付きRuleが別の記述表層にある場合も、元Source位置・Revisionは別である。SUI [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)では同じ文字列が二箇所に存在すると選択Digestは一致しても選択byte位置が異なる。両者を組み合わせた『同じ意味・同じ本文・同じ配布物は別の同一性』の反例と、Ownerへの引渡しは[横断§56](harness-cross-ui-session-probe-2026-11-14.md)へ集約した。この並行作業票では同じ証拠Packet/Runnerを重複定義しない。
+**後続に共通化した検収**：実TEIの同じ型付きRuleが別の記述表層にある場合も、元Source位置・Revisionは別である。SUI [main #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)では同じ文字列が二箇所に存在すると選択Digestは一致しても選択byte位置が異なる。両者を組み合わせた**意味・原文の位置・配布物の一致を分ける反例**と、Ownerへの引渡しは[横断§56](harness-cross-ui-session-probe-2026-11-14.md)へ集約した。この並行作業票では同じ証拠Packet/Runnerを重複定義しない。TAI #168の独立H2/H3四Slot（比較適格0/4）とTEI #4583のStage1→Stage2を、この追加反例の必須条件にしない。
