@@ -81,6 +81,7 @@ REVIEW_STATUS = "evaluations/SCN-001-review-status.json"
 # Do not rewrite it as PASS, admit arbitrary FAIL receipts, or treat it as
 # evidence that today's SUI consumer still loses the field.
 SUI_CONSUMER_MAPPING_NEGATIVE = "evaluations/records/SUI-consumer-mapping-2026-11-06.json"
+SUI_CONSUMER_MAPPING_ARTIFACT = "evaluations/artifacts/scn-003-document.json"
 
 # Real-execution receipts are kept separate from synthetic ones so that a test
 # run on a host is never counted as synthetic evidence.
@@ -352,7 +353,7 @@ def _is_pinned_sui_consumer_mapping_negative(
             or data.get("result") != "FAIL"
             or not isinstance(artifact, dict)
             or not isinstance(observed, dict)
-            or artifact.get("path") != "evaluations/artifacts/scn-003-document.json"):
+            or artifact.get("path") != SUI_CONSUMER_MAPPING_ARTIFACT):
         return False
     try:
         raw = (root / artifact["path"]).read_bytes()
