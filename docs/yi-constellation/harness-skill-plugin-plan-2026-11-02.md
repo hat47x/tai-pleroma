@@ -1172,3 +1172,17 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 [SUIの現行`documentv1_projection.py`](https://github.com/hat47x/sui-sensemaking/blob/main/03_Implement/backend/src/sui_sensemaking_api/documentv1_projection.py)には、`from_artifact`で`readingOrder`を取り込み、`to_documentv1_payload`で明示的に出力する処理が存在する。しかし**別リポジトリの現行Sourceの存在は、過去のWindows Consumer Receiptを置き換える現在の実行結果ではない**。次のSUI Owner検収は、入力ArtifactのByteとSUI commit／Consumerバイナリ・依存環境を固定し、現行Consumerを別Processで再実行すること。元の`FAIL`記録を残したまま、新たな`PASS`または新たな損失の実Receiptを別のAttemptとして保存し、元資料と同じ`readingOrder`・全Collectionで対照する。これを初めて実Consumer改善の証拠とする。
 
 **横断の意味**：Receipt Checkerの成功は「保存した証拠の整合性」、SUI現行Consumerの実測成功は「Product投影の正確性」、Document/Sourceの現在認可は「現在読める資格」、AI・SHO・TEIへの二次開示と完全受領は各Ownerの別資格である。SUI [#3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Head照合は当該時点ではopenであり、実Card保存／CAS／正式Providerの完成とはしない。TEIのRule→通常CLI生成とWebView2実Consumerの限定実績、TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（適格**0/4**）、TEI #4583 Windows Stage1→Stage2は従来の別Owner／独立P0を維持する。今回の外部Product／実OS／Windows実再実行・Owner意味受理は**NOT RUN**。
+
+### 55.9 SUI Consumerを再検証するときは、新しいAttemptを作り旧Receiptを上書きしない
+
+[TAI #684](https://github.com/hat47x/tai-pleroma/pull/684)により、2026年11月の`SUI-consumer-mapping-2026-11-06.json`は、元Artifact `readingOrder` 2件が当時のSUI Consumerで0件になった**履歴上の失敗証拠**として検収されるようになった。対象HEADの既存Python CIではReceipt単体・全件検査が成功し、Checkerの失敗は解消した。ただし当該Productの現行Consumerが修正されたことを示す新Attemptは存在しない。
+
+再実行用の既存[Consumer Mapping Checker](../../integrations/pilot-sui-document/assembler/consumer_mapping_coverage_check.py)には、過去の`FAIL`記録をそのまま上書きできる危険があった。また実行コマンドを記録するとき、元の旧Receiptの`--out`が固定文字列で埋め込まれ、異なる出力先や利用したコードと一致しない。今回は同じCheckerを次のように限定して改める。**過去Receiptの出力先は拒否**し、別の既存ファイルも上書きしない。新規出力先を指定し、そのファイルを排他的に新規作成する。Sourceの原ArtifactのSHA-256、実際に選択したSUI Consumerの二つのPythonモジュールbyte指紋、Checker自身のbyte指紋、Python実行環境・実行引数を新Receiptに記録する。Consumer実行前後の照合でArtifactまたは二つのSUIモジュールのbyteが一致しなければ保存を拒否する。ただし、途中でA→B→Aと戻った変更や、列挙していない依存ファイルの変更まで検出するものではない。
+
+この検査では、`readingOrder`を**件数だけでなくCard IDの並びも含めて一致**させる。同じ2件でも順序が逆なら`FAIL`であり、1枚目にはない`sources`などの属性も、Collection全件のキー和集合で消失を検出する。**元のPayloadに残っていても、SUIの`DocumentV1`検証後のモデルから消えた項目は不合格**とし、両段階のキーをReceiptに分けて残す。 ただし、**`readingOrder`以外の各フィールド値そのものの同一性は今回比較していない**。全項目の値・関係・時間条件までの意味受理は別に残す。したがってSourceから投影した意味の「要素数が合っている」だけでは受け入れない。Product Consumer自体の正式Schema、現在のDB権限、元データとの保存後CAS、外部開示Grantをこの参照検査が新たに決定するわけではない。
+
+**検収順**：まず既存Python CIで新しいテストのOutput保護・順序逆転・後続Card属性落ち・Payload→DocumentV1での属性落ち・前後Source不一致の**合成負例**をPASSさせる。次にSUI Ownerが実SUI checkout・依存・入力Artifactを固定し、このCheckerを別Processで起動して新しいReceiptを保存する。新Receiptの`result`が`PASS`で全属性・順序が保たれた場合のみ、**その一Attemptの実Consumer投影**を肯定する。出力は旧Receiptとは別のファイルとし、元の`FAIL`を残して対照できるようにする。生成された新ReceiptをTAIが第二のSource正本にすることはない。
+
+**並行実装との関係**：[SUI #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Headを使った古いCard選択失効は、確認時点ではopenであり、本件の別Process Consumer再検証とは独立している。[TEI #5007](https://github.com/hat47x/tei-platform/pull/5007)のOperator実装選択、[TEI #5025](https://github.com/hat47x/tei-platform/pull/5025)のPin再読込時失効も、同じ名前やbyteが戻ったときに旧資格を自動復活させない例である。元Source／選択した実装／実Consumer／現在Grantを別に検収する原則は[横断計画§56.5](harness-cross-ui-session-probe-2026-11-14.md)に接続する。
+
+**停止線**：TAI #168の実OS G0→G1→G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の非Plugin実Windows Stage1→Stage2は独立P0を維持する。今回の実SUI Product実行、外部AI/SHO/TEIへのRaw開示、Owner意味受理は**NOT RUN**。新Host・Runner・Registry・第二Expectedは追加しない。

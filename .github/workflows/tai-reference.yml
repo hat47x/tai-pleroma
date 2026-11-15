@@ -56,6 +56,9 @@ jobs:
       - name: YIC Skill selection limited-discovery regression (synthetic)
         working-directory: .
         run: python integrations/tools/skill_selection_check.py --self-test
+      - name: SUI consumer replay receipt safety regression (synthetic)
+        working-directory: integrations/pilot-sui-document/assembler
+        run: python -m unittest -v test_consumer_mapping_coverage_check.py
       - name: SUI probe test
         run: python -m unittest -v probe_test.py
       - name: EKI API probe test
