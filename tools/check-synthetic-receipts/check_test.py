@@ -1,3 +1,4 @@
+import hashlib
 import json
 import pathlib
 import shutil
@@ -139,6 +140,20 @@ class CheckTest(unittest.TestCase):
             self._copy_fixture(root)
             artifact = root / SUI_CONSUMER_MAPPING_ARTIFACT
             artifact.write_bytes(artifact.read_bytes() + b" ")
+            result = check(root)
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["knownNegativeReceipts"], [])
+
+    def test_artifact_and_receipt_digest_cannot_be_rewritten_together(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self._copy_fixture(root)
+            artifact = root / SUI_CONSUMER_MAPPING_ARTIFACT
+            artifact.write_bytes(artifact.read_bytes() + b" ")
+            path = root / SUI_CONSUMER_MAPPING_NEGATIVE
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data["artifact"]["digest"] = "sha256:" + hashlib.sha256(artifact.read_bytes()).hexdigest()
+            path.write_text(json.dumps(data), encoding="utf-8")
             result = check(root)
             self.assertFalse(result["passed"])
             self.assertEqual(result["knownNegativeReceipts"], [])
