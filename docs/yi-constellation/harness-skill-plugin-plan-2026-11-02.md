@@ -1106,3 +1106,15 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **追加反例**：YK-50＝同じ行の二つの発見済みToolが一つのJSON Pathを説明する場合、帰属不明として`UNJUDGED`（TAI #488）。YK-51＝発見済みToolと未確認の子Toolが同じ行にあり、前者の成功Pathを後者の成功とみなす場合、帰属不明と子未確認の両方を残す（TAI #488/#271）。
 
 **優先度は不変**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（適格0/4）とTEI #4583のWindows非Plugin Stage1→Stage2を独立P0とする。TEI #4714の公開Manual一件Readと、#4911 R1から正式Builder/Provider/CLIへつなぐR2/R3は別Ownerで並行する。今回は既存検査器の合成負例と計画への反映に限り、外部Harness/実Provider/正式Owner受理は**NOT RUN**。
+
+### 55.3 真偽値以外の証拠申告を、Tool到達・独立観測の成立として数えない
+
+既存の[Skill選択・評価器](../../integrations/tools/skill_selection_check.py)に残っていた採点上の抜けを修正する。B0/B1/B2の記録に`evidence.toolReached: "false"`や`evidence.independentObservation: "true"`のような**文字列**、または数値`1`が混入しても、Pythonの真偽値変換だけで実Tool到達や独立観測が成立したと判定してはならない。両項目を肯定するにはJSONの真偽値`true`が必要とし、配列などの不正なEvidence形状も未成立扱いにする。合成自己試験S13〜S16で文字列・数値・不正形状と、従来の正常な`true`を対照にする。**既存8指標は増減させず、旧Trialや封印Expectedも書き換えない。**
+
+ただし、`true`と記録されていること自体は**実Tool呼出しや独立の第三者検証を証明しない**。採点器が扱うのは申告形式の最低条件までである。実質的な独立観測には、対象の実Tool Reply、正確なAttempt/HEAD、Consumer側の取得記録と、Ownerが定めた独立Expectedを別に必要とする。この区別は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)のG0/G1/G2と独立H2/H3四Slot（現時点の比較適格0/4）の必須条件を緩めるものではない。
+
+**製品間の現在資格**：[TEI #4930](https://github.com/hat47x/tei-platform/pull/4930)はmainへ統合済みで、Markdown Ruleの参照先を一因子変更し、再生成したGoを二つの実バイナリとして比較するR1.5の回帰コードが追加された。ただしそのPRの対象HEADには失敗CIもあり、正式Builder/通常CLI/実Providerの合格とはしない。[TEI #4934](https://github.com/hat47x/tei-platform/pull/4934)はReference Builderで生成Goを消費するR2前段の試験提案だが**closed／not merged**。その成果をmainへ加算しない。[SUI #3458](https://github.com/hat47x/sui-sensemaking/pull/3458)は、既存Content Blob/NAS/Document権限がSource Capture Occurrenceと現在Grantの正本をまだ満たさないことを既存計画で整理したDocs-onlyのmain統合であり、正式Source Providerを実装したわけではない。Rule生成Go・原文Snapshot・AIへの公開は、それぞれ現在のSourceと利用資格を確認する。
+
+次の反証は、**YK-52**：Evidenceに文字列`"true"`・`"false"`や数値を与えても、Tool到達と独立観測を合格にしない（TAI #488）。**YK-53**：申告`true`と旧PRの成功CIだけがあるが、現在Attemptの独立Consumer受領がない場合、H2/H3の比較適格としない（TAI #168/#271）。この二件は既存Owner/Checkerへの入力例であり、第二の採点器・権限正本・共通Registryを作るものではない。
+
+**優先度・停止線**：TAI #168の実OS read-deny→実Egress→完全Tool Reply→独立H2/H3、TEI #4583のWindows Stage1→Stage2を独立P0として維持。TEI #4714の公開Manual一件のSource-backed Read、TEI #4544/#4495のBuilder／実Provider、SUI #3441の正式Source用Host/Grantは並行するOwnerの仕事に留める。今回の修正・文書は合成採点器の検査であり、実Product/Host/外部Harness・Owner意味受理は**NOT RUN**。
