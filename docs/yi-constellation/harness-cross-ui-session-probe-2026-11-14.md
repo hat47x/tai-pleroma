@@ -1829,6 +1829,18 @@ SUIでは[main #3457](https://github.com/hat47x/sui-sensemaking/pull/3457)のSou
 
 実施先はTEIの既存R2-P Owner #4544/#2595とProduct Build実行票であり、YICではその**受入済みの範囲をread-onlyの短い説明に投影するだけ**とする。R3純粋FunctionのEntry/Provider、Owner Meaning、外部Disclosure、Studio Stage1→Stage2は別の合格欄に残す。初回TAI #168のH2/H3四Slotを増やさない。
 
+### 55.6 実装選択と生成物の現在性を、意味モデルから独立して確認する
+
+[TEI main #5007](https://github.com/hat47x/tei-platform/pull/5007)で、DocumentのOperator宣言、Workspace Manifestの`implementations`選択、実バイナリにある組込み実装、Scenario評価時の**実Call**が別々の責務として実装された。`sales.non_negative`に`tei.number.non-negative`を選べば値`0`は成立し、`tei.number.non-zero`に切り替えると不成立になる。型付き`World`が同一でも評価結果は変わる。既存`TestScenarioDecidesAnOperatorRuleWithTheSelectedImplementation`／`TestScenarioRefusesAnOperatorRuleWithoutExactlyOneAvailableImplementation`が、この型付き意味と実装選択の差・不適格な実装選択の拒否を扱う。
+
+**現時点の未接続**は、Manifestで実装選択を変更しても、既に生成したScenario Commandを古いと判定する機構がまだ実証されていないこと。実装名を変えただけで以前のCommand/Artifact/Resultを再利用せず、**同一World／異なる選択／異なる実Call**の一因子反証をTEIの既存Product Owner #1180/#2514へ渡す。外部Pluginの選択/Lock・署名・現在Provider・業務上そのOperatorが正しいかは独立に受理する。YIC側で実装名一覧を増やしたり、選択の正本を複製しない。
+
+一方、[TEI main #5020](https://github.com/hat47x/tei-platform/pull/5020)は、**一つの製品Loadから元RuleのSource byte/Range・Model Revision、生成Go byte、Go AST上のRead Attribute・比較分岐・byte範囲**を結び付けるI2M-1のread-only回帰を追加した。元DSLと生成Goのbyte位置は別の座標系であり、Go ASTを改変して別Attributeを読む、`>0`を`>=0`にする負例を拒否する。これはGo構文上の部分観測で、意味逆変換・Owner受理・正式Builder実消費の証明ではない。
+
+[TEI main #5021](https://github.com/hat47x/tei-platform/pull/5021)のexact HEADセルフビルドWorkflow [run 43707249734](https://github.com/hat47x/tei-platform/actions/runs/43707249734)では、既存`reference-self-build`ジョブ内の**「選択済みRule生成Goの通常CLIビルドと実Binary判断を検査」Stepがsuccess**となった。前節で未確認としていた限定Focused StepはこのHEADでは合格と記録できる。ただしProduct Source byte／Reader版／選択実装・Generator版／実Build Intent Closure／受領Artifactの**正式な同一Attempt束縛**はまだ別のR2-P受入であり、実際のR3 Provider呼出しや外部Context Deliveryの成功を追加しない。
+
+したがって、**意味（World/Rule）・Source（元byte/版）・実装選択（Manifest/Plugin Lock）・生成器/Build/Artifact・現在Grant/実Consumer**を、変更された軸だけでなく影響先ごとに失効・再確認する。Canonicalや生成Go byteが一致する場合にも、別の実装選択で生成した以前のScenario結果は復活させない。次の失効試験とHandoff停止線は[QH §10.10](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。
+
 ## 56. 意味・原文の位置・配布物の一致を分けて検証する
 
 同じ文字列やHashが返ったという一事実を、「同じ業務意味」「同じSource箇所」「現在その人が読める」「別Productに開示してよい」「実Consumerが受領した」の五つに拡大解釈しない。これは独立した新しいEvidence形式の提案ではなく、既存[製品間Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)のI（意図）／R（Product再解決）／P（開示許可）／T（送出）／C（Consumer）／H（Harness）の**各欄を埋める前に、何の同一性を確認したかを固定するための条件**である。
@@ -1875,3 +1887,13 @@ Ruleの生成Goは[TEI #5009](https://github.com/hat47x/tei-platform/pull/5009)�
 以上を既存QH §10のI（意図）→R（元Product再解決）→P（開示）→T（送出）→C（Consumer）→H（Harness）の受入へ引き渡す。例えばSUIの内部readが成功した場合でも、Pは未証明のまま保留できる。TEIの通常WebView2が合格しても、生成DesktopのCは失敗として残す。**一つのCIやJSONフラグに複数の受入結果を合算しない**。[TAI #680](https://github.com/hat47x/tai-pleroma/issues/680)で判明した別テスト失敗に遮られたSkill自己試験についても、試験未実行と失敗を分けて記録する。
 
 次の検収は、TEIの生成Desktop版不一致の原因解決→Windows Stage1→Stage2の同一Attempt、SUIの実Card保存・Current Grant／開示→別Consumerでの再読、TAIの実OS G0/G1/G2→独立H2/H3四Slotを**各Ownerで独立に進める**。外部Product間の実送受信、実Provider Effect、Owner意味受理は今回**NOT RUN**。新しい共通Source Store・Grantサービス・Runnerは導入しない。
+
+### 56.5 再読込のあとに残せるのは「対象への意図」であり、旧観測の資格ではない
+
+TEIの実Windows [main #5012](https://github.com/hat47x/tei-platform/pull/5012)では、Pin Aの明示再確認・解除中にも、BのCodeMirror Focus/Caret、Graph/ARIA、Diagnostics等を保持する通常Desktopジョブが[対象HEADで成功](https://github.com/hat47x/tei-platform/actions/runs/43706400375)した。続く[main #5025](https://github.com/hat47x/tei-platform/pull/5025)では**同じWorkspaceの再読込**後にPin対象Aへの意図は残す一方、旧観測・旧版を未取得に失効させ、利用者の明示再確認と実Host再読取でのみ資格を回復する通常Desktopジョブが[成功](https://github.com/hat47x/tei-platform/actions/runs/43706898173)した。両Workflowとも**生成Desktop PoC Bは失敗**しており、通常Desktopの部分合格を生成DesktopやStage1→Stage2へ流用しない。別Workspace A→B→A、遅延旧Replyの意図的競合、Dirty Bufferの実編集保護も未検収である。
+
+SUIでは実Document readとSource readの独立判定がmain済み[#3462](https://github.com/hat47x/sui-sensemaking/pull/3462)。さらに**Draft／未マージ**の[PR #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は、保存済Cardの出典候補が、実DBのDocument Revision Head（Version／Revision IDと所属Document）に一致するかをSource再読の前に検査する変更を提案している。**本文を無変更で再保存する場合やA→B→Aで同じRaw byteへ戻る場合も、旧Headを再利用しない**反証を追加し、対象HEADのBackend CIはsuccess。ただしmainの製品実績とは数えず、正式Card選択の永続化・同一Commit CAS、本番Raw/Source Provider・組織PDP、他Productへの二次開示の受入もしていない。
+
+両者に共通するのは、「同じ内容／同じ対象」と「その**時点で観測・実行・配信してよい**」は別の問いということである。ただしWindowのPin状態とSUIのDocument Revisionを一つのバージョン番号に押し込めない。既存Ownerが保存する**Pin意図・Host Reply、Document Head・選択Receipt、Rule/Manifest選択・Build Artifact**をそれぞれ再解決し、必要なときだけ既存I/R/P/T/C/Hで同一Attemptに結び付ける。P（Recipient別開示）が成立しないならT/C/Hを埋めず、Raw送出を停止する。
+
+**次の独立反証**：TEI #5007の実装選択A→B、SUI #3464のDocument Raw A→B→A、Studio #5025の同一Workspace再読込を、各Productで異なる入力とExpectedとして保持する。反証は一つのYIC新Runnerにまとめず、製品OwnerのGo/Python/Windows試験を利用する。実OS G0/G1/G2・H2/H3四Slot（比較適格0/4）と非Plugin Windows Stage1→Stage2は独立P0のまま。
