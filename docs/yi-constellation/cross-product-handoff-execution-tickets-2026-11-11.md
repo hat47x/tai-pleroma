@@ -777,3 +777,19 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 **終了/撤退条件**：P0の成功は`I`合成・`T`既存限定・`R/C`当該実Consumerが本当に行った範囲でのみ宣言。Kind/ID一意性、対象の元Source Binding、Disclosure Producer、Consumer Resolverのいずれかを実証できなければ、特定の列を`not-run/unsupported/insufficient-evidence`として残す。新UI/第二Resolver/Authorizer/Session Store・新`yi.handoff.context/v2`を要する設計なら実装を停止して各OwnerへFit/Gapを返す。初回TAI #168 H2/H3の新Blockingにしない。
 
 **責務**：対象解決と#4472/#4475修正＝TEI #1124/#4472/#4475、用途別開示＝TEI #2516/TAI #232、Handoff/実Consumer＝SUI/SHO既存Owner、Activity現在資格＝TAI #271、Skill有効性＝TAI #488、実Harness比較＝TAI #168。既存のG1〜G6の歴史実測をこの未実施のQHで上書きしない。
+
+### 10.8 実Card選択候補と実Rule CLI読取を、元Sourceへ戻す二つの入口として試す
+
+横断計画[§56.3](harness-cross-ui-session-probe-2026-11-14.md)を実行用の入力・Expectedへ下ろす。最初からSUI→TEI→SHO/AIを一本の実送信として実行せず、**SUIの保存済Card Source選択候補**と**TEIの実CLIで読めるRule**をProductごとの独立A0として検証する。前者は[main SUI #3461](https://github.com/hat47x/sui-sensemaking/pull/3461)の内部Reader、後者は[main TEI #4980](https://github.com/hat47x/tei-platform/pull/4980)の別Process実CLI回帰が起点。SHO側の正式保存・再読取・Owner意味受理は、この二つの成功から導かない。
+
+| 受入カード | 元入力と実装済みの検査対象 | 独立Expected／現状 |
+| --- | --- | --- |
+| **QH-CARD-R0：保存位置を再読** | SUIのテスト用同文二Occurrence。保存対象は二箇所目のUTF-8 byte範囲`[38,57)`。認証済Memberで`AuthorizedCardSourceSelectionResolver`からTenant/Document/Card/Captureと保存済み`RawSelectionContentCheckpoint`候補を取得し、Source専用現在許可とRaw再読に渡す | Clientが一箇所目Offsetに変更しても二箇所目へ束縛。異Tenant/Card/Capture、Resolver欠落、未認証、Grant失効、Raw変更は拒否。テスト用Resolverを含む**内部Reference回帰**であり、実Card DB/CAS・正式Hostではない |
+| **QH-TEI-R0：実CLIでRuleをInspect** | TEIの固定`internal/workspace/testdata/tei-md-rule`と`semantic-validation:sales.order_line.quantity_positive`。同一実Goビルドから別OSプロセス`tei inspect`で`tei.cli.inspect/v0`、read-only、元byte範囲・Artifact指紋を照合するテストSource | 同IDの`semantic-capability`は`SUBJECT_NOT_FOUND`、説明用`text`領域だけのRuleも不存在。mainにテストがあるが、この実行票でのFocused Go Testと実CLI Resultは**NOT RUN**。Function公開／実Provider実行と同一視しない |
+| **QH-X-01：異Productへ渡す前に止める** | QH-CARD-R0／QH-TEI-R0の両方から、元Sourceと現在受信者への開示資格を別審査。SUI側Checkpoint/DigestやTEI側Canonical ID単体だけを外部AIへ送らない | Source read／型付きInspectだけではP（Recipient別Disclosure）未確認。T実送信・C完全受領・H Harness Tool Replyも**NOT RUN**。許可済みのread-only説明以外は保留 |
+
+実行時の記録は既存の**I/R/P/T/C/H**に限定する。Iでは利用者の問いと元Product、Rでは当該Productの現在Subject/Root・元byte位置・Source Revision・read scope、PではAudience/Recipient別Grant、Tは実送出、Cは実Consumerにおける受領内容と対象の突合、Hは実Tool Replyの完了とResult資格を記録する。**Rを二つのProductで独立に確認しただけで、P/T/C/Hを埋めない**。許可の根拠を別ProductのDigestや静的Plugin構成で代用せず、未知の欄は`not-run`または`insufficient-evidence`とする。
+
+**実行に使う既存の回帰**：SUI `03_Implement/backend/tests/test_r2_source_snapshot_read_gate.py`の`test_pinned_card_*`系は同文二Occurrenceの保存位置・Grant再評価の負例を持つ。TEI `cmd/tei/cli_inspect_rule_markdown_process_test.go`の`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`は別OS Processの正負対照。各Ownerは**試験対象HEAD、該当test caseのExit・結果・実Source byte・資格・実Consumerを同一Attemptに記録**する。SUI #3461 exact HEADのbackend-contractは448件PASSだが本番Card Providerは未接続。TEI #4980の該当Goテスト単独PASSもこの票では未確認。旧Headや別PackageのGreenを根拠に合格を補完しない。
+
+**停止線と優先度**：この二つのProduct A0から横断QH-P0へ進むのは、Cardの正式保存・現在Document/Source read・Export Grant、TEIの対象Rule現在Source・開示資格、実受信先の同一性をOwnerが独立に確認できた場合だけ。未確認ならRawの送信を止め、許可された概要だけ扱う。TAI #168のG0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583の非Plugin Windows Stage1→Stage2は独立P0のままで、この二入口を初回四Slotの追加Blocking条件にしない。新しいResolver/Context Store/Runner/Grant正本は採用しない。今回の横断実送信・正式Product保存・実SHO Consumer・Owner意味受理は**NOT RUN**。
