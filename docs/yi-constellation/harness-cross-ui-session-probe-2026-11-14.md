@@ -1546,3 +1546,71 @@ Source Indexのbyte offsetとEditor/LSPの文字位置（UTF-16等）が一致�
 **保留する部分**は、YIC独自Agent Loop、中央Scheduler/Registry/Session Store、全Harness共通のTranscript/Tool ABI、Handoff v2、中央Authorization、複数UIの実同時書込保証、Go→WASMの標準化である。必要な仕事で少なくとも二つの外部Harness構成を適格に比較し、Product APIと薄いAdapterでは解決できない具体的な欠落・運用費・追加効果が実測された場合に、§44とTAI #234で内製を再審査する。
 
 **この更新の資格**：既存の他領域の設計と実GitHub Issue/PRの照合に基づくDocs-onlyの統合。新しいHarness送受信、Pinの実Wails/DOM、Source/Grant再審査、Goal/Schedule再起動、二Harnessの比較、製品EffectとOwnerの正式受理は**NOT RUN**。正式なOwner/Expectedは引き続きTEI #4515/#4583、TAI #168/#234/#271、QH §10、EKI #57/#829にあり、本節は第二の受入正本を作らない。
+
+<!-- yic-qualification-closure-and-selective-revalidation-20261115 -->
+## 51. AIに仕事を任せる前の確認を、実Productの到達点と結びつける
+
+§50では、途中で止まった仕事の状態と利用者への説明を整理した。しかし、その説明の根拠となる「この機能は使える」「この対象は渡せる」「この結果は受け取れた」を誰が確かめたのかが曖昧だと、操作の入口を統一しても誤った継続が起こる。ここでは各Product／Hostが持つ検査結果を**作業ごと・利用時点ごとに読み合わせる手順**を定める。新しい共通の権限判定器や公開Harness Protocolではなく、既存TAI ActivityとProductの実操作を接合するための設計である。
+
+### 51.1 機能の発見から実受領までを、異なる確認事項として扱う
+
+| 確認する段階 | 実際に確認するもの | 確認だけでは成立しないもの／主なOwner |
+| --- | --- | --- |
+| **入口を発見した** | 現行CLIのcommands、Pluginの選択版・Lock、Harness Native Tool/Profileの実在 | 宣言・一覧は実行許可でない。TEI #4376/#4800、TAI #168 |
+| **対象を結び付けた** | Product Readerが元Workspace／Root、Subject、Source版、実取得範囲、必要なDoc帰属を照合 | Fingerprint一致だけでRootや意味・Doc本文を保証しない。TEI #4503/#4515/#4714 |
+| **現在の利用・開示資格を確認した** | 元Product/Hostによる用途・Principal・Audience・Recipient別のGrantと送出予定内容 | UIの参照成功やPlugin Lock一致から外部送出可能とは推定しない。TEI #2516、TAI #232 |
+| **実際に配送した** | 実Host／Harnessの送出、Tool Call、Native Turn、返信の終端・欠落 | Preview、ログ記載、送信ACK、Session IDだけでは完全受領でない。TAI #168、QH §10 |
+| **利用先が結果を読んだ** | Product／SHO／EKI等の独立したConsumerが、元Task・Source・Attemptに結び付くResult本文を実Read | Harnessの回答やResultメタデータだけではProduct処理・意味受理にならない。TEI #3419、TAI #271、EKI #57/#829 |
+| **変更を採用した** | Product側の差分・診断、利用者の明示操作、必要な実Effect・ReceiptとOwner判断 | read-onlyの調査成功をSource変更や業務完了としない。TEI #4583、既存Product Acceptance |
+
+各段階の「確認済み」は**対象、版、用途、受け手、Attemptの範囲内**だけで有効とする。失敗した項目を横断して全てのProduct機能を止めるのではなく、成立しているProduct-only／read-onlyの範囲は継続可能とする。一方、利用できない機能を別のToolやSkill経由で密かに迂回しない。
+
+**直近の実装との接点**：[TEI main #4800](https://github.com/hat47x/tei-platform/pull/4800)では、実plugin-inventoryのdocumentReadPreflightで選択版とLockの一致を確認できる。しかし、返るsourceBindingはunbound、disclosureはnot-checked、readEligibilityはnot-assessedのままである。したがって、[TEI #4714](https://github.com/hat47x/tei-platform/issues/4714)の正式Plugin→公開Doc帰属と実Source Readが成立するまでは、AIに「文書を読める」と案内しない。通常Markdownの公開Manual一件を読むことに正式な業務 *.tei.md Reader完成を新しい前提にはしない。
+
+また、[TEI main #4806](https://github.com/hat47x/tei-platform/pull/4806)はInspectのauthorityLimitsを参照Workbenchで保持・表示する実装である。これは**参照結果が保証しないことの表示**であって、現在の外部開示Grantではない。[配布側検証 #4812](https://github.com/hat47x/tei-platform/pull/4812)はclosed/unmergedであり、参照Sourceの成功から実Windows配布UIで同じ表示を受け取れたと推論しない。
+
+### 51.2 変更されたものに応じて、必要な範囲だけ再確認する
+
+TAI #271のActivityには過去の観測を履歴として残せるが、その**観測を今も利用できるか**は別に判断する。過去のTool Reply、元SourceへのRef、Resultの受領記録を残しつつ、次の判断をそれぞれのOwnerへ戻す。
+
+| 途中で起きた変更 | 再確認すべき範囲 | 再利用してはいけないもの |
+| --- | --- | --- |
+| Focusや画面レイアウトだけが変わった | 元Pinと現在Focusの区別。画面表示・共有予定Contentに影響があればその再投影 | 閲覧中Bを元依頼Aへ付け替えない。変更なしという自己申告でPin現在性を認めない |
+| Source/Rootが変わった、A→B→Aに戻った | 元ProductのSubject・Source Reader・Origin、必要なRelation occurrenceと取得Coverage | 同名ID、同Hash、旧PinのReader応答から現在Sourceの同一性を推定しない |
+| Plugin選択・Lock・Provider・Toolchainが変わった | 実選択、Doc/Contractの適用先、実ProviderとArtifactの生成・受領経路 | 別構成で成功したBuild・Tool Callを現構成の成功として使わない |
+| Principal／Audience／Recipient／Grantが変わった | 元Product／Hostの現在認可と、再送する実内容・Metadata・ログの露出面 | 以前のPreview、Grant、Skill Load、受信先設定をそのまま再使用しない |
+| Native Sessionが切れた・別Harnessへ移った | Native Sessionの再接続能力と、TAI Activityの限定Handoffを別々に確認 | 新しいSessionを旧Sessionの復帰と呼ばない。過去TranscriptやCredentialを丸ごと移さない |
+| Tool Replyが途切れた、Effectの成否が不明 | 実Result本文・終端、元Operation/Attempt、必要なProduct/EKI Receipt | 送信ACKや同じ回答文で実受領・Effect成功を補わない。未知の副作用を盲目的に再実行しない |
+
+対象を確認し直す際は、必要な依存だけを再取得する。新しいSourceのために過去の無関係な観測を全て捨てる必要はないが、**受理済みの意味・現在Grant・実Provider資格を古いEvidenceから自動復活させない**。[SUI main #3452](https://github.com/hat47x/sui-sensemaking/pull/3452)のローカルHTTPテストPDPはDocumentとRaw Sourceの異なる許可を検査した限定実績であり、実HostのSource開示権限までYICへ委ねるものではない。
+
+### 51.3 最初の仕事に接合する：短い依頼から必要な実取得へ
+
+例は引き続き、公開TEI Workspaceの一Subject（sales.order）の依存とValidationをAIに説明してもらい、元対象へread-onlyの回答候補を返す一往復とする。
+
+1. **Product-onlyで固定する**：現行TEI CLIの実commandsとCatalog/Inspect/Locateを確認し、対象Kind/ID、元Root/Source、版と取得範囲を実記録する。GUI Pinが未検収ならCUI固定入力を使い、GUI成功とは呼ばない。
+2. **短い依頼と開示Previewを作る**：Productが現在の用途・Audience・Recipientに公開できるTask、対象、根拠、unknown、返却先だけを投影する。原Path、未保存Buffer、非公開ID・件数・Digest、全Manual、全Transcriptを既定で送らない。Preview後のGrant/Source変更では再審査する。
+3. **必要な文書は別の実取得とする**：Plugin説明が必要なら、短いProduct Skillから現在選択版の公開Doc一件を要求する。ただし#4714の実Doc Reader・現在Disclosureが未成立なら、この追加取得はunsupportedのまま止め、最初の公開Subject調査自体の新Blockingにしない。遠隔HarnessにローカルPathを渡しただけでSource読取とは呼ばない。
+4. **Tool-onlyの実送受信を先に測る**：既存TAI #168で適格な実OS隔離、Egress、完全Tool Replyを確認できた環境で、元Taskへの応答とConsumer受領を別々に記録する。H2/H3の固定四試行とは別の後続Trialとし、同じSession名や返答文だけから独立性・正答を評価しない。
+5. **元Productへ候補を戻す**：Request／Activity／元Subject／元Source版の対応を確認する。閲覧中Bや未保存Bufferを変更しない。Source/Grantが旧版なら候補を保留して再取得する。保存・Build・実Effectは後続の明示操作に分ける。
+
+### 51.4 既存の試験票へ追加する判断（新Runner・第二Expectedは作らない）
+
+| 反証 | 必要な観測 | 還元先 |
+| --- | --- | --- |
+| Lockは一致するがDocumentの帰属・Source・Audienceが不明 | Doc送信ゼロ。Plugin選択は確認済み、読取は未確認と区別 | TEI #4714、TAI #488、既存YK-20/21 |
+| Workbench参照画面では制限表示があるが配布資産は旧版 | UIを実受領とみなさず、同一HEADの生成・配布Byte・実Browserを別照合 | TEI #4806/#4812、既存YK-23 |
+| Documentは読めるがRaw Sourceは現在拒否 | Source取得は拒否。文書の存在や以前の許可をRaw共有へ転用しない | SUI #3441/#3452、既存YK-22 |
+| Context送出後にNative Tool Reply本文が切断 | 送信と完全Result受領を分離し、必要なら同じTurn/Attemptを照会 | TAI #168、QH §10、既存YK-24 |
+| 元Pin Aの後にFocus B、Source A→B→A、旧Reply到着 | Pin意図の保持と現在資格を分離。Bの表示・Editorを変更せず旧Replyを不採用 | TEI #4515/#4597、TAI #271 |
+| Agentが操作済みと報告、実Effectはunknown | 新しい業務実行を始める前に元Operation/Attempt/Receiptを照会 | TEI #4497、EKI #57/#829、TAI #234 |
+
+いずれも他チャットのProduct・Skill・Source/Consumerの**既存Expectedを参照する実装用チェック**であり、この文書内で新しい試験IDの正本、Checker、中央Policy、実行エンジンを定義しない。結果がpartial／unknown／permission-deniedなら、その意味を失わせず、公開が認められない詳細は伏せて返す。
+
+### 51.5 次の実装順と停止線
+
+最初に接続するのは **Sレーン：TEIの実Source/Pin/Workbench** と **Hレーン：既存Harnessの実Tool Reply/元Task受領** の二つだけである。各レーンは独立に進める。SがまだGUIで実証されなければCUIでProduct-onlyの基線を取り、HがOS隔離で不適格なら外部送信せずProduct内の仕事を継続する。両方が成立した範囲だけを同一公開Subjectの一往復へ接続し、必要ならPlugin文書・Activity引継ぎを後続へ追加する。
+
+**独立P0は変更しない**。TEI #4583の非Plugin Stage1→Stage2実WindowsセルフビルドとTAI #168のG0実Read-deny→G1 Egress→G2完全Reply→新規独立H2/H3四Slot（現在比較適格0/4）は、互いの新Hard Gateにしない。正式 *.tei.md Reader、Plugin公開Doc一件、SUI Rawの実Host Grant、複数UIでの同一Session再接続は各Ownerの並行・後続検収とする。
+
+**今回の確認範囲**：mainにあるTEI #4800/#4806/#4789、SUI #3452、既存TAI Skill計画§50〜51、QH §10、TEI #4597/#4714のIssue/PRと照合した設計追補であり、**Docs-only**。新しいGo/Node/Windows/実Browser/外部Harness実送受信、現在Grant・Effect、Owner意味受理は**NOT RUN**。本節の追加から実行済みの資格を拡張しない。
