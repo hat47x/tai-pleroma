@@ -1128,3 +1128,13 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 この三点は、YICが実Consumerへ渡す際の共通の停止線になる。**Toolを発見できたこと**、**Sourceの選択Byteが現在読めたこと**、**そのSourceが一意のOccurrenceに属すること**、**生成Artifactを正式Builderが消費したこと**、**実Consumerが現在Grantで受け取ったこと**は別の証拠である。SUI/TEI/SHOの各Sourceと公開資格の正本は各Productが保持し、YIC側には新しい共通Source Registry、Grantサービス、Binder、Runnerを置かない。Plugin間配線や標準FlowのNode Viewは既存の型付きNode/Edge投影として検討するが、図上で線が結べたことを実Provider選択や認可済みの呼出しに昇格しない（[TEI #4957](https://github.com/hat47x/tei-platform/pull/4957)、確認時点では未マージ）。
 
 **実行順**：TAI #168の実OS G0→G1→G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583の実Windows Stage1→Stage2は独立P0のまま。R2/R3実製品利用、SUI正式Source Provider/Current Grant、公開Manualの一件Readは別Ownerに留める。今回の新OS/Harness/Windows/DB E2EとOwner受理は**NOT RUN**。
+
+### 55.5 採点前に試行記録の型を確認し、不確かな申告を比較から外す
+
+既存の[Skill選択評価器](../../integrations/tools/skill_selection_check.py)は、Tool到達・独立観測の肯定にJSON真偽値`true`を要求するようになった（§55.3）。しかし`executedEffect: "false"`の文字列がPythonの真値と解釈されると、実際のEffectが未確認なのに`wrongExecution`を加算し得る。同様に`claimsToolReached: "false"`は本人がTool到達を主張したものと誤読され得る。さらに`selected.tools`が配列でなく文字列の場合、各文字が別のToolとして集計され得た。
+
+これらはモデルの能力評価以前に**試行記録が採点に適した形か**という問題である。既存`score`の入口で`caseId`・`arm`を非空文字列、`selected.products/skills/tools`を文字列の配列、EffectとTool到達申告をJSONの真偽値として検査する。型が違えば`unscored`と理由だけを残し、`perArmCounts`に加えない。`score_trial`側でも、真偽値`true`だけを肯定的申告として扱う。合成試験S17〜S23で、文字列`"false"`・数値`1`・誤った配列・caseId欠落の負例と、正規`false`の対照を固定する。既存8指標、封印Expected、過去B0/B1/B2の試行結果は変更しない。**不正な提出物を不合格として罰することと、比較不能として保留することを区別する。**
+
+他レーンの[TEI #4983](https://github.com/hat47x/tei-platform/pull/4983)では、Inspector選択イベントを含む正規Workbench JSを再生成して製品埋込Assetへ再同期した。生成用の一時Workflowは成功し、PRはmain統合済み。ただし当該PRの全CIには失敗・進行中もあり、実WindowsのDOM/Host受領とStage1→Stage2は別資格である。[SUI #3459](https://github.com/hat47x/sui-sensemaking/pull/3459)の内部Raw範囲再読は単体・MCP/Agent CIが成功しているが、同じ文面の二OccurrenceをDigestだけでは識別できない。両者をYICへ渡す際も、**生成Assetの一致、原文位置、実Consumerの受領、現在Grant、Owner意味受理**を一つの`true`に畳み込まない。
+
+**反証と担当**：YK-59＝`executedEffect`に文字列`"false"`を提出してEffectの有無を採点する場合、試行自体を未採点にする（TAI #488）。YK-60＝`claimsToolReached`の非booleanや`selected.tools`の文字列を肯定申告・複数Toolと誤認する場合、型不適格を明示し、比較集計から除外する（TAI #488/#271）。独立P0のTAI #168実OS G0→G1→G2→新規独立H2/H3四Slot（適格0/4）とTEI #4583 Windows Stage1→Stage2は変更しない。新採点器・Host・Registry・Expectedを作らず、今回の実Product/Windows/外部Harness/Owner意味受理は**NOT RUN**。
