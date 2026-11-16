@@ -1186,3 +1186,13 @@ Product Skillの正本はTEI/SEI/SUI/SHO/EKI等の各Productに残し、TAIは�
 **並行実装との関係**：[SUI #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Headを使った古いCard選択失効は、確認時点ではopenであり、本件の別Process Consumer再検証とは独立している。[TEI #5007](https://github.com/hat47x/tei-platform/pull/5007)のOperator実装選択、[TEI #5025](https://github.com/hat47x/tei-platform/pull/5025)のPin再読込時失効も、同じ名前やbyteが戻ったときに旧資格を自動復活させない例である。元Source／選択した実装／実Consumer／現在Grantを別に検収する原則は[横断計画§56.5](harness-cross-ui-session-probe-2026-11-14.md)に接続する。
 
 **停止線**：TAI #168の実OS G0→G1→G2と独立H2/H3四Slot（比較適格**0/4**）、TEI #4583の非Plugin実Windows Stage1→Stage2は独立P0を維持する。今回の実SUI Product実行、外部AI/SHO/TEIへのRaw開示、Owner意味受理は**NOT RUN**。新Host・Runner・Registry・第二Expectedは追加しない。
+
+## 56. 2026-11-16：型付きSkill構成と実行時資格を、既存の検証経路へ結び付ける
+
+[型付きSkill構成と利用資格の検証仕様](skill-composition-typed-qualification-2026-11-16.md)を追加する。§19の型付きConnection、§23・§48の最小構成、§55の限定Tool Discovery／実Source／実Consumer検査を一件のTaskで使うため、**手順・値・証拠と権限の三種類の接続**を区別する。TEI [#5101](https://github.com/hat47x/tei-platform/pull/5101)の「Whole／Field／混合」と「無変換／明示Adapter」は直交する二軸であり、Skill自身が型正本や変換器になるのではない。型適合からOwner意味受理や現在Grantを導かない。
+
+D0候補、D1構造適合、D2実Source、D3作用直前、D4実行結果、D5消費側の**六つの観測点**を受入票に対応付ける。既存の試験に割り付ける反証はYK-COMP-01〜12。TEI [#5118](https://github.com/hat47x/tei-platform/pull/5118)の値と実Read IDの違い、[#5109](https://github.com/hat47x/tei-platform/pull/5109)／[#5129](https://github.com/hat47x/tei-platform/pull/5129)のPlan確定後の生成Go／Markdown改版拒否、SUI [#3464](https://github.com/hat47x/sui-sensemaking/pull/3464)の現行Document Revision照合と[#3466](https://github.com/hat47x/sui-sensemaking/pull/3466)の読取投影と文書保存の分離を、**それぞれ限定された実績**として接続する。TEI #5114の実装選択PinとSUI #3465のRaw取得後の再確認はクローズ・未マージであり、現行mainの機能として扱わない。
+
+**実行順は変更しない。** TAI #168の実OS G0→G1→G2と新たな独立H2/H3四Slot（既存比較適格0/4）、TEI非Plugin Windows Stage1→Stage2を独立P0として優先する。その後、公開TEI read-only能力から二番目の実Consumerへの**読取→参照**を一件接続し、B0 Tool-only／B1 Product Skill／必要時B2 TAI Skillの増分価値を比較する。TAI #488はSkill選択と発見の誤判定、#271は利用時点の再資格化、#74は配布、#232は現在のDisclosure、TEI/SUI等のProduct Ownerは実型・意味・実Provider・Consumerを担当する。**追加の中央Router、型Registry、Runner、認可器、第二Expectedは不要。**
+
+本節とリンク先は設計・受入候補である。新しいProduct間実接続・OS・外部Harness/CI・実SUI/SHO Consumer・Owner意味受理は**NOT RUN**。
