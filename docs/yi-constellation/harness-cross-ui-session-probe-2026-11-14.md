@@ -1026,7 +1026,7 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 **Windowsの赤を包含ロジックの破損と読まない。** 同時に、linuxの緑もSUI #3462の限界を上げない（Card選択ResolverとSource Providerはテストダブル、PDPはlocalhost、正式なCard保存・二次開示・実組織PDPは未成立）。
 
-**同じ日に見つけたホスト差**：TEIの`internal/workspace`にあるrooted source境界のテストは、**Windowsでは2件がSKIPする**（[receipt](../../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、同commit）。
+**同じ日に見つけたホスト差**：これらは[テストが暗黙にホストを選ぶ問題](host-dependent-tests-2026-11-16.md)として3製品分をまとめた。TEIの`internal/workspace`にあるrooted source境界のテストは、**Windowsでは2件がSKIPする**（[receipt](../../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、同commit）。
 
 | テスト | Windows | Linux |
 | --- | --- | --- |
