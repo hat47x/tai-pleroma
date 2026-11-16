@@ -1018,6 +1018,16 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 とくに`TestSamePlanBuiltByTwoToolchainsIsToldApartOnlyByTheRecord`は、`TEI_SELF_BUILD_FULL_CHAIN=1`と`TEI_SELF_BUILD_SECOND_GO`（Go 1.27.0）を与えて実行し、**同一Plan fingerprint `239df29d…` に対して、Go 1.26.11 の artifact が `sha256:b3b54142…`、Go 1.27.0 が `sha256:fc29a6d0…` と異なる**ことを観測した。文書の「同一計画で生成Binaryのbyteが変わる」という記述は、この固定commitでも成り立つ。
 
+**同じ日に見つけたホスト差**：TEIの`internal/workspace`にあるrooted source境界のテストは、**Windowsでは2件がSKIPする**（[receipt](../../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、同commit）。
+
+| テスト | Windows | Linux |
+| --- | --- | --- |
+| `TestRootedSourceRejectsOutsideSymlinksAndNestedAliases` | **SKIP**（symlink作成権限が無い） | PASS |
+| `TestRootedSourcePinsOpenedFileAcrossRename` | **SKIP**（rename意味が異なる） | PASS |
+| `TestRootedSourceBasicPathBoundaryOnNativeTargets` | PASS | PASS |
+
+Windowsだけで検証すると、**パス包含境界が未検証のまま残る**。symlink経由の脱出とopen-fileのrename固定は、まさに境界の検査である。CIがlinuxで回っていることと、手元のWindowsで通ることは別であり、この差を「同じ緑」と数えない。
+
 **ただし意味は変えない**：これは`Toolchain reported`の水準であり、`Plan names toolchain`、`Actual compiler independently observed`、`Artifact bytes independently consumed`は別Claimのままである。Seed TrustやG4受理ではなく、別OS間のBinary同値も主張しない。
 
 新しい`matched`はBuilder申告Pathのbyte再読一致であり**そのCompilerを実際に使ったことの独立実証でも、Seed TrustやG4受理でもない**。
