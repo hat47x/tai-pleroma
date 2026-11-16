@@ -264,7 +264,7 @@ go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
 
 TEI Studioは[main #5012](https://github.com/hat47x/tei-platform/pull/5012)でPin A再確認中のBのCaret/Focus/Graph/ARIA保護が、[main #5025](https://github.com/hat47x/tei-platform/pull/5025)で**同じWorkspace再読込時の旧Pin観測失効**が、それぞれ実Windows通常Desktopジョブでsuccessとなった。生成Desktopジョブは両方failure。別Workspace A→B→A、意図的な後着Reply、Dirty BufferとStage1→Stage2は別に試験する。
 
-SUIの[PR #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は**Draft・未マージ**。保存済Cardの出典候補を実Document Revision HeadのVersion・Revision ID・所属Documentと比較し、無変更再保存やRaw A→B→Aで旧候補を拒否する次の負例として扱う。対象HEADの限定Backend CIはsuccessだが、正式Card保存・Current Source Provider/Export Grant・AI受領の成功ではなく、現行mainの利用可能機能としてSkillに列挙しない。
+SUIの[main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は、実Document Revision HeadのVersion・Revision ID・所属Documentと保存済みCard選択候補を照合し、無変更再保存やRaw A→B→Aによる旧候補を拒否する内部回帰を統合した。対象HEADのBackend/MCP・agent認証CIはsuccess。ただしRaw取得前の限定検査であり、正式Card保存・CAS・Current Source Provider/Export Grant・AI受領の合格ではない。
 
 この3系統の独立Expectedは[QH §10.10](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。各Ownerが一因子試験で再確認した結果だけをI/R/P/T/C/Hへ渡し、未受理のSource/実装選択・現在Grantは`insufficient-evidence`として扱う。**この実行票追補から新Go／Windows／SUI／外部Harness実行はNOT RUN**。TAI #168 H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Windows Stage1→Stage2は独立P0のままとする。
 
@@ -313,8 +313,27 @@ go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v
 python -m unittest discover -s integrations/pilot-sui-document/assembler -p 'test_consumer_mapping_coverage_check.py' -v
 ~~~
 
-**実装選択の次段**：[TEI #5114](https://github.com/hat47x/tei-platform/pull/5114)はOpen／未マージで、旧Scenario CommandのOperator実装選択Pinを別Processでも検査する候補。正式mainに入るまで再試験手順の成功条件へ含めない。[TEI #5119](https://github.com/hat47x/tei-platform/pull/5119)もDraft／未マージで、CLI別Process・直接Operation・Wails非依存Studio Hostの三入口Inspect同値を検査する候補。CLI/Hostの結果一致をHTTP公開や非Builtin ProviderのGrantへ拡張しない。
+**実装選択の次段**：[TEI #5114](https://github.com/hat47x/tei-platform/pull/5114)はOpen／未マージで、旧Scenario CommandのOperator実装選択Pinを別Processでも検査する候補。正式mainに入るまで再試験手順の成功条件へ含めない。[TEI #5119](https://github.com/hat47x/tei-platform/pull/5119)も未マージでクローズで、CLI別Process・直接Operation・Wails非依存Studio Hostの三入口Inspect同値を検査する候補。CLI/Hostの結果一致をHTTP公開や非Builtin ProviderのGrantへ拡張しない。
 
 **SUI Consumerの次段**：[TAI main #687](https://github.com/hat47x/tai-pleroma/pull/687)で、旧`readingOrder`欠落の`FAIL` Receiptを保持し、上書き不能の新Attempt用Checkerへ進んだ。#687 exact HEADの`tai-reference`は確認時点で**queued**。上記Pythonの合成試験が成功しても、実SUI checkout/依存/Consumerの別Process読取を伴う新Receiptはまだ存在しない。出典のある新Attemptと過去Receiptを区別し、単に`valid: true`や配列件数が等しいだけで全Field/順序の完全受領を報告しない。
 
 この三系統の結果は[QH §10.12](cross-product-handoff-execution-tickets-2026-11-11.md)の別受入票へ渡す。OwnerによるMeaningと現在Grantが確定しない実Effect・外部AI/SHO送信は行わない。TAI #168の独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Windows Stage1→Stage2は独立P0のまま。
+
+## 三値判定とDocument現在版の再資格化を再試験する
+
+TEI [main #5142](https://github.com/hat47x/tei-platform/pull/5142)は、NULL・未取得・関係の部分取得を区別し、**見えた範囲だけで結果を確定できる場合**と判定不能を分ける。[main #5143](https://github.com/hat47x/tei-platform/pull/5143)は記録例の期待`satisfied`／`not-satisfied`／`undecided`をRuleと照合し、[main #5146](https://github.com/hat47x/tei-platform/pull/5146)は一記録内の日付順序のRuleを扱う。**これら新Ruleの生成Goや実Providerでの評価は未検収**。次はTEIリポジトリRootで試し、HEAD・Fixture・Exit・判定理由をそれぞれ記録する。本YIC文書更新からは未実行。
+
+~~~sh
+go test ./internal/semantic/validationeval -run '^(TestTheTwoReasonsANumberIsMissingStayDifferent|TestUniqueIsDecidedExactlyWhenEveryWorldAgrees)$' -count=1 -v
+go test ./internal/operations -run '^TestCheckRuleExamplesReportsEachDifferentAnswerWhereItIsWritten$' -count=1 -v
+go test ./cmd/tei -run '^(TestWithoutIfPresentAnOpenPeriodIsNotDecided|TestValidateReportsADateRuleThatAnswersDifferentlyFromItsExample)$' -count=1 -v
+~~~
+
+SUI [main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)はDocument読取許可と、**Raw取得前**の現在Head／Revision所属を照合する。無変更再保存・A→B→A・同Tenant別Documentの同内容への旧選択束縛を拒否する試験は、SUIリポジトリRootから次のように再確認する。対象HEADのBackend/MCP・agent認証CIはsuccessだが、この実行票では再実行していない。
+
+~~~sh
+pytest -q 03_Implement/backend/tests/test_r2_source_snapshot_read_gate.py -k 'same_content_after_document_version_advance or a_b_a_even_when_document_version_reused or revision_from_other_document_same_tenant'
+~~~
+
+**停止線**：Raw読取後の再認可案[SUI #3465](https://github.com/hat47x/sui-sensemaking/pull/3465)は未マージでクローズ。TEIの`undecided`を権限拒否の別名にせず、Documentに現在アクセスできてもRecipientへの二次開示を自動許可しない。[TEI #5129](https://github.com/hat47x/tei-platform/pull/5129)の対象HEADで成功したSelf-Build Focused Stepと、後着[#5146のSelf-Build failure / Focused Step skipped](https://github.com/hat47x/tei-platform/actions/runs/43800801801)を合算しない。受入条件は[QH §10.13](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。TAI #168独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Stage1→Stage2は独立P0のまま。
+

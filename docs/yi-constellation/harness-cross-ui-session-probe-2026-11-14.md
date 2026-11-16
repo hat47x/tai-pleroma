@@ -1868,6 +1868,16 @@ Gの実行資格はさらに時間を持つ。[TEI main #5109](https://github.co
 
 **共通の実行順**：[TEI main #5116](https://github.com/hat47x/tei-platform/pull/5116)の設計に沿い、まずOwnerの業務意味受理・Sourceと実装の選択・現在のGrantを確認し、**副作用のあるInvokeより前に**入出力の型/欠損/完全性/Effect条件を検査する。その後に実Call・Read ID/回数・Builder実入力・Result/Effect/Receiptを照合する。型付きPort全体／Field／Adapterの[main #5101](https://github.com/hat47x/tei-platform/pull/5101)はこの経路への投影であって、型の一致のみで開示許可やInvocationを発行しない。Goの生成メソッド名やUI上のNodeラベルではなく、**Meaning ID・選択した抽象経路・通過時の状態不変条件**で受入を記述する（[main #5112](https://github.com/hat47x/tei-platform/pull/5112)）。この局所証拠を外部HandoffのP/T/C/Hへ勝手に昇格させない。独立受入票は[QH §10.12](cross-product-handoff-execution-tickets-2026-11-11.md)に集約する。
 
+### 55.9 判定できない理由と、現在読んでよいかを混同しない
+
+[TEI main #5142](https://github.com/hat47x/tei-platform/pull/5142)は、型付きRuleの既存評価器に状態を申告できる`Decide`を加え、値の`present`／`null`／`not-fetched`と、関係読取の`complete`／`partial`を区別する。例えば一意性のRuleで**既に重複する二行を読めた場合は**、残りが未取得でも不成立と確定できる。一方、重複が見つからない場合に部分取得しかなければ、成立とは言わず理由つきの「判定できない」に留める。NULLや未取得を数値0・不成立・認可拒否へ自動変換しない。矛盾した状態申告は「判定できない」ではなくReader側の誤りとして拒否する。
+
+[TEI main #5143](https://github.com/hat47x/tei-platform/pull/5143)は、記録例の表に`satisfied`／`not-satisfied`／`undecided`という独立Expectedを記述し、選択したRuleの応答と例の位置を照合する。[main #5146](https://github.com/hat47x/tei-platform/pull/5146)は**同じ一記録の暦日二項目**について`is not after`と`if present`を追加し、期間の前後を例で検査できるようにした。これらは、既存positive Ruleについて確立したP/G実Binary同値とは異なるRule種別であり、**新しい日付Ruleの生成Go・物理Provider読取・全Target同値の実証ではない**。複数行の期間重複を扱う[TEI #5148](https://github.com/hat47x/tei-platform/pull/5148)はDraft／未マージとして保留する。
+
+「判定不能」は**データに関する意味上の状態**であり、「読取禁止」は**Authority/Grantの拒否**である。Sourceや関係が`not-fetched`だった理由を、未取得なのかアクセス拒否なのか推定しない。権限がない場合はRaw取得・二次開示を止め、許可された観測のみ縮退して扱う。意味上の結果が不成立に確定しても、開示・実送信の資格が増えるわけではない。現在の`Decide`に状態を与えるのは主にScenario Fixtureであり、実DBの射影・ページ分割・組織PDPから完全性を生成する正式Source Readerは未接続である。
+
+**CIの上限**：#5142/#5143/#5146はmainにマージされているが、後着[#5146のexact HEAD](https://github.com/hat47x/tei-platform/actions/runs/43800801801)のセルフビルドWorkflowは**failure**で、Rule専用Focused Stepは**skipped**。[TEI #5129](https://github.com/hat47x/tei-platform/pull/5129)の別HEADでは、BuildPlan確定後に同梱元Markdownの説明文だけを変えて旧Planを拒否するSelf-Build Stepが**success**（[run 43733725622](https://github.com/hat47x/tei-platform/actions/runs/43733725622)）。この過去HEADの成功で現行Rule全種のBuild受理や後着HEADの失敗を埋めない。次の独立負例は[QH §10.13](cross-product-handoff-execution-tickets-2026-11-11.md)にまとめる。
+
 ## 56. 意味・原文の位置・配布物の一致を分けて検証する
 
 同じ文字列やHashが返ったという一事実を、「同じ業務意味」「同じSource箇所」「現在その人が読める」「別Productに開示してよい」「実Consumerが受領した」の五つに拡大解釈しない。これは独立した新しいEvidence形式の提案ではなく、既存[製品間Handoff実行票§10](cross-product-handoff-execution-tickets-2026-11-11.md)のI（意図）／R（Product再解決）／P（開示許可）／T（送出）／C（Consumer）／H（Harness）の**各欄を埋める前に、何の同一性を確認したかを固定するための条件**である。
@@ -1919,7 +1929,7 @@ Ruleの生成Goは[TEI #5009](https://github.com/hat47x/tei-platform/pull/5009)�
 
 TEIの実Windows [main #5012](https://github.com/hat47x/tei-platform/pull/5012)では、Pin Aの明示再確認・解除中にも、BのCodeMirror Focus/Caret、Graph/ARIA、Diagnostics等を保持する通常Desktopジョブが[対象HEADで成功](https://github.com/hat47x/tei-platform/actions/runs/43706400375)した。続く[main #5025](https://github.com/hat47x/tei-platform/pull/5025)では**同じWorkspaceの再読込**後にPin対象Aへの意図は残す一方、旧観測・旧版を未取得に失効させ、利用者の明示再確認と実Host再読取でのみ資格を回復する通常Desktopジョブが[成功](https://github.com/hat47x/tei-platform/actions/runs/43706898173)した。両Workflowとも**生成Desktop PoC Bは失敗**しており、通常Desktopの部分合格を生成DesktopやStage1→Stage2へ流用しない。別Workspace A→B→A、遅延旧Replyの意図的競合、Dirty Bufferの実編集保護も未検収である。
 
-SUIでは実Document readとSource readの独立判定がmain済み[#3462](https://github.com/hat47x/sui-sensemaking/pull/3462)。さらに**Draft／未マージ**の[PR #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は、保存済Cardの出典候補が、実DBのDocument Revision Head（Version／Revision IDと所属Document）に一致するかをSource再読の前に検査する変更を提案している。**本文を無変更で再保存する場合やA→B→Aで同じRaw byteへ戻る場合も、旧Headを再利用しない**反証を追加し、対象HEADのBackend CIはsuccess。ただしmainの製品実績とは数えず、正式Card選択の永続化・同一Commit CAS、本番Raw/Source Provider・組織PDP、他Productへの二次開示の受入もしていない。
+SUIでは実Document readとSource readの独立判定がmain済み[#3462](https://github.com/hat47x/sui-sensemaking/pull/3462)。さらに[main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は、保存済Cardの出典候補が、実DBのDocument Revision Head（Version／Revision IDと所属Document）に一致するかをSource再読の前に検査する内部変更を統合した。**本文を無変更で再保存する場合やA→B→Aで同じRaw byteへ戻る場合も、旧Headを再利用しない**反証を追加し、対象HEADのBackend CIはsuccess。ただしRaw取得後の再資格化や、正式Card選択の永続化・同一Commit CAS、本番Raw/Source Provider・組織PDP、他Productへの二次開示の受入もしていない。
 
 両者に共通するのは、「同じ内容／同じ対象」と「その**時点で観測・実行・配信してよい**」は別の問いということである。ただしWindowのPin状態とSUIのDocument Revisionを一つのバージョン番号に押し込めない。既存Ownerが保存する**Pin意図・Host Reply、Document Head・選択Receipt、Rule/Manifest選択・Build Artifact**をそれぞれ再解決し、必要なときだけ既存I/R/P/T/C/Hで同一Attemptに結び付ける。P（Recipient別開示）が成立しないならT/C/Hを埋めず、Raw送出を停止する。
 
@@ -1937,19 +1947,16 @@ SUIでは実Document readとSource readの独立判定がmain済み[#3462](https
 
 [TAI main #687](https://github.com/hat47x/tai-pleroma/pull/687)では、旧SUI`readingOrder`欠落（歴史的`FAIL`）のReceiptを保全し、Consumerを再試験する際には**上書きできない別Receipt**を作る仕組みが既存Checkerへ入った。出力先が既存なら拒否し、元Artifact、実際に選択したSUIの`documentv1_projection.py`／`models.py`、Checker自身のbyte指紋、実引数とPython環境を残す。Consumer入出力の`readingOrder`は数だけでなくCard IDの順番まで比較し、二枚目だけの`sources`欠落やDocumentV1モデル検証時の項目脱落も拒否する。**ただし全Field値の完全同値、列挙外依存の完全閉包、実行途中のA→B→Aは確認しない。**
 
-#687はmainへ統合済みだが、取得時点のexact HEAD `tai-reference`はqueuedであり**この新合成回帰のCI合格は未確認**。さらにSUI checkout／実依存を伴う**現行Consumerの別Process再試験は未実施**である。新Checkerのコードがあることは現在のSUI Product投影が成功したという意味ではない。歴史的失敗と新試行は同じ`readingOrder`のExpectedで比較できても、同じResult/Receiptに上書きしない。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Head照合はmain未採用で、正式Card/CASや現在の開示Grantも別に受理する。
+#687はmainへ統合済み。exact HEAD [tai-reference Run 43733064386](https://github.com/hat47x/tai-pleroma/actions/runs/43733064386)の`python-reference`内**SUI consumer replay receipt safety regression (synthetic)はsuccess**。ただし同Workflow全体はGo Reference系の別Job失敗でfailure。さらにSUI checkout／実依存を伴う**現行Consumerの別Process再試験は未実施**である。新Checkerのコードがあることは現在のSUI Product投影が成功したという意味ではない。歴史的失敗と新試行は同じ`readingOrder`のExpectedで比較できても、同じResult/Receiptに上書きしない。SUI [main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)の内部Document Revision Head照合は統合済みだが、正式Card/CASや現在の開示Grantは別に受理する。
 
 **横断へ渡す単位**は「どのProduct・Subjectのどの版を、どのOperator/実現方式・Builder/Consumerが、どの独立Expectedに対して実際に使用したか」であり、過去Receiptの整合・現在Product Reader/Consumerの合格・Recipientへの二次開示を**三つの別票**とする。YICは既存I/R/P/T/C/Hを利用し、SUI/TEIの内部Revisionや実装選択を一つの共通Hashへまとめない。TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583の正式非Plugin Stage1→Stage2は引き続き独立P0。
 
+### 56.8 Documentの現在Headと、Raw取得後の最終許可を別の時点で確認する
 
-### 56.4 通常の実Consumerと生成側の実Consumerを分け、Productの成功資格を横断に引き渡す
+前回はSUIのDocument Revision Head照合をDraftとしていたが、[SUI main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は**マージ済み**で、対象HEADのBackend/MCP・agent認証Workflowはsuccess。実SQLiteのDocument・Revision Blob・Headが同一Documentに属し、保存済みCard選択候補が現在のDocument Version／Head Version／Revision IDと一致することを、**Document read PDP→保存Card選択Resolver→Revision確認→Source read PDP→Raw/選択byte確認**の順に検査する。無変更再保存やRaw A→B→A、同じTenantの別Documentでも、旧選択位置を現在の出典として復活させない。
 
-[TEI #4995](https://github.com/hat47x/tei-platform/pull/4995)のWindows WebView2実測により、従来の「Pinの実DOM操作は未検証」という停止線の一部が前進した。exact HEAD `2f7132503dc88229953c45db25b350a78802c5d2`の[Windows Run](https://github.com/hat47x/tei-platform/actions/runs/43703879023)では、**通常の`desktop-webview2-smoke`が成功**した。実Hostの版を基準にAを固定し、BのGraph選択を保ったままAを再確認・旧観測を失効させて再読し、最後に固定を解除した。一方、同じRunの`generated-desktop-webview2-smoke`は失敗しており、生成側の固定Workbench Source Snapshot版が一致しない問題は別Ownerに残る。[TEI #5002](https://github.com/hat47x/tei-platform/pull/5002)の設計・計画にもこの限定結果がmainへ統合済みである。通常のPin操作成功を、Source改版時の後着Reply／Dirty Editor／現在Grant／Stage1→Stage2の合格に拡張しない。
+ただし、これは**Raw取得前の資格確認**である。NAS/S3や外部PDPの読取中にDocumentやCardが変わる窓が残る。[SUI #3465](https://github.com/hat47x/sui-sensemaking/pull/3465)はRaw取得後のDocument再認可・Card再解決・Revision再照合を検査する案だが、**未マージでクローズ**されており、現行mainの完了機能には含めない。仮にこの再確認を導入しても、Raw取得後のSource専用Grant再評価、同一Commit CAS、トランザクション分離、外部Provider／PDP一貫性まで自動的に保証されるわけではない。
 
-Ruleの生成Goは[TEI #5009](https://github.com/hat47x/tei-platform/pull/5009)で、元の`tei.rule-authoring/v0`の選択から、既存`validationgen.GeneratePositive`を通じて通常の`tei self-build`／Build Intentで実Binaryを作り判定する**製品経路のテスト**がmainに入った。局所Generatorで終わっていたR1より進んだが、原Markdown byte・Generator版を同じArtifactへ正式束縛するR2-Pの完了、正式に公開されたFunction EntryからProviderを実CallするR3、Ownerの業務意味受理は未成立。テストSourceの存在と対象HEAD CI成否も分けて記録する。
+YICのR（元Product再解決）には**読取開始時のRoot/Document/Selection/Revision/Grantの照合**と**返却・利用前にどの条件がなお有効か**を別欄に残す。Rの内部テストが成功しても、Recipient別のP（Disclosure）、T（送出）、C（別Consumerでの完全受領）、H（Tool Reply完了）は空欄のままにする。正式Card永続化とRevisionの同一Commit保存・現在Raw Provider・組織PDP・外部AI/SHO/TEI Consumerは独立Ownerに残す。新Snapshot Store・共通Grant・Runnerは設けず、TAI #168 G0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Stage1→Stage2のP0を変えない。
 
-[SUI #3462](https://github.com/hat47x/sui-sensemaking/pull/3462)は、実Document行とServer側Document Resource Resolverを通し、**Document readが認められた後に、保存済みCard選択候補とSource readを別途検査**する内部経路へ進んだ。対象HEADの単体CIはbackend 452件成功、MCP/Agent回帰も成功。実Document資格は進展したが、Card選択・Source Authority・Rawの正規Provider、本番PDP、Card CAS、二次開示まで実証されたわけではない。
 
-以上を既存QH §10のI（意図）→R（元Product再解決）→P（開示）→T（送出）→C（Consumer）→H（Harness）の受入へ引き渡す。例えばSUIの内部readが成功した場合でも、Pは未証明のまま保留できる。TEIの通常WebView2が合格しても、生成DesktopのCは失敗として残す。**一つのCIやJSONフラグに複数の受入結果を合算しない**。[TAI #680](https://github.com/hat47x/tai-pleroma/issues/680)で判明した別テスト失敗に遮られたSkill自己試験についても、試験未実行と失敗を分けて記録する。
-
-次の検収は、TEIの生成Desktop版不一致の原因解決→Windows Stage1→Stage2の同一Attempt、SUIの実Card保存・Current Grant／開示→別Consumerでの再読、TAIの実OS G0/G1/G2→独立H2/H3四Slotを**各Ownerで独立に進める**。外部Product間の実送受信、実Provider Effect、Owner意味受理は今回**NOT RUN**。新しい共通Source Store・Grantサービス・Runnerは導入しない。
