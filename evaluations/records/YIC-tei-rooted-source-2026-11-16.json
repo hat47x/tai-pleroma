@@ -1,0 +1,53 @@
+{
+  "schema": "tai.reference.yic-tei-rooted-source/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows and WSL Ubuntu, running the same TEI package on both",
+  "command": "python integrations/tools/yic_tei_rooted_source.py --tei-repo <clean TEI clone at 926c8f2e3511> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-rooted-source-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
+    "checkoutClean": true,
+    "package": "./internal/workspace",
+    "comparisons": [
+      {
+        "test": "TestRootedSourceBasicPathBoundaryOnNativeTargets",
+        "windows": "PASS",
+        "linux": "PASS",
+        "differs": false
+      },
+      {
+        "test": "TestRootedSourcePinsOpenedFileAcrossRename",
+        "windows": "SKIP",
+        "linux": "PASS",
+        "differs": true
+      },
+      {
+        "test": "TestRootedSourceRejectsOutsideSymlinksAndNestedAliases",
+        "windows": "SKIP",
+        "linux": "PASS",
+        "differs": true
+      }
+    ],
+    "skippedOnWindows": [
+      "TestRootedSourcePinsOpenedFileAcrossRename",
+      "TestRootedSourceRejectsOutsideSymlinksAndNestedAliases"
+    ],
+    "failedOnLinux": [],
+    "verifiedOnlyOnLinux": [
+      "TestRootedSourcePinsOpenedFileAcrossRename",
+      "TestRootedSourceRejectsOutsideSymlinksAndNestedAliases"
+    ],
+    "windowsExit": 0,
+    "linuxExit": 0,
+    "everyTestPassedOnLinux": true,
+    "finding": "rooted source境界のテストは、Windowsではsymlink作成権限が無く、opened-file renameの意味も異なるため2件がSKIPする。WSLのUbuntuでは3件すべてPASSした。Windowsだけの実行では、包含境界が検証されないまま残る。"
+  },
+  "scope": "Runs the rooted-source traversal tests on Windows and in WSL Ubuntu and records each verdict per host, so a host that cannot exercise the boundary is visible rather than silently counted as covered. A linux pass shows the repository's containment tests hold there at this commit; it does not audit the reader beyond those tests, does not establish any Product's runtime authorization, and does not transfer the result to another OS."
+}
