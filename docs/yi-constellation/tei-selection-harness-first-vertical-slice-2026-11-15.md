@@ -85,7 +85,18 @@ go test ./cmd/tei -run '^TestProductInspectCLISelectedMarkdownRuleIsNotCapabilit
 
 **入口と配送の二軸**：CUIでの実CLI指定／Studioでの明示PinはProductの選択入口。既存Native Sessionへの配送／TAI Activityから新Sessionへの限定Handoffは運搬方式。Session共有不能なら新Sessionへ縮退し、旧Grantや全Transcriptを渡さない。既存yi.handoff.context/v1が必要なRoot・Relation occurrenceを表せなければunsupportedとして止め、架空の欄を加えない。
 
-## 現行CLIから始める基線（実行例、今回未実行）
+## 現行CLIから始める基線（2026-11-16に実行済み）
+
+**2026-11-16の実行結果**：この節の5コマンドは、固定commitのclean cloneで実際に[実行しました](../../../evaluations/records/YIC-tei-readonly-cli-2026-11-16.json)（`tei-platform` `926c8f2e3511`、`checkoutClean: true`、Goの版はreceiptに記録）。5つすべてが応答し、`inspect`は`semantic/sales/order.tei`の定義位置を`offset 124, line 7, column 6`〜`129`として返し、`worldFingerprint`と`sourceIndexFingerprint`も返した。`validate`は`ok: true`で警告3件（`*_RELEASE_CONTRACT_NOT_CURRENT`）、宣言数は`total: 79`。
+
+**inspectが自分で宣言する限界**（`authorityLimits`）：
+
+- `inspection-is-a-derived-read-only-projection`
+- `source-location-is-not-semantic-acceptance`
+- `source-location-is-not-write-authority`
+- `local-read-is-not-disclosure-permission`
+
+以下は同じ実行の再現手順である。
 
 実装時にTEI checkout、Go版、Workspace原byte、Tool version、HEADを記録し、最新のdocs/getting-started.mdとコマンド発見結果を確認する。
 

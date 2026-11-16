@@ -243,6 +243,7 @@ REAL_RECORDS = (
     "evaluations/records/YI-pass-consistency-2026-11-11.json",
     "evaluations/records/YI-receipt-quality-2026-11-11.json",
     "evaluations/records/YIC-tei-product-read-2026-11-16.json",
+    "evaluations/records/YIC-tei-readonly-cli-2026-11-16.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -640,6 +641,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-tei-readonly-cli" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyCommandAnswered") is not True
+                or observed.get("inspectReturnedByteRange") is not True
+                or observed.get("checkoutClean") is not True
+            ):
+                errors.append(f"the CLI baseline lost a command or its byte range: {relative}")
         if "YI-receipt-quality" in relative:
             observed = data.get("observed", {})
             if (

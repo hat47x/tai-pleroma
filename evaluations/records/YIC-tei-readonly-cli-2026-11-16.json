@@ -1,0 +1,296 @@
+{
+  "schema": "tai.reference.yic-tei-readonly-cli-baseline/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go, running the TEI CLI against reference/workspace in a clean clone",
+  "command": "python integrations/tools/yic_tei_readonly_cli_baseline.py --tei-repo <clean TEI clone at 926c8f2e3511> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-readonly-cli-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
+    "checkoutClean": true,
+    "commandsRun": 5,
+    "failed": [],
+    "results": [
+      {
+        "command": "go run ./cmd/tei commands",
+        "establishes": "入口の実Discovery（選択されたread-onlyコマンドの一覧）",
+        "exit": 0,
+        "jsonParsed": true,
+        "kept": {
+          "schemaVersion": "tei.cli.discovery/v0",
+          "scope": "selected-read-only-commands"
+        },
+        "stderrTail": []
+      },
+      {
+        "command": "go run ./cmd/tei model catalog -workspace reference/workspace",
+        "establishes": "宣言された型の実Catalog",
+        "exit": 0,
+        "jsonParsed": true,
+        "kept": {
+          "schemaVersion": "tei.cli.model/v0",
+          "ok": true
+        },
+        "stderrTail": []
+      },
+      {
+        "command": "go run ./cmd/tei model locate -workspace reference/workspace -subject-kind semantic-data -subject-id sales.order",
+        "establishes": "Subjectの位置（派生のread-only投影）",
+        "exit": 0,
+        "jsonParsed": true,
+        "kept": {
+          "schemaVersion": "tei.cli.model-locate/v0",
+          "ok": true,
+          "result": {
+            "subject": {
+              "subject": {
+                "kind": "semantic-data",
+                "id": "sales.order"
+              },
+              "parent": {
+                "kind": "semantic",
+                "id": "sales"
+              },
+              "symbol": "Order",
+              "sourceStatus": "indexed"
+            },
+            "validation": {
+              "ok": true,
+              "errorCount": 0,
+              "warningCount": 3
+            },
+            "authorityLimits": [
+              "location-is-a-derived-read-only-projection",
+              "location-is-navigation-not-semantic-acceptance-or-edit-authority",
+              "empty-lists-cover-only-the-derived-families"
+            ],
+            "coverage": {
+              "derived": [
+                "containment",
+                "relation-target",
+                "attribute-type",
+                "pattern-data",
+                "pattern-relation",
+                "pattern-query",
+                "pattern-capability"
+              ],
+              "notDerived": [
+                "business-event-flow",
+                "lifecycle-state-transition",
+                "query-data-dependency",
+                "implementation-binding",
+                "test-and-evidence-binding"
+              ]
+            }
+          }
+        },
+        "stderrTail": []
+      },
+      {
+        "command": "go run ./cmd/tei inspect -workspace reference/workspace -subject-kind semantic-data -subject-id sales.order",
+        "establishes": "Canonical内容と元byte範囲",
+        "exit": 0,
+        "jsonParsed": true,
+        "kept": {
+          "schemaVersion": "tei.cli.inspect/v0",
+          "ok": true,
+          "result": {
+            "subject": {
+              "kind": "semantic-data",
+              "id": "sales.order"
+            },
+            "canonical": {
+              "id": "sales.order",
+              "symbol": "Order",
+              "attributes": [
+                {
+                  "id": "sales.order.customer_id",
+                  "symbol": "customerId",
+                  "type": "customer.customer_id"
+                },
+                {
+                  "id": "sales.order.external_id",
+                  "symbol": "externalId",
+                  "type": "std.text"
+                },
+                {
+                  "id": "sales.order.order_id",
+                  "symbol": "orderId",
+                  "type": "sales.order_id"
+                },
+                {
+                  "id": "sales.order.ordered_at",
+                  "symbol": "orderedAt",
+                  "type": "std.datetime"
+                },
+                {
+                  "id": "sales.order.status",
+                  "symbol": "status",
+                  "type": "sales.order_status"
+                },
+                {
+                  "id": "sales.order.total",
+                  "symbol": "total",
+                  "type": "std.money"
+                }
+              ],
+              "relations": [
+                {
+                  "id": "sales.order.customer",
+                  "symbol": "customer",
+                  "target": "customer.customer",
+                  "cardinality": "one",
+                  "keys": [
+                    {
+                      "sourceAttribute": "sales.order.customer_id",
+                      "targetAttribute": "customer.customer.customer_id"
+                    }
+                  ]
+                },
+                {
+                  "id": "sales.order.lines",
+                  "symbol": "lines",
+                  "target": "sales.order_line",
+                  "cardinality": "many"
+                }
+              ]
+            },
+            "sourceStatus": "indexed",
+            "worldFingerprint": "sha256:b85b5827600fce6f0f6d55ba92640f69e10b179921e59af2a1d3547e3a2c7e26",
+            "sourceIndexFingerprint": "sha256:ae48c0ea4b76fc9bc5b2443ef098b101e8734198fb28c0d94d2b552c31e95c11",
+            "sources": {
+              "subject": {
+                "kind": "semantic-data",
+                "id": "sales.order"
+              },
+              "artifacts": [
+                {
+                  "path": "semantic/sales/order.tei",
+                  "format": "tei",
+                  "fingerprint": "sha256:f2063418b893a60a9f948edbb2b23ec821f7a15ed8e5863c36e1b72abade1e33"
+                }
+              ],
+              "references": [
+                {
+                  "subject": {
+                    "kind": "semantic-data",
+                    "id": "sales.order"
+                  },
+                  "artifactPath": "semantic/sales/order.tei",
+                  "range": {
+                    "start": {
+                      "offset": 124,
+                      "line": 7,
+                      "column": 6
+                    },
+                    "end": {
+                      "offset": 129,
+                      "line": 7,
+                      "column": 11
+                    }
+                  },
+                  "role": "definition"
+                }
+              ]
+            },
+            "authorityLimits": [
+              "inspection-is-a-derived-read-only-projection",
+              "source-location-is-not-semantic-acceptance",
+              "source-location-is-not-write-authority",
+              "local-read-is-not-disclosure-permission"
+            ]
+          }
+        },
+        "stderrTail": []
+      },
+      {
+        "command": "go run ./cmd/tei validate -workspace reference/workspace -json",
+        "establishes": "Workspaceの診断",
+        "exit": 0,
+        "jsonParsed": true,
+        "kept": {
+          "schemaVersion": "tei.cli.validate/v0",
+          "ok": true,
+          "diagnostics": [
+            {
+              "diagnostic": {
+                "code": "DATABASE_RELEASE_CONTRACT_NOT_CURRENT",
+                "severity": "warning",
+                "message": "database sales_core release 4.0.0 provides historical contract sales_core.order_legacy which has no current definition"
+              }
+            },
+            {
+              "diagnostic": {
+                "code": "DATABASE_RELEASE_CONTRACT_NOT_CURRENT",
+                "severity": "warning",
+                "message": "database sales_core release 4.1.0 provides historical contract sales_core.order_legacy which has no current definition"
+              }
+            },
+            {
+              "diagnostic": {
+                "code": "APPLICATION_RELEASE_CONTRACT_NOT_CURRENT",
+                "severity": "warning",
+                "message": "application release order_entry@3.7.0 requires historical contract sales_core.order_legacy which has no current definition"
+              }
+            }
+          ],
+          "declarationCounts": {
+            "namespaces": 4,
+            "types": 9,
+            "data": 8,
+            "attributes": 20,
+            "capabilities": 3,
+            "validations": 3,
+            "periods": 0,
+            "effectRules": 0,
+            "runPlans": 0,
+            "applications": 2,
+            "patterns": 6,
+            "databases": 2,
+            "environments": 2,
+            "queries": 1,
+            "plugins": 8,
+            "bundles": 1,
+            "persistenceMappings": 2,
+            "migrations": 1,
+            "applicationReleases": 2,
+            "databaseReleases": 3,
+            "solutionReleases": 2,
+            "total": 79
+          }
+        },
+        "stderrTail": []
+      }
+    ],
+    "inspectReturnedByteRange": true,
+    "definitionRanges": [
+      {
+        "start": {
+          "offset": 124,
+          "line": 7,
+          "column": 6
+        },
+        "end": {
+          "offset": 129,
+          "line": 7,
+          "column": 11
+        }
+      }
+    ],
+    "inspectAuthorityLimits": [
+      "inspection-is-a-derived-read-only-projection",
+      "source-location-is-not-semantic-acceptance",
+      "source-location-is-not-write-authority",
+      "local-read-is-not-disclosure-permission"
+    ],
+    "everyCommandAnswered": true,
+    "finding": "実行票が例示のみとしていた5つのread-only CLIは、固定commitのclean cloneですべて応答した。inspectは元byte範囲（offset・line・column）とsourceIndexFingerprintを返し、authorityLimitsに「read-onlyの派生投影であり、意味の受理でも書込み権限でも開示許可でもない」と明記する。"
+  },
+  "scope": "Runs the five read-only TEI CLI commands the YIC ticket lists as examples, against reference/workspace in a dedicated clean clone, and records exit code and the fields that carry evidence. A successful read is not semantic acceptance, write authority or disclosure permission, as the inspect output itself states. It does not exercise a real Provider invocation, an external harness delivery, a complete Tool Reply, or receipt by the original subject's Consumer, and it says nothing about the distributed Workbench or real Windows WebView2."
+}
