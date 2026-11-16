@@ -815,13 +815,13 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 | 受入カード・Owner | 固定するもの／一因子だけ変えるもの | 独立Expectedと現状 |
 | --- | --- | --- |
 | **QH-IMPL-01（TEI Operator）** | `sales.non_negative`を含むWorld/Ruleと入力値`0`は固定。Manifestの選択だけ`tei.number.non-negative`（成立）→`tei.number.non-zero`（不成立）へ変更 | [TEI main #5007](https://github.com/hat47x/tei-platform/pull/5007)の`TestScenarioDecidesAnOperatorRuleWithTheSelectedImplementation`で型付きWorld同値・異なる実Call/結果の限定Go回帰あり。一方、**実装選択だけ変更後の旧生成Scenario Commandを失効させることは未実装・未検収**。YICのTool/Skill説明には「選択済み＝実Call済み」と書かない |
-| **QH-CARD-REV-01（SUI Document）** | Document/Card/Captureと選択した二箇所目の原文範囲を固定。Documentを無変更再保存、次にRawをA→B→Aへ戻して**Head Version／Revision ID**だけ進める。さらに同Tenant別Documentの同byte Revisionを差し込む | [SUI Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)が、実DBのDocument Head/Revision所属照合と旧選択拒否を提案。対象HEAD Backend CI successは確認したが**未マージの候補でありmain合格に加算しない**。実Card保存・同一Commit CAS・本番Source Provider/組織PDP／二次開示は別P0 |
+| **QH-CARD-REV-01（SUI Document）** | Document/Card/Captureと選択した二箇所目の原文範囲を固定。Documentを無変更再保存、次にRawをA→B→Aへ戻して**Head Version／Revision ID**だけ進める。さらに同Tenant別Documentの同byte Revisionを差し込む | [SUI main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)で実DBのDocument Head/Revision所属照合と旧選択拒否を実装。対象HEADのBackend・MCP/Agent CIはsuccess。ただしRaw取得前の内部照合で、Card正式保存・同一Commit CAS・組織PDP／二次開示は未受理。実Card保存・同一Commit CAS・本番Source Provider/組織PDP／二次開示は別P0 |
 | **QH-PIN-RELOAD-01（TEI Studio）** | 同一Workspace／Pin対象Aを維持して、一覧だけを再読込する。旧Pin観測が未取得・要再確認へ戻り、利用者が明示再確認した後だけ実Hostから再取得 | [TEI main #5025](https://github.com/hat47x/tei-platform/pull/5025)のexact HEAD通常Windows WebView2ジョブはsuccess。[main #5012](https://github.com/hat47x/tei-platform/pull/5012)のB Caret/Focus/Graph/ARIA保護も通常ジョブでsuccess。一方、両runの**生成Desktopジョブはfailure**。別Workspace A→B→A、故意に遅延した旧Reply、Dirty Editor、Stage1→Stage2は未試験 |
 | **QH-I2M-R2（TEI Source→Go）** | 元DSLのRule ID・意味と生成GoのRead Attribute/比較条件を独立照合し、`>0`→`>=0`や元Source説明改訂を差分にする。Go ASTのbyte位置と元DSL byte位置を混同しない | [TEI main #5020](https://github.com/hat47x/tei-platform/pull/5020)にはSource→Go AST一試行回帰。さらに[main #5021](https://github.com/hat47x/tei-platform/pull/5021)のexact HEADセルフビルドCI [run 43707249734](https://github.com/hat47x/tei-platform/actions/runs/43707249734)では生成Rule専用Focused Stepがsuccess。しかし元Rule/Generator版の正式BuildPlan束縛・R3選択Providerの実Callは未受理 |
 
 **評価するときの扱い**：QH-IMPL-01／QH-CARD-REV-01／QH-I2M-R2はSourceと実装資格の現在性を判断する**R（元Product再解決）の補助証拠**。QH-PIN-RELOAD-01は元Productでの意図・観測失効と再読取という**Consumer内の限定証拠**。いずれもP（Recipient別Disclosure）、T（実送出）、C（相手Productでの完全受領）、H（外部Harness Tool Replyの完了）には流用しない。異なる時点のGreenや`pass: true`を一つの横断Attemptに束ねない。
 
-**実行順と停止線**：まず各Ownerの固定HEAD／Expectedで正負試験を行い、Source Revision/Manifest実装選択/Pin観測を**それぞれ失効・再資格化**する。次に正式ProviderとGrantのあるProductだけを選び、既存§10のI→R→P→T→C→Hを一件の同一Attemptで通す。SUI #3464はPRがmainに入るまで「計画とDraft CI」にとどめる。TAI #168のG0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2は従来どおり独立P0。**新しい製品間の実送受信・Owner受理は今回NOT RUN**。
+**実行順と停止線**：まず各Ownerの固定HEAD／Expectedで正負試験を行い、Source Revision/Manifest実装選択/Pin観測を**それぞれ失効・再資格化**する。次に正式ProviderとGrantのあるProductだけを選び、既存§10のI→R→P→T→C→Hを一件の同一Attemptで通す。SUI #3464の実DB・現在Head照合はmainの内部回帰として扱うが、Raw取得後の再認可と正式Card保存・二次開示は受理しない。TAI #168のG0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2は従来どおり独立P0。**新しい製品間の実送受信・Owner受理は今回NOT RUN**。
 
 ### 10.11 実現方式の一致・生成Desktopの受領・歴史的失敗を別々に検収する
 
@@ -837,7 +837,7 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 **採点と引渡し**：QH-PGは判断結果の**限定同値**、QH-G-BUILDはBuildに取り込んだ実byte、QH-N2は限定Windows実Consumer、QH-REC-FAILは**失敗記録の監査可能性**をそれぞれ数える。合格／失敗／未実行／Skip／既知負例は区別し、一つのWorkflow・Receiptの`passed`だけで相互転用しない。ProductのSource範囲/Revision・実現方式のSelected/Invoked・現在Grant・Audience・Artifact・Replyの適格性は、既存§10の**I/R/P/T/C/H**で必要な範囲だけ再確認する。
 
-次段ではTEIの**ManifestにGと記述されても実CallerがPを呼ぶ不一致**、P/G差分のEffect/取得完全性、DのProvider拒否後にPへ無断Fallbackする負例を各Ownerの試験として固定する。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のRevision Head拒否はmain合格に加算しない。外部AIへRawを送るP/T/C/H、Owner意味受理、TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583のStage1→Stage2は従来どおり独立P0。今回の製品間送受信は**NOT RUN**。
+次段ではTEIの**ManifestにGと記述されても実CallerがPを呼ぶ不一致**、P/G差分のEffect/取得完全性、DのProvider拒否後にPへ無断Fallbackする負例を各Ownerの試験として固定する。SUI [main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のRevision Head拒否は内部試験として加算できるが、外部受領・Grant資格には転用しない。外部AIへRawを送るP/T/C/H、Owner意味受理、TAI #168の実OS G0/G1/G2・独立H2/H3四Slot（比較適格0/4）、TEI #4583のStage1→Stage2は従来どおり独立P0。今回の製品間送受信は**NOT RUN**。
 
 ### 10.12 結果が一致しても、実Read・Builder時点・Consumer再試行が違えば不合格
 
@@ -852,5 +852,22 @@ TEIの[#4475](https://github.com/hat47x/tei-platform/issues/4475)のうち、**F
 
 **先に受理する順序**：Ownerによる意味・Law受理→Source/型/Mappingと実装選択の現在性→**副作用前の現在Grant／Audience/Effect条件**→実CallとRead Footprint／Artifact／Result・Effect→Recipient別Disclosureと相手Consumer→Harnessの完全Reply。TEI main [#5116](https://github.com/hat47x/tei-platform/pull/5116)はこの順序を製品計画に整理済みだが、業務OwnerやGrantの実呼出しが追加されたわけではない。抽象経路は[main #5112](https://github.com/hat47x/tei-platform/pull/5112)の安定Meaning/Rule ID・Guard・必須/禁止通過点・状態不変条件で指定し、生成メソッド名を受入IDにはしない。
 
-**横断への加算規則**：QH-PG-READはProduct局所の意味経路、QH-PLAN-TIMEはBuild投入時のbyte、QH-OP-SELは実装選択の時点資格、QH-CONSUMER-REPLAYは旧/新Receiptの証拠整合。各々I/Rの補助または局所C候補であり、P/T/C/Hの外部Product実送受信を代用しない。同じRule ID／同じHash／同じResultで古い資格を再利用せず、単一の外部Attemptに関係のない別HEAD Greenを混ぜない。SUI [Draft #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)のDocument Revision Head照合もmain受理前には未実証。TAI #168実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Stage1→Stage2は独立P0。今回の実Product間送受信とOwner意味受理は**NOT RUN**。
+**横断への加算規則**：QH-PG-READはProduct局所の意味経路、QH-PLAN-TIMEはBuild投入時のbyte、QH-OP-SELは実装選択の時点資格、QH-CONSUMER-REPLAYは旧/新Receiptの証拠整合。各々I/Rの補助または局所C候補であり、P/T/C/Hの外部Product実送受信を代用しない。同じRule ID／同じHash／同じResultで古い資格を再利用せず、単一の外部Attemptに関係のない別HEAD Greenを混ぜない。SUI [main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)の現在Document Revision Head照合は限定内部実証済み。Raw後の再認可と正式Providerは未実証。TAI #168実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）とTEI #4583非Plugin Stage1→Stage2は独立P0。今回の実Product間送受信とOwner意味受理は**NOT RUN**。
+
+### 10.13 判定不能の意味・Sourceの読取範囲・現在権限を別々に受理する
+
+TEIで「成立／不成立／判定できない」を決める根拠と、SUIで「いまSourceを読んでよい」を決める根拠は独立している。ValueやRelationを**一部しか読めない**ときも、既に得られた証拠だけで結論が不変なら判断できる場合がある。一方、その結果を説明するために未許可のRawを別Productへ開示してよいことにはならない。[横断計画§55.9／§56.8](harness-cross-ui-session-probe-2026-11-14.md)と同じ停止線を、次の独立Expectedで固定する。
+
+| 受入カード | Productが観測する事実 | 正負Expectedと現在の上限 |
+| --- | --- | --- |
+| **QH-TRI-01：判定不能の理由を保つ** | [TEI main #5142](https://github.com/hat47x/tei-platform/pull/5142)の`Decide`に、値の`present`／`null`／`not-fetched`と関係の`complete`／`partial`を独立に入力する。一意性は、取得済み二行の明白な重複なら部分取得でも不成立、重複がなく部分取得なら判定できない | `not-fetched`を0や不成立に変換しない。矛盾するSource状態はReaderエラーとし、意味上の`undecided`にはしない。**権限拒否をデータのNULL/未取得と偽装しない**。現段階はScenario Fixture等による限定回帰で、実DB・PDPの取得状態統合ではない |
+| **QH-EXAMPLE-02：独立ExpectedとRuleの位置** | [TEI main #5143](https://github.com/hat47x/tei-platform/pull/5143)で記録例の表から`satisfied`／`not-satisfied`／`undecided`を明示し、Ruleの実判定と照合。[main #5146](https://github.com/hat47x/tei-platform/pull/5146)で同じ記録の暦日順序`is not after`を追加 | 期待と異なる答えは例の位置に結び付けて拒否。**これらのRuleを生成Goで実Binary実行した証拠や、業務Ownerによる意味受理はない**。複数行の期間重複[TEI #5148](https://github.com/hat47x/tei-platform/pull/5148)はDraft／未マージ |
+| **QH-CARD-HEAD-03：保存時Headが現在か** | [SUI main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)で実SQLiteのDocument／Revision Blob／Headの同一所属、Version／Revision ID、保存済Card選択位置を、Document読取許可の後・Source再読の前に突合する | 無変更再保存、A→B→A、同Tenant別Documentの同byte差替えを拒否。**正式Card選択CAS・本番Source Provider・相手へのDisclosureは未受理**。一致するbyte/Hashだけで旧資格を復活させない |
+| **QH-RAW-RACE-04：読み終えた時点の資格** | [SUI #3465](https://github.com/hat47x/sui-sensemaking/pull/3465)は、Raw読取中にDocument Grant／Head／Card選択が変更される負例と返却前再照合の候補 | **#3465は未マージでクローズ**。現行mainの#3464はRaw取得前の照合であり、後続の更新競合を止める完成機能ではない。Raw取得後のSource専用Grant・同一Commit・外部PDP一貫性も別Ownerが受理する |
+
+**判定の順序**：Ownerが意味とExpectedを受理する → 元Productが必要な範囲・粒度・完全性と現在のRoot/Document/Revisionを解決する → 現在Grantを副作用前に確認する → 必要な実Read/Callを行い、返却時まで資格が保たれたかを再確認する → RecipientごとのPと実送受信T/C/Hを別に記録する。**Readerの状態はAuthority判定を代替せず、Source資格は意味上の判定を代替しない**。
+
+**CIの取扱い**：SUI #3464の対象HEAD Backend/MCP・agent認証はsuccess。TEI #5142/#5143/#5146はmainへマージ済みだが、#5146 exact HEADのセルフビルドRun 43800801801はfailure、Rule専用Focused Stepはskipped。TEI #5129の別HEADでは同梱MarkdownをPlan確定後に変更した旧Plan拒否と通常CLIのRule専用Focused Stepがsuccess（Run 43733725622）。**別HEAD間で結果を補完しない**。これらの限定事実をI/R補助とし、P（Recipient開示）・T（送出）・C（外部Consumer）・H（Tool Reply）の新実行証拠には数えない。
+
+TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2と通常CLI→実Providerは独立P0のまま。新共通Source Store、横断判定Runner、第二Grant正本は設けない。今回の実Product間送受信とOwner受理は**NOT RUN**。
 
