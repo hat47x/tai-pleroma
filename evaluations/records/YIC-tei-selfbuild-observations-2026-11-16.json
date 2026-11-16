@@ -1,0 +1,104 @@
+{
+  "schema": "tai.reference.yic-tei-selfbuild-observations/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows host running WSL Ubuntu-24.04 (Linux/x86_64) with the pinned Go toolchain",
+  "command": "python integrations/tools/yic_tei_selfbuild_observations.py --tei-repo <clean TEI clone at 926c8f2e3511> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-selfbuild-observations-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
+    "checkoutClean": true,
+    "distro": "Ubuntu-24.04",
+    "hostKernel": "Linux",
+    "hostMachine": "x86_64",
+    "goVersion": "go version go1.26.11 linux/amd64",
+    "secondGoVersion": "",
+    "packageExit": 0,
+    "tests": [
+      {
+        "test": "stateObservationSeesChild",
+        "goTestName": "TestStateObservationSeesAChildThatUsesTheStateItWasPassed",
+        "verdict": "PASS"
+      },
+      {
+        "test": "stateObservationSharedStateStopped",
+        "goTestName": "TestStateObservationIsRecordedWhenSharedStateIsStopped",
+        "verdict": "PASS"
+      },
+      {
+        "test": "stateObservationEmptyDirIsNotUse",
+        "goTestName": "TestStateObservationDoesNotAcceptAnEmptyDirectoryAsUse",
+        "verdict": "PASS"
+      },
+      {
+        "test": "stateObservationNoStateChild",
+        "goTestName": "TestStateObservationDoesNotRejectAChildThatKeepsNoState",
+        "verdict": "PASS"
+      },
+      {
+        "test": "stateObservationCopiedState",
+        "goTestName": "TestStateObservationCannotSeeStateCopiedBetweenRuns",
+        "verdict": "PASS"
+      },
+      {
+        "test": "processImageRecorded",
+        "goTestName": "TestSelfBuildRecordsTheProcessImageBesideTheNamedFile",
+        "verdict": "PASS"
+      },
+      {
+        "test": "toolchainReportVsFile",
+        "goTestName": "TestObserveChildToolchainComparesTheReportWithTheFile",
+        "verdict": "PASS"
+      },
+      {
+        "test": "toolchainReportVsPlan",
+        "goTestName": "TestObserveChildToolchainComparesTheReportWithThePlan",
+        "verdict": "PASS"
+      },
+      {
+        "test": "plannedPlanParameter",
+        "goTestName": "TestPlannedPlanParameterReadsTheReceiptPlan",
+        "verdict": "PASS"
+      },
+      {
+        "test": "toolchainReportNotRequired",
+        "goTestName": "TestSelfBuildDoesNotRequireAToolchainReport",
+        "verdict": "PASS"
+      },
+      {
+        "test": "twoToolchainsToldApartByRecord",
+        "goTestName": "TestSamePlanBuiltByTwoToolchainsIsToldApartOnlyByTheRecord",
+        "verdict": "PASS"
+      }
+    ],
+    "verdictCounts": {
+      "PASS": 11
+    },
+    "passedTests": [
+      "stateObservationSeesChild",
+      "stateObservationSharedStateStopped",
+      "stateObservationEmptyDirIsNotUse",
+      "stateObservationNoStateChild",
+      "stateObservationCopiedState",
+      "processImageRecorded",
+      "toolchainReportVsFile",
+      "toolchainReportVsPlan",
+      "plannedPlanParameter",
+      "toolchainReportNotRequired",
+      "twoToolchainsToldApartByRecord"
+    ],
+    "skippedTests": [],
+    "failedTests": [],
+    "testsWithoutVerdict": [],
+    "everyTestProducedAVerdict": true,
+    "noTestFailedOnLinux": true,
+    "finding": "linux固定のself-build観測系テスト11件をWSLのUbuntuで実行し、各テストの判定を個別に記録した。二つのツールチェーンを要するテストはGo 1.26.11と1.27.0を与えて実行し、同一Planでもartifact digestが変わることを確認した。これは製品ローカルの観測であり、Owner受理、公開Entry、実Provider、外部開示、別OSのBinary同値を示さない。"
+  },
+  "scope": "Runs eleven linux-pinned TEI self-build observation tests in WSL Ubuntu and records each verdict separately from the package exit code. A pass shows the repository's own tests hold on linux/amd64 at this commit. It is not an independent proof that the named compiler was used, not Owner acceptance, not a published Function Entry, not a real Provider call, not external disclosure, and it does not compare binaries across hosts or operating systems."
+}

@@ -1014,7 +1014,13 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 ### 39.2 同じBuildPlanでも同じArtifactではない
 
-[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648)は、同一のself-build計画に対してGo 1.26.11と1.27.0で**生成Binaryのbyteが実際に変わる**ことをWSL2/linux-amd64で観測した。旧計画の`l2b.claimed=true`はいずれも成立し、`toolchainObservation.namedByPlan=false`。新しい`matched`はBuilder申告Pathのbyte再読一致であり**そのCompilerを実際に使ったことの独立実証でも、Seed TrustやG4受理でもない**。
+[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648)は、同一のself-build計画に対してGo 1.26.11と1.27.0で**生成Binaryのbyteが実際に変わる**ことをWSL2/linux-amd64で観測した。旧計画の`l2b.claimed=true`はいずれも成立し、`toolchainObservation.namedByPlan=false`。**2026-11-16の追試**：この節が参照するself-build観測系の**linux固定テスト11件**を、WSLのUbuntuで実行し、**11件すべてPASS**した（[receipt](../../../evaluations/records/YIC-tei-selfbuild-observations-2026-11-16.json)、`tei-platform` `926c8f2e3511`、`Linux/x86_64`）。
+
+とくに`TestSamePlanBuiltByTwoToolchainsIsToldApartOnlyByTheRecord`は、`TEI_SELF_BUILD_FULL_CHAIN=1`と`TEI_SELF_BUILD_SECOND_GO`（Go 1.27.0）を与えて実行し、**同一Plan fingerprint `239df29d…` に対して、Go 1.26.11 の artifact が `sha256:b3b54142…`、Go 1.27.0 が `sha256:fc29a6d0…` と異なる**ことを観測した。文書の「同一計画で生成Binaryのbyteが変わる」という記述は、この固定commitでも成り立つ。
+
+**ただし意味は変えない**：これは`Toolchain reported`の水準であり、`Plan names toolchain`、`Actual compiler independently observed`、`Artifact bytes independently consumed`は別Claimのままである。Seed TrustやG4受理ではなく、別OS間のBinary同値も主張しない。
+
+新しい`matched`はBuilder申告Pathのbyte再読一致であり**そのCompilerを実際に使ったことの独立実証でも、Seed TrustやG4受理でもない**。
 
 | 仕事の境界 | YICが引き継げる情報 | Cache／Handoff／Owner判断 |
 | --- | --- | --- |
