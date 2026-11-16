@@ -251,6 +251,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json",
     "evaluations/records/YIC-skip-disclosure-2026-11-16.json",
     "evaluations/records/YIC-qh-revalidate-2026-11-16.json",
+    "evaluations/records/YIC-qh-resolve-09-2026-11-16.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -648,6 +649,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-qh-resolve-09" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyClaimIsPinnedByAPassingTest") is not True
+                or observed.get("failed")
+            ):
+                errors.append(f"a resolve claim lost its pinning test: {relative}")
         if "YIC-qh-revalidate" in relative:
             observed = data.get("observed", {})
             if (
