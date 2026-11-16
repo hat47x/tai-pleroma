@@ -62,9 +62,9 @@ D4の単なるResult値一致も十分ではない。[TEI #5118](https://github.
 
 **Sourceと生成物**：[TEI #5109](https://github.com/hat47x/tei-platform/pull/5109)／[#5129](https://github.com/hat47x/tei-platform/pull/5129)は、BuildPlan確定後の生成Go変更と同梱原Markdown変更を、それぞれ旧Planのままでは拒否する回帰を製品に追加した。元byteへ戻ったとしても、それだけで旧Host Grantや業務意味の受理が復活するわけではない。
 
-**実装選択**：Operator A→Bの選択はWorldの見た目やResult値が同じでも別資格になり得る。旧生成Scenario Commandの選択Pin強化を提案したTEI [#5114](https://github.com/hat47x/tei-platform/pull/5114)は**クローズ・未マージ**であり、現行製品の一般保証として案内しない。
+**実装選択**：Operator A→Bの選択はWorldの見た目やResult値が同じでも別資格になり得る。TEIの**現行mainには**、Scenarioの`OperatorSelectionSHA256`と、選択を変えた旧生成Commandの拒否を試す`TestGeneratedScenarioCommandInvalidatesOperatorSelectionChange`が存在する。これは組込みOperatorを使った限定的なCLI／Planの証拠であり、正式Plugin Lock、実Provider呼出し、A→B→Aの履歴資格までを保証しない。旧[#5114](https://github.com/hat47x/tei-platform/pull/5114)自体は未マージでクローズされたが、そのPR番号だけから現行機能の不存在を推測しない。計算定義の一本化を進める[#5150](https://github.com/hat47x/tei-platform/pull/5150)は確認時点ではopenであり、提案内容を実装済みの追加保証へ加算しない。
 
-**SUIの出典**：SUI [#3464](https://github.com/hat47x/sui-sensemaking/pull/3464)では、保存済みCard選択候補を現行Document Revision Headと照合する内部処理がmainへ統合された。本文がA→B→Aと戻ってもDocument版・Revisionの差を確認する。ただし選択Resolver等にはテストダブルが残り、正式なSource保存・開示資格は未成立。Raw読取後の再検証を加えた[#3465](https://github.com/hat47x/sui-sensemaking/pull/3465)は**クローズ・未マージ**であり、返却直前の再確認を実装済みと主張しない。
+**SUIの出典**：SUI [#3464](https://github.com/hat47x/sui-sensemaking/pull/3464)は保存済みCard選択候補と現行Document Revision Headを、Source Raw取得前に照合する。旧[#3465](https://github.com/hat47x/sui-sensemaking/pull/3465)自体はクローズ・未マージだが、同じ変更は別の[mainマージコミット`71b13d`](https://github.com/hat47x/sui-sensemaking/commit/71b13d2966a3eb29ca61870dc12514a3657ffa7b)として存在し、Raw取得後のDocument再認可・Card再解決・Revision照合は**限定内部経路に実装済み**。さらに[main #3467](https://github.com/hat47x/sui-sensemaking/pull/3467)では、保存済みCard出典の再読経路でRaw取得後のSource Authority／PolicyRef再解決と二度目のSource専用PDP判定を追加した。**一般Source読取にはこの二重判定を適用しない**。選択Resolverや正式Source Provider等はテストダブル／未受理を含み、同一Commit CAS・原子的権限保証・別Productへの開示が成立したわけではない。
 
 **SUIの投影と保存**：[SUI #3466](https://github.com/hat47x/sui-sensemaking/pull/3466)で、`from_artifact`は参照を作る読取経路、`to_documentv1_payload`は契約確認用に限定し、`documentv1_save_plan`と`documentv1_merge`をRoute/MCP/CLIへ接続しない方針がmainに統合された。したがって「TEIからSUIへ型が合うArtifactを渡せる」ことを「SUI文書の保存ができる」と説明しない。SUI文書への保存を要求する場合は別のOwner判断・ADRが先。
 
@@ -109,3 +109,63 @@ D4の単なるResult値一致も十分ではない。[TEI #5118](https://github.
 - **P2**：別HarnessでのActivity再開、Selective Requalification、必要が証明されたAdapterの実装・検証。権限と実作用は各Product/HostのOwnerが決める。
 
 **今回の検証上限**：既存PRと設計の静的照合。新しい外部Harness、実OS、実SUI/SHO Consumer、Provider／Grant／Effect、Owner意味受理を実行・実証したものではない。
+
+## 9. Skillが案内できる実現方式は、Rule種別・現在の製品版ごとに判定する
+
+[TEI #5166](https://github.com/hat47x/tei-platform/pull/5166)は、同じMarkdown内のDataとRuleをProduct Reader／Inspectorで選べても、そのRuleをすべての実現方式へ展開できるとは限らないことを具体化した。YICは「製品が使える」という総称を、実際のTaskで選ぶRule・入力・実現方式・Provider・Hostの資格へ分解する。これは新たなCapability Registry/APIを定めるものではなく、既存Productの検証結果から作る**利用案内の比較票**である。
+
+| 実対象・方式 | 現行mainで確認できる範囲 | YICが主張してはならないこと |
+| --- | --- | --- |
+| 正値の数値Rule／P（直接評価） | 既存Evaluatorで局所評価。値と実Read IDを独立に比較する限定回帰がある | 正しい値が返ったので実DBの全件を読んだ |
+| 正値の数値Rule／G（Go生成） | 選択した種類について局所生成・別Process実Binaryと、限定的な通常CLI Self-buildの試験がある | 全Rule、全Provider、全Targetで同一意味・同一Effectを保証する |
+| 暦日の`not-after ... if present`／P | Workspace Readerと型検査、同日・日付順序・NULL・未取得を区別する直接評価の回帰がmainにある | 業務Ownerの意味受理、実DBからの取得状態、正式Host権限が成立した |
+| 同じ暦日Rule／G | **未対応**。`unsupported generated kind`として生成を拒否することが試験に明記されている | Gが使えないのでPへ黙って切り替え、Gによる成果物を作成したと報告する |
+| 関係の期間重複Rule、Contract Query行からの状態Reader | [#5148](https://github.com/hat47x/tei-platform/pull/5148)／[#5149](https://github.com/hat47x/tei-platform/pull/5149)は確認時点でopen。局所実装・試験の提案段階 | mainの正式Rule・実Provider入口・全件読取が完成したと扱う |
+| Typed PluginのWhole/Field投影 | [#5101](https://github.com/hat47x/tei-platform/pull/5101)は設計をmainに導入。[#5156](https://github.com/hat47x/tei-platform/pull/5156)のpure Transform回帰は確認時点でopen | 実Port接続、未公開Fieldの自動排除、現在Grant、非Builtin Providerを検証済みとする |
+
+P（直接解釈）、G（コード生成）、D（既存実装への委譲）を、**Rule種別に対する能力候補**として扱う。選択した方式が不適格なときは理由を残して保留し、別方式へ変更したい場合は新しい選択として再検証する。ユーザーが要求した成果物が「生成Go」なら、Pの成功だけで生成完了としない。HostのWails／CLI／MCP入口も実現方式とは別軸であり、同じProduct名を根拠に可搬性を推定しない。
+
+## 10. 「判定できない」と「実行できない」の理由を混ぜない
+
+[TEI #5142](https://github.com/hat47x/tei-platform/pull/5142)の限定的な三値Rule判定は、取得済みの値・NULL・未取得、関係が完全か部分取得かを区別する。例えば一意性の検査では、読んだ二行に確実な重複があれば、残りが部分取得でも不成立と判断できる。一方、読んだ範囲に重複がないだけでは、部分取得の集合全体が一意とは判断できない。
+
+この意味上の判定と、Product/Hostの呼出し結果を分ける。
+
+| 状況 | YICの取扱い |
+| --- | --- |
+| Ruleに必要な値が明示NULL、または未取得 | ProductのRuleが定める三値・理由を保持する。NULL＝未取得、未取得＝不成立にしない |
+| 部分取得でも決定的な違反を観測 | Productが根拠付きで不成立と判断した範囲のみ伝える |
+| 部分取得のためRule結果が変わり得る | `undecided`と理由・取得範囲を保持する。0件・正常終了から全件適合を推定しない |
+| HostがReaderを拒否、PDPが失効・障害 | **認可／可用性の失敗**。業務データのNULLやRuleの`undecided`に偽装しない |
+| 選択した実現方式が未対応 | **当該方式のunsupported**。別方式の利用可能性は別の候補で確認 |
+| Tool応答が失敗、または途中で途切れた | **実呼出しの失敗／受領未確認**。応答中の成功風JSONや過去Receiptを採点に使わない |
+| Effectの結果が不明 | Product/Host/EKIの同一Attempt記録を確認するまで保留し、Skillだけで再送しない |
+
+D0〜D5の観測点には単一の「成功」を追加せず、**どの観測点について、何が成立し、何が不明か**を既存Receipt・Task記録で表す。YICの説明文がProductの意味判定、Source/DisclosureのAuthority、またはConsumerの独立Expectedを代替しない。
+
+## 11. 実際のSourceを読んだあとにも残る利用資格の確認
+
+SUIの現行mainでは、保存済みCard出典の限定経路に、次の順序が実装されている。①現在のDocument read判定と選択・Revision照合、②現在のSource Authority／PolicyとRaw read判定、③実Raw・選択byte照合、④**Source Authority／PolicyRef／PDPの再照合**、⑤**Document read・Card選択・Revisionの再照合**。これらの失敗時にはRawを外部へ返さない。
+
+ただし、これは保存済みCardを復帰する**特定の内部入口**であり、一般Source APIや正式なProduct Source Providerの全操作を覆うものではない。二度の一致確認は原子的な同一Snapshotを意味せず、再確認後の失効、短時間のA→B→A、同じRaw byteを持つ別Root／Occurrence等の未確認は残る。[SUI #3466](https://github.com/hat47x/sui-sensemaking/pull/3466)の読取投影と保存禁止の区別も維持する。
+
+YICが別Productへ渡すHandoffの受入票には、**実Callの開始時点のScope/Grant、返却前に再確認した範囲、Consumer別Disclosure、別Processで実際に受け取ったBody**を別欄で残す。どれか一つが成功しても、すべての欄を成功へ昇格しない。原文や非公開Policy Refを横断の一般Skillへ持ち出さず、既存Productが公開を許可した最小Projectionだけを渡す。
+
+## 12. 既存Ownerへ渡す追加反証と実行順
+
+| 反証ID | 一因子の変更・誤推定 | 既存Ownerと期待判定 |
+| --- | --- | --- |
+| **YK-COMP-13** | RuleをReaderが受理したのでGも対応しているとする | TEI #5166：暦日`not-after`はP可／G未対応を別々に表示 |
+| **YK-COMP-14** | G未対応を黙ってPへ切り替えて「生成済み」と報告 | TEIのG/P/D契約・TAI #488：実現方式と成果物資格を失効／保留 |
+| **YK-COMP-15** | partialな一意性Readで違反なし→全件成立と断定 | TEI #5142／TAI #271：未取得範囲の判定不能を保持 |
+| **YK-COMP-16** | partialでも確定した違反まで`undecided`に変える | TEI #5142：独立Expectedに従う不成立を保持 |
+| **YK-COMP-17** | Source PDP拒否をNULL・未取得・Ruleの`undecided`に変換 | SUI #3467／TAI #232：Authority拒否を別資格で止める |
+| **YK-COMP-18** | 古いPR #3465が未マージなので、mainのRaw後再照合も存在しないと断定 | SUI main実コード／TAI #488：同内容の別Commit採否と入口範囲を確認 |
+| **YK-COMP-19** | Operator選択Pinが存在するので、全Plugin実CallやA→B→Aの履歴も保証すると断定 | TEI Scenarioの現行実試験／TAI #271：局所CLI PinとProvider/Historyの資格を分離 |
+| **YK-COMP-20** | Pinned Cardでの二度目のPDP successから、一般Source APIも原子的に保護されたと断定 | SUI #3467／TAI #232：入口限定・未検証の競合窓を保持 |
+
+いずれも既存の[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)／[#271](https://github.com/hat47x/tai-pleroma/issues/271)、[SK-01](../../evaluations/SK-01-harness-skills.md)、Product単独のテストへ割り付ける**追加の受入候補**である。新Checker・独立Expected Store・Harness Runnerを設けず、封印済みH2/H3のTask、Skill byte、順序と初回Blocking条件は変更しない。
+
+**実行の順序**：最優先のTAI #168 H2/H3実OS隔離・独立四Sessionと、TEI非Plugin Stage1→Stage2の独立P0は据え置く。その後、現行mainに存在するRule種別のP/G差をTool-onlyで確認し、実在する二番目の読取専用ConsumerへのSource/型付きProjection受渡しを試す。Product Skill・TAI Skillの増分価値は、そのTaskについて実Call/受領が観測できた場合にだけ比較する。
+
+**今回の到達範囲**：現行Product mainの実Source・PR採否と限定テストを照合した設計更新。上記YK-COMP-13〜20の新しい実Harness Trial、独立Consumer E2E、実OS、実DB/Host Grant、Owner意味受理は**NOT RUN**。
