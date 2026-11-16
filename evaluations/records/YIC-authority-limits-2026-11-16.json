@@ -1,0 +1,136 @@
+{
+  "schema": "tai.reference.yic-authority-limits-kept/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yic_authority_limits_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-authority-limits-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receipts": 12,
+    "rows": [
+      {
+        "receipt": "YIC-qh-field-13-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-qh-resolve-09-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-qh-revalidate-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-skip-disclosure-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": true
+      },
+      {
+        "receipt": "YIC-sui-r2-gate-hosts-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-tei-host-skip-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-tei-knowledge-disclosure-2026-11-16.json",
+        "limitsKept": 10,
+        "limits": [
+          "dependency-edge-is-not-semantic-applicability",
+          "dependency-edge-is-not-write-or-runtime-authority",
+          "derived-context-is-not-canonical-authority",
+          "disclosure-fingerprint-is-cache-identity-not-semantic-proof",
+          "omitted-knowledge-is-not-negative-evidence",
+          "projection-or-runtime-identity-is-not-business-data-identity",
+          "selection-does-not-change-qualification-or-canonical-meaning",
+          "selective-disclosure-is-derived-not-authority",
+          "selective-disclosure-is-not-access-control-or-redaction",
+          "unavailable-requested-section-is-not-empty-meaning"
+        ],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-tei-linux-regression-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-tei-product-read-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-tei-readonly-cli-2026-11-16.json",
+        "limitsKept": 7,
+        "limits": [
+          "empty-lists-cover-only-the-derived-families",
+          "inspection-is-a-derived-read-only-projection",
+          "local-read-is-not-disclosure-permission",
+          "location-is-a-derived-read-only-projection",
+          "location-is-navigation-not-semantic-acceptance-or-edit-authority",
+          "source-location-is-not-semantic-acceptance",
+          "source-location-is-not-write-authority"
+        ],
+        "recordsProductResult": true
+      },
+      {
+        "receipt": "YIC-tei-rooted-source-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-tei-selfbuild-observations-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      }
+    ],
+    "receiptsKeepingLimits": 2,
+    "receiptsRecordingProductResult": 2,
+    "productResultsWithoutKeptLimits": [],
+    "distinctLimits": 17,
+    "limits": [
+      "dependency-edge-is-not-semantic-applicability",
+      "dependency-edge-is-not-write-or-runtime-authority",
+      "derived-context-is-not-canonical-authority",
+      "disclosure-fingerprint-is-cache-identity-not-semantic-proof",
+      "empty-lists-cover-only-the-derived-families",
+      "inspection-is-a-derived-read-only-projection",
+      "local-read-is-not-disclosure-permission",
+      "location-is-a-derived-read-only-projection",
+      "location-is-navigation-not-semantic-acceptance-or-edit-authority",
+      "omitted-knowledge-is-not-negative-evidence",
+      "projection-or-runtime-identity-is-not-business-data-identity",
+      "selection-does-not-change-qualification-or-canonical-meaning",
+      "selective-disclosure-is-derived-not-authority",
+      "selective-disclosure-is-not-access-control-or-redaction",
+      "source-location-is-not-semantic-acceptance",
+      "source-location-is-not-write-authority",
+      "unavailable-requested-section-is-not-empty-meaning"
+    ],
+    "everyProductResultKeepsItsLimits": true,
+    "finding": "YICのreceiptがProduct出力を記録するとき、Product自身が返す`authorityLimits`をそのまま保持しているかを点検した。限界の文字列を言い換えたり落としたりすると、「できること」と「許可されていること」の区別が記録から消える。"
+  },
+  "scope": "Reads the YIC receipts and counts which Product-declared limit strings each one keeps verbatim, flagging receipts that record a Product result but keep none. It checks preservation, not interpretation: a receipt can keep every limit and still draw a conclusion the limit forbids, and a limit the Product never printed cannot be checked."
+}
