@@ -15,6 +15,12 @@
     "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
     "checkoutClean": true,
     "package": "./internal/workspace",
+    "hostGoos": "windows",
+    "hostGoarch": "amd64",
+    "goVersion": "go version go1.27.0 windows/amd64",
+    "linuxGoVersion": "go version go1.26.11 linux/amd64",
+    "hostKernel": "Linux",
+    "hostMachine": "x86_64",
     "comparisons": [
       {
         "test": "TestRootedSourceBasicPathBoundaryOnNativeTargets",

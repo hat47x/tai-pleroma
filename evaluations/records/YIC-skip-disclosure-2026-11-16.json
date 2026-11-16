@@ -1,0 +1,124 @@
+{
+  "schema": "tai.reference.yic-skip-disclosure/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 reading evaluations/records",
+  "command": "python integrations/tools/yic_skip_disclosure_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-skip-disclosure-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receipts": 7,
+    "rows": [
+      {
+        "receipt": "YIC-sui-r2-gate-hosts-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
+      },
+      {
+        "receipt": "YIC-tei-host-skip-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "hostGoarch",
+          "hostGoos"
+        ],
+        "verdictCount": 2,
+        "skipCount": 1,
+        "skips": [
+          {
+            "path": "tests/0/verdict",
+            "verdict": "SKIP"
+          }
+        ],
+        "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-tei-linux-regression-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "distro",
+          "goVersion",
+          "hostKernel",
+          "hostMachine"
+        ],
+        "verdictCount": 6,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-tei-product-read-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "goVersion"
+        ],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-tei-readonly-cli-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
+      },
+      {
+        "receipt": "YIC-tei-rooted-source-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "goVersion",
+          "hostGoarch",
+          "hostGoos",
+          "hostKernel",
+          "hostMachine"
+        ],
+        "verdictCount": 6,
+        "skipCount": 2,
+        "skips": [
+          {
+            "path": "comparisons/1/windows",
+            "verdict": "SKIP"
+          },
+          {
+            "path": "comparisons/2/windows",
+            "verdict": "SKIP"
+          }
+        ],
+        "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-tei-selfbuild-observations-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "distro",
+          "goVersion",
+          "hostKernel",
+          "hostMachine"
+        ],
+        "verdictCount": 11,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": true
+      }
+    ],
+    "receiptsReportingVerdicts": 4,
+    "receiptsMissingHost": [],
+    "receiptsHidingASkip": [],
+    "everyVerdictReceiptStatesItsHost": true,
+    "everySkipIsVisible": true,
+    "finding": "テスト実行を報告するYICのreceiptは、個々の検証判定と実行ホストを持つ。SKIPを含むreceiptは、そのSKIPを明示する（件数または理由）。`ok`と終了コード0だけを根拠にした『通った』を残さない。"
+  },
+  "scope": "Reads the YIC receipts and, for each that records a per-test verdict, checks that it states the host it ran on and that any SKIP is visible rather than folded into a PASS. It checks disclosure only: a receipt can disclose a skip and still misjudge what the skip means, and it cannot detect a skip that the summary never printed."
+}

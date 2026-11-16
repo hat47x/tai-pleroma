@@ -97,10 +97,39 @@ def main():
         if item["windows"] in ("SKIP", "absent") and item["linux"] == "PASS"
     ]
 
+    windows_goos = subprocess.run(
+        ["go", "env", "GOOS"], cwd=repo, capture_output=True, text=True,
+        encoding="utf-8", errors="replace",
+    ).stdout.strip()
+    windows_goarch = subprocess.run(
+        ["go", "env", "GOARCH"], cwd=repo, capture_output=True, text=True,
+        encoding="utf-8", errors="replace",
+    ).stdout.strip()
+    windows_go = subprocess.run(
+        ["go", "version"], cwd=repo, capture_output=True, text=True,
+        encoding="utf-8", errors="replace",
+    ).stdout.strip()
+    linux_probe = subprocess.run(
+        ["wsl", "-d", DISTRO, "--", "env", "-u", "PATH", "bash", "-lc",
+         f"PATH=/usr/bin:/bin:{REMOTE_GO}; export PATH; go version; uname -s; uname -m"],
+        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
+    )
+    linux_lines = (linux_probe.stdout or "").strip().splitlines()
+    linux_go = linux_lines[0] if linux_lines else ""
+    linux_kernel = linux_lines[1] if len(linux_lines) > 1 else ""
+    linux_machine = linux_lines[2] if len(linux_lines) > 2 else ""
+
     checks = {
         "teiCommit": head,
         "checkoutClean": dirty == "",
         "package": PACKAGE,
+        # Both hosts are stated, because the whole point is the difference.
+        "hostGoos": windows_goos,
+        "hostGoarch": windows_goarch,
+        "goVersion": windows_go,
+        "linuxGoVersion": linux_go,
+        "hostKernel": linux_kernel,
+        "hostMachine": linux_machine,
         "comparisons": comparisons,
         "skippedOnWindows": skipped_on_windows,
         "failedOnLinux": failed_on_linux,
