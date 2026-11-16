@@ -90,6 +90,32 @@
 
 `knowledge-context -disclose`で**開示の選択と報告**は実測できた（§3.1）。残るのは**受信者・Audience別の許可判定**である。Productが「この受信者に渡してよいか」を答える経路は、まだ確認していない。ここはOwner判断を含むため、既定案を実装せず、次に確かめる対象として置く。
 
+## 5.1 Productが自分で宣言する限界を、記録から落とさない
+
+P・T・C・Hの議論で繰り返し現れたのは、**Product自身が「これは許可ではない」と宣言している**ことだった。YICのreceiptがProduct出力を写すとき、この宣言を言い換えたり落としたりすると、「できること」と「許可されていること」の区別が記録から消える。
+
+そこで、receiptが保持している限界文字列を機械的に数える点検を足した（[点検のreceipt](../../../evaluations/records/YIC-authority-limits-2026-11-16.json)）。現在の結果は次のとおり。
+
+| 項目 | 値 |
+| --- | --- |
+| YICのreceipt | 12件 |
+| 限界を保持しているreceipt | 2件 |
+| 収集した異なり限界 | **17種** |
+| 限界を持つはずのProduct出力で、限界を落としたreceipt | **0件** |
+
+収集した17種のうち、P/T/C/Hの読み替えに直接効くもの:
+
+| 限界 | 何を禁じるか |
+| --- | --- |
+| `local-read-is-not-disclosure-permission` | 手元で読めたことを開示許可と呼ばない |
+| `selective-disclosure-is-not-access-control-or-redaction` | 開示Sectionの選択を権限制御と呼ばない |
+| `selective-disclosure-is-derived-not-authority` | 開示の派生を権限と呼ばない |
+| `source-location-is-not-semantic-acceptance` | 位置の取得を意味の受理と呼ばない |
+| `inspection-is-a-derived-read-only-projection` | 参照を正本と呼ばない |
+| `omitted-knowledge-is-not-negative-evidence` | 省略を不存在の証拠と呼ばない |
+
+**この点検が見るのは保持だけである。** 限界をそのまま写していても、その限界が禁じる結論を出しているreceiptは通る。限界の解釈は人の判断に残る。
+
 ## 6. この記録が示さないこと
 
 - 外部Harnessの実送受信、完全なTool Reply
