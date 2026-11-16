@@ -1208,3 +1208,19 @@ D0候補、D1構造適合、D2実Source、D3作用直前、D4実行結果、D5�
 **既存Ownerと反証**：YK-COMP-13〜20をTAI #488（Skill選択・誤成功・Discovery）、#271（履歴変更・再資格化）、#232（実開示境界）、TEI #988/#2514/#2621と現行Rule/Scenarioテスト、SUI #3441のSource内部読取へ割り付ける。結果を合格にするのは各Ownerの現行Product/Host/Consumer証拠であり、YICに第二の型正本・Operator Selector・共通Source／Grant Store・実行Engine・独立Oracleを増やさない。
 
 **順序と停止線**：TAI #168の実OS G0→G1→G2および新独立H2/H3四Slot（既存比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2を独立P0として据え置く。後続の一件は、公開TEI RuleのTool-onlyでRule種別別P/G対応と意味上の判定不能を先に観測し、実在する二番目のread-only Consumerが選べたときだけSource-qualified Handoffへ進む。別HarnessへのResumeや書込みは後続の別Attemptである。今回の追加は**設計と受入候補**であり、新規Go/SQLite/実OS/外部Harness/正式Product Consumerテスト、Owner意味受理は**NOT RUN**。
+
+## 58. 2026-11-17：実在Capabilityの発見から、固定CLIの読取証拠・安全な投影へ進める
+
+[Skill構成仕様§13〜16](skill-composition-typed-qualification-2026-11-16.md)で、§56の型付き接続と§57のRule実現方式を、実際のTaskで選択可能なProduct/Toolの検証へ結び付ける。Skillの文面をCapabilityの正本にせず、**(a)候補の発見／一意性、(b)宣言・型の適合、(c)実Tool／Reader到達、(d)現在性とRecipientの開示**を別々に確認する。
+
+**Product現状の更新**：[TEI main #5197](https://github.com/hat47x/tei-platform/pull/5197)では`ResolvedSet.Capability`の偽値が「不在」と「複数候補で曖昧」の双方を含むことを実測し、現行Resolverはその二つを区別しない。[main #5204](https://github.com/hat47x/tei-platform/pull/5204)ではCapabilityの6種類の`Supports*`述語が宣言内にあるかを検証する局所テストを追加。[main #5205](https://github.com/hat47x/tei-platform/pull/5205)では`.tei.md`のParser未選択を、manifestの`languages:`で選ぶ方法を伴う診断に改善した。**「見つからない」の原因が不在・曖昧・Language未選択・Version不適合のどれか未確認なら、Skillは存在しないと断定しない。** 現行のProductが返していない内部分類をTAIの新Resolverで補わず、明示的に未解決と扱う。
+
+**型付きI/Oの前進**：[TEI #5156](https://github.com/hat47x/tei-platform/pull/5156)はmainに統合済み。既存pure TransformのWhole Recordは追加`internalNote`を含めたまま通し、2 Field Projectionは余分なFieldを出さない。必須Field欠損・明示NULLは別に検証する。ただし**純粋出力の成立 ≠ 実Port Binding・元Source完全性・Disclosure Grant・非Builtin Provider実Call**。[TEI #5148](https://github.com/hat47x/tei-platform/pull/5148)／[#5149](https://github.com/hat47x/tei-platform/pull/5149)もmainへ統合済みで、関係の期間RuleとContract Query結果からの状態Readerに限定前進した。正式な全件宣言・製品実行経路の接続・全Target G/P同値は別Ownerが受理する。
+
+**既存TAIへの実証引渡し**：[TAI #693](https://github.com/hat47x/tai-pleroma/pull/693)は固定TEI commit `926c8f2e3511`のclean cloneでProduct A0読取8回帰を実行するPRで、対象HEADの14 CI Jobはすべてsuccess。ただし**確認時点ではopen/未マージ**。[TAI #695](https://github.com/hat47x/tai-pleroma/pull/695)は同じTEI commitの公開read-only `commands`／`model catalog`／`model locate`／`inspect`／`validate`を実行し、Source offset/line/columnと警告をReceiptへ残すPRで、確認時点openかつCI結果未確定。**PR HEADの限定実測をmainの正式受入・他HEADの合格と混同しない**。前回のGo整形失敗は[TAI main #694](https://github.com/hat47x/tai-pleroma/pull/694)で13 GoファイルのCRLF→LFのみを修正し、当該PRの`tai-reference`はcompleted/success。後続の実証PRもそれぞれ自分のexact HEADのCIで判断する。
+
+**再読の前提**：[TEI #5198](https://github.com/hat47x/tei-platform/pull/5198)は複数read-only CLIのSource/Worldを束ねるSnapshot Fingerprintを返し、期待値不一致を`STALE_SNAPSHOT`で拒否する改善候補。PR内の実Binary局所試験は記録されているが**確認時点はopen**。正式mainの全CLI/MCPで「期待指紋つき再読が成立済み」と案内せず、当該入口と実Tool Replyで証明する。同じID・World byte・Source位置の一致から現在Grant／RecipientへのRaw開示を導かない。
+
+**採用する実行順**：YK-COMP-21〜30をTAI #488（Skill候補の過小・過大選択）、#271（再読時の資格・版ずれ）、#232（公開Field集合・Recipient）、TEI/SUIの実Product Ownerへ振り分ける。最初に既存`commands`の限定公開範囲と実CLI Familyを固定し、RuleをReaderで選んで実Source byte位置を検証する。次に必要Fieldだけのpure Projectionと実Contract・Audienceを照合し、最後に**実在する別Productのread-only Consumer**が実Bodyを受け取れる場合だけHandoffへ進む。存在しなければD5は`not-run`を維持する。TEI #4583 Stage1→Stage2とTAI #168実OS G0→G1→G2→独立H2/H3四Slot（記録上比較適格0/4）は依然として独立P0。
+
+本節は実装済みの製品機能／固定PR HEADの観測／未マージ提案を分けた**計画・受入更新**。新OS隔離・外部AI Harness比較・Product間Consumer・正式Provider/Grant・Owner意味受理は**NOT RUN**。共通Agent Runtime、中央Tool Registry、Source Authority正本、万能型変換器、第二Expected Storeは作らない。
