@@ -1,0 +1,108 @@
+{
+  "schema": "tai.reference.yic-tei-product-read-regressions/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go, running the TEI regressions in a dedicated clean clone",
+  "command": "python integrations/tools/yic_tei_product_read_regressions.py --tei-repo <clean TEI clone at 926c8f2e3511> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-product-read-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
+    "checkoutClean": true,
+    "untrackedOrModifiedCount": 0,
+    "goVersion": "go version go1.27.0 windows/amd64",
+    "testsRun": 8,
+    "testsPassed": 8,
+    "failed": [],
+    "results": [
+      {
+        "test": "capabilitySourceEvidence",
+        "claims": "実Go回帰にある semantic-capability の Subject と元byte範囲を Workspace から取得する",
+        "command": "go test ./internal/operations -run '^TestInspectCapabilitySourceEvidenceFromWorkspace$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/operations\t0.728s"
+        ]
+      },
+      {
+        "test": "capabilitySourceInvalidation",
+        "claims": "Source改訂で Pinned Revision が失効する",
+        "command": "go test ./internal/operations -run '^TestCapabilitySourceOnlyEditInvalidatesPinnedRevision$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/operations\t0.545s"
+        ]
+      },
+      {
+        "test": "builtinRuleAdmissionAndIndex",
+        "claims": "正式に選択された Rule Markdown が同一Loadで型付き取得される",
+        "command": "go test ./internal/workspace -run '^TestBuiltinRuleMarkdownProductAdmissionAndSourceIndex$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/workspace\t4.638s"
+        ]
+      },
+      {
+        "test": "builtinRuleRejectsUnselected",
+        "claims": "Language未選択・未知版を拒否する",
+        "command": "go test ./internal/workspace -run '^TestBuiltinRuleMarkdownProductAdmissionRejectsUnselectedOrUnknownLanguage$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/workspace\t2.916s"
+        ]
+      },
+      {
+        "test": "selectedRuleFromSameLoad",
+        "claims": "選択済み Rule を同一Loadから読む",
+        "command": "go test ./internal/operations -run '^TestInspectSelectedRuleMarkdownFromSameLoad$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/operations\t0.444s"
+        ]
+      },
+      {
+        "test": "ruleMarkdownIdenticalMeaning",
+        "claims": "Markdown Rule と従来Validationの型付き意味同値、同一IDの二重宣言拒否",
+        "command": "go test ./internal/workspace -run '^TestRuleMarkdown(AndLegacyValidationHaveIdenticalProductMeaning|RejectsLegacyValidationWithSameIdentity)$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/workspace\t2.171s"
+        ]
+      },
+      {
+        "test": "evaluatorReadFootprint",
+        "claims": "選択Ruleが Evaluator の Read 範囲を駆動する",
+        "command": "go test ./internal/operations -run '^TestSelectedMarkdownRulesDriveEvaluatorReadFootprint$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/internal/operations\t0.361s"
+        ]
+      },
+      {
+        "test": "productInspectCliNotCapability",
+        "claims": "実CLIのinspectが選択Ruleを取得し、同名 Capability と text Fence 内の Rule は SUBJECT_NOT_FOUND",
+        "command": "go test ./cmd/tei -run '^TestProductInspectCLISelectedMarkdownRuleIsNotCapability$' -count=1",
+        "exit": 0,
+        "passed": true,
+        "tail": [
+          "ok  \ttei/cmd/tei\t17.361s"
+        ]
+      }
+    ],
+    "everyListedRegressionPassed": true,
+    "finding": "実行票がNOT RUNとしていた8件のGo回帰は、固定commitのclean cloneですべてPASSした。ただしこれは製品ローカルのA0読取であり、公開Function Entry、実ProviderへのInvocation、外部開示、外部Harnessへの配送・完全Reply、元SubjectのConsumer受領は示さない。"
+  },
+  "scope": "Runs the eight Go regressions the YIC execution ticket lists as NOT RUN, in a dedicated clone at the recorded commit, and records exit code and output tail per test. It is a product-local read-only baseline: it does not exercise a public Function Entry, a real Provider invocation, external disclosure, delivery to an external harness, a complete Tool Reply, or receipt by the original subject's Consumer. Passing tests show the code the clone contains behaves as those tests assert; they say nothing about the distributed Workbench, real Windows WebView2, or current Grant."
+}
