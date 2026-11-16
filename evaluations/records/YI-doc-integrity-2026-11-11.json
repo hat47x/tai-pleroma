@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-11",
+  "date": "2026-11-17",
   "host": "Windows with Python 3.12 reading docs/yi-constellation",
   "command": "python integrations/tools/yi_doc_integrity_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-doc-integrity-2026-11-11.json",
   "result": "PASS",
@@ -13,7 +13,7 @@
   },
   "observed": {
     "analysisFiles": 53,
-    "links": 592,
+    "links": 598,
     "notIndexedInReadme": [],
     "brokenLinks": [],
     "brokenReadmeLinks": [],

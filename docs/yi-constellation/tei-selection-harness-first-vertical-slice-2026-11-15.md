@@ -47,6 +47,10 @@ go test ./internal/operations -run '^TestInspectSelectedRuleMarkdownFromSameLoad
 
 **拒否・失効を同じ試験で扱う**：Language未選択（`TEI_MD_PARSER_UNBOUND`）、未知版（`TEI_LANGUAGE_UNAVAILABLE`）、説明文だけの改訂で旧Source Index失効。試験時には**固定repo HEAD、Go/OS環境、実コマンドと終了コード、失敗時の原因、Fixtureの版、結果の受領先**を既存TEI Ownerの記録へ残す。実Ruleが存在することとRule集合全件性／実Providerの入力集合全件性は別である。
 
+**2026-11-16の実行記録**：この票がNOT RUNとしていた**8件のGo回帰は、固定commitのclean cloneで実行し、すべてPASSした**（[receipt](../../../evaluations/records/YIC-tei-product-read-2026-11-16.json)）。対象は`tei-platform`の`926c8f2e3511`、cloneは未変更（`checkoutClean: true`）、Goは実行時の版をreceiptに記録している。8件は、Capability Source Evidence、Sourceのみの改訂による Pinned Revision 失効、内蔵Rule Markdownの同一Load取得と未選択/未知版の拒否、選択Ruleの同一Load読取、Markdown/従来Validationの型付き意味同値と同一ID二重宣言の拒否、EvaluatorのRead範囲、実CLI `inspect` が選択Ruleを取得し同名Capabilityと`text` Fence内のRuleを`SUBJECT_NOT_FOUND`にすること、である。
+
+**この実行が示さないこと**：製品ローカルのA0読取だけであり、公開Function Entry、実ProviderへのInvocation、外部開示、外部Harnessへの配送、完全なTool Reply、元SubjectのConsumer受領は示さない。配布Workbenchのbyte一致、実Windows WebView2、現在のGrantも未確認のままである。receiptの`scope`に同じ限定を書いた。
+
 **次に確認できる一段階**：[TEI main #4900](https://github.com/hat47x/tei-platform/pull/4900)で、従来のValidationとMarkdown Ruleの型付き意味同値、および同一Rule IDの二重宣言拒否を検査するコードが追加された。[main #4901](https://github.com/hat47x/tei-platform/pull/4901)では、実Ruleを既存Evaluatorに渡し、合成Sourceで数量・明細番号のRead要求と未取得／空集合／NULLを区別するGo回帰が追加された。次のコマンドは**現行mainでテスト名を照合した実行候補**であり、この文書更新では未実行。
 
 ~~~sh
