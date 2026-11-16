@@ -1,0 +1,65 @@
+{
+  "schema": "tai.reference.yic-tei-linux-regression/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows host running WSL Ubuntu-24.04 (Linux/x86_64) with the Go toolchain tei requires",
+  "command": "python integrations/tools/yic_tei_linux_regression.py --tei-repo <clean TEI clone at 926c8f2e3511> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-linux-regression-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
+    "checkoutClean": true,
+    "distro": "Ubuntu-24.04",
+    "hostKernel": "Linux",
+    "hostMachine": "x86_64",
+    "goVersion": "go version go1.26.11 linux/amd64",
+    "results": [
+      {
+        "test": "selectedRuleGoThroughRealCLISelfBuild",
+        "why": "R2-B: 選択Ruleを通常のtei self-build経由でGo生成し判定する",
+        "package": "./cmd/tei",
+        "command": "go test ./cmd/tei -run '^TestSelectedRuleGoThroughRealCLISelfBuild$' -count=1 -v",
+        "verdict": "PASS",
+        "subtests": [
+          {
+            "verdict": "PASS",
+            "name": "TestSelectedRuleGoThroughRealCLISelfBuild/generic-vs-generated-positive"
+          },
+          {
+            "verdict": "PASS",
+            "name": "TestSelectedRuleGoThroughRealCLISelfBuild/generic-vs-generated-zero"
+          },
+          {
+            "verdict": "PASS",
+            "name": "TestSelectedRuleGoThroughRealCLISelfBuild/generic-vs-generated-negative"
+          },
+          {
+            "verdict": "PASS",
+            "name": "TestSelectedRuleGoThroughRealCLISelfBuild/generic-vs-generated-null"
+          },
+          {
+            "verdict": "PASS",
+            "name": "TestSelectedRuleGoThroughRealCLISelfBuild/generic-vs-generated-missing"
+          }
+        ],
+        "tail": [
+          "    --- PASS: TestSelectedRuleGoThroughRealCLISelfBuild/generic-vs-generated-missing (0.00s)",
+          "PASS",
+          "ok  \ttei/cmd/tei\t139.198s"
+        ]
+      }
+    ],
+    "passedTests": [
+      "selectedRuleGoThroughRealCLISelfBuild"
+    ],
+    "failedOrSkipped": [],
+    "everyTestPassedOnLinux": true,
+    "finding": "Windowsホストでは`runtime.GOOS != \"linux\"`でSKIPしていた`TestSelectedRuleGoThroughRealCLISelfBuild`は、WSLのUbuntu（linux/amd64）でPASSした。5つのsubtest（positive/zero/negative/null/missing）もすべてPASS。これで「#5009のFocused Go test単独結果は未確認」の段階は解消する。"
+  },
+  "scope": "Runs the linux-pinned TEI regression inside WSL Ubuntu and records the kernel, machine and Go version it actually ran under. A pass shows the repository's own test holds on linux/amd64 at this commit; it is an R2 command-build witness, not a published Function Entry, a real Provider invocation, external disclosure, delivery to an external harness, or Owner acceptance. It does not replace the pinned linux CI run and does not cover the generated Desktop Workbench or a real Windows WebView2."
+}

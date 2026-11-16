@@ -245,6 +245,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-tei-product-read-2026-11-16.json",
     "evaluations/records/YIC-tei-readonly-cli-2026-11-16.json",
     "evaluations/records/YIC-tei-host-skip-2026-11-16.json",
+    "evaluations/records/YIC-tei-linux-regression-2026-11-16.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -642,6 +643,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-tei-linux-regression" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyTestPassedOnLinux") is not True
+                or observed.get("checkoutClean") is not True
+                or not str(observed.get("hostKernel", "")).lower().startswith("linux")
+            ):
+                errors.append(f"the linux regression lost its host or its pass: {relative}")
         if "YIC-tei-host-skip" in relative:
             observed = data.get("observed", {})
             if (
