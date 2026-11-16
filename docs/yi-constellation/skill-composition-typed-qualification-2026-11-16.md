@@ -193,8 +193,8 @@ TEI [main #5204](https://github.com/hat47x/tei-platform/pull/5204)では、Actio
 
 YICの実行票は、ToolにCommandが存在すると知っているだけでなく、**固定したTEI commitから実際に何を呼び、どのbyteのどの範囲を読んだか**を残す方向へ進んでいる。
 
-- TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)：固定TEI `926c8f2e3511`のclean cloneで、8件の既存Product/Rule読取Go回帰を実行したPR。対象HEADの`tai-reference`は全14ジョブsuccess。**このPRをmainへ取り込む前は、PR内Receiptを正式なmain受入に数えない**。実証範囲は製品ローカルA0であり、外部Harness/Consumer到達は含まない。
-- TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)：同じ固定TEI commitの`commands`・`model catalog`・`model locate`・`inspect`・`validate`という5つの実Commandを呼び、Source Indexと`inspect`の元byte offset／line／column、警告も残すPR。**確認時点はopen、CI結果は未確定**。`ok: true`の観測と`validate`警告の有無を同一視しない。
+- TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)：固定TEI `926c8f2e3511`のclean cloneで、8件の既存Product/Rule読取Go回帰を実行したPR。対象HEADの`tai-reference`は全14ジョブsuccess。**PR #693はmainへ統合済み**（merge `5e6b44eb`）。固定HEADで実行した検証記録がmainに存在するが、実証範囲は製品ローカルA0であり、外部Harness/Consumer到達は含まない。
+- TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)：同じ固定TEI commitの`commands`・`model catalog`・`model locate`・`inspect`・`validate`という5つの実Commandを呼び、Source Indexと`inspect`の元byte offset／line／column、警告も残すPR。**確認時点はopen／競合あり。対象HEADの14ジョブはcompleted/success**。`ok: true`の観測と`validate`警告の有無を同一視しない。
 - TEI [#5198](https://github.com/hat47x/tei-platform/pull/5198)：返されたWorld／Source Indexの版を後続読取へ期待指紋として渡し、変化を`STALE_SNAPSHOT`として拒否する提案。実バイナリによる限定検証がPRに記録されているが、**確認時点で未マージ**。既存mainの全CLI／MCPがこの前提条件を受理できるとは記載しない。
 
 したがって、Skillによる`inspect`の成功を元に別のToolへ進む場合、最低でも次を分ける。
