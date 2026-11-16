@@ -1018,6 +1018,14 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 とくに`TestSamePlanBuiltByTwoToolchainsIsToldApartOnlyByTheRecord`は、`TEI_SELF_BUILD_FULL_CHAIN=1`と`TEI_SELF_BUILD_SECOND_GO`（Go 1.27.0）を与えて実行し、**同一Plan fingerprint `239df29d…` に対して、Go 1.26.11 の artifact が `sha256:b3b54142…`、Go 1.27.0 が `sha256:fc29a6d0…` と異なる**ことを観測した。文書の「同一計画で生成Binaryのbyteが変わる」という記述は、この固定commitでも成り立つ。
 
+**SUI側にも同じ種類のホスト差がある**：`tests/test_r2_source_snapshot_read_gate.py`は70件あり、**Windowsでは70件すべてが失敗し、linuxでは70件すべてがPASSする**（[receipt](../../../evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json)、`sui-sensemaking` `0c2a2c548058`）。
+
+原因は二つで、どちらも対象OSの差である。
+1. 参照Storeがディレクトリをfsyncするため`os.open(directory, O_RDONLY)`を呼ぶが、Windowsはこれを`PermissionError`で拒否する（コード自身が`# Linux/Unix reference only; cross-platform durability is NOT shown.`と注記している）
+2. 一時ファイル名（64桁digest＋32桁uuid＋suffix）がpytestのbasetemp深くで`MAX_PATH`（260）を超える。短いbasetempでも1は残るため、両方が独立に効いている
+
+**Windowsの赤を包含ロジックの破損と読まない。** 同時に、linuxの緑もSUI #3462の限界を上げない（Card選択ResolverとSource Providerはテストダブル、PDPはlocalhost、正式なCard保存・二次開示・実組織PDPは未成立）。
+
 **同じ日に見つけたホスト差**：TEIの`internal/workspace`にあるrooted source境界のテストは、**Windowsでは2件がSKIPする**（[receipt](../../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、同commit）。
 
 | テスト | Windows | Linux |
