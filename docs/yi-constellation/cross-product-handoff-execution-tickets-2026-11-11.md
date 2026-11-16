@@ -861,7 +861,7 @@ TEIで「成立／不成立／判定できない」を決める根拠と、SUI�
 | 受入カード | Productが観測する事実 | 正負Expectedと現在の上限 |
 | --- | --- | --- |
 | **QH-TRI-01：判定不能の理由を保つ** | [TEI main #5142](https://github.com/hat47x/tei-platform/pull/5142)の`Decide`に、値の`present`／`null`／`not-fetched`と関係の`complete`／`partial`を独立に入力する。一意性は、取得済み二行の明白な重複なら部分取得でも不成立、重複がなく部分取得なら判定できない | `not-fetched`を0や不成立に変換しない。矛盾するSource状態はReaderエラーとし、意味上の`undecided`にはしない。**権限拒否をデータのNULL/未取得と偽装しない**。現段階はScenario Fixture等による限定回帰で、実DB・PDPの取得状態統合ではない |
-| **QH-EXAMPLE-02：独立ExpectedとRuleの位置** | [TEI main #5143](https://github.com/hat47x/tei-platform/pull/5143)で記録例の表から`satisfied`／`not-satisfied`／`undecided`を明示し、Ruleの実判定と照合。[main #5146](https://github.com/hat47x/tei-platform/pull/5146)で同じ記録の暦日順序`is not after`を追加 | 期待と異なる答えは例の位置に結び付けて拒否。**これらのRuleを生成Goで実Binary実行した証拠や、業務Ownerによる意味受理はない**。複数行の期間重複[TEI #5148](https://github.com/hat47x/tei-platform/pull/5148)はDraft／未マージ |
+| **QH-EXAMPLE-02：独立ExpectedとRuleの位置** | [TEI main #5143](https://github.com/hat47x/tei-platform/pull/5143)で記録例の表から`satisfied`／`not-satisfied`／`undecided`を明示し、Ruleの実判定と照合。[main #5146](https://github.com/hat47x/tei-platform/pull/5146)で同じ記録の暦日順序`is not after`を追加 | 期待と異なる答えは例の位置に結び付けて拒否。**これらのRuleを生成Goで実Binary実行した証拠や、業務Ownerによる意味受理はない**。複数行の期間重複[TEI #5148](https://github.com/hat47x/tei-platform/pull/5148)は現在mainに統合済みだが、実Providerで全行を読んだ受理は別 |
 | **QH-CARD-HEAD-03：保存時Headが現在か** | [SUI main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)で実SQLiteのDocument／Revision Blob／Headの同一所属、Version／Revision ID、保存済Card選択位置を、Document読取許可の後・Source再読の前に突合する | 無変更再保存、A→B→A、同Tenant別Documentの同byte差替えを拒否。**正式Card選択CAS・本番Source Provider・相手へのDisclosureは未受理**。一致するbyte/Hashだけで旧資格を復活させない |
 | **QH-RAW-RACE-04：読み終えた時点の資格** | SUI旧[#3465](https://github.com/hat47x/sui-sensemaking/pull/3465)はクローズ・未マージだが、DocumentのRaw後再認可・Card再解決・Revision照合は[main commit `71b13d`](https://github.com/hat47x/sui-sensemaking/commit/71b13d2966a3eb29ca61870dc12514a3657ffa7b)で取り込まれた。さらに[main #3467](https://github.com/hat47x/sui-sensemaking/pull/3467)でPinned Cardに限りSource Authority／PolicyRef／PDPをRaw取得後に再確認する | **限定入口でのSource/Documentの再確認は現行mainに存在**。一般Source read、正式Capture／Provider／Grant、同一Commit CAS、原子的Snapshot、外部Disclosureは未受理。PRのmergedフラグ一つでmainの実装有無を判断しない |
 
@@ -887,3 +887,19 @@ TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583�
 **検収順**：まずTEI/Product単独の既存Go回帰・SUIのPinned Card内部回帰から実在Capabilityと失敗条件を確認し、製品の受入を正本とする。次に既存TAI #168のG0〜G2／新独立H2/H3四Slot（記録上比較適格0/4）を妨げず、別の後続TaskでTool-onlyの最小`read→reference` Handoffを計画する。正式Product Readerや外部Consumerが未接続ならD2/D5を`NOT RUN`とし、合成結果で埋めない。TEI非Plugin Windows Stage1→Stage2は独立P0。新Runner、中央Authority/Source Store、第二Expectedは設けない。
 
 **今回の上限**：現行main・PR・既存Go/Python試験の照合と文書の受入票更新であり、新しい実DB・実OS・Product間別Process Consumer・外部Harness試験とOwner受理は**NOT RUN**。
+
+### 10.15 実Toolの能力発見・Source位置・期待版を、一件の実証へ束ねる
+
+[Skill構成仕様§13〜16](skill-composition-typed-qualification-2026-11-16.md)と[Skill/Plugin計画§58](harness-skill-plugin-plan-2026-11-02.md)の後続試験を、既存のI（Subject）／R（Read）／P（Disclosure）／T（送出）／C（Consumer）／H（Tool Reply）へ配置する。**同じSourceを説明していても、どの時点のどのToolが読んだかを別に残す**。
+
+| 検証カード | 実際に確認するもの | まだ成立しない資格 |
+| --- | --- | --- |
+| **QH-RESOLVE-09** | TEI main #5197の`ResolvedSet.Capability`は、候補0件と複数件の双方で`false`を返し得る。#5204の`Supports*`は宣言内の所属判定。#5205は`.tei.md` Parser未選択時に選択候補とmanifest設定方法を案内 | その`false`をCapability不存在へ昇格させない。`Supports=true`をLoaded/Invoked/Grantedと呼ばない。既存Product/TAI #488 |
+| **QH-A0-RUN-10** | TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)の固定TEI `926c8f2e3511`に対する8件のProduct読取回帰とclean clone実行記録。対象HEADの全14 CI Job success、mainへ統合済み（merge `5e6b44eb`） | Product単独A0の限定証拠。外部Harness、実Provider、現在Grant、Consumer受領を未実行のまま保持 |
+| **QH-CLI-RANGE-11** | TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)の同じ固定TEIで5 read-only CLIを試したPR。実`inspect`のSource offset/line/column、Source Index Fingerprint、`validate`のWarningを分ける。確認時点open／競合あり、対象HEADの全14 CI Job success | `ok:true`でWarning 0としない。実CLIで見つかったSource位置から二次開示・Owner意味受理・別Product受信を推定しない |
+| **QH-REVALIDATE-12** | TEI [#5198](https://github.com/hat47x/tei-platform/pull/5198)が提案する後続CLIの`-expected-fingerprint`／`STALE_SNAPSHOT`を当該実バイナリ・入口で確認。確認時点open | 古いmainの全read-only CLI/MCPが版前提を検査できるとはしない。Source版と現在Grantを混ぜない |
+| **QH-FIELD-13** | TEI main #5156のpure Whole Recordと明示2 Field Projection：追加FieldがWholeで残り、Field投影では落ちる。必須欠落と明示NULLを別に検査 | 出力の形が正しいだけで実Port Binding／Source完全性／RecipientのField公開権限／Providerを合格にしない |
+
+**初回の実Consumer試験の受入順**：①同一固定Product・公開Workspaceで実CLI/Toolに到達し、SubjectとSource Range・Warningsを記録、②当該CLIが受理するなら期待版を引き渡して再読し、受理しなければ「前提未検証」と留保、③明示Field集合を元Productの公開Projection候補に限定し、現在のAudience／GrantをProduct Ownerに確認、④受取側が別Processで実Bodyを読み、その値・順序・Source参照を独立Expectedと比較、⑤必要性が示されたTaskに限りB0 Tool-onlyとB1 Product Skill、続いてB2 TAI Skillの増分を試す。D0〜D5の局所記録からE0〜E3の実証へ進めても、同じAttemptの外部C/Hを省略しない。
+
+**実施・未実施の境界**：TAI #693はmain統合済みで対象HEAD CI completed/success、#695は対象HEAD CI successだが競合があり未マージ。TEI #5198も確認時点で未マージ。TAI main #694はGoファイル13件のCRLFによる既存`gofmt`失敗を修正し、対象PR CI completed/success。異なるPR HEADの合格を合成せず、失敗を隠さない。外部H2/H3の比較適格は記録上0/4のままで、TAI #168のG0/G1/G2とTEI #4583のWindows Stage1→Stage2を独立P0として保つ。今回のHandoff/Consumer、実Grant、Owner意味受理は**NOT RUN**。
