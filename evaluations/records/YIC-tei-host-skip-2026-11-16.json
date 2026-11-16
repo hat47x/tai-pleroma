@@ -1,0 +1,56 @@
+{
+  "schema": "tai.reference.yic-tei-host-skip/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go running TEI tests on windows/amd64",
+  "command": "python integrations/tools/yic_tei_host_skip_probe.py --tei-repo <clean TEI clone at 926c8f2e3511> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-host-skip-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "926c8f2e3511e39641e73373f4c0aa48cb11199b",
+    "hostGoos": "windows",
+    "hostGoarch": "amd64",
+    "tests": [
+      {
+        "test": "selectedRuleGoThroughRealCLISelfBuild",
+        "package": "./cmd/tei",
+        "probeSays": "Focused Go test単独結果は未確認",
+        "verdict": "SKIP",
+        "skipReason": "existing test catalog pins the host/linux/amd64 target",
+        "packageExit": 0,
+        "tail": [
+          "PASS",
+          "ok  \ttei/cmd/tei\t0.424s"
+        ]
+      },
+      {
+        "test": "productInspectCliNotCapability",
+        "package": "./cmd/tei",
+        "probeSays": "単独PASS（#4994のrun）",
+        "verdict": "PASS",
+        "skipReason": null,
+        "packageExit": 0,
+        "tail": [
+          "PASS",
+          "ok  \ttei/cmd/tei\t5.470s"
+        ]
+      }
+    ],
+    "passedTests": [
+      "productInspectCliNotCapability"
+    ],
+    "skippedTests": [
+      "selectedRuleGoThroughRealCLISelfBuild"
+    ],
+    "failedTests": [],
+    "noTestFailed": true,
+    "skipIsNotAFailure": true,
+    "finding": "`TestSelectedRuleGoThroughRealCLISelfBuild` はこのホスト（windows/amd64）でSKIPした。理由はテスト自身が`host/linux/amd64` を固定していることである。SKIPは失敗でも合格でもなく、このホストでは単独結果を出せない。対象HEAD CI（linux）のsucessは別の記録として扱う。"
+  },
+  "scope": "Runs two named TEI tests on this Windows host and records each verdict, keeping a SKIP separate from a PASS or FAIL. A skip means the host cannot produce the result the test is designed to show, so this establishes nothing about the behaviour under test. It does not substitute for the linux CI result, does not exercise a published Function, a real Provider call, or external harness receipt."
+}
