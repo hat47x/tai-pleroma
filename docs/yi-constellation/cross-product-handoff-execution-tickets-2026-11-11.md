@@ -863,11 +863,27 @@ TEIで「成立／不成立／判定できない」を決める根拠と、SUI�
 | **QH-TRI-01：判定不能の理由を保つ** | [TEI main #5142](https://github.com/hat47x/tei-platform/pull/5142)の`Decide`に、値の`present`／`null`／`not-fetched`と関係の`complete`／`partial`を独立に入力する。一意性は、取得済み二行の明白な重複なら部分取得でも不成立、重複がなく部分取得なら判定できない | `not-fetched`を0や不成立に変換しない。矛盾するSource状態はReaderエラーとし、意味上の`undecided`にはしない。**権限拒否をデータのNULL/未取得と偽装しない**。現段階はScenario Fixture等による限定回帰で、実DB・PDPの取得状態統合ではない |
 | **QH-EXAMPLE-02：独立ExpectedとRuleの位置** | [TEI main #5143](https://github.com/hat47x/tei-platform/pull/5143)で記録例の表から`satisfied`／`not-satisfied`／`undecided`を明示し、Ruleの実判定と照合。[main #5146](https://github.com/hat47x/tei-platform/pull/5146)で同じ記録の暦日順序`is not after`を追加 | 期待と異なる答えは例の位置に結び付けて拒否。**これらのRuleを生成Goで実Binary実行した証拠や、業務Ownerによる意味受理はない**。複数行の期間重複[TEI #5148](https://github.com/hat47x/tei-platform/pull/5148)はDraft／未マージ |
 | **QH-CARD-HEAD-03：保存時Headが現在か** | [SUI main #3464](https://github.com/hat47x/sui-sensemaking/pull/3464)で実SQLiteのDocument／Revision Blob／Headの同一所属、Version／Revision ID、保存済Card選択位置を、Document読取許可の後・Source再読の前に突合する | 無変更再保存、A→B→A、同Tenant別Documentの同byte差替えを拒否。**正式Card選択CAS・本番Source Provider・相手へのDisclosureは未受理**。一致するbyte/Hashだけで旧資格を復活させない |
-| **QH-RAW-RACE-04：読み終えた時点の資格** | [SUI #3465](https://github.com/hat47x/sui-sensemaking/pull/3465)は、Raw読取中にDocument Grant／Head／Card選択が変更される負例と返却前再照合の候補 | **#3465は未マージでクローズ**。現行mainの#3464はRaw取得前の照合であり、後続の更新競合を止める完成機能ではない。Raw取得後のSource専用Grant・同一Commit・外部PDP一貫性も別Ownerが受理する |
+| **QH-RAW-RACE-04：読み終えた時点の資格** | SUI旧[#3465](https://github.com/hat47x/sui-sensemaking/pull/3465)はクローズ・未マージだが、DocumentのRaw後再認可・Card再解決・Revision照合は[main commit `71b13d`](https://github.com/hat47x/sui-sensemaking/commit/71b13d2966a3eb29ca61870dc12514a3657ffa7b)で取り込まれた。さらに[main #3467](https://github.com/hat47x/sui-sensemaking/pull/3467)でPinned Cardに限りSource Authority／PolicyRef／PDPをRaw取得後に再確認する | **限定入口でのSource/Documentの再確認は現行mainに存在**。一般Source read、正式Capture／Provider／Grant、同一Commit CAS、原子的Snapshot、外部Disclosureは未受理。PRのmergedフラグ一つでmainの実装有無を判断しない |
 
 **判定の順序**：Ownerが意味とExpectedを受理する → 元Productが必要な範囲・粒度・完全性と現在のRoot/Document/Revisionを解決する → 現在Grantを副作用前に確認する → 必要な実Read/Callを行い、返却時まで資格が保たれたかを再確認する → RecipientごとのPと実送受信T/C/Hを別に記録する。**Readerの状態はAuthority判定を代替せず、Source資格は意味上の判定を代替しない**。
 
-**CIの取扱い**：SUI #3464の対象HEAD Backend/MCP・agent認証はsuccess。TEI #5142/#5143/#5146はmainへマージ済みだが、#5146 exact HEADのセルフビルドRun 43800801801はfailure、Rule専用Focused Stepはskipped。TEI #5129の別HEADでは同梱MarkdownをPlan確定後に変更した旧Plan拒否と通常CLIのRule専用Focused Stepがsuccess（Run 43733725622）。**別HEAD間で結果を補完しない**。これらの限定事実をI/R補助とし、P（Recipient開示）・T（送出）・C（外部Consumer）・H（Tool Reply）の新実行証拠には数えない。
+**CIの取扱い**：SUI #3464の対象HEAD Backend/MCP・agent認証はsuccess。SUI #3467相当のRaw後Source再認可はmainに存在するが、その新HEADのCI結果を#3464の旧CIで代用しない。TEI #5142/#5143/#5146はmainへマージ済みだが、#5146 exact HEADのセルフビルドRun 43800801801はfailure、Rule専用Focused Stepはskipped。TEI #5129の別HEADでは同梱MarkdownをPlan確定後に変更した旧Plan拒否と通常CLIのRule専用Focused Stepがsuccess（Run 43733725622）。**別HEAD間で結果を補完しない**。これらの限定事実をI/R補助とし、P（Recipient開示）・T（送出）・C（外部Consumer）・H（Tool Reply）の新実行証拠には数えない。
 
 TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583の非Plugin Windows Stage1→Stage2と通常CLI→実Providerは独立P0のまま。新共通Source Store、横断判定Runner、第二Grant正本は設けない。今回の実Product間送受信とOwner受理は**NOT RUN**。
 
+### 10.14 Rule種別ごとの実現対応と、返却直前の資格を同じ成功へ畳まない
+
+前節§10.13の判定可能性、元Document/Sourceの現在性、Authorityの失効を、YICの[Skill構成仕様§9〜12](skill-composition-typed-qualification-2026-11-16.md)に合わせて**一件のTaskがどのProduct能力を選べるか**へ接続する。元のQH-TRI／QH-CARD-HEAD／QH-RAW-RACEを再実装せず、次の引渡しを既存Productの独立Expectedで検収する。
+
+| 受入カード | Productの実際の資格 | 成立させないClaim／担当 |
+| --- | --- | --- |
+| **QH-REALIZATION-05** | TEI [main #5166](https://github.com/hat47x/tei-platform/pull/5166)の一件の暦日`not-after if present` RuleはP（直接評価）で日付・NULL・未取得のExpectedを照合するが、G（生成Go）は当該種別で未対応のため拒否する | Gの要求をPで黙って満たしたことにしない。別方式を使うなら独立選択と再資格化。TEI Rule実現Owner／TAI #488 |
+| **QH-PARTIAL-06** | TEI main #5142では、部分取得でも明白な重複は`not-satisfied`、未読部分で反例があり得る「重複なし」は`undecided`。値のNULL・未取得は別 | `undecided`を「拒否された」「Ruleが無い」「取得値0」と同じ表示へ畳まない。TEI #2621／TAI #271 |
+| **QH-PIN-07** | TEIの現行`scenario`にはOperator選択Pinと旧Command拒否のGo試験が存在し、実装選択A→Bの変化はWorld/結果一致から独立に観測する | 旧PR #5114の未マージを「現行mainにPinなし」と誤断定しない。一方、実Provider・正式Plugin Lock・A→B→A履歴の受理は別。TEI Scenario Owner |
+| **QH-RETURN-08** | SUIの現行Pinned Card内部経路ではRaw後のSource再認可／Authority/PolicyRef一致、その後のDocument/Card/Revision再確認がある。[#3467](https://github.com/hat47x/sui-sensemaking/pull/3467) | 一般Source APIの原子的Grant・別ProductへのP/T/C/H到達まで成立したとしない。SUI #3441／TAI #232／TAI #271 |
+
+**一件の実証で保持する最小票**：Task・Audience・Source/Occurrence／実読取範囲、Rule/Subject/Meaning IDとRule種別、要求したP/G/Dと実際に選択・呼出した方式、Resultの三値/理由、Read Footprintと取得完全性、実ToolとAttempt、開始／返却前の現在性確認範囲、Disclosure資格と実送受信、Consumer実Readと独立Expected。存在しない情報は`unknown`や`not-run`として残し、Productの失敗理由をSkillで新たに解釈・上書きしない。
+
+**検収順**：まずTEI/Product単独の既存Go回帰・SUIのPinned Card内部回帰から実在Capabilityと失敗条件を確認し、製品の受入を正本とする。次に既存TAI #168のG0〜G2／新独立H2/H3四Slot（記録上比較適格0/4）を妨げず、別の後続TaskでTool-onlyの最小`read→reference` Handoffを計画する。正式Product Readerや外部Consumerが未接続ならD2/D5を`NOT RUN`とし、合成結果で埋めない。TEI非Plugin Windows Stage1→Stage2は独立P0。新Runner、中央Authority/Source Store、第二Expectedは設けない。
+
+**今回の上限**：現行main・PR・既存Go/Python試験の照合と文書の受入票更新であり、新しい実DB・実OS・Product間別Process Consumer・外部Harness試験とOwner受理は**NOT RUN**。
