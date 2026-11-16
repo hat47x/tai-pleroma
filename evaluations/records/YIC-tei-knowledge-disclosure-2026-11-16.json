@@ -1,0 +1,85 @@
+{
+  "schema": "tai.reference.yic-tei-knowledge-disclosure/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go, running the real TEI CLI against reference/workspace",
+  "command": "python integrations/tools/yic_tei_knowledge_disclosure.py --tei-repo <clean TEI clone at a44b0ed25392> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tei-knowledge-disclosure-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "a44b0ed253921eda302adc4679ebb41cc8560304",
+    "checkoutClean": true,
+    "workspace": "reference/workspace",
+    "oneSection": {
+      "exit": 0,
+      "ok": true,
+      "mode": "disclosure",
+      "status": "complete",
+      "selected": [
+        "definition"
+      ],
+      "disclosed": [
+        "definition"
+      ],
+      "omitted": [
+        "data-design",
+        "dependencies",
+        "source"
+      ],
+      "available": [
+        "data-design",
+        "definition",
+        "dependencies",
+        "source"
+      ],
+      "fingerprint": "sha256:7072c8f5b58aa10d48922ed522349897ea41002d08c4e3682b46cbbfbef3a772"
+    },
+    "everySection": {
+      "exit": 0,
+      "ok": true,
+      "status": "complete",
+      "disclosed": [
+        "data-design",
+        "definition",
+        "dependencies",
+        "source"
+      ],
+      "omitted": null
+    },
+    "unknownSection": {
+      "exit": 1,
+      "ok": false,
+      "code": "KNOWLEDGE_BUILD_FAILED",
+      "messageListsSupported": true
+    },
+    "authorityLimits": [
+      "dependency-edge-is-not-semantic-applicability",
+      "dependency-edge-is-not-write-or-runtime-authority",
+      "derived-context-is-not-canonical-authority",
+      "disclosure-fingerprint-is-cache-identity-not-semantic-proof",
+      "omitted-knowledge-is-not-negative-evidence",
+      "projection-or-runtime-identity-is-not-business-data-identity",
+      "selection-does-not-change-qualification-or-canonical-meaning",
+      "selective-disclosure-is-derived-not-authority",
+      "selective-disclosure-is-not-access-control-or-redaction",
+      "unavailable-requested-section-is-not-empty-meaning"
+    ],
+    "declaredLimitsThatBlockAPReading": [
+      "selective-disclosure-is-not-access-control-or-redaction",
+      "selective-disclosure-is-derived-not-authority",
+      "omitted-knowledge-is-not-negative-evidence",
+      "disclosure-fingerprint-is-cache-identity-not-semantic-proof"
+    ],
+    "declaresItIsNotAccessControl": true,
+    "selectiveDisclosureWorks": true,
+    "allSectionsDiscloseEverything": true,
+    "unknownSectionIsRefused": true,
+    "finding": "TEIの`knowledge-context -disclose`は、Subjectに対して開示するSectionを選ばせ、選んだものだけを`disclosedSections`に、残りを`omittedAvailableSections`に分ける。これは**P（開示）の形を作れる**が、Pの判定主体ではない。コマンド自身が`selective-disclosure-is-not-access-control-or-redaction`と`selective-disclosure-is-derived-not-authority`を返しており、受信者・Audience別の許可判定ではない。"
+  },
+  "scope": "Runs TEI's knowledge-context disclosure with one section, with all four, and with an unsupported name, and records what each returns. It shows the Product can select and report disclosed versus omitted sections for a subject. It does **not** show a recipient or audience-specific permission decision: the command itself declares it is not access control or redaction, and that selective disclosure is derived rather than authority. No external recipient was contacted and no Owner acceptance was sought."
+}
