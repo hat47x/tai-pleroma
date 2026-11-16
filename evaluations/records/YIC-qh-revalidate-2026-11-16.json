@@ -1,0 +1,83 @@
+{
+  "schema": "tai.reference.yic-qh-revalidate/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go, running the real TEI CLI against reference/workspace",
+  "command": "python integrations/tools/yic_qh_revalidate_probe.py --tei-repo <clean TEI clone at a44b0ed25392> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-qh-revalidate-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "a44b0ed253921eda302adc4679ebb41cc8560304",
+    "checkoutClean": true,
+    "workspace": "reference/workspace",
+    "jsonFlagAcceptedBy": [
+      "validate"
+    ],
+    "fingerprintGuardOn": [
+      "trace"
+    ],
+    "worldFingerprint": "sha256:b85b5827600fce6f0f6d55ba92640f69e10b179921e59af2a1d3547e3a2c7e26",
+    "snapshotFingerprint": "sha256:33d104879bb353f85aa2d2484bd9ec837061ca80503f03c121a903851d6d60bd",
+    "results": [
+      {
+        "command": "trace",
+        "hasFingerprintFlag": true,
+        "withoutFlag": {
+          "exit": 0,
+          "ok": true
+        },
+        "withMatchingFingerprint": {
+          "exit": 0,
+          "ok": true
+        },
+        "withWrongFingerprint": {
+          "exit": 1,
+          "ok": false,
+          "namesStaleSnapshot": true
+        }
+      },
+      {
+        "command": "inspect",
+        "hasFingerprintFlag": false,
+        "withoutFlag": {
+          "exit": 0,
+          "ok": true
+        }
+      },
+      {
+        "command": "model locate",
+        "hasFingerprintFlag": false,
+        "withoutFlag": {
+          "exit": 0,
+          "ok": true
+        }
+      },
+      {
+        "command": "model catalog",
+        "hasFingerprintFlag": false,
+        "withoutFlag": {
+          "exit": 0,
+          "ok": true
+        }
+      },
+      {
+        "command": "validate",
+        "hasFingerprintFlag": false,
+        "withoutFlag": {
+          "exit": 0,
+          "ok": true
+        }
+      }
+    ],
+    "everyCommandStillRunsWithoutTheFlag": true,
+    "everyCommandAcceptsTheMatchingFingerprint": true,
+    "everyCommandRefusesAWrongFingerprint": true,
+    "finding": "TEI #5198の`-expected-fingerprint`は現行mainに統合済みで、4つのread commandすべてが、フラグ無しで従来どおり動き、一致する指紋を受理し、誤った指紋を`STALE_SNAPSHOT`で拒否する。これはCLIの前提版検査であり、Sourceの現在Grantや別Productへの開示を検査しない。なお現行版では`-json`を受け付けるのはvalidateだけで、inspect・model locate・model catalogは常にJSONを返し、`-json`を渡すとINVALID_ARGUMENTで拒否する。"
+  },
+  "scope": "Runs four read-only TEI commands with no flag, with the workspace's real fingerprint and with a deliberately wrong one, and records exit codes and whether STALE_SNAPSHOT appears. It shows the guard works on this workspace at this commit; it does not show that every read-only command carries the guard, that a stale Source is refused outside these commands, or anything about current disclosure to another Product."
+}
