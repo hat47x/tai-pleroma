@@ -39,9 +39,26 @@
 
 ## 3. 到達していない段階と、その理由
 
-### 3.1 P（開示）に到達しない理由
+### 3.1 P（開示）の形は作れるが、判定主体にはなっていない
 
 5枚はいずれも**受信者を定めていない**。Product内のread-only参照であり、Audience/Recipient別の許可判定を通っていない。`inspect`自身が`local-read-is-not-disclosure-permission`を`authorityLimits`に返している。
+
+**ただしProductには開示を選ぶ入口がある。** `knowledge-context -disclose`は、Subjectに対してSectionを選ばせ、選んだものを`disclosedSections`、残りを`omittedAvailableSections`に分けて返す（[receipt](../../../evaluations/records/YIC-tei-knowledge-disclosure-2026-11-16.json)、`a44b0ed2`）。
+
+| 指定 | `disclosedSections` | `omittedAvailableSections` |
+| --- | --- | --- |
+| `definition` | `["definition"]` | `["data-design","dependencies","source"]` |
+| 4つすべて | 4つすべて | なし |
+| `unknown` | 拒否（`KNOWLEDGE_BUILD_FAILED`、対応Sectionを列挙） | — |
+
+**これはPの判定ではない。** コマンド自身が次の4つの限界を返している。
+
+- `selective-disclosure-is-not-access-control-or-redaction`
+- `selective-disclosure-is-derived-not-authority`
+- `omitted-knowledge-is-not-negative-evidence`
+- `disclosure-fingerprint-is-cache-identity-not-semantic-proof`
+
+つまり「**何を渡すか選べる**」ことは確かめられたが、「**この受信者に渡してよいか**」は答えていない。Pの判定主体は依然として未定である。
 
 ### 3.2 T（配送）に到達しない理由
 
@@ -71,7 +88,7 @@
 
 ## 5. 次の一段階
 
-到達点を上げるには、**P の判定主体を決める**必要がある。5枚はいずれも受信者を持たないため、Pを作れない。最初の一歩は、TEI側で「このSubjectを、このAudienceへ、今開示してよいか」をProductが答える経路を実測することである。これは既存の`disclose`系コマンドの範囲に関わる。
+`knowledge-context -disclose`で**開示の選択と報告**は実測できた（§3.1）。残るのは**受信者・Audience別の許可判定**である。Productが「この受信者に渡してよいか」を答える経路は、まだ確認していない。ここはOwner判断を含むため、既定案を実装せず、次に確かめる対象として置く。
 
 ## 6. この記録が示さないこと
 
