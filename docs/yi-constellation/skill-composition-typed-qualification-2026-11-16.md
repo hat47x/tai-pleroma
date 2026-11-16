@@ -120,8 +120,8 @@ D4の単なるResult値一致も十分ではない。[TEI #5118](https://github.
 | 正値の数値Rule／G（Go生成） | 選択した種類について局所生成・別Process実Binaryと、限定的な通常CLI Self-buildの試験がある | 全Rule、全Provider、全Targetで同一意味・同一Effectを保証する |
 | 暦日の`not-after ... if present`／P | Workspace Readerと型検査、同日・日付順序・NULL・未取得を区別する直接評価の回帰がmainにある | 業務Ownerの意味受理、実DBからの取得状態、正式Host権限が成立した |
 | 同じ暦日Rule／G | **未対応**。`unsupported generated kind`として生成を拒否することが試験に明記されている | Gが使えないのでPへ黙って切り替え、Gによる成果物を作成したと報告する |
-| 関係の期間重複Rule、Contract Query行からの状態Reader | [#5148](https://github.com/hat47x/tei-platform/pull/5148)／[#5149](https://github.com/hat47x/tei-platform/pull/5149)は確認時点でopen。局所実装・試験の提案段階 | mainの正式Rule・実Provider入口・全件読取が完成したと扱う |
-| Typed PluginのWhole/Field投影 | [#5101](https://github.com/hat47x/tei-platform/pull/5101)は設計をmainに導入。[#5156](https://github.com/hat47x/tei-platform/pull/5156)のpure Transform回帰は確認時点でopen | 実Port接続、未公開Fieldの自動排除、現在Grant、非Builtin Providerを検証済みとする |
+| 関係の期間重複Rule、Contract Query行からの状態Reader | [#5148](https://github.com/hat47x/tei-platform/pull/5148)／[#5149](https://github.com/hat47x/tei-platform/pull/5149)はmainへ統合済み。期間RuleとSQL Executor後の状態Readerは局所試験の範囲で存在するが、正式な全件宣言／通常製品Runへの接続は別 | mainの正式Rule・実Provider入口・全件読取が完成したと扱う |
+| Typed PluginのWhole/Field投影 | [#5101](https://github.com/hat47x/tei-platform/pull/5101)は設計をmainに導入。[#5156](https://github.com/hat47x/tei-platform/pull/5156)のpure Transform回帰はmainに統合済み。Wholeは追加Fieldも保持し、明示2 Field投影は余分なFieldを落とすが、公開可否の認可を代行しない | 実Port接続、未公開Fieldの自動排除、現在Grant、非Builtin Providerを検証済みとする |
 
 P（直接解釈）、G（コード生成）、D（既存実装への委譲）を、**Rule種別に対する能力候補**として扱う。選択した方式が不適格なときは理由を残して保留し、別方式へ変更したい場合は新しい選択として再検証する。ユーザーが要求した成果物が「生成Go」なら、Pの成功だけで生成完了としない。HostのWails／CLI／MCP入口も実現方式とは別軸であり、同じProduct名を根拠に可搬性を推定しない。
 
@@ -169,3 +169,68 @@ YICが別Productへ渡すHandoffの受入票には、**実Callの開始時点の
 **実行の順序**：最優先のTAI #168 H2/H3実OS隔離・独立四Sessionと、TEI非Plugin Stage1→Stage2の独立P0は据え置く。その後、現行mainに存在するRule種別のP/G差をTool-onlyで確認し、実在する二番目の読取専用ConsumerへのSource/型付きProjection受渡しを試す。Product Skill・TAI Skillの増分価値は、そのTaskについて実Call/受領が観測できた場合にだけ比較する。
 
 **今回の到達範囲**：現行Product mainの実Source・PR採否と限定テストを照合した設計更新。上記YK-COMP-13〜20の新しい実Harness Trial、独立Consumer E2E、実OS、実DB/Host Grant、Owner意味受理は**NOT RUN**。
+
+## 13. Skillが参照する能力は、候補の一意性・適用条件・実到達で三段階に絞る
+
+能力の発見は「あるか、ないか」だけでは足りない。TEI [main #5197](https://github.com/hat47x/tei-platform/pull/5197)の現行`ResolvedSet.Capability`では、候補0件（不在）と複数件（曖昧）がどちらも`false`になり得る。Productの解決器を変更したわけではなく、テストによって**現行の曖昧さを確かめた**段階である。TAIのSkillは、この値だけを見て「提供元は存在しない」と説明してはならない。
+
+TEI [main #5204](https://github.com/hat47x/tei-platform/pull/5204)では、Action／Observation／Evidence／Database Provider／Migration Tool／Featureの`Supports*`述語が、宣言された項目だけを真とする局所テストを備えた。ただし「Supports=true」は**能力の候補契約への適合**であって、選択Providerの実ロード、現在Grant、実呼出し、Result受領を示さない。[main #5205](https://github.com/hat47x/tei-platform/pull/5205)では、`.tei.md`に対応するParserが未選択の場合、選択可能な`tei.authoring/v1`／`tei.rule-authoring/v0`とmanifestの`languages:`設定を案内する診断が加わった。言語選択や利用条件の不備を、能力の不在と取り違えない。
+
+**既存の製品応答を利用した最小判別**：
+
+| 観測 | Skillの説明・次の行動 | 昇格させないもの |
+| --- | --- | --- |
+| Discoveryに実Commandが載り、対応するToolが実呼出しに応答 | **当該Command・当該対象で**限定到達を記録 | 全Commandが列挙済み、Owner意味受理 |
+| Discoveryは限定範囲、または親Commandしか返さない | `not-observed`。既存CLIの対象操作の存在を別途照合 | `absent`という断定 |
+| Productの解決結果が不在・曖昧を区別できない | `unresolved`。対象kind/id／候補の可視範囲を再確認 | 0件と2件以上の同一視、一意選択 |
+| Language／Versionが未選択・不正 | 有効な候補と設定方法をProductの実診断から案内 | 診断なしの勝手な代替Language選択 |
+| Supportsがtrue、しかしProvider/Grant未確認 | `contract-eligible`。実LoadとCallの検証へ進む | `invoked`／`granted`／`received` |
+| 実Toolが失敗、Reader未取得または版不一致 | 観測した失敗理由を保持し、必要な辺だけ再確認 | 陰性結果を「対象なし」へ変換 |
+
+ここでの英語の状態名は受入票の**説明用**であり、TEIの新しい戻り値・共通Skill Registry・製品間Result Schemaの採用を意味しない。現在の選択候補が曖昧なら呼出しを保留し、対象の一意性を確かめるまではAgentが提供者を推測で選ばない。
+
+## 14. 実読取を再利用するには、元Sourceと「次の読取の前提」を別に固定する
+
+YICの実行票は、ToolにCommandが存在すると知っているだけでなく、**固定したTEI commitから実際に何を呼び、どのbyteのどの範囲を読んだか**を残す方向へ進んでいる。
+
+- TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)：固定TEI `926c8f2e3511`のclean cloneで、8件の既存Product/Rule読取Go回帰を実行したPR。対象HEADの`tai-reference`は全14ジョブsuccess。**このPRをmainへ取り込む前は、PR内Receiptを正式なmain受入に数えない**。実証範囲は製品ローカルA0であり、外部Harness/Consumer到達は含まない。
+- TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)：同じ固定TEI commitの`commands`・`model catalog`・`model locate`・`inspect`・`validate`という5つの実Commandを呼び、Source Indexと`inspect`の元byte offset／line／column、警告も残すPR。**確認時点はopen、CI結果は未確定**。`ok: true`の観測と`validate`警告の有無を同一視しない。
+- TEI [#5198](https://github.com/hat47x/tei-platform/pull/5198)：返されたWorld／Source Indexの版を後続読取へ期待指紋として渡し、変化を`STALE_SNAPSHOT`として拒否する提案。実バイナリによる限定検証がPRに記録されているが、**確認時点で未マージ**。既存mainの全CLI／MCPがこの前提条件を受理できるとは記載しない。
+
+したがって、Skillによる`inspect`の成功を元に別のToolへ進む場合、最低でも次を分ける。
+
+| 区分 | 保存する最小の実証 | 再利用時の扱い |
+| --- | --- | --- |
+| **E0 対象と入力** | Task、対象kind/id、Workspace、実Product commit、Command family/argv、固定Source候補 | Tool/Skillの可搬性と無関係。対象が未選択なら停止 |
+| **E1 読取の観測** | 実Exit、Result/Warning、元定義のSource rangeとSource Index、Read Footprint、実際の取得範囲 | 既存限定CLIの成功としてのみ案内 |
+| **E2 前提条件の再確認** | 呼出し時点でProductが受理するRevision／fingerprint／Ownerの実再読結果 | 未対応Toolなら前提Pin済みとは書かず、手動再照合／保留 |
+| **E3 Recipient利用** | 許可Audience、公開Projection、実送出byte、Consumer Body/Receipt、独立Expected | 受取側で未実行なら`not-run`を維持 |
+
+**同じIDが見つかったこと**、**同じWorld Fingerprint**、**同じSource byte**、**その時点の開示Grant**を一つの同一性へ畳まない。ReaderがSourceを引用できることはProduct意味受理・外部AudienceへRawを送れることと別である。TAI #168の実OS隔離と独立H2/H3四Sessionを、このローカルBaseline試験で置き換えない。
+
+## 15. Whole/Field投影は「情報を落とさない」と「公開し過ぎない」の両方を検査する
+
+TEI [main #5156](https://github.com/hat47x/tei-platform/pull/5156)の既存pure Transformを使う局所試験では、Whole Recordの出力に追加`internalNote`が残り、明示的な2 Field Projectionでは追加Fieldを出力しない。必須`amount`の欠落を拒否し、明示NULLを「Fieldがない」に変換しない。**これが証明したのは純粋な値の投影**であり、Sourceの取得完全性・Scope・Fieldの公開権限・実Port BindとProvider Callではない。
+
+Skillの利用者が「この2項目を文書へ渡す」と求めたなら、Whole Recordを簡便な代用として公開せず、元ProductのScope/Contractと明示投影が合致するかを確認する。ただしField Projectionで秘密項目が出力に含まれなくても、そのFieldが許可されたことの証明にはならない。Graphの多重性／順序、数値の単位・精度、NULL・未取得、Audienceごとの見せ方は、前述のD1／D2／D3で独立に検証する。
+
+**最初の小さな統合試験**は、同じ公開DataのWhole／2 Field Projectionを使い、元Sourceが同一で追加Fieldだけを変えたときの出力差と、公開Audienceの最小Projection候補を比較する。既存Transform回帰のPASSを再利用しても、RecipientのDisclosure/Delivery、Provider、保存処理の受理までは主張しない。
+
+## 16. 実行票へ引き渡す追加反証
+
+| ID | 一因子の反証 | 既存Owner／期待する停止 |
+| --- | --- | --- |
+| **YK-COMP-21** | Capability lookupの`false`を候補0件の断定として返す | TEI #5197／TAI #488：曖昧な複数件を`absent`に変換しない |
+| **YK-COMP-22** | Supports=trueだけで実Providerが呼ばれたことにする | TEI #5204／TAI #488：ContractとLoaded/Invoked/Receivedを分ける |
+| **YK-COMP-23** | 未選択Languageを説明せず未知の能力として捨てる | TEI #5205／TAI #488：実候補・設定案内・対象外のFenceを区別 |
+| **YK-COMP-24** | Limited DiscoveryでCommandが見えず「CLIに存在しない」と断定 | TAI #488／既存SK-01：限定範囲と不存在を分離 |
+| **YK-COMP-25** | `inspect`のSource Rangeがあるので現在Grant／二次開示も成立とする | TAI #693/#695／TAI #232：元位置・現在許可・送出を分離 |
+| **YK-COMP-26** | 前回の指紋が返るだけで、後続CLIが古い版を拒否できると主張 | TEI #5198／TAI #271：期待指紋を実受理した場合だけ再利用可 |
+| **YK-COMP-27** | `validate ok`かつ警告3件をWarning 0として報告 | TAI #695／TAI #488：Exit/Result/Warningsを分ける |
+| **YK-COMP-28** | Whole Recordの`internalNote`を二Field Projectionと同一として開示 | TEI #5156／TAI #232：Field集合とDisclosure Scopeを分離 |
+| **YK-COMP-29** | NULLのFieldを欠落と読み替える、または必須Field欠落を黙認 | TEI #5156／TAI #271：値の状態とContractの欠落を別扱い |
+| **YK-COMP-30** | ローカルGo 8件／CLI 5件の成功をH2/H3比較完了に数える | TAI #168/#488：実OSと外部Harness独立4Slotの分母を変えない |
+
+これらは**試験候補**として既存Ownerに渡す。新しいScript群やRunnerをYICに新設せず、承認済みのTEI Product/CLI、TAIのReceipt Checker、SK-01評価とHandoff実行票を先に利用する。
+
+**次段の判断**：P0はTAI #168の実OS G0→G1→G2から独立H2/H3四Slot（記録上比較適格0/4）、TEIの非Plugin Windows Stage1→Stage2とする。ローカルBaselineの確定後、公開TEI read-only Toolを同じTaskでB0/B1比較し、外部Consumerの実Readへ進める場合はRecipientごとに現行Source/Grantを再確認する。今回は文書と実証の区別を明確にする作業であり、**新しいProduct実行、OS隔離、外部Harness、二Productの実Consumer受理、Owner意味受理はNOT RUN**。
