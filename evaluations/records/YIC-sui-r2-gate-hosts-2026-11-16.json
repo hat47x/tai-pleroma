@@ -1,0 +1,34 @@
+{
+  "schema": "tai.reference.yic-sui-r2-gate-hosts/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows and WSL Ubuntu, running the same SUI pytest suite on both",
+  "command": "python integrations/tools/yic_sui_r2_gate_hosts.py --sui-repo <SUI checkout at 0c2a2c548058> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "checkoutClean": true,
+    "testFile": "tests/test_r2_source_snapshot_read_gate.py",
+    "windows": {
+      "passed": null,
+      "failed": 70,
+      "exit": 1,
+      "firstFilesystemError": "E       PermissionError: [Errno 13] Permission denied: 'D:\\\\GIT\\\\hat47x\\\\.gotmp\\\\pyshort-yic\\\\test_explicit_current_source_a0\\\\raw\\\\80a707af7dc77ee1228f9127180f3964835e5beb4c4ab0d812f0fe7593579b3a'"
+    },
+    "linux": {
+      "passed": 70,
+      "failed": null,
+      "exit": 0
+    },
+    "linuxIsGreen": true,
+    "windowsCannotPass": true,
+    "finding": "このgate testは、参照Storeがディレクトリをfsyncするために`os.open(directory, O_RDONLY)`を呼ぶ。WindowsはこれをPermissionErrorで拒否し、さらに一時ファイル名がpytestのbasetemp深くでMAX_PATHを超える。したがってWindowsでは70件すべてが失敗し、linuxでは70件すべてがPASSする。Windowsの赤は包含ロジックの破損ではなく、この参照実装の対象OS差である。"
+  },
+  "scope": "Runs SUI's R2 source-snapshot gate suite on Windows and in WSL Ubuntu and records the counts and the first filesystem error on each. A linux pass shows the suite holds there at this commit; it does not upgrade SUI #3462's own limits, which keep the card resolver and Source Provider as test doubles and the PDP local, and it is not a real organization PDP, a real Card save, or a second disclosure. It does not audit the implementation beyond these tests."
+}
