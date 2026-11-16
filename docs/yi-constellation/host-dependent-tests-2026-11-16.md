@@ -51,7 +51,13 @@ YICの実行票が「未実行」としていたテストを実際に走らせ�
 - SKIPした件数と、その理由の文字列
 - FAILした場合、**それが対象の欠陥かホストの制約か**の切り分け
 
-本資料のreceiptは、いずれもこれを含む。
+本資料のreceiptは、いずれもこれを含む。この点検は機械化した（[点検のreceipt](../../../evaluations/records/YIC-skip-disclosure-2026-11-16.json)）。
+
+- 個々の検証判定を持つYIC receiptは、**実行ホストを明示**する（`hostGoos`/`hostGoarch`/`goVersion`/`hostKernel` など）
+- SKIPを含むreceiptは、**そのSKIPを可視にする**（件数または理由）
+- `ok`と終了コード0だけを根拠にした「通った」を残さない
+
+点検の途中で、`YIC-tei-rooted-source`が両ホストの判定を持ちながら**ホストを記録していない**ことが分かったので、生成側にWindowsとLinuxの両方の版を記録するよう足して再生成した。
 
 ### 4.2 「全件実行」を一律に要求しない
 
