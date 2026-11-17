@@ -60,6 +60,8 @@ CHECKS = (
      "a dated 'nothing further can be done' claim acknowledges later work"),
     ("harnessEvidence", "yic_harness_evidence_check.py",
      "every harness evidence file records what it did not establish"),
+    ("codexAdapter", "yic_codex_adapter_probe.py",
+     "the codex-exec adapter's own tests still pass and the CLI is absent"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites
