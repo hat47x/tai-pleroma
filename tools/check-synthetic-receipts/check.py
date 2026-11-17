@@ -266,6 +266,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-eki-private-input-2026-11-17.json",
     "evaluations/records/YIC-sui-source-policy-2026-11-17.json",
     "evaluations/records/YIC-audience-declaration-2026-11-17.json",
+    "evaluations/records/YIC-section-order-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -663,6 +664,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-section-order" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("sectionsAreOrdered") is not True
+                or observed.get("outOfOrder")
+            ):
+                errors.append(f"the document sections are out of order: {relative}")
         if "YIC-audience-declaration" in relative:
             observed = data.get("observed", {})
             if (

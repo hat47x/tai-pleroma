@@ -1,0 +1,39 @@
+{
+  "schema": "tai.reference.yic-section-order/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the document headings",
+  "command": "python integrations/tools/yic_section_order_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-section-order-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/irptch-reach-2026-11-16.md",
+    "headings": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "4.1",
+      "4.2",
+      "4.3",
+      "4.4",
+      "4.5",
+      "4.6",
+      "5",
+      "5.1",
+      "6",
+      "7"
+    ],
+    "headingCount": 14,
+    "outOfOrder": [],
+    "missingTopLevelNumbers": [],
+    "sectionsAreOrdered": true,
+    "finding": "節番号が文書内で昇順に並んでいるかを点検する。番号が逆転していると、読者は節の依存関係を読み違える。`4.6`が`4.5`より前に置かれていた事例を検出して修正した。"
+  },
+  "scope": "Reads the numbered headings in one document and checks they ascend without gaps. It checks order only: a well-ordered section can still be wrong, and a heading whose number is inside a code block or table is not examined."
+}
