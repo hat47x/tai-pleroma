@@ -2,6 +2,7 @@ package harnessadapter
 
 import (
 	"context"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -188,7 +189,7 @@ func TestClaudeSkillRootsDocumented(t *testing.T) {
 			t.Fatalf("root not labelled: %+v", r)
 		}
 	}
-	if !strings.HasSuffix(roots[0].Path, `.claude\skills`) {
+	if !strings.HasSuffix(filepath.ToSlash(roots[0].Path), ".claude/skills") {
 		t.Fatalf("project root is not .claude/skills: %s", roots[0].Path)
 	}
 }
