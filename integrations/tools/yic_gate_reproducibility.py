@@ -9,6 +9,7 @@ This runs the aggregate twice and compares the receipts it writes.
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -16,12 +17,22 @@ import time
 from pathlib import Path
 
 GATES = "integrations/tools/yic_receipt_gates.py"
-RECORDS = (
-    "evaluations/records/TEI-receipt-scope-2026-11-06.json",
-    "evaluations/records/TEI-receipt-consistency-2026-11-06.json",
-    "evaluations/records/YIC-authority-limits-2026-11-16.json",
-    "evaluations/records/YIC-skip-disclosure-2026-11-16.json",
-)
+# Read from the aggregate so this list cannot drift from what it actually writes.
+GATES_SOURCE = "integrations/tools/yic_receipt_gates.py"
+AGGREGATE_RECEIPT = "evaluations/records/YIC-receipt-gates-2026-11-17.json"
+
+
+def receipts_written_by_gates(root):
+    """Every receipt the aggregate writes, taken from its own OUTPUTS table."""
+    source = (root / GATES_SOURCE).read_text(encoding="utf-8")
+    match = re.search(r"OUTPUTS = \{(.*?)\}", source, re.S)
+    if not match:
+        raise SystemExit("could not read OUTPUTS from the aggregate")
+    # Entries look like `"gate": "receipt.json"; take the right-hand side only.
+    files = re.findall(r'"[^"]+"\s*:\s*"([^"]+\.json)"', match.group(1))
+    if not files:
+        raise SystemExit("OUTPUTS in the aggregate has no receipt filenames")
+    return tuple(f"evaluations/records/{name}" for name in files)
 
 
 def digest(path):
@@ -55,9 +66,10 @@ def main():
         if completed.returncode != 0:
             print(completed.stdout, completed.stderr, file=sys.stderr)
             return 1
+        names = receipts_written_by_gates(root)
         outputs.append({
             "run": run,
-            "receipts": snapshot(root, RECORDS + ("evaluations/records/YIC-receipt-gates-2026-11-17.json",)),
+            "receipts": snapshot(root, names + (AGGREGATE_RECEIPT,)),
         })
 
     first, second = outputs[0]["receipts"], outputs[1]["receipts"]
@@ -69,6 +81,7 @@ def main():
     checks = {
         "gatesScript": GATES,
         "receiptsCompared": len(first),
+        "receiptsFromAggregateTable": len(first) - 1,
         "run1": first,
         "run2": second,
         "unstableReceipts": unstable,
