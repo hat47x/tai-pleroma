@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-11",
+  "date": "2026-11-17",
   "host": "Windows with Python 3.12 reading evaluations/records",
   "command": "python integrations/tools/yi_cross_receipt_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-cross-receipt-2026-11-11.json",
   "result": "PASS",

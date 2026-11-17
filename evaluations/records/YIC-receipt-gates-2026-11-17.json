@@ -1,0 +1,82 @@
+{
+  "schema": "tai.reference.yic-receipt-gates/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 running the receipt gates together",
+  "command": "python integrations/tools/yic_receipt_gates.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-receipt-gates-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "gatesRequested": 8,
+    "gatesRun": 8,
+    "results": {
+      "checker": {
+        "ran": true,
+        "question": "the receipt is registered and shaped as declared",
+        "exit": 0,
+        "passed": true,
+        "tail": "}"
+      },
+      "scope": {
+        "ran": true,
+        "question": "the scope states what was measured and what was not",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"real\": 277, \"synthetic\": 64, \"missingFields\": 0, \"missingScope\": 0, \"scopeWithoutLimitation\": 0, \"unparsable\": 0, \"historical\": 70, \"passed\": true}"
+      },
+      "consistency": {
+        "ran": true,
+        "question": "a PASS receipt does not contradict its own observations",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"checked\": 244, \"unexpected\": {}, \"declaredNegative\": [\"TEI-meaning-change-required-2026-11-06.json\", \"TEI-target-profile-compare-2026-11-06.json\", \"TEI-target-profile-compare-text-2026-11-06.json\", "
+      },
+      "auditability": {
+        "ran": true,
+        "question": "the receipt carries the five required fields",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 31, \"complete\": 31, \"missing\": {}, \"passed\": true}"
+      },
+      "crossReceipt": {
+        "ran": true,
+        "question": "facts shared with other receipts agree",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"mismatches\": [], \"partition\": true, \"passed\": true}"
+      },
+      "artifactDigest": {
+        "ran": true,
+        "question": "the recorded artifact digest is still current",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 31, \"mismatched\": [], \"missing\": [], \"passed\": true}"
+      },
+      "limitsKept": {
+        "ran": true,
+        "question": "Product-declared limits are not dropped",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 14, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+      },
+      "skipDisclosure": {
+        "ran": true,
+        "question": "a skip is visible rather than folded into a pass",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 14, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+      }
+    },
+    "scriptsMissing": [],
+    "failed": [],
+    "everyGateRan": true,
+    "everyGatePassed": true,
+    "finding": "新しいreceiptは、構文checkerだけでなく、scope・一貫性・監査可能性・相互整合・artifact digest・限界保持・SKIP開示の各ゲートを通す必要がある。過去にcheckerだけ通してマージし、suite内でしか走らない一貫性検査を壊した事例があるため、これらを1コマンドにまとめた。"
+  },
+  "scope": "Runs eight receipt gates in one pass and refuses PASS if any is missing or fails. It records whether each gate ran and its exit code, not what each concluded; a gate that passes can still judge the wrong thing, and this aggregate inherits every limit of the eight."
+}

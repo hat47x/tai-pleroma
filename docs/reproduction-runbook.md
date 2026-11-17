@@ -94,6 +94,10 @@ doc整合: passed = true（97段、実実行184件が一致）
 
 ```powershell
 python tools/check-synthetic-receipts/check.py --root .
+# A new receipt must also survive the gates that live inside the suite.
+python integrations/tools/yic_receipt_gates.py \
+  --artifact evaluations/artifacts/scn-003-document.json \
+  --out evaluations/records/YIC-receipt-gates-2026-11-17.json
 python integrations/tools/doc_consistency_check.py
 ```
 
