@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.yic-eki-recipient-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the EKI lease delivery sources",
+  "command": "python integrations/tools/yic_eki_recipient_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-eki-recipient-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "ekiCommit": "256feb8bab9c08c0bf0ce58ca4f9e37589dd2f27",
+    "verifyFile": "internal/core/leaseverify/verify.go",
+    "deliveryFile": "internal/core/leasedelivery/delivery.go",
+    "comparesRecipient": true,
+    "comparisonText": "lease.WorkerIdentity() != v.cfg.WorkerIdentity",
+    "reasonOnMismatch": "ReasonSubjectMismatch",
+    "deliveryRefusesCallerSuppliedRecipient": true,
+    "envelopeFields": [
+      "LeaseID",
+      "WorkerIdentity",
+      "SignedLease"
+    ],
+    "finding": "EKIのLease検証は、`lease.WorkerIdentity()`がローカルWorkerと一致するかを比較し、一致しなければ`ReasonSubjectMismatch`で拒否する。**受信者が判定に入っている**という点で、SUIの`AccessRequest`とは違う。ただしこれは**Leaseの受信者がWorkerか**という判定であり、「誰に文書を見せてよいか」とは対象が違う。",
+    "whatThisDoesNotShow": "署名付きLeaseのfixtureを組み立てていないため、この比較が実際に走ることは実行で確かめていない。ソースの読み取りである。"
+  },
+  "scope": "Reads EKI's lease delivery sources and records that the verifier compares the Lease recipient with the local Worker and refuses a mismatch, and that the delivery envelope does not let a caller supply a recipient. It is a source reading, not an execution: no signed lease is built, and the comparison is about a Lease recipient, not about which person a document may be shown to."
+}
