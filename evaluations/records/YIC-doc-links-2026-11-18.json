@@ -1,0 +1,38 @@
+{
+  "schema": "tai.reference.yic-doc-links/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 resolving relative links under docs/",
+  "command": "python integrations/tools/yic_doc_links_check.py --strict --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-doc-links-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "docs",
+    "documentsScanned": 119,
+    "linksChecked": 1063,
+    "brokenLinks": [],
+    "brokenCount": 0,
+    "crossRepoLinks": [
+      {
+        "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
+        "line": 183,
+        "target": "../../../sui-sensemaking/01_Plans/adr/ADR-0117-cross-product-handoff-context-envelope.md"
+      },
+      {
+        "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
+        "line": 184,
+        "target": "../../../sho-composer/docs/handoff-cross-product-trial-2026-11-11.md"
+      }
+    ],
+    "crossRepoCount": 2,
+    "everyRelativeLinkResolves": true,
+    "note": "crossRepoLinks are references into sibling checkouts. They resolve only when those repositories are present in the same workspace, so they are reported separately rather than counted as broken.",
+    "finding": "docs配下の相対Markdownリンクを、そのリンクを含むファイルの位置から解決し、実在するファイルに着地するかを点検する。リンク先が存在していても、基準ディレクトリを誤ると壊れる。"
+  },
+  "scope": "Resolves every relative .md link under docs/ against the file that contains it and reports links that do not land on an existing file, plus links pointing outside the checkout when --strict is given. It checks resolution only: a link to the wrong but existing document is not detected, and anchors after # are not validated."
+}

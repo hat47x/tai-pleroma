@@ -131,7 +131,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 - MMIはformat profileの受理（`assertFormatProfile`）とconsumerの5件を確認した
 - EKIは投影TaskRequestの受理（202/queued）と、policy・Worker行を入れた場合の`running`到達まで確認した
 - TEI `25a15110d`・EKI `8159af1`・SUI `21d07f01`の組み合わせで、一括検証31段がPASSした
-- 実実行receiptは253件、合成receiptは61件
+- 実実行receiptは254件、合成receiptは61件
 - 公開gateは`allowed=false`・blocker 7件のまま（[2026-11-03の再確認](../evaluations/SCN-001-publication-gate-recheck-2026-11-03.json)）
 
 詳細は[TEI/SUI統合の整理](../analysis/tei-sui-integration-2026-11-03.md)と[フィージビリティ整理](../analysis/tei-construction-feasibility-2026-11-03.md)にある。残課題は[Issue #394](https://github.com/hat47x/tai-pleroma/issues/394)へ整理した。実行・結果受理、SaaS外部認証、管理DB・実CA・配備は未検証である。
@@ -145,7 +145,7 @@ Owner指示（2026-10-26）とOwner判断（2026-10-29）により、`developmen
 - SEI/MMI: gate変種、inspect/inventory/delivery-auditを確認
 - 未確認: 実データ・実テナント・実IdP、管理DB、公開CA、本番Worker Protocol互換、結果受入の配線、複数Workerの分散、生産性の測定
 
-整理は[製品側の判断が必要な6点](analysis/product-side-decisions-2026-11-06.md)と[TEI構築のフィージビリティ](analysis/tei-construction-feasibility-2026-11-03.md)を参照。公開gateは`allowed=false`のまま。
+整理は[製品側の判断が必要な6点](../analysis/product-side-decisions-2026-11-06.md)と[TEI構築のフィージビリティ](../analysis/tei-construction-feasibility-2026-11-03.md)を参照。公開gateは`allowed=false`のまま。
 
 再現手順は[再現手順（runbook）](reproduction-runbook.md)に固定しています。前提・固定した版・つまずきやすい点・再現できないものを分けて書いています。
 

@@ -2,7 +2,7 @@
 
 **状態: 設計判断と最小実装の記録。PoC。製品の要求受理・Owner採用・実本番運用の証明ではない。**
 
-- 実装: [integrations/harness-adapter/](../harness-adapter/README.md)
+- 実装: [integrations/harness-adapter/](../../integrations/harness-adapter/README.md)
 - 親Issue: [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、
   [TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)、
   [TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)、
