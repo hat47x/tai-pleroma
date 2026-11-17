@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-11",
+  "date": "2026-11-17",
   "host": "Windows with Python 3.12 reading the receipt directory",
   "command": "python integrations/tools/receipt_consistency_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/TEI-receipt-consistency-2026-11-06.json",
   "result": "PASS",
@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "passReceiptsChecked": 228,
+    "passReceiptsChecked": 244,
     "expectedNegative": {
       "TEI-meaning-change-required-2026-11-06.json": [
         "coverageBeforeFixtureEdit/passed"
@@ -27,11 +27,17 @@
       ],
       "YI-overreach-2026-11-11.json": [
         "control/receiptPassed"
+      ],
+      "YIC-qh-revalidate-2026-11-16.json": [
+        "results/0/withWrongFingerprint/ok"
+      ],
+      "YIC-tei-knowledge-disclosure-2026-11-16.json": [
+        "unknownSection/ok"
       ]
     },
     "unexpected": {},
     "unexpectedCount": 0,
-    "declaredNegativeCount": 4,
+    "declaredNegativeCount": 6,
     "everyPassIsConsistent": true
   },
   "scope": "Walks the PASS receipts and flags a false value under a success-named key. The three receipts where that is the finding are listed with the reason, so a green result means no undeclared contradiction, not that every claim was independently verified. It does not check the claims themselves."

@@ -1,0 +1,30 @@
+{
+  "schema": "tai.reference.yic-suite-invocation-record/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 reading the suite source and its receipt",
+  "command": "python integrations/tools/yic_suite_invocation_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-suite-invocation-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiteSource": "integrations/tools/run_suite.py",
+    "receipt": "evaluations/records/TEI-suite-2026-11-03.json",
+    "sourceRecordsItsInvocation": true,
+    "receiptHasAnInvocation": false,
+    "receiptUsesAPlaceholderCommand": true,
+    "registeredSteps": 108,
+    "recordedSteps": 107,
+    "missingFromRecord": [
+      "checker"
+    ],
+    "missingIsExplainable": false,
+    "receiptPredatesTheFix": true,
+    "finding": "suiteのreceiptは、実行したargvを残すべきである。固定のプレースホルダだけでは、登録済みの段が記録に無い理由（意図的な除外か記録漏れか）を後から判別できない。この検査は、suiteのソースが実行したargvを記録するかを見る。現行のソースは記録する。既存のreceiptは修正前のものなので、`checker`の欠落が意図的かどうかはそのreceiptからは依然として判別できない。次回の実行から判別できるようになる。"
+  },
+  "scope": "Checks whether the suite records the argv it ran with and whether a step missing from a record can be explained by it. It does not re-run the suite, and a receipt that does record its invocation is still not proof that a step measured what it claims."
+}

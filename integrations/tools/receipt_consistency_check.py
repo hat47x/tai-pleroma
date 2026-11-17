@@ -27,6 +27,15 @@ EXPECTED_NEGATIVE = {
         "comparisonPassed is false on purpose: the text template shows the same "
         "asymmetry as the record template."
     ),
+    "YIC-qh-revalidate-2026-11-16.json": (
+        "results/*/withWrongFingerprint/ok is false on purpose: the receipt records "
+        "that a deliberately wrong fingerprint is refused, so a false ok there is "
+        "the evidence, not a contradiction."
+    ),
+    "YIC-tei-knowledge-disclosure-2026-11-16.json": (
+        "unknownSection/ok is false on purpose: the receipt records that an "
+        "unsupported disclosure section is rejected with KNOWLEDGE_BUILD_FAILED."
+    ),
     "YI-overreach-2026-11-11.json": (
         "control/receiptPassed is false on purpose: the control workspace is the "
         "one the TEI validator is expected to refuse, so its receipt passing would "

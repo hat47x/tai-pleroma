@@ -307,6 +307,10 @@ def main():
         steps.pop("checker", None)
     tei_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=args.tei_repo, capture_output=True, text=True).stdout.strip()
     passed = all(step["returncode"] == 0 for step in steps.values())
+    invocation = [
+        arg.replace(str(args.tei_repo), "<TEI>").replace(str(args.sui_repo), "<SUI>")
+        for arg in sys.argv
+    ]
     receipt = {
         "schema": "tai.reference.tei-suite/v0",
         "synthetic": False,
@@ -314,7 +318,8 @@ def main():
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
         "host": "Windows with Go on PATH, Python 3.12, and the SUI consumer",
-        "command": "python integrations/tools/run_suite.py --tei-repo <TEI> --sui-repo <SUI>",
+        "command": "python " + " ".join(invocation),
+        "invocation": invocation,
         "result": "PASS" if passed else "FAIL",
         "teiCommit": tei_commit,
         "steps": steps,
