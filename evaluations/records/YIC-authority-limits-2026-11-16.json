@@ -12,7 +12,7 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receipts": 12,
+    "receipts": 14,
     "rows": [
       {
         "receipt": "YIC-qh-field-13-2026-11-16.json",
@@ -40,6 +40,18 @@
       },
       {
         "receipt": "YIC-sui-r2-gate-hosts-2026-11-16.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-suite-invocation-2026-11-17.json",
+        "limitsKept": 0,
+        "limits": [],
+        "recordsProductResult": false
+      },
+      {
+        "receipt": "YIC-suite-step-accounting-2026-11-16.json",
         "limitsKept": 0,
         "limits": [],
         "recordsProductResult": false

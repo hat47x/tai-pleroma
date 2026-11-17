@@ -12,10 +12,68 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receipts": 7,
+    "receipts": 14,
     "rows": [
       {
+        "receipt": "YIC-authority-limits-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
+      },
+      {
+        "receipt": "YIC-qh-field-13-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "goVersion"
+        ],
+        "verdictCount": 1,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-qh-resolve-09-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [
+          "goVersion"
+        ],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-qh-revalidate-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
+      },
+      {
         "receipt": "YIC-sui-r2-gate-hosts-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
+      },
+      {
+        "receipt": "YIC-suite-invocation-2026-11-17.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
+      },
+      {
+        "receipt": "YIC-suite-step-accounting-2026-11-16.json",
         "result": "PASS",
         "hostFields": [],
         "verdictCount": 0,
@@ -39,6 +97,15 @@
           }
         ],
         "statesItsHost": true
+      },
+      {
+        "receipt": "YIC-tei-knowledge-disclosure-2026-11-16.json",
+        "result": "PASS",
+        "hostFields": [],
+        "verdictCount": 0,
+        "skipCount": 0,
+        "skips": [],
+        "statesItsHost": false
       },
       {
         "receipt": "YIC-tei-linux-regression-2026-11-16.json",
@@ -113,7 +180,7 @@
         "statesItsHost": true
       }
     ],
-    "receiptsReportingVerdicts": 4,
+    "receiptsReportingVerdicts": 5,
     "receiptsMissingHost": [],
     "receiptsHidingASkip": [],
     "everyVerdictReceiptStatesItsHost": true,
