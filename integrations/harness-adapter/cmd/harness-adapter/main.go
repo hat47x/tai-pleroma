@@ -41,7 +41,8 @@ func main() {
 		dshAppr  = flag.String("dsh-approval-policy", "", "DSH --approval-policy")
 		dshDirs  = flag.String("dsh-add-dir", "", "comma-separated --add-dir values")
 		dshPatch = flag.String("dsh-patch", "", "comma-separated --patch overlays")
-		codexCLI = flag.String("codex-cli", "codex", "Codex CLI executable for codex-exec")
+		codexCLI     = flag.String("codex-cli", "codex", "Codex CLI executable for codex-exec")
+		codexVersion = flag.String("codex-version", "", "exact output of codex --version; empty permits unqualified version")
 		ccCLI    = flag.String("claude-cli", "claude", "Claude Code executable")
 		ccTools  = flag.String("claude-tools", "", "Claude Code --tools value")
 		ccMode   = flag.String("claude-permission-mode", "", "Claude Code --permission-mode")
@@ -91,6 +92,7 @@ func main() {
 		case "codex-exec":
 			a := harnessadapter.NewCodexExecAdapter(task.WorkDirHint())
 			a.CLI = *codexCLI
+			a.ExpectedVersion = *codexVersion
 			reg.Register(a)
 		case "claude-code":
 			a := harnessadapter.NewClaudeCodeAdapter(task.WorkDirHint())
