@@ -11,6 +11,8 @@
 
 **Codexの後続作業：** [Codex公開Harnessの接続実行票](codex-source-integration-decision-2026-11-17.md)では、既存Adapterへの `codex exec` の追加（C1）と、双方向App Server接続（C2）を分離した。どちらもこの索引の実装・実接続Exitには**未計上**。Codex未導入時の `not-run` を維持し、既存E1〜E6の結果をCodexへ転用しない。
 
+**Codex C1の追加（2026-11-17）：** `codex-exec` のGo実装・合成JSONL契約試験を追加した。ただしCodexの実バイナリはこの作業環境で起動しておらず、E1〜E6の実接続実績に加算しない。Taskが必要とするToolOffer・ContextRef・Skill、継続Sessionは事前にunsupportedとし、黙ってTaskを縮小しない。詳細は[Codex接続票](codex-source-integration-decision-2026-11-17.md)のC1と実装READMEを参照。
+
 ## 1. Exit一覧
 
 | Exit | 状態 | 示した実行 | 証拠 |
