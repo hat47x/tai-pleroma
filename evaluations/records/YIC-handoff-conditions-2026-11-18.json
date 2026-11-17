@@ -1,0 +1,64 @@
+{
+  "schema": "tai.reference.yic-handoff-condition-doc/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the handoff-condition document",
+  "command": "python integrations/tools/yic_handoff_conditions_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-handoff-conditions-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/analysis/54-受渡し条件.md",
+    "stages": [
+      {
+        "stage": "P",
+        "found": true,
+        "statusCell": "**計器なし**。`knowledge-context -disclose`はSectionの選択であり、Audienceで変わらない（[§4.1](../irptch-reach-2026-11-16.md)）",
+        "statesInstrumentAbsent": true,
+        "statesInstrumentLimited": false,
+        "hasMinimumTestSet": true,
+        "hasCounterExample": true
+      },
+      {
+        "stage": "T",
+        "found": true,
+        "statusCell": "**限定的な計器あり**。SHOのrunnerで`newProcessRereceive: true`を観測（ただしclaimはリテラル、§4.8）",
+        "statesInstrumentAbsent": false,
+        "statesInstrumentLimited": true,
+        "hasMinimumTestSet": true,
+        "hasCounterExample": true
+      },
+      {
+        "stage": "C",
+        "found": true,
+        "statusCell": "**限定的な計器あり**。`actualConsumerRead: true`はトップレベルで観測される",
+        "statesInstrumentAbsent": false,
+        "statesInstrumentLimited": true,
+        "hasMinimumTestSet": true,
+        "hasCounterExample": true
+      },
+      {
+        "stage": "H",
+        "found": true,
+        "statusCell": "**計器なし**（`otherHarnessLiveExecution: 'not-run'`）",
+        "statesInstrumentAbsent": true,
+        "statesInstrumentLimited": false,
+        "hasMinimumTestSet": true,
+        "hasCounterExample": true
+      }
+    ],
+    "stagesMissing": [],
+    "stagesWithoutAnInstrumentStatement": [],
+    "stagesWithoutAMinimumTestSet": [],
+    "stagesWithoutACounterExample": [],
+    "separatesWhatG1Changes": true,
+    "everyStageStatesItsInstrument": true,
+    "everyStageHasATestSet": true,
+    "finding": "受渡し条件の文書が、各段階について**計器の有無**と**最小検証セット**を述べているか、またG1で変わるものと変わらないものを分けているかを見る。計器の有無を書かずに条件だけ書くと、「条件はあるが今は測れない」という要点が読者に伝わらない。"
+  },
+  "scope": "Reads the handoff-condition document and checks each of P/T/C/H states its instrument status, a minimum test set and a counter-example, and that the document separates what G1 changes from what it does not. It checks the document's structure; whether the stated conditions would in fact establish a handoff is not judged."
+}
