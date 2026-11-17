@@ -289,6 +289,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-proposal-boundary-2026-11-18.json",
     "evaluations/records/YIC-pdp-payload-2026-11-18.json",
     "evaluations/records/YIC-recipient-search-2026-11-18.json",
+    "evaluations/records/YIC-audit-recipient-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -703,9 +704,17 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 27
+                or observed.get("checksRun") != 28
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
+        if "YIC-audit-recipient" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("carriesRecipientInEnvelope") is not False
+                or not observed.get("recipientKeysSurviveSanitization")
+            ):
+                errors.append(f"the audit-layer measurement lost its finding: {relative}")
         if "YIC-recipient-search" in relative:
             observed = data.get("observed", {})
             if (
