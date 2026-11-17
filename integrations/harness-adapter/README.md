@@ -68,6 +68,16 @@ Adapterが提供する補助:
 | `ObserveSkillUse` + `ObserveSkillPair` | Skill LoadStateをtool callから判定しH2/H3の適格性を出す | 正答の比較をしない |
 | `FileReadback` / `ClaimReadback` / `DirectReadback` | Consumerが読んだbytesをdigest・claimで照合する | producerの自己申告をreceiptにしない |
 
+### Codex exec：限定的な追加（C1）
+
+`codex-exec` は `codex exec --json --ephemeral --sandbox read-only -` の**単発JSONL経路**を扱う。Task本文はargvでなくstdinへ渡し、実Toolの結果とTurnの終端を分離して記録する。Codexの公開Source（`640b86dc879ceaaa126cdf183b417731e291f476`）の `exec_events.rs` を参照して実装した**契約試験段階**であり、Codex実バイナリ・認証・Tool・OS隔離の実接続は未実施。
+
+- 既存の `Task`、`Result`、`Registry`、`Runner` を使い、共通契約の版は変更しない。`codex-exec` は `-real` 指定時のみCLIから有効になる。
+- 本AdapterはContextRef・ToolOffer・Skill配置・Native Session resumeをまだ構成できないため、要求があれば**実行前にunsupportedで停止**する。読めるはずの資料やToolを黙って省略しない。
+- `thread.started`、`turn.started`、`item.completed`、`turn.completed`／`turn.failed` の関係を解釈するが、`turn.completed`だけでは製品結果を受理せず、Receiptは常に `not-observed`。欠落した終端、Tool結果、壊れたJSONLは `unknown` のまま残す。
+- `--ephemeral` によりNative Threadを保持しないため、ここで観測したThread IDから後日のresumeを保証しない。App Serverの双方向通信・承認・継続Sessionは[別途C2](../../docs/yi-constellation/codex-source-integration-decision-2026-11-17.md)で扱う。
+- `--sandbox read-only` は設定の宣言であり、MCP／OS／ネットワークによる実効隔離や現在のSource開示資格の証拠にはならない。実外部Harness試験には別の環境・権限・送出確認が必要。
+
 ## 4. Product Tool投影
 
 `TEIReadOnlyTool` はTEI CLIの**既存**read-onlyカタログ（`tei commands`、
