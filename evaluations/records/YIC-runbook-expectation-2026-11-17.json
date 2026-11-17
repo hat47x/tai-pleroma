@@ -1,0 +1,49 @@
+{
+  "schema": "tai.reference.yic-runbook-expectation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 reading the runbook and the live counts",
+  "command": "python integrations/tools/yic_runbook_expectation_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-runbook-expectation-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "runbook": "docs/reproduction-runbook.md",
+    "block": "suite:   107段すべて returncode 0、result = PASS\nchecker: 合成61件・実実行245件、passed = true\ndoc整合: passed = true（107段、実実行245件が一致）",
+    "comparisons": [
+      {
+        "value": "suite steps",
+        "claimed": 107,
+        "actual": 107
+      },
+      {
+        "value": "checker synthetic",
+        "claimed": 61,
+        "actual": 61
+      },
+      {
+        "value": "checker real",
+        "claimed": 245,
+        "actual": 245
+      },
+      {
+        "value": "doc steps",
+        "claimed": 107,
+        "actual": 107
+      },
+      {
+        "value": "doc real (status.md)",
+        "claimed": 245,
+        "actual": 245
+      }
+    ],
+    "staleValues": [],
+    "everyExpectedValueMatches": true,
+    "finding": "runbookの「期待する結果」は、実行した読者が自分の出力と比べる基準である。ここが古いと、正しく実行した読者が「何かがおかしい」と誤って判断する。段数とreceipt件数を、checker・suite receipt・status.mdの現在値と突き合わせる。"
+  },
+  "scope": "Compares the numbers in the runbook's expected-output block with the live checker and suite counts. It checks those five numbers only; prose elsewhere in the runbook, and whether the commands themselves would succeed on another host, are not examined."
+}
