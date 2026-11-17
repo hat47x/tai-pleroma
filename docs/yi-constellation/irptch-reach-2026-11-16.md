@@ -258,6 +258,43 @@ sourceRevisionCurrent: false
 
 **「成立」と「完了」は違う。** TとCは、このrunnerが測る範囲で成立する。外部開示（`externalDisclosure: false`）と現在のHost Grant（`currentHostGrantVerified: "not-run"`）は成立していない。
 
+## 4.8 §4.7の「成立」は、測った結果ではない
+
+§4.7でI・T・Cが「成立する」と書いた。その根拠を疑う必要がある。**claims moduleを読むと、29個のclaimのうち観測から計算されているのは2個だけ**だった（[receipt](../../evaluations/records/YIC-claim-ceiling-2026-11-18.json)）。
+
+計算されている2個:
+
+```
+teiReadonlyObservationCited: teiState === 'observed-pass'
+fileDeletedAfterTrial: cleanupConfirmed
+```
+
+残り27個はリテラルである。段階ごとに見ると:
+
+| 段階 | 計算 | リテラルで`true`（測らずに主張） | リテラルで`false`/`not-run`（測らないと宣言） |
+| --- | --- | --- | --- |
+| I | 0 | **2**（`realProductProducer`・`realProductConsumer`） | 0 |
+| R | 0 | 0 | **3** |
+| P | 0 | 0 | **2** |
+| T | 0 | **2**（`receiptReturnedAndIndependentlyReviewed`・`newProcessRereceive`） | 0 |
+| C | 0 | **1**（`independentReread`） | **1**（`actualConsumerRead`はトップレベル） |
+| H | 0 | 0 | **2** |
+
+### 4.8.1 二種類の確かめられなさ
+
+**リテラルの`true`は「測っていない事実を主張している」。** `realProductProducer: true`は、Producerが実在することをこの関数が確かめたのではなく、**書いた人がそう主張している**だけである。
+
+**リテラルの`false`／`'not-run'`は「測らないと宣言している」。** R・P・Hはこれで、**runnerに何を与えても値は変わらない**。
+
+### 4.8.2 §4.7をどう読み直すか
+
+- R・P・Hが「不成立」なのは、**試みて失敗したのではなく、試みていない**
+- I・T・Cが「成立」なのは、**測って成立したのではなく、そう書いてある**
+
+**したがって§4.7の表は、到達点の測定として読めない。** 「この計器が何を主張し、何を拒否しているか」の一覧である。
+
+これは悲観ではない。**計器の天井が分かった**ので、次に必要なのは「Tを実際に測る計器」であって「runnerに別の引数を与えること」ではない。何度再実行しても届かないことが、これで確定した。
+
 ## 5. 次の一段階
 
 `knowledge-context -disclose`で**開示の選択と報告**は実測できた（§3.1）。

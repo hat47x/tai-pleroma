@@ -281,6 +281,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-analysis-gates-2026-11-18.json",
     "evaluations/records/YIC-tool-routing-2026-11-18.json",
     "evaluations/records/YIC-handoff-stages-2026-11-18.json",
+    "evaluations/records/YIC-claim-ceiling-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -698,6 +699,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checksRun") != 20
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
+        if "YIC-claim-ceiling" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("claimsFound") != 29
+                or not observed.get("stagesThatCannotBeReached")
+            ):
+                errors.append(f"the claim-ceiling classification was lost: {relative}")
         if "YIC-handoff-stages" in relative:
             observed = data.get("observed", {})
             if (
