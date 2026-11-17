@@ -76,6 +76,7 @@ func TestCodexExecRejectsUnboundCapabilitiesBeforeLaunch(t *testing.T) {
 		want    string
 	}{
 		{name: "tool", task: Task{Prompt: "hello", Tools: []ToolOffer{{Name: "tei_model_catalog"}}}, want: "tool:offer-binding"},
+		{name: "tool-schema", task: Task{Prompt: "hello", Pins: Pins{ToolSchemas: []ToolSchemaPin{{Name: "mcp__tei__model_catalog"}}}}, want: "tool:offer-binding"},
 		{name: "skill", task: Task{Prompt: "hello", Skills: []SkillPin{{ID: "tei"}}}, want: "skill:placement"},
 		{name: "context", task: Task{Prompt: "hello", ContextRefs: []ContextRef{{Kind: "source", Ref: "A"}}}, want: "context:projection"},
 		{name: "resume", task: Task{Prompt: "hello"}, session: &SessionRef{ExternalID: "old"}, want: "session:resume"},
