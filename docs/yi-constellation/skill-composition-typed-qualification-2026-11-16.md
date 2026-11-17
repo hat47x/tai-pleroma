@@ -194,8 +194,8 @@ TEI [main #5204](https://github.com/hat47x/tei-platform/pull/5204)では、Actio
 YICの実行票は、ToolにCommandが存在すると知っているだけでなく、**固定したTEI commitから実際に何を呼び、どのbyteのどの範囲を読んだか**を残す方向へ進んでいる。
 
 - TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)：固定TEI `926c8f2e3511`のclean cloneで、8件の既存Product/Rule読取Go回帰を実行したPR。対象HEADの`tai-reference`は全14ジョブsuccess。**PR #693はmainへ統合済み**（merge `5e6b44eb`）。固定HEADで実行した検証記録がmainに存在するが、実証範囲は製品ローカルA0であり、外部Harness/Consumer到達は含まない。
-- TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)：同じ固定TEI commitの`commands`・`model catalog`・`model locate`・`inspect`・`validate`という5つの実Commandを呼び、Source Indexと`inspect`の元byte offset／line／column、警告も残すPR。**確認時点はopen／競合あり。対象HEADの14ジョブはcompleted/success**。`ok: true`の観測と`validate`警告の有無を同一視しない。
-- TEI [#5198](https://github.com/hat47x/tei-platform/pull/5198)：返されたWorld／Source Indexの版を後続読取へ期待指紋として渡し、変化を`STALE_SNAPSHOT`として拒否する提案。実バイナリによる限定検証がPRに記録されているが、**確認時点で未マージ**。既存mainの全CLI／MCPがこの前提条件を受理できるとは記載しない。
+- TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)：固定TEI `926c8f2e3511`で`commands`、`model catalog`、`model locate`、`inspect`、`validate`の5コマンドを実行し、元Source位置・警告・`authorityLimits`を記録した。**mainへ統合済み**。ただし実行は製品ローカルのA0/R相当であり、外部Audienceへの送出許可・Consumer受領・Tool Reply完了を示さない。
+- TEI [#5198](https://github.com/hat47x/tei-platform/pull/5198)：期待指紋による再読拒否の実装PRはmainへ統合済み。ただしTAI [#704](https://github.com/hat47x/tai-pleroma/pull/704)が固定TEI `a44b0ed2`の実バイナリで確認したのは、`trace`の`snapshotFingerprint`一致・不一致だけである。同じ固定版の`inspect`／`model locate`／`model catalog`は`-expected-fingerprint`を受理しなかった。**PRの説明や一つのCLIの成功から全Command／MCPへ一般化せず、使う実入口とBinaryで確かめる。**
 
 したがって、Skillによる`inspect`の成功を元に別のToolへ進む場合、最低でも次を分ける。
 
@@ -234,3 +234,31 @@ Skillの利用者が「この2項目を文書へ渡す」と求めたなら、Wh
 これらは**試験候補**として既存Ownerに渡す。新しいScript群やRunnerをYICに新設せず、承認済みのTEI Product/CLI、TAIのReceipt Checker、SK-01評価とHandoff実行票を先に利用する。
 
 **次段の判断**：P0はTAI #168の実OS G0→G1→G2から独立H2/H3四Slot（記録上比較適格0/4）、TEIの非Plugin Windows Stage1→Stage2とする。ローカルBaselineの確定後、公開TEI read-only Toolを同じTaskでB0/B1比較し、外部Consumerの実Readへ進める場合はRecipientごとに現行Source/Grantを再確認する。今回は文書と実証の区別を明確にする作業であり、**新しいProduct実行、OS隔離、外部Harness、二Productの実Consumer受理、Owner意味受理はNOT RUN**。
+
+## 17. 一件の利用者作業を優先し、能力の証拠と開示の資格を混同しない
+
+実読取の受入票を増やした結果、TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)／[#695](https://github.com/hat47x/tai-pleroma/pull/695)／[#704〜706](https://github.com/hat47x/tai-pleroma/pull/706)が対象とした5枚のカードは、すべて局所ProductでのI（対象）と、最大でもR（再解決）までの証拠に留まる。[#707](https://github.com/hat47x/tai-pleroma/pull/707)がこの境界を整理し、[#708](https://github.com/hat47x/tai-pleroma/pull/708)は`knowledge-context -disclose`でSectionの選択と省略を実測した。選択した情報の形を作れても、**特定の受信者に開示してよいと判定したことにはならない**。
+
+Productが返す限界も根拠として保持する。例えば`local-read-is-not-disclosure-permission`、`selective-disclosure-is-not-access-control-or-redaction`、`omitted-knowledge-is-not-negative-evidence`は、局所読取・Section選択・省略の結果をどこまで解釈してよいかを直接制限する。[TAI #709](https://github.com/hat47x/tai-pleroma/pull/709)はReceiptへの限界文字列の保持を検査し、当時の対象12 Receiptのうち2件に含まれる17種類を数え、欠落0件を確認した。ただし**保持の検査は、限界に反する結論を書いていないことの検査ではない**。YICはこの情報を第二の権限エンジンに移さず、実行結果の表示・引継ぎにそのまま添える。
+
+### 当面のSkillの対象はTEIの「受注の一変更」
+
+TEIの優先順位の正本[plan/NOW.md](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)は、実PostgreSQLからの受注明細読取、各行のRule判定、`*.tei.md`のRule一件変更、同じDBからの再読、生成Web画面での同じ答えの表示、という一巡に絞っている。TEI [#5271](https://github.com/hat47x/tei-platform/pull/5271)／[#5300](https://github.com/hat47x/tei-platform/pull/5300)では実Queryから行・Ruleへの限定的な経路ができた。全件性の証明がないため一意性の成立は判定保留になり得る。Webでの受領と、一巡の正式な受入はまだ残る。
+
+YICは**同じTaskを最初から横断Skillへ移さない**。まず公開・合成の受注例と実在CLIにより、B0（Tool-only）で五段の到達点、利用したCommand/Source、Ruleの三値・理由、入力の完全性、失敗・再試行を記録する。B0で不便が確認された工程にだけB1（Product Skill）を追加し、発見・説明・手数・正答の増分を別の試行で測る。B2（TAI横断Skill）はProductをまたぐ用途と受信者が実在し、追加の価値が確認できる段階まで保留する。**Skillの比較をTEIの実Web完成の前提にしない**。外部H2/H3比較はTAI #168の独立G0〜G2を先に通す。
+
+### P（開示）で区別する三つの操作
+
+| 操作 | 製品で確認した範囲 | 必要な次の判断 |
+| --- | --- | --- |
+| 通常の内部read-only参照 | `tei inspect`や`tei view`等が、そのHost・Workspaceで値とSourceを返す | Sourceの現在性と取得完全性、意味判定。すべての内部業務Dataに横断ACLを必須化しない |
+| Section／Fieldの投影・削減 | `knowledge-context -disclose`、純粋なWhole／Field Projection | 出力集合だけを検証し、秘匿・redaction・Recipientへの許可とは別にする |
+| 別Product／外部Harness／別Audienceへの開示 | 受信者の特定・目的・Scope・現在Grantを伴うP判定が必要 | Source Owner／Product Hostの既存認可境界で許可を確認。許可できない場合は送らず、Taskを局所実行に戻す |
+
+[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の機密Profileは、外部開示や特例の秘密Sourceに対する個別の境界であり、通常のTEI組織Dataに一律のACL/OS隔離を作る指示ではない。また、**公開投影が同じでも内部の全件Claimの真偽が異なる**ことがある。外部側に見える一部だけから「全部が適合する」とは結論しない。内部で判定した真偽を1bitだけ返す場合でも、問いと結果の開示はOwnerの許可対象であり、Skillが勝手に追加するAPIにはしない。
+
+### OS・ToolchainとReceiptの読み方
+
+TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテストのexit 0に`SKIP`が混在する場合、Windows／Linuxによるpath境界・self-build・SUI参照Store試験の差、Go 1.26.11／1.27.0の成果物byte差を別Receiptとして記録した。**あるHostのPASSを別Hostへ転記しない**。Tool-onlyの初回基線ではOS/arch・Toolchain・対象commit・実行した試験とSKIP理由を保ち、Receiptの`PASS`とProduct意味受理、実Consumer受領を別に報告する。
+
+今回の追加は、既存D0〜D5／I・R・P・T・C・Hを**実際の一件へ使う判断**であり、新しいSkill Registry、PDP、Runner、Provider、Expectedを足すものではない。目下の停止線は「**TEIの受注一変更を実CLI・実DB・実Webまで通す**」と「**TAI #168のOS隔離から独立H2/H3四Sessionを成立させる**」の独立した二本である。Web表示・外部Consumer・H2/H3比較適格は、関連する実証が出るまで未完了として扱う。
