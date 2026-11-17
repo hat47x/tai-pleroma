@@ -264,6 +264,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-sui-tenant-boundary-2026-11-17.json",
     "evaluations/records/YIC-reach-table-2026-11-17.json",
     "evaluations/records/YIC-eki-private-input-2026-11-17.json",
+    "evaluations/records/YIC-sui-source-policy-2026-11-17.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -661,6 +662,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-sui-source-policy" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("suiteGreen") is not True
+                or observed.get("everyOverrideTestRan") is not True
+                or observed.get("forcesDenyForSourceSnapshot") is not True
+            ):
+                errors.append(f"the source-snapshot override was lost: {relative}")
         if "YIC-eki-private-input" in relative:
             observed = data.get("observed", {})
             if (

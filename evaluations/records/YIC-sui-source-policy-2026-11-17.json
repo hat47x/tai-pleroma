@@ -1,0 +1,40 @@
+{
+  "schema": "tai.reference.yic-sui-source-policy/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows host running WSL Ubuntu-24.04, executing the SUI source policy boundary tests",
+  "command": "python integrations/tools/yic_sui_source_policy_boundary.py --sui-repo <SUI checkout at 0c2a2c548058> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-sui-source-policy-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "checkoutClean": true,
+    "distro": "Ubuntu-24.04",
+    "testFile": "tests/test_r2_source_policy_core_boundary.py",
+    "passed": 16,
+    "failed": 0,
+    "exit": 0,
+    "overrideTestsRan": [
+      "test_source_tenant_scope_is_required_even_if_caller_forgets",
+      "test_source_never_inherits_document_read_only_fallback",
+      "test_source_other_actions_are_not_implicitly_granted",
+      "test_source_never_accepts_built_in_allow_all_or_mock_adapter"
+    ],
+    "overrideTestsAbsent": [],
+    "forcesDenyForSourceSnapshot": true,
+    "forcesTenantScopeForSourceSnapshot": true,
+    "rejectsBuiltinAdaptersForSource": true,
+    "everyOverrideTestRan": true,
+    "suiteGreen": true,
+    "summaryLineParsed": true,
+    "whatItDecides": "source_snapshot resources are forced to deny-on-error and tenant scope",
+    "whatItDoesNotDecide": "recipient- or audience-specific disclosure permission",
+    "finding": "SUIの`resolve_access_decision`は、`resource.kind == \"source_snapshot\"`のとき、呼出し側が`require_tenant_scope`を省いても強制的に真へ変え、`fail_safe_mode`も`deny`へ変える。さらに`noop`/`mock`アダプタを拒否する。これは**呼出し側の意図を製品が上書きする**判断であり、確認した中で最もPに近い。それでも判定対象はリソース種別であって、受信者・Audienceではない。"
+  },
+  "scope": "Runs SUI's source-policy boundary tests on linux and checks that the entrypoint forces deny-on-error, tenant scope and adapter rejection for source_snapshot resources even when the caller omits the requirement. It shows the product overrides the caller for a resource kind; it does not show a recipient- or audience-specific disclosure permission, a real organization PDP, or any external delivery."
+}
