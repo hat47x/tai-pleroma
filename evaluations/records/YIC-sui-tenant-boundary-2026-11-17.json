@@ -1,0 +1,36 @@
+{
+  "schema": "tai.reference.yic-sui-tenant-boundary/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows host running WSL Ubuntu-24.04, executing the SUI access-control tests",
+  "command": "python integrations/tools/yic_sui_tenant_boundary.py --sui-repo <SUI checkout at 0c2a2c548058> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-sui-tenant-boundary-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "checkoutClean": true,
+    "distro": "Ubuntu-24.04",
+    "tests": [
+      "tests/test_access_control_tenant_boundary.py",
+      "tests/test_access_control_adapter_contract.py"
+    ],
+    "passed": 8,
+    "failed": 0,
+    "exit": 0,
+    "tail": [
+      "bash: line 1: export: `Code/bin:/mnt/c/Users/yhata/AppData/Roaming/npm:/mnt/c/Users/yhata/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/yhata/AppData/Local/Microsoft/WinGet/Packages/Anthropic.ClaudeCode_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/yhata/go/bin:/mnt/c/Users/yhata/AppData/Local/Programs/Microsoft': not a valid identifier",
+      "bash: line 1: export: `Code/bin/copilot-shim:/mnt/c/Users/yhata/.stepcode/bin:/mnt/c/Users/yhata/.stepcode/agent/bin': not a valid identifier"
+    ],
+    "denialHappensBeforeTheAdapter": true,
+    "finding": "SUIの`resolve_access_decision`は`require_tenant_scope=True`のとき、Tenant不一致・scope不一致を**PDPアダプタを呼ぶ前に**拒否する（テストが`adapter.calls == 0`を検査している）。一方、一致するTenantはPDP評価へ進み`adapter.calls == 1`になる。これは「外部の判断を待たずに自分で拒否できる」という意味でPの形を持つが、判定しているのは**Tenant境界**であり、受信者・Audience別の開示許可ではない。",
+    "whatItDecides": "tenant scope boundary before the PDP adapter",
+    "whatItDoesNotDecide": "recipient- or audience-specific disclosure permission",
+    "everyBoundaryTestPassed": true
+  },
+  "scope": "Runs SUI's tenant-boundary and adapter-contract tests on linux and records the counts. It shows the tenant check refuses before the PDP adapter is called, which is a decision made without waiting for an external answer. It does not show a recipient- or audience-specific disclosure permission, a real PDP, or a real organization's policy; the adapter in these tests is a recording double."
+}
