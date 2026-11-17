@@ -1,0 +1,36 @@
+{
+  "schema": "tai.reference.yic-gate-reproducibility/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 running the gate aggregate twice",
+  "command": "python integrations/tools/yic_gate_reproducibility.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-gate-reproducibility-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "gatesScript": "integrations/tools/yic_receipt_gates.py",
+    "receiptsCompared": 5,
+    "run1": {
+      "evaluations/records/TEI-receipt-scope-2026-11-06.json": "sha256:a635d0f6e28915d8ccf317554033da744b91d60b9748fbdb76794fdee1444250",
+      "evaluations/records/TEI-receipt-consistency-2026-11-06.json": "sha256:6abc26f56b3a987faaf2997dda5fb3ee5ae8ffd124d6769412912f2ce078ea15",
+      "evaluations/records/YIC-authority-limits-2026-11-16.json": "sha256:ff07205dcc1a0b4b9e1bb4b2f09382d696a18f6e9f9c424484fd53bc15786704",
+      "evaluations/records/YIC-skip-disclosure-2026-11-16.json": "sha256:228200f9344e35dc61c5fb13108d9b82b57c0ac813ba7da3b782f5003c45e059",
+      "evaluations/records/YIC-receipt-gates-2026-11-17.json": "sha256:fe91a31597ec344deec82f67ace5c96353577e6363c5af916dd638f4df1fb042"
+    },
+    "run2": {
+      "evaluations/records/TEI-receipt-scope-2026-11-06.json": "sha256:a635d0f6e28915d8ccf317554033da744b91d60b9748fbdb76794fdee1444250",
+      "evaluations/records/TEI-receipt-consistency-2026-11-06.json": "sha256:6abc26f56b3a987faaf2997dda5fb3ee5ae8ffd124d6769412912f2ce078ea15",
+      "evaluations/records/YIC-authority-limits-2026-11-16.json": "sha256:ff07205dcc1a0b4b9e1bb4b2f09382d696a18f6e9f9c424484fd53bc15786704",
+      "evaluations/records/YIC-skip-disclosure-2026-11-16.json": "sha256:228200f9344e35dc61c5fb13108d9b82b57c0ac813ba7da3b782f5003c45e059",
+      "evaluations/records/YIC-receipt-gates-2026-11-17.json": "sha256:fe91a31597ec344deec82f67ace5c96353577e6363c5af916dd638f4df1fb042"
+    },
+    "unstableReceipts": [],
+    "runsAreReproducible": true,
+    "finding": "ゲートを2回続けて実行し、書き出されるreceiptが同じかを見る。同じreceiptを再実行のたびに書き換えると、本物の変更と再生成のゆらぎを差分から区別できない。安定していないreceiptは、内容が走行ごとに変わる（件数など）。"
+  },
+  "scope": "Runs the receipt-gate aggregate twice and compares the digests of the receipts each run writes, reporting which receipts are not reproducible. It says nothing about whether the gates judged correctly, and an unstable receipt may be legitimate when its content records a growing count rather than a run-specific fact."
+}

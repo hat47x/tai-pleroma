@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -51,11 +52,64 @@ def digest(path):
     return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+
+def classify(results):
+    """Which gates did not run, and which ran but did not pass."""
+    missing = [name for name, item in results.items() if not item["ran"]]
+    failed = [name for name, item in results.items()
+              if item["ran"] and not item["passed"]]
+    return missing, failed
+
+
+def self_test():
+    """Show that the aggregate cannot report PASS over a missing or failed gate.
+
+    Two cases: a gate whose script is absent, and a gate that exits non-zero. Both
+    must come back as a failure, otherwise the aggregate is a rubber stamp.
+    """
+    absent = {"absentGate": {"ran": False, "reason": "script missing", "question": "q"}}
+    missing, failed = classify(absent)
+    absentIsFailure = bool(missing) and not failed
+
+    # Run a real script that exits non-zero, so the reading of exit codes is tested
+    # rather than assumed.
+    probe = Path(tempfile.mkdtemp()) / "always_fails.py"
+    probe.write_text("import sys\nsys.exit(1)\n", encoding="utf-8")
+    completed = subprocess.run(
+        [sys.executable, str(probe)], capture_output=True, text=True,
+        encoding="utf-8", errors="replace",
+    )
+    failing = {"failingGate": {
+        "ran": True,
+        "passed": completed.returncode == 0,
+        "exit": completed.returncode,
+    }}
+    _, failed2 = classify(failing)
+    failingIsFailure = bool(failed2)
+
+    return {
+        "absentScriptIsAFailure": absentIsFailure,
+        "failingScriptIsAFailure": failingIsFailure,
+        "passed": absentIsFailure and failingIsFailure,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--artifact", required=True)
+    parser.add_argument("--artifact", required=False, default="")
     parser.add_argument("--out", required=True)
+    parser.add_argument("--self-test", action="store_true",
+                        help="prove the aggregate fails when a gate is missing or fails")
     args = parser.parse_args()
+
+    if args.self_test:
+        outcome = self_test()
+        Path(args.out).write_text(
+            json.dumps({"selfTest": outcome}, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(json.dumps(outcome, ensure_ascii=False))
+        return 0 if outcome["passed"] else 1
 
     root = Path(__file__).resolve().parents[2]
     results = {}
@@ -83,8 +137,7 @@ def main():
             "tail": tail[-1][:200] if tail else "",
         }
 
-    missing = [name for name, item in results.items() if not item["ran"]]
-    failed = [name for name, item in results.items() if item["ran"] and not item["passed"]]
+    missing, failed = classify(results)
     checks = {
         "gatesRequested": len(GATES),
         "gatesRun": len([item for item in results.values() if item["ran"]]),
