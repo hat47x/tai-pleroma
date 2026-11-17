@@ -2,6 +2,8 @@
 
 **状態：横断Handoffは実行計画／この票からの新しい実送信はNOT RUN。** [横断計画§49–56](harness-cross-ui-session-probe-2026-11-14.md)の実装者向け短縮版。新しいCLI名、公開API/ABI、Context Store、Runner、Host、権限正本、受入基準の第二正本は作らない。
 
+**独自Harnessへの投資判断と受入順**：新しい[2026年11月17日の判定・実行計画](yic-harness-investment-gates-2026-11-17.md)で、P0-AのTEI実セルフビルドとP0-Bの外部Harness四Slotを独立に維持し、H-03の最初の一往復、二HarnessへのHandoff、B4自作Loopの投資判断を段階化した。この票の固定Task、Product Owner、独立Expectedは変更しない。
+
 **途中で止まった場合**：送信ACK・Native Session ID・AIの回答・実Product Effectを同じ「完了」にまとめない。Source/Grantが変わったら送信前に再確認し、Tool Replyが不完全なら未受領、Sessionを再接続できなければ限定Activity Handoffへ縮退する。元ProductのEffectが不明な場合は再実行せず照会する。実際の表示例とOwner別の停止線は[横断計画§50](harness-cross-ui-session-probe-2026-11-14.md)を参照。
 
 **11月15日の統合状況補正**：[TEI Pin #4597](https://github.com/hat47x/tei-platform/pull/4597)はGitHub上で**mainへマージ済み**。以下の「Draft／未マージ」は当時の検収記録として読み、現在のPR状態とは区別する。Pinの状態遷移が統合されたことだけで、配布Workbenchの生成／埋込byte一致、実Windows WebView2、実外部Harnessとの一往復、現在Root/Disclosureが確認できたわけではない。[TEI #4812](https://github.com/hat47x/tei-platform/pull/4812)の配布Bundle修復試行は**closed/unmerged**であり、別branchの成功を現在mainの配布受入に使わない。別Workerが生成物や同じ契約を修正する際の競合・統合後検査は[並行AI開発の実行票](parallel-agent-integration-first-trial-2026-11-15.md)を参照する。
