@@ -1,0 +1,76 @@
+{
+  "schema": "tai.reference.yic-proposal-boundary/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the design proposal",
+  "command": "python integrations/tools/yic_proposal_boundary_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-proposal-boundary-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/analysis/55-受信者の欄.md",
+    "requirements": [
+      {
+        "requirement": "statesItIsAProposal",
+        "question": "提案であって受理ではないと述べているか",
+        "matchedPhrases": [
+          "提案",
+          "材料",
+          "設計の比較"
+        ],
+        "satisfied": true
+      },
+      {
+        "requirement": "namesTheOwner",
+        "question": "判断する主体を名指ししているか",
+        "matchedPhrases": [
+          "Owner"
+        ],
+        "satisfied": true
+      },
+      {
+        "requirement": "saysTaiWillNotImplement",
+        "question": "TAIが実装しないと述べているか",
+        "matchedPhrases": [
+          "TAIがこれを実装しない",
+          "編集・採用確定しない"
+        ],
+        "satisfied": true
+      },
+      {
+        "requirement": "givesARecommendation",
+        "question": "推奨を一つに絞っているか",
+        "matchedPhrases": [
+          "推奨",
+          "案A"
+        ],
+        "satisfied": true
+      },
+      {
+        "requirement": "namesWhatWouldBreak",
+        "question": "壊れる可能性を述べているか",
+        "matchedPhrases": [
+          "壊れる"
+        ],
+        "satisfied": true
+      },
+      {
+        "requirement": "givesAMinimalTest",
+        "question": "最小の試験を挙げているか",
+        "matchedPhrases": [
+          "最小の試験"
+        ],
+        "satisfied": true
+      }
+    ],
+    "unsatisfied": [],
+    "assertsTheChangeIsDecided": false,
+    "everyRequirementIsStated": true,
+    "finding": "製品の契約変更を提案する文書が、**提案であること・判断主体・TAIが実装しないこと**を述べているかを点検する。推奨だけを書くと、読み手が決定と読む。"
+  },
+  "scope": "Checks that the design proposal document states it is a proposal, names the deciding owner, says TAI will not implement it, and gives a recommendation with a breakage note and a minimal test. It checks the presence of those statements, not whether the recommendation is sound."
+}

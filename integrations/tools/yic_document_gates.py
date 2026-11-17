@@ -54,6 +54,8 @@ CHECKS = (
      "the suite records the argv it ran with"),
     ("suiteStepAccounting", "yic_suite_step_accounting.py",
      "registered steps and recorded steps reconcile"),
+    ("proposalBoundary", "yic_proposal_boundary_check.py",
+     "a proposal for a product contract names its owner and does not claim a decision"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites

@@ -13,14 +13,14 @@
   },
   "observed": {
     "folder": "docs/yi-constellation",
-    "documents": 92,
-    "documentsWithAStatusLine": 92,
-    "nonIndexDocuments": 90,
+    "documents": 93,
+    "documentsWithAStatusLine": 93,
+    "nonIndexDocuments": 91,
     "documentsWithoutAStatusLine": [],
     "withoutStatusLineCount": 0,
     "statusLineAfterFirstSection": [],
     "shapesUsed": {
-      "labelled": 90,
+      "labelled": 91,
       "bold-statement": 0,
       "none": 0
     },
