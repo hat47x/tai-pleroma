@@ -70,7 +70,8 @@
         "requirement": "statesTheSizeOfTheChange",
         "question": "変更が何箇所に及ぶかを述べているか",
         "matchedPhrases": [
-          "足す必要がある箇所"
+          "足す必要がある箇所",
+          "3箇所"
         ],
         "satisfied": true
       }

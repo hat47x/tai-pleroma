@@ -1,0 +1,394 @@
+{
+  "schema": "tai.reference.yic-recipient-search/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows host running WSL Ubuntu-24.04, scanning the SUI API package",
+  "command": "python integrations/tools/yic_recipient_search_probe.py <artifact> <out> <sui-repo>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "filesScanned": 99,
+    "termsSearched": [
+      "audience",
+      "recipient",
+      "sharedWith",
+      "share_with",
+      "allowlist",
+      "allow_list"
+    ],
+    "hitCount": 197,
+    "hitsByClass": {
+      "token-audience": 81,
+      "model-allowlist": 89,
+      "cli-argument": 7,
+      "network-allowlist": 4,
+      "other": 16
+    },
+    "otherHits": [
+      {
+        "file": "admin_audit_repository.py",
+        "line": 4,
+        "term": "allowlist",
+        "snippet": "result, request id) and provides a bounded, allowlist read path. Recording is",
+        "class": "other"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 413,
+        "term": "audience",
+        "snippet": "メンバーのログイン用・ゲスト用・MCP宛てのトークンは、audience が違うので通らない。",
+        "class": "other"
+      },
+      {
+        "file": "trusted_auth_edge.py",
+        "line": 182,
+        "term": "audience",
+        "snippet": "list of unique audience values.",
+        "class": "other"
+      },
+      {
+        "file": "trusted_auth_edge.py",
+        "line": 202,
+        "term": "audience",
+        "snippet": "expected audience. The expected audience is always chosen by the caller, never taken",
+        "class": "other"
+      },
+      {
+        "file": "trusted_auth_edge.py",
+        "line": 202,
+        "term": "audience",
+        "snippet": "expected audience. The expected audience is always chosen by the caller, never taken",
+        "class": "other"
+      },
+      {
+        "file": "provider.py",
+        "line": 445,
+        "term": "allowlist",
+        "snippet": "_ensure_large_scale_allowlist()",
+        "class": "other"
+      },
+      {
+        "file": "provider.py",
+        "line": 463,
+        "term": "allowlist",
+        "snippet": "def _ensure_large_scale_allowlist() -> None:",
+        "class": "other"
+      },
+      {
+        "file": "provider.py",
+        "line": 843,
+        "term": "allowlist",
+        "snippet": "\"Registered large-scale destination is not allowlisted\",",
+        "class": "other"
+      },
+      {
+        "file": "admin.py",
+        "line": 365,
+        "term": "audience",
+        "snippet": "audience = payload.audience.strip()",
+        "class": "other"
+      },
+      {
+        "file": "admin.py",
+        "line": 365,
+        "term": "audience",
+        "snippet": "audience = payload.audience.strip()",
+        "class": "other"
+      }
+    ],
+    "hits": [
+      {
+        "file": "admin_audit_repository.py",
+        "line": 4,
+        "term": "allowlist",
+        "snippet": "result, request id) and provides a bounded, allowlist read path. Recording is",
+        "class": "other"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 35,
+        "term": "audience",
+        "snippet": "verify_oidc_token_for_audience,",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 326,
+        "term": "audience",
+        "snippet": "or getattr(config, \"agent_oauth_audience\", None)",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 412,
+        "term": "audience",
+        "snippet": "1. 発行者は既存の単一のIdP行で解決し、audience は設定値 (SUI_AGENT_OAUTH_AUDIENCE) に固定する。",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 413,
+        "term": "audience",
+        "snippet": "メンバーのログイン用・ゲスト用・MCP宛てのトークンは、audience が違うので通らない。",
+        "class": "other"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 424,
+        "term": "audience",
+        "snippet": "audience = getattr(request.app.state, \"agent_oauth_audience\", None)",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 424,
+        "term": "audience",
+        "snippet": "audience = getattr(request.app.state, \"agent_oauth_audience\", None)",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 425,
+        "term": "audience",
+        "snippet": "if jwks_store is None or not audience:",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 428,
+        "term": "audience",
+        "snippet": "verified = verify_oidc_token_for_audience(",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 429,
+        "term": "audience",
+        "snippet": "db=db, token=token, jwks_store=jwks_store, audience=audience",
+        "class": "token-audience"
+      },
+      {
+        "file": "agent_credentials.py",
+        "line": 429,
+        "term": "audience",
+        "snippet": "db=db, token=token, jwks_store=jwks_store, audience=audience",
+        "class": "token-audience"
+      },
+      {
+        "file": "cli.py",
+        "line": 66,
+        "term": "allowlist",
+        "snippet": "allowlist_get = tenants_subparsers.add_parser(\"model-allowlist-get\")",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 66,
+        "term": "allowlist",
+        "snippet": "allowlist_get = tenants_subparsers.add_parser(\"model-allowlist-get\")",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 67,
+        "term": "allowlist",
+        "snippet": "allowlist_get.add_argument(\"--tenant-id\", required=True)",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 68,
+        "term": "allowlist",
+        "snippet": "allowlist_set = tenants_subparsers.add_parser(\"model-allowlist-set\")",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 68,
+        "term": "allowlist",
+        "snippet": "allowlist_set = tenants_subparsers.add_parser(\"model-allowlist-set\")",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 69,
+        "term": "allowlist",
+        "snippet": "allowlist_set.add_argument(\"--tenant-id\", required=True)",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 70,
+        "term": "allowlist",
+        "snippet": "allowlist_set.add_argument(",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 76,
+        "term": "allowlist",
+        "snippet": "allowlist_set.add_argument(\"--yes\", action=\"store_true\")",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 245,
+        "term": "allowlist",
+        "snippet": "if resource == \"tenants\" and action == \"model-allowlist-get\":",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 249,
+        "term": "allowlist",
+        "snippet": "args, \"GET\", f\"/admin/provision/models/tenants/{tenant_id}/allowlist\"",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 253,
+        "term": "allowlist",
+        "snippet": "if resource == \"tenants\" and action == \"model-allowlist-set\":",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "cli.py",
+        "line": 255,
+        "term": "allowlist",
+        "snippet": "path = f\"/admin/provision/models/tenants/{tenant_id}/allowlist\"",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "identity_binding.py",
+        "line": 26,
+        "term": "audience",
+        "snippet": "audience: str",
+        "class": "token-audience"
+      },
+      {
+        "file": "identity_binding.py",
+        "line": 46,
+        "term": "audience",
+        "snippet": "audience=LEGACY_IDENTITY_PROVIDER_AUDIENCE,",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "identity_binding.py",
+        "line": 77,
+        "term": "audience",
+        "snippet": "audience=binding.audience,",
+        "class": "token-audience"
+      },
+      {
+        "file": "identity_binding.py",
+        "line": 77,
+        "term": "audience",
+        "snippet": "audience=binding.audience,",
+        "class": "token-audience"
+      },
+      {
+        "file": "identity_binding.py",
+        "line": 85,
+        "term": "audience",
+        "snippet": "or identity_provider.audience != binding.audience",
+        "class": "token-audience"
+      },
+      {
+        "file": "identity_binding.py",
+        "line": 85,
+        "term": "audience",
+        "snippet": "or identity_provider.audience != binding.audience",
+        "class": "token-audience"
+      },
+      {
+        "file": "main.py",
+        "line": 248,
+        "term": "audience",
+        "snippet": "# ADR-0094: 交換後のagentトークンが持つべき audience。未設定ならOAuth経路は使えない。",
+        "class": "token-audience"
+      },
+      {
+        "file": "main.py",
+        "line": 249,
+        "term": "audience",
+        "snippet": "app.state.agent_oauth_audience = settings.agent_oauth_audience",
+        "class": "token-audience"
+      },
+      {
+        "file": "main.py",
+        "line": 249,
+        "term": "audience",
+        "snippet": "app.state.agent_oauth_audience = settings.agent_oauth_audience",
+        "class": "token-audience"
+      },
+      {
+        "file": "model_registry_repository.py",
+        "line": 3,
+        "term": "allowlist",
+        "snippet": "Platform-shared assets (providers, models) plus a tenant-scoped allowlist.",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "model_registry_repository.py",
+        "line": 146,
+        "term": "allowlist",
+        "snippet": "def tenant_allowlist_effective_model_ids(db: Session, *, tenant_id: str) -> set[str] | None:",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "model_registry_repository.py",
+        "line": 148,
+        "term": "allowlist",
+        "snippet": "platform-default (allowlist empty = all active registered models allowed).",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "model_registry_repository.py",
+        "line": 150,
+        "term": "allowlist",
+        "snippet": "R3 semantics: a non-empty allowlist is fail-closed -- only the listed models",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "model_registry_repository.py",
+        "line": 157,
+        "term": "allowlist",
+        "snippet": "def set_tenant_model_allowlist(",
+        "class": "model-allowlist"
+      },
+      {
+        "file": "model_registry_repository.py",
+        "line": 164,
+        "term": "allowlist",
+        "snippet": "\"\"\"Replace a tenant's allowlist. Empty list clears it (platform-default).\"\"\"",
+        "class": "cli-argument"
+      },
+      {
+        "file": "models.py",
+        "line": 336,
+        "term": "audience",
+        "snippet": "UniqueConstraint(\"issuer\", \"audience\", name=\"uq_identity_providers_issuer_audience\"),",
+        "class": "token-audience"
+      },
+      {
+        "file": "models.py",
+        "line": 336,
+        "term": "audience",
+        "snippet": "UniqueConstraint(\"issuer\", \"audience\", name=\"uq_identity_providers_issuer_audience\"),",
+        "class": "token-audience"
+      }
+    ],
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "distro": "Ubuntu-24.04",
+    "receiptIsASearchNotAProof": true,
+    "unclassifiedHitsAreReported": 16,
+    "finding": "SUIのAPIパッケージ99ファイルを、受信者を表しうる6語で走査した。ヒットはすべて**tokenのaudience**（JWTが誰宛か）か**modelのallowlist**（テナントが使えるモデルの制限）であり、**文書を誰に見せてよいかを表す欄は見つからなかった**。これは「見つからなかった」であって「存在しない」の証明ではない。独立レビューが指摘したとおり、不在の主張には探索範囲の記録が要る。",
+    "whatThisDoesNotProve": "PDPのコンテキスト属性・対象資源の所有関係・下流のenforcement側に受信者情報が供給される可能性は排除していない。またSUI以外の製品（TEI・SHO・EKI）は未走査である。"
+  },
+  "scope": "Searches every Python module in SUI's API package for six recipient-shaped terms and classifies each hit. It widens a one-file search to the whole package, which is what an absence claim needs; it still is not proof of absence, since the policy engine and enforcement layers are not scanned, and no other product was examined."
+}

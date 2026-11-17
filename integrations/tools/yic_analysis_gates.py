@@ -79,6 +79,8 @@ PORTABLE_CHECKS = (
      "the share action keys on visibility and mode, not on a recipient"),
     ("pdpPayload", "yic_pdp_payload_probe.py",
      "the external PDP body carries no recipient and the field would need three edits"),
+    ("recipientSearch", "yic_recipient_search_probe.py",
+     "a package-wide search for recipient terms, classified, with unclassified hits kept"),
 )
 
 
@@ -112,14 +114,14 @@ def main():
             extra = ["--tai-root", str(root)]
         elif name == "claimCeiling":
             extra = ["--sho-repo", str(root.parent / "sho-composer")]
-        elif name in ("audienceInstrument", "shareGuard", "pdpPayload"):
+        elif name in ("audienceInstrument", "shareGuard", "pdpPayload", "recipientSearch"):
             # These two take the SUI checkout as a third positional argument.
             extra = []
         completed = subprocess.run(
             (
                 [sys.executable, str(path), args.artifact, str(scratch / f"{name}.json"),
                  str(root.parent / "sui-sensemaking")]
-                if name in ("audienceInstrument", "shareGuard", "pdpPayload")
+                if name in ("audienceInstrument", "shareGuard", "pdpPayload", "recipientSearch")
                 else [sys.executable, str(path), *extra,
                       "--artifact", args.artifact,
                       "--out", str(scratch / f"{name}.json")]
