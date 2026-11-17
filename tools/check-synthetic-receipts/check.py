@@ -260,6 +260,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-receipt-gates-2026-11-17.json",
     "evaluations/records/YIC-gate-reproducibility-2026-11-17.json",
     "evaluations/records/YIC-runbook-expectation-2026-11-17.json",
+    "evaluations/records/YIC-preflight-disclosure-2026-11-17.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -657,6 +658,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-preflight-disclosure" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("disclaimsAudienceAndDisclosure") is not True
+                or observed.get("everyTestPassed") is not True
+            ):
+                errors.append(f"the preflight boundary is no longer disclaimed or passing: {relative}")
         if "YIC-runbook-expectation" in relative:
             observed = data.get("observed", {})
             if (
