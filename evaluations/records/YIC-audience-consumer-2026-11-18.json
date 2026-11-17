@@ -1,0 +1,97 @@
+{
+  "schema": "tai.reference.yic-audience-consumer/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Node, driving SHO's consumer CLI on three tickets",
+  "command": "python integrations/tools/yic_audience_consumer_probe.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-audience-consumer-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "shoCommit": "e012691b830758168381dc3f37f300c724516d57",
+    "suiCommit": "",
+    "cases": [
+      {
+        "case": "declared-recipient",
+        "exit": 0,
+        "parsed": true,
+        "acceptedTicket": true,
+        "claims": [
+          "authorityCarried",
+          "conversationHistoryIncluded",
+          "externalDisclosure",
+          "externalSourcesAcquired",
+          "independentReread",
+          "meaningAccepted",
+          "originalSourcesRead",
+          "payloadMatchesTicket",
+          "sessionInheritedAuthority",
+          "sourceRevisionCurrent",
+          "writerInvoked"
+        ],
+        "authorityCarried": false,
+        "externalDisclosure": false,
+        "consumerStatus": "received",
+        "carriedAudience": null,
+        "stderrTail": []
+      },
+      {
+        "case": "unrelated-recipient",
+        "exit": 0,
+        "parsed": true,
+        "acceptedTicket": true,
+        "claims": [
+          "authorityCarried",
+          "conversationHistoryIncluded",
+          "externalDisclosure",
+          "externalSourcesAcquired",
+          "independentReread",
+          "meaningAccepted",
+          "originalSourcesRead",
+          "payloadMatchesTicket",
+          "sessionInheritedAuthority",
+          "sourceRevisionCurrent",
+          "writerInvoked"
+        ],
+        "authorityCarried": false,
+        "externalDisclosure": false,
+        "consumerStatus": "received",
+        "carriedAudience": null,
+        "stderrTail": []
+      },
+      {
+        "case": "both",
+        "exit": 0,
+        "parsed": true,
+        "acceptedTicket": true,
+        "claims": [
+          "authorityCarried",
+          "conversationHistoryIncluded",
+          "externalDisclosure",
+          "externalSourcesAcquired",
+          "independentReread",
+          "meaningAccepted",
+          "originalSourcesRead",
+          "payloadMatchesTicket",
+          "sessionInheritedAuthority",
+          "sourceRevisionCurrent",
+          "writerInvoked"
+        ],
+        "authorityCarried": false,
+        "externalDisclosure": false,
+        "consumerStatus": "received",
+        "carriedAudience": null,
+        "stderrTail": []
+      }
+    ],
+    "consumerAcceptsUnrelatedRecipient": true,
+    "consumerNeverClaimsAuthority": true,
+    "firstAttemptNote": "最初はpayloadのdigestを固定値`sha256:bbbb…`として組んだため、全ケースが`handoff-payload-digest-mismatch`で落ちた。これはConsumerの性質ではなく、こちらのfixtureの誤りである。実際に書くバイトのdigestを計算して再実行した。",
+    "finding": "SHOのConsumer CLIへ、`audience`だけが異なる3つの票を実際に読ませた。`['someone-else']`のような**無関係な受信者を宣言した票も受理される**。Consumerは票を読み直して保持するが、**受信者の妥当性は判定しない**。Consumerのreceiptは`authorityCarried: false`と`externalDisclosure: false`を主張するが、これは権限を持たないという意味であって、受信者が正しいと確認したという意味ではない。**宣言は受信者を制限しない。**"
+  },
+  "scope": "Builds three tickets with SUI's own envelope builder, differing only in audience, and runs SHO's consumer CLI on each. It executes the real consumer but with synthetic tickets; acceptance of an unrelated recipient shows this consumer does not judge recipients, not that no deployment would."
+}
