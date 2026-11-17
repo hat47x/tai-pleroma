@@ -1,0 +1,73 @@
+{
+  "schema": "tai.reference.yic-audience-execution/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Node and esbuild, bundling SUI's envelope validator",
+  "command": "python integrations/tools/yic_audience_execution_probe.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-audience-execution-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiCommit": "",
+    "entry": "src/export/handoff_context_envelope.ts",
+    "fixtureShapeSource": "the product's own handoff_context_envelope.test.ts input()",
+    "cases": [
+      {
+        "case": "valid-one-audience",
+        "accepted": true,
+        "audience": [
+          "sho-composer"
+        ]
+      },
+      {
+        "case": "empty-audience",
+        "accepted": false,
+        "code": "handoff-disclosure-audience-empty",
+        "message": "disclosure.audience must not be empty"
+      },
+      {
+        "case": "non-string-audience-entry",
+        "accepted": false,
+        "code": "handoff-missing-field",
+        "message": "disclosure.audience[] must be a non-empty string"
+      },
+      {
+        "case": "unrelated-recipient",
+        "accepted": true,
+        "audience": [
+          "someone-else"
+        ]
+      },
+      {
+        "case": "wrong-case-recipient",
+        "accepted": true,
+        "audience": [
+          "SHO-Composer"
+        ]
+      },
+      {
+        "case": "many-recipients",
+        "accepted": true,
+        "audience": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    ],
+    "validAccepted": true,
+    "emptyRefused": true,
+    "emptyRefusalCode": "handoff-disclosure-audience-empty",
+    "nonStringRefused": true,
+    "unrelatedRecipientAccepted": true,
+    "wrongCaseRecipientAccepted": true,
+    "manyRecipientsAccepted": true,
+    "finding": "handoff envelopeの検証器を**実行**した。空のリストと非文字列の要素は拒否される。一方、**無関係な受信者名は受理される**、大文字小文字違いも受理される。**この検証器は形式だけを見ており、受信者の妥当性は判定しない。**前ラウンドのソース読み取りと同じ結論を、実行で確認した。",
+    "firstAttemptNote": "最初は欄名から組み立てた票で実行したが、全ケースが`handoff-missing-field`で落ちた。検証器が要求する欄を推測で当てていたためで、製品自身のtest fixtureの形に合わせて再実行した。"
+  },
+  "scope": "Bundles SUI's handoff envelope module and drives its builder with six inputs shaped like the product's own test fixture. It executes the validator on synthetic inputs; it does not exercise the export flow around it, and acceptance of an unrelated recipient shows only that this validator does not judge recipients."
+}

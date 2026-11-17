@@ -89,6 +89,8 @@ PORTABLE_CHECKS = (
      "the handoff envelope has an audience field that nothing decides against"),
     ("perContractClaims", "yic_per_contract_claims_check.py",
      "the document names each contract and carries no blanket claim"),
+    ("audienceExecution", "yic_audience_execution_probe.py",
+     "running the envelope validator: shape refused, an unrelated recipient accepted"),
 )
 
 
