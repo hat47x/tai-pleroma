@@ -12,14 +12,14 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 18,
+    "checksRequested": 19,
     "excluded": [
       {
         "check": "gateReproducibility",
         "reason": "rewrites tracked receipts by design; not read-only"
       }
     ],
-    "checksRun": 18,
+    "checksRun": 19,
     "results": {
       "readmeCoverage": {
         "ran": true,
@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 197, \"linksChecked\": 2093, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 197, \"linksChecked\": 2109, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -68,7 +68,7 @@
         "question": "every gate is cited and non-PASS citations are caveated",
         "exit": 0,
         "passed": true,
-        "tail": "{\"citations\": 23, \"distinct\": 17, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
+        "tail": "{\"citations\": 27, \"distinct\": 21, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
       },
       "g1Packet": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 46, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 55, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 45, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 54, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -117,7 +117,7 @@
         "question": "a universal claim states its population",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receiptsWithUniversalClaims\": 55, \"withoutCount\": 0, \"passed\": true}"
+        "tail": "{\"receiptsWithUniversalClaims\": 57, \"withoutCount\": 0, \"passed\": true}"
       },
       "sectionOrder": {
         "ran": true,
@@ -145,7 +145,14 @@
         "question": "a proposal for a product contract names its owner and does not claim a decision",
         "exit": 0,
         "passed": true,
-        "tail": "{\"requirements\": 6, \"unsatisfied\": [], \"assertsDecided\": false, \"passed\": true}"
+        "tail": "{\"requirements\": 7, \"unsatisfied\": [], \"assertsDecided\": false, \"passed\": true}"
+      },
+      "exhaustionClaim": {
+        "ran": true,
+        "question": "a dated 'nothing further can be done' claim acknowledges later work",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"later\": 62, \"listed\": 8, \"notNamedIndividually\": 54, \"passed\": true}"
       }
     },
     "scriptsMissing": [],
