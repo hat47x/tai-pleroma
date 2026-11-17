@@ -101,7 +101,7 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 	switch {
 	case requestedID(session) != "":
 		res.Unsupported = []string{"session:resume"}
-	case len(t.Tools) > 0:
+	case len(t.Tools) > 0 || len(t.Pins.ToolSchemas) > 0:
 		res.Unsupported = []string{"tool:offer-binding"}
 	case len(t.Skills) > 0 || len(t.Pins.Skills) > 0:
 		res.Unsupported = []string{"skill:placement"}
