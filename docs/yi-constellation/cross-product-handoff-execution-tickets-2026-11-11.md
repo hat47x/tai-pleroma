@@ -896,7 +896,7 @@ TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583�
 | --- | --- | --- |
 | **QH-RESOLVE-09** | TEI main #5197の`ResolvedSet.Capability`は、候補0件と複数件の双方で`false`を返し得る。#5204の`Supports*`は宣言内の所属判定。#5205は`.tei.md` Parser未選択時に選択候補とmanifest設定方法を案内。**いずれもmain統合済みで、裏づけのテストを固定commitで実行した**（[receipt](../../../evaluations/records/YIC-qh-resolve-09-2026-11-16.json)、`a44b0ed2`）。「曖昧」と「不在」が同じ結果になること、同一IDの別Kindが曖昧でないこと、単一Providerが識別子で答えることは、いずれもPASSで固定されている。`internal/plugin/runtime`のSupports系は3件がSKIP（対象外の環境要因）で、失敗は0 | その`false`をCapability不存在へ昇格させない。`Supports=true`をLoaded/Invoked/Grantedと呼ばない。これは**読み手の判断に残り、テストでは固定されていない**。既存Product/TAI #488 |
 | **QH-A0-RUN-10** | TAI [#693](https://github.com/hat47x/tai-pleroma/pull/693)の固定TEI `926c8f2e3511`に対する8件のProduct読取回帰とclean clone実行記録。対象HEADの全14 CI Job success、mainへ統合済み（merge `5e6b44eb`） | Product単独A0の限定証拠。外部Harness、実Provider、現在Grant、Consumer受領を未実行のまま保持 |
-| **QH-CLI-RANGE-11** | TAI [#695](https://github.com/hat47x/tai-pleroma/pull/695)の同じ固定TEIで5 read-only CLIを試したPR。実`inspect`のSource offset/line/column、Source Index Fingerprint、`validate`のWarningを分ける。確認時点open／競合あり、対象HEADの全14 CI Job success | `ok:true`でWarning 0としない。実CLIで見つかったSource位置から二次開示・Owner意味受理・別Product受信を推定しない |
+| **QH-CLI-RANGE-11** | TAI [main #695](https://github.com/hat47x/tai-pleroma/pull/695)の固定TEI `926c8f2e3511`で、5 read-only CLIを実行したReceiptがmainに存在する。`inspect`は元Source offset/line/columnとSource Index Fingerprint、`validate`は警告3件を返した。対象HEADの14 CI Job success | `ok:true`をWarningなしと読まない。Source位置を意味受理・外部Audience開示・別Process Consumer受領へ昇格しない |
 | **QH-REVALIDATE-12** | TEI [#5198](https://github.com/hat47x/tei-platform/pull/5198)の`-expected-fingerprint`／`STALE_SNAPSHOT`を実バイナリで確認済み（[receipt](../../../evaluations/records/YIC-qh-revalidate-2026-11-16.json)）。現行main `a44b0ed2`で、`trace`が一致する**`snapshotFingerprint`**を受理して`ok:true`・exit 0、誤った指紋を`STALE_SNAPSHOT`・exit 1で拒否する。`inspect`・`model locate`・`model catalog`は常にJSONを返し、`-json`も`-expected-fingerprint`も受け付けない（`INVALID_ARGUMENT`）。`validate`だけが`-json`を受ける | ガードは`trace`にだけ在り、他のread commandへ広がったとはしない。`worldFingerprint`と`snapshotFingerprint`は別物で、前者を渡すと正しい呼出しでも`STALE_SNAPSHOT`になる。Source版と現在Grantを混ぜない |
 | **QH-FIELD-13** | TEI main #5156のpure Whole Recordと明示2 Field Projection：追加FieldがWholeで残り、Field投影では落ちる。必須欠落と明示NULLを別に検査。**main統合済みで、固定commitで実行した**（[receipt](../../../evaluations/records/YIC-qh-field-13-2026-11-16.json)、`a44b0ed2`、`internal/plugin/transform`の1テストがPASS）。検査内容は、`internalNote`がWholeでは残り、明示2 Field投影では`len(Object)==2`になること、および必須欠落・明示NULLを別の値として扱うこと | 出力の形が正しいだけで実Port Binding／Source完全性／RecipientのField公開権限／Providerを合格にしない |
 
@@ -904,4 +904,24 @@ TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583�
 
 **初回の実Consumer試験の受入順**：①同一固定Product・公開Workspaceで実CLI/Toolに到達し、SubjectとSource Range・Warningsを記録、②当該CLIが受理するなら期待版を引き渡して再読し、受理しなければ「前提未検証」と留保、③明示Field集合を元Productの公開Projection候補に限定し、現在のAudience／GrantをProduct Ownerに確認、④受取側が別Processで実Bodyを読み、その値・順序・Source参照を独立Expectedと比較、⑤必要性が示されたTaskに限りB0 Tool-onlyとB1 Product Skill、続いてB2 TAI Skillの増分を試す。D0〜D5の局所記録からE0〜E3の実証へ進めても、同じAttemptの外部C/Hを省略しない。
 
-**実施・未実施の境界**：TAI #693はmain統合済みで対象HEAD CI completed/success、#695は対象HEAD CI successだが競合があり未マージ。TEI #5198も確認時点で未マージ。TAI main #694はGoファイル13件のCRLFによる既存`gofmt`失敗を修正し、対象PR CI completed/success。異なるPR HEADの合格を合成せず、失敗を隠さない。外部H2/H3の比較適格は記録上0/4のままで、TAI #168のG0/G1/G2とTEI #4583のWindows Stage1→Stage2を独立P0として保つ。今回のHandoff/Consumer、実Grant、Owner意味受理は**NOT RUN**。
+**実施・未実施の境界**：TAI #693/#695はmainへ統合済みで各対象HEAD CI success。TEI #5198もmain統合済みだが、TAI #704が固定Binaryで観測した前提指紋ガードは`trace`のみ。#705/#706はCapabilityの曖昧さとpure Field投影を実際に再試験し、#707で5枚のカードの到達を最大Rと整理した。#708の開示Section選択はPの許可ではなく、#709の`authorityLimits`保持検査はClaimの正当性を保証しない。異なるProduct HEAD・Host・Attemptの合格を混ぜない。TAI #168の外部H2/H3比較適格は記録上0/4、TEI #4583のWindows Stage1→Stage2は独立P0である。正式Provider効果、Audience認可、P/T/C/Hの実受入は**NOT RUN**。
+
+### 10.16 一件の受注変更をTool-onlyで通し、必要なときだけSkillの増分を計る
+
+[TEI plan/NOW.md](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)で定めた「受注の一変更」をYIC側の最初の作業として採用する。ただし**TEIの実装優先順位はNOW.mdが正本**であり、YICは別の到達点やRunnerを追加しない。まず製品内で完結するB0 Tool-onlyを観測し、B1 Product Skill／B2 TAI横断Skillを完成条件として先に課さない。
+
+| 製品側の段階 | 既存入口と実測・未完了 | YICが実際に保持する根拠 |
+| --- | --- | --- |
+| 1. 受注一件の明細を実DBから読む | [TEI main #5300](https://github.com/hat47x/tei-platform/pull/5300)の`tei view -environment development`で実PostgreSQLの行を読む限定入口がある | 使用したWorkspace/Environment、受注ID、実DB Query/Read、行ID、取得範囲と`partial`、現在のSource/Rule |
+| 2. 各行のRule判定を得る | [main #5271](https://github.com/hat47x/tei-platform/pull/5271)の実Query行→Ruleの限定試験、[main #5304](https://github.com/hat47x/tei-platform/pull/5304)の同Workspace `validate`→実Readを利用 | 行ごとの`satisfied`／`not-satisfied`／`undecided`、理由、独立Expected、全件性を主張できないRuleの留保 |
+| 3. 一件のRuleを書き換え、例を足す | 既存の`*.tei.md`／`tei.authoring/v1`を使用。変更による元Source Revisionの失効は別に確認 | 変更前後のRule ID・Source位置・例表とExpected、変更した意味とOperator |
+| 4. `tei validate`後に再読する | 同じWorkspaceと実DBで読直し、変更前後の期待が異なることを確かめる | `validate`のError/Warning、選択した実現方式、実ReadとRule結果の差、未取得/NULL/partialの理由 |
+| 5. 生成Web画面で同じ答えを見る | **未完了**。Web Consumerの実動作と生成Bundleの一致を別Expectedで検証 | 画面が実際に受け取った値・Rule ID・順序・状態・表示、未実行なら`NOT RUN` |
+
+**既存の先行カードの利用範囲**：QH-RESOLVE-09〜FIELD-13は、[TAI #707のI/R/P/T/C/H整理](irptch-reach-2026-11-16.md)で最大Rまでの局所確認として扱う。[TAI #708](https://github.com/hat47x/tai-pleroma/pull/708)が実測した`knowledge-context -disclose`のSection選択は、受信者別の開示許可（P）を立証しない。[TAI #709](https://github.com/hat47x/tai-pleroma/pull/709)の`authorityLimits`保存確認も、その限界を破る結論を機械的に拒否する機能ではない。したがって**局所CLIを使うために外部開示Pを無条件に要求しない**一方、別Product・外部AIへ値や判定結果を渡す際には、目的・受信者・Audience・現在Grant・必要最小限のField／SectionをProduct/Host Ownerが判定する。認可されない場合は送らず、局所作業の証拠だけを保持する。
+
+**最小の反証**：同じ許可投影を持つ二つのSourceで、隠れている行の有無によって全件Claimが変わる場合、外部Consumerは投影だけから全件成立と断定しない。逆に公開された実Rowの違反が確定している場合は、partialであることを理由にその違反まで不明にしない。外部へ返す「判定不能」「対象なし」の区別そのものが機密を漏らす場合もあるため、外部への応答分類は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)のOwner判断に委ねる。新しい任意SQL／Predicateを受け付ける共通判定APIを設けない。
+
+**Skill比較の開始条件**：B0で上の五段を実行・独立Expectedで確認してから、Toolの発見やRule修正手順で人が迷う実例がある場合にだけ、同一TaskのB1を別Attemptで比較する。別Product受領が必要になった場合に限りB2を追加し、受信者別P→T→C→Hを個別に検収する。TAI #168のG0 Read-deny／G1実送出／G2完全Tool Replyと固定H2→H3→H3→H2の独立4Session（現状比較適格0/4）、TEIの非Plugin Windows Stage1→Stage2（生成器を触らず定義変更→次のStudioへ反映）の独立P0を変更しない。
+
+本節は次に接続する具体的な製品コード・独立Expected・Owner境界を示した**実行票の更新**であり、五段すべてが既に一巡したという記録でも、外部Tool/Consumerの新しい実行証拠でもない。
