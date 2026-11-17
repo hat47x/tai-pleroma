@@ -12,8 +12,14 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 11,
-    "checksRun": 11,
+    "checksRequested": 17,
+    "excluded": [
+      {
+        "check": "gateReproducibility",
+        "reason": "rewrites tracked receipts by design; not read-only"
+      }
+    ],
+    "checksRun": 17,
     "results": {
       "readmeCoverage": {
         "ran": true,
@@ -27,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 195, \"linksChecked\": 2081, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 195, \"linksChecked\": 2082, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -83,19 +89,61 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 36, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 40, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 35, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 39, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+      },
+      "reachTable": {
+        "ran": true,
+        "question": "every reach mark is backed by its receipt",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"cards\": 5, \"mismatched\": [], \"missingRows\": [], \"passed\": true}"
+      },
+      "runbookExpectation": {
+        "ran": true,
+        "question": "the runbook's expected numbers match the live counts",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"stale\": [], \"passed\": true}"
+      },
+      "universalClaim": {
+        "ran": true,
+        "question": "a universal claim states its population",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receiptsWithUniversalClaims\": 50, \"withoutCount\": 0, \"passed\": true}"
+      },
+      "sectionOrder": {
+        "ran": true,
+        "question": "the reach document's sections ascend",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"headings\": 15, \"outOfOrder\": [], \"missingTops\": [], \"passed\": true}"
+      },
+      "suiteInvocation": {
+        "ran": true,
+        "question": "the suite records the argv it ran with",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"sourceRecordsInvocation\": true, \"receiptHasInvocation\": false, \"placeholder\": true, \"missing\": [\"checker\"], \"passed\": true}"
+      },
+      "suiteStepAccounting": {
+        "ran": true,
+        "question": "registered steps and recorded steps reconcile",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"keyed\": 97, \"calls\": 108, \"recorded\": 107, \"conditional\": 0, \"neverRecorded\": [\"checker\"], \"passed\": true}"
       }
     },
     "scriptsMissing": [],
     "failed": [],
-    "scratchDirectory": "C:\\Users\\yhata\\AppData\\Local\\Temp\\yic-doc-gates-bz1j7u0g",
+    "usedScratchDirectory": true,
     "wroteIntoTheTree": false,
     "everyDocumentCheckRan": true,
     "everyDocumentCheckPassed": true,

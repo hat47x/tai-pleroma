@@ -186,7 +186,7 @@ def main():
     missing, failed = classify(results)
     checks = {
         "wroteIntoTheTree": not args.no_write,
-        "scratchDirectory": str(scratch) if args.no_write else "",
+        "usedScratchDirectory": bool(args.no_write),
         "gatesRequested": len(GATES),
         "gatesRun": len([item for item in results.values() if item["ran"]]),
         "results": results,

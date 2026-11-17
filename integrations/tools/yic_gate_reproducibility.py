@@ -40,7 +40,8 @@ def digest(path):
 
 
 def snapshot(root, names):
-    return {name: digest(root / name) for name in names}
+    """Digest each receipt, keyed by file name so scratch paths do not mask equality."""
+    return {Path(name).name: digest(root / name) for name in names}
 
 
 def main():
@@ -59,14 +60,27 @@ def main():
     for run in (1, 2):
         target = root / "evaluations/records/YIC-receipt-gates-2026-11-17.json"
         completed = subprocess.run(
-            [sys.executable, str(gates), "--artifact", args.artifact, "--out", str(target)],
+            [sys.executable, str(gates), "--no-write",
+             "--artifact", args.artifact, "--out", str(target)],
             cwd=root, capture_output=True, text=True,
             encoding="utf-8", errors="replace",
         )
         if completed.returncode != 0:
             print(completed.stdout, completed.stderr, file=sys.stderr)
             return 1
-        names = receipts_written_by_gates(root)
+        # The children wrote into the aggregate's scratch directory; compare those.
+        produced = json.loads(target.read_text(encoding="utf-8"))
+        scratch = (produced.get("observed") or {}).get("scratchDirectory")
+        if scratch and Path(scratch).exists():
+            names = tuple(
+                str(Path(scratch) / Path(relative).name)
+                for relative in receipts_written_by_gates(root)
+            )
+            # Key the snapshot by file name so two different scratch directories can
+            # still be compared on content.
+            names = tuple(names)
+        else:
+            names = receipts_written_by_gates(root)
         outputs.append({
             "run": run,
             "receipts": snapshot(root, names + (AGGREGATE_RECEIPT,)),
