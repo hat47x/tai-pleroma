@@ -37,7 +37,9 @@ func TestCodexExecRunIsBoundedAndNeverProductAccepted(t *testing.T) {
 	a := NewCodexExecAdapter("/fixed/git/worktree")
 	a.Runner = fake
 	r, err := a.Run(context.Background(), Task{ID: "codex-1", Prompt: "Explain Source A."}, nil)
-	if err != nil { t.Fatal(err) }
+	if err != nil {
+		t.Fatal(err)
+	}
 	if r.Transport != TransportDelivered || r.Run != RunCompleted ||
 		r.Session.State != SessionCreated || r.Session.ExternalID != "thread-1" {
 		t.Fatalf("unexpected result: %+v", r)
@@ -68,105 +70,117 @@ func TestCodexExecRunIsBoundedAndNeverProductAccepted(t *testing.T) {
 
 func TestCodexExecRejectsUnboundCapabilitiesBeforeLaunch(t *testing.T) {
 	tests := []struct {
-		name string
-		task Task
+		name    string
+		task    Task
 		session *SessionRef
-		want string
+		want    string
 	}{
-		{name:"tool",task:Task{Prompt:"hello",Tools:[]ToolOffer{{Name:"tei_model_catalog"}}},want:"tool:offer-binding"},
-		{name:"skill",task:Task{Prompt:"hello",Skills:[]SkillPin{{ID:"tei"}}},want:"skill:placement"},
-		{name:"context",task:Task{Prompt:"hello",ContextRefs:[]ContextRef{{Kind:"source",Ref:"A"}}},want:"context:projection"},
-		{name:"resume",task:Task{Prompt:"hello"},session:&SessionRef{ExternalID:"old"},want:"session:resume"},
-		{name:"prompt",task:Task{},want:"task:empty-prompt"},
+		{name: "tool", task: Task{Prompt: "hello", Tools: []ToolOffer{{Name: "tei_model_catalog"}}}, want: "tool:offer-binding"},
+		{name: "skill", task: Task{Prompt: "hello", Skills: []SkillPin{{ID: "tei"}}}, want: "skill:placement"},
+		{name: "context", task: Task{Prompt: "hello", ContextRefs: []ContextRef{{Kind: "source", Ref: "A"}}}, want: "context:projection"},
+		{name: "resume", task: Task{Prompt: "hello"}, session: &SessionRef{ExternalID: "old"}, want: "session:resume"},
+		{name: "prompt", task: Task{}, want: "task:empty-prompt"},
 	}
 	for _, tc := range tests {
-		t.Run(tc.name,func(t *testing.T){
+		t.Run(tc.name, func(t *testing.T) {
 			f := &FakeRunner{}
 			a := NewCodexExecAdapter("/fixed")
 			a.Runner = f
-			got,err := a.Run(context.Background(),tc.task,tc.session)
-			if err!=nil {t.Fatal(err)}
-			if got.Transport!=TransportNotAttempted || got.Run!=RunUnknown || len(f.Calls)!=0 ||
-				len(got.Unsupported)!=1 || got.Unsupported[0]!=tc.want {
-				t.Fatalf("did not fail closed: %+v",got)
+			got, err := a.Run(context.Background(), tc.task, tc.session)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got.Transport != TransportNotAttempted || got.Run != RunUnknown || len(f.Calls) != 0 ||
+				len(got.Unsupported) != 1 || got.Unsupported[0] != tc.want {
+				t.Fatalf("did not fail closed: %+v", got)
 			}
 		})
 	}
 }
 
 func TestCodexExecIncompleteResultsDoNotPass(t *testing.T) {
-	tests := []struct {name, raw string; exit int; want RunState}{
-		{"failed-turn",strings.Replace(codexOKJSONL,`{"type":"turn.completed","usage":{"input_tokens":10,"output_tokens":7}}`,`{"type":"turn.failed","error":{"message":"out of quota"}}`,1),1,RunError},
-		{"incomplete-item",`{"type":"thread.started","thread_id":"a"}
+	tests := []struct {
+		name, raw string
+		exit      int
+		want      RunState
+	}{
+		{"failed-turn", strings.Replace(codexOKJSONL, `{"type":"turn.completed","usage":{"input_tokens":10,"output_tokens":7}}`, `{"type":"turn.failed","error":{"message":"out of quota"}}`, 1), 1, RunError},
+		{"incomplete-item", `{"type":"thread.started","thread_id":"a"}
 {"type":"turn.started"}
 {"type":"item.started","item":{"id":"m","type":"mcp_tool_call"}}
 {"type":"turn.completed","usage":{}}
-`,0,RunUnknown},
-		{"no-terminal",`{"type":"thread.started","thread_id":"a"}
+`, 0, RunUnknown},
+		{"no-terminal", `{"type":"thread.started","thread_id":"a"}
 {"type":"turn.started"}
-`,0,RunUnknown},
-		{"bad-json",codexOKJSONL+`{"type":"item.`,0,RunUnknown},
-		{"exit-nonzero",codexOKJSONL,7,RunError},
-		{"no-thread",`{"type":"turn.started"}
+`, 0, RunUnknown},
+		{"bad-json", codexOKJSONL + `{"type":"item.`, 0, RunUnknown},
+		{"exit-nonzero", codexOKJSONL, 7, RunError},
+		{"no-thread", `{"type":"turn.started"}
 {"type":"turn.completed","usage":{}}
-`,0,RunUnknown},
+`, 0, RunUnknown},
 	}
 	for _, tc := range tests {
-		t.Run(tc.name,func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			a := NewCodexExecAdapter("/fixed")
-			a.Runner = &FakeRunner{Default: ExecResult{ExitCode:tc.exit,Stdout:[]byte(tc.raw)}}
-			got,err := a.Run(context.Background(),Task{Prompt:"safe"},nil)
-			if err!=nil { t.Fatal(err) }
-			if got.Run!=tc.want || got.Receipt.State!=ReceiptNotObserved {
-				t.Fatalf("incorrect result %s: %+v",tc.name,got)
+			a.Runner = &FakeRunner{Default: ExecResult{ExitCode: tc.exit, Stdout: []byte(tc.raw)}}
+			got, err := a.Run(context.Background(), Task{Prompt: "safe"}, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got.Run != tc.want || got.Receipt.State != ReceiptNotObserved {
+				t.Fatalf("incorrect result %s: %+v", tc.name, got)
 			}
 		})
 	}
 }
 
 func TestCodexExecRefusesOversizedOutputAndUnknownRoot(t *testing.T) {
-	f := &FakeRunner{Default: ExecResult{ExitCode:0,Stdout:[]byte(codexOKJSONL)}}
-	a:=NewCodexExecAdapter("")
-	a.Runner=f
-	r,err:=a.Run(context.Background(),Task{Prompt:"safe"},nil)
-	if err!=nil || len(r.Unsupported)!=1 || r.Unsupported[0]!="workspace:unqualified" || len(f.Calls)!=0 {
-		t.Fatalf("unqualified workspace must fail: %+v %v",r,err)
+	f := &FakeRunner{Default: ExecResult{ExitCode: 0, Stdout: []byte(codexOKJSONL)}}
+	a := NewCodexExecAdapter("")
+	a.Runner = f
+	r, err := a.Run(context.Background(), Task{Prompt: "safe"}, nil)
+	if err != nil || len(r.Unsupported) != 1 || r.Unsupported[0] != "workspace:unqualified" || len(f.Calls) != 0 {
+		t.Fatalf("unqualified workspace must fail: %+v %v", r, err)
 	}
-	a.WorkDir="/fixed"
-	r,err=a.Run(context.Background(),Task{Prompt:"safe",Limits:Limits{MaxOutBytes:8}},nil)
-	if err!=nil || r.Run!=RunUnknown || r.Reason!="output-limit" || len(f.Calls)!=1 {
-		t.Fatalf("output limit did not fail safely: %+v %v",r,err)
+	a.WorkDir = "/fixed"
+	r, err = a.Run(context.Background(), Task{Prompt: "safe", Limits: Limits{MaxOutBytes: 8}}, nil)
+	if err != nil || r.Run != RunUnknown || r.Reason != "output-limit" || len(f.Calls) != 1 {
+		t.Fatalf("output limit did not fail safely: %+v %v", r, err)
 	}
 }
 
 func TestCodexExecProbeDoesNotAssumeInstallation(t *testing.T) {
-	a:=NewCodexExecAdapter("/fixed")
-	a.PathResolver=FakePathResolver{Paths:map[string]string{}}
-	unavailable,err:=a.Probe(context.Background())
-	if err!=nil || unavailable.Reachable { t.Fatalf("probe fabricated success: %+v %v",unavailable,err)}
-	f:=&FakeRunner{Default:ExecResult{ExitCode:0,Stdout:[]byte("codex-cli 1.2")}}
-	a.Runner=f
-	a.PathResolver=FakePathResolver{Paths:map[string]string{"codex":"/binary/codex"}}
-	available,err:=a.Probe(context.Background())
-	if err!=nil || !available.Reachable || available.Detail["version"]!="codex-cli 1.2" ||
-		len(f.Calls)!=1 || len(f.Calls[0].Argv)!=2 || f.Calls[0].Argv[1]!="--version" {
-		t.Fatalf("version probe unexpected: %+v %v",available,err)
+	a := NewCodexExecAdapter("/fixed")
+	a.PathResolver = FakePathResolver{Paths: map[string]string{}}
+	unavailable, err := a.Probe(context.Background())
+	if err != nil || unavailable.Reachable {
+		t.Fatalf("probe fabricated success: %+v %v", unavailable, err)
+	}
+	f := &FakeRunner{Default: ExecResult{ExitCode: 0, Stdout: []byte("codex-cli 1.2")}}
+	a.Runner = f
+	a.PathResolver = FakePathResolver{Paths: map[string]string{"codex": "/binary/codex"}}
+	available, err := a.Probe(context.Background())
+	if err != nil || !available.Reachable || available.Detail["version"] != "codex-cli 1.2" ||
+		len(f.Calls) != 1 || len(f.Calls[0].Argv) != 2 || f.Calls[0].Argv[1] != "--version" {
+		t.Fatalf("version probe unexpected: %+v %v", available, err)
 	}
 }
 
 func TestParseCodexExecUnknownEventAndSplitTerminal(t *testing.T) {
-	s,err:=ParseCodexExecJSONL([]byte(`{"type":"thread.started","thread_id":"abc"}
+	s, err := ParseCodexExecJSONL([]byte(`{"type":"thread.started","thread_id":"abc"}
 {"type":"turn.started"}
 {"type":"experimental.new-kind","token":"unknown"}
 {"type":"turn.completed","usage":{}}
 `))
-	if err!=nil || s.UnknownEvents!=1 || s.Terminal!="turn.completed" {
-		t.Fatalf("unknown event should remain observable: %+v %v",s,err)
+	if err != nil || s.UnknownEvents != 1 || s.Terminal != "turn.completed" {
+		t.Fatalf("unknown event should remain observable: %+v %v", s, err)
 	}
-	_,err=ParseCodexExecJSONL([]byte(`{"type":"thread.started","thread_id":"abc"}
+	_, err = ParseCodexExecJSONL([]byte(`{"type":"thread.started","thread_id":"abc"}
 {"type":"turn.started"}
 {"type":"turn.completed","usage":{}}
 {"type":"turn.failed","error":{"message":"after completion"}}
 `))
-	if err==nil { t.Fatal("conflicting terminal accepted") }
+	if err == nil {
+		t.Fatal("conflicting terminal accepted")
+	}
 }
