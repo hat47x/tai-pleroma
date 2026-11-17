@@ -68,6 +68,12 @@ Adapterが提供する補助:
 | `ObserveSkillUse` + `ObserveSkillPair` | Skill LoadStateをtool callから判定しH2/H3の適格性を出す | 正答の比較をしない |
 | `FileReadback` / `ClaimReadback` / `DirectReadback` | Consumerが読んだbytesをdigest・claimで照合する | producerの自己申告をreceiptにしない |
 
+**Codexの扱い（2026年11月18日確定方針）**：Codexは更新の速い**外部Harness**として接続する。CodexのRust Core、Agent Loop、Session Store、内部PolicyをYICへ埋め込まない。公開Sourceは接続仕様と負例を検討するための参考とし、YIC固有の機能は既存の型付きProduct API、TAI Activity/Handoff、Host Grant、EKI Receipt、AdapterのCapability境界へ戻す。詳細は[接続判断票](../../docs/yi-constellation/codex-source-integration-decision-2026-11-17.md)を参照する。
+
+Codex CLIの自動更新に備え、`-codex-version` へ `codex --version` の**完全一致文字列**を指定できる。指定値とProbeの実測値が違えば `ineligible` とし、直接`Run`呼出しでもTask開始前に停止する。未指定ならC1契約上のバージョン資格は未確認。これはバイナリSHA／プロセス隔離を保証するものではない。
+
+JSONLに未知のThread／Turn／Item**制御イベント**が追加されたときは、完了判定を`unknown`に縮退し、新版のWire契約を確認する。任意の非制御Telemetryは件数を残す。Terminal後の追加イベントは不完全なStreamとして拒否する。Codexの変更を追って内部型を取り込むのではなく、この境界で互換性を検証する。
+
 ### Codex exec：限定的な追加（C1）
 
 `codex-exec` は `codex exec --json --ephemeral --sandbox read-only -` の**単発JSONL経路**を扱う。Task本文はargvでなくstdinへ渡し、実Toolの結果とTurnの終端を分離して記録する。Codexの公開Source（`640b86dc879ceaaa126cdf183b417731e291f476`）の `exec_events.rs` を参照して実装した**契約試験段階**であり、Codex実バイナリ・認証・Tool・OS隔離の実接続は未実施。

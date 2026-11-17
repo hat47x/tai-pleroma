@@ -30,24 +30,25 @@ import (
 
 func main() {
 	var (
-		taskPath = flag.String("task", "", "path to a Task JSON file")
-		outPath  = flag.String("out", "", "path to write the pilot report JSON")
-		names    = flag.String("adapters", "direct-control", "comma-separated adapter names")
-		real     = flag.Bool("real", false, "allow real connections to external harnesses")
-		timeout  = flag.Duration("timeout", 20*time.Minute, "overall timeout")
-		dshProf  = flag.String("dsh-profile", "headless", "DSH profile to boot")
-		dshCLI   = flag.String("dsh-cli", "dsh", "DSH executable")
-		dshMode  = flag.String("dsh-permission-mode", "", "DSH --permission-mode (empty: harness default)")
-		dshAppr  = flag.String("dsh-approval-policy", "", "DSH --approval-policy")
-		dshDirs  = flag.String("dsh-add-dir", "", "comma-separated --add-dir values")
-		dshPatch = flag.String("dsh-patch", "", "comma-separated --patch overlays")
-		codexCLI = flag.String("codex-cli", "codex", "Codex CLI executable for codex-exec")
-		ccCLI    = flag.String("claude-cli", "claude", "Claude Code executable")
-		ccTools  = flag.String("claude-tools", "", "Claude Code --tools value")
-		ccMode   = flag.String("claude-permission-mode", "", "Claude Code --permission-mode")
-		ccPrompt = flag.String("claude-permission-prompts", "none", "Claude Code --permission-prompts")
-		ccDirs   = flag.String("claude-add-dir", "", "comma-separated --add-dir values")
-		ccMCP    = flag.String("claude-mcp-config", "", "comma-separated --mcp-config values")
+		taskPath     = flag.String("task", "", "path to a Task JSON file")
+		outPath      = flag.String("out", "", "path to write the pilot report JSON")
+		names        = flag.String("adapters", "direct-control", "comma-separated adapter names")
+		real         = flag.Bool("real", false, "allow real connections to external harnesses")
+		timeout      = flag.Duration("timeout", 20*time.Minute, "overall timeout")
+		dshProf      = flag.String("dsh-profile", "headless", "DSH profile to boot")
+		dshCLI       = flag.String("dsh-cli", "dsh", "DSH executable")
+		dshMode      = flag.String("dsh-permission-mode", "", "DSH --permission-mode (empty: harness default)")
+		dshAppr      = flag.String("dsh-approval-policy", "", "DSH --approval-policy")
+		dshDirs      = flag.String("dsh-add-dir", "", "comma-separated --add-dir values")
+		dshPatch     = flag.String("dsh-patch", "", "comma-separated --patch overlays")
+		codexCLI     = flag.String("codex-cli", "codex", "Codex CLI executable for codex-exec")
+		codexVersion = flag.String("codex-version", "", "exact output of codex --version; empty permits unqualified version")
+		ccCLI        = flag.String("claude-cli", "claude", "Claude Code executable")
+		ccTools      = flag.String("claude-tools", "", "Claude Code --tools value")
+		ccMode       = flag.String("claude-permission-mode", "", "Claude Code --permission-mode")
+		ccPrompt     = flag.String("claude-permission-prompts", "none", "Claude Code --permission-prompts")
+		ccDirs       = flag.String("claude-add-dir", "", "comma-separated --add-dir values")
+		ccMCP        = flag.String("claude-mcp-config", "", "comma-separated --mcp-config values")
 	)
 	flag.Parse()
 
@@ -91,6 +92,7 @@ func main() {
 		case "codex-exec":
 			a := harnessadapter.NewCodexExecAdapter(task.WorkDirHint())
 			a.CLI = *codexCLI
+			a.ExpectedVersion = *codexVersion
 			reg.Register(a)
 		case "claude-code":
 			a := harnessadapter.NewClaudeCodeAdapter(task.WorkDirHint())

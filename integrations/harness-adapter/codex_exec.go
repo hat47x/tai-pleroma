@@ -19,12 +19,13 @@ import (
 // codex-rs/exec/src/{cli.rs,exec_events.rs,lib.rs}. The actual executable and
 // authentication must be qualified separately at the selected version.
 type CodexExecAdapter struct {
-	CLI          string
-	WorkDir      string
-	Timeout      time.Duration
-	Runner       Runner
-	PathResolver PathResolver
-	Clock        func() time.Time
+	CLI             string
+	ExpectedVersion string // exact `codex --version` output; empty means unqualified
+	WorkDir         string
+	Timeout         time.Duration
+	Runner          Runner
+	PathResolver    PathResolver
+	Clock           func() time.Time
 }
 
 func NewCodexExecAdapter(workDir string) *CodexExecAdapter {
@@ -65,10 +66,17 @@ func (a *CodexExecAdapter) Probe(ctx context.Context) (Availability, error) {
 		return Availability{Reachable: false, Reason: "Codex version probe failed",
 			Detail: map[string]string{"family": a.Name(), "probe": "version"}}, nil
 	}
+	version := strings.TrimSpace(string(r.Stdout))
+	if a.ExpectedVersion != "" && version != a.ExpectedVersion {
+		return Availability{Reachable: false,
+			Reason: "Codex version changed since the caller's explicit pin",
+			Detail: map[string]string{"family": a.Name(), "probe": "version", "version": version,
+				"expectedVersion": a.ExpectedVersion}}, nil
+	}
 	return Availability{Reachable: true,
 		Reason: "version probe succeeded; authentication, sandbox and tool access remain unverified",
 		Detail: map[string]string{"family": a.Name(), "probe": "version", "exePath": path,
-			"version": strings.TrimSpace(string(r.Stdout)), "platform": runtime.GOOS}}, nil
+			"version": version, "platform": runtime.GOOS}}, nil
 }
 
 // buildArgv keeps the task text off argv. '-' forces Codex to consume stdin.
@@ -125,6 +133,19 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 		res.Unsupported = []string{"workspace:unqualified"}
 		return res, nil
 	}
+	// A caller that pins a Codex version must not silently run an upgraded
+	// binary. Pilot also probes, but direct Run callers require this check.
+	// The version check is not an OS binary hash or a TOCTOU-safe file lock.
+	if a.ExpectedVersion != "" {
+		availability, err := a.Probe(ctx)
+		if err != nil || !availability.Reachable {
+			res.Unsupported = []string{"harness:version-not-qualified"}
+			res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+				Code: "codex-exec-version-not-qualified", Source: a.Name()})
+			return res, nil
+		}
+		res.Observations["codex-cli-version"] = availability.Detail["version"]
+	}
 	argv := a.buildArgv(t)
 	res.Outbound = append(res.Outbound,
 		OutboundRecord{Direction: "argv", BytesSHA256: DigestString(Quote(argv)),
@@ -167,6 +188,7 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 	res.FinalText = stream.FinalText
 	res.Reason = stream.Terminal
 	res.Observations["unrecognized-events"] = fmt.Sprint(stream.UnknownEvents)
+	res.Observations["unrecognized-control-events"] = fmt.Sprint(stream.UnknownControlEvents)
 	res.Observations["tool-items-unfinished"] = fmt.Sprint(stream.UnfinishedTools)
 	res.Observations["tool-results-missing"] = fmt.Sprint(stream.MissingToolBodies)
 	if stream.ThreadID != "" {
@@ -179,7 +201,7 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 			Code: "codex-exec-invalid-jsonl", Message: parseErr.Error(), Source: a.Name()})
 	}
 	switch {
-	case parseErr != nil || stream.UnfinishedTools > 0 || stream.MissingToolBodies > 0 || stream.Terminal == "" ||
+	case parseErr != nil || stream.UnknownControlEvents > 0 || stream.UnfinishedTools > 0 || stream.MissingToolBodies > 0 || stream.Terminal == "" ||
 		!stream.TurnStarted || stream.ThreadID == "":
 		res.Run = RunUnknown
 	case stream.Terminal == "turn.failed" || stream.Terminal == "error" || exit != 0:
@@ -195,14 +217,15 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 // CodexExecStream is an observation of the JSONL emitted by 'codex exec --json',
 // not the durable conversation history and not a Product receipt.
 type CodexExecStream struct {
-	ThreadID          string
-	TurnStarted       bool
-	Terminal          string
-	FinalText         string
-	ToolCalls         []ToolCallRecord
-	UnknownEvents     int
-	UnfinishedTools   int
-	MissingToolBodies int
+	ThreadID             string
+	TurnStarted          bool
+	Terminal             string
+	FinalText            string
+	ToolCalls            []ToolCallRecord
+	UnknownEvents        int
+	UnknownControlEvents int
+	UnfinishedTools      int
+	MissingToolBodies    int
 }
 
 // ParseCodexExecJSONL decodes complete lines and distinguishes terminal turn
@@ -238,6 +261,11 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 		}
 		if err := json.Unmarshal(b, &ev); err != nil {
 			return result, fmt.Errorf("line %d is not complete JSON", line)
+		}
+		// A new event after terminal indicates that the selected Codex version
+		// does not obey the single-turn wire sequence this adapter understands.
+		if result.Terminal != "" {
+			return result, fmt.Errorf("line %d arrives after terminal event", line)
 		}
 		switch ev.Type {
 		case "thread.started":
@@ -297,6 +325,10 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 			// A partial item does not prove a completed Tool result.
 		default:
 			result.UnknownEvents++
+			if ev.Type == "" || strings.HasPrefix(ev.Type, "thread.") ||
+				strings.HasPrefix(ev.Type, "turn.") || strings.HasPrefix(ev.Type, "item.") {
+				result.UnknownControlEvents++
+			}
 		}
 	}
 	if err := scanner.Err(); err != nil {

@@ -191,3 +191,76 @@ func TestParseCodexExecUnknownEventAndSplitTerminal(t *testing.T) {
 		t.Fatal("conflicting terminal accepted")
 	}
 }
+
+// TestCodexExecExactVersionPin prevents an unattended vendor upgrade from
+// silently qualifying a different external CLI. It is not binary-byte proof.
+func TestCodexExecExactVersionPin(t *testing.T) {
+	const expected = "codex-cli 1.2.0"
+	f := &FakeRunner{Script: []FakeStep{
+		{Match: "--version", Result: ExecResult{ExitCode: 0, Stdout: []byte("codex-cli 1.3.0\n")}},
+		{Match: "exec --json", Result: ExecResult{ExitCode: 0, Stdout: []byte(codexOKJSONL)}},
+	}}
+	a := NewCodexExecAdapter("/fixed")
+	a.Runner = f
+	a.PathResolver = FakePathResolver{Paths: map[string]string{"codex": "/installed/codex"}}
+	a.ExpectedVersion = expected
+
+	unavailable, err := a.Probe(context.Background())
+	if err != nil || unavailable.Reachable || unavailable.Detail["version"] != "codex-cli 1.3.0" {
+		t.Fatalf("upgraded CLI must be ineligible: %+v %v", unavailable, err)
+	}
+	got, err := a.Run(context.Background(), Task{Prompt: "Explain Source A"}, nil)
+	if err != nil || got.Transport != TransportNotAttempted || got.Run != RunUnknown ||
+		len(got.Unsupported) != 1 || got.Unsupported[0] != "harness:version-not-qualified" {
+		t.Fatalf("direct Run bypassed version preflight: %+v %v", got, err)
+	}
+	for _, call := range f.Calls {
+		if len(call.Argv) > 1 && call.Argv[1] == "exec" {
+			t.Fatal("executed an unqualified Codex version")
+		}
+	}
+
+	// The same pin may qualify a known version. A real provider, sandbox and
+	// actual binary digest are independent checks, not inferred from this probe.
+	f.Script[0].Result.Stdout = []byte(expected + "\n")
+	got, err = a.Run(context.Background(), Task{Prompt: "Explain Source A"}, nil)
+	if err != nil || got.Run != RunCompleted || got.Observations["codex-cli-version"] != expected ||
+		got.Receipt.State != ReceiptNotObserved || got.Promoted() {
+		t.Fatalf("qualified version did not preserve result boundaries: %+v %v", got, err)
+	}
+}
+
+func TestCodexExecUnknownControlEventRequiresRequalification(t *testing.T) {
+	const control = "{\"type\":\"turn.new_vendor_stage\"}\n"
+	raw := strings.Replace(codexOKJSONL, "{\"type\":\"turn.completed\"", control+"{\"type\":\"turn.completed\"", 1)
+	s, err := ParseCodexExecJSONL([]byte(raw))
+	if err != nil || s.UnknownEvents != 1 || s.UnknownControlEvents != 1 {
+		t.Fatalf("new lifecycle event not identified: %+v %v", s, err)
+	}
+	a := NewCodexExecAdapter("/fixed")
+	a.Runner = &FakeRunner{Default: ExecResult{ExitCode: 0, Stdout: []byte(raw)}}
+	r, err := a.Run(context.Background(), Task{Prompt: "Explain Source A"}, nil)
+	if err != nil || r.Run != RunUnknown || r.Observations["unrecognized-control-events"] != "1" {
+		t.Fatalf("unknown lifecycle drift treated as completed: %+v %v", r, err)
+	}
+
+	// An unrelated optional telemetry event is visible but does not redefine
+	// the lifecycle; it must not silently disappear from the evidence.
+	metadata := strings.Replace(codexOKJSONL, "{\"type\":\"turn.completed\"",
+		"{\"type\":\"optional.telemetry\"}\n{\"type\":\"turn.completed\"", 1)
+	s, err = ParseCodexExecJSONL([]byte(metadata))
+	if err != nil || s.UnknownEvents != 1 || s.UnknownControlEvents != 0 {
+		t.Fatalf("telemetry event was misclassified: %+v %v", s, err)
+	}
+	a.Runner = &FakeRunner{Default: ExecResult{ExitCode: 0, Stdout: []byte(metadata)}}
+	r, err = a.Run(context.Background(), Task{Prompt: "Explain Source A"}, nil)
+	if err != nil || r.Run != RunCompleted || r.Observations["unrecognized-events"] != "1" {
+		t.Fatalf("harmless optional event was misclassified: %+v %v", r, err)
+	}
+
+	// No later event can be reinterpreted as part of the completed turn.
+	_, err = ParseCodexExecJSONL([]byte(codexOKJSONL + "{\"type\":\"item.updated\",\"item\":{}}\n"))
+	if err == nil {
+		t.Fatal("event after turn terminal was accepted")
+	}
+}

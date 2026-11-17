@@ -1,6 +1,6 @@
 # Codex公開Harnessの活用判断とYIC・TEI接続実行票（2026年11月17日）
 
-> **状態：設計・実装順序の確定候補（Docs-only）。Codexの実接続、Go Adapter、Studio UI、OS隔離、二Harness同条件比較、Owner受理は未実施。** 既存の[Harness Adapter](../../integrations/harness-adapter/README.md)、[投資判断](yic-harness-investment-gates-2026-11-17.md)、[Native Session検証票](native-harness-session-capability-pilot-2026-11-17.md)を具体化する補助資料。新しい共通契約・実行Host・Agent Loop・Session DB・権限正本・Build Engineは追加しない。
+> **状態：接続方針と後続検証の実行票。Go製C1 Adapterと合成JSONL契約試験はmainへ統合済み。実Codex接続、C2 App Server、Studio連携、OS隔離、二Harness同条件比較、Owner受理は未実施。** 既存の[Harness Adapter](../../integrations/harness-adapter/README.md)、[投資判断](yic-harness-investment-gates-2026-11-17.md)、[Native Session検証票](native-harness-session-capability-pilot-2026-11-17.md)を具体化する補助資料。新しい共通契約・実行Host・Agent Loop・Session DB・権限正本・Build Engineは追加しない。
 
 ## 結論：公開ソースは「Harness接続の根拠」として活用する
 
@@ -9,6 +9,38 @@ CodexをYICの唯一の実行基盤にするのではなく、DSH、Claude Code�
 **接続は二つの用途に分ける。** 既存のGo Harness Adapterで同条件比較を始める場合は、非対話型 `codex exec` のイベントと結果を薄く投影する。Studioの継続対話、進捗、割り込み、承認要求を扱う場合は `codex app-server` のNative Sessionを使う。両者の出力を同じJSON形式と仮定しない。最初の実装単位を「App Serverの全面移植」にしない。
 
 TEI Studioでは既存の型付きApplication APIを入口にし、Wails Bridge専用の業務ロジックや新しいAPI正本を作らない。Codexから製品を呼ぶ方向は、各Harnessの既存MCP clientとTEIの既存read-only MCP／CLIを優先する。別個のMCP clientやTEI専用Hostは作らない。
+
+## 判断の優先順位（2026年11月18日追補）：外部Codexを利用し、必要な機能はYICへ
+
+**CodexはYICの内蔵エンジンにしない。** 開発速度の速いCodexのRustコード、Agent Loop、内部Session Store、実行Policy、承認キュー、Transcript形式、Plugin登録処理をYICへコピー／Fork／静的リンクする方式は採用しない。Codexの存在を前提にTEIのGo単一バイナリやProduct単独動作を変更しない。Codexが将来変わっても、YICと各Productは外部Harnessなしで動作し続ける。
+
+Codexの公開ソースから学ぶのは、**機能そのものの構造と、境界・失敗・操作の振る舞い**である。採用する仕組みはCodex以外のHarnessにも役立つ契約・Product APIとして定義し直す。公開実装を読み、実バイナリを別途固定して確認することと、特定の内部実装へ依存することを区別する。
+
+| Codexから参考にする機能 | YIC側に持ち込む機能・Owner | 実装判断と境界 |
+| --- | --- | --- |
+| Thread／Turn／Itemと進捗通知 | TAI Activity／Harness AdapterのNative観測、TEI Studioの実行表示 | Product Operationとは別ID。互換イベントは限定投影し、未知通知はUnknown |
+| 継続、履歴、Fork、Handoff | TAI #271、Native Session機能票 | 実Sessionの再接続と許可済みActivityの別Session引継ぎは別。共通Transcript DBなし |
+| MCP・Tool利用 | 各Productの既存型付きApplication API、Harness AdapterのToolOffer／MCPServerSpec | Codex固有MCP clientをコピーしない。広告、実呼出し、完全Reply、Consumer受領は別確認 |
+| Approvalと実行前確認 | Hostの現在Grant・Audience・Disclosure、Product側のAcceptance | Nativeの承認要求UIは補助。モデルやHarnessの許可がHost権限にはならない |
+| Sandbox／Network／Process境界 | 実OS隔離、Egress制限、TAI #232／#168 | Codexのread-onlyやcwd宣言だけではRoot外read拒否を保証しない |
+| Context管理・Project/Skill | TEI/SUI/SHOの元Sourceから生成した許可済みProjection、YIC既存Skill契約 | 会話履歴から秘密・旧Grantを自動転記しない。配置と実Loadを区別 |
+| Worktree／並列開発／差分確認 | TEI #2017のBranch/HEAD/Pathと既存CI、Ownerレビュー | 別Agent Loop・中央Schedulerを設けない。CI成功とProduct意味受理は別 |
+| 実行費用・Quota・診断 | TAI #234のHarness/Provider/Model Route別観測 | API・Subscription・Gatewayの利用権を推定しない。無断で別課金先に切り替えない |
+| エラー・途中切断・再試行 | EKIのActual Attempt／Effect／Receipt、TAIのUnknown | Native Turn完了、Effect確定、Consumer Readbackを区別。原因不明の副作用を自動再実行しない |
+
+この表は新しい共通正本を作る指示ではなく、既存Ownerが必要な差分を判断するための一覧である。**既存Capability/Tool/Operationで実現できるものは新設せず、初めて検証された不足に限ってAdapterやProductを拡張する。** 最も速い上流追従より、利用者が対象・根拠・安全な実行範囲を保ったまま異なるHarnessを選べることを優先する。
+
+### Codexの更新を受け入れる条件
+
+上流のmain、リリースバイナリ、実行Protocol、モデル提供／課金経路、Sandboxの実効性は**別々の可変要素**である。Codexの新バージョンが公開されただけでは、YICの互換性・開示資格・採用判定を更新しない。
+
+1. **Source調査：** 読み取った上流のexact commit／該当ソース位置／公開仕様・実験的APIの違いを記録する。ソース版が一致しても実バイナリの版・bytes一致を推定しない。
+2. **実行物固定：** 実CLI `codex --version`、パス、SHA-256、Host/OS、Provider/Model Route、Profile、設定／Skill／MCP、実際のCode/Schema組合せを資格票に記録する。新しい `-codex-version` は**出力文字列の厳密一致を任意指定するC1のPreflight**であり、Binary SHA・現在権限・OS隔離の代わりではない。未指定ならバージョンは未資格と明示する。
+3. **Wire契約の確認：** C1は `thread.started` → `turn.started` → Item → Terminalの合成fixtureを維持する。未知のThread/Turn/Item制御イベント、Terminal後の追加イベント、Result本文欠落・不整合は `RunUnknown` またはparse失敗へ縮退し、成功を推定しない。任意の追加Telemetryは無視せず件数を観測する。
+4. **実効Capability再検証：** Codexが提供すると説明する機能、選択版で実際に呼べる操作、Hostが現在許可する範囲、Consumerが実受領した結果を四段に分ける。外部Harnessを切り替えた時もCapabilityとGrantを再確認する。
+5. **段階的な反映：** 差分契約試験→実Codexでの明示的なopt-in試験→TEIの公開read-only一往復→独立G0/G1/G2→必要なNative C2操作の順。変更単位ごとに既存Harness非退行を確認し、失敗した版は使わず既存Product-only／他の適格Harnessへ**利用者が明示的に**縮退する。
+
+**Ambientな設定への注意：** `--ephemeral` はSession保存、`--sandbox read-only` はCodex内の実行要求に関わる宣言であり、親環境の設定・Skill/MCP・Credential・送出先の封じ込めを証明しない。新しい版の利用前にCodexの実設定源と送出を確認し、必要ならHost側で別identity／root／networkを強制する。C1単体のGo契約試験を実隔離のPASSに流用しない。
 
 ## 1. 観測した上流実装と固定する版
 
@@ -124,4 +156,4 @@ TEI Studioでは既存の型付きApplication APIを入口にし、Wails Bridge�
 
 コードの複製・配布が必要になった場合はApache-2.0の許諾・表示条件と依存ライセンスを別途精査する。**公開コードを利用できることは、OpenAIのモデル、アカウント、定額枠を転用できることではない。**
 
-**未確認のまま残す事項：** Codex実Binaryの導入／version／SHA、実Go実装、実MCP・Product Consumer、Host／OS／通信の負例、実Capability／モデル利用権、試験実績、Owner受理。これらを「設計の採用」から実行済みへ昇格させない。
+**未確認のまま残す事項：** Codex実Binaryの導入／version／SHA、実MCP・Product Consumer、Host／OS／通信の負例、実Capability／モデル利用権、実Codex接続・外部E2E試験、Owner受理。GoのC1実装と合成試験はmainへ統合済み。これらを「設計の採用」から実行済みへ昇格させない。
