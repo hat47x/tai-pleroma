@@ -1,0 +1,39 @@
+{
+  "schema": "tai.reference.yic-suite-step-accounting/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 reading the suite source and its receipt",
+  "command": "python integrations/tools/yic_suite_step_accounting.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-suite-step-accounting-2026-11-16.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "source": "integrations/tools/run_suite.py",
+    "receipt": "evaluations/records/TEI-suite-2026-11-03.json",
+    "keyedSteps": 97,
+    "runStepCalls": 108,
+    "assignedSteps": 6,
+    "continuationLineSteps": 101,
+    "registeredSteps": 108,
+    "unexplainedRunStepCalls": 0,
+    "recordedSteps": 107,
+    "receiptResult": "PASS",
+    "duplicateKeys": [],
+    "callsWithoutKey": 11,
+    "recordedButNotKeyed": [],
+    "keyedButNotRecorded": [
+      "checker"
+    ],
+    "explainedBySkipFlag": [],
+    "receiptRecordsItsFlags": false,
+    "countsAreInternallyConsistent": true,
+    "everyKeyedStepAppearsInTheRecord": false,
+    "numbersAreExplainable": false,
+    "finding": "suiteの段数は3つの数で表れる。登録数108、`run_step(`の呼出し数108、receiptに記録された段数107である。登録は3つの書き方に分かれる（辞書リテラル97、実行時の代入6、前の呼出しに続く行5）。登録数と呼出し数は一致し、説明できない呼出しは0件だった。一方で登録済みの`checker`が記録に無い。receiptの`command`は固定のプレースホルダで実行フラグを残さないため、`--skip-checker`による意図的な除外か、記録漏れかを**記録からは判別できない**。判別できないことをそのまま残し、推測で埋めない。"
+  },
+  "scope": "Compares the suite's registered steps, its run_step call count and the steps in one recorded run, and checks that the counts are internally consistent. It does not verify that each step measures what it claims. The recorded run omits one registered step (`checker`); because the receipt's command field is a fixed placeholder, this check cannot tell a deliberate --skip-checker run from an omission, and says so rather than resolving it."
+}
