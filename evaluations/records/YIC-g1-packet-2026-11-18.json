@@ -1,0 +1,151 @@
+{
+  "schema": "tai.reference.yic-g1-packet-readiness/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the G1 packet",
+  "command": "python integrations/tools/yic_g1_packet_readiness.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-g1-packet-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "packet": "docs/yi-constellation/analysis/18-G1レビューパケット.md",
+    "keptCandidates": 15,
+    "movedCandidates": 10,
+    "candidates": 25,
+    "movedRows": [
+      {
+        "id": "003",
+        "name": "輔相の境界",
+        "movedTo": "TAIの非目標",
+        "todo": "レビューの観点として、TAIのREADMEと概要資料の用語を点検する",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "004",
+        "name": "聚の保留",
+        "movedTo": "SUIの受入検査",
+        "todo": "集約の操作ごとの確認を、合成データで試す",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "006",
+        "name": "昇の来歴",
+        "movedTo": "MMIの由来の保持とADR-0028",
+        "todo": "成果から原本へ到達できるかの検査を足す。要求は追加しない",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "007",
+        "name": "汲めることの検査",
+        "movedTo": "SEIのREQ-0005、REQ-0014、受入シナリオ",
+        "todo": "後日の読み直しのシナリオを、実データで試す",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "009",
+        "name": "担い手の交換",
+        "movedTo": "SEIのREQ-0007",
+        "todo": "交換前後の意味の一致を、事例として足す",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "011",
+        "name": "凝命",
+        "movedTo": "TEIのRQ-028",
+        "todo": "漂流の検知を、RQ-028の検査として足す",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "013",
+        "name": "改過としての益",
+        "movedTo": "EKIのRQ-019、RQ-021、RQ-044",
+        "todo": "修正のループを、価値の測り方として設計する",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "014",
+        "name": "反哺の記録",
+        "movedTo": "EKIのRQ-036と受入シナリオ",
+        "todo": "一方的取得の検出を、測り方として設計する",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "015",
+        "name": "損の設計",
+        "movedTo": "EKIのRQ-005、RQ-006、RQ-009、RQ-035",
+        "todo": "減らす操作の効果を、測り方として設計する",
+        "hasDestination": true,
+        "hasTodo": true
+      },
+      {
+        "id": "017",
+        "name": "象徴層の境界",
+        "movedTo": "SEIとMMIの原則",
+        "todo": "系列の運用規則として、READMEに明記する",
+        "hasDestination": true,
+        "hasTodo": true
+      }
+    ],
+    "movedRowsMissingAField": [],
+    "decisions": 6,
+    "judgementCellsEmpty": 15,
+    "filledJudgementCells": [],
+    "candidatesMissingADecisionField": [],
+    "decisionRows": [
+      {
+        "id": "D1",
+        "title": "ハーネスの境界を、どこに置くか",
+        "statesAQuestion": false,
+        "optionLines": 3
+      },
+      {
+        "id": "D2",
+        "title": "TAIを「統合製品」と呼ぶか",
+        "statesAQuestion": false,
+        "optionLines": 3
+      },
+      {
+        "id": "D3",
+        "title": "SHOの状態を、どう示すか",
+        "statesAQuestion": false,
+        "optionLines": 2
+      },
+      {
+        "id": "D4",
+        "title": "坎を、どう扱うか",
+        "statesAQuestion": false,
+        "optionLines": 3
+      },
+      {
+        "id": "D5",
+        "title": "系列全体の要求を、誰が受理するか",
+        "statesAQuestion": false,
+        "optionLines": 3
+      },
+      {
+        "id": "D6",
+        "title": "SHOを、製品、MMIの役割、保留のどれにするか",
+        "statesAQuestion": false,
+        "optionLines": 3
+      }
+    ],
+    "everyJudgementCellIsEmpty": true,
+    "everyCandidateCarriesItsFields": true,
+    "sixDecisionsPresent": true,
+    "readyForADecision": true,
+    "finding": "G1パケットが判断可能な状態かを点検する。判断はOwnerのものであるため、**判断欄が空であること**を合格条件にする。各候補に担当・証拠・推奨が揃い、D1〜D6の6問が存在することを確かめる。"
+  },
+  "scope": "Reads the G1 packet and checks that 25 candidates each carry a class, owner, evidence and recommendation with an empty judgement cell, and that six cross-cutting questions are present. It checks readiness for a decision, never the decision: an empty cell means TAI did not decide, not that the candidate is right, and the reading makes no judgement about whether the evidence is adequate."
+}
