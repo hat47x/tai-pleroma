@@ -12,14 +12,14 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 20,
+    "checksRequested": 21,
     "excluded": [
       {
         "check": "gateReproducibility",
         "reason": "rewrites tracked receipts by design; not read-only"
       }
     ],
-    "checksRun": 20,
+    "checksRun": 21,
     "results": {
       "readmeCoverage": {
         "ran": true,
@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2113, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2114, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 56, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 57, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 55, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 56, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 63, \"listed\": 8, \"notNamedIndividually\": 55, \"passed\": true}"
+        "tail": "{\"later\": 64, \"listed\": 8, \"notNamedIndividually\": 56, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,
@@ -160,6 +160,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"files\": 10, \"unparsed\": [], \"withoutDeclaredLimit\": 0, \"coversFour\": [\"dsh-headless\"], \"passed\": true}"
+      },
+      "codexAdapter": {
+        "ran": true,
+        "question": "the codex-exec adapter's own tests still pass and the CLI is absent",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"passed\": 7, \"skipped\": 0, \"failed\": 0, \"cli\": false, \"evidenceMentions\": 0, \"result\": \"PASS\"}"
       }
     },
     "scriptsMissing": [],
