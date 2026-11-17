@@ -274,6 +274,8 @@ REAL_RECORDS = (
     "evaluations/records/YIC-g1-packet-2026-11-18.json",
     "evaluations/records/YIC-gate-citation-2026-11-18.json",
     "evaluations/records/YIC-status-line-2026-11-18.json",
+    "evaluations/records/YIC-deck-counts-2026-11-18.json",
+    "evaluations/records/YIC-readme-coverage-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -671,6 +673,24 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-deck-counts" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyStatedCountMatchesTheFile") is not True
+                or observed.get("mismatchedStatedCounts")
+                or observed.get("pdfPageMismatches")
+                or observed.get("rangeArithmeticIssues")
+            ):
+                errors.append(f"a stated deck count no longer matches the file: {relative}")
+        if "YIC-readme-coverage" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyDocumentIsReachableFromTheReadme") is not True
+                or observed.get("unindexedCount") != 0
+            ):
+                errors.append(f"a YI document is unreachable from the README: {relative}")
         if "YIC-status-line" in relative:
             observed = data.get("observed", {})
             if (

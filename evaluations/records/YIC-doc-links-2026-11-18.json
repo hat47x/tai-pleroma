@@ -20,23 +20,23 @@
       "integrations"
     ],
     "documentsScanned": 195,
-    "linksChecked": 2057,
+    "linksChecked": 2079,
     "brokenLinks": [],
     "brokenCount": 0,
     "crossRepoLinks": [
       {
         "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
-        "line": 183,
+        "line": 185,
         "target": "../../../sui-sensemaking/01_Plans/adr/ADR-0117-cross-product-handoff-context-envelope.md"
       },
       {
         "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
-        "line": 184,
+        "line": 186,
         "target": "../../../sho-composer/docs/handoff-cross-product-trial-2026-11-11.md"
       },
       {
         "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
-        "line": 184,
+        "line": 186,
         "target": "../../../sho-composer/docs/handoff-cross-product-trial-receipt-2026-11-11.json"
       }
     ],

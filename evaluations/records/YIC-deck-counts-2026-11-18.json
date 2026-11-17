@@ -1,0 +1,96 @@
+{
+  "schema": "tai.reference.yic-deck-counts/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the deck files and their indexes",
+  "command": "python integrations/tools/yic_deck_counts_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-deck-counts-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "decksFolder": "docs/yi-constellation/decks",
+    "actualSlideCounts": {
+      "part1/YI_Constellation_1.pptx": 30,
+      "part2/YI_Constellation_2.pptx": 42,
+      "part2/YI_Constellation_2_detail.pptx": 47,
+      "価値のトラック.pptx": 15
+    },
+    "actualPdfPages": {
+      "part1/YI_Constellation_1.pdf": 30,
+      "part2/YI_Constellation_2.pdf": 42,
+      "part2/YI_Constellation_2_detail.pdf": 47
+    },
+    "statedCounts": [
+      {
+        "index": "docs/yi-constellation/README.md",
+        "deck": "part1/YI_Constellation_1.pptx",
+        "labelled": "前編",
+        "stated": 30,
+        "actual": 30
+      },
+      {
+        "index": "docs/yi-constellation/README.md",
+        "deck": "part1/YI_Constellation_1.pptx",
+        "labelled": "前編",
+        "stated": 30,
+        "actual": 30
+      },
+      {
+        "index": "docs/yi-constellation/README.md",
+        "deck": "part2/YI_Constellation_2.pptx",
+        "labelled": "後編",
+        "stated": 42,
+        "actual": 42
+      },
+      {
+        "index": "docs/yi-constellation/README.md",
+        "deck": "part2/YI_Constellation_2.pptx",
+        "labelled": "後編",
+        "stated": 42,
+        "actual": 42
+      },
+      {
+        "index": "docs/yi-constellation/README.md",
+        "deck": "part2/YI_Constellation_2.pptx",
+        "labelled": "後編",
+        "stated": 42,
+        "actual": 42
+      },
+      {
+        "index": "docs/yi-constellation/README.md",
+        "deck": "part2/YI_Constellation_2_detail.pptx",
+        "labelled": "詳細版",
+        "stated": 47,
+        "actual": 47
+      },
+      {
+        "index": "docs/yi-constellation/decks/README.md",
+        "deck": "価値のトラック.pptx",
+        "labelled": "価値のトラック",
+        "stated": 15,
+        "actual": 15
+      }
+    ],
+    "mismatchedStatedCounts": [],
+    "pdfPageMismatches": [],
+    "rangeArithmeticIssues": [],
+    "inspectionRecord": {
+      "claimedSlideCount": 47,
+      "actualSlideCount": 47,
+      "displayNumbers": [
+        31,
+        77
+      ],
+      "agrees": true
+    },
+    "everyStatedCountMatchesTheFile": true,
+    "everyPdfMatchesItsDeck": true,
+    "everyDisplayRangeIsConsistent": true,
+    "finding": "索引が述べる枚数を、実際の.pptxのスライド数と.pdfのページ数に対して点検する。「42枚（31〜72番）」のような表示範囲が枚数と整合するかも確かめる。"
+  },
+  "scope": "Counts slide XML parts in each .pptx and page objects in each .pdf, and compares them with the counts the two index documents and the inspection record state. It checks counts only: matching numbers say nothing about whether a deck's content is right, and the page count reads the PDF structure rather than rendering it."
+}

@@ -187,6 +187,47 @@ TAIを中心とする製品シリーズ YI Constellation について、次の�
 
 製品側の資料は、各製品のリポジトリのREADME、価値文書、状態文書、ADRを参照し、必要な箇所を本文に示しました。製品群の概要資料は、別ファイルの[「YI Constellation 構想と設計」](https://github.com/hat47x/tai-pleroma/blob/main/docs/YI_Constellation.pptx)を参照してください。
 
+## 実行票・設計補遺の索引
+
+「文書一覧」は文化的分析の資料を並べています。以下の文書は、実行票・設計判断・資格化の記録であり、分析資料とは性格が異なるため、ここにまとめます。**いずれも提案または記録であり、Owner受理・実装完了・実機検証を意味しません**（各文書冒頭の状態行を参照）。
+
+### 価値・要件の研究と監査
+
+- [価値観・要望・要件の往復設計](value-needs-requirements-2026-11-01.md) — Research / Draft / Owner未受理
+- [価値の実現と検証をつなぐ研究計画](value-realization-research-protocol-2026-11-01.md) — 研究方法と実証設計の補助
+- [主要価値からの要件適正化と独立レビュー計画](product-value-scope-audit-2026-11-04.md) — 横断レビュー計画案（#422）
+
+### Harnessの調査・資格化
+
+- [代表的Harnessの相互運用・最小Adapter・Handoffの段階実証](harness-interoperability-and-handoff-pilot-2026-11-03.md)
+- [複数HarnessのSkill可搬性と実Capabilityの資格化](harness-portability-and-capability-qualification-2026-11-03.md)
+- [Skill選択・意味連携・実効権限・可搬性の深化](harness-skills-interoperability-and-evidence-2026-11-02.md)
+- [要求データ・実取得・Rule依存・外部開示を分けるSkill設計](harness-skill-read-witness-rule-disclosure-2026-11-02.md)
+- [Semantic ContextからのAction選択とUI非依存連携](harness-skill-semantic-action-routing-2026-11-02.md)
+- [Skill入口とTEIのUI・Job・組織Scopeを接続する最小契約](skill-entrypoint-ui-job-organization-boundaries-2026-11-03.md)
+- [Skill横断適合・実行順序への統合追補](skill-crosslane-qualification-and-order-2026-11-06.md)
+- [Capability由来のSkill Projection](capability-derived-skill-projections-2026-11-02.md)
+- [変更後の選択的再資格化と共同Claimの成立条件](harness-skill-selective-requalification-2026-11-02.md)
+- [Activity継続の選択的再資格化](activity-selective-requalification-and-handoff-2026-11-02.md)
+- [最初の実Product Skill資格確認 Runbook](first-real-skill-qualification-runbook-2026-11-02.md)
+- [回答前の観測面・実Consumer表示・Tool候補の開示資格](preanswer-observable-surface-and-consumer-handoff.md)
+
+### Harness Adapterの設計と索引
+
+- [共通Harness Adapter 後続計画](harness-adapter-followup-plan-2026-11-11.md) — 後続担当への作業計画
+- [共通Harness Adapterの最小契約](harness-adapter-minimal-contract-2026-11-11.md) — 設計判断と最小実装の記録
+- [AdapterのExit一覧と証拠の索引](harness-adapter-exit-index-2026-11-12.md) — 索引
+- [外部Harness活用と独自Harness投資の段階判断](harness-build-vs-buy-decision-2026-11-08.md)
+- [Harness構想：独自化の判断基準と最初の実行順](yic-harness-investment-gates-2026-11-17.md)
+
+### TEI能力連携
+
+- [TEI能力参照の段階的連携](tei-capability-reference-integration-2026-11-11.md) — 実装・限定検証の記録（提案／未採用）
+
+### デッキ
+
+- [デッキの一覧と構成](decks/README.md)
+
 ## 製品間連携の実行票
 
 文化的な分析資料とは別に、TEI Studioで選んだ設計要素を既存AIハーネスへ渡し、元の対象に候補として戻す際の検証手順をまとめています。

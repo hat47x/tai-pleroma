@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.yic-readme-coverage/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the YI README and its links",
+  "command": "python integrations/tools/yic_readme_coverage_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-readme-coverage-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "docs/yi-constellation",
+    "documents": 90,
+    "readmeLinks": 84,
+    "brokenReadmeLinks": [],
+    "unindexedDocuments": [],
+    "unindexedCount": 0,
+    "everyDocumentIsReachableFromTheReadme": true,
+    "everyReadmeLinkResolves": true,
+    "finding": "YI READMEから、配下の全Markdown文書へ到達できるかを点検する。索引を経由した到達も認める。リンク先が実在することも確かめる。"
+  },
+  "scope": "Walks every .md under docs/yi-constellation and checks it is reachable from the README directly or through one linked index, and that README links resolve. It checks reach ability only: a document reached through a stale link that still resolves is not detected, and non-.md files are not indexed by this check."
+}
