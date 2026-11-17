@@ -1014,11 +1014,11 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 ### 39.2 同じBuildPlanでも同じArtifactではない
 
-[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648)は、同一のself-build計画に対してGo 1.26.11と1.27.0で**生成Binaryのbyteが実際に変わる**ことをWSL2/linux-amd64で観測した。旧計画の`l2b.claimed=true`はいずれも成立し、`toolchainObservation.namedByPlan=false`。**2026-11-16の追試**：この節が参照するself-build観測系の**linux固定テスト11件**を、WSLのUbuntuで実行し、**11件すべてPASS**した（[receipt](../../../evaluations/records/YIC-tei-selfbuild-observations-2026-11-16.json)、`tei-platform` `926c8f2e3511`、`Linux/x86_64`）。
+[TEI #4648](https://github.com/hat47x/tei-platform/pull/4648)は、同一のself-build計画に対してGo 1.26.11と1.27.0で**生成Binaryのbyteが実際に変わる**ことをWSL2/linux-amd64で観測した。旧計画の`l2b.claimed=true`はいずれも成立し、`toolchainObservation.namedByPlan=false`。**2026-11-16の追試**：この節が参照するself-build観測系の**linux固定テスト11件**を、WSLのUbuntuで実行し、**11件すべてPASS**した（[receipt](../../evaluations/records/YIC-tei-selfbuild-observations-2026-11-16.json)、`tei-platform` `926c8f2e3511`、`Linux/x86_64`）。
 
 とくに`TestSamePlanBuiltByTwoToolchainsIsToldApartOnlyByTheRecord`は、`TEI_SELF_BUILD_FULL_CHAIN=1`と`TEI_SELF_BUILD_SECOND_GO`（Go 1.27.0）を与えて実行し、**同一Plan fingerprint `239df29d…` に対して、Go 1.26.11 の artifact が `sha256:b3b54142…`、Go 1.27.0 が `sha256:fc29a6d0…` と異なる**ことを観測した。文書の「同一計画で生成Binaryのbyteが変わる」という記述は、この固定commitでも成り立つ。
 
-**SUI側にも同じ種類のホスト差がある**：`tests/test_r2_source_snapshot_read_gate.py`は70件あり、**Windowsでは70件すべてが失敗し、linuxでは70件すべてがPASSする**（[receipt](../../../evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json)、`sui-sensemaking` `0c2a2c548058`）。
+**SUI側にも同じ種類のホスト差がある**：`tests/test_r2_source_snapshot_read_gate.py`は70件あり、**Windowsでは70件すべてが失敗し、linuxでは70件すべてがPASSする**（[receipt](../../evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json)、`sui-sensemaking` `0c2a2c548058`）。
 
 原因は二つで、どちらも対象OSの差である。
 1. 参照Storeがディレクトリをfsyncするため`os.open(directory, O_RDONLY)`を呼ぶが、Windowsはこれを`PermissionError`で拒否する（コード自身が`# Linux/Unix reference only; cross-platform durability is NOT shown.`と注記している）
@@ -1026,7 +1026,7 @@ YIC側は**Source実体のIdentity、現在Context、Audience、実送信byte、
 
 **Windowsの赤を包含ロジックの破損と読まない。** 同時に、linuxの緑もSUI #3462の限界を上げない（Card選択ResolverとSource Providerはテストダブル、PDPはlocalhost、正式なCard保存・二次開示・実組織PDPは未成立）。
 
-**同じ日に見つけたホスト差**：これらは[テストが暗黙にホストを選ぶ問題](host-dependent-tests-2026-11-16.md)として3製品分をまとめた。TEIの`internal/workspace`にあるrooted source境界のテストは、**Windowsでは2件がSKIPする**（[receipt](../../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、同commit）。
+**同じ日に見つけたホスト差**：これらは[テストが暗黙にホストを選ぶ問題](host-dependent-tests-2026-11-16.md)として3製品分をまとめた。TEIの`internal/workspace`にあるrooted source境界のテストは、**Windowsでは2件がSKIPする**（[receipt](../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、同commit）。
 
 | テスト | Windows | Linux |
 | --- | --- | --- |
@@ -1935,7 +1935,7 @@ Gの実行資格はさらに時間を持つ。[TEI main #5109](https://github.co
 
 **横断Ownerへ渡す最小判定**：初回はSUI側の現在認可済みCard選択候補とTEI側の公開可能な一Ruleを**二つの独立Product試行**として固定する。Iで依頼・元Subject、Rで元ProductのOwnerが解決したIdentity・Source位置・現行版、Pで受信者別Disclosure、Tで実送出、Cで完全な実受領、Hで外部Harnessの現在のTool Replyをそれぞれ記録する。両Productのread-only試験が成功しても、**Card SourceのRawをTEIやAIへ送ったことにはしない**。詳しい受入カードと失敗時の縮退は[QH実行票§10.8](cross-product-handoff-execution-tickets-2026-11-11.md)へ集約する。
 
-**検収の上限**：SUI #3461（448 PASS）から#3462（452 PASS、MCP/Agent CI success）へ限定内部判定が前進した。TEI #4994のfocused CLI inspectはPASS、#5009の対象HEADのセルフビルドWorkflowもsuccess。**2026-11-16のホスト別確認**：[#5009](https://github.com/hat47x/tei-platform/pull/5009)の`TestSelectedRuleGoThroughRealCLISelfBuild`は、**このWindowsホストではSKIPする**（[receipt](../../../evaluations/records/YIC-tei-host-skip-2026-11-16.json)、対象`tei-platform` `926c8f2e3511`）。テスト自身が`runtime.GOOS != "linux"`でスキップし、理由を`existing test catalog pins the host/linux/amd64 target`と出力する。同じ実行で`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`はPASSした。**SKIPは失敗でも合格でもなく**、このホストでは単独結果を出せないという観測である。**同日、linuxで解決した**：WSLのUbuntu（`linux/x86_64`、Go 1.26.11）で同じテストを実行し、**PASS**した（[receipt](../../../evaluations/records/YIC-tei-linux-regression-2026-11-16.json)）。subtestは`generic-vs-generated-{positive,zero,negative,null,missing}`の5つで、すべてPASS。したがって「#5009のFocused Go test単独結果」は、**この固定commitでは解消**する。
+**検収の上限**：SUI #3461（448 PASS）から#3462（452 PASS、MCP/Agent CI success）へ限定内部判定が前進した。TEI #4994のfocused CLI inspectはPASS、#5009の対象HEADのセルフビルドWorkflowもsuccess。**2026-11-16のホスト別確認**：[#5009](https://github.com/hat47x/tei-platform/pull/5009)の`TestSelectedRuleGoThroughRealCLISelfBuild`は、**このWindowsホストではSKIPする**（[receipt](../../evaluations/records/YIC-tei-host-skip-2026-11-16.json)、対象`tei-platform` `926c8f2e3511`）。テスト自身が`runtime.GOOS != "linux"`でスキップし、理由を`existing test catalog pins the host/linux/amd64 target`と出力する。同じ実行で`TestProductInspectCLISelectedMarkdownRuleIsNotCapability`はPASSした。**SKIPは失敗でも合格でもなく**、このホストでは単独結果を出せないという観測である。**同日、linuxで解決した**：WSLのUbuntu（`linux/x86_64`、Go 1.26.11）で同じテストを実行し、**PASS**した（[receipt](../../evaluations/records/YIC-tei-linux-regression-2026-11-16.json)）。subtestは`generic-vs-generated-{positive,zero,negative,null,missing}`の5つで、すべてPASS。したがって「#5009のFocused Go test単独結果」は、**この固定commitでは解消**する。
 
 ただし合格の意味はR2のcommand-build witnessに限られる。公開Function Entry、実ProviderのCall、外部開示、外部Harnessの完全Reply、Ownerの意味受理は未成立のままである。生成Desktop Workbenchと実Windows WebView2も引き続き別判定で、この実行は対象外である。
 

@@ -94,7 +94,7 @@
 
 - DSH: headless profileでは `credentials` サービスがdisabled。認可は**launching environment のenv var**のみ。
   既定routeは `deepseek-official`（`DEEPSEEK_API_KEY` 必要）。trialではcaller-supplied `--patch` で
-  routeを切り替えた（[trial patch](../../.tmp_harness_pilot/patch-trial.yml)、repo外）。
+  routeを切り替えた（trial patch は repo外の `.tmp_harness_pilot/patch-trial.yml`、リポジトリに含めない）。
 - Claude Code: OAuth（`~/.claude.json`）。env var不要。
 - **credentialをrepo・Issue・PR・ログに書かない。** 値の印刷もしない。
 
