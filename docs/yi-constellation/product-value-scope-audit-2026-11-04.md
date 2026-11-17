@@ -618,6 +618,12 @@ SCN-001のB0/B1/B2比較でそのSource経路が必要な時だけ、**継続Cur
 **現況**：既存Issue・ADRと局所CIへの設計照合のみ。RC-01〜05をこの変更で実注入したわけではない。外部Provider/二Client/本番Worker/正式Writer/完全H2-H3、B0/B1/B2比較、Owner受理は **NOT RUN**。
 
 
+## 25. （欠番：製品固有のデータ基盤判断はOwnerリポジトリへ移した）
+
+**この節番号は欠番である。** 2026-11-08の`eedf6f89`で、KONの独立Service／独立DBを前提とする判断を製品Ownerの側へ移したため、この節の本文は削除された。当時の内容は[SUI #3400](https://github.com/hat47x/sui-sensemaking/issues/3400)・[SUI #3401](https://github.com/hat47x/sui-sensemaking/issues/3401)・[SUI #3399](https://github.com/hat47x/sui-sensemaking/issues/3399)・[SHO #20](https://github.com/hat47x/sho-composer/issues/20)・[TEI #2586](https://github.com/hat47x/tei-platform/issues/2586)・[TEI #3419](https://github.com/hat47x/tei-platform/issues/3419)が引き継いでいる。
+
+**番号を詰めていない理由**：後続の節（26以降）を参照している記録が既に存在しうるため、番号を付け替えると参照が黙って別の節を指すことになる。欠番として残し、理由をここに書く。
+
 ## 26. 2026-11-08：Plugin HookとInteraction Flowを一つのOperation契約に結び付ける
 
 **成熟した設計差分**：TEIのAPI/Web/Desktop/CLI/MCP/VUIは媒体ごとの独立Engineではなく、同じ型付きOperationを実行・観測するAdapterとする。Plugin-firstを徹底する場合でも、選択・ロード・呼出し・結果受領・実Effectを混同しない。§24の結果不明と§25のSource/Meaning分離を継承する。
