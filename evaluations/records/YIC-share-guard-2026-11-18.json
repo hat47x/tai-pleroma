@@ -1,0 +1,57 @@
+{
+  "schema": "tai.reference.yic-share-guard/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows host running WSL Ubuntu-24.04, driving SUI's share action",
+  "command": "python integrations/tools/yic_share_guard_probe.py <artifact> <out> <sui-repo>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "baseline": {
+      "allow": false,
+      "reason": "policy_ref_missing",
+      "adapterCalls": 0
+    },
+    "otherRoles": {
+      "allow": false,
+      "reason": "policy_ref_missing",
+      "adapterCalls": 0
+    },
+    "rolesChangeTheOutcome": false,
+    "publicVisibility": {
+      "allow": true,
+      "reason": null,
+      "adapterCalls": 1
+    },
+    "visibilityChangeTheOutcome": true,
+    "safeMode": {
+      "allow": false,
+      "reason": "safe_mode",
+      "adapterCalls": 0
+    },
+    "safeModeChangesTheOutcome": true,
+    "readOnly": {
+      "allow": false,
+      "reason": "read_only",
+      "adapterCalls": 0
+    },
+    "readOnlyChangesTheOutcome": true,
+    "varyableRecipientField": false,
+    "actionsAvailable": [
+      "read",
+      "write",
+      "export",
+      "share"
+    ],
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "distro": "Ubuntu-24.04",
+    "finding": "SUIには`share`というactionがある。実測すると、**依頼者のrolesを変えても判定は変わらない**（どちらも`policy_ref_missing`）。一方、visibilityは判定を変える：`Org`は`policy_ref`が無いと拒否され、`Public`はその要求を飛ばして許可される。safe_modeとread_onlyも拒否を生む。つまりこのガードは、**公開範囲（visibility）と配備モードで決まる**。受信者が誰かは判定に入っていない（欄自体が無い）。**visibilityは「誰に見せてよいか」ではなく「どこまで公開してよいか」**であり、両者は別である。",
+    "whatWouldMakeItRecipientBased": "同じresource・同じactionで、受信者だけを変えたとき判定が変わること。そのためには受信者を表す欄が要る。"
+  },
+  "scope": "Drives SUI's resolve_access_decision with action=share while varying the requester's roles, the resource's visibility and the deployment mode, one at a time. It shows the outcome changes only with the mode, so the guard is not recipient-based. It uses a recording adapter, not a real PDP, and does not examine other SUI entrypoints."
+}

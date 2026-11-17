@@ -73,6 +73,10 @@ PORTABLE_CHECKS = (
      "claims that are literals cannot be reached by re-running"),
     ("handoffConditions", "yic_handoff_conditions_check.py",
      "each stage states whether it has an instrument and what would count as a handoff"),
+    ("audienceInstrument", "yic_audience_instrument_probe.py",
+     "the request type has no recipient field and roles do not change the decision"),
+    ("shareGuard", "yic_share_guard_probe.py",
+     "the share action keys on visibility and mode, not on a recipient"),
 )
 
 
@@ -106,10 +110,18 @@ def main():
             extra = ["--tai-root", str(root)]
         elif name == "claimCeiling":
             extra = ["--sho-repo", str(root.parent / "sho-composer")]
+        elif name in ("audienceInstrument", "shareGuard"):
+            # These two take the SUI checkout as a third positional argument.
+            extra = []
         completed = subprocess.run(
-            [sys.executable, str(path), *extra,
-             "--artifact", args.artifact,
-             "--out", str(scratch / f"{name}.json")],
+            (
+                [sys.executable, str(path), args.artifact, str(scratch / f"{name}.json"),
+                 str(root.parent / "sui-sensemaking")]
+                if name in ("audienceInstrument", "shareGuard")
+                else [sys.executable, str(path), *extra,
+                      "--artifact", args.artifact,
+                      "--out", str(scratch / f"{name}.json")]
+            ),
             cwd=root, capture_output=True, text=True,
             encoding="utf-8", errors="replace", env={**os.environ}, timeout=900,
         )
