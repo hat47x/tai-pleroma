@@ -12,28 +12,28 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 17,
+    "checksRequested": 18,
     "excluded": [
       {
         "check": "gateReproducibility",
         "reason": "rewrites tracked receipts by design; not read-only"
       }
     ],
-    "checksRun": 17,
+    "checksRun": 18,
     "results": {
       "readmeCoverage": {
         "ran": true,
         "question": "every YI document is reachable from the README",
         "exit": 0,
         "passed": true,
-        "tail": "{\"documents\": 90, \"unindexed\": 0, \"broken\": [], \"passed\": true}"
+        "tail": "{\"documents\": 92, \"unindexed\": 0, \"broken\": [], \"passed\": true}"
       },
       "docLinks": {
         "ran": true,
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 195, \"linksChecked\": 2083, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 197, \"linksChecked\": 2093, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -47,7 +47,7 @@
         "question": "every document states what it is, early",
         "exit": 0,
         "passed": true,
-        "tail": "{\"documents\": 91, \"withoutStatus\": 0, \"late\": 0, \"passed\": true}"
+        "tail": "{\"documents\": 93, \"withoutStatus\": 0, \"late\": 0, \"passed\": true}"
       },
       "deckCounts": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 41, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 46, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 40, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 45, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -117,14 +117,14 @@
         "question": "a universal claim states its population",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receiptsWithUniversalClaims\": 50, \"withoutCount\": 0, \"passed\": true}"
+        "tail": "{\"receiptsWithUniversalClaims\": 55, \"withoutCount\": 0, \"passed\": true}"
       },
       "sectionOrder": {
         "ran": true,
         "question": "the reach document's sections ascend",
         "exit": 0,
         "passed": true,
-        "tail": "{\"headings\": 16, \"outOfOrder\": [], \"missingTops\": [], \"passed\": true}"
+        "tail": "{\"headings\": 17, \"outOfOrder\": [], \"missingTops\": [], \"passed\": true}"
       },
       "suiteInvocation": {
         "ran": true,
@@ -139,6 +139,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"keyed\": 99, \"calls\": 110, \"recorded\": 107, \"conditional\": 0, \"neverRecorded\": [\"checker\", \"yic_analysis_gates\", \"yic_document_gates\"], \"passed\": true}"
+      },
+      "proposalBoundary": {
+        "ran": true,
+        "question": "a proposal for a product contract names its owner and does not claim a decision",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"requirements\": 6, \"unsatisfied\": [], \"assertsDecided\": false, \"passed\": true}"
       }
     },
     "scriptsMissing": [],
