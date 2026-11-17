@@ -42,6 +42,20 @@ CHECKS = (
      "Product-declared limits are not dropped"),
     ("skipDisclosure", "yic_skip_disclosure_check.py",
      "a skip is visible rather than folded into a pass"),
+    ("reachTable", "yic_reach_table_check.py",
+     "every reach mark is backed by its receipt"),
+    ("runbookExpectation", "yic_runbook_expectation_check.py",
+     "the runbook's expected numbers match the live counts"),
+    ("universalClaim", "yic_universal_claim_check.py",
+     "a universal claim states its population"),
+    ("sectionOrder", "yic_section_order_check.py",
+     "the reach document's sections ascend"),
+    ("suiteInvocation", "yic_suite_invocation_check.py",
+     "the suite records the argv it ran with"),
+    ("suiteStepAccounting", "yic_suite_step_accounting.py",
+     "registered steps and recorded steps reconcile"),
+    ("gateReproducibility", "yic_gate_reproducibility.py",
+     "two runs in a row write the same receipts"),
 )
 
 

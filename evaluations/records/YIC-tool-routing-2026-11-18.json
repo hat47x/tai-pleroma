@@ -1,0 +1,663 @@
+{
+  "schema": "tai.reference.yic-tool-routing/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 asking each tool for its arguments",
+  "command": "python integrations/tools/yic_tool_routing_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tool-routing-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "toolsFolder": "integrations/tools",
+    "tools": 69,
+    "routedTools": 47,
+    "unroutedTools": [
+      "yi_centre_handoff_probe.py",
+      "yi_empty_reference_probe.py",
+      "yi_overreach_probe.py",
+      "yi_staleness_probe.py",
+      "yi_unreferenced_probe.py",
+      "yic_audience_declaration_probe.py",
+      "yic_eki_private_input.py",
+      "yic_preflight_disclosure_boundary.py",
+      "yic_qh_field_13_probe.py",
+      "yic_qh_resolve_09_probe.py",
+      "yic_qh_revalidate_probe.py",
+      "yic_sui_r2_gate_hosts.py",
+      "yic_sui_source_policy_boundary.py",
+      "yic_sui_tenant_boundary.py",
+      "yic_tei_host_skip_probe.py",
+      "yic_tei_knowledge_disclosure.py",
+      "yic_tei_linux_regression.py",
+      "yic_tei_product_read_regressions.py",
+      "yic_tei_readonly_cli_baseline.py",
+      "yic_tei_rooted_source.py",
+      "yic_tei_selfbuild_observations.py",
+      "yic_tool_routing_check.py"
+    ],
+    "unroutedCount": 22,
+    "portableButUnrouted": [],
+    "portableButUnroutedCount": 0,
+    "needingAProductCheckout": [
+      "yi_centre_handoff_probe.py",
+      "yi_empty_reference_probe.py",
+      "yi_overreach_probe.py",
+      "yi_staleness_probe.py",
+      "yi_unreferenced_probe.py",
+      "yic_audience_declaration_probe.py",
+      "yic_eki_private_input.py",
+      "yic_preflight_disclosure_boundary.py",
+      "yic_qh_field_13_probe.py",
+      "yic_qh_resolve_09_probe.py",
+      "yic_qh_revalidate_probe.py",
+      "yic_sui_r2_gate_hosts.py",
+      "yic_sui_source_policy_boundary.py",
+      "yic_sui_tenant_boundary.py",
+      "yic_tei_host_skip_probe.py",
+      "yic_tei_knowledge_disclosure.py",
+      "yic_tei_linux_regression.py",
+      "yic_tei_product_read_regressions.py",
+      "yic_tei_readonly_cli_baseline.py",
+      "yic_tei_rooted_source.py",
+      "yic_tei_selfbuild_observations.py"
+    ],
+    "needingOnlyTheTaiRoot": [
+      "yi_context_handoff_probe.py",
+      "yi_fold_with_dissent_probe.py",
+      "yi_publication_refusal_probe.py",
+      "yi_state_classification.py"
+    ],
+    "rows": [
+      {
+        "tool": "yi_acceptance_authority_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_artifact_digest_check.py",
+        "routers": [
+          "integrations/tools/yic_receipt_gates.py",
+          "integrations/tools/yi_receipt_quality.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_candidate_fields_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_centre_handoff_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yi_centre_key_options.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_citation_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_context_handoff_probe.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": true,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_cross_receipt_check.py",
+        "routers": [
+          "integrations/tools/yic_receipt_gates.py",
+          "integrations/tools/yi_receipt_quality.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_csw_return_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_danger_units_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_deck_proposal_figures_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_doc_integrity_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_eki_measurement_probe.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_empty_reference_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yi_fold_with_dissent_probe.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": true,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_g1_evidence_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_g1_status_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_g2_landing_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_landing_paths_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_naming_blast_radius.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_overreach_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": true,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yi_pass_consistency_check.py",
+        "routers": [
+          "integrations/tools/yi_receipt_quality.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_publication_refusal_probe.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": true,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_receipt_auditability_check.py",
+        "routers": [
+          "integrations/tools/yic_receipt_gates.py",
+          "integrations/tools/yi_receipt_quality.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_receipt_quality.py",
+        "routers": [
+          "integrations/tools/run_suite.py",
+          "integrations/tools/yi_receipt_quality.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_scope_halves_check.py",
+        "routers": [
+          "integrations/tools/yi_receipt_quality.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_sho_actual_check.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_stage3_inventory.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_staleness_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yi_state_classification.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": true,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yi_unreferenced_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": true,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_analysis_gates.py",
+        "routers": [
+          "integrations/tools/yic_analysis_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_audience_declaration_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_authority_limits_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py",
+          "integrations/tools/yic_receipt_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_deck_counts_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_doc_links_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_document_gates.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_eki_private_input.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_g1_packet_readiness.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_gate_citation_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_gate_prose_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_gate_reproducibility.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_notrun_refresh_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_preflight_disclosure_boundary.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_qh_field_13_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_qh_resolve_09_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_qh_revalidate_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_reach_table_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_readme_coverage_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_receipt_gates.py",
+        "routers": [
+          "integrations/tools/yic_receipt_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_runbook_expectation_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_section_order_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_section_sequence_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_skip_disclosure_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py",
+          "integrations/tools/yic_receipt_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_status_line_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_sui_r2_gate_hosts.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_sui_source_policy_boundary.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_sui_tenant_boundary.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_suite_invocation_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_suite_step_accounting.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_tei_host_skip_probe.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tei_knowledge_disclosure.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tei_linux_regression.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tei_product_read_regressions.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tei_readonly_cli_baseline.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tei_rooted_source.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tei_selfbuild_observations.py",
+        "routers": [],
+        "needsProductCheckout": true,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": false
+      },
+      {
+        "tool": "yic_tool_routing_check.py",
+        "routers": [],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      },
+      {
+        "tool": "yic_universal_claim_check.py",
+        "routers": [
+          "integrations/tools/yic_document_gates.py"
+        ],
+        "needsProductCheckout": false,
+        "needsTaiRoot": false,
+        "runsWithoutAProduct": true
+      }
+    ],
+    "everyPortableToolIsRouted": true,
+    "finding": "YIのツールを、製品チェックアウトを要するかで分類し、どの集約から走るかを記録する。「suite PASS」が全ツールの実行を意味しないことを、推測ではなく記録で示す。"
+  },
+  "scope": "Asks each YI tool for its --help text, decides whether it needs a product checkout, and records which aggregate references it. It judges routing and portability only: a tool that is routed may still fail on another host, and a tool needing a checkout is not thereby unverified — it is simply not run by the portable aggregates."
+}

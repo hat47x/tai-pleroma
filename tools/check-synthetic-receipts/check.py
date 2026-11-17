@@ -278,6 +278,8 @@ REAL_RECORDS = (
     "evaluations/records/YIC-readme-coverage-2026-11-18.json",
     "evaluations/records/YIC-notrun-refresh-2026-11-18.json",
     "evaluations/records/YIC-document-gates-2026-11-18.json",
+    "evaluations/records/YIC-analysis-gates-2026-11-18.json",
+    "evaluations/records/YIC-tool-routing-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -685,6 +687,23 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("rangeArithmeticIssues")
             ):
                 errors.append(f"a stated deck count no longer matches the file: {relative}")
+        if "YIC-analysis-gates" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyAnalysisCheckRan") is not True
+                or observed.get("everyAnalysisCheckPassed") is not True
+                or observed.get("checksRun") != 20
+            ):
+                errors.append(f"a YI analysis check was skipped or failed: {relative}")
+        if "YIC-tool-routing" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyPortableToolIsRouted") is not True
+                or observed.get("portableButUnroutedCount") != 0
+            ):
+                errors.append(f"a portable YI tool is not routed: {relative}")
         if "YIC-document-gates" in relative:
             observed = data.get("observed", {})
             if (

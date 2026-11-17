@@ -1,0 +1,167 @@
+{
+  "schema": "tai.reference.yic-analysis-gates/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 running the analysis checks together",
+  "command": "python integrations/tools/yic_analysis_gates.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-analysis-gates-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checksRequested": 20,
+    "checksRun": 20,
+    "results": {
+      "candidateFields": {
+        "ran": true,
+        "question": "every candidate carries the six fields a decision needs",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"candidates\": 25, \"incomplete\": [], \"missing\": {}, \"passed\": true}"
+      },
+      "g1Evidence": {
+        "ran": true,
+        "question": "each cross-cutting decision has an observation or a named gap",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"decisions\": 6, \"withoutObservation\": [\"D2\", \"D5\"], \"missingFiles\": 0, \"passed\": true}"
+      },
+      "g1Status": {
+        "ran": true,
+        "question": "the decision fields are unfilled and no document claims acceptance",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"fields\": 6, \"filled\": 0, \"recordFilled\": 0, \"g1Decided\": false, \"claiming\": [], \"passed\": true}"
+      },
+      "citation": {
+        "ran": true,
+        "question": "every cited requirement is defined and every candidate counted once",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"cited\": 24, \"unresolved\": [], \"notDefined\": [], \"passed\": true}"
+      },
+      "docIntegrity": {
+        "ran": true,
+        "question": "the analysis files are indexed and their links resolve",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"files\": 53, \"links\": 625, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+      },
+      "deckFigures": {
+        "ran": true,
+        "question": "the deck's figures still agree with the receipts",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"drifted\": [], \"missing\": [], \"passed\": true}"
+      },
+      "cswReturn": {
+        "ran": true,
+        "question": "the edits returned to CSW are still present",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"edits\": 9, \"missing\": [], \"passed\": true}"
+      },
+      "dangerUnits": {
+        "ran": true,
+        "question": "each of the five danger units has evidence",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 358, \"units\": {\"permissionDeviation\": 15, \"delegationRefusal\": 35, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+      },
+      "acceptanceAuthority": {
+        "ran": true,
+        "question": "each product names who accepts a requirement",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"withRole\": [\"TAI\", \"TEI\", \"SHO\"], \"withoutRole\": [\"SEI\", \"EKI\", \"SUI\", \"MMI\"], \"passed\": true}"
+      },
+      "centreKeyOptions": {
+        "ran": true,
+        "question": "exactly one typed place can carry the centre units",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"logicalFields\": [\"id\", \"kind\", \"scope\"], \"exactFields\": [\"content_digest\", \"logical_ref\", \"representation_profile\"], \"basisRefsCanCarryTheUnits\": false, \"extensionsCanCarryTheUnits\": true, \"passed\":"
+      },
+      "ekiMeasurement": {
+        "ran": true,
+        "question": "the EKI ADR names the measurement it requires",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"sections\": 3, \"stopOrLimitMeasured\": true, \"passed\": true}"
+      },
+      "g2Landing": {
+        "ran": true,
+        "question": "each product has a place and a free number for landed requirements",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"next\": {\"SEI\": 24, \"TEI\": 38, \"EKI\": 65, \"SUI\": 13, \"MMI\": 32}, \"missing\": [], \"withoutNumberedRequirements\": [], \"passed\": true}"
+      },
+      "landingPaths": {
+        "ran": true,
+        "question": "the landing paths exist in the product repositories",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"repos\": 7, \"places\": 11, \"missingRepos\": [], \"missingPaths\": [], \"contradictions\": [], \"passed\": true}"
+      },
+      "shoActual": {
+        "ran": true,
+        "question": "SHO carries the commits and files the plan assumes",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"commits\": 217, \"tracked\": 108, \"firstDate\": \"2026-10-31\", \"latestDate\": \"2026-11-15\", \"doc21PremiseHolds\": false, \"passed\": true}"
+      },
+      "stage3Inventory": {
+        "ran": true,
+        "question": "the stage-3 items and their not-run states are enumerated",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"executed\": [\"changeLineInspection\", \"entranceJoin\", \"harnessBoundary\"], \"evidenceOnly\": [\"usabilityConditions\"], \"notRun\": [\"centreHandoff\", \"thinPhaseExpansion\", \"contextHandoff\"], \"suites\": {}, \"p"
+      },
+      "namingBlastRadius": {
+        "ran": true,
+        "question": "a naming change touches a bounded set of files",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"usages\": 8, \"files\": 5, \"alternative\": 0, \"passed\": true}"
+      },
+      "contextHandoffProbe": {
+        "ran": true,
+        "question": "a context handoff carries the three units",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"referencePassed\": true, \"handoffFields\": [\"ContextID\", \"Version\", \"Task\", \"Deferred\"], \"unitsCarried\": [\"task\"], \"unitsMissing\": [\"decision\", \"unresolved\"], \"passed\": true}"
+      },
+      "foldWithDissentProbe": {
+        "ran": true,
+        "question": "a fold keeps its dissent",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"cards\": 5, \"islands\": [\"I-01\", \"I-02\", \"I-03\"], \"dissentSurvives\": true, \"passed\": true}"
+      },
+      "publicationRefusalProbe": {
+        "ran": true,
+        "question": "receipts that declare publication held state a reason",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"allowed\": false, \"blockers\": 7, \"exit\": 1, \"passed\": true}"
+      },
+      "stateClassification": {
+        "ran": true,
+        "question": "each record's state is classified, not inferred",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"statesWithoutAnExample\": [\"notConnected\", \"notAccepted\"], \"unclassifiedChecks\": [], \"passed\": true}"
+      }
+    },
+    "scriptsMissing": [],
+    "failed": [],
+    "wroteIntoTheTree": false,
+    "everyAnalysisCheckRan": true,
+    "everyAnalysisCheckPassed": true,
+    "finding": "分析水準のYI点検9種を1コマンドで実行し、1つでも欠ければPASSを返さない。いずれも製品チェックアウトを要さず、数秒で終わるが、suiteにもreceipt集約にも入っていないため個別に呼ぶしかなかった。"
+  },
+  "scope": "Runs nine analysis-level YI checks in one pass and refuses PASS if any is missing or fails. It records whether each ran and its exit code, not what each concluded; a check that passes can still judge the wrong thing, and this aggregate inherits every limit of the nine."
+}
