@@ -1,0 +1,980 @@
+{
+  "schema": "tai.reference.yic-universal-claim-population/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the YI receipts",
+  "command": "python integrations/tools/yic_universal_claim_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-universal-claim-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "evaluations/records",
+    "receiptsScanned": 58,
+    "receiptsWithUniversalClaims": 40,
+    "receiptsWithoutACount": [],
+    "withoutCountTotal": 0,
+    "everyUniversalClaimStatesItsPopulation": true,
+    "rows": [
+      {
+        "receipt": "YI-acceptance-authority-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "allProductsNameAnAuthority"
+        ],
+        "counts": {
+          "productsDescribingAnAcceptanceRole[]": 3,
+          "productsWithoutAnAcceptanceRole[]": 4,
+          "acceptedWithoutARole[]": 4
+        },
+        "populationStatements": {
+          "productsDescribingAnAcceptanceRole[]": 3,
+          "productsWithoutAnAcceptanceRole[]": 4,
+          "acceptedWithoutARole[]": 4
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-artifact-digest-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyArtifactDigestStillMatches",
+          "everyReceiptRecordsAnArtifact"
+        ],
+        "counts": {
+          "receipts": 31,
+          "receiptsWithoutArtifactDigest[]": 0,
+          "mismatched[]": 0,
+          "rows[]": 31
+        },
+        "populationStatements": {
+          "receipts": 31,
+          "receiptsWithoutArtifactDigest[]": 0,
+          "mismatched[]": 0,
+          "rows[]": 31
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-candidate-fields-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyCandidateStatesItsFields"
+        ],
+        "counts": {
+          "candidates": 25,
+          "complete": 25,
+          "incomplete[]": 0
+        },
+        "populationStatements": {
+          "candidates": 25,
+          "complete": 25,
+          "incomplete[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-citation-check-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyCandidateIsAccountedOnce",
+          "everyCitationIsDefined",
+          "everyCitationResolves"
+        ],
+        "counts": {
+          "documents[]": 2,
+          "citedIds": 24,
+          "unresolved[]": 0,
+          "notDefinedByProduct[]": 0,
+          "keptInPacket": 15,
+          "movedInPacket": 10,
+          "candidatesNotAccounted[]": 0,
+          "candidatesCountedTwice[]": 0,
+          "candidatesOutsideTheKnownSet[]": 0
+        },
+        "populationStatements": {
+          "documents[]": 2,
+          "citedIds": 24,
+          "unresolved[]": 0,
+          "notDefinedByProduct[]": 0,
+          "keptInPacket": 15,
+          "movedInPacket": 10,
+          "candidatesNotAccounted[]": 0,
+          "candidatesCountedTwice[]": 0,
+          "candidatesOutsideTheKnownSet[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-cross-receipt-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyOverlappingFactAgrees"
+        ],
+        "counts": {
+          "facts[]": 2,
+          "mismatches[]": 0,
+          "kept": 15,
+          "moved": 10,
+          "total": 25,
+          "keptPlusMovedEqualsTotal": true
+        },
+        "populationStatements": {
+          "facts[]": 2,
+          "mismatches[]": 0,
+          "kept": 15,
+          "moved": 10,
+          "total": 25,
+          "keptPlusMovedEqualsTotal": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-csw-return-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyReturnedEditIsStillPresent"
+        ],
+        "counts": {
+          "editsRecorded": 9,
+          "results[]": 9,
+          "missing[]": 0
+        },
+        "populationStatements": {
+          "editsRecorded": 9,
+          "results[]": 9,
+          "missing[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-danger-units-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyUnitHasEvidence"
+        ],
+        "counts": {
+          "receiptsDeclaringPublicationHeld": 286,
+          "receiptsRead": 300,
+          "publicationRefusalEvidence": 2,
+          "publicationFieldOnlyIn": 0,
+          "unitsWithNoObservation[]": 0
+        },
+        "populationStatements": {
+          "receiptsDeclaringPublicationHeld": 286,
+          "receiptsRead": 300,
+          "publicationRefusalEvidence": 2,
+          "publicationFieldOnlyIn": 0,
+          "unitsWithNoObservation[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-deck-figures-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyClaimAgreesWithReceipt",
+          "everyClaimStillStated"
+        ],
+        "counts": {
+          "claims[]": 4,
+          "claimsChecked": 4,
+          "drifted[]": 0,
+          "missingFromProposal[]": 0
+        },
+        "populationStatements": {
+          "claims[]": 4,
+          "claimsChecked": 4,
+          "drifted[]": 0,
+          "missingFromProposal[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-doc-integrity-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyFileIsIndexed",
+          "everyLinkResolves"
+        ],
+        "counts": {
+          "analysisFiles": 53,
+          "links": 601,
+          "notIndexedInReadme[]": 0,
+          "brokenLinks[]": 0,
+          "brokenReadmeLinks[]": 0,
+          "candidatesInList": 25,
+          "candidatesInPacket": 25,
+          "missingFromPacket[]": 0,
+          "unknownInPacket[]": 0,
+          "candidateSetsAgree": true
+        },
+        "populationStatements": {
+          "analysisFiles": 53,
+          "links": 601,
+          "notIndexedInReadme[]": 0,
+          "brokenLinks[]": 0,
+          "brokenReadmeLinks[]": 0,
+          "candidatesInList": 25,
+          "candidatesInPacket": 25,
+          "missingFromPacket[]": 0,
+          "unknownInPacket[]": 0,
+          "candidateSetsAgree": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-fold-dissent-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "noCardLostInTheFold"
+        ],
+        "counts": {
+          "linkedCardCount": 5,
+          "islandGroups[]": 3,
+          "edgeCount": 1,
+          "contradiction": true,
+          "endpointsPresent": true,
+          "endpointsRemainSeparate": true,
+          "dissentSurvivesTheFold": true
+        },
+        "populationStatements": {
+          "linkedCardCount": 5,
+          "islandGroups[]": 3,
+          "edgeCount": 1,
+          "contradiction": true,
+          "endpointsPresent": true,
+          "endpointsRemainSeparate": true,
+          "dissentSurvivesTheFold": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-g1-evidence-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyCitedPathExists",
+          "everyDecisionHasAnObservation",
+          "everyDecisionNamesItsGap"
+        ],
+        "counts": {
+          "decisions[]": 6,
+          "decisionsChecked": 6,
+          "decisionsWithNoObservation[]": 2,
+          "missingFiles[]": 0,
+          "decisionsWithoutObservation[]": 2
+        },
+        "populationStatements": {
+          "decisions[]": 6,
+          "decisionsChecked": 6,
+          "decisionsWithNoObservation[]": 2,
+          "missingFiles[]": 0,
+          "decisionsWithoutObservation[]": 2
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-g1-status-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "noDocumentClaimsAcceptanceWhileOpen"
+        ],
+        "counts": {
+          "selfTestDetectsTheWording": true,
+          "decisionFields": 6,
+          "decisionFieldsFilled": 0,
+          "recordFilled": 0,
+          "g1IsDecided": false,
+          "perCandidateOpenCount": 25,
+          "documentsClaimingAcceptance[]": 0
+        },
+        "populationStatements": {
+          "selfTestDetectsTheWording": true,
+          "decisionFields": 6,
+          "decisionFieldsFilled": 0,
+          "recordFilled": 0,
+          "g1IsDecided": false,
+          "perCandidateOpenCount": 25,
+          "documentsClaimingAcceptance[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-g2-landing-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "allDocumentsReadable",
+          "everyProductHasAFreeNumber"
+        ],
+        "counts": {
+          "productsWithoutNumberedRequirements[]": 0,
+          "productsThatNeedAnAdrInstead[]": 0,
+          "productsWhoseNumbersAreDecisions[]": 1
+        },
+        "populationStatements": {
+          "productsWithoutNumberedRequirements[]": 0,
+          "productsThatNeedAnAdrInstead[]": 0,
+          "productsWhoseNumbersAreDecisions[]": 1
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-landing-paths-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyPathExists",
+          "everyRepoSits",
+          "noPathIsBothTouchedAndAvoided"
+        ],
+        "counts": {
+          "repositoriesInTable[]": 7,
+          "repositoriesMissing[]": 0,
+          "placesNamed": 11,
+          "pathsMissing[]": 0,
+          "touchAvoidContradictions[]": 0
+        },
+        "populationStatements": {
+          "repositoriesInTable[]": 7,
+          "repositoriesMissing[]": 0,
+          "placesNamed": 11,
+          "pathsMissing[]": 0,
+          "touchAvoidContradictions[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-pass-consistency-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyPassExplainsItsGaps"
+        ],
+        "counts": {
+          "receipts": 31,
+          "rows[]": 31,
+          "unexplainedPassWithGap[]": 0
+        },
+        "populationStatements": {
+          "receipts": 31,
+          "rows[]": 31,
+          "unexplainedPassWithGap[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-publication-refusal-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "allowed"
+        ],
+        "counts": {
+          "exitCode": 1,
+          "blockerCount": 7,
+          "blockers[]": 7,
+          "accepted[]": 0,
+          "developmentAccepted[]": 5,
+          "syntheticAcceptancesBlockPublication": true,
+          "pendingReviewsBlockPublication": true,
+          "refusalObserved": true
+        },
+        "populationStatements": {
+          "exitCode": 1,
+          "blockerCount": 7,
+          "blockers[]": 7,
+          "accepted[]": 0,
+          "developmentAccepted[]": 5,
+          "syntheticAcceptancesBlockPublication": true,
+          "pendingReviewsBlockPublication": true,
+          "refusalObserved": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-receipt-auditability-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyReceiptIsAuditable"
+        ],
+        "counts": {
+          "receipts": 31,
+          "excludedAsHistorical[]": 1,
+          "perReceipt[]": 31,
+          "completeReceipts": 31,
+          "incompleteReceipts[]": 0
+        },
+        "populationStatements": {
+          "receipts": 31,
+          "excludedAsHistorical[]": 1,
+          "perReceipt[]": 31,
+          "completeReceipts": 31,
+          "incompleteReceipts[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-receipt-quality-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyQualityCheckPassed",
+          "everyQualityCheckRan"
+        ],
+        "counts": {
+          "checksRun": 5,
+          "scriptsMissing[]": 0,
+          "failed[]": 0
+        },
+        "populationStatements": {
+          "checksRun": 5,
+          "scriptsMissing[]": 0,
+          "failed[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-scope-halves-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyScopeStatesBothHalves"
+        ],
+        "counts": {
+          "selfTestDetectsBothHalves": true,
+          "receipts": 31,
+          "rows[]": 31,
+          "missingLimit[]": 0,
+          "missingMeasured[]": 0,
+          "receiptsStatingBothHalves": 31
+        },
+        "populationStatements": {
+          "selfTestDetectsBothHalves": true,
+          "receipts": 31,
+          "rows[]": 31,
+          "missingLimit[]": 0,
+          "missingMeasured[]": 0,
+          "receiptsStatingBothHalves": 31
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-stage3-inventory-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyEvidenceFileExists",
+          "notRunIsDeclared"
+        ],
+        "counts": {
+          "executed[]": 3,
+          "evidenceOnly[]": 1,
+          "notRun[]": 3,
+          "suitesRun[]": 3,
+          "suitesPassed": true
+        },
+        "populationStatements": {
+          "executed[]": 3,
+          "evidenceOnly[]": 1,
+          "notRun[]": 3,
+          "suitesRun[]": 3,
+          "suitesPassed": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YI-state-classification-2026-11-11.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyNegativeCheckIsClassified",
+          "everyStateHasAnExample"
+        ],
+        "counts": {
+          "referencePassed": true,
+          "negativeChecksInReference[]": 10,
+          "unclassifiedChecks[]": 0,
+          "statesWithoutAnExample[]": 2
+        },
+        "populationStatements": {
+          "referencePassed": true,
+          "negativeChecksInReference[]": 10,
+          "unclassifiedChecks[]": 0,
+          "statesWithoutAnExample[]": 2
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-authority-limits-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyProductResultKeepsItsLimits"
+        ],
+        "counts": {
+          "receipts": 14,
+          "rows[]": 14,
+          "receiptsKeepingLimits": 2,
+          "receiptsRecordingProductResult": 2,
+          "productResultsWithoutKeptLimits[]": 0,
+          "distinctLimits": 17,
+          "limits[]": 17
+        },
+        "populationStatements": {
+          "receipts": 14,
+          "rows[]": 14,
+          "receiptsKeepingLimits": 2,
+          "receiptsRecordingProductResult": 2,
+          "productResultsWithoutKeptLimits[]": 0,
+          "distinctLimits": 17,
+          "limits[]": 17
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-doc-links-2026-11-18.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyRelativeLinkResolves"
+        ],
+        "counts": {
+          "directories[]": 5,
+          "documentsScanned": 195,
+          "linksChecked": 2057,
+          "brokenLinks[]": 0,
+          "brokenCount": 0,
+          "crossRepoLinks[]": 3,
+          "declaredExternalLinks[]": 2,
+          "crossRepoCount": 3,
+          "declaredExternalCount": 2
+        },
+        "populationStatements": {
+          "directories[]": 5,
+          "documentsScanned": 195,
+          "linksChecked": 2057,
+          "brokenLinks[]": 0,
+          "brokenCount": 0,
+          "crossRepoLinks[]": 3,
+          "declaredExternalLinks[]": 2,
+          "crossRepoCount": 3,
+          "declaredExternalCount": 2
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-preflight-disclosure-2026-11-17.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyTestPassed"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "testsRun": 21,
+          "testsPassed": 21,
+          "failed[]": 0,
+          "skipped[]": 0,
+          "disclaimers[]": 4,
+          "disclaimsAudienceAndDisclosure": true
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "testsRun": 21,
+          "testsPassed": 21,
+          "failed[]": 0,
+          "skipped[]": 0,
+          "disclaimers[]": 4,
+          "disclaimsAudienceAndDisclosure": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-qh-resolve-09-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyClaimIsPinnedByAPassingTest"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "claims[]": 3,
+          "failed[]": 0
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "claims[]": 3,
+          "failed[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-qh-revalidate-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyCommandAcceptsTheMatchingFingerprint",
+          "everyCommandRefusesAWrongFingerprint",
+          "everyCommandStillRunsWithoutTheFlag"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "jsonFlagAcceptedBy[]": 1,
+          "fingerprintGuardOn[]": 1,
+          "results[]": 5
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "jsonFlagAcceptedBy[]": 1,
+          "fingerprintGuardOn[]": 1,
+          "results[]": 5
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-receipt-gates-2026-11-17.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyGatePassed",
+          "everyGateRan"
+        ],
+        "counts": {
+          "gatesRequested": 8,
+          "gatesRun": 8,
+          "scriptsMissing[]": 0,
+          "failed[]": 0
+        },
+        "populationStatements": {
+          "gatesRequested": 8,
+          "gatesRun": 8,
+          "scriptsMissing[]": 0,
+          "failed[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-runbook-expectation-2026-11-17.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyExpectedValueMatches"
+        ],
+        "counts": {
+          "comparisons[]": 5,
+          "staleValues[]": 0
+        },
+        "populationStatements": {
+          "comparisons[]": 5,
+          "staleValues[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-section-sequence-2026-11-18.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everySequenceAscendsAndHasNoUndocumentedHole"
+        ],
+        "counts": {
+          "documentsScanned": 37,
+          "documentsWithProblems": 0,
+          "problems[]": 0,
+          "declaredAbsences[]": 1
+        },
+        "populationStatements": {
+          "documentsScanned": 37,
+          "documentsWithProblems": 0,
+          "problems[]": 0,
+          "declaredAbsences[]": 1
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-skip-disclosure-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everySkipIsVisible",
+          "everyVerdictReceiptStatesItsHost"
+        ],
+        "counts": {
+          "receipts": 14,
+          "rows[]": 14,
+          "receiptsReportingVerdicts": 5,
+          "receiptsMissingHost[]": 0,
+          "receiptsHidingASkip[]": 0
+        },
+        "populationStatements": {
+          "receipts": 14,
+          "rows[]": 14,
+          "receiptsReportingVerdicts": 5,
+          "receiptsMissingHost[]": 0,
+          "receiptsHidingASkip[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-sui-source-policy-2026-11-17.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyOverrideTestRan"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "passed": 16,
+          "failed": 0,
+          "exit": 0,
+          "overrideTestsRan[]": 4,
+          "overrideTestsAbsent[]": 0,
+          "forcesDenyForSourceSnapshot": true,
+          "forcesTenantScopeForSourceSnapshot": true,
+          "rejectsBuiltinAdaptersForSource": true,
+          "suiteGreen": true,
+          "summaryLineParsed": true
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "passed": 16,
+          "failed": 0,
+          "exit": 0,
+          "overrideTestsRan[]": 4,
+          "overrideTestsAbsent[]": 0,
+          "forcesDenyForSourceSnapshot": true,
+          "forcesTenantScopeForSourceSnapshot": true,
+          "rejectsBuiltinAdaptersForSource": true,
+          "suiteGreen": true,
+          "summaryLineParsed": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-sui-tenant-boundary-2026-11-17.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyBoundaryTestPassed"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "tests[]": 2,
+          "passed": 8,
+          "failed": 0,
+          "exit": 0,
+          "tail[]": 2,
+          "denialHappensBeforeTheAdapter": true
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "tests[]": 2,
+          "passed": 8,
+          "failed": 0,
+          "exit": 0,
+          "tail[]": 2,
+          "denialHappensBeforeTheAdapter": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-suite-step-accounting-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyKeyedStepAppearsInTheRecord"
+        ],
+        "counts": {
+          "keyedSteps": 97,
+          "runStepCalls": 108,
+          "assignedSteps": 6,
+          "continuationLineSteps": 101,
+          "registeredSteps": 108,
+          "unexplainedRunStepCalls": 0,
+          "recordedSteps": 107,
+          "duplicateKeys[]": 0,
+          "callsWithoutKey": 11,
+          "recordedButNotKeyed[]": 0,
+          "keyedButNotRecorded[]": 1,
+          "explainedBySkipFlag[]": 0,
+          "receiptRecordsItsFlags": false,
+          "countsAreInternallyConsistent": true,
+          "numbersAreExplainable": false
+        },
+        "populationStatements": {
+          "keyedSteps": 97,
+          "runStepCalls": 108,
+          "assignedSteps": 6,
+          "continuationLineSteps": 101,
+          "registeredSteps": 108,
+          "unexplainedRunStepCalls": 0,
+          "recordedSteps": 107,
+          "duplicateKeys[]": 0,
+          "callsWithoutKey": 11,
+          "recordedButNotKeyed[]": 0,
+          "keyedButNotRecorded[]": 1,
+          "explainedBySkipFlag[]": 0,
+          "receiptRecordsItsFlags": false,
+          "countsAreInternallyConsistent": true,
+          "numbersAreExplainable": false
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-host-skip-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "noTestFailed"
+        ],
+        "counts": {
+          "tests[]": 2,
+          "passedTests[]": 1,
+          "skippedTests[]": 1,
+          "failedTests[]": 0,
+          "skipIsNotAFailure": true
+        },
+        "populationStatements": {
+          "tests[]": 2,
+          "passedTests[]": 1,
+          "skippedTests[]": 1,
+          "failedTests[]": 0,
+          "skipIsNotAFailure": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-knowledge-disclosure-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "allSectionsDiscloseEverything"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "authorityLimits[]": 10,
+          "declaredLimitsThatBlockAPReading[]": 4,
+          "declaresItIsNotAccessControl": true,
+          "selectiveDisclosureWorks": true,
+          "unknownSectionIsRefused": true
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "authorityLimits[]": 10,
+          "declaredLimitsThatBlockAPReading[]": 4,
+          "declaresItIsNotAccessControl": true,
+          "selectiveDisclosureWorks": true,
+          "unknownSectionIsRefused": true
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-linux-regression-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyTestPassedOnLinux"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "results[]": 1,
+          "passedTests[]": 1,
+          "failedOrSkipped[]": 0
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "results[]": 1,
+          "passedTests[]": 1,
+          "failedOrSkipped[]": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-product-read-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyListedRegressionPassed"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "untrackedOrModifiedCount": 0,
+          "testsRun": 8,
+          "testsPassed": 8,
+          "failed[]": 0,
+          "results[]": 8
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "untrackedOrModifiedCount": 0,
+          "testsRun": 8,
+          "testsPassed": 8,
+          "failed[]": 0,
+          "results[]": 8
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-readonly-cli-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyCommandAnswered"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "commandsRun": 5,
+          "failed[]": 0,
+          "results[]": 5,
+          "inspectReturnedByteRange": true,
+          "definitionRanges[]": 1,
+          "inspectAuthorityLimits[]": 4
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "commandsRun": 5,
+          "failed[]": 0,
+          "results[]": 5,
+          "inspectReturnedByteRange": true,
+          "definitionRanges[]": 1,
+          "inspectAuthorityLimits[]": 4
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-rooted-source-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyTestPassedOnLinux"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "comparisons[]": 3,
+          "skippedOnWindows[]": 2,
+          "failedOnLinux[]": 0,
+          "verifiedOnlyOnLinux[]": 2,
+          "windowsExit": 0,
+          "linuxExit": 0
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "comparisons[]": 3,
+          "skippedOnWindows[]": 2,
+          "failedOnLinux[]": 0,
+          "verifiedOnlyOnLinux[]": 2,
+          "windowsExit": 0,
+          "linuxExit": 0
+        },
+        "statesAPopulationSize": true
+      },
+      {
+        "receipt": "YIC-tei-selfbuild-observations-2026-11-16.json",
+        "result": "PASS",
+        "universalClaims": [
+          "everyTestProducedAVerdict",
+          "noTestFailedOnLinux"
+        ],
+        "counts": {
+          "checkoutClean": true,
+          "packageExit": 0,
+          "tests[]": 11,
+          "passedTests[]": 11,
+          "skippedTests[]": 0,
+          "failedTests[]": 0,
+          "testsWithoutVerdict[]": 0
+        },
+        "populationStatements": {
+          "checkoutClean": true,
+          "packageExit": 0,
+          "tests[]": 11,
+          "passedTests[]": 11,
+          "skippedTests[]": 0,
+          "failedTests[]": 0,
+          "testsWithoutVerdict[]": 0
+        },
+        "statesAPopulationSize": true
+      }
+    ],
+    "finding": "「すべてのXが…」という判定を持つreceiptが、検査した対象の個数を記録しているかを点検する。個数が無いreceiptは、3件を見たのか300件を見たのか読者に分からない。"
+  },
+  "scope": "Reads the YI receipts and flags those that assert an 'every …' verdict without any integer count in their observed data. It checks disclosure of a population size only: a counted receipt may still have counted the wrong population, and an uncounted one may describe a single object truthfully."
+}
