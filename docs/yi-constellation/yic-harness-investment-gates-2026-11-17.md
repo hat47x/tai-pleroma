@@ -6,6 +6,8 @@
 
 **Codex公開ソースの取り込み方：** [Codex公開Harnessの活用判断と接続実行票](codex-source-integration-decision-2026-11-17.md)に、固定した上流Source、既存Go Harness Adapterでの単発実行、App Serverの双方向Session接続、実証負例とC0〜C5の順序を整理した。これはH-01／H-03以降の補助票であり、二本の独立P0、B4内製判定、受入Ownerを変更しない。
 
+**Codexに関する確定方針（2026-11-18）：** 更新が速いCodexの実装はYICへ埋め込まず、外部Harnessの接続・比較対象とする。一方、対象Pin、進捗、承認、Native Session／限定Activity Handoff、Tool・Evidence、並列Workstreamの安全な統合などはYIC・各Productの既存Ownerへ取り込む。[Codex接続実行票](codex-source-integration-decision-2026-11-17.md)に責務対応表と版更新時の確認条件を追加した。B4独自Loopの不採用判断、#168 G0/G1/G2／四Slot適格0/4、TEIセルフビルドの独立P0は変更しない。
+
 ## 結論：独自UIは先に、独自Agent Loopは後から判断する
 
 YICが実現したいのは「AIを自分で回すこと」ではなく、**利用者が選んだ仕事と対象を、異なる製品・画面・Harnessの間で安全に扱い続けられること**である。外部HarnessのNative Sessionをそのまま共有できる場合はその能力を利用する。できない場合も、許可されたActivityの目的・対象参照・未決事項を新Sessionへ引き継ぐ経路を用意する。ただし両者を同一の「Session復旧」と呼ばない。
