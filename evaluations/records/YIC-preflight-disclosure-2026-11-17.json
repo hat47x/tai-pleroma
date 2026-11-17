@@ -1,0 +1,73 @@
+{
+  "schema": "tai.reference.yic-preflight-disclosure-boundary/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go, running the TEI plugin-management preflight tests",
+  "command": "python integrations/tools/yic_preflight_disclosure_boundary.py --tei-repo <clean TEI clone at a44b0ed25392> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-preflight-disclosure-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "teiCommit": "a44b0ed253921eda302adc4679ebb41cc8560304",
+    "checkoutClean": true,
+    "package": "./internal/plugin/management",
+    "typeFile": "internal/plugin/management/document_preflight.go",
+    "testsRun": 21,
+    "testsPassed": 21,
+    "failed": [],
+    "skipped": [],
+    "verdicts": {
+      "TestDocumentReadPreflightUsesExistingResolverSelection": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/partial-scan": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/unrun-scan": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/not-declared": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/not-selected": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/resolver-failed": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/row-unresolved": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/unparseable-version": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/missing-lock": "PASS",
+      "TestDocumentReadPreflightFailsClosedOnUnqualifiedStates/mismatched-lock": "PASS",
+      "TestDocumentReadPreflightReportsOnlyDirectUpstream": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/missing": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/undeclared": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/unselected": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/unresolved": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/invalid-version": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/major-mismatch": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/lock-unknown": "PASS",
+      "TestDocumentReadPreflightUpstreamFailureStates/lock-mismatch": "PASS"
+    },
+    "disclaimers": [
+      {
+        "phrase": "does not discover a Document",
+        "question": "対象文書の発見",
+        "presentInSource": true
+      },
+      {
+        "phrase": "read its bytes",
+        "question": "本文byteの読取",
+        "presentInSource": true
+      },
+      {
+        "phrase": "check Audience/Disclosure",
+        "question": "受信者別の開示判定",
+        "presentInSource": true
+      },
+      {
+        "phrase": "grant publication",
+        "question": "公開の許可",
+        "presentInSource": true
+      }
+    ],
+    "disclaimsAudienceAndDisclosure": true,
+    "everyTestPassed": true,
+    "finding": "TEIの`document_preflight`は、Documentを発見せず、byteを読み、Audience/Disclosureを検査せず、公開を許可しないと型のコメントで明示している。この検査はその宣言と、選択解決の挙動を固定するテストを実行して確認した。したがって、P（受信者別の開示）を判定する経路は、少なくともこの入口には無い。"
+  },
+  "scope": "Runs the tests that pin TEI's document read preflight and checks that the type's own comment disclaims discovering the document, reading bytes, checking Audience/Disclosure and granting publication. It shows the preflight is not a recipient-specific decision; it does not prove that no other TEI entry can decide disclosure, and it does not exercise any release or publication route."
+}
