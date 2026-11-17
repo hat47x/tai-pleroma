@@ -196,6 +196,7 @@ TAIを中心とする製品シリーズ YI Constellation について、次の�
 - [YIC Skillから実Plugin文書を取得する縦断実行票](skill-knowledge-use-qualification-2026-11-15.md)
 - [型付きSkill構成と利用資格の検証仕様](skill-composition-typed-qualification-2026-11-16.md) — Whole/Field接続、実行時の再確認、既存Ownerへの反証引渡し
 - [横断計画：複数UIと外部Harness Sessionの接合](harness-cross-ui-session-probe-2026-11-14.md)
+- [Native Session機能の確認票：履歴・再開・別UI・分岐と縮退](native-harness-session-capability-pilot-2026-11-17.md) — Codex／Claude等の実API差を残して確認し、Activity引継ぎと会話の再接続を混同しない
 - [テストが暗黙にホストを選ぶ問題](host-dependent-tests-2026-11-16.md) — TEI・SUIで見つかったSKIP/FAILのホスト差と、検証の記録方法
 - [I/R/P/T/C/Hの到達点](irptch-reach-2026-11-16.md) — 5枚の検証カードがどこまで届いたかを段階別に並べる
 - [並行AI開発の最初の実行票：branch競合・独立検証・main統合](parallel-agent-integration-first-trial-2026-11-15.md)
