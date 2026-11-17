@@ -100,6 +100,8 @@ def main():
     parser.add_argument("--out", required=True)
     parser.add_argument("--self-test", action="store_true",
                         help="prove the aggregate fails when a gate is missing or fails")
+    parser.add_argument("--no-write", action="store_true",
+                        help="write the children's receipts to a temporary directory")
     args = parser.parse_args()
 
     if args.self_test:
@@ -112,6 +114,7 @@ def main():
         return 0 if outcome["passed"] else 1
 
     root = Path(__file__).resolve().parents[2]
+    scratch = Path(tempfile.mkdtemp(prefix="yic-gates-"))
     results = {}
     for name, script, question, extra in GATES:
         path = root / script
@@ -122,8 +125,12 @@ def main():
         if name == "checker":
             command += extra
         else:
-            command += ["--artifact", args.artifact,
-                        "--out", str(root / "evaluations/records" / OUTPUTS[name])]
+            # Keep count-bearing receipts out of the tree when merely verifying.
+            target = (
+                scratch / OUTPUTS[name] if args.no_write
+                else root / "evaluations/records" / OUTPUTS[name]
+            )
+            command += ["--artifact", args.artifact, "--out", str(target)]
         completed = subprocess.run(
             command, cwd=root, capture_output=True, text=True,
             encoding="utf-8", errors="replace", env={**os.environ},
@@ -139,6 +146,8 @@ def main():
 
     missing, failed = classify(results)
     checks = {
+        "wroteIntoTheTree": not args.no_write,
+        "scratchDirectory": str(scratch) if args.no_write else "",
         "gatesRequested": len(GATES),
         "gatesRun": len([item for item in results.values() if item["ran"]]),
         "results": results,
