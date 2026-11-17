@@ -65,6 +65,14 @@
           "最小の試験"
         ],
         "satisfied": true
+      },
+      {
+        "requirement": "statesTheSizeOfTheChange",
+        "question": "変更が何箇所に及ぶかを述べているか",
+        "matchedPhrases": [
+          "足す必要がある箇所"
+        ],
+        "satisfied": true
       }
     ],
     "unsatisfied": [],
