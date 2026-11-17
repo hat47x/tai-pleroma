@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 32,
-    "checksRun": 32,
+    "checksRequested": 33,
+    "checksRun": 33,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 55, \"links\": 641, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 55, \"links\": 642, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 373, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 374, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 84, \"writers\": 84, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 85, \"writers\": 85, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -238,6 +238,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"validAccepted\": true, \"emptyRefused\": true, \"nonStringRefused\": true, \"unrelatedRecipientAccepted\": true, \"wrongCaseRecipientAccepted\": true}"
+      },
+      "audienceConsumer": {
+        "ran": true,
+        "question": "running the consumer CLI: a ticket naming a third party is still accepted",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"cases\": 3, \"unrelatedAccepted\": true, \"neverClaimsAuthority\": true, \"passed\": true}"
       }
     },
     "scriptsMissing": [],

@@ -294,6 +294,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-audience-field-reading-2026-11-18.json",
     "evaluations/records/YIC-per-contract-claims-2026-11-18.json",
     "evaluations/records/YIC-audience-execution-2026-11-18.json",
+    "evaluations/records/YIC-audience-consumer-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -708,7 +709,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 32
+                or observed.get("checksRun") != 33
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative:
@@ -719,6 +720,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("comparesAudienceAgainstARecipient") is not False
             ):
                 errors.append(f"the audience declaration reading lost its finding: {relative}")
+        if "YIC-audience-consumer" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("consumerAcceptsUnrelatedRecipient") is not True
+                or observed.get("consumerNeverClaimsAuthority") is not True
+            ):
+                errors.append(f"the consumer audience probe lost its finding: {relative}")
         if "YIC-audience-execution" in relative:
             observed = data.get("observed", {})
             if (

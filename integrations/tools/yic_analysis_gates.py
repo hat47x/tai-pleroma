@@ -91,6 +91,8 @@ PORTABLE_CHECKS = (
      "the document names each contract and carries no blanket claim"),
     ("audienceExecution", "yic_audience_execution_probe.py",
      "running the envelope validator: shape refused, an unrelated recipient accepted"),
+    ("audienceConsumer", "yic_audience_consumer_probe.py",
+     "running the consumer CLI: a ticket naming a third party is still accepted"),
 )
 
 
