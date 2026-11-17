@@ -1,5 +1,7 @@
 # YIC 外部HarnessのNative Session機能を検証する最小実行票
 
+状態: 実行票（2026-11-17）。Docs-onlyの計画であり、実Harness試行はNOT RUN。
+
 > **2026-11-17 / Proposed / Docs-only / 実Harness試行 NOT RUN。** [横断計画](harness-cross-ui-session-probe-2026-11-14.md)のM0〜M4を、Harness固有の実APIに当てはめて確かめる後続実行票。新Agent Loop、共通Session DB、中央Lock、共通Transcript ABI、第二Expected/Authority、共通Hostは設けない。最初の[TEI実行票](tei-selection-harness-first-vertical-slice-2026-11-15.md)と[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の固定比較条件を変更しない。
 
 Codexについては、[公開ソースを固定した接続実行票](codex-source-integration-decision-2026-11-17.md)のC2およびCX-02〜06／12を参照する。App Serverのローカルstdioは初回単一Clientとして扱い、別UIからの閲覧・再開・同時操作は**別々に実証する**。Codexの実接続やこのNative票のM2／M3は未実施。

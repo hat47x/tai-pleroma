@@ -1,5 +1,7 @@
 # 共通Harness Adapter：Exit一覧と証拠の索引（2026-11-12）
 
+状態: 索引（2026-11-12）。Exitと証拠ファイルの対応のみを置き、判断の正本は後続計画と実装READMEにある。
+
 **これは索引である。判断の正本は [後続計画](harness-adapter-followup-plan-2026-11-11.md) と
 [実装README](../../integrations/harness-adapter/README.md) にある。ここには
 「どのExitを、どの実行で、どの証拠ファイルで示したか」だけを置く。**

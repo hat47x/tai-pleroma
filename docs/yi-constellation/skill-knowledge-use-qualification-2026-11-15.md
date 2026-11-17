@@ -1,5 +1,7 @@
 # YIC：Skillから製品知識を発見し、実操作と成果を確かめる実行計画
 
+状態: 実行計画（2026-11-15）。設計・実装の引渡しであり、後続の実Harness比較とOwner受理はNOT RUN。
+
 更新：2026-11-15。状態：**設計・実装引渡し／後続実Harness比較とOwner受理はNOT RUN**。これは[Skill／Plugin構成計画](harness-skill-plugin-plan-2026-11-02.md)§48の後続実行票である。[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)の照合、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness比較、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の再資格化、[TAI #74](https://github.com/hat47x/tai-pleroma/issues/74)の配布を置き換えない。新しいRegistry、Router、権限判定Engine、Agent Loop、Evidence正本、Skill形式は作らない。
 
 ## 1. 設計判断：Skillは短い入口、専門知識の正本はProductとPlugin

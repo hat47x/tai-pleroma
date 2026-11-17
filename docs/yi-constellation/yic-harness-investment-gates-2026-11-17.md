@@ -1,5 +1,7 @@
 # YICハーネス構想：独自化の判断基準と最初の実行順（2026年11月17日）
 
+状態: 設計判断の整理と実行計画（2026-11-17）。新しいHarness・共有Agent Loop・実OS/Provider E2E・Owner受理はNOT RUN。
+
 > **位置づけ：設計判断の整理・実行計画。新しいHarness、共有Agent Loop、実OS/Provider E2E、正式なOwner受理はNOT RUN。** 本文は[TAI #234](https://github.com/hat47x/tai-pleroma/issues/234)の投資判断、[#168](https://github.com/hat47x/tai-pleroma/issues/168)の実Harness適格性、[#271](https://github.com/hat47x/tai-pleroma/issues/271)のActivity継続、[既存の横断UI計画](harness-cross-ui-session-probe-2026-11-14.md)を短い実装判断へ結ぶ補助票である。新規の契約正本、検査器、中央Host、Runner、Session Store、Lock、Registry、認可器を設けない。
 
 **Codex公開ソースの取り込み方：** [Codex公開Harnessの活用判断と接続実行票](codex-source-integration-decision-2026-11-17.md)に、固定した上流Source、既存Go Harness Adapterでの単発実行、App Serverの双方向Session接続、実証負例とC0〜C5の順序を整理した。これはH-01／H-03以降の補助票であり、二本の独立P0、B4内製判定、受入Ownerを変更しない。

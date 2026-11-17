@@ -1,5 +1,7 @@
 # YI Constellation：代表的Harnessの相互運用、最小Adapter、Skill実効性とHandoffの段階実証
 
+状態: 追加実証計画（2026-11-03）。実Harness接続・製品機能の受理ではなく、全新試験はNOT RUN。
+
 2026-11-03。TAI [#168](https://github.com/hat47x/tai-pleroma/issues/168)の対応要求を、[Draft #270](https://github.com/hat47x/tai-pleroma/pull/270)のSK-01/SK-02、[TAI #271](https://github.com/hat47x/tai-pleroma/issues/271)の再資格化、[TEI #2605](https://github.com/hat47x/tei-platform/issues/2605)のProduct Skillへ接続する**追加実証計画**。本書自体は実Harness接続・製品機能の受理を意味しない（全新試験 NOT RUN）。
 
 ## 1. 成熟させる意思決定
