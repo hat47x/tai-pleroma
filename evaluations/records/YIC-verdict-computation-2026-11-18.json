@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.yic-verdict-computation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the YI tool sources",
+  "command": "python integrations/tools/yic_verdict_computation_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-verdict-computation-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "toolsFolder": "integrations/tools",
+    "toolsScanned": 73,
+    "toolsThatWriteAVerdict": 73,
+    "toolsWithAFixedVerdict": [],
+    "fixedVerdictCount": 0,
+    "fixedPassOnly": [],
+    "everyVerdictIsComputed": true,
+    "finding": "YIのreceipt書き出し部が、判定を計算しているのか、リテラルで主張しているのかを調べる。`\"result\": \"PASS\"`という固定文字列は、自分の検査が失敗してもPASSを報告しうる。`\"PASS\" if ... else \"FAIL\"`のような条件式は対象外とする。"
+  },
+  "scope": "Reads the YI tool sources and flags writers whose verdict is a fixed string with no conditional. It checks the shape of the writer only: a computed verdict can still compute from the wrong comparison, and a tool that writes no verdict is not examined."
+}

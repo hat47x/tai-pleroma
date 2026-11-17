@@ -66,6 +66,13 @@ TAI_ROOT_CHECKS = (
      "each record's state is classified, not inferred"),
 )
 
+PORTABLE_CHECKS = (
+    ("verdictComputation", "yic_verdict_computation_check.py",
+     "every receipt writer computes its verdict rather than asserting one"),
+    ("claimCeiling", "yic_claim_ceiling_check.py",
+     "claims that are literals cannot be reached by re-running"),
+)
+
 
 def digest(path):
     return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -87,12 +94,16 @@ def main():
     root = Path(__file__).resolve().parents[2]
     scratch = Path(tempfile.mkdtemp(prefix="yic-analysis-gates-"))
     results = {}
-    for name, script, question in CHECKS + TAI_ROOT_CHECKS:
+    for name, script, question in CHECKS + TAI_ROOT_CHECKS + PORTABLE_CHECKS:
         path = root / "integrations/tools" / script
         if not path.exists():
             results[name] = {"ran": False, "reason": "script missing", "question": question}
             continue
-        extra = ["--tai-root", str(root)] if (name, script, question) in TAI_ROOT_CHECKS else []
+        extra = []
+        if (name, script, question) in TAI_ROOT_CHECKS:
+            extra = ["--tai-root", str(root)]
+        elif name == "claimCeiling":
+            extra = ["--sho-repo", str(root.parent / "sho-composer")]
         completed = subprocess.run(
             [sys.executable, str(path), *extra,
              "--artifact", args.artifact,
@@ -111,7 +122,7 @@ def main():
 
     missing, failed = classify(results)
     checks = {
-        "checksRequested": len(CHECKS) + len(TAI_ROOT_CHECKS),
+        "checksRequested": len(CHECKS) + len(TAI_ROOT_CHECKS) + len(PORTABLE_CHECKS),
         "checksRun": len([item for item in results.values() if item["ran"]]),
         "results": results,
         "scriptsMissing": missing,
