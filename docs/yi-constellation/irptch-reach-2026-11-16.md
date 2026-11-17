@@ -23,9 +23,11 @@
 | QH-A0-RUN-10 | ○ | ○ | − | − | − | − |
 | QH-CLI-RANGE-11 | ○ | ○ | − | − | − | − |
 | QH-REVALIDATE-12 | ○ | ○ | − | − | − | − |
-| QH-FIELD-13 | ○ | ○ | − | − | − | − |
+| QH-FIELD-13 | ○ | − | − | − | − | − |
 
 凡例: ○＝receiptで観測、−＝未到達（NOT RUN）。
+
+**この表はreceiptから機械的に再生成して突き合わせている**（[点検のreceipt](../../../evaluations/records/YIC-reach-table-2026-11-17.json)）。Iはcommitとclean checkoutの記録、Rはカードごとに名指した証拠field（`inspectReturnedByteRange`／`snapshotFingerprint`／`everyListedRegressionPassed`）の値を要求する。**初回の点検でQH-FIELD-13のRが根拠なしと判明したので、この表を修正した。**
 
 ### 2.1 各カードが実際に観測したもの
 
@@ -35,7 +37,7 @@
 | QH-A0-RUN-10 | [YIC-tei-product-read](../../../evaluations/records/YIC-tei-product-read-2026-11-16.json) | 8件のGo回帰がclean cloneでPASS。Subject・元byte範囲の取得を含む |
 | QH-CLI-RANGE-11 | [YIC-tei-readonly-cli](../../../evaluations/records/YIC-tei-readonly-cli-2026-11-16.json) | 5つのCLIが応答。`inspect`が`offset 124, line 7, column 6`〜`129`を返す |
 | QH-REVALIDATE-12 | [YIC-qh-revalidate](../../../evaluations/records/YIC-qh-revalidate-2026-11-16.json) | `trace`が`snapshotFingerprint`一致を受理し、不一致を`STALE_SNAPSHOT`で拒否 |
-| QH-FIELD-13 | [YIC-qh-field-13](../../../evaluations/records/YIC-qh-field-13-2026-11-16.json) | Whole Recordが追加Fieldを残し、明示2 Field投影が落とす |
+| QH-FIELD-13 | [YIC-qh-field-13](../../../evaluations/records/YIC-qh-field-13-2026-11-16.json) | Whole Recordが追加Fieldを残し、明示2 Field投影が落とす。**構成したRecordに対するTransformの試験であり、WorkspaceのSubjectを解決していない**のでRには届かない |
 
 ## 3. 到達していない段階と、その理由
 

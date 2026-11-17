@@ -1,0 +1,145 @@
+{
+  "schema": "tai.reference.yic-reach-table-derivation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Python 3.12 reading the documents and the receipts",
+  "command": "python integrations/tools/yic_reach_table_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-reach-table-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/irptch-reach-2026-11-16.md",
+    "cards": 5,
+    "rows": [
+      {
+        "card": "QH-RESOLVE-09",
+        "receipt": "YIC-qh-resolve-09-2026-11-16",
+        "receiptResult": "PASS",
+        "rEvidence": null,
+        "rWhy": "能力解決の曖昧/不在を固定する試験であり、Subjectを解決していない",
+        "documented": {
+          "I": true,
+          "R": false,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "derived": {
+          "I": true,
+          "R": false,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "mismatches": []
+      },
+      {
+        "card": "QH-A0-RUN-10",
+        "receipt": "YIC-tei-product-read-2026-11-16",
+        "receiptResult": "PASS",
+        "rEvidence": "everyListedRegressionPassed",
+        "rWhy": "8件の回帰にSubjectと元byte範囲の取得が含まれ、全件PASSした",
+        "documented": {
+          "I": true,
+          "R": true,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "derived": {
+          "I": true,
+          "R": true,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "mismatches": []
+      },
+      {
+        "card": "QH-CLI-RANGE-11",
+        "receipt": "YIC-tei-readonly-cli-2026-11-16",
+        "receiptResult": "PASS",
+        "rEvidence": "inspectReturnedByteRange",
+        "rWhy": "inspectが定義位置のoffset/line/columnを返した",
+        "documented": {
+          "I": true,
+          "R": true,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "derived": {
+          "I": true,
+          "R": true,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "mismatches": []
+      },
+      {
+        "card": "QH-REVALIDATE-12",
+        "receipt": "YIC-qh-revalidate-2026-11-16",
+        "receiptResult": "PASS",
+        "rEvidence": "snapshotFingerprint",
+        "rWhy": "traceがSubjectを解決し、snapshot指紋を返した",
+        "documented": {
+          "I": true,
+          "R": true,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "derived": {
+          "I": true,
+          "R": true,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "mismatches": []
+      },
+      {
+        "card": "QH-FIELD-13",
+        "receipt": "YIC-qh-field-13-2026-11-16",
+        "receiptResult": "PASS",
+        "rEvidence": null,
+        "rWhy": "Transformの投影差を評価する試験であり、Subjectを解決していない",
+        "documented": {
+          "I": true,
+          "R": false,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "derived": {
+          "I": true,
+          "R": false,
+          "P": false,
+          "T": false,
+          "C": false,
+          "H": false
+        },
+        "mismatches": []
+      }
+    ],
+    "mismatchedCards": [],
+    "cardsWithoutATableRow": [],
+    "oMarksAreBackedByTheReceipt": true,
+    "finding": "到達点の表の○を、receiptの`observed`から機械的に再生成して突き合わせた。Iは実行の固定（commit・clean checkout）、RはSubjectの解決または位置取得の観測、P以降は受信者・配送・Consumer・Harnessの記録を要求する。Pは開示の**選択**では立たない（受信者別の判定ではないため）。"
+  },
+  "scope": "Rebuilds the I/R/P/T/C/H marks from each card's receipt and compares them with the document. It checks that a printed ○ has receipt evidence behind it and that no receipt hides a stage the document leaves blank. The predicates are conservative heuristics over field names: they can confirm a mark is backed, and they can catch a mark with no backing field, but they do not judge whether the evidence means what the stage requires."
+}
