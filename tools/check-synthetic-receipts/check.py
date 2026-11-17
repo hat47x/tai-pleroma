@@ -284,6 +284,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-claim-ceiling-2026-11-18.json",
     "evaluations/records/YIC-verdict-computation-2026-11-18.json",
     "evaluations/records/YIC-handoff-conditions-2026-11-18.json",
+    "evaluations/records/YIC-audience-instrument-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -701,6 +702,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checksRun") != 23
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
+        if "YIC-audience-instrument" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("hasAudienceField") is not False
+                or observed.get("sameDecision") is not True
+            ):
+                errors.append(f"the audience probe no longer shows the missing field: {relative}")
         if "YIC-handoff-conditions" in relative:
             observed = data.get("observed", {})
             if (

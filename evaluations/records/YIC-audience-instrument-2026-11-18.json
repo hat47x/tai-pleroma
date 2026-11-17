@@ -1,0 +1,35 @@
+{
+  "schema": "tai.reference.yic-audience-instrument/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows host running WSL Ubuntu-24.04, driving SUI's access decision",
+  "command": "python integrations/tools/yic_audience_instrument_probe.py <artifact> evaluations/records/YIC-audience-instrument-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "requestFields": [
+      "action",
+      "auth",
+      "read_only",
+      "resource",
+      "safe_mode",
+      "subject",
+      "tenant"
+    ],
+    "hasAudienceField": false,
+    "hasRecipientField": false,
+    "allowWithReader": true,
+    "allowWithAdmin": true,
+    "sameDecision": true,
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "distro": "Ubuntu-24.04",
+    "finding": "SUIの`AccessRequest`に`audience`も`recipient`も無く、`subject`（誰が求めているか）と`resource`（何を求めるか）だけがある。依頼者のroles/groupsを変えても判定が同じなら、**この関数は受信者を判定していない**。Pの計器を作るには、まず受信者を表す欄が要る。",
+    "whatWouldBeNeededForP": "AccessRequestに受信者（audience）を表す欄を追加し、同じresource・異なるaudienceで判定が変わることを示す試験。"
+  },
+  "scope": "Calls SUI's resolve_access_decision twice with requests that differ only in the requester's roles and groups, and records whether the decision changed and whether the request type has any field naming an audience. It shows the function does not judge a recipient; it does not prove that no other SUI entry could, and it does not test a real PDP."
+}

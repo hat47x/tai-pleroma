@@ -61,6 +61,10 @@ def main():
             "statesInstrumentLimited": any(word in status for word in LIMITED),
             "hasMinimumTestSet": "最小検証セット" in block,
             "hasCounterExample": "反例" in block,
+            # P must name the field that is missing, not only say the instrument is absent.
+            "namesWhatIsMissing": (
+                "受信者を表す欄" in block if stage == "P" else None
+            ),
         })
 
     missing = [row["stage"] for row in rows if not row["found"]]
@@ -70,6 +74,10 @@ def main():
     ]
     noTests = [row["stage"] for row in rows if row["found"] and not row["hasMinimumTestSet"]]
     noCounter = [row["stage"] for row in rows if row["found"] and not row["hasCounterExample"]]
+    noMissingName = [
+        row["stage"] for row in rows
+        if row["found"] and row["namesWhatIsMissing"] is False
+    ]
 
     # The document must also separate what G1 changes from what it does not.
     separatesG1 = (
@@ -83,6 +91,8 @@ def main():
         "stagesWithoutAnInstrumentStatement": noStatus,
         "stagesWithoutAMinimumTestSet": noTests,
         "stagesWithoutACounterExample": noCounter,
+        "stagesNotNamingWhatIsMissing": noMissingName,
+        "everyAbsentInstrumentIsNamed": not noMissingName,
         "separatesWhatG1Changes": separatesG1,
         "everyStageStatesItsInstrument": not noStatus,
         "everyStageHasATestSet": not noTests,
@@ -94,7 +104,7 @@ def main():
         ),
     }
     passed = (
-        not missing and not noStatus and not noTests and separatesG1
+        not missing and not noStatus and not noTests and not noMissingName and separatesG1
     )
 
     receipt = {

@@ -17,11 +17,12 @@
       {
         "stage": "P",
         "found": true,
-        "statusCell": "**計器なし**。`knowledge-context -disclose`はSectionの選択であり、Audienceで変わらない（[§4.1](../irptch-reach-2026-11-16.md)）",
+        "statusCell": "**計器なし**。`knowledge-context -disclose`はSectionの選択であり、Audienceで変わらない（[§4.1](../irptch-reach-2026-11-16.md)）。SUIの`AccessRequest`にも`audience`／`recipient`の欄が無く、依頼者のroles/groupsを変えても判定が変わらなかった（[実測](../../../evaluations/records/YIC-audience-instrument-2026-11-18.json)）",
         "statesInstrumentAbsent": true,
         "statesInstrumentLimited": false,
         "hasMinimumTestSet": true,
-        "hasCounterExample": true
+        "hasCounterExample": true,
+        "namesWhatIsMissing": true
       },
       {
         "stage": "T",
@@ -30,7 +31,8 @@
         "statesInstrumentAbsent": false,
         "statesInstrumentLimited": true,
         "hasMinimumTestSet": true,
-        "hasCounterExample": true
+        "hasCounterExample": true,
+        "namesWhatIsMissing": null
       },
       {
         "stage": "C",
@@ -39,7 +41,8 @@
         "statesInstrumentAbsent": false,
         "statesInstrumentLimited": true,
         "hasMinimumTestSet": true,
-        "hasCounterExample": true
+        "hasCounterExample": true,
+        "namesWhatIsMissing": null
       },
       {
         "stage": "H",
@@ -48,13 +51,16 @@
         "statesInstrumentAbsent": true,
         "statesInstrumentLimited": false,
         "hasMinimumTestSet": true,
-        "hasCounterExample": true
+        "hasCounterExample": true,
+        "namesWhatIsMissing": null
       }
     ],
     "stagesMissing": [],
     "stagesWithoutAnInstrumentStatement": [],
     "stagesWithoutAMinimumTestSet": [],
     "stagesWithoutACounterExample": [],
+    "stagesNotNamingWhatIsMissing": [],
+    "everyAbsentInstrumentIsNamed": true,
     "separatesWhatG1Changes": true,
     "everyStageStatesItsInstrument": true,
     "everyStageHasATestSet": true,
