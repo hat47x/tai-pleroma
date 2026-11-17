@@ -58,6 +58,8 @@ CHECKS = (
      "a proposal for a product contract names its owner and does not claim a decision"),
     ("exhaustionClaim", "yic_exhaustion_claim_check.py",
      "a dated 'nothing further can be done' claim acknowledges later work"),
+    ("harnessEvidence", "yic_harness_evidence_check.py",
+     "every harness evidence file records what it did not establish"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites

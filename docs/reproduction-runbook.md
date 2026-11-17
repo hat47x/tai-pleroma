@@ -86,8 +86,8 @@ python integrations/tools/run_suite.py `
 
 ```text
 suite:   107段すべて returncode 0、result = PASS
-checker: 合成61件・実実行282件、passed = true
-doc整合: passed = true（107段、実実行282件が一致）
+checker: 合成61件・実実行283件、passed = true
+doc整合: passed = true（107段、実実行283件が一致）
 ```
 
 確認コマンド:

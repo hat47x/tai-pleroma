@@ -1,0 +1,266 @@
+{
+  "schema": "tai.reference.yic-harness-evidence/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading every harness-adapter evidence file",
+  "command": "python integrations/tools/yic_harness_evidence_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-harness-evidence-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "integrations/harness-adapter/evidence",
+    "files": 10,
+    "adaptersRecordedAcrossAllFiles": [
+      "claude-code",
+      "direct-control",
+      "dsh-headless",
+      "step-cli"
+    ],
+    "rows": [
+      {
+        "file": "four-session-observation-2026-11-12.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "allocation",
+          "itt",
+          "notClaimed",
+          "pairs",
+          "sessions"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 3,
+        "outcomeCount": 0,
+        "adaptersInThisFile": [],
+        "contract": null
+      },
+      {
+        "file": "real-pilot-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "contract",
+          "divergences",
+          "finishedAt",
+          "notes",
+          "outcomes",
+          "startedAt",
+          "taskId",
+          "taskPins"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 1,
+        "outcomeCount": 3,
+        "adaptersInThisFile": [
+          "claude-code",
+          "direct-control",
+          "dsh-headless"
+        ],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "real-pilot-cross-product-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "contract",
+          "divergences",
+          "finishedAt",
+          "notes",
+          "outcomes",
+          "startedAt",
+          "taskId",
+          "taskPins"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 1,
+        "outcomeCount": 2,
+        "adaptersInThisFile": [
+          "direct-control",
+          "dsh-headless"
+        ],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "real-pilot-cross-product-claude-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "contract",
+          "divergences",
+          "finishedAt",
+          "notes",
+          "outcomes",
+          "startedAt",
+          "taskId",
+          "taskPins"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 1,
+        "outcomeCount": 2,
+        "adaptersInThisFile": [
+          "claude-code",
+          "direct-control"
+        ],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "real-pilot-step-typed-mcp-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "contract",
+          "divergences",
+          "finishedAt",
+          "notes",
+          "outcomes",
+          "startedAt",
+          "taskId",
+          "taskPins"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 1,
+        "outcomeCount": 2,
+        "adaptersInThisFile": [
+          "direct-control",
+          "step-cli"
+        ],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "real-pilot-typed-mcp-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "contract",
+          "divergences",
+          "finishedAt",
+          "notes",
+          "outcomes",
+          "startedAt",
+          "taskId",
+          "taskPins"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 1,
+        "outcomeCount": 3,
+        "adaptersInThisFile": [
+          "claude-code",
+          "direct-control",
+          "dsh-headless"
+        ],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "real-pilot-typed-mcp-claude-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "contract",
+          "divergences",
+          "finishedAt",
+          "notes",
+          "outcomes",
+          "startedAt",
+          "taskId",
+          "taskPins"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 1,
+        "outcomeCount": 2,
+        "adaptersInThisFile": [
+          "claude-code",
+          "direct-control"
+        ],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "receipt-readback-2026-11-11.json",
+        "parsed": true,
+        "shape": "object",
+        "topLevelKeys": [
+          "arm",
+          "claimsSource",
+          "configuration",
+          "consumers",
+          "contract",
+          "date",
+          "experiment",
+          "notClaimed",
+          "result"
+        ],
+        "declaresWhatItDidNotDo": true,
+        "notClaimedCount": 4,
+        "outcomeCount": 0,
+        "adaptersInThisFile": [],
+        "contract": "yi.harness-adapter/v0"
+      },
+      {
+        "file": "skill-pair-observation-2026-11-11.json",
+        "parsed": true,
+        "shape": "array",
+        "topLevelKeys": [
+          "eligible",
+          "h2",
+          "h3",
+          "skillEffect",
+          "taskId"
+        ],
+        "entryCount": 1,
+        "declaresWhatItDidNotDo": false,
+        "notClaimedCount": null,
+        "outcomeCount": null,
+        "contract": null
+      },
+      {
+        "file": "skill-pair-step-2026-11-11.json",
+        "parsed": true,
+        "shape": "array",
+        "topLevelKeys": [
+          "eligible",
+          "h2",
+          "h3",
+          "ineligibleReasons",
+          "skillEffect",
+          "taskId"
+        ],
+        "entryCount": 1,
+        "declaresWhatItDidNotDo": false,
+        "notClaimedCount": null,
+        "outcomeCount": null,
+        "contract": null
+      }
+    ],
+    "unparsedFiles": [],
+    "filesWithoutADeclaredLimit": [],
+    "arrayShapedFiles": [
+      "skill-pair-observation-2026-11-11.json",
+      "skill-pair-step-2026-11-11.json"
+    ],
+    "fourSession": {
+      "sessionsListed": 4,
+      "pairsListed": 2,
+      "notClaimedCount": 3,
+      "allocation": [
+        "S1-H2",
+        "S2-H3",
+        "S3-H3",
+        "S4-H2"
+      ],
+      "adaptersListed": [
+        "dsh-headless"
+      ],
+      "coversFourAdapters": [
+        "dsh-headless"
+      ],
+      "whatItActuallyCovers": "4つの割当（S1-H2/S2-H3/S3-H3/S4-H2）を1つのadapterで走らせた記録。4種類のadapterではない。"
+    },
+    "everyFileRecordsItsLimit": true,
+    "finding": "harness-adapterのevidenceを全件読み、**各ファイルが何を実施し、何を実施しなかったと自分で書いているか**を記録した。`real-pilot-*`という名前は実施の規模を連想させるが、ファイル自身が`notClaimed`で限界を書いているかは別に確かめる必要がある。"
+  },
+  "scope": "Reads every JSON file under the harness-adapter evidence directory and records each file's top-level keys, whether it declares what it did not do, and the four-session file's adapter coverage. It reads recorded evidence; it does not re-run any pilot, and it does not judge whether the recordings describe what happened."
+}

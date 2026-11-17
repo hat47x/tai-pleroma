@@ -12,28 +12,28 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 19,
+    "checksRequested": 20,
     "excluded": [
       {
         "check": "gateReproducibility",
         "reason": "rewrites tracked receipts by design; not read-only"
       }
     ],
-    "checksRun": 19,
+    "checksRun": 20,
     "results": {
       "readmeCoverage": {
         "ran": true,
         "question": "every YI document is reachable from the README",
         "exit": 0,
         "passed": true,
-        "tail": "{\"documents\": 92, \"unindexed\": 0, \"broken\": [], \"passed\": true}"
+        "tail": "{\"documents\": 93, \"unindexed\": 0, \"broken\": [], \"passed\": true}"
       },
       "docLinks": {
         "ran": true,
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 197, \"linksChecked\": 2109, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2113, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -47,7 +47,7 @@
         "question": "every document states what it is, early",
         "exit": 0,
         "passed": true,
-        "tail": "{\"documents\": 93, \"withoutStatus\": 0, \"late\": 0, \"passed\": true}"
+        "tail": "{\"documents\": 94, \"withoutStatus\": 0, \"late\": 0, \"passed\": true}"
       },
       "deckCounts": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 55, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 56, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 54, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 55, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -117,7 +117,7 @@
         "question": "a universal claim states its population",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receiptsWithUniversalClaims\": 57, \"withoutCount\": 0, \"passed\": true}"
+        "tail": "{\"receiptsWithUniversalClaims\": 58, \"withoutCount\": 0, \"passed\": true}"
       },
       "sectionOrder": {
         "ran": true,
@@ -152,7 +152,14 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 62, \"listed\": 8, \"notNamedIndividually\": 54, \"passed\": true}"
+        "tail": "{\"later\": 63, \"listed\": 8, \"notNamedIndividually\": 55, \"passed\": true}"
+      },
+      "harnessEvidence": {
+        "ran": true,
+        "question": "every harness evidence file records what it did not establish",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"files\": 10, \"unparsed\": [], \"withoutDeclaredLimit\": 0, \"coversFour\": [\"dsh-headless\"], \"passed\": true}"
       }
     },
     "scriptsMissing": [],
