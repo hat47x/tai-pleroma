@@ -119,7 +119,10 @@ def main():
         "observed": checks,
         "scope": "Walks the PASS receipts and flags a false value under a success-named key. The three receipts where that is the finding are listed with the reason, so a green result means no undeclared contradiction, not that every claim was independently verified. It does not check the claims themselves.",
     }
-    (records / Path(args.out).name).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    destination = Path(args.out)
+    if not destination.is_absolute():
+        destination = records / destination.name
+    destination.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
         "checked": checked,
         "unexpected": unexpected,
