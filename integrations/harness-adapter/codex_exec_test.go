@@ -110,6 +110,12 @@ func TestCodexExecIncompleteResultsDoNotPass(t *testing.T) {
 {"type":"item.started","item":{"id":"m","type":"mcp_tool_call"}}
 {"type":"turn.completed","usage":{}}
 `, 0, RunUnknown},
+		{"missing-tool-result", `{"type":"thread.started","thread_id":"a"}
+{"type":"turn.started"}
+{"type":"item.started","item":{"id":"m","type":"mcp_tool_call","server":"tei","tool":"model_catalog"}}
+{"type":"item.completed","item":{"id":"m","type":"mcp_tool_call","server":"tei","tool":"model_catalog","status":"completed","result":null}}
+{"type":"turn.completed","usage":{}}
+`, 0, RunUnknown},
 		{"no-terminal", `{"type":"thread.started","thread_id":"a"}
 {"type":"turn.started"}
 `, 0, RunUnknown},
