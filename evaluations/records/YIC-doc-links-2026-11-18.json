@@ -12,9 +12,15 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "folder": "docs",
-    "documentsScanned": 119,
-    "linksChecked": 1063,
+    "directories": [
+      "docs",
+      "analysis",
+      "evaluations",
+      "scenarios",
+      "integrations"
+    ],
+    "documentsScanned": 195,
+    "linksChecked": 1234,
     "brokenLinks": [],
     "brokenCount": 0,
     "crossRepoLinks": [
