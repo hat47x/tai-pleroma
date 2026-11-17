@@ -1,0 +1,28 @@
+{
+  "schema": "tai.reference.yic-audience-field-reading/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the handoff envelope and its consumer",
+  "command": "python integrations/tools/yic_audience_declaration_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-audience-field-reading-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "shoCommit": "e012691b830758168381dc3f37f300c724516d57",
+    "envelopeFile": "03_Implement/frontend/src/export/handoff_context_envelope.ts",
+    "envelopeHasAudience": true,
+    "validatesAudienceIsAList": true,
+    "refusesEmptyAudience": true,
+    "comparesAudienceAgainstARecipient": false,
+    "consumerRefusesAudienceExpansion": false,
+    "consumerDeclaresItDoesNotVerify": true,
+    "consumerRecordsHostGrantAsNotRun": true,
+    "finding": "SUIのhandoff envelopeには`disclosure.audience`があり、**空のリストは拒否される**（`handoff-disclosure-audience-empty`）。しかし**宣言された受信者と実際の受信者を比較する箇所は無い**。SHOのConsumerは宣言を読み直して保持するが、受信者の拡大を拒否せず、Host Grantも検証していない（`hostRecipientAuthorization: 'not-run'`と自分で記録している）。**つまり`audience`は『宣言』であって『判定』ではない。**これは前ラウンドまでの結論（SUIに受信者の欄が無い）を**部分的に訂正する**：`AccessRequest`には無いが、handoff envelopeにはある。あるが、判定には使われていない。"
+  },
+  "scope": "Reads SUI's handoff envelope validator and SHO's consumer for audience handling: the field exists, an empty list is refused, and nothing compares the declared audience with an actual recipient. This is a source reading; it does not run the TypeScript validator, and it does not examine any other audience-carrying schema."
+}
