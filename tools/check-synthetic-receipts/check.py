@@ -296,6 +296,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-audience-execution-2026-11-18.json",
     "evaluations/records/YIC-audience-consumer-2026-11-18.json",
     "evaluations/records/YIC-exhaustion-claim-2026-11-18.json",
+    "evaluations/records/YIC-harness-evidence-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -721,6 +722,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("comparesAudienceAgainstARecipient") is not False
             ):
                 errors.append(f"the audience declaration reading lost its finding: {relative}")
+        if "YIC-harness-evidence" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyFileRecordsItsLimit") is not True
+                or len(observed.get("adaptersRecordedAcrossAllFiles") or []) < 3
+            ):
+                errors.append(f"the harness evidence reading lost its scope: {relative}")
         if "YIC-exhaustion-claim" in relative:
             observed = data.get("observed", {})
             if (
@@ -869,7 +878,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyDocumentCheckRan") is not True
                 or observed.get("everyDocumentCheckPassed") is not True
-                or observed.get("checksRun") != 19
+                or observed.get("checksRun") != 20
             ):
                 errors.append(f"a YI document check was skipped or failed: {relative}")
         if "YIC-notrun-refresh" in relative:
