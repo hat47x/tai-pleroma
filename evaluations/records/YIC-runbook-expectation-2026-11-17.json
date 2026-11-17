@@ -13,7 +13,7 @@
   },
   "observed": {
     "runbook": "docs/reproduction-runbook.md",
-    "block": "suite:   107段すべて returncode 0、result = PASS\nchecker: 合成61件・実実行246件、passed = true\ndoc整合: passed = true（107段、実実行246件が一致）",
+    "block": "suite:   107段すべて returncode 0、result = PASS\nchecker: 合成61件・実実行247件、passed = true\ndoc整合: passed = true（107段、実実行247件が一致）",
     "comparisons": [
       {
         "value": "suite steps",
@@ -27,8 +27,8 @@
       },
       {
         "value": "checker real",
-        "claimed": 246,
-        "actual": 246
+        "claimed": 247,
+        "actual": 247
       },
       {
         "value": "doc steps",
@@ -37,8 +37,8 @@
       },
       {
         "value": "doc real (status.md)",
-        "claimed": 246,
-        "actual": 246
+        "claimed": 247,
+        "actual": 247
       }
     ],
     "staleValues": [],
