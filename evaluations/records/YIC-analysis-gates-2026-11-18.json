@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 29,
-    "checksRun": 29,
+    "checksRequested": 31,
+    "checksRun": 31,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 55, \"links\": 639, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 55, \"links\": 640, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 370, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 372, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 81, \"writers\": 81, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 83, \"writers\": 83, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -217,6 +217,20 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"comparesRecipient\": true, \"reason\": \"ReasonSubjectMismatch\", \"callerCannotSupply\": true, \"passed\": true}"
+      },
+      "audienceFieldReading": {
+        "ran": true,
+        "question": "the handoff envelope has an audience field that nothing decides against",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"envelopeHasAudience\": true, \"refusesEmptyAudience\": true, \"comparesAudienceAgainstARecipient\": false, \"consumerRefusesAudienceExpansion\": false, \"consumerRecordsHostGrantAsNotRun\": true}"
+      },
+      "perContractClaims": {
+        "ran": true,
+        "question": "the document names each contract and carries no blanket claim",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"contracts\": 4, \"notNamed\": [], \"blanket\": [], \"passed\": true}"
       }
     },
     "scriptsMissing": [],

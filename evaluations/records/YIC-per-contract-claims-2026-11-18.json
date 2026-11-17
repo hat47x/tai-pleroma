@@ -1,0 +1,57 @@
+{
+  "schema": "tai.reference.yic-per-contract-claims/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the proposal document",
+  "command": "python integrations/tools/yic_per_contract_claims_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-per-contract-claims-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/analysis/55-受信者の欄.md",
+    "contracts": [
+      {
+        "contract": "AccessRequest",
+        "named": true,
+        "phrasesPresent": [
+          "AccessRequest"
+        ]
+      },
+      {
+        "contract": "handoffEnvelope",
+        "named": true,
+        "phrasesPresent": [
+          "handoff envelope",
+          "disclosure.audience"
+        ]
+      },
+      {
+        "contract": "auditEnvelope",
+        "named": true,
+        "phrasesPresent": [
+          "AuditEvent",
+          "metadata"
+        ]
+      },
+      {
+        "contract": "ekiLease",
+        "named": true,
+        "phrasesPresent": [
+          "leasedelivery",
+          "WorkerIdentity"
+        ]
+      }
+    ],
+    "contractsNotNamed": [],
+    "blanketSentences": [],
+    "statesTheDifferencesArePerContract": true,
+    "everyContractIsNamed": true,
+    "noBlanketClaim": true,
+    "finding": "提案文書が、契約ごとに受信者の有無が違うことを述べているかを見る。`AccessRequest`・handoff envelope・`AuditEvent`・EKI Leaseの4つを個別に名指しし、**製品群全体への全称判断が無いこと**を要求する。1つの契約の欠落を製品群の欠落と呼ばないためである。"
+  },
+  "scope": "Checks the proposal document names each of four contracts and carries no sentence that generalises an absence to the whole product group. It checks the document's structure, not whether each contract's stated status is correct."
+}

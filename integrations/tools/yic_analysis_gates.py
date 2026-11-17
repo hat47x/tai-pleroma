@@ -85,6 +85,10 @@ PORTABLE_CHECKS = (
      "the audit envelope has no recipient field but metadata can carry one"),
     ("ekiRecipient", "yic_eki_recipient_check.py",
      "EKI verifies the Lease recipient against the local Worker"),
+    ("audienceFieldReading", "yic_audience_declaration_check.py",
+     "the handoff envelope has an audience field that nothing decides against"),
+    ("perContractClaims", "yic_per_contract_claims_check.py",
+     "the document names each contract and carries no blanket claim"),
 )
 
 
