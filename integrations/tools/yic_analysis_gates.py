@@ -71,6 +71,8 @@ PORTABLE_CHECKS = (
      "every receipt writer computes its verdict rather than asserting one"),
     ("claimCeiling", "yic_claim_ceiling_check.py",
      "claims that are literals cannot be reached by re-running"),
+    ("handoffConditions", "yic_handoff_conditions_check.py",
+     "each stage states whether it has an instrument and what would count as a handoff"),
 )
 
 

@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 22,
-    "checksRun": 22,
+    "checksRequested": 23,
+    "checksRun": 23,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 53, \"links\": 625, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 54, \"links\": 628, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 362, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 363, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 73, \"writers\": 73, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 74, \"writers\": 74, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -168,6 +168,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"claimsFound\": 29, \"unreachableStages\": [\"I\", \"R\", \"P\", \"T\", \"C\", \"H\"], \"passed\": true}"
+      },
+      "handoffConditions": {
+        "ran": true,
+        "question": "each stage states whether it has an instrument and what would count as a handoff",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"stages\": 4, \"missing\": [], \"noStatus\": [], \"noTests\": [], \"separatesG1\": true, \"passed\": true}"
       }
     },
     "scriptsMissing": [],
