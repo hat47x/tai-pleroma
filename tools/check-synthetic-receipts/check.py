@@ -276,6 +276,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-status-line-2026-11-18.json",
     "evaluations/records/YIC-deck-counts-2026-11-18.json",
     "evaluations/records/YIC-readme-coverage-2026-11-18.json",
+    "evaluations/records/YIC-notrun-refresh-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -683,6 +684,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("rangeArithmeticIssues")
             ):
                 errors.append(f"a stated deck count no longer matches the file: {relative}")
+        if "YIC-notrun-refresh" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or not observed.get("itemsWithLaterEvidence")
+                or len(observed.get("itemsWithLaterEvidence") or []) != len(observed.get("recordedNotRun") or [])
+            ):
+                errors.append(f"the not-run refresh lost an item: {relative}")
         if "YIC-readme-coverage" in relative:
             observed = data.get("observed", {})
             if (

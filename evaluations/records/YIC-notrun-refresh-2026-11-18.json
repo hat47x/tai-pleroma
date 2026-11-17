@@ -1,0 +1,61 @@
+{
+  "schema": "tai.reference.yic-notrun-refresh/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the inventory and later records",
+  "command": "python integrations/tools/yic_notrun_refresh_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-notrun-refresh-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "inventory": "evaluations/records/YI-stage3-inventory-2026-11-11.json",
+    "inventoryDate": "2026-11-11",
+    "recordedNotRun": [
+      "centreHandoff",
+      "thinPhaseExpansion",
+      "contextHandoff"
+    ],
+    "rows": [
+      {
+        "item": "centreHandoff",
+        "receiptExists": true,
+        "receipt": "evaluations/records/YI-centre-handoff-2026-11-11.json",
+        "documentExists": true,
+        "document": "docs/yi-constellation/analysis/48-接続の単位の不足.md",
+        "kind": "probe of the field set the handoff carries",
+        "documentMentionsTheItem": false
+      },
+      {
+        "item": "thinPhaseExpansion",
+        "receiptExists": false,
+        "receipt": null,
+        "documentExists": true,
+        "document": "docs/yi-constellation/analysis/49-相の拡充の結果.md",
+        "kind": "six phase expansions recorded in a document",
+        "documentMentionsTheItem": false
+      },
+      {
+        "item": "contextHandoff",
+        "receiptExists": true,
+        "receipt": "evaluations/records/YI-context-handoff-2026-11-11.json",
+        "documentExists": true,
+        "document": "docs/yi-constellation/analysis/48-接続の単位の不足.md",
+        "kind": "probe of the three units a context handoff must carry",
+        "documentMentionsTheItem": false
+      }
+    ],
+    "itemsWithLaterEvidence": [
+      "centreHandoff",
+      "thinPhaseExpansion",
+      "contextHandoff"
+    ],
+    "stillWithoutEvidence": [],
+    "theNotRunListIsStale": true,
+    "finding": "`YI-stage3-inventory`が`not-run`とした3件のうち、3件すべてに後続の証拠がある。この記録は書かれた時点では正しく、現在は古い。**記録を書き換えない**：その記録は自分の日付についての陳述である。代わりに、後続の証拠の所在を対応表として残す。"
+  },
+  "scope": "Compares the inventory's recorded not-run list with later receipts and documents, and states where later evidence sits. It checks that the later evidence exists, not that it settles the item: the probe receipts measure a field set, which is weaker than the running handoff the inventory asked for."
+}
