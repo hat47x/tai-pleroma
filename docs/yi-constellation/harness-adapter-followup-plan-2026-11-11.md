@@ -2,7 +2,7 @@
 
 **状態: 後続担当への作業計画・設計。未実施の実験の計画であり、実装済みや実証済みの認定ではない。**
 
-- 直前の実装: [integrations/harness-adapter/](../harness-adapter/README.md)（commit `7cd9c1c`、branch `feat/harness-adapter-minimal-20261111`）
+- 直前の実装: [integrations/harness-adapter/](../../integrations/harness-adapter/README.md)（commit `7cd9c1c`、branch `feat/harness-adapter-minimal-20261111`）
 - 設計判断の記録: [harness-adapter-minimal-contract-2026-11-11.md](harness-adapter-minimal-contract-2026-11-11.md)
 - 親Issue: [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)、[TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)、[TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)
 

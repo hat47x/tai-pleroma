@@ -103,7 +103,7 @@ SUIの実装が持つ`DocumentV1`と、TEIパイロットが参照ローカル�
 
 - Edgeは端点種別まで含めて完全に写せている
 - DocumentV1の未写像21項目は、カード・島・関係の集合（`cards`/`edges`/`islands`/`affiliations`/`voids`/`narratives`/`evidenceLinks`/`shelf`）、決定と履歴（`reviewAttribution`/`structureDecisions`/`mergeSuggestionDecisions`/`contradictionSignalDecisions`/`critiqueInputs`/`reproposalDiffs`/`patchApplyLog`/`relationSummaries`/`deterministicTieBreak`）、時刻と変換（`createdAt`/`updatedAt`/`transform`）、版（`version`）に分かれる
-- 集合と決定の集合は合成層が担う設計だが、**それらを1つのrecordで表すには入れ子投影が要る**（[入れ子の実測](tei-sui-integration-2026-11-03.md)）
+- 集合と決定の集合は合成層が担う設計だが、**それらを1つのrecordで表すには入れ子投影が要る**（[入れ子の実測](../analysis/tei-sui-integration-2026-11-03.md)）
 - パイロット固有のフィールドは残っていない（`digest`は撤去済み）
 
 この数値は名前の一致だけを数えたもので、型・意味の一致は含まない。

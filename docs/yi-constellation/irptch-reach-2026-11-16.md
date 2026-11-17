@@ -204,7 +204,7 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 前節の案Cは「誰に渡すと宣言したか」を記録する案である。その記録の器が既に存在するかを確かめた。
 
-`yi.handoff.context/v1`の票は`disclosure.audience`を運ぶ（[契約](../../../docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md)、`disclosure.audience`が空なら拒否）。SHOのConsumerを実際に走らせて、拡大したAudienceをどう扱うかを見た（[receipt](../../../evaluations/records/YIC-audience-declaration-2026-11-17.json)、`sho-composer` `e012691b8307`、14 observations）。
+`yi.handoff.context/v1`の票は`disclosure.audience`を運ぶ（[契約](cross-product-handoff-context-v1-2026-11-11.md)、`disclosure.audience`が空なら拒否）。SHOのConsumerを実際に走らせて、拡大したAudienceをどう扱うかを見た（[receipt](../../../evaluations/records/YIC-audience-declaration-2026-11-17.json)、`sho-composer` `e012691b8307`、14 observations）。
 
 | 操作 | 結果 |
 | --- | --- |

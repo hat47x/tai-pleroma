@@ -1,7 +1,7 @@
 # 共通Harness Adapter：Exit一覧と証拠の索引（2026-11-12）
 
 **これは索引である。判断の正本は [後続計画](harness-adapter-followup-plan-2026-11-11.md) と
-[実装README](../integrations/harness-adapter/README.md) にある。ここには
+[実装README](../../integrations/harness-adapter/README.md) にある。ここには
 「どのExitを、どの実行で、どの証拠ファイルで示したか」だけを置く。**
 
 - 契約: `yi.harness-adapter/v0`（[contract.go](../integrations/harness-adapter/contract.go)）
