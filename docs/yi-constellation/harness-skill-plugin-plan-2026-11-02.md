@@ -1233,4 +1233,8 @@ D0候補、D1構造適合、D2実Source、D3作用直前、D4実行結果、D5�
 
 **次の実装・受入順**：①TEI #2586／#1119に沿う「受注の一変更」をB0 Tool-onlyで一巡させ、実DBのRow・Rule・部分取得理由とWeb Consumerの独立Expectedを確認、②その一巡のうち説明・発見・操作で無駄が実際にある箇所だけB1 Product Skillによる増分価値を比較、③別Productへ渡す必要とAudienceが決まってからB2 TAI横断Skillと実開示P/T/C/Hを別Attemptで検証する。現行の内部CLI読取には外部開示Pを一律に要求しない。外部送出や機密Sourceでは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)に従い、Source Owner／実Hostが受信者・目的・Projectionを判定する。**一部のみの投影で全体のClaimを成立と答えない**。
 
+**直近の実装に基づく順番の明確化**：[TEI main #5314](https://github.com/hat47x/tei-platform/pull/5314)は実PostgreSQLで「重複の片方がSQLで隠れる」「重複二行が見える」「取得結果が0行」の三例を確認した。全件の根拠がない場合、見えていない行について一意性の成立を推測しない。一方、見えている行に確かな重複があれば部分取得でも不成立を伝える。対象HEADの実PostgreSQL CIと関連ワークフローは成功している。[TEI #5311](https://github.com/hat47x/tei-platform/pull/5311)の全件性を検証する設計は未マージで、Callerの自己申告を全件の証明として受け取らない。
+
+[TEI #5317](https://github.com/hat47x/tei-platform/pull/5317)は既存の受注明細JSONと同じ結果を静的HTMLへ表示する候補で、専用実PostgreSQL CIにおける変更前後のJSON/HTML照合は成功した。ただし**未マージ**であり、当該HEADのリポジトリ健全性ワークフローはfailure。加えて、これはCLIが生成するHTMLであって、宣言的Web Targetの生成・実ブラウザ受領・Studioセルフビルドの完成ではない。[TEI #5319](https://github.com/hat47x/tei-platform/pull/5319)の一ページ手順書は、実PostgreSQLで前半の操作を実行した候補だが確認時点は未マージ。次の製品側作業は、[TEI plan/NOW.md](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)と#2586/#1119に沿い、取得範囲の検証、既存の実画面への同一結果の表示、手順書による再現を順に受理すること。YICのB1/B2比較はこの工程の先行条件にしない。
+
 **検収の停止線**：TEI通常CLIの全件性と実Web受領は未完了。TEI非Plugin Windows Studio Stage1→Stage2は引き続き別の独立P0で、定義だけの変更を生成器の手直しなしに次のStudioへ反映することが完了条件。TAI #168のOS Read-deny→Egress→Tool Reply完結→H2/H3独立四Session（現存比較適格0/4）は独立P0。Windows/WSLのPASS・SKIP・FAILやToolchainのbyte差は[TAI #697〜703](https://github.com/hat47x/tai-pleroma/pull/703)の既存実行記録に従い、別Hostへ合格を持ち越さない。本節は次の製品コードとその独立Expectedを選ぶための計画であり、新たなProduct間送信・Owner認可・外部Harness Trialを実行したものではない。

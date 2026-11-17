@@ -918,6 +918,25 @@ TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583�
 | 4. `tei validate`後に再読する | 同じWorkspaceと実DBで読直し、変更前後の期待が異なることを確かめる | `validate`のError/Warning、選択した実現方式、実ReadとRule結果の差、未取得/NULL/partialの理由 |
 | 5. 生成Web画面で同じ答えを見る | **未完了**。Web Consumerの実動作と生成Bundleの一致を別Expectedで検証 | 画面が実際に受け取った値・Rule ID・順序・状態・表示、未実行なら`NOT RUN` |
 
+**「読めた」と「その意味を表示できた」を切り分ける検収**：TEI [main #5314](https://github.com/hat47x/tei-platform/pull/5314)の実PostgreSQL反例を、表示側にも同じ意味で渡す。
+
+| 実DBでの反例 | Ruleの期待結果 | HTMLやSkillがしてはならないこと |
+| --- | --- | --- |
+| 本来重複する明細の片方をSQLで隠す | 見えた行では重複しなくても、全件の根拠がなく**判定できない** | 見える行だけが一意だから「成立」と表示する |
+| 重複する二つの明細を実際に読む | 部分取得でも**不成立**が確定する | 取得が部分的という理由で既知の違反まで「不明」に戻す |
+| 親受注を指定したQueryが0行を返す | 親に明細がないと確定できなければ**判定できない** | 空の結果から「明細なし・全件適合」と断定する |
+
+三例は製品の実DB回帰としてmain統合済みであり、[対象HEADの専用PostgreSQL CI](https://github.com/hat47x/tei-platform/actions/runs/44033853164)も成功している。**全件性を認定する新契約が完成したわけではない**。[TEI #5311](https://github.com/hat47x/tei-platform/pull/5311)のRequested／Executed／Observed／Claimed／Qualifiedという分離は審査中の設計であり、Callerの`complete`自己申告を独立の全件証明にしない。
+
+**表示候補に渡す項目と条件**：[TEI #5317](https://github.com/hat47x/tei-platform/pull/5317)は、通常`tei view -environment`の**同じ読取結果**を`-format html`で静的HTMLとして出す候補である。実PostgreSQL専用CI（[run 44034407670](https://github.com/hat47x/tei-platform/actions/runs/44034407670)）ではJSON／HTMLの変更前後6ケースが独立Expectedと一致した。一方、同HEADのRepository Healthにはfailureがあり、PRは未マージである。正式受入には次を同一受注・同一Rule版で比べる。
+
+- **対象と値**：`orderLineId`、項目ID、Rule ID、行の順序と数、数値の精度、`present`／`null`／`not-fetched`をJSON→HTMLの間で変えない。
+- **判断と未確定理由**：行ごと・受注全体の`satisfied`／`not-satisfied`／`undecided`、`coverage: partial`、保留理由を維持する。HTMLの空表示は全件取得の証明ではない。
+- **投影と安全性**：値をHTMLとしてエスケープし、DB取得失敗時に成功風のHTMLを出さない。静的ファイルが生成できたことと、実Browser/Web Componentsで同じ答えを読んだことは別に検収する。
+- **作業の再現**：[TEI #5319](https://github.com/hat47x/tei-platform/pull/5319)は一ページ手順書で実PostgreSQLの段階1〜4を試した候補だが未マージ。固定された参照Workspace名や登録済み実行バイナリへの依存を解消する作業も同PRの対象であり、現在の製品へ適用済みとはしない。
+
+最初は**既存ProductのB0 Tool-only**でこの比較を行い、Web画面と手順書が製品側で正式受理されてから、実際の導入負担を軽くするB1 Product Skillの必要性を測る。HTMLの出力を別Productや外部Harnessへ送る場合だけ、Audience別の許可Pと配送T・受領C・Harness Reply Hを別に確認する。**静的HTMLの作成自体をP/T/C/Hの達成に数えない**。
+
 **既存の先行カードの利用範囲**：QH-RESOLVE-09〜FIELD-13は、[TAI #707のI/R/P/T/C/H整理](irptch-reach-2026-11-16.md)で最大Rまでの局所確認として扱う。[TAI #708](https://github.com/hat47x/tai-pleroma/pull/708)が実測した`knowledge-context -disclose`のSection選択は、受信者別の開示許可（P）を立証しない。[TAI #709](https://github.com/hat47x/tai-pleroma/pull/709)の`authorityLimits`保存確認も、その限界を破る結論を機械的に拒否する機能ではない。したがって**局所CLIを使うために外部開示Pを無条件に要求しない**一方、別Product・外部AIへ値や判定結果を渡す際には、目的・受信者・Audience・現在Grant・必要最小限のField／SectionをProduct/Host Ownerが判定する。認可されない場合は送らず、局所作業の証拠だけを保持する。
 
 **最小の反証**：同じ許可投影を持つ二つのSourceで、隠れている行の有無によって全件Claimが変わる場合、外部Consumerは投影だけから全件成立と断定しない。逆に公開された実Rowの違反が確定している場合は、partialであることを理由にその違反まで不明にしない。外部へ返す「判定不能」「対象なし」の区別そのものが機密を漏らす場合もあるため、外部への応答分類は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)のOwner判断に委ねる。新しい任意SQL／Predicateを受け付ける共通判定APIを設けない。
