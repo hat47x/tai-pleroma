@@ -110,6 +110,12 @@ TEI Studioでは既存の型付きApplication APIを入口にし、Wails Bridge�
 
 **レビュー・統合：** 各PRは変更path、base／exact HEAD、実行環境、重点試験、既存試験の非退行、未実行、Source版、独立レビュー、マージ後のmain再確認を記録する。Docs-onlyの合格は実Codex接続成功の根拠ではない。
 
+### C1の実装差分（2026年11月17日）
+
+`integrations/harness-adapter/codex_exec.go` と契約試験、CLI登録を追加した。既存契約を変更せず、`codex exec` のJSONLからThread／Turnの終端、MCP・Commandの完了Itemを読み取る。全ToolOffer・Skill・ContextRefは未対応として事前拒否し、`codex --version` による実行物の到達と、認証済み／Tool利用可能／OS隔離成立を混同しない。プロセスはstdinへTaskを渡し、危険なsandbox bypassや自動Git境界無視を指定しない。
+
+**成立範囲は契約試験による合成JSONLの解釈まで。** 実Codexバイナリ、正規モデルRoute、TEIの型付きMCP実Tool、完全Reply、Root外Read-deny、実Egress、Studio、App Server接続はNOT RUN。C1の実装でC0の実実行物固定、TAI #168の適格Slot、C2〜C5を自動的に完了扱いしない。次の実装出口は、C0の実Binary pinと、Taskに必要なTool/Skillを改変しない**明示的なCodex MCP設定方式**の検証である。
+
 ## 7. 採用・保留
 
 - **採用する設計：** 外部プロセス接続、Codexの二種類の実行面、既存Go Harness Adapterと型付き製品API、Studioに返す限定候補、実権限／Effect／Evidenceの分離。
