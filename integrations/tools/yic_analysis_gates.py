@@ -81,6 +81,8 @@ PORTABLE_CHECKS = (
      "the external PDP body carries no recipient and the field would need three edits"),
     ("recipientSearch", "yic_recipient_search_probe.py",
      "a package-wide search for recipient terms, classified, with unclassified hits kept"),
+    ("auditRecipient", "yic_audit_recipient_probe.py",
+     "the audit envelope has no recipient field but metadata can carry one"),
 )
 
 
@@ -114,14 +116,16 @@ def main():
             extra = ["--tai-root", str(root)]
         elif name == "claimCeiling":
             extra = ["--sho-repo", str(root.parent / "sho-composer")]
-        elif name in ("audienceInstrument", "shareGuard", "pdpPayload", "recipientSearch"):
+        elif name in ("audienceInstrument", "shareGuard", "pdpPayload",
+                      "recipientSearch", "auditRecipient"):
             # These two take the SUI checkout as a third positional argument.
             extra = []
         completed = subprocess.run(
             (
                 [sys.executable, str(path), args.artifact, str(scratch / f"{name}.json"),
                  str(root.parent / "sui-sensemaking")]
-                if name in ("audienceInstrument", "shareGuard", "pdpPayload", "recipientSearch")
+                if name in ("audienceInstrument", "shareGuard", "pdpPayload",
+                            "recipientSearch", "auditRecipient")
                 else [sys.executable, str(path), *extra,
                       "--artifact", args.artifact,
                       "--out", str(scratch / f"{name}.json")]

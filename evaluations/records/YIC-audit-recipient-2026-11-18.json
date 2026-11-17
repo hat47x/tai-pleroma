@@ -1,0 +1,95 @@
+{
+  "schema": "tai.reference.yic-audit-recipient/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows host running WSL Ubuntu-24.04, building an audit event via SUI's constructor",
+  "command": "python integrations/tools/yic_audit_recipient_probe.py <artifact> <out> <sui-repo>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "eventFields": [
+      "actorRefHash",
+      "docId",
+      "eventId",
+      "eventType",
+      "metadata",
+      "occurredAt",
+      "principalKind",
+      "safeMode",
+      "schemaVersion",
+      "tenantId"
+    ],
+    "eventTypeValues": [
+      "agent_admin",
+      "apply",
+      "bundle",
+      "export",
+      "llm",
+      "proposal",
+      "query",
+      "view"
+    ],
+    "metadataKeys": [
+      "action",
+      "audience",
+      "decision_allow",
+      "decision_reason",
+      "method",
+      "recipient",
+      "route",
+      "sharedWith",
+      "visibility"
+    ],
+    "carriesRecipientInEnvelope": false,
+    "recipientKeysSurviveSanitization": [
+      "audience",
+      "recipient",
+      "sharedWith"
+    ],
+    "sensitiveKeyParts": [
+      "apikey",
+      "assertion",
+      "authorization",
+      "clientsecret",
+      "cookie",
+      "credential",
+      "email",
+      "password",
+      "prompt",
+      "secret",
+      "token"
+    ],
+    "allPaths": [
+      "actorRefHash",
+      "docId",
+      "eventId",
+      "eventType",
+      "metadata",
+      "metadata.action",
+      "metadata.audience",
+      "metadata.decision_allow",
+      "metadata.decision_reason",
+      "metadata.method",
+      "metadata.recipient",
+      "metadata.route",
+      "metadata.sharedWith",
+      "metadata.visibility",
+      "occurredAt",
+      "principalKind",
+      "safeMode",
+      "schemaVersion",
+      "tenantId"
+    ],
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "distro": "Ubuntu-24.04",
+    "finding": "SUIのaudit層を実測した。`AuditEvent`の封筒は`actorRefHash, docId, eventId, eventType, metadata, occurredAt, principalKind, safeMode, schemaVersion, tenantId`を持ち、**受信者を表す欄は無い**。一方、`metadata`は自由な鍵を受け、`audience`・`recipient`・`sharedWith`は残る（sanitizeは秘匿系の鍵だけを伏せる）。つまり**作用層には受信者を記録できる場所がある**が、**記録する義務は無い**。",
+    "whatThisMeansForP": "観測からPを測る経路は、決定経路より現実的である。ただし (a) 誰が記録するか、(b) 記録が無いことを「開示していない」と読めるか、(c) metadataは呼出し側の自己申告であり、サーバが観測した事実ではない、という3点を先に決める必要がある。",
+    "nextStepSuggested": "metadataに受信者を載せる規約を製品Ownerが決め、記録がある場合と無い場合を別々に扱う試験を書く。記録が無いことを『開示なし』と読み替えない。"
+  },
+  "scope": "Builds one audit event through SUI's own build_event and records its envelope fields and metadata keys, checking whether a recipient-shaped metadata key survives sanitization. It shows the observation layer has room to record a recipient but no envelope field for one; it does not inspect a real audit sink, and metadata is caller-reported rather than server-observed."
+}
