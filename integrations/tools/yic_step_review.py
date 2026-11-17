@@ -103,10 +103,36 @@ def main():
     if completed is None:
         print("no PowerShell available", file=sys.stderr)
         return 1
+    def usable(text):
+        """A review must be prose, not a tool-call preamble."""
+        if len(text) < 400:
+            return False
+        if "<tool_call>" in text or "<function=" in text:
+            return False
+        return "##" in text
+
     reply = (completed.stdout or "").strip()
-    if not reply:
-        print((completed.stderr or "")[:400], file=sys.stderr)
-        return 1
+    attempts = [{"chars": len(reply), "usable": usable(reply)}]
+    if not usable(reply):
+        # Retry once with the prohibition stated in the prompt itself.
+        retry_prompt = prompt_file
+        retry_prompt.write_text(
+            PROMPT + "\n\n**重要**: ツールを呼び出さないでください。"
+            "`<tool_call>`を出力しないでください。見出し付きの文章だけを返してください。\n",
+            encoding="utf-8",
+        )
+        retry = subprocess.run(
+            [shell, "-NoProfile", "-Command", script.replace(
+                f'Get-Content -Raw -Encoding UTF8 \\"{prompt_file}\\"',
+                f'Get-Content -Raw -Encoding UTF8 \\"{retry_prompt}\\"')],
+            cwd=root, capture_output=True, text=True,
+            encoding="utf-8", errors="replace", env={**os.environ}, timeout=1800,
+        )
+        reply = (retry.stdout or "").strip()
+        attempts.append({"chars": len(reply), "usable": usable(reply)})
+
+    if not usable(reply):
+        print(f"unusable reply after {len(attempts)} attempts: {attempts}", file=sys.stderr)
 
     receipt = {
         "schema": "tai.reference.yic-step-review/v0",
@@ -116,7 +142,7 @@ def main():
         "date": time.strftime("%Y-%m-%d"),
         "host": "Windows with the official Step Code CLI, model step-3.7-flash, no tools",
         "command": "python integrations/tools/yic_step_review.py evaluations/artifacts/scn-003-document.json " + RECEIPT,
-        "result": "PASS",
+        "result": "PASS" if usable(reply) else "FAIL",
         "artifact": {"path": args_artifact, "digest": digest(root / args_artifact)},
         "observed": {
             "model": "step-3.7-flash",
@@ -125,9 +151,14 @@ def main():
             "exit": completed.returncode,
             "replyChars": len(reply),
             "reply": reply,
+            "replyReceived": bool(reply),
+            "replyIsUsable": usable(reply),
+            "attempts": attempts,
             "finding": (
                 "Step 3.7のarchitectロールに、点検の追加が前進か停滞かを判断させた。"
                 "返答はそのまま`reply`に保存し、要約・改変しない。"
+                "`result`は返答を得られたかどうかを示す。"
+                "**返答の内容が正しいかは判定しない**：これは意見の記録であり、検査ではない。"
             ),
         },
         "scope": (

@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 20,
-    "checksRun": 20,
+    "checksRequested": 22,
+    "checksRun": 22,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 361, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 362, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -154,6 +154,20 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"statesWithoutAnExample\": [\"notConnected\", \"notAccepted\"], \"unclassifiedChecks\": [], \"passed\": true}"
+      },
+      "verdictComputation": {
+        "ran": true,
+        "question": "every receipt writer computes its verdict rather than asserting one",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"tools\": 73, \"writers\": 73, \"fixedVerdicts\": [], \"passed\": true}"
+      },
+      "claimCeiling": {
+        "ran": true,
+        "question": "claims that are literals cannot be reached by re-running",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"claimsFound\": 29, \"unreachableStages\": [\"I\", \"R\", \"P\", \"T\", \"C\", \"H\"], \"passed\": true}"
       }
     },
     "scriptsMissing": [],
