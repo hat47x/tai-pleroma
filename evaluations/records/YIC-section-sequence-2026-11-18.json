@@ -1,0 +1,31 @@
+{
+  "schema": "tai.reference.yic-section-sequence/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 scanning the YI documents",
+  "command": "python integrations/tools/yic_section_sequence_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-section-sequence-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "docs/yi-constellation",
+    "documentsScanned": 37,
+    "documentsWithProblems": 0,
+    "problems": [],
+    "declaredAbsences": [
+      {
+        "document": "product-value-scope-audit-2026-11-04.md",
+        "numbers": [
+          "25"
+        ]
+      }
+    ],
+    "everySequenceAscendsAndHasNoUndocumentedHole": true,
+    "finding": "YI文書の番号付き見出しを走査し、降順の対と、途中の欠番（理由が書かれていないもの）を検出する。`## 25. （欠番：…）`のように**欠番であることを明示した見出し**は、解決済みとして扱う。番号を詰めると既存の参照が別の節を指すため、欠番を残して理由を書く方を選ぶ。"
+  },
+  "scope": "Scans every YI document for numbered headings that run backwards, and for numbers missing from the middle of a sequence without a heading that declares the absence. It checks numbering only: a well-numbered document can still be wrong, and headings inside fences or tables are not examined."
+}

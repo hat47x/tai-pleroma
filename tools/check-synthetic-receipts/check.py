@@ -267,6 +267,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-sui-source-policy-2026-11-17.json",
     "evaluations/records/YIC-audience-declaration-2026-11-17.json",
     "evaluations/records/YIC-section-order-2026-11-18.json",
+    "evaluations/records/YIC-section-sequence-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -664,6 +665,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-section-sequence" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everySequenceAscendsAndHasNoUndocumentedHole") is not True
+                or observed.get("documentsWithProblems")
+            ):
+                errors.append(f"a YI section sequence regressed: {relative}")
         if "YIC-section-order" in relative:
             observed = data.get("observed", {})
             if (
