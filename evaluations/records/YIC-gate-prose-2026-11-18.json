@@ -1,0 +1,76 @@
+{
+  "schema": "tai.reference.yic-gate-prose-values/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the gate documents and their receipts",
+  "command": "python integrations/tools/yic_gate_prose_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-gate-prose-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "documents": [
+      "docs/yi-constellation/analysis/51-現在地とゲートの状態.md",
+      "docs/yi-constellation/analysis/53-判定と残る前進.md"
+    ],
+    "claimsChecked": 4,
+    "claims": [
+      {
+        "claim": "stage3 executed/described/not-run",
+        "stated": [
+          3,
+          1,
+          3
+        ],
+        "fromReceipt": [
+          3,
+          1,
+          3
+        ],
+        "source": "YI-stage3-inventory-2026-11-11.json"
+      },
+      {
+        "claim": "candidate count",
+        "stated": [
+          25
+        ],
+        "fromReceipt": [
+          25
+        ],
+        "source": "YI-candidate-fields-2026-11-11.json"
+      },
+      {
+        "claim": "cross-cutting decisions",
+        "stated": [
+          6
+        ],
+        "fromReceipt": [
+          6
+        ],
+        "source": "YI-g1-evidence-2026-11-11.json",
+        "statedIn": "docs/yi-constellation/analysis/53-判定と残る前進.md"
+      },
+      {
+        "claim": "CSW edits",
+        "stated": [
+          9
+        ],
+        "fromReceipt": [
+          9
+        ],
+        "source": "YI-csw-return-2026-11-11.json"
+      }
+    ],
+    "mismatched": [],
+    "g1StatusFields": {
+      "decisionsChecked": 6,
+      "decisionsWithoutObservation": 2
+    },
+    "everyStatedNumberMatchesItsReceipt": true,
+    "finding": "ゲート状態の文書が述べる件数を、引用しているreceiptの値と突き合わせる。`3件実行済み・1件記述のみ・3件未実施`、候補数、横断判断の数、CSW編集数が対象である。"
+  },
+  "scope": "Compares four counts stated in the gate-status documents with the receipts those documents cite: stage-3 executed/described/not-run, candidate count, cross-cutting decision count and CSW edit count. It checks those four numbers only; other prose claims in the same documents are not examined."
+}
