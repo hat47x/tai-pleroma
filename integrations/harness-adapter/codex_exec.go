@@ -19,12 +19,12 @@ import (
 // codex-rs/exec/src/{cli.rs,exec_events.rs,lib.rs}. The actual executable and
 // authentication must be qualified separately at the selected version.
 type CodexExecAdapter struct {
-	CLI        string
-	WorkDir    string
-	Timeout    time.Duration
-	Runner     Runner
+	CLI          string
+	WorkDir      string
+	Timeout      time.Duration
+	Runner       Runner
 	PathResolver PathResolver
-	Clock      func() time.Time
+	Clock        func() time.Time
 }
 
 func NewCodexExecAdapter(workDir string) *CodexExecAdapter {
@@ -194,12 +194,12 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 // CodexExecStream is an observation of the JSONL emitted by 'codex exec --json',
 // not the durable conversation history and not a Product receipt.
 type CodexExecStream struct {
-	ThreadID string
-	TurnStarted bool
-	Terminal string
-	FinalText string
-	ToolCalls []ToolCallRecord
-	UnknownEvents int
+	ThreadID        string
+	TurnStarted     bool
+	Terminal        string
+	FinalText       string
+	ToolCalls       []ToolCallRecord
+	UnknownEvents   int
 	UnfinishedTools int
 }
 
@@ -217,21 +217,21 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 			continue
 		}
 		var ev struct {
-			Type string `json:"type"`
+			Type     string `json:"type"`
 			ThreadID string `json:"thread_id"`
-			Item struct {
-				ID string `json:"id"`
-				Type string `json:"type"`
-				Text string `json:"text"`
-				Command string `json:"command"`
-				AggregatedOutput string `json:"aggregated_output"`
-				ExitCode *int `json:"exit_code"`
-				Status string `json:"status"`
-				Server string `json:"server"`
-				Tool string `json:"tool"`
-				Arguments json.RawMessage `json:"arguments"`
-				Result json.RawMessage `json:"result"`
-				Error json.RawMessage `json:"error"`
+			Item     struct {
+				ID               string          `json:"id"`
+				Type             string          `json:"type"`
+				Text             string          `json:"text"`
+				Command          string          `json:"command"`
+				AggregatedOutput string          `json:"aggregated_output"`
+				ExitCode         *int            `json:"exit_code"`
+				Status           string          `json:"status"`
+				Server           string          `json:"server"`
+				Tool             string          `json:"tool"`
+				Arguments        json.RawMessage `json:"arguments"`
+				Result           json.RawMessage `json:"result"`
+				Error            json.RawMessage `json:"error"`
 			} `json:"item"`
 		}
 		if err := json.Unmarshal(b, &ev); err != nil {
