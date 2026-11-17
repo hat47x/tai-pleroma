@@ -83,6 +83,8 @@ PORTABLE_CHECKS = (
      "a package-wide search for recipient terms, classified, with unclassified hits kept"),
     ("auditRecipient", "yic_audit_recipient_probe.py",
      "the audit envelope has no recipient field but metadata can carry one"),
+    ("ekiRecipient", "yic_eki_recipient_check.py",
+     "EKI verifies the Lease recipient against the local Worker"),
 )
 
 
