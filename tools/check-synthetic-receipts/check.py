@@ -298,6 +298,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-exhaustion-claim-2026-11-18.json",
     "evaluations/records/YIC-harness-evidence-2026-11-18.json",
     "evaluations/records/YIC-codex-adapter-2026-11-18.json",
+    "evaluations/records/YIC-reach-forward-refs-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -723,6 +724,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("comparesAudienceAgainstARecipient") is not False
             ):
                 errors.append(f"the audience declaration reading lost its finding: {relative}")
+        if "YIC-reach-forward-refs" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyRevisionIsReachable") is not True
+                or observed.get("correctsTheStageTableSomewhere") is not True
+            ):
+                errors.append(f"the reach document's stage table lost its correction: {relative}")
         if "YIC-codex-adapter" in relative:
             observed = data.get("observed", {})
             if (

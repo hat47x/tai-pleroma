@@ -1,0 +1,39 @@
+{
+  "schema": "tai.reference.yic-reach-forward-refs/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the reach document's sections",
+  "command": "python integrations/tools/yic_reach_forward_refs_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-reach-forward-refs-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/irptch-reach-2026-11-16.md",
+    "rows": [
+      {
+        "earlier": "4.7",
+        "later": "4.8",
+        "bothSectionsExist": true,
+        "earlierPointsToLater": true,
+        "why": "the stage table is not a measurement"
+      },
+      {
+        "earlier": "4.7",
+        "later": "4.8.2",
+        "bothSectionsExist": true,
+        "earlierPointsToLater": true,
+        "why": "states how §4.7 must be read"
+      }
+    ],
+    "sectionsMissing": [],
+    "sectionsWithoutForwardReference": [],
+    "correctsTheStageTableSomewhere": true,
+    "everyRevisionIsReachable": true,
+    "finding": "到達点の文書の段階表（§4.7）が、後から書いた修正（§4.8）を指しているかを見る。§4.7だけを読んだ人が「I・T・Cは成立した」で止まらないようにするためである。節の存在と参照だけを見ており、記述の正しさは判定しない。"
+  },
+  "scope": "Parses the reach document's sections and checks that each earlier section names the later section that revises it. It checks that the cross-references exist; it does not judge whether the later section's correction is adequate."
+}
