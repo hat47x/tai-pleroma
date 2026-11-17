@@ -933,7 +933,11 @@ TAI #168の実OS G0/G1/G2→独立H2/H3四Slot（比較適格0/4）、TEI #4583�
 - **対象と値**：`orderLineId`、項目ID、Rule ID、行の順序と数、数値の精度、`present`／`null`／`not-fetched`をJSON→HTMLの間で変えない。
 - **判断と未確定理由**：行ごと・受注全体の`satisfied`／`not-satisfied`／`undecided`、`coverage: partial`、保留理由を維持する。HTMLの空表示は全件取得の証明ではない。
 - **投影と安全性**：値をHTMLとしてエスケープし、DB取得失敗時に成功風のHTMLを出さない。静的ファイルが生成できたことと、実Browser/Web Componentsで同じ答えを読んだことは別に検収する。
-- **作業の再現**：[TEI #5319](https://github.com/hat47x/tei-platform/pull/5319)は一ページ手順書で実PostgreSQLの段階1〜4を試した候補だが未マージ。固定された参照Workspace名や登録済み実行バイナリへの依存を解消する作業も同PRの対象であり、現在の製品へ適用済みとはしない。
+- - **作業の再現**：[TEI main #5319](https://github.com/hat47x/tei-platform/pull/5319)は一ページ手順書と`plan/NOW.md`を統合し、別の実PostgreSQLで段階1〜4を実行した。後から修正したPOSIX `awk`版の全手順、Windows、Webの段階5は未検証。登録済み実行バイナリは削除済みだが、`tei view`に固定された参照Workspace/Patternを除く製品コード変更は次の#2586である。
+
+**次のコード変更を受け取るための具体的な票**：TEI [main plan/NOW.md](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)の道1を優先し、現状の固定`order_entry.order_lines`／`development`を持つ`tei view -environment`から、別Workspace・別Patternでも同じCLIを使用できる入口へ改める。検収では、①既存受注3件×変更前後6ケースが独立Expectedのまま、②別Workspaceの別Patternが実PostgreSQLで読め、製品コードにその固有IDを追加していない、③未知Pattern／接続不可／SQL書込み要求はfail-closed、④Source・Rule・Environment・実Queryの出典と`coverage:partial`をReceiptで区別する。別Workspaceの新Expectedが未作成なら**NOT RUN**であり、既存受注例の成功を一般化の成功にしない。
+
+**表示とPlugin接続の後続**：[TEI #5317](https://github.com/hat47x/tei-platform/pull/5317)は修正HEADの専用実PostgreSQL CIが成功した静的HTML候補だがDraft・未マージであり、実Web画面の受領を代替しない。[TEI main #5326](https://github.com/hat47x/tei-platform/pull/5326)のConsumer別Plugin適格性は型一致に加えてPresence/Identity/Coverage/精度/Grant/受領を区別する**設計**で、現時点の実Provider/Consumer合格を意味しない。[TEI #5325](https://github.com/hat47x/tei-platform/pull/5325)の生成Inspector唯一化・正規Wails埋込みはStudio側の独立Draftで、Stage1→Stage2受入済みではない。YICは製品側の道1→道2（Web）→道3（全件性）の順を守り、追加の共通Runner／権限Engine／新Expected Storeを設けない。
 
 最初は**既存ProductのB0 Tool-only**でこの比較を行い、Web画面と手順書が製品側で正式受理されてから、実際の導入負担を軽くするB1 Product Skillの必要性を測る。HTMLの出力を別Productや外部Harnessへ送る場合だけ、Audience別の許可Pと配送T・受領C・Harness Reply Hを別に確認する。**静的HTMLの作成自体をP/T/C/Hの達成に数えない**。
 
