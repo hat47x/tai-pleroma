@@ -1,0 +1,38 @@
+{
+  "schema": "tai.reference.yic-gate-citation-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the gate documents and their cited receipts",
+  "command": "python integrations/tools/yic_gate_citation_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-gate-citation-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "documents": [
+      "docs/yi-constellation/analysis/51-現在地とゲートの状態.md",
+      "docs/yi-constellation/analysis/53-判定と残る前進.md"
+    ],
+    "citations": 22,
+    "distinctReceipts": 16,
+    "missingFiles": [],
+    "nonPassReceipts": [],
+    "nonPassWithoutAnyCaveat": [],
+    "gatesFound": {
+      "G1": true,
+      "G2": true,
+      "G3": true,
+      "G4": true,
+      "G5": true
+    },
+    "uncoveredGates": [],
+    "everyCitationResolves": true,
+    "everyGateIsCited": true,
+    "everyNonPassCitationIsCaveated": true,
+    "finding": "ゲート状態の文書が引用するreceiptを開き、`result`がPASS以外のものを文書が注記なしで提示していないかを点検する。読者はリンク先を見てゲートの状態を判断するため、文書の主張とreceiptの結果が食い違うと止まっている場所を取り違える。"
+  },
+  "scope": "Opens each receipt cited by the two gate documents and records its result, flagging a non-PASS receipt that the surrounding text does not qualify. It checks citation consistency only: a PASS receipt cited in a misleading way is not detected, and the caveat search is lexical over a fixed word list."
+}

@@ -272,6 +272,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-universal-claim-2026-11-18.json",
     "evaluations/records/YIC-gate-prose-2026-11-18.json",
     "evaluations/records/YIC-g1-packet-2026-11-18.json",
+    "evaluations/records/YIC-gate-citation-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
@@ -669,6 +670,15 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
+        if "YIC-gate-citation" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyCitationResolves") is not True
+                or observed.get("everyGateIsCited") is not True
+                or observed.get("nonPassWithoutAnyCaveat")
+            ):
+                errors.append(f"a gate citation is broken or uncaveated: {relative}")
         if "YIC-g1-packet" in relative:
             observed = data.get("observed", {})
             if (
