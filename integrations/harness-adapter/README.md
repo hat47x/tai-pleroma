@@ -8,7 +8,7 @@
 - 親Issue: [TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)（Harness間適合）、
   [TEI #2509](https://github.com/hat47x/tei-platform/issues/2509)（DSH固有実証）、
   [TEI ADR-0048](https://github.com/hat47x/tei-platform/blob/main/plan/adr/0048-shared-application-api-and-transport-adapters.md)（共通Application API）。
-- 設計判断の記録: [harness-adapter-minimal-contract-2026-11-11.md](../../../docs/yi-constellation/harness-adapter-minimal-contract-2026-11-11.md)
+- 設計判断の記録: [harness-adapter-minimal-contract-2026-11-11.md](../../docs/yi-constellation/harness-adapter-minimal-contract-2026-11-11.md)
 
 ## 1. 何をするか／しないか
 

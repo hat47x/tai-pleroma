@@ -16,7 +16,8 @@ import re
 import time
 from pathlib import Path
 
-DOCS = "docs"
+# Directories that carry prose and links. Code and fixtures are excluded on purpose.
+DIRECTORIES = ("docs", "analysis", "evaluations", "scenarios", "integrations")
 LINK = re.compile(r"\]\(([^)#\s]+\.md)(?:#[^)]*)?\)")
 
 
@@ -33,15 +34,18 @@ def main():
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parents[2]
-    folder = root / DOCS
-    if not folder.exists():
-        print(f"missing {DOCS}", file=sys.stderr)
+    present = [name for name in DIRECTORIES if (root / name).exists()]
+    if not present:
+        print(f"none of {DIRECTORIES} exist", file=sys.stderr)
         return 1
 
     broken = []
     cross_repo = []
     checked = 0
-    for source in sorted(folder.rglob("*.md")):
+    sources = []
+    for name in present:
+        sources.extend(sorted((root / name).rglob("*.md")))
+    for source in sources:
         text = source.read_text(encoding="utf-8", errors="replace")
         for match in LINK.finditer(text):
             target = match.group(1)
@@ -70,8 +74,8 @@ def main():
                 })
 
     checks = {
-        "folder": DOCS,
-        "documentsScanned": len(list(folder.rglob("*.md"))),
+        "directories": present,
+        "documentsScanned": len(sources),
         "linksChecked": checked,
         "brokenLinks": broken,
         "brokenCount": len(broken),
@@ -111,6 +115,7 @@ def main():
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
+        "directories": checks["directories"],
         "documents": checks["documentsScanned"],
         "linksChecked": checked,
         "broken": broken[:8],
