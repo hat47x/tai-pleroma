@@ -1,0 +1,37 @@
+{
+  "schema": "tai.reference.yic-eki-private-input/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-17",
+  "host": "Windows with Go, running the EKI contract tests",
+  "command": "python integrations/tools/yic_eki_private_input.py --eki-repo <EKI checkout at 256feb8bab9c> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-eki-private-input-2026-11-17.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "ekiCommit": "256feb8bab9c08c0bf0ce58ca4f9e37589dd2f27",
+    "checkoutClean": true,
+    "goVersion": "go version go1.27.0 windows/amd64",
+    "package": "./spikes/verifiable-computation-contract",
+    "module": "spikes/verifiable-computation-contract",
+    "tests": [
+      "TestOrdinaryProofDoesNotSatisfyPrivateInputRequirement",
+      "TestPrivateInputProfileCanSatisfyPrivateInputRequirement"
+    ],
+    "verdicts": {
+      "TestOrdinaryProofDoesNotSatisfyPrivateInputRequirement": "PASS",
+      "TestPrivateInputProfileCanSatisfyPrivateInputRequirement": "PASS"
+    },
+    "failed": [],
+    "skipped": [],
+    "testsWithoutVerdict": [],
+    "refusalAndAcceptanceBothHold": true,
+    "whatItDecides": "a relying party refuses a public-io proof when private input is required",
+    "whatItDoesNotDecide": "which recipient may receive which content",
+    "finding": "EKIの`Accept`は、`RequirePrivateInputProof`が真のとき`DisclosurePublicIO`の証明を拒否し、`DisclosurePrivateInput`の証明を受理する。これは**受取側が自分で出す拒否**であり、Pの形を持つ。ただし判定しているのは証明の開示Profileであって、「この受信者にこの内容を渡してよいか」ではない。"
+  },
+  "scope": "Runs two EKI contract tests: one that a public-io proof is refused when private input is required, one that a private-input proof is accepted. Both are Go tests over a fixture, and the refusal is made by the relying party's own acceptance check. It does not show a recipient- or audience-specific disclosure permission, a real proof system, or any external delivery."
+}
