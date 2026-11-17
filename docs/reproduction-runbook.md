@@ -86,8 +86,8 @@ python integrations/tools/run_suite.py `
 
 ```text
 suite:   107段すべて returncode 0、result = PASS
-checker: 合成61件・実実行262件、passed = true
-doc整合: passed = true（107段、実実行262件が一致）
+checker: 合成61件・実実行263件、passed = true
+doc整合: passed = true（107段、実実行263件が一致）
 ```
 
 確認コマンド:
@@ -98,6 +98,11 @@ python tools/check-synthetic-receipts/check.py --root .
 # --no-write keeps the count-bearing child receipts out of the tree, so a
 # verification pass leaves no diff behind. Drop it only when refreshing them.
 python integrations/tools/yic_receipt_gates.py --no-write \
+# The YI document checks are not part of the suite; run them together here.
+# They write nothing into the tree.
+python integrations/tools/yic_document_gates.py \
+  --artifact evaluations/artifacts/scn-003-document.json \
+  --out evaluations/records/YIC-document-gates-2026-11-18.json
   --artifact evaluations/artifacts/scn-003-document.json \
   --out evaluations/records/YIC-receipt-gates-2026-11-17.json
 # Prove the aggregate cannot pass over a missing or failing gate. The output is a

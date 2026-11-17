@@ -1,0 +1,105 @@
+{
+  "schema": "tai.reference.yic-document-gates/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 running the document checks together",
+  "command": "python integrations/tools/yic_document_gates.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-document-gates-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checksRequested": 11,
+    "checksRun": 11,
+    "results": {
+      "readmeCoverage": {
+        "ran": true,
+        "question": "every YI document is reachable from the README",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"documents\": 90, \"unindexed\": 0, \"broken\": [], \"passed\": true}"
+      },
+      "docLinks": {
+        "ran": true,
+        "question": "every relative link resolves",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 195, \"linksChecked\": 2081, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
+      },
+      "sectionSequence": {
+        "ran": true,
+        "question": "numbered sections ascend without undocumented holes",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"documents\": 37, \"withProblems\": [], \"passed\": true}"
+      },
+      "statusLine": {
+        "ran": true,
+        "question": "every document states what it is, early",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"documents\": 91, \"withoutStatus\": 0, \"late\": 0, \"passed\": true}"
+      },
+      "deckCounts": {
+        "ran": true,
+        "question": "stated deck counts equal the files",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"stated\": 7, \"mismatched\": [], \"pdfMismatches\": [], \"rangeIssues\": [], \"passed\": true}"
+      },
+      "gateProse": {
+        "ran": true,
+        "question": "the gate documents' numbers match their receipts",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"claims\": 4, \"mismatched\": [], \"passed\": true}"
+      },
+      "gateCitation": {
+        "ran": true,
+        "question": "every gate is cited and non-PASS citations are caveated",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"citations\": 23, \"distinct\": 17, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
+      },
+      "g1Packet": {
+        "ran": true,
+        "question": "the G1 packet is ready for a decision and undecided",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"candidates\": 15, \"decisions\": 6, \"filledCells\": [], \"incomplete\": [], \"passed\": true}"
+      },
+      "notRunRefresh": {
+        "ran": true,
+        "question": "the not-run list's later evidence is located",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"recordedNotRun\": [\"centreHandoff\", \"thinPhaseExpansion\", \"contextHandoff\"], \"withLaterEvidence\": [\"centreHandoff\", \"thinPhaseExpansion\", \"contextHandoff\"], \"stale\": true, \"passed\": true}"
+      },
+      "authorityLimits": {
+        "ran": true,
+        "question": "Product-declared limits are not dropped",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 36, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+      },
+      "skipDisclosure": {
+        "ran": true,
+        "question": "a skip is visible rather than folded into a pass",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"receipts\": 35, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+      }
+    },
+    "scriptsMissing": [],
+    "failed": [],
+    "scratchDirectory": "C:\\Users\\yhata\\AppData\\Local\\Temp\\yic-doc-gates-bz1j7u0g",
+    "wroteIntoTheTree": false,
+    "everyDocumentCheckRan": true,
+    "everyDocumentCheckPassed": true,
+    "finding": "YI文書の点検12種を1コマンドで実行し、1つでも欠ければPASSを返さない。各点検は3秒未満で終わるが、個別に呼ぶと一部を飛ばしやすい。作業ツリーへは書かない（一時ディレクトリへ出力する）。"
+  },
+  "scope": "Runs eleven document-level YI checks in one pass and refuses PASS if any is missing or fails. It records whether each ran and its exit code, not what each concluded; a check that passes can still judge the wrong thing, and this aggregate inherits every limit of the eleven."
+}

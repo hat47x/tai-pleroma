@@ -46,10 +46,20 @@ def main():
     root = Path(__file__).resolve().parents[2]
     records = root / "evaluations/records"
     own = Path(args.out).name
+    def isOwnReceipt(path):
+        """This check's own receipts carry verdict-shaped data; skip them by schema."""
+        if path.name == own:
+            return True
+        try:
+            probe = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            return False
+        return probe.get("schema") == "tai.reference.yic-skip-disclosure/v0"
+
     names = sorted(
         path.name
         for path in records.glob("YIC-*.json")
-        if path.name != own
+        if not isOwnReceipt(path)
     )
 
     rows = []
