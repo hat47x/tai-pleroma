@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 195, \"linksChecked\": 2082, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 195, \"linksChecked\": 2083, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 3, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 40, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 41, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 39, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 40, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -124,21 +124,21 @@
         "question": "the reach document's sections ascend",
         "exit": 0,
         "passed": true,
-        "tail": "{\"headings\": 15, \"outOfOrder\": [], \"missingTops\": [], \"passed\": true}"
+        "tail": "{\"headings\": 16, \"outOfOrder\": [], \"missingTops\": [], \"passed\": true}"
       },
       "suiteInvocation": {
         "ran": true,
         "question": "the suite records the argv it ran with",
         "exit": 0,
         "passed": true,
-        "tail": "{\"sourceRecordsInvocation\": true, \"receiptHasInvocation\": false, \"placeholder\": true, \"missing\": [\"checker\"], \"passed\": true}"
+        "tail": "{\"sourceRecordsInvocation\": true, \"receiptHasInvocation\": false, \"placeholder\": true, \"missing\": [\"checker\", \"yic_analysis_gates\", \"yic_document_gates\"], \"passed\": true}"
       },
       "suiteStepAccounting": {
         "ran": true,
         "question": "registered steps and recorded steps reconcile",
         "exit": 0,
         "passed": true,
-        "tail": "{\"keyed\": 97, \"calls\": 108, \"recorded\": 107, \"conditional\": 0, \"neverRecorded\": [\"checker\"], \"passed\": true}"
+        "tail": "{\"keyed\": 99, \"calls\": 110, \"recorded\": 107, \"conditional\": 0, \"neverRecorded\": [\"checker\", \"yic_analysis_gates\", \"yic_document_gates\"], \"passed\": true}"
       }
     },
     "scriptsMissing": [],

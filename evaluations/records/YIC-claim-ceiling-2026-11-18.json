@@ -1,0 +1,171 @@
+{
+  "schema": "tai.reference.yic-claim-ceiling/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the SHO claims module",
+  "command": "python integrations/tools/yic_claim_ceiling_check.py --sho-repo <SHO at e012691b8307> --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-claim-ceiling-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "shoCommit": "e012691b830758168381dc3f37f300c724516d57",
+    "module": "src/handoff_cross_product_claims.cjs",
+    "claimsFound": 29,
+    "stages": [
+      {
+        "stage": "I",
+        "claims": [
+          "realProductProducer",
+          "realProductConsumer"
+        ],
+        "absentFromTheModule": [],
+        "declaredLiterals": [
+          "realProductProducer",
+          "realProductConsumer"
+        ],
+        "measuredClaims": [],
+        "canEverBeReachedByReRunning": false,
+        "values": {
+          "realProductProducer": "true",
+          "realProductConsumer": "true"
+        },
+        "assertedWithoutMeasurement": [
+          "realProductProducer",
+          "realProductConsumer"
+        ],
+        "refused": []
+      },
+      {
+        "stage": "R",
+        "claims": [
+          "teiSubjectSourceIndependentlyResolved",
+          "originalSourcesRead",
+          "sourceRevisionCurrent"
+        ],
+        "absentFromTheModule": [],
+        "declaredLiterals": [
+          "teiSubjectSourceIndependentlyResolved",
+          "originalSourcesRead",
+          "sourceRevisionCurrent"
+        ],
+        "measuredClaims": [],
+        "canEverBeReachedByReRunning": false,
+        "values": {
+          "teiSubjectSourceIndependentlyResolved": "not-run",
+          "originalSourcesRead": "false",
+          "sourceRevisionCurrent": "false"
+        },
+        "assertedWithoutMeasurement": [],
+        "refused": [
+          "teiSubjectSourceIndependentlyResolved",
+          "originalSourcesRead",
+          "sourceRevisionCurrent"
+        ]
+      },
+      {
+        "stage": "P",
+        "claims": [
+          "externalDisclosure",
+          "currentHostGrantVerified"
+        ],
+        "absentFromTheModule": [],
+        "declaredLiterals": [
+          "externalDisclosure",
+          "currentHostGrantVerified"
+        ],
+        "measuredClaims": [],
+        "canEverBeReachedByReRunning": false,
+        "values": {
+          "externalDisclosure": "false",
+          "currentHostGrantVerified": "not-run"
+        },
+        "assertedWithoutMeasurement": [],
+        "refused": [
+          "externalDisclosure",
+          "currentHostGrantVerified"
+        ]
+      },
+      {
+        "stage": "T",
+        "claims": [
+          "receiptReturnedAndIndependentlyReviewed",
+          "newProcessRereceive"
+        ],
+        "absentFromTheModule": [],
+        "declaredLiterals": [
+          "receiptReturnedAndIndependentlyReviewed",
+          "newProcessRereceive"
+        ],
+        "measuredClaims": [],
+        "canEverBeReachedByReRunning": false,
+        "values": {
+          "receiptReturnedAndIndependentlyReviewed": "true",
+          "newProcessRereceive": "true"
+        },
+        "assertedWithoutMeasurement": [
+          "receiptReturnedAndIndependentlyReviewed",
+          "newProcessRereceive"
+        ],
+        "refused": []
+      },
+      {
+        "stage": "C",
+        "claims": [
+          "independentReread"
+        ],
+        "absentFromTheModule": [
+          "actualConsumerRead"
+        ],
+        "declaredLiterals": [
+          "independentReread"
+        ],
+        "measuredClaims": [],
+        "canEverBeReachedByReRunning": false,
+        "values": {
+          "independentReread": "true"
+        },
+        "assertedWithoutMeasurement": [
+          "independentReread"
+        ],
+        "refused": []
+      },
+      {
+        "stage": "H",
+        "claims": [
+          "otherHarnessLiveExecution",
+          "harnessSessionResume"
+        ],
+        "absentFromTheModule": [],
+        "declaredLiterals": [
+          "otherHarnessLiveExecution",
+          "harnessSessionResume"
+        ],
+        "measuredClaims": [],
+        "canEverBeReachedByReRunning": false,
+        "values": {
+          "otherHarnessLiveExecution": "not-run",
+          "harnessSessionResume": "not-run"
+        },
+        "assertedWithoutMeasurement": [],
+        "refused": [
+          "otherHarnessLiveExecution",
+          "harnessSessionResume"
+        ]
+      }
+    ],
+    "stagesThatCannotBeReached": [
+      "I",
+      "R",
+      "P",
+      "T",
+      "C",
+      "H"
+    ],
+    "finding": "SHOのclaims moduleを読み、各claimが**観測から計算される**のか**リテラルとして宣言されている**のかを分類した。29個のclaimのうち計算されているのは2個だけで、I・T・Cを構成するclaimは**リテラルの`true`**、R・P・Hを構成するものは**リテラルの`false`／`'not-run'`**である。前者は「測っていない事実を主張している」、後者は「測らないと宣言している」。**どちらも再実行では変わらない。**"
+  },
+  "scope": "Reads the SHO claims module and classifies each I/R/P/T/C/H claim as computed or literal. Literals are ceilings: re-running the runner cannot change them. It reads one module of one product's test-only orchestrator; it does not prove that no other instrument could reach those stages, and a computed claim can still be computed from an inadequate observation."
+}
