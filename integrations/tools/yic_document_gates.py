@@ -54,8 +54,15 @@ CHECKS = (
      "the suite records the argv it ran with"),
     ("suiteStepAccounting", "yic_suite_step_accounting.py",
      "registered steps and recorded steps reconcile"),
+)
+
+# Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites
+# their tracked receipts, so it cannot live in a read-only aggregate. It is run from the
+# runbook on its own, where a rewrite is the expected outcome.
+EXCLUDED = (
     ("gateReproducibility", "yic_gate_reproducibility.py",
-     "two runs in a row write the same receipts"),
+     "two runs in a row write the same receipts",
+     "rewrites tracked receipts by design; not read-only"),
 )
 
 
@@ -113,11 +120,14 @@ def main():
     missing, failed = classify(results)
     checks = {
         "checksRequested": len(CHECKS),
+        "excluded": [
+            {"check": name, "reason": reason} for name, _, _, reason in EXCLUDED
+        ],
         "checksRun": len([item for item in results.values() if item["ran"]]),
         "results": results,
         "scriptsMissing": missing,
         "failed": failed,
-        "scratchDirectory": str(scratch),
+        "usedScratchDirectory": True,
         "wroteIntoTheTree": False,
         "everyDocumentCheckRan": not missing,
         "everyDocumentCheckPassed": not failed,

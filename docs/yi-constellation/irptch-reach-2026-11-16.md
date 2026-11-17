@@ -220,6 +220,44 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 これは案Cの「記録」の実装が既に存在することを示す。同時に、**記録は判定ではない**ことも、製品自身の記録が示している。
 
+## 4.7 TとCは限定的に成立する。R・P・Hは成立しない
+
+§4.5で既定案C（記録だけ）を選んだ。その案が実際にどこまで届くかを、SHOのCross-product Handoffで測った（[receipt](../../evaluations/records/YIC-handoff-stages-2026-11-18.json)）。
+
+TEI rootの有無で2回走らせ、Consumer自身が返すclaimsから各段階を導いた。**段階が成立するのは、それを構成するclaimがすべて真のときだけ**である。
+
+| 段階 | 構成するclaim | TEI root無し | TEI root有り |
+| --- | --- | --- | --- |
+| **I** | `realProductProducer`・`realProductConsumer` | **成立** | **成立** |
+| **R** | `teiSubjectSourceIndependentlyResolved`・`originalSourcesRead`・`sourceRevisionCurrent` | 不成立 | **不成立** |
+| **P** | `externalDisclosure`・`currentHostGrantVerified` | 不成立 | **不成立** |
+| **T** | `receiptReturnedAndIndependentlyReviewed`・`newProcessRereceive` | **成立** | **成立** |
+| **C** | `actualConsumerRead`（＋`independentReread`） | **成立** | **成立** |
+| **H** | `otherHarnessLiveExecution`・`harnessSessionResume` | 不成立 | **不成立** |
+
+### 4.7.1 「引用した」は「再解決した」ではない
+
+TEI rootを与えると`teiReadonlyObservationCited`は**false → true**に変わる。TEIの`worldFingerprint`と`authorityLimits`4件を引用できるようになるからである。
+
+しかし同じ実行で:
+
+```
+teiSubjectSourceIndependentlyResolved: "not-run"
+originalSourcesRead: false
+sourceRevisionCurrent: false
+```
+
+**TEI観測を引用することは、元Subjectを独立に再解決したことではない。** 引用は「そのProductが見たこと」を持ってくるが、`originalSourcesRead`は本文を読んだことを要求し、そこはfalseのままである。
+
+### 4.7.2 TとCが成立する意味と、しない意味
+
+| 段階 | 成立する根拠 | 成立しない意味 |
+| --- | --- | --- |
+| **T** | 別Processが票を読み直し、receiptを返し、独立にreviewedした | 外部受信者への送出ではない。組織境界を越えていない |
+| **C** | `actualConsumerRead: true`、payload 354 bytes、digest照合 | 元Subjectの意味が受理されたわけではない（`meaningAccepted: false`） |
+
+**「成立」と「完了」は違う。** TとCは、このrunnerが測る範囲で成立する。外部開示（`externalDisclosure: false`）と現在のHost Grant（`currentHostGrantVerified: "not-run"`）は成立していない。
+
 ## 5. 次の一段階
 
 `knowledge-context -disclose`で**開示の選択と報告**は実測できた（§3.1）。
