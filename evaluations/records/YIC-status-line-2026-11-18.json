@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.yic-status-line-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the YI documents",
+  "command": "python integrations/tools/yic_status_line_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-status-line-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "docs/yi-constellation",
+    "documents": 91,
+    "documentsWithAStatusLine": 91,
+    "nonIndexDocuments": 89,
+    "documentsWithoutAStatusLine": [],
+    "withoutStatusLineCount": 0,
+    "statusLineAfterFirstSection": [],
+    "shapesUsed": {
+      "labelled": 89,
+      "bold-statement": 0,
+      "none": 0
+    },
+    "everyDocumentStatesWhatItIs": true,
+    "everyStatusLineOpensTheDocument": true,
+    "finding": "YI文書が、自分が何であるか（提案・記録・受理済み・NOT RUN など）を最初の節より前に述べているかを点検する。`状態:`・`**状態：**`・`- **状態**：`・`> **Status:**`の4つの書き方を認める。索引であるREADMEは対象外とする。"
+  },
+  "scope": "Checks that every non-index YI document carries a `状態:` line before its first section. It checks presence and position only: a document can state '提案' and still be read as accepted, and a status line whose date or wording is wrong is not detected."
+}

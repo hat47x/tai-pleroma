@@ -1,5 +1,7 @@
 # 製品横断Handoff `yi.handoff.context/v1`：最小の二製品経路と段階的検証計画
 
+状態: 設計と実装の記録（2026-11-11）。新しい中央Host・Registry・権限Engineは作らない。Owner受理と実外部送信はNOT RUN。
+
 2026-11-11。YI Constellation の複数製品が**外部AIハーネスのSession**を共有し、TEI・SHO・SUI・SEI の専門機能を協調利用するための、最小の製品横断 Handoff 機構。
 
 本書は設計と実装の記録である。**全新規の共通実行基盤・中央Host・第二Registry・権限Engineは作らない。** 既存の Product Skill・Activity・Context Projection・Source Provenance・Evidence・Handoff 契約の延長として成立する範囲だけを実装する。
