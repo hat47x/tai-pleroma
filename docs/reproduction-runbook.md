@@ -86,8 +86,8 @@ python integrations/tools/run_suite.py `
 
 ```text
 suite:   107段すべて returncode 0、result = PASS
-checker: 合成61件・実実行184件、passed = true
-doc整合: passed = true（97段、実実行184件が一致）
+checker: 合成61件・実実行245件、passed = true
+doc整合: passed = true（107段、実実行245件が一致）
 ```
 
 確認コマンド:
@@ -95,9 +95,19 @@ doc整合: passed = true（97段、実実行184件が一致）
 ```powershell
 python tools/check-synthetic-receipts/check.py --root .
 # A new receipt must also survive the gates that live inside the suite.
-python integrations/tools/yic_receipt_gates.py \
+# --no-write keeps the count-bearing child receipts out of the tree, so a
+# verification pass leaves no diff behind. Drop it only when refreshing them.
+python integrations/tools/yic_receipt_gates.py --no-write \
   --artifact evaluations/artifacts/scn-003-document.json \
   --out evaluations/records/YIC-receipt-gates-2026-11-17.json
+# Prove the aggregate cannot pass over a missing or failing gate. The output is a
+# self-test verdict, not a shaped receipt, so it goes to a scratch path.
+python integrations/tools/yic_receipt_gates.py --self-test \
+  --out /tmp/yic-gates-self-test.json
+# Prove that two runs in a row write the same receipts.
+python integrations/tools/yic_gate_reproducibility.py \
+  --artifact evaluations/artifacts/scn-003-document.json \
+  --out evaluations/records/YIC-gate-reproducibility-2026-11-17.json
 python integrations/tools/doc_consistency_check.py
 ```
 
