@@ -120,6 +120,32 @@ TEIの2つの入口はどちらも受信者別の開示を判定しなかった�
 
 **Pの形（自分で判断して止められる）は存在する。** 問われているのは「その判断の対象が開示かどうか」であって、「そういう判断ができるかどうか」ではない。
 
+## 4.3 受取側が自分で拒否する例は、EKIにもある
+
+SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**がある（[receipt](../../../evaluations/records/YIC-eki-private-input-2026-11-17.json)、`eki-fabric` `256feb8bab9c`、2件PASS）。
+
+| 要求 | 証明の開示Profile | 判定 |
+| --- | --- | --- |
+| `RequirePrivateInputProof = true` | `public-io` | **拒否**（"must not be treated as zero knowledge by default"） |
+| `RequirePrivateInputProof = true` | `private-input` | **受理** |
+
+同じ要求に対して、証明のProfileだけで結果が変わる。**これは対称性の検査であり、片側だけでは「常に拒否する実装」と区別できない**ので、受理側も併せて実行している。
+
+ただし判定しているのは**証明の開示Profile**であって、「この受信者にこの内容を渡してよいか」ではない。
+
+## 4.4 三つの製品で見たPの形
+
+ここまでに確認した「自分で判断して止められる」入口を並べる。
+
+| 製品 | 入口 | 判定している対象 | 受信者別の開示か |
+| --- | --- | --- | --- |
+| TEI | `knowledge-context -disclose` | 開示するSectionの選択 | **違う**（選択であり許可ではない） |
+| TEI | `DocumentReadPreflight` | Plugin選択の投影 | **違う**（開示を判定しないと明示） |
+| SUI | `resolve_access_decision`（Tenant scope） | Tenant境界 | **違う**（Tenantの一致） |
+| EKI | `Accept`（`RequirePrivateInputProof`） | 証明の開示Profile | **違う**（Profileの種別） |
+
+**4つの入口すべてが「自分で止められる」形を持ち、4つとも対象が開示ではない。** これは「開示を判定する能力が無い」ことの証明ではない。確認した入口が4つである、という記録である。
+
 ## 5. 次の一段階
 
 `knowledge-context -disclose`で**開示の選択と報告**は実測できた（§3.1）。
