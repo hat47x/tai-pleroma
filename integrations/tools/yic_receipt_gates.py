@@ -61,36 +61,76 @@ def classify(results):
     return missing, failed
 
 
-def self_test():
-    """Show that the aggregate cannot report PASS over a missing or failed gate.
+def read_gate(script_path, args, root, artifact, out):
+    """Run one gate and turn its process outcome into a reading.
 
-    Two cases: a gate whose script is absent, and a gate that exits non-zero. Both
-    must come back as a failure, otherwise the aggregate is a rubber stamp.
+    This is the conversion `main()` relies on. `self_test()` calls it directly so an
+    inverted or dropped exit code cannot pass the self-test unnoticed.
     """
-    absent = {"absentGate": {"ran": False, "reason": "script missing", "question": "q"}}
-    missing, failed = classify(absent)
-    absentIsFailure = bool(missing) and not failed
-
-    # Run a real script that exits non-zero, so the reading of exit codes is tested
-    # rather than assumed.
-    probe = Path(tempfile.mkdtemp()) / "always_fails.py"
-    probe.write_text("import sys\nsys.exit(1)\n", encoding="utf-8")
     completed = subprocess.run(
-        [sys.executable, str(probe)], capture_output=True, text=True,
-        encoding="utf-8", errors="replace",
+        [sys.executable, str(script_path)] + args,
+        cwd=root, capture_output=True, text=True,
+        encoding="utf-8", errors="replace", env={**os.environ}, timeout=1800,
     )
-    failing = {"failingGate": {
+    tail = (completed.stdout or "").strip().splitlines()
+    return {
         "ran": True,
-        "passed": completed.returncode == 0,
         "exit": completed.returncode,
-    }}
-    _, failed2 = classify(failing)
-    failingIsFailure = bool(failed2)
+        "passed": completed.returncode == 0,
+        "tail": tail[-1][:200] if tail else "",
+    }
+
+
+def self_test():
+    """Prove the aggregate cannot report PASS over a missing, failing or crashing gate.
+
+    Four cases, each of which must come back as a failure:
+      * a gate whose script is absent,
+      * a gate whose script exits non-zero,
+      * a gate whose script exits zero,
+      * both missing and failed present at once.
+    """
+    root = Path(__file__).resolve().parents[2]
+    scratch = Path(tempfile.mkdtemp(prefix="yic-selftest-"))
+
+    # The three real exit paths, run through the same reader main() uses.
+    failing_probe = scratch / "always_fails.py"
+    failing_probe.write_text("import sys\nsys.exit(1)\n", encoding="utf-8")
+    passing_probe = scratch / "always_passes.py"
+    passing_probe.write_text("print('ok')\n", encoding="utf-8")
+    broken_probe = scratch / "not_executable.txt"
+    broken_probe.write_text("this is not python\n", encoding="utf-8")
+
+    failing = read_gate(failing_probe, [], root, "", "")
+    passing = read_gate(passing_probe, [], root, "", "")
+    # A file Python cannot parse exits non-zero, so it must read as a failure.
+    broken = read_gate(broken_probe, [], root, "", "")
+
+    absent = {"absentGate": {"ran": False, "reason": "script missing", "question": "q"}}
+    missing_only, failed_only = classify(absent)
+    absentIsFailure = bool(missing_only) and not failed_only
+
+    both = {
+        "absentGate": {"ran": False, "reason": "script missing", "question": "q"},
+        "failingGate": failing,
+        "passingGate": passing,
+    }
+    missing_both, failed_both = classify(both)
+    combinedIsFailure = bool(missing_both) and bool(failed_both)
 
     return {
         "absentScriptIsAFailure": absentIsFailure,
-        "failingScriptIsAFailure": failingIsFailure,
-        "passed": absentIsFailure and failingIsFailure,
+        "failingScriptReadsAsFailure": failing["passed"] is False,
+        "passingScriptReadsAsPass": passing["passed"] is True,
+        "unparsableScriptReadsAsFailure": broken["passed"] is False,
+        "missingAndFailedTogetherIsFailure": combinedIsFailure,
+        "passed": (
+            absentIsFailure
+            and failing["passed"] is False
+            and passing["passed"] is True
+            and broken["passed"] is False
+            and combinedIsFailure
+        ),
     }
 
 
@@ -121,7 +161,7 @@ def main():
         if not path.exists():
             results[name] = {"ran": False, "reason": "script missing", "question": question}
             continue
-        command = [sys.executable, str(path)]
+        command = []
         if name == "checker":
             command += extra
         else:
@@ -131,18 +171,17 @@ def main():
                 else root / "evaluations/records" / OUTPUTS[name]
             )
             command += ["--artifact", args.artifact, "--out", str(target)]
-        completed = subprocess.run(
-            command, cwd=root, capture_output=True, text=True,
-            encoding="utf-8", errors="replace", env={**os.environ},
-        )
-        tail = (completed.stdout or "").strip().splitlines()
-        results[name] = {
-            "ran": True,
-            "question": question,
-            "exit": completed.returncode,
-            "passed": completed.returncode == 0,
-            "tail": tail[-1][:200] if tail else "",
-        }
+        try:
+            reading = read_gate(path, command, root, args.artifact, "")
+        except (OSError, subprocess.SubprocessError) as error:
+            # A gate that cannot be executed is a gate that did not pass.
+            results[name] = {
+                "ran": False,
+                "reason": f"could not execute: {type(error).__name__}",
+                "question": question,
+            }
+            continue
+        results[name] = {"question": question, **reading}
 
     missing, failed = classify(results)
     checks = {
