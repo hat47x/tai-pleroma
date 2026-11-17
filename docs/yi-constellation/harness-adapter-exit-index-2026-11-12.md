@@ -9,6 +9,8 @@
 - 実接続試験: `HARNESS_ADAPTER_REAL=1 go test -tags realconnect ./...`（既定では走らない）
 - Adapter: `dsh-headless`、`claude-code`、`step-cli`、`direct-control`、`scripted-*`（契約試験専用）
 
+**Codexの後続作業：** [Codex公開Harnessの接続実行票](codex-source-integration-decision-2026-11-17.md)では、既存Adapterへの `codex exec` の追加（C1）と、双方向App Server接続（C2）を分離した。どちらもこの索引の実装・実接続Exitには**未計上**。Codex未導入時の `not-run` を維持し、既存E1〜E6の結果をCodexへ転用しない。
+
 ## 1. Exit一覧
 
 | Exit | 状態 | 示した実行 | 証拠 |
