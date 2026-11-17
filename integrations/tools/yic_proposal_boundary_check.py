@@ -47,6 +47,11 @@ REQUIRES = (
         "phrases": ("最小の試験",),
         "question": "最小の試験を挙げているか",
     },
+    {
+        "name": "statesTheSizeOfTheChange",
+        "phrases": ("足す必要がある箇所", "3箇所"),
+        "question": "変更が何箇所に及ぶかを述べているか",
+    },
 )
 
 

@@ -1,0 +1,64 @@
+{
+  "schema": "tai.reference.yic-pdp-payload/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows host running WSL Ubuntu-24.04, serializing a request through the adapter",
+  "command": "python integrations/tools/yic_pdp_payload_probe.py <artifact> <out> <sui-repo>",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "bodyBytes": 331,
+    "topLevelKeys": [
+      "action",
+      "readOnly",
+      "resource",
+      "safeMode",
+      "subject",
+      "tenant"
+    ],
+    "allPaths": [
+      "action",
+      "readOnly",
+      "resource",
+      "resource.docId",
+      "resource.kind",
+      "resource.policyRef",
+      "resource.tenantId",
+      "resource.visibility",
+      "safeMode",
+      "subject",
+      "subject.actorRef",
+      "subject.groups",
+      "subject.roles",
+      "subject.userId",
+      "tenant",
+      "tenant.membershipId",
+      "tenant.resolvedBy",
+      "tenant.tenantId"
+    ],
+    "carriesAudience": false,
+    "subjectSubkeys": [
+      "actorRef",
+      "groups",
+      "roles",
+      "userId"
+    ],
+    "resourceSubkeys": [
+      "docId",
+      "kind",
+      "policyRef",
+      "tenantId",
+      "visibility"
+    ],
+    "suiCommit": "0c2a2c5480583636ea4c5aeeb179c6154cda8c0b",
+    "distro": "Ubuntu-24.04",
+    "placesToThreadARecipient": 3,
+    "finding": "外部PDPへ送るbodyを実際に組み立てて、含まれる鍵を数えた。bodyのトップレベルは`action, readOnly, resource, safeMode, subject, tenant`で、**`audience`も`recipient`も無い**。したがって受信者を足すには、`AccessRequest`だけでなく**直列化の関数**と**PDP側の契約**の3箇所に足す必要がある。文書55の『省略可能な欄を足すだけ』は、**直列化を通す作業を含んでいなかった**。"
+  },
+  "scope": "Calls the SUI external adapter's own request serializer and records every key in the body it produces, checking whether a recipient appears anywhere. It shows the recipient would need to be added in three places; it does not judge whether the external PDP would use such a field, and no network call is made."
+}
