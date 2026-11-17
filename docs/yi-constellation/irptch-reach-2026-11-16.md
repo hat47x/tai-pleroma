@@ -133,7 +133,7 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 ただし判定しているのは**証明の開示Profile**であって、「この受信者にこの内容を渡してよいか」ではない。
 
-## 4.4 三つの製品で見たPの形
+## 4.4 4つの製品で見たPの形
 
 ここまでに確認した「自分で判断して止められる」入口を並べる。
 
@@ -143,8 +143,15 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 | TEI | `DocumentReadPreflight` | Plugin選択の投影 | **違う**（開示を判定しないと明示） |
 | SUI | `resolve_access_decision`（Tenant scope） | Tenant境界 | **違う**（Tenantの一致） |
 | EKI | `Accept`（`RequirePrivateInputProof`） | 証明の開示Profile | **違う**（Profileの種別） |
+| SUI | `resolve_access_decision`（`source_snapshot`上書き） | リソース種別ごとの強制deny | **違う**（種別） |
 
-**4つの入口すべてが「自分で止められる」形を持ち、4つとも対象が開示ではない。** これは「開示を判定する能力が無い」ことの証明ではない。確認した入口が4つである、という記録である。
+**5つの入口すべてが「自分で止められる」形を持ち、5つとも対象が開示ではない。**
+
+とくにSUIの`source_snapshot`上書きは、確認した中で**最もPに近い**（[receipt](../../../evaluations/records/YIC-sui-source-policy-2026-11-17.json)、16件PASS）。呼出し側が`require_tenant_scope`を省いても製品が真へ変え、`fail_safe_mode`も`deny`へ変え、`noop`/`mock`アダプタを拒否する。**呼出し側の意図を製品が上書きする**点で、単なる「要求に従う」とは違う。
+
+それでも判定対象はリソース種別であって、受信者・Audienceではない。
+
+これは「開示を判定する能力が無い」ことの証明ではない。確認した入口が5つである、という記録である。
 
 ## 5. 次の一段階
 
