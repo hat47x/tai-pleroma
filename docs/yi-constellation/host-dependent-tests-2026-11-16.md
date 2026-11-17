@@ -15,7 +15,7 @@ YICの実行票が「未実行」としていたテストを実際に走らせ�
 | SUI | `tests/test_r2_source_snapshot_read_gate.py` 70件 | **FAIL 70件** | **PASS 70件** | `os.open(directory, O_RDONLY)` を Windows が拒否。一時名が MAX_PATH 超過 |
 | SEI | `runtime/go` 16パッケージ | **PASS 16** | （未実行） | 差は見つかっていない |
 
-根拠のreceipt: [TEIパス境界](../../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、[TEI self-build](../../../evaluations/records/YIC-tei-linux-regression-2026-11-16.json)、[SUI gate](../../../evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json)。
+根拠のreceipt: [TEIパス境界](../../evaluations/records/YIC-tei-rooted-source-2026-11-16.json)、[TEI self-build](../../evaluations/records/YIC-tei-linux-regression-2026-11-16.json)、[SUI gate](../../evaluations/records/YIC-sui-r2-gate-hosts-2026-11-16.json)。
 
 ## 2. SKIPとFAILは違うが、どちらも「未検証」
 
@@ -51,7 +51,7 @@ YICの実行票が「未実行」としていたテストを実際に走らせ�
 - SKIPした件数と、その理由の文字列
 - FAILした場合、**それが対象の欠陥かホストの制約か**の切り分け
 
-本資料のreceiptは、いずれもこれを含む。この点検は機械化した（[点検のreceipt](../../../evaluations/records/YIC-skip-disclosure-2026-11-16.json)）。
+本資料のreceiptは、いずれもこれを含む。この点検は機械化した（[点検のreceipt](../../evaluations/records/YIC-skip-disclosure-2026-11-16.json)）。
 
 - 個々の検証判定を持つYIC receiptは、**実行ホストを明示**する（`hostGoos`/`hostGoarch`/`goVersion`/`hostKernel` など）
 - SKIPを含むreceiptは、**そのSKIPを可視にする**（件数または理由）

@@ -4,7 +4,7 @@
 [実装README](../../integrations/harness-adapter/README.md) にある。ここには
 「どのExitを、どの実行で、どの証拠ファイルで示したか」だけを置く。**
 
-- 契約: `yi.harness-adapter/v0`（[contract.go](../integrations/harness-adapter/contract.go)）
+- 契約: `yi.harness-adapter/v0`（[contract.go](../../integrations/harness-adapter/contract.go)）
 - 契約試験: `go test ./... -count=1` — 160件PASS（外部接続なし）
 - 実接続試験: `HARNESS_ADAPTER_REAL=1 go test -tags realconnect ./...`（既定では走らない）
 - Adapter: `dsh-headless`、`claude-code`、`step-cli`、`direct-control`、`scripted-*`（契約試験専用）

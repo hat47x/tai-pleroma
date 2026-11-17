@@ -18,7 +18,10 @@ from pathlib import Path
 
 # Directories that carry prose and links. Code and fixtures are excluded on purpose.
 DIRECTORIES = ("docs", "analysis", "evaluations", "scenarios", "integrations")
-LINK = re.compile(r"\]\(([^)#\s]+\.md)(?:#[^)]*)?\)")
+# Any relative link, not only .md: receipts, sources and trial files are linked too.
+LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
+# Wording that marks a target as deliberately outside the repository.
+EXTERNAL_MARKERS = ("repo外", "リポジトリ外", "outside the repository")
 
 
 def digest(path):
@@ -41,6 +44,7 @@ def main():
 
     broken = []
     cross_repo = []
+    external_declared = []
     checked = 0
     sources = []
     for name in present:
@@ -49,15 +53,25 @@ def main():
         text = source.read_text(encoding="utf-8", errors="replace")
         for match in LINK.finditer(text):
             target = match.group(1)
-            if target.startswith(("http:", "https:", "mailto:")):
+            if target.startswith(("http:", "https:", "mailto:", "#")):
                 continue
+            # A link the surrounding text calls "outside the repository" is a
+            # declared external reference, not a broken relative path.
+            context = text[max(0, match.start() - 160):match.start()]
+            declared_external = any(marker in context for marker in EXTERNAL_MARKERS)
             checked += 1
             resolved = (source.parent / target).resolve()
             exists = resolved.exists()
             inside = str(resolved).startswith(str(root.resolve()))
             # Line number of the link, for a locatable report.
             line = text.count("\n", 0, match.start()) + 1
-            if not exists:
+            if declared_external:
+                external_declared.append({
+                    "source": str(source.relative_to(root)).replace("\\", "/"),
+                    "line": line,
+                    "target": target,
+                })
+            elif not exists:
                 broken.append({
                     "source": str(source.relative_to(root)).replace("\\", "/"),
                     "line": line,
@@ -80,7 +94,9 @@ def main():
         "brokenLinks": broken,
         "brokenCount": len(broken),
         "crossRepoLinks": cross_repo,
+        "declaredExternalLinks": external_declared,
         "crossRepoCount": len(cross_repo),
+        "declaredExternalCount": len(external_declared),
         "everyRelativeLinkResolves": not broken,
         "note": (
             "crossRepoLinks are references into sibling checkouts. They resolve only when "

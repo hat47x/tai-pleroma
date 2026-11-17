@@ -27,17 +27,17 @@
 
 凡例: ○＝receiptで観測、−＝未到達（NOT RUN）。
 
-**この表はreceiptから機械的に再生成して突き合わせている**（[点検のreceipt](../../../evaluations/records/YIC-reach-table-2026-11-17.json)）。Iはcommitとclean checkoutの記録、Rはカードごとに名指した証拠field（`inspectReturnedByteRange`／`snapshotFingerprint`／`everyListedRegressionPassed`）の値を要求する。**初回の点検でQH-FIELD-13のRが根拠なしと判明したので、この表を修正した。**
+**この表はreceiptから機械的に再生成して突き合わせている**（[点検のreceipt](../../evaluations/records/YIC-reach-table-2026-11-17.json)）。Iはcommitとclean checkoutの記録、Rはカードごとに名指した証拠field（`inspectReturnedByteRange`／`snapshotFingerprint`／`everyListedRegressionPassed`）の値を要求する。**初回の点検でQH-FIELD-13のRが根拠なしと判明したので、この表を修正した。**
 
 ### 2.1 各カードが実際に観測したもの
 
 | カード | receipt | 観測した範囲 |
 | --- | --- | --- |
-| QH-RESOLVE-09 | [YIC-qh-resolve-09](../../../evaluations/records/YIC-qh-resolve-09-2026-11-16.json) | 能力解決の「曖昧＝不在」、Supports述語の所属判定。**Subjectを解決していない**のでRには届かない |
-| QH-A0-RUN-10 | [YIC-tei-product-read](../../../evaluations/records/YIC-tei-product-read-2026-11-16.json) | 8件のGo回帰がclean cloneでPASS。Subject・元byte範囲の取得を含む |
-| QH-CLI-RANGE-11 | [YIC-tei-readonly-cli](../../../evaluations/records/YIC-tei-readonly-cli-2026-11-16.json) | 5つのCLIが応答。`inspect`が`offset 124, line 7, column 6`〜`129`を返す |
-| QH-REVALIDATE-12 | [YIC-qh-revalidate](../../../evaluations/records/YIC-qh-revalidate-2026-11-16.json) | `trace`が`snapshotFingerprint`一致を受理し、不一致を`STALE_SNAPSHOT`で拒否 |
-| QH-FIELD-13 | [YIC-qh-field-13](../../../evaluations/records/YIC-qh-field-13-2026-11-16.json) | Whole Recordが追加Fieldを残し、明示2 Field投影が落とす。**構成したRecordに対するTransformの試験であり、WorkspaceのSubjectを解決していない**のでRには届かない |
+| QH-RESOLVE-09 | [YIC-qh-resolve-09](../../evaluations/records/YIC-qh-resolve-09-2026-11-16.json) | 能力解決の「曖昧＝不在」、Supports述語の所属判定。**Subjectを解決していない**のでRには届かない |
+| QH-A0-RUN-10 | [YIC-tei-product-read](../../evaluations/records/YIC-tei-product-read-2026-11-16.json) | 8件のGo回帰がclean cloneでPASS。Subject・元byte範囲の取得を含む |
+| QH-CLI-RANGE-11 | [YIC-tei-readonly-cli](../../evaluations/records/YIC-tei-readonly-cli-2026-11-16.json) | 5つのCLIが応答。`inspect`が`offset 124, line 7, column 6`〜`129`を返す |
+| QH-REVALIDATE-12 | [YIC-qh-revalidate](../../evaluations/records/YIC-qh-revalidate-2026-11-16.json) | `trace`が`snapshotFingerprint`一致を受理し、不一致を`STALE_SNAPSHOT`で拒否 |
+| QH-FIELD-13 | [YIC-qh-field-13](../../evaluations/records/YIC-qh-field-13-2026-11-16.json) | Whole Recordが追加Fieldを残し、明示2 Field投影が落とす。**構成したRecordに対するTransformの試験であり、WorkspaceのSubjectを解決していない**のでRには届かない |
 
 ## 3. 到達していない段階と、その理由
 
@@ -45,7 +45,7 @@
 
 5枚はいずれも**受信者を定めていない**。Product内のread-only参照であり、Audience/Recipient別の許可判定を通っていない。`inspect`自身が`local-read-is-not-disclosure-permission`を`authorityLimits`に返している。
 
-**ただしProductには開示を選ぶ入口がある。** `knowledge-context -disclose`は、Subjectに対してSectionを選ばせ、選んだものを`disclosedSections`、残りを`omittedAvailableSections`に分けて返す（[receipt](../../../evaluations/records/YIC-tei-knowledge-disclosure-2026-11-16.json)、`a44b0ed2`）。
+**ただしProductには開示を選ぶ入口がある。** `knowledge-context -disclose`は、Subjectに対してSectionを選ばせ、選んだものを`disclosedSections`、残りを`omittedAvailableSections`に分けて返す（[receipt](../../evaluations/records/YIC-tei-knowledge-disclosure-2026-11-16.json)、`a44b0ed2`）。
 
 | 指定 | `disclosedSections` | `omittedAvailableSections` |
 | --- | --- | --- |
@@ -90,7 +90,7 @@
 
 ## 4.1 Pの判定主体が、製品の入口に見つからないこと
 
-「開示を選べる」ことは§3.1で確かめた。では「この受信者に渡してよいか」を製品が答える入口はあるのか。**最も近い候補**である`internal/plugin/management`の`DocumentReadPreflight`を実行して確かめた（[receipt](../../../evaluations/records/YIC-preflight-disclosure-2026-11-17.json)、`a44b0ed2`）。
+「開示を選べる」ことは§3.1で確かめた。では「この受信者に渡してよいか」を製品が答える入口はあるのか。**最も近い候補**である`internal/plugin/management`の`DocumentReadPreflight`を実行して確かめた（[receipt](../../evaluations/records/YIC-preflight-disclosure-2026-11-17.json)、`a44b0ed2`）。
 
 テスト**21件はすべてPASS**した。そのうえで、型自身のコメントが次を明示している。
 
@@ -107,7 +107,7 @@
 
 ## 4.2 自分で拒否できる判定は存在する。ただし対象が違う
 
-TEIの2つの入口はどちらも受信者別の開示を判定しなかった。しかし**外部の判断を待たずに自分で拒否する**判定は、別の製品にある。SUIの`resolve_access_decision`を`require_tenant_scope=True`で実行した（[receipt](../../../evaluations/records/YIC-sui-tenant-boundary-2026-11-17.json)、`sui-sensemaking` `0c2a2c548058`、linux、8件PASS）。
+TEIの2つの入口はどちらも受信者別の開示を判定しなかった。しかし**外部の判断を待たずに自分で拒否する**判定は、別の製品にある。SUIの`resolve_access_decision`を`require_tenant_scope=True`で実行した（[receipt](../../evaluations/records/YIC-sui-tenant-boundary-2026-11-17.json)、`sui-sensemaking` `0c2a2c548058`、linux、8件PASS）。
 
 | 状況 | 判定 | 外部Adapterの呼出し |
 | --- | --- | --- |
@@ -122,7 +122,7 @@ TEIの2つの入口はどちらも受信者別の開示を判定しなかった�
 
 ## 4.3 受取側が自分で拒否する例は、EKIにもある
 
-SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**がある（[receipt](../../../evaluations/records/YIC-eki-private-input-2026-11-17.json)、`eki-fabric` `256feb8bab9c`、2件PASS）。
+SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**がある（[receipt](../../evaluations/records/YIC-eki-private-input-2026-11-17.json)、`eki-fabric` `256feb8bab9c`、2件PASS）。
 
 | 要求 | 証明の開示Profile | 判定 |
 | --- | --- | --- |
@@ -147,7 +147,7 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 **5つの入口すべてが「自分で止められる」形を持ち、5つとも対象が開示ではない。**
 
-とくにSUIの`source_snapshot`上書きは、確認した中で**最もPに近い**（[receipt](../../../evaluations/records/YIC-sui-source-policy-2026-11-17.json)、16件PASS）。呼出し側が`require_tenant_scope`を省いても製品が真へ変え、`fail_safe_mode`も`deny`へ変え、`noop`/`mock`アダプタを拒否する。**呼出し側の意図を製品が上書きする**点で、単なる「要求に従う」とは違う。
+とくにSUIの`source_snapshot`上書きは、確認した中で**最もPに近い**（[receipt](../../evaluations/records/YIC-sui-source-policy-2026-11-17.json)、16件PASS）。呼出し側が`require_tenant_scope`を省いても製品が真へ変え、`fail_safe_mode`も`deny`へ変え、`noop`/`mock`アダプタを拒否する。**呼出し側の意図を製品が上書きする**点で、単なる「要求に従う」とは違う。
 
 それでも判定対象はリソース種別であって、受信者・Audienceではない。
 
@@ -204,7 +204,7 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 前節の案Cは「誰に渡すと宣言したか」を記録する案である。その記録の器が既に存在するかを確かめた。
 
-`yi.handoff.context/v1`の票は`disclosure.audience`を運ぶ（[契約](cross-product-handoff-context-v1-2026-11-11.md)、`disclosure.audience`が空なら拒否）。SHOのConsumerを実際に走らせて、拡大したAudienceをどう扱うかを見た（[receipt](../../../evaluations/records/YIC-audience-declaration-2026-11-17.json)、`sho-composer` `e012691b8307`、14 observations）。
+`yi.handoff.context/v1`の票は`disclosure.audience`を運ぶ（[契約](cross-product-handoff-context-v1-2026-11-11.md)、`disclosure.audience`が空なら拒否）。SHOのConsumerを実際に走らせて、拡大したAudienceをどう扱うかを見た（[receipt](../../evaluations/records/YIC-audience-declaration-2026-11-17.json)、`sho-composer` `e012691b8307`、14 observations）。
 
 | 操作 | 結果 |
 | --- | --- |
@@ -236,7 +236,7 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 P・T・C・Hの議論で繰り返し現れたのは、**Product自身が「これは許可ではない」と宣言している**ことだった。YICのreceiptがProduct出力を写すとき、この宣言を言い換えたり落としたりすると、「できること」と「許可されていること」の区別が記録から消える。
 
-そこで、receiptが保持している限界文字列を機械的に数える点検を足した（[点検のreceipt](../../../evaluations/records/YIC-authority-limits-2026-11-16.json)）。現在の結果は次のとおり。
+そこで、receiptが保持している限界文字列を機械的に数える点検を足した（[点検のreceipt](../../evaluations/records/YIC-authority-limits-2026-11-16.json)）。現在の結果は次のとおり。
 
 | 項目 | 値 |
 | --- | --- |

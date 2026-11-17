@@ -78,7 +78,7 @@ TEIの設計判断を拘束しない範囲で、最小の拡張案を示しま�
 
 ## 6. 入れ子投影の扱い（2026-11-06の実測）
 
-段階4の判断で「入れ子投影はTEI側の不足」とした前提を実測で確かめた。[receipt](../evaluations/records/TEI-nesting-2026-11-06.json)
+段階4の判断で「入れ子投影はTEI側の不足」とした前提を実測で確かめた。[receipt](../../evaluations/records/TEI-nesting-2026-11-06.json)
 
 ```text
 projection.kind に未知の値 → 契約検証で拒否（生成なし）

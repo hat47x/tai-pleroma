@@ -20,7 +20,7 @@
       "integrations"
     ],
     "documentsScanned": 195,
-    "linksChecked": 1234,
+    "linksChecked": 2057,
     "brokenLinks": [],
     "brokenCount": 0,
     "crossRepoLinks": [
@@ -33,9 +33,27 @@
         "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
         "line": 184,
         "target": "../../../sho-composer/docs/handoff-cross-product-trial-2026-11-11.md"
+      },
+      {
+        "source": "docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md",
+        "line": 184,
+        "target": "../../../sho-composer/docs/handoff-cross-product-trial-receipt-2026-11-11.json"
       }
     ],
-    "crossRepoCount": 2,
+    "declaredExternalLinks": [
+      {
+        "source": "analysis/product-side-decisions-issue-drafts-2026-11-06.md",
+        "line": 8,
+        "target": "product-side-decisions-2026-11-06.md"
+      },
+      {
+        "source": "analysis/tei-side-gaps-issue-drafts-2026-11-06.md",
+        "line": 5,
+        "target": "tei-stage4-decision-2026-11-06.md"
+      }
+    ],
+    "crossRepoCount": 3,
+    "declaredExternalCount": 2,
     "everyRelativeLinkResolves": true,
     "note": "crossRepoLinks are references into sibling checkouts. They resolve only when those repositories are present in the same workspace, so they are reported separately rather than counted as broken.",
     "finding": "docs配下の相対Markdownリンクを、そのリンクを含むファイルの位置から解決し、実在するファイルに着地するかを点検する。リンク先が存在していても、基準ディレクトリを誤ると壊れる。"

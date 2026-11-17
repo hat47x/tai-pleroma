@@ -49,7 +49,7 @@ go test ./internal/operations -run '^TestInspectSelectedRuleMarkdownFromSameLoad
 
 **拒否・失効を同じ試験で扱う**：Language未選択（`TEI_MD_PARSER_UNBOUND`）、未知版（`TEI_LANGUAGE_UNAVAILABLE`）、説明文だけの改訂で旧Source Index失効。試験時には**固定repo HEAD、Go/OS環境、実コマンドと終了コード、失敗時の原因、Fixtureの版、結果の受領先**を既存TEI Ownerの記録へ残す。実Ruleが存在することとRule集合全件性／実Providerの入力集合全件性は別である。
 
-**2026-11-16の実行記録**：この票がNOT RUNとしていた**8件のGo回帰は、固定commitのclean cloneで実行し、すべてPASSした**（[receipt](../../../evaluations/records/YIC-tei-product-read-2026-11-16.json)）。対象は`tei-platform`の`926c8f2e3511`、cloneは未変更（`checkoutClean: true`）、Goは実行時の版をreceiptに記録している。8件は、Capability Source Evidence、Sourceのみの改訂による Pinned Revision 失効、内蔵Rule Markdownの同一Load取得と未選択/未知版の拒否、選択Ruleの同一Load読取、Markdown/従来Validationの型付き意味同値と同一ID二重宣言の拒否、EvaluatorのRead範囲、実CLI `inspect` が選択Ruleを取得し同名Capabilityと`text` Fence内のRuleを`SUBJECT_NOT_FOUND`にすること、である。
+**2026-11-16の実行記録**：この票がNOT RUNとしていた**8件のGo回帰は、固定commitのclean cloneで実行し、すべてPASSした**（[receipt](../../evaluations/records/YIC-tei-product-read-2026-11-16.json)）。対象は`tei-platform`の`926c8f2e3511`、cloneは未変更（`checkoutClean: true`）、Goは実行時の版をreceiptに記録している。8件は、Capability Source Evidence、Sourceのみの改訂による Pinned Revision 失効、内蔵Rule Markdownの同一Load取得と未選択/未知版の拒否、選択Ruleの同一Load読取、Markdown/従来Validationの型付き意味同値と同一ID二重宣言の拒否、EvaluatorのRead範囲、実CLI `inspect` が選択Ruleを取得し同名Capabilityと`text` Fence内のRuleを`SUBJECT_NOT_FOUND`にすること、である。
 
 **この実行が示さないこと**：製品ローカルのA0読取だけであり、公開Function Entry、実ProviderへのInvocation、外部開示、外部Harnessへの配送、完全なTool Reply、元SubjectのConsumer受領は示さない。配布Workbenchのbyte一致、実Windows WebView2、現在のGrantも未確認のままである。receiptの`scope`に同じ限定を書いた。
 
@@ -89,7 +89,7 @@ go test ./cmd/tei -run '^TestProductInspectCLISelectedMarkdownRuleIsNotCapabilit
 
 ## 現行CLIから始める基線（2026-11-16に実行済み）
 
-**2026-11-16の実行結果**：この節の5コマンドは、固定commitのclean cloneで実際に[実行しました](../../../evaluations/records/YIC-tei-readonly-cli-2026-11-16.json)（`tei-platform` `926c8f2e3511`、`checkoutClean: true`、Goの版はreceiptに記録）。5つすべてが応答し、`inspect`は`semantic/sales/order.tei`の定義位置を`offset 124, line 7, column 6`〜`129`として返し、`worldFingerprint`と`sourceIndexFingerprint`も返した。`validate`は`ok: true`で警告3件（`*_RELEASE_CONTRACT_NOT_CURRENT`）、宣言数は`total: 79`。
+**2026-11-16の実行結果**：この節の5コマンドは、固定commitのclean cloneで実際に[実行しました](../../evaluations/records/YIC-tei-readonly-cli-2026-11-16.json)（`tei-platform` `926c8f2e3511`、`checkoutClean: true`、Goの版はreceiptに記録）。5つすべてが応答し、`inspect`は`semantic/sales/order.tei`の定義位置を`offset 124, line 7, column 6`〜`129`として返し、`worldFingerprint`と`sourceIndexFingerprint`も返した。`validate`は`ok: true`で警告3件（`*_RELEASE_CONTRACT_NOT_CURRENT`）、宣言数は`total: 79`。
 
 **inspectが自分で宣言する限界**（`authorityLimits`）：
 
