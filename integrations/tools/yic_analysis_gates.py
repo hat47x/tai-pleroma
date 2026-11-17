@@ -1,0 +1,159 @@
+"""Run the analysis-level YI checks in one pass.
+
+Eight further checks judge the analysis itself: the candidate fields G1 needs, the
+gate-1 status and evidence, the requirement citations, document integrity, deck
+figure agreement, the CSW return, the five danger units, and the acceptance authority.
+None needs a product checkout, all run in seconds, and none is wired into the suite.
+Running them individually from memory is how one gets skipped.
+
+This runs them together and refuses PASS if any is missing or fails.
+"""
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+CHECKS = (
+    ("candidateFields", "yi_candidate_fields_check.py",
+     "every candidate carries the six fields a decision needs"),
+    ("g1Evidence", "yi_g1_evidence_check.py",
+     "each cross-cutting decision has an observation or a named gap"),
+    ("g1Status", "yi_g1_status_check.py",
+     "the decision fields are unfilled and no document claims acceptance"),
+    ("citation", "yi_citation_check.py",
+     "every cited requirement is defined and every candidate counted once"),
+    ("docIntegrity", "yi_doc_integrity_check.py",
+     "the analysis files are indexed and their links resolve"),
+    ("deckFigures", "yi_deck_proposal_figures_check.py",
+     "the deck's figures still agree with the receipts"),
+    ("cswReturn", "yi_csw_return_check.py",
+     "the edits returned to CSW are still present"),
+    ("dangerUnits", "yi_danger_units_check.py",
+     "each of the five danger units has evidence"),
+    ("acceptanceAuthority", "yi_acceptance_authority_check.py",
+     "each product names who accepts a requirement"),
+    ("centreKeyOptions", "yi_centre_key_options.py",
+     "exactly one typed place can carry the centre units"),
+    ("ekiMeasurement", "yi_eki_measurement_probe.py",
+     "the EKI ADR names the measurement it requires"),
+    ("g2Landing", "yi_g2_landing_check.py",
+     "each product has a place and a free number for landed requirements"),
+    ("landingPaths", "yi_landing_paths_check.py",
+     "the landing paths exist in the product repositories"),
+    ("shoActual", "yi_sho_actual_check.py",
+     "SHO carries the commits and files the plan assumes"),
+    ("stage3Inventory", "yi_stage3_inventory.py",
+     "the stage-3 items and their not-run states are enumerated"),
+    ("namingBlastRadius", "yi_naming_blast_radius.py",
+     "a naming change touches a bounded set of files"),
+)
+
+# Checks that also need the TAI root; the aggregate supplies this checkout.
+TAI_ROOT_CHECKS = (
+    ("contextHandoffProbe", "yi_context_handoff_probe.py",
+     "a context handoff carries the three units"),
+    ("foldWithDissentProbe", "yi_fold_with_dissent_probe.py",
+     "a fold keeps its dissent"),
+    ("publicationRefusalProbe", "yi_publication_refusal_probe.py",
+     "receipts that declare publication held state a reason"),
+    ("stateClassification", "yi_state_classification.py",
+     "each record's state is classified, not inferred"),
+)
+
+
+def digest(path):
+    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def classify(results):
+    missing = [name for name, item in results.items() if not item["ran"]]
+    failed = [name for name, item in results.items()
+              if item["ran"] and not item["passed"]]
+    return missing, failed
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--artifact", required=True)
+    parser.add_argument("--out", required=True)
+    args = parser.parse_args()
+
+    root = Path(__file__).resolve().parents[2]
+    scratch = Path(tempfile.mkdtemp(prefix="yic-analysis-gates-"))
+    results = {}
+    for name, script, question in CHECKS + TAI_ROOT_CHECKS:
+        path = root / "integrations/tools" / script
+        if not path.exists():
+            results[name] = {"ran": False, "reason": "script missing", "question": question}
+            continue
+        extra = ["--tai-root", str(root)] if (name, script, question) in TAI_ROOT_CHECKS else []
+        completed = subprocess.run(
+            [sys.executable, str(path), *extra,
+             "--artifact", args.artifact,
+             "--out", str(scratch / f"{name}.json")],
+            cwd=root, capture_output=True, text=True,
+            encoding="utf-8", errors="replace", env={**os.environ}, timeout=900,
+        )
+        tail = (completed.stdout or "").strip().splitlines()
+        results[name] = {
+            "ran": True,
+            "question": question,
+            "exit": completed.returncode,
+            "passed": completed.returncode == 0,
+            "tail": tail[-1][:200] if tail else "",
+        }
+
+    missing, failed = classify(results)
+    checks = {
+        "checksRequested": len(CHECKS) + len(TAI_ROOT_CHECKS),
+        "checksRun": len([item for item in results.values() if item["ran"]]),
+        "results": results,
+        "scriptsMissing": missing,
+        "failed": failed,
+        "wroteIntoTheTree": False,
+        "everyAnalysisCheckRan": not missing,
+        "everyAnalysisCheckPassed": not failed,
+        "finding": (
+            "分析水準のYI点検9種を1コマンドで実行し、1つでも欠ければPASSを返さない。"
+            "いずれも製品チェックアウトを要さず、数秒で終わるが、"
+            "suiteにもreceipt集約にも入っていないため個別に呼ぶしかなかった。"
+        ),
+    }
+    passed = not missing and not failed
+
+    receipt = {
+        "schema": "tai.reference.yic-analysis-gates/v0",
+        "synthetic": False,
+        "evidenceKind": "real-execution",
+        "publicationAllowed": False,
+        "date": time.strftime("%Y-%m-%d"),
+        "host": "Windows with Python 3.12 running the analysis checks together",
+        "command": "python integrations/tools/yic_analysis_gates.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-analysis-gates-2026-11-18.json",
+        "result": "PASS" if passed else "FAIL",
+        "artifact": {"path": args.artifact, "digest": digest(Path(args.artifact).resolve())},
+        "observed": checks,
+        "scope": (
+            "Runs nine analysis-level YI checks in one pass and refuses PASS if any is missing or "
+            "fails. It records whether each ran and its exit code, not what each concluded; a check "
+            "that passes can still judge the wrong thing, and this aggregate inherits every limit of "
+            "the nine."
+        ),
+    }
+    Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({
+        "ran": checks["checksRun"],
+        "failed": failed,
+        "missing": missing,
+        "passed": passed,
+    }, ensure_ascii=False))
+    return 0 if passed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
