@@ -153,6 +153,26 @@ SUIのTenant境界に続き、EKIにも**受取側が自分で出す拒否**が�
 
 これは「開示を判定する能力が無い」ことの証明ではない。確認した入口が5つである、という記録である。
 
+## 4.6 Audienceは「運ばれる」が「許可されない」
+
+§4.5の案Cは「誰に渡すと宣言したか」を記録する案である。その記録の器が既に存在するかを確かめた。
+
+`yi.handoff.context/v1`の票は`disclosure.audience`を運ぶ（[契約](../../../docs/yi-constellation/cross-product-handoff-context-v1-2026-11-11.md)、`disclosure.audience`が空なら拒否）。SHOのConsumerを実際に走らせて、拡大したAudienceをどう扱うかを見た（[receipt](../../../evaluations/records/YIC-audience-declaration-2026-11-17.json)、`sho-composer` `e012691b8307`、14 observations）。
+
+| 操作 | 結果 |
+| --- | --- |
+| `audience`を`['sho-composer']` → `['sho-composer','other-consumer']`へ拡大 | Consumerは**現在の宣言をそのまま読み直す**（`expanded-audience-declaration-reread-only`） |
+| 受信者別の許可判定 | **`hostRecipientAuthorization: 'not-run'`** |
+| 拡大の拒否 | **`audienceExpansionDenied: 'not-run'`** |
+| 権限の持越し | `authorityCarried: false`、`meaningAccepted: false` |
+
+**Consumerのrunner自身が「許可は未実行」と記録している。** つまり:
+- 拡大を**拒否した**わけではない
+- 拡大を**許可した**わけでもない
+- **宣言を読んだだけ**である
+
+これは案Cの「記録」の実装が既に存在することを示す。同時に、**記録は判定ではない**ことも、製品自身の記録が示している。
+
 ## 4.5 Pを担う主体をどうするか——3案の比較
 
 5つの入口を確認した結果、いずれも判定対象が開示ではないことが分かった。ではPを担う主体をどう扱うか。**これは設計判断であり、Ownerの領域を含む。既定案を実装しない。** 比較の材料として3案を並べる（Step 3.7の`architect`ロールによる整理を含む）。

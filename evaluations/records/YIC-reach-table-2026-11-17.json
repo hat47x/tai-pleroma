@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-17",
+  "date": "2026-11-18",
   "host": "Windows with Python 3.12 reading the documents and the receipts",
   "command": "python integrations/tools/yic_reach_table_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-reach-table-2026-11-17.json",
   "result": "PASS",
