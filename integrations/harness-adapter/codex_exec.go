@@ -168,6 +168,7 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 	res.Reason = stream.Terminal
 	res.Observations["unrecognized-events"] = fmt.Sprint(stream.UnknownEvents)
 	res.Observations["tool-items-unfinished"] = fmt.Sprint(stream.UnfinishedTools)
+	res.Observations["tool-results-missing"] = fmt.Sprint(stream.MissingToolBodies)
 	if stream.ThreadID != "" {
 		res.Session.ExternalID = stream.ThreadID
 		res.Session.State = SessionCreated
@@ -178,7 +179,7 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 			Code: "codex-exec-invalid-jsonl", Message: parseErr.Error(), Source: a.Name()})
 	}
 	switch {
-	case parseErr != nil || stream.UnfinishedTools > 0 || stream.Terminal == "" ||
+	case parseErr != nil || stream.UnfinishedTools > 0 || stream.MissingToolBodies > 0 || stream.Terminal == "" ||
 		!stream.TurnStarted || stream.ThreadID == "":
 		res.Run = RunUnknown
 	case stream.Terminal == "turn.failed" || stream.Terminal == "error" || exit != 0:
@@ -201,6 +202,7 @@ type CodexExecStream struct {
 	ToolCalls       []ToolCallRecord
 	UnknownEvents   int
 	UnfinishedTools int
+	MissingToolBodies int
 }
 
 // ParseCodexExecJSONL decodes complete lines and distinguishes terminal turn
@@ -275,6 +277,7 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 					call.ResultBytes = int64(len(ev.Item.Result))
 				} else if ev.Item.Status == "completed" {
 					call.Note = "result-body-not-observed"
+					result.MissingToolBodies++
 				}
 				result.ToolCalls = append(result.ToolCalls, call)
 			case "command_execution":
