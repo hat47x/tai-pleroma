@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 57, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 58, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 56, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 57, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -117,7 +117,7 @@
         "question": "a universal claim states its population",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receiptsWithUniversalClaims\": 58, \"withoutCount\": 0, \"passed\": true}"
+        "tail": "{\"receiptsWithUniversalClaims\": 59, \"withoutCount\": 0, \"passed\": true}"
       },
       "sectionOrder": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 64, \"listed\": 8, \"notNamedIndividually\": 56, \"passed\": true}"
+        "tail": "{\"later\": 65, \"listed\": 8, \"notNamedIndividually\": 57, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,
@@ -161,12 +161,12 @@
         "passed": true,
         "tail": "{\"files\": 10, \"unparsed\": [], \"withoutDeclaredLimit\": 0, \"coversFour\": [\"dsh-headless\"], \"passed\": true}"
       },
-      "codexAdapter": {
+      "reachForwardRefs": {
         "ran": true,
-        "question": "the codex-exec adapter's own tests still pass and the CLI is absent",
+        "question": "a corrected section points forward to its correction",
         "exit": 0,
         "passed": true,
-        "tail": "{\"passed\": 7, \"skipped\": 0, \"failed\": 0, \"cli\": false, \"evidenceMentions\": 0, \"result\": \"PASS\"}"
+        "tail": "{\"rows\": 2, \"missing\": [], \"notForward\": [], \"passed\": true}"
       }
     },
     "scriptsMissing": [],

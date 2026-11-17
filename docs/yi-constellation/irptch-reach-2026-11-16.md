@@ -235,6 +235,8 @@ TEI rootの有無で2回走らせ、Consumer自身が返すclaimsから各段階
 | **C** | `actualConsumerRead`（＋`independentReread`） | **成立** | **成立** |
 | **H** | `otherHarnessLiveExecution`・`harnessSessionResume` | 不成立 | **不成立** |
 
+**この表は、後に§4.8で読み直される。** 段階が「成立」と「不成立」に分かれているのは、claimsの値をそのまま写したからであって、測った結果ではない。§4.8を先に読むほうが正確である。
+
 ### 4.7.1 「引用した」は「再解決した」ではない
 
 TEI rootを与えると`teiReadonlyObservationCited`は**false → true**に変わる。TEIの`worldFingerprint`と`authorityLimits`4件を引用できるようになるからである。
