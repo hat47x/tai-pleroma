@@ -22,10 +22,10 @@ type CodexExecAdapter struct {
 	CLI             string
 	ExpectedVersion string // exact `codex --version` output; empty means unqualified
 	WorkDir         string
-	Timeout      time.Duration
-	Runner       Runner
-	PathResolver PathResolver
-	Clock        func() time.Time
+	Timeout         time.Duration
+	Runner          Runner
+	PathResolver    PathResolver
+	Clock           func() time.Time
 }
 
 func NewCodexExecAdapter(workDir string) *CodexExecAdapter {
@@ -217,15 +217,15 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 // CodexExecStream is an observation of the JSONL emitted by 'codex exec --json',
 // not the durable conversation history and not a Product receipt.
 type CodexExecStream struct {
-	ThreadID          string
-	TurnStarted       bool
-	Terminal          string
-	FinalText         string
-	ToolCalls         []ToolCallRecord
-	UnknownEvents     int
+	ThreadID             string
+	TurnStarted          bool
+	Terminal             string
+	FinalText            string
+	ToolCalls            []ToolCallRecord
+	UnknownEvents        int
 	UnknownControlEvents int
-	UnfinishedTools   int
-	MissingToolBodies int
+	UnfinishedTools      int
+	MissingToolBodies    int
 }
 
 // ParseCodexExecJSONL decodes complete lines and distinguishes terminal turn
