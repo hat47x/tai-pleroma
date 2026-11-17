@@ -195,13 +195,13 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 // CodexExecStream is an observation of the JSONL emitted by 'codex exec --json',
 // not the durable conversation history and not a Product receipt.
 type CodexExecStream struct {
-	ThreadID        string
-	TurnStarted     bool
-	Terminal        string
-	FinalText       string
-	ToolCalls       []ToolCallRecord
-	UnknownEvents   int
-	UnfinishedTools int
+	ThreadID          string
+	TurnStarted       bool
+	Terminal          string
+	FinalText         string
+	ToolCalls         []ToolCallRecord
+	UnknownEvents     int
+	UnfinishedTools   int
 	MissingToolBodies int
 }
 
