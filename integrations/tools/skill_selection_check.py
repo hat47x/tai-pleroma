@@ -266,8 +266,15 @@ def in_repo(path):
 
 def score_trial(trial, exp):
     sel = trial.get("selected", {})
-    chosen = set(sel.get("products", [])) | set(sel.get("skills", []))
+    products = set(sel.get("products", []))
+    skills = set(sel.get("skills", []))
+    chosen = products | skills
     tools = set(sel.get("tools", []))
+    # B0 is Tool-only: a Skill cannot satisfy its required capabilities or
+    # be an allowed optional choice, even when it shares a Product name.
+    baseline_skill_violation = ({f"skill:{name}" for name in skills}
+                                if trial.get("arm") == "B0" else set())
+    qualified_chosen = products if trial.get("arm") == "B0" else chosen
     outcome = trial.get("outcome")
     held = outcome in HOLD_OUTCOMES
     need = set(exp.get("requiredCapabilities", []))
@@ -283,8 +290,8 @@ def score_trial(trial, exp):
     tool_observed = evidence.get("toolReached") is True
     independent_observed = evidence.get("independentObservation") is True
     m = {
-        "missed": sorted(need - chosen - tools) if not exp.get("mustHold") and not held else [],
-        "extra": sorted(chosen - allowed),
+        "missed": sorted(need - qualified_chosen - tools) if not exp.get("mustHold") and not held else [],
+        "extra": sorted((chosen - allowed) | baseline_skill_violation),
         "nonexistent": sorted(tools - set(exp.get("existingTools", []))),
         "wrongExecution": bool(exp.get("mustHold") and (trial.get("executedEffect") is True or not held)),
         "unneededHold": bool(not exp.get("mustHold") and held),
@@ -661,6 +668,27 @@ else:
           len(mixed_unbound["rows"]) == 2
           and mixed_unbound["perArmCounts"]["B0"]["unsupportedEvidenceClaim"] == 1
           and mixed_unbound["perArmCounts"]["B1"]["unsupportedEvidenceClaim"] == 0)
+    b0_skill_as_capability = r(trial("direct", "B0", selected={"skills": ["tei"]}))
+    check("S33 B0 Skill does not satisfy a Product capability",
+          b0_skill_as_capability["missed"] == ["tei"]
+          and b0_skill_as_capability["extra"] == ["skill:tei"])
+    b0_product_and_skill = r(trial("direct", "B0",
+                                   selected={"products": ["tei"], "skills": ["tei"]}))
+    check("S34 B0 Skill stays forbidden when a Product shares its name",
+          not b0_product_and_skill["missed"]
+          and b0_product_and_skill["extra"] == ["skill:tei"])
+    b1_skill = r(trial("direct", "B1", selected={"skills": ["tei"]}))
+    check("S35 B1 matching Product Skill remains eligible",
+          not b1_skill["missed"] and not b1_skill["extra"])
+    b0_tool_only = r(trial("direct", "B0",
+                            selected={"products": ["tei"], "tools": ["tei model catalog"]}))
+    check("S36 B0 Product and real Tool remain eligible without a Skill",
+          not b0_tool_only["missed"] and not b0_tool_only["extra"])
+    b0_hold_with_skill = r(trial("hold", "B0", outcome="withhold",
+                                 selected={"skills": ["tei"]}, executedEffect=False))
+    check("S37 B0 Skill contamination cannot hide behind a valid hold",
+          b0_hold_with_skill["extra"] == ["skill:tei"]
+          and not b0_hold_with_skill["wrongExecution"])
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
