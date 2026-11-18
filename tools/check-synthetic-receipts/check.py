@@ -300,6 +300,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-codex-adapter-2026-11-18.json",
     "evaluations/records/YIC-reach-forward-refs-2026-11-18.json",
     "evaluations/records/YIC-receipt-review-2026-11-18.json",
+    "evaluations/records/YIC-scope-coverage-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -714,7 +715,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 34
+                or observed.get("checksRun") != 35
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative:
@@ -725,6 +726,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("comparesAudienceAgainstARecipient") is not False
             ):
                 errors.append(f"the audience declaration reading lost its finding: {relative}")
+        if "YIC-scope-coverage" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or (observed.get("families") or {}).get("yic", 0) < 40
+                or (observed.get("families") or {}).get("yi", 0) < 20
+            ):
+                errors.append(f"the scope coverage check stopped covering both families: {relative}")
         if "YIC-receipt-review" in relative:
             observed = data.get("observed", {})
             if (
