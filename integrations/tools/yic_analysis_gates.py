@@ -99,6 +99,10 @@ PORTABLE_CHECKS = (
      "both receipt naming families state a measured half and a limit half"),
     ("countAgreement", "yic_count_agreement_check.py",
      "each aggregate's check count matches what the checker expects"),
+    ("ruleLiveness", "yic_rule_liveness_check.py",
+     "which rules can never fire because of case"),
+    ("deadRuleImpact", "yic_dead_rule_impact_probe.py",
+     "running the checker with the dead rules made live"),
 )
 
 
