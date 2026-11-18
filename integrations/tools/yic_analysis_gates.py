@@ -97,6 +97,8 @@ PORTABLE_CHECKS = (
      "running the producer's receipt review: audience is not consulted"),
     ("scopeCoverage", "yic_scope_coverage_check.py",
      "both receipt naming families state a measured half and a limit half"),
+    ("countAgreement", "yic_count_agreement_check.py",
+     "each aggregate's check count matches what the checker expects"),
 )
 
 
