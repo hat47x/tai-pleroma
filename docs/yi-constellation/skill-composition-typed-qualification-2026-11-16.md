@@ -262,3 +262,31 @@ YICは**同じTaskを最初から横断Skillへ移さない**。まず公開・�
 TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテストのexit 0に`SKIP`が混在する場合、Windows／Linuxによるpath境界・self-build・SUI参照Store試験の差、Go 1.26.11／1.27.0の成果物byte差を別Receiptとして記録した。**あるHostのPASSを別Hostへ転記しない**。Tool-onlyの初回基線ではOS/arch・Toolchain・対象commit・実行した試験とSKIP理由を保ち、Receiptの`PASS`とProduct意味受理、実Consumer受領を別に報告する。
 
 今回の追加は、既存D0〜D5／I・R・P・T・C・Hを**実際の一件へ使う判断**であり、新しいSkill Registry、PDP、Runner、Provider、Expectedを足すものではない。目下の停止線は「**TEIの受注一変更を実CLI・実DB・実Webまで通す**」と「**TAI #168のOS隔離から独立H2/H3四Sessionを成立させる**」の独立した二本である。Web表示・外部Consumer・H2/H3比較適格は、関連する実証が出るまで未完了として扱う。
+
+## 18. Skill選択の検収は、製品の実結果・開示・Harnessを別々に測る（2026-11-19）
+
+最初の評価では、[TEIの公開手順0〜5](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)をSkillなしで実行する。実際のDBから読めた行、Rule変更後の判定、画面で見えた結果と、独立した期待を一つの試行で比べる。**手順を通す前に新しいProduct Skillを配布しない。** 作業の完了後、使いにくかった箇所に限定してSkillの有無を比較し、所要操作・再説明・誤選択と結果の品質を記録する。製品機能の欠落をSkillの説明で隠さない。
+
+横断評価に移る場合の最小の受渡し条件は次のとおり。既存の[実行票](cross-product-handoff-execution-tickets-2026-11-11.md)と[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)を再利用し、別の判定器は設けない。
+
+| 観測箇所 | 現在わかっていること | 次に必要な検収 |
+| --- | --- | --- |
+| **R：元Product** | 固定したTEIの実CLI・Source位置を読んだ限定記録がある | 今回のWorkspace・対象・実Readに結び付くこと |
+| **P：開示** | SUIの調査対象AccessRequestではRecipient別判定を確認できていない。一方、SUI→SHOのHandoff envelopeは受信者名の形式を検査できる | 形式だけでなく、今回の受信者と用途に対するProduct／Hostの実判断を得る |
+| **T／C：配送・消費** | 別Processの受領とBody読取には限定実績があるが、Receipt一致だけでは内容や受信者の適格性を保証しない | 送出byteと受領byte、独立Expected、必要なFieldの一致・不一致を確認 |
+| **H：Harness** | [既存Adapter](../../integrations/harness-adapter/README.md)にDSH等の実観測がある。DSH・Claude Code・Step Code・Codex execには終端判別とSession識別の解析部品がある | 選んだ実Harnessで終端・Tool Reply本文・Session同定を同一Attemptで確認 |
+
+**受信者名の記載は開示許可ではない。** [受信者判定の調査](analysis/55-受信者の欄.md)では、SUI→SHO票の無関係な受信者名を形式検証器・SHO Consumer・ProducerのReceipt照合が受理した。この検証結果は受信者別Pの不成立を示すものであり、実際に秘密が外部へ送られたという意味ではない。受信者ごとの判定をProduct/Hostが確かめるまで、B2の外部送出は保留する。
+
+**4 Sessionを一つの数で語らない。** [Harness Adapterの実観測](../../integrations/harness-adapter/README.md)では、DSHに4 Sessionを割り付け、H2/H3の配置・Loadから**比較に使える2対**を確認した。ただし正答の改善は未採点であり、OS隔離・完全なTool応答・独立Expectedを含む[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の先行4 Slotは**適格0/4**という別の評価である。どちらも証拠の範囲を変えずに保持する。
+
+[Codex exec Adapter](../../integrations/harness-adapter/codex_exec.go)はGo側に実装済みで、合成JSONLのTool lifecycle欠落、未完了Reply、モデル切替などを誤って完了にしない（[PR #771](https://github.com/hat47x/tai-pleroma/pull/771)）。一方、現行C1はTool Offer、Skill配置、ContextRefとSession再開を未対応として起動前に拒否する。したがって**C1の単発実行をH2/H3のSkill効果や製品間Handoffの成功と数えない**。実Codex CLIの起動・認証・外部送出・権限は別に検証する。
+
+既存Ownerに渡す追加の反証は四つに絞る。
+
+- **YK-COMP-31（TAI #488）**：B0が未完了のままSkillの助言による見かけの成功をB1の増分価値と報告する。
+- **YK-COMP-32（TAI #232／SUI・SHO Owner）**：Handoff票の受信者名が形式的に正しいだけで、別Audienceへの開示を許可したと扱う。
+- **YK-COMP-33（TAI #168／#488）**：Adapter内のDSH比較可能な2対を、#168のOS隔離等を満たす4 Slotの合格と読み替える。
+- **YK-COMP-34（TAI #168／#234）**：Codex C1のJSONL終端から、Tool/Skill/Contextの実利用やSession再開を推測する。
+
+いずれも今回新たに実行した試験ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。
