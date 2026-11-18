@@ -1225,18 +1225,20 @@ D0候補、D1構造適合、D2実Source、D3作用直前、D4実行結果、D5�
 
 本節は実装済みの製品機能／固定PR HEADの観測／未マージ提案を分けた**計画・受入更新**。新OS隔離・外部AI Harness比較・Product間Consumer・正式Provider/Grant・Owner意味受理は**NOT RUN**。共通Agent Runtime、中央Tool Registry、Source Authority正本、万能型変換器、第二Expected Storeは作らない。
 
-## 59. 2026-11-17：五枚のProduct検証票を「受注の一変更」の一巡へつなぐ
+## 59. 2026-11-19：実利用を一巡させてからSkillの増分を測る
 
-[Skill構成仕様§17](skill-composition-typed-qualification-2026-11-16.md)と[Handoff実行票§10.16](cross-product-handoff-execution-tickets-2026-11-11.md)で、検証を増やすのではなく**最初に一人が通せる作業**を優先する。TEIの現在の優先順位の正本は[plan/NOW.md](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)。実PostgreSQLを読んでRule判定→Rule一件変更→validate→再読→生成Web画面で同じ答え、という五つを完成させる。それ以外のTEI設計拡張をYICのTaskで先行させない。
+YICのSkill構成は、TEIの[現在の優先順位](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)に従う。最初の題材は「受注の一変更」一件とし、新しいSkillや横断実行基盤を先に作らない。実装と受入条件の正本はTEIに置き、本節は**どの作業にSkillを使うか**だけを扱う。
 
-**既に確認できること**：TAI #693/#695/#705/#706によりProduct単独のRule/Source読取、5 CLI、Capabilityの曖昧さ、Wholeと二Fieldの純粋投影は固定コミットの試験で記録された。[TAI #707](https://github.com/hat47x/tai-pleroma/pull/707)が整理した5枚のI/R/P/T/C/Hの到達点は**最大R**であり、P以降は未達。[TAI #708](https://github.com/hat47x/tai-pleroma/pull/708)のknowledge-context disclosureは開示するSectionを選択するが、認可／redactionではない。[TAI #709](https://github.com/hat47x/tai-pleroma/pull/709)はProduct自身が返す限界17種類をReceiptに保持できていることを検査したが、限界と矛盾する結論の自動検出ではない。TAIの第二Authority正本やOracleにはしない。
+**製品側で動く範囲（2026年11月19日照合）**：TEIは実PostgreSQLからの明細読取、Ruleの三値判定、定義の変更と再検証、第一Webの実HTTP・Chrome DOMでの変更前後の表示まで到達した（[#5362](https://github.com/hat47x/tei-platform/pull/5362)、[#5492](https://github.com/hat47x/tei-platform/pull/5492)）。取得範囲の宣言と実DBの確認を経た場合に限り全件性を認定する処理も進んだ（[#5507](https://github.com/hat47x/tei-platform/pull/5507)、[#5525](https://github.com/hat47x/tei-platform/pull/5525)）。ただし、[公開手順0〜5](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)を**初めて使う人が記載どおり一続きに完走した**という検収はまだない。個別のCI成功をこの検収へ置き換えない。
 
-**次の実装・受入順**：①TEI #2586／#1119に沿う「受注の一変更」をB0 Tool-onlyで一巡させ、実DBのRow・Rule・部分取得理由とWeb Consumerの独立Expectedを確認、②その一巡のうち説明・発見・操作で無駄が実際にある箇所だけB1 Product Skillによる増分価値を比較、③別Productへ渡す必要とAudienceが決まってからB2 TAI横断Skillと実開示P/T/C/Hを別Attemptで検証する。現行の内部CLI読取には外部開示Pを一律に要求しない。外部送出や機密Sourceでは[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)に従い、Source Owner／実Hostが受信者・目的・Projectionを判定する。**一部のみの投影で全体のClaimを成立と答えない**。
+| 比較 | 実行する内容 | 採否の判断 |
+| --- | --- | --- |
+| **B0：Skillなし** | 公開手順に従い、実CLI・実DB・Rule変更・validate・再読取・Web表示までを一つの作業領域で実行 | 最初の基準。独立Expectedと実際の操作回数・変更ファイル数を保存 |
+| **B1：Product Skill** | B0で手順を探し直した箇所、誤操作や再説明が生じた箇所だけを補助 | 同じ結果と権限境界を保ち、手数または誤りが減った場合にのみ採用候補 |
+| **B2：TAI横断Skill** | 実在する別Productへの受渡しが必要になった場合だけ、対象・受信者・許可Projectionを固定して別Attemptで実行 | Product側の現在の開示判定と実Consumer受領まで確認できなければ、横断Skillの成功としない |
 
-**現行の実装と優先順位（2026-11-17再確認）**：[TEI main #5319](https://github.com/hat47x/tei-platform/pull/5319)が一ページの[実行手順](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)と[優先順位の正本](https://github.com/hat47x/tei-platform/blob/main/plan/NOW.md)を統合した。受注の変更前後を別の実PostgreSQLで読み、手順1〜4の答えを独立Expectedと照合済み。ただし後から直したPOSIX `awk`版の全手順再実行、Windows、手順5のWeb受領は未実施である。最優先の次の**製品コード**は、現在の`tei view -environment`に固定された`order_entry.order_lines`／`development`を取り除き、**別Workspace・別Patternでもコード変更なしに同じCLIで実DB読取できること**を独立Expectedで確認する（TEI #2586）。この作業を通さずにYICの横断SkillやWeb投影の範囲を広げない。
+**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
 
-[TEI main #5314](https://github.com/hat47x/tei-platform/pull/5314)は実PostgreSQLで、SQLで重複を隠した場合・見える重複がある場合・0行の場合を検査した。部分取得では成立を推測せず、見える違反は不成立とする。現行の`coverage: partial`を全件認定に昇格しない。[TEI #5322](https://github.com/hat47x/tei-platform/pull/5322)のRequested／Executed／Observed／Claimed／Qualified分離は設計段階であり、Caller自己申告を実行根拠としない。[TEI #5317](https://github.com/hat47x/tei-platform/pull/5317)のJSON→静的HTMLはDraft・未マージ。旧HEADのRepository Health失敗後にGo整形を修正し、修正HEAD `86b8d54`の実PostgreSQL専用CI・Repository Healthを含む11ワークフローはすべて成功した。ただしDraft・未マージであり、実Web Target/Browserの受入ではない。**現行NOW.mdの順は、別Workspaceへの一般化→Webの実画面→全件性の宣言・検証**であり、以前の「全件性をWebより先に完了させる」という順番を引き継がない。
+B2では、元Productが対象を再解決できたこと（R）と、指定した受信者への現在の開示許可（P）、実配送（T）、Consumerの本文受領（C）、Harnessの完全応答（H）を分ける。SHOのHandoff票に受信者名が書けても、それ自体は許可ではない。TAI側で独自の権限正本を作らず、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)とProduct Ownerの判断に従う。
 
-[TEI main #5326](https://github.com/hat47x/tei-platform/pull/5326)の型付きPlugin接続計画は、型・値の一致だけでなくConsumerが必要とするPresence／Identity／Coverage／精度／Grant／実受領を別々に検収する設計である。これは**設計のみ**であり、YICに新しい配線Runtimeや全Consumer共通の権限判定を増設する根拠ではない。B0 Tool-onlyを先に通し、B1 Product Skillの増分は実際の操作負担が確認されてから測る。B2横断Skillは別Product ConsumerとAudienceが実在する場合だけ別Attemptで検証する。並行するStudio復旧[TEI #5325](https://github.com/hat47x/tei-platform/pull/5325)はDraftで、生成Inspector Readerの唯一化・正規Wails Assetへの組込み・Windows受領・定義だけの変更によるStage2生成は未完了。
-
-**検収の停止線**：TEI通常CLIの全件性と実Web受領は未完了。TEI非Plugin Windows Studio Stage1→Stage2は引き続き別の独立P0で、定義だけの変更を生成器の手直しなしに次のStudioへ反映することが完了条件。TAI #168のOS Read-deny→Egress→Tool Reply完結→H2/H3独立四Session（現存比較適格0/4）は独立P0。Windows/WSLのPASS・SKIP・FAILやToolchainのbyte差は[TAI #697〜703](https://github.com/hat47x/tai-pleroma/pull/703)の既存実行記録に従い、別Hostへ合格を持ち越さない。本節は次の製品コードとその独立Expectedを選ぶための計画であり、新たなProduct間送信・Owner認可・外部Harness Trialを実行したものではない。
+**別の独立P0**として、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS隔離→実送出→完全Tool応答→独立H2/H3比較、[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)のWindows Stage1→Stage2セルフビルドを維持する。既存Harness AdapterのSkill配置・Loadの比較資格と、#168の実OS・独立Expectedを満たした適格比較は別物である。詳細は[Skill構成仕様§18](skill-composition-typed-qualification-2026-11-16.md)。本節は計画の更新であり、新たな実試行・Product間開示・Owner受理を行った記録ではない。
