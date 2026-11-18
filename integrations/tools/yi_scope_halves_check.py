@@ -17,13 +17,14 @@ from pathlib import Path
 # two languages.
 LIMIT = re.compile(
     r"\bnot\b|\bno\b|neither|cannot|unverified|test-only|out of scope|local|"
-    r"same host|synthetic|stub|does not|未|ない|ません|のみ|範囲外|ません",
+    r"same host|synthetic|stub|does not|says nothing|may still|rather than|"
+    r"未|ない|ません|のみ|範囲外|ません",
     re.IGNORECASE,
-)
-# Wording that states what was measured.
+)# Wording that states what was measured.
 MEASURED = re.compile(
     r"Runs|Reads|Walks|Builds|Counts|Compares|Searches|Measures|Records|"
-    r"記録|数え|読み|測り|走査|検算|照合|突き合わせ",
+    r"Drives|Executes|Bundles|Parses|Checks|Verifies|Applies|Serializes|"
+    r"記録|測定|読む|走査|比較|計算|照合|たどり合わせ|検算|実行|点検|確認",
     re.IGNORECASE,
 )
 HISTORICAL = {"yi-constellation-structure-2026-11-01.json"}

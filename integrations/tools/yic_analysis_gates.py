@@ -95,6 +95,8 @@ PORTABLE_CHECKS = (
      "running the consumer CLI: a ticket naming a third party is still accepted"),
     ("receiptReview", "yic_receipt_review_probe.py",
      "running the producer's receipt review: audience is not consulted"),
+    ("scopeCoverage", "yic_scope_coverage_check.py",
+     "both receipt naming families state a measured half and a limit half"),
 )
 
 
