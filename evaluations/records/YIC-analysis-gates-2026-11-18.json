@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 39,
-    "checksRun": 39,
+    "checksRequested": 40,
+    "checksRun": 40,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 56, \"links\": 659, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 56, \"links\": 660, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 385, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 386, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 96, \"writers\": 96, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 97, \"writers\": 97, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -258,28 +258,28 @@
         "question": "both receipt naming families state a measured half and a limit half",
         "exit": 0,
         "passed": true,
-        "tail": "{\"yi\": 33, \"yic\": 65, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
+        "tail": "{\"yi\": 33, \"yic\": 66, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
       },
       "countAgreement": {
         "ran": true,
         "question": "each aggregate's check count matches what the checker expects",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 39, 39], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
+        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 40, 40], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
       },
       "ruleLiveness": {
         "ran": true,
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rules\": 271, \"caseDead\": 40, \"trulyDead\": 7, \"passed\": true}"
+        "tail": "{\"rules\": 272, \"caseDead\": 40, \"trulyDead\": 7, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,
         "question": "running the checker with the dead rules made live",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rewritten\": 274, \"baseline\": 2, \"ci\": 23, \"new\": 22, \"passed\": true}"
+        "tail": "{\"rewritten\": 275, \"baseline\": 1, \"ci\": 22, \"new\": 22, \"passed\": true}"
       },
       "deadRuleFields": {
         "ran": true,
@@ -287,6 +287,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"examined\": 22, \"messages\": 9, \"allMissing\": true}"
+      },
+      "hConditionsParser": {
+        "ran": true,
+        "question": "each adapter can parse a terminal event and holds a session identifier",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"adapters\": 4, \"observing\": [\"step-cli\", \"claude-code\", \"codex-exec\", \"dsh-headless\"], \"notObserving\": [], \"passed\": true}"
       }
     },
     "scriptsMissing": [],
