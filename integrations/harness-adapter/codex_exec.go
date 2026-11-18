@@ -194,6 +194,19 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 	res.Observations["command-exits-missing"] = fmt.Sprint(stream.MissingCommandExits)
 	res.Observations["file-change-events"] = fmt.Sprint(stream.FileChangeEvents)
 	res.Observations["model-reroute-events"] = fmt.Sprint(stream.ModelReroutes)
+	// Each marker is an observation, never a Product permission or effect verdict.
+	if stream.FileChangeEvents > 0 {
+		res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+			Code: "codex-exec-file-change-observed", Source: a.Name()})
+	}
+	if stream.ModelReroutes > 0 {
+		res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+			Code: "codex-exec-model-rerouted", Source: a.Name()})
+	}
+	if stream.MissingToolBodies > 0 || stream.MissingCommandExits > 0 {
+		res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+			Code: "codex-exec-tool-reply-incomplete", Source: a.Name()})
+	}
 	if stream.ThreadID != "" {
 		res.Session.ExternalID = stream.ThreadID
 		res.Session.State = SessionCreated
