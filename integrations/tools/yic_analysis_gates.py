@@ -105,6 +105,8 @@ PORTABLE_CHECKS = (
      "running the checker with the dead rules made live"),
     ("deadRuleFields", "yic_dead_rule_fields_check.py",
      "each failing rule's field: missing, or present with a different value"),
+    ("hConditionsParser", "yic_h_conditions_parser_check.py",
+     "each adapter can parse a terminal event and holds a session identifier"),
 )
 
 

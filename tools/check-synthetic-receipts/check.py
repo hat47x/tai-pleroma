@@ -305,6 +305,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-rule-liveness-2026-11-18.json",
     "evaluations/records/YIC-dead-rule-impact-2026-11-18.json",
     "evaluations/records/YIC-dead-rule-fields-2026-11-18.json",
+    "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -719,7 +720,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 39
+                or observed.get("checksRun") != 40
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative:
@@ -737,6 +738,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("caseDeadCount", 0) < 1
             ):
                 errors.append(f"the rule liveness reading lost its finding: {relative}")
+        if "YIC-h-conditions-parser" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or len(observed.get("adaptersObservingBothConditions") or []) < 1
+                or not observed.get("adaptersNotObserving") == []
+            ):
+                errors.append(f"the H-condition reading lost its finding: {relative}")
         if "YIC-dead-rule-fields" in relative:
             observed = data.get("observed", {})
             if (

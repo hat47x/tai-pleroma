@@ -1,0 +1,78 @@
+{
+  "schema": "tai.reference.yic-h-conditions-parser/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading the harness adapters",
+  "command": "python integrations/tools/yic_h_conditions_parser_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "adapterFolder": "integrations/harness-adapter",
+    "adapters": [
+      {
+        "adapter": "step-cli",
+        "file": "step_cli.go",
+        "exists": true,
+        "terminalHints": [
+          "case-branch",
+          "settled-field",
+          "agent_settled"
+        ],
+        "observesTerminalEvent": true,
+        "hasSessionIdentifier": true,
+        "mentionsResume": true,
+        "declaresResumeUnsupported": false
+      },
+      {
+        "adapter": "claude-code",
+        "file": "claude_code.go",
+        "exists": true,
+        "terminalHints": [
+          "case-branch"
+        ],
+        "observesTerminalEvent": true,
+        "hasSessionIdentifier": true,
+        "mentionsResume": true,
+        "declaresResumeUnsupported": false
+      },
+      {
+        "adapter": "codex-exec",
+        "file": "codex_exec.go",
+        "exists": true,
+        "terminalHints": [
+          "settled-field"
+        ],
+        "observesTerminalEvent": true,
+        "hasSessionIdentifier": true,
+        "mentionsResume": true,
+        "declaresResumeUnsupported": true
+      },
+      {
+        "adapter": "dsh-headless",
+        "file": "dsh_headless.go",
+        "exists": true,
+        "terminalHints": [
+          "case-branch"
+        ],
+        "observesTerminalEvent": true,
+        "hasSessionIdentifier": true,
+        "mentionsResume": true,
+        "declaresResumeUnsupported": false
+      }
+    ],
+    "adaptersObservingBothConditions": [
+      "step-cli",
+      "claude-code",
+      "codex-exec",
+      "dsh-headless"
+    ],
+    "adaptersNotObserving": [],
+    "finding": "Hの成立条件は**Replyの終端**と**Sessionの同定**である。adapterの内訳: 終端イベントを解析し、Sessionの識別子を持つものは4種（step-cli, claude-code, codex-exec, dsh-headless）。持たないものは0種（なし）。**adapterは条件を解析できる形で持っている。**しかし**実Harnessを走らせた記録でその2つを観測したものは無い**（doc 56）。**計器の部品は在り、実測が無い**という段階である。"
+  },
+  "scope": "Reads each harness adapter's source for a terminal-event branch and a session identifier. It shows the parsers can express H's two conditions; it does not run a real harness, so it does not show either condition was observed."
+}
