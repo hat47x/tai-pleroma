@@ -289,4 +289,6 @@ TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテス�
 - **YK-COMP-33（TAI #168／#488）**：Adapter内のDSH比較可能な2対を、#168のOS隔離等を満たす4 Slotの合格と読み替える。
 - **YK-COMP-34（TAI #168／#234）**：Codex C1のJSONL終端から、Tool/Skill/Contextの実利用やSession再開を推測する。
 
+**Skill選択評価器の最小修正（S29〜S32）**：B0を評価するときに、`selected.tools`が空なのに`claimsToolReached: true`と書かれた申告を見落とさないようにする。既存の`unsupportedEvidenceClaim`を利用し、`evidence.toolReached: true`という自己申告があっても、選択したToolとの対応が無ければ不支持として数える。反対に、Tool選択も到達主張も無いB0を誤って失格にしない。B1で実際に選ばれたToolと正規の観測欄が揃うケースは従来どおり評価する。この修正は**申告の内部整合性の合成検査**であり、実Tool呼出しやTEI公開手順の完走を証明しない。製品の[初回利用手順](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)を実行する検収と、[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)の実PG・Chrome試行の採否はTEI Ownerで追う。
+
 いずれも今回新たに実行した試験ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。
