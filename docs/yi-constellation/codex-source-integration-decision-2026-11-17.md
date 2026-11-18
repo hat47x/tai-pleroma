@@ -148,6 +148,16 @@ Codexの公開ソースから学ぶのは、**機能そのものの構造と、�
 
 **成立範囲は契約試験による合成JSONLの解釈まで。** 実Codexバイナリ、正規モデルRoute、TEIの型付きMCP実Tool、完全Reply、Root外Read-deny、実Egress、Studio、App Server接続はNOT RUN。C1の実装でC0の実実行物固定、TAI #168の適格Slot、C2〜C5を自動的に完了扱いしない。次の実装出口は、C0の実Binary pinと、Taskに必要なTool/Skillを改変しない**明示的なCodex MCP設定方式**の検証である。
 
+### C1追加検証：Toolの対応関係と読取専用宣言（2026年11月18日）
+
+C1のJSONL解析では、`thread.started`→`turn.started`→各Toolの`item.started`／`item.completed`→Turn終端という**観測順序**を確認する。MCP／Commandの呼出しIDが欠ける、同じIDが繰り返される、開始と完了でToolの種類・名称・Serverが変わる、開始しないまま完了だけ届く場合は、`Run=unknown`として扱う。これはCodexのNative Item IDを製品の操作IDに昇格させるものではない。
+
+MCPの完了本文とCommandの終了コードは別々に確認し、欠落を記録する。失敗したToolの理由が観測できても、`turn.completed`は**Harnessの一ターンが終わった**ことしか示さない。Product Verdict／Consumer Receiptは別の実測が必要になる。実Codexが補完した終了イベントを出した場合も、対応する開始が取得できなければ比較適格にしない。
+
+固定した上流JSONL変換ではモデルの自動切替が`error`項目の`model rerouted:`として伝えられるため、検出時は予定モデルで完走したと認定しない。また、`--sandbox read-only`を指定していても`file_change`が現れた場合は、書込み実行の**可能性**を記録して`Run=unknown`とする。これは実OS書込みの成立や否認の証明ではない。新しいCodex版で通知形式が変わればC0のWire再確認を要求する。
+
+この追加分の受入は、合成JSONLの開始／完了対応・異常系・モデル切替・変更イベントと、既存Go Adapter回帰テストに限定する。**実Binary、資格情報、TEI型付きMCP、OS read-deny、Egress、TAI #168の独立4 Slotは引き続き未実施**とする。C1のparserをC2の双方向App Serverへ再利用する前提にはせず、必要な共通概念だけを製品側に昇格させる。
+
 ## 7. 採用・保留
 
 - **採用する設計：** 外部プロセス接続、Codexの二種類の実行面、既存Go Harness Adapterと型付き製品API、Studioに返す限定候補、実権限／Effect／Evidenceの分離。
