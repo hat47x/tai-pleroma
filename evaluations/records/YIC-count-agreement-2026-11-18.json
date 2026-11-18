@@ -27,13 +27,23 @@
       {
         "aggregate": "yic_analysis_gates.py",
         "exists": true,
-        "entriesInSource": 35,
+        "entriesInSource": 36,
         "tuplesCounted": [
           "CHECKS",
           "TAI_ROOT_CHECKS",
           "PORTABLE_CHECKS"
         ],
-        "expectedByChecker": 35,
+        "expectedByChecker": 36,
+        "agrees": true
+      },
+      {
+        "aggregate": "yi_receipt_quality.py",
+        "exists": true,
+        "entriesInSource": 5,
+        "tuplesCounted": [
+          "CHECKS"
+        ],
+        "expectedByChecker": 5,
         "agrees": true
       }
     ],
@@ -41,10 +51,11 @@
     "countsAreHardCodedInTheChecker": true,
     "hardCodedAggregates": [
       "yic_document_gates.py",
-      "yic_analysis_gates.py"
+      "yic_analysis_gates.py",
+      "yi_receipt_quality.py"
     ],
     "everyCountAgrees": true,
-    "finding": "集約が実際に走らせる点検の数と、checkerが期待する数の一致を見る。点検を1つ足すたびに**4箇所の定数を手で直す**必要があり、今回も同じ変更で4箇所を編集した（うち2箇所は同じファイル）。**手で保つ定数は、いつか食い違う。**"
+    "finding": "集約が実際に走らせる点検の数と、checkerが期待する数の一致を見る。checkerには3つの固定された数があり、点検を1つ足すたびに手で直す必要がある。**手で保つ定数は、いつか食い違う。**ここでは3つすべてを突き合わせる。"
   },
   "scope": "Parses each aggregate's check tuple and the checker's expected integer, and compares them. It catches a count that has drifted; it cannot tell which of the two is right, and it does not remove the hand-maintained constant."
 }
