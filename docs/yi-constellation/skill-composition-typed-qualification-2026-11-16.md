@@ -291,4 +291,8 @@ TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテス�
 
 **Skill選択評価器の最小修正（S29〜S32）**：B0を評価するときに、`selected.tools`が空なのに`claimsToolReached: true`と書かれた申告を見落とさないようにする。既存の`unsupportedEvidenceClaim`を利用し、`evidence.toolReached: true`という自己申告があっても、選択したToolとの対応が無ければ不支持として数える。反対に、Tool選択も到達主張も無いB0を誤って失格にしない。B1で実際に選ばれたToolと正規の観測欄が揃うケースは従来どおり評価する。この修正は**申告の内部整合性の合成検査**であり、実Tool呼出しやTEI公開手順の完走を証明しない。製品の[初回利用手順](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)を実行する検収と、[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)の実PG・Chrome試行の採否はTEI Ownerで追う。
 
+**B0の試験条件を検査する（S33〜S38）**：B0はTool-onlyの基準であり、Product・Toolの直接使用を禁じないが、Skillの選択を認めない。これまでの採点器は`selected.products`と`selected.skills`を同じ集合にまとめていたため、同名のSkillだけで必要なProduct能力を満たしたと判定できた。B0ではSkillを必要能力の充足対象から外し、`skill:<名前>`を既存の`extra`へ**一度だけ**計上する。同じ名前のProductを正しく選んだ場合でもSkillの混入は見逃さず、B1でSkillが認められるケースやB0のTool-only成功は従来どおり扱う。保留したB0のSkill混入も、`wrongExecution`とは分けて数える。これも選択記録の合成試験であり、実Loadや実Tool実行の観測に置き換えない。
+
+**TEIの現在の受入境界**：[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)は2026年11月19日にmainへ統合され、公開手順0・1・3のシェルを、同じ実DB・Workspace・Chromeの試行で実行するところまで進んだ。ただしWebプロセスの起動はテスト側が担い、初回利用者が手順書の全操作を実行したことまでは証明しない。この残りの利用者検収をB0の実結果として先に確かめ、Skillの採否比較はその後とする。
+
 いずれも今回新たに実行した試験ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。

@@ -1231,13 +1231,15 @@ YICのSkill構成は、TEIの[現在の優先順位](https://github.com/hat47x/t
 
 **製品側で動く範囲（2026年11月19日照合）**：TEIは実PostgreSQLからの明細読取、Ruleの三値判定、定義の変更と再検証、第一Webの実HTTP・Chrome DOMでの変更前後の表示まで到達した（[#5362](https://github.com/hat47x/tei-platform/pull/5362)、[#5492](https://github.com/hat47x/tei-platform/pull/5492)）。取得範囲の宣言と実DBの確認を経た場合に限り全件性を認定する処理も進んだ（[#5507](https://github.com/hat47x/tei-platform/pull/5507)、[#5525](https://github.com/hat47x/tei-platform/pull/5525)）。ただし、[公開手順0〜5](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)を**初めて使う人が記載どおり一続きに完走した**という検収はまだない。個別のCI成功をこの検収へ置き換えない。
 
+**同一試行への前進**：[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)はmainへ統合済み。公開手順0のDDL・Seed、1のWorkspace複製、3のRule編集について、手順書のシェルを同じ実PostgreSQL・CLI・ChromeのE2Eで実行する。ただし手順5のWebプロセスはテスト側から起動しており、利用者が手順書の`go run`とブラウザ操作をすべて行った証拠ではない。B0の基準はこれらを区別して固定する。
+
 | 比較 | 実行する内容 | 採否の判断 |
 | --- | --- | --- |
 | **B0：Skillなし** | 公開手順に従い、実CLI・実DB・Rule変更・validate・再読取・Web表示までを一つの作業領域で実行 | 最初の基準。独立Expectedと実際の操作回数・変更ファイル数を保存 |
 | **B1：Product Skill** | B0で手順を探し直した箇所、誤操作や再説明が生じた箇所だけを補助 | 同じ結果と権限境界を保ち、手数または誤りが減った場合にのみ採用候補 |
 | **B2：TAI横断Skill** | 実在する別Productへの受渡しが必要になった場合だけ、対象・受信者・許可Projectionを固定して別Attemptで実行 | Product側の現在の開示判定と実Consumer受領まで確認できなければ、横断Skillの成功としない |
 
-**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
+**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B0はProductとToolを使ってよいが、**Skillは選択しない**。既存のSkill選択評価器では、B0にSkillが紛れた場合、Productと同名でも`extra`へ`skill:<名前>`として記録する。B0の必要能力をSkillだけで満たしたと誤採点しない。これは比較データの整合性検査であって、実際にSkillがロードされなかった証拠ではない。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
 
 B2では、元Productが対象を再解決できたこと（R）と、指定した受信者への現在の開示許可（P）、実配送（T）、Consumerの本文受領（C）、Harnessの完全応答（H）を分ける。SHOのHandoff票に受信者名が書けても、それ自体は許可ではない。TAI側で独自の権限正本を作らず、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)とProduct Ownerの判断に従う。
 
