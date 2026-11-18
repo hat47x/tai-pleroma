@@ -1,0 +1,56 @@
+{
+  "schema": "tai.reference.yic-dead-rule-impact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 running the checker with case-insensitive rule matching",
+  "command": "python integrations/tools/yic_dead_rule_impact_probe.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-dead-rule-impact-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checker": "tools/check-synthetic-receipts/check.py",
+    "rulesRewritten": 271,
+    "asWritten": {
+      "exit": 0,
+      "passed": true,
+      "errors": 0
+    },
+    "withCaseInsensitiveRules": {
+      "exit": 1,
+      "passed": false,
+      "errors": 22
+    },
+    "newErrors": [
+      "TEI artifact receipt points at a missing file: evaluations/records/SUI-TEI-artifact-2026-11-02.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/SEI-TEI-artifact-2026-11-03.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/MMI-TEI-artifact-2026-11-03.json",
+      "TEI auth receipt did not record 200/401: evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json",
+      "TEI auth receipt did not enable authorization: evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json",
+      "TEI target receipt did not pass the oneshot profile: evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+      "TEI target receipt did not pass 4 cases: evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+      "TEI target receipt did not pass the oneshot profile: evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
+      "TEI target receipt did not pass 4 cases: evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
+      "TEI assembler receipt did not pass 6 tests: evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+      "TEI assembler receipt did not bind the card record: evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+      "TEI assembler receipt did not pass 6 tests: evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json",
+      "TEI assembler receipt did not bind the card record: evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/EKI-TEI-artifact-2026-11-03.json",
+      "TEI consumer receipt did not record six read-only tests: evaluations/records/SEI-TEI-consumer-2026-11-03.json",
+      "TEI consumer receipt did not record six read-only tests: evaluations/records/MMI-TEI-consumer-2026-11-03.json",
+      "TEI consumer receipt did not record six read-only tests: evaluations/records/EKI-TEI-consumer-2026-11-03.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/TEI-artifact-digests-2026-11-03.json",
+      "TEI artifact receipt has no projection schema: evaluations/records/TEI-artifacts-determinism-2026-11-03.json"
+    ],
+    "newErrorCount": 22,
+    "firstAttemptCorrection": "最初の試行では`relative`自体を小文字にしたため、規則の内部にある大小文字依存の比較（`\"SCN-002\" in relative`など）も壊れ、出た誤りは**こちらの改変の産物**だった。今回は照合の側だけを大小文字無視にし、`relative`は元のまま残した。",
+    "finding": "checkerの規則照合だけを大小文字無視に書き換えて実行した。**271件の規則**が書き換わり、その結果**22件の新しい誤り**が出た。大小文字の違いで発火していなかった規則には、**実際の判定が書かれていた**。"
+  },
+  "scope": "Runs the checker twice: as written, and with the rule match made case-insensitive so the case-dead rules fire. It shows that those rules would reject receipts; it does not decide which behaviour is intended, and the second run is a patched copy."
+}
