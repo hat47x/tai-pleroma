@@ -84,6 +84,8 @@ JSONLに未知のThread／Turn／Item**制御イベント**が追加されたと
 - `--ephemeral` によりNative Threadを保持しないため、ここで観測したThread IDから後日のresumeを保証しない。App Serverの双方向通信・承認・継続Sessionは[別途C2](../../docs/yi-constellation/codex-source-integration-decision-2026-11-17.md)で扱う。
 - `--sandbox read-only` は設定の宣言であり、MCP／OS／ネットワークによる実効隔離や現在のSource開示資格の証拠にはならない。実外部Harness試験には別の環境・権限・送出確認が必要。
 
+**C1 JSONLの完全性検査（2026-11-18追加）：** 開始／完了のTool IDを照合し、欠落・重複・別Toolへの変化があればTurnの完了通知を成功へ昇格しない。完了したMCP Toolの結果本文とCommandの終了コードを別々に確認する。失敗したToolの状態はHarness観測のまま記録する。読み取り専用の宣言と矛盾する`file_change`や、固定Source版で`model rerouted:`と報告されたモデル切替も`Run=unknown`に留める。いずれも**合成JSONLの契約試験**であり、実OS／Provider／Product操作の証明ではない。詳細は[Codex接続実行票](../../docs/yi-constellation/codex-source-integration-decision-2026-11-17.md)を参照する。
+
 ## 4. Product Tool投影
 
 `TEIReadOnlyTool` はTEI CLIの**既存**read-onlyカタログ（`tei commands`、
