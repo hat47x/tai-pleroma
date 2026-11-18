@@ -1,0 +1,556 @@
+{
+  "schema": "tai.reference.yic-dead-rule-fields/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 reading each failing receipt",
+  "command": "python integrations/tools/yic_dead_rule_fields_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-dead-rule-fields-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "impactReceipt": "evaluations/records/YIC-dead-rule-impact-2026-11-18.json",
+    "failuresExamined": 22,
+    "byMessage": [
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "receipts": 1,
+        "fieldPresent": 0,
+        "fieldAbsent": 1,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipts": 8,
+        "fieldPresent": 0,
+        "fieldAbsent": 8,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not record 200/401",
+        "receipts": 1,
+        "fieldPresent": 0,
+        "fieldAbsent": 1,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "receipts": 1,
+        "fieldPresent": 0,
+        "fieldAbsent": 1,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "receipts": 2,
+        "fieldPresent": 0,
+        "fieldAbsent": 2,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "receipts": 2,
+        "fieldPresent": 0,
+        "fieldAbsent": 2,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipts": 2,
+        "fieldPresent": 0,
+        "fieldAbsent": 2,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipts": 2,
+        "fieldPresent": 0,
+        "fieldAbsent": 2,
+        "values": [
+          "None"
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipts": 3,
+        "fieldPresent": 3,
+        "fieldAbsent": 0,
+        "values": [
+          "3",
+          "4",
+          "5"
+        ]
+      }
+    ],
+    "rows": [
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "receipt": "evaluations/records/SUI-TEI-artifact-2026-11-02.json",
+        "exists": true,
+        "expectedField": "artifactPath",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "artifact",
+          "casesPassed",
+          "casesRun",
+          "command",
+          "composed",
+          "contracts",
+          "danglingReferenceRejected",
+          "date",
+          "elapsedMillis",
+          "evidenceKind",
+          "host",
+          "publicationAllowed"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "artifact",
+          "command",
+          "date",
+          "errors",
+          "evidenceKind",
+          "host",
+          "passed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "artifact",
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "schemaFile",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/SEI-TEI-artifact-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "artifact",
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "artifact",
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not record 200/401",
+        "receipt": "evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json",
+        "exists": true,
+        "expectedField": "authorizedStatus",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "cases"
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "receipt": "evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json",
+        "exists": true,
+        "expectedField": "authEnabled",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "cases"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "receipt": "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+        "exists": true,
+        "expectedField": "oneshotPassed",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "candidateBuilt",
+          "compareExit",
+          "comparisonPassed",
+          "contractId",
+          "contractVersion",
+          "expectedContractId",
+          "fixtureDigest",
+          "longRunningRefused",
+          "oneShotPassed",
+          "profiles",
+          "refusalIsExecutionModel",
+          "refusalReason"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "receipt": "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "candidateBuilt",
+          "compareExit",
+          "comparisonPassed",
+          "contractId",
+          "contractVersion",
+          "expectedContractId",
+          "fixtureDigest",
+          "longRunningRefused",
+          "oneShotPassed",
+          "profiles",
+          "refusalIsExecutionModel",
+          "refusalReason"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "receipt": "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
+        "exists": true,
+        "expectedField": "oneshotPassed",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "candidateBuilt",
+          "compareExit",
+          "comparisonPassed",
+          "contractId",
+          "contractVersion",
+          "expectedContractId",
+          "fixtureDigest",
+          "longRunningRefused",
+          "oneShotPassed",
+          "profiles",
+          "refusalIsExecutionModel",
+          "refusalReason"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "receipt": "evaluations/records/TEI-target-profile-compare-text-2026-11-06.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "candidateBuilt",
+          "compareExit",
+          "comparisonPassed",
+          "contractId",
+          "contractVersion",
+          "expectedContractId",
+          "fixtureDigest",
+          "longRunningRefused",
+          "oneShotPassed",
+          "profiles",
+          "refusalIsExecutionModel",
+          "refusalReason"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipt": "evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "absentKindUnknownEndpointRefused",
+          "absentKindsResolveCardToIsland",
+          "absentKindsResolvedFromEndpoint",
+          "assemblerRewritesKinds",
+          "contractKindsOptional",
+          "explicitKinds",
+          "nullKindsResolvedFromEndpoint",
+          "unknownKindRefused"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipt": "evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
+        "exists": true,
+        "expectedField": "cardRecordBound",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "absentKindUnknownEndpointRefused",
+          "absentKindsResolveCardToIsland",
+          "absentKindsResolvedFromEndpoint",
+          "assemblerRewritesKinds",
+          "contractKindsOptional",
+          "explicitKinds",
+          "nullKindsResolvedFromEndpoint",
+          "unknownKindRefused"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipt": "evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "exit",
+          "failed",
+          "summary",
+          "testsRun"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipt": "evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json",
+        "exists": true,
+        "expectedField": "cardRecordBound",
+        "lookedIn": "observed",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "exit",
+          "failed",
+          "summary",
+          "testsRun"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "artifact",
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipt": "evaluations/records/SEI-TEI-consumer-2026-11-03.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": true,
+        "value": 3,
+        "observedKeys": [
+          "callsRuntime",
+          "package",
+          "passed",
+          "readsArtifact",
+          "tests",
+          "writes"
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipt": "evaluations/records/MMI-TEI-consumer-2026-11-03.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": true,
+        "value": 5,
+        "observedKeys": [
+          "module",
+          "passed",
+          "readsArtifact",
+          "realArtifact",
+          "tests",
+          "typecheck",
+          "writes"
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipt": "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
+        "exists": true,
+        "expectedField": "passed",
+        "lookedIn": "observed",
+        "present": true,
+        "value": 4,
+        "observedKeys": [
+          "callsControl",
+          "executorId",
+          "package",
+          "passed",
+          "readsArtifact",
+          "tests",
+          "writes"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/TEI-artifact-digests-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "evaluations/records/TEI-artifacts-determinism-2026-11-03.json",
+        "exists": true,
+        "expectedField": "projectionSchema",
+        "lookedIn": "top",
+        "present": false,
+        "value": null,
+        "observedKeys": [
+          "command",
+          "date",
+          "evidenceKind",
+          "host",
+          "observed",
+          "publicationAllowed",
+          "result",
+          "schema",
+          "scope",
+          "synthetic"
+        ]
+      }
+    ],
+    "everyMissingFieldIsReallyMissing": true,
+    "fieldsPresentWithADifferentValue": [
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipts": 3,
+        "fieldPresent": 3,
+        "fieldAbsent": 0,
+        "values": [
+          "3",
+          "4",
+          "5"
+        ]
+      }
+    ],
+    "finding": "発火させたときに落ちた22件について、**規則が要求する欄がreceiptに実在するか、実在するなら値は何か**を1件ずつ読んだ。9種類のうち8種類は**欄そのものが無い**。1種類（TEI consumer）は**欄は在るが値が違う**（`passed: 4`で6を要求、`readOnly`は無い）。**「欄が無い」と「値が違う」は別の食い違いであり、まとめると読みを誤る。**どちらを直すかは製品Ownerの判断であり、ここでは決めない。"
+  },
+  "scope": "Reads the receipts named by the dead-rule experiment and checks whether the field each failing rule wants is present. It establishes that the rules and receipts disagree; it does not decide which side is out of date, and it cannot see fields the rule derives rather than reads."
+}

@@ -103,6 +103,8 @@ PORTABLE_CHECKS = (
      "which rules can never fire because of case"),
     ("deadRuleImpact", "yic_dead_rule_impact_probe.py",
      "running the checker with the dead rules made live"),
+    ("deadRuleFields", "yic_dead_rule_fields_check.py",
+     "each failing rule's field: missing, or present with a different value"),
 )
 
 
