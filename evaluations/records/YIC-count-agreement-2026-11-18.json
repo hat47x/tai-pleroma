@@ -1,0 +1,50 @@
+{
+  "schema": "tai.reference.yic-count-agreement/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Python 3.12 parsing the aggregates and the checker",
+  "command": "python integrations/tools/yic_count_agreement_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-count-agreement-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checker": "tools/check-synthetic-receipts/check.py",
+    "aggregates": [
+      {
+        "aggregate": "yic_document_gates.py",
+        "exists": true,
+        "entriesInSource": 21,
+        "tuplesCounted": [
+          "CHECKS"
+        ],
+        "expectedByChecker": 21,
+        "agrees": true
+      },
+      {
+        "aggregate": "yic_analysis_gates.py",
+        "exists": true,
+        "entriesInSource": 35,
+        "tuplesCounted": [
+          "CHECKS",
+          "TAI_ROOT_CHECKS",
+          "PORTABLE_CHECKS"
+        ],
+        "expectedByChecker": 35,
+        "agrees": true
+      }
+    ],
+    "disagreements": [],
+    "countsAreHardCodedInTheChecker": true,
+    "hardCodedAggregates": [
+      "yic_document_gates.py",
+      "yic_analysis_gates.py"
+    ],
+    "everyCountAgrees": true,
+    "finding": "集約が実際に走らせる点検の数と、checkerが期待する数の一致を見る。点検を1つ足すたびに**4箇所の定数を手で直す**必要があり、今回も同じ変更で4箇所を編集した（うち2箇所は同じファイル）。**手で保つ定数は、いつか食い違う。**"
+  },
+  "scope": "Parses each aggregate's check tuple and the checker's expected integer, and compares them. It catches a count that has drifted; it cannot tell which of the two is right, and it does not remove the hand-maintained constant."
+}
