@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 33,
-    "checksRun": 33,
+    "checksRequested": 34,
+    "checksRun": 34,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 55, \"links\": 642, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 56, \"links\": 654, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 374, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 55, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 379, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 56, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 85, \"writers\": 85, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 90, \"writers\": 90, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -245,6 +245,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"cases\": 3, \"unrelatedAccepted\": true, \"neverClaimsAuthority\": true, \"passed\": true}"
+      },
+      "receiptReview": {
+        "ran": true,
+        "question": "running the producer's receipt review: audience is not consulted",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"declared\": \"matched\", \"unrelated\": \"matched\", \"empty\": \"matched\", \"blind\": true, \"passed\": true}"
       }
     },
     "scriptsMissing": [],

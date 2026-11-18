@@ -299,6 +299,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-harness-evidence-2026-11-18.json",
     "evaluations/records/YIC-codex-adapter-2026-11-18.json",
     "evaluations/records/YIC-reach-forward-refs-2026-11-18.json",
+    "evaluations/records/YIC-receipt-review-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
     "evaluations/records/TEI-target-profile-compare-2026-11-06.json",
@@ -713,7 +714,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 33
+                or observed.get("checksRun") != 34
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative:
@@ -724,6 +725,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("comparesAudienceAgainstARecipient") is not False
             ):
                 errors.append(f"the audience declaration reading lost its finding: {relative}")
+        if "YIC-receipt-review" in relative:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("reviewIsBlindToAudience") is not True
+            ):
+                errors.append(f"the receipt review probe lost its finding: {relative}")
         if "YIC-reach-forward-refs" in relative:
             observed = data.get("observed", {})
             if (

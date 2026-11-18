@@ -19,7 +19,7 @@ from pathlib import Path
 DOC = "docs/yi-constellation/analysis/54-受渡し条件.md"
 STAGES = ("P", "T", "C", "H")
 # Phrases that assert an instrument is absent or limited.
-ABSENT = ("計器なし", "計器がない", "なし")
+ABSENT = ("計器なし", "計器がない", "なし", "計器は無い", "測る計器は無い")
 LIMITED = ("限定的", "限定的にあり")
 PRESENT = ("あり",)
 

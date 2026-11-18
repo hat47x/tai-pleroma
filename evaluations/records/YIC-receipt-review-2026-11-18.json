@@ -1,0 +1,54 @@
+{
+  "schema": "tai.reference.yic-receipt-review-audience/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-18",
+  "host": "Windows with Node and esbuild, bundling SUI's receipt review",
+  "command": "python integrations/tools/yic_receipt_review_probe.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-receipt-review-2026-11-18.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "suiCommit": "",
+    "entry": "src/export/handoff_receipt_review.ts",
+    "exports": [
+      "HANDOFF_RECEIPT_SCHEMA",
+      "HandoffReceiptError",
+      "isReceiptMatchedForTicket",
+      "reviewHandoffReceipt"
+    ],
+    "cases": [
+      {
+        "case": "declared-recipient",
+        "audience": [
+          "sho-composer"
+        ],
+        "status": "matched",
+        "reason": "ticket digests match"
+      },
+      {
+        "case": "unrelated-recipient",
+        "audience": [
+          "someone-else"
+        ],
+        "status": "matched",
+        "reason": "ticket digests match"
+      },
+      {
+        "case": "empty-audience",
+        "audience": [],
+        "status": "matched",
+        "reason": "ticket digests match"
+      }
+    ],
+    "declaredRecipientStatus": "matched",
+    "unrelatedRecipientStatus": "matched",
+    "emptyAudienceStatus": "matched",
+    "reviewIsBlindToAudience": true,
+    "finding": "ProducerのReceipt照合（`reviewHandoffReceipt`）を実行した。票のdigestとclaimsしか見ておらず、**`audience`だけを変えた3つのReceiptがすべて`matched`になる**。つまり**Producerも受信者を判定していない**。これは前ラウンドまでの「宣言は判定ではない」を、3つ目の側（Producer）から確認したものである。"
+  },
+  "scope": "Bundles SUI's receipt review and drives it with three receipts differing only in the audience the Consumer carried forward. It executes the review on synthetic receipts; it does not cover the receipt write-back (which the module says is not implemented)."
+}
