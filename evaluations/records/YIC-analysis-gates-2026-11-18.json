@@ -265,7 +265,7 @@
         "question": "each aggregate's check count matches what the checker expects",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rows\": 2, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 36, 36]], \"passed\": true}"
+        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 36, 36], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
       }
     },
     "scriptsMissing": [],

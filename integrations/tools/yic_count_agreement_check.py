@@ -24,6 +24,9 @@ AGGREGATES = (
     # Checks live in three tuples here; the aggregate runs the sum of them.
     ("yic_analysis_gates.py", ("CHECKS", "TAI_ROOT_CHECKS", "PORTABLE_CHECKS"),
      "YIC-analysis-gates"),
+    # The receipt-quality aggregate is a suite step rather than a YIC aggregate, but its
+    # count is hard-coded in the same file and drifts the same way.
+    ("yi_receipt_quality.py", ("CHECKS",), "YI-receipt-quality"),
 )
 
 
@@ -99,9 +102,10 @@ def main():
         "everyCountAgrees": not disagreements,
         "finding": (
             "集約が実際に走らせる点検の数と、checkerが期待する数の一致を見る。"
-            "点検を1つ足すたびに**4箇所の定数を手で直す**必要があり、"
-            "今回も同じ変更で4箇所を編集した（うち2箇所は同じファイル）。"
+            "checkerには3つの固定された数があり、"
+            "点検を1つ足すたびに手で直す必要がある。"
             "**手で保つ定数は、いつか食い違う。**"
+            "ここでは3つすべてを突き合わせる。"
         ),
     }
     passed = not disagreements
