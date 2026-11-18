@@ -291,7 +291,7 @@ def score_trial(trial, exp):
     independent_observed = evidence.get("independentObservation") is True
     m = {
         "missed": sorted(need - qualified_chosen - tools) if not exp.get("mustHold") and not held else [],
-        "extra": sorted((chosen - allowed) | baseline_skill_violation),
+        "extra": sorted((qualified_chosen - allowed) | baseline_skill_violation),
         "nonexistent": sorted(tools - set(exp.get("existingTools", []))),
         "wrongExecution": bool(exp.get("mustHold") and (trial.get("executedEffect") is True or not held)),
         "unneededHold": bool(not exp.get("mustHold") and held),
@@ -677,6 +677,10 @@ else:
     check("S34 B0 Skill stays forbidden when a Product shares its name",
           not b0_product_and_skill["missed"]
           and b0_product_and_skill["extra"] == ["skill:tei"])
+    b0_unrelated_skill = r(trial("direct", "B0", selected={"products": ["tei"],
+                                                               "skills": ["unrelated"]}))
+    check("S38 B0 forbidden Skill is counted only once as a typed extra",
+          b0_unrelated_skill["extra"] == ["skill:unrelated"])
     b1_skill = r(trial("direct", "B1", selected={"skills": ["tei"]}))
     check("S35 B1 matching Product Skill remains eligible",
           not b1_skill["missed"] and not b1_skill["extra"])
