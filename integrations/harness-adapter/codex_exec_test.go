@@ -273,7 +273,7 @@ func TestCodexExecToolLifecycleGuards(t *testing.T) {
 	const started = "{\"type\":\"item.started\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\"}}\n"
 	const done = "{\"type\":\"item.completed\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\",\"status\":\"completed\",\"result\":{\"content\":[]}}}\n"
 	const tail = "{\"type\":\"turn.completed\",\"usage\":{}}\n"
-	tests := []struct { name, stream string }{
+	tests := []struct{ name, stream string }{
 		{"completed-tool-without-start", head + done + tail},
 		{"duplicate-tool-start", head + started + started + done + tail},
 		{"duplicate-tool-completion", head + started + done + done + tail},
@@ -294,7 +294,9 @@ func TestCodexExecToolLifecycleGuards(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			_, err := ParseCodexExecJSONL([]byte(tc.stream))
-			if err == nil { t.Fatal("invalid lifecycle accepted as complete") }
+			if err == nil {
+				t.Fatal("invalid lifecycle accepted as complete")
+			}
 			a := NewCodexExecAdapter("/fixed")
 			a.Runner = &FakeRunner{Default: ExecResult{Stdout: []byte(tc.stream), ExitCode: 0}}
 			out, err := a.Run(context.Background(), Task{Prompt: "read public TEI"}, nil)
@@ -310,7 +312,7 @@ func TestCodexExecMissingCommandExitAndReadonlyEffects(t *testing.T) {
 	const tail = "{\"type\":\"turn.completed\",\"usage\":{}}\n"
 	tests := []struct {
 		name, stream, observation, value string
-		unknown bool
+		unknown                          bool
 	}{
 		{"command-exit-not-observed", head +
 			"{\"type\":\"item.started\",\"item\":{\"id\":\"c\",\"type\":\"command_execution\",\"command\":\"cat public.md\"}}\n" +
@@ -343,9 +345,13 @@ func TestCodexExecMissingCommandExitAndReadonlyEffects(t *testing.T) {
 			a := NewCodexExecAdapter("/fixed")
 			a.Runner = &FakeRunner{Default: ExecResult{Stdout: []byte(tc.stream), ExitCode: 0}}
 			out, err := a.Run(context.Background(), Task{Prompt: "read public TEI"}, nil)
-			if err != nil { t.Fatal(err) }
+			if err != nil {
+				t.Fatal(err)
+			}
 			want := RunCompleted
-			if tc.unknown { want = RunUnknown }
+			if tc.unknown {
+				want = RunUnknown
+			}
 			if out.Run != want || out.Observations[tc.observation] != tc.value ||
 				out.Receipt.State != ReceiptNotObserved || out.Promoted() {
 				t.Fatalf("evidence was promoted or lost: %+v", out)
