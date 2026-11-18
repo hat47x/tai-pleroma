@@ -191,6 +191,22 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 	res.Observations["unrecognized-control-events"] = fmt.Sprint(stream.UnknownControlEvents)
 	res.Observations["tool-items-unfinished"] = fmt.Sprint(stream.UnfinishedTools)
 	res.Observations["tool-results-missing"] = fmt.Sprint(stream.MissingToolBodies)
+	res.Observations["command-exits-missing"] = fmt.Sprint(stream.MissingCommandExits)
+	res.Observations["file-change-events"] = fmt.Sprint(stream.FileChangeEvents)
+	res.Observations["model-reroute-events"] = fmt.Sprint(stream.ModelReroutes)
+	// Each marker is an observation, never a Product permission or effect verdict.
+	if stream.FileChangeEvents > 0 {
+		res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+			Code: "codex-exec-file-change-observed", Source: a.Name()})
+	}
+	if stream.ModelReroutes > 0 {
+		res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+			Code: "codex-exec-model-rerouted", Source: a.Name()})
+	}
+	if stream.MissingToolBodies > 0 || stream.MissingCommandExits > 0 {
+		res.Diagnostics = append(res.Diagnostics, Diagnostic{Severity: "warning",
+			Code: "codex-exec-tool-reply-incomplete", Source: a.Name()})
+	}
 	if stream.ThreadID != "" {
 		res.Session.ExternalID = stream.ThreadID
 		res.Session.State = SessionCreated
@@ -201,7 +217,8 @@ func (a *CodexExecAdapter) Run(ctx context.Context, t Task, session *SessionRef)
 			Code: "codex-exec-invalid-jsonl", Message: parseErr.Error(), Source: a.Name()})
 	}
 	switch {
-	case parseErr != nil || stream.UnknownControlEvents > 0 || stream.UnfinishedTools > 0 || stream.MissingToolBodies > 0 || stream.Terminal == "" ||
+	case parseErr != nil || stream.UnknownControlEvents > 0 || stream.UnfinishedTools > 0 || stream.MissingToolBodies > 0 ||
+		stream.MissingCommandExits > 0 || stream.FileChangeEvents > 0 || stream.ModelReroutes > 0 || stream.Terminal == "" ||
 		!stream.TurnStarted || stream.ThreadID == "":
 		res.Run = RunUnknown
 	case stream.Terminal == "turn.failed" || stream.Terminal == "error" || exit != 0:
@@ -226,6 +243,9 @@ type CodexExecStream struct {
 	UnknownControlEvents int
 	UnfinishedTools      int
 	MissingToolBodies    int
+	MissingCommandExits  int
+	FileChangeEvents     int
+	ModelReroutes        int
 }
 
 // ParseCodexExecJSONL decodes complete lines and distinguishes terminal turn
@@ -235,7 +255,13 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 	var result CodexExecStream
 	scanner := bufio.NewScanner(bytes.NewReader(raw))
 	scanner.Buffer(make([]byte, 4096), 16<<20)
-	pending := map[string]bool{}
+	// An item id identifies one tool lifecycle. We never invent a missing
+	// start, turn boundary or final reply for a completed-only tool item.
+	type toolStart struct {
+		kind, server, tool, command string
+	}
+	pending := map[string]toolStart{}
+	seenToolIDs := map[string]bool{}
 	for line := 1; scanner.Scan(); line++ {
 		b := bytes.TrimSpace(scanner.Bytes())
 		if len(b) == 0 {
@@ -248,6 +274,7 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 				ID               string          `json:"id"`
 				Type             string          `json:"type"`
 				Text             string          `json:"text"`
+				Message          string          `json:"message"`
 				Command          string          `json:"command"`
 				AggregatedOutput string          `json:"aggregated_output"`
 				ExitCode         *int            `json:"exit_code"`
@@ -269,66 +296,122 @@ func ParseCodexExecJSONL(raw []byte) (CodexExecStream, error) {
 		}
 		switch ev.Type {
 		case "thread.started":
-			if ev.ThreadID == "" || (result.ThreadID != "" && result.ThreadID != ev.ThreadID) {
-				return result, fmt.Errorf("line %d has missing or conflicting thread id", line)
+			if result.ThreadID != "" || result.TurnStarted || ev.ThreadID == "" {
+				return result, fmt.Errorf("line %d duplicates or misorders thread start", line)
 			}
 			result.ThreadID = ev.ThreadID
 		case "turn.started":
-			if result.TurnStarted {
-				return result, fmt.Errorf("line %d starts an additional turn", line)
+			if result.ThreadID == "" || result.TurnStarted {
+				return result, fmt.Errorf("line %d starts a turn without a single thread", line)
 			}
 			result.TurnStarted = true
-		case "turn.completed", "turn.failed", "error":
-			if result.Terminal != "" {
-				return result, fmt.Errorf("line %d adds a second terminal event", line)
+		case "turn.completed", "turn.failed":
+			if !result.TurnStarted {
+				return result, fmt.Errorf("line %d ends a turn that never started", line)
 			}
 			result.Terminal = ev.Type
+		case "error":
+			result.Terminal = ev.Type
 		case "item.started":
-			if ev.Item.ID != "" && (ev.Item.Type == "mcp_tool_call" || ev.Item.Type == "command_execution") {
-				pending[ev.Item.ID] = true
+			if !result.TurnStarted {
+				return result, fmt.Errorf("line %d has an item outside the turn", line)
+			}
+			if ev.Item.Type == "mcp_tool_call" || ev.Item.Type == "command_execution" {
+				if ev.Item.ID == "" || seenToolIDs[ev.Item.ID] {
+					return result, fmt.Errorf("line %d starts a tool with a missing or reused id", line)
+				}
+				if ev.Item.Type == "mcp_tool_call" && (ev.Item.Server == "" || ev.Item.Tool == "") {
+					return result, fmt.Errorf("line %d starts a tool without server and tool identity", line)
+				}
+				seenToolIDs[ev.Item.ID] = true
+				pending[ev.Item.ID] = toolStart{
+					kind: ev.Item.Type, server: ev.Item.Server, tool: ev.Item.Tool, command: ev.Item.Command,
+				}
+			}
+		case "item.updated":
+			if ev.Item.Type == "mcp_tool_call" || ev.Item.Type == "command_execution" {
+				start, ok := pending[ev.Item.ID]
+				if !ok || start.kind != ev.Item.Type ||
+					(start.kind == "mcp_tool_call" && (start.server != ev.Item.Server || start.tool != ev.Item.Tool)) ||
+					(start.kind == "command_execution" && start.command != "" && ev.Item.Command != "" && start.command != ev.Item.Command) {
+					return result, fmt.Errorf("line %d updates a tool without matching start and identity", line)
+				}
 			}
 		case "item.completed":
-			if ev.Item.ID != "" {
-				delete(pending, ev.Item.ID)
+			if !result.TurnStarted {
+				return result, fmt.Errorf("line %d completes an item outside the turn", line)
 			}
 			switch ev.Item.Type {
 			case "agent_message":
 				result.FinalText = ev.Item.Text
-			case "mcp_tool_call":
-				if ev.Item.ID == "" || ev.Item.Server == "" || ev.Item.Tool == "" {
-					return result, fmt.Errorf("line %d has incomplete MCP tool identity", line)
+			case "error":
+				// The pinned Codex JSONL renderer maps ModelRerouted into an
+				// error item containing this prefix. It is not proof of the pinned
+				// model's execution, even when the turn later completes normally.
+				if strings.HasPrefix(ev.Item.Message, "model rerouted:") {
+					result.ModelReroutes++
 				}
-				call := ToolCallRecord{CallID: ev.Item.ID, Tool: "mcp__" + ev.Item.Server + "__" + ev.Item.Tool,
-					InputJSON: string(ev.Item.Arguments), HarnessStatus: ev.Item.Status}
-				if len(ev.Item.Result) > 0 && string(ev.Item.Result) != "null" {
-					call.ResultText = string(ev.Item.Result)
-					call.ResultBytes = int64(len(ev.Item.Result))
-				} else if ev.Item.Status == "completed" {
-					call.Note = "result-body-not-observed"
-					result.MissingToolBodies++
+			case "mcp_tool_call", "command_execution":
+				start, ok := pending[ev.Item.ID]
+				if !ok || start.kind != ev.Item.Type {
+					return result, fmt.Errorf("line %d completes a tool without its matching start", line)
 				}
-				result.ToolCalls = append(result.ToolCalls, call)
-			case "command_execution":
-				if ev.Item.ID == "" {
-					return result, fmt.Errorf("line %d has missing command item id", line)
+				if (ev.Item.Type == "mcp_tool_call" && (start.server != ev.Item.Server || start.tool != ev.Item.Tool)) ||
+					(ev.Item.Type == "command_execution" && start.command != "" && ev.Item.Command != "" && start.command != ev.Item.Command) {
+					return result, fmt.Errorf("line %d changes tool identity between start and completion", line)
 				}
-				call := ToolCallRecord{CallID: ev.Item.ID, Tool: "run_command",
-					HarnessStatus: ev.Item.Status, ResultText: ev.Item.AggregatedOutput,
-					ResultBytes: int64(len(ev.Item.AggregatedOutput)), ExitCode: ev.Item.ExitCode}
-				if ev.Item.Command != "" {
-					encoded, _ := json.Marshal(map[string]string{"command": ev.Item.Command})
-					call.InputJSON = string(encoded)
+				delete(pending, ev.Item.ID)
+				if ev.Item.Type == "mcp_tool_call" {
+					if ev.Item.Status != "completed" && ev.Item.Status != "failed" {
+						return result, fmt.Errorf("line %d completes an MCP tool without a terminal status", line)
+					}
+					call := ToolCallRecord{CallID: ev.Item.ID, Tool: MCPToolName(ev.Item.Server, ev.Item.Tool),
+						InputJSON: string(ev.Item.Arguments), HarnessStatus: ev.Item.Status}
+					if ev.Item.Status == "completed" {
+						if len(ev.Item.Result) == 0 || string(ev.Item.Result) == "null" {
+							call.Note = "result-body-not-observed"
+							result.MissingToolBodies++
+						} else {
+							call.ResultText = string(ev.Item.Result)
+							call.ResultBytes = int64(len(ev.Item.Result))
+						}
+					} else if len(ev.Item.Error) == 0 || string(ev.Item.Error) == "null" {
+						call.Note = "failure-body-not-observed"
+						result.MissingToolBodies++
+					} else {
+						call.ResultText = string(ev.Item.Error)
+						call.ResultBytes = int64(len(ev.Item.Error))
+					}
+					result.ToolCalls = append(result.ToolCalls, call)
+				} else {
+					if ev.Item.Status != "completed" && ev.Item.Status != "failed" && ev.Item.Status != "declined" {
+						return result, fmt.Errorf("line %d completes a command without a terminal status", line)
+					}
+					call := ToolCallRecord{CallID: ev.Item.ID, Tool: "run_command",
+						HarnessStatus: ev.Item.Status, ResultText: ev.Item.AggregatedOutput,
+						ResultBytes: int64(len(ev.Item.AggregatedOutput)), ExitCode: ev.Item.ExitCode}
+					if ev.Item.Status == "completed" && ev.Item.ExitCode == nil {
+						call.Note = "command-exit-not-observed"
+						result.MissingCommandExits++
+					}
+					if ev.Item.Command != "" {
+						encoded, _ := json.Marshal(map[string]string{"command": ev.Item.Command})
+						call.InputJSON = string(encoded)
+					}
+					result.ToolCalls = append(result.ToolCalls, call)
 				}
-				result.ToolCalls = append(result.ToolCalls, call)
 			}
-		case "item.updated":
-			// A partial item does not prove a completed Tool result.
 		default:
 			result.UnknownEvents++
 			if ev.Type == "" || strings.HasPrefix(ev.Type, "thread.") ||
 				strings.HasPrefix(ev.Type, "turn.") || strings.HasPrefix(ev.Type, "item.") {
 				result.UnknownControlEvents++
 			}
+		}
+		if (ev.Type == "item.started" || ev.Type == "item.updated" || ev.Type == "item.completed") && ev.Item.Type == "file_change" {
+			// The request declared read-only; this notification is an unverified
+			// possible effect, not an authorized file write or an OS denial proof.
+			result.FileChangeEvents++
 		}
 	}
 	if err := scanner.Err(); err != nil {

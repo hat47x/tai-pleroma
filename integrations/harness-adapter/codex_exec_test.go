@@ -264,3 +264,104 @@ func TestCodexExecUnknownControlEventRequiresRequalification(t *testing.T) {
 		t.Fatal("event after turn terminal was accepted")
 	}
 }
+
+// TestCodexExecToolLifecycleGuards treats a completed-only tool event as
+// unqualified, even though Codex can emit a synthesized item id for it.
+// The versioned C1 comparison must not invent the missing request/response link.
+func TestCodexExecToolLifecycleGuards(t *testing.T) {
+	const head = "{\"type\":\"thread.started\",\"thread_id\":\"a\"}\n{\"type\":\"turn.started\"}\n"
+	const started = "{\"type\":\"item.started\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\"}}\n"
+	const done = "{\"type\":\"item.completed\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\",\"status\":\"completed\",\"result\":{\"content\":[]}}}\n"
+	const tail = "{\"type\":\"turn.completed\",\"usage\":{}}\n"
+	tests := []struct{ name, stream string }{
+		{"completed-tool-without-start", head + done + tail},
+		{"duplicate-tool-start", head + started + started + done + tail},
+		{"duplicate-tool-completion", head + started + done + done + tail},
+		{"changed-tool-name", head + started +
+			strings.Replace(done, "\"tool\":\"catalog\"", "\"tool\":\"write\"", 1) + tail},
+		{"changed-tool-type", head + started +
+			strings.Replace(done, "\"type\":\"mcp_tool_call\"", "\"type\":\"command_execution\"", 1) + tail},
+		{"changed-tool-during-update", head + started +
+			"{\"type\":\"item.updated\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"other\",\"tool\":\"catalog\"}}\n" + done + tail},
+		{"updated-tool-without-start", head +
+			"{\"type\":\"item.updated\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\"}}\n" + tail},
+		{"unknown-final-status", head + started + strings.Replace(done, "\"status\":\"completed\"", "\"status\":\"in_progress\"", 1) + tail},
+		{"duplicate-thread-start", head + "{\"type\":\"thread.started\",\"thread_id\":\"a\"}\n" + started + done + tail},
+		{"tool-before-turn", "{\"type\":\"thread.started\",\"thread_id\":\"a\"}\n" + started +
+			"{\"type\":\"turn.started\"}\n" + done + tail},
+		{"turn-before-thread", "{\"type\":\"turn.started\"}\n" + head + started + done + tail},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := ParseCodexExecJSONL([]byte(tc.stream))
+			if err == nil {
+				t.Fatal("invalid lifecycle accepted as complete")
+			}
+			a := NewCodexExecAdapter("/fixed")
+			a.Runner = &FakeRunner{Default: ExecResult{Stdout: []byte(tc.stream), ExitCode: 0}}
+			out, err := a.Run(context.Background(), Task{Prompt: "read public TEI"}, nil)
+			if err != nil || out.Run != RunUnknown || out.Receipt.State != ReceiptNotObserved || out.Promoted() {
+				t.Fatalf("unqualified native tool promoted: %+v err=%v", out, err)
+			}
+		})
+	}
+}
+
+func TestCodexExecMissingCommandExitAndReadonlyEffects(t *testing.T) {
+	const head = "{\"type\":\"thread.started\",\"thread_id\":\"a\"}\n{\"type\":\"turn.started\"}\n"
+	const tail = "{\"type\":\"turn.completed\",\"usage\":{}}\n"
+	tests := []struct {
+		name, stream, observation, value string
+		unknown                          bool
+	}{
+		{"command-exit-not-observed", head +
+			"{\"type\":\"item.started\",\"item\":{\"id\":\"c\",\"type\":\"command_execution\",\"command\":\"cat public.md\"}}\n" +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"c\",\"type\":\"command_execution\",\"command\":\"cat public.md\",\"status\":\"completed\",\"aggregated_output\":\"ok\",\"exit_code\":null}}\n" + tail,
+			"command-exits-missing", "1", true},
+		{"command-exit-observed", head +
+			"{\"type\":\"item.started\",\"item\":{\"id\":\"c\",\"type\":\"command_execution\",\"command\":\"cat public.md\"}}\n" +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"c\",\"type\":\"command_execution\",\"command\":\"cat public.md\",\"status\":\"completed\",\"aggregated_output\":\"ok\",\"exit_code\":0}}\n" + tail,
+			"command-exits-missing", "0", false},
+		{"read-only-file-change", head +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"f\",\"type\":\"file_change\",\"changes\":[{\"path\":\"public.md\",\"kind\":\"update\"}],\"status\":\"completed\"}}\n" + tail,
+			"file-change-events", "1", true},
+		{"model-route-changed", head +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"e\",\"type\":\"error\",\"message\":\"model rerouted: pinned -> other (quota)\"}}\n" + tail,
+			"model-reroute-events", "1", true},
+		{"generic-warning-is-not-model-reroute", head +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"e\",\"type\":\"error\",\"message\":\"optional config warning\"}}\n" + tail,
+			"model-reroute-events", "0", false},
+		{"failed-mcp-without-error-detail", head +
+			"{\"type\":\"item.started\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\"}}\n" +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\",\"status\":\"failed\",\"error\":null}}\n" + tail,
+			"tool-results-missing", "1", true},
+		{"failed-mcp-with-error-detail", head +
+			"{\"type\":\"item.started\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\"}}\n" +
+			"{\"type\":\"item.completed\",\"item\":{\"id\":\"m\",\"type\":\"mcp_tool_call\",\"server\":\"tei\",\"tool\":\"catalog\",\"status\":\"failed\",\"error\":{\"message\":\"read denied\"}}}\n" + tail,
+			"tool-results-missing", "0", false},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			a := NewCodexExecAdapter("/fixed")
+			a.Runner = &FakeRunner{Default: ExecResult{Stdout: []byte(tc.stream), ExitCode: 0}}
+			out, err := a.Run(context.Background(), Task{Prompt: "read public TEI"}, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := RunCompleted
+			if tc.unknown {
+				want = RunUnknown
+			}
+			if out.Run != want || out.Observations[tc.observation] != tc.value ||
+				out.Receipt.State != ReceiptNotObserved || out.Promoted() {
+				t.Fatalf("evidence was promoted or lost: %+v", out)
+			}
+			if tc.name == "failed-mcp-with-error-detail" {
+				if len(out.ToolCalls) != 1 || out.ToolCalls[0].HarnessStatus != "failed" ||
+					out.ToolCalls[0].ResultBytes == 0 || out.ToolCalls[0].ProductVerdict != nil {
+					t.Fatalf("tool failure must stay a harness observation: %+v", out.ToolCalls)
+				}
+			}
+		})
+	}
+}
