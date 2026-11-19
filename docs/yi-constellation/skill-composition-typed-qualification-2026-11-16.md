@@ -299,4 +299,4 @@ TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテス�
 
 **TEIの実利用検証の現在地**：mainに統合された[TEI #5608](https://github.com/hat47x/tei-platform/pull/5608)により、手順2・4の掲載CLIも公開の手順0・1・3と同じ実DB・Chrome試行で実行される。手順5の掲載`go run`を実行する[#5632](https://github.com/hat47x/tei-platform/pull/5632)は確認時点で提案中。利用者自身の一巡が未受理である間は、これらをB1の実利用改善として採点しない。
 
-いずれも今回新たに実行した試験ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。
+S29〜S41は選択評価器の合成回帰であり、実Product・外部Harness・利用者による試行ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。
