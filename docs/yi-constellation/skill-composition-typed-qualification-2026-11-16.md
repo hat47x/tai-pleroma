@@ -299,4 +299,6 @@ TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテス�
 
 **TEIの実利用検証の現在地**：mainに統合された[TEI #5608](https://github.com/hat47x/tei-platform/pull/5608)により、手順2・4の掲載CLIも公開の手順0・1・3と同じ実DB・Chrome試行で実行される。手順5の掲載`go run`を実行する[#5632](https://github.com/hat47x/tei-platform/pull/5632)は確認時点で提案中。利用者自身の一巡が未受理である間は、これらをB1の実利用改善として採点しない。
 
-S29〜S41は選択評価器の合成回帰であり、実Product・外部Harness・利用者による試行ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。
+**採点結果の機密保持（S42〜S47）**：評価者だけが持つExpectedには、漏出してはならない文字列が入る。従来の採点器は、検出した秘密の原文を`disclosure`の結果欄に表示し、改行を含む秘密はJSON文字列への変換で見逃すことがあった。改修後は実際のJSON文字列値・入れ子・項目名と数値を照合し、一致したExpectedの順番を`secret-1`などの匿名識別子として返す。漏出件数は従来の`disclosure`指標で集計する。**識別子は原文でもハッシュでもなく、正答や開示許可を示すものでもない**。評価者のExpectedファイルを参加Agentに見せない原則は変えない。入力Trialが最初から含む文字列や、Tool／Networkの実送出をこの静的照合が消去・検証できるわけではない。外部送出の実観測と開示許可は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の責務とする。
+
+S29〜S47は選択評価器の合成回帰であり、実Product・外部Harness・利用者による試行ではない。まずB0の実利用一巡を優先し、P/T/C/HとB1/B2の実験は既存Ownerの実行条件が揃った段階で進める。新しいHarness本体、中央Router、共通認可器、Source正本、第二Expected Storeは作らない。
