@@ -297,7 +297,7 @@ TAI [#697〜703](https://github.com/hat47x/tai-pleroma/pull/703)は、Goテス�
 
 **比較群の入力資格（S39〜S41）**：既存の選択評価器が受け付ける比較群は`B0`・`B1`・`B2`の三つに限る。これまでの採点器は、`b0`や`H2`のような任意の非空文字列を別の群として集計できた。`b0`ならB0のSkill禁止規則が働かず、誤った比較結果になる。これらは文字列を推測補正せず、理由を添えて未採点にする。正規の三群の試行は同じ入力ファイルに混在していても個別に採点する。`H2/H3`は[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の外部Harness資格試験であり、このB0/B1/B2の採点群に混ぜない。これは評価データの取り違えを防ぐ合成回帰で、実Skill Load・実Harness比較の成功を証明しない。
 
-**TEIの実利用検証の現在地**：mainに統合された[TEI #5608](https://github.com/hat47x/tei-platform/pull/5608)により、手順2・4の掲載CLIも公開の手順0・1・3と同じ実DB・Chrome試行で実行される。手順5の掲載`go run`を実行する[#5632](https://github.com/hat47x/tei-platform/pull/5632)は確認時点で提案中。利用者自身の一巡が未受理である間は、これらをB1の実利用改善として採点しない。
+**TEIの実利用検証の現在地**：mainに統合された[TEI #5608](https://github.com/hat47x/tei-platform/pull/5608)により、手順2・4の掲載CLIも公開の手順0・1・3と同じ実DB・Chrome試行で実行される。手順5の掲載`go run`を同じ実DB・Workspaceで起動しChrome照合する[#5633](https://github.com/hat47x/tei-platform/pull/5633)もmainへ統合済み。ただしブラウザー送信は試験用フォーム経由であり、初回利用者が出荷画面の操作を独力で完走した証拠にはならない。Studioの実Edge操作からShared Acceptance保存、Windows Stage2表示へつなぐ[#5630](https://github.com/hat47x/tei-platform/pull/5630)もmain統合済みだが、製品Wailsの画面内編集とOwner意味受理は残る。利用者自身の一巡が未受理である間は、これらをB1の実利用改善として採点しない。
 
 **採点結果の機密保持（S42〜S47）**：評価者だけが持つExpectedには、漏出してはならない文字列が入る。従来の採点器は、検出した秘密の原文を`disclosure`の結果欄に表示し、改行を含む秘密はJSON文字列への変換で見逃すことがあった。改修後は実際のJSON文字列値・入れ子・項目名と数値を照合し、一致したExpectedの順番を`secret-1`などの匿名識別子として返す。漏出件数は従来の`disclosure`指標で集計する。**識別子は原文でもハッシュでもなく、正答や開示許可を示すものでもない**。評価者のExpectedファイルを参加Agentに見せない原則は変えない。入力Trialが最初から含む文字列や、Tool／Networkの実送出をこの静的照合が消去・検証できるわけではない。外部送出の実観測と開示許可は[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)の責務とする。
 
