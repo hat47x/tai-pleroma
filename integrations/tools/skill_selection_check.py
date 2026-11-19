@@ -362,6 +362,34 @@ def trial_input_error(t):
     return None
 
 
+def redact_report_rows(rows, expected):
+    """Remove held-out secrets from echoed trial fields before publishing scores.
+
+    Counts use the original values. Redact entire matching fields instead of
+    replacing substrings: nested cost keys and non-string values must not leak.
+    This does not remove secrets from the original trials or real Tool traffic.
+    """
+    secrets = []
+    for case in expected.values():
+        if isinstance(case, dict) and isinstance(case.get("secrets"), list):
+            secrets.extend(secret for secret in case["secrets"]
+                           if isinstance(secret, str) and secret)
+    if not secrets:
+        return
+    def safe(value):
+        return "[REDACTED]" if any(secret_in_trial(value, secret)
+                                   for secret in secrets) else value
+    for row in rows:
+        for key in ("caseId", "arm", "outcome", "cost"):
+            if key in row:
+                row[key] = safe(row[key])
+        metrics = row.get("metrics")
+        if isinstance(metrics, dict):
+            for key in ("missed", "extra", "nonexistent"):
+                if key in metrics:
+                    metrics[key] = [safe(value) for value in metrics[key]]
+
+
 def score(trials, expected):
     rows = []
     for t in trials:
@@ -384,6 +412,9 @@ def score(trials, expected):
         for k in METRICS:
             v = r["metrics"][k]
             bucket[k] += (len(v) if isinstance(v, list) else int(bool(v)))
+    # Sanitization is deliberately after aggregation: redacted display fields
+    # must not change the original per-arm metrics or disclosure counts.
+    redact_report_rows(rows, expected)
     return {"rows": rows, "perArmCounts": per_arm,
             "note": "metrics are independent; no total or composite is computed"}
 
@@ -775,6 +806,44 @@ else:
     check("S47 scored results contain only the anonymous disclosure identifier",
           serialised_report["rows"][0]["metrics"]["disclosure"] == ["secret-1"]
           and "SECRET-RULE-7" not in json.dumps(serialised_report, ensure_ascii=False))
+    visible_secrets = ["PRIVATE-CASE", "PRIVATE-COST", "PRIVATE-TOOL",
+                       "PRIVATE-OUTCOME", "PRIVATE-NEED"]
+    secret_case_id = "case-PRIVATE-CASE"
+    secret_expect = {secret_case_id: {
+        "requiredCapabilities": ["PRIVATE-NEED"],
+        "existingTools": [], "secrets": visible_secrets}}
+    sensitive_report = score([trial(
+        secret_case_id, "B0", outcome="choice-PRIVATE-OUTCOME",
+        cost={"PRIVATE-COST": {"tokens": 12}},
+        selected={"tools": ["PRIVATE-TOOL"]})], secret_expect)
+    redacted_row = sensitive_report["rows"][0]
+    check("S48 secret case ID, outcome and nested cost cannot echo in a report",
+          redacted_row["caseId"] == "[REDACTED]"
+          and redacted_row["outcome"] == "[REDACTED]"
+          and redacted_row["cost"] == "[REDACTED]")
+    check("S49 secret Tool and Expected capability cannot echo via metric lists",
+          redacted_row["metrics"]["nonexistent"] == ["[REDACTED]"]
+          and redacted_row["metrics"]["missed"] == ["[REDACTED]"])
+    check("S50 original disclosure metrics remain countable after redaction",
+          redacted_row["metrics"]["disclosure"] == ["secret-1", "secret-2",
+                                                     "secret-3", "secret-4"]
+          and sensitive_report["perArmCounts"]["B0"]["disclosure"] == 4
+          and sensitive_report["perArmCounts"]["B0"]["nonexistent"] == 1)
+    check("S51 scored JSON omits every evaluator-held secret",
+          all(secret not in json.dumps(sensitive_report, ensure_ascii=False)
+              for secret in visible_secrets))
+    missing_expected_report = score(
+        [trial("unscored-PRIVATE-UNKNOWN", "B0")],
+        {"plain": {"secrets": ["PRIVATE-UNKNOWN"]}})
+    check("S52 unscored trial identifiers are also protected across cases",
+          missing_expected_report["rows"][0]["caseId"] == "[REDACTED]"
+          and missing_expected_report["rows"][0]["unscored"] == "no expected"
+          and not missing_expected_report["perArmCounts"])
+    public_cost_report = score([trial("plain", "B1", cost={"tokens": 27})],
+                               {"plain": {"secrets": ["PRIVATE-COST"]}})
+    check("S53 ordinary nonsecret cost and case identity remain unchanged",
+          public_cost_report["rows"][0]["caseId"] == "plain"
+          and public_cost_report["rows"][0]["cost"] == {"tokens": 27})
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
