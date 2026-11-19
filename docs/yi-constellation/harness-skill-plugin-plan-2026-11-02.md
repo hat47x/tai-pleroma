@@ -1231,7 +1231,7 @@ YICのSkill構成は、TEIの[現在の優先順位](https://github.com/hat47x/t
 
 **製品側で動く範囲（2026年11月19日照合）**：TEIは実PostgreSQLからの明細読取、Ruleの三値判定、定義の変更と再検証、第一Webの実HTTP・Chrome DOMでの変更前後の表示まで到達した（[#5362](https://github.com/hat47x/tei-platform/pull/5362)、[#5492](https://github.com/hat47x/tei-platform/pull/5492)）。取得範囲の宣言と実DBの確認を経た場合に限り全件性を認定する処理も進んだ（[#5507](https://github.com/hat47x/tei-platform/pull/5507)、[#5525](https://github.com/hat47x/tei-platform/pull/5525)）。ただし、[公開手順0〜5](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)を**初めて使う人が記載どおり一続きに完走した**という検収はまだない。個別のCI成功をこの検収へ置き換えない。
 
-**同一試行への前進**：[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)はmainへ統合済み。公開手順0のDDL・Seed、1のWorkspace複製、3のRule編集について、手順書のシェルを同じ実PostgreSQL・CLI・ChromeのE2Eで実行する。ただし手順5のWebプロセスはテスト側から起動しており、利用者が手順書の`go run`とブラウザ操作をすべて行った証拠ではない。B0の基準はこれらを区別して固定する。
+**同一試行への前進（11月19日再照合）**：[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)は公開手順0・1・3のシェル操作、[#5608](https://github.com/hat47x/tei-platform/pull/5608)は手順2・4の掲載CLIを、同じ実PostgreSQL・Workspace・Chrome試行へつないでmainへ統合した。残る手順5の公開`go run`を同じ試行で実行する変更は[TEI #5632](https://github.com/hat47x/tei-platform/pull/5632)で提案中。テストドライバによるChrome操作やCI成功だけで、初回利用者自身の完走とは扱わない。B0では到達済みの試験と利用者検収を分けて記録する。
 
 | 比較 | 実行する内容 | 採否の判断 |
 | --- | --- | --- |
@@ -1239,8 +1239,8 @@ YICのSkill構成は、TEIの[現在の優先順位](https://github.com/hat47x/t
 | **B1：Product Skill** | B0で手順を探し直した箇所、誤操作や再説明が生じた箇所だけを補助 | 同じ結果と権限境界を保ち、手数または誤りが減った場合にのみ採用候補 |
 | **B2：TAI横断Skill** | 実在する別Productへの受渡しが必要になった場合だけ、対象・受信者・許可Projectionを固定して別Attemptで実行 | Product側の現在の開示判定と実Consumer受領まで確認できなければ、横断Skillの成功としない |
 
-**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B0はProductとToolを使ってよいが、**Skillは選択しない**。既存のSkill選択評価器では、B0にSkillが紛れた場合、Productと同名でも`extra`へ`skill:<名前>`として記録する。B0の必要能力をSkillだけで満たしたと誤採点しない。これは比較データの整合性検査であって、実際にSkillがロードされなかった証拠ではない。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
+**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B0はProductとToolを使ってよいが、**Skillは選択しない**。既存のSkill選択評価器では、B0にSkillが紛れた場合、Productと同名でも`extra`へ`skill:<名前>`として記録する。B0の必要能力をSkillだけで満たしたと誤採点しない。これは比較データの整合性検査であって、実際にSkillがロードされなかった証拠ではない。採点器は比較群を`B0`・`B1`・`B2`に限定し、`b0`などの別表記や外部Harness試験の`H2/H3`を混ぜた試行は理由付きで未採点にする。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
 
 B2では、元Productが対象を再解決できたこと（R）と、指定した受信者への現在の開示許可（P）、実配送（T）、Consumerの本文受領（C）、Harnessの完全応答（H）を分ける。SHOのHandoff票に受信者名が書けても、それ自体は許可ではない。TAI側で独自の権限正本を作らず、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)とProduct Ownerの判断に従う。
 
-**別の独立P0**として、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS隔離→実送出→完全Tool応答→独立H2/H3比較、[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)のWindows Stage1→Stage2セルフビルドを維持する。既存Harness AdapterのSkill配置・Loadの比較資格と、#168の実OS・独立Expectedを満たした適格比較は別物である。詳細は[Skill構成仕様§18](skill-composition-typed-qualification-2026-11-16.md)。本節は計画の更新であり、新たな実試行・Product間開示・Owner受理を行った記録ではない。
+**別の独立P0**として、[TAI #168](https://github.com/hat47x/tai-pleroma/issues/168)の実OS隔離→実送出→完全Tool応答→独立H2/H3比較、[TEI #4583](https://github.com/hat47x/tei-platform/issues/4583)のWindows Stage1→Stage2セルフビルドを維持する。Studio側は実Chrome編集・Shared Acceptance保存（[TEI #5613](https://github.com/hat47x/tei-platform/pull/5613)）と、保存SourceからWindows Stage2可視画面までの検査（[#5616](https://github.com/hat47x/tei-platform/pull/5616)）がmainへ統合された。両者を一つの実Edge操作へつなぐ[#5630](https://github.com/hat47x/tei-platform/pull/5630)は確認時点で提案中で、YICのB0実利用試験と混同しない。既存Harness AdapterのSkill配置・Loadの比較資格と、#168の実OS・独立Expectedを満たした適格比較は別物である。詳細は[Skill構成仕様§18](skill-composition-typed-qualification-2026-11-16.md)。本節は計画の更新であり、新たな実試行・Product間開示・Owner受理を行った記録ではない。

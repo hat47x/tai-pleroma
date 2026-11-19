@@ -25,6 +25,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 HOLD_OUTCOMES = {"need-clarification", "unsupported", "withhold"}
+# This scorer compares the Tool-only/Product Skill/cross-Product Skill arms.
+# H2/H3 Harness sessions belong to a separate, independently qualified study.
+SELECTION_ARMS = {"B0", "B1", "B2"}
 METRICS = (
     "missed", "extra", "nonexistent", "wrongExecution", "unneededHold",
     "disclosure", "unsupportedEvidenceClaim", "jobNotEstablished",
@@ -315,6 +318,10 @@ def trial_input_error(t):
         return "caseId is not a nonempty string"
     if not isinstance(t.get("arm"), str) or not t["arm"].strip():
         return "arm is not a nonempty string"
+    if t["arm"] not in SELECTION_ARMS:
+        # In particular, a lowercase 'b0' must not silently evade B0's
+        # prohibition on Skill selection and enter a separate score bucket.
+        return "arm is not a recognized selection arm (B0, B1, B2)"
     # Unknown but nonempty outcome labels remain eligible for evaluation;
     # an absent, empty or non-string outcome cannot establish a hold or
     # an attempted execution and can crash set membership for list/dict.
@@ -693,6 +700,25 @@ else:
                                                                "skills": ["unrelated"]}))
     check("S38 B0 forbidden Skill is counted only once as a typed extra",
           b0_unrelated_skill["extra"] == ["skill:unrelated"])
+    alias_b0 = score([trial("direct", "b0", selected={"skills": ["tei"]})], exp)
+    check("S39 lowercase b0 cannot bypass the Tool-only arm contract",
+          "recognized selection arm" in alias_b0["rows"][0].get("unscored", "")
+          and not alias_b0["perArmCounts"])
+    unknown_arm = score([trial("direct", "H2", selected={"products": ["tei"]})], exp)
+    check("S40 Harness H2 is not silently treated as a Skill-selection arm",
+          "recognized selection arm" in unknown_arm["rows"][0].get("unscored", "")
+          and not unknown_arm["perArmCounts"])
+    mixed_arm_labels = score([
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("direct", "b0", selected={"skills": ["tei"]}),
+        trial("direct", "B1", selected={"skills": ["tei"]}),
+        trial("direct", "B2", selected={"products": ["tei"]})], exp)
+    check("S41 invalid arm is excluded without discarding valid B0/B1/B2",
+          len(mixed_arm_labels["rows"]) == 4
+          and "unscored" in mixed_arm_labels["rows"][1]
+          and set(mixed_arm_labels["perArmCounts"]) == SELECTION_ARMS
+          and all(mixed_arm_labels["perArmCounts"][arm]["extra"] == 0
+                  for arm in SELECTION_ARMS))
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
