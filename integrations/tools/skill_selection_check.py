@@ -391,9 +391,19 @@ def redact_report_rows(rows, expected):
 
 
 def score(trials, expected):
+    # Without an attempt identity, repeated (caseId, arm) records cannot be
+    # distinguished from replayed output. Quarantine the entire duplicate
+    # pair instead of arbitrarily scoring the first or last observation.
+    pair_counts = {}
+    for t in trials:
+        if trial_input_error(t) is None:
+            pair = (t["caseId"], t["arm"])
+            pair_counts[pair] = pair_counts.get(pair, 0) + 1
     rows = []
     for t in trials:
         reason = trial_input_error(t)
+        if reason is None and pair_counts[(t["caseId"], t["arm"])] > 1:
+            reason = "duplicate caseId/arm in one selection batch; score attempts separately"
         if reason is not None:
             rows.append({"caseId": t.get("caseId") if isinstance(t, dict) else None,
                          "arm": t.get("arm") if isinstance(t, dict) else None,
@@ -844,6 +854,52 @@ else:
     check("S53 ordinary nonsecret cost and case identity remain unchanged",
           public_cost_report["rows"][0]["caseId"] == "plain"
           and public_cost_report["rows"][0]["cost"] == {"tokens": 27})
+    replayed_pair = score([
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("direct", "B0", selected={"products": ["tei"], "skills": ["tei"]})], exp)
+    check("S54 conflicting duplicate B0 records are both unscored",
+          len(replayed_pair["rows"]) == 2
+          and all("duplicate caseId/arm" in row.get("unscored", "")
+                  for row in replayed_pair["rows"])
+          and not replayed_pair["perArmCounts"])
+    paired_arms = score([
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("direct", "B1", selected={"skills": ["tei"]})], exp)
+    check("S55 same case in B0 and B1 is a valid comparison",
+          len(paired_arms["rows"]) == 2
+          and set(paired_arms["perArmCounts"]) == {"B0", "B1"}
+          and all("metrics" in row for row in paired_arms["rows"]))
+    mixed_replay = score([
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("direct", "B2", selected={"products": ["tei"]})], exp)
+    check("S56 duplicate B0 does not contaminate an independent B2 count",
+          len(mixed_replay["rows"]) == 3
+          and "B0" not in mixed_replay["perArmCounts"]
+          and mixed_replay["perArmCounts"]["B2"]["missed"] == 0)
+    malformed_neighbour = score([
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("direct", "B0", selected={"tools": "malformed"})], exp)
+    check("S57 malformed record does not invalidate a separate valid row",
+          "metrics" in malformed_neighbour["rows"][0]
+          and "selected.tools" in malformed_neighbour["rows"][1].get("unscored", "")
+          and "B0" in malformed_neighbour["perArmCounts"])
+    distinct_cases = score([
+        trial("direct", "B0", selected={"products": ["tei"]}),
+        trial("plain", "B0", selected={})], exp)
+    check("S58 distinct cases in the same arm still aggregate",
+          len(distinct_cases["rows"]) == 2
+          and all("metrics" in row for row in distinct_cases["rows"])
+          and set(distinct_cases["perArmCounts"]) == {"B0"})
+    sensitive_duplicate = score([
+        trial("hold", "B0", outcome="withhold", rationale="SECRET-RULE-7"),
+        trial("hold", "B0", outcome="withhold", rationale="SECRET-RULE-7")], exp)
+    check("S59 replayed secret trials never inflate disclosure counts",
+          len(sensitive_duplicate["rows"]) == 2
+          and all("duplicate caseId/arm" in row.get("unscored", "")
+                  for row in sensitive_duplicate["rows"])
+          and not sensitive_duplicate["perArmCounts"]
+          and "SECRET-RULE-7" not in json.dumps(sensitive_duplicate, ensure_ascii=False))
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
