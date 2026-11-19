@@ -746,7 +746,7 @@ else:
     escaped_metrics = score_trial(escaped_trial, {"mustHold": True,
                                                   "secrets": [escaped_secret]})["metrics"]
     check("S42 decoded newline in nested trial text is detected",
-          "\\n" in escaped_secret and escaped_metrics["disclosure"] == ["secret-1"])
+          "\n" in escaped_secret and escaped_metrics["disclosure"] == ["secret-1"])
     check("S43 disclosure metric never repeats evaluator-held secret text",
           escaped_secret not in json.dumps(escaped_metrics, ensure_ascii=False)
           and "PRIVATE-ROW" not in json.dumps(escaped_metrics, ensure_ascii=False))
