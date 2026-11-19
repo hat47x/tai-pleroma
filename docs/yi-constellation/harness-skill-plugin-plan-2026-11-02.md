@@ -1231,7 +1231,7 @@ YICのSkill構成は、TEIの[現在の優先順位](https://github.com/hat47x/t
 
 **製品側で動く範囲（2026年11月19日照合）**：TEIは実PostgreSQLからの明細読取、Ruleの三値判定、定義の変更と再検証、第一Webの実HTTP・Chrome DOMでの変更前後の表示まで到達した（[#5362](https://github.com/hat47x/tei-platform/pull/5362)、[#5492](https://github.com/hat47x/tei-platform/pull/5492)）。取得範囲の宣言と実DBの確認を経た場合に限り全件性を認定する処理も進んだ（[#5507](https://github.com/hat47x/tei-platform/pull/5507)、[#5525](https://github.com/hat47x/tei-platform/pull/5525)）。ただし、[公開手順0〜5](https://github.com/hat47x/tei-platform/blob/main/docs/first-change.md)を**初めて使う人が記載どおり一続きに完走した**という検収はまだない。個別のCI成功をこの検収へ置き換えない。
 
-**同一試行への前進（11月19日再照合）**：[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)は公開手順0・1・3のシェル操作、[#5608](https://github.com/hat47x/tei-platform/pull/5608)は手順2・4の掲載CLIを、同じ実PostgreSQL・Workspace・Chrome試行へつないでmainへ統合した。手順5の公開`go run`については、[TEI #5633](https://github.com/hat47x/tei-platform/pull/5633)が同じ隔離DB・Workspaceからの実起動とChrome照合をmainへ統合した（#5632は未マージで終了）。ただしChromeの送信は試験用フォームを通り、出荷画面の各欄を利用者が自ら操作した証拠ではない。CI成功だけで初回利用者自身の完走とは扱わない。B0では到達済みの試験と利用者検収を分けて記録する。
+**同一試行への前進（11月19日再照合）**：[TEI #5588](https://github.com/hat47x/tei-platform/pull/5588)は公開手順0・1・3のシェル操作、[#5608](https://github.com/hat47x/tei-platform/pull/5608)は手順2・4の掲載CLIを、同じ実PostgreSQL・Workspace・Chrome試行へつないでmainへ統合した。手順5の公開`go run`については、[TEI #5633](https://github.com/hat47x/tei-platform/pull/5633)が同じ隔離DB・Workspaceからの実起動とChrome照合をmainへ統合した（#5632は未マージで終了）。さらに[TEI #5642](https://github.com/hat47x/tei-platform/pull/5642)は、出荷Web自身の可視4入力欄を実Chromeで自動操作し、実PostgreSQLからの受注1001・1002の回答を独立Expectedで照合した。**ここまでの一連は自動試験として動く**が、初回利用者自身が公開手順を自力で完走した証拠ではない。実利用者による受入条件の明確化は[TEI #5643](https://github.com/hat47x/tei-platform/pull/5643)で提案中である。B0では到達済みの試験と利用者検収を分けて記録する。
 
 | 比較 | 実行する内容 | 採否の判断 |
 | --- | --- | --- |
@@ -1239,7 +1239,7 @@ YICのSkill構成は、TEIの[現在の優先順位](https://github.com/hat47x/t
 | **B1：Product Skill** | B0で手順を探し直した箇所、誤操作や再説明が生じた箇所だけを補助 | 同じ結果と権限境界を保ち、手数または誤りが減った場合にのみ採用候補 |
 | **B2：TAI横断Skill** | 実在する別Productへの受渡しが必要になった場合だけ、対象・受信者・許可Projectionを固定して別Attemptで実行 | Product側の現在の開示判定と実Consumer受領まで確認できなければ、横断Skillの成功としない |
 
-**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B0はProductとToolを使ってよいが、**Skillは選択しない**。既存のSkill選択評価器では、B0にSkillが紛れた場合、Productと同名でも`extra`へ`skill:<名前>`として記録する。B0の必要能力をSkillだけで満たしたと誤採点しない。これは比較データの整合性検査であって、実際にSkillがロードされなかった証拠ではない。採点器は比較群を`B0`・`B1`・`B2`に限定し、`b0`などの別表記や外部Harness試験の`H2/H3`を混ぜた試行は理由付きで未採点にする。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
+**現在の優先作業**はB0の一巡と、通常開発との手数・変更箇所の比較である。B0はProductとToolを使ってよいが、**Skillは選択しない**。既存のSkill選択評価器では、B0にSkillが紛れた場合、Productと同名でも`extra`へ`skill:<名前>`として記録する。B0の必要能力をSkillだけで満たしたと誤採点しない。これは比較データの整合性検査であって、実際にSkillがロードされなかった証拠ではない。採点器は比較群を`B0`・`B1`・`B2`に限定し、`b0`などの別表記や外部Harness試験の`H2/H3`を混ぜた試行は理由付きで未採点にする。**同じCaseと比較群を一つの採点バッチへ二度入れた場合も、試行を独立に識別できないため両方を未採点とし、群別件数を膨らませない。** 反復試行は独立した評価単位として実施・記録する。B1の効果を測る際は、Skillの有無以外のTask、入力、期待結果、Toolの利用範囲を揃える。Skillがロードされただけ、正しそうな語が回答に現れただけ、自己申告のReceiptが残っただけでは改善とみなさない。比較評価のOwnerは[TAI #488](https://github.com/hat47x/tai-pleroma/issues/488)。
 
 B2では、元Productが対象を再解決できたこと（R）と、指定した受信者への現在の開示許可（P）、実配送（T）、Consumerの本文受領（C）、Harnessの完全応答（H）を分ける。SHOのHandoff票に受信者名が書けても、それ自体は許可ではない。Skill選択の漏出評価では、評価者だけが持つ秘密を匿名識別子と件数で数え、試行ID・結果名・費用・選択名などの**採点結果に再掲される欄**にも一致する秘密があれば伏せる。件数は伏せる前の値で集計する。改行や入れ子も検査するが、元Trialや実Network送出を消す処理ではなく、Recipient別許可の代わりにもならない。TAI側で独自の権限正本を作らず、[TAI #232](https://github.com/hat47x/tai-pleroma/issues/232)とProduct Ownerの判断に従う。
 
