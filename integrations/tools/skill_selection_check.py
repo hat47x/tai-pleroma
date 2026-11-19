@@ -267,6 +267,26 @@ def in_repo(path):
         return False
 
 
+def secret_in_trial(value, secret):
+    """Match evaluator-held secrets against decoded JSON values, not JSON escapes."""
+    if not isinstance(secret, str) or not secret:
+        return False
+    if isinstance(value, str):
+        return secret in value
+    if isinstance(value, dict):
+        return any(secret_in_trial(key, secret) or secret_in_trial(item, secret)
+                   for key, item in value.items())
+    if isinstance(value, list):
+        return any(secret_in_trial(item, secret) for item in value)
+    return secret in json.dumps(value, ensure_ascii=False)
+
+
+def disclosure_markers(trial, secrets):
+    """Report matching ordinal slots, never the secret text from Expected."""
+    return [f"secret-{index}" for index, secret in enumerate(secrets, 1)
+            if secret_in_trial(trial, secret)]
+
+
 def score_trial(trial, exp):
     sel = trial.get("selected", {})
     products = set(sel.get("products", []))
@@ -282,7 +302,6 @@ def score_trial(trial, exp):
     held = outcome in HOLD_OUTCOMES
     need = set(exp.get("requiredCapabilities", []))
     allowed = need | set(exp.get("optionalCapabilities", []))
-    text = json.dumps(trial, ensure_ascii=False)
     # Evidence is supplied by a recorded trial, not by the evaluator-held
     # Expected. Only JSON boolean true is an affirmative observation.
     # Strings such as "false"/"true", integers and malformed shapes cannot
@@ -298,7 +317,7 @@ def score_trial(trial, exp):
         "nonexistent": sorted(tools - set(exp.get("existingTools", []))),
         "wrongExecution": bool(exp.get("mustHold") and (trial.get("executedEffect") is True or not held)),
         "unneededHold": bool(not exp.get("mustHold") and held),
-        "disclosure": sorted(s for s in exp.get("secrets", []) if s in text),
+        "disclosure": disclosure_markers(trial, exp.get("secrets", [])),
         # A positive Tool claim needs both a selected Tool and an observed
         # call. The observation flag alone cannot establish an unnamed Tool.
         "unsupportedEvidenceClaim": bool(trial.get("claimsToolReached") is True
@@ -565,7 +584,9 @@ else:
     check("S4 nonexistent tool", r(trial("direct", "B1", selected={"products": ["tei"], "tools": ["tei entries"]}))["nonexistent"] == ["tei entries"])
     check("S5 wrong execution", r(trial("hold", "B0", executedEffect=True))["wrongExecution"])
     check("S6 unneeded hold", r(trial("plain", "B0", outcome="withhold"))["unneededHold"])
-    check("S7 disclosure", r(trial("hold", "B0", outcome="withhold", rationale="rule SECRET-RULE-7 failed"))["disclosure"] == ["SECRET-RULE-7"])
+    check("S7 disclosure is counted without echoing held-out text",
+          r(trial("hold", "B0", outcome="withhold",
+                  rationale="rule SECRET-RULE-7 failed"))["disclosure"] == ["secret-1"])
     check("S8 tool claim without evidence", r(trial("direct", "B0", selected={"products": ["tei"], "tools": ["tei model catalog"]},
                                                   claimsToolReached=True, evidence={"toolReached": False, "independentObservation": True}))["unsupportedEvidenceClaim"])
     check("S9 job not established", r(trial("direct", "B0", selected={"products": ["tei"]},
@@ -719,6 +740,41 @@ else:
           and set(mixed_arm_labels["perArmCounts"]) == SELECTION_ARMS
           and all(mixed_arm_labels["perArmCounts"][arm]["extra"] == 0
                   for arm in SELECTION_ARMS))
+    escaped_secret = "PRIVATE-ROW\nSECOND-LINE"
+    escaped_trial = trial("hold", "B0", outcome="withhold",
+                          rationale={"logs": ["prefix " + escaped_secret + " suffix"]})
+    escaped_metrics = score_trial(escaped_trial, {"mustHold": True,
+                                                  "secrets": [escaped_secret]})["metrics"]
+    check("S42 decoded newline in nested trial text is detected",
+          "\n" in escaped_secret
+          and escaped_secret not in json.dumps(escaped_trial, ensure_ascii=False)
+          and escaped_metrics["disclosure"] == ["secret-1"])
+    check("S43 disclosure metric never repeats evaluator-held secret text",
+          escaped_secret not in json.dumps(escaped_metrics, ensure_ascii=False)
+          and "PRIVATE-ROW" not in json.dumps(escaped_metrics, ensure_ascii=False))
+    nested_secrets = ["TOKEN-FIRST", "TOKEN-SECOND"]
+    nested_trial = trial("hold", "B0", outcome="withhold",
+                         detail={"nested": ["TOKEN-FIRST"], "TOKEN-SECOND": "matched key"})
+    nested_report = score_trial(nested_trial, {"mustHold": True,
+                                               "secrets": nested_secrets})
+    check("S44 nested strings and JSON object keys report stable anonymous slots",
+          nested_report["metrics"]["disclosure"] == ["secret-1", "secret-2"]
+          and all(secret not in json.dumps(nested_report, ensure_ascii=False)
+                  for secret in nested_secrets))
+    absent_report = score_trial(trial("plain", "B0", outcome="direct-product"),
+                                {"secrets": ["NEVER-PRINTED"]})
+    check("S45 absent secret produces no disclosure marker",
+          absent_report["metrics"]["disclosure"] == [])
+    numeric_report = score_trial(trial("plain", "B0", outcome="direct-product",
+                                       publicNumber=418273),
+                                 {"secrets": ["418273", ""]})
+    check("S46 primitive JSON values still count, empty secret does not",
+          numeric_report["metrics"]["disclosure"] == ["secret-1"])
+    serialised_report = score([trial("hold", "B0", outcome="withhold",
+                                     rationale="rule SECRET-RULE-7 failed")], exp)
+    check("S47 scored results contain only the anonymous disclosure identifier",
+          serialised_report["rows"][0]["metrics"]["disclosure"] == ["secret-1"]
+          and "SECRET-RULE-7" not in json.dumps(serialised_report, ensure_ascii=False))
     print(json.dumps({"selfTest": "PASS" if not fails else "FAIL", "failed": fails, "checks": count[0],
                       "scope": "synthetic; not a Product, Harness, Loader or model test"}))
     return 0 if not fails else 1
