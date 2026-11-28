@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（187件）。
+生成対象: `integrations/tools` の `*.py`（189件）。
 
-### YIC（分析・点検）（92件）
+### YIC（分析・点検）（94件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -90,6 +90,7 @@ python integrations/tools/run_suite.py \
 | `yic_gate_citation_check.py` | Check that a gate document's citations match what each receipt actually claims. |
 | `yic_gate_prose_check.py` | Check that the gate-status prose matches the receipts it cites. |
 | `yic_gate_reproducibility.py` | Check that running the gates twice in a row produces the same receipts. |
+| `yic_growth_watch_probe.py` | Prove the growth watch fires: add one mismatched name and see the check fail. |
 | `yic_h_conditions_parser_check.py` | Check whether the harness adapter can observe H's two conditions. |
 | `yic_handoff_conditions_check.py` | Check that the handoff-condition document keeps the distinction it was written to make. |
 | `yic_handoff_stage_mapping.py` | Run SHO's cross-product handoff with and without a TEI checkout, and map the result onto I/R/P/T/C/H. |
@@ -118,6 +119,7 @@ python integrations/tools/run_suite.py \
 | `yic_receipt_review_probe.py` | Ask whether the Producer's receipt review looks at the audience at all. |
 | `yic_recipient_search_probe.py` | Check the independent review's objection: is the "no recipient field" claim supported? |
 | `yic_registration_parity_check.py` | Check that every receipt the checker registers also has a rule, and vice versa. |
+| `yic_rename_cost_check.py` | Measure what a `date`-wins policy would cost before renaming anything. |
 | `yic_reversed_selector_probe.py` | Measure the reordered selectors correctly: five of them point at real receipts. |
 | `yic_rule_liveness_check.py` | Point the liveness reading at the selector that now exists, and at both loops. |
 | `yic_runbook_expectation_check.py` | Check that the runbook's expected-output block matches what the gates report. |

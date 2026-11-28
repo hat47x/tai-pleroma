@@ -393,6 +393,8 @@ REAL_RECORDS = (
     "evaluations/records/YIC-docs-index-2026-11-28.json",
     "evaluations/records/YIC-docs-index-freshness-2026-11-28.json",
     "evaluations/records/YIC-folder-index-check-2026-11-28.json",
+    "evaluations/records/YIC-rename-cost-2026-11-28.json",
+    "evaluations/records/YIC-growth-watch-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
@@ -810,7 +812,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 49
+                or observed.get("checksRun") != 51
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative_lower:
@@ -890,6 +892,28 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyDocumentIsListed") is not True
             ):
                 errors.append(f"a docs document is missing from the index: {relative}")
+        if "YIC-rename-cost" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("mismatchedTotal", 0) < 1
+            ):
+                errors.append(f"the rename cost reading lost its scope: {relative}")
+        if "YIC-growth-watch" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("growthIsDetected") is not True
+            ):
+                errors.append(f"the growth watch does not fire: {relative}")
+        if "YIC-receipt-name-date" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("baselineRecorded", 0) < 1
+                or observed.get("newSinceBaseline")
+            ):
+                errors.append(f"a new name-date mismatch appeared: {relative}")
         if "YIC-folder-index-check" in relative_lower:
             observed = data.get("observed", {})
             if (

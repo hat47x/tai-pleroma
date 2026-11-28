@@ -12,9 +12,9 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "receiptsWithANameDate": 324,
+    "receiptsWithANameDate": 335,
     "receiptsWithoutADate": 80,
-    "agreeing": 183,
+    "agreeing": 194,
     "mismatched": [
       {
         "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
@@ -135,9 +135,737 @@
         "nameDate": "2026-11-03",
         "fieldDate": "2026-11-11",
         "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-mcp-check-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-resume-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-auth-flow-tests-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-consumer-mapping-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-docs-tests-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-readonly-enforcement-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-saas-adapter-contract-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-saas-callback-contract-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-saas-identity-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-saas-login-contract-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-saas-oauth-contract-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-saas-tests-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-session-tests-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-admin-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-agent-credential-admin-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-agent-guard-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-agent-key-wiring-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-agent-read-path-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-archive-lifecycle-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-audit-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-audit-pagination-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-auth-assurance-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-builders-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-ca-chain-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-card-move-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-ce4-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-ce4-audit-order-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-context-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-context-bundle-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-dedup-window-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-document-coverage-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-document-types-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-edge-chain-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-edge-optional-contract-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-edge-optionality-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-etag-stability-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-export-dedup-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-failsafe-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-headers-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-integration-flow-2026-11-02.json",
+        "nameDate": "2026-11-02",
+        "fieldDate": "2026-11-09",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-list-pagination-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-merge-decision-log-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-migrations-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-multi-instance-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-native-action-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-parsers-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-policy-requirements-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-polygon-handoff-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-concurrency-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-contention-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-etag-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-migrate-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-multidoc-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-retry-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-tls-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-preflight-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-probes-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-profile-policy-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-provision-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-proxy-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-reference-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-reference-multi-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-registry-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-saas-precondition-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-similar-candidates-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SUI-TEI-tls-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TAI-TEI-capability-reference-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-11T04:49:00Z",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-artifact-digests-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-artifacts-crosscheck-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-conclusion-integrity-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-10",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-decimal-fidelity-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-decode-divergence-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-fixture-coverage-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-independent-oracle-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-many-primitive-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-meaning-change-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-meaning-change-required-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-meaning-change-requiredness-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-nesting-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-optional-flag-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-projection-strategy-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-receipt-consistency-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-receipt-scope-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-records-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-result-exit-parity-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-suite-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-suite-pipeline-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-target-profile-compare-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-09",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-artifact-digest-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-cross-receipt-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-doc-integrity-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-18",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-pass-consistency-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-receipt-auditability-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-receipt-quality-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YI-scope-halves-2026-11-11.json",
+        "nameDate": "2026-11-11",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-analysis-gates-2026-11-18.json",
+        "nameDate": "2026-11-18",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-audience-declaration-2026-11-17.json",
+        "nameDate": "2026-11-17",
+        "fieldDate": "2026-11-18",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-authority-limits-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-dead-rule-fields-2026-11-18.json",
+        "nameDate": "2026-11-18",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-dead-rule-impact-2026-11-18.json",
+        "nameDate": "2026-11-18",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-document-gates-2026-11-18.json",
+        "nameDate": "2026-11-18",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-qh-field-13-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-qh-resolve-09-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-qh-revalidate-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-reach-table-2026-11-17.json",
+        "nameDate": "2026-11-17",
+        "fieldDate": "2026-11-18",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-rule-liveness-2026-11-18.json",
+        "nameDate": "2026-11-18",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-scope-coverage-2026-11-18.json",
+        "nameDate": "2026-11-18",
+        "fieldDate": "2026-11-28",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-skip-disclosure-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-sui-r2-gate-hosts-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-suite-step-accounting-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-host-skip-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-knowledge-disclosure-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-linux-regression-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-product-read-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-readonly-cli-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-rooted-source-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
+      },
+      {
+        "receipt": "YIC-tei-selfbuild-observations-2026-11-16.json",
+        "nameDate": "2026-11-16",
+        "fieldDate": "2026-11-17",
+        "agrees": false
       }
     ],
     "mismatchedCount": 141,
+    "baselineRecorded": 141,
+    "newSinceBaseline": [],
     "mismatchPatterns": [
       [
         "2026-11-03 -> 2026-11-11",
@@ -180,7 +908,7 @@
         1
       ]
     ],
-    "finding": "ファイル名の日付と`date`欄を持つreceipt324件を比べた。一致183件・**不一致141件**。**ファイル名が指す版と、中身が主張する版が違う。**読む人がファイル名で日付を判断すると、receiptの主張と食い違う。**どちらを正とするかは決めていない**（`date`欄を正とするのが自然だが、改名はreferencesを壊しうる）。"
+    "finding": "ファイル名の日付と`date`欄を持つreceipt335件を比べた。一致194件・**不一致141件**。**ファイル名が指す版と、中身が主張する版が違う。**読む人がファイル名で日付を判断すると、receiptの主張と食い違う。**どちらを正とするかは決めていない**（`date`欄を正とするのが自然だが、改名はreferencesを壊しうる）。"
   },
   "scope": "Parses the date out of each receipt's file name and compares it with the `date` field. It measures the mismatch; it does not rename any file and does not decide which side is authoritative."
 }

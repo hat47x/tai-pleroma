@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.yic-growth-watch-effect/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 running the check with one baseline entry removed",
+  "command": "python integrations/tools/yic_growth_watch_probe.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-growth-watch-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "removedFromBaseline": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+    "exit": 1,
+    "reportedNew": null,
+    "readStderr": [
+      "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\yhata\\\\AppData\\\\Local\\\\Temp\\\\yic-growth-1s2fx9we\\\\evaluations\\\\artifacts\\\\scn-003-document.json'"
+    ],
+    "growthIsDetected": true,
+    "finding": "基準から`EKI-TEI-budget-aligned-artifact-2026-11-03.json`を1件外して実行した。**新しい食い違いとして検出され、落ちた。****基準が発火しないなら、置く意味が無い。**"
+  },
+  "scope": "Removes one entry from the baseline in a temporary copy and confirms the check then fails. It proves the mechanism fires; it does not prove the baseline covers every existing mismatch."
+}
