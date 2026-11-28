@@ -139,6 +139,8 @@ PORTABLE_CHECKS = (
      "whether a gone receipt's digest exists under any name in artifacts"),
     ("digestSearchWide", "yic_digest_search_wide.py",
      "whether that digest exists anywhere in the tracked tree"),
+    ("missingDigestClassify", "yic_missing_digest_classify.py",
+     "each missing digest is either an inside-path change or an outside-path citation"),
     ("ruleLiveness", "yic_rule_liveness_check.py",
      "which rules can never fire because of case"),
     ("deadRuleImpact", "yic_dead_rule_impact_probe.py",

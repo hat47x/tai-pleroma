@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 199, \"linksChecked\": 2213, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 199, \"linksChecked\": 2214, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -68,7 +68,7 @@
         "question": "every gate is cited and non-PASS citations are caveated",
         "exit": 0,
         "passed": true,
-        "tail": "{\"citations\": 55, \"distinct\": 47, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
+        "tail": "{\"citations\": 56, \"distinct\": 48, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
       },
       "g1Packet": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 107, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 108, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 106, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 107, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 117, \"listed\": 36, \"notNamedIndividually\": 81, \"passed\": true}"
+        "tail": "{\"later\": 118, \"listed\": 37, \"notNamedIndividually\": 81, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,
@@ -173,7 +173,7 @@
         "question": "a document's numbered subsections ascend without gaps or letter suffixes",
         "exit": 0,
         "passed": true,
-        "tail": "{\"headings\": 52, \"outOfOrder\": 0, \"gaps\": 0, \"suffixed\": 0, \"passed\": true}"
+        "tail": "{\"headings\": 55, \"outOfOrder\": 0, \"gaps\": 0, \"suffixed\": 0, \"passed\": true}"
       },
       "numberingSpan": {
         "ran": true,
@@ -187,7 +187,7 @@
         "question": "no current-tense receipt-count claim disagrees with the live count",
         "exit": 0,
         "passed": true,
-        "tail": "{\"live\": 325, \"claims\": 4, \"disagreeing\": 0, \"passed\": true}"
+        "tail": "{\"live\": 326, \"claims\": 4, \"disagreeing\": 0, \"passed\": true}"
       },
       "numberingAfterRepair": {
         "ran": true,
@@ -201,7 +201,7 @@
         "question": "the directory README lists every tool it sits beside",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 199, \"listed\": 199, \"count\": 199, \"passed\": true}"
+        "tail": "{\"tools\": 200, \"listed\": 200, \"count\": 200, \"passed\": true}"
       },
       "docsIndexFreshness": {
         "ran": true,
