@@ -1,0 +1,186 @@
+{
+  "schema": "tai.reference.yic-receipt-name-date/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading every receipt's name and date field",
+  "command": "python integrations/tools/yic_receipt_name_date_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-receipt-name-date-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptsWithANameDate": 324,
+    "receiptsWithoutADate": 80,
+    "agreeing": 183,
+    "mismatched": [
+      {
+        "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-06",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-manual-execution-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-multi-worker-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-06",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-policy-execution-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-projection-execution-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-06",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-revoked-agent-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-submit-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "EKI-TEI-worker-revoke-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "MMI-delivery-audit-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "MMI-inspect-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "MMI-inventory-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "MMI-TEI-profile-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SCN-003-artifact-links-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SCN-003-compose-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SCN-003-compose-2026-11-03.validate.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-cli-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-doctor-2026-11-06.json",
+        "nameDate": "2026-11-06",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-gate-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-gate-variants-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      },
+      {
+        "receipt": "SEI-TEI-mcp-2026-11-03.json",
+        "nameDate": "2026-11-03",
+        "fieldDate": "2026-11-11",
+        "agrees": false
+      }
+    ],
+    "mismatchedCount": 141,
+    "mismatchPatterns": [
+      [
+        "2026-11-03 -> 2026-11-11",
+        52
+      ],
+      [
+        "2026-11-06 -> 2026-11-11",
+        51
+      ],
+      [
+        "2026-11-16 -> 2026-11-17",
+        14
+      ],
+      [
+        "2026-11-11 -> 2026-11-28",
+        6
+      ],
+      [
+        "2026-11-18 -> 2026-11-28",
+        6
+      ],
+      [
+        "2026-11-03 -> 2026-11-06",
+        3
+      ],
+      [
+        "2026-11-06 -> 2026-11-17",
+        2
+      ],
+      [
+        "2026-11-17 -> 2026-11-18",
+        2
+      ],
+      [
+        "2026-11-02 -> 2026-11-09",
+        1
+      ],
+      [
+        "2026-11-11 -> 2026-11-11T04:49:00Z",
+        1
+      ]
+    ],
+    "finding": "ファイル名の日付と`date`欄を持つreceipt324件を比べた。一致183件・**不一致141件**。**ファイル名が指す版と、中身が主張する版が違う。**読む人がファイル名で日付を判断すると、receiptの主張と食い違う。**どちらを正とするかは決めていない**（`date`欄を正とするのが自然だが、改名はreferencesを壊しうる）。"
+  },
+  "scope": "Parses the date out of each receipt's file name and compares it with the `date` field. It measures the mismatch; it does not rename any file and does not decide which side is authoritative."
+}

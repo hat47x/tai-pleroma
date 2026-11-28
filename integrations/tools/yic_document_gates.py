@@ -68,6 +68,8 @@ CHECKS = (
      "no YI document numbers its subsections out of order or with letter suffixes"),
     ("countClaimSpan", "yic_count_claim_span_check.py",
      "no current-tense receipt-count claim disagrees with the live count"),
+    ("numberingAfterRepair", "yic_numbering_after_repair.py",
+     "both numbering repairs hold across all YI documents"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites
