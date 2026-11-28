@@ -39,5 +39,6 @@
     "archivedCommitStatus": 423,
     "archivedCommitCode": "action_denied"
   },
-  "scope": "Calls SUI's Action v1 receiver with the feature flag off, then turns it on in-process and exercises header, origin, revision, card, read-only, replay and archive cases. It does not run a real TEI Host or verify authenticated sessions."
+  "scope": "Calls SUI's Action v1 receiver with the feature flag off, then turns it on in-process and exercises header, origin, revision, card, read-only, replay and archive cases. It does not run a real TEI Host or verify authenticated sessions.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

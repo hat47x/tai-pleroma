@@ -29,5 +29,6 @@
     "operationCommandMismatchStatus": 422,
     "operationCommandMismatchCode": "operation_command_mismatch"
   },
-  "scope": "Records a CE4 apply before any other event, then query/bundle/proposal, then apply again, then a mismatched source bundle and a mismatched command. It does not test the tracker expiry window or a second tenant."
+  "scope": "Records a CE4 apply before any other event, then query/bundle/proposal, then apply again, then a mismatched source bundle and a mismatched command. It does not test the tracker expiry window or a second tenant.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

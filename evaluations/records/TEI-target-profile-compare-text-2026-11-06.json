@@ -47,5 +47,6 @@
     "sameContractBothProfiles": true,
     "expectedContractId": "sui.card.text"
   },
-  "scope": "Builds one candidate for the given contract, then runs TEI's compare over a one-shot and a long-running Target Profile with the same contract and fixtures. It records that the one-shot profile passes and that the long-running profile refuses the same candidate because the generated program answers one request per process. It does not prove a real target and does not change the candidate template."
+  "scope": "Builds one candidate for the given contract, then runs TEI's compare over a one-shot and a long-running Target Profile with the same contract and fixtures. It records that the one-shot profile passes and that the long-running profile refuses the same candidate because the generated program answers one request per process. It does not prove a real target and does not change the candidate template.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\tei-wt-r2. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

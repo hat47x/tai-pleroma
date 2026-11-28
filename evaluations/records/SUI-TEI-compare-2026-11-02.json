@@ -37,5 +37,6 @@
   },
   "humanInterventions": 0,
   "interpretation": "Both paths passed. The TEI path took longer because it regenerates the candidate and rebinds it to the contract; the baseline edited a handwritten candidate. This run does not show a productivity gain. It shows that the TEI path keeps the contract and fixtures as the change surface, and that the same four cases verify both paths.",
-  "scope": "Both paths were authored by the same agent in one session. The receipt compares artifact edits, regeneration, and elapsed time; it does not measure human productivity, code quality, or autonomy."
+  "scope": "Both paths were authored by the same agent in one session. The receipt compares artifact edits, regeneration, and elapsed time; it does not measure human productivity, code quality, or autonomy.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\tei-wt-main3. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

@@ -24,5 +24,6 @@
     "apiKey": "configured",
     "unauthorizedStatus": 401
   },
-  "scope": "The SUI app runs in-process with a temporary SQLite database, no API key, and the local-dev profile. It exercises create, read, and update over HTTP. It does not verify a production database, authentication, or deployment."
+  "scope": "The SUI app runs in-process with a temporary SQLite database, no API key, and the local-dev profile. It exercises create, read, and update over HTTP. It does not verify a production database, authentication, or deployment.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-exist. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

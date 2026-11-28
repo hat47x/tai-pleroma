@@ -87,5 +87,6 @@
     "documentRows": 1,
     "database": "embedded PostgreSQL 16.2"
   },
-  "scope": "Repeats conditional-PUT contention for a few rounds against a real PostgreSQL. It does not prove throughput, fairness, or long-running stability."
+  "scope": "Repeats conditional-PUT contention for a few rounds against a real PostgreSQL. It does not prove throughput, fairness, or long-running stability.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

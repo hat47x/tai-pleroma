@@ -14,8 +14,8 @@
   "observed": {
     "citedPathReceipt": "evaluations/records/YIC-cited-path-2026-11-28.json",
     "affectedReceipts": 82,
-    "alreadyHaveANoteField": 0,
-    "withoutOne": 82,
+    "alreadyHaveANoteField": 82,
+    "withoutOne": 0,
     "globalFieldAllowList": false,
     "rulesPinningAnExactFieldList": [
       "\"documentId\", \"title\", \"digest\""
@@ -24,7 +24,7 @@
     "unexpectedFieldMessages": [
       "errors.append(f\"TEI document record receipt has unexpected fields: {relative}\")"
     ],
-    "finding": "注記を要するreceiptは82件で、注記欄を持つものは**0件**。checkerに**トップレベル欄の全体許可リストは無い**。一方、**内側の`observed.fields`を完全一致で固定する規則が1件**あり、そちらは注記の置き場所に制約を与える。最初の版は`unexpected fields`という語だけで『全体で拒否』と判定し、**1つのreceipt種別の内側規則を全体規則と読み違えた**。"
+    "finding": "注記を要するreceiptは82件で、注記欄を持つものは**82件**。checkerに**トップレベル欄の全体許可リストは無い**。一方、**内側の`observed.fields`を完全一致で固定する規則が1件**あり、そちらは注記の置き場所に制約を与える。最初の版は`unexpected fields`という語だけで『全体で拒否』と判定し、**1つのreceipt種別の内側規則を全体規則と読み違えた**。"
   },
   "scope": "Reads the receipts named by the path check for a field that could carry a note, and reads the checker for a global field allow-list and for rules pinning an exact inner field list. It readies an annotation pass; it does not write the annotation, and a rule-pinned inner list is a constraint on placement, not a rejection of all notes."
 }

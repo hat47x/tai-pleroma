@@ -20,5 +20,6 @@
     "saveStatus": 200,
     "etagChangedAfterSave": true
   },
-  "scope": "Reads a document twice, repeats a read with If-None-Match, then saves an edit and reads again. Records that a conditional GET is answered with the full body (no 304), so readers re-read every time. It does not test concurrent writers."
+  "scope": "Reads a document twice, repeats a read with If-None-Match, then saves an edit and reads again. Records that a conditional GET is answered with the full body (no 304), so readers re-read every time. It does not test concurrent writers.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

@@ -49,5 +49,6 @@
       null
     ]
   },
-  "scope": "Calls the SaaS precondition helper with nine header combinations and records the status and code it returns. It does not reach the helper through the HTTP route, because local-dev does not enable the tenant-session precondition."
+  "scope": "Calls the SaaS precondition helper with nine header combinations and records the status and code it returns. It does not reach the helper through the HTTP route, because local-dev does not enable the tenant-session precondition.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

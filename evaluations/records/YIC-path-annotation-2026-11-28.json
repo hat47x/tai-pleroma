@@ -1,0 +1,46 @@
+{
+  "schema": "tai.reference.yic-path-annotation/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 annotating the receipts that cite a removed path",
+  "command": "python integrations/tools/yic_path_annotation.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-path-annotation-2026-11-28.json --apply",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "citedPathReceipt": "evaluations/records/YIC-cited-path-2026-11-28.json",
+    "affected": 82,
+    "annotated": 82,
+    "alreadyAnnotated": 0,
+    "skipped": [],
+    "applied": true,
+    "sample": [
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "citedPath": "D:\\GIT\\hat47x\\tei-wt-cur"
+      },
+      {
+        "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+        "citedPath": "D:\\GIT\\hat47x\\tei-wt-latest"
+      },
+      {
+        "receipt": "EKI-TEI-task-request-selection-2026-11-03.json",
+        "citedPath": "D:\\GIT\\hat47x\\tei-wt-cur"
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "citedPath": "D:\\GIT\\hat47x\\tei-wt-latest"
+      },
+      {
+        "receipt": "MMI-TEI-format-profile-selection-2026-11-03.json",
+        "citedPath": "D:\\GIT\\hat47x\\tei-wt-cur"
+      }
+    ],
+    "finding": "解決しない引用を持つ82件のうち、**82件**に注記を書き込んだ。既に注記済み0件、除外0件。**注記はトップレベルに置き、`observed`の内側には触れていない。**内側の欄の並びを固定する規則が1件あるためである。"
+  },
+  "scope": "Adds a top-level `note` naming the removed path to receipts the path check flagged, and writes them when --apply is given. It changes no measured value and no inner field; it does not re-run any command, and it leaves receipts with an existing unrelated note untouched."
+}

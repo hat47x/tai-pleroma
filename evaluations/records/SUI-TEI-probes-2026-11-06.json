@@ -38,5 +38,6 @@
     "alembicVersionTablePresent": false,
     "readyImpliesSchemaOk": false
   },
-  "scope": "Reads /healthz, /readyz, /version and compares them with a wrong-key /docs request and an unauthenticated admin call. With no SUI_ADMIN_API_KEY and local-dev, the admin plane answers 200 by design. The temporary SQLite database has no alembic_version table, and /readyz reports database=unreachable rather than a schema mismatch: the schema query shares the readiness try block. This is recorded as observed, not fixed."
+  "scope": "Reads /healthz, /readyz, /version and compares them with a wrong-key /docs request and an unauthenticated admin call. With no SUI_ADMIN_API_KEY and local-dev, the admin plane answers 200 by design. The temporary SQLite database has no alembic_version table, and /readyz reports database=unreachable rather than a schema mismatch: the schema query shares the readiness try block. This is recorded as observed, not fixed.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

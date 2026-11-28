@@ -13,5 +13,6 @@
     "passed": true,
     "cases": 3
   },
-  "scope": "Builds one reference generator and runs the fixture selection for the given contract. It does not compose a document or touch a product."
+  "scope": "Builds one reference generator and runs the fixture selection for the given contract. It does not compose a document or touch a product.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\tei-wt-cur. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

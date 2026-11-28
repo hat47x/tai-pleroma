@@ -202,5 +202,6 @@
     "hNeverHolds": true,
     "finding": "SHOのCross-product Handoffを、TEI root無しと有りで2回走らせ、Consumer自身が返すclaimsからI/R/P/T/C/Hを導いた。TEI rootを与えると`teiReadonlyObservationCited`は真になるが、Rを構成する`teiSubjectSourceIndependentlyResolved`はnot-runのまま、`originalSourcesRead`と`sourceRevisionCurrent`はfalseである。**TEI観測を引用することは、元Subjectを再解決したことではない。**TとCは限定的に成立し、PとHは成立しない。"
   },
-  "scope": "Runs SHO's cross-product handoff with and without a TEI checkout and derives each I/R/P/T/C/H stage from the consumer's own claim block, requiring every claim that constitutes a stage. T and C hold in the narrow sense the runner measures (a separate process reread the payload); R, P and H do not. This maps claims to stages; it does not audit whether those claims are themselves adequate, and no external recipient was contacted."
+  "scope": "Runs SHO's cross-product handoff with and without a TEI checkout and derives each I/R/P/T/C/H stage from the consumer's own claim block, requiring every claim that constitutes a stage. T and C hold in the narrow sense the runner measures (a separate process reread the payload); R, P and H do not. This maps claims to stages; it does not audit whether those claims are themselves adequate, and no external recipient was contacted.",
+  "note": "The command above cites a check-out path that no longer exists: <SHO. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

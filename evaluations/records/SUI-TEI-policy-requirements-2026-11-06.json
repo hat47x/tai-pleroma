@@ -74,5 +74,6 @@
       "authSessionHashKey"
     ]
   },
-  "scope": "Builds a fully-satisfying policy, then breaks each requirement alone and all together, recording which labels the refusal names. It does not start a SaaS instance."
+  "scope": "Builds a fully-satisfying policy, then breaks each requirement alone and all together, recording which labels the refusal names. It does not start a SaaS instance.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }
