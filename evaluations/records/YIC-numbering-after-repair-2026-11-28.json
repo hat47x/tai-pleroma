@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.yic-numbering-after-repair/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 re-running the span check over all YI documents",
+  "command": "python integrations/tools/yic_numbering_after_repair.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-numbering-after-repair-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "spanExit": 0,
+    "documentsWithNumberedHeadings": 52,
+    "documentsWithDisorder": 0,
+    "totalOutOfOrder": 0,
+    "totalGaps": 0,
+    "totalSuffixed": 0,
+    "stillDisordered": [],
+    "bothRepairsHold": true,
+    "finding": "この会期中、番号の乱れを2回直した（53の§6.1と55の§6.8）。全文書を再測定した結果、番号付き見出しを持つ52件のうち**乱れがあるもの0件**。**2回の修正が両方とも効いており、他に残っていない。**"
+  },
+  "scope": "Runs the span check again after the two renumbering repairs and records whether any document remains disordered. It measures the result of those repairs; it does not check the numbers' content, and a document formatted differently would not be parsed."
+}
