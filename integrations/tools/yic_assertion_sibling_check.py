@@ -55,7 +55,7 @@ def baseline_by_message(root):
     return mapping
 
 
-def guard_evaluates_to_failure(condition, receipt):
+def guard_evaluates_to_failure(condition, receipt, root):
     """True / False for whether this receipt trips the guard, or None if it cannot be read."""
     expression = condition.strip()
     if expression.startswith("if "):
@@ -71,12 +71,31 @@ def guard_evaluates_to_failure(condition, receipt):
     artifact = receipt.get("artifact")
     if not isinstance(artifact, dict):
         artifact = {}
+    # `root` and the standard modules are part of the checker's own namespace; supplying
+    # them lets guards that inspect the filesystem be evaluated instead of skipped.
+    namespace = {
+        "__builtins__": {},
+        "observed": observed,
+        "data": receipt,
+        "artifact": artifact,
+        "root": root,
+        "Path": Path,
+        "hashlib": hashlib,
+        "len": len,
+        "str": str,
+        "bool": bool,
+        "int": int,
+    }
+    # Some guards sit in an `else:` branch and use a name bound a few lines earlier in the
+    # checker's own block (`artifact_path = root / artifact["path"]`). Bind the names those
+    # branches need so the guard can be evaluated rather than skipped.
+    if "artifact_path" in expression:
+        try:
+            namespace["artifact_path"] = root / artifact["path"]
+        except Exception:
+            return None
     try:
-        return bool(eval(expression, {"__builtins__": {}}, {  # noqa: S307 - checker's own text
-            "observed": observed,
-            "data": receipt,
-            "artifact": artifact,
-        }))
+        return bool(eval(expression, namespace, {}))  # noqa: S307 - the checker's own text
     except Exception:
         return None
 
@@ -107,7 +126,7 @@ def main():
             if not path.exists():
                 continue
             receipt = json.loads(path.read_text(encoding="utf-8-sig"))
-            verdict = guard_evaluates_to_failure(condition, receipt)
+            verdict = guard_evaluates_to_failure(condition, receipt, root)
             if verdict is None:
                 unevaluable.append(name)
                 continue

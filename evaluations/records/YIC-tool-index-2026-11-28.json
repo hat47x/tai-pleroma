@@ -13,18 +13,18 @@
   },
   "observed": {
     "folder": "integrations/tools",
-    "toolsOnDisk": 194,
+    "toolsOnDisk": 196,
     "groups": [
       "YIC（分析・点検）",
       "YI（初期の点検）",
       "その他"
     ],
-    "listedAfterGeneration": 194,
+    "listedAfterGeneration": 196,
     "notListed": [],
     "placeholderLinesThatWereOrphaned": 0,
     "applied": true,
     "everyToolIsListed": true,
-    "finding": "`integrations/tools` のPythonツール194件のうち、READMEに名前が出ていたのはわずか10件だった。**索引はディレクトリの唯一の入口**であり、載っていない道具は存在しないのと同じである。docstringの冒頭から索引を生成し、**全件が載ることを検査する**ようにした。**索引を手で保つ限り、道具を足すたびに腐る。**"
+    "finding": "`integrations/tools` のPythonツール196件のうち、READMEに名前が出ていたのはわずか10件だった。**索引はディレクトリの唯一の入口**であり、載っていない道具は存在しないのと同じである。docstringの冒頭から索引を生成し、**全件が載ることを検査する**ようにした。**索引を手で保つ限り、道具を足すたびに腐る。**"
   },
   "scope": "Reads each tool's module docstring and writes a generated index block into the directory README, then verifies every tool appears. It indexes names and first sentences only; it does not verify that a docstring describes the tool correctly."
 }

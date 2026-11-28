@@ -1,0 +1,40 @@
+{
+  "schema": "tai.reference.yic-assertion-agreement/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 running the checker and comparing its messages",
+  "command": "python integrations/tools/yic_assertion_agreement_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-assertion-agreement-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checkerExit": 0,
+    "checkerPassed": true,
+    "knownRuleFailures": 29,
+    "resolvedRuleFailures": 0,
+    "blocking": 0,
+    "assertionsTheEvaluationCouldNotSupport": 2,
+    "messagesTheCheckerActuallyReports": [
+      "TEI ETag receipt did not record 409/200",
+      "TEI artifact receipt has no projection schema",
+      "TEI artifact receipt points at a missing file",
+      "TEI assembler receipt did not bind the card record",
+      "TEI assembler receipt did not pass 6 tests",
+      "TEI auth receipt did not enable authorization",
+      "TEI auth receipt did not record 200/401",
+      "TEI consumer receipt did not record six read-only tests",
+      "TEI save plan receipt did not record an idempotent update",
+      "TEI save plan receipt did not record four non-writing tests",
+      "TEI target receipt did not pass 4 cases",
+      "TEI target receipt did not pass the oneshot profile"
+    ],
+    "assertionsNotReportedByTheChecker": [],
+    "evaluationAgreesWithTheRule": true,
+    "finding": "ガード評価が『どこでも成立しない』とした2種類を、**checker自身の出力と突き合わせた**。checkerは29件の既知失敗を報告し、阻止は0件。**評価が根拠にした種類はすべてcheckerも報告している。**評価は規則と一致している。"
+  },
+  "scope": "Runs the checker and compares the messages it reports with the assertions the sibling evaluation could not support. It checks agreement of message sets; it does not verify the evaluation of every individual receipt."
+}

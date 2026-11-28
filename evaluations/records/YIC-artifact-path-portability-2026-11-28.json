@@ -1,0 +1,75 @@
+{
+  "schema": "tai.reference.yic-artifact-path-portability/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 resolving every receipt's cited artifact path",
+  "command": "python integrations/tools/yic_artifact_path_portability.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-artifact-path-portability-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptsWithACitedArtifactPath": 263,
+    "pathInsideTheRepository": 229,
+    "pathOutsideTheRepository": 34,
+    "fileExistsOnThisHost": 226,
+    "fileMissingOnThisHost": 37,
+    "missingSample": [
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-projection.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sxu\\evaluations\\artifacts\\eki-task-request-policy-aligned.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sxj\\evaluations\\artifacts\\mmi-format-profile-projection.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "SCN-003-save-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sc3\\evaluations\\artifacts\\scn-003-document.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sea\\evaluations\\artifacts\\sei-decision-projection.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "SUI-TEI-admin-path-2026-11-02.json",
+        "cited": "tai-wt-optcore\\evaluations\\artifacts\\documentv1-projection.json",
+        "insideTheRepository": true
+      },
+      {
+        "receipt": "SUI-TEI-artifact-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sch\\evaluations\\artifacts\\documentv1-projection.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-rev\\evaluations\\artifacts\\documentv1-projection.json",
+        "insideTheRepository": false
+      },
+      {
+        "receipt": "SUI-TEI-binding-2026-11-02.json",
+        "cited": "tai-wt-reader\\evaluations\\artifacts\\documentv1-projection.json",
+        "insideTheRepository": true
+      }
+    ],
+    "finding": "`artifact.path`を持つreceipt263件を調べた。**リポジトリ内を指すもの229件**、**リポジトリ外を指すもの34件**。**このホストで実在するもの226件、実在しないもの37件**。実在しないものの大半は、**もう存在しない別worktreeの絶対パス**を指す。**receiptは正直である（その時点でそのworktreeに在った）。しかしその引用は、このホストでは再現できない。****『規則が成立しない』と『このホストでは確かめられない』は別である。**"
+  },
+  "scope": "Resolves each receipt's cited artifact path and records whether it lies inside the repository and whether the file exists on this host. It measures portability of the citation; it does not check the digest, and a missing file may exist on the host where the receipt was written."
+}
