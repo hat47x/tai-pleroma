@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.yic-tool-index-freshness/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 comparing the README's generated block with the folder",
+  "command": "python integrations/tools/yic_tool_index_freshness.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-tool-index-freshness-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "readme": "integrations/tools/README.md",
+    "generatorExit": 0,
+    "toolsOnDisk": 183,
+    "listedInBlock": 183,
+    "missingFromBlock": [],
+    "declaredCountInBlock": 183,
+    "actualCount": 183,
+    "countAgrees": true,
+    "finding": "READMEの生成索引を検査した。ディスク上のツール183件のうち索引に載っているもの183件、載っていないもの0件。**索引は生成されるが、生成を実行しない限り腐る。**ここで毎回突き合わせることで、道具を足して再生成を忘れた場合に検出できる。"
+  },
+  "scope": "Reads the generated index block and checks every tool on disk appears and the declared count matches. It checks completeness and counts; it does not check that each purpose line is accurate."
+}
