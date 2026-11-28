@@ -1,0 +1,242 @@
+{
+  "schema": "tai.reference.yic-cited-path-exists/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading every receipt's command",
+  "command": "python integrations/tools/yic_cited_path_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-cited-path-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptsWithAPathFlag": 98,
+    "pathsChecked": 98,
+    "missingPaths": [
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-cur",
+        "citedBy": 11,
+        "receipts": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "EKI-TEI-task-request-selection-2026-11-03.json",
+          "MMI-TEI-format-profile-selection-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-decision-selection-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-latest",
+        "citedBy": 2,
+        "receipts": [
+          "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-tenant",
+        "citedBy": 38,
+        "receipts": [
+          "SCN-003-compose-2026-11-03.validate.json",
+          "SUI-consumer-mapping-2026-11-06.json",
+          "SUI-readonly-enforcement-2026-11-06.json",
+          "SUI-TEI-agent-key-wiring-2026-11-06.json",
+          "SUI-TEI-agent-read-path-2026-11-06.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-latest",
+        "citedBy": 2,
+        "receipts": [
+          "SCN-003-save-2026-11-03.json",
+          "SUI-TEI-postgres-retry-evidence-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-main",
+        "citedBy": 3,
+        "receipts": [
+          "SUI-TEI-admin-path-2026-11-02.json",
+          "SUI-TEI-binding-2026-11-02.json",
+          "SUI-TEI-sui-reader-2026-11-02.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-main3",
+        "citedBy": 3,
+        "receipts": [
+          "SUI-TEI-affiliation-2026-11-02.json",
+          "SUI-TEI-alignment-2026-11-02.json",
+          "SUI-TEI-compare-2026-11-02.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-main4",
+        "citedBy": 2,
+        "receipts": [
+          "SUI-TEI-artifact-2026-11-02.json",
+          "SUI-TEI-island-cardids-2026-11-02.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-ro",
+        "citedBy": 3,
+        "receipts": [
+          "SUI-TEI-contract-versions-validation-2026-11-03.json",
+          "SUI-TEI-fields-roundtrip-2026-11-03.json",
+          "SUI-TEI-reading-order-validation-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-num2",
+        "citedBy": 1,
+        "receipts": [
+          "SUI-TEI-coordinates-2026-11-02.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-exist",
+        "citedBy": 9,
+        "receipts": [
+          "SUI-TEI-etag-2026-11-03.json",
+          "SUI-TEI-large-doc-2026-11-03.json",
+          "SUI-TEI-multi-doc-2026-11-03.json",
+          "SUI-TEI-save-auth-2026-11-03.json",
+          "SUI-TEI-save-contract-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-r2",
+        "citedBy": 2,
+        "receipts": [
+          "SUI-TEI-integration-flow-2026-11-02.json",
+          "TEI-target-profile-compare-text-2026-11-06.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-opt2",
+        "citedBy": 1,
+        "receipts": [
+          "SUI-TEI-optional-2026-11-02.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\tei-wt-bool2",
+        "citedBy": 2,
+        "receipts": [
+          "SUI-TEI-optional-core-2026-11-02.json",
+          "SUI-TEI-reviewed-2026-11-02.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-schema",
+        "citedBy": 1,
+        "receipts": [
+          "SUI-TEI-save-plan-cli-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\sui-wt-src",
+        "citedBy": 1,
+        "receipts": [
+          "SUI-TEI-sources-validation-2026-11-03.json"
+        ]
+      },
+      {
+        "path": "D:\\GIT\\hat47x\\.tmp\\tei-yic-latest",
+        "citedBy": 1,
+        "receipts": [
+          "YIC-handoff-stages-2026-11-18.json"
+        ]
+      }
+    ],
+    "missingCount": 82,
+    "receiptsAffected": [
+      "EKI-TEI-artifact-2026-11-03.json",
+      "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+      "EKI-TEI-task-request-selection-2026-11-03.json",
+      "MMI-TEI-artifact-2026-11-03.json",
+      "MMI-TEI-format-profile-selection-2026-11-03.json",
+      "SCN-003-compose-2026-11-03.validate.json",
+      "SCN-003-save-2026-11-03.json",
+      "SEI-TEI-artifact-2026-11-03.json",
+      "SEI-TEI-decision-selection-2026-11-03.json",
+      "SUI-TEI-admin-path-2026-11-02.json",
+      "SUI-TEI-affiliation-2026-11-02.json",
+      "SUI-TEI-agent-key-wiring-2026-11-06.json",
+      "SUI-TEI-agent-read-path-2026-11-06.json",
+      "SUI-TEI-alignment-2026-11-02.json",
+      "SUI-TEI-archive-lifecycle-2026-11-06.json",
+      "SUI-TEI-artifact-2026-11-02.json",
+      "SUI-TEI-auth-assurance-2026-11-06.json",
+      "SUI-TEI-binding-2026-11-02.json",
+      "SUI-TEI-builders-2026-11-06.json",
+      "SUI-TEI-card-move-2026-11-06.json",
+      "SUI-TEI-ce4-audit-order-2026-11-06.json",
+      "SUI-TEI-compare-2026-11-02.json",
+      "SUI-TEI-containment-2026-11-03.json",
+      "SUI-TEI-contract-digest-2026-11-03.json",
+      "SUI-TEI-contract-versions-2026-11-03.json",
+      "SUI-TEI-contract-versions-validation-2026-11-03.json",
+      "SUI-TEI-coordinates-2026-11-02.json",
+      "SUI-TEI-dedup-window-2026-11-06.json",
+      "SUI-TEI-determinism-2026-11-03.json",
+      "SUI-TEI-document-coverage-2026-11-06.json",
+      "SUI-TEI-document-types-2026-11-06.json",
+      "SUI-TEI-documentv1-validation-2026-11-03.json",
+      "SUI-TEI-etag-2026-11-03.json",
+      "SUI-TEI-etag-stability-2026-11-06.json",
+      "SUI-TEI-export-dedup-2026-11-06.json",
+      "SUI-TEI-failsafe-2026-11-06.json",
+      "SUI-TEI-fields-roundtrip-2026-11-03.json",
+      "SUI-TEI-headers-2026-11-06.json",
+      "SUI-TEI-integration-flow-2026-11-02.json",
+      "SUI-TEI-island-cardids-2026-11-02.json",
+      "SUI-TEI-large-doc-2026-11-03.json",
+      "SUI-TEI-list-pagination-2026-11-06.json",
+      "SUI-TEI-merge-decision-log-2026-11-06.json",
+      "SUI-TEI-migrations-2026-11-06.json",
+      "SUI-TEI-multi-doc-2026-11-03.json",
+      "SUI-TEI-native-action-2026-11-06.json",
+      "SUI-TEI-optional-2026-11-02.json",
+      "SUI-TEI-optional-core-2026-11-02.json",
+      "SUI-TEI-parsers-2026-11-06.json",
+      "SUI-TEI-policy-requirements-2026-11-06.json",
+      "SUI-TEI-polygon-handoff-2026-11-06.json",
+      "SUI-TEI-postgres-2026-11-03.json",
+      "SUI-TEI-postgres-concurrency-2026-11-03.json",
+      "SUI-TEI-postgres-contention-2026-11-03.json",
+      "SUI-TEI-postgres-etag-2026-11-03.json",
+      "SUI-TEI-postgres-migrate-2026-11-03.json",
+      "SUI-TEI-postgres-multidoc-2026-11-03.json",
+      "SUI-TEI-postgres-retry-2026-11-03.json",
+      "SUI-TEI-postgres-retry-evidence-2026-11-03.json",
+      "SUI-TEI-preflight-2026-11-06.json",
+      "SUI-TEI-probes-2026-11-06.json",
+      "SUI-TEI-profile-policy-2026-11-06.json",
+      "SUI-TEI-reading-order-2026-11-03.json",
+      "SUI-TEI-reading-order-validation-2026-11-03.json",
+      "SUI-TEI-reviewed-2026-11-02.json",
+      "SUI-TEI-saas-precondition-2026-11-06.json",
+      "SUI-TEI-save-auth-2026-11-03.json",
+      "SUI-TEI-save-contract-2026-11-03.json",
+      "SUI-TEI-save-e2e-2026-11-03.json",
+      "SUI-TEI-save-plan-2026-11-03.json",
+      "SUI-TEI-save-plan-cli-2026-11-03.json",
+      "SUI-TEI-save-roundtrip-2026-11-03.json",
+      "SUI-TEI-server-2026-11-03.json",
+      "SUI-TEI-similar-candidates-2026-11-06.json",
+      "SUI-TEI-sources-2026-11-03.json",
+      "SUI-TEI-sources-validation-2026-11-03.json",
+      "SUI-TEI-sui-reader-2026-11-02.json",
+      "SUI-TEI-tls-2026-11-03.json",
+      "SUI-consumer-mapping-2026-11-06.json",
+      "SUI-readonly-enforcement-2026-11-06.json",
+      "TEI-target-profile-compare-text-2026-11-06.json",
+      "YIC-handoff-stages-2026-11-18.json"
+    ],
+    "finding": "receiptの`command`に書かれたローカルのcheckoutパスが**現在も存在するか**を確かめた。検査した98件のうち**82件**が、既に存在しないパスを指している。**receiptは再実行できる形で書かれているとは限らない。**パスが消えていれば、commandを写しても再現できない。"
+  },
+  "scope": "Reads each receipt's `command` string, extracts local absolute paths passed to repo/root/checkout flags, and tests whether each still exists. It reports paths that are gone; it does not attempt to re-run any command, and a missing worktree may be an expected consequence of cleanup rather than a defect."
+}
