@@ -403,6 +403,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-path-resolution-2026-11-28.json",
     "evaluations/records/YIC-digest-search-2026-11-28.json",
     "evaluations/records/YIC-digest-search-wide-2026-11-28.json",
+    "evaluations/records/YIC-missing-digest-classify-2026-11-28.json",
     "evaluations/records/YIC-baseline-classify-effect-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
@@ -821,7 +822,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 60
+                or observed.get("checksRun") != 61
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative_lower:
@@ -936,6 +937,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or len(observed.get("rows") or []) < 1
             ):
                 errors.append(f"the digest search stored no rows: {relative}")
+        if "YIC-missing-digest-classify" in relative_lower:
+            observed = data.get("observed", {})
+            # Every missing digest must be accounted for: inside-path change or outside path.
+            if (
+                data.get("result") != "PASS"
+                or observed.get("citationOutsideTheRepository", 0)
+                + observed.get("citationInsideTheRepository", 0)
+                != observed.get("missingDigests", 0)
+            ):
+                errors.append(f"the missing-digest classification does not add up: {relative}")
         if "YIC-digest-search-wide" in relative_lower:
             observed = data.get("observed", {})
             # A sample recorded as if it were the population is the failure this guards.

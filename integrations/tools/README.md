@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（199件）。
+生成対象: `integrations/tools` の `*.py`（200件）。
 
-### YIC（分析・点検）（104件）
+### YIC（分析・点検）（105件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -105,6 +105,7 @@ python integrations/tools/run_suite.py \
 | `yic_harness_evidence_check.py` | Check that the harness-adapter's evidence files are honest about what they ran. |
 | `yic_inert_remainder_check.py` | Check whether the two remaining inert selectors name a receipt that exists elsewhere. |
 | `yic_inert_selector_check.py` | Check that the seven selectors that reach nothing are dead, or missing a receipt. |
+| `yic_missing_digest_classify.py` | Classify the 29 receipts whose recorded digest exists nowhere in this repository. |
 | `yic_note_correction.py` | Correct the note I wrote: 65 of the 82 receipts record no commit. |
 | `yic_note_correction_effect_check.py` | Check the correction took effect: how many notes still claim a commit that does not exist. |
 | `yic_note_truthfulness_check.py` | Check whether the note I wrote tells the truth. |

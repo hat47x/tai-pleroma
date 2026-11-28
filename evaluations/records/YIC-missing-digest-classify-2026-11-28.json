@@ -1,0 +1,142 @@
+{
+  "schema": "tai.reference.yic-missing-digest-classify/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 separating inside-path from outside-path misses",
+  "command": "python integrations/tools/yic_missing_digest_classify.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-missing-digest-classify-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "missingDigests": 29,
+    "citationOutsideTheRepository": 29,
+    "citationInsideTheRepository": 0,
+    "insideAndFileExistsWithDifferentBytes": 0,
+    "insideAndFileGone": 0,
+    "insideRows": [],
+    "outsideRows": [
+      {
+        "receipt": "SUI-TEI-admin-path-2026-11-02.json",
+        "cited": "tai-wt-optcore\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-artifact-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-rev\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-binding-2026-11-02.json",
+        "cited": "tai-wt-reader\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-containment-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-contract-digest-check-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-cd\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-contract-versions-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-contract-versions-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-cv\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-coordinates-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-documentv1-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-containment\\evaluations\\artifacts\\documentv1-projection.jso"
+      },
+      {
+        "receipt": "SUI-TEI-etag-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-etag\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-fields-roundtrip-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-fr\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-large-doc-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-large\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-multi-doc-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-multi\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-optional-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-optional-core-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-reading-order-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-reading-order-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-ro\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-reviewed-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-save-auth-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sauth\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-save-contract-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-evc\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-save-e2e-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-save\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-apply\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-save-roundtrip-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-rt\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-server-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-srv\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-sources-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-sources-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-src\\evaluations\\artifacts\\documentv1-projection.json"
+      },
+      {
+        "receipt": "SUI-TEI-sui-reader-2026-11-02.json",
+        "cited": "tai-wt-reader\\evaluations\\artifacts\\documentv1-projection.json"
+      }
+    ],
+    "finding": "digestがどこにも無い29件を、**引用先がリポジトリ内か外か**で分けた。**リポジトリ外を指すもの29件**、**リポジトリ内を指すもの0件**。内側のうち**ファイルは在るが中身が違うもの0件**、**ファイルも無いもの0件**。**外を指すものは『ここに無い』のが当然であり、異常ではない。**内側で中身が違うものは、**同じパスが別の版に更新された**ことを示す。**同じ『見つからない』でも、処置が違う。**"
+  },
+  "scope": "Separates the 29 receipts by whether their cited path lies inside this repository, and records whether an inside path now holds different bytes. It classifies; it does not rewrite receipts and does not determine which version was correct."
+}
