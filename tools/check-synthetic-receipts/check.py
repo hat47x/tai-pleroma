@@ -388,6 +388,8 @@ REAL_RECORDS = (
     "evaluations/records/YIC-count-claim-span-2026-11-28.json",
     "evaluations/records/YIC-receipt-name-date-2026-11-28.json",
     "evaluations/records/YIC-numbering-after-repair-2026-11-28.json",
+    "evaluations/records/YIC-tool-index-2026-11-28.json",
+    "evaluations/records/YIC-tool-index-freshness-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
@@ -871,6 +873,20 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("receiptsWithANameDate", 0) < 1
             ):
                 errors.append(f"the name-date reading lost its scope: {relative}")
+        if "YIC-tool-index" in relative_lower and "freshness" not in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyToolIsListed") is not True
+            ):
+                errors.append(f"a tool is missing from the generated index: {relative}")
+        if "YIC-tool-index-freshness" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("countAgrees") is not True
+            ):
+                errors.append(f"the generated tool index is stale: {relative}")
         if "YIC-numbering-after-repair" in relative_lower:
             observed = data.get("observed", {})
             if (
@@ -1164,7 +1180,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyDocumentCheckRan") is not True
                 or observed.get("everyDocumentCheckPassed") is not True
-                or observed.get("checksRun") != 25
+                or observed.get("checksRun") != 26
             ):
                 errors.append(f"a YI document check was skipped or failed: {relative}")
         if "YIC-notrun-refresh" in relative_lower:

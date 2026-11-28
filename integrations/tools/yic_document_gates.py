@@ -70,6 +70,8 @@ CHECKS = (
      "no current-tense receipt-count claim disagrees with the live count"),
     ("numberingAfterRepair", "yic_numbering_after_repair.py",
      "both numbering repairs hold across all YI documents"),
+    ("toolIndexFreshness", "yic_tool_index_freshness.py",
+     "the directory README lists every tool it sits beside"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites
