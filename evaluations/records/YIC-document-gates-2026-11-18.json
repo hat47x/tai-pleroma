@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2132, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2133, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -68,7 +68,7 @@
         "question": "every gate is cited and non-PASS citations are caveated",
         "exit": 0,
         "passed": true,
-        "tail": "{\"citations\": 37, \"distinct\": 31, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
+        "tail": "{\"citations\": 38, \"distinct\": 32, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
       },
       "g1Packet": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 72, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 73, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 71, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 72, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 79, \"listed\": 18, \"notNamedIndividually\": 61, \"passed\": true}"
+        "tail": "{\"later\": 80, \"listed\": 19, \"notNamedIndividually\": 61, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,

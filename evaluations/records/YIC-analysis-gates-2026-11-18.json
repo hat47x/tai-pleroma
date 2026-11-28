@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 45,
-    "checksRun": 45,
+    "checksRequested": 46,
+    "checksRun": 46,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 56, \"links\": 666, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 56, \"links\": 667, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 392, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 393, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 104, \"writers\": 104, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 105, \"writers\": 105, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -258,14 +258,14 @@
         "question": "both receipt naming families state a measured half and a limit half",
         "exit": 0,
         "passed": true,
-        "tail": "{\"yi\": 33, \"yic\": 72, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
+        "tail": "{\"yi\": 33, \"yic\": 73, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
       },
       "countAgreement": {
         "ran": true,
         "question": "each aggregate's check count matches what the checker expects",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 45, 45], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
+        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 46, 46], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
       },
       "inertRemainder": {
         "ran": true,
@@ -286,7 +286,7 @@
         "question": "how many real receipts carry a commit, against the proposal to require one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"real\": 300, \"withCommit\": 59, \"withoutCommit\": 241, \"passed\": true}"
+        "tail": "{\"real\": 301, \"withCommit\": 59, \"withoutCommit\": 242, \"passed\": true}"
       },
       "citationDates": {
         "ran": true,
@@ -300,21 +300,28 @@
         "question": "whether receipts written now still cite a local checkout path",
         "exit": 0,
         "passed": true,
-        "tail": "{\"recent\": 12, \"citing\": 0, \"missing\": 0, \"passed\": true}"
+        "tail": "{\"recent\": 13, \"citing\": 0, \"missing\": 0, \"passed\": true}"
+      },
+      "annotationReadiness": {
+        "ran": true,
+        "question": "whether a note can be added without tripping the checker",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"affected\": 82, \"withNote\": 0, \"globalAllowList\": false, \"exactListRules\": 1, \"passed\": true}"
       },
       "ruleLiveness": {
         "ran": true,
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"selectors\": 271, \"inert\": 2, \"passed\": true}"
+        "tail": "{\"selectors\": 272, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,
         "question": "running the checker with the dead rules made live",
         "exit": 0,
         "passed": true,
-        "tail": "{\"known\": 29, \"resolved\": 0, \"blocking\": 1, \"whenEmptied\": 30, \"inert\": 2, \"passed\": true}"
+        "tail": "{\"known\": 29, \"resolved\": 0, \"blocking\": 0, \"whenEmptied\": 29, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleFields": {
         "ran": true,
