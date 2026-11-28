@@ -39,5 +39,5 @@
     "readOnlyDoesNotRestrictWrite": true
   },
   "scope": "Calls SUI's resolve_access_decision and enforce_access with a stub adapter that returns allow-plus-read-only, and with a denying adapter as a control. It records that the read-only decision does not refuse a write while a deny does, so the enforcement point ignores the read-only flag. It exercises the functions directly, not an HTTP route, and the stub is not a real PDP.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

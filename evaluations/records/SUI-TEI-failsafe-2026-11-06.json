@@ -91,5 +91,5 @@
     }
   },
   "scope": "Runs fifteen decision cases through resolve_access_decision with stub adapters: the local ladder, tenant boundary, and adapter failures in both fail-safe modes. It does not call a real PDP. The caller-set read_only flag is not propagated to a read decision: the local ladder only trips on write/export/share, so a read request is answered by the adapter with read_only=False.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

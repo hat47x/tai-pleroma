@@ -40,5 +40,5 @@
     "agentStatus": 503
   },
   "scope": "Reads the security headers on success and 401 responses, checks that an inbound x-trace-id is echoed or replaced when unsafe, and checks the agent-specific cache headers. It does not test a reverse proxy or the browser CSRF guard.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

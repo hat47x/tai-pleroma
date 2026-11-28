@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.yic-note-correction/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 correcting the note I wrote into 82 receipts",
+  "command": "python integrations/tools/yic_note_correction.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-note-correction-2026-11-28.json --apply",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "keptBecauseACommitExists": 17,
+    "correctedBecauseNoCommit": 65,
+    "alreadyCorrect": 0,
+    "applied": true,
+    "finding": "私が書いた注記の末尾は「receiptが記録するcommitが恒久的な参照である」と述べていた。commitを記録している17件では正しいが、記録していない65件では**根拠の無い安心**を与えていた。commitが無いreceiptには「このreceiptはcommitを記録していない」と書き換えた。**根拠の無い一文を、証拠の中に残さない。**"
+  },
+  "scope": "Rewrites the closing sentence of the annotation note only, in receipts that record no commit. It changes no measured value; it does not add a commit, and where a commit exists the original sentence is kept unchanged."
+}

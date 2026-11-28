@@ -50,5 +50,5 @@
     "auditWrongChannelStatus": 403
   },
   "scope": "Registers one agent credential through the repository, then reads the granted document, attempts a write, a list, a derived view, an ungranted document, a mixed credential request, a bogus token, and two audit channels. It checks the allowlist and redaction rules, not a real external agent.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

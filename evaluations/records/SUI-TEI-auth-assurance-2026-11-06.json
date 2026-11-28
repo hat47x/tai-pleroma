@@ -112,5 +112,5 @@
     }
   },
   "scope": "Classifies 16 synthetic AuthContext values (AMR shapes, AAL/ACR precedence, fresh/stale/future/naive timestamps) at a fixed now. It does not read a real IdP assertion.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

@@ -25,5 +25,5 @@
     "transport": "uvicorn on 127.0.0.1"
   },
   "scope": "SUI runs under uvicorn on a real local socket with a temporary SQLite database and an API key. It does not verify a production database, TLS, a reverse proxy, or deployment.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-exist. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-exist. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }
