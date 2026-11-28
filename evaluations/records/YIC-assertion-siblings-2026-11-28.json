@@ -16,11 +16,10 @@
     "distinctAssertions": 12,
     "assertionsHoldingSomewhere": 10,
     "assertionsHoldingNowhere": [
+      "TEI artifact receipt points at a missing file",
       "TEI save plan receipt did not record four non-writing tests"
     ],
-    "assertionsNotJudgeable": [
-      "TEI artifact receipt points at a missing file"
-    ],
+    "assertionsNotJudgeable": [],
     "perAssertion": [
       {
         "message": "TEI ETag receipt did not record 409/200",
@@ -55,9 +54,9 @@
         "message": "TEI artifact receipt points at a missing file",
         "holdsSomewhere": false,
         "states": [
-          "unevaluable"
+          "evaluated"
         ],
-        "siblingCount": 0,
+        "siblingCount": 4,
         "satisfiedBy": []
       },
       {
@@ -169,7 +168,7 @@
         ]
       }
     ],
-    "siblingsEvaluated": 28,
+    "siblingsEvaluated": 32,
     "siblingsSatisfying": 28,
     "rows": [
       {
@@ -311,15 +310,31 @@
         "message": "TEI artifact receipt points at a missing file",
         "selector": "tei-artifact",
         "condition": "if not artifact_path.is_file():",
-        "state": "unevaluable",
+        "state": "evaluated",
         "excludedAsFailingThisAssertion": 0,
-        "unevaluable": [
-          "EKI-TEI-artifact-2026-11-03.json",
-          "MMI-TEI-artifact-2026-11-03.json",
-          "SEI-TEI-artifact-2026-11-03.json",
-          "SUI-TEI-artifact-schema-2026-11-03.json"
-        ],
-        "siblings": []
+        "unevaluable": [],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "guardTrips": true,
+            "satisfiesAssertion": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "guardTrips": true,
+            "satisfiesAssertion": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "guardTrips": true,
+            "satisfiesAssertion": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+            "guardTrips": true,
+            "satisfiesAssertion": false
+          }
+        ]
       },
       {
         "message": "TEI assembler receipt did not bind the card record",
@@ -594,7 +609,7 @@
         ]
       }
     ],
-    "finding": "各assertionの**ガード条件そのものを評価**して、兄弟receiptが規則を満たすかを見た。規則は『失敗する条件』として書かれているので、**ガードが偽になるreceiptが規則を満たす**。基準の背後にある12種類のうち、**どこかで成立するもの10件**、**判定できる兄弟が無いもの1件**、**兄弟はいるが満たさないもの1件**。**『どこでも成立しない』と『判定する相手が無い』は別である。****演算子を手で反転させようとして3回誤った。条件を評価すれば反転は要らない。**"
+    "finding": "各assertionの**ガード条件そのものを評価**して、兄弟receiptが規則を満たすかを見た。規則は『失敗する条件』として書かれているので、**ガードが偽になるreceiptが規則を満たす**。基準の背後にある12種類のうち、**どこかで成立するもの10件**、**判定できる兄弟が無いもの0件**、**兄弟はいるが満たさないもの2件**。**『どこでも成立しない』と『判定する相手が無い』は別である。****演算子を手で反転させようとして3回誤った。条件を評価すれば反転は要らない。**"
   },
   "scope": "Evaluates each assertion's guard condition against sibling receipts, treating a guard that does not trip as satisfaction, and reports separately the assertions no sibling satisfies and the ones no sibling could be judged for. It evaluates only the siblings named by the location receipt; it does not sweep every registered receipt, and a guard closing over helpers rather than the receipt's own fields cannot be evaluated."
 }
