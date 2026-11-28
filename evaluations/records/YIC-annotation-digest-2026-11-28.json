@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.yic-annotation-digest-impact/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 comparing recorded digests before and after the annotation",
+  "command": "python integrations/tools/yic_annotation_digest_impact.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-annotation-digest-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "annotatedReceipts": 82,
+    "receiptsNamingAnnotatedFile": 12,
+    "holdingTheOldDigest": 0,
+    "holdingTheCurrentDigest": 0,
+    "staleDigestHolders": [],
+    "finding": "注記した82件のファイル名を、他の12件のreceiptが本文に含む。そのうち**書き換え前のdigestを保持しているものは0件**、現在のdigestを保持しているものは0件。**名前を含むだけであり、digestは保持していない。**つまり**82件の書き換えは、他のreceiptのダイジェストを壊していない。**"
+  },
+  "scope": "Recovers each annotated file's pre-annotation digest from git and checks, for every other receipt whose text names such a file, whether it holds the old digest, the new one, or neither. It covers digests only; a receipt that cites the file by name alone is not evidence that anything broke."
+}

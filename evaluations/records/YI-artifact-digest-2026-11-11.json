@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-17",
+  "date": "2026-11-28",
   "host": "Windows with Python 3.12 recomputing the recorded digests",
   "command": "python integrations/tools/yi_artifact_digest_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YI-artifact-digest-2026-11-11.json",
   "result": "PASS",
