@@ -1,0 +1,28 @@
+{
+  "schema": "tai.reference.yic-docs-index/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 generating a docs/ index from first headings",
+  "command": "python integrations/tools/yic_docs_index.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-docs-index-2026-11-28.json --apply",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "docs",
+    "documentsOnDisk": 27,
+    "listed": 27,
+    "notListed": [],
+    "machineReadDocuments": [
+      "reproduction-runbook.md",
+      "status.md"
+    ],
+    "applied": true,
+    "everyDocumentIsListed": true,
+    "finding": "`docs` 直下の文書27件のうち、READMEに載っていなかったものは**0件**（生成前は13件）。**載っていなかった中に`status.md`と`reproduction-runbook.md`が含まれる。**両文書は`doc_consistency_check`が読む、機械が依存する入口である。**機械が読む文書を、人間の索引に載せていなかった。**"
+  },
+  "scope": "Reads each top-level doc's first heading and status line and writes a generated index block into docs/README.md, then checks every file appears. It indexes top-level files only; subdirectory documents are not covered, and a title is not verified for accuracy."
+}

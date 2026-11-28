@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（183件）。
+生成対象: `integrations/tools` の `*.py`（185件）。
 
-### YIC（分析・点検）（88件）
+### YIC（分析・点検）（90件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -78,6 +78,8 @@ python integrations/tools/run_suite.py \
 | `yic_deck_counts_check.py` | Check the deck slide counts that the indexes state against the actual files. |
 | `yic_doc55_renumber.py` | Renumber doc 55's §6.8 so the letter suffixes become numbers. |
 | `yic_doc_links_check.py` | Check every relative Markdown link in docs/ resolves to a file that exists. |
+| `yic_docs_index.py` | Generate an index of docs/ from each document's own title and status line. |
+| `yic_docs_index_freshness.py` | Verify the generated docs index lists every top-level document. |
 | `yic_document_gates.py` | Run the document-level YI checks in one pass. |
 | `yic_eki_private_input.py` | Check that EKI refuses a public disclosure profile when private input is required. |
 | `yic_eki_recipient_check.py` | Check whether EKI verifies that a Lease goes to the intended recipient. |
