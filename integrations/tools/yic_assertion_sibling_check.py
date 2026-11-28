@@ -1,12 +1,17 @@
-"""Evaluate the located assertion against its siblings, not against the whole selector.
+"""Evaluate each assertion's guard as a predicate against sibling receipts.
 
-Now that each baseline failure is tied to the assertion that emits it, the sibling test is
-exact: does a receipt that shares the selector and is *not* in the baseline for this
-assertion actually satisfy this assertion? Read the guard, extract the field comparison, and
-check.
+Three attempts at this failed the same way: parsing the comparison operators out of the
+condition by hand and then guessing which direction means success. The guard in the checker
+is written as *the failure predicate* — `if observed.get("x") != 409 or ...: errors.append(...)`
+— so a receipt satisfies the assertion exactly when the guard evaluates to False.
+
+Rather than invert operators by hand, evaluate the guard itself against the receipt. The
+condition text comes from the checker's own source, so evaluating it is reading the rule as
+the rule means it.
 """
 
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -15,32 +20,65 @@ from pathlib import Path
 
 LOCATE = "evaluations/records/YIC-assertion-locate-2026-11-28.json"
 CHECKER = "tools/check-synthetic-receipts/check.py"
+BASELINE_NAME = "KNOWN_RULE_FAILURE_BASELINE"
 
 
 def digest(path):
     return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def comparisons(condition):
-    """(receiver.field, expected) pairs from a guard condition string, deduplicated."""
-    pairs = []
-    for match in re.finditer(
-        r'(\w+)\.get\("(\w+)"\)\s*(?:!=|==)\s*(?:"([^"]*)"|(\d+|True|False))', condition
-    ):
-        receiver, field = match.group(1), match.group(2)
-        literal = match.group(3) if match.group(3) is not None else match.group(4)
-        if literal in ("True", "False"):
-            value = literal == "True"
-        elif literal.isdigit():
-            value = int(literal)
-        else:
-            value = literal
-        pairs.append((f"{receiver}.{field}", value))
-    # A field may appear in several clauses; keep the first expectation for each path.
-    seen = {}
-    for path, value in pairs:
-        seen.setdefault(path, value)
-    return sorted(seen.items())
+def baseline_by_message(root):
+    """Which receipts are in the baseline for which message."""
+    tree = ast.parse((root / CHECKER).read_text(encoding="utf-8"))
+    mapping = {}
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and node.targets
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == BASELINE_NAME
+        ):
+            stack = [node.value]
+            while stack:
+                current = stack.pop()
+                if isinstance(current, ast.BinOp) and isinstance(current.op, ast.Add):
+                    stack.extend([current.left, current.right])
+                elif isinstance(current, (ast.Tuple, ast.List)):
+                    for element in current.elts:
+                        if isinstance(element, ast.Tuple) and len(element.elts) == 2:
+                            values = [
+                                item.value for item in element.elts
+                                if isinstance(item, ast.Constant) and isinstance(item.value, str)
+                            ]
+                            if len(values) == 2:
+                                mapping.setdefault(values[0], set()).add(Path(values[1]).name)
+    return mapping
+
+
+def guard_evaluates_to_failure(condition, receipt):
+    """True / False for whether this receipt trips the guard, or None if it cannot be read."""
+    expression = condition.strip()
+    if expression.startswith("if "):
+        expression = expression[3:]
+    while expression.endswith(":"):
+        expression = expression[:-1].rstrip()
+    if not expression:
+        return None
+
+    observed = receipt.get("observed")
+    if not isinstance(observed, dict):
+        observed = {}
+    artifact = receipt.get("artifact")
+    if not isinstance(artifact, dict):
+        artifact = {}
+    try:
+        return bool(eval(expression, {"__builtins__": {}}, {  # noqa: S307 - checker's own text
+            "observed": observed,
+            "data": receipt,
+            "artifact": artifact,
+        }))
+    except Exception:
+        return None
 
 
 def main():
@@ -52,103 +90,107 @@ def main():
     root = Path(__file__).resolve().parents[2]
     located = json.loads((root / LOCATE).read_text(encoding="utf-8"))
     rows_in = (located.get("observed") or {}).get("rows") or []
+    excluded_by_message = baseline_by_message(root)
 
-    checks_rows = []
+    rows = []
     for entry in rows_in:
-        wanted = comparisons(entry.get("condition") or "")
-        evaluated = []
+        condition = entry.get("condition") or ""
+        excluded = excluded_by_message.get(entry.get("message"), set())
+        siblings = []
+        unevaluable = []
+        excludedCount = 0
         for name in entry.get("siblings") or []:
+            if Path(name).name in excluded:
+                excludedCount += 1
+                continue
             path = root / "evaluations/records" / name
             if not path.exists():
                 continue
             receipt = json.loads(path.read_text(encoding="utf-8-sig"))
-            for container_name in ("observed", None):
-                container = receipt.get(container_name) if container_name else receipt
-                if not isinstance(container, dict):
-                    continue
-            observed = receipt.get("observed")
-            if not isinstance(observed, dict):
-                observed = receipt
-            def resolve(path):
-                receiver, _, field = path.partition(".")
-                if receiver in ("observed", ""):
-                    return observed.get(field)
-                container = receipt.get(receiver)
-                if isinstance(container, dict):
-                    return container.get(field)
-                return None
-
-            satisfied = [
-                path for path, value in wanted if resolve(path) == value
-            ]
-            evaluated.append({
+            verdict = guard_evaluates_to_failure(condition, receipt)
+            if verdict is None:
+                unevaluable.append(name)
+                continue
+            siblings.append({
                 "receipt": name,
-                "required": len(wanted),
-                "satisfied": len(satisfied),
-                "satisfiesAll": bool(wanted) and len(satisfied) == len(wanted),
+                "guardTrips": verdict,
+                # The assertion holds for a receipt exactly when the guard does not trip.
+                "satisfiesAssertion": verdict is False,
             })
-        checks_rows.append({
+        # "Holds nowhere" and "could not be judged" are different findings, and a count of
+        # zero siblings must not be read as either without saying which.
+        if siblings:
+            state = "evaluated"
+        elif unevaluable:
+            state = "unevaluable"
+        elif excludedCount:
+            state = "allSiblingsAreThemselvesFailing"
+        else:
+            state = "noSiblingsAtAll"
+        rows.append({
             "message": entry.get("message"),
             "selector": entry.get("selector"),
-            "requiredFields": [field for field, _ in wanted],
-            "siblings": evaluated,
+            "condition": condition,
+            "state": state,
+            "excludedAsFailingThisAssertion": excludedCount,
+            "unevaluable": unevaluable,
+            "siblings": siblings,
         })
 
-    all_siblings = [item for row in checks_rows for item in row["siblings"]]
-    unsupporting = [item for item in all_siblings if not item["satisfiesAll"]]
-    withoutComparisons = [
-        row for row in checks_rows if not row["requiredFields"]
+    per_assertion = {}
+    for row in rows:
+        key = row["message"]
+        supporting = [item["receipt"] for item in row["siblings"] if item["satisfiesAssertion"]]
+        record = per_assertion.setdefault(
+            key, {"selector": row["selector"], "satisfiedBy": [], "states": []}
+        )
+        record["satisfiedBy"].extend(supporting)
+        record["states"].append(row["state"])
+
+    holds = {key: bool(value["satisfiedBy"]) for key, value in per_assertion.items()}
+    # Separate "no receipt satisfies it" from "there was no receipt to judge".
+    nowhere = [
+        key for key, value in holds.items()
+        if not value and "unevaluable" not in per_assertion[key]["states"]
     ]
-    summary = []
-    for row in checks_rows:
-        supporting = [item for item in row["siblings"] if item["satisfiesAll"]]
-        summary.append({
-            "message": row["message"],
-            "selector": row["selector"],
-            "requiredFields": row["requiredFields"],
-            "siblingsChecked": len(row["siblings"]),
-            "satisfiedBy": [item["receipt"] for item in supporting],
-            "holdsSomewhere": bool(supporting),
-        })
-    distinct = {}
-    for row in summary:
-        distinct.setdefault(row["message"], row["holdsSomewhere"])
+    unevaluated = [
+        key for key, value in holds.items()
+        if not value and "unevaluable" in per_assertion[key]["states"]
+    ]
+    all_siblings = [item for row in rows for item in row["siblings"]]
+    satisfying = [item for item in all_siblings if item["satisfiesAssertion"]]
 
     checks = {
         "locateReceipt": LOCATE,
-        "distinctAssertions": len(distinct),
-        "assertionsHoldingSomewhere": len([key for key, value in distinct.items() if value]),
-        "assertionsHoldingNowhere": [
-            key for key, value in distinct.items() if not value
-        ],
+        "distinctAssertions": len(per_assertion),
+        "assertionsHoldingSomewhere": len([key for key, value in holds.items() if value]),
+        "assertionsHoldingNowhere": nowhere,
+        "assertionsNotJudgeable": unevaluated,
         "perAssertion": [
             {
                 "message": key,
-                "holdsSomewhere": value,
-                "satisfiedBy": sorted({
-                    receipt
-                    for row in summary if row["message"] == key
-                    for receipt in row["satisfiedBy"]
-                })[:3],
+                "holdsSomewhere": holds[key],
+                "states": value["states"],
+                "siblingCount": len([
+                    item for row in rows if row["message"] == key for item in row["siblings"]
+                ]),
+                "satisfiedBy": sorted(set(value["satisfiedBy"]))[:3],
             }
-            for key, value in distinct.items()
+            for key, value in per_assertion.items()
         ],
-        "baselineAssertions": len(rows_in),
-        "rows": checks_rows,
         "siblingsEvaluated": len(all_siblings),
-        "siblingsSupporting": len(all_siblings) - len(unsupporting),
-        "siblingsNotSupporting": unsupporting,
-        "rowsWithoutComparisons": len(withoutComparisons),
+        "siblingsSatisfying": len(satisfying),
+        "rows": rows,
         "finding": (
-            f"基準の背後にある**{len(distinct)}種類のassertion**を、兄弟と突き合わせた。"
-            f"**どこかのreceiptで成立しているもの{len([key for key, value in distinct.items() if value])}件**、"
-            f"**どのreceiptでも成立しないもの"
-            f"{len([key for key, value in distinct.items() if not value])}件**。"
-            f"検査した兄弟{len(all_siblings)}件のうち**規則を満たすもの"
-            f"{len(all_siblings) - len(unsupporting)}件**、満たさないもの{len(unsupporting)}件。"
-            f"比較式を読めなかった行{len(withoutComparisons)}件。"
-            "**セレクタ全体ではなくassertionで見ると、"
-            "『兄弟なし』と数えていた失敗のいくつかに兄弟がいた。**"
+            f"各assertionの**ガード条件そのものを評価**して、兄弟receiptが規則を満たすかを見た。"
+            f"規則は『失敗する条件』として書かれているので、"
+            f"**ガードが偽になるreceiptが規則を満たす**。"
+            f"基準の背後にある{len(per_assertion)}種類のうち、"
+            f"**どこかで成立するもの{len([key for key, value in holds.items() if value])}件**、"
+            f"**判定できる兄弟が無いもの{len(unevaluated)}件**、"
+            f"**兄弟はいるが満たさないもの{len(nowhere)}件**。"
+            "**『どこでも成立しない』と『判定する相手が無い』は別である。**"
+            "**演算子を手で反転させようとして3回誤った。条件を評価すれば反転は要らない。**"
         ),
     }
     passed = bool(all_siblings)
@@ -159,22 +201,24 @@ def main():
         "evidenceKind": "real-execution",
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
-        "host": "Windows with Python 3.12 evaluating each assertion against its siblings",
+        "host": "Windows with Python 3.12 evaluating each checker guard against sibling receipts",
         "command": "python integrations/tools/yic_assertion_sibling_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-assertion-siblings-2026-11-28.json",
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(Path(args.artifact).resolve())},
         "observed": checks,
         "scope": (
-            "Reads the located assertion's guard condition, extracts its field comparisons, and "
-            "evaluates them against sibling receipts. It checks a sample of siblings; it does not "
-            "evaluate every receipt, and a guard using a helper rather than a literal is not parsed."
+            "Evaluates each assertion's guard condition against sibling receipts, treating a guard "
+            "that does not trip as satisfaction, and reports separately the assertions no sibling "
+            "satisfies and the ones no sibling could be judged for. It evaluates only the siblings "
+            "named by the location receipt; it does not sweep every registered receipt, and a guard "
+            "closing over helpers rather than the receipt's own fields cannot be evaluated."
         ),
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
-        "siblings": len(all_siblings),
-        "supporting": len(all_siblings) - len(unsupporting),
-        "withoutComparisons": len(withoutComparisons),
+        "assertions": len(per_assertion),
+        "holdsSomewhere": len([key for key, value in holds.items() if value]),
+        "holdsNowhere": len([key for key, value in holds.items() if not value]),
         "passed": passed,
     }, ensure_ascii=False))
     return 0 if passed else 1

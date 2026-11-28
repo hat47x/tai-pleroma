@@ -4,7 +4,7 @@
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
   "date": "2026-11-28",
-  "host": "Windows with Python 3.12 evaluating each assertion against its siblings",
+  "host": "Windows with Python 3.12 evaluating each checker guard against sibling receipts",
   "command": "python integrations/tools/yic_assertion_sibling_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-assertion-siblings-2026-11-28.json",
   "result": "PASS",
   "artifact": {
@@ -14,16 +14,21 @@
   "observed": {
     "locateReceipt": "evaluations/records/YIC-assertion-locate-2026-11-28.json",
     "distinctAssertions": 12,
-    "assertionsHoldingSomewhere": 9,
+    "assertionsHoldingSomewhere": 10,
     "assertionsHoldingNowhere": [
-      "TEI artifact receipt points at a missing file",
-      "TEI auth receipt did not enable authorization",
       "TEI save plan receipt did not record four non-writing tests"
+    ],
+    "assertionsNotJudgeable": [
+      "TEI artifact receipt points at a missing file"
     ],
     "perAssertion": [
       {
         "message": "TEI ETag receipt did not record 409/200",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated"
+        ],
+        "siblingCount": 1,
         "satisfiedBy": [
           "SUI-TEI-etag-2026-11-03.json"
         ]
@@ -31,6 +36,17 @@
       {
         "message": "TEI artifact receipt has no projection schema",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated",
+          "evaluated",
+          "evaluated",
+          "evaluated",
+          "evaluated",
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 8,
         "satisfiedBy": [
           "SUI-TEI-artifact-2026-11-02.json"
         ]
@@ -38,11 +54,20 @@
       {
         "message": "TEI artifact receipt points at a missing file",
         "holdsSomewhere": false,
+        "states": [
+          "unevaluable"
+        ],
+        "siblingCount": 0,
         "satisfiedBy": []
       },
       {
         "message": "TEI assembler receipt did not bind the card record",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 2,
         "satisfiedBy": [
           "SUI-TEI-assembler-2026-11-02.json"
         ]
@@ -50,18 +75,33 @@
       {
         "message": "TEI assembler receipt did not pass 6 tests",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 2,
         "satisfiedBy": [
           "SUI-TEI-assembler-2026-11-02.json"
         ]
       },
       {
         "message": "TEI auth receipt did not enable authorization",
-        "holdsSomewhere": false,
-        "satisfiedBy": []
+        "holdsSomewhere": true,
+        "states": [
+          "evaluated"
+        ],
+        "siblingCount": 1,
+        "satisfiedBy": [
+          "SUI-TEI-auth-2026-11-02.json"
+        ]
       },
       {
         "message": "TEI auth receipt did not record 200/401",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated"
+        ],
+        "siblingCount": 1,
         "satisfiedBy": [
           "SUI-TEI-auth-2026-11-02.json"
         ]
@@ -69,6 +109,12 @@
       {
         "message": "TEI consumer receipt did not record six read-only tests",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 3,
         "satisfiedBy": [
           "SUI-TEI-consumer-2026-11-02.json"
         ]
@@ -76,6 +122,11 @@
       {
         "message": "TEI save plan receipt did not record an idempotent update",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 2,
         "satisfiedBy": [
           "SUI-TEI-save-plan-2026-11-03.json"
         ]
@@ -83,11 +134,22 @@
       {
         "message": "TEI save plan receipt did not record four non-writing tests",
         "holdsSomewhere": false,
+        "states": [
+          "allSiblingsAreThemselvesFailing",
+          "allSiblingsAreThemselvesFailing",
+          "allSiblingsAreThemselvesFailing"
+        ],
+        "siblingCount": 0,
         "satisfiedBy": []
       },
       {
         "message": "TEI target receipt did not pass 4 cases",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 4,
         "satisfiedBy": [
           "SUI-TEI-target-2026-11-01.json",
           "SUI-TEI-target-document-id-2026-11-02.json"
@@ -96,1049 +158,443 @@
       {
         "message": "TEI target receipt did not pass the oneshot profile",
         "holdsSomewhere": true,
+        "states": [
+          "evaluated",
+          "evaluated"
+        ],
+        "siblingCount": 4,
         "satisfiedBy": [
           "SUI-TEI-target-2026-11-01.json",
           "SUI-TEI-target-document-id-2026-11-02.json"
         ]
       }
     ],
-    "baselineAssertions": 28,
+    "siblingsEvaluated": 28,
+    "siblingsSatisfying": 28,
     "rows": [
       {
         "message": "TEI ETag receipt did not record 409/200",
         "selector": "sui-tei-etag",
-        "requiredFields": [
-          "observed.matchingIfMatchStatus",
-          "observed.staleIfMatchStatus"
-        ],
+        "condition": "if observed.get(\"staleIfMatchStatus\") != 409 or observed.get(\"matchingIfMatchStatus\") != 200:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 0,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-etag-2026-11-03.json",
-            "required": 2,
-            "satisfied": 2,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt has no projection schema",
         "selector": "tei-artifact",
-        "requiredFields": [
-          "artifact.schema"
-        ],
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 3,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-artifact-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI artifact receipt points at a missing file",
         "selector": "tei-artifact",
-        "requiredFields": [],
+        "condition": "if not artifact_path.is_file():",
+        "state": "unevaluable",
+        "excludedAsFailingThisAssertion": 0,
+        "unevaluable": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-schema-2026-11-03.json"
+        ],
+        "siblings": []
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "selector": "tei-assembler",
+        "condition": "if observed.get(\"cardCases\") != 4 or observed.get(\"cardQualified\") != \"text-record-template\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-artifact-2026-11-03.json",
-            "required": 0,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-artifact-2026-11-03.json",
-            "required": 0,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-artifact-2026-11-03.json",
-            "required": 0,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-            "required": 0,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "receipt": "SUI-TEI-assembler-2026-11-02.json",
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI assembler receipt did not bind the card record",
         "selector": "tei-assembler",
-        "requiredFields": [
-          "observed.cardCases",
-          "observed.cardQualified"
-        ],
+        "condition": "if observed.get(\"cardCases\") != 4 or observed.get(\"cardQualified\") != \"text-record-template\":",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-assembler-2026-11-02.json",
-            "required": 2,
-            "satisfied": 2,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
-            "required": 2,
-            "satisfied": 0,
-            "satisfiesAll": false
-          }
-        ]
-      },
-      {
-        "message": "TEI assembler receipt did not bind the card record",
-        "selector": "tei-assembler",
-        "requiredFields": [
-          "observed.cardCases",
-          "observed.cardQualified"
-        ],
-        "siblings": [
-          {
-            "receipt": "SUI-TEI-assembler-2026-11-02.json",
-            "required": 2,
-            "satisfied": 2,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
-            "required": 2,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI assembler receipt did not pass 6 tests",
         "selector": "tei-assembler",
-        "requiredFields": [
-          "observed.assemblerPassed",
-          "observed.assemblerTests"
-        ],
+        "condition": "if observed.get(\"assemblerPassed\") != 6 or observed.get(\"assemblerTests\") != 6:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-assembler-2026-11-02.json",
-            "required": 2,
-            "satisfied": 2,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
-            "required": 2,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI assembler receipt did not pass 6 tests",
         "selector": "tei-assembler",
-        "requiredFields": [
-          "observed.assemblerPassed",
-          "observed.assemblerTests"
-        ],
+        "condition": "if observed.get(\"assemblerPassed\") != 6 or observed.get(\"assemblerTests\") != 6:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-assembler-2026-11-02.json",
-            "required": 2,
-            "satisfied": 2,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
-            "required": 2,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI auth receipt did not enable authorization",
         "selector": "tei-auth",
-        "requiredFields": [],
+        "condition": "if observed.get(\"authEnabled\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 0,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-auth-2026-11-02.json",
-            "required": 0,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI auth receipt did not record 200/401",
         "selector": "tei-auth",
-        "requiredFields": [
-          "observed.anonymousStatus",
-          "observed.authorizedStatus"
-        ],
+        "condition": "if observed.get(\"authorizedStatus\") != 200 or observed.get(\"anonymousStatus\") != 401:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 0,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-auth-2026-11-02.json",
-            "required": 2,
-            "satisfied": 2,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI consumer receipt did not record six read-only tests",
         "selector": "tei-consumer",
-        "requiredFields": [
-          "observed.passed"
-        ],
+        "condition": "if observed.get(\"passed\") != 6 or observed.get(\"readOnly\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 2,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "MMI-TEI-consumer-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-consumer-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-consumer-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI consumer receipt did not record six read-only tests",
         "selector": "tei-consumer",
-        "requiredFields": [
-          "observed.passed"
-        ],
+        "condition": "if observed.get(\"passed\") != 6 or observed.get(\"readOnly\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 2,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-consumer-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SEI-TEI-consumer-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-consumer-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI consumer receipt did not record six read-only tests",
         "selector": "tei-consumer",
-        "requiredFields": [
-          "observed.passed"
-        ],
+        "condition": "if observed.get(\"passed\") != 6 or observed.get(\"readOnly\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 2,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "EKI-TEI-consumer-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "MMI-TEI-consumer-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
             "receipt": "SUI-TEI-consumer-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI save plan receipt did not record an idempotent update",
         "selector": "sui-tei-save-plan",
-        "requiredFields": [
-          "observed.planAction"
-        ],
+        "condition": "if observed.get(\"planAction\") != \"update\" or observed.get(\"roundTrip\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-save-plan-2026-11-03.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI save plan receipt did not record an idempotent update",
         "selector": "sui-tei-save-plan",
-        "requiredFields": [
-          "observed.planAction"
-        ],
+        "condition": "if observed.get(\"planAction\") != \"update\" or observed.get(\"roundTrip\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-save-plan-2026-11-03.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI save plan receipt did not record four non-writing tests",
         "selector": "sui-tei-save-plan",
-        "requiredFields": [
-          "observed.passed"
-        ],
-        "siblings": [
-          {
-            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          }
-        ]
+        "condition": "if observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False:",
+        "state": "allSiblingsAreThemselvesFailing",
+        "excludedAsFailingThisAssertion": 2,
+        "unevaluable": [],
+        "siblings": []
       },
       {
         "message": "TEI save plan receipt did not record four non-writing tests",
         "selector": "sui-tei-save-plan",
-        "requiredFields": [
-          "observed.passed"
-        ],
-        "siblings": [
-          {
-            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          },
-          {
-            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          }
-        ]
+        "condition": "if observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False:",
+        "state": "allSiblingsAreThemselvesFailing",
+        "excludedAsFailingThisAssertion": 2,
+        "unevaluable": [],
+        "siblings": []
       },
       {
         "message": "TEI save plan receipt did not record four non-writing tests",
         "selector": "sui-tei-save-plan",
-        "requiredFields": [
-          "observed.passed"
-        ],
+        "condition": "if observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False:",
+        "state": "allSiblingsAreThemselvesFailing",
+        "excludedAsFailingThisAssertion": 2,
+        "unevaluable": [],
+        "siblings": []
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "selector": "tei-target",
+        "condition": "if observed.get(\"passedCases\") != 4:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
-            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "receipt": "SUI-TEI-target-2026-11-01.json",
+            "guardTrips": false,
+            "satisfiesAssertion": true
           },
           {
-            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI target receipt did not pass 4 cases",
         "selector": "tei-target",
-        "requiredFields": [
-          "observed.passedCases"
-        ],
+        "condition": "if observed.get(\"passedCases\") != 4:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-target-2026-11-01.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           },
           {
             "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
-          }
-        ]
-      },
-      {
-        "message": "TEI target receipt did not pass 4 cases",
-        "selector": "tei-target",
-        "requiredFields": [
-          "observed.passedCases"
-        ],
-        "siblings": [
-          {
-            "receipt": "SUI-TEI-target-2026-11-01.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "TEI-target-profile-compare-2026-11-06.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI target receipt did not pass the oneshot profile",
         "selector": "tei-target",
-        "requiredFields": [
-          "observed.processModel"
-        ],
+        "condition": "if observed.get(\"processModel\") != \"oneshot\" or observed.get(\"profilePassed\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-target-2026-11-01.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           },
           {
             "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       },
       {
         "message": "TEI target receipt did not pass the oneshot profile",
         "selector": "tei-target",
-        "requiredFields": [
-          "observed.processModel"
-        ],
+        "condition": "if observed.get(\"processModel\") != \"oneshot\" or observed.get(\"profilePassed\") is not True:",
+        "state": "evaluated",
+        "excludedAsFailingThisAssertion": 1,
+        "unevaluable": [],
         "siblings": [
           {
             "receipt": "SUI-TEI-target-2026-11-01.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
+            "guardTrips": false,
+            "satisfiesAssertion": true
           },
           {
             "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
-            "required": 1,
-            "satisfied": 1,
-            "satisfiesAll": true
-          },
-          {
-            "receipt": "TEI-target-profile-compare-2026-11-06.json",
-            "required": 1,
-            "satisfied": 0,
-            "satisfiesAll": false
+            "guardTrips": false,
+            "satisfiesAssertion": true
           }
         ]
       }
     ],
-    "siblingsEvaluated": 78,
-    "siblingsSupporting": 27,
-    "siblingsNotSupporting": [
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-artifact-2026-11-03.json",
-        "required": 0,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-artifact-2026-11-03.json",
-        "required": 0,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-artifact-2026-11-03.json",
-        "required": 0,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
-        "required": 0,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
-        "required": 2,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
-        "required": 2,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
-        "required": 2,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
-        "required": 2,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-auth-2026-11-02.json",
-        "required": 0,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-consumer-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-consumer-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-consumer-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SEI-TEI-consumer-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "EKI-TEI-consumer-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "MMI-TEI-consumer-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "TEI-target-profile-compare-2026-11-06.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      },
-      {
-        "receipt": "TEI-target-profile-compare-2026-11-06.json",
-        "required": 1,
-        "satisfied": 0,
-        "satisfiesAll": false
-      }
-    ],
-    "rowsWithoutComparisons": 2,
-    "finding": "基準の背後にある**12種類のassertion**を、兄弟と突き合わせた。**どこかのreceiptで成立しているもの9件**、**どのreceiptでも成立しないもの3件**。検査した兄弟78件のうち**規則を満たすもの27件**、満たさないもの51件。比較式を読めなかった行2件。**セレクタ全体ではなくassertionで見ると、『兄弟なし』と数えていた失敗のいくつかに兄弟がいた。**"
+    "finding": "各assertionの**ガード条件そのものを評価**して、兄弟receiptが規則を満たすかを見た。規則は『失敗する条件』として書かれているので、**ガードが偽になるreceiptが規則を満たす**。基準の背後にある12種類のうち、**どこかで成立するもの10件**、**判定できる兄弟が無いもの1件**、**兄弟はいるが満たさないもの1件**。**『どこでも成立しない』と『判定する相手が無い』は別である。****演算子を手で反転させようとして3回誤った。条件を評価すれば反転は要らない。**"
   },
-  "scope": "Reads the located assertion's guard condition, extracts its field comparisons, and evaluates them against sibling receipts. It checks a sample of siblings; it does not evaluate every receipt, and a guard using a helper rather than a literal is not parsed."
+  "scope": "Evaluates each assertion's guard condition against sibling receipts, treating a guard that does not trip as satisfaction, and reports separately the assertions no sibling satisfies and the ones no sibling could be judged for. It evaluates only the siblings named by the location receipt; it does not sweep every registered receipt, and a guard closing over helpers rather than the receipt's own fields cannot be evaluated."
 }

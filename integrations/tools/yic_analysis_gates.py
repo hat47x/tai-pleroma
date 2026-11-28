@@ -128,7 +128,7 @@ PORTABLE_CHECKS = (
     ("assertionLocate", "yic_assertion_locate.py",
      "which assertion emits each baseline message"),
     ("assertionSiblings", "yic_assertion_sibling_check.py",
-     "of the twelve assertions, how many hold on some other receipt"),
+     "evaluate each guard against siblings and separate no / unevaluable"),
     ("ruleLiveness", "yic_rule_liveness_check.py",
      "which rules can never fire because of case"),
     ("deadRuleImpact", "yic_dead_rule_impact_probe.py",
