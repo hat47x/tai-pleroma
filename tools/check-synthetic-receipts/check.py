@@ -138,6 +138,16 @@ KNOWN_RULE_FAILURE_BASELINE = (
     ('TEI artifact receipt has no projection schema', 'evaluations/records/TEI-artifacts-determinism-2026-11-03.json'),
 )
 
+KNOWN_RULE_FAILURE_BASELINE = KNOWN_RULE_FAILURE_BASELINE + (
+    ('TEI save plan receipt did not record an idempotent update', 'evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json'),
+    ('TEI save plan receipt did not record an idempotent update', 'evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json'),
+    ('TEI ETag receipt did not record 409/200', 'evaluations/records/SUI-TEI-etag-stability-2026-11-06.json'),
+)
+KNOWN_RULE_FAILURE_BASELINE = KNOWN_RULE_FAILURE_BASELINE + (
+    ('TEI save plan receipt did not record four non-writing tests', 'evaluations/records/SUI-TEI-save-plan-2026-11-03.json'),
+    ('TEI save plan receipt did not record four non-writing tests', 'evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json'),
+    ('TEI save plan receipt did not record four non-writing tests', 'evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json'),
+)
 KNOWN_RULE_FAILURE_KEYS = frozenset(KNOWN_RULE_FAILURE_BASELINE)
 
 _CHECKER_SOURCE = pathlib.Path(__file__).read_text(encoding="utf-8")
@@ -361,6 +371,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-rule-liveness-2026-11-18.json",
     "evaluations/records/YIC-dead-rule-impact-2026-11-18.json",
     "evaluations/records/YIC-dead-rule-fields-2026-11-18.json",
+    "evaluations/records/YIC-inert-selectors-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
@@ -608,7 +619,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("synthetic") is not True or observed.get("savedCards") != 300:
                 errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
-        if "tei-sui-etag" in relative_lower:
+        if "sui-tei-etag" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
                 errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
@@ -616,7 +627,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
                 errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
-        if "tei-sui-save-plan" in relative_lower:
+        if "sui-tei-save-plan" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("planAction") != "update" or observed.get("roundTrip") is not True:
                 errors.append(f"TEI save plan receipt did not record an idempotent update: {relative}")
@@ -805,6 +816,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("adaptersNotObserving") == []
             ):
                 errors.append(f"the H-condition reading lost its finding: {relative}")
+        if "YIC-inert-selectors" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("selectorsReversed") is None
+                or observed.get("exposedCount", 0) < 1
+            ):
+                errors.append(f"the reversed-selector measurement lost its finding: {relative}")
         if "YIC-dead-rule-fields" in relative_lower:
             observed = data.get("observed", {})
             if (
@@ -2065,7 +2084,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
         elif "tei-sources" in relative:
             if data.get("result") != "PASS":
                 errors.append(f"TEI sources receipt did not pass: {relative}")
-        if "tei-sui-server" in relative_lower:
+        if "sui-tei-server" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("serverReady") is not True or observed.get("anonymousStatus") != 401:
                 errors.append(f"TEI server receipt did not record readiness and 401: {relative}")
@@ -2098,11 +2117,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("writes") is not False or observed.get("action") != "update":
                 errors.append(f"TEI save plan CLI receipt did not record a non-writing update: {relative}")
-        if "tei-sui-save-plan-merge" in relative_lower:
+        if "sui-tei-save-plan-merge" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 6 or observed.get("writes") is not False:
                 errors.append(f"TEI save plan merge receipt did not record six non-writing tests: {relative}")
-        if "tei-sui-save-merge" in relative_lower:
+        if "sui-tei-save-merge" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
@@ -2110,7 +2129,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("synthetic") is not True or observed.get("savedCards") != 300:
                 errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
-        if "tei-sui-etag" in relative_lower:
+        if "sui-tei-etag" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
                 errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
@@ -2118,7 +2137,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
                 errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
-        if "tei-sui-save-plan" in relative_lower:
+        if "sui-tei-save-plan" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save plan receipt did not record four non-writing tests: {relative}")

@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 386, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 36, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 387, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 97, \"writers\": 97, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 99, \"writers\": 99, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -258,7 +258,7 @@
         "question": "both receipt naming families state a measured half and a limit half",
         "exit": 0,
         "passed": true,
-        "tail": "{\"yi\": 33, \"yic\": 66, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
+        "tail": "{\"yi\": 33, \"yic\": 67, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
       },
       "countAgreement": {
         "ran": true,
@@ -272,14 +272,14 @@
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"selectors\": 265, \"inert\": 7, \"passed\": true}"
+        "tail": "{\"selectors\": 266, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,
         "question": "running the checker with the dead rules made live",
         "exit": 0,
         "passed": true,
-        "tail": "{\"known\": 22, \"resolved\": 0, \"blocking\": 0, \"whenEmptied\": 22, \"inert\": 7, \"passed\": true}"
+        "tail": "{\"known\": 29, \"resolved\": 0, \"blocking\": 0, \"whenEmptied\": 29, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleFields": {
         "ran": true,

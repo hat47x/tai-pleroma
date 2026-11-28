@@ -1,0 +1,59 @@
+{
+  "schema": "tai.reference.yic-reversed-selectors/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 running the checker with the inert selectors reordered",
+  "command": "python integrations/tools/yic_inert_selector_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-inert-selectors-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checker": "tools/check-synthetic-receipts/check.py",
+    "selectorsReversed": [
+      "tei-sui-etag",
+      "tei-sui-save-merge",
+      "tei-sui-save-plan",
+      "tei-sui-save-plan-merge",
+      "tei-sui-server"
+    ],
+    "asWritten": {
+      "exit": 0,
+      "passed": true,
+      "blocking": 0,
+      "inert": [
+        "tei-comparison",
+        "tei-sui-etag",
+        "tei-sui-save-merge",
+        "tei-sui-save-plan",
+        "tei-sui-save-plan-merge",
+        "tei-sui-server",
+        "tei-text-selection"
+      ]
+    },
+    "withReorderedSelectors": {
+      "exit": 0,
+      "passed": true,
+      "blocking": 0,
+      "inert": [
+        "tei-comparison",
+        "tei-sui-etag",
+        "tei-sui-save-plan",
+        "tei-text-selection"
+      ]
+    },
+    "assertionFailuresExposed": [
+      "TEI save plan receipt did not record an idempotent update: evaluations/records/SUI-TEI-save-plan-merge-2026-11-03.json",
+      "TEI save plan receipt did not record an idempotent update: evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json",
+      "TEI ETag receipt did not record 409/200: evaluations/records/SUI-TEI-etag-stability-2026-11-06.json"
+    ],
+    "exposedCount": 3,
+    "inertBefore": 7,
+    "inertAfter": 4,
+    "finding": "発火しないセレクタ5件は、語順がreceipt名と**逆**である。語順だけを直すと**3件の判定失敗が出る**。失敗の内訳: `TEI save plan receipt did not record four non-writing tests`、`did not record an idempotent update`、`TEI ETag receipt did not record 409/200`。**存在するreceiptを指しており、語順だけで一度も走っていなかった。**最初の試行は`tei-sui-reader`（正しく動いていた）も書き換えて失敗を覆い隠した。不活性のものだけを書き換えて測り直した。"
+  },
+  "scope": "Reverses only the word order of selectors that reach no registered receipt and runs the checker twice, once with the exposed failures added to the same named baseline. It shows those rules point at real receipts; it does not decide whether a failure means the receipt or the rule is wrong."
+}

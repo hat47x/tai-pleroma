@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 66, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 67, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 65, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 66, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 73, \"listed\": 13, \"notNamedIndividually\": 60, \"passed\": true}"
+        "tail": "{\"later\": 74, \"listed\": 13, \"notNamedIndividually\": 61, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,
