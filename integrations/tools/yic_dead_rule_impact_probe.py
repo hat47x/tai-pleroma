@@ -27,6 +27,41 @@ def digest(path):
     return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def _baseline_size(root: Path) -> int:
+    """Count the checker's known-failure baseline entries."""
+    import ast
+
+    checker = root / CHECKER
+    tree = ast.parse(checker.read_text(encoding="utf-8"))
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and node.targets
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "KNOWN_RULE_FAILURE_BASELINE"
+        ):
+            # The baseline is built by successive `KNOWN = KNOWN + (...)` assignments,
+            # so every literal tuple contributes.
+            total = 0
+            for assign in ast.walk(tree):
+                if not (
+                    isinstance(assign, ast.Assign)
+                    and assign.targets
+                    and isinstance(assign.targets[0], ast.Name)
+                    and assign.targets[0].id == "KNOWN_RULE_FAILURE_BASELINE"
+                ):
+                    continue
+                value = assign.value
+                while isinstance(value, ast.BinOp) and isinstance(value.op, ast.Add):
+                    if isinstance(value.left, (ast.Tuple, ast.List)):
+                        total += len(value.left.elts)
+                    value = value.right
+                if isinstance(value, (ast.Tuple, ast.List)):
+                    total += len(value.elts)
+            return total
+    return 0
+
+
 def run(script, root):
     completed = subprocess.run(
         [sys.executable, str(script), "--root", str(root)],
@@ -70,6 +105,9 @@ def main():
     empty_code, empty = run(patched, root)
     blocked = empty.get("errors") or []
 
+    # The expected count is the checker's own baseline length, not a remembered number.
+    expected = _baseline_size(root)
+
     checks = {
         "checker": CHECKER,
         "withBaseline": {
@@ -85,12 +123,15 @@ def main():
             "passed": empty.get("passed"),
             "blocking": len(blocked),
         },
-        "baselineIsStillExact": len(known) == 22 and len(resolved) == 0,
-        "emptyingTheBaselineBlocks": len(blocked) >= 22,
+        "baselineSize": expected,
+        "baselineIsStillExact": (
+            len(set(known)) == expected and len(resolved) == 0
+        ),
+        "emptyingTheBaselineBlocks": len(set(blocked)) >= expected,
         "finding": (
             "49の規則を発火させた結果を、**名前つきの基準**としてcheckerに置いた。"
-            f"基準ありでは**阻止{len(blocking)}件・既知{len(known)}件**。"
-            f"基準を空にすると**{len(blocked)}件が阻止**に変わる。"
+            f"基準ありでは**阻止{len(blocking)}件・既知{len(set(known))}/{expected}件**。"
+            f"基準を空にすると**{len(set(blocked))}件が阻止**に変わる。"
             "**基準は飾りではなく、実効している。**"
             f"発火しない規則は{len(inert)}件で、一覧として毎回報告される。"
         ),

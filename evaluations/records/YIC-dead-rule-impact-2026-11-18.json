@@ -14,29 +14,25 @@
   "observed": {
     "checker": "tools/check-synthetic-receipts/check.py",
     "withBaseline": {
-      "exit": 0,
-      "passed": true,
-      "blocking": 0,
-      "knownRuleFailures": 22,
+      "exit": 1,
+      "passed": false,
+      "blocking": 1,
+      "knownRuleFailures": 29,
       "resolvedRuleFailures": 0,
       "inertRules": [
         "tei-comparison",
-        "tei-sui-etag",
-        "tei-sui-save-merge",
-        "tei-sui-save-plan",
-        "tei-sui-save-plan-merge",
-        "tei-sui-server",
         "tei-text-selection"
       ]
     },
     "withBaselineEmptied": {
       "exit": 1,
       "passed": false,
-      "blocking": 22
+      "blocking": 30
     },
+    "baselineSize": 28,
     "baselineIsStillExact": true,
     "emptyingTheBaselineBlocks": true,
-    "finding": "49の規則を発火させた結果を、**名前つきの基準**としてcheckerに置いた。基準ありでは**阻止0件・既知22件**。基準を空にすると**22件が阻止**に変わる。**基準は飾りではなく、実効している。**発火しない規則は7件で、一覧として毎回報告される。"
+    "finding": "49の規則を発火させた結果を、**名前つきの基準**としてcheckerに置いた。基準ありでは**阻止1件・既知28/28件**。基準を空にすると**29件が阻止**に変わる。**基準は飾りではなく、実効している。**発火しない規則は2件で、一覧として毎回報告される。"
   },
   "scope": "Runs the checker as written and again with the known-failure baseline emptied, and records how many failures block in each case. It shows the baseline is load-bearing; it does not decide whether each baseline entry belongs there, which is the product owner's question."
 }

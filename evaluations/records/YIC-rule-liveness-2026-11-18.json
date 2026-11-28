@@ -17,16 +17,11 @@
     "selectors": 265,
     "selectorsReachingNothing": [
       "tei-comparison",
-      "tei-sui-etag",
-      "tei-sui-save-merge",
-      "tei-sui-save-plan",
-      "tei-sui-save-plan-merge",
-      "tei-sui-server",
       "tei-text-selection"
     ],
-    "inertCount": 7,
+    "inertCount": 2,
     "comparesAgainst": "relative_lower",
-    "finding": "checkerの全265セレクタについて、登録353件のうち何件に当たるかを数えた。**当たらないセレクタは7件**。以前「大小文字の違いで死んでいる40件」と数えていたが、選択が`relative_lower`に変わった後は**その区分自体が存在しない**。残る問いは『一度も当たらない規則』だけである。"
+    "finding": "checkerの全265セレクタについて、登録353件のうち何件に当たるかを数えた。**当たらないセレクタは2件**。以前「大小文字の違いで死んでいる40件」と数えていたが、選択が`relative_lower`に変わった後は**その区分自体が存在しない**。残る問いは『一度も当たらない規則』だけである。"
   },
   "scope": "Parses every `in relative_lower` selector and counts how many registered receipts each reaches. It reports selectors that reach nothing; it does not judge whether a reachable selector asserts the right thing, and it reads the source rather than running the checker."
 }
