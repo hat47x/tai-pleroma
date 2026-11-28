@@ -36,7 +36,10 @@ def main():
     registered = sorted(
         set(re.findall(r'"(evaluations/records/[^"]+\.json)"', text))
     )
-    rules = sorted(set(re.findall(r'if "([^"]+)" in relative:', text)))
+    rules = sorted(
+        set(re.findall(r'if "([^"]+)" in relative:', text))
+        | set(re.findall(r'if "([^"]+)" in relative_lower:', text))
+    )
 
     caseOnlyDead = []
     trulyDead = []

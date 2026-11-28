@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-18",
+  "date": "2026-11-28",
   "host": "Windows with Python 3.12 reading each failing receipt",
   "command": "python integrations/tools/yic_dead_rule_fields_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-dead-rule-fields-2026-11-18.json",
   "result": "PASS",

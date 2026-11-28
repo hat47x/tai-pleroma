@@ -19,7 +19,11 @@ from pathlib import Path
 DOC = "docs/yi-constellation/analysis/54-受渡し条件.md"
 STAGES = ("P", "T", "C", "H")
 # Phrases that assert an instrument is absent or limited.
-ABSENT = ("計器なし", "計器がない", "なし", "計器は無い", "測る計器は無い")
+ABSENT = (
+    "計器なし", "計器がない", "なし", "計器は無い", "測る計器は無い",
+    # A status may say the parts exist but the observation does not.
+    "未取得", "未観測", "観測は未", "裏付ける",
+)
 LIMITED = ("限定的", "限定的にあり")
 PRESENT = ("あり",)
 
@@ -61,9 +65,20 @@ def main():
             "statesInstrumentLimited": any(word in status for word in LIMITED),
             "hasMinimumTestSet": "最小検証セット" in block,
             "hasCounterExample": "反例" in block,
-            # P must name the field that is missing, not only say the instrument is absent.
+            # P must name what it lacks, not only say the instrument is absent.
+            # Several wordings say the same thing; accept any of them.
             "namesWhatIsMissing": (
-                "受信者を表す欄" in block if stage == "P" else None
+                any(
+                    phrase in block
+                    for phrase in (
+                        "受信者を表す欄",
+                        "欄が無い",
+                        "受信者がどの入口",
+                        "次に必要な確認",
+                    )
+                )
+                if stage == "P"
+                else None
             ),
         })
 

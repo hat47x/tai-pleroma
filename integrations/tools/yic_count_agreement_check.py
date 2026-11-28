@@ -50,6 +50,9 @@ def expected_in_checker(checker_text, rule_key):
     """Read the `!= N` that follows the rule keyed on this receipt name."""
     index = checker_text.find(f'if "{rule_key}" in relative:')
     if index < 0:
+        # Selectors now compare against the lower-cased path.
+        index = checker_text.find(f'if "{rule_key}" in relative_lower:')
+    if index < 0:
         return None
     window = checker_text[index:index + 900]
     match = re.search(r'checksRun"\)\s*!=\s*(\d+)', window)

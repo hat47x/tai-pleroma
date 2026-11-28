@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-18",
+  "date": "2026-11-28",
   "host": "Windows with Python 3.12 running the analysis checks together",
   "command": "python integrations/tools/yic_analysis_gates.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-analysis-gates-2026-11-18.json",
   "result": "PASS",
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 56, \"links\": 660, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 56, \"links\": 661, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -272,14 +272,14 @@
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rules\": 272, \"caseDead\": 40, \"trulyDead\": 7, \"passed\": true}"
+        "tail": "{\"rules\": 273, \"caseDead\": 40, \"trulyDead\": 8, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,
         "question": "running the checker with the dead rules made live",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rewritten\": 275, \"baseline\": 1, \"ci\": 22, \"new\": 22, \"passed\": true}"
+        "tail": "{\"known\": 22, \"resolved\": 0, \"blocking\": 0, \"whenEmptied\": 22, \"inert\": 7, \"passed\": true}"
       },
       "deadRuleFields": {
         "ran": true,
