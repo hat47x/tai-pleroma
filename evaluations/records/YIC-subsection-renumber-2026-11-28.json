@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.yic-subsection-renumber/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 renumbering doc 53's §6.1 headings",
+  "command": "python integrations/tools/yic_subsection_renumber.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-subsection-renumber-2026-11-28.json --apply",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/analysis/53-判定と残る前進.md",
+    "headingsAtThreeDeepUnder6_1": 16,
+    "renumbered": 13,
+    "referencedElsewhere": [],
+    "safeToRenumber": true,
+    "applied": true,
+    "finding": "§6.1の3階層見出し16件を、読み順に1から振り直した。変更した見出しは13件。他の文書が番号で参照している箇所は0件。**参照が無いので適用した。****番号を整えることは、主張を変えない。** ただし**外部からの住所を変える**ので、参照の有無を先に確かめる必要がある。"
+  },
+  "scope": "Renumbers the three-deep headings under §6.1 in reading order and applies the change only when no other document cites those numbers. It changes heading numbers only; it does not edit any assertion, and it does not renumber other documents."
+}

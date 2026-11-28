@@ -1,0 +1,27 @@
+{
+  "schema": "tai.reference.yic-subsection-numbering/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 parsing doc 53's numbered headings",
+  "command": "python integrations/tools/yic_subsection_numbering_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-subsection-numbering-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/analysis/53-判定と残る前進.md",
+    "headingsWithANumber": 22,
+    "families": [
+      "6.1"
+    ],
+    "outOfOrder": [],
+    "gaps": [],
+    "suffixThatIsNotAnInteger": [],
+    "numberingIsMonotonic": true,
+    "finding": "文書の番号付き見出しを解析した。3階層を持つ族は1個。**順序が逆の箇所0件**、**番号の飛び0件**、**整数でない接尾辞0件**。**節は追記のたびに末尾へ足されるため、番号だけが古い位置に残る。**番号を見ている点検は`irptch-reach`だけであり、この文書は誰も見ていなかった。"
+  },
+  "scope": "Parses numbered headings in doc 53 and reports disorder, gaps and non-integer suffixes. It reads one document; it does not check other YI documents, and a gap may be a deliberate omission rather than an error."
+}

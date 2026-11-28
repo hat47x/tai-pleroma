@@ -62,6 +62,8 @@ CHECKS = (
      "every harness evidence file records what it did not establish"),
     ("reachForwardRefs", "yic_reach_forward_refs_check.py",
      "a corrected section points forward to its correction"),
+    ("subsectionNumbering", "yic_subsection_numbering_check.py",
+     "a document's numbered subsections ascend without gaps or letter suffixes"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites
