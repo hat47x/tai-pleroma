@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.yic-current-citation-form/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading the most recent receipts",
+  "command": "python integrations/tools/yic_citation_form_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-citation-form-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "since": "2026-11-28",
+    "recentReceipts": 10,
+    "recentCitingALocalPath": 0,
+    "ofThoseAlreadyMissing": 0,
+    "rows": [],
+    "finding": "2026-11-28以降のreceipt10件のうち、**0件**がローカルのcheckoutパスをcommandに書いている。そのうち**0件**は現時点で既に存在しない。**現在は書かれていない。** 書き方は既に変わっており、履歴の注記で足りる。"
+  },
+  "scope": "Counts recent receipts whose command still cites a local absolute checkout path, and whether each path exists now. It shows whether the habit persists; it does not change any receipt, and a single date cutoff cannot prove when the habit started."
+}

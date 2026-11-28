@@ -1,0 +1,23 @@
+{
+  "schema": "tai.reference.yic-citation-dates/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading the affected receipts' dates",
+  "command": "python integrations/tools/yic_citation_date_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-citation-dates-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "cutoff": "2026-11-20",
+    "affected": 82,
+    "writtenBeforeTheCutoff": 82,
+    "writtenOnOrAfterTheCutoff": 0,
+    "recentUnresolvable": [],
+    "finding": "解決しない引用を持つ82件を、日付で分けた。**2026-11-20より前が82件、以降が0件**。**すべて期限より前**なので、当時は正しかった。履歴に注記すれば足りる。"
+  },
+  "scope": "Splits the receipts with unresolvable citations by their recorded date against a fixed cutoff. It supports a decision about where the fix belongs (history vs generation); it does not itself annotate or rewrite any receipt, and the cutoff is a chosen line, not a measured event."
+}
