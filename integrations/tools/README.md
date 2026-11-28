@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（185件）。
+生成対象: `integrations/tools` の `*.py`（187件）。
 
-### YIC（分析・点検）（90件）
+### YIC（分析・点検）（92件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -84,6 +84,8 @@ python integrations/tools/run_suite.py \
 | `yic_eki_private_input.py` | Check that EKI refuses a public disclosure profile when private input is required. |
 | `yic_eki_recipient_check.py` | Check whether EKI verifies that a Lease goes to the intended recipient. |
 | `yic_exhaustion_claim_check.py` | Check whether doc 53's "nothing further can be done" claim is still true. |
+| `yic_folder_index.py` | Generate a directory index for any top-level folder, from each document's heading. |
+| `yic_folder_index_check.py` | Check every top-level folder whose documents should be indexed. |
 | `yic_g1_packet_readiness.py` | Check that the G1 packet is ready for a decision, not that it has been decided. |
 | `yic_gate_citation_check.py` | Check that a gate document's citations match what each receipt actually claims. |
 | `yic_gate_prose_check.py` | Check that the gate-status prose matches the receipts it cites. |

@@ -1,0 +1,26 @@
+{
+  "schema": "tai.reference.yic-folder-index/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 generating a folder index from document headings",
+  "command": "python integrations/tools/yic_folder_index.py --folder scenarios --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-folder-index-2026-11-28.json --apply",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "scenarios",
+    "documentsOnDisk": 3,
+    "readmeExisted": true,
+    "readmeCreated": false,
+    "listed": 3,
+    "missingFromIndex": [],
+    "applied": true,
+    "everyDocumentIsListed": true,
+    "finding": "`scenarios/`直下の文書3件の索引を、各文書の先頭見出しから生成した。READMEは既存を更新し、掲載3件・欠落0件。**索引を手で保つ限り腐る**ので、生成と検査の両方を置く。"
+  },
+  "scope": "Generates a table of a folder's top-level markdown documents from their first heading and status line, and writes it into that folder's README. It indexes names and first headings; it does not verify the headings describe the documents, and nested subdirectories are not covered."
+}
