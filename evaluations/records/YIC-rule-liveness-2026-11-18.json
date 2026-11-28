@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-18",
+  "date": "2026-11-28",
   "host": "Windows with Python 3.12 comparing rules with registered names",
   "command": "python integrations/tools/yic_rule_liveness_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-rule-liveness-2026-11-18.json",
   "result": "PASS",
@@ -13,93 +13,9 @@
   },
   "observed": {
     "checker": "tools/check-synthetic-receipts/check.py",
-    "registeredReceipts": 349,
-    "rules": 268,
+    "registeredReceipts": 353,
+    "rules": 7,
     "rulesDeadOnlyOnCase": [
-      {
-        "rule": "tei-adapter",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-adapter-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-admin-path",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-admin-path-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-affiliation",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-affiliation-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-artifact",
-        "wouldMatch": [
-          "evaluations/records/EKI-TEI-artifact-2026-11-03.json",
-          "evaluations/records/MMI-TEI-artifact-2026-11-03.json",
-          "evaluations/records/SEI-TEI-artifact-2026-11-03.json"
-        ],
-        "matchCount": 9
-      },
-      {
-        "rule": "tei-artifact-validation",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-assembler",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-assembler-2026-11-02.json",
-          "evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json",
-          "evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json"
-        ],
-        "matchCount": 3
-      },
-      {
-        "rule": "tei-auth",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-auth-2026-11-02.json",
-          "evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json"
-        ],
-        "matchCount": 2
-      },
-      {
-        "rule": "tei-binding",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-binding-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-card-record",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-card-record-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-consumer",
-        "wouldMatch": [
-          "evaluations/records/EKI-TEI-consumer-2026-11-03.json",
-          "evaluations/records/MMI-TEI-consumer-2026-11-03.json",
-          "evaluations/records/SEI-TEI-consumer-2026-11-03.json"
-        ],
-        "matchCount": 4
-      },
-      {
-        "rule": "tei-contract-digest-check",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-contract-digest-check-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
       {
         "rule": "tei-contract-versions",
         "wouldMatch": [
@@ -107,104 +23,6 @@
           "evaluations/records/SUI-TEI-contract-versions-validation-2026-11-03.json"
         ],
         "matchCount": 2
-      },
-      {
-        "rule": "tei-contract-versions-validation",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-contract-versions-validation-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-deploy",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-deploy-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-determinism",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-determinism-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-document-record",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-document-record-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-fields-roundtrip",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-fields-roundtrip-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-generation-spike",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-generation-spike-2026-11-01.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-http-route",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-http-route-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-integration-flow",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-integration-flow-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-island-edge",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-island-edge-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-large-doc",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-large-doc-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-multi-attribute",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-multi-attribute-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-multi-doc",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-multi-doc-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-pipeline-run",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-pipeline-run-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-pipeline-save",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-pipeline-save-2026-11-03.json"
-        ],
-        "matchCount": 1
       },
       {
         "rule": "tei-reading-order",
@@ -215,113 +33,19 @@
         "matchCount": 2
       },
       {
-        "rule": "tei-reading-order-validation",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-save-auth",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-save-auth-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-save-contract",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-save-contract-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-save-e2e",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-save-e2e-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-save-plan-cli",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-save-plan-cli-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-save-roundtrip",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-save-roundtrip-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
         "rule": "tei-sources",
         "wouldMatch": [
           "evaluations/records/SUI-TEI-sources-2026-11-03.json",
           "evaluations/records/SUI-TEI-sources-validation-2026-11-03.json"
         ],
         "matchCount": 2
-      },
-      {
-        "rule": "tei-sources-validation",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-sources-validation-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-sui-reader",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-sui-reader-2026-11-02.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-target",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-target-2026-11-01.json",
-          "evaluations/records/SUI-TEI-target-document-id-2026-11-02.json",
-          "evaluations/records/TEI-target-profile-compare-2026-11-06.json"
-        ],
-        "matchCount": 4
-      },
-      {
-        "rule": "tei-tenant-route",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-tenant-route-2026-11-03.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-text-generation",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-text-generation-2026-11-01.json"
-        ],
-        "matchCount": 1
-      },
-      {
-        "rule": "tei-workflow",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-workflow-2026-11-02.json"
-        ],
-        "matchCount": 1
       }
     ],
-    "caseDeadCount": 40,
-    "rulesDeadRegardlessOfCase": [
-      "tei-comparison",
-      "tei-sui-etag",
-      "tei-sui-save-merge",
-      "tei-sui-save-plan",
-      "tei-sui-save-plan-merge",
-      "tei-sui-server",
-      "tei-text-selection"
-    ],
-    "trulyDeadCount": 7,
+    "caseDeadCount": 3,
+    "rulesDeadRegardlessOfCase": [],
+    "trulyDeadCount": 0,
     "comparedCaseSensitively": true,
-    "finding": "checkerの規則は`if \"...\" in relative:`で照合する。`relative`はディスク上の名前（`SUI-TEI-adapter-…`）を保ち、規則は小文字（`tei-adapter`）で書かれている。**40件の規則が、大小文字の違いだけで一度も発火しない。**それらのreceiptは汎用の規則だけを通り、**詳細な検査が無音で飛ばされている**。"
+    "finding": "checkerの規則は`if \"...\" in relative:`で照合する。`relative`はディスク上の名前（`SUI-TEI-adapter-…`）を保ち、規則は小文字（`tei-adapter`）で書かれている。**3件の規則が、大小文字の違いだけで一度も発火しない。**それらのreceiptは汎用の規則だけを通り、**詳細な検査が無音で飛ばされている**。"
   },
   "scope": "Compares the checker's rule strings with its registered receipt names, case-sensitively and case-insensitively. It shows which rules cannot fire; it does not run them or judge whether they would pass if they did."
 }

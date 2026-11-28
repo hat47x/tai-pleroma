@@ -3,7 +3,7 @@
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
-  "date": "2026-11-18",
+  "date": "2026-11-28",
   "host": "Windows with Python 3.12 running the document checks together",
   "command": "python integrations/tools/yic_document_gates.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-document-gates-2026-11-18.json",
   "result": "PASS",
@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2114, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2127, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -68,7 +68,7 @@
         "question": "every gate is cited and non-PASS citations are caveated",
         "exit": 0,
         "passed": true,
-        "tail": "{\"citations\": 27, \"distinct\": 21, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
+        "tail": "{\"citations\": 32, \"distinct\": 26, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
       },
       "g1Packet": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 58, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 66, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 57, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 65, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -117,7 +117,7 @@
         "question": "a universal claim states its population",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receiptsWithUniversalClaims\": 59, \"withoutCount\": 0, \"passed\": true}"
+        "tail": "{\"receiptsWithUniversalClaims\": 62, \"withoutCount\": 0, \"passed\": true}"
       },
       "sectionOrder": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 65, \"listed\": 8, \"notNamedIndividually\": 57, \"passed\": true}"
+        "tail": "{\"later\": 73, \"listed\": 13, \"notNamedIndividually\": 60, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,

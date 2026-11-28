@@ -12,6 +12,25 @@ import hashlib
 import json
 import pathlib
 from typing import Any
+import re
+
+# Every rule selector, read from this file so a new rule is always counted.
+_CHECKER_SOURCE = pathlib.Path(__file__).read_text(encoding="utf-8")
+def _selectors_from_source(source: str) -> tuple[str, ...]:
+    """Every top-level rule selector, read from this file."""
+    found = set(
+        re.findall(r'\n        if "(\S+)" in relative_lower:', source)
+    )
+    return tuple(
+        sorted(
+            selector
+            for selector in found
+            # The scan's own defining line contains the text it searches for.
+            if "\\" not in selector
+        )
+    )
+
+_RULE_SELECTORS = _selectors_from_source(_CHECKER_SOURCE)
 
 RECORDS = (
     "evaluations/records/SUI-api-2026-10-26.json",
@@ -85,6 +104,43 @@ SUI_CONSUMER_MAPPING_ARTIFACT = "evaluations/artifacts/scn-003-document.json"
 SUI_CONSUMER_MAPPING_ORIGINAL_DIGEST = (
     "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
 )
+
+# Per-file rules are selected by a lower-cased path: the rule text is lower case and
+# the receipt names are not. Only the selector folds case; every field assertion is
+# unchanged.
+#
+# Forty rules were inert because of that case difference. Making them live exposes 22
+# assertion failures. They are listed here by (message, receipt) so each run still
+# reports them, a NEW failure is blocking, and resolving one entry cannot quietly
+# replace it with an unrelated regression.
+KNOWN_RULE_FAILURE_BASELINE = (
+    ('TEI artifact receipt points at a missing file', 'evaluations/records/SUI-TEI-artifact-2026-11-02.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/SUI-TEI-artifact-validation-2026-11-02.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/SUI-TEI-artifact-schema-2026-11-03.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/SEI-TEI-artifact-2026-11-03.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/MMI-TEI-artifact-2026-11-03.json'),
+    ('TEI auth receipt did not record 200/401', 'evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json'),
+    ('TEI auth receipt did not enable authorization', 'evaluations/records/SUI-TEI-auth-assurance-2026-11-06.json'),
+    ('TEI target receipt did not pass the oneshot profile', 'evaluations/records/TEI-target-profile-compare-2026-11-06.json'),
+    ('TEI target receipt did not pass 4 cases', 'evaluations/records/TEI-target-profile-compare-2026-11-06.json'),
+    ('TEI target receipt did not pass the oneshot profile', 'evaluations/records/TEI-target-profile-compare-text-2026-11-06.json'),
+    ('TEI target receipt did not pass 4 cases', 'evaluations/records/TEI-target-profile-compare-text-2026-11-06.json'),
+    ('TEI assembler receipt did not pass 6 tests', 'evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json'),
+    ('TEI assembler receipt did not bind the card record', 'evaluations/records/SUI-TEI-assembler-kinds-2026-11-06.json'),
+    ('TEI assembler receipt did not pass 6 tests', 'evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json'),
+    ('TEI assembler receipt did not bind the card record', 'evaluations/records/SUI-TEI-assembler-tests-2026-11-06.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/TEI-artifacts-crosscheck-2026-11-03.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/EKI-TEI-artifact-2026-11-03.json'),
+    ('TEI consumer receipt did not record six read-only tests', 'evaluations/records/SEI-TEI-consumer-2026-11-03.json'),
+    ('TEI consumer receipt did not record six read-only tests', 'evaluations/records/MMI-TEI-consumer-2026-11-03.json'),
+    ('TEI consumer receipt did not record six read-only tests', 'evaluations/records/EKI-TEI-consumer-2026-11-03.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/TEI-artifact-digests-2026-11-03.json'),
+    ('TEI artifact receipt has no projection schema', 'evaluations/records/TEI-artifacts-determinism-2026-11-03.json'),
+)
+
+KNOWN_RULE_FAILURE_KEYS = frozenset(KNOWN_RULE_FAILURE_BASELINE)
+
+_CHECKER_SOURCE = pathlib.Path(__file__).read_text(encoding="utf-8")
 
 # Real-execution receipts are kept separate from synthetic ones so that a test
 # run on a host is never counted as synthetic evidence.
@@ -471,6 +527,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
     errors: list[str] = []
     known_negative_receipts: list[str] = []
     for relative in RECORDS:
+        relative_lower = relative.lower()
         path = root / relative
         if not path.is_file():
             errors.append(f"missing receipt: {relative}")
@@ -482,7 +539,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             errors.append(f"synthetic is not true: {relative}")
         if data.get("evidenceKind") != "synthetic":
             errors.append(f"evidenceKind is not synthetic: {relative}")
-        if "ai-review" in relative:
+        if "ai-review" in relative_lower:
             if data.get("evaluatorKind") != "generative-ai":
                 errors.append(f"evaluatorKind is not generative-ai: {relative}")
             if data.get("humanReviewed") is not False or data.get("publicationApproved") is not False:
@@ -500,6 +557,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             if data.get("outcome") != expected_outcome or data.get("userNextStep") != expected_next:
                 errors.append(f"AI review does not preserve the business outcome: {relative}")
     for relative in REAL_RECORDS:
+        relative_lower = relative.lower()
         path = root / relative
         if not path.is_file():
             errors.append(f"missing real-execution receipt: {relative}")
@@ -522,7 +580,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"archived SUI consumer negative is not source-bound: {relative}")
         elif data.get("result") != "PASS":
             errors.append(f"real-execution receipt is not PASS: {relative}")
-        if "TEI-EKI-live" in relative:
+        if "TEI-EKI-live" in relative_lower:
             accepted = data.get("accepted", {})
             if accepted.get("resultStatus") != 202:
                 errors.append(f"live receipt did not record 202: {relative}")
@@ -535,7 +593,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             conflict = data.get("idempotencyConflict", {})
             if conflict.get("resultStatus") != 409 or conflict.get("code") != "IDEMPOTENCY_KEY_CONFLICT":
                 errors.append(f"live receipt did not record the idempotency conflict: {relative}")
-        if "SUI-live" in relative:
+        if "SUI-live" in relative_lower:
             document = data.get("document", {})
             if document.get("putStatus") != 200 or document.get("read") is not True:
                 errors.append(f"SUI live receipt has no document round trip: {relative}")
@@ -543,74 +601,74 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"SUI live receipt card count differs: {relative}")
             if not str(document.get("digest", "")).startswith("sha256:"):
                 errors.append(f"SUI live receipt has no document digest: {relative}")
-        if "tei-affiliation" in relative:
+        if "tei-affiliation" in relative_lower:
             if data.get("composed", {}).get("affiliations") != 1:
                 errors.append(f"TEI affiliation receipt did not compose one affiliation: {relative}")
-        if "tei-large-doc" in relative:
+        if "tei-large-doc" in relative_lower:
             observed = data.get("observed", {})
             if data.get("synthetic") is not True or observed.get("savedCards") != 300:
                 errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
-        if "tei-sui-etag" in relative:
+        if "tei-sui-etag" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
                 errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
-        if "tei-multi-doc" in relative:
+        if "tei-multi-doc" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
                 errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
-        if "tei-sui-save-plan" in relative:
+        if "tei-sui-save-plan" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("planAction") != "update" or observed.get("roundTrip") is not True:
                 errors.append(f"TEI save plan receipt did not record an idempotent update: {relative}")
-        if "tei-determinism" in relative:
+        if "tei-determinism" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("identical") is not True or len(set(observed.get("digests", []))) != 1:
                 errors.append(f"TEI determinism receipt did not record identical digests: {relative}")
-        if "SUI-TEI-multi-instance" in relative:
+        if "SUI-TEI-multi-instance" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("crossUpdateStatus") != 200 or observed.get("staleUpdateStatus") != 409:
                 errors.append(f"SUI multi-instance check did not hold: {relative}")
-        if "SUI-TEI-ca-chain" in relative:
+        if "SUI-TEI-ca-chain" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("untrustedRefused") is not True:
                 errors.append(f"SUI CA chain check did not hold: {relative}")
-        if "SUI-TEI-proxy" in relative:
+        if "SUI-TEI-proxy" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("anonymousStatus") not in (401, 403):
                 errors.append(f"SUI behind the proxy did not round-trip or refuse anonymous writes: {relative}")
-        if "SUI-TEI-postgres-tls" in relative:
+        if "SUI-TEI-postgres-tls" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("roundTrip") is not True or observed.get("anonymousStatus") not in (401, 403):
                 errors.append(f"SUI over PostgreSQL+TLS did not round-trip or refuse anonymous writes: {relative}")
-        if "SUI-TEI-postgres-retry-evidence" in relative:
+        if "SUI-TEI-postgres-retry-evidence" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("retries", 0) < 1 or data.get("result") != "PASS":
                 errors.append(f"SUI Postgres retry evidence did not record a recovered retry: {relative}")
-        if "SUI-TEI-postgres-retry" in relative:
+        if "SUI-TEI-postgres-retry" in relative_lower:
             rounds = data.get("observed", {}).get("rounds", [])
             terminal = all(all(status in (200, 409) for status in item.get("statuses", [])) for item in rounds)
             if data.get("result") != "PASS" or not terminal:
                 errors.append(f"SUI Postgres retry run left a transient status: {relative}")
-        if "SUI-TEI-postgres-contention" in relative:
+        if "SUI-TEI-postgres-contention" in relative_lower:
             rounds = data.get("observed", {}).get("rounds", [])
             settled = bool(rounds) and all(
                 sum(1 for status in item.get("statuses", []) if status == 200) == 1 for item in rounds
             )
             if data.get("result") != "PASS" or not settled:
                 errors.append(f"SUI Postgres contention did not settle every round: {relative}")
-        if "SUI-TEI-postgres-concurrency" in relative:
+        if "SUI-TEI-postgres-concurrency" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("winners") != 1 or observed.get("conflicts") != 1:
                 errors.append(f"SUI Postgres concurrency check did not settle on one winner: {relative}")
-        if "SUI-TEI-postgres-etag" in relative:
+        if "SUI-TEI-postgres-etag" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("staleStatus") != 409 or observed.get("matchingStatus") != 200:
                 errors.append(f"SUI Postgres ETag check did not enforce preconditions: {relative}")
-        if "SUI-TEI-postgres-migrate" in relative:
+        if "SUI-TEI-postgres-migrate" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
-        if "SUI-TEI-postgres-multidoc" in relative:
+        if "SUI-TEI-postgres-multidoc" in relative_lower:
             observed = data.get("observed", {})
             reads = observed.get("reads") or []
             if (
@@ -624,31 +682,31 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             expected = "PASS" if observed.get("roundTrip") is True else "FAIL"
             if data.get("result") != expected:
                 errors.append(f"SUI Postgres receipt result does not match roundTrip: {relative}")
-        if "SUI-TEI-postgres-retry-evidence" in relative:
+        if "SUI-TEI-postgres-retry-evidence" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("retries", 0) < 1 or data.get("result") != "PASS":
                 errors.append(f"SUI Postgres retry evidence did not record a recovered retry: {relative}")
-        if "SUI-TEI-postgres-retry" in relative:
+        if "SUI-TEI-postgres-retry" in relative_lower:
             rounds = data.get("observed", {}).get("rounds", [])
             terminal = all(all(status in (200, 409) for status in item.get("statuses", [])) for item in rounds)
             if data.get("result") != "PASS" or not terminal:
                 errors.append(f"SUI Postgres retry run left a transient status: {relative}")
-        if "SUI-TEI-postgres-contention" in relative:
+        if "SUI-TEI-postgres-contention" in relative_lower:
             rounds = data.get("observed", {}).get("rounds", [])
             settled = bool(rounds) and all(
                 sum(1 for status in item.get("statuses", []) if status == 200) == 1 for item in rounds
             )
             if data.get("result") != "PASS" or not settled:
                 errors.append(f"SUI Postgres contention did not settle every round: {relative}")
-        if "SUI-TEI-postgres-concurrency" in relative:
+        if "SUI-TEI-postgres-concurrency" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("winners") != 1 or observed.get("conflicts") != 1:
                 errors.append(f"SUI Postgres concurrency check did not settle on one winner: {relative}")
-        if "SUI-TEI-postgres-etag" in relative:
+        if "SUI-TEI-postgres-etag" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("staleStatus") != 409 or observed.get("matchingStatus") != 200:
                 errors.append(f"SUI Postgres ETag check did not enforce preconditions: {relative}")
-        if "SUI-TEI-postgres-migrate" in relative:
+        if "SUI-TEI-postgres-migrate" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("migration") != "alembic upgrade head":
                 errors.append(f"SUI Postgres migration run did not persist through alembic: {relative}")
@@ -656,11 +714,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("documentRows") != 1:
                 errors.append(f"SUI Postgres save did not persist one document: {relative}")
-        if "SUI-TEI-tls" in relative:
+        if "SUI-TEI-tls" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("tls") is not True or observed.get("authenticatedStatus") != 200:
                 errors.append(f"SUI TLS check did not succeed: {relative}")
-        if "TEI-fixture-coverage" in relative:
+        if "TEI-fixture-coverage" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -668,7 +726,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("uncoveredRequiredFields")
             ):
                 errors.append(f"TEI fixture field coverage regressed: {relative}")
-        if "TEI-receipt-scope" in relative:
+        if "TEI-receipt-scope" in relative_lower:
             observed = data.get("observed", {})
             gaps = observed.get("gapCounts") or {}
             # Foreign receipts are other workstreams' own schema, not TAI gaps.
@@ -679,7 +737,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or any(own_gaps.values())
             ):
                 errors.append(f"receipt scope walk found gaps: {relative}")
-        if "TEI-target-profile-compare" in relative:
+        if "TEI-target-profile-compare" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -687,7 +745,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("longRunningRefused") is not True
             ):
                 errors.append(f"TEI target-profile comparison changed: {relative}")
-        if "TEI-meaning-change-requiredness" in relative:
+        if "TEI-meaning-change-requiredness" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -695,7 +753,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerMappingUnchanged") is not True
             ):
                 errors.append(f"TEI requiredness change changed: {relative}")
-        if "YIC-tei-product-read" in relative:
+        if "YIC-tei-product-read" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -704,7 +762,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"a listed TEI regression did not pass or the clone was dirty: {relative}")
-        if "YIC-deck-counts" in relative:
+        if "YIC-deck-counts" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -714,7 +772,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("rangeArithmeticIssues")
             ):
                 errors.append(f"a stated deck count no longer matches the file: {relative}")
-        if "YIC-analysis-gates" in relative:
+        if "YIC-analysis-gates" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -723,7 +781,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checksRun") != 40
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
-        if "YIC-audience-field-reading" in relative:
+        if "YIC-audience-field-reading" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -731,14 +789,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("comparesAudienceAgainstARecipient") is not False
             ):
                 errors.append(f"the audience declaration reading lost its finding: {relative}")
-        if "YIC-rule-liveness" in relative:
+        if "YIC-rule-liveness" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("caseDeadCount", 0) < 1
             ):
                 errors.append(f"the rule liveness reading lost its finding: {relative}")
-        if "YIC-h-conditions-parser" in relative:
+        if "YIC-h-conditions-parser" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -746,28 +804,28 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("adaptersNotObserving") == []
             ):
                 errors.append(f"the H-condition reading lost its finding: {relative}")
-        if "YIC-dead-rule-fields" in relative:
+        if "YIC-dead-rule-fields" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("failuresExamined", 0) < 10
             ):
                 errors.append(f"the dead-rule field reading lost its scope: {relative}")
-        if "YIC-dead-rule-impact" in relative:
+        if "YIC-dead-rule-impact" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("newErrorCount", 0) < 1
             ):
                 errors.append(f"the dead-rule experiment lost its finding: {relative}")
-        if "YIC-count-agreement" in relative:
+        if "YIC-count-agreement" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("everyCountAgrees") is not True
             ):
                 errors.append(f"an aggregate's check count and the checker disagree: {relative}")
-        if "YIC-scope-coverage" in relative:
+        if "YIC-scope-coverage" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -775,14 +833,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or (observed.get("families") or {}).get("yi", 0) < 20
             ):
                 errors.append(f"the scope coverage check stopped covering both families: {relative}")
-        if "YIC-receipt-review" in relative:
+        if "YIC-receipt-review" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("reviewIsBlindToAudience") is not True
             ):
                 errors.append(f"the receipt review probe lost its finding: {relative}")
-        if "YIC-reach-forward-refs" in relative:
+        if "YIC-reach-forward-refs" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -790,7 +848,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("correctsTheStageTableSomewhere") is not True
             ):
                 errors.append(f"the reach document's stage table lost its correction: {relative}")
-        if "YIC-codex-adapter" in relative:
+        if "YIC-codex-adapter" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -798,7 +856,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("testsFailed")
             ):
                 errors.append(f"the codex adapter's tests stopped passing: {relative}")
-        if "YIC-harness-evidence" in relative:
+        if "YIC-harness-evidence" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -806,7 +864,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or len(observed.get("adaptersRecordedAcrossAllFiles") or []) < 3
             ):
                 errors.append(f"the harness evidence reading lost its scope: {relative}")
-        if "YIC-exhaustion-claim" in relative:
+        if "YIC-exhaustion-claim" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -814,7 +872,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("namesTheClaimDateNearby") is not True
             ):
                 errors.append(f"doc 53's dated claim is presented as current: {relative}")
-        if "YIC-audience-consumer" in relative:
+        if "YIC-audience-consumer" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -822,7 +880,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("consumerNeverClaimsAuthority") is not True
             ):
                 errors.append(f"the consumer audience probe lost its finding: {relative}")
-        if "YIC-audience-execution" in relative:
+        if "YIC-audience-execution" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -831,7 +889,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("unrelatedRecipientAccepted") is not True
             ):
                 errors.append(f"the audience execution probe lost its finding: {relative}")
-        if "YIC-per-contract-claims" in relative:
+        if "YIC-per-contract-claims" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -839,7 +897,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("noBlanketClaim") is not True
             ):
                 errors.append(f"a per-contract claim regressed to a blanket one: {relative}")
-        if "YIC-eki-recipient" in relative:
+        if "YIC-eki-recipient" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -848,7 +906,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("deliveryRefusesCallerSuppliedRecipient") is not True
             ):
                 errors.append(f"the EKI recipient reading lost its finding: {relative}")
-        if "YIC-audit-recipient" in relative:
+        if "YIC-audit-recipient" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -856,7 +914,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("recipientKeysSurviveSanitization")
             ):
                 errors.append(f"the audit-layer measurement lost its finding: {relative}")
-        if "YIC-recipient-search" in relative:
+        if "YIC-recipient-search" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -864,7 +922,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("filesScanned", 0) < 90
             ):
                 errors.append(f"the recipient search lost its scope: {relative}")
-        if "YIC-pdp-payload" in relative:
+        if "YIC-pdp-payload" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -872,7 +930,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("placesToThreadARecipient") != 3
             ):
                 errors.append(f"the PDP payload probe lost its finding: {relative}")
-        if "YIC-proposal-boundary" in relative:
+        if "YIC-proposal-boundary" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -880,7 +938,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("assertsTheChangeIsDecided") is not False
             ):
                 errors.append(f"a product-contract proposal lost its boundary: {relative}")
-        if "YIC-share-guard" in relative:
+        if "YIC-share-guard" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -889,7 +947,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("safeModeChangesTheOutcome") is not True
             ):
                 errors.append(f"the share action stopped being mode-keyed: {relative}")
-        if "YIC-audience-instrument" in relative:
+        if "YIC-audience-instrument" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -897,7 +955,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("sameDecision") is not True
             ):
                 errors.append(f"the audience probe no longer shows the missing field: {relative}")
-        if "YIC-handoff-conditions" in relative:
+        if "YIC-handoff-conditions" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -906,7 +964,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("separatesWhatG1Changes") is not True
             ):
                 errors.append(f"a handoff condition lost its instrument statement: {relative}")
-        if "YIC-verdict-computation" in relative:
+        if "YIC-verdict-computation" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -914,7 +972,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("fixedVerdictCount") != 0
             ):
                 errors.append(f"a YI writer asserts a fixed verdict: {relative}")
-        if "YIC-claim-ceiling" in relative:
+        if "YIC-claim-ceiling" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -922,7 +980,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("stagesThatCannotBeReached")
             ):
                 errors.append(f"the claim-ceiling classification was lost: {relative}")
-        if "YIC-handoff-stages" in relative:
+        if "YIC-handoff-stages" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -931,7 +989,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("citationClaimShifted") is not True
             ):
                 errors.append(f"the handoff stage mapping changed shape: {relative}")
-        if "YIC-step-review" in relative:
+        if "YIC-step-review" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -940,7 +998,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("replyChars", 0) < 200
             ):
                 errors.append(f"the Step review reply was lost or truncated: {relative}")
-        if "YIC-tool-routing" in relative:
+        if "YIC-tool-routing" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -948,7 +1006,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("portableButUnroutedCount") != 0
             ):
                 errors.append(f"a portable YI tool is not routed: {relative}")
-        if "YIC-document-gates" in relative:
+        if "YIC-document-gates" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -957,7 +1015,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checksRun") != 21
             ):
                 errors.append(f"a YI document check was skipped or failed: {relative}")
-        if "YIC-notrun-refresh" in relative:
+        if "YIC-notrun-refresh" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -965,7 +1023,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or len(observed.get("itemsWithLaterEvidence") or []) != len(observed.get("recordedNotRun") or [])
             ):
                 errors.append(f"the not-run refresh lost an item: {relative}")
-        if "YIC-readme-coverage" in relative:
+        if "YIC-readme-coverage" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -973,7 +1031,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("unindexedCount") != 0
             ):
                 errors.append(f"a YI document is unreachable from the README: {relative}")
-        if "YIC-status-line" in relative:
+        if "YIC-status-line" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -981,7 +1039,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("withoutStatusLineCount") != 0
             ):
                 errors.append(f"a YI document does not state what it is: {relative}")
-        if "YIC-gate-citation" in relative:
+        if "YIC-gate-citation" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -990,7 +1048,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("nonPassWithoutAnyCaveat")
             ):
                 errors.append(f"a gate citation is broken or uncaveated: {relative}")
-        if "YIC-g1-packet" in relative:
+        if "YIC-g1-packet" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -999,7 +1057,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("candidates") != 25
             ):
                 errors.append(f"the G1 packet is not ready for a decision: {relative}")
-        if "YIC-gate-prose" in relative:
+        if "YIC-gate-prose" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1008,7 +1066,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("claimsChecked") != 4
             ):
                 errors.append(f"a gate-status number drifted from its receipt: {relative}")
-        if "YIC-universal-claim" in relative:
+        if "YIC-universal-claim" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1016,7 +1074,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("withoutCountTotal") != 0
             ):
                 errors.append(f"a universal claim lost its population: {relative}")
-        if "YIC-doc-links" in relative:
+        if "YIC-doc-links" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1024,7 +1082,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("brokenCount") != 0
             ):
                 errors.append(f"a docs link no longer resolves: {relative}")
-        if "YIC-section-sequence" in relative:
+        if "YIC-section-sequence" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1032,7 +1090,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("documentsWithProblems")
             ):
                 errors.append(f"a YI section sequence regressed: {relative}")
-        if "YIC-section-order" in relative:
+        if "YIC-section-order" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1040,7 +1098,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("outOfOrder")
             ):
                 errors.append(f"the document sections are out of order: {relative}")
-        if "YIC-audience-declaration" in relative:
+        if "YIC-audience-declaration" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1049,7 +1107,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("outputParsed") is not True
             ):
                 errors.append(f"the audience declaration lost its not-run position: {relative}")
-        if "YIC-sui-source-policy" in relative:
+        if "YIC-sui-source-policy" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1058,7 +1116,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("forcesDenyForSourceSnapshot") is not True
             ):
                 errors.append(f"the source-snapshot override was lost: {relative}")
-        if "YIC-eki-private-input" in relative:
+        if "YIC-eki-private-input" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1066,7 +1124,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("testsWithoutVerdict")
             ):
                 errors.append(f"the EKI private-input asymmetry was lost: {relative}")
-        if "YIC-reach-table" in relative:
+        if "YIC-reach-table" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1074,7 +1132,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("mismatchedCards")
             ):
                 errors.append(f"a reach mark is not backed by its receipt: {relative}")
-        if "YIC-sui-tenant-boundary" in relative:
+        if "YIC-sui-tenant-boundary" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1082,7 +1140,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("failed") != 0
             ):
                 errors.append(f"the tenant boundary stopped refusing first: {relative}")
-        if "YIC-preflight-disclosure" in relative:
+        if "YIC-preflight-disclosure" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1090,7 +1148,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyTestPassed") is not True
             ):
                 errors.append(f"the preflight boundary is no longer disclaimed or passing: {relative}")
-        if "YIC-runbook-expectation" in relative:
+        if "YIC-runbook-expectation" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1098,14 +1156,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("staleValues")
             ):
                 errors.append(f"the runbook expectation is stale: {relative}")
-        if "YIC-gate-reproducibility" in relative:
+        if "YIC-gate-reproducibility" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("runsAreReproducible") is not True
             ):
                 errors.append(f"the gates stopped being reproducible: {relative}")
-        if "YIC-receipt-gates" in relative:
+        if "YIC-receipt-gates" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1113,14 +1171,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyGatePassed") is not True
             ):
                 errors.append(f"a receipt gate was skipped or failed: {relative}")
-        if "YIC-suite-invocation" in relative:
+        if "YIC-suite-invocation" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("sourceRecordsItsInvocation") is not True
             ):
                 errors.append(f"the suite stopped recording its invocation: {relative}")
-        if "YIC-suite-step-accounting" in relative:
+        if "YIC-suite-step-accounting" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1128,7 +1186,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("unexplainedRunStepCalls") != 0
             ):
                 errors.append(f"the suite step counts no longer reconcile: {relative}")
-        if "YIC-authority-limits" in relative:
+        if "YIC-authority-limits" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1136,7 +1194,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("productResultsWithoutKeptLimits")
             ):
                 errors.append(f"a Product result lost its declared limits: {relative}")
-        if "YIC-tei-knowledge-disclosure" in relative:
+        if "YIC-tei-knowledge-disclosure" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1144,7 +1202,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("declaresItIsNotAccessControl") is not True
             ):
                 errors.append(f"knowledge disclosure lost its selection or its limit: {relative}")
-        if "YIC-qh-field-13" in relative:
+        if "YIC-qh-field-13" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1153,7 +1211,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("theClaimIsPinnedByAPassingTest") is not True
             ):
                 errors.append(f"QH-FIELD-13 lost its pinning test: {relative}")
-        if "YIC-qh-resolve-09" in relative:
+        if "YIC-qh-resolve-09" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1161,7 +1219,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("failed")
             ):
                 errors.append(f"a resolve claim lost its pinning test: {relative}")
-        if "YIC-qh-revalidate" in relative:
+        if "YIC-qh-revalidate" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1169,7 +1227,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyCommandRefusesAWrongFingerprint") is not True
             ):
                 errors.append(f"the fingerprint guard stopped guarding: {relative}")
-        if "YIC-skip-disclosure" in relative:
+        if "YIC-skip-disclosure" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1177,7 +1235,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everySkipIsVisible") is not True
             ):
                 errors.append(f"a test receipt hid its host or its skip: {relative}")
-        if "YIC-sui-r2-gate-hosts" in relative:
+        if "YIC-sui-r2-gate-hosts" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1185,7 +1243,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("windowsCannotPass") is not True
             ):
                 errors.append(f"the SUI host difference was lost: {relative}")
-        if "YIC-tei-rooted-source" in relative:
+        if "YIC-tei-rooted-source" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1193,7 +1251,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("skippedOnWindows")
             ):
                 errors.append(f"the rooted-source host difference was lost: {relative}")
-        if "YIC-tei-selfbuild-observations" in relative:
+        if "YIC-tei-selfbuild-observations" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1203,7 +1261,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not str(observed.get("hostKernel", "")).lower().startswith("linux")
             ):
                 errors.append(f"a self-build observation skipped or failed: {relative}")
-        if "YIC-tei-linux-regression" in relative:
+        if "YIC-tei-linux-regression" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1212,7 +1270,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not str(observed.get("hostKernel", "")).lower().startswith("linux")
             ):
                 errors.append(f"the linux regression lost its host or its pass: {relative}")
-        if "YIC-tei-host-skip" in relative:
+        if "YIC-tei-host-skip" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1220,7 +1278,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("skippedTests")
             ):
                 errors.append(f"the host-skip probe lost its skip or gained a failure: {relative}")
-        if "YIC-tei-readonly-cli" in relative:
+        if "YIC-tei-readonly-cli" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1229,7 +1287,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("checkoutClean") is not True
             ):
                 errors.append(f"the CLI baseline lost a command or its byte range: {relative}")
-        if "YI-receipt-quality" in relative:
+        if "YI-receipt-quality" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1238,14 +1296,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("scriptsMissing")
             ):
                 errors.append(f"a receipt-quality check was skipped: {relative}")
-        if "YI-pass-consistency" in relative:
+        if "YI-pass-consistency" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("everyPassExplainsItsGaps") is not True
             ):
                 errors.append(f"a PASS receipt hides a gap: {relative}")
-        if "YI-artifact-digest" in relative:
+        if "YI-artifact-digest" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1253,7 +1311,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyReceiptRecordsAnArtifact") is not True
             ):
                 errors.append(f"a receipt's artifact digest went stale: {relative}")
-        if "YI-cross-receipt" in relative:
+        if "YI-cross-receipt" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1261,7 +1319,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("keptPlusMovedEqualsTotal") is not True
             ):
                 errors.append(f"two receipts now disagree on one fact: {relative}")
-        if "YI-scope-halves" in relative:
+        if "YI-scope-halves" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1269,7 +1327,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("selfTestDetectsBothHalves") is not True
             ):
                 errors.append(f"a YI scope stopped naming its limit: {relative}")
-        if "YI-candidate-fields" in relative:
+        if "YI-candidate-fields" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1277,7 +1335,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("candidates") != 25
             ):
                 errors.append(f"a candidate lost a field or the count moved: {relative}")
-        if "YI-acceptance-authority" in relative:
+        if "YI-acceptance-authority" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1285,21 +1343,21 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("productsWithoutAnAcceptanceRole")
             ):
                 errors.append(f"the acceptance-role gap closed or moved; re-measure: {relative}")
-        if "YI-naming-radius" in relative:
+        if "YI-naming-radius" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("blastRadius", 0) < 3
             ):
                 errors.append(f"the naming blast radius was re-measured as smaller: {relative}")
-        if "YI-sho-actual" in relative:
+        if "YI-sho-actual" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("doc21PremiseHolds") is not False
             ):
                 errors.append(f"sho-composer no longer contradicts doc 21; re-measure: {relative}")
-        if "YI-g1-evidence" in relative:
+        if "YI-g1-evidence" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1307,7 +1365,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("decisionsWithNoObservation")
             ):
                 errors.append(f"G1 evidence lost a gap or a citation: {relative}")
-        if "YI-csw-return" in relative:
+        if "YI-csw-return" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1315,7 +1373,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("editsRecorded") != 9
             ):
                 errors.append(f"a recorded CSW return edit is missing: {relative}")
-        if "YI-receipt-auditability" in relative:
+        if "YI-receipt-auditability" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1323,7 +1381,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("receipts") < 15
             ):
                 errors.append(f"a YI receipt lost its audit fields: {relative}")
-        if "YI-deck-figures" in relative:
+        if "YI-deck-figures" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1331,7 +1389,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyClaimStillStated") is not True
             ):
                 errors.append(f"a deck figure no longer matches its receipt: {relative}")
-        if "YI-publication-refusal" in relative:
+        if "YI-publication-refusal" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1339,7 +1397,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("allowed") is not False
             ):
                 errors.append(f"the publication refusal changed shape: {relative}")
-        if "YI-danger-units" in relative:
+        if "YI-danger-units" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1347,7 +1405,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("receiptsDeclaringPublicationHeld", 0) < 100
             ):
                 errors.append(f"danger-unit evidence changed shape: {relative}")
-        if "YI-eki-measurement" in relative:
+        if "YI-eki-measurement" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1355,7 +1413,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("hasNotCountedSection") is not True
             ):
                 errors.append(f"EKI measurement ADR changed shape: {relative}")
-        if "YI-overreach" in relative:
+        if "YI-overreach" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1363,21 +1421,21 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("overreachRefusedAtDesignTime") is not False
             ):
                 errors.append(f"the design-time refusal changed; re-measure: {relative}")
-        if "YI-fold-dissent" in relative:
+        if "YI-fold-dissent" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("dissentSurvivesTheFold") is not True
             ):
                 errors.append(f"folding lost the dissent; re-measure: {relative}")
-        if "YI-unreferenced" in relative:
+        if "YI-unreferenced" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("canShowUnreferenced") is not False
             ):
                 errors.append(f"SEI now records reads; re-measure: {relative}")
-        if "YI-state-classification" in relative:
+        if "YI-state-classification" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1385,7 +1443,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("statesWithoutAnExample")
             ):
                 errors.append(f"the state classification lost a check or hid an uncovered state: {relative}")
-        if "YI-empty-reference" in relative:
+        if "YI-empty-reference" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1393,7 +1451,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("emptyRangeDiagnosed") is not False
             ):
                 errors.append(f"an empty reference is now diagnosed; re-measure: {relative}")
-        if "YI-context-handoff" in relative:
+        if "YI-context-handoff" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1401,7 +1459,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("carriesAllThreeUnits") is not False
             ):
                 errors.append(f"the context handoff probe changed shape; re-measure: {relative}")
-        if "YI-staleness" in relative:
+        if "YI-staleness" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1409,14 +1467,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("editInsideRangeIsStale") is not True
             ):
                 errors.append(f"staleness reporting changed; re-measure: {relative}")
-        if "YI-centre-key" in relative:
+        if "YI-centre-key" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
                 or observed.get("extensionsCanCarryTheUnits") is not True
             ):
                 errors.append(f"SEI no longer offers a place for the handoff key: {relative}")
-        if "YI-centre-handoff" in relative:
+        if "YI-centre-handoff" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1424,7 +1482,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("handoffIsImplemented") is not False
             ):
                 errors.append(f"the centre handoff probe changed shape; re-measure: {relative}")
-        if "YI-stage3-inventory" in relative:
+        if "YI-stage3-inventory" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1432,7 +1490,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("notRun")
             ):
                 errors.append(f"stage-3 inventory lost an item or hid a not-run: {relative}")
-        if "YI-landing-paths" in relative:
+        if "YI-landing-paths" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1440,7 +1498,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("noPathIsBothTouchedAndAvoided") is not True
             ):
                 errors.append(f"a planned landing path no longer resolves: {relative}")
-        if "YI-g1-status" in relative:
+        if "YI-g1-status" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1448,7 +1506,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("selfTestDetectsTheWording") is not True
             ):
                 errors.append(f"YI documents claim an undecided acceptance: {relative}")
-        if "YI-g2-landing" in relative:
+        if "YI-g2-landing" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1456,7 +1514,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyProductHasAFreeNumber") is not True
             ):
                 errors.append(f"the G2 landing table no longer resolves: {relative}")
-        if "YI-citation-check" in relative:
+        if "YI-citation-check" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1464,13 +1522,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyCandidateIsAccountedOnce") is not True
             ):
                 errors.append(f"YI citations no longer resolve or the packet lost a candidate: {relative}")
-        if "yi-constellation-structure" in relative:
+        if "yi-constellation-structure" in relative_lower:
             if data.get("passed") is not True or data.get("errors"):
                 errors.append(f"YI structural audit recorded errors: {relative}")
             for document in data.get("documents", []):
                 if not (root / document).exists():
                     errors.append(f"YI structural audit names a missing document: {document}")
-        if "YI-doc-integrity" in relative:
+        if "YI-doc-integrity" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1479,7 +1537,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("candidateSetsAgree") is not True
             ):
                 errors.append(f"YI document set is not navigable: {relative}")
-        if "TEI-conclusion-integrity" in relative:
+        if "TEI-conclusion-integrity" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1487,7 +1545,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyCitedReceiptIsPass") is not True
             ):
                 errors.append(f"a conclusion citation is dead or not PASS: {relative}")
-        if "SUI-readonly-enforcement" in relative:
+        if "SUI-readonly-enforcement" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1495,7 +1553,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("denyIsRefused") is not True
             ):
                 errors.append(f"read-only enforcement changed; re-measure: {relative}")
-        if "TEI-independent-oracle" in relative:
+        if "TEI-independent-oracle" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1503,7 +1561,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("knownMismatchesStillReproduce") is not True
             ):
                 errors.append(f"SUI model mismatch set changed; re-measure: {relative}")
-        if "TEI-projection-strategy" in relative:
+        if "TEI-projection-strategy" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1511,7 +1569,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("oneShotStrategiesStillWork") is not True
             ):
                 errors.append(f"TEI projection strategy binding changed: {relative}")
-        if "TEI-receipt-consistency" in relative:
+        if "TEI-receipt-consistency" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1519,13 +1577,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("unexpected")
             ):
                 errors.append(f"a PASS receipt contradicts a success flag: {relative}")
-        if "TEI-decimal-fidelity" in relative:
+        if "TEI-decimal-fidelity" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allProjected") is not True:
                 errors.append(f"TEI decimal fidelity probe did not run: {relative}")
             if observed.get("precisionPreserved") is True:
                 errors.append(f"TEI decimal fidelity changed; re-measure before claiming loss: {relative}")
-        if "TEI-result-exit-parity" in relative:
+        if "TEI-result-exit-parity" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1533,11 +1591,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("suspects")
             ):
                 errors.append(f"receipt verdict can disagree with exit code: {relative}")
-        if "TEI-optional-flag" in relative:
+        if "TEI-optional-flag" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("flagChangesBehaviour") is not True:
                 errors.append(f"TEI optional flag stopped changing behaviour: {relative}")
-        if "SUI-TEI-integration-flow" in relative:
+        if "SUI-TEI-integration-flow" in relative_lower:
             if data.get("result") != "PASS" or data.get("casesPassed") != data.get("casesRun"):
                 errors.append(f"SUI integration flow did not pass every case: {relative}")
         if "TEI-meaning-change-required" in relative and "requiredness" not in relative:
@@ -1553,98 +1611,98 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("consumerDropsNewField") is not True:
                 errors.append(f"TEI meaning-change behaviour changed: {relative}")
-        if "TEI-many-primitive" in relative:
+        if "TEI-many-primitive" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("numericManyRefused") is not True:
                 errors.append(f"TEI numeric many behaviour changed: {relative}")
-        if "TEI-decode-divergence" in relative:
+        if "TEI-decode-divergence" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("prefixDistinguishable") is not True:
                 errors.append(f"TEI decode paths became uniform: {relative}")
-        if "TEI-suite-2026" in relative:
+        if "TEI-suite-2026" in relative_lower:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or any(step.get("returncode") != 0 for step in steps.values()):
                 errors.append(f"TEI suite did not pass every step: {relative}")
-        if "SCN-003-save" in relative:
+        if "SCN-003-save" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True or observed.get("cards") != 5:
                 errors.append(f"SCN-003 save did not round trip three cards: {relative}")
-        if "SCN-003-compose" in relative:
+        if "SCN-003-compose" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
                 errors.append(f"SCN-003 compose did not validate: {relative}")
-        if "SCN-003-artifact-links" in relative:
+        if "SCN-003-artifact-links" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("allFound") is not True or observed.get("count") != 4:
                 errors.append(f"SCN-003 artifact links were not all found: {relative}")
-        if "artifacts-determinism" in relative:
+        if "artifacts-determinism" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("allIdentical") is not True or observed.get("count") != 3:
                 errors.append(f"artifact determinism check did not confirm three artifacts: {relative}")
-        if "SUI-session-tests" in relative:
+        if "SUI-session-tests" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
                 errors.append(f"SUI session test subset did not pass: {relative}")
-        if "SUI-auth-flow-tests" in relative:
+        if "SUI-auth-flow-tests" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
                 errors.append(f"SUI auth flow tests did not pass: {relative}")
-        if "SUI-docs-tests" in relative:
+        if "SUI-docs-tests" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
                 errors.append(f"SUI docs test subset did not pass: {relative}")
-        if "SUI-saas-tests" in relative:
+        if "SUI-saas-tests" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("failed") != 0 or observed.get("passed", 0) < 1:
                 errors.append(f"SUI SaaS test subset did not pass: {relative}")
-        if "SUI-saas-identity" in relative:
+        if "SUI-saas-identity" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SUI broker identity checks did not all pass: {relative}")
-        if "SUI-saas-callback-contract" in relative:
+        if "SUI-saas-callback-contract" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SUI callback rejection checks did not all pass: {relative}")
-        if "SUI-saas-login-contract" in relative:
+        if "SUI-saas-login-contract" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SUI login initiation contract checks did not all pass: {relative}")
-        if "SUI-saas-oauth-contract" in relative:
+        if "SUI-saas-oauth-contract" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SUI OAuth broker contract checks did not all pass: {relative}")
-        if "SUI-saas-adapter-contract" in relative:
+        if "SUI-saas-adapter-contract" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SUI SaaS adapter contract checks did not all pass: {relative}")
-        if "TEI-artifact-digests" in relative:
+        if "TEI-artifact-digests" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("allMatch") is not True or observed.get("count") != 4:
                 errors.append(f"artifact contract digests did not all match: {relative}")
-        if "TEI-records" in relative:
+        if "TEI-records" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"product record conversions did not all validate: {relative}")
-        if "EKI-TEI-multi-worker" in relative:
+        if "EKI-TEI-multi-worker" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or len(observed.get("workers", [])) != 2 or observed.get("executed", 0) < 1:
                 errors.append(f"EKI multi-worker evidence did not hold: {relative}")
-        if "EKI-TEI-revoked-agent" in relative:
+        if "EKI-TEI-revoked-agent" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("executed") is not False or observed.get("refusedStatus") not in (401, 403):
                 errors.append(f"EKI refused-agent evidence did not hold: {relative}")
-        if "EKI-TEI-worker-revoke" in relative:
+        if "EKI-TEI-worker-revoke" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("eventualState") is not True or observed.get("reregisterRefused") is not True:
                 errors.append(f"EKI worker revocation evidence did not hold: {relative}")
-        if "EKI-TEI-manual-execution" in relative:
+        if "EKI-TEI-manual-execution" in relative_lower:
             observed = data.get("observed", {})
             body = observed.get("resultBody") or {}
             if data.get("result") != "PASS" or observed.get("executed") is not True or observed.get("claimed") is not True or not observed.get("taskId"):
                 errors.append(f"EKI manual execution evidence did not hold: {relative}")
             elif observed.get("resultStatus") != 409 or body.get("code") != "RESULT_NOT_READY":
                 errors.append(f"EKI result acceptance changed; update the finding: {relative}")
-        if "EKI-TEI-policy-execution" in relative:
+        if "EKI-TEI-policy-execution" in relative_lower:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
@@ -1657,23 +1715,23 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or "without a retry" not in data.get("scope", "")
             ):
                 errors.append(f"EKI policy-aligned no-retry evidence did not hold: {relative}")
-        if "EKI-TEI-projection-execution" in relative:
+        if "EKI-TEI-projection-execution" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or not observed.get("taskId") or not observed.get("claimDigest"):
                 errors.append(f"EKI projection execution evidence did not hold: {relative}")
-        if "EKI-TEI-http-execution" in relative:
+        if "EKI-TEI-http-execution" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("executed") is not True or observed.get("claimDigest") != observed.get("acceptedResultDigest"):
                 errors.append(f"EKI execution evidence did not hold: {relative}")
-        if "EKI-TEI-dispatch-running" in relative:
+        if "EKI-TEI-dispatch-running" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("taskStatus") != "running" or observed.get("taskExecuted") is not False:
                 errors.append(f"EKI task did not reach running without executing: {relative}")
-        if "EKI-TEI-submit" in relative:
+        if "EKI-TEI-submit" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202 or observed.get("taskStatus") != "queued":
                 errors.append(f"EKI did not accept the projected TaskRequest: {relative}")
-        if "SEI-TEI-mcp-check" in relative:
+        if "SEI-TEI-mcp-check" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SEI MCP check_decision allow/deny pair did not hold: {relative}")
@@ -1682,16 +1740,16 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             checks = observed.get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()) or observed.get("tools") != ["resume", "add_recommendation", "check_decision"]:
                 errors.append(f"SEI MCP probe did not expose the expected tools: {relative}")
-        if "SEI-TEI-resume" in relative:
+        if "SEI-TEI-resume" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("humanViewHasNoRawBidi") is not True:
                 errors.append(f"SEI resume view leaked a raw bidi control: {relative}")
-        if "SEI-TEI-doctor" in relative:
+        if "SEI-TEI-doctor" in relative_lower:
             observed = data.get("observed", {})
             lock = observed.get("withStaleLock", {}).get("lines", {}).get("lock", {})
             if data.get("result") != "PASS" or lock.get("status") != "warn":
                 errors.append(f"SEI doctor lock handling changed: {relative}")
-        if "SEI-TEI-gate-variants" in relative:
+        if "SEI-TEI-gate-variants" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SEI gate variant checks did not all pass: {relative}")
@@ -1699,55 +1757,55 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allowVerdict") != "allow" or observed.get("denyVerdict") != "deny":
                 errors.append(f"SEI gate allow/deny pair did not hold: {relative}")
-        if "SEI-TEI-cli" in relative:
+        if "SEI-TEI-cli" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"SEI CLI recording did not pass: {relative}")
-        if "EKI-TEI-record" in relative:
+        if "EKI-TEI-record" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
                 errors.append(f"EKI task-request record did not validate: {relative}")
-        if "EKI-TEI-consumer" in relative:
+        if "EKI-TEI-consumer" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 4 or observed.get("callsControl") is not False:
                 errors.append(f"EKI consumer receipt did not record four non-calling tests: {relative}")
-        if "MMI-TEI-record" in relative:
+        if "MMI-TEI-record" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
                 errors.append(f"MMI format-profile record did not validate: {relative}")
-        if "MMI-TEI-real-artifact" in relative:
+        if "MMI-TEI-real-artifact" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("profileId") != "profile-a":
                 errors.append(f"MMI real artifact receipt did not parse profile-a: {relative}")
-        if "MMI-TEI-consumer" in relative:
+        if "MMI-TEI-consumer" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"MMI consumer receipt did not record four non-writing tests: {relative}")
-        if "SEI-TEI-record" in relative:
+        if "SEI-TEI-record" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("valid") is not True or observed.get("refId") != "decision-1":
                 errors.append(f"SEI decision-memory record did not validate: {relative}")
-        if "SEI-TEI-real-artifact" in relative:
+        if "SEI-TEI-real-artifact" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") is not True or observed.get("refId") != "decision-1":
                 errors.append(f"SEI real artifact receipt did not parse decision-1: {relative}")
-        if "SEI-TEI-consumer" in relative:
+        if "SEI-TEI-consumer" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 3 or observed.get("writes") is not False:
                 errors.append(f"SEI consumer receipt did not record three non-writing tests: {relative}")
-        if "EKI-TEI-artifact" in relative:
+        if "EKI-TEI-artifact" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("taskRequestValid") is not True:
                 errors.append(f"EKI artifact did not validate: {relative}")
-        if "EKI-TEI-task-request-selection" in relative:
+        if "EKI-TEI-task-request-selection" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") is not True:
                 errors.append(f"EKI task request selection did not pass: {relative}")
-        if "artifacts-crosscheck" in relative:
+        if "artifacts-crosscheck" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("allValid") is not True or observed.get("count") != 4:
                 errors.append(f"TEI artifacts crosscheck did not validate three artifacts: {relative}")
-        if "SUI-TEI-reference-multi" in relative:
+        if "SUI-TEI-reference-multi" in relative_lower:
             checks = data.get("observed", {})
             if data.get("result") != "PASS" or checks.get("firstStatus") != 200 or checks.get("secondStatus") != 200 or checks.get("firstNotSei") is not True:
                 errors.append(f"SUI did not isolate two TEI artifacts: {relative}")
@@ -1755,11 +1813,11 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("projectionStatus") != 200 or observed.get("artifactEchoed") is not True:
                 errors.append(f"SUI did not serve the bound TEI artifact: {relative}")
-        if "SUI-TEI-provision" in relative:
+        if "SUI-TEI-provision" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("createStatus") != 201 or observed.get("auditEvents", 0) < 1:
                 errors.append(f"SUI provision check did not hold: {relative}")
-        if "SUI-TEI-edge-optional-contract" in relative:
+        if "SUI-TEI-edge-optional-contract" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("absentKindsProjectedWithoutThem") is not True:
                 errors.append(f"SUI optional-kind Edge contract behaviour changed: {relative}")
@@ -1767,143 +1825,143 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             # Its only qualified outcome is the pinned, explicit field-loss
             # observation checked above. Never call this consumer a PASS.
             pass
-        if "SUI-TEI-edge-chain" in relative:
+        if "SUI-TEI-edge-chain" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("cardToIslandComposes") is not True:
                 errors.append(f"SUI edge projection-to-assembly chain broke: {relative}")
-        if "SUI-TEI-assembler-tests" in relative:
+        if "SUI-TEI-assembler-tests" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("failed") is not False:
                 errors.append(f"SUI assembler unit tests failed: {relative}")
-        if "SUI-TEI-assembler-kinds" in relative:
+        if "SUI-TEI-assembler-kinds" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("assemblerRewritesKinds") is not True:
                 errors.append(f"SUI assembler kind fallback changed: {relative}")
-        if "SUI-TEI-edge-optionality" in relative:
+        if "SUI-TEI-edge-optionality" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("bothKindsPresent") is not True:
                 errors.append(f"SUI Edge optionality behaviour changed: {relative}")
-        if "SUI-TEI-document-types" in relative:
+        if "SUI-TEI-document-types" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allPrimitivesMatch") is not True:
                 errors.append(f"SUI projection contract types changed: {relative}")
-        if "SUI-TEI-document-coverage" in relative:
+        if "SUI-TEI-document-coverage" in relative_lower:
             observed = data.get("observed", {})
             edge = observed.get("coverage", {}).get("Edge", {})
             if data.get("result") != "PASS" or edge.get("coverageRatio") != 1.0:
                 errors.append(f"SUI DocumentV1 coverage changed: {relative}")
-        if "SUI-TEI-parsers" in relative:
+        if "SUI-TEI-parsers" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("visibility", {}).get("caseMismatch") is not None:
                 errors.append(f"SUI visibility parsing became case-insensitive: {relative}")
-        if "SUI-TEI-failsafe" in relative:
+        if "SUI-TEI-failsafe" in relative_lower:
             cases = data.get("observed", {}).get("cases", {})
             if data.get("result") != "PASS" or cases.get("safeModeExport", {}).get("reason") != "safe_mode":
                 errors.append(f"SUI local fail-safe ladder changed: {relative}")
-        if "SUI-TEI-builders" in relative:
+        if "SUI-TEI-builders" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("unknownAdapterFallsBackToNoop") is not True:
                 errors.append(f"SUI policy component fallbacks changed: {relative}")
-        if "SUI-TEI-policy-requirements" in relative:
+        if "SUI-TEI-policy-requirements" in relative_lower:
             cases = data.get("observed", {}).get("cases", {})
             broken = cases.get("allTenBroken", {}).get("reason", "")
             if data.get("result") != "PASS" or broken.count(", ") < 8:
                 errors.append(f"SUI SaaS policy requirement list changed: {relative}")
-        if "SUI-TEI-preflight" in relative:
+        if "SUI-TEI-preflight" in relative_lower:
             observed = data.get("observed", {}).get("results", {})
             if data.get("result") != "PASS" or observed.get("withAdapters:local-dev", {}).get("outcome") != "refused":
                 errors.append(f"SUI trusted runtime preflight rule changed: {relative}")
-        if "SUI-TEI-migrations" in relative:
+        if "SUI-TEI-migrations" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("singleHead") is not True:
                 errors.append(f"SUI migration heads are not linear: {relative}")
-        if "SUI-TEI-card-move" in relative:
+        if "SUI-TEI-card-move" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("noOp", {}).get("outcome") != "refused":
                 errors.append(f"SUI card-move domain changed: {relative}")
-        if "SUI-TEI-headers" in relative:
+        if "SUI-TEI-headers" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("readHeaders", {}).get("nosniff") != "nosniff":
                 errors.append(f"SUI security headers missing: {relative}")
-        if "SUI-TEI-auth-assurance" in relative:
+        if "SUI-TEI-auth-assurance" in relative_lower:
             cases = data.get("observed", {}).get("cases", {})
             if data.get("result") != "PASS" or cases.get("aalLowWinsOverAcrHigh", {}).get("assuranceLevel") != "low":
                 errors.append(f"SUI auth assurance precedence changed: {relative}")
-        if "SUI-TEI-probes" in relative:
+        if "SUI-TEI-probes" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("healthzBody") != {"status": "ok"}:
                 errors.append(f"SUI probe endpoints changed: {relative}")
-        if "SUI-TEI-profile-policy" in relative:
+        if "SUI-TEI-profile-policy" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("sessionRequiredProfiles") != ["saas-multitenant"]:
                 errors.append(f"SUI profile policy table changed: {relative}")
-        if "SUI-TEI-dedup-window" in relative:
+        if "SUI-TEI-dedup-window" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("immediateSent") is not False:
                 errors.append(f"SUI audit dedup window did not suppress an immediate repeat: {relative}")
-        if "SUI-TEI-saas-precondition" in relative:
+        if "SUI-TEI-saas-precondition" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("updateMissing") != [428, "document_precondition_required"]:
                 errors.append(f"SUI SaaS precondition helper did not demand If-Match: {relative}")
-        if "SUI-TEI-agent-key-wiring" in relative:
+        if "SUI-TEI-agent-key-wiring" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("agentRequestStatus") != 503:
                 errors.append(f"SUI agent key wiring probe did not observe the local-dev 503: {relative}")
-        if "SUI-TEI-agent-read-path" in relative:
+        if "SUI-TEI-agent-read-path" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("writeAttemptStatus") != 403:
                 errors.append(f"SUI agent read path did not refuse a write: {relative}")
-        if "SUI-TEI-list-pagination" in relative:
+        if "SUI-TEI-list-pagination" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("allSeenOnce") is not True:
                 errors.append(f"SUI document list pagination missed or repeated a document: {relative}")
-        if "SUI-TEI-native-action" in relative:
+        if "SUI-TEI-native-action" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("disabledStatus") != 404:
                 errors.append(f"SUI native action was not disabled by default: {relative}")
-        if "SUI-TEI-export-dedup" in relative:
+        if "SUI-TEI-export-dedup" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("repeatSuppressed") is not True:
                 errors.append(f"SUI export audit dedup did not suppress a repeat: {relative}")
-        if "SUI-TEI-similar-candidates" in relative:
+        if "SUI-TEI-similar-candidates" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("mergedCardExcluded") is not True:
                 errors.append(f"SUI similar candidates included an ineligible card: {relative}")
-        if "SUI-TEI-polygon-handoff" in relative:
+        if "SUI-TEI-polygon-handoff" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("paddingDecision") != "rollback_required":
                 errors.append(f"SUI polygon handoff did not require rollback: {relative}")
-        if "SUI-TEI-ce4-audit-order" in relative:
+        if "SUI-TEI-ce4-audit-order" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("applyBeforeAnyEventStatus") != 409:
                 errors.append(f"SUI CE4 audit order did not refuse an early apply: {relative}")
-        if "SUI-TEI-merge-decision-log" in relative:
+        if "SUI-TEI-merge-decision-log" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("duplicateStatus") != 409:
                 errors.append(f"SUI merge decision log accepted a duplicate: {relative}")
-        if "SUI-TEI-archive-lifecycle" in relative:
+        if "SUI-TEI-archive-lifecycle" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("writeArchivedStatus") != 423:
                 errors.append(f"SUI archive gate did not refuse the write: {relative}")
-        if "SUI-TEI-etag-stability" in relative:
+        if "SUI-TEI-etag-stability" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("etagStableAcrossReads") is not True:
                 errors.append(f"SUI document ETag was not stable: {relative}")
             if observed.get("etagChangedAfterSave") is not True:
                 errors.append(f"SUI document ETag did not change after a save: {relative}")
-        if "SUI-TEI-audit-pagination" in relative:
+        if "SUI-TEI-audit-pagination" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("noOverlap") is not True or observed.get("hasCursor") is not True:
                 errors.append(f"SUI admin audit pagination did not hold: {relative}")
-        if "SUI-TEI-agent-credential-admin" in relative:
+        if "SUI-TEI-agent-credential-admin" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("anonymousStatus") not in (401, 403):
                 errors.append(f"SUI agent credential admin did not refuse anonymous callers: {relative}")
-        if "SUI-TEI-agent-guard" in relative:
+        if "SUI-TEI-agent-guard" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("guardRaised") is not True or observed.get("auditExportedClearsGuard") is not True:
                 errors.append(f"SUI agent credential guard did not hold: {relative}")
-        if "SUI-TEI-registry" in relative:
+        if "SUI-TEI-registry" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("listStatus") != 200 or observed.get("createStatus") != 201:
                 errors.append(f"SUI model registry did not hold: {relative}")
@@ -1911,7 +1969,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("dryStatus") != 200 or observed.get("hasBundleHash") is not True:
                 errors.append(f"SUI CE4 resolve did not hold: {relative}")
-        if "SUI-TEI-context-bundle" in relative:
+        if "SUI-TEI-context-bundle" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("firstStatus") != 200 or observed.get("deterministic") is not True:
                 errors.append(f"SUI context bundle did not hold: {relative}")
@@ -1927,59 +1985,59 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("eventCount", 0) < 1 or observed.get("viewStatus") != 200:
                 errors.append(f"SUI audit export did not deliver an event: {relative}")
-        if "MMI-delivery-audit" in relative:
+        if "MMI-delivery-audit" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("exitCode") != 1 or observed.get("referentialCompleteness") != "empty":
                 errors.append(f"MMI delivery audit observation changed: {relative}")
-        if "MMI-inventory" in relative:
+        if "MMI-inventory" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"MMI inventory checks did not all pass: {relative}")
-        if "MMI-inspect" in relative:
+        if "MMI-inspect" in relative_lower:
             checks = data.get("observed", {}).get("checks", {})
             if data.get("result") != "PASS" or not checks or not all(checks.values()):
                 errors.append(f"MMI inspect contract checks did not all pass: {relative}")
-        if "MMI-TEI-profile" in relative:
+        if "MMI-TEI-profile" in relative_lower:
             observed = data.get("observed", {})
             if data.get("result") != "PASS" or observed.get("accepted") is not True:
                 errors.append(f"MMI did not accept the projected format profile: {relative}")
-        if "MMI-TEI-artifact" in relative:
+        if "MMI-TEI-artifact" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("profileValid") is not True:
                 errors.append(f"MMI artifact did not validate: {relative}")
-        if "MMI-TEI-format-profile-selection" in relative:
+        if "MMI-TEI-format-profile-selection" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") is not True:
                 errors.append(f"MMI format profile selection did not pass: {relative}")
-        if "SEI-TEI-artifact" in relative:
+        if "SEI-TEI-artifact" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("decisionValid") is not True:
                 errors.append(f"SEI artifact did not validate: {relative}")
-        if "artifact-schema" in relative:
+        if "artifact-schema" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("valid") is not True:
                 errors.append(f"TEI artifact schema check did not validate: {relative}")
-        if "SEI-TEI-decision-selection" in relative:
+        if "SEI-TEI-decision-selection" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") is not True:
                 errors.append(f"SEI decision selection did not pass: {relative}")
-        if "tei-pipeline-save" in relative:
+        if "tei-pipeline-save" in relative_lower:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or steps.get("save", {}).get("roundTrip") is not True:
                 errors.append(f"TEI pipeline save did not pass with a round trip: {relative}")
-        if "SUI-TEI-compat" in relative:
+        if "SUI-TEI-compat" in relative_lower:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:
                 errors.append(f"SUI pipeline did not pass against the newer TEI: {relative}")
-        if "tei-pipeline-run" in relative:
+        if "tei-pipeline-run" in relative_lower:
             steps = data.get("steps", {})
             if data.get("result") != "PASS" or steps.get("flow", {}).get("casesPassed") != 21:
                 errors.append(f"TEI pilot run did not pass all steps: {relative}")
-        if "tei-contract-digest-check" in relative:
+        if "tei-contract-digest-check" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("allMatch") is not True:
                 errors.append(f"TEI contract digest check found a mismatch: {relative}")
-        if "tei-contract-versions-validation" in relative:
+        if "tei-contract-versions-validation" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("documentV1Valid") is not True:
                 errors.append(f"TEI contract versions validation did not validate DocumentV1: {relative}")
@@ -1987,125 +2045,125 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             contracts = data.get("contracts", {})
             if not contracts or not all(item.get("contractVersion") for item in contracts.values()):
                 errors.append(f"TEI contract versions receipt is missing contract versions: {relative}")
-        if "tei-fields-roundtrip" in relative:
+        if "tei-fields-roundtrip" in relative_lower:
             observed = data.get("observed", {})
             checks = observed.get("roundTripChecks", {})
             if observed.get("roundTrip") is not True or not checks or not all(checks.values()):
                 errors.append(f"TEI fields roundtrip receipt has failing checks: {relative}")
-        if "tei-reading-order-validation" in relative:
+        if "tei-reading-order-validation" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("documentV1Valid") is not True:
                 errors.append(f"TEI reading order validation did not validate DocumentV1: {relative}")
         elif "tei-reading-order" in relative:
             if data.get("result") != "PASS":
                 errors.append(f"TEI reading order receipt did not pass: {relative}")
-        if "tei-sources-validation" in relative:
+        if "tei-sources-validation" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("documentV1Valid") is not True:
                 errors.append(f"TEI sources validation did not validate DocumentV1: {relative}")
         elif "tei-sources" in relative:
             if data.get("result") != "PASS":
                 errors.append(f"TEI sources receipt did not pass: {relative}")
-        if "tei-sui-server" in relative:
+        if "tei-sui-server" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("serverReady") is not True or observed.get("anonymousStatus") != 401:
                 errors.append(f"TEI server receipt did not record readiness and 401: {relative}")
             if observed.get("transport") != "uvicorn on 127.0.0.1":
                 errors.append(f"TEI server receipt must disclose the transport: {relative}")
-        if "tei-save-roundtrip" in relative:
+        if "tei-save-roundtrip" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("roundTrip") is not True:
                 errors.append(f"TEI roundtrip receipt did not record a matching round trip: {relative}")
             checks = observed.get("roundTripChecks", {})
             if not checks or not all(checks.values()):
                 errors.append(f"TEI roundtrip receipt has failing checks: {relative}")
-        if "tei-save-auth" in relative:
+        if "tei-save-auth" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("unauthorizedStatus") != 401 or observed.get("finalReadStatus") != 200:
                 errors.append(f"TEI save auth receipt did not record 401 then 200: {relative}")
             if observed.get("apiKey") != "configured":
                 errors.append(f"TEI save auth receipt must disclose the configured key: {relative}")
-        if "tei-save-e2e" in relative:
+        if "tei-save-e2e" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("writes") is not True or observed.get("finalReadStatus") != 200:
                 errors.append(f"TEI save e2e receipt did not record a successful write: {relative}")
             if observed.get("database") != "temporary SQLite":
                 errors.append(f"TEI save e2e receipt must disclose the temporary database: {relative}")
-        if "tei-save-contract" in relative:
+        if "tei-save-contract" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("contractValid") is not True or observed.get("writes") is not False or observed.get("existingValidated") is not True:
                 errors.append(f"TEI save contract receipt did not validate the payload: {relative}")
-        if "tei-save-plan-cli" in relative:
+        if "tei-save-plan-cli" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("writes") is not False or observed.get("action") != "update":
                 errors.append(f"TEI save plan CLI receipt did not record a non-writing update: {relative}")
-        if "tei-sui-save-plan-merge" in relative:
+        if "tei-sui-save-plan-merge" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 6 or observed.get("writes") is not False:
                 errors.append(f"TEI save plan merge receipt did not record six non-writing tests: {relative}")
-        if "tei-sui-save-merge" in relative:
+        if "tei-sui-save-merge" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save merge receipt did not record five non-writing tests: {relative}")
-        if "tei-large-doc" in relative:
+        if "tei-large-doc" in relative_lower:
             observed = data.get("observed", {})
             if data.get("synthetic") is not True or observed.get("savedCards") != 300:
                 errors.append(f"TEI large-doc synthetic receipt is mislabeled or incomplete: {relative}")
-        if "tei-sui-etag" in relative:
+        if "tei-sui-etag" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("staleIfMatchStatus") != 409 or observed.get("matchingIfMatchStatus") != 200:
                 errors.append(f"TEI ETag receipt did not record 409/200: {relative}")
-        if "tei-multi-doc" in relative:
+        if "tei-multi-doc" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("documents") != 10 or observed.get("isolatedIds") is not True:
                 errors.append(f"TEI multi-doc receipt did not record ten isolated documents: {relative}")
-        if "tei-sui-save-plan" in relative:
+        if "tei-sui-save-plan" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 5 or observed.get("writes") is not False:
                 errors.append(f"TEI save plan receipt did not record four non-writing tests: {relative}")
-        if "documentv1-validation" in relative:
+        if "documentv1-validation" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("documentV1Valid") is not True or observed.get("cards") != 2:
                 errors.append(f"DocumentV1 validation receipt did not validate two cards: {relative}")
-        if "tei-tenant-route" in relative:
+        if "tei-tenant-route" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("boundArtifactStatus") != 200 or observed.get("agentCredentialStatus") != 403:
                 errors.append(f"TEI tenant route receipt did not record 200/403: {relative}")
             if observed.get("authorizationStubbed") is not True:
                 errors.append(f"TEI tenant route receipt did not disclose the authorization stub: {relative}")
-        if "tei-auth" in relative:
+        if "tei-auth" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("authorizedStatus") != 200 or observed.get("anonymousStatus") != 401:
                 errors.append(f"TEI auth receipt did not record 200/401: {relative}")
             if observed.get("authEnabled") is not True:
                 errors.append(f"TEI auth receipt did not enable authorization: {relative}")
-        if "tei-http-route" in relative:
+        if "tei-http-route" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 2 or observed.get("status") != 200:
                 errors.append(f"TEI HTTP route receipt did not pass two requests: {relative}")
             if observed.get("authOverridden") is not True:
                 errors.append(f"TEI HTTP route receipt did not disclose the auth override: {relative}")
-        if "tei-adapter" in relative:
+        if "tei-adapter" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 9 or observed.get("savesAnything") is not False:
                 errors.append(f"TEI adapter receipt did not record nine non-saving tests: {relative}")
-        if "tei-consumer" in relative:
+        if "tei-consumer" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed") != 6 or observed.get("readOnly") is not True:
                 errors.append(f"TEI consumer receipt did not record six read-only tests: {relative}")
-        if "tei-admin-path" in relative:
+        if "tei-admin-path" in relative_lower:
             if data.get("adminPathOk") is not True or data.get("readOk") is not True:
                 errors.append(f"TEI admin path receipt did not read the artifact: {relative}")
-        if "tei-binding" in relative:
+        if "tei-binding" in relative_lower:
             if data.get("bindingResolved") is not True or data.get("readOk") is not True:
                 errors.append(f"TEI binding receipt did not resolve and read: {relative}")
-        if "tei-sui-reader" in relative:
+        if "tei-sui-reader" in relative_lower:
             if data.get("readOk") is not True or data.get("tenantIsolationRejected") is not True:
                 errors.append(f"TEI SUI reader receipt did not read and isolate: {relative}")
-        if "tei-artifact-validation" in relative:
+        if "tei-artifact-validation" in relative_lower:
             if data.get("passed") is not True or data.get("errors"):
                 errors.append(f"TEI artifact validation receipt did not pass: {relative}")
-        if "tei-artifact" in relative:
+        if "tei-artifact" in relative_lower:
             artifact = data.get("artifact") or {}
             if artifact.get("schema") != "tai.reference.tei-documentv1-projection/v0":
                 errors.append(f"TEI artifact receipt has no projection schema: {relative}")
@@ -2115,44 +2173,44 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                     errors.append(f"TEI artifact receipt points at a missing file: {relative}")
                 elif hashlib.sha256(artifact_path.read_bytes()).hexdigest() != artifact["digest"].removeprefix("sha256:"):
                     errors.append(f"TEI artifact digest does not match the file: {relative}")
-        if "tei-integration-flow" in relative:
+        if "tei-integration-flow" in relative_lower:
             if data.get("casesPassed") != data.get("casesRun"):
                 errors.append(f"TEI integration flow receipt did not pass all cases: {relative}")
             if data.get("danglingReferenceRejected") is not True:
                 errors.append(f"TEI integration flow receipt did not reject a dangling reference: {relative}")
             if data.get("composed", {}).get("cards") != 2:
                 errors.append(f"TEI integration flow receipt did not compose two cards: {relative}")
-        if "tei-assembler" in relative:
+        if "tei-assembler" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("assemblerPassed") != 6 or observed.get("assemblerTests") != 6:
                 errors.append(f"TEI assembler receipt did not pass 6 tests: {relative}")
             if observed.get("cardCases") != 4 or observed.get("cardQualified") != "text-record-template":
                 errors.append(f"TEI assembler receipt did not bind the card record: {relative}")
-        if "tei-document-record" in relative:
+        if "tei-document-record" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("cases") != 4 or observed.get("profilePassed") is not True:
                 errors.append(f"TEI document record receipt did not pass 4 cases and the profile: {relative}")
             if observed.get("fields") != ["documentId", "title", "digest"]:
                 errors.append(f"TEI document record receipt has unexpected fields: {relative}")
-        if "tei-island-edge" in relative:
+        if "tei-island-edge" in relative_lower:
             contracts = data.get("observed", {}).get("contracts", [])
             if len(contracts) != 2:
                 errors.append(f"TEI island/edge receipt did not cover two contracts: {relative}")
             for item in contracts:
                 if item.get("cases") != 4 or item.get("targetPassed") is not True:
                     errors.append(f"TEI island/edge receipt did not pass 4 cases for {item.get('id')}: {relative}")
-        if "tei-deploy" in relative:
+        if "tei-deploy" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("rollback", {}).get("passed") is not True:
                 errors.append(f"TEI deploy receipt did not pass rollback: {relative}")
             if observed.get("secondDeploy", {}).get("rollbackAvailable") is not True:
                 errors.append(f"TEI deploy receipt did not record rollback availability: {relative}")
-        if "tei-comparison" in relative:
+        if "tei-comparison" in relative_lower:
             if data.get("evaluationSet", {}).get("cases") != 4:
                 errors.append(f"TEI comparison receipt did not use 4 cases: {relative}")
             if data.get("tei", {}).get("passed") is not True or data.get("baseline", {}).get("passed") is not True:
                 errors.append(f"TEI comparison receipt did not pass both paths: {relative}")
-        if "tei-card-record" in relative:
+        if "tei-card-record" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("kind") != "record" or observed.get("passedCases") != 4:
                 errors.append(f"TEI card record receipt did not pass a record contract: {relative}")
@@ -2160,42 +2218,42 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"TEI card record receipt did not qualify the record candidate: {relative}")
             if observed.get("profilePassed") is not True:
                 errors.append(f"TEI card record receipt did not run the profile: {relative}")
-        if "tei-multi-attribute" in relative:
+        if "tei-multi-attribute" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("attributeCount") != 2 or observed.get("passedCases") != 4:
                 errors.append(f"TEI multi-attribute receipt did not cover two attributes: {relative}")
             if "text-template" not in observed.get("qualified", []):
                 errors.append(f"TEI multi-attribute receipt did not qualify the candidate: {relative}")
-        if "tei-workflow" in relative:
+        if "tei-workflow" in relative_lower:
             if data.get("passed") is not True or data.get("cases") != 4:
                 errors.append(f"TEI workflow receipt did not pass 4 cases: {relative}")
             if data.get("humanInterventions") != 0:
                 errors.append(f"TEI workflow receipt recorded human interventions: {relative}")
-        if "tei-target" in relative:
+        if "tei-target" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("processModel") != "oneshot" or observed.get("profilePassed") is not True:
                 errors.append(f"TEI target receipt did not pass the oneshot profile: {relative}")
             if observed.get("passedCases") != 4:
                 errors.append(f"TEI target receipt did not pass 4 cases: {relative}")
-        if "tei-text-generation" in relative:
+        if "tei-text-generation" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("strategy") != "text-template" or observed.get("passedCases") != 4:
                 errors.append(f"TEI text generation receipt did not pass 4 cases with text-template: {relative}")
             if "text-template" not in observed.get("qualified", []):
                 errors.append(f"TEI text generation receipt did not qualify the generated candidate: {relative}")
-        if "tei-text-selection" in relative:
+        if "tei-text-selection" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("cases") != 4 or observed.get("passedCases") != 4:
                 errors.append(f"TEI text selection receipt did not pass 4 cases: {relative}")
             if "text-identity" not in observed.get("qualified", []):
                 errors.append(f"TEI text selection receipt did not qualify the candidate: {relative}")
-        if "tei-generation-spike" in relative:
+        if "tei-generation-spike" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("cases") != 4 or observed.get("passedCases") != 4:
                 errors.append(f"TEI generation spike receipt did not pass 4 cases: {relative}")
             if not str(observed.get("contractDigest", "")).startswith("sha256:"):
                 errors.append(f"TEI generation spike receipt has no contract digest: {relative}")
-        if "SUI-TEI-pilot" in relative:
+        if "SUI-TEI-pilot" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("validate") != "ok":
                 errors.append(f"TEI pilot receipt did not record validate ok: {relative}")
@@ -2203,13 +2261,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"TEI pilot receipt has no source index fingerprint: {relative}")
             if observed.get("dataTypes", 0) < 4:
                 errors.append(f"TEI pilot receipt has too few data types: {relative}")
-        if "SUI-auth" in relative:
+        if "SUI-auth" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("passed", 0) < 40 or observed.get("failed") != 0:
                 errors.append(f"SUI auth receipt does not record 40 passing tests: {relative}")
             if not str(data.get("suiCommit", "")):
                 errors.append(f"SUI auth receipt has no commit: {relative}")
-        if "EKI-http-agent" in relative:
+        if "EKI-http-agent" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("submitStatus") != 202:
                 errors.append(f"EKI HTTP/agent receipt has no 202: {relative}")
@@ -2221,7 +2279,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"EKI HTTP/agent receipt has no accepted result: {relative}")
             if not str(observed.get("acceptedResultDigest", "")):
                 errors.append(f"EKI HTTP/agent receipt has no accepted result digest: {relative}")
-        if "MMI-live" in relative:
+        if "MMI-live" in relative_lower:
             observed = data.get("observed", {})
             if observed.get("exitCode") != 0:
                 errors.append(f"MMI live receipt did not record exit 0: {relative}")
@@ -2263,10 +2321,45 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 continue
             if item.get("evidence") not in (None, ""):
                 errors.append(f"{item_id} declares evidence despite evidenceKind=none")
+    # Separate known rule-selector failures from new ones: a known entry is still
+    # reported, and only an unlisted failure blocks.
+    known_rule_failures: list[str] = []
+    blocking: list[str] = []
+    for message in errors:
+        key = None
+        if ": evaluations/records/" in message:
+            text_key, relative_key = message.split(": ", 1)
+            key = (text_key, relative_key)
+        if key is not None and key in KNOWN_RULE_FAILURE_KEYS:
+            known_rule_failures.append(message)
+        else:
+            blocking.append(message)
+    resolved_rule_failures = sorted(
+        f"{text_key}: {relative_key}"
+        for text_key, relative_key in KNOWN_RULE_FAILURE_KEYS
+        if f"{text_key}: {relative_key}" not in known_rule_failures
+    )
+    errors = blocking
+
+    # Every rule must reach at least one registered receipt, or say so.
+    # The per-file rules are applied to both loops, so a rule that reaches only a
+    # real-execution receipt is live. Counting RECORDS alone reported false inert rules.
+    all_names = list(RECORDS) + list(REAL_RECORDS)
+    selector_counts = {
+        selector: sum(1 for name in all_names if selector.lower() in name.lower())
+        for selector in _RULE_SELECTORS
+    }
+    inert_rules = sorted(
+        selector for selector, count in selector_counts.items() if count == 0
+    )
+
     return {
         "passed": not errors,
         "errors": errors,
         "recordCount": len(RECORDS),
+        "knownRuleFailures": known_rule_failures,
+        "resolvedRuleFailures": resolved_rule_failures,
+        "inertRules": inert_rules,
         "realRecordCount": len(REAL_RECORDS),
         "knownNegativeReceipts": known_negative_receipts,
     }

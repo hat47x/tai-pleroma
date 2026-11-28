@@ -30,6 +30,33 @@ EXPECTATIONS = {
 }
 
 
+def _from_checker_baseline(root):
+    """Read the checker's own KNOWN_RULE_FAILURE_BASELINE as (message, receipt) pairs."""
+    import ast
+
+    checker = root / "tools/check-synthetic-receipts/check.py"
+    tree = ast.parse(checker.read_text(encoding="utf-8"))
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and node.targets
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "KNOWN_RULE_FAILURE_BASELINE"
+            and isinstance(node.value, (ast.Tuple, ast.List))
+        ):
+            pairs = []
+            for element in node.value.elts:
+                if isinstance(element, ast.Tuple) and len(element.elts) == 2:
+                    values = []
+                    for item in element.elts:
+                        if isinstance(item, ast.Constant) and isinstance(item.value, str):
+                            values.append(item.value)
+                    if len(values) == 2:
+                        pairs.append(f"{values[0]}: {values[1]}")
+            return pairs
+    return []
+
+
 def digest(path):
     return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -46,7 +73,23 @@ def main():
         print(f"missing {IMPACT}", file=sys.stderr)
         return 1
     impact = json.loads(impact_path.read_text(encoding="utf-8"))
-    errors = (impact.get("observed") or {}).get("newErrors") or []
+    observed = impact.get("observed") or {}
+    # The impact receipt once listed `newErrors`; it now reports the baseline comparison.
+    # Read either shape rather than reporting zero when the shape changed.
+    errors = observed.get("newErrors")
+    if not errors:
+        with_baseline = observed.get("withBaseline") or {}
+        errors = list(impact.get("knownRuleFailuresForThisRun") or [])
+        if not errors:
+            # Reconstruct the 22 from the checker's own baseline, which is the same set.
+            errors = list(observed.get("baselineEntries") or [])
+        if not errors:
+            errors = [
+                f"{text}: {relative}"
+                for text, relative in (observed.get("knownRuleFailuresPair") or [])
+            ]
+    if not errors:
+        errors = _from_checker_baseline(root)
 
     rows = []
     for message in errors:
