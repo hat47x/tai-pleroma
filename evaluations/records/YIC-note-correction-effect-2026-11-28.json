@@ -1,0 +1,22 @@
+{
+  "schema": "tai.reference.yic-note-correction-effect/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 re-reading the corrected notes",
+  "command": "python integrations/tools/yic_note_correction_effect_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-note-correction-effect-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "strongClaimWithACommit": 17,
+    "honestClaimWithoutOne": 65,
+    "unsupportedStrongClaims": [],
+    "noNoteClaimsACommitItDoesNotHave": true,
+    "finding": "注記の末尾を、根拠に合わせて書き換えた。commitを持つreceiptで強い言い方を残したもの**17件**、commitを持たないreceiptで『commitを記録していない』と書いたもの**65件**、**根拠なく強い言い方をしているもの0件**。**ゼロであり、注記は自分の根拠を超えて主張していない。**"
+  },
+  "scope": "Re-reads the corrected notes and counts how many still make the commit claim without a commit. It checks the note text against the receipt's own fields; it does not verify that a recorded commit is the right one."
+}

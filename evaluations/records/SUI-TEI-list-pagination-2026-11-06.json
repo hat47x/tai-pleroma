@@ -35,5 +35,5 @@
     "payloadHasNoText": true
   },
   "scope": "Writes four documents, then reads the list with limit=2 and follows X-Next-Cursor to the end, checking for overlap and completeness, plus an over-limit request. It also archives one document and lists with an unrelated createdBy. It does not test concurrent writes during pagination.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

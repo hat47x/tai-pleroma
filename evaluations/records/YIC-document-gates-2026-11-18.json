@@ -33,7 +33,7 @@
         "question": "every relative link resolves",
         "exit": 0,
         "passed": true,
-        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2134, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
+        "tail": "{\"directories\": [\"docs\", \"analysis\", \"evaluations\", \"scenarios\", \"integrations\"], \"documents\": 198, \"linksChecked\": 2136, \"broken\": [], \"brokenCount\": 0, \"crossRepoCount\": 4, \"passed\": true}"
       },
       "sectionSequence": {
         "ran": true,
@@ -68,7 +68,7 @@
         "question": "every gate is cited and non-PASS citations are caveated",
         "exit": 0,
         "passed": true,
-        "tail": "{\"citations\": 39, \"distinct\": 33, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
+        "tail": "{\"citations\": 41, \"distinct\": 35, \"nonPass\": 0, \"uncaveated\": [], \"uncoveredGates\": [], \"passed\": true}"
       },
       "g1Packet": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 75, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 78, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 74, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 77, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -117,7 +117,7 @@
         "question": "a universal claim states its population",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receiptsWithUniversalClaims\": 62, \"withoutCount\": 0, \"passed\": true}"
+        "tail": "{\"receiptsWithUniversalClaims\": 63, \"withoutCount\": 0, \"passed\": true}"
       },
       "sectionOrder": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 85, \"listed\": 22, \"notNamedIndividually\": 63, \"passed\": true}"
+        "tail": "{\"later\": 88, \"listed\": 24, \"notNamedIndividually\": 64, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,

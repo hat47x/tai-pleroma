@@ -36,5 +36,5 @@
     "agentRequestCode": "agent_credential_unavailable"
   },
   "scope": "Reads main.py's module-level assignments with AST to find the guarding runtime-profile condition, then boots local-dev with SUI_AGENT_CREDENTIAL_HASH_KEY set and confirms the agent path answers 503. It does not boot saas-multitenant.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

@@ -1,0 +1,33 @@
+{
+  "schema": "tai.reference.yic-note-truthfulness/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading the receipts I annotated",
+  "command": "python integrations/tools/yic_note_truthfulness_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-note-truthfulness-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "annotatedReceipts": 82,
+    "canSupportTheSentence": 17,
+    "cannotSupportIt": 65,
+    "unsupportedSample": [
+      "EKI-TEI-artifact-2026-11-03.json",
+      "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+      "EKI-TEI-task-request-selection-2026-11-03.json",
+      "MMI-TEI-artifact-2026-11-03.json",
+      "MMI-TEI-format-profile-selection-2026-11-03.json",
+      "SCN-003-compose-2026-11-03.validate.json",
+      "SCN-003-save-2026-11-03.json",
+      "SEI-TEI-artifact-2026-11-03.json",
+      "SEI-TEI-decision-selection-2026-11-03.json",
+      "SUI-consumer-mapping-2026-11-06.json"
+    ],
+    "finding": "私が書いた注記は「receiptが記録するcommitが恒久的な参照である」と述べる。注記した82件のうち、commitを実際に記録しているのは**17件**、記録していないのは**65件**。**commitを記録していないreceiptに『commitが参照である』と書いたのは誤り。**注記の後半は、根拠の無い安心を与えている。"
+  },
+  "scope": "Reads every receipt carrying the annotation note and checks whether it also carries a commit-like field with a commit-shaped value, which is what the note's last sentence asserts. It measures the note's claim; it does not rewrite the note."
+}

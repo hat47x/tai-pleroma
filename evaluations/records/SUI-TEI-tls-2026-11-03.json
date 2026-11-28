@@ -18,5 +18,5 @@
     "runtimeProfile": "local-dev"
   },
   "scope": "SUI runs behind its own TLS listener with a self-signed certificate on a local socket. It does not verify a real CA, a reverse proxy, HSTS, client certificates, or deployment.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

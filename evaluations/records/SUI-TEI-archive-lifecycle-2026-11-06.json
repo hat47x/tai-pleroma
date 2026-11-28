@@ -21,5 +21,5 @@
     "writeAfterUnarchiveStatus": 200
   },
   "scope": "Archives a document, reads it, tries to write it, then unarchives and writes again. It does not test the archive gate under concurrent writers or with an agent credential.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }

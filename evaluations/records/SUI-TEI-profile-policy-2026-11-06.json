@@ -47,5 +47,5 @@
     }
   },
   "scope": "Calls resolve_tenant_session_bootstrap_mode for five profile names and greps main.py for the docs, agent-wiring, and safe-mode guards. It does not boot each profile.",
-  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; this receipt records no commit, so it carries no durable reference of its own."
 }
