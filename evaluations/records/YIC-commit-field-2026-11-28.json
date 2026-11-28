@@ -1,0 +1,32 @@
+{
+  "schema": "tai.reference.yic-commit-field-coverage/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading every real-execution receipt",
+  "command": "python integrations/tools/yic_commit_field_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-commit-field-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "realExecutionReceipts": 297,
+    "withACommitLikeField": 59,
+    "withoutOne": 238,
+    "commitValuesLookingLikeACommit": 59,
+    "sampleWithout": [
+      "EKI-TEI-artifact-2026-11-03.json",
+      "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+      "EKI-TEI-dispatch-running-2026-11-03.json",
+      "EKI-TEI-manual-execution-2026-11-03.json",
+      "EKI-TEI-multi-worker-2026-11-03.json",
+      "EKI-TEI-policy-execution-2026-11-03.json",
+      "EKI-TEI-projection-execution-2026-11-03.json",
+      "EKI-TEI-record-2026-11-03.json"
+    ],
+    "finding": "受渡し条件の提案は「再現性の根拠をパスからcommitへ移す」とした。実実行receipt297件のうち、commitらしき欄を持つものは**59件**、持たないものは**238件**。**欄を持つreceiptが少数**であり、この提案は**既存の記録の大半を書き換える必要がある**。提案の大きさを取り違えないよう、ここに数を記す。"
+  },
+  "scope": "Reads every real-execution receipt for a field whose name resembles a commit, head or revision, and checks whether its value looks like a commit. It measures how far the proposal has to reach; it does not add the field or rewrite any receipt."
+}
