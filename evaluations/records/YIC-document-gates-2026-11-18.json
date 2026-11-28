@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 101, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 102, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 100, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 101, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 111, \"listed\": 31, \"notNamedIndividually\": 80, \"passed\": true}"
+        "tail": "{\"later\": 112, \"listed\": 31, \"notNamedIndividually\": 81, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,
@@ -173,7 +173,7 @@
         "question": "a document's numbered subsections ascend without gaps or letter suffixes",
         "exit": 0,
         "passed": true,
-        "tail": "{\"headings\": 43, \"outOfOrder\": 0, \"gaps\": 0, \"suffixed\": 0, \"passed\": true}"
+        "tail": "{\"headings\": 44, \"outOfOrder\": 0, \"gaps\": 0, \"suffixed\": 0, \"passed\": true}"
       },
       "numberingSpan": {
         "ran": true,
@@ -201,7 +201,7 @@
         "question": "the directory README lists every tool it sits beside",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 193, \"listed\": 193, \"count\": 193, \"passed\": true}"
+        "tail": "{\"tools\": 194, \"listed\": 194, \"count\": 194, \"passed\": true}"
       },
       "docsIndexFreshness": {
         "ran": true,

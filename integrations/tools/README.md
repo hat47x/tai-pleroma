@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（193件）。
+生成対象: `integrations/tools` の `*.py`（194件）。
 
-### YIC（分析・点検）（98件）
+### YIC（分析・点検）（99件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -59,7 +59,7 @@ python integrations/tools/run_suite.py \
 | `yic_annotation_digest_impact.py` | Check whether the annotation left any recorded digest pointing at changed bytes. |
 | `yic_annotation_readiness_check.py` | Correct the annotation-readiness detector: the checker has no global field allow-list. |
 | `yic_assertion_locate.py` | Classify by the specific assertion, not by the whole selector block. |
-| `yic_assertion_sibling_check.py` | Evaluate the located assertion against its siblings, not against the whole selector. |
+| `yic_assertion_sibling_check.py` | Evaluate each assertion's guard as a predicate against sibling receipts. |
 | `yic_audience_consumer_probe.py` | Run SHO's consumer against a ticket whose audience names a third party. |
 | `yic_audience_declaration_check.py` | Check what the handoff envelope's `audience` field actually does. |
 | `yic_audience_declaration_probe.py` | Check what the cross-product handoff does with `disclosure.audience`. |
@@ -105,6 +105,7 @@ python integrations/tools/run_suite.py \
 | `yic_note_correction_effect_check.py` | Check the correction took effect: how many notes still claim a commit that does not exist. |
 | `yic_note_truthfulness_check.py` | Check whether the note I wrote tells the truth. |
 | `yic_notrun_refresh_check.py` | Check that the inventory's not-run list is still the current not-run list. |
+| `yic_nowhere_reason_check.py` | For each of the three assertions holding nowhere, name the reason it cannot hold. |
 | `yic_numbering_after_repair.py` | Install a section-numbering check that covers every YI document, not just two. |
 | `yic_numbering_span_check.py` | Look for the same numbering disorder in every YI document, not only doc 53. |
 | `yic_path_annotation.py` | Add a machine-readable note to receipts whose cited checkout path no longer exists. |

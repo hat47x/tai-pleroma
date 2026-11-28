@@ -23,7 +23,7 @@ LIMIT = re.compile(
 )# Wording that states what was measured.
 MEASURED = re.compile(
     r"Runs|Reads|Walks|Builds|Counts|Compares|Searches|Measures|Records|"
-    r"Drives|Executes|Bundles|Parses|Checks|Verifies|Applies|Serializes|Splits|Classifies|Groups|Sorts|Adds|Annotates|Attaches|Writes|Renumbers|Rewrites|Moves|"
+    r"Drives|Executes|Bundles|Parses|Checks|Verifies|Applies|Serializes|Splits|Classifies|Groups|Sorts|Adds|Annotates|Attaches|Writes|Renumbers|Rewrites|Moves|Evaluates|Reports|Separates|"
     r"記録|測定|読む|走査|比較|計算|照合|たどり合わせ|検算|実行|点検|確認",
     re.IGNORECASE,
 )

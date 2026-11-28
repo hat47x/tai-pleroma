@@ -912,9 +912,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 errors.append(f"the assertion location lost its scope: {relative}")
         if "YIC-assertion-siblings" in relative_lower:
             observed = data.get("observed", {})
+            # "nowhere" and "not judgeable" must be reported separately; a reading that
+            # folds them together cannot say which repair is needed.
             if (
                 data.get("result") != "PASS"
                 or observed.get("distinctAssertions", 0) < 1
+                or observed.get("assertionsHoldingSomewhere", 0) < 1
+                or "assertionsNotJudgeable" not in observed
             ):
                 errors.append(f"the assertion sibling reading lost its scope: {relative}")
         if "YIC-baseline-classify" in relative_lower and "effect" not in relative_lower:

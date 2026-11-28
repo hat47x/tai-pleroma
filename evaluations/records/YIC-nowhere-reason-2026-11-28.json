@@ -1,0 +1,158 @@
+{
+  "schema": "tai.reference.yic-nowhere-reason/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading every receipt matching the three selectors",
+  "command": "python integrations/tools/yic_nowhere_reason_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-nowhere-reason-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "checker": "tools/check-synthetic-receipts/check.py",
+    "assertionsExamined": 3,
+    "rows": [
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "selector": "sui-tei-save-plan",
+        "guard": "observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False",
+        "matchingReceipts": 3,
+        "receiptsWithTheField": 3,
+        "satisfiedBy": [],
+        "cause": "欄はあるが、期待値を満たすreceiptが無い",
+        "values": [
+          {
+            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+            "values": {
+              "passed": null,
+              "writes": true
+            }
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+            "values": {
+              "passed": 6,
+              "writes": false
+            }
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+            "values": {
+              "passed": null,
+              "writes": false
+            }
+          }
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "selector": "tei-auth",
+        "guard": "observed.get(\"authEnabled\") is not True",
+        "matchingReceipts": 2,
+        "receiptsWithTheField": 1,
+        "satisfiedBy": [
+          "SUI-TEI-auth-2026-11-02.json"
+        ],
+        "cause": "規則を満たすreceiptがある（分類の前提が誤っていた）",
+        "values": [
+          {
+            "receipt": "SUI-TEI-auth-2026-11-02.json",
+            "values": {
+              "authEnabled": true
+            }
+          },
+          {
+            "receipt": "SUI-TEI-auth-assurance-2026-11-06.json",
+            "values": {
+              "authEnabled": null
+            }
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "selector": "tei-artifact",
+        "guard": "artifact.get(\"path\") is not None and not Path(...).exists()",
+        "matchingReceipts": 9,
+        "receiptsWithTheField": 6,
+        "satisfiedBy": [],
+        "cause": "欄はあるが、期待値を満たすreceiptが無い",
+        "values": [
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "values": {
+              "path": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json"
+            }
+          },
+          {
+            "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+            "values": {
+              "path": "D:\\GIT\\hat47x\\tai-wt-rev\\evaluations\\artifacts\\documentv1-projection.json"
+            }
+          },
+          {
+            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+            "values": {
+              "path": "D:\\GIT\\hat47x\\tai-wt-sch\\evaluations\\artifacts\\documentv1-projection.json"
+            }
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "values": {
+              "path": "D:\\GIT\\hat47x\\tai-wt-sea\\evaluations\\artifacts\\sei-decision-projection.json"
+            }
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "values": {
+              "path": "D:\\GIT\\hat47x\\tai-wt-sxj\\evaluations\\artifacts\\mmi-format-profile-projection.json"
+            }
+          },
+          {
+            "receipt": "TEI-artifacts-crosscheck-2026-11-03.json",
+            "values": {
+              "path": null
+            }
+          },
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "values": {
+              "path": "D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-projection.json"
+            }
+          },
+          {
+            "receipt": "TEI-artifact-digests-2026-11-03.json",
+            "values": {
+              "path": null
+            }
+          },
+          {
+            "receipt": "TEI-artifacts-determinism-2026-11-03.json",
+            "values": {
+              "path": null
+            }
+          }
+        ]
+      }
+    ],
+    "causes": [
+      {
+        "message": "TEI save plan receipt did not record four non-writ",
+        "cause": "欄はあるが、期待値を満たすreceiptが無い"
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "cause": "規則を満たすreceiptがある（分類の前提が誤っていた）"
+      },
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "cause": "欄はあるが、期待値を満たすreceiptが無い"
+      }
+    ],
+    "finding": "「どこでも成立しない」3種類について、**当たるreceiptを全部読み、なぜ成立しないかを場合分けした**。TEI save plan receipt did not record→欄はあるが、期待値を満たすreceiptが無い；TEI auth receipt did not enable auth→規則を満たすreceiptがある（分類の前提が誤っていた）；TEI artifact receipt points at a mis→欄はあるが、期待値を満たすreceiptが無い。**原因が違えば処置も違うが、処置は決めていない。**"
+  },
+  "scope": "Reads every registered receipt matching each of the three selectors and records the field values, then names the reason the assertion holds nowhere. It names the cause; it does not decide whether the receipt or the rule should change."
+}
