@@ -64,6 +64,8 @@ CHECKS = (
      "a corrected section points forward to its correction"),
     ("subsectionNumbering", "yic_subsection_numbering_check.py",
      "a document's numbered subsections ascend without gaps or letter suffixes"),
+    ("numberingSpan", "yic_numbering_span_check.py",
+     "no YI document numbers its subsections out of order or with letter suffixes"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites

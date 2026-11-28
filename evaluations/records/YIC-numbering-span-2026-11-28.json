@@ -1,0 +1,25 @@
+{
+  "schema": "tai.reference.yic-numbering-span/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading every YI document's numbered headings",
+  "command": "python integrations/tools/yic_numbering_span_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-numbering-span-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folder": "docs/yi-constellation",
+    "documentsWithNumberedHeadings": 52,
+    "documentsWithDisorder": 0,
+    "disorderedSample": [],
+    "totalOutOfOrder": 0,
+    "totalGaps": 0,
+    "totalSuffixed": 0,
+    "finding": "YI文書のうち番号付き見出しを持つものは52件。そのうち**番号に乱れがあるものは0件**。合計で順序の逆0件・飛び0件・整数でない接尾辞0件。**番号を見ている点検の対象は1文書だけだった。**乱れは追記の仕方の性質なので、**1文書だけを見ても足りない。**"
+  },
+  "scope": "Parses numbered headings across all YI documents and reports disorder per document. It measures the span of the problem; it does not fix any document, and a gap can be a deliberate omission."
+}
