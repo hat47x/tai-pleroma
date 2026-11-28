@@ -21,5 +21,6 @@
     "runtimeProfile": "local-dev",
     "writes": true
   },
-  "scope": "Checks stale and matching If-Match preconditions on the save route with a temporary SQLite database. It does not verify concurrent writers or the SaaS precondition profile."
+  "scope": "Checks stale and matching If-Match preconditions on the save route with a temporary SQLite database. It does not verify concurrent writers or the SaaS precondition profile.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-exist. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

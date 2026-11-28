@@ -31,5 +31,6 @@
     "distinctKept": true,
     "noIdDelivered": true
   },
-  "scope": "Records the same exportId twice, then a different exportId, then one export without an exportId, and checks what reached the sink. It does not test the dedup window boundary or a restart."
+  "scope": "Records the same exportId twice, then a different exportId, then one export without an exportId, and checks what reached the sink. It does not test the dedup window boundary or a restart.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

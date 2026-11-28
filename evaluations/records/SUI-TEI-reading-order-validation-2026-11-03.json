@@ -18,5 +18,6 @@
     "affiliations": 1,
     "documentV1Valid": true
   },
-  "scope": "The artifact is read by SUI's consumer and validated by SUI's DocumentV1 model with caller-supplied transform and timestamps. It does not save, call the API, or prove human acceptance."
+  "scope": "The artifact is read by SUI's consumer and validated by SUI's DocumentV1 model with caller-supplied transform and timestamps. It does not save, call the API, or prove human acceptance.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-ro. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

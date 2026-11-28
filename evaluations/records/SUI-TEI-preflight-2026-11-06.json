@@ -52,5 +52,6 @@
     },
     "initializeReturnedBundle": false
   },
-  "scope": "Runs the preflight with and without adapter bundles across five profiles, with a bogus bundle, and checks that initialize refuses a second call but accepts after release. It uses a stub adapter, not a real IdP."
+  "scope": "Runs the preflight with and without adapter bundles across five profiles, with a bogus bundle, and checks that initialize refuses a second call but accepts after release. It uses a stub adapter, not a real IdP.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

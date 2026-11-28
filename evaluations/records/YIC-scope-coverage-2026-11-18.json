@@ -14,14 +14,14 @@
   "observed": {
     "families": {
       "yi": 33,
-      "yic": 71
+      "yic": 73
     },
-    "receiptsCovered": 104,
+    "receiptsCovered": 106,
     "unparsedReceipts": [],
     "receiptsWithoutAMeasuredHalf": [],
     "receiptsWithoutALimitHalf": [],
     "theYiChecksFamilyOnly": true,
-    "finding": "`yi_scope_halves_check.py`は`yi-`で始まる名前だけを走査する。本分析の後のreceiptは`YIC-`で始まるため、**71件が対象外**だった。点検は32件を調べて合格と報告し、**対象外の件数を書いていない**。両方の名前を走査して、scopeが2つの半分を書いているかを確認した。"
+    "finding": "`yi_scope_halves_check.py`は`yi-`で始まる名前だけを走査する。本分析の後のreceiptは`YIC-`で始まるため、**73件が対象外**だった。点検は32件を調べて合格と報告し、**対象外の件数を書いていない**。両方の名前を走査して、scopeが2つの半分を書いているかを確認した。"
   },
   "scope": "Reads every receipt whose name starts with yi- or YIC-, and applies the measured/limit detectors to each scope. It shows the earlier check's coverage gap and confirms both halves are present; it does not judge whether a scope's stated limit is the right one."
 }

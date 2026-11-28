@@ -59,5 +59,6 @@
       "differs": true
     }
   },
-  "scope": "Calls parse_csv_header, normalize_policy_ref, parse_visibility, and compute_actor_ref_hash on representative and degenerate inputs. It does not send these values through HTTP headers."
+  "scope": "Calls parse_csv_header, normalize_policy_ref, parse_visibility, and compute_actor_ref_hash on representative and degenerate inputs. It does not send these values through HTTP headers.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

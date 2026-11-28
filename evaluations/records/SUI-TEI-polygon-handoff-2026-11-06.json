@@ -31,5 +31,6 @@
     "missingDocStatus": 404,
     "badHashStatus": 422
   },
-  "scope": "Verifies the polygon handoff contract with a clean case, a padding violation, a reordered tie-break, an explicit matching order, a missing document, and a malformed hash. It recomputes the verification key but does not run a real polygon pipeline."
+  "scope": "Verifies the polygon handoff contract with a clean case, a padding violation, a reordered tie-break, an explicit matching order, a missing document, and a malformed hash. It recomputes the verification key but does not run a real polygon pipeline.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

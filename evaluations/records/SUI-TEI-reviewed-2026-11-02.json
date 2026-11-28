@@ -51,5 +51,6 @@
     "digest": "sha256:c4c77cafca936e76c201bba8d30b4d32bb63dc881b3989a079c145555b3158c5",
     "schema": "tai.reference.tei-documentv1-projection/v0"
   },
-  "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance."
+  "scope": "Generated candidates are executed on this host and their present-case outputs are composed in-process. It does not generate SUI code, use a real target, or show human acceptance.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\tei-wt-bool2. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

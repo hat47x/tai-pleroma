@@ -842,6 +842,9 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("affectedReceipts", 0) < 1
                 or observed.get("globalFieldAllowList") is not False
+                # Every affected receipt now carries the note, which is the point of the pass.
+                or observed.get("alreadyHaveANoteField", 0)
+                != observed.get("affectedReceipts")
             ):
                 errors.append(f"the annotation readiness reading lost its shape: {relative}")
         if "YIC-citation-form" in relative_lower:

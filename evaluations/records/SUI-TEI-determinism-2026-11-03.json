@@ -19,5 +19,6 @@
       21
     ]
   },
-  "scope": "Runs the projection flow repeatedly with the same inputs and compares the artifact digests. It does not prove determinism across hosts or toolchain versions."
+  "scope": "Runs the projection flow repeatedly with the same inputs and compares the artifact digests. It does not prove determinism across hosts or toolchain versions.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\tei-wt-cur. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

@@ -81,5 +81,6 @@
     "titlesMatch": true,
     "database": "embedded PostgreSQL 16.2"
   },
-  "scope": "Saves several documents with distinct ids into a real PostgreSQL and reads them back. It does not verify tenancy isolation, access control, or deployment."
+  "scope": "Saves several documents with distinct ids into a real PostgreSQL and reads them back. It does not verify tenancy isolation, access control, or deployment.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

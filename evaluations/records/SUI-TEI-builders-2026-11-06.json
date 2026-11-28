@@ -49,5 +49,6 @@
     "externalTenantClassExists": true,
     "mockClassExists": true
   },
-  "scope": "Calls three builders with six access-control names and default settings. It records that an unknown adapter name silently becomes noop, that external_http refuses without an endpoint, and that the tenant resolver degrades to Unavailable. It does not start a SaaS instance."
+  "scope": "Calls three builders with six access-control names and default settings. It records that an unknown adapter name silently becomes noop, that external_http refuses without an endpoint, and that the tenant resolver degrades to Unavailable. It does not start a SaaS instance.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

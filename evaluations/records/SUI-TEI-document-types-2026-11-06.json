@@ -296,5 +296,6 @@
       "Edge": []
     }
   },
-  "scope": "For every name the contract covers, reads the SUI annotation, reduces it to its inner type, and compares the expected primitive, cardinality and optionality with the declared ones. It does not check value ranges or semantics. Edge.fromKind/toKind are Optional in SUI but required in the contract, which the probe records as a known gap rather than a defect."
+  "scope": "For every name the contract covers, reads the SUI annotation, reduces it to its inner type, and compares the expected primitive, cardinality and optionality with the declared ones. It does not check value ranges or semantics. Edge.fromKind/toKind are Optional in SUI but required in the contract, which the probe records as a known gap rather than a defect.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }

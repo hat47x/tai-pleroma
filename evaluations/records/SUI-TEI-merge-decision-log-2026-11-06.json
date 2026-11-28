@@ -25,5 +25,6 @@
     "restoreAbsentStatus": 200,
     "restoreAbsentCount": 0
   },
-  "scope": "Appends one merge decision, replays the same decision, lists the group, and lists a group with no decisions. It also reads the snapshot-version restore view. It does not test concurrent appends or authorisation of other tenants."
+  "scope": "Appends one merge decision, replays the same decision, lists the group, and lists a group with no decisions. It also reads the snapshot-version restore view. It does not test concurrent appends or authorisation of other tenants.",
+  "note": "The command above cites a check-out path that no longer exists: D:\\GIT\\hat47x\\sui-wt-tenant. The path was removed after the run, so the command as written cannot be re-run; the commit the receipt records is the durable reference."
 }
