@@ -1,0 +1,65 @@
+{
+  "schema": "tai.reference.yic-inert-remainder/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 reading the checker and the records folder",
+  "command": "python integrations/tools/yic_inert_remainder_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-inert-remainder-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "inertSelectors": [
+      "tei-comparison",
+      "tei-text-selection"
+    ],
+    "rows": [
+      {
+        "selector": "tei-comparison",
+        "stem": "comparison",
+        "registeredWithTheStem": [],
+        "fullCallersBelow": [],
+        "filesOnDiskWithTheStem": [],
+        "guards": [
+          "if data.get(\"evaluationSet\", {}).get(\"cases\") != 4:",
+          "errors.append(f\"TEI comparison receipt did not use 4 cases: {relative}\")",
+          "if data.get(\"tei\", {}).get(\"passed\") is not True or data.get(\"baseline\", {}).get(\"passed\") is not Tr",
+          "errors.append(f\"TEI comparison receipt did not pass both paths: {relative}\")"
+        ]
+      },
+      {
+        "selector": "tei-text-selection",
+        "stem": "selection",
+        "registeredWithTheStem": [
+          "evaluations/records/SUI-TEI-selection-2026-11-01.json",
+          "evaluations/records/SEI-TEI-decision-selection-2026-11-03.json",
+          "evaluations/records/MMI-TEI-format-profile-selection-2026-11-03.json",
+          "evaluations/records/EKI-TEI-task-request-selection-2026-11-03.json"
+        ],
+        "fullCallersBelow": [],
+        "filesOnDiskWithTheStem": [
+          "EKI-TEI-task-request-selection-2026-11-03.json",
+          "MMI-TEI-format-profile-selection-2026-11-03.json",
+          "SEI-TEI-decision-selection-2026-11-03.json",
+          "SUI-TEI-selection-2026-11-01.json",
+          "TAI-capability-selection-b0b1b2-2026-11-11.json",
+          "TAI-capability-selection-model-trial-2026-11-12.json",
+          "TAI-capability-selection-multiproduct-trial-2026-11-13.json"
+        ],
+        "guards": [
+          "if observed.get(\"cases\") != 4 or observed.get(\"passedCases\") != 4:",
+          "errors.append(f\"TEI text selection receipt did not pass 4 cases: {relative}\")",
+          "if \"text-identity\" not in observed.get(\"qualified\", []):"
+        ]
+      }
+    ],
+    "selectorsWithNoResemblingFile": [
+      "tei-comparison"
+    ],
+    "finding": "残る2件を調べた。`tei-comparison` は語尾`comparison`を持つreceiptが無く、`tei-text-selection` は`text-selection`を持つreceiptがあり。**receiptが存在しない規則は、対象がまだ作られていない**という意味であり、名前の不一致ではない。"
+  },
+  "scope": "For each of the two remaining inert selectors, searches the registered list and the records folder for a name carrying the same distinguishing word. It distinguishes 'a receipt exists under another name' from 'no such receipt exists'; it does not decide whether the rule should be deleted."
+}

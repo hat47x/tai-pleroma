@@ -12,8 +12,8 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 40,
-    "checksRun": 40,
+    "checksRequested": 41,
+    "checksRun": 41,
     "results": {
       "candidateFields": {
         "ran": true,
@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 56, \"links\": 661, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 56, \"links\": 662, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 387, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 388, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 32, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 99, \"writers\": 99, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 100, \"writers\": 100, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -258,21 +258,28 @@
         "question": "both receipt naming families state a measured half and a limit half",
         "exit": 0,
         "passed": true,
-        "tail": "{\"yi\": 33, \"yic\": 67, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
+        "tail": "{\"yi\": 33, \"yic\": 68, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
       },
       "countAgreement": {
         "ran": true,
         "question": "each aggregate's check count matches what the checker expects",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 40, 40], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
+        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 21, 21], [\"yic_analysis_gates.py\", 41, 41], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
+      },
+      "inertRemainder": {
+        "ran": true,
+        "question": "the two remaining inert selectors: one has no receipt, one must not match",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"noResemblingFile\": [\"tei-comparison\"], \"rows\": [[\"tei-comparison\", 0], [\"tei-text-selection\", 7]]}"
       },
       "ruleLiveness": {
         "ran": true,
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"selectors\": 266, \"inert\": 2, \"passed\": true}"
+        "tail": "{\"selectors\": 267, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,

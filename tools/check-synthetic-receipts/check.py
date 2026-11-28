@@ -372,6 +372,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-dead-rule-impact-2026-11-18.json",
     "evaluations/records/YIC-dead-rule-fields-2026-11-18.json",
     "evaluations/records/YIC-inert-selectors-2026-11-28.json",
+    "evaluations/records/YIC-inert-remainder-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
@@ -789,7 +790,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 40
+                or observed.get("checksRun") != 41
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative_lower:
@@ -816,6 +817,13 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or not observed.get("adaptersNotObserving") == []
             ):
                 errors.append(f"the H-condition reading lost its finding: {relative}")
+        if "YIC-inert-remainder" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("inertSelectors") != ["tei-comparison", "tei-text-selection"]
+            ):
+                errors.append(f"the inert remainder reading lost its scope: {relative}")
         if "YIC-inert-selectors" in relative_lower:
             observed = data.get("observed", {})
             if (
