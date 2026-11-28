@@ -1,0 +1,188 @@
+{
+  "schema": "tai.reference.yic-baseline-classification/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 classifying the known rule failures",
+  "command": "python integrations/tools/yic_baseline_classify.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-baseline-classify-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "baselineEntries": 28,
+    "failingRulesLocated": 28,
+    "failuresWithARuleThatHoldsElsewhere": 14,
+    "failuresWhoseRuleHoldsNowhere": 14,
+    "unsupported": [
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "TEI-artifact-digests-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "TEI-artifacts-crosscheck-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "TEI-artifacts-determinism-2026-11-03.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "receipt": "SUI-TEI-artifact-2026-11-02.json",
+        "selector": "tei-artifact",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "siblingsOfSameKind": 0,
+        "siblings": [],
+        "ruleIsLiveElsewhere": false
+      }
+    ],
+    "historicalSample": [
+      {
+        "message": "TEI ETag receipt did not record 409/200",
+        "receipt": "SUI-TEI-etag-stability-2026-11-06.json",
+        "selector": "sui-tei-etag",
+        "siblingsOfSameKind": 1,
+        "siblings": [
+          "SUI-TEI-etag-2026-11-03.json"
+        ],
+        "ruleIsLiveElsewhere": true
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "selector": "tei-assembler",
+        "siblingsOfSameKind": 1,
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json"
+        ],
+        "ruleIsLiveElsewhere": true
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "selector": "tei-assembler",
+        "siblingsOfSameKind": 1,
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json"
+        ],
+        "ruleIsLiveElsewhere": true
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "selector": "tei-assembler",
+        "siblingsOfSameKind": 1,
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json"
+        ],
+        "ruleIsLiveElsewhere": true
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "selector": "tei-assembler",
+        "siblingsOfSameKind": 1,
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json"
+        ],
+        "ruleIsLiveElsewhere": true
+      }
+    ],
+    "finding": "基準28件のうち、**同じ規則が別のreceiptでは成立している**（そのreceiptは基準に無く、失敗を出さない）ものが14件、**どのreceiptでも成立しない**ものが14件。前者は**receiptが古い（規則は現行）**、後者は**規則が現行のreceiptに合わない**可能性が高い。**どちらを直すかは製品Ownerの判断だが、どちらの種類かは測れる。**"
+  },
+  "scope": "Reads the checker's baseline and, for each entry, finds the selector behind the message and whether any other registered receipt of the same kind satisfies it. It sorts failures into 'rule holds elsewhere' and 'rule holds nowhere'; it does not decide which receipt or rule is wrong."
+}
