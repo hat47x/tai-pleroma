@@ -14,13 +14,13 @@
   "observed": {
     "readme": "integrations/tools/README.md",
     "generatorExit": 0,
-    "toolsOnDisk": 183,
-    "listedInBlock": 183,
+    "toolsOnDisk": 185,
+    "listedInBlock": 185,
     "missingFromBlock": [],
-    "declaredCountInBlock": 183,
-    "actualCount": 183,
+    "declaredCountInBlock": 185,
+    "actualCount": 185,
     "countAgrees": true,
-    "finding": "READMEの生成索引を検査した。ディスク上のツール183件のうち索引に載っているもの183件、載っていないもの0件。**索引は生成されるが、生成を実行しない限り腐る。**ここで毎回突き合わせることで、道具を足して再生成を忘れた場合に検出できる。"
+    "finding": "READMEの生成索引を検査した。ディスク上のツール185件のうち索引に載っているもの185件、載っていないもの0件。**索引は生成されるが、生成を実行しない限り腐る。**ここで毎回突き合わせることで、道具を足して再生成を忘れた場合に検出できる。"
   },
   "scope": "Reads the generated index block and checks every tool on disk appears and the declared count matches. It checks completeness and counts; it does not check that each purpose line is accurate."
 }

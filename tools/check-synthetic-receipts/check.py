@@ -390,6 +390,8 @@ REAL_RECORDS = (
     "evaluations/records/YIC-numbering-after-repair-2026-11-28.json",
     "evaluations/records/YIC-tool-index-2026-11-28.json",
     "evaluations/records/YIC-tool-index-freshness-2026-11-28.json",
+    "evaluations/records/YIC-docs-index-2026-11-28.json",
+    "evaluations/records/YIC-docs-index-freshness-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
@@ -880,6 +882,20 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("everyToolIsListed") is not True
             ):
                 errors.append(f"a tool is missing from the generated index: {relative}")
+        if "YIC-docs-index" in relative_lower and "freshness" not in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("everyDocumentIsListed") is not True
+            ):
+                errors.append(f"a docs document is missing from the index: {relative}")
+        if "YIC-docs-index-freshness" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("countAgrees") is not True
+            ):
+                errors.append(f"the generated docs index is stale: {relative}")
         if "YIC-tool-index-freshness" in relative_lower:
             observed = data.get("observed", {})
             if (
@@ -1180,7 +1196,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyDocumentCheckRan") is not True
                 or observed.get("everyDocumentCheckPassed") is not True
-                or observed.get("checksRun") != 26
+                or observed.get("checksRun") != 27
             ):
                 errors.append(f"a YI document check was skipped or failed: {relative}")
         if "YIC-notrun-refresh" in relative_lower:

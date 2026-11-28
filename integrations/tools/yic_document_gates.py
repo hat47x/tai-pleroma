@@ -72,6 +72,8 @@ CHECKS = (
      "both numbering repairs hold across all YI documents"),
     ("toolIndexFreshness", "yic_tool_index_freshness.py",
      "the directory README lists every tool it sits beside"),
+    ("docsIndexFreshness", "yic_docs_index_freshness.py",
+     "the docs README lists every top-level document"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites

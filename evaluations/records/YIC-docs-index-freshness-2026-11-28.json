@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.yic-docs-index-freshness/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 comparing docs/README's generated block with docs/",
+  "command": "python integrations/tools/yic_docs_index_freshness.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-docs-index-freshness-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "readme": "docs/README.md",
+    "documentsOnDisk": 27,
+    "listedInBlock": 27,
+    "missingFromBlock": [],
+    "declaredCount": 27,
+    "countAgrees": true,
+    "finding": "`docs/` 直下の文書27件のうち、生成索引に載っているもの27件、載っていないもの0件。**索引は生成されるが、生成を実行しない限り腐る。**ここで毎回突き合わせ、文書を足して再生成を忘れた場合に検出する。"
+  },
+  "scope": "Reads the generated index block and checks every top-level doc appears and the declared count matches. It checks completeness and counts only; subdirectories and title accuracy are not covered."
+}
