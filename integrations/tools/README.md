@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（196件）。
+生成対象: `integrations/tools` の `*.py`（199件）。
 
-### YIC（分析・点検）（101件）
+### YIC（分析・点検）（104件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -82,6 +82,8 @@ python integrations/tools/run_suite.py \
 | `yic_dead_rule_fields_check.py` | Check whether the 22 rules that never fire are stale, or reject receipts correctly. |
 | `yic_dead_rule_impact_probe.py` | Replace the dead-rule experiment with the question that remains after the fix. |
 | `yic_deck_counts_check.py` | Check the deck slide counts that the indexes state against the actual files. |
+| `yic_digest_search_check.py` | Search for the recorded digest itself, under any name, across the repository's artifacts. |
+| `yic_digest_search_wide.py` | The 29 missing digests were searched in artifacts/ only. |
 | `yic_doc55_renumber.py` | Renumber doc 55's §6.8 so the letter suffixes become numbers. |
 | `yic_doc_links_check.py` | Check every relative Markdown link in docs/ resolves to a file that exists. |
 | `yic_docs_index.py` | Generate an index of docs/ from each document's own title and status line. |
@@ -111,6 +113,7 @@ python integrations/tools/run_suite.py \
 | `yic_numbering_after_repair.py` | Install a section-numbering check that covers every YI document, not just two. |
 | `yic_numbering_span_check.py` | Look for the same numbering disorder in every YI document, not only doc 53. |
 | `yic_path_annotation.py` | Add a machine-readable note to receipts whose cited checkout path no longer exists. |
+| `yic_path_resolution_check.py` | For receipts citing a path that no longer exists, try the same filename in-repo. |
 | `yic_pdp_payload_probe.py` | Measure what the external PDP request body actually carries. |
 | `yic_per_contract_claims_check.py` | Check that the proposal document states per-contract differences, not one blanket claim. |
 | `yic_preflight_disclosure_boundary.py` | Check what the nearest thing to a P step can and cannot decide. |
