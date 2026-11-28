@@ -1,0 +1,40 @@
+{
+  "schema": "tai.reference.yic-count-claim-span/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 scanning docs for receipt-count claims",
+  "command": "python integrations/tools/yic_count_claim_span_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-count-claim-span-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "liveRealRecordCount": 306,
+    "claimsFound": 2,
+    "checkerReadsOnlyTheFirst": true,
+    "claims": [
+      {
+        "document": "docs/status.md",
+        "line": 134,
+        "claimed": 306,
+        "historical": false,
+        "matchesLiveCount": true
+      },
+      {
+        "document": "docs/status.md",
+        "line": 141,
+        "claimed": 186,
+        "historical": true,
+        "matchesLiveCount": false
+      }
+    ],
+    "claimsDisagreeingWithLive": [],
+    "disagreeingCount": 0,
+    "historicalClaims": 1,
+    "finding": "文書中の「実実行receiptはN件」という主張を全部集めた。**2件**あり、日付を持つ履歴上の主張が1件。**現在について述べている主張のうち、実測306件と食い違うものは0件**。`doc_consistency_check`はdocs/status.mdの**最初の一致だけ**を検証する（該当）。**残りの主張は誰も見ていない。**同じファイル・同じ話題に2つの数があると、読む位置で違う現在を知ることになる。"
+  },
+  "scope": "Scans docs/ and analysis/ for the phrase 実実行receiptはN件, compares each to the live count from the checker, and records which file the consistency check reads. It reports stale claims; it does not rewrite any document, and a claim inside a dated historical section may be correct for that date."
+}
