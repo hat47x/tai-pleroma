@@ -12,14 +12,14 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checksRequested": 22,
+    "checksRequested": 23,
     "excluded": [
       {
         "check": "gateReproducibility",
         "reason": "rewrites tracked receipts by design; not read-only"
       }
     ],
-    "checksRun": 22,
+    "checksRun": 23,
     "results": {
       "readmeCoverage": {
         "ran": true,
@@ -89,14 +89,14 @@
         "question": "Product-declared limits are not dropped",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 80, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 82, \"withLimits\": 2, \"distinctLimits\": 17, \"productResultsWithoutLimits\": [], \"passed\": true}"
       },
       "skipDisclosure": {
         "ran": true,
         "question": "a skip is visible rather than folded into a pass",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 79, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 81, \"withVerdicts\": 5, \"missingHost\": [], \"hidingSkip\": [], \"passed\": true}"
       },
       "reachTable": {
         "ran": true,
@@ -152,7 +152,7 @@
         "question": "a dated 'nothing further can be done' claim acknowledges later work",
         "exit": 0,
         "passed": true,
-        "tail": "{\"later\": 90, \"listed\": 24, \"notNamedIndividually\": 66, \"passed\": true}"
+        "tail": "{\"later\": 92, \"listed\": 24, \"notNamedIndividually\": 68, \"passed\": true}"
       },
       "harnessEvidence": {
         "ran": true,
@@ -174,6 +174,13 @@
         "exit": 0,
         "passed": true,
         "tail": "{\"headings\": 22, \"outOfOrder\": 0, \"gaps\": 0, \"suffixed\": 0, \"passed\": true}"
+      },
+      "numberingSpan": {
+        "ran": true,
+        "question": "no YI document numbers its subsections out of order or with letter suffixes",
+        "exit": 0,
+        "passed": true,
+        "tail": "{\"documents\": 52, \"disordered\": 0, \"outOfOrder\": 0, \"gaps\": 0, \"suffixed\": 0, \"passed\": true}"
       }
     },
     "scriptsMissing": [],

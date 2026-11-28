@@ -1,0 +1,50 @@
+{
+  "schema": "tai.reference.yic-doc55-renumber/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 renumbering doc 55's §6.8 headings",
+  "command": "python integrations/tools/yic_doc55_renumber.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-doc55-renumber-2026-11-28.json --apply",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "document": "docs/yi-constellation/analysis/55-受信者の欄.md",
+    "headingsUnder6_8": 7,
+    "changed": [
+      {
+        "line": 221,
+        "old": "6.8.2b",
+        "new": "6.8.3"
+      },
+      {
+        "line": 235,
+        "old": "6.8.2c",
+        "new": "6.8.4"
+      },
+      {
+        "line": 249,
+        "old": "6.8.2d",
+        "new": "6.8.5"
+      },
+      {
+        "line": 259,
+        "old": "6.8.3",
+        "new": "6.8.6"
+      },
+      {
+        "line": 270,
+        "old": "6.8.3",
+        "new": "6.8.7"
+      }
+    ],
+    "referencedElsewhere": [],
+    "safeToRenumber": true,
+    "applied": true,
+    "finding": "§6.8の見出し7件を読み順に振り直した。変更5件。他の文書からの番号参照は0件。**参照が無いので適用した。****挿入した節に文字を振るのではなく、全体を振り直すのが番号の規則である。**"
+  },
+  "scope": "Renumbers the three-deep headings under §6.8 of doc 55 in reading order, applying only when no other document cites those numbers. It changes heading numbers only and edits no assertion."
+}
