@@ -1,0 +1,353 @@
+{
+  "schema": "tai.reference.yic-assertion-locate/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 locating each baseline failure's assertion",
+  "command": "python integrations/tools/yic_assertion_locate.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-assertion-locate-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "baselineEntries": 28,
+    "assertionsLocated": 28,
+    "assertionsNotFound": [],
+    "rows": [
+      {
+        "message": "TEI ETag receipt did not record 409/200",
+        "receipt": "SUI-TEI-etag-stability-2026-11-06.json",
+        "selector": "sui-tei-etag",
+        "condition": "if observed.get(\"staleIfMatchStatus\") != 409 or observed.get(\"matchingIfMatchStatus\") != 200:",
+        "siblings": [
+          "SUI-TEI-etag-2026-11-03.json"
+        ],
+        "siblingCount": 1
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json",
+          "SUI-TEI-artifact-schema-2026-11-03.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json",
+          "SUI-TEI-artifact-schema-2026-11-03.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json",
+          "SUI-TEI-artifact-schema-2026-11-03.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "TEI-artifact-digests-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "TEI-artifacts-crosscheck-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "receipt": "TEI-artifacts-determinism-2026-11-03.json",
+        "selector": "tei-artifact",
+        "condition": "if artifact.get(\"schema\") != \"tai.reference.tei-documentv1-projection/v0\":",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-2026-11-02.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "receipt": "SUI-TEI-artifact-2026-11-02.json",
+        "selector": "tei-artifact",
+        "condition": "if not artifact_path.is_file():",
+        "siblings": [
+          "EKI-TEI-artifact-2026-11-03.json",
+          "MMI-TEI-artifact-2026-11-03.json",
+          "SEI-TEI-artifact-2026-11-03.json",
+          "SUI-TEI-artifact-schema-2026-11-03.json"
+        ],
+        "siblingCount": 8
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "selector": "tei-assembler",
+        "condition": "if observed.get(\"cardCases\") != 4 or observed.get(\"cardQualified\") != \"text-record-template\":",
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json",
+          "SUI-TEI-assembler-tests-2026-11-06.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "selector": "tei-assembler",
+        "condition": "if observed.get(\"cardCases\") != 4 or observed.get(\"cardQualified\") != \"text-record-template\":",
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json",
+          "SUI-TEI-assembler-kinds-2026-11-06.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "selector": "tei-assembler",
+        "condition": "if observed.get(\"assemblerPassed\") != 6 or observed.get(\"assemblerTests\") != 6:",
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json",
+          "SUI-TEI-assembler-tests-2026-11-06.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "selector": "tei-assembler",
+        "condition": "if observed.get(\"assemblerPassed\") != 6 or observed.get(\"assemblerTests\") != 6:",
+        "siblings": [
+          "SUI-TEI-assembler-2026-11-02.json",
+          "SUI-TEI-assembler-kinds-2026-11-06.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "receipt": "SUI-TEI-auth-assurance-2026-11-06.json",
+        "selector": "tei-auth",
+        "condition": "if observed.get(\"authEnabled\") is not True:",
+        "siblings": [
+          "SUI-TEI-auth-2026-11-02.json"
+        ],
+        "siblingCount": 1
+      },
+      {
+        "message": "TEI auth receipt did not record 200/401",
+        "receipt": "SUI-TEI-auth-assurance-2026-11-06.json",
+        "selector": "tei-auth",
+        "condition": "if observed.get(\"authorizedStatus\") != 200 or observed.get(\"anonymousStatus\") != 401:",
+        "siblings": [
+          "SUI-TEI-auth-2026-11-02.json"
+        ],
+        "siblingCount": 1
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipt": "EKI-TEI-consumer-2026-11-03.json",
+        "selector": "tei-consumer",
+        "condition": "if observed.get(\"passed\") != 6 or observed.get(\"readOnly\") is not True:",
+        "siblings": [
+          "MMI-TEI-consumer-2026-11-03.json",
+          "SEI-TEI-consumer-2026-11-03.json",
+          "SUI-TEI-consumer-2026-11-02.json"
+        ],
+        "siblingCount": 3
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipt": "MMI-TEI-consumer-2026-11-03.json",
+        "selector": "tei-consumer",
+        "condition": "if observed.get(\"passed\") != 6 or observed.get(\"readOnly\") is not True:",
+        "siblings": [
+          "EKI-TEI-consumer-2026-11-03.json",
+          "SEI-TEI-consumer-2026-11-03.json",
+          "SUI-TEI-consumer-2026-11-02.json"
+        ],
+        "siblingCount": 3
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "receipt": "SEI-TEI-consumer-2026-11-03.json",
+        "selector": "tei-consumer",
+        "condition": "if observed.get(\"passed\") != 6 or observed.get(\"readOnly\") is not True:",
+        "siblings": [
+          "EKI-TEI-consumer-2026-11-03.json",
+          "MMI-TEI-consumer-2026-11-03.json",
+          "SUI-TEI-consumer-2026-11-02.json"
+        ],
+        "siblingCount": 3
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "condition": "if observed.get(\"planAction\") != \"update\" or observed.get(\"roundTrip\") is not True:",
+        "siblings": [
+          "SUI-TEI-save-plan-2026-11-03.json",
+          "SUI-TEI-save-plan-merge-2026-11-03.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "condition": "if observed.get(\"planAction\") != \"update\" or observed.get(\"roundTrip\") is not True:",
+        "siblings": [
+          "SUI-TEI-save-plan-2026-11-03.json",
+          "SUI-TEI-save-plan-cli-2026-11-03.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "condition": "if observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False:",
+        "siblings": [
+          "SUI-TEI-save-plan-cli-2026-11-03.json",
+          "SUI-TEI-save-plan-merge-2026-11-03.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "condition": "if observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False:",
+        "siblings": [
+          "SUI-TEI-save-plan-2026-11-03.json",
+          "SUI-TEI-save-plan-merge-2026-11-03.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "selector": "sui-tei-save-plan",
+        "condition": "if observed.get(\"passed\") != 5 or observed.get(\"writes\") is not False:",
+        "siblings": [
+          "SUI-TEI-save-plan-2026-11-03.json",
+          "SUI-TEI-save-plan-cli-2026-11-03.json"
+        ],
+        "siblingCount": 2
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "receipt": "TEI-target-profile-compare-2026-11-06.json",
+        "selector": "tei-target",
+        "condition": "if observed.get(\"passedCases\") != 4:",
+        "siblings": [
+          "SUI-TEI-target-2026-11-01.json",
+          "SUI-TEI-target-document-id-2026-11-02.json",
+          "TEI-target-profile-compare-text-2026-11-06.json"
+        ],
+        "siblingCount": 3
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+        "selector": "tei-target",
+        "condition": "if observed.get(\"passedCases\") != 4:",
+        "siblings": [
+          "SUI-TEI-target-2026-11-01.json",
+          "SUI-TEI-target-document-id-2026-11-02.json",
+          "TEI-target-profile-compare-2026-11-06.json"
+        ],
+        "siblingCount": 3
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "receipt": "TEI-target-profile-compare-2026-11-06.json",
+        "selector": "tei-target",
+        "condition": "if observed.get(\"processModel\") != \"oneshot\" or observed.get(\"profilePassed\") is not True:",
+        "siblings": [
+          "SUI-TEI-target-2026-11-01.json",
+          "SUI-TEI-target-document-id-2026-11-02.json",
+          "TEI-target-profile-compare-text-2026-11-06.json"
+        ],
+        "siblingCount": 3
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+        "selector": "tei-target",
+        "condition": "if observed.get(\"processModel\") != \"oneshot\" or observed.get(\"profilePassed\") is not True:",
+        "siblings": [
+          "SUI-TEI-target-2026-11-01.json",
+          "SUI-TEI-target-document-id-2026-11-02.json",
+          "TEI-target-profile-compare-2026-11-06.json"
+        ],
+        "siblingCount": 3
+      }
+    ],
+    "finding": "基準28件について、**その失敗を出すassertionを規則本文から特定**した。特定できたもの28件、できなかったもの0件。**セレクタ全体で分類すると、別のassertionで基準に入っているreceiptを『兄弟なし』と数えてしまう。** どのassertionかを持てば、**同じassertionを通るreceiptを兄弟として数えられる。**"
+  },
+  "scope": "Parses each rule block's assertions and matches a baseline message to the assertion that emits it, recording the selector and the guard condition. It locates the assertion; it does not evaluate it against the receipts."
+}
