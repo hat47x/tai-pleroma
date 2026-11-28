@@ -111,6 +111,8 @@ PORTABLE_CHECKS = (
      "whether receipts written now still cite a local checkout path"),
     ("annotationReadiness", "yic_annotation_readiness_check.py",
      "whether a note can be added without tripping the checker"),
+    ("annotationDigest", "yic_annotation_digest_impact.py",
+     "whether the annotation left a stale digest in another receipt"),
     ("ruleLiveness", "yic_rule_liveness_check.py",
      "which rules can never fire because of case"),
     ("deadRuleImpact", "yic_dead_rule_impact_probe.py",
