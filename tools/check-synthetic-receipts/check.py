@@ -377,6 +377,7 @@ REAL_RECORDS = (
     "evaluations/records/YIC-commit-field-2026-11-28.json",
     "evaluations/records/YIC-citation-dates-2026-11-28.json",
     "evaluations/records/YIC-citation-form-2026-11-28.json",
+    "evaluations/records/YIC-annotation-readiness-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
     "evaluations/records/TEI-meaning-change-requiredness-2026-11-06.json",
@@ -794,7 +795,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 45
+                or observed.get("checksRun") != 46
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative_lower:
@@ -835,6 +836,14 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("affected", 0) < 1
             ):
                 errors.append(f"the citation date split lost its scope: {relative}")
+        if "YIC-annotation-readiness" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("affectedReceipts", 0) < 1
+                or observed.get("globalFieldAllowList") is not False
+            ):
+                errors.append(f"the annotation readiness reading lost its shape: {relative}")
         if "YIC-citation-form" in relative_lower:
             observed = data.get("observed", {})
             if (

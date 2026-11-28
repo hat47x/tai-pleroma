@@ -109,6 +109,8 @@ PORTABLE_CHECKS = (
      "whether the unresolvable citations are all historical"),
     ("citationForm", "yic_citation_form_check.py",
      "whether receipts written now still cite a local checkout path"),
+    ("annotationReadiness", "yic_annotation_readiness_check.py",
+     "whether a note can be added without tripping the checker"),
     ("ruleLiveness", "yic_rule_liveness_check.py",
      "which rules can never fire because of case"),
     ("deadRuleImpact", "yic_dead_rule_impact_probe.py",
