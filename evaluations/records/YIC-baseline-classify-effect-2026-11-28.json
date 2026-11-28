@@ -1,0 +1,24 @@
+{
+  "schema": "tai.reference.yic-baseline-classification-effect/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 deriving the rule's expectations from its own body",
+  "command": "python integrations/tools/yic_baseline_classify_effect.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-baseline-classify-effect-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "classificationReceipt": "evaluations/records/YIC-baseline-classify-2026-11-28.json",
+    "historicalEntriesSampled": 5,
+    "selectorsResolved": 5,
+    "siblingsChecked": 5,
+    "siblingsThatSatisfyTheRule": 5,
+    "siblingsThatDoNot": [],
+    "finding": "「規則が他所で成立している」と分類した5件について、**checkerの規則本文から期待値を読み出し**、兄弟receiptが実際にそれを満たすかを確かめた。検査した兄弟5件のうち**5件が規則を満たす**。**最初の版は手書きの欄名表を使い、欄名を間違えて『満たさない』と誤判定した。****規則本文から読めば、推測は要らない。**"
+  },
+  "scope": "Parses the comparison expressions out of each rule block and checks whether the sibling receipts hold those exact values. It validates the classification's evidence for the sampled entries; it does not check every baseline entry."
+}

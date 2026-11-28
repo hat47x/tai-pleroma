@@ -49,9 +49,9 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（189件）。
+生成対象: `integrations/tools` の `*.py`（191件）。
 
-### YIC（分析・点検）（94件）
+### YIC（分析・点検）（96件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
@@ -65,6 +65,8 @@ python integrations/tools/run_suite.py \
 | `yic_audience_instrument_probe.py` | Check whether SUI's access decision varies with the audience, not just the tenant. |
 | `yic_audit_recipient_probe.py` | Measure what the audit layer records about who received what. |
 | `yic_authority_limits_check.py` | Check that receipts quoting a Product's own authority limits keep them verbatim. |
+| `yic_baseline_classify.py` | Classify the known rule failures: is the rule current, or is the receipt historical? |
+| `yic_baseline_classify_effect.py` | Derive the expected fields from the checker's own rule body, not from a guess. |
 | `yic_citation_date_check.py` | Check whether the citations that no longer resolve are all historical. |
 | `yic_citation_form_check.py` | Extend the citation check: does the current writing habit still cite a worktree path? |
 | `yic_cited_path_check.py` | Check whether receipts cite a checkout path that still exists. |
