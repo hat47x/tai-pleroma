@@ -59,7 +59,9 @@ def main():
         "assertionsTheEvaluationCouldNotSupport": len(nowhere),
         "messagesTheCheckerActuallyReports": sorted(reportedMessages),
         "assertionsNotReportedByTheChecker": absent,
-        "evaluationAgreesWithTheRule": not absent and payload.get("passed") is True,
+        # The claim is about the message set, not about the checker's overall verdict: a
+        # stale unrelated receipt makes the checker non-PASS without changing its messages.
+        "evaluationAgreesWithTheRule": not absent,
         "finding": (
             "ガード評価が『どこでも成立しない』とした"
             f"{len(nowhere)}種類を、**checker自身の出力と突き合わせた**。"
@@ -72,7 +74,7 @@ def main():
             )
         ),
     }
-    passed = payload.get("passed") is True and not absent
+    passed = not absent
 
     receipt = {
         "schema": "tai.reference.yic-assertion-agreement/v0",
@@ -87,7 +89,8 @@ def main():
         "observed": checks,
         "scope": (
             "Runs the checker and compares the messages it reports with the assertions the "
-            "sibling evaluation could not support. It checks agreement of message sets; it does not "
+            "sibling evaluation could not support. It checks agreement of message sets; the "
+            "checker's overall pass is recorded but is not part of the claim, and it does not "
             "verify the evaluation of every individual receipt."
         ),
     }

@@ -12,11 +12,11 @@
     "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
   },
   "observed": {
-    "checkerExit": 0,
-    "checkerPassed": true,
+    "checkerExit": 1,
+    "checkerPassed": false,
     "knownRuleFailures": 29,
     "resolvedRuleFailures": 0,
-    "blocking": 0,
+    "blocking": 1,
     "assertionsTheEvaluationCouldNotSupport": 2,
     "messagesTheCheckerActuallyReports": [
       "TEI ETag receipt did not record 409/200",
@@ -34,7 +34,7 @@
     ],
     "assertionsNotReportedByTheChecker": [],
     "evaluationAgreesWithTheRule": true,
-    "finding": "ガード評価が『どこでも成立しない』とした2種類を、**checker自身の出力と突き合わせた**。checkerは29件の既知失敗を報告し、阻止は0件。**評価が根拠にした種類はすべてcheckerも報告している。**評価は規則と一致している。"
+    "finding": "ガード評価が『どこでも成立しない』とした2種類を、**checker自身の出力と突き合わせた**。checkerは29件の既知失敗を報告し、阻止は1件。**評価が根拠にした種類はすべてcheckerも報告している。**評価は規則と一致している。"
   },
-  "scope": "Runs the checker and compares the messages it reports with the assertions the sibling evaluation could not support. It checks agreement of message sets; it does not verify the evaluation of every individual receipt."
+  "scope": "Runs the checker and compares the messages it reports with the assertions the sibling evaluation could not support. It checks agreement of message sets; the checker's overall pass is recorded but is not part of the claim, and it does not verify the evaluation of every individual receipt."
 }

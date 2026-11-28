@@ -1,0 +1,225 @@
+{
+  "schema": "tai.reference.yic-digest-search/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 indexing every artifact digest and searching it",
+  "command": "python integrations/tools/yic_digest_search_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-digest-search-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptsWhoseCitedPathIsGone": 37,
+    "recoverableByNameAndDigest": 8,
+    "recoverableByDigestUnderAnotherName": 0,
+    "notPresentAnywhereInTheRepository": 29,
+    "rows": [
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/eki-task-request-projection.json"
+        ]
+      },
+      {
+        "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/eki-task-request-policy-aligned.json"
+        ]
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/mmi-format-profile-projection.json"
+        ]
+      },
+      {
+        "receipt": "SCN-003-save-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/scn-003-document.json"
+        ]
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/sei-decision-projection.json"
+        ]
+      },
+      {
+        "receipt": "SUI-TEI-admin-path-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-artifact-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/documentv1-projection.json"
+        ]
+      },
+      {
+        "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-binding-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-containment-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-contract-digest-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/documentv1-projection.json"
+        ]
+      },
+      {
+        "receipt": "SUI-TEI-contract-digest-check-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-contract-versions-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-contract-versions-validation-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-coordinates-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-documentv1-validation-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-etag-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-fields-roundtrip-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-large-doc-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-multi-doc-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-optional-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-optional-core-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-postgres-retry-evidence-2026-11-03.json",
+        "status": "sameNameAndDigest",
+        "locations": [
+          "evaluations/artifacts/scn-003-document.json"
+        ]
+      },
+      {
+        "receipt": "SUI-TEI-reading-order-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-reading-order-validation-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-reviewed-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-save-auth-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-save-contract-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-save-e2e-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-save-roundtrip-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-server-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-sources-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-sources-validation-2026-11-03.json",
+        "status": "notFound",
+        "locations": []
+      },
+      {
+        "receipt": "SUI-TEI-sui-reader-2026-11-02.json",
+        "status": "notFound",
+        "locations": []
+      }
+    ],
+    "finding": "引用先が消えた37件について、**名前ではなくdigestで**リポジトリ内を探した。**名前もdigestも一致8件**、**名前は違うがdigestが一致0件**、**どこにも無い29件**。**名前で探すと取りこぼす。** 記録したのは名前ではなく内容である。**digestで見つかったものは『その内容がリポジトリに在る』ことを示すが、receiptがそれを観測したことは示さない。**"
+  },
+  "scope": "Indexes digests of every file under evaluations/artifacts and looks up each missing receipt's recorded digest. It covers artifacts/ only, not the whole repository, and finding a digest proves the content exists now, not that the receipt observed it."
+}

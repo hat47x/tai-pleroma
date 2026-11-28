@@ -1,0 +1,321 @@
+{
+  "schema": "tai.reference.yic-path-resolution/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 resolving missing artifact paths by file name",
+  "command": "python integrations/tools/yic_path_resolution_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-path-resolution-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "receiptsWhoseCitedPathIsGone": 37,
+    "sameFileNameExistsInRepo": 37,
+    "digestAgrees": 8,
+    "digestDiffers": 29,
+    "noSameNameFound": 0,
+    "rows": [
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-ekr\\evaluations\\artifacts\\eki-task-request-projec",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:1d25d0c0bcb52",
+        "inRepoDigest": "sha256:1d25d0c0bcb52",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sxu\\evaluations\\artifacts\\eki-task-request-policy",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:0a7052294ff72",
+        "inRepoDigest": "sha256:0a7052294ff72",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sxj\\evaluations\\artifacts\\mmi-format-profile-proj",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:0743e38b06c5a",
+        "inRepoDigest": "sha256:0743e38b06c5a",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "SCN-003-save-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sc3\\evaluations\\artifacts\\scn-003-document.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:4d688e78aa72c",
+        "inRepoDigest": "sha256:4d688e78aa72c",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sea\\evaluations\\artifacts\\sei-decision-projection",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:e0ed3caccce9f",
+        "inRepoDigest": "sha256:e0ed3caccce9f",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "SUI-TEI-admin-path-2026-11-02.json",
+        "cited": "tai-wt-optcore\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:b16489915a09f",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:e0ef3090a726f",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sch\\evaluations\\artifacts\\documentv1-projection.j",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:d1c8605ee8a28",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "SUI-TEI-artifact-validation-2026-11-02.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-rev\\evaluations\\artifacts\\documentv1-projection.j",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:c4c77cafca936",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-binding-2026-11-02.json",
+        "cited": "tai-wt-reader\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:e0ef3090a726f",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-containment-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-contract-digest-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:d1c8605ee8a28",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "SUI-TEI-contract-digest-check-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-cd\\evaluations\\artifacts\\documentv1-projection.js",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:dcf4df7386ac5",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-contract-versions-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:14a6ae4df0057",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-contract-versions-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-cv\\evaluations\\artifacts\\documentv1-projection.js",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:14a6ae4df0057",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-coordinates-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:51da315cd733f",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-documentv1-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-containment\\evaluations\\artifacts\\documentv1-proj",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-etag-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-etag\\evaluations\\artifacts\\documentv1-projection.",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-fields-roundtrip-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-fr\\evaluations\\artifacts\\documentv1-projection.js",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:9ab052be815b1",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-large-doc-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-large\\evaluations\\artifacts\\documentv1-projection",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-multi-doc-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-multi\\evaluations\\artifacts\\documentv1-projection",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-optional-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:555ad7452e059",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-optional-core-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:b16489915a09f",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-postgres-retry-evidence-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sx6\\evaluations\\artifacts\\scn-003-document.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:4d688e78aa72c",
+        "inRepoDigest": "sha256:4d688e78aa72c",
+        "digestAgrees": true
+      },
+      {
+        "receipt": "SUI-TEI-reading-order-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:9ab052be815b1",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-reading-order-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-ro\\evaluations\\artifacts\\documentv1-projection.js",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:9ab052be815b1",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-reviewed-2026-11-02.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:c4c77cafca936",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-save-auth-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-sauth\\evaluations\\artifacts\\documentv1-projection",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-save-contract-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-evc\\evaluations\\artifacts\\documentv1-projection.j",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-save-e2e-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-save\\evaluations\\artifacts\\documentv1-projection.",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-apply\\evaluations\\artifacts\\documentv1-projection",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-cli\\evaluations\\artifacts\\documentv1-projection.j",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-save-roundtrip-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-rt\\evaluations\\artifacts\\documentv1-projection.js",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-server-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-srv\\evaluations\\artifacts\\documentv1-projection.j",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:6d39148ca5f9b",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-sources-2026-11-03.json",
+        "cited": "..\\..\\..\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:a315af481c080",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-sources-validation-2026-11-03.json",
+        "cited": "D:\\GIT\\hat47x\\tai-wt-src\\evaluations\\artifacts\\documentv1-projection.j",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:a315af481c080",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      },
+      {
+        "receipt": "SUI-TEI-sui-reader-2026-11-02.json",
+        "cited": "tai-wt-reader\\evaluations\\artifacts\\documentv1-projection.json",
+        "sameNameInRepo": true,
+        "recordedDigest": "sha256:e0ef3090a726f",
+        "inRepoDigest": "sha256:d1c8605ee8a28",
+        "digestAgrees": false
+      }
+    ],
+    "finding": "引用先が消えたreceipt37件について、**同名ファイルがリポジトリ内に在るか**を調べた。在るもの37件、無いもの0件。そのうち**digestが一致するもの8件**、**一致しないもの29件**。**一致しても『同じ内容の別の複製が在る』ことしか言えない。**そのreceiptが観測した対象が、この複製だったことは言えない。**一致しない場合は、複製が違うのか、記録が古いのか、区別できない。**"
+  },
+  "scope": "For receipts whose cited artifact path no longer exists, looks for the same file name under evaluations/artifacts and compares digests. It measures recoverability by name only; it does not rewrite any receipt or assert that the in-repo file is the one the receipt observed."
+}

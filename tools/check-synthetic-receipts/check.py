@@ -400,6 +400,9 @@ REAL_RECORDS = (
     "evaluations/records/YIC-assertion-siblings-2026-11-28.json",
     "evaluations/records/YIC-artifact-path-portability-2026-11-28.json",
     "evaluations/records/YIC-assertion-agreement-2026-11-28.json",
+    "evaluations/records/YIC-path-resolution-2026-11-28.json",
+    "evaluations/records/YIC-digest-search-2026-11-28.json",
+    "evaluations/records/YIC-digest-search-wide-2026-11-28.json",
     "evaluations/records/YIC-baseline-classify-effect-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
@@ -818,7 +821,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 57
+                or observed.get("checksRun") != 60
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative_lower:
@@ -919,6 +922,28 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("receiptsWithACitedArtifactPath", 0) < 1
             ):
                 errors.append(f"the path portability reading lost its scope: {relative}")
+        if "YIC-path-resolution" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("receiptsWhoseCitedPathIsGone", 0) < 1
+            ):
+                errors.append(f"the path resolution reading lost its scope: {relative}")
+        if "YIC-digest-search" in relative_lower and "wide" not in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or len(observed.get("rows") or []) < 1
+            ):
+                errors.append(f"the digest search stored no rows: {relative}")
+        if "YIC-digest-search-wide" in relative_lower:
+            observed = data.get("observed", {})
+            # A sample recorded as if it were the population is the failure this guards.
+            if (
+                data.get("result") != "PASS"
+                or observed.get("digestsTheNarrowSearchMissed", 0) < 1
+            ):
+                errors.append(f"the wide digest search lost its scope: {relative}")
         if "YIC-assertion-agreement" in relative_lower:
             observed = data.get("observed", {})
             if (
