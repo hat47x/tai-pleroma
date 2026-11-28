@@ -1,0 +1,72 @@
+{
+  "schema": "tai.reference.yic-rename-cost/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 counting citations of the mismatched receipts",
+  "command": "python integrations/tools/yic_rename_cost_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-rename-cost-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "mismatchReceipt": "evaluations/records/YIC-receipt-name-date-2026-11-28.json",
+    "mismatchedTotal": 141,
+    "namesAvailable": 20,
+    "sampled": 20,
+    "uncitedInSample": 0,
+    "citedInSample": 20,
+    "totalCitationsInSample": 102,
+    "heaviest": [
+      {
+        "receipt": "EKI-TEI-budget-aligned-artifact-2026-11-03.json",
+        "citedBy": 7,
+        "examples": [
+          "evaluations/records/YIC-cited-path-2026-11-28.json",
+          "evaluations/records/YIC-commit-field-2026-11-28.json",
+          "evaluations/records/YIC-note-truthfulness-2026-11-28.json"
+        ]
+      },
+      {
+        "receipt": "EKI-TEI-manual-execution-2026-11-03.json",
+        "citedBy": 7,
+        "examples": [
+          "analysis/product-side-decisions-2026-11-06.md",
+          "analysis/tei-sui-integration-2026-11-03.md",
+          "evaluations/records/YI-danger-units-2026-11-11.json"
+        ]
+      },
+      {
+        "receipt": "EKI-TEI-multi-worker-2026-11-03.json",
+        "citedBy": 7,
+        "examples": [
+          "analysis/product-side-decisions-2026-11-06.md",
+          "analysis/product-side-decisions-issue-drafts-2026-11-06.md",
+          "analysis/tei-sui-integration-2026-11-03.md"
+        ]
+      },
+      {
+        "receipt": "SCN-003-compose-2026-11-03.validate.json",
+        "citedBy": 7,
+        "examples": [
+          "docs/tei-construction-migration-plan.md",
+          "evaluations/records/TEI-receipt-scope-2026-11-06.json",
+          "evaluations/records/YIC-cited-path-2026-11-28.json"
+        ]
+      },
+      {
+        "receipt": "EKI-TEI-submit-2026-11-03.json",
+        "citedBy": 6,
+        "examples": [
+          "analysis/product-side-decisions-issue-drafts-2026-11-06.md",
+          "docs/status.md",
+          "evaluations/README.md"
+        ]
+      }
+    ],
+    "finding": "名前の日付と`date`が食い違う**141件**のうち、receiptが名前一覧として保持している20件を標本にした。**他のファイルから名前で引用されているもの20件**、引用の無いもの0件。標本内の延べ引用数は**102**。**改名は引用を壊す**ので、引用の無いものだけを改名する案と、`date`を正として名前は履歴として残す案を比べる必要がある。**どちらを採るかは決めていない。**"
+  },
+  "scope": "Counts, for a sample of forty mismatched receipts, how many other files name the file. It measures the cost of renaming; it does not rename anything, and a text match is not a semantic citation (a name inside a receipt's own listing is indistinguishable)."
+}
