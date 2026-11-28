@@ -20,3 +20,15 @@
 **現状:** GitHub上のTAIのmainはSCN-001等の参照試験が中心で、全製品を組み立てるBundle ReleaseとYIサイトの本番公開は未実装。本文は視覚説明の**Draft**であり、正式ブランド承認・第三者受入・PPTX実描画を意味しない。
 
 外部公開する前に、各製品のOwnerによる説明の確認、商標・ブランドアセットの利用確認、スライドの投影・可読性検証を行うこと。
+
+<!-- index:begin -->
+
+以下は`presentations/`直下の各文書の先頭見出しから生成した。**手で保たない。**
+対象: `*.md`（READMEを除く3件）。
+
+| 文書 | 題 | 状態 |
+| --- | --- | --- |
+| [yi-constellation-design-guide.md](yi-constellation-design-guide.md) | YI Constellation｜高密度スライド・デザイン制作ガイド v3（統合・配布の二層を追加） | — |
+| [yi-constellation-editorial-review.md](yi-constellation-editorial-review.md) | YI Constellation｜統合ビルド・配布方針のスライド反映レビュー | 2026-10-28時点の**設計・ブランド説明用のDraft**。PPTXの実描画・新しい統合CI／製品Bundle実 |
+| [yi-constellation-family-overview.md](yi-constellation-family-overview.md) | 01　YI Constellation | — |
+<!-- index:end -->

@@ -89,3 +89,31 @@
 - [ローカルCAのチェーン](records/SUI-TEI-ca-chain-2026-11-03.json): 信頼は通るが未信頼クライアントは拒否
 - [2インスタンスと共有Postgres](records/SUI-TEI-multi-instance-2026-11-03.json): 相互読み取りと古いETagの409
 
+<!-- index:begin -->
+
+以下は`evaluations/`直下の各文書の先頭見出しから生成した。**手で保たない。**
+対象: `*.md`（READMEを除く20件）。
+
+| 文書 | 題 | 状態 |
+| --- | --- | --- |
+| [CX-01-csw-exploration-method-transfer-2026-11-08.md](CX-01-csw-exploration-method-transfer-2026-11-08.md) | CX-01：CSW執筆Skillの探索手法をTEI設計に転用できるか（事前登録用・未実行） | — |
+| [harness-boundary-negative-cases.md](harness-boundary-negative-cases.md) | 外部ハーネスへの引渡し：証拠・権限の負例マトリクス | **Draft / acceptance design / 新規実験NOT RUN**。TAIの共通Schemaや実行エ |
+| [P-06-cogovernance-protocol.md](P-06-cogovernance-protocol.md) | P-06 個人・組織・社会の人間・AI協働統治を比較するプロトコル | **Draft / 計画のみ / 全ケースNOT RUN** |
+| [P-06-trial-template.md](P-06-trial-template.md) | P-06 試行記録テンプレート（コピー用・未記入） | — |
+| [SCN-001-acceptance.md](SCN-001-acceptance.md) | SCN-001 受入観点と反証条件 | **Draft（評価計画）**。2026-10-25時点で実行試験、外部ツール接続試験、利用者試験は**未実施**。これ |
+| [SCN-001-ai-development-review-rubric.md](SCN-001-ai-development-review-rubric.md) | SCN-001 生成AIによるdevelopment reviewの観点 | **development review用**。人間の独立レビューや公開承認ではない。 |
+| [SCN-001-eki-worker-feasibility-review.md](SCN-001-eki-worker-feasibility-review.md) | SCN-001 EKI Worker feasibility review | **生成AIによるfeasibility review**。Task実行の検証ではない。 |
+| [SCN-001-mmi-preview-limit.md](SCN-001-mmi-preview-limit.md) | MMIのpreview行数制約 | — |
+| [SCN-001-owner-decision-2026-10-29.md](SCN-001-owner-decision-2026-10-29.md) | SCN-001 実物レビュー要求の変更（Owner判断） | — |
+| [SCN-001-real-object-review.md](SCN-001-real-object-review.md) | SCN-001 実物ベース再レビュー（合成後） | **合成によるdevelopment reviewはaccepted。実物レビューは未実施**。`reviewTrigg |
+| [SCN-001-sui-current-observation-gap.md](SCN-001-sui-current-observation-gap.md) | 保存済みSUI照合と今回のMMI観測が一致しない反例 | 合成入力による未解消の反例。人による意味受理、権限確認、公開承認の証拠ではありません。[Issue #28](https |
+| [SCN-001-synthetic-facility-review.md](SCN-001-synthetic-facility-review.md) | SCN-001 合成施設文書による工程欠陥検査 | **検証用（synthetic）**。実物ベース再レビューではない。 |
+| [SCN-002-003-owner-decision-2026-10-30.md](SCN-002-003-owner-decision-2026-10-30.md) | SCN-002/SCN-003の採用とEKI次段階（Owner判断） | **development review accepted / publication blocked** |
+| [SK-01-harness-skills.md](SK-01-harness-skills.md) | SK-01：YI Constellation Skill／Pluginのハーネス横断資格試験（2026-11-02） | **評価計画 / 全SK-01ケースNOT RUN / Owner未受理**。既存のTAI SCN-001合成Refer |
+| [SK-02-first-real-product-skill-paired-pilot-2026-11-03.md](SK-02-first-real-product-skill-paired-pilot-2026-11-03.md) | SK-02：最初の実Product Skill増分を測る盲検ペア試験（2026-11-03） | — |
+| [SW-01-harness-handoff-qualification.md](SW-01-harness-handoff-qualification.md) | SW-01：外部ハーネス間の判断再開・文脈適用の検証票 | **Draft / S1は合成の限定A/BおよびAの計3回観測済み / 完全比較は未完了**（2026-11-01）。S |
+| [VA-01-product-value-necessity.md](VA-01-product-value-necessity.md) | VA-01：YI Constellation主要価値レビュー・初回反証パケット | — |
+| [VA-02-cross-product-first-run-protocol.md](VA-02-cross-product-first-run-protocol.md) | VA-02：製品独立性を保った初回実証・証拠引継ぎ手順 | — |
+| [VA-04-evidence-readiness-preflight.md](VA-04-evidence-readiness-preflight.md) | VA-04：AI-first検証の入力閉包と契約発見の事前確認 | — |
+| [VA-COND-01-conditional-capabilities-and-source-drift.md](VA-COND-01-conditional-capabilities-and-source-drift.md) | VA-COND-01：用途条件付き能力とSource状態ドリフトの横断判定票 | — |
+<!-- index:end -->

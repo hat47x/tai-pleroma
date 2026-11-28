@@ -99,3 +99,12 @@ TAI main `c388e47c708c6f35b6c6f8f42a546a1b31710f3d`では、[SCN-002 複数拠�
 
 この追補も提案であり、mainの変更、Owner受理、CSWの製品外用途での効果確認、独立評価者実験、公開・実世界効果の証明を意味しない。
 
+<!-- index:begin -->
+
+以下は`research/`直下の各文書の先頭見出しから生成した。**手で保たない。**
+対象: `*.md`（READMEを除く1件）。
+
+| 文書 | 題 | 状態 |
+| --- | --- | --- |
+| [COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md](COGNITIVE_GENERATION_AND_EVIDENCE_2026-11-02.md) | 生成的探索と証拠制約の接続：TAI横断研究の拡張（2026-11-02） | — |
+<!-- index:end -->

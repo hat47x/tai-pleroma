@@ -1,0 +1,72 @@
+{
+  "schema": "tai.reference.yic-folder-index-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 checking the index of every document folder",
+  "command": "python integrations/tools/yic_folder_index_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-folder-index-check-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "folders": 6,
+    "rows": [
+      {
+        "folder": "analysis",
+        "documents": 12,
+        "readmeExists": true,
+        "hasGeneratedIndex": true,
+        "listed": 12,
+        "missing": []
+      },
+      {
+        "folder": "docs",
+        "documents": 27,
+        "readmeExists": true,
+        "hasGeneratedIndex": true,
+        "listed": 27,
+        "missing": []
+      },
+      {
+        "folder": "evaluations",
+        "documents": 20,
+        "readmeExists": true,
+        "hasGeneratedIndex": true,
+        "listed": 20,
+        "missing": []
+      },
+      {
+        "folder": "scenarios",
+        "documents": 3,
+        "readmeExists": true,
+        "hasGeneratedIndex": true,
+        "listed": 3,
+        "missing": []
+      },
+      {
+        "folder": "presentations",
+        "documents": 3,
+        "readmeExists": true,
+        "hasGeneratedIndex": true,
+        "listed": 3,
+        "missing": []
+      },
+      {
+        "folder": "research",
+        "documents": 1,
+        "readmeExists": true,
+        "hasGeneratedIndex": true,
+        "listed": 1,
+        "missing": []
+      }
+    ],
+    "foldersWithoutAGeneratedIndex": [],
+    "foldersWithAnIncompleteIndex": [],
+    "everyFolderIsIndexed": true,
+    "finding": "文書を持つ6ディレクトリを調べた。生成索引を持つもの6件、持たないもの0件。索引が不完全なもの0件。**索引の欠落は1つの型であり、ディレクトリごとに見つけ直す必要は無い。**この検査を1箇所に置くことで、**新しいディレクトリが増えても同じ基準で判定できる**。"
+  },
+  "scope": "Reads each folder's README generated block and compares it with the folder's top-level markdown files. It checks presence and counts; it does not check that a title describes its document, and subdirectories are not covered."
+}

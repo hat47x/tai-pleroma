@@ -74,6 +74,8 @@ CHECKS = (
      "the directory README lists every tool it sits beside"),
     ("docsIndexFreshness", "yic_docs_index_freshness.py",
      "the docs README lists every top-level document"),
+    ("folderIndex", "yic_folder_index_check.py",
+     "every document folder's README lists its top-level documents"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites
