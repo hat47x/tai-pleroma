@@ -396,6 +396,8 @@ REAL_RECORDS = (
     "evaluations/records/YIC-rename-cost-2026-11-28.json",
     "evaluations/records/YIC-growth-watch-2026-11-28.json",
     "evaluations/records/YIC-baseline-classify-2026-11-28.json",
+    "evaluations/records/YIC-assertion-locate-2026-11-28.json",
+    "evaluations/records/YIC-assertion-siblings-2026-11-28.json",
     "evaluations/records/YIC-baseline-classify-effect-2026-11-28.json",
     "evaluations/records/YIC-h-conditions-parser-2026-11-18.json",
     "evaluations/records/YIC-step-review-2026-11-18.json",
@@ -814,7 +816,7 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 data.get("result") != "PASS"
                 or observed.get("everyAnalysisCheckRan") is not True
                 or observed.get("everyAnalysisCheckPassed") is not True
-                or observed.get("checksRun") != 53
+                or observed.get("checksRun") != 55
             ):
                 errors.append(f"a YI analysis check was skipped or failed: {relative}")
         if "YIC-audience-field-reading" in relative_lower:
@@ -901,6 +903,20 @@ def check(root: pathlib.Path) -> dict[str, Any]:
                 or observed.get("mismatchedTotal", 0) < 1
             ):
                 errors.append(f"the rename cost reading lost its scope: {relative}")
+        if "YIC-assertion-locate" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("assertionsLocated", 0) < 1
+            ):
+                errors.append(f"the assertion location lost its scope: {relative}")
+        if "YIC-assertion-siblings" in relative_lower:
+            observed = data.get("observed", {})
+            if (
+                data.get("result") != "PASS"
+                or observed.get("distinctAssertions", 0) < 1
+            ):
+                errors.append(f"the assertion sibling reading lost its scope: {relative}")
         if "YIC-baseline-classify" in relative_lower and "effect" not in relative_lower:
             observed = data.get("observed", {})
             if (

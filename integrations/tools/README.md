@@ -49,15 +49,17 @@ python integrations/tools/run_suite.py \
 <!-- tool-index:begin -->
 
 以下は各ツールのdocstringの冒頭から生成した。**手で保たない。**
-生成対象: `integrations/tools` の `*.py`（191件）。
+生成対象: `integrations/tools` の `*.py`（193件）。
 
-### YIC（分析・点検）（96件）
+### YIC（分析・点検）（98件）
 
 | ツール | 目的（docstringの冒頭） |
 | --- | --- |
 | `yic_analysis_gates.py` | Run the analysis-level YI checks in one pass. |
 | `yic_annotation_digest_impact.py` | Check whether the annotation left any recorded digest pointing at changed bytes. |
 | `yic_annotation_readiness_check.py` | Correct the annotation-readiness detector: the checker has no global field allow-list. |
+| `yic_assertion_locate.py` | Classify by the specific assertion, not by the whole selector block. |
+| `yic_assertion_sibling_check.py` | Evaluate the located assertion against its siblings, not against the whole selector. |
 | `yic_audience_consumer_probe.py` | Run SHO's consumer against a ticket whose audience names a third party. |
 | `yic_audience_declaration_check.py` | Check what the handoff envelope's `audience` field actually does. |
 | `yic_audience_declaration_probe.py` | Check what the cross-product handoff does with `disclosure.audience`. |

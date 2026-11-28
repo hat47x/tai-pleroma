@@ -1,0 +1,1144 @@
+{
+  "schema": "tai.reference.yic-assertion-sibling-check/v0",
+  "synthetic": false,
+  "evidenceKind": "real-execution",
+  "publicationAllowed": false,
+  "date": "2026-11-28",
+  "host": "Windows with Python 3.12 evaluating each assertion against its siblings",
+  "command": "python integrations/tools/yic_assertion_sibling_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-assertion-siblings-2026-11-28.json",
+  "result": "PASS",
+  "artifact": {
+    "path": "evaluations/artifacts/scn-003-document.json",
+    "digest": "sha256:4d688e78aa72c4c55336266d4587c337b564f8672934af23db0ad387131f68de"
+  },
+  "observed": {
+    "locateReceipt": "evaluations/records/YIC-assertion-locate-2026-11-28.json",
+    "distinctAssertions": 12,
+    "assertionsHoldingSomewhere": 9,
+    "assertionsHoldingNowhere": [
+      "TEI artifact receipt points at a missing file",
+      "TEI auth receipt did not enable authorization",
+      "TEI save plan receipt did not record four non-writing tests"
+    ],
+    "perAssertion": [
+      {
+        "message": "TEI ETag receipt did not record 409/200",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-etag-2026-11-03.json"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-artifact-2026-11-02.json"
+        ]
+      },
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "holdsSomewhere": false,
+        "satisfiedBy": []
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-assembler-2026-11-02.json"
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-assembler-2026-11-02.json"
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "holdsSomewhere": false,
+        "satisfiedBy": []
+      },
+      {
+        "message": "TEI auth receipt did not record 200/401",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-auth-2026-11-02.json"
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-consumer-2026-11-02.json"
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-save-plan-2026-11-03.json"
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "holdsSomewhere": false,
+        "satisfiedBy": []
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-target-2026-11-01.json",
+          "SUI-TEI-target-document-id-2026-11-02.json"
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "holdsSomewhere": true,
+        "satisfiedBy": [
+          "SUI-TEI-target-2026-11-01.json",
+          "SUI-TEI-target-document-id-2026-11-02.json"
+        ]
+      }
+    ],
+    "baselineAssertions": 28,
+    "rows": [
+      {
+        "message": "TEI ETag receipt did not record 409/200",
+        "selector": "sui-tei-etag",
+        "requiredFields": [
+          "observed.matchingIfMatchStatus",
+          "observed.staleIfMatchStatus"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-etag-2026-11-03.json",
+            "required": 2,
+            "satisfied": 2,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt has no projection schema",
+        "selector": "tei-artifact",
+        "requiredFields": [
+          "artifact.schema"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI artifact receipt points at a missing file",
+        "selector": "tei-artifact",
+        "requiredFields": [],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-artifact-2026-11-03.json",
+            "required": 0,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-artifact-2026-11-03.json",
+            "required": 0,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-artifact-2026-11-03.json",
+            "required": 0,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+            "required": 0,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "selector": "tei-assembler",
+        "requiredFields": [
+          "observed.cardCases",
+          "observed.cardQualified"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-assembler-2026-11-02.json",
+            "required": 2,
+            "satisfied": 2,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+            "required": 2,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not bind the card record",
+        "selector": "tei-assembler",
+        "requiredFields": [
+          "observed.cardCases",
+          "observed.cardQualified"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-assembler-2026-11-02.json",
+            "required": 2,
+            "satisfied": 2,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+            "required": 2,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "selector": "tei-assembler",
+        "requiredFields": [
+          "observed.assemblerPassed",
+          "observed.assemblerTests"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-assembler-2026-11-02.json",
+            "required": 2,
+            "satisfied": 2,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+            "required": 2,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI assembler receipt did not pass 6 tests",
+        "selector": "tei-assembler",
+        "requiredFields": [
+          "observed.assemblerPassed",
+          "observed.assemblerTests"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-assembler-2026-11-02.json",
+            "required": 2,
+            "satisfied": 2,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+            "required": 2,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not enable authorization",
+        "selector": "tei-auth",
+        "requiredFields": [],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-auth-2026-11-02.json",
+            "required": 0,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI auth receipt did not record 200/401",
+        "selector": "tei-auth",
+        "requiredFields": [
+          "observed.anonymousStatus",
+          "observed.authorizedStatus"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-auth-2026-11-02.json",
+            "required": 2,
+            "satisfied": 2,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "selector": "tei-consumer",
+        "requiredFields": [
+          "observed.passed"
+        ],
+        "siblings": [
+          {
+            "receipt": "MMI-TEI-consumer-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-consumer-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-consumer-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "selector": "tei-consumer",
+        "requiredFields": [
+          "observed.passed"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-consumer-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SEI-TEI-consumer-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-consumer-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI consumer receipt did not record six read-only tests",
+        "selector": "tei-consumer",
+        "requiredFields": [
+          "observed.passed"
+        ],
+        "siblings": [
+          {
+            "receipt": "EKI-TEI-consumer-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "MMI-TEI-consumer-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-consumer-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          }
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "selector": "sui-tei-save-plan",
+        "requiredFields": [
+          "observed.planAction"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record an idempotent update",
+        "selector": "sui-tei-save-plan",
+        "requiredFields": [
+          "observed.planAction"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "selector": "sui-tei-save-plan",
+        "requiredFields": [
+          "observed.passed"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "selector": "sui-tei-save-plan",
+        "requiredFields": [
+          "observed.passed"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI save plan receipt did not record four non-writing tests",
+        "selector": "sui-tei-save-plan",
+        "requiredFields": [
+          "observed.passed"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          },
+          {
+            "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "selector": "tei-target",
+        "requiredFields": [
+          "observed.passedCases"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-target-2026-11-01.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass 4 cases",
+        "selector": "tei-target",
+        "requiredFields": [
+          "observed.passedCases"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-target-2026-11-01.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "TEI-target-profile-compare-2026-11-06.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "selector": "tei-target",
+        "requiredFields": [
+          "observed.processModel"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-target-2026-11-01.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      },
+      {
+        "message": "TEI target receipt did not pass the oneshot profile",
+        "selector": "tei-target",
+        "requiredFields": [
+          "observed.processModel"
+        ],
+        "siblings": [
+          {
+            "receipt": "SUI-TEI-target-2026-11-01.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "SUI-TEI-target-document-id-2026-11-02.json",
+            "required": 1,
+            "satisfied": 1,
+            "satisfiesAll": true
+          },
+          {
+            "receipt": "TEI-target-profile-compare-2026-11-06.json",
+            "required": 1,
+            "satisfied": 0,
+            "satisfiesAll": false
+          }
+        ]
+      }
+    ],
+    "siblingsEvaluated": 78,
+    "siblingsSupporting": 27,
+    "siblingsNotSupporting": [
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-artifact-2026-11-03.json",
+        "required": 0,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-artifact-2026-11-03.json",
+        "required": 0,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-artifact-2026-11-03.json",
+        "required": 0,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-artifact-schema-2026-11-03.json",
+        "required": 0,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "required": 2,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "required": 2,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-assembler-tests-2026-11-06.json",
+        "required": 2,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-assembler-kinds-2026-11-06.json",
+        "required": 2,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-auth-2026-11-02.json",
+        "required": 0,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-consumer-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-consumer-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-consumer-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SEI-TEI-consumer-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "EKI-TEI-consumer-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "MMI-TEI-consumer-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-merge-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "SUI-TEI-save-plan-cli-2026-11-03.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "TEI-target-profile-compare-2026-11-06.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "TEI-target-profile-compare-text-2026-11-06.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      },
+      {
+        "receipt": "TEI-target-profile-compare-2026-11-06.json",
+        "required": 1,
+        "satisfied": 0,
+        "satisfiesAll": false
+      }
+    ],
+    "rowsWithoutComparisons": 2,
+    "finding": "基準の背後にある**12種類のassertion**を、兄弟と突き合わせた。**どこかのreceiptで成立しているもの9件**、**どのreceiptでも成立しないもの3件**。検査した兄弟78件のうち**規則を満たすもの27件**、満たさないもの51件。比較式を読めなかった行2件。**セレクタ全体ではなくassertionで見ると、『兄弟なし』と数えていた失敗のいくつかに兄弟がいた。**"
+  },
+  "scope": "Reads the located assertion's guard condition, extracts its field comparisons, and evaluates them against sibling receipts. It checks a sample of siblings; it does not evaluate every receipt, and a guard using a helper rather than a literal is not parsed."
+}
