@@ -793,7 +793,8 @@ def check(root: pathlib.Path) -> dict[str, Any]:
             observed = data.get("observed", {})
             if (
                 data.get("result") != "PASS"
-                or observed.get("caseDeadCount", 0) < 1
+                or observed.get("selectors", 0) < 1
+                or not isinstance(observed.get("selectorsReachingNothing"), list)
             ):
                 errors.append(f"the rule liveness reading lost its finding: {relative}")
         if "YIC-h-conditions-parser" in relative_lower:

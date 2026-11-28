@@ -1,10 +1,10 @@
 {
-  "schema": "tai.reference.yic-rule-liveness/v0",
+  "schema": "tai.reference.yic-selector-reach/v0",
   "synthetic": false,
   "evidenceKind": "real-execution",
   "publicationAllowed": false,
   "date": "2026-11-28",
-  "host": "Windows with Python 3.12 comparing rules with registered names",
+  "host": "Windows with Python 3.12 parsing the checker's selectors and receipt lists",
   "command": "python integrations/tools/yic_rule_liveness_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-rule-liveness-2026-11-18.json",
   "result": "PASS",
   "artifact": {
@@ -13,39 +13,20 @@
   },
   "observed": {
     "checker": "tools/check-synthetic-receipts/check.py",
-    "registeredReceipts": 353,
-    "rules": 7,
-    "rulesDeadOnlyOnCase": [
-      {
-        "rule": "tei-contract-versions",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-contract-versions-2026-11-03.json",
-          "evaluations/records/SUI-TEI-contract-versions-validation-2026-11-03.json"
-        ],
-        "matchCount": 2
-      },
-      {
-        "rule": "tei-reading-order",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-reading-order-2026-11-03.json",
-          "evaluations/records/SUI-TEI-reading-order-validation-2026-11-03.json"
-        ],
-        "matchCount": 2
-      },
-      {
-        "rule": "tei-sources",
-        "wouldMatch": [
-          "evaluations/records/SUI-TEI-sources-2026-11-03.json",
-          "evaluations/records/SUI-TEI-sources-validation-2026-11-03.json"
-        ],
-        "matchCount": 2
-      }
+    "registeredNames": 353,
+    "selectors": 265,
+    "selectorsReachingNothing": [
+      "tei-comparison",
+      "tei-sui-etag",
+      "tei-sui-save-merge",
+      "tei-sui-save-plan",
+      "tei-sui-save-plan-merge",
+      "tei-sui-server",
+      "tei-text-selection"
     ],
-    "caseDeadCount": 3,
-    "rulesDeadRegardlessOfCase": [],
-    "trulyDeadCount": 0,
-    "comparedCaseSensitively": true,
-    "finding": "checkerの規則は`if \"...\" in relative:`で照合する。`relative`はディスク上の名前（`SUI-TEI-adapter-…`）を保ち、規則は小文字（`tei-adapter`）で書かれている。**3件の規則が、大小文字の違いだけで一度も発火しない。**それらのreceiptは汎用の規則だけを通り、**詳細な検査が無音で飛ばされている**。"
+    "inertCount": 7,
+    "comparesAgainst": "relative_lower",
+    "finding": "checkerの全265セレクタについて、登録353件のうち何件に当たるかを数えた。**当たらないセレクタは7件**。以前「大小文字の違いで死んでいる40件」と数えていたが、選択が`relative_lower`に変わった後は**その区分自体が存在しない**。残る問いは『一度も当たらない規則』だけである。"
   },
-  "scope": "Compares the checker's rule strings with its registered receipt names, case-sensitively and case-insensitively. It shows which rules cannot fire; it does not run them or judge whether they would pass if they did."
+  "scope": "Parses every `in relative_lower` selector and counts how many registered receipts each reaches. It reports selectors that reach nothing; it does not judge whether a reachable selector asserts the right thing, and it reads the source rather than running the checker."
 }

@@ -272,7 +272,7 @@
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rules\": 273, \"caseDead\": 40, \"trulyDead\": 8, \"passed\": true}"
+        "tail": "{\"selectors\": 265, \"inert\": 7, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,

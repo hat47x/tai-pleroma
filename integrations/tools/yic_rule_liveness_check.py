@@ -1,20 +1,18 @@
-"""Check that every per-receipt rule can actually fire on a registered receipt.
+"""Point the liveness reading at the selector that now exists, and at both loops.
 
-The checker matches rules with `if "<name>" in relative:`. `relative` is the receipt's
-path, which carries the name as written on disk: `SUI-TEI-adapter-…`. Rules are written
-in lower case: `tei-adapter`. Twenty-nine of them never match because of the case alone,
-so the detailed checks they encode silently never run — the receipt still passes on the
-generic rules.
+After the fix, the checker no longer compares `rule in name` with the original case: it
+compares `rule in relative_lower`. So "rules dead only on case" is no longer a category
+the checker can produce — the remaining question is which selectors reach no registered
+receipt at all. The old vocabulary made this look like 40 rules had died, when they had
+been made live.
 
-This compares each rule against the registered names, case-sensitively and
-case-insensitively, and reports the rules that only fail on case.
+This reads the checker's own selector list and counts reach across both receipt loops.
 """
 
 import argparse
+import ast
 import hashlib
 import json
-import os
-import re
 import time
 from pathlib import Path
 
@@ -33,74 +31,79 @@ def main():
 
     root = Path(__file__).resolve().parents[2]
     text = (root / CHECKER).read_text(encoding="utf-8")
-    registered = sorted(
-        set(re.findall(r'"(evaluations/records/[^"]+\.json)"', text))
-    )
-    rules = sorted(
-        set(re.findall(r'if "([^"]+)" in relative:', text))
-        | set(re.findall(r'if "([^"]+)" in relative_lower:', text))
-    )
+    tree = ast.parse(text)
 
-    caseOnlyDead = []
-    trulyDead = []
-    for rule in rules:
-        exact = [name for name in registered if rule in name]
-        if exact:
-            continue
-        insensitive = [name for name in registered if rule in name.lower()]
-        if insensitive:
-            caseOnlyDead.append({
-                "rule": rule,
-                "wouldMatch": insensitive[:3],
-                "matchCount": len(insensitive),
-            })
-        else:
-            trulyDead.append(rule)
+    names = []
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and node.targets
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id in ("RECORDS", "REAL_RECORDS")
+            and isinstance(node.value, (ast.Tuple, ast.List))
+        ):
+            for element in node.value.elts:
+                if isinstance(element, ast.Constant) and isinstance(element.value, str):
+                    names.append(element.value)
 
+    selectors = sorted({
+        line.strip().split('"')[1]
+        for line in text.splitlines()
+        if line.strip().startswith('if "') and 'in relative_lower:' in line
+    })
+
+    rows = []
+    for selector in selectors:
+        reached = [name for name in names if selector.lower() in name.lower()]
+        rows.append({
+            "selector": selector,
+            "reach": len(reached),
+            "examples": reached[:2],
+        })
+
+    inert = [row["selector"] for row in rows if row["reach"] == 0]
     checks = {
         "checker": CHECKER,
-        "registeredReceipts": len(registered),
-        "rules": len(rules),
-        "rulesDeadOnlyOnCase": caseOnlyDead,
-        "caseDeadCount": len(caseOnlyDead),
-        "rulesDeadRegardlessOfCase": trulyDead,
-        "trulyDeadCount": len(trulyDead),
-        "comparedCaseSensitively": True,
+        "registeredNames": len(names),
+        "selectors": len(selectors),
+        "selectorsReachingNothing": inert,
+        "inertCount": len(inert),
+        "comparesAgainst": "relative_lower",
         "finding": (
-            "checkerの規則は`if \"...\" in relative:`で照合する。"
-            "`relative`はディスク上の名前（`SUI-TEI-adapter-…`）を保ち、"
-            "規則は小文字（`tei-adapter`）で書かれている。"
-            f"**{len(caseOnlyDead)}件の規則が、大小文字の違いだけで一度も発火しない。**"
-            "それらのreceiptは汎用の規則だけを通り、"
-            "**詳細な検査が無音で飛ばされている**。"
+            f"checkerの全{len(selectors)}セレクタについて、"
+            f"登録{len(names)}件のうち何件に当たるかを数えた。"
+            f"**当たらないセレクタは{len(inert)}件**。"
+            "以前「大小文字の違いで死んでいる40件」と数えていたが、"
+            "選択が`relative_lower`に変わった後は**その区分自体が存在しない**。"
+            "残る問いは『一度も当たらない規則』だけである。"
         ),
     }
-    # This check passes when it can report the finding, not when there are no dead rules:
-    # the dead rules are the finding.
-    passed = len(caseOnlyDead) > 0
+    # This check reports the inert list; it does not fail on it. The list is the finding,
+    # and the checker already surfaces it as `inertRules`.
+    passed = len(selectors) > 0 and len(names) > 0
 
     receipt = {
-        "schema": "tai.reference.yic-rule-liveness/v0",
+        "schema": "tai.reference.yic-selector-reach/v0",
         "synthetic": False,
         "evidenceKind": "real-execution",
         "publicationAllowed": False,
         "date": time.strftime("%Y-%m-%d"),
-        "host": "Windows with Python 3.12 comparing rules with registered names",
+        "host": "Windows with Python 3.12 parsing the checker's selectors and receipt lists",
         "command": "python integrations/tools/yic_rule_liveness_check.py --artifact evaluations/artifacts/scn-003-document.json --out evaluations/records/YIC-rule-liveness-2026-11-18.json",
         "result": "PASS" if passed else "FAIL",
         "artifact": {"path": args.artifact, "digest": digest(Path(args.artifact).resolve())},
         "observed": checks,
         "scope": (
-            "Compares the checker's rule strings with its registered receipt names, case-sensitively "
-            "and case-insensitively. It shows which rules cannot fire; it does not run them or judge "
-            "whether they would pass if they did."
+            "Parses every `in relative_lower` selector and counts how many registered receipts "
+            "each reaches. It reports selectors that reach nothing; it does not judge whether a "
+            "reachable selector asserts the right thing, and it reads the source rather than "
+            "running the checker."
         ),
     }
     Path(args.out).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
-        "rules": len(rules),
-        "caseDead": len(caseOnlyDead),
-        "trulyDead": len(trulyDead),
+        "selectors": len(selectors),
+        "inert": len(inert),
         "passed": passed,
     }, ensure_ascii=False))
     return 0 if passed else 1
