@@ -66,6 +66,8 @@ CHECKS = (
      "a document's numbered subsections ascend without gaps or letter suffixes"),
     ("numberingSpan", "yic_numbering_span_check.py",
      "no YI document numbers its subsections out of order or with letter suffixes"),
+    ("countClaimSpan", "yic_count_claim_span_check.py",
+     "no current-tense receipt-count claim disagrees with the live count"),
 )
 
 # Deliberately excluded: `yic_gate_reproducibility` re-runs the receipt gates and rewrites

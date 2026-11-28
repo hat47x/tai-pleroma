@@ -48,7 +48,7 @@
         "question": "the analysis files are indexed and their links resolve",
         "exit": 0,
         "passed": true,
-        "tail": "{\"files\": 56, \"links\": 670, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
+        "tail": "{\"files\": 56, \"links\": 671, \"notIndexed\": [], \"broken\": [], \"missingFromPacket\": [], \"unknownInPacket\": []}"
       },
       "deckFigures": {
         "ran": true,
@@ -69,7 +69,7 @@
         "question": "each of the five danger units has evidence",
         "exit": 0,
         "passed": true,
-        "tail": "{\"receipts\": 402, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 34, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
+        "tail": "{\"receipts\": 403, \"units\": {\"permissionDeviation\": 16, \"delegationRefusal\": 37, \"permissionExpiry\": 35, \"verificationFailure\": 58, \"publicationRefusal\": 12}, \"withoutEvidence\": [], \"passed\": true}"
       },
       "acceptanceAuthority": {
         "ran": true,
@@ -160,7 +160,7 @@
         "question": "every receipt writer computes its verdict rather than asserting one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"tools\": 114, \"writers\": 114, \"fixedVerdicts\": [], \"passed\": true}"
+        "tail": "{\"tools\": 115, \"writers\": 115, \"fixedVerdicts\": [], \"passed\": true}"
       },
       "claimCeiling": {
         "ran": true,
@@ -258,14 +258,14 @@
         "question": "both receipt naming families state a measured half and a limit half",
         "exit": 0,
         "passed": true,
-        "tail": "{\"yi\": 33, \"yic\": 82, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
+        "tail": "{\"yi\": 33, \"yic\": 83, \"withoutMeasured\": 0, \"withoutLimit\": 0, \"passed\": true}"
       },
       "countAgreement": {
         "ran": true,
         "question": "each aggregate's check count matches what the checker expects",
         "exit": 0,
         "passed": true,
-        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 23, 23], [\"yic_analysis_gates.py\", 49, 49], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
+        "tail": "{\"rows\": 3, \"disagreements\": [], \"each\": [[\"yic_document_gates.py\", 24, 24], [\"yic_analysis_gates.py\", 49, 49], [\"yi_receipt_quality.py\", 5, 5]], \"passed\": true}"
       },
       "inertRemainder": {
         "ran": true,
@@ -286,7 +286,7 @@
         "question": "how many real receipts carry a commit, against the proposal to require one",
         "exit": 0,
         "passed": true,
-        "tail": "{\"real\": 310, \"withCommit\": 59, \"withoutCommit\": 251, \"passed\": true}"
+        "tail": "{\"real\": 311, \"withCommit\": 59, \"withoutCommit\": 252, \"passed\": true}"
       },
       "citationDates": {
         "ran": true,
@@ -300,7 +300,7 @@
         "question": "whether receipts written now still cite a local checkout path",
         "exit": 0,
         "passed": true,
-        "tail": "{\"recent\": 28, \"citing\": 0, \"missing\": 0, \"passed\": true}"
+        "tail": "{\"recent\": 29, \"citing\": 0, \"missing\": 0, \"passed\": true}"
       },
       "annotationReadiness": {
         "ran": true,
@@ -335,14 +335,14 @@
         "question": "which rules can never fire because of case",
         "exit": 0,
         "passed": true,
-        "tail": "{\"selectors\": 279, \"inert\": 2, \"passed\": true}"
+        "tail": "{\"selectors\": 280, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleImpact": {
         "ran": true,
         "question": "running the checker with the dead rules made live",
         "exit": 0,
         "passed": true,
-        "tail": "{\"known\": 29, \"resolved\": 0, \"blocking\": 1, \"whenEmptied\": 30, \"inert\": 2, \"passed\": true}"
+        "tail": "{\"known\": 29, \"resolved\": 0, \"blocking\": 0, \"whenEmptied\": 29, \"inert\": 2, \"passed\": true}"
       },
       "deadRuleFields": {
         "ran": true,
